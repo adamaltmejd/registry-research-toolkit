@@ -106,6 +106,23 @@ def _coded_states(
         if len(matches) > 1:
             raise ValueError("coding resolver returned overlapping coding segments")
         matched = matches[0] if matches else None
+        if matched is not None and matched.state_disposition != "include":
+            if matched.state_disposition == "omit":
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="curated_state_omission",
+                        severity="warning",
+                        subject=subject,
+                        detail="An applicable checked decision omits this state: "
+                        + "\n".join(matched.provenance),
+                        refs=_refs(segment.occurrences),
+                        fields=("coding",),
+                        valid_from=start,
+                        valid_to=end,
+                        withheld_output=("state",),
+                    )
+                )
+            continue
         if matched is None and coding.claims:
             diagnostics.append(
                 ResolutionDiagnostic(
@@ -393,7 +410,7 @@ def form_native_variable(
                 )
                 states.extend(new_states)
                 diagnostics.extend(new_issues)
-                if _text(segment.fields, "data_type") is None:
+                if new_states and _text(segment.fields, "data_type") is None:
                     issue(
                         "unknown_data_type",
                         "The occurrence has no unambiguous documented data type.",
@@ -408,11 +425,15 @@ def form_native_variable(
     )
     diagnostics.extend(representation_issues)
     if not states:
+        accepted_omission = any(
+            d.code == "curated_state_omission" for d in diagnostics
+        ) and not any(d.severity == "error" for d in diagnostics)
         issue(
             "no_supported_states",
             "No source occurrence establishes a safe finite delivery state.",
             ("availability", "period"),
             (subject,),
+            severity="warning" if accepted_omission else "error",
         )
     if not name or not states:
         return VariableFormation(

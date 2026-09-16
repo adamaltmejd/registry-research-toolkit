@@ -13,7 +13,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
 from itertools import pairwise
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_intervals import scope_bounds
@@ -69,6 +69,7 @@ class CodingSegment:
     claim_ids: tuple[str, ...]
     version_label: str = ""
     provenance: tuple[str, ...] = ()
+    state_disposition: Literal["include", "omit", "withhold"] = "include"
 
 
 @dataclass(frozen=True)
@@ -237,3 +238,43 @@ def coding_content_sha256(claim: CodeListClaim) -> str | None:
                 (segment.valid_from, segment.valid_to, members, segment.version_label)
             )
     return canonical_sha256(segments)
+
+
+def coding_observation_sha256(claim: CodeListClaim) -> str:
+    """Fingerprint known or incomplete evidence without making unknowns equal.
+
+    Complete lists reuse their semantic fingerprint. Incomplete lists retain
+    literal code/label values and unknown validity, while excluding physical
+    identities, duplicates and members wholly outside the checked claim period.
+    """
+    complete = coding_content_sha256(claim)
+    if complete is not None:
+        return complete
+    periods = scope_bounds(claim.scope)
+    if periods is None:
+        raise ValueError("coding expectations require independently dated claims")
+    members = set()
+    for member in claim.members:
+        bounds = (
+            periods
+            if member.scope.kind in {"not_applicable", "year_independent"}
+            else scope_bounds(member.scope)
+        )
+        if bounds is None:
+            scope = member.scope.model_dump(mode="json")
+        else:
+            clipped = sorted(
+                {
+                    (max(lo, start), min(hi, end))
+                    for lo, hi in bounds
+                    for start, end in periods
+                    if lo <= end and hi >= start
+                }
+            )
+            if not clipped:
+                continue
+            scope = clipped
+        members.add(canonical_sha256((member.code, member.label, scope)))
+    return canonical_sha256(
+        ("incomplete", sorted(set(periods)), claim.version_label, sorted(members))
+    )

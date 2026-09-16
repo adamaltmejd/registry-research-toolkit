@@ -1,8 +1,8 @@
-"""Apply finite coding choices after source binding and before catalog formation.
+"""Apply exact coding decisions before catalog formation.
 
-Original record guards and semantic coding expectations are checked independently.
-A matching source list is selected only inside the reviewed interval. Other claims
-remain available for accounting; an obsolete choice never refreshes itself.
+Selection, explicitly uncoded periods and state omission share one applicability
+and conflict path. A coding extension checks both its target and finite witness;
+all original claims remain available for accounting.
 """
 
 from __future__ import annotations
@@ -19,10 +19,12 @@ from reg_meta_build.source_coding import (
     CodingResolution,
     CodingSegment,
     coding_content_sha256,
+    coding_observation_sha256,
     resolve_code_membership,
 )
 from reg_meta_build.source_curation import (
-    CodingChoiceDecision,
+    CodingDecision,
+    CodingSelection,
     CurationCase,
     ResolutionDiagnostic,
     evaluate_cases,
@@ -156,7 +158,8 @@ def _compose(
             )
             continue
         alternatives = {
-            (segment.code_set, segment.version_label) for _, segment in selected
+            (segment.code_set, segment.version_label, segment.state_disposition)
+            for _, segment in selected
         }
         claim_ids = tuple(
             sorted(
@@ -173,18 +176,105 @@ def _compose(
                     lower,
                     upper,
                     case_ids=case_ids,
+                    withheld=(
+                        "state"
+                        if any(s.state_disposition != "include" for _, s in selected)
+                        else "code_membership"
+                    ),
                 )
             )
-            segments.append(CodingSegment(lower, upper, None, claim_ids))
+            disposition = (
+                "withhold"
+                if any(s.state_disposition != "include" for _, s in selected)
+                else "include"
+            )
+            segments.append(
+                CodingSegment(
+                    lower, upper, None, claim_ids, state_disposition=disposition
+                )
+            )
         else:
-            code_set, label = next(iter(alternatives))
+            code_set, label, disposition = next(iter(alternatives))
             provenance = tuple(
                 sorted({item for _, segment in selected for item in segment.provenance})
             )
             segments.append(
-                CodingSegment(lower, upper, code_set, claim_ids, label, provenance)
+                CodingSegment(
+                    lower, upper, code_set, claim_ids, label, provenance, disposition
+                )
             )
     return CodingResolution(tuple(segments), tuple(issues), base.claims), conflicted
+
+
+def coding_expectations(
+    claims: tuple[CodeListClaim, ...], valid_from: str, valid_to: str
+) -> tuple[str, ...]:
+    """Capture exact observed alternatives, including known empty/unknown lists."""
+    return tuple(
+        sorted(
+            {
+                coding_observation_sha256(claim)
+                for claim in coding_for_period(claims, valid_from, valid_to)
+            }
+        )
+    )
+
+
+def _selection(
+    decision: CodingDecision, claims: tuple[CodeListClaim, ...]
+) -> tuple[CodingResolution | None, str | None]:
+    selection = decision.selection
+    if isinstance(selection, str):
+        projected = coding_for_period(claims, decision.valid_from, decision.valid_to)
+        return CodingResolution(
+            (
+                CodingSegment(
+                    decision.valid_from,
+                    decision.valid_to,
+                    None,
+                    tuple(sorted({claim.claim_id for claim in projected})),
+                    state_disposition="omit"
+                    if selection == "omit_state"
+                    else "include",
+                ),
+            ),
+            (),
+            claims,
+        ), None
+    observed = coding_expectations(claims, selection.valid_from, selection.valid_to)
+    if set(observed) != set(selection.expected_codings):
+        return None, "coding_witness_changed"
+    projected = coding_for_period(claims, selection.valid_from, selection.valid_to)
+    selected = resolve_code_membership(
+        tuple(
+            claim
+            for claim in projected
+            if coding_content_sha256(claim) == selection.selected_coding
+        )
+    )
+    if not _covers(selected, selection.valid_from, selection.valid_to):
+        return None, "incomplete_selected_coding"
+    if (selection.valid_from, selection.valid_to) != (
+        decision.valid_from,
+        decision.valid_to,
+    ):
+        alternatives = {(s.code_set, s.version_label) for s in selected.segments}
+        if len(alternatives) != 1:
+            return None, "nonconstant_coding_witness"
+        code_set, label = next(iter(alternatives))
+        selected = replace(
+            selected,
+            segments=(
+                CodingSegment(
+                    decision.valid_from,
+                    decision.valid_to,
+                    code_set,
+                    tuple(sorted({c for s in selected.segments for c in s.claim_ids})),
+                    label,
+                ),
+            ),
+        )
+    return selected, None
 
 
 def apply_coding_choices(
@@ -193,20 +283,20 @@ def apply_coding_choices(
     *,
     coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
 ) -> CodingChoiceResolution:
-    """Resolve coding with exact original evidence and finite accepted choices."""
+    """Resolve all checked coding assignments against original evidence together."""
     ordered = tuple(sorted(cases, key=lambda case: case.case_id))
     if len({case.case_id for case in ordered}) != len(ordered):
-        raise ValueError("coding choice case IDs must be unique")
+        raise ValueError("coding case IDs must be unique")
     for case in ordered:
-        if not isinstance(case.decision, CodingChoiceDecision):
-            raise TypeError("coding application requires coding choice decisions")
+        if not isinstance(case.decision, CodingDecision):
+            raise TypeError("coding application requires coding decisions")
         if case.decision.column_key not in coding:
-            raise ValueError("coding choice has an unconverted column binding")
+            raise ValueError("coding decision has an unconverted column binding")
         guarded = {ref for guard in case.peer_guards for ref in guard.expected_members}
-        for target in case.targets:
+        for target in (*case.targets, *case.support):
             _require_checked(target, ("column_name",))
             if target.ref not in guarded:
-                raise ValueError("coding choices require guarded original membership")
+                raise ValueError("coding decisions require guarded original membership")
     evaluations = evaluate_cases(ordered, records)
     resolved = {key: resolve_code_membership(claims) for key, claims in coding.items()}
     choices: dict[NativeKey, list[tuple[str, CodingResolution]]] = defaultdict(list)
@@ -214,13 +304,13 @@ def apply_coding_choices(
     accounting = []
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
-        assert isinstance(decision, CodingChoiceDecision)
+        assert isinstance(decision, CodingDecision)
 
         def report(
             code: str,
             detail: str,
             case: CurationCase = case,
-            decision: CodingChoiceDecision = decision,
+            decision: CodingDecision = decision,
         ) -> None:
             diagnostics.append(
                 ResolutionDiagnostic(
@@ -229,11 +319,11 @@ def apply_coding_choices(
                     case_id=case.case_id,
                     subject=repr(decision.column_key),
                     detail=detail,
-                    refs=tuple(target.ref for target in case.targets),
+                    refs=tuple(target.ref for target in (*case.targets, *case.support)),
                     fields=("coding",),
                     valid_from=decision.valid_from,
                     valid_to=decision.valid_to,
-                    withheld_output=("curation.coding_choice",),
+                    withheld_output=("curation.coding",),
                 )
             )
 
@@ -242,50 +332,50 @@ def apply_coding_choices(
                 report(issue.code, issue.detail)
             accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
             continue
-        projected = coding_for_period(
-            coding[decision.column_key], decision.valid_from, decision.valid_to
-        )
-        fingerprints = [(claim, coding_content_sha256(claim)) for claim in projected]
-        observed = tuple(
-            sorted({digest for _, digest in fingerprints if digest is not None})
-        )
+        claims = coding[decision.column_key]
+        projected = coding_for_period(claims, decision.valid_from, decision.valid_to)
+        observed = coding_expectations(claims, decision.valid_from, decision.valid_to)
         incomplete = tuple(
-            sorted({claim.claim_id for claim, digest in fingerprints if digest is None})
-        )
-        selected = resolve_code_membership(
-            tuple(
-                claim
-                for claim, digest in fingerprints
-                if digest == decision.selected_coding
+            sorted(
+                {
+                    claim.claim_id
+                    for claim in projected
+                    if coding_content_sha256(claim) is None
+                }
             )
         )
-        if incomplete or set(observed) != set(decision.expected_codings):
+        if set(observed) != set(decision.expected_codings):
             report(
                 "coding_evidence_changed",
-                f"Expected complete codings {sorted(decision.expected_codings)!r}; observed {observed!r}; incomplete claims {incomplete!r}. No choice was applied.",
-            )
-            status = "stale"
-        elif not _covers(selected, decision.valid_from, decision.valid_to):
-            report(
-                "incomplete_selected_coding",
-                "The selected source coding does not cover the whole checked period.",
+                f"Expected codings {sorted(decision.expected_codings)!r}; observed {observed!r}; incomplete claims {incomplete!r}. No assignment was applied.",
             )
             status = "stale"
         else:
-            selected = replace(
-                selected,
-                segments=tuple(
-                    replace(
-                        segment,
-                        provenance=(
-                            f"{case.case_id}: {decision.reason}\n{decision.provenance}",
-                        ),
-                    )
-                    for segment in selected.segments
-                ),
-            )
-            choices[decision.column_key].append((case.case_id, selected))
-            status = "applied"
+            selected, problem = _selection(decision, claims)
+            if problem is not None:
+                selection = decision.selection
+                assert isinstance(selection, CodingSelection)
+                report(
+                    problem,
+                    f"The selected coding witness in {selection.valid_from} to {selection.valid_to} changed, is incomplete, or cannot supply one constant membership for an extension.",
+                )
+                status = "stale"
+            else:
+                assert selected is not None
+                selected = replace(
+                    selected,
+                    segments=tuple(
+                        replace(
+                            segment,
+                            provenance=(
+                                f"{case.case_id}: {decision.reason}\n{decision.provenance}",
+                            ),
+                        )
+                        for segment in selected.segments
+                    ),
+                )
+                choices[decision.column_key].append((case.case_id, selected))
+                status = "applied"
         accounting.append(
             CodingChoiceAccounting(case.case_id, status, observed, incomplete)
         )

@@ -543,37 +543,54 @@ class SearchAliasDecision(_CurationModel):
         return self
 
 
-class CodingChoiceDecision(_CurationModel):
-    """Choose existing coding in one exact column and finite checked period."""
+class CodingWindow(_CurationModel):
+    """The complete observed coding evidence for one finite period."""
 
-    kind: Literal["coding_choice"] = "coding_choice"
-    reviewed: Literal[True]
-    column_key: NativeKey
     valid_from: str
     valid_to: str
     expected_codings: tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...]
+
+    @model_validator(mode="after")
+    def _bounded(self) -> Self:
+        for value in (self.valid_from, self.valid_to):
+            parsed = date.fromisoformat(value)
+            if parsed.isoformat() != value or parsed.year == 9999:
+                raise ValueError("coding windows require finite ISO date bounds")
+        if self.valid_from > self.valid_to:
+            raise ValueError("coding window bounds are reversed")
+        if len(set(self.expected_codings)) != len(self.expected_codings):
+            raise ValueError("expected coding fingerprints must be unique")
+        return self
+
+
+class CodingSelection(CodingWindow):
+    """A checked existing list, possibly witnessed in a different finite period."""
+
     selected_coding: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+    @model_validator(mode="after")
+    def _existing(self) -> Self:
+        if self.selected_coding not in self.expected_codings:
+            raise ValueError("select one of the expected existing codings")
+        return self
+
+
+class CodingDecision(CodingWindow):
+    """Assign coding, explicit uncoded meaning, or omission to one exact window."""
+
+    kind: Literal["coding"] = "coding"
+    reviewed: Literal[True]
+    column_key: NativeKey
+    selection: CodingSelection | Literal["uncoded", "omit_state"]
     reason: str = Field(min_length=1)
     provenance: str = Field(min_length=1)
 
     @model_validator(mode="after")
-    def _bounded(self) -> Self:
+    def _justified(self) -> Self:
         if not self.column_key or "" in self.column_key:
-            raise ValueError("a coding choice requires an exact column key")
-        for value in (self.valid_from, self.valid_to):
-            parsed = date.fromisoformat(value)
-            if parsed.isoformat() != value or parsed.year == 9999:
-                raise ValueError("coding choices require finite ISO date bounds")
-        if self.valid_from > self.valid_to:
-            raise ValueError("coding choice bounds are reversed")
-        if (
-            not self.expected_codings
-            or len(set(self.expected_codings)) != len(self.expected_codings)
-            or self.selected_coding not in self.expected_codings
-        ):
-            raise ValueError("choose one of the unique expected existing codings")
+            raise ValueError("a coding decision requires an exact column key")
         if not self.reason.strip() or not self.provenance.strip():
-            raise ValueError("a coding choice requires rationale and provenance")
+            raise ValueError("a coding decision requires rationale and provenance")
         return self
 
 
@@ -582,7 +599,7 @@ type CurationDecision = (
     | FormVariableDecision
     | OccurrenceCorrectionDecision
     | SearchAliasDecision
-    | CodingChoiceDecision
+    | CodingDecision
 )
 
 
@@ -1256,7 +1273,7 @@ def inspect_cases(
     for case in ordered_cases:
         if isinstance(
             case.decision,
-            (OccurrenceCorrectionDecision, SearchAliasDecision, CodingChoiceDecision),
+            (OccurrenceCorrectionDecision, SearchAliasDecision, CodingDecision),
         ):
             raise TypeError(
                 "occurrence, alias and coding corrections require the ordinary formation path"

@@ -145,15 +145,24 @@ window. A source change invalidates their original membership guard. Unsupported
 dependencies withhold the affected alias; missing conversion mappings remain fatal
 engineering errors.
 
-Checked coding choices name an exact column identity, a finite date interval and the
-semantic fingerprints of every competing complete coding in that interval. Both the
-original record membership and those coding expectations must still match. A changed,
-added, removed or incomplete coding invalidates the choice; physical duplicates and
-irrelevant later periods do not broaden it. Resolution retains every original claim,
-applies the selected existing membership only inside the checked window, and carries the
-decision's provenance into the resulting state. Conflicting accepted choices withhold
-only their disputed overlap. Unknown or pooled source scopes remain unresolved. Ordinary
-variable formation consumes this resolved coding; it makes no further choice.
+Checked coding decisions name an exact column identity, a finite date interval and the
+semantic fingerprints of every competing observation in that interval. Both original
+record membership and coding expectations must still match. Incomplete lists retain
+their actual code/label/validity evidence in their fingerprint; missing, empty and
+unknown lists are different. Physical duplicates and irrelevant later periods do not
+broaden a decision. A decision selects an existing complete list, explicitly accepts an
+uncoded period, or omits a state. These effects share one applicability and composition
+path.
+
+A selection names a separately checked finite source witness. Copying its membership to
+a different period requires one constant complete coding across that witness; the
+extension is an explicit accepted decision, never automatic gap filling. Changed target
+or witness evidence makes the decision stale. Resolution retains every original claim
+and carries the decision's provenance into the resulting state. An omitted state keeps
+its source observations and does not become a negative availability claim. Conflicting
+decisions withhold only the disputed coding, or the state if inclusion itself conflicts.
+Unknown or pooled source scopes remain unresolved. Ordinary variable formation consumes
+this resolved coding; it makes no further choice.
 
 The prepared manifest distinguishes field support with a format-defined join from
 support requiring explicit curation, such as the LISA workbook. SCB preparation declares

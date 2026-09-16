@@ -16,7 +16,12 @@ from reg_meta_build.source_coding import (
     resolve_code_membership,
 )
 from reg_meta_build.source_coding_choices import apply_coding_choices, coding_for_period
-from reg_meta_build.source_curation import CodingChoiceDecision, CurationCase, PeerGuard
+from reg_meta_build.source_curation import (
+    CodingDecision,
+    CodingSelection,
+    CurationCase,
+    PeerGuard,
+)
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import source_occurrence
@@ -105,13 +110,18 @@ def _case(
                 expected_members=(record_ref(record),),
             ),
         ),
-        decision=CodingChoiceDecision(
+        decision=CodingDecision(
             reviewed=True,
             column_key=column,
             valid_from=start,
             valid_to=end,
             expected_codings=tuple(sorted(set(digests))),
-            selected_coding=digests[selected],
+            selection=CodingSelection(
+                valid_from=start,
+                valid_to=end,
+                expected_codings=tuple(sorted(set(digests))),
+                selected_coding=digests[selected],
+            ),
             reason="Existing accepted list selection",
             provenance="accepted.toml entry 1",
         ),
@@ -307,8 +317,8 @@ def test_missing_binding_or_guard_is_fatal_not_a_content_waiver() -> None:
         {"valid_from": "2020"},
         {"valid_to": "9999-12-31"},
         {"valid_to": "2019-12-31"},
-        {"expected_codings": ()},
-        {"selected_coding": "f" * 64},
+        {"expected_codings": ("bad-hash",)},
+        {"selection": "guess"},
         {"column_key": ()},
     ],
 )
@@ -317,4 +327,251 @@ def test_choice_contract_requires_finite_scope_and_existing_selection(
 ) -> None:
     decision = _case(_record(), (_claim("first", "01"),)).decision.model_dump()
     with pytest.raises(ValidationError):
-        CodingChoiceDecision.model_validate(decision | changes)
+        CodingDecision.model_validate(decision | changes)
+
+
+def _assignment_case(
+    record: SourceRecord,
+    claims: tuple[CodeListClaim, ...],
+    selection: CodingSelection | str,
+    *,
+    start: str = "2020-01-01",
+    end: str = "2020-12-31",
+    name: str = "assignment",
+) -> CurationCase:
+    from reg_meta_build.source_coding_choices import coding_expectations
+
+    case = _case(record, (_claim("fixture", "0"),), name=name)
+    assert isinstance(case.decision, CodingDecision)
+    return case.model_copy(
+        update={
+            "decision": CodingDecision.model_validate(
+                {
+                    "reviewed": True,
+                    "column_key": case.decision.column_key,
+                    "valid_from": start,
+                    "valid_to": end,
+                    "expected_codings": coding_expectations(claims, start, end),
+                    "selection": selection,
+                    "reason": "Existing accepted finite coding correction",
+                    "provenance": "accepted codeless decision",
+                }
+            )
+        }
+    )
+
+
+def _witness(claims: tuple[CodeListClaim, ...]) -> CodingSelection:
+    from reg_meta_build.source_coding_choices import coding_expectations
+
+    start, end = "2020-05-01", "2020-06-30"
+    digest = coding_content_sha256(coding_for_period(claims, start, end)[0])
+    assert digest is not None
+    return CodingSelection(
+        valid_from=start,
+        valid_to=end,
+        expected_codings=coding_expectations(claims, start, end),
+        selected_coding=digest,
+    )
+
+
+def test_extension_checks_separate_witness_and_changes_only_exact_target() -> None:
+    record = _record()
+    claims = (_claim("coding", "01", "2020-05-01", "2020-06-30"),)
+    case = _assignment_case(record, claims, _witness(claims), end="2020-02-29")
+    result = _apply(record, claims, case)
+    assert result.accounting[0].status == "applied"
+    resolved = next(iter(result.coding.values()))
+    assert [(s.valid_from, s.valid_to) for s in resolved.segments] == [
+        ("2020-01-01", "2020-02-29"),
+        ("2020-05-01", "2020-06-30"),
+    ]
+    assert resolved.segments[0].code_set == resolved.segments[1].code_set
+    assert resolved.segments[0].provenance and not resolved.segments[1].provenance
+    assert resolved.claims == claims
+    changed = (_claim("coding", "02", "2020-05-01", "2020-06-30"),)
+    stale = _apply(record, changed, case)
+    assert stale.accounting[0].status == "stale"
+    assert stale.diagnostics[0].code == "coding_witness_changed"
+    new_target_claim = _claim("new", "03", end="2020-02-29")
+    stale = _apply(record, (*claims, new_target_claim), case)
+    assert stale.diagnostics[0].code == "coding_evidence_changed"
+
+
+def test_extension_rejects_varying_witness_but_same_period_selection_keeps_changes() -> (
+    None
+):
+    record = _record()
+    claim = _claim("coding", "01", "2020-05-01", "2020-06-30")
+    claim = replace(
+        claim,
+        members=(
+            replace(
+                claim.members[0],
+                scope=TemporalScope(
+                    kind="intervals",
+                    intervals=(ScopeInterval(start="2020-05-01", end="2020-05-31"),),
+                ),
+            ),
+            CodeMembershipClaim(
+                "02",
+                "Label",
+                TemporalScope(
+                    kind="intervals",
+                    intervals=(ScopeInterval(start="2020-06-01", end="2020-06-30"),),
+                ),
+            ),
+        ),
+    )
+    claims = (claim,)
+    witness = _witness(claims)
+    extension = _assignment_case(record, claims, witness, end="2020-02-29")
+    result = _apply(record, claims, extension)
+    assert result.diagnostics[0].code == "nonconstant_coding_witness"
+    same = _assignment_case(
+        record, claims, witness, start="2020-05-01", end="2020-06-30"
+    )
+    result = _apply(record, claims, same)
+    assert result.accounting[0].status == "applied"
+    assert len(next(iter(result.coding.values())).segments) == 2
+
+
+def test_exact_empty_evidence_can_be_accepted_as_uncoded_without_guessing_members() -> (
+    None
+):
+    from reg_meta_build.source_coding_choices import coding_expectations
+
+    record = _record()
+    empty = replace(_claim("empty", "01"), members=())
+    case = _assignment_case(record, (empty,), "uncoded", end="2020-06-30")
+    result = _apply(record, (empty,), case)
+    resolved = next(iter(result.coding.values()))
+    assert result.accounting[0].status == "applied"
+    assert resolved.segments[0].code_set is None and resolved.segments[0].provenance
+    assert [(i.code, i.valid_from, i.valid_to) for i in resolved.issues] == [
+        ("empty_active_coding", "2020-07-01", "2020-12-31"),
+    ]
+    unknown = replace(
+        empty,
+        members=(
+            CodeMembershipClaim(
+                None, "Label", TemporalScope(kind="unknown", label="unsupplied")
+            ),
+        ),
+    )
+    assert coding_expectations(
+        (empty,), "2020-01-01", "2020-06-30"
+    ) != coding_expectations((unknown,), "2020-01-01", "2020-06-30")
+    assert _apply(record, (unknown,), case).accounting[0].status == "stale"
+    assert _apply(record, (), case).accounting[0].status == "stale"
+
+
+def test_cap_can_select_complete_coding_among_exact_known_empty_competitors() -> None:
+    record = _record()
+    claims = (_claim("coding", "01"), replace(_claim("empty", "0"), members=()))
+    selection = _witness(claims)
+    case = _assignment_case(
+        record, claims, selection, start="2020-05-01", end="2020-06-30"
+    )
+    result = _apply(record, claims, case)
+    resolved = next(iter(result.coding.values()))
+    assert result.accounting[0].status == "applied"
+    assert resolved.segments[1].code_set is not None
+    assert [(i.valid_from, i.valid_to) for i in resolved.issues] == [
+        ("2020-01-01", "2020-04-30"),
+        ("2020-07-01", "2020-12-31"),
+    ]
+
+
+def test_incomplete_expectations_ignore_order_duplicates_and_inactive_members() -> None:
+    from reg_meta_build.source_coding import coding_observation_sha256
+
+    base = replace(
+        _claim("unknown", "01"),
+        members=(
+            CodeMembershipClaim("01", None, TemporalScope(kind="year_independent")),
+            CodeMembershipClaim(
+                "02", "Label", TemporalScope(kind="unknown", label="unclear")
+            ),
+        ),
+    )
+    duplicate = replace(
+        base,
+        claim_id="new-layout",
+        members=(base.members[1], base.members[0], base.members[1]),
+    )
+    assert coding_observation_sha256(base) == coding_observation_sha256(duplicate)
+    changed = replace(
+        base, members=(replace(base.members[0], code="1"), base.members[1])
+    )
+    assert coding_observation_sha256(base) != coding_observation_sha256(changed)
+    future = CodeMembershipClaim(
+        "future",
+        "Label",
+        TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2021", end="2021"),)
+        ),
+    )
+    assert coding_observation_sha256(base) == coding_observation_sha256(
+        replace(base, members=(*base.members, future))
+    )
+
+
+def test_omission_retains_evidence_and_withholds_conflicting_overlap() -> None:
+    record = _record()
+    claims = (_claim("coding", "01"),)
+    omit = _assignment_case(record, claims, "omit_state", end="2020-08-31", name="omit")
+    include = _assignment_case(
+        record, claims, "uncoded", start="2020-05-01", name="include"
+    )
+    result = _apply(record, claims, omit, include)
+    assert result == _apply(record, claims, include, omit)
+    resolved = next(iter(result.coding.values()))
+    assert [s.state_disposition for s in resolved.segments] == [
+        "omit",
+        "withhold",
+        "include",
+    ]
+    assert resolved.issues[0].withheld == "state"
+    assert resolved.issues[0].valid_from == "2020-05-01"
+    assert resolved.issues[0].valid_to == "2020-08-31"
+    assert resolved.claims == claims
+
+
+def test_omission_is_not_a_negative_availability_fact_or_a_new_formation_error() -> (
+    None
+):
+    record = _record()
+    claims = (_claim("coding", "01"),)
+    omit = _assignment_case(record, claims, "omit_state")
+    coding = _apply(record, claims, omit)
+    occurrence = source_occurrence(record)
+    assert occurrence.variant_key is not None
+    formed = form_native_variable(
+        (record,),
+        register=ResolvedRegister(provider="scb", slug="test", name="Test"),
+        variants={
+            occurrence.variant_key: ResolvedVariant(slug="people", name="People")
+        },
+        slug="value",
+        provider_key="5",
+        coding=coding.coding,
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+    )
+    assert formed.variable is None and formed.occurrences == (record,)
+    assert all(d.severity == "warning" for d in formed.diagnostics)
+    assert any(d.code == "curated_state_omission" for d in formed.diagnostics)
+    assert formed.intervals[0].negative_segments == ()
+
+
+def test_undated_coding_is_not_consumed_by_finite_uncoded_acceptance() -> None:
+    record = _record()
+    pooled = replace(
+        _claim("pooled", "01"), scope=TemporalScope(kind="pooled", label="2010-2020")
+    )
+    case = _assignment_case(record, (pooled,), "uncoded")
+    resolved = next(iter(_apply(record, (pooled,), case).coding.values()))
+    assert [i.code for i in resolved.issues] == ["unsupported_coding_scope"]
+    assert resolved.claims == (pooled,)
