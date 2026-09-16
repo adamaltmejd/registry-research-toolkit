@@ -31,6 +31,7 @@ if TYPE_CHECKING:
         PreparedSourceValues,
         PreparedValueSession,
     )
+    from reg_meta_build.source_occurrences import EffectiveOccurrence
     from reg_meta_build.source_records import RecordLocator
     from reg_meta_build.source_values import (
         SourceValueAssociation,
@@ -438,11 +439,37 @@ def bind_code_lists(
     )
 
 
+def bind_occurrence_code_lists(
+    occurrence: EffectiveOccurrence,
+    sessions: Iterable[ValueBindingSession],
+) -> ValueBindingResult:
+    """Bind original or explicitly copied coding at the resolved occurrence scope.
+
+    Supporting metadata alone never provides coding for an added occurrence.
+    Multiple source alternatives remain competing claims for the coding resolver.
+    """
+    records = occurrence.source_records or occurrence.coding_records
+    scope = occurrence.edition_period_scope
+    if scope.kind == "not_applicable":
+        scope = occurrence.edition_scope
+    sessions = tuple(sessions)
+    results = tuple(
+        bind_code_lists(record, sessions, scope=scope)
+        for record in {record.record_id: record for record in records}.values()
+    )
+    return ValueBindingResult(
+        tuple(claim for result in results for claim in result.claims),
+        tuple(binding for result in results for binding in result.bindings),
+        tuple(issue for result in results for issue in result.issues),
+    )
+
+
 __all__ = [
     "ValueBindingIssue",
     "ValueBindingResult",
     "ValueBindingSession",
     "ValueListBinding",
     "bind_code_lists",
+    "bind_occurrence_code_lists",
     "open_value_bindings",
 ]

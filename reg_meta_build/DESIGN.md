@@ -515,6 +515,12 @@ distinguishes absent flags from explicitly false flags before the legacy loader'
 defaults can erase that distinction. Unknown coverage remains a blocking diagnostic, and
 no annual state is produced from it.
 
+Copying scalar metadata does not copy coding. An added occurrence must explicitly
+request coding from its checked donor, including the original code-set references.
+Application retains those records separately as coding evidence. The common value binder
+uses original occurrences or that explicit evidence at the corrected scope; it never
+searches metadata support for a convenient code list.
+
 Native-member code-list bindings share immutable claims when the source member and
 effective scope agree. Each physical record keeps its own evidence binding, and every
 original code association remains available. A one-list cache avoids rebuilding those

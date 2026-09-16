@@ -35,6 +35,7 @@ class EffectiveOccurrence:
     edition_period_scope: TemporalScope
     source_records: tuple[SourceRecord, ...]
     support_records: tuple[SourceRecord, ...] = ()
+    coding_records: tuple[SourceRecord, ...] = ()
     occurrence_key: str | None = None
     corrections: tuple[AppliedCorrection, ...] = ()
     identity_checked: bool = False

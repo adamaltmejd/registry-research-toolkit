@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import TYPE_CHECKING, Literal
 
 import pytest
@@ -11,6 +12,7 @@ from reg_meta_build.prepared_values import (
     prepare_source_values,
 )
 from reg_meta_build.source_coding import resolve_code_membership
+from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
@@ -23,7 +25,11 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
-from reg_meta_build.source_value_bindings import bind_code_lists, open_value_bindings
+from reg_meta_build.source_value_bindings import (
+    bind_code_lists,
+    bind_occurrence_code_lists,
+    open_value_bindings,
+)
 from reg_meta_build.source_value_periods import value_period, value_window
 from reg_meta_build.source_values import (
     SourceMemberHint,
@@ -148,6 +154,34 @@ def _prepare(
     return open_prepared_source_values(
         path, expected_sha256=manifest.sha256, input_commit=commit
     )
+
+
+def test_occurrence_binding_distinguishes_coding_evidence_from_metadata_support(
+    tmp_path: Path,
+) -> None:
+    values = _prepare(tmp_path / "values", join=_join())
+    record = _record()
+    original = source_occurrence(record)
+    declared = replace(
+        original,
+        source_records=(),
+        support_records=(record,),
+        occurrence_key="added",
+        edition_scope=TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2021", end="2021"),)
+        ),
+    )
+    with open_value_bindings((values,)) as sessions:
+        native = bind_occurrence_code_lists(original, sessions)
+        assert native.claims and native.bindings
+        metadata_only = bind_occurrence_code_lists(declared, sessions)
+        assert metadata_only.claims == metadata_only.bindings == ()
+        copied = bind_occurrence_code_lists(
+            replace(declared, coding_records=(record, record)), sessions
+        )
+    assert len(copied.bindings) == 1
+    assert {claim.scope for claim in copied.claims} == {declared.edition_scope}
+    assert copied.bindings[0].record_locators == record.locators
 
 
 def test_native_join_preserves_raw_tokens_uses_one_session_and_exact_validity(
@@ -279,7 +313,10 @@ def test_native_list_reuse_keeps_each_record_binding_and_checks_scope(
     ],
 )
 def test_missing_file_unknown_window_and_unlisted_item_are_distinct(
-    tmp_path: Path, missing: str, window: SourceValueWindow | None, expected: str | None
+    tmp_path: Path,
+    missing: Literal["unknown", "unrestricted"],
+    window: SourceValueWindow | None,
+    expected: str | None,
 ) -> None:
     validity = (
         (SourceValueValidity(2, "1", "bad", "bad", "validity", window=window),)

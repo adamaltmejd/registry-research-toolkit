@@ -101,6 +101,10 @@ def _check_contract(case: CurationCase) -> None:
                 )
             if effect.donor is not None:
                 for alternative in checked[effect.donor].alternatives:
+                    if effect.copy_coding and alternative.code_set_references is None:
+                        raise ValueError(
+                            "copied coding requires checked code-set references"
+                        )
                     donor_fields = {field.name: field for field in alternative.fields}
                     for name in effect.copied_fields:
                         expected = donor_fields[name]
@@ -369,7 +373,10 @@ def apply_occurrence_cases(
         # Evidence references differ legitimately for identical assertions; retain
         # all of them instead of making insertion order choose provenance.
         assertions = {
-            effect.model_dump_json(exclude={"evidence", "donor", "copied_fields"})
+            effect.model_dump_json(
+                exclude={"evidence", "copied_fields"}
+                | ({"donor"} if not effect.copy_coding else set())
+            )
             for effect, _ in claims
         }
         refs = tuple(
@@ -393,6 +400,9 @@ def apply_occurrence_cases(
                 edition_scope=effect.edition_scope,
                 edition_period_scope=effect.edition_period_scope,
                 source_records=(),
+                coding_records=tuple(evidence[effect.donor])
+                if effect.copy_coding and effect.donor is not None
+                else (),
                 support_records=tuple(
                     record for ref in refs for record in evidence[ref]
                 ),

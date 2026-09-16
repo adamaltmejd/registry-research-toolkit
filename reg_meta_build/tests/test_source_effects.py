@@ -315,6 +315,30 @@ def test_authored_coverage_does_not_require_a_fabricated_delivery_edition() -> N
     assert declared.support_records == (record,)
 
 
+def test_added_occurrence_copies_coding_only_with_explicit_checked_declaration() -> (
+    None
+):
+    record = _record(column="VALUE")
+    addition = _addition(record)
+    metadata_only = apply_occurrence_cases((record,), (_case(record, addition),))
+    assert metadata_only.occurrences[-1].coding_records == ()
+
+    copied = addition.model_copy(update={"copy_coding": True})
+    case = _case(record, copied)
+    with pytest.raises(ValueError, match="checked code-set references"):
+        apply_occurrence_cases((record,), (case,))
+    case = case.model_copy(
+        update={
+            "targets": capture_expectations(
+                (record,), fields=tuple(SourceFields.model_fields), coding=True
+            )
+        }
+    )
+    result = apply_occurrence_cases((record,), (case,))
+    assert result.diagnostics == ()
+    assert result.occurrences[-1].coding_records == (record,)
+
+
 def test_addition_cannot_omit_coverage_without_marking_it_unresolved() -> None:
     record = _record(column="VALUE")
     addition = _addition(record).model_copy(

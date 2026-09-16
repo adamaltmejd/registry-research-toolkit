@@ -448,6 +448,7 @@ class CuratedOccurrenceAddition(_CurationModel):
     Keys reference independently established native or curated identities. The
     caller must resolve these identities before materialization. Copied fields
     name the exact checked donor; all other supplied facts are authored claims.
+    Coding is copied only when explicitly requested, independently of scalar fields.
     An authored coverage declaration may have no delivery-edition identity; its
     explicit period still applies without inventing an edition.
     """
@@ -465,6 +466,7 @@ class CuratedOccurrenceAddition(_CurationModel):
     evidence: tuple[SourceRecordRef, ...]
     donor: SourceRecordRef | None = None
     copied_fields: tuple[str, ...] = ()
+    copy_coding: bool = False
 
     @model_validator(mode="after")
     def _explicit_membership(self) -> Self:
@@ -478,6 +480,8 @@ class CuratedOccurrenceAddition(_CurationModel):
             raise ValueError("the donor must be included in the checked evidence")
         if bool(self.copied_fields) != (self.donor is not None):
             raise ValueError("copied fields and their donor must be supplied together")
+        if self.copy_coding and self.donor is None:
+            raise ValueError("copied coding requires an explicit checked donor")
         if len(set(self.copied_fields)) != len(self.copied_fields) or any(
             name not in SourceFields.model_fields for name in self.copied_fields
         ):

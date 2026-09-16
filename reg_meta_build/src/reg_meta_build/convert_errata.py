@@ -16,6 +16,7 @@ from reg_meta_build.normalization import normalize_text
 from reg_meta_build.source_coordinates import native_variant_key, source_register_key
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
+    CodeSetExpectation,
     CuratedOccurrenceAddition,
     CurationCase,
     FieldExpectation,
@@ -64,7 +65,11 @@ class ErrataConversion:
 
 
 def capture_expectations(
-    records: tuple[SourceRecord, ...], *, fields: tuple[str, ...], parents: bool = False
+    records: tuple[SourceRecord, ...],
+    *,
+    fields: tuple[str, ...],
+    parents: bool = False,
+    coding: bool = False,
 ) -> tuple[RecordExpectation, ...]:
     """Capture a finite conversion baseline; never call this to refresh stale cases."""
     grouped = defaultdict(dict)
@@ -80,6 +85,15 @@ def capture_expectations(
             subject=record.subject,
             edition_scope=record.edition_scope,
             edition_period_scope=record.edition_period_scope,
+            code_set_references=tuple(
+                CodeSetExpectation(
+                    reference_id=ref.reference_id,
+                    content_sha256=ref.content_sha256,
+                )
+                for ref in record.code_set_references
+            )
+            if coding
+            else None,
             parent_facts=tuple(
                 parent_fact_projection(parent) for parent in record.parent_facts
             )
