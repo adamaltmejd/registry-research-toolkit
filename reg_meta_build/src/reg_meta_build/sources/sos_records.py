@@ -10,7 +10,7 @@ import re
 from dataclasses import dataclass, replace
 from datetime import date, datetime
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, overload
 
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
@@ -22,24 +22,37 @@ from reg_meta_build.source_records import (
     SourceEvidenceRow,
     SourceEvidenceTable,
     SourceField,
+    SourceFieldCells,
     SourceFields,
+    SourceParentObservation,
     SourceRecord,
     SourceSubject,
     TemporalScope,
     canonical_sha256,
     value_field,
 )
+from reg_meta_build.source_reference_records import (
+    SourceCodeCrosswalkDeclaration,
+    SourceCodeOperand,
+    SourceDerivationClause,
+    SourceDerivationDeclaration,
+)
+from reg_meta_build.source_value_periods import value_period, value_window
 from reg_meta_build.source_values import (
     SourceMemberHint,
     SourceValue,
     SourceValueAssociation,
     SourceValueDescriptor,
+    SourceValueValidity,
+    SourceValueWindow,
 )
+from reg_meta_build.sources.sos import _classify_value_set_text
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping
 
     from reg_meta_build.source_records import FieldScalar, SourceRevision
+    from reg_meta_build.source_reference_records import SourceReferenceDeclaration
     from reg_meta_build.sources.sos import (
         SosCellEvidence,
         SosEvidenceRole,
@@ -73,6 +86,24 @@ def _raw_scalar(cell: SosCellEvidence | None) -> FieldScalar | None:
     return cell.display_value
 
 
+@overload
+def _text_field(
+    cell: SosCellEvidence,
+    *,
+    token: bool = False,
+    multiline: bool = False,
+) -> SourceField: ...
+
+
+@overload
+def _text_field(
+    cell: SosCellEvidence | None,
+    *,
+    token: bool = False,
+    multiline: bool = False,
+) -> SourceField | None: ...
+
+
 def _text_field(
     cell: SosCellEvidence | None,
     *,
@@ -82,6 +113,8 @@ def _text_field(
     if cell is None:
         return None
     raw = _raw_scalar(cell)
+    if cell.data_type == "f":
+        return SourceField(status="unknown", raw_value=raw)
     value = cell.raw_value if isinstance(cell.raw_value, str) else cell.display_value
     if isinstance(cell.raw_value, (date, datetime)):
         value = cell.raw_value.isoformat()
@@ -161,6 +194,12 @@ def _delivered_cells(evidence: SosRowEvidence | None) -> tuple[DeliveredCell, ..
             number_format=cell.number_format,
             hyperlink_target=cell.hyperlink_target,
             hyperlink_location=cell.hyperlink_location,
+            cached_raw_value=(
+                "" if cell.cached_raw_value is None else str(cell.cached_raw_value)
+            )
+            if cell.cached_raw_type is not None
+            else None,
+            cached_raw_type=cell.cached_raw_type,
         )
         for cell in evidence.cells
     )
@@ -210,6 +249,7 @@ def clean_sos_variable(
         normalize_token(variable.deldatamangd) if variable.deldatamangd else None
     )
     member_name = normalize_token(variable.name)
+    label = _text_field(_cell(evidence, "label"))
     semantic_key = (
         f"register:{register_name or '<unknown>'}",
         f"deldatamangd:{variant_name or '<unknown>'}",
@@ -234,7 +274,9 @@ def clean_sos_variable(
             variable=SourceCoordinate(
                 status="value",
                 native_id=member_name,
-                name=normalize_text(variable.label) if variable.label else None,
+                name=label.value
+                if label is not None and isinstance(label.value, str)
+                else None,
             ),
             member=SourceCoordinate(status="value", name=member_name),
             native=NativeCoordinates(),
@@ -315,6 +357,7 @@ def _metadata_record(
     revision: SourceRevision,
     evidence: SosRowEvidence,
     fields: dict[str, SourceField],
+    field_cells: tuple[SourceFieldCells, ...],
     *,
     kind: str,
     language: Literal["sv", "en"] | None = None,
@@ -333,21 +376,25 @@ def _metadata_record(
         f"fields:{','.join(sorted(fields))}",
         f"language:{language or '<not declared>'}",
     )
+    register_coordinate = (
+        SourceCoordinate(status="value", name=register_name)
+        if register_name
+        else SourceCoordinate(status="unknown")
+    )
+    variant_coordinate = (
+        SourceCoordinate(status="value", name=subset_name)
+        if subset_name
+        else SourceCoordinate(
+            status="unknown" if kind == "subsets" else "not_applicable"
+        )
+    )
     return SourceRecord.create(
         revision=revision,
         locators=(_locator(evidence, revision, semantic_key),),
         subject=SourceSubject(
             provider="sos",
-            register=(
-                SourceCoordinate(status="value", name=register_name)
-                if register_name
-                else SourceCoordinate(status="unknown")
-            ),
-            variant=(
-                SourceCoordinate(status="value", name=subset_name)
-                if subset_name
-                else SourceCoordinate(status="not_applicable")
-            ),
+            register=register_coordinate,
+            variant=variant_coordinate,
             population=SourceCoordinate(status="unknown"),
             variable=SourceCoordinate(status="not_applicable"),
             member=SourceCoordinate(status="not_applicable"),
@@ -359,7 +406,19 @@ def _metadata_record(
             else TemporalScope(kind="not_applicable")
         ),
         edition_period_scope=TemporalScope(kind="not_applicable"),
-        fields=SourceFields.model_validate(fields),
+        fields=SourceFields(),
+        parent_facts=(
+            SourceParentObservation(
+                kind="variant" if kind == "subsets" else "register",
+                coordinate=variant_coordinate
+                if kind == "subsets"
+                else register_coordinate,
+                register=register_coordinate,
+                variant=variant_coordinate if kind == "subsets" else None,
+                fields=SourceFields.model_validate(fields),
+                field_cells=field_cells,
+            ),
+        ),
         language=language,
         delivered_cells=_delivered_cells(evidence),
     )
@@ -377,7 +436,7 @@ def iter_sos_metadata_records(
                 continue
             evidence = row.source_evidence
             if sheet.kind == "dcat":
-                for cell in evidence.cells:
+                for position, cell in enumerate(evidence.cells):
                     if cell.language is None or cell.field_name is None:
                         continue
                     stem = cell.field_name.removesuffix(f"_{cell.language}")
@@ -391,25 +450,39 @@ def iter_sos_metadata_records(
                             revision,
                             evidence,
                             {field: cleaned},
+                            (SourceFieldCells(field=field, positions=(position,)),),
                             kind=sheet.kind,
                             language=cell.language,
                         )
             else:
                 mapping = _GENERAL_FIELDS if sheet.kind == "general" else _SUBSET_FIELDS
-                fields = {
-                    field: cleaned
-                    for source_field, field in mapping.items()
-                    if (
-                        cleaned := _text_field(
-                            _cell(evidence, source_field),
+                fields = {}
+                field_cells = []
+                for source_field, field in mapping.items():
+                    position = next(
+                        (
+                            index
+                            for index, cell in enumerate(evidence.cells)
+                            if cell.field_name == source_field
+                        ),
+                        None,
+                    )
+                    if position is not None:
+                        fields[field] = _text_field(
+                            evidence.cells[position],
                             multiline=field in _PARAGRAPH_FIELDS,
                         )
-                    )
-                    is not None
-                }
+                        field_cells.append(
+                            SourceFieldCells(field=field, positions=(position,))
+                        )
                 if fields:
                     yield _metadata_record(
-                        register, revision, evidence, fields, kind=sheet.kind
+                        register,
+                        revision,
+                        evidence,
+                        fields,
+                        tuple(field_cells),
+                        kind=sheet.kind,
                     )
 
 
@@ -426,6 +499,8 @@ _ROW_ROLES: dict[
     "preamble": "declaration",
     "period_section": "section",
     "code": "data",
+    "crosswalk": "declaration",
+    "derivation": "declaration",
     "raw": "unparsed",
     "quality": "note",
 }
@@ -462,14 +537,22 @@ class CleanedSosSource:
     descriptors: Mapping[str, SourceValueDescriptor]
     values: Mapping[str, SourceValue]
     associations: tuple[SourceValueAssociation, ...]
+    validity: tuple[SourceValueValidity, ...]
+    declarations: tuple[SourceReferenceDeclaration, ...]
 
 
 def _declaration_text(
     cell: SosCellEvidence | None, *, token: bool = False
 ) -> str | None:
-    if cell is None or cell.raw_value is None:
+    if cell is None or cell.raw_value is None or cell.data_type == "f":
         return None
     return (normalize_token if token else normalize_text)(str(cell.raw_value))
+
+
+def _period_window(cell: SosCellEvidence | None) -> SourceValueWindow | None:
+    if cell is not None and cell.data_type == "f":
+        return SourceValueWindow("unknown")
+    return value_period(_declaration_text(cell))
 
 
 def clean_sos_source(
@@ -486,6 +569,8 @@ def clean_sos_source(
     descriptors: dict[str, SourceValueDescriptor] = {}
     values: dict[str, SourceValue] = {}
     associations: list[SourceValueAssociation] = []
+    validity: list[SourceValueValidity] = []
+    references: list[SourceReferenceDeclaration] = []
     for sheet in register.source_sheets:
         if sheet.kind != "codelist":
             continue
@@ -495,6 +580,8 @@ def clean_sos_source(
         declarations: list[DeliveredCell] = []
         declaration_locators: list[RecordLocator] = []
         section_period: str | None = None
+        section_period_field: SourceField | None = None
+        section_window: SourceValueWindow | None = None
         section_locator: RecordLocator | None = None
         for row in sheet.rows:
             evidence = row.source_evidence
@@ -513,7 +600,59 @@ def clean_sos_source(
                     )
             if row.role == "period_section":
                 section_period = _declaration_text(_cell(evidence, "tidsperiod"))
+                section_period_field = _text_field(_cell(evidence, "tidsperiod"))
+                section_window = _period_window(_cell(evidence, "tidsperiod"))
                 section_locator = locator
+            if row.role == "crosswalk":
+                operand_roles: dict[str, Literal["input", "output", "peer"]] = {
+                    "input_code": "input",
+                    "output_code": "output",
+                    "peer_code": "peer",
+                }
+                references.append(
+                    SourceCodeCrosswalkDeclaration(
+                        revision=revision,
+                        locator=locator,
+                        delivered_cells=_delivered_cells(evidence),
+                        member_name=_text_field(
+                            _cell(evidence, "variable_name"), token=True
+                        ),
+                        supplied_period=_text_field(_cell(evidence, "tidsperiod")),
+                        section_period=section_period_field,
+                        section_locator=section_locator,
+                        description=_text_field(_cell(evidence, "beskrivning")),
+                        operands=tuple(
+                            SourceCodeOperand(
+                                role=operand_roles[cell.field_name],
+                                name=normalize_text(cell.header),
+                                code=_text_field(cell, token=True),
+                            )
+                            for cell in evidence.cells
+                            if cell.field_name in operand_roles
+                        ),
+                    )
+                )
+            elif row.role == "derivation":
+                references.append(
+                    SourceDerivationDeclaration(
+                        revision=revision,
+                        locator=locator,
+                        delivered_cells=_delivered_cells(evidence),
+                        member_name=_text_field(
+                            _cell(evidence, "variable_name"), token=True
+                        ),
+                        supplied_period=_text_field(_cell(evidence, "tidsperiod")),
+                        description=_text_field(_cell(evidence, "beskrivning")),
+                        clauses=tuple(
+                            SourceDerivationClause(
+                                name=normalize_text(cell.header),
+                                content=_text_field(cell, multiline=True),
+                            )
+                            for cell in evidence.cells
+                            if cell.field_name == "clause"
+                        ),
+                    )
+                )
             if row.role != "code":
                 continue
             code = _cell(evidence, "kod")
@@ -565,29 +704,111 @@ def clean_sos_source(
                     source_file=revision.artifact_path,
                     source_table=sheet.sheet_name,
                     member_hints=row_hints,
+                    member_references=tuple(
+                        hint.value for hint in row_hints if hint.value is not None
+                    ),
+                    supplied_window=_period_window(_cell(evidence, "tidsperiod")),
+                    section_window=section_window,
                     supplied_period=_declaration_text(_cell(evidence, "tidsperiod")),
                     section_period=section_period,
                     section_locator=section_locator,
                     delivered_cells=_delivered_cells(evidence),
                 )
             )
+            if (
+                _cell(evidence, "valid_from") is not None
+                or _cell(evidence, "valid_to") is not None
+            ):
+                validity.append(
+                    SourceValueValidity(
+                        row_number=evidence.row_number,
+                        item_id=None,
+                        valid_from=_declaration_text(
+                            _cell(evidence, "valid_from"), token=True
+                        ),
+                        valid_to=_declaration_text(
+                            _cell(evidence, "valid_to"), token=True
+                        ),
+                        source_file=revision.artifact_path,
+                        source_table=sheet.sheet_name,
+                        locators=(occurrence_locator,),
+                        delivered_cells=_delivered_cells(evidence),
+                        window=SourceValueWindow("unknown")
+                        if any(
+                            cell is not None and cell.data_type == "f"
+                            for cell in (
+                                _cell(evidence, "valid_from"),
+                                _cell(evidence, "valid_to"),
+                            )
+                        )
+                        else value_window(
+                            _declaration_text(
+                                _cell(evidence, "valid_from"), token=True
+                            ),
+                            _declaration_text(_cell(evidence, "valid_to"), token=True),
+                            compact_dates=True,
+                        ),
+                    )
+                )
         descriptors[descriptor_key] = SourceValueDescriptor(
             payload_key=descriptor_key,
             name=normalize_text(sheet.sheet_name),
             member_hints=tuple(hints),
+            member_references=tuple(
+                hint.value
+                for hint in hints
+                if hint.role == "list_header" and hint.value is not None
+            ),
             locators=tuple(declaration_locators),
             delivered_cells=tuple(declarations),
         )
+    records = (
+        *iter_sos_metadata_records(register, revision),
+        *iter_sos_variable_records(register, revision),
+    )
+    for record in records:
+        representation = record.fields.representation
+        if representation is None or not isinstance(representation.value, str):
+            continue
+        pairs = _classify_value_set_text(representation.value)
+        if pairs is None:
+            continue
+        descriptor_key = f"inline:{record.record_id}"
+        descriptors[descriptor_key] = SourceValueDescriptor(
+            payload_key=descriptor_key,
+            record_ids=(record.record_id,),
+            locators=record.locators,
+            delivered_cells=record.delivered_cells,
+        )
+        locator = record.locators[0]
+        for code, label in pairs:
+            key = canonical_sha256([code, label, record.record_id])
+            values[key] = SourceValue(
+                key,
+                normalize_token(code),
+                normalize_text(label) if label is not None else None,
+                locators=record.locators,
+                delivered_cells=record.delivered_cells,
+            )
+            associations.append(
+                SourceValueAssociation(
+                    row_number=int(locator.physical_record.removeprefix("row:")),
+                    descriptor_key=descriptor_key,
+                    value_key=key,
+                    source_file=locator.physical_file,
+                    source_table=locator.physical_table,
+                    delivered_cells=record.delivered_cells,
+                )
+            )
     return CleanedSosSource(
         revision=revision,
-        records=(
-            *iter_sos_metadata_records(register, revision),
-            *iter_sos_variable_records(register, revision),
-        ),
+        records=records,
         tables=_source_tables(register, revision),
         descriptors=MappingProxyType(descriptors),
         values=MappingProxyType(values),
         associations=tuple(associations),
+        validity=tuple(validity),
+        declarations=tuple(references),
     )
 
 

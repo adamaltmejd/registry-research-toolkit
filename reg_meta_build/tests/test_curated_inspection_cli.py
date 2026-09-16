@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
 from _prepared_fixtures import accept_prepared
-from reg_meta.errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_USAGE
+from reg_meta.db import get_manifest, open_db
+from reg_meta.errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.prepared_sources import prepare_source_records
 from reg_meta_build.source_curation import (
@@ -227,6 +229,146 @@ def test_blocked_build_preserves_catalog_and_returns_inspection_diagnostics(
     assert all(build[key] == value for key, value in inspection.items())
     assert build["catalog_published"] is False
     assert database.read_bytes() == b"previous catalog"
+
+
+def _add_stale_case(path: Path) -> None:
+    cases = json.loads(path.read_text())
+    missing = json.loads(json.dumps(cases[0]))
+    missing["case_id"] = "missing-case"
+    missing["targets"][0]["ref"]["semantic_record_key"] = ["missing:member"]
+    missing["decision"]["variable_slug"] = "missing"
+    cases.append(missing)
+    path.write_text(json.dumps(cases))
+
+
+def _diagnostic_arguments(prepared: list[str], output: Path) -> list[str]:
+    return [
+        "build-curated-db",
+        *prepared,
+        "--diagnostic",
+        "--diagnostic-db-path",
+        str(output),
+    ]
+
+
+def test_diagnostic_completes_safe_output_with_unchanged_blockers_and_accounting(
+    tmp_path: Path, prepared_cli, capsys
+) -> None:
+    _add_stale_case(tmp_path / "cases.json")
+    previous = tmp_path / "catalog.db"
+    previous.write_bytes(b"previous catalog")
+    assert run(_arguments("build-curated-db", prepared_cli, tmp_path)) == EXIT_CONFIG
+    strict = json.loads(capsys.readouterr().out)
+    diagnostic = tmp_path / "diagnostic.db"
+    assert run(_diagnostic_arguments(prepared_cli, diagnostic)) == EXIT_CONFIG
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "diagnostic_complete"
+    assert result["artifact_complete"] is True
+    assert result["catalog_published"] is False
+    assert result["publication_ready"] is False
+    assert result["incomplete"] is True
+    assert result["curation_status"] == "blocked"
+    assert result["curation_exit_code"] == EXIT_CONFIG
+    assert result["diagnostics"] == strict["diagnostics"]
+    assert result["source_accounting"] == strict["source_accounting"]
+    assert result["case_accounting"] == strict["case_accounting"]
+    assert {
+        item["case_id"]: item["disposition"] for item in result["case_accounting"]
+    } == {"fixture-case": "resolved", "missing-case": "withheld"}
+    assert result["source_occurrences"] == 1
+    assert previous.read_bytes() == b"previous catalog"
+    repeat = tmp_path / "diagnostic-repeat.db"
+    assert run(_diagnostic_arguments(prepared_cli, repeat)) == EXIT_CONFIG
+    assert repeat.read_bytes() == diagnostic.read_bytes()
+    capsys.readouterr()
+    with closing(open_db(diagnostic)) as conn:
+        manifest = get_manifest(conn)
+        assert manifest["catalog_artifact_kind"] == "diagnostic"
+        assert manifest["catalog_publishable"] == "false"
+        assert manifest["catalog_completeness"] == "incomplete"
+        ledger = json.loads(manifest["diagnostic_accounting"])
+        assert ledger["diagnostics"] == result["diagnostics"]
+        assert ledger["case_accounting"] == result["case_accounting"]
+        assert conn.execute("SELECT count(*) FROM variable").fetchone()[0] == 1
+
+
+def test_diagnostic_option_requires_its_own_output_path(
+    tmp_path: Path, prepared_cli, capsys
+) -> None:
+    assert (
+        run([*_arguments("build-curated-db", prepared_cli, tmp_path), "--diagnostic"])
+        == EXIT_USAGE
+    )
+    assert not (tmp_path / "catalog.db").exists()
+    capsys.readouterr()
+    assert (
+        run(
+            [
+                "build-curated-db",
+                *prepared_cli,
+                "--diagnostic-db-path",
+                str(tmp_path / "diagnostic.db"),
+            ]
+        )
+        == EXIT_USAGE
+    )
+    assert not (tmp_path / "diagnostic.db").exists()
+
+
+def test_diagnostic_report_cannot_replace_its_database(
+    tmp_path: Path, prepared_cli
+) -> None:
+    diagnostic = tmp_path / "diagnostic.db"
+    assert (
+        run(
+            [
+                *_diagnostic_arguments(prepared_cli, diagnostic),
+                "--output",
+                str(diagnostic),
+            ]
+        )
+        == EXIT_USAGE
+    )
+    assert not diagnostic.exists()
+
+
+def test_diagnostic_report_failure_reports_completed_artifact(
+    tmp_path: Path, prepared_cli, monkeypatch, capsys
+) -> None:
+    from reg_meta_build import cli
+
+    _add_stale_case(tmp_path / "cases.json")
+    diagnostic = tmp_path / "diagnostic.db"
+
+    def failed_report(*args, **kwargs):
+        raise OSError("late report failure")
+
+    monkeypatch.setattr(cli, "write_json", failed_report)
+    assert run(_diagnostic_arguments(prepared_cli, diagnostic)) == EXIT_OUTPUT
+    receipt = json.loads(capsys.readouterr().err.splitlines()[-1])["error"]
+    assert receipt["artifact_complete"] is True
+    assert receipt["artifact_kind"] == "diagnostic"
+    assert receipt["catalog_published"] is False
+    assert receipt["curation_exit_code"] == EXIT_CONFIG
+    with closing(open_db(diagnostic)) as conn:
+        assert json.loads(get_manifest(conn)["diagnostic_accounting"])["errors"] > 0
+
+
+def test_diagnostic_still_rejects_invalid_pin_and_resolved_contract(
+    tmp_path: Path, prepared_cli, capsys
+) -> None:
+    diagnostic = tmp_path / "diagnostic.db"
+    bad_pin = prepared_cli.copy()
+    bad_pin[3] = "0" * 64
+    assert run(_diagnostic_arguments(bad_pin, diagnostic)) == EXIT_CONFIG
+    assert not diagnostic.exists()
+    capsys.readouterr()
+    cases = json.loads((tmp_path / "cases.json").read_text())
+    cases[0]["decision"]["variable_slug"] = "Bad_slug"
+    (tmp_path / "cases.json").write_text(json.dumps(cases))
+    assert run(_diagnostic_arguments(prepared_cli, diagnostic)) == EXIT_CONFIG
+    assert not diagnostic.exists()
+    assert "curated_diagnostic_contract_invalid" in capsys.readouterr().out
 
 
 @pytest.mark.parametrize("command", ["inspect-curation", "build-curated-db"])

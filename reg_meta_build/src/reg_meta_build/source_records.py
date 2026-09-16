@@ -128,6 +128,7 @@ class SourceSubject(_SourceModel):
     provider: str
     register_name: SourceCoordinate = Field(alias="register")
     variant: SourceCoordinate
+    variant_references: tuple[SourceCoordinate, ...] = ()
     population: SourceCoordinate
     # Source-local identity within this record's source/register/variant context;
     # it does not assert that occurrences form one catalog variable.
@@ -209,6 +210,11 @@ class SourceFields(_SourceModel):
     measurement_unit: SourceField | None = None
     reference_period: SourceField | None = None
     sensitivity: SourceField | None = None
+    conditional_sensitivity: SourceField | None = None
+    identifier: SourceField | None = None
+    purpose: SourceField | None = None
+    classification_declared: SourceField | None = None
+    value_set_declared: SourceField | None = None
     base_register: SourceField | None = None
     population_definition: SourceField | None = None
     population_comment: SourceField | None = None
@@ -227,6 +233,10 @@ class SourceFields(_SourceModel):
     legislation: SourceField | None = None
     source_version: SourceField | None = None
     source_date: SourceField | None = None
+    measurement_information: SourceField | None = None
+    documentation_status: SourceField | None = None
+    first_approved_at: SourceField | None = None
+    last_approved_at: SourceField | None = None
 
     @model_validator(mode="after")
     def _typed_fields(self) -> Self:
@@ -245,9 +255,19 @@ class SourceFields(_SourceModel):
                 raise ValueError(
                     "sensitivity must carry a boolean or the conditional marker"
                 )
+        for field_name in ("identifier", "conditional_sensitivity"):
+            observation = getattr(self, field_name)
+            if (
+                observation is not None
+                and observation.status == "value"
+                and type(observation.value) is not bool
+            ):
+                raise ValueError(f"{field_name} must carry a boolean")
         for field_name in type(self).model_fields.keys() - {
             "availability",
             "sensitivity",
+            "identifier",
+            "conditional_sensitivity",
         }:
             observation = getattr(self, field_name)
             if (
@@ -264,6 +284,88 @@ class SourceFields(_SourceModel):
                 and field_name != "availability"
             ):
                 raise ValueError("explicit negative is supported only for availability")
+        return self
+
+
+class SourceFieldCells(_SourceModel):
+    """Exact zero-based delivered-cell positions supporting one common field."""
+
+    field: str
+    positions: tuple[int, ...]
+
+    @model_validator(mode="after")
+    def _valid_mapping(self) -> Self:
+        if self.field not in SourceFields.model_fields:
+            raise ValueError(f"unknown source field: {self.field}")
+        if (
+            not self.positions
+            or any(position < 0 for position in self.positions)
+            or len(set(self.positions)) != len(self.positions)
+        ):
+            raise ValueError(
+                "field cell positions must be nonempty, nonnegative and unique"
+            )
+        return self
+
+
+type SourceParentKind = Literal[
+    "register", "variant", "edition", "population", "object_type"
+]
+
+
+class SourceParentObservation(_SourceModel):
+    """A source-local parent claim, scoped without assigning catalog identity."""
+
+    kind: SourceParentKind
+    coordinate: SourceCoordinate
+    register_name: SourceCoordinate = Field(alias="register")
+    variant: SourceCoordinate | None = None
+    edition: SourceCoordinate | None = None
+    fields: SourceFields
+    field_cells: tuple[SourceFieldCells, ...]
+
+    @model_validator(mode="after")
+    def _coherent(self) -> Self:
+        names = [mapping.field for mapping in self.field_cells]
+        supplied = {
+            name
+            for name in SourceFields.model_fields
+            if getattr(self.fields, name) is not None
+        }
+        if not supplied or len(set(names)) != len(names) or set(names) != supplied:
+            raise ValueError(
+                "parent facts require exactly one cell mapping for every supplied field"
+            )
+        if self.kind == "register":
+            if (
+                self.variant is not None
+                or self.edition is not None
+                or self.coordinate.model_dump_json()
+                != self.register_name.model_dump_json()
+            ):
+                raise ValueError(
+                    "register parent scope must identify only its register"
+                )
+        elif self.kind == "variant":
+            if (
+                self.variant is None
+                or self.edition is not None
+                or self.coordinate.model_dump_json() != self.variant.model_dump_json()
+            ):
+                raise ValueError("variant parent scope must identify its variant")
+        elif self.kind == "edition":
+            if (
+                self.variant is None
+                or self.edition is None
+                or self.coordinate.model_dump_json() != self.edition.model_dump_json()
+            ):
+                raise ValueError(
+                    "edition parent scope must identify its variant and edition"
+                )
+        elif self.edition is not None and self.variant is None:
+            raise ValueError(
+                "edition-scoped parent requires an explicit variant coordinate"
+            )
         return self
 
 
@@ -317,6 +419,12 @@ class DeliveredCell(_SourceModel):
     number_format: str | None = None
     hyperlink_target: str | None = None
     hyperlink_location: str | None = None
+    cached_raw_value: str | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    cached_raw_type: str | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
 
     @model_validator(mode="after")
     def _coherent(self) -> Self:
@@ -326,6 +434,8 @@ class DeliveredCell(_SourceModel):
             or (not self.present and self.raw_value is not None)
         ):
             raise ValueError("delivered cell presence and raw value disagree")
+        if (self.cached_raw_value is None) != (self.cached_raw_type is None):
+            raise ValueError("cached source value and type must be supplied together")
         return self
 
 
@@ -351,6 +461,7 @@ class SourceRecord(_SourceModel):
     edition_scope: TemporalScope
     edition_period_scope: TemporalScope
     fields: SourceFields
+    parent_facts: tuple[SourceParentObservation, ...] = ()
     language: Literal["sv", "en"] | None = None
     code_set_references: tuple[CodeSetReference, ...] = ()
     original_period_text: str | None = None
@@ -371,6 +482,7 @@ class SourceRecord(_SourceModel):
         original_period_text: str | None,
         context: tuple[str, ...],
         delivered_cells: tuple[DeliveredCell, ...],
+        parent_facts: tuple[SourceParentObservation, ...] = (),
     ) -> str:
         digest = canonical_sha256(
             {
@@ -380,6 +492,9 @@ class SourceRecord(_SourceModel):
                 "edition_scope": edition_scope.model_dump(mode="json"),
                 "edition_period_scope": edition_period_scope.model_dump(mode="json"),
                 "fields": fields.model_dump(mode="json"),
+                "parent_facts": [
+                    parent.model_dump(mode="json") for parent in parent_facts
+                ],
                 "language": language,
                 "code_set_references": [
                     {
@@ -412,6 +527,7 @@ class SourceRecord(_SourceModel):
         original_period_text: str | None = None,
         context: tuple[str, ...] = (),
         delivered_cells: tuple[DeliveredCell, ...] = (),
+        parent_facts: tuple[SourceParentObservation, ...] = (),
     ) -> SourceRecord:
         if not locators:
             raise ValueError("a source record needs at least one physical locator")
@@ -427,6 +543,7 @@ class SourceRecord(_SourceModel):
             original_period_text=original_period_text,
             context=context,
             delivered_cells=delivered_cells,
+            parent_facts=parent_facts,
         )
         return cls(
             record_id=record_id,
@@ -437,6 +554,7 @@ class SourceRecord(_SourceModel):
             edition_scope=edition_scope,
             edition_period_scope=edition_period_scope,
             fields=fields,
+            parent_facts=parent_facts,
             language=language,
             code_set_references=code_set_references,
             original_period_text=original_period_text,
@@ -465,6 +583,22 @@ class SourceRecord(_SourceModel):
         ]
         if len(physical) != len(set(physical)):
             raise ValueError("source record physical locators must be unique")
+        if self.parent_facts and any(
+            len(locator.physical_cells) != len(self.delivered_cells)
+            for locator in self.locators
+        ):
+            raise ValueError(
+                "parent cell mappings require aligned delivered cells and physical locators"
+            )
+        if any(
+            position >= len(self.delivered_cells)
+            for parent in self.parent_facts
+            for mapping in parent.field_cells
+            for position in mapping.positions
+        ):
+            raise ValueError(
+                "parent field cell position is outside the delivered record"
+            )
         expected = self._record_id(
             source=self.source,
             semantic_record_key=semantic_record_key,
@@ -477,12 +611,35 @@ class SourceRecord(_SourceModel):
             original_period_text=self.original_period_text,
             context=self.context,
             delivered_cells=self.delivered_cells,
+            parent_facts=self.parent_facts,
         )
         if self.record_id != expected:
             raise ValueError("source record identity does not match its semantic facts")
         if not self.source_revision_id.startswith(f"{self.source}@sha256:"):
             raise ValueError("source record revision belongs to another logical source")
         return self
+
+    def parent_field_locators(
+        self, parent_index: int, field: str
+    ) -> tuple[RecordLocator, ...]:
+        """Locate a typed parent field without interpreting any provider column name."""
+        parent = self.parent_facts[parent_index]
+        mapping = next(
+            (mapping for mapping in parent.field_cells if mapping.field == field), None
+        )
+        if mapping is None:
+            raise KeyError(field)
+        return tuple(
+            locator.model_copy(
+                update={
+                    "physical_cells": tuple(
+                        locator.physical_cells[position]
+                        for position in mapping.positions
+                    )
+                }
+            )
+            for locator in self.locators
+        )
 
     def with_additional_locators(
         self, locators: tuple[RecordLocator, ...]
@@ -508,7 +665,10 @@ __all__ = [
     "SourceEvidenceRow",
     "SourceEvidenceTable",
     "SourceField",
+    "SourceFieldCells",
     "SourceFields",
+    "SourceParentKind",
+    "SourceParentObservation",
     "SourceRecord",
     "SourceRevision",
     "SourceSubject",

@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from reg_meta_build.db import _decode_cp1252, _validated_scb_header
 from reg_meta_build.input_snapshot import SnapshotError
 from reg_meta_build.normalization import normalize_text, normalize_token
+from reg_meta_build.source_value_periods import value_window
 from reg_meta_build.source_values import (
     SourceValue,
     SourceValueAssociation,
@@ -117,6 +118,10 @@ def _read_validity(reader: ScbSnapshotReader) -> tuple[SourceValueValidity, ...]
                     item_id=_clean_cell(item_id, token=True),
                     valid_from=_clean_cell(valid_from, token=True),
                     valid_to=_clean_cell(valid_to, token=True),
+                    window=value_window(
+                        _clean_cell(valid_from, token=True),
+                        _clean_cell(valid_to, token=True),
+                    ),
                 )
             )
     return tuple(records)

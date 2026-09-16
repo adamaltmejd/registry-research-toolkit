@@ -517,6 +517,78 @@ def test_selected_prepared_member_cannot_silently_disappear(case_inputs) -> None
         resolve_cases((case,), (*records, added))
 
 
+def test_source_accounting_retains_identical_physical_occurrences(case_inputs) -> None:
+    case, records = case_inputs
+    inspection = inspect_cases((case,), (*records, records[1]))
+    assert inspection.buildable
+    member = next(
+        item for item in inspection.source_accounting if item.ref == _ref(records[1])
+    )
+    assert len(member.occurrences) == 2
+    assert member.occurrences[0] == member.occurrences[1]
+    assert member.occurrences[0].record_id == records[1].record_id
+    assert member.occurrences[0].source_revision_id == records[1].source_revision_id
+    assert member.output_disposition == "resolved_target"
+    assert inspection.report()["source_occurrences"] == 3
+
+
+def test_unknown_flag_blocks_strict_and_is_withheld_in_diagnostic_output(
+    tmp_path: Path, case_inputs, capsys
+) -> None:
+    case, records = case_inputs
+    unknown_record = _record(2018)
+    unknown_case = case.model_copy(
+        update={
+            "case_id": "unknown-flag",
+            "peer_guards": (),
+            "targets": (
+                _expect(
+                    unknown_record,
+                    tuple(
+                        field.name for field in case.targets[0].alternatives[0].fields
+                    ),
+                ),
+            ),
+            "decision": case.decision.model_copy(
+                update={"variable_slug": "unknown", "is_sensitive": None}
+            ),
+        }
+    )
+    argv = _prepare(tmp_path, (case, unknown_case), (*records, unknown_record))
+    assert run(argv) == EXIT_CONFIG
+    strict = json.loads(capsys.readouterr().out)
+    issue = next(
+        item for item in strict["diagnostics"] if item["code"] == "unresolved_flag"
+    )
+    assert issue["severity"] == "error"
+    assert issue["subject"] == "scb/study/unknown"
+    assert issue["fields"] == ["is_sensitive"]
+    assert issue["withheld_output"] == ["variable", "states", "dependent_edges"]
+    assert not (tmp_path / "reg_meta.db").exists()
+    argv[argv.index("--db-path")] = "--diagnostic-db-path"
+    argv.append("--diagnostic")
+    assert run(argv) == EXIT_CONFIG
+    diagnostic = json.loads(capsys.readouterr().out)
+    assert diagnostic["status"] == "diagnostic_complete"
+    assert diagnostic["diagnostics"] == strict["diagnostics"]
+    withheld = next(
+        item
+        for item in diagnostic["case_accounting"]
+        if item["case_id"] == "unknown-flag"
+    )
+    assert withheld["disposition"] == "withheld"
+    assert withheld["decision"]["is_sensitive"] is None
+    assert withheld["output_fqid"] == "scb/study/unknown"
+    source = next(
+        item
+        for item in diagnostic["source_accounting"]
+        if item["ref"] == _ref(unknown_record).model_dump(mode="json")
+    )
+    assert source["output_disposition"] == "withheld_target"
+    with sqlite3.connect(tmp_path / "reg_meta.db") as conn:
+        assert conn.execute("SELECT slug FROM variable").fetchall() == [("benefit",)]
+
+
 def test_only_explicit_expected_peer_members_are_review_context(case_inputs) -> None:
     case, records = case_inputs
     peer = _record(2017, member=12345)

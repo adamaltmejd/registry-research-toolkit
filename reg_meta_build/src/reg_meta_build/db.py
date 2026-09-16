@@ -16,7 +16,7 @@ import sqlite3
 import struct
 import sys
 import time
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from datetime import date, timedelta
 from typing import TYPE_CHECKING, Any, Literal, cast
 
@@ -25,6 +25,7 @@ from reg_meta.db import (
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
     DB_FILENAME,
     SCHEMA_VERSION,
+    get_manifest,
     register_py_lower,
     utc_now,
 )
@@ -1601,6 +1602,23 @@ def _unlink_wal_sidecars(db_path: Path) -> None:
         db_path.with_name(db_path.name + sidecar).unlink(missing_ok=True)
 
 
+def _require_publishable_catalog(conn: sqlite3.Connection, db_path: Path) -> None:
+    """Protect builder activation while leaving explicit diagnostic reads possible."""
+    manifest = get_manifest(conn)
+    if (
+        manifest.get("catalog_artifact_kind", "catalog") != "catalog"
+        or manifest.get("catalog_publishable", "true") != "true"
+        or manifest.get("catalog_completeness", "complete") != "complete"
+    ):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_not_publishable",
+            error_class="configuration",
+            message=f"Diagnostic or incomplete catalog cannot be installed: {db_path}",
+            remediation="Use an explicit local inspection path; resolve its blockers and run a strict build before publication.",
+        )
+
+
 def publish_db(tmp_path: Path, final_path: Path) -> None:
     """Install the staged DB at `tmp_path` as the live DB at `final_path`.
 
@@ -1626,6 +1644,16 @@ def publish_db(tmp_path: Path, final_path: Path) -> None:
     `_unlink_wal_sidecars`) — the post-build validator's read-only open leaves
     them behind, and the replace moves only the base file.
     """
+    with closing(
+        sqlite3.connect(tmp_path.resolve().as_uri() + "?mode=ro", uri=True)
+    ) as conn:
+        conn.row_factory = sqlite3.Row
+        # The companion source-provenance DB uses this atomic placement helper
+        # too, but has no catalog manifest or publication contract.
+        if conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='import_manifest'"
+        ).fetchone():
+            _require_publishable_catalog(conn, tmp_path)
     _unlink_wal_sidecars(tmp_path)
     if final_path.exists():
         prev_path = final_path.with_name(final_path.name + ".prev")

@@ -8,10 +8,15 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta_build.source_records import (
+    DeliveredCell,
     NativeCoordinates,
     SourceCoordinate,
     SourceRevision,
     value_field,
+)
+from reg_meta_build.source_reference_records import (
+    SourceCodeCrosswalkDeclaration,
+    SourceDerivationDeclaration,
 )
 from reg_meta_build.sources.sos import SosParseIssue, parse_register_file
 from reg_meta_build.sources.sos_records import (
@@ -24,6 +29,31 @@ if TYPE_CHECKING:
 
 
 _CLASSIFICATION_URL = "https://example.test/classifications/ssyk"
+
+
+def test_absent_formula_cache_does_not_change_existing_source_payloads() -> None:
+    original = {
+        "name": "Kod",
+        "present": True,
+        "raw_value": "001",
+        "interpreted_value": "001",
+        "raw_type": "str",
+        "storage_type": "s",
+        "number_format": "General",
+        "hyperlink_target": None,
+        "hyperlink_location": None,
+    }
+    assert DeliveredCell.model_validate(original).model_dump(mode="json") == original
+    for raw_value, raw_type in [("", "str"), ("", "none"), (" ", "str")]:
+        with_cache = {
+            **original,
+            "cached_raw_value": raw_value,
+            "cached_raw_type": raw_type,
+        }
+        assert (
+            DeliveredCell.model_validate(with_cache).model_dump(mode="json")
+            == with_cache
+        )
 
 
 def _write_source_workbook(path: Path) -> None:
@@ -180,9 +210,11 @@ def test_parser_retains_xlsx_row_cells_and_code_display_provenance(
         classification.hyperlink_target,
     ) == ("F2", _CLASSIFICATION_URL, "s", "General", _CLASSIFICATION_URL)
 
+    linked_evidence = register.variables[4].source_evidence
+    assert linked_evidence is not None
     internal_link = next(
         cell
-        for cell in register.variables[4].source_evidence.cells
+        for cell in linked_evidence.cells
         if cell.field_name == "external_classification"
     )
     assert (
@@ -224,6 +256,8 @@ def test_source_records_keep_occurrences_conflicts_and_native_sos_coordinates(
     assert storage_variant.fields.model_dump(
         exclude={"coverage_from"}
     ) == first.fields.model_dump(exclude={"coverage_from"})
+    assert storage_variant.fields.coverage_from is not None
+    assert first.fields.coverage_from is not None
     assert (
         storage_variant.fields.coverage_from.value
         == first.fields.coverage_from.value
@@ -361,8 +395,18 @@ def test_common_parent_metadata_preserves_languages_conflicts_and_raw_context(
         if record.subject.member.status == "not_applicable"
     ]
     assert all(record.subject.variable.status == "not_applicable" for record in parents)
-    titles = [record for record in parents if record.language and record.fields.name]
-    assert {(record.language, record.fields.name.value) for record in titles} == {
+    assert all(record.fields.name is None for record in parents)
+    titles = [
+        record
+        for record in parents
+        if record.language and record.parent_facts[0].fields.name
+    ]
+    observed_titles = set()
+    for record in titles:
+        name = record.parent_facts[0].fields.name
+        assert name is not None
+        observed_titles.add((record.language, name.value))
+    assert observed_titles == {
         ("sv", "Första titeln"),
         ("sv", "Andra titeln"),
         ("en", "First title"),
@@ -375,19 +419,28 @@ def test_common_parent_metadata_preserves_languages_conflicts_and_raw_context(
     )
     assert swedish[0].record_id != swedish[1].record_id
     description = next(
-        record.fields.description
+        record.parent_facts[0].fields.description
         for record in parents
-        if record.language == "sv" and record.fields.description
+        if record.language == "sv" and record.parent_facts[0].fields.description
     )
     assert description.value == "  indragen rad\n    tabell  kolumn"
     subset = next(
         record for record in parents if record.subject.variant.name == "PAR_OV"
     )
     assert subset.edition_scope.intervals[0].start == "1900"
+    assert subset.parent_facts[0].kind == "variant"
+    assert subset.parent_field_locators(0, "coverage_from")[0].physical_cells == (
+        "Deldatamängder!C2",
+    )
+    assert swedish[0].parent_field_locators(0, "name")[0].physical_cells == (
+        "Metadata-Datamängd (DCAT-AP)!C2",
+    )
     partial = next(
         record for record in cleaned.records if record.subject.member.name == "PARTIELL"
     )
     assert partial.edition_scope.kind == "unknown"
+    assert partial.fields.coverage_from is not None
+    assert partial.fields.coverage_to is not None
     assert partial.fields.coverage_from.value == "2010"
     assert partial.fields.coverage_to.status == "unknown"
     dcat = next(
@@ -417,6 +470,7 @@ def test_common_values_keep_duplicate_associations_competing_labels_and_period_o
     assert [association.row_number for association in cleaned.associations] == [5, 6, 7]
     assert first.supplied_period is None
     assert first.section_period == "2010-2012"
+    assert first.section_locator is not None
     assert first.section_locator.physical_record == "row:4"
     descriptor = cleaned.descriptors["sheet:Kodlista_HDIA"]
     assert [(hint.role, hint.value) for hint in descriptor.member_hints] == [
@@ -450,3 +504,348 @@ def test_source_cleaning_blocks_on_parser_failure_with_original_evidence_availab
     with pytest.raises(ValueError, match="Kodlista_HDIA: bad code layout"):
         clean_sos_source(failed, _revision(path))
     assert failed.source_sheets == parsed.source_sheets
+
+
+def test_formatted_code_section_heading_is_evidence_not_a_value(tmp_path: Path) -> None:
+    import openpyxl
+    from openpyxl.styles import Font
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    sheet = workbook["Kodlista_HDIA"]
+    sheet.append([None, "Description of the following code digits", None])
+    sheet["B3"].font = Font(bold=True)
+    sheet.append([None, "01-19", "Literal code range"])
+    for cell in sheet[4]:
+        cell.font = Font(bold=True)
+    sheet.append([None, "20", None])
+    workbook.save(path)
+
+    parsed = parse_register_file(path)
+    cleaned = clean_sos_source(parsed, _revision(path))
+
+    assert [row.kod for row in parsed.kodlistor[0].rows] == ["001", "01-19", "20"]
+    assert {value.code for value in cleaned.values.values()} == {"001", "01-19", "20"}
+    table = next(table for table in cleaned.tables if table.name == sheet.title)
+    assert table.rows[2].role == "section"
+    assert (
+        table.rows[2].cells[1].raw_value == "Description of the following code digits"
+    )
+
+
+def _clean_code_rows(tmp_path: Path, rows: list[list[object]]):
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    del workbook["Kodlista_HDIA"]
+    sheet = workbook.create_sheet("Kodlista_Arbitrary")
+    for row in rows:
+        sheet.append(row)
+    workbook.save(path)
+    return clean_sos_source(parse_register_file(path), _revision(path))
+
+
+def test_known_hidden_support_sheet_is_preserved_but_unknown_sheet_blocks(
+    tmp_path: Path,
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    support = workbook.create_sheet("Ej relevant_listor")
+    support.sheet_state = "veryHidden"
+    support.append(["Binär", "Datatyp"])
+    support.append(["Ja", "Heltal"])
+    workbook.save(path)
+
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+    table = next(table for table in cleaned.tables if table.name == support.title)
+    assert [row.role for row in table.rows] == ["unparsed", "unparsed"]
+    assert [[cell.raw_value for cell in row.cells] for row in table.rows] == [
+        ["Binär", "Datatyp"],
+        ["Ja", "Heltal"],
+    ]
+    assert table.rows[1].locator.physical_cells == (
+        "Ej relevant_listor!A2",
+        "Ej relevant_listor!B2",
+    )
+    assert len(cleaned.associations) == 1
+
+    support.title = "New source structure"
+    workbook.save(path)
+    parsed = parse_register_file(path)
+    with pytest.raises(
+        ValueError, match="New source structure: unrecognized worksheet"
+    ):
+        clean_sos_source(parsed, _revision(path))
+    assert parsed.source_sheets[-1].rows[1].source_evidence.cells[0].raw_value == "Ja"
+
+
+def test_crosswalk_retains_explicit_recode_direction_and_literal_period(
+    tmp_path: Path,
+) -> None:
+    cleaned = _clean_code_rows(
+        tmp_path,
+        [
+            ["Variabelnamn", "Tidsperiod", "Indata Kod", "Kodat till", "Beskrivning"],
+            ["FAMSIT", "1990/91-1994", "02", 3, " Annan familjesituation "],
+            ["FAMSIT", "1990/91-1994", "02", 3, " Annan familjesituation "],
+        ],
+    )
+    first, duplicate = cleaned.declarations
+    assert isinstance(first, SourceCodeCrosswalkDeclaration)
+    assert first.member_name.value == "FAMSIT"
+    assert first.supplied_period.value == "1990/91-1994"
+    assert first.section_period is None
+    assert [
+        (item.role, item.name, item.code.value, item.code.raw_value)
+        for item in first.operands
+    ] == [
+        ("input", "Indata Kod", "02", "02"),
+        ("output", "Kodat till", "3", 3),
+    ]
+    assert first.description.value == "Annan familjesituation"
+    assert first.locator.physical_record == "row:2"
+    assert duplicate.locator.physical_record == "row:3"
+    assert first.revision == cleaned.revision
+    assert len(first.delivered_cells) == 5
+    assert not cleaned.values and not cleaned.associations
+
+
+def test_crosswalk_keeps_peer_namespaces_and_section_period_separate(
+    tmp_path: Path,
+) -> None:
+    cleaned = _clean_code_rows(
+        tmp_path,
+        [
+            ["Används i variabeln", "BHEM"],
+            ["Tidsperiod", "SCBkod", "SiSkod", "Namn"],
+            ["1994-", None, None, None],
+            [None, 16, 313, "Håkanstorp"],
+            ["2000-2001", None, 314, "Ensidig uppgift"],
+        ],
+    )
+    first, second = cleaned.declarations
+    assert isinstance(first, SourceCodeCrosswalkDeclaration)
+    assert first.member_name is None
+    assert first.supplied_period.status == "unknown"
+    assert first.section_period.value == "1994-"
+    assert first.section_locator.physical_record == "row:3"
+    assert [(item.role, item.name, item.code.value) for item in first.operands] == [
+        ("peer", "SCBkod", "16"),
+        ("peer", "SiSkod", "313"),
+    ]
+    assert second.operands[0].code.status == "unknown"
+    assert second.supplied_period.value == "2000-2001"
+    assert second.section_period.value == "1994-"
+    assert (
+        cleaned.descriptors["sheet:Kodlista_Arbitrary"].member_hints[1].value == "BHEM"
+    )
+    assert not cleaned.values and not cleaned.associations
+
+
+def test_code_directory_retains_bounds_without_inventing_item_ids_or_end_dates(
+    tmp_path: Path,
+) -> None:
+    cleaned = _clean_code_rows(
+        tmp_path,
+        [
+            [
+                "Variabelnamn",
+                "Från",
+                "Till",
+                "Sjukhuskod",
+                "Region",
+                "Sjukhusnamn",
+                "Aktuella",
+                "Kommentar",
+            ],
+            [
+                "SJUKHUS",
+                2023,
+                None,
+                "10011",
+                "Stockholm",
+                " Sjukhus ",
+                "JA",
+                "Startade 202304",
+            ],
+        ],
+    )
+    (association,) = cleaned.associations
+    (validity,) = cleaned.validity
+    assert (validity.valid_from, validity.valid_to, validity.item_id) == (
+        "2023",
+        None,
+        None,
+    )
+    assert validity.locator == association.locator
+    assert validity.locators[0] == cleaned.values[association.value_key].locators[0]
+    assert validity.delivered_cells[2].present
+    assert validity.delivered_cells[2].raw_type == "none"
+    assert association.delivered_cells[-1].raw_value == "Startade 202304"
+    assert association.supplied_period is None and association.section_period is None
+    assert association.member_hints[0].value == "SJUKHUS"
+    assert cleaned.values[association.value_key].normalized_content == (
+        "10011",
+        "Sjukhus",
+    )
+
+
+def test_formula_and_delivered_cache_survive_without_promoting_computed_facts(
+    tmp_path: Path,
+) -> None:
+    import xml.etree.ElementTree as ET
+    import zipfile
+
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["C2"] = '="Computed label"'
+    del workbook["Kodlista_HDIA"]
+    sheet = workbook.create_sheet("Kodlista_HOSPITAL")
+    sheet.append(
+        [
+            "Variabelnamn",
+            "Från",
+            "Till",
+            "Sjukhuskod",
+            "Region",
+            "Sjukhusnamn",
+            "Aktuella",
+            "Kommentar",
+        ]
+    )
+    formula = '=IF(C2>1, " ","JA")'
+    sheet.append(
+        ["SJUKHUS", 1973, 1980, "10010", "Stockholm", "Sjukhus", formula, None]
+    )
+    workbook.save(path)
+
+    # openpyxl writes formula text but cannot populate a delivered formula cache.
+    namespace = {"s": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+    with zipfile.ZipFile(path) as source:
+        members = {name: source.read(name) for name in source.namelist()}
+    for name, payload in members.items():
+        if not name.startswith("xl/worksheets/") or not name.endswith(".xml"):
+            continue
+        document = ET.fromstring(payload)
+        for cell in document.findall(".//s:c", namespace):
+            if cell.find("s:f", namespace) is None:
+                continue
+            cell.set("t", "str")
+            cached = cell.find("s:v", namespace)
+            assert cached is not None
+            cached.text = " " if cell.get("r") == "G2" else "Computed label"
+        members[name] = ET.tostring(document)
+    with zipfile.ZipFile(path, "w") as output:
+        for name, payload in members.items():
+            output.writestr(name, payload)
+
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+    (association,) = cleaned.associations
+    delivered = association.delivered_cells[6]
+    assert (
+        delivered.raw_value,
+        delivered.storage_type,
+        delivered.interpreted_value,
+    ) == (formula, "f", "")
+    assert (delivered.cached_raw_value, delivered.cached_raw_type) == (" ", "str")
+    assert cleaned.values[association.value_key].code == "10010"
+    variable = next(
+        record
+        for record in cleaned.records
+        if record.subject.member.name == "HDIA"
+        and record.locators[0].physical_record == "row:2"
+    )
+    assert variable.fields.name is not None
+    assert variable.fields.name.status == "unknown"
+    assert variable.fields.name.raw_value == '="Computed label"'
+    assert variable.subject.variable.name is None
+    assert variable.delivered_cells[2].cached_raw_value == "Computed label"
+
+
+@pytest.mark.parametrize(
+    "headers, values",
+    [
+        (
+            [
+                "Variabler",
+                "ICD 8",
+                "ICD 9 ",
+                "ICD 10",
+                "Åtgärdskoder 1963-1996",
+                "Åtgärdskoder 1997-",
+            ],
+            [
+                "SECFORE=1 eller SECAVSL=1",
+                None,
+                None,
+                "O82 (alla underdiagnoser)",
+                "7010, 7030",
+                "MAH03/MAC23  (ersatt av MAC23 2007-12-31)",
+            ],
+        ),
+        (
+            ["Variabler", "Villkor", "Algoritm"],
+            [
+                "KON, BVIKT, GRDBS, BORDF2",
+                "GRVB mellan 22 och 45",
+                "BVIKT < (-0.001 * GRDBS**4)\n  + 123",
+            ],
+        ),
+    ],
+)
+def test_derivation_keeps_named_literal_clauses_without_evaluation(
+    tmp_path: Path, headers, values
+) -> None:
+    cleaned = _clean_code_rows(
+        tmp_path,
+        [
+            ["Variabelnamn", "Tidsperiod", "Beskrivning", *headers],
+            ["RESULTAT", "1973-", "Definition", *values],
+        ],
+    )
+    (declaration,) = cleaned.declarations
+    assert isinstance(declaration, SourceDerivationDeclaration)
+    assert declaration.member_name.value == "RESULTAT"
+    assert declaration.supplied_period.value == "1973-"
+    assert [clause.name for clause in declaration.clauses] == [
+        header.strip() for header in headers
+    ]
+    assert [clause.content.raw_value for clause in declaration.clauses] == values
+    assert [clause.content.value for clause in declaration.clauses] == values
+    assert not cleaned.values and not cleaned.associations and not cleaned.validity
+
+
+def test_code_patterns_and_adjacent_legend_stay_literal_and_separate(
+    tmp_path: Path,
+) -> None:
+    cleaned = _clean_code_rows(
+        tmp_path,
+        [
+            ["KOD ", "Beskrivning", "Följande sympoler används", None, None],
+            ["1XXXX", "missbildning i CNS", "X: valfri siffra", None, None],
+            ["11xxy", "Annan kategori", "x: 1 unilateral", "Räknas ej", "Osäker"],
+            [None, None, 1, "A", "K"],
+        ],
+    )
+    assert {value.normalized_content for value in cleaned.values.values()} == {
+        ("1XXXX", "missbildning i CNS"),
+        ("11xxy", "Annan kategori"),
+    }
+    assert len(cleaned.associations) == 2
+    assert all(len(value.delivered_cells) == 2 for value in cleaned.values.values())
+    table = next(
+        table for table in cleaned.tables if table.name == "Kodlista_Arbitrary"
+    )
+    assert table.rows[1].cells[2].raw_value == "X: valfri siffra"
+    assert table.rows[3].cells[2].raw_value == "1"
+    assert table.rows[3].cells[3].raw_value == "A"
+    assert not cleaned.declarations and not cleaned.validity

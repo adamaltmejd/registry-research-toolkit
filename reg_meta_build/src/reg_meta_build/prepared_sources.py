@@ -15,32 +15,34 @@ import re
 import shutil
 import sqlite3
 import tempfile
-from contextlib import closing
+from contextlib import closing, contextmanager
 from dataclasses import dataclass
 from functools import lru_cache
+from itertools import groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
-from reg_meta_build.db import _file_sha256
-from reg_meta_build.input_snapshot import (
-    SnapshotError,
-    _committed_inventory_sizes,
-    _git,
-    _git_bytes,
-    _index_tags,
-    _snapshot_repo_path,
-    clean_git_commit,
-    input_bundle_repository,
+from reg_meta_build._accepted_prepared import (
+    check_accepted_files,
+    read_accepted_manifest,
 )
+from reg_meta_build.db import _file_sha256
+from reg_meta_build.input_snapshot import SnapshotError, _git
+from reg_meta_build.source_coordinates import native_variable_key
 from reg_meta_build.source_records import (
     CodeSetReference,
     DeliveredCell,
     NativeCoordinates,
     RecordLocator,
     SourceCoordinate,
+    SourceEvidenceRow,
+    SourceEvidenceTable,
+    SourceField,
+    SourceFieldCells,
     SourceFields,
+    SourceParentObservation,
     SourceRecord,
     SourceRevision,
     SourceSubject,
@@ -48,10 +50,12 @@ from reg_meta_build.source_records import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Callable, Iterable, Iterator
+
+    from reg_meta_build.source_coordinates import NativeKey
 
 _FORMAT = "reg-meta-prepared-source-records"
-_SCHEMA_VERSION = 2
+_SCHEMA_VERSION = 6
 _MANIFEST = "manifest.json"
 _DATABASE = "files/records.sqlite"
 _HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
@@ -68,14 +72,17 @@ class _PreparedModel(BaseModel):
 
 class _ManifestDocument(_PreparedModel):
     format: Literal["reg-meta-prepared-source-records"] = _FORMAT
-    schema_version: Literal[2] = _SCHEMA_VERSION
+    schema_version: Literal[6] = _SCHEMA_VERSION
     scope: str
     partial: Literal[True] = True
     record_count: int
+    table_count: int
+    table_row_count: int
     revisions: tuple[SourceRevision, ...]
     database_path: Literal["files/records.sqlite"] = _DATABASE
     database_size: int
     database_sha256: str
+    database_git_blob: str
 
     @field_validator("scope")
     @classmethod
@@ -84,7 +91,7 @@ class _ManifestDocument(_PreparedModel):
             raise ValueError("prepared source scope must be non-empty")
         return value
 
-    @field_validator("record_count", "database_size")
+    @field_validator("record_count", "table_count", "table_row_count", "database_size")
     @classmethod
     def _nonnegative(cls, value: int) -> int:
         if value < 0:
@@ -96,6 +103,15 @@ class _ManifestDocument(_PreparedModel):
     def _hash(cls, value: str) -> str:
         if not _HASH_RE.fullmatch(value):
             raise ValueError("database_sha256 must be a lowercase SHA-256 value")
+        return value
+
+    @field_validator("database_git_blob")
+    @classmethod
+    def _blob(cls, value: str) -> str:
+        if not _COMMIT_RE.fullmatch(value):
+            raise ValueError(
+                "database_git_blob must be a lowercase Git SHA-1 object ID"
+            )
         return value
 
 
@@ -132,7 +148,7 @@ def _manifest(payload: bytes) -> PreparedSourceManifest:
 
 
 _DDL = """
-PRAGMA user_version=2;
+PRAGMA user_version=6;
 CREATE TABLE payload (
     id INTEGER PRIMARY KEY,
     kind TEXT NOT NULL,
@@ -149,6 +165,7 @@ CREATE TABLE occurrence (
     provider TEXT NOT NULL,
     register_payload INTEGER NOT NULL REFERENCES payload(id),
     variant_payload INTEGER NOT NULL REFERENCES payload(id),
+    variant_references_payload INTEGER NOT NULL REFERENCES payload(id),
     population_payload INTEGER NOT NULL REFERENCES payload(id),
     variable_payload INTEGER NOT NULL REFERENCES payload(id),
     member_payload INTEGER NOT NULL REFERENCES payload(id),
@@ -159,15 +176,19 @@ CREATE TABLE occurrence (
     language TEXT,
     original_period_text TEXT,
     context_payload INTEGER NOT NULL REFERENCES payload(id),
-    codes_payload INTEGER NOT NULL REFERENCES payload(id)
+    codes_payload INTEGER NOT NULL REFERENCES payload(id),
+    parents_payload INTEGER NOT NULL REFERENCES payload(id),
+    family_payload INTEGER REFERENCES payload(id)
 );
 CREATE INDEX occurrence_source_key ON occurrence(source, semantic_key);
+CREATE INDEX occurrence_native_family ON occurrence(source, family_payload, ordinal);
 CREATE TABLE locator (
     occurrence INTEGER NOT NULL REFERENCES occurrence(ordinal),
     position INTEGER NOT NULL,
     physical_file TEXT NOT NULL,
     physical_table TEXT NOT NULL,
     physical_record TEXT NOT NULL,
+    cells_prefix TEXT NOT NULL,
     cells_payload INTEGER NOT NULL REFERENCES payload(id),
     PRIMARY KEY(occurrence, position)
 ) WITHOUT ROWID;
@@ -176,6 +197,33 @@ CREATE TABLE delivered_cell (
     position INTEGER NOT NULL,
     payload INTEGER NOT NULL REFERENCES payload(id),
     PRIMARY KEY(occurrence, position)
+) WITHOUT ROWID;
+CREATE TABLE evidence_table (
+    ordinal INTEGER PRIMARY KEY,
+    source TEXT NOT NULL,
+    revision_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    row_count INTEGER NOT NULL
+);
+CREATE INDEX evidence_table_source ON evidence_table(source);
+CREATE TABLE evidence_row (
+    ordinal INTEGER PRIMARY KEY,
+    table_ordinal INTEGER NOT NULL REFERENCES evidence_table(ordinal),
+    position INTEGER NOT NULL,
+    role TEXT NOT NULL,
+    semantic_key TEXT NOT NULL,
+    physical_file TEXT NOT NULL,
+    physical_table TEXT NOT NULL,
+    physical_record TEXT NOT NULL,
+    cells_prefix TEXT NOT NULL,
+    cells_payload INTEGER NOT NULL REFERENCES payload(id),
+    UNIQUE(table_ordinal, position)
+);
+CREATE TABLE evidence_cell (
+    row_ordinal INTEGER NOT NULL REFERENCES evidence_row(ordinal),
+    position INTEGER NOT NULL,
+    payload INTEGER NOT NULL REFERENCES payload(id),
+    PRIMARY KEY(row_ordinal, position)
 ) WITHOUT ROWID;
 """
 
@@ -207,6 +255,45 @@ class _PayloadWriter:
             value = value.model_dump(mode="json", exclude_defaults=True)
         return self.intern(kind, _json(value))
 
+    def fields(self, fields: SourceFields) -> int:
+        # Edition-specific combinations share the individual field observations.
+        # Whole-field-set JSON duplicated over a gigabyte in the maintained corpus.
+        return self.put(
+            "fields",
+            {
+                name: self.put("field", value)
+                for name in SourceFields.model_fields
+                if (value := getattr(fields, name)) is not None
+            },
+        )
+
+    def parents(self, parents: tuple[SourceParentObservation, ...]) -> int:
+        return self.put(
+            "parents",
+            [
+                self.put(
+                    "parent",
+                    {
+                        "kind": parent.kind,
+                        "coordinate": self.put("coordinate", parent.coordinate),
+                        "register": self.put("coordinate", parent.register_name),
+                        "variant": self.put("coordinate", parent.variant)
+                        if parent.variant is not None
+                        else None,
+                        "edition": self.put("coordinate", parent.edition)
+                        if parent.edition is not None
+                        else None,
+                        "fields": self.fields(parent.fields),
+                        "field_cells": [
+                            mapping.model_dump(mode="json")
+                            for mapping in parent.field_cells
+                        ],
+                    },
+                )
+                for parent in parents
+            ],
+        )
+
 
 def _write_record(
     conn: sqlite3.Connection,
@@ -217,7 +304,7 @@ def _write_record(
     subject = record.subject
     key = _json(record.locators[0].semantic_record_key)
     conn.execute(
-        "INSERT INTO occurrence VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO occurrence VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         (
             ordinal,
             record.source,
@@ -227,13 +314,17 @@ def _write_record(
             subject.provider,
             payloads.put("coordinate", subject.register_name),
             payloads.put("coordinate", subject.variant),
+            payloads.put(
+                "coordinates",
+                [value.model_dump(mode="json") for value in subject.variant_references],
+            ),
             payloads.put("coordinate", subject.population),
             payloads.put("coordinate", subject.variable),
             payloads.put("coordinate", subject.member),
             payloads.put("native", subject.native),
             payloads.put("scope", record.edition_scope),
             payloads.put("scope", record.edition_period_scope),
-            payloads.put("fields", record.fields),
+            payloads.fields(record.fields),
             record.language,
             record.original_period_text,
             payloads.put("strings", record.context),
@@ -241,29 +332,104 @@ def _write_record(
                 "codes",
                 [code.model_dump(mode="json") for code in record.code_set_references],
             ),
+            payloads.parents(record.parent_facts),
+            payloads.put("native_family", family)
+            if (family := native_variable_key(record)) is not None
+            else None,
         ),
     )
     conn.executemany(
-        "INSERT INTO locator VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO locator VALUES (?, ?, ?, ?, ?, ?, ?)",
         (
-            (
-                ordinal,
-                position,
-                locator.physical_file,
-                locator.physical_table,
-                locator.physical_record,
-                payloads.put("strings", locator.physical_cells),
-            )
+            (ordinal, position, *_locator_values(payloads, locator))
             for position, locator in enumerate(record.locators)
         ),
     )
-    conn.executemany(
+    _write_cells(
+        conn,
+        payloads,
         "INSERT INTO delivered_cell VALUES (?, ?, ?)",
-        (
-            (ordinal, position, payloads.put("cell", cell))
-            for position, cell in enumerate(record.delivered_cells)
+        ordinal,
+        record.delivered_cells,
+    )
+
+
+def _locator_values(
+    payloads: _PayloadWriter, locator: RecordLocator
+) -> tuple[str, str, str, str, int]:
+    prefix = os.path.commonprefix(locator.physical_cells)
+    return (
+        locator.physical_file,
+        locator.physical_table,
+        locator.physical_record,
+        prefix,
+        payloads.put(
+            "strings", tuple(cell[len(prefix) :] for cell in locator.physical_cells)
         ),
     )
+
+
+def _write_cells(
+    conn: sqlite3.Connection,
+    payloads: _PayloadWriter,
+    statement: str,
+    owner: int,
+    cells: tuple[DeliveredCell, ...],
+) -> None:
+    conn.executemany(
+        statement,
+        (
+            (owner, position, payloads.put("cell", cell))
+            for position, cell in enumerate(cells)
+        ),
+    )
+
+
+def _write_table(
+    conn: sqlite3.Connection,
+    payloads: _PayloadWriter,
+    ordinal: int,
+    table: SourceEvidenceTable,
+) -> None:
+    conn.execute(
+        "INSERT INTO evidence_table VALUES (?, ?, ?, ?, ?)",
+        (ordinal, table.source, table.source_revision_id, table.name, len(table.rows)),
+    )
+    for position, row in enumerate(table.rows):
+        cursor = conn.execute(
+            "INSERT INTO evidence_row(table_ordinal, position, role, semantic_key, physical_file, physical_table, physical_record, cells_prefix, cells_payload) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                ordinal,
+                position,
+                row.role,
+                _json(row.locator.semantic_record_key),
+                *_locator_values(payloads, row.locator),
+            ),
+        )
+        assert cursor.lastrowid is not None
+        _write_cells(
+            conn,
+            payloads,
+            "INSERT INTO evidence_cell VALUES (?, ?, ?)",
+            cursor.lastrowid,
+            row.cells,
+        )
+
+
+def _require_revision(
+    source: str,
+    revision_id: str,
+    revisions: dict[str, SourceRevision],
+    *,
+    kind: str,
+) -> None:
+    revision = revisions.get(revision_id)
+    if revision is None:
+        raise PreparedSourceError(
+            f"{kind} revision absent from artifact: {revision_id}"
+        )
+    if revision.dataset != source:
+        raise PreparedSourceError(f"{kind} and revision name different sources")
 
 
 def prepare_source_records(
@@ -272,6 +438,7 @@ def prepare_source_records(
     records: Iterable[SourceRecord],
     revisions: tuple[SourceRevision, ...],
     scope: str,
+    tables: Iterable[SourceEvidenceTable] = (),
 ) -> PreparedSourceManifest:
     """Validate a streamed selection and atomically publish a new candidate directory.
 
@@ -303,7 +470,7 @@ def prepare_source_records(
     try:
         database = staging / _DATABASE
         database.parent.mkdir()
-        count = 0
+        count = table_count = table_row_count = 0
         with closing(sqlite3.connect(database)) as conn:
             conn.execute("PRAGMA journal_mode=OFF")
             conn.execute("PRAGMA synchronous=OFF")
@@ -317,16 +484,30 @@ def prepare_source_records(
                     raise PreparedSourceError(
                         f"source record {count} violates the SourceRecord contract: {exc}"
                     ) from exc
-                revision = by_revision.get(checked.source_revision_id)
-                if revision is None:
-                    raise PreparedSourceError(
-                        f"source record revision absent from artifact: {checked.source_revision_id}"
-                    )
-                if revision.dataset != checked.source:
-                    raise PreparedSourceError(
-                        "source record and revision name different sources"
-                    )
+                _require_revision(
+                    checked.source,
+                    checked.source_revision_id,
+                    by_revision,
+                    kind="source record",
+                )
                 _write_record(conn, payloads, count, checked)
+            for table_count, table in enumerate(tables, start=1):
+                try:
+                    checked_table = SourceEvidenceTable.model_validate_json(
+                        table.model_dump_json()
+                    )
+                except (AttributeError, TypeError, ValueError) as exc:
+                    raise PreparedSourceError(
+                        f"source table {table_count} violates the SourceEvidenceTable contract: {exc}"
+                    ) from exc
+                _require_revision(
+                    checked_table.source,
+                    checked_table.source_revision_id,
+                    by_revision,
+                    kind="source table",
+                )
+                _write_table(conn, payloads, table_count, checked_table)
+                table_row_count += len(checked_table.rows)
             if conn.execute("PRAGMA foreign_key_check").fetchone() is not None:
                 raise PreparedSourceError(
                     "prepared records contain an invalid payload reference"
@@ -341,9 +522,12 @@ def prepare_source_records(
         document = _ManifestDocument(
             scope=scope,
             record_count=count,
+            table_count=table_count,
+            table_row_count=table_row_count,
             revisions=validated_revisions,
             database_size=database.stat().st_size,
             database_sha256=_file_sha256(database),
+            database_git_blob=_git(staging, "hash-object", "--no-filters", _DATABASE),
         )
         manifest_bytes = (_json(document.model_dump(mode="json")) + "\n").encode(
             "utf-8"
@@ -363,13 +547,190 @@ _PAYLOAD_MODELS: dict[str, type[BaseModel]] = {
     "coordinate": SourceCoordinate,
     "native": NativeCoordinates,
     "scope": TemporalScope,
-    "fields": SourceFields,
+    "field": SourceField,
     "cell": DeliveredCell,
 }
 
 
 def _readonly(database: Path) -> sqlite3.Connection:
     return sqlite3.connect(database.as_uri() + "?mode=ro&immutable=1", uri=True)
+
+
+def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
+    @lru_cache(maxsize=8192)
+    def payload(key: int, kind: str) -> Any:
+        row = conn.execute(
+            "SELECT kind, body FROM payload WHERE id = ?", (key,)
+        ).fetchone()
+        if row is None or row["kind"] != kind:
+            raise PreparedSourceError(f"missing or wrong-kind prepared payload {key}")
+        if kind in _PAYLOAD_MODELS:
+            return _PAYLOAD_MODELS[kind].model_validate_json(row["body"])
+        decoded = json.loads(row["body"])
+        if kind == "native_family":
+            if not isinstance(decoded, list) or any(
+                type(value) not in {str, int} for value in decoded
+            ):
+                raise PreparedSourceError("invalid prepared native-family key")
+            return tuple(decoded)
+        if kind == "parents":
+            if not isinstance(decoded, list) or any(
+                type(value) is not int for value in decoded
+            ):
+                raise PreparedSourceError("invalid prepared parent references")
+            return tuple(payload(value, "parent") for value in decoded)
+        if kind == "parent":
+            if not isinstance(decoded, dict) or set(decoded) != {
+                "kind",
+                "coordinate",
+                "register",
+                "variant",
+                "edition",
+                "fields",
+                "field_cells",
+            }:
+                raise PreparedSourceError("invalid prepared parent observation")
+            if any(
+                type(decoded[name]) is not int
+                for name in ("coordinate", "register", "fields")
+            ) or any(
+                decoded[name] is not None and type(decoded[name]) is not int
+                for name in ("variant", "edition")
+            ):
+                raise PreparedSourceError("invalid prepared parent fragment references")
+            if not isinstance(decoded["field_cells"], list):
+                raise PreparedSourceError("invalid prepared parent field cells")
+            return SourceParentObservation(
+                kind=decoded["kind"],
+                coordinate=payload(decoded["coordinate"], "coordinate"),
+                register=payload(decoded["register"], "coordinate"),
+                variant=payload(decoded["variant"], "coordinate")
+                if decoded["variant"] is not None
+                else None,
+                edition=payload(decoded["edition"], "coordinate")
+                if decoded["edition"] is not None
+                else None,
+                fields=payload(decoded["fields"], "fields"),
+                field_cells=tuple(
+                    SourceFieldCells.model_validate_json(_json(mapping))
+                    for mapping in decoded["field_cells"]
+                ),
+            )
+        if kind == "fields":
+            if not isinstance(decoded, dict) or any(
+                name not in SourceFields.model_fields or type(value) is not int
+                for name, value in decoded.items()
+            ):
+                raise PreparedSourceError("invalid prepared field references")
+            return SourceFields.model_validate(
+                {name: payload(value, "field") for name, value in decoded.items()}
+            )
+        if kind == "strings":
+            if not isinstance(decoded, list) or any(
+                not isinstance(value, str) for value in decoded
+            ):
+                raise PreparedSourceError("invalid prepared string tuple")
+            return tuple(decoded)
+        if kind == "codes":
+            return tuple(
+                CodeSetReference.model_validate_json(_json(value)) for value in decoded
+            )
+        if kind == "coordinates":
+            return tuple(
+                SourceCoordinate.model_validate_json(_json(value)) for value in decoded
+            )
+        raise PreparedSourceError(f"unknown prepared payload kind {kind}")
+
+    return payload
+
+
+@contextmanager
+def _decoded_database(
+    root: Path, manifest: PreparedSourceManifest
+) -> Iterator[tuple[sqlite3.Connection, Callable[[int, str], Any]]]:
+    try:
+        with closing(_readonly(root / manifest.database_path)) as conn:
+            conn.row_factory = sqlite3.Row
+            yield conn, _payload_reader(conn)
+    except (sqlite3.Error, ValueError, KeyError, TypeError) as exc:
+        if isinstance(exc, PreparedSourceError):
+            raise
+        raise PreparedSourceError(
+            f"cannot decode prepared source evidence: {exc}"
+        ) from exc
+
+
+def _read_locator(
+    row: sqlite3.Row, semantic_key: tuple[str, ...], payload: Callable[[int, str], Any]
+) -> RecordLocator:
+    return RecordLocator(
+        semantic_record_key=semantic_key,
+        physical_file=row["physical_file"],
+        physical_table=row["physical_table"],
+        physical_record=row["physical_record"],
+        physical_cells=tuple(
+            row["cells_prefix"] + suffix
+            for suffix in payload(row["cells_payload"], "strings")
+        ),
+    )
+
+
+def _read_cells(
+    conn: sqlite3.Connection,
+    payload: Callable[[int, str], Any],
+    statement: str,
+    owner: int,
+) -> tuple[DeliveredCell, ...]:
+    return tuple(payload(cell[0], "cell") for cell in conn.execute(statement, (owner,)))
+
+
+def _read_record(
+    conn: sqlite3.Connection,
+    payload: Callable[[int, str], Any],
+    row: sqlite3.Row,
+) -> SourceRecord:
+    semantic_key = tuple(json.loads(row["semantic_key"]))
+    locators = tuple(
+        _read_locator(locator, semantic_key, payload)
+        for locator in conn.execute(
+            "SELECT * FROM locator WHERE occurrence = ? ORDER BY position",
+            (row["ordinal"],),
+        )
+    )
+    subject = SourceSubject.model_construct(
+        provider=row["provider"],
+        register_name=payload(row["register_payload"], "coordinate"),
+        variant=payload(row["variant_payload"], "coordinate"),
+        variant_references=payload(row["variant_references_payload"], "coordinates"),
+        population=payload(row["population_payload"], "coordinate"),
+        variable=payload(row["variable_payload"], "coordinate"),
+        member=payload(row["member_payload"], "coordinate"),
+        native=payload(row["native_payload"], "native"),
+    )
+    # Identity and revision membership were exhaustively proved during
+    # preparation. The accepted Git/manifest boundary permits decoding
+    # this exact immutable representation without repeating those hashes.
+    return SourceRecord.model_construct(
+        record_id=row["record_id"],
+        source=row["source"],
+        source_revision_id=row["revision_id"],
+        locators=locators,
+        subject=subject,
+        edition_scope=payload(row["scope_payload"], "scope"),
+        edition_period_scope=payload(row["period_payload"], "scope"),
+        fields=payload(row["fields_payload"], "fields"),
+        parent_facts=payload(row["parents_payload"], "parents"),
+        language=row["language"],
+        code_set_references=payload(row["codes_payload"], "codes"),
+        original_period_text=row["original_period_text"],
+        context=payload(row["context_payload"], "strings"),
+        delivered_cells=_read_cells(
+            conn,
+            payload,
+            "SELECT payload FROM delivered_cell WHERE occurrence = ? ORDER BY position",
+            row["ordinal"],
+        ),
+    )
 
 
 @dataclass(frozen=True)
@@ -402,102 +763,95 @@ class PreparedSourceRecords:
             (source,) if source is not None else (),
         )
 
+    def iter_native_families(
+        self,
+        source: str,
+    ) -> Iterator[tuple[NativeKey, tuple[SourceRecord, ...]]]:
+        """Decode one source-native family at a time using the cold-prepared index.
+
+        Families exclude the variant so callers see the complete native variable.
+        Native IDs take precedence over supplied names; name-only source identities
+        remain scoped to their exact source/register. This is grouping of evidence,
+        not a declaration that each group is one catalog variable. Duplicate rows
+        keep source order. Records without a complete family are available separately.
+        """
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            rows = conn.execute(
+                "SELECT * FROM occurrence WHERE source=? AND family_payload IS NOT NULL "
+                "ORDER BY family_payload, ordinal",
+                (source,),
+            )
+            for family, members in groupby(rows, key=lambda row: row["family_payload"]):
+                yield (
+                    payload(family, "native_family"),
+                    tuple(_read_record(conn, payload, row) for row in members),
+                )
+
+    def iter_without_native_family(self, source: str) -> Iterator[SourceRecord]:
+        """Retain declarations and incomplete identities outside ordinary families."""
+        return self._iter("WHERE source=? AND family_payload IS NULL", (source,))
+
     def _iter(self, where: str, parameters: tuple[str, ...]) -> Iterator[SourceRecord]:
-        conn: sqlite3.Connection | None = None
-        try:
-            conn = _readonly(self.root / self.manifest.database_path)
-            conn.row_factory = sqlite3.Row
-
-            @lru_cache(maxsize=8192)
-            def payload(key: int, kind: str) -> Any:
-                row = conn.execute(
-                    "SELECT kind, body FROM payload WHERE id = ?", (key,)
-                ).fetchone()
-                if row is None or row["kind"] != kind:
-                    raise PreparedSourceError(
-                        f"missing or wrong-kind prepared payload {key}"
-                    )
-                if kind in _PAYLOAD_MODELS:
-                    return _PAYLOAD_MODELS[kind].model_validate_json(row["body"])
-                decoded = json.loads(row["body"])
-                if kind == "strings":
-                    if not isinstance(decoded, list) or any(
-                        not isinstance(value, str) for value in decoded
-                    ):
-                        raise PreparedSourceError("invalid prepared string tuple")
-                    return tuple(decoded)
-                if kind == "codes":
-                    return tuple(
-                        CodeSetReference.model_validate_json(_json(value))
-                        for value in decoded
-                    )
-                raise PreparedSourceError(f"unknown prepared payload kind {kind}")
-
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
             seen = 0
             for row in conn.execute(
                 f"SELECT * FROM occurrence {where} ORDER BY ordinal", parameters
             ):
-                semantic_key = tuple(json.loads(row["semantic_key"]))
-                locators = tuple(
-                    RecordLocator(
-                        semantic_record_key=semantic_key,
-                        physical_file=locator["physical_file"],
-                        physical_table=locator["physical_table"],
-                        physical_record=locator["physical_record"],
-                        physical_cells=payload(locator["cells_payload"], "strings"),
-                    )
-                    for locator in conn.execute(
-                        "SELECT * FROM locator WHERE occurrence = ? ORDER BY position",
-                        (row["ordinal"],),
-                    )
-                )
-                subject = SourceSubject.model_construct(
-                    provider=row["provider"],
-                    register_name=payload(row["register_payload"], "coordinate"),
-                    variant=payload(row["variant_payload"], "coordinate"),
-                    population=payload(row["population_payload"], "coordinate"),
-                    variable=payload(row["variable_payload"], "coordinate"),
-                    member=payload(row["member_payload"], "coordinate"),
-                    native=payload(row["native_payload"], "native"),
-                )
-                # Identity and revision membership were exhaustively proved during
-                # preparation. The accepted Git/manifest boundary permits decoding
-                # this exact immutable representation without repeating those hashes.
-                yield SourceRecord.model_construct(
-                    record_id=row["record_id"],
-                    source=row["source"],
-                    source_revision_id=row["revision_id"],
-                    locators=locators,
-                    subject=subject,
-                    edition_scope=payload(row["scope_payload"], "scope"),
-                    edition_period_scope=payload(row["period_payload"], "scope"),
-                    fields=payload(row["fields_payload"], "fields"),
-                    language=row["language"],
-                    code_set_references=payload(row["codes_payload"], "codes"),
-                    original_period_text=row["original_period_text"],
-                    context=payload(row["context_payload"], "strings"),
-                    delivered_cells=tuple(
-                        payload(cell[0], "cell")
-                        for cell in conn.execute(
-                            "SELECT payload FROM delivered_cell WHERE occurrence = ? ORDER BY position",
-                            (row["ordinal"],),
-                        )
-                    ),
-                )
+                yield _read_record(conn, payload, row)
                 seen += 1
             if not where and seen != self.manifest.record_count:
                 raise PreparedSourceError(
                     "prepared source record count differs from manifest"
                 )
-        except (sqlite3.Error, ValueError, KeyError, TypeError) as exc:
-            if isinstance(exc, PreparedSourceError):
-                raise
-            raise PreparedSourceError(
-                f"cannot decode prepared source records: {exc}"
-            ) from exc
-        finally:
-            if conn is not None:
-                conn.close()
+
+    def iter_tables(
+        self, *, source: str | None = None
+    ) -> Iterator[SourceEvidenceTable]:
+        """Decode one table at a time, preserving table and row occurrence order."""
+        where = "WHERE source = ?" if source is not None else ""
+        parameters = (source,) if source is not None else ()
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            table_count = row_count = 0
+            for table in conn.execute(
+                f"SELECT * FROM evidence_table {where} ORDER BY ordinal", parameters
+            ):
+                rows = tuple(
+                    SourceEvidenceRow(
+                        locator=_read_locator(
+                            row, tuple(json.loads(row["semantic_key"])), payload
+                        ),
+                        role=row["role"],
+                        cells=_read_cells(
+                            conn,
+                            payload,
+                            "SELECT payload FROM evidence_cell WHERE row_ordinal = ? ORDER BY position",
+                            row["ordinal"],
+                        ),
+                    )
+                    for row in conn.execute(
+                        "SELECT * FROM evidence_row WHERE table_ordinal = ? ORDER BY position",
+                        (table["ordinal"],),
+                    )
+                )
+                if len(rows) != table["row_count"]:
+                    raise PreparedSourceError(
+                        "prepared evidence table row count differs from preparation"
+                    )
+                yield SourceEvidenceTable.model_construct(
+                    source=table["source"],
+                    source_revision_id=table["revision_id"],
+                    name=table["name"],
+                    rows=rows,
+                )
+                table_count += 1
+                row_count += len(rows)
+            if source is None and (
+                table_count != self.manifest.table_count
+                or row_count != self.manifest.table_row_count
+            ):
+                raise PreparedSourceError(
+                    "prepared evidence table/row counts differ from manifest"
+                )
 
 
 def prepared_source_paths(root: Path) -> tuple[Path, ...]:
@@ -509,70 +863,26 @@ def open_prepared_source_records(
     path: Path, *, expected_sha256: str, input_commit: str
 ) -> PreparedSourceRecords:
     """Quick-check an accepted Git selection, without hashing or scanning its data."""
-    if not _HASH_RE.fullmatch(expected_sha256) or not _COMMIT_RE.fullmatch(
-        input_commit
-    ):
-        raise PreparedSourceError(
-            "prepared selection requires a full input_commit and manifest SHA-256"
-        )
-    root = path.expanduser().resolve()
     try:
-        repo = input_bundle_repository(root)
-        relative = root.relative_to(repo).as_posix()
-        if clean_git_commit(repo) != input_commit:
-            raise PreparedSourceError("prepared input commit pin mismatch")
-        manifest_path = _snapshot_repo_path(relative, _MANIFEST)
-        committed_bytes = _git_bytes(
-            repo, "cat-file", "blob", f"{input_commit}:{manifest_path}"
+        selection = read_accepted_manifest(
+            path, expected_sha256=expected_sha256, input_commit=input_commit
         )
-        if hashlib.sha256(committed_bytes).hexdigest() != expected_sha256:
-            raise PreparedSourceError("prepared source manifest hash mismatch")
-        if (root / _MANIFEST).is_symlink() or (
-            root / _MANIFEST
-        ).read_bytes() != committed_bytes:
-            raise PreparedSourceError(
-                "prepared source manifest differs from pinned commit"
-            )
-        manifest = _manifest(committed_bytes)
-        inventory = _committed_inventory_sizes(
-            repo,
-            input_commit,
-            relative,
-            (_snapshot_repo_path(relative, "files"),),
-            context="prepared sources",
+        manifest = _manifest(selection.manifest_bytes)
+        check_accepted_files(
+            selection,
+            {_DATABASE: (manifest.database_size, manifest.database_git_blob)},
         )
-        if inventory != {_DATABASE: manifest.database_size}:
-            raise PreparedSourceError(
-                "prepared source committed inventory differs from manifest"
-            )
-        tags = _index_tags(repo)
-        for name in (_MANIFEST, _DATABASE):
-            if tags.get(_snapshot_repo_path(relative, name)) != "H":
-                raise PreparedSourceError(
-                    "prepared input files must be fully materialized with ordinary Git index flags"
-                )
+        root = selection.root
         database = root / _DATABASE
-        actual = {
-            item.relative_to(root).as_posix(): item.stat().st_size
-            for item in (root / "files").rglob("*")
-            if item.is_file()
-        }
-        if (
-            (root / "files").is_symlink()
-            or database.is_symlink()
-            or actual != inventory
-        ):
-            raise PreparedSourceError(
-                "prepared source worktree inventory differs from manifest"
-            )
         with closing(_readonly(database)) as conn:
             if conn.execute("PRAGMA user_version").fetchone() != (_SCHEMA_VERSION,):
                 raise PreparedSourceError(
                     "unsupported prepared records database version"
                 )
             conn.execute("SELECT ordinal, source, semantic_key FROM occurrence LIMIT 0")
-        if _git(repo, "rev-parse", "HEAD") != input_commit:
-            raise PreparedSourceError("prepared input commit changed during selection")
+            conn.execute(
+                "SELECT ordinal, source, name, row_count FROM evidence_table LIMIT 0"
+            )
     except (SnapshotError, OSError, sqlite3.Error, ValueError) as exc:
         if isinstance(exc, PreparedSourceError):
             raise

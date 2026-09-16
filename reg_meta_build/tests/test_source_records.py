@@ -21,6 +21,7 @@ from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
     SourceCoordinate,
+    SourceField,
     SourceFields,
     SourceRecord,
     SourceRevision,
@@ -480,3 +481,22 @@ def test_declared_reference_period_preserves_missing_and_empty_evidence() -> Non
     assert missing.status == empty.status == "unknown"
     assert missing.raw_value is None
     assert empty.raw_value == ""
+
+
+@pytest.mark.parametrize("value", [True, False])
+@pytest.mark.parametrize("field", ["identifier", "conditional_sensitivity"])
+def test_flag_declarations_preserve_explicit_booleans(field: str, value: bool) -> None:
+    fields = SourceFields.model_validate({field: value_field(value)})
+    assert getattr(fields, field).value is value
+    assert getattr(SourceFields(), field) is None
+    unknown = SourceFields.model_validate({field: SourceField(status="unknown")})
+    assert getattr(unknown, field).value is None
+
+
+@pytest.mark.parametrize("value", ["true", 1, 0, "conditional"])
+@pytest.mark.parametrize("field", ["identifier", "conditional_sensitivity"])
+def test_flag_declarations_reject_nonboolean_values(
+    field: str, value: str | int
+) -> None:
+    with pytest.raises(ValueError, match=f"{field} must carry a boolean"):
+        SourceFields.model_validate({field: value_field(value)})

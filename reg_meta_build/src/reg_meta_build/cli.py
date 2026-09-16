@@ -200,8 +200,18 @@ def _build_parser() -> argparse.ArgumentParser:
             "--records-commit", required=True, help="Accepted input Git commit."
         )
         command_p.add_argument("--cases", required=True)
+    curated_output = curated_p.add_mutually_exclusive_group(required=True)
+    curated_output.add_argument(
+        "--db-path", help="Explicit strict-build output SQLite path."
+    )
+    curated_output.add_argument(
+        "--diagnostic-db-path",
+        help="New, separate SQLite path for a nonpublishable diagnostic artifact.",
+    )
     curated_p.add_argument(
-        "--db-path", required=True, help="Explicit output SQLite path."
+        "--diagnostic",
+        action="store_true",
+        help="Complete a diagnostic artifact despite curation blockers; requires --diagnostic-db-path.",
     )
 
     build_p = sub.add_parser(
@@ -1154,8 +1164,18 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     start = time.perf_counter()
     records_path = Path(args.records).expanduser().resolve()
     cases_path = Path(args.cases).expanduser().resolve()
+    diagnostic = getattr(args, "diagnostic", False)
+    diagnostic_path = getattr(args, "diagnostic_db_path", None)
+    if diagnostic != bool(diagnostic_path):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="curated_diagnostic_output_required",
+            error_class="usage",
+            message="--diagnostic and a separate --diagnostic-db-path must be used together.",
+            remediation="Choose a new diagnostic output path, or use --db-path for a strict build.",
+        )
     output = (
-        Path(args.db_path).expanduser().resolve()
+        Path(diagnostic_path or args.db_path).expanduser().resolve()
         if args.command == "build-curated-db"
         else None
     )
@@ -1211,19 +1231,55 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     args_payload = {"records": str(records_path), "cases": str(cases_path)}
     if output is not None:
         args_payload["db_path"] = str(output)
-        data.update(db_path=str(output), catalog_published=False)
-        if inspection.buildable:
+        data.update(
+            db_path=str(output),
+            catalog_published=False,
+            artifact_complete=False,
+            artifact_kind="diagnostic" if diagnostic else "catalog",
+            publication_ready=inspection.buildable and not diagnostic,
+            curation_status=data["status"],
+            curation_exit_code=0 if inspection.buildable else EXIT_CONFIG,
+        )
+        fatal_issues = [
+            item
+            for item in inspection.diagnostics
+            if item.code
+            in {"output_contract_invalid", "formation_invalid", "no_catalog_content"}
+        ]
+        if diagnostic and fatal_issues:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="curated_diagnostic_contract_invalid",
+                error_class="configuration",
+                message="Diagnostic artifact cannot bypass invalid or empty resolved content: "
+                + "; ".join(f"{item.code}: {item.detail}" for item in fatal_issues),
+                remediation="Repair the formation or resolved contract; no diagnostic artifact was written.",
+            )
+        if inspection.buildable or diagnostic:
+            manifest = {
+                "build_mode": "scoped-curation",
+                "source_scope": prepared.manifest.scope,
+                "prepared_sources_sha256": args.records_sha256,
+                "prepared_sources_commit": args.records_commit,
+                "curation_cases_sha256": case_sha256,
+            }
+            if diagnostic:
+                manifest["diagnostic_accounting"] = json.dumps(
+                    {
+                        key: value
+                        for key, value in inspection.report().items()
+                        if key != "catalog_preview"
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
             try:
                 write_resolved_catalog(
                     inspection.variables,
                     output,
-                    manifest={
-                        "build_mode": "scoped-curation",
-                        "source_scope": prepared.manifest.scope,
-                        "prepared_sources_sha256": args.records_sha256,
-                        "prepared_sources_commit": args.records_commit,
-                        "curation_cases_sha256": case_sha256,
-                    },
+                    manifest=manifest,
+                    diagnostic=diagnostic,
                 )
             except ValueError as exc:
                 raise RegMetaError(
@@ -1236,13 +1292,16 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
             data.update(
                 db_sha256=_file_sha256(output),
                 structural_validation="passed",
-                catalog_published=True,
+                catalog_published=not diagnostic,
+                artifact_complete=True,
             )
+            if diagnostic:
+                data.update(status="diagnostic_complete", incomplete=True)
     return success_envelope(
         command=args.command,
         args_payload=args_payload,
         db_info={"schema_version": SCHEMA_VERSION}
-        if data.get("catalog_published")
+        if data.get("artifact_complete")
         else None,
         data=data,
         duration_ms=int((time.perf_counter() - start) * 1000),
@@ -2664,9 +2723,12 @@ def _confined_bundle_output_path(
         )
     if args.command in {"build-curated-db", "inspect-curation"}:
         protected = _curated_source_paths(args)
-        if getattr(args, "db_path", None) is not None:
+        if (
+            database_path := getattr(args, "diagnostic_db_path", None)
+            or getattr(args, "db_path", None)
+        ) is not None:
             protected.update(
-                _curated_database_paths(Path(args.db_path).expanduser().resolve())
+                _curated_database_paths(Path(database_path).expanduser().resolve())
             )
         report_paths = {
             resolved_output,
@@ -2779,18 +2841,22 @@ def run(argv: list[str] | None = None) -> int:
                 write_json(payload.get("data", payload), output_path)
         except Exception as exc:
             data = payload.get("data", payload)
-            if args.command == "build-curated-db" and data.get("catalog_published"):
+            if args.command == "build-curated-db" and data.get("artifact_complete"):
                 sys.stderr.write(
                     json.dumps(
                         {
                             "error": {
                                 "code": "curated_build_report_failed",
                                 "class": "diagnostic_output",
-                                "message": f"Catalog publication succeeded; writing its report failed: {exc}",
-                                "catalog_published": True,
+                                "message": f"Catalog artifact completed; writing its report failed: {exc}",
+                                "catalog_published": data["catalog_published"],
+                                "artifact_complete": True,
+                                "artifact_kind": data["artifact_kind"],
+                                "publication_ready": data["publication_ready"],
+                                "curation_exit_code": data["curation_exit_code"],
                                 "db_path": data["db_path"],
                                 "db_sha256": data["db_sha256"],
-                                "remediation": "Keep the published database; choose a writable report destination.",
+                                "remediation": "Keep the completed artifact; choose a writable report destination. Diagnostic accounting is retained in its manifest.",
                             }
                         },
                         ensure_ascii=False,

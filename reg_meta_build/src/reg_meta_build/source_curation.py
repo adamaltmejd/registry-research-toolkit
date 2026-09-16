@@ -14,13 +14,20 @@ from typing import TYPE_CHECKING, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from reg_meta_build._curation import fold_column
+from reg_meta_build.source_coordinates import (
+    NativeKey,  # noqa: TC001 — Pydantic contract
+)
 from reg_meta_build.source_records import (
     FieldScalar,
     FieldState,
     NativeCoordinates,
     RecordLocator,
+    SourceCoordinate,
     SourceField,
     SourceFields,
+    SourceParentKind,
+    SourceParentObservation,
     SourceRecord,
     SourceSubject,
     TemporalScope,
@@ -88,6 +95,43 @@ class CodeSetExpectation(_CurationModel):
     content_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
 
+class ParentFactProjection(_CurationModel):
+    """Complete cleaned parent claim, excluding raw cells and physical layout."""
+
+    model_config = ConfigDict(populate_by_name=True, serialize_by_alias=True)
+
+    kind: SourceParentKind
+    coordinate: SourceCoordinate
+    register_name: SourceCoordinate = Field(alias="register")
+    variant: SourceCoordinate | None = None
+    edition: SourceCoordinate | None = None
+    fields: tuple[FieldExpectation, ...]
+
+    @field_validator("fields")
+    @classmethod
+    def _ordered_fields(
+        cls, fields: tuple[FieldExpectation, ...]
+    ) -> tuple[FieldExpectation, ...]:
+        if not fields or len({field.name for field in fields}) != len(fields):
+            raise ValueError("parent projection needs unique supplied fields")
+        return tuple(sorted(fields, key=lambda field: field.name))
+
+
+def parent_fact_projection(parent: SourceParentObservation) -> ParentFactProjection:
+    return ParentFactProjection(
+        kind=parent.kind,
+        coordinate=parent.coordinate,
+        register=parent.register_name,
+        variant=parent.variant,
+        edition=parent.edition,
+        fields=tuple(
+            FieldExpectation(name=name, status=field.status, value=field.value)
+            for name in SourceFields.model_fields
+            if (field := getattr(parent.fields, name)) is not None
+        ),
+    )
+
+
 class RecordProjection(_CurationModel):
     """The explicitly relevant cleaned part of one source observation."""
 
@@ -96,6 +140,14 @@ class RecordProjection(_CurationModel):
     edition_period_scope: TemporalScope | None = None
     subject: SourceSubject | None = None
     code_set_references: tuple[CodeSetExpectation, ...] | None = None
+    parent_facts: tuple[ParentFactProjection, ...] | None = None
+
+    @field_validator("parent_facts")
+    @classmethod
+    def _ordered_parents(
+        cls, parents: tuple[ParentFactProjection, ...] | None
+    ) -> tuple[ParentFactProjection, ...] | None:
+        return None if parents is None else tuple(sorted(parents, key=_model_token))
 
     @field_validator("code_set_references")
     @classmethod
@@ -126,6 +178,7 @@ class RecordProjection(_CurationModel):
             and self.edition_period_scope is None
             and self.subject is None
             and self.code_set_references is None
+            and self.parent_facts is None
         ):
             raise ValueError("a record projection must select at least one fact")
         return self
@@ -133,13 +186,14 @@ class RecordProjection(_CurationModel):
 
 def _projection_shape(
     projection: RecordProjection,
-) -> tuple[tuple[str, ...], bool, bool, bool, bool]:
+) -> tuple[tuple[str, ...], bool, bool, bool, bool, bool]:
     return (
         tuple(field.name for field in projection.fields),
         projection.edition_scope is not None,
         projection.edition_period_scope is not None,
         projection.subject is not None,
         projection.code_set_references is not None,
+        projection.parent_facts is not None,
     )
 
 
@@ -176,6 +230,7 @@ class PeerGuard(_CurationModel):
     register_name: str | None = None
     fields: tuple[FieldExpectation, ...] = ()
     edition_scopes: tuple[TemporalScope, ...] = ()
+    folded_column: str | None = None
 
     @model_validator(mode="after")
     def _valid_guard(self) -> Self:
@@ -183,8 +238,20 @@ class PeerGuard(_CurationModel):
             raise ValueError("peer guard identifiers must be non-empty")
         if self.register_name is not None and not self.register_name.strip():
             raise ValueError("peer guard register_name cannot be blank")
-        if self.native is None and self.register_name is None and not self.fields:
+        if (
+            self.native is None
+            and self.register_name is None
+            and not self.fields
+            and self.folded_column is None
+        ):
             raise ValueError("a peer guard needs review matching criteria")
+        if self.folded_column is not None and (
+            not self.folded_column
+            or fold_column(self.folded_column) != self.folded_column
+        ):
+            raise ValueError(
+                "a folded column guard must contain a nonempty folded token"
+            )
         if self.native is not None and all(
             getattr(self.native, name) is None
             for name in type(self.native).model_fields
@@ -193,8 +260,6 @@ class PeerGuard(_CurationModel):
         field_names = [field.name for field in self.fields]
         if len(field_names) != len(set(field_names)):
             raise ValueError("a peer guard cannot match a field more than once")
-        if not self.expected_members:
-            raise ValueError("a peer guard needs expected members")
         member_keys = [_ref_key(member) for member in self.expected_members]
         if len(member_keys) != len(set(member_keys)):
             raise ValueError("peer guard members must be unique semantic keys")
@@ -252,8 +317,8 @@ class FormVariableDecision(_CurationModel):
     provider_key: str
     delivery_column_name: str
     canonical_source: SourceRecordRef
-    is_sensitive: bool
-    is_identifier: bool
+    is_sensitive: bool | None
+    is_identifier: bool | None
     reason: str
     coding: Literal["withheld"]
     coding_reason: str
@@ -275,7 +340,84 @@ class FormVariableDecision(_CurationModel):
         return self
 
 
-type CurationDecision = BoundedUnresolvedDecision | FormVariableDecision
+class CheckedFieldChange(_CurationModel):
+    """Replace one checked field of an exact semantic source member."""
+
+    kind: Literal["field"] = "field"
+    ref: SourceRecordRef
+    replacement: FieldExpectation
+
+
+class CheckedPeriodChange(_CurationModel):
+    """Replace the interpreted scopes of one checked source member."""
+
+    kind: Literal["period"] = "period"
+    ref: SourceRecordRef
+    edition_scope: TemporalScope
+    edition_period_scope: TemporalScope
+
+
+class CuratedOccurrenceAddition(_CurationModel):
+    """A declared delivery, not an invented physical source row or native ID.
+
+    Keys reference independently established native or curated identities. The
+    caller must resolve these identities before materialization. Copied fields
+    name the exact checked donor; all other supplied facts are authored claims.
+    """
+
+    kind: Literal["addition"] = "addition"
+    occurrence_key: str = Field(min_length=1)
+    provider: str = Field(min_length=1)
+    variable_key: NativeKey
+    variant_key: NativeKey
+    edition_key: NativeKey
+    population_key: NativeKey | None = None
+    fields: SourceFields
+    edition_scope: TemporalScope
+    edition_period_scope: TemporalScope
+    evidence: tuple[SourceRecordRef, ...]
+    donor: SourceRecordRef | None = None
+    copied_fields: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def _explicit_membership(self) -> Self:
+        if not self.variable_key or not self.variant_key or not self.edition_key:
+            raise ValueError("a declared occurrence needs explicit topology keys")
+        if not self.evidence or len(set(self.evidence)) != len(self.evidence):
+            raise ValueError("a declared occurrence needs unique checked evidence")
+        if self.donor is not None and self.donor not in self.evidence:
+            raise ValueError("the donor must be included in the checked evidence")
+        if bool(self.copied_fields) != (self.donor is not None):
+            raise ValueError("copied fields and their donor must be supplied together")
+        if len(set(self.copied_fields)) != len(self.copied_fields) or any(
+            name not in SourceFields.model_fields for name in self.copied_fields
+        ):
+            raise ValueError("copied fields must be unique known source fields")
+        return self
+
+
+type OccurrenceEffect = (
+    CheckedFieldChange | CheckedPeriodChange | CuratedOccurrenceAddition
+)
+
+
+class OccurrenceCorrectionDecision(_CurationModel):
+    kind: Literal["correct_occurrences"] = "correct_occurrences"
+    reviewed: Literal[True]
+    effects: tuple[OccurrenceEffect, ...]
+    reason: str = Field(min_length=1)
+    provenance: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _nonempty(self) -> Self:
+        if not self.effects or not self.reason.strip() or not self.provenance.strip():
+            raise ValueError("a correction needs effects, rationale and provenance")
+        return self
+
+
+type CurationDecision = (
+    BoundedUnresolvedDecision | FormVariableDecision | OccurrenceCorrectionDecision
+)
 
 
 class CurationCase(_CurationModel):
@@ -367,6 +509,11 @@ def _project_record(record: SourceRecord, shape: RecordProjection) -> RecordProj
             else None
         ),
         subject=record.subject if shape.subject is not None else None,
+        parent_facts=tuple(
+            parent_fact_projection(parent) for parent in record.parent_facts
+        )
+        if shape.parent_facts is not None
+        else None,
         code_set_references=(
             tuple(
                 CodeSetExpectation(
@@ -390,6 +537,15 @@ def _peer_matches(record: SourceRecord, guard: PeerGuard) -> bool:
         return False
     if guard.edition_scopes and record.edition_scope not in guard.edition_scopes:
         return False
+    if guard.folded_column is not None:
+        column = record.fields.column_name
+        if (
+            column is None
+            or column.status != "value"
+            or not isinstance(column.value, str)
+            or fold_column(column.value) != guard.folded_column
+        ):
+            return False
     if guard.native is not None:
         native = record.subject.native
         for name in type(guard.native).model_fields:
@@ -470,15 +626,39 @@ def evaluate_case(
     return _evaluate_case(case, records, grouped)
 
 
-def _evaluate_case(
-    case: CurationCase,
+def evaluate_source_expectations(
+    targets: tuple[RecordExpectation, ...],
+    support: tuple[RecordExpectation, ...],
+    peer_guards: tuple[PeerGuard, ...],
+    records: Iterable[SourceRecord],
+) -> tuple[ApplicabilityIssue, ...]:
+    """Check finite source expectations without requiring a curation decision.
+
+    The caller must include all source records eligible for each peer guard;
+    passing only the previously expected members would hide newly added peers.
+    """
+    records = tuple(records)
+    grouped: defaultdict[tuple[str, tuple[str, ...]], list[SourceRecord]] = defaultdict(
+        list
+    )
+    for record in records:
+        grouped[_record_key(record)].append(record)
+    return _evaluate_source_expectations(
+        targets, support, peer_guards, records, grouped
+    )
+
+
+def _evaluate_source_expectations(
+    targets: tuple[RecordExpectation, ...],
+    support: tuple[RecordExpectation, ...],
+    peer_guards: tuple[PeerGuard, ...],
     records: tuple[SourceRecord, ...],
     grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]],
-) -> CaseEvaluation:
+) -> tuple[ApplicabilityIssue, ...]:
     issues: list[ApplicabilityIssue] = []
     for role, expectations in (
-        ("target", case.targets),
-        ("support", case.support),
+        ("target", targets),
+        ("support", support),
     ):
         for expected in expectations:
             issue = _compare_expectation(
@@ -489,7 +669,7 @@ def _evaluate_case(
             if issue is not None:
                 issues.append(issue)
 
-    for guard in case.peer_guards:
+    for guard in peer_guards:
         actual_members = {
             _record_key(record) for record in records if _peer_matches(record, guard)
         }
@@ -515,6 +695,18 @@ def _evaluate_case(
                     added_members=added_members,
                 )
             )
+
+    return tuple(issues)
+
+
+def _evaluate_case(
+    case: CurationCase,
+    records: tuple[SourceRecord, ...],
+    grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]],
+) -> CaseEvaluation:
+    issues = _evaluate_source_expectations(
+        case.targets, case.support, case.peer_guards, records, grouped
+    )
 
     if issues:
         return CaseEvaluation(
@@ -544,6 +736,16 @@ class ResolutionDiagnostic(_CurationModel):
     detail: str
     refs: tuple[SourceRecordRef, ...] = ()
     applicability_issue: ApplicabilityIssue | None = None
+    fields: tuple[str, ...] = ()
+    withheld_output: tuple[str, ...] = ()
+    valid_from: str | None = None
+    valid_to: str | None = None
+
+
+class SourceOccurrenceAccounting(_CurationModel):
+    record_id: str
+    source_revision_id: str
+    locators: tuple[RecordLocator, ...]
 
 
 class SourceAccounting(_CurationModel):
@@ -553,6 +755,23 @@ class SourceAccounting(_CurationModel):
     roles: tuple[Literal["target", "support", "review_context"], ...]
     case_ids: tuple[str, ...]
     locators: tuple[RecordLocator, ...]
+    occurrences: tuple[SourceOccurrenceAccounting, ...]
+    output_disposition: Literal[
+        "resolved_target",
+        "withheld_target",
+        "support_only",
+        "review_context_only",
+        "unaccounted",
+    ] = "unaccounted"
+
+
+class CaseAccounting(_CurationModel):
+    case_id: str
+    decision: CurationDecision
+    targets: tuple[SourceRecordRef, ...]
+    disposition: Literal["resolved", "withheld"]
+    output_fqid: str | None
+    diagnostic_codes: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -560,6 +779,7 @@ class CurationInspection:
     variables: tuple[ResolvedVariable, ...]
     diagnostics: tuple[ResolutionDiagnostic, ...]
     source_accounting: tuple[SourceAccounting, ...]
+    case_accounting: tuple[CaseAccounting, ...]
 
     @property
     def buildable(self) -> bool:
@@ -580,6 +800,15 @@ class CurationInspection:
             "source_accounting": [
                 item.model_dump(mode="json") for item in self.source_accounting
             ],
+            "source_occurrences": sum(
+                len(item.occurrences) for item in self.source_accounting
+            ),
+            "case_accounting": [
+                item.model_dump(mode="json") for item in self.case_accounting
+            ],
+            "withheld_cases": sum(
+                item.disposition == "withheld" for item in self.case_accounting
+            ),
             "catalog_preview": [
                 variable.model_dump(mode="json") for variable in self.variables
             ],
@@ -655,6 +884,8 @@ def inspect_cases(
     Records must already satisfy the source contract, as checked at preparation and
     artifact-read boundaries; inspection does not revalidate original source inputs.
     """
+    from reg_meta_build.resolved_catalog import unresolved_variable_flags
+
     records = tuple(records)
     grouped: defaultdict[tuple[str, tuple[str, ...]], list[SourceRecord]] = defaultdict(
         list
@@ -726,6 +957,19 @@ def inspect_cases(
                 roles=tuple(sorted(roles[key])),
                 case_ids=tuple(sorted(owners[key])),
                 locators=tuple(locators[token] for token in sorted(locators)),
+                occurrences=tuple(
+                    sorted(
+                        (
+                            SourceOccurrenceAccounting(
+                                record_id=observation.record_id,
+                                source_revision_id=observation.source_revision_id,
+                                locators=observation.locators,
+                            )
+                            for observation in observations
+                        ),
+                        key=_model_token,
+                    )
+                ),
             )
         )
         if not roles[key]:
@@ -744,8 +988,29 @@ def inspect_cases(
             )
 
     variables: list[ResolvedVariable] = []
+    formed_cases: dict[str, str] = {}
+    intended_outputs: dict[str, str] = {}
     identities: dict[tuple[str, str, str], str] = {}
     for case in ordered_cases:
+        if isinstance(case.decision, OccurrenceCorrectionDecision):
+            raise TypeError(
+                "occurrence corrections require the ordinary formation path"
+            )
+        if isinstance(case.decision, FormVariableDecision):
+            providers = {
+                projection.subject.provider
+                for target in case.targets
+                for projection in target.alternatives
+                if projection.subject is not None
+            }
+            if len(providers) == 1:
+                intended_outputs[case.case_id] = "/".join(
+                    (
+                        next(iter(providers)),
+                        case.decision.register_slug,
+                        case.decision.variable_slug,
+                    )
+                )
         evaluation = _evaluate_case(case, records, grouped)
         for issue in evaluation.issues:
             diagnostics.append(
@@ -819,6 +1084,25 @@ def inspect_cases(
             variable.register_ref.slug,
             variable.slug,
         )
+        intended_outputs[case.case_id] = "/".join(identity)
+        if unknown_flags := unresolved_variable_flags(variable):
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="unresolved_flag",
+                    severity="error",
+                    case_id=case.case_id,
+                    subject="/".join(identity),
+                    refs=target_refs,
+                    fields=unknown_flags,
+                    withheld_output=("variable", "states", "dependent_edges"),
+                    detail=(
+                        "Unknown flags cannot be represented faithfully by the existing "
+                        "public catalog contract. The variable and its dependent content "
+                        "are withheld; no false value is inferred."
+                    ),
+                )
+            )
+            continue
         if identity in identities:
             diagnostics.append(
                 ResolutionDiagnostic(
@@ -832,6 +1116,7 @@ def inspect_cases(
             )
         identities[identity] = case.case_id
         variables.append(variable)
+        formed_cases[case.case_id] = "/".join(identity)
         for field_name in ("data_type", "data_length"):
             missing = tuple(
                 target.ref
@@ -890,6 +1175,34 @@ def inspect_cases(
                 detail="No safely formed variables; refusing to publish an empty catalog.",
             )
         )
+    diagnostic_codes: defaultdict[str, set[str]] = defaultdict(set)
+    ref_diagnostic_codes: defaultdict[tuple[str, tuple[str, ...]], set[str]] = (
+        defaultdict(set)
+    )
+    for item in diagnostics:
+        if item.case_id is not None:
+            diagnostic_codes[item.case_id].add(item.code)
+        for ref in item.refs:
+            ref_diagnostic_codes[_ref_key(ref)].add(item.code)
+    for case in ordered_cases:
+        for target in case.targets:
+            diagnostic_codes[case.case_id].update(
+                ref_diagnostic_codes[_ref_key(target.ref)]
+            )
+    for index, item in enumerate(accounting):
+        key = _ref_key(item.ref)
+        disposition = (
+            "resolved_target"
+            if any(case_id in formed_cases for case_id in target_owners[key])
+            else "withheld_target"
+            if "target" in item.roles
+            else "support_only"
+            if "support" in item.roles
+            else "review_context_only"
+            if "review_context" in item.roles
+            else "unaccounted"
+        )
+        accounting[index] = item.model_copy(update={"output_disposition": disposition})
     return CurationInspection(
         variables=tuple(variables),
         diagnostics=tuple(
@@ -905,6 +1218,17 @@ def inspect_cases(
             )
         ),
         source_accounting=tuple(accounting),
+        case_accounting=tuple(
+            CaseAccounting(
+                case_id=case.case_id,
+                decision=case.decision,
+                targets=tuple(target.ref for target in case.targets),
+                disposition="resolved" if case.case_id in formed_cases else "withheld",
+                output_fqid=intended_outputs.get(case.case_id),
+                diagnostic_codes=tuple(sorted(diagnostic_codes[case.case_id])),
+            )
+            for case in ordered_cases
+        ),
     )
 
 
@@ -1084,6 +1408,7 @@ def _form_variable(
 __all__ = [
     "ApplicabilityIssue",
     "BoundedUnresolvedDecision",
+    "CaseAccounting",
     "CaseEvaluation",
     "CodeSetExpectation",
     "CurationCase",
@@ -1091,14 +1416,17 @@ __all__ = [
     "CurationResolutionError",
     "FieldExpectation",
     "FormVariableDecision",
+    "ParentFactProjection",
     "PeerGuard",
     "RecordExpectation",
     "RecordProjection",
     "ResolutionDiagnostic",
     "SourceAccounting",
+    "SourceOccurrenceAccounting",
     "SourceRecordRef",
     "UnresolvedAspect",
     "evaluate_case",
     "inspect_cases",
+    "parent_fact_projection",
     "resolve_cases",
 ]

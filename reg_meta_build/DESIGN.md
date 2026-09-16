@@ -398,17 +398,54 @@ structured diagnostics, semantic source accounting with physical locators, and t
 resolved catalog preview. A blocked result returns a nonzero status. The warm path never
 generates cases, reads a PDF, asks an LLM, or updates its input expectations.
 
-The current case resolver forms finite, non-overlapping annual occurrences and
+An explicit `--diagnostic --diagnostic-db-path DB` replaces `--db-path` to write
+independently resolved output despite curation blockers. It uses the same inspection and
+structural checks. The destination must be new and distinct from the active catalog;
+creation cannot overwrite another file. The manifest marks the artifact diagnostic,
+incomplete and nonpublishable, and retains its issue, case-disposition and
+source-occurrence ledger, including duplicate observations. The result distinguishes
+`status=diagnostic_complete` and `artifact_complete=true` from
+`publication_ready=false`, and preserves the strict `curation_exit_code` even when the
+artifact completed. Malformed contracts, pins, formation errors and empty resolved
+output remain fatal. Builder publication (`publish_db`, including `extend-db`) rejects
+diagnostic artifacts. Reader and download-installation behavior in `reg_meta` is outside
+this builder-only change; local comparison can read the artifact explicitly.
+
+The replacement source preparation now covers the maintained input inventory through
+`prepared_catalog.py`, including separate source-value dictionaries and indexed native
+variable families. Parent metadata remains source evidence. The common formation path
+resolves occurrence intervals and bound code memberships, then supplies the direct
+writer with catalog facts. The writer supports the existing classification, group,
+relation, tag, alias, edition and search contract. These components are implemented;
+ordinary `build-db` has not yet switched to them, and full-corpus replacement output and
+comparison remain completion gates.
+
+Occurrence corrections compose against the original cleaned evidence. Exact field and
+period assignments can agree or affect different facts. Conflicting assignments retain
+all claims and withhold the disputed fact; another observation cannot silently fill it
+back in. A declared delivery has an explicit variable, variant, edition and finite
+period, checked supporting members and correction provenance. It never becomes a
+fabricated physical source row. An offline converter can freeze an existing errata donor
+choice and target membership; warm application cannot reselect the nearest donor. Source
+updates invalidate relevant pins, while unrelated variable changes and physical layout
+changes do not. Conversion of the remaining accepted surfaces, including the coding
+dependencies of copied deliveries, remains required before cutover.
+
+The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across
 states, preserves exact code strings and differing labels for the same code, and removes
 only identical repeated pairs. Selecting source memberships for a state's period remains
 the resolver's responsibility. Null type, length and coding preserve uncertainty;
-withheld coding is recorded in state provenance. Sensitivity and identifier flags are
-explicit decisions; deprecation defaults to false for this first current-variable slice.
-It does not yet support code-set resolution, parallel representations, groups,
-relations, tags or full-corpus publication. The maintained AmPolTyp demonstration and
-its reviewed cases stay in local evidence, outside accepted input curation.
+withheld coding is recorded in state provenance. Sensitivity and identifier flags may
+remain unknown in source/resolved evidence, but the existing public database contract
+cannot represent unknown flags faithfully. Inspection reports `unresolved_flag` and
+withholds that variable, its states and dependent edges; strict publication blocks,
+while diagnostics may retain unrelated safe output. The writer independently refuses
+unknown flags. It never substitutes false. Deprecation defaults to false for this first
+current-variable slice. That inspector does not provide complete source resolution or
+full-corpus publication. The maintained AmPolTyp demonstration and its reviewed cases
+stay in local evidence, outside accepted input curation.
 
 Case applicability is semantic, not whole-file-byte equality. A different source hash or
 physical locator alone does not invalidate a case when all relevant scoped facts,

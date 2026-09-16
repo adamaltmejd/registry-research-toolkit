@@ -338,6 +338,13 @@ def test_core_graph_reinsert_preserves_existing_alias_windows() -> None:
     conn.close()
 
 
+def _staged_database(path: Path) -> bytes:
+    with sqlite3.connect(path) as conn:
+        conn.execute("CREATE TABLE payload (value TEXT)")
+        conn.execute("INSERT INTO payload VALUES ('new generation')")
+    return path.read_bytes()
+
+
 def test_publish_db_installs_new_bytes_and_keeps_prior_generation(
     tmp_path: Path,
 ) -> None:
@@ -348,11 +355,11 @@ def test_publish_db_installs_new_bytes_and_keeps_prior_generation(
     staged = tmp_path / "reg_meta.db.tmp"
     live.write_bytes(b"gen-2")
     prev.write_bytes(b"gen-1-old")
-    staged.write_bytes(b"gen-3")
+    staged_bytes = _staged_database(staged)
 
     publish_db(staged, live)
 
-    assert live.read_bytes() == b"gen-3"
+    assert live.read_bytes() == staged_bytes
     assert prev.read_bytes() == b"gen-2"
     assert not staged.exists()
 
@@ -361,11 +368,11 @@ def test_publish_db_first_generation_writes_no_prev(tmp_path: Path) -> None:
     """First-ever build: nothing live to preserve, no error, no `.prev`."""
     live = tmp_path / "reg_meta.db"
     staged = tmp_path / "reg_meta.db.tmp"
-    staged.write_bytes(b"gen-1")
+    staged_bytes = _staged_database(staged)
 
     publish_db(staged, live)
 
-    assert live.read_bytes() == b"gen-1"
+    assert live.read_bytes() == staged_bytes
     assert not (tmp_path / "reg_meta.db.prev").exists()
 
 
@@ -377,7 +384,7 @@ def test_publish_db_backup_failure_leaves_live_db_intact(
     live = tmp_path / "reg_meta.db"
     staged = tmp_path / "reg_meta.db.tmp"
     live.write_bytes(b"live generation")
-    staged.write_bytes(b"new generation")
+    _staged_database(staged)
 
     def _boom(*_args: object, **_kwargs: object) -> None:
         raise OSError("injected backup failure")
@@ -401,7 +408,7 @@ def test_publish_db_replace_failure_leaves_live_db_intact(
     live = tmp_path / "reg_meta.db"
     staged = tmp_path / "reg_meta.db.tmp"
     live.write_bytes(b"live generation")
-    staged.write_bytes(b"new generation")
+    staged_bytes = _staged_database(staged)
 
     def _boom(*_args: object, **_kwargs: object) -> None:
         raise OSError("injected replace failure")
@@ -414,7 +421,7 @@ def test_publish_db_replace_failure_leaves_live_db_intact(
         publish_db(staged, live)
 
     assert live.read_bytes() == b"live generation"
-    assert staged.read_bytes() == b"new generation"
+    assert staged.read_bytes() == staged_bytes
 
 
 def test_create_empty_provenance_db_schema(tmp_path: Path) -> None:

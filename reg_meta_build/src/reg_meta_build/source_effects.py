@@ -1,0 +1,302 @@
+"""Compose checked occurrence corrections against immutable original evidence.
+
+All applicability checks precede every effect. A preceding correction cannot make
+a later decision applicable. Equal or disjoint assignments compose; contradictory
+assignments withhold only the disputed fact, with every claim retained in the ledger.
+"""
+
+from __future__ import annotations
+
+from collections import defaultdict
+from dataclasses import dataclass, replace
+from typing import TYPE_CHECKING, Literal
+
+from reg_meta_build.source_curation import (
+    CaseEvaluation,
+    CheckedFieldChange,
+    CheckedPeriodChange,
+    CuratedOccurrenceAddition,
+    CurationCase,
+    OccurrenceCorrectionDecision,
+    ResolutionDiagnostic,
+    SourceRecordRef,
+    evaluate_case,
+)
+from reg_meta_build.source_intervals import finite_scope_bounds
+from reg_meta_build.source_occurrences import (
+    AppliedCorrection,
+    EffectiveOccurrence,
+    source_occurrence,
+)
+from reg_meta_build.source_records import SourceField, SourceFields, TemporalScope
+
+if TYPE_CHECKING:
+    from reg_meta_build.source_curation import RecordExpectation
+    from reg_meta_build.source_records import SourceRecord
+
+
+@dataclass(frozen=True)
+class CorrectionAccounting:
+    case: CurationCase
+    evaluation: CaseEvaluation
+    disposition: Literal["applied", "stale", "conflicted"]
+    conflicting_effects: tuple[int, ...] = ()
+
+
+@dataclass(frozen=True)
+class OccurrenceCorrections:
+    occurrences: tuple[EffectiveOccurrence, ...]
+    accounting: tuple[CorrectionAccounting, ...]
+    diagnostics: tuple[ResolutionDiagnostic, ...]
+
+
+def record_ref(record: SourceRecord) -> SourceRecordRef:
+    return SourceRecordRef(
+        source=record.source, semantic_record_key=record.locators[0].semantic_record_key
+    )
+
+
+def _require_checked(expected: RecordExpectation, fields: tuple[str, ...] = ()) -> None:
+    shape = expected.alternatives[0]
+    if (
+        shape.subject is None
+        or shape.edition_scope is None
+        or shape.edition_period_scope is None
+        or set(fields) - {field.name for field in shape.fields}
+    ):
+        raise ValueError(
+            "occurrence effects require checked subject, both scopes and every changed/copied field"
+        )
+
+
+def _check_contract(case: CurationCase) -> None:
+    decision = case.decision
+    if not isinstance(decision, OccurrenceCorrectionDecision):
+        raise TypeError("occurrence application accepts only occurrence corrections")
+    targets = {item.ref: item for item in case.targets}
+    checked = {item.ref: item for item in (*case.support, *case.targets)}
+    for effect in decision.effects:
+        if isinstance(effect, CuratedOccurrenceAddition):
+            if not case.peer_guards:
+                raise ValueError(
+                    "an occurrence addition requires finite peer membership guards"
+                )
+            if any(ref not in checked for ref in effect.evidence):
+                raise ValueError("addition evidence must be checked targets or support")
+            for ref in effect.evidence:
+                _require_checked(
+                    checked[ref], effect.copied_fields if ref == effect.donor else ()
+                )
+            scope = effect.edition_period_scope
+            if scope.kind == "not_applicable":
+                scope = effect.edition_scope
+            if finite_scope_bounds(scope) is None:
+                raise ValueError(
+                    "an added occurrence requires an explicit finite period"
+                )
+            if effect.donor is not None:
+                for alternative in checked[effect.donor].alternatives:
+                    donor_fields = {field.name: field for field in alternative.fields}
+                    for name in effect.copied_fields:
+                        expected = donor_fields[name]
+                        actual = getattr(effect.fields, name)
+                        if expected.status == "absent":
+                            agrees = actual is None
+                        else:
+                            agrees = actual is not None and (
+                                actual.status,
+                                actual.value,
+                            ) == (expected.status, expected.value)
+                        if not agrees:
+                            raise ValueError(
+                                "a copied field must equal every checked donor alternative"
+                            )
+        else:
+            if effect.ref not in targets:
+                raise ValueError("a field or period effect must name an exact target")
+            _require_checked(
+                targets[effect.ref],
+                (effect.replacement.name,)
+                if isinstance(effect, CheckedFieldChange)
+                else (),
+            )
+
+
+def apply_occurrence_cases(
+    records: tuple[SourceRecord, ...], cases: tuple[CurationCase, ...]
+) -> OccurrenceCorrections:
+    """Resolve a complete relevant source slice; never select only expected peers.
+
+    Contract errors are fatal in both strict and diagnostic modes. Stale decisions
+    do not apply. Their evidence and errors remain available alongside source facts.
+    """
+    ordered = tuple(sorted(cases, key=lambda case: case.case_id))
+    if len({case.case_id for case in ordered}) != len(ordered):
+        raise ValueError("occurrence correction case IDs must be unique")
+    for case in ordered:
+        _check_contract(case)
+    evaluations = tuple(evaluate_case(case, records) for case in ordered)
+    evidence: dict[SourceRecordRef, list[SourceRecord]] = defaultdict(list)
+    for record in records:
+        evidence[record_ref(record)].append(record)
+    fields = defaultdict(list)
+    periods = defaultdict(list)
+    additions = defaultdict(list)
+    diagnostics = []
+    for case, evaluation in zip(ordered, evaluations, strict=True):
+        for issue in evaluation.issues:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code=issue.code,
+                    severity="error",
+                    case_id=case.case_id,
+                    subject=issue.subject,
+                    detail=issue.detail,
+                    refs=tuple(item.ref for item in (*case.targets, *case.support)),
+                    applicability_issue=issue,
+                    withheld_output=("curation_effects",),
+                )
+            )
+        if evaluation.status == "stale":
+            continue
+        decision = case.decision
+        assert isinstance(decision, OccurrenceCorrectionDecision)
+        for index, effect in enumerate(decision.effects):
+            correction = AppliedCorrection(case.case_id, index, decision.provenance)
+            if isinstance(effect, CheckedFieldChange):
+                fields[effect.ref, effect.replacement.name].append((effect, correction))
+            elif isinstance(effect, CheckedPeriodChange):
+                periods[effect.ref].append((effect, correction))
+            else:
+                additions[effect.occurrence_key].append((effect, correction))
+
+    conflicted: dict[str, set[int]] = defaultdict(set)
+
+    def conflict(claims, subject: str, refs, names, withheld) -> None:
+        detail = "Competing checked assignments: " + "; ".join(
+            f"{owner.case_id}[{owner.effect_index}]={effect.model_dump_json()}"
+            for effect, owner in claims
+        )
+        for _, owner in claims:
+            conflicted[owner.case_id].add(owner.effect_index)
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="conflicting_curation_effects",
+                    severity="error",
+                    case_id=owner.case_id,
+                    subject=subject,
+                    detail=detail,
+                    refs=refs,
+                    fields=names,
+                    withheld_output=withheld,
+                )
+            )
+
+    field_changes = defaultdict(dict)
+    field_owners = defaultdict(list)
+    withheld_fields = defaultdict(set)
+    for (ref, name), claims in fields.items():
+        replacements = {effect.replacement for effect, _ in claims}
+        if len(replacements) > 1:
+            conflict(claims, str(ref), (ref,), (name,), (name,))
+            value = SourceField(status="unknown")
+            withheld_fields[ref].add(name)
+        else:
+            replacement = next(iter(replacements))
+            value = (
+                None
+                if replacement.status == "absent"
+                else SourceField(status=replacement.status, value=replacement.value)
+            )
+        field_changes[ref][name] = value
+        field_owners[ref].extend(owner for _, owner in claims)
+    period_changes = {}
+    for ref, claims in periods.items():
+        replacements = {
+            (effect.edition_scope, effect.edition_period_scope) for effect, _ in claims
+        }
+        if len(replacements) > 1:
+            conflict(claims, str(ref), (ref,), ("period",), ("occurrence",))
+            period_changes[ref] = (
+                TemporalScope(kind="unknown", label="conflicting checked periods"),
+                TemporalScope(kind="unknown", label="conflicting checked periods"),
+            )
+        else:
+            period_changes[ref] = next(iter(replacements))
+        field_owners[ref].extend(owner for _, owner in claims)
+
+    occurrences = []
+    for record in records:
+        ref = record_ref(record)
+        occurrence = source_occurrence(record)
+        values = {
+            name: getattr(record.fields, name) for name in SourceFields.model_fields
+        }
+        values.update(field_changes.get(ref, {}))
+        scope, period = period_changes.get(
+            ref, (record.edition_scope, record.edition_period_scope)
+        )
+        occurrences.append(
+            replace(
+                occurrence,
+                fields=SourceFields.model_validate(values),
+                edition_scope=scope,
+                edition_period_scope=period,
+                corrections=tuple(
+                    sorted(field_owners[ref], key=lambda c: (c.case_id, c.effect_index))
+                ),
+                withheld_fields=tuple(sorted(withheld_fields[ref])),
+            )
+        )
+    for key, claims in sorted(additions.items()):
+        # Evidence references differ legitimately for identical assertions; retain
+        # all of them instead of making insertion order choose provenance.
+        assertions = {
+            effect.model_dump_json(exclude={"evidence", "donor", "copied_fields"})
+            for effect, _ in claims
+        }
+        refs = tuple(
+            sorted(
+                {ref for effect, _ in claims for ref in effect.evidence},
+                key=lambda ref: (ref.source, ref.semantic_record_key),
+            )
+        )
+        if len(assertions) > 1:
+            conflict(claims, key, refs, ("occurrence",), (key,))
+            continue
+        effect = claims[0][0]
+        occurrences.append(
+            EffectiveOccurrence(
+                provider=effect.provider,
+                variable_key=effect.variable_key,
+                variant_key=effect.variant_key,
+                edition_key=effect.edition_key,
+                population_key=effect.population_key,
+                fields=effect.fields,
+                edition_scope=effect.edition_scope,
+                edition_period_scope=effect.edition_period_scope,
+                source_records=(),
+                support_records=tuple(
+                    record for ref in refs for record in evidence[ref]
+                ),
+                occurrence_key=key,
+                corrections=tuple(owner for _, owner in claims),
+            )
+        )
+    return OccurrenceCorrections(
+        tuple(occurrences),
+        tuple(
+            CorrectionAccounting(
+                case,
+                evaluation,
+                "stale"
+                if evaluation.status == "stale"
+                else "conflicted"
+                if case.case_id in conflicted
+                else "applied",
+                tuple(sorted(conflicted[case.case_id])),
+            )
+            for case, evaluation in zip(ordered, evaluations, strict=True)
+        ),
+        tuple(diagnostics),
+    )

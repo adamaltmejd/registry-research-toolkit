@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import TYPE_CHECKING
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -16,7 +17,9 @@ from reg_meta_build.source_records import (
     RecordLocator,
     SourceCoordinate,
     SourceField,
+    SourceFieldCells,
     SourceFields,
+    SourceParentObservation,
     SourceRecord,
     SourceRevision,
     SourceSubject,
@@ -56,7 +59,13 @@ class _RegisterinformationRow:
     population_date: str
 
 
-def _scb_native_id(value: str, field: str, row_number: int) -> int:
+def _scb_native_id(
+    value: str,
+    field: str,
+    row_number: int,
+    *,
+    filename: str = "Registerinformation.csv",
+) -> int:
     try:
         return int(value)
     except ValueError as exc:
@@ -65,7 +74,7 @@ def _scb_native_id(value: str, field: str, row_number: int) -> int:
             code="scb_native_id_invalid",
             error_class="configuration",
             message=(
-                "Invalid SCB native ID in Registerinformation.csv "
+                f"Invalid SCB native ID in {filename} "
                 f"at row {row_number}, field {field}: {value!r}."
             ),
             remediation="Re-export the file from mikrometadata.scb.se.",
@@ -132,6 +141,17 @@ def _cell_field(
     return value_field(cleaned, raw=raw)
 
 
+def _delivered_cells(
+    cells: Mapping[str, tuple[bool, str | None, str]],
+) -> tuple[DeliveredCell, ...]:
+    return tuple(
+        DeliveredCell(
+            name=name, present=cell[0], raw_value=cell[1], interpreted_value=cell[2]
+        )
+        for name, cell in cells.items()
+    )
+
+
 def _data_type_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
     field = _cell_field(cell)
     if field is None or field.status != "value" or not isinstance(field.value, str):
@@ -165,6 +185,117 @@ def _data_length_field(cell: tuple[bool, str | None, str]) -> SourceField | None
             status="value", value=str(int(field.value)), raw_value=field.raw_value
         )
     return field
+
+
+_PARENT_COLUMNS = (
+    ("register", (("name", "Registernamn"), ("purpose", "Registersyfte"))),
+    (
+        "variant",
+        (
+            ("name", "Registervariantnamn"),
+            ("description", "Registervariantbeskrivning"),
+        ),
+    ),
+    (
+        "edition",
+        (
+            ("name", "Registerversionnamn"),
+            ("description", "Registerversionbeskrivning"),
+            ("measurement_information", "Registerversionmätinformation"),
+            ("documentation_status", "Registerversion_DocStaus"),
+            ("first_approved_at", "Registerversion_ForstaGodkannandeDatum"),
+            ("last_approved_at", "Registerversion_SenastGodkandDatum"),
+        ),
+    ),
+    (
+        "population",
+        (
+            ("name", "Populationnamn"),
+            ("population_definition", "Populationdefinition"),
+            ("population_comment", "Populationkommentar"),
+            ("population_date", "Populationdatum"),
+        ),
+    ),
+    ("object_type", (("name", "Objekttypnamn"), ("definition", "Objekttypdefinition"))),
+)
+_PARENT_COLUMN_NAMES = tuple(
+    column for _, fields in _PARENT_COLUMNS for _, column in fields
+)
+_PARENT_PARAGRAPHS = {
+    "purpose",
+    "description",
+    "measurement_information",
+    "population_definition",
+    "population_comment",
+    "definition",
+}
+
+
+@lru_cache(maxsize=8192)
+def _parent_facts(
+    register_id: int,
+    variant_id: int,
+    edition_id: int,
+    positions: tuple[int, ...],
+    cells: tuple[tuple[bool, str | None, str], ...],
+) -> tuple[SourceParentObservation, ...]:
+    """Share repeated parent claims while retaining every original row occurrence."""
+    fields_by_kind = {}
+    mappings = {}
+    offset = 0
+    for kind, names in _PARENT_COLUMNS:
+        fields = {}
+        field_cells = []
+        for field, _ in names:
+            present, raw, interpreted = cells[offset]
+            fields[field] = (
+                value_field(
+                    normalize_text(interpreted, multiline=field in _PARENT_PARAGRAPHS),
+                    raw=raw,
+                )
+                if present and interpreted.strip()
+                else SourceField(status="unknown", raw_value=raw)
+            )
+            field_cells.append(
+                SourceFieldCells(field=field, positions=(positions[offset],))
+            )
+            offset += 1
+        fields_by_kind[kind] = SourceFields.model_validate(fields)
+        mappings[kind] = tuple(field_cells)
+
+    def coordinate(kind: str, native_id: int | None = None) -> SourceCoordinate:
+        name = fields_by_kind[kind].name
+        text = name.value if name is not None and isinstance(name.value, str) else None
+        return (
+            SourceCoordinate(status="value", native_id=native_id, name=text)
+            if native_id is not None or text
+            else SourceCoordinate(status="unknown")
+        )
+
+    register = coordinate("register", register_id)
+    variant = coordinate("variant", variant_id)
+    edition = coordinate("edition", edition_id)
+    coordinates = {
+        "register": register,
+        "variant": variant,
+        "edition": edition,
+        "population": coordinate("population"),
+        "object_type": coordinate("object_type"),
+    }
+    return tuple(
+        SourceParentObservation(
+            kind=kind,
+            coordinate=coordinates[kind],
+            register=register,
+            variant=variant if kind != "register" else None,
+            edition=edition
+            if kind in {"edition", "population", "object_type"}
+            else None,
+            fields=fields_by_kind[kind],
+            field_cells=mappings[kind],
+        )
+        for kind, _ in _PARENT_COLUMNS
+    )
 
 
 def clean_scb_row(
@@ -279,19 +410,13 @@ def clean_scb_row(
             measurement_unit=_optional_text_field(
                 interpreted.measurement_unit, text("Mattenhet")
             ),
-            population_definition=_optional_text_field(
-                interpreted.population_definition,
-                text("Populationdefinition"),
-                multiline=True,
-            ),
-            population_comment=_optional_text_field(
-                interpreted.population_comment,
-                text("Populationkommentar"),
-                multiline=True,
-            ),
-            population_date=_optional_text_field(
-                interpreted.population_date, text("Populationdatum")
-            ),
+        ),
+        parent_facts=_parent_facts(
+            interpreted.register_id,
+            interpreted.register_variant_id,
+            interpreted.edition_id,
+            tuple(header.index(name) for name in _PARENT_COLUMN_NAMES),
+            tuple(cells[name] for name in _PARENT_COLUMN_NAMES),
         ),
         original_period_text=text("Registerversionnamn"),
         context=(
@@ -305,15 +430,7 @@ def clean_scb_row(
             text("Objekttypnamn"),
             text("Objekttypdefinition"),
         ),
-        delivered_cells=tuple(
-            DeliveredCell(
-                name=name,
-                present=cell[0],
-                raw_value=cell[1],
-                interpreted_value=cell[2],
-            )
-            for name, cell in cells.items()
-        ),
+        delivered_cells=_delivered_cells(cells),
     )
     issue = None
     if issue_kind is not None:

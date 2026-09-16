@@ -28,7 +28,7 @@ from collections import Counter
 from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -116,6 +116,8 @@ class SosCellEvidence:
     hyperlink_target: str | None
     hyperlink_location: str | None
     display_value: str | None
+    cached_raw_value: Any = None
+    cached_raw_type: str | None = None
 
 
 @dataclass(frozen=True)
@@ -137,6 +139,8 @@ SosEvidenceRole = Literal[
     "preamble",
     "period_section",
     "code",
+    "crosswalk",
+    "derivation",
     "raw",
     "quality",
 ]
@@ -154,7 +158,9 @@ class SosEvidenceRow:
 class SosSheetEvidence:
     """Ordered original rows retained from one recognized SOS sheet."""
 
-    kind: Literal["general", "dcat", "subsets", "variables", "codelist", "quality"]
+    kind: Literal[
+        "general", "dcat", "subsets", "variables", "codelist", "quality", "support"
+    ]
     sheet_name: str
     rows: tuple[SosEvidenceRow, ...]
 
@@ -289,7 +295,7 @@ def parse_register_file(path: Path | str) -> SosRegister:
         # read-only cells discard hyperlinks, including delivered cells whose
         # classification link is their only content. These workbooks are small,
         # and the existing bounded row iterators still avoid phantom-row work.
-        wb = openpyxl.load_workbook(p, read_only=False, data_only=True)
+        wb = openpyxl.load_workbook(p, read_only=False, data_only=False)
     except zipfile.BadZipFile as exc:
         raise SosParseError(f"{p.name} is not a valid .xlsx file") from exc
     except openpyxl.utils.exceptions.InvalidFileException as exc:
@@ -390,6 +396,30 @@ def parse_register_file(path: Path | str) -> SosRegister:
                 quality, quality_evidence = _parse_quality_sheet(wb[sheet_name])
                 quality_sheets.append(quality)
                 evidence_by_sheet[sheet_name] = quality_evidence
+            elif sheet_name not in evidence_by_sheet:
+                evidence_by_sheet[sheet_name] = SosSheetEvidence(
+                    kind="support",
+                    sheet_name=sheet_name,
+                    rows=tuple(
+                        SosEvidenceRow(
+                            role="raw",
+                            source_evidence=_row_evidence(
+                                wb[sheet_name], None, cells, {}
+                            ),
+                        )
+                        for cells in _cell_row_iter(wb[sheet_name])
+                    ),
+                )
+                # The maintained workbooks supply this hidden dropdown directory.
+                # Retention does not make its rows catalog entities or code lists.
+                if sheet_name != "Ej relevant_listor":
+                    parse_issues.append(
+                        SosParseIssue(
+                            sheet_name=sheet_name,
+                            kind="unsupported_sheet",
+                            detail="unrecognized worksheet layout; update the source adapter",
+                        )
+                    )
 
         if generell is None:
             warnings.append("missing Generell information sheet")
@@ -397,6 +427,71 @@ def parse_register_file(path: Path | str) -> SosRegister:
             warnings.append("missing DCAT-AP sheet")
         if deldat is None:
             warnings.append("missing Deldatamängder sheet (implicit single subset)")
+
+        # Preserve Excel's delivered formula and cached value separately. The
+        # cache is evidence, not permission to evaluate or assert the formula.
+        if any(
+            cell.data_type == "f"
+            for sheet in evidence_by_sheet.values()
+            for row in sheet.rows
+            for cell in row.source_evidence.cells
+        ):
+            cached = openpyxl.load_workbook(p, read_only=False, data_only=True)
+            try:
+                source_rows = {}
+                for sheet_name, sheet in evidence_by_sheet.items():
+                    rows = []
+                    for row in sheet.rows:
+                        cells = []
+                        for cell in row.source_evidence.cells:
+                            if cell.data_type == "f":
+                                value = cached[sheet_name][cell.coordinate].value
+                                cell = replace(
+                                    cell,
+                                    cached_raw_value=value,
+                                    cached_raw_type=(
+                                        type(value).__name__
+                                        if value is not None
+                                        else "none"
+                                    ),
+                                )
+                            cells.append(cell)
+                        evidence = replace(row.source_evidence, cells=tuple(cells))
+                        source_rows[sheet_name, evidence.row_number] = evidence
+                        rows.append(replace(row, source_evidence=evidence))
+                    evidence_by_sheet[sheet_name] = replace(sheet, rows=tuple(rows))
+                variables = tuple(
+                    replace(
+                        variable,
+                        source_evidence=source_rows[
+                            variable.source_evidence.sheet_name,
+                            variable.source_evidence.row_number,
+                        ],
+                    )
+                    if variable.source_evidence is not None
+                    else variable
+                    for variable in variables
+                )
+                kodlistor = [
+                    replace(
+                        item,
+                        rows=tuple(
+                            replace(
+                                row,
+                                source_evidence=source_rows[
+                                    row.source_evidence.sheet_name,
+                                    row.source_evidence.row_number,
+                                ],
+                            )
+                            if row.source_evidence is not None
+                            else row
+                            for row in item.rows
+                        ),
+                    )
+                    for item in kodlistor
+                ]
+            finally:
+                cached.close()
 
         return SosRegister(
             source_file=p,
@@ -515,6 +610,8 @@ def _format_code(cell: Any) -> str | None:
     Excel display formatting. Excel may store '001' as the integer 1 with
     number_format '000'; without consulting the format we'd silently emit
     '1' and corrupt code identity for downstream joins."""
+    if getattr(cell, "data_type", None) == "f":
+        return None
     v = cell.value
     if v is None:
         return None
@@ -989,6 +1086,110 @@ def _parse_variables(
     )
 
 
+def _code_sheet_header(
+    row: tuple[Any, ...],
+) -> tuple[dict[int, str], SosEvidenceRole] | None:
+    """Decode delivered table headers; names of registers/sheets play no role."""
+
+    headers = tuple((_clean(value) or "").casefold() for value in row)
+    layouts = (
+        (
+            ("variabelnamn", "tidsperiod", "indata kod", "kodat till", "beskrivning"),
+            ("variable_name", "tidsperiod", "input_code", "output_code", "beskrivning"),
+            "crosswalk",
+        ),
+        (
+            ("tidsperiod", "scbkod", "siskod", "namn"),
+            ("tidsperiod", "peer_code", "peer_code", "beskrivning"),
+            "crosswalk",
+        ),
+        (
+            (
+                "variabelnamn",
+                "från",
+                "till",
+                "sjukhuskod",
+                "region",
+                "sjukhusnamn",
+                "aktuella",
+                "kommentar",
+            ),
+            (
+                "variable_name",
+                "valid_from",
+                "valid_to",
+                "kod",
+                "region",
+                "beskrivning",
+                "current_marker",
+                "comment",
+            ),
+            "code",
+        ),
+        (
+            (
+                "variabelnamn",
+                "tidsperiod",
+                "beskrivning",
+                "variabler",
+                "icd 8",
+                "icd 9",
+                "icd 10",
+                "åtgärdskoder 1963-1996",
+                "åtgärdskoder 1997-",
+            ),
+            (
+                "variable_name",
+                "tidsperiod",
+                "beskrivning",
+                "clause",
+                "clause",
+                "clause",
+                "clause",
+                "clause",
+                "clause",
+            ),
+            "derivation",
+        ),
+        (
+            (
+                "variabelnamn",
+                "tidsperiod",
+                "beskrivning",
+                "variabler",
+                "villkor",
+                "algoritm",
+            ),
+            (
+                "variable_name",
+                "tidsperiod",
+                "beskrivning",
+                "clause",
+                "clause",
+                "clause",
+            ),
+            "derivation",
+        ),
+    )
+    for expected, fields, role in layouts:
+        if headers[: len(expected)] == expected and not any(headers[len(expected) :]):
+            return dict(enumerate(fields)), cast("SosEvidenceRole", role)
+
+    positions: dict[str, int] = {}
+    for index, header in enumerate(headers):
+        if header.startswith("tidsperiod"):
+            positions["tidsperiod"] = index
+        elif header == "kod":
+            positions["kod"] = index
+        elif header.startswith(("beskrivning", "betydelse")):
+            positions["beskrivning"] = index
+        elif header == "variabelnamn":
+            positions["variable_name"] = index
+    if "kod" in positions and ("tidsperiod" in positions or "beskrivning" in positions):
+        return {index: name for name, index in positions.items()}, "code"
+    return None
+
+
 def _code_sheet_evidence(
     ws: Any, all_cell_rows: list[tuple[Any, ...]]
 ) -> SosSheetEvidence:
@@ -999,28 +1200,18 @@ def _code_sheet_evidence(
     fields_by_index: dict[int, str] = {}
     col_tp: int | None = None
     col_kod: int | None = None
+    data_role: SosEvidenceRole = "code"
     for cells in all_cell_rows:
         row = tuple(cell.value for cell in cells)
         first = _clean(row[0]) if row else None
         if header_cells is None:
-            positions: dict[str, int] = {}
-            for index, header in enumerate(row):
-                normalized = (_clean(header) or "").casefold()
-                if normalized.startswith("tidsperiod"):
-                    positions["tidsperiod"] = index
-                elif normalized == "kod":
-                    positions["kod"] = index
-                elif normalized.startswith(("beskrivning", "betydelse")):
-                    positions["beskrivning"] = index
-                elif normalized == "variabelnamn":
-                    positions["variable_name"] = index
-            if "tidsperiod" in positions and "kod" in positions:
+            layout = _code_sheet_header(row)
+            if layout is not None:
                 header_cells = cells
-                fields_by_index = {
-                    index: field_name for field_name, index in positions.items()
-                }
-                col_tp = positions["tidsperiod"]
-                col_kod = positions["kod"]
+                fields_by_index, data_role = layout
+                positions = {field: index for index, field in fields_by_index.items()}
+                col_tp = positions.get("tidsperiod")
+                col_kod = positions.get("kod")
                 evidence_rows.append(
                     SosEvidenceRow(
                         role="header",
@@ -1038,6 +1229,7 @@ def _code_sheet_evidence(
             preamble_field = {
                 "kodverk": "codeset_name",
                 "variabelnamn": "variable_header",
+                "används i variabeln": "variable_header",
                 "bakgrund": "background",
             }.get(first.casefold() if first else "")
             evidence_rows.append(
@@ -1064,8 +1256,32 @@ def _code_sheet_evidence(
             if col_kod is not None and col_kod < len(cells)
             else None
         )
-        if tp_value and not code_value:
-            role: SosEvidenceRole = "period_section"
+        # The delivered table also uses a bold, otherwise empty row as a
+        # section heading inside the code column. Its text is not a code.
+        heading = (
+            code_value
+            and all(
+                index == col_kod or _clean(cell.value) is None
+                for index, cell in enumerate(cells)
+            )
+            and col_kod is not None
+            and cells[col_kod].font.bold
+        )
+        if data_role == "derivation":
+            role = "derivation" if any(_clean(value) for value in row) else "raw"
+        elif data_role == "crosswalk":
+            has_operand = any(
+                _clean(row[index])
+                for index, field in fields_by_index.items()
+                if field in {"input_code", "output_code", "peer_code"}
+            )
+            role = (
+                "crosswalk" if has_operand else "period_section" if tp_value else "raw"
+            )
+        elif heading:
+            role: SosEvidenceRole = "section"
+        elif tp_value and not code_value:
+            role = "period_section"
         elif code_value:
             role = "code"
         else:
@@ -1161,7 +1377,7 @@ def _parse_kodlista(
 
     if not has_header:
         warnings.append(
-            f"kodlista {sheet_name!r}: no Tidsperiod/Kod header row found; "
+            f"kodlista {sheet_name!r}: no supported code/documentation header row found; "
             "structured rows skipped (raw content preserved)"
         )
         raw_rows = [
