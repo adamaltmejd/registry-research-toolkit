@@ -26,6 +26,7 @@ from reg_meta_build.source_intervals import (
     resolve_occurrence_intervals,
 )
 from reg_meta_build.source_occurrences import EffectiveOccurrence, effective_occurrence
+from reg_meta_build.source_representations import form_representations
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -33,6 +34,7 @@ if TYPE_CHECKING:
     from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
     from reg_meta_build.source_coding import CodingResolution
     from reg_meta_build.source_coordinates import NativeKey
+    from reg_meta_build.source_curation import CurationCase
     from reg_meta_build.source_records import (
         SourceFields,
         SourceRecord,
@@ -247,6 +249,7 @@ def form_native_variable(
     provider_key: str,
     flags: SourceFields,
     coding: Mapping[NativeKey, CodingResolution],
+    representations: tuple[CurationCase, ...] = (),
 ) -> VariableFormation:
     """Form one ordinary native identity; return unsafe aspects as explicit issues.
 
@@ -420,6 +423,16 @@ def form_native_variable(
                         valid_from=segment.valid_from,
                         valid_to=segment.valid_to,
                     )
+    variable_key = effective[0].variable_key
+    assert variable_key is not None
+    states, aliases, grouping_issues = form_representations(
+        states,
+        representations,
+        variable_key=variable_key,
+        variants=variants,
+        subject=subject,
+    )
+    diagnostics.extend(grouping_issues)
     states, representation_issues = _disjoint_representations(
         states, effective, subject
     )
@@ -470,6 +483,7 @@ def form_native_variable(
         is_sensitive=flag_values["is_sensitive"],
         is_identifier=flag_values["is_identifier"],
         states=tuple(states),
+        aliases=aliases,
     )
     if unknown := unresolved_variable_flags(variable):
         issue(

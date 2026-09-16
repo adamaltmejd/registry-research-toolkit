@@ -8,6 +8,7 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
 
+from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.resolved_catalog import ResolvedAlias, ResolvedAliasWindow
 from reg_meta_build.source_curation import (
     AliasWindowDecision,
@@ -17,7 +18,6 @@ from reg_meta_build.source_curation import (
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
-from reg_meta_build.source_intervals import covers_window
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping

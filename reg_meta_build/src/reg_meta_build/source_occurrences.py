@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta_build.source_coordinates import (
     NativeKey,
     _coordinate_key,
+    column_identity,
     native_variable_key,
     native_variant_key,
 )
@@ -58,13 +59,7 @@ class EffectiveOccurrence:
             or not column.value
         ):
             return None
-        return (
-            *self.variable_key,
-            "variant-key",
-            *self.variant_key,
-            "column",
-            column.value,
-        )
+        return column_identity(self.variable_key, self.variant_key, column.value)
 
 
 def source_occurrence(record: SourceRecord) -> EffectiveOccurrence:

@@ -58,6 +58,11 @@ def native_variant_key(record: SourceRecord) -> NativeKey | None:
     )
 
 
+def column_identity(variable: NativeKey, variant: NativeKey, column: str) -> NativeKey:
+    """One exact delivered spelling under an established variable and variant."""
+    return (*variable, "variant-key", *variant, "column", column)
+
+
 def native_column_key(record: SourceRecord) -> NativeKey | None:
     variable = native_variable_key(record)
     variant = native_variant_key(record)
@@ -71,7 +76,7 @@ def native_column_key(record: SourceRecord) -> NativeKey | None:
         or not field.value
     ):
         return None
-    return (*variable, "variant-key", *variant, "column", field.value)
+    return column_identity(variable, variant, field.value)
 
 
 def native_parent_key(

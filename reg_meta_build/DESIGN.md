@@ -571,6 +571,19 @@ Identical repeated claim IDs contribute membership events once; different conten
 one claim ID is a fatal contract error. A checked corrected scope changes the claim
 identity and membership intersections, but never rewrites source validity or locators.
 
+Accepted parallel-column families use checked identity and label assignments followed by
+a finite representation declaration. The declaration names each literal column and its
+exact delivery window, guards original members and metadata, and checks the coding
+evidence over the shared metadata period. Formation reconciles all siblings before
+emitting one shared state. Conflicting optional facts or coding remain unknown with
+errors; missing members or incompatible declarations withhold the affected state.
+Representation windows do not split annual metadata into monthly states. The database
+requires a representative column label, so formation selects the first literal column in
+sorted order only after reconciliation. This label never selects a metadata donor.
+Structural alias windows select the actual delivered column; their attribution is kept
+on the shared state. Month-name parsing is confined to offline conversion of existing
+accepted families, not common resolution.
+
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across

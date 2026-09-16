@@ -1,7 +1,7 @@
 """Small shared contracts and deterministic IDs for resolved catalog inputs."""
 
 from datetime import date
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 from pydantic import (
     BaseModel,
@@ -12,6 +12,9 @@ from pydantic import (
 )
 
 from reg_meta_build.id import mint, mint_canonical_scb
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 class _ResolvedModel(BaseModel):
@@ -67,3 +70,24 @@ def _storage_id(provider: str, kind: str, *coordinates: str) -> int:
 
 def _classification_id(slug: str) -> int:
     return mint("resolved-catalog", "classification", slug)
+
+
+def covers_window(
+    intervals: Iterable[tuple[str, str]], valid_from: str, valid_to: str
+) -> bool:
+    """Whether known inclusive ISO intervals cover a window without a gap."""
+    next_day = date.fromisoformat(valid_from).toordinal()
+    last_day = date.fromisoformat(valid_to).toordinal()
+    if next_day > last_day:
+        raise ValueError("coverage bounds are reversed")
+    for start, end in sorted(intervals):
+        lower, upper = (
+            date.fromisoformat(start).toordinal(),
+            date.fromisoformat(end).toordinal(),
+        )
+        if lower > next_day:
+            break
+        next_day = max(next_day, upper + 1)
+        if next_day > last_day:
+            return True
+    return False

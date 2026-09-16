@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING, Annotated, Literal, Self
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from reg_meta_build._curation import fold_column
+from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.source_coordinates import (
     NativeKey,
     _coordinate_key,
@@ -582,6 +583,54 @@ class AliasWindowDecision(FiniteCurationWindow):
         return self
 
 
+class ColumnRepresentation(FiniteCurationWindow):
+    """One exact physical representation within a reviewed metadata window."""
+
+    column: str = Field(min_length=1)
+    # Checked over the enclosing metadata window, not this alias's subperiod.
+    expected_codings: tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...]
+
+    @field_validator("column")
+    @classmethod
+    def _trimmed(cls, value: str) -> str:
+        if not value.strip() or value != value.strip():
+            raise ValueError("a representation column must be nonempty and trimmed")
+        return value
+
+
+class RepresentationDecision(FiniteCurationWindow):
+    """Share metadata across explicitly identified parallel delivery columns."""
+
+    kind: Literal["representations"] = "representations"
+    reviewed: Literal[True]
+    variable_key: NativeKey
+    variant_key: NativeKey
+    columns: tuple[ColumnRepresentation, ...] = Field(min_length=2)
+    reason: str = Field(min_length=1)
+    provenance: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _covered(self) -> Self:
+        if any(not key or "" in key for key in (self.variable_key, self.variant_key)):
+            raise ValueError("representations need exact variable and variant keys")
+        if len({c.column for c in self.columns}) != len(self.columns):
+            raise ValueError("representation columns must be unique")
+        if any(
+            c.valid_from < self.valid_from or c.valid_to > self.valid_to
+            for c in self.columns
+        ) or not covers_window(
+            ((c.valid_from, c.valid_to) for c in self.columns),
+            self.valid_from,
+            self.valid_to,
+        ):
+            raise ValueError(
+                "representation windows must cover exactly the metadata window"
+            )
+        if not self.reason.strip() or not self.provenance.strip():
+            raise ValueError("representations need rationale and provenance")
+        return self
+
+
 class CodingWindow(FiniteCurationWindow):
     """The complete observed coding evidence for one finite period."""
 
@@ -631,6 +680,7 @@ type CurationDecision = (
     | OccurrenceCorrectionDecision
     | SearchAliasDecision
     | AliasWindowDecision
+    | RepresentationDecision
     | CodingDecision
 )
 
@@ -1309,6 +1359,7 @@ def inspect_cases(
                 OccurrenceCorrectionDecision,
                 SearchAliasDecision,
                 AliasWindowDecision,
+                RepresentationDecision,
                 CodingDecision,
             ),
         ):
