@@ -339,6 +339,7 @@ def apply_occurrence_cases(
         corrected = replace(
             occurrence,
             variable_key=variable_key,
+            identity_checked=len(assigned) == 1,
             use="support" if support_uses.get(ref) else occurrence.use,
             fields=SourceFields.model_validate(values),
             edition_scope=scope,
@@ -399,6 +400,7 @@ def apply_occurrence_cases(
                 ),
                 occurrence_key=key,
                 corrections=tuple(owner for _, owner in claims),
+                identity_checked=True,
             )
         )
     return OccurrenceCorrections(

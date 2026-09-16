@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from contextlib import closing
+from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
@@ -24,6 +25,11 @@ from reg_meta_build.source_coordinates import (
     native_variant_key,
 )
 from reg_meta_build.source_formation import form_native_variable
+from reg_meta_build.source_occurrences import (
+    EffectiveOccurrence,
+    effective_occurrence,
+    source_occurrence,
+)
 from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
@@ -100,7 +106,7 @@ def _record(
 
 
 def _form(
-    records: tuple[SourceRecord, ...],
+    records: tuple[SourceRecord | EffectiveOccurrence, ...],
     *,
     flags: SourceFields = _FLAGS,
     claims: tuple[CodeListClaim, ...] = (),
@@ -108,9 +114,10 @@ def _form(
     variants = {}
     coding = {}
     for record in records:
-        if (key := native_variant_key(record)) is not None:
+        occurrence = effective_occurrence(record)
+        if (key := occurrence.variant_key) is not None:
             variants[key] = _VARIANT
-        if (key := native_column_key(record)) is not None:
+        if (key := occurrence.column_key) is not None:
             coding[key] = claims
     return form_native_variable(
         records,
@@ -223,6 +230,25 @@ def test_canonical_text_conflict_preserves_states_and_withholds_only_that_fact()
     assert [(d.code, d.fields, d.withheld_output) for d in result.diagnostics] == [
         ("conflicting_variable_fact", ("definition",), ("variable.definition",))
     ]
+
+
+def test_checked_identity_does_not_choose_a_parallel_column_representation() -> None:
+    records = (
+        replace(source_occurrence(_record(2020, column="OLD")), identity_checked=True),
+        replace(source_occurrence(_record(2020, column="NEW")), identity_checked=True),
+        replace(source_occurrence(_record(2021, column="NEW")), identity_checked=True),
+    )
+    result = _form(records)
+    assert result.variable is not None
+    assert [
+        (state.delivery_column_name, state.valid_from, state.valid_to)
+        for state in result.variable.states
+    ] == [("NEW", "2021-01-01", "2021-12-31")]
+    assert [
+        (issue.code, issue.valid_from, issue.valid_to, issue.withheld_output)
+        for issue in result.diagnostics
+    ] == [("unresolved_column_representation", "2020-01-01", "2020-12-31", ("state",))]
+    assert result.occurrences == records
 
 
 def test_unknown_flags_withhold_unsupported_entity_without_defaulting_false() -> None:

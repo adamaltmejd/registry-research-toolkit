@@ -37,6 +37,7 @@ class EffectiveOccurrence:
     support_records: tuple[SourceRecord, ...] = ()
     occurrence_key: str | None = None
     corrections: tuple[AppliedCorrection, ...] = ()
+    identity_checked: bool = False
     withheld_fields: tuple[str, ...] = ()
     use: Literal["catalog", "support"] = "catalog"
 

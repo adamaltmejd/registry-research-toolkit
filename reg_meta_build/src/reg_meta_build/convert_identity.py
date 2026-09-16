@@ -1,8 +1,9 @@
 """Convert accepted column-discriminated names into checked identity assignments.
 
 This is an offline bridge for the existing naming format. Only a bijection between
-its explicit discriminators and delivered column spellings is converted. Folded
-rename clusters, shape splits and discriminator collisions need their existing
+its explicit discriminators and delivered column components is converted. Existing
+case/diacritic twins may share a component only when their editions do not coincide.
+Other rename clusters, shape splits and discriminator collisions need their existing
 decisions converted separately; no source identity is inferred from similar names.
 """
 
@@ -14,6 +15,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.fqid import derive_variable_slug
 
+from reg_meta_build._curation import fold_column
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
@@ -26,6 +28,7 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_naming import LegacyNamingBinding, NativeNamingTarget
+from reg_meta_build.source_occurrences import source_occurrence
 
 if TYPE_CHECKING:
     from reg_meta_build.source_records import SourceRecord
@@ -36,6 +39,25 @@ class ColumnPartitionConversion:
     bindings: tuple[LegacyNamingBinding, ...]
     case: CurationCase | None
     diagnostics: tuple[ResolutionDiagnostic, ...]
+
+
+def _accepted_column_component(
+    spellings: list[str], columns: dict[str, list[SourceRecord]]
+) -> bool:
+    if len(spellings) == 1:
+        return True
+    folded = {fold_column(column) for column in spellings}
+    if len(folded) != 1 or "" in folded:
+        return False
+    # Preserve the existing co-delivery guard: case/diacritic twins in one
+    # edition can carry different codings, and need their representation decision.
+    editions: dict[tuple, str] = {}
+    for column in spellings:
+        for record in columns[column]:
+            key = source_occurrence(record).edition_key
+            if key is None or editions.setdefault(key, column) != column:
+                return False
+    return True
 
 
 def convert_column_partitions(
@@ -73,7 +95,7 @@ def convert_column_partitions(
         candidates[derive_variable_slug(column) or "x"].append(column)
     suffixes = {key[len(source_id) + 1 :] for key in split_ids}
     if set(candidates) != suffixes or any(
-        len(items) != 1 for items in candidates.values()
+        not _accepted_column_component(items, columns) for items in candidates.values()
     ):
         return ColumnPartitionConversion(
             (),
@@ -114,18 +136,20 @@ def convert_column_partitions(
     bindings = []
     for split_id in sorted(split_ids):
         suffix = split_id[len(source_id) + 1 :]
-        column = candidates[suffix][0]
         key = (*native, "accepted-partition", split_id)
-        for record in columns[column]:
-            ref = record_ref(record)
-            effect = CheckedIdentityChange(
-                ref=ref,
-                variable_key=key,
-                when=(
-                    FieldExpectation(name="column_name", status="value", value=column),
-                ),
-            )
-            effects[ref, column] = effect
+        for column in candidates[suffix]:
+            for record in columns[column]:
+                ref = record_ref(record)
+                effect = CheckedIdentityChange(
+                    ref=ref,
+                    variable_key=key,
+                    when=(
+                        FieldExpectation(
+                            name="column_name", status="value", value=column
+                        ),
+                    ),
+                )
+                effects[ref, column] = effect
         bindings.append(
             LegacyNamingBinding(
                 kind="variable",

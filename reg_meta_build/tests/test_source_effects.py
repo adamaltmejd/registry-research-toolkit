@@ -527,6 +527,78 @@ def test_existing_shape_split_or_rename_cluster_is_not_guessed_from_discriminato
     assert converted.case is None
 
 
+def test_accepted_case_twins_keep_exact_columns_and_periods(tmp_path: Path) -> None:
+    records = (
+        _record(column="ANSWER", year="2020"),
+        _record(cvid=21, column="Answer", year="2021"),
+    )
+    converted = convert_column_partitions(
+        records, source_id="1.5", split_ids=("1.5.answer",)
+    )
+    assert converted.case is not None and not converted.diagnostics
+    result = apply_occurrence_cases(records, (converted.case,))
+    assert all(record.identity_checked for record in result.occurrences)
+    assert [record.fields for record in result.occurrences] == [
+        record.fields for record in records
+    ]
+    variant = ResolvedVariant(slug="people", name="People")
+    variable = form_native_variable(
+        result.occurrences,
+        register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
+        variants={
+            record.variant_key: variant
+            for record in result.occurrences
+            if record.variant_key is not None
+        },
+        slug="answer",
+        provider_key="5.answer",
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+        coding={
+            record.column_key: ()
+            for record in result.occurrences
+            if record.column_key is not None
+        },
+    )
+    assert variable.variable is not None and variable.diagnostics == ()
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog((variable.variable,), output, manifest={})
+    with closing(open_db(output)) as conn:
+        assert [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT delivery_column_name, valid_from, valid_to FROM variable_state ORDER BY valid_from"
+            )
+        ] == [
+            ("ANSWER", "2020-01-01", "2020-12-31"),
+            ("Answer", "2021-01-01", "2021-12-31"),
+        ]
+    changed = (records[0], _record(cvid=21, column="OTHER", year="2021"))
+    stale = apply_occurrence_cases(changed, (converted.case,))
+    assert stale.accounting[0].disposition == "stale"
+    assert not any(record.identity_checked for record in stale.occurrences)
+
+
+@pytest.mark.parametrize(
+    ("first", "second", "year", "suffix"),
+    [
+        ("ANSWER", "Answer", "2020", "answer"),
+        ("ANSWER_A", "ANSWER-A", "2021", "answer-a"),
+    ],
+)
+def test_case_component_conversion_keeps_codelivery_and_slug_collision_guards(
+    first: str, second: str, year: str, suffix: str
+) -> None:
+    converted = convert_column_partitions(
+        (_record(column=first), _record(cvid=21, column=second, year=year)),
+        source_id="1.5",
+        split_ids=(f"1.5.{suffix}",),
+    )
+    assert converted.case is None
+    assert converted.diagnostics[0].code == "split_identity_conversion_pending"
+
+
 def test_checked_lookup_role_keeps_evidence_and_does_not_materialize_parents() -> None:
     lookup = _record(column="CODE")
     other = _record(cvid=21, column="DATA", variable=6)

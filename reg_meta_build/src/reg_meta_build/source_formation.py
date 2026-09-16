@@ -151,6 +151,79 @@ def _coded_states(
     return states, diagnostics
 
 
+def _disjoint_representations(
+    states: list[ResolvedState],
+    records: tuple[EffectiveOccurrence, ...],
+    subject: str,
+) -> tuple[list[ResolvedState], list[ResolutionDiagnostic]]:
+    """Withhold only overlapping representations lacking a canonical choice.
+
+    An identity assignment establishes the variable, not which parallel column
+    represents it. Independently labelled codings retain their existing lanes.
+    """
+    groups: dict[tuple[str, str], list[ResolvedState]] = defaultdict(list)
+    for state in states:
+        groups[state.variant.slug, state.value_set_version_label].append(state)
+    result = []
+    diagnostics = []
+    for members in groups.values():
+        ordered = sorted(members, key=lambda state: state.valid_from)
+        if all(left.valid_to < right.valid_from for left, right in pairwise(ordered)):
+            result.extend(ordered)
+            continue
+        changes: dict[int, list[tuple[int, bool]]] = defaultdict(list)
+        for ordinal, state in enumerate(ordered):
+            changes[date.fromisoformat(state.valid_from).toordinal()].append(
+                (ordinal, True)
+            )
+            changes[date.fromisoformat(state.valid_to).toordinal() + 1].append(
+                (ordinal, False)
+            )
+        active: set[int] = set()
+        for start, next_start in pairwise(sorted(changes)):
+            for ordinal, entering in changes[start]:
+                if entering:
+                    active.add(ordinal)
+                else:
+                    active.remove(ordinal)
+            if not active:
+                continue
+            lower, upper = (
+                date.fromordinal(start).isoformat(),
+                date.fromordinal(next_start - 1).isoformat(),
+            )
+            if len(active) == 1:
+                state = ordered[next(iter(active))]
+                result.append(
+                    state.model_copy(update={"valid_from": lower, "valid_to": upper})
+                )
+                continue
+            columns = {ordered[index].delivery_column_name for index in active}
+            if len(columns) == 1:
+                raise ValueError("formation produced overlapping states for one column")
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="unresolved_column_representation",
+                    severity="error",
+                    subject=subject,
+                    detail="The checked identity has parallel columns without an unambiguous catalog representation: "
+                    + ", ".join(sorted(columns)),
+                    refs=_refs(
+                        tuple(
+                            record
+                            for record in records
+                            if _text(record.fields, "column_name") in columns
+                        )
+                    ),
+                    fields=("column_name",),
+                    valid_from=lower,
+                    valid_to=upper,
+                    withheld_output=("state",),
+                )
+            )
+    return result, diagnostics
+
+
 def form_native_variable(
     records: tuple[SourceRecord | EffectiveOccurrence, ...],
     *,
@@ -167,9 +240,9 @@ def form_native_variable(
     the selected source supplied no code list). An omitted mapping is an incomplete
     implementation/contract, not a curation issue. Flags are already reconciled
     source facts. Unknown flags cannot be represented by the current DB contract.
-    Multiple column names under one native variable require a checked identity or
-    alias decision; the ordinary path does not guess whether they are renames or
-    different questions. Each physical input occurrence remains in the result.
+    Multiple unassigned column names under one native variable require a checked
+    identity decision; the ordinary path does not guess whether they are renames
+    or different questions. Each physical input occurrence remains in the result.
     """
     effective = tuple(effective_occurrence(record) for record in records)
     if any(record.use != "catalog" for record in effective):
@@ -216,7 +289,8 @@ def form_native_variable(
     columns = {
         record.fields.column_name.value
         for record in effective
-        if record.fields.column_name is not None
+        if not record.identity_checked
+        and record.fields.column_name is not None
         and record.fields.column_name.status == "value"
     }
     if len(columns) > 1:
@@ -327,6 +401,10 @@ def form_native_variable(
                         valid_from=segment.valid_from,
                         valid_to=segment.valid_to,
                     )
+    states, representation_issues = _disjoint_representations(
+        states, effective, subject
+    )
+    diagnostics.extend(representation_issues)
     if not states:
         issue(
             "no_supported_states",
