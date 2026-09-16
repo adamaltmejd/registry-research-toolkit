@@ -23,6 +23,7 @@ from _csv_fixtures import (
     REGISTERINFORMATION_HEADER,
     REGISTERINFORMATION_ROWS,
     UNIKA_ROWS,
+    VARDEMANGDER_ROWS,
     _var_row,
     hydrate_scb_values,
     omit_scb_snapshot_file,
@@ -48,7 +49,7 @@ from reg_meta.catalog import Catalog
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.order import requested_intervals, resolve_binding
 from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
-from reg_meta_build.db import DDL, build_db, seed_providers
+from reg_meta_build.db import DDL, _file_sha256, build_db, seed_providers
 from reg_meta_build.dbdiff import TableIgnore, diff_db_content
 from reg_meta_build.id import _CANONICAL_SCB_BIT, is_canonical_scb
 from reg_meta_build.input_snapshot import ScbSnapshotReader, open_scb_snapshot
@@ -61,6 +62,7 @@ from reg_meta_build.ir import (
     IRVariant,
     IRWarning,
 )
+from reg_meta_build.scb_trace import ScbTraceCollector
 from reg_meta_build.source_records import SourceRecord
 from reg_meta_build.sources import scb as scb_module
 from reg_meta_build.sources.scb import SCBAdapter
@@ -93,6 +95,94 @@ def _drained_adapter(tmp_path: Path) -> tuple[sqlite3.Connection, SCBAdapter, li
     adapter = SCBAdapter(conn)
     objects = list(adapter.emit(scb_dir))
     return conn, adapter, objects
+
+
+def _trace_fixture_rows() -> tuple[list[str], list[str]]:
+    rows = [
+        _var_row(
+            colname="DropCol",
+            cvid=7101,
+            var_id=710,
+            varname="DropVar",
+            year="2024",
+            regver_id=710,
+            data_type="char",
+            data_length="10",
+        ),
+        _var_row(
+            colname="DropCol",
+            cvid=7102,
+            var_id=710,
+            varname="DropVar",
+            year="2024",
+            regver_id=710,
+            data_type="char",
+            data_length="11",
+        ),
+        _var_row(
+            colname="UnequalCol",
+            cvid=7201,
+            var_id=720,
+            varname="UnequalVar",
+            year="2016",
+            regver_id=7201,
+            data_type="char",
+            data_length="10",
+        ),
+        _var_row(
+            colname="UnequalCol",
+            cvid=7202,
+            var_id=720,
+            varname="UnequalVar",
+            year="2017",
+            regver_id=7202,
+            data_type="varchar",
+            data_length="10",
+        ),
+        *[
+            _var_row(
+                colname="TimeCol",
+                cvid=cvid,
+                var_id=730,
+                varname="TimeVar",
+                year=year,
+                regver_id=cvid,
+            )
+            for cvid, year in (
+                (7300, "2018"),
+                (7301, "2020"),
+                (7302, "2022"),
+                (7303, "2024"),
+            )
+        ],
+        _var_row(
+            colname="FirstAlias",
+            cvid=7401,
+            var_id=740,
+            varname="FirstWinsVar",
+            year="2025",
+            regver_id=7401,
+            data_type="int",
+            data_length="0",
+        ),
+        _var_row(
+            colname="SecondAlias",
+            cvid=7401,
+            var_id=740,
+            varname="FirstWinsVar",
+            year="2025",
+            regver_id=7401,
+            data_type="char",
+            data_length="1",
+        ),
+    ]
+    values = (
+        vm_rows(7300, "AlphaA", CODING_A)
+        + vm_rows(7302, "AlphaA", CODING_A)
+        + vm_rows(7303, "AlphaA", CODING_A)
+        + vm_rows(7301, "BetaB", CODING_B)
+    )
+    return rows, values
 
 
 # ── 1. SCBAdapter conforms to IRAdapter ────────────────────────────────────
@@ -410,6 +500,247 @@ class TestFixtureRoundTrip:
         b = _build("b")
         report = diff_db_content(a, b)
         assert report.identical, report
+
+    def test_selected_member_trace_is_bounded_and_catalog_identical(
+        self, tmp_path: Path
+    ) -> None:
+        extra_rows, extra_values = _trace_fixture_rows()
+        input_dir = tmp_path / "input"
+        write_scb_input(
+            input_dir,
+            registerinformation_rows=list(REGISTERINFORMATION_ROWS) + extra_rows,
+            vardemangder_rows=list(VARDEMANGDER_ROWS) + extra_values,
+        )
+        baseline = build_db(
+            input_dir=input_dir,
+            db_dir=tmp_path / "baseline",
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        traced = build_db(
+            input_dir=input_dir,
+            db_dir=tmp_path / "traced",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_trace_cvids=(7101, 7102, 7201, 7300, 7401, 999999),
+            scb_trace_code_commit="c" * 40,
+        )
+
+        semantic = diff_db_content(Path(baseline["db_path"]), Path(traced["db_path"]))
+        assert semantic.identical, semantic
+        assert "scb_trace" not in baseline
+
+        trace = traced["scb_trace"]
+        assert trace["selected_members"] == [
+            {
+                "cvid": 7101,
+                "outcome": "emitted",
+                "present_at_intake": True,
+                "staged_group_id": "group-0001",
+                "owner_variable_id": 9,
+                "dropped": False,
+                "emitted_state_ids": [10],
+            },
+            {
+                "cvid": 7102,
+                "outcome": "dropped",
+                "present_at_intake": True,
+                "staged_group_id": "group-0002",
+                "owner_variable_id": 9,
+                "dropped": True,
+                "emitted_state_ids": [],
+            },
+            {
+                "cvid": 7201,
+                "outcome": "emitted",
+                "present_at_intake": True,
+                "staged_group_id": "group-0003",
+                "owner_variable_id": 10,
+                "dropped": False,
+                "emitted_state_ids": [11],
+            },
+            {
+                "cvid": 7300,
+                "outcome": "emitted",
+                "present_at_intake": True,
+                "staged_group_id": "group-0004",
+                "owner_variable_id": 11,
+                "dropped": False,
+                "emitted_state_ids": [12, 13, 14],
+            },
+            {
+                "cvid": 7401,
+                "outcome": "emitted",
+                "present_at_intake": True,
+                "staged_group_id": "group-0005",
+                "owner_variable_id": 12,
+                "dropped": False,
+                "emitted_state_ids": [16],
+            },
+            {
+                "cvid": 999999,
+                "outcome": "absent",
+                "present_at_intake": False,
+                "staged_group_id": None,
+                "owner_variable_id": None,
+                "dropped": False,
+                "emitted_state_ids": [],
+            },
+        ]
+        unequal = next(
+            group for group in trace["groups"] if group["group_id"] == "group-0003"
+        )
+        assert [member["cvid"] for member in unequal["staging_membership"]] == [
+            7201,
+            7202,
+        ]
+        assert [
+            member["staged_payload"]["data_type"]
+            for member in unequal["staging_membership"]
+        ] == ["char", "varchar"]
+        temporal = next(
+            group for group in trace["groups"] if group["group_id"] == "group-0004"
+        )
+        assert [
+            (row["emitted_payload"]["valid_from"], row["emitted_payload"]["valid_to"])
+            for row in temporal["emissions"]
+        ] == [
+            ("2018-01-01", "2018-12-31"),
+            ("2022-01-01", "2022-12-31"),
+            ("2024-01-01", "2024-12-31"),
+        ]
+        assert {row["final_fate"]["status"] for row in temporal["emissions"]} == {
+            "unchanged"
+        }
+        first_wins = next(
+            group for group in trace["groups"] if group["group_id"] == "group-0005"
+        )
+        assert first_wins["staging_membership"] == [
+            {
+                "cvid": 7401,
+                "selected": True,
+                "native_coordinates": {
+                    "register_id": 1,
+                    "register_variant_id": 10,
+                    "variable_id": 740,
+                    "edition_id": 7401,
+                    "edition_name": "2025",
+                },
+                "edition_claim_limits": [
+                    {
+                        "year": 2025,
+                        "valid_from": "2025-01-01",
+                        "valid_to": "2025-12-31",
+                    }
+                ],
+                "staged_payload": {
+                    "data_type": "int",
+                    "data_length": "0",
+                    "value_set_id": None,
+                    "value_set_version_label": None,
+                    "value_set_grain": None,
+                    "operational_definition": "",
+                    "source_register_text": "",
+                    "provenance": None,
+                    "projected_owner_id": None,
+                    "aliases": ["FirstAlias", "SecondAlias"],
+                },
+            }
+        ]
+        assert trace["evidence_layers"]["raw_observations"]["included"] is False
+        assert "first-wins" in trace["evidence_layers"]["staged"]
+        assert any("do not prove field-level" in limit for limit in trace["limits"])
+        output = trace["identity"]["completed_output"]
+        assert output["sha256"] == _file_sha256(Path(output["path"]))
+        assert trace["identity"]["code_commit"] == "c" * 40
+
+    def test_trace_reports_mutated_deleted_and_reused_state_ids(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        extra_rows, extra_values = _trace_fixture_rows()
+        input_dir = tmp_path / "input"
+        write_scb_input(
+            input_dir,
+            registerinformation_rows=list(REGISTERINFORMATION_ROWS) + extra_rows,
+            vardemangder_rows=list(VARDEMANGDER_ROWS) + extra_values,
+        )
+        original = ScbTraceCollector.mark_pre_overlap_liveness
+
+        def mutate_after_emission(
+            collector: ScbTraceCollector, conn: sqlite3.Connection
+        ) -> None:
+            if collector._pre_overlap_checked:
+                return
+            state_ids = [handle["state_id"] for handle in collector._handles]
+            assert len(state_ids) == 3
+            reused = conn.execute(
+                "SELECT state_id, variable_id, register_variant_id, valid_from, "
+                "valid_to, data_type, data_length, delivery_column_name, "
+                "source_register_text, operational_definition, provenance, "
+                "value_set_id, value_set_version_label, classification_id "
+                "FROM variable_state WHERE state_id = ?",
+                (state_ids[2],),
+            ).fetchone()
+            assert reused is not None
+            conn.execute(
+                "DELETE FROM variable_state WHERE state_id = ?", (state_ids[2],)
+            )
+            original(collector, conn)
+            conn.execute(
+                "UPDATE variable_state SET data_length = 'mutated' WHERE state_id = ?",
+                (state_ids[0],),
+            )
+            conn.execute(
+                "DELETE FROM variable_state WHERE state_id = ?", (state_ids[1],)
+            )
+            reused_values = list(reused)
+            reused_values[6] = "reused"
+            conn.execute(
+                "INSERT INTO variable_state (state_id, variable_id, "
+                "register_variant_id, valid_from, valid_to, data_type, data_length, "
+                "delivery_column_name, source_register_text, operational_definition, "
+                "provenance, value_set_id, value_set_version_label, classification_id) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                reused_values,
+            )
+
+        monkeypatch.setattr(
+            ScbTraceCollector, "mark_pre_overlap_liveness", mutate_after_emission
+        )
+        result = build_db(
+            input_dir=input_dir,
+            db_dir=tmp_path / "traced",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_trace_cvids=(7300,),
+            scb_trace_code_commit="c" * 40,
+        )
+
+        emissions = result["scb_trace"]["groups"][0]["emissions"]
+        assert [item["final_fate"]["status"] for item in emissions] == [
+            "modified",
+            "missing",
+            "missing",
+        ]
+        assert emissions[0]["final_fate"]["changes"]["data_length"] == {
+            "emitted": "1",
+            "final": "mutated",
+        }
+        assert emissions[1]["final_fate"]["downstream_explanation"] == "unknown"
+        reused_fate = emissions[2]["final_fate"]
+        assert reused_fate["missing_before_curated_overlap_resolution"] is True
+        assert reused_fate["final_state"] is None
+        assert reused_fate["same_numeric_id_context"]["context_only"] is True
+        assert (
+            reused_fate["same_numeric_id_context"]["state"]["data_length"] == "reused"
+        )
+        reused_state_id = emissions[2]["state_id"]
+        owner_state = next(
+            row
+            for row in result["scb_trace"]["assigned_owner_context"][0]["final_states"]
+            if row["state"]["state_id"] == reused_state_id
+        )
+        assert owner_state["context_only"] is True
 
     def test_native_snapshot_build_preserves_catalog_and_raw_source_identities(
         self,

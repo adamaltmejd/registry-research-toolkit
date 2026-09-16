@@ -119,6 +119,103 @@ def test_build_command_omits_prestage_when_path_is_none(tmp_path: Path) -> None:
     assert "--scb-value-prestage-cache" not in cmd
 
 
+def test_build_command_forwards_scb_trace_selection(tmp_path: Path) -> None:
+    paths = build_db_watch.RunPaths(
+        db_dir=tmp_path / "db",
+        slug_dir=None,
+        prestage_cache=None,
+        log_path=tmp_path / "build.log",
+        summary_path=tmp_path / "summary.json",
+        created_db_dir=False,
+        created_slug_dir=False,
+    )
+    args = Namespace(
+        input_dir="/seed/input_data",
+        input_bundle=None,
+        input_commit=None,
+        input_manifest_sha256=None,
+        no_validate=False,
+        no_timing=False,
+        providers="scb",
+        trace_scb_cvids="421800,590946",
+        refresh_prestage_cache=False,
+        dbdiff_against=None,
+    )
+
+    cmd = build_db_watch.build_command(args, paths)
+
+    trace_index = cmd.index("--trace-scb-cvids")
+    assert cmd[trace_index + 1] == "421800,590946"
+
+
+def test_trace_selection_refuses_cleanup_that_would_delete_result() -> None:
+    with pytest.raises(SystemExit):
+        build_db_watch.parse_args(
+            [
+                "--input-dir",
+                "/seed/input_data",
+                "--trace-scb-cvids",
+                "421800",
+                "--cleanup-on-success",
+            ]
+        )
+
+
+def test_trace_summary_retains_build_result_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    paths = build_db_watch.RunPaths(
+        db_dir=tmp_path / "db",
+        slug_dir=None,
+        prestage_cache=None,
+        log_path=tmp_path / "build.log",
+        summary_path=tmp_path / "summary.json",
+        created_db_dir=True,
+        created_slug_dir=False,
+    )
+    paths.db_dir.mkdir()
+
+    def fake_run_build(
+        _cmd: list[str], run_paths: build_db_watch.RunPaths, _quiet_seconds: int
+    ) -> int:
+        build_db_watch.build_result_path(run_paths).write_text(
+            json.dumps({"scb_trace": {"selection": {"native_cvids": [421800]}}}),
+            encoding="utf-8",
+        )
+        return 0
+
+    monkeypatch.setattr(build_db_watch, "repo_root", lambda: tmp_path)
+    monkeypatch.setattr(build_db_watch, "prepare_paths", lambda _args, _root: paths)
+    monkeypatch.setattr(build_db_watch, "run_build", fake_run_build)
+    monkeypatch.setattr(
+        build_db_watch,
+        "sqlite_checks",
+        lambda _path: {
+            "integrity_check": "ok",
+            "foreign_key_violations": 0,
+            "table_counts": {},
+        },
+    )
+
+    assert (
+        build_db_watch.main(
+            [
+                "--input-dir",
+                "/seed/input_data",
+                "--trace-scb-cvids",
+                "421800",
+                "--no-prestage-cache",
+                "--summary",
+                str(paths.summary_path),
+            ]
+        )
+        == 0
+    )
+    summary = json.loads(paths.summary_path.read_text(encoding="utf-8"))
+    assert summary["build_result"] == str(build_db_watch.build_result_path(paths))
+    assert build_db_watch.build_result_path(paths).is_file()
+
+
 def test_build_command_threads_complete_bundle_without_slug_override(
     tmp_path: Path,
 ) -> None:

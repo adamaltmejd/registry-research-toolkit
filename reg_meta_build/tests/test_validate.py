@@ -1727,6 +1727,143 @@ class TestBuildDbValidateFlag:
         assert ns.no_validate is True
 
 
+class TestBuildDbScbTrace:
+    @pytest.mark.parametrize("raw", ("", "1,,2", "abc", "0", "-1", str(2**63), "1,1"))
+    def test_malformed_selection_fails_clearly(self, raw: str) -> None:
+        from reg_meta_build import cli as cli_mod
+
+        with pytest.raises(RegMetaError) as exc_info:
+            cli_mod._parse_scb_trace_cvids(raw)
+        assert exc_info.value.code == "scb_trace_selection_invalid"
+
+    def test_missing_selection_value_is_argparse_usage_error(self) -> None:
+        from reg_meta_build.cli import _build_parser
+
+        with pytest.raises(SystemExit) as exc_info:
+            _build_parser().parse_args(
+                ["build-db", "--input-dir", "x", "--trace-scb-cvids"]
+            )
+        assert exc_info.value.code == 2
+
+    def test_selection_and_code_pin_reach_build(self, monkeypatch, tmp_path: Path):
+        from reg_meta_build import cli as cli_mod
+
+        seen = {}
+        monkeypatch.setattr(cli_mod, "source_interpreter_commit", lambda: "c" * 40)
+
+        def fake_build_db(**kwargs):
+            seen.update(kwargs)
+            return {"import_date": "2026-09-16"}
+
+        monkeypatch.setattr(cli_mod, "build_db", fake_build_db)
+        args = cli_mod._build_parser().parse_args(
+            [
+                "--db",
+                str(tmp_path / "db"),
+                "build-db",
+                "--providers",
+                "scb",
+                "--no-validate",
+                "--input-dir",
+                "input",
+                "--trace-scb-cvids",
+                "590946,421800",
+            ]
+        )
+
+        envelope, exit_code = cli_mod._cmd_build_db(args)
+
+        assert exit_code == 0
+        assert seen["scb_trace_cvids"] == (421800, 590946)
+        assert seen["scb_trace_code_commit"] == "c" * 40
+        assert envelope["request"]["args"]["trace_scb_cvids"] == [421800, 590946]
+
+    def test_trace_requires_scb_before_build(self, monkeypatch, tmp_path: Path):
+        from reg_meta_build import cli as cli_mod
+
+        monkeypatch.setattr(
+            cli_mod,
+            "build_db",
+            lambda **_kwargs: pytest.fail("SCB-excluded trace reached build_db"),
+        )
+        args = cli_mod._build_parser().parse_args(
+            [
+                "--db",
+                str(tmp_path / "db"),
+                "build-db",
+                "--providers",
+                "sos",
+                "--no-validate",
+                "--input-dir",
+                "input",
+                "--trace-scb-cvids",
+                "421800",
+            ]
+        )
+
+        with pytest.raises(RegMetaError) as exc_info:
+            cli_mod._cmd_build_db(args)
+        assert exc_info.value.code == "scb_trace_requires_scb"
+
+    def test_post_publication_output_failure_is_diagnostic_only(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        tmp_path: Path,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        from reg_meta.errors import EXIT_OUTPUT
+
+        from reg_meta_build import cli as cli_mod
+
+        generation = {
+            "path": str(tmp_path / "db" / DB_FILENAME),
+            "sha256": "d" * 64,
+            "schema_version": "test",
+            "import_date": "2026-09-16",
+        }
+        monkeypatch.setattr(cli_mod, "source_interpreter_commit", lambda: "c" * 40)
+        monkeypatch.setattr(
+            cli_mod,
+            "build_db",
+            lambda **_kwargs: {
+                "import_date": "2026-09-16",
+                "scb_trace": {"identity": {"completed_output": generation}},
+            },
+        )
+        writes = 0
+
+        def fail_output(*_args, **_kwargs):
+            nonlocal writes
+            writes += 1
+            raise OSError("fixture destination refused")
+
+        monkeypatch.setattr(cli_mod, "write_json", fail_output)
+        exit_code = cli_mod.run(
+            [
+                "--db",
+                str(tmp_path / "db"),
+                "--output",
+                str(tmp_path / "trace.json"),
+                "build-db",
+                "--providers",
+                "scb",
+                "--no-validate",
+                "--input-dir",
+                "input",
+                "--trace-scb-cvids",
+                "421800",
+            ]
+        )
+
+        assert exit_code == EXIT_OUTPUT
+        assert writes == 1
+        error = json.loads(capsys.readouterr().err)["error"]
+        assert error["code"] == "scb_trace_output_failed"
+        assert error["class"] == "diagnostic_output"
+        assert error["catalog_published"] is True
+        assert error["completed_output"] == generation
+
+
 class TestBuildDbBundleSelection:
     def test_argparse_exposes_all_three_bundle_pins(self):
         from reg_meta_build.cli import _build_parser

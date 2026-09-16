@@ -572,6 +572,7 @@ def source_interpreter_commit() -> str:
             package / "cli.py",
             package / "db.py",
             package / "edition_bounds.py",
+            package / "scb_trace.py",
             package / "sources" / "lisa.py",
             package / "sources" / "scb.py",
             package / "sources" / "scb_records.py",

@@ -132,6 +132,7 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.codelivery import CodeliveryMap
     from reg_meta_build.input_snapshot import PreparedVardemangder, ScbSnapshotReader
+    from reg_meta_build.scb_trace import ScbTraceCollector
     from reg_meta_build.sources import IRObject
 
 
@@ -2619,6 +2620,7 @@ def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tup
 def _coalesce_variable_states(
     conn: sqlite3.Connection,
     codelivery: CodeliveryMap | None = None,
+    trace: ScbTraceCollector | None = None,
 ) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` (see reg_meta/DESIGN.md → Two-level variable model).
 
@@ -3107,6 +3109,14 @@ def _coalesce_variable_states(
                 # bounded, the open-ended signal wins (mid-life rename case).
                 grp.unika_has_open_top = True
 
+    if trace is not None:
+        trace.capture_groups(
+            rows,
+            groups,
+            cvid_gkey,
+            edition_claims=register_edition_claims,
+        )
+
     # Materialize the variable_state rows.
     #
     # Each group's range = its OWN observed `regver_min`/`regver_max`. A
@@ -3168,6 +3178,13 @@ def _coalesce_variable_states(
     # routes each group to its variable_id + (folded) value_set_version_label.
     with _stage_timer("scb:coalesce:triage_groups"):
         triage = _triage_groups(conn, groups, vid_map)
+    if trace is not None:
+        trace.capture_assignments(
+            triage.assignments,
+            triage.dropped,
+            triage.labels,
+            triage.clamped_to,
+        )
 
     # Stamp each cvid's OWNING `variable_id` now that triage has assigned every
     # group (including the split siblings it just minted). This is the GROUND
@@ -3499,24 +3516,25 @@ def _coalesce_variable_states(
                 if label != base:
                     disambig_count += 1
             _used_index_keys.add((vid, grp.register_variant_id, part_from, label))
-            batch.append(
-                (
-                    vid,
-                    grp.register_variant_id,
-                    part_from,
-                    part_to,
-                    grp.data_type,
-                    grp.data_length,
-                    grp.latest_alias,
-                    grp.source_register_text,
-                    None
-                    if grp.operational_definition_conflict
-                    else grp.operational_definition,
-                    provenance,
-                    grp.value_set_id,
-                    label,
-                )
+            emitted_row = (
+                vid,
+                grp.register_variant_id,
+                part_from,
+                part_to,
+                grp.data_type,
+                grp.data_length,
+                grp.latest_alias,
+                grp.source_register_text,
+                None
+                if grp.operational_definition_conflict
+                else grp.operational_definition,
+                provenance,
+                grp.value_set_id,
+                label,
             )
+            batch.append(emitted_row)
+            if trace is not None:
+                trace.record_emission(gkey, emitted_row)
 
     def _emit_span(gkey: tuple, grp: _StateGroup) -> None:
         """Fast path / yearless fallback: one state over the group's
@@ -3816,6 +3834,8 @@ def _coalesce_variable_states(
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             batch,
         )
+        if trace is not None:
+            trace.bind_emissions(conn)
 
     # State-uniqueness index — UNIQUE(variable_id, register_variant_id,
     # valid_from, value_set_version_label). A4.3b moved its CREATE into the
@@ -5327,6 +5347,7 @@ class SCBAdapter:
         snapshot: ScbSnapshotReader | None = None,
         value_prestage_cache: Path | None = None,
         refresh_value_prestage: bool = False,
+        trace: ScbTraceCollector | None = None,
     ) -> None:
         # The adapter writes its scratch/reference tables into the working conn
         # and reads the universal rows back to emit IR (strategy B).
@@ -5334,6 +5355,7 @@ class SCBAdapter:
         self.snapshot = snapshot
         self.value_prestage_cache = value_prestage_cache
         self.refresh_value_prestage = refresh_value_prestage
+        self.trace = trace
         # Co-delivery curation (register_id, var_id, column) → kept label,
         # consulted by the coalescer for genuine one-off same-column conflicts.
         self.codelivery = codelivery or {}
@@ -5427,6 +5449,8 @@ class SCBAdapter:
             ri_count, unika_join, known_cvids = _import_registerinformation(
                 conn, ri_path, self.snapshot
             )
+        if self.trace is not None:
+            self.trace.record_intake(known_cvids)
         self.row_counts["Registerinformation.csv"] = ri_count
         projection_backbone_sha256 = _projection_backbone_hash(conn)
 
@@ -5644,7 +5668,9 @@ class SCBAdapter:
         # `unika_summary` and `register_version`; must run before the
         # unika_summary DROP below.
         with _stage_timer("scb:coalesce_variable_states"):
-            self.coalesce_stats = _coalesce_variable_states(conn, self.codelivery)
+            self.coalesce_stats = _coalesce_variable_states(
+                conn, self.codelivery, self.trace
+            )
         self.row_counts["variable_state"] = self.coalesce_stats["n_variable_states"]
         # R8 side channels (NOT manifest values): consumed by the materializer's
         # slug post-pass and the concept-group edge fold.

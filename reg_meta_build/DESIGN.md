@@ -1295,6 +1295,30 @@ reg-meta-build --db /scratch/catalog-build build-db \
   --scb-value-prestage-cache /scratch/scb-value-prestage.sqlite --timing
 ```
 
+For bounded formation debugging, that ordinary build can opt into one finite native
+member trace:
+
+```console
+reg-meta-build --db /scratch/catalog-build --output /scratch/build-result.json \
+  build-db <the-same-pinned-bundle-options> \
+  --trace-scb-cvids 2181,6294,421800,590946
+```
+
+The trace is part of the successful build result, never a catalog table or a second
+publisher. It records post-enrichment first-wins staging (not original physical
+observations), group membership, owner assignment, actual emitted state IDs, and those
+IDs' final pre-drop state plus assigned-owner context. Membership is not fieldwise or
+windowwise support; missing handles remain unexplained instead of being recovered by
+name, slug, equal payload, or owner stamp. Compare raw evidence separately through
+`inspect-source-records` using the report's native coordinates and exact code/input
+pins. A failed build returns no successful trace, while a failure writing the result
+after publication explicitly identifies the already-published catalog generation.
+
+This hook is intentionally temporary diagnostic bookkeeping around the current formation
+path. When the preserved Y161 formation replacement resumes, it must consume or directly
+replace this emission hook and report writer and delete overlapping trace paths; no
+compatibility format is promised.
+
 Selection requires a clean checkout at the exact full commit. The committed and worktree
 bundle and snapshot manifests must match their explicit SHA-256 pins and supported
 schemas. Ordinary use compares the complete declared inventories and byte sizes with the

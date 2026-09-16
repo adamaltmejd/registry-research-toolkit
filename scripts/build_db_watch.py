@@ -338,6 +338,8 @@ def build_command(args: argparse.Namespace, paths: RunPaths) -> list[str]:
         cmd.append("--timing")
     if args.providers:
         cmd.extend(["--providers", args.providers])
+    if trace_cvids := getattr(args, "trace_scb_cvids", None):
+        cmd.extend(["--trace-scb-cvids", trace_cvids])
     if paths.prestage_cache is not None:
         cmd.extend(["--scb-value-prestage-cache", str(paths.prestage_cache)])
         if args.refresh_prestage_cache:
@@ -590,6 +592,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Optional build-db --providers subset. Omit for full global build.",
     )
     parser.add_argument(
+        "--trace-scb-cvids",
+        default=None,
+        help=(
+            "Forward a finite comma-list to build-db --trace-scb-cvids. The "
+            "diagnostic remains in build-result.json."
+        ),
+    )
+    parser.add_argument(
         "--prestage-cache",
         default=None,
         help=(
@@ -673,6 +683,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         )
     if (args.input_dir is None) == (args.input_bundle is None):
         parser.error("select exactly one of --input-dir or --input-bundle")
+    if args.trace_scb_cvids is not None and args.cleanup_on_success:
+        parser.error(
+            "--trace-scb-cvids cannot be combined with --cleanup-on-success; "
+            "cleanup would delete build-result.json"
+        )
     if args.input_bundle and (args.slug_dir or args.use_repo_slug_dir):
         parser.error("a pinned input bundle cannot be combined with slug overrides")
     return args
@@ -727,6 +742,11 @@ def main(argv: list[str] | None = None) -> int:
             "finished": now_stamp(),
             "return_code": rc,
             "db_dir": str(paths.db_dir),
+            "build_result": (
+                str(build_result_path(paths))
+                if build_result is not None and args.trace_scb_cvids is not None
+                else None
+            ),
             "slug_dir": str(paths.slug_dir) if paths.slug_dir else None,
             "slug_workspace": slug_workspace,
             "slug_changes": slug_changes,

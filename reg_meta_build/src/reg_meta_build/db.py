@@ -93,6 +93,7 @@ from .relations import (
     materialize_curated_replaced_by,
     materialize_same_as,
 )
+from .scb_trace import ScbTraceCollector
 from .tags import (
     load_tags,
     materialize_tags,
@@ -4289,6 +4290,7 @@ def materialize(
     skip_classifications: bool,
     slug_dir: Path | None,
     skip_slugs: bool,
+    scb_trace: ScbTraceCollector | None = None,
 ) -> dict[str, Any]:
     """Consume EACH adapter's IR stream and run the provider-blind derivation
     post-passes ONCE over the combined graph, writing the universal catalog.
@@ -4678,6 +4680,8 @@ def materialize(
         codeless_overlap = load_codeless_overlap(
             _catalog_curation_path(curation_dir, "codeless_overlap.toml")
         )
+        if scb_trace is not None:
+            scb_trace.mark_pre_overlap_liveness(conn)
         _resolve_curated_codeless_overlaps(conn, codeless_overlap)
 
         # Curated code↔label pairs (#923) — fold a coded variable (`partikod`)
@@ -5092,6 +5096,10 @@ def materialize(
             derive_variable_vintage_succession(conn, progress=_progress)
         )
 
+    scb_trace_report = None
+    if scb_trace is not None:
+        scb_trace_report = scb_trace.report(conn)
+
     # A2.7 / A4.4e: drop `variable_instance` + its cvid-grained alias staging +
     # the provider-blind `classification_candidate` before ship. Every build-time
     # reader has run: `_coalesce_variable_states` (→ `variable_state`),
@@ -5141,7 +5149,7 @@ def materialize(
     # back. Sorted by register_id for byte-stable provenance writes.
     scb_register_id_map.sort()
 
-    return {
+    result = {
         "source_checksums": source_checksums,
         "row_counts": row_counts,
         "projection_stats": projection_stats,
@@ -5156,6 +5164,9 @@ def materialize(
             "scb_register_id_map": scb_register_id_map,
         },
     }
+    if scb_trace_report is not None:
+        result["scb_trace"] = scb_trace_report
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -5193,6 +5204,8 @@ def build_db(
     refresh_scb_value_prestage: bool = False,
     pre_rename_hook: Callable[[Path, Path | None], None] | None = None,
     provenance_pre_rename_hook: Callable[[Path], None] | None = None,
+    scb_trace_cvids: tuple[int, ...] | None = None,
+    scb_trace_code_commit: str | None = None,
 ) -> dict[str, Any]:
     """Build the reg_meta database from the selected providers' source exports.
 
@@ -5242,6 +5255,45 @@ def build_db(
                 "input_bundle for a routine build."
             ),
         )
+    if scb_trace_cvids is not None:
+        invalid_trace_ids = [
+            cvid
+            for cvid in scb_trace_cvids
+            if not isinstance(cvid, int)
+            or isinstance(cvid, bool)
+            or not 0 < cvid < 2**63
+        ]
+        if (
+            not scb_trace_cvids
+            or invalid_trace_ids
+            or len(set(scb_trace_cvids)) != len(scb_trace_cvids)
+        ):
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="scb_trace_selection_invalid",
+                error_class="configuration",
+                message=(
+                    "SCB trace selection must contain distinct positive native "
+                    f"CVIDs below 2^63; got {list(scb_trace_cvids)}."
+                ),
+                remediation="Pass a finite list of distinct native SCB CVIDs.",
+            )
+        if "scb" not in providers:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="scb_trace_requires_scb",
+                error_class="configuration",
+                message="SCB member tracing requires the scb provider in this build.",
+                remediation="Include scb in --providers or omit --trace-scb-cvids.",
+            )
+        if not scb_trace_code_commit:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="scb_trace_code_pin_missing",
+                error_class="configuration",
+                message="SCB member tracing requires an exact builder code commit pin.",
+                remediation="Invoke the diagnostic through reg-meta-build build-db.",
+            )
     if input_dir is not None and input_bundle is not None:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -5457,6 +5509,12 @@ def build_db(
     register_py_lower(conn)
     build_failed = True
     slug_changes: dict[str, list[str]] | None = None
+    scb_trace = None
+    if scb_trace_cvids is not None:
+        assert scb_trace_code_commit is not None
+        scb_trace = ScbTraceCollector(
+            tuple(sorted(scb_trace_cvids)), code_commit=scb_trace_code_commit
+        )
     try:
         conn.executescript(DDL)
         seed_providers(conn)
@@ -5534,6 +5592,7 @@ def build_db(
                 snapshot=snapshot_reader,
                 value_prestage_cache=scb_value_prestage_cache,
                 refresh_value_prestage=refresh_scb_value_prestage,
+                trace=scb_trace,
             )
             # Provenance: the errata file mints catalog rows, so a build audit
             # needs its digest next to the exports it corrects. Recorded through
@@ -5597,6 +5656,7 @@ def build_db(
             skip_classifications=skip_classifications,
             slug_dir=slug_dir,
             skip_slugs=skip_slugs,
+            scb_trace=scb_trace,
         )
         _emit_timing("materialize (total)", _t_mat)
         source_checksums = mat["source_checksums"]
@@ -5730,6 +5790,43 @@ def build_db(
                 remediation="Restore the accepted checkout and rerun with the same exact pins.",
             ) from exc
 
+    trace_report = None
+    if scb_trace is not None:
+        trace_report = mat["scb_trace"]
+        trace_report["identity"] = {
+            "code_commit": scb_trace.code_commit,
+            "input_pins": {
+                "source_checksums": source_checksums,
+                "scb_input_snapshot": (
+                    snapshot_reader.provenance if snapshot_reader is not None else None
+                ),
+                "catalog_input_bundle": (
+                    bundle_reader.provenance if bundle_reader is not None else None
+                ),
+            },
+            "effective_build_options": {
+                "providers": list(providers),
+                "skip_classifications": skip_classifications,
+                "skip_slugs": skip_slugs,
+                "input_mode": "bundle" if input_bundle is not None else "raw",
+                "scb_value_prestage_cache": (
+                    str(scb_value_prestage_cache)
+                    if scb_value_prestage_cache is not None
+                    else None
+                ),
+                "refresh_scb_value_prestage_cache": refresh_scb_value_prestage,
+                "pre_rename_guard_enabled": pre_rename_hook is not None,
+            },
+            "completed_output": {
+                "path": str(final_path),
+                # Atomic publication renames these exact finalized bytes.
+                "sha256": _file_sha256(tmp_path),
+                "schema_version": SCHEMA_VERSION,
+                "import_date": manifest_data["import_date"],
+            },
+        }
+        json.dumps(trace_report, ensure_ascii=False, sort_keys=True)
+
     publish_db(tmp_path, final_path)
 
     # Sibling provenance DB population (A4.2). Runs AFTER the universal swap so
@@ -5788,6 +5885,8 @@ def build_db(
         "source_checksums": source_checksums,
         "row_counts": row_counts,
     }
+    if trace_report is not None:
+        result["scb_trace"] = trace_report
     if snapshot_reader is not None:
         result["scb_input_snapshot"] = snapshot_reader.provenance
     if bundle_reader is not None:

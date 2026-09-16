@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import json
 import os
 import sys
 import time
@@ -34,6 +35,7 @@ from reg_meta.db import (
 from reg_meta.errors import (
     EXIT_CONFIG,
     EXIT_NOT_FOUND,
+    EXIT_OUTPUT,
     EXIT_USAGE,
     RegMetaError,
 )
@@ -255,6 +257,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "`lakemedelsverket`/`pliktverket`/`riksarkivet`/`umu` (#443) are thin "
             "curated providers whose committed TOMLs ship with the repo. (The `build_db()` function default stays "
             "`('scb',)` so synthetic SCB-only test fixtures need no extra inputs.)"
+        ),
+    )
+    build_p.add_argument(
+        "--trace-scb-cvids",
+        default=None,
+        help=(
+            "Opt-in diagnostic for a finite comma-separated list of native SCB "
+            "CVIDs. The build result records staging, assignment, actual emission, "
+            "and final state fate without changing catalog formation."
         ),
     )
     build_p.add_argument(
@@ -1026,6 +1037,50 @@ def _build_validate_hook(
     return hook
 
 
+def _parse_scb_trace_cvids(raw: str | None) -> tuple[int, ...] | None:
+    if raw is None:
+        return None
+    tokens = raw.split(",")
+    if not tokens or any(not token.strip() for token in tokens):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="scb_trace_selection_invalid",
+            error_class="usage",
+            message="--trace-scb-cvids requires a non-empty comma-list of native CVIDs.",
+            remediation="Pass distinct positive integers, for example 421800,590946.",
+        )
+    values: list[int] = []
+    for token in tokens:
+        stripped = token.strip()
+        if not stripped.isascii() or not stripped.isdecimal():
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="scb_trace_selection_invalid",
+                error_class="usage",
+                message=f"Invalid native CVID in --trace-scb-cvids: {token!r}.",
+                remediation="Pass distinct positive base-10 integers only.",
+            )
+        value = int(stripped)
+        if not 0 < value < 2**63:
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="scb_trace_selection_invalid",
+                error_class="usage",
+                message=f"Native CVID is outside the supported range: {stripped}.",
+                remediation="Pass positive native IDs below 2^63.",
+            )
+        values.append(value)
+    if len(set(values)) != len(values):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="scb_trace_selection_invalid",
+            error_class="usage",
+            message="--trace-scb-cvids contains a duplicate native CVID.",
+            remediation="List each selected native CVID exactly once.",
+        )
+    return tuple(sorted(values))
+
+
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     # `--timing` is surfaced to the build internals (db.py `_timing_enabled`) via
@@ -1034,7 +1089,15 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         os.environ["REG_META_BUILD_TIMING"] = "1"
     db_dir = Path(args.db) if args.db else default_db_dir()
     providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
-
+    trace_cvids = _parse_scb_trace_cvids(args.trace_scb_cvids)
+    if trace_cvids is not None and "scb" not in providers:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="scb_trace_requires_scb",
+            error_class="usage",
+            message="--trace-scb-cvids requires scb in --providers.",
+            remediation="Include scb in --providers or omit the trace selection.",
+        )
     bundle_values = (
         args.input_bundle,
         args.input_commit,
@@ -1095,6 +1158,18 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         if args.slug_dir
         else repo_slug_dir()
     )
+    try:
+        trace_code_commit = (
+            source_interpreter_commit() if trace_cvids is not None else None
+        )
+    except SnapshotError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="scb_trace_code_pin_invalid",
+            error_class="configuration",
+            message=f"Cannot pin the builder code used by the SCB trace: {exc}",
+            remediation="Run the diagnostic from a clean tracked builder checkout.",
+        ) from exc
 
     pre_rename_hook = (
         None if args.no_validate else _build_validate_hook(bootstrap=args.skip_slugs)
@@ -1113,6 +1188,8 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         ),
         refresh_scb_value_prestage=args.refresh_scb_value_prestage_cache,
         pre_rename_hook=pre_rename_hook,
+        scb_trace_cvids=trace_cvids,
+        scb_trace_code_commit=trace_code_commit,
     )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
@@ -1127,6 +1204,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "input_manifest_sha256": args.input_manifest_sha256,
             "scb_value_prestage_cache": args.scb_value_prestage_cache,
             "refresh_scb_value_prestage_cache": args.refresh_scb_value_prestage_cache,
+            "trace_scb_cvids": list(trace_cvids) if trace_cvids is not None else None,
         },
         db_info={
             "schema_version": SCHEMA_VERSION,
@@ -2524,10 +2602,36 @@ def run(argv: list[str] | None = None) -> int:
 
     try:
         payload, exit_code = handler(args)
-        if verbose:
-            write_json(payload, output_path)
-        else:
-            write_json(payload.get("data", payload), output_path)
+        try:
+            if verbose:
+                write_json(payload, output_path)
+            else:
+                write_json(payload.get("data", payload), output_path)
+        except Exception as exc:
+            if args.command != "build-db" or not getattr(args, "trace_scb_cvids", None):
+                raise
+            data = payload.get("data", payload)
+            generation = data["scb_trace"]["identity"]["completed_output"]
+            diagnostic_error = {
+                "error": {
+                    "code": "scb_trace_output_failed",
+                    "class": "diagnostic_output",
+                    "message": (
+                        "Catalog publication succeeded, but the SCB trace result "
+                        f"could not be written: {type(exc).__name__}: {exc}"
+                    ),
+                    "remediation": (
+                        "Keep the published catalog identified here, choose a "
+                        "writable --output path, and rerun the diagnostic."
+                    ),
+                    "catalog_published": True,
+                    "completed_output": generation,
+                }
+            }
+            sys.stderr.write(
+                json.dumps(diagnostic_error, ensure_ascii=False, sort_keys=True) + "\n"
+            )
+            return EXIT_OUTPUT
         return exit_code
     except Exception as exc:  # noqa: BLE001 — CLI top-level boundary: map any failure to a stable exit code
         return handle_cli_exception(exc, output_path)
