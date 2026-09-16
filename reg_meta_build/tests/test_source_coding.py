@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
+    coding_content_sha256,
     resolve_code_membership,
 )
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
@@ -109,6 +112,38 @@ def test_equivalent_independent_lists_agree_without_losing_their_references() ->
     assert result.issues == ()
     assert result.segments[0].claim_ids == ("a", "b")
     assert result.segments == resolve_code_membership((a, b)).segments
+
+
+def test_coding_expectation_ignores_storage_and_equivalent_interval_partition() -> None:
+    whole = _claim("original", _member("01"), _member("02"))
+    split = _claim(
+        "new revision and physical identity",
+        _member("02"),
+        _member("01", scope=_scope("2020-01-01", "2020-06-30")),
+        _member("01", scope=_scope("2020-07-01", "2020-12-31")),
+        _member("02"),
+        scope=_scope("2020", "2020"),
+    )
+    assert coding_content_sha256(whole) is not None
+    assert coding_content_sha256(whole) == coding_content_sha256(split)
+
+
+def test_coding_expectation_changes_with_meaning_and_rejects_unknown_membership() -> (
+    None
+):
+    original = _claim("original", _member("01"))
+    variants = (
+        _claim("code", _member("1")),
+        _claim("label", _member("01", "Changed")),
+        _claim("period", _member("01"), scope=_scope("2020-02-01")),
+        replace(original, version_label="New classification vintage"),
+    )
+    assert all(
+        coding_content_sha256(variant) != coding_content_sha256(original)
+        for variant in variants
+    )
+    assert coding_content_sha256(_claim("missing", _member(None))) is None
+    assert coding_content_sha256(_claim("empty")) is None
 
 
 @pytest.mark.parametrize(

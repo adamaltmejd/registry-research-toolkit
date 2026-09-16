@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_intervals import scope_bounds
+from reg_meta_build.source_records import canonical_sha256
 
 if TYPE_CHECKING:
     from reg_meta_build.source_records import TemporalScope
@@ -200,3 +201,37 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
             )
         )
     return CodingResolution(tuple(segments), tuple(issues), claims)
+
+
+def coding_content_sha256(claim: CodeListClaim) -> str | None:
+    """Identify complete coding meaning for a finite checked curation dependency.
+
+    Physical row order, duplicate associations and source-revision identifiers do
+    not change membership. Codes, labels, effective periods and coding labels do.
+    Incomplete source membership cannot supply an accepted coding expectation.
+    This is for selected curation dependencies, not whole-corpus revalidation.
+    """
+    resolved = resolve_code_membership((claim,))
+    if resolved.issues or not resolved.segments:
+        return None
+    segments: list[tuple[str, str, tuple[tuple[str, str], ...], str]] = []
+    for segment in resolved.segments:
+        assert segment.code_set is not None
+        members = segment.code_set.members
+        if (
+            segments
+            and segments[-1][2:] == (members, segment.version_label)
+            and date.fromisoformat(segments[-1][1]).toordinal() + 1
+            == date.fromisoformat(segment.valid_from).toordinal()
+        ):
+            segments[-1] = (
+                segments[-1][0],
+                segment.valid_to,
+                members,
+                segment.version_label,
+            )
+        else:
+            segments.append(
+                (segment.valid_from, segment.valid_to, members, segment.version_label)
+            )
+    return canonical_sha256(segments)
