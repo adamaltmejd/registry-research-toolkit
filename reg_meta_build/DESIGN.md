@@ -132,6 +132,12 @@ source fields. Identity alone does not choose a primary parallel column: an unre
 overlap withholds only the affected state period. Renames and shape splits remain
 explicit conversion work.
 
+Canonical classification membership uses the explicitly selected prepared codebook. The
+common resolver retains literal codes, deduplicates equal code/label payloads, and
+diagnoses competing or incomplete members without choosing a label. The original rows
+remain in prepared evidence. Classification identity, variable bindings and succession
+are separate checked declarations; code similarity does not establish those links.
+
 Overlapping occurrence decisions are checked together against original evidence. The
 applicability evaluator shares semantic-member and selector indexes for one complete
 slice, including newly added records; it never searches only the expected members. The
