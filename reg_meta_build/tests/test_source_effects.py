@@ -26,6 +26,7 @@ from reg_meta_build.resolved_catalog import (
 )
 from reg_meta_build.scb_errata import ErrataColumn, ErrataDelivered
 from reg_meta_build.source_annotations import apply_search_aliases
+from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
     CheckedIdentityChange,
@@ -169,7 +170,7 @@ def _search_alias_fixture():
         flags=SourceFields(
             sensitivity=value_field(False), identifier=value_field(False)
         ),
-        coding={occurrence.column_key: ()},
+        coding={occurrence.column_key: resolve_code_membership(())},
     )
     assert result.variable is not None
     case = _case(
@@ -754,7 +755,7 @@ def test_explicit_identity_decision_keeps_exact_columns_and_periods(
             sensitivity=value_field(False), identifier=value_field(False)
         ),
         coding={
-            record.column_key: ()
+            record.column_key: resolve_code_membership(())
             for record in result.occurrences
             if record.column_key is not None
         },
@@ -988,7 +989,7 @@ def test_corrected_facts_and_provenance_reach_direct_materialization(
         flags=SourceFields(
             sensitivity=value_field(False), identifier=value_field(False)
         ),
-        coding={occurrence.column_key: ()},
+        coding={occurrence.column_key: resolve_code_membership(())},
     )
     assert formed.variable is not None
     assert formed.diagnostics == ()

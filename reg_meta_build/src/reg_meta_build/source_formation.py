@@ -18,11 +18,6 @@ from reg_meta_build.resolved_catalog import (
     ResolvedVariable,
     unresolved_variable_flags,
 )
-from reg_meta_build.source_coding import (
-    CodeListClaim,
-    CodingResolution,
-    resolve_code_membership,
-)
 from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
 from reg_meta_build.source_intervals import (
     OccurrenceResolution,
@@ -36,6 +31,7 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
     from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
+    from reg_meta_build.source_coding import CodingResolution
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_records import (
         SourceFields,
@@ -141,6 +137,7 @@ def _coded_states(
                             for occurrence in segment.effective_occurrences
                             for correction in occurrence.corrections
                         }
+                        | set(matched.provenance if matched else ())
                     )
                 )
                 or None,
@@ -232,11 +229,11 @@ def form_native_variable(
     slug: str,
     provider_key: str,
     flags: SourceFields,
-    coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
+    coding: Mapping[NativeKey, CodingResolution],
 ) -> VariableFormation:
     """Form one ordinary native identity; return unsafe aspects as explicit issues.
 
-    Every known column needs an explicit coding lookup result (an empty tuple means
+    Every known column needs an explicit coding resolution (empty claims mean
     the selected source supplied no code list). An omitted mapping is an incomplete
     implementation/contract, not a curation issue. Flags are already reconciled
     source facts. Unknown flags cannot be represented by the current DB contract.
@@ -368,7 +365,7 @@ def form_native_variable(
             assert code_key is not None
             if code_key not in coding:
                 raise ValueError(f"missing explicit source coding lookup: {code_key!r}")
-            code_result = resolve_code_membership(coding[code_key])
+            code_result = coding[code_key]
             coding_results.append(code_result)
             for problem in code_result.issues:
                 diagnostics.append(
@@ -377,7 +374,12 @@ def form_native_variable(
                         severity="error",
                         subject=subject,
                         detail="Bound source coding claims disagree or contain incomplete membership evidence: "
-                        + ", ".join(problem.claim_ids),
+                        + ", ".join(problem.claim_ids)
+                        + (
+                            ". Curation cases: " + ", ".join(problem.case_ids)
+                            if problem.case_ids
+                            else ""
+                        ),
                         refs=_refs(tuple(members)),
                         fields=("coding",),
                         valid_from=problem.valid_from,

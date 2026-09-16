@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
-from typing import TYPE_CHECKING, Literal, Self
+from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -543,11 +543,46 @@ class SearchAliasDecision(_CurationModel):
         return self
 
 
+class CodingChoiceDecision(_CurationModel):
+    """Choose existing coding in one exact column and finite checked period."""
+
+    kind: Literal["coding_choice"] = "coding_choice"
+    reviewed: Literal[True]
+    column_key: NativeKey
+    valid_from: str
+    valid_to: str
+    expected_codings: tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...]
+    selected_coding: str = Field(pattern=r"^[0-9a-f]{64}$")
+    reason: str = Field(min_length=1)
+    provenance: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _bounded(self) -> Self:
+        if not self.column_key or "" in self.column_key:
+            raise ValueError("a coding choice requires an exact column key")
+        for value in (self.valid_from, self.valid_to):
+            parsed = date.fromisoformat(value)
+            if parsed.isoformat() != value or parsed.year == 9999:
+                raise ValueError("coding choices require finite ISO date bounds")
+        if self.valid_from > self.valid_to:
+            raise ValueError("coding choice bounds are reversed")
+        if (
+            not self.expected_codings
+            or len(set(self.expected_codings)) != len(self.expected_codings)
+            or self.selected_coding not in self.expected_codings
+        ):
+            raise ValueError("choose one of the unique expected existing codings")
+        if not self.reason.strip() or not self.provenance.strip():
+            raise ValueError("a coding choice requires rationale and provenance")
+        return self
+
+
 type CurationDecision = (
     BoundedUnresolvedDecision
     | FormVariableDecision
     | OccurrenceCorrectionDecision
     | SearchAliasDecision
+    | CodingChoiceDecision
 )
 
 
@@ -1220,10 +1255,11 @@ def inspect_cases(
     identities: dict[tuple[str, str, str], str] = {}
     for case in ordered_cases:
         if isinstance(
-            case.decision, (OccurrenceCorrectionDecision, SearchAliasDecision)
+            case.decision,
+            (OccurrenceCorrectionDecision, SearchAliasDecision, CodingChoiceDecision),
         ):
             raise TypeError(
-                "occurrence and alias corrections require the ordinary formation path"
+                "occurrence, alias and coding corrections require the ordinary formation path"
             )
         if isinstance(case.decision, FormVariableDecision):
             providers = {

@@ -145,6 +145,16 @@ window. A source change invalidates their original membership guard. Unsupported
 dependencies withhold the affected alias; missing conversion mappings remain fatal
 engineering errors.
 
+Checked coding choices name an exact column identity, a finite date interval and the
+semantic fingerprints of every competing complete coding in that interval. Both the
+original record membership and those coding expectations must still match. A changed,
+added, removed or incomplete coding invalidates the choice; physical duplicates and
+irrelevant later periods do not broaden it. Resolution retains every original claim,
+applies the selected existing membership only inside the checked window, and carries the
+decision's provenance into the resulting state. Conflicting accepted choices withhold
+only their disputed overlap. Unknown or pooled source scopes remain unresolved. Ordinary
+variable formation consumes this resolved coding; it makes no further choice.
+
 Overlapping occurrence decisions are checked together against original evidence. The
 applicability evaluator shares semantic-member and selector indexes for one complete
 slice, including newly added records; it never searches only the expected members. The
@@ -186,11 +196,13 @@ that reference to a catalog classification remains a checked curation responsibi
 
 An accepted column or delivery declaration may target a concrete edition whose coverage
 is pooled or unknown. Resolution retains that edition membership and diagnoses its
-unsupported period; it cannot emit annual states from it. Existing `all_versions`
-declarations are converted to an explicit finite edition list. Future editions receive
-no correction automatically, and a newly documented column invalidates the old omission
-claim. Declared column metadata comes from the accepted entry, not from an unrelated
-variable used to verify the target edition.
+unsupported period; it cannot emit annual states from it. Existing undated
+`all_versions` holdings remain one declaration with unknown coverage; they cannot
+establish presence in every annual edition. Explicitly named editions remain bounded to
+those editions. Future editions receive no correction automatically, and a newly
+documented column invalidates the old omission claim. Declared column metadata comes
+from the accepted entry, not from an unrelated variable used to verify the target
+edition. Omitted identifier and sensitivity flags remain unknown.
 
 ### Mechanical normalization
 

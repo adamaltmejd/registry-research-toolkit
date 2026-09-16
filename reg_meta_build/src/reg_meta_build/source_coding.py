@@ -58,6 +58,7 @@ class CodingIssue:
     valid_to: str | None
     member_positions: tuple[tuple[str, int], ...] = ()
     withheld: str = "code_membership"
+    case_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -67,6 +68,7 @@ class CodingSegment:
     code_set: ResolvedCodeSet | None
     claim_ids: tuple[str, ...]
     version_label: str = ""
+    provenance: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

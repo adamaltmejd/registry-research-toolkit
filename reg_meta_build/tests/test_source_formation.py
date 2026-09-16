@@ -18,7 +18,11 @@ from reg_meta_build.resolved_catalog import (
     ResolvedVariant,
     write_resolved_catalog,
 )
-from reg_meta_build.source_coding import CodeListClaim, CodeMembershipClaim
+from reg_meta_build.source_coding import (
+    CodeListClaim,
+    CodeMembershipClaim,
+    resolve_code_membership,
+)
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_variable_key,
@@ -118,7 +122,7 @@ def _form(
         if (key := occurrence.variant_key) is not None:
             variants[key] = _VARIANT
         if (key := occurrence.column_key) is not None:
-            coding[key] = claims
+            coding[key] = resolve_code_membership(claims)
     return form_native_variable(
         records,
         register=_REGISTER,
@@ -336,5 +340,7 @@ def test_missing_implementation_mapping_is_fatal_not_curation_backlog(
             slug="value",
             provider_key="4",
             flags=_FLAGS,
-            coding={} if missing == "coding" else {column_key: ()},
+            coding={}
+            if missing == "coding"
+            else {column_key: resolve_code_membership(())},
         )

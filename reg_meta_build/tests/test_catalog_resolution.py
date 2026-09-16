@@ -10,6 +10,7 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.db import open_db
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.resolved_catalog import write_resolved_catalog
+from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_parent_key,
@@ -106,7 +107,7 @@ def test_parent_facts_feed_ordinary_formation_and_direct_catalog(
         variants=parents.variants,
         slug="value",
         provider_key="5",
-        coding={code_key: ()},
+        coding={code_key: resolve_code_membership(())},
         flags=SourceFields(
             identifier=value_field(False), sensitivity=value_field(False)
         ),
@@ -164,7 +165,7 @@ def test_edition_populations_do_not_become_competing_variable_assignments() -> N
         flags=SourceFields(
             identifier=value_field(False), sensitivity=value_field(False)
         ),
-        coding={column_key: ()},
+        coding={column_key: resolve_code_membership(())},
     )
     assert formed.variable is not None and formed.diagnostics == ()
     assert len(formed.variable.states) == 1
