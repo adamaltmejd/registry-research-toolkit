@@ -127,16 +127,18 @@ def _check_contract(case: CurationCase) -> None:
                 raise ValueError(
                     "an identity/use assignment requires guarded source membership"
                 )
-            if isinstance(effect, CheckedIdentityChange) and not any(
+            if isinstance(
+                effect, (CheckedFieldChange, CheckedIdentityChange)
+            ) and not any(
                 all(field in alternative.fields for field in effect.when)
                 for alternative in targets[effect.ref].alternatives
             ):
                 raise ValueError(
-                    "identity conditions must match a checked source alternative"
+                    "effect conditions must match a checked source alternative"
                 )
             _require_checked(
                 targets[effect.ref],
-                (effect.replacement.name,)
+                (effect.replacement.name, *(field.name for field in effect.when))
                 if isinstance(effect, CheckedFieldChange)
                 else ("column_name", *(field.name for field in effect.when))
                 if isinstance(effect, CheckedIdentityChange)
@@ -189,7 +191,7 @@ def apply_occurrence_cases(
         for index, effect in enumerate(decision.effects):
             correction = AppliedCorrection(case.case_id, index, decision.provenance)
             if isinstance(effect, CheckedFieldChange):
-                fields[effect.ref, effect.replacement.name].append((effect, correction))
+                fields[effect.ref].append((effect, correction))
             elif isinstance(effect, CheckedPeriodChange):
                 periods[effect.ref].append((effect, correction))
             elif isinstance(effect, CheckedIdentityChange):
@@ -223,24 +225,8 @@ def apply_occurrence_cases(
                 )
             )
 
-    field_changes = defaultdict(dict)
     field_owners = defaultdict(list)
     withheld_fields = defaultdict(set)
-    for (ref, name), claims in fields.items():
-        replacements = {effect.replacement for effect, _ in claims}
-        if len(replacements) > 1:
-            conflict(claims, str(ref), (ref,), (name,), (name,))
-            value = SourceField(status="unknown")
-            withheld_fields[ref].add(name)
-        else:
-            replacement = next(iter(replacements))
-            value = (
-                None
-                if replacement.status == "absent"
-                else SourceField(status=replacement.status, value=replacement.value)
-            )
-        field_changes[ref][name] = value
-        field_owners[ref].extend(owner for _, owner in claims)
     period_changes = {}
     for ref, claims in periods.items():
         replacements = {
@@ -257,6 +243,7 @@ def apply_occurrence_cases(
         field_owners[ref].extend(owner for _, owner in claims)
 
     reported_identity_conflicts = set()
+    reported_field_conflicts = set()
     variant_changes = {}
     for ref, claims in variants.items():
         replacements = {effect.variant_keys for effect, _ in claims}
@@ -274,7 +261,29 @@ def apply_occurrence_cases(
         values = {
             name: getattr(record.fields, name) for name in SourceFields.model_fields
         }
-        values.update(field_changes.get(ref, {}))
+        matching_fields = defaultdict(list)
+        for effect, owner in fields.get(ref, ()):
+            if all(_field_matches(record, field) for field in effect.when):
+                matching_fields[effect.replacement.name].append((effect, owner))
+        changed_fields = set(withheld_fields[ref])
+        matching_owners = []
+        for name, claims in matching_fields.items():
+            replacements = {effect.replacement for effect, _ in claims}
+            matching_owners.extend(owner for _, owner in claims)
+            if len(replacements) > 1:
+                signature = (ref, name, tuple(owner for _, owner in claims))
+                if signature not in reported_field_conflicts:
+                    conflict(claims, str(ref), (ref,), (name,), (name,))
+                    reported_field_conflicts.add(signature)
+                values[name] = SourceField(status="unknown")
+                changed_fields.add(name)
+            else:
+                replacement = next(iter(replacements))
+                values[name] = (
+                    None
+                    if replacement.status == "absent"
+                    else SourceField(status=replacement.status, value=replacement.value)
+                )
         scope, period = period_changes.get(
             ref, (record.edition_scope, record.edition_period_scope)
         )
@@ -285,7 +294,7 @@ def apply_occurrence_cases(
         ]
         assigned = {effect.variable_key for effect, _ in identity_claims}
         variable_key = occurrence.variable_key
-        withheld = set(withheld_fields[ref])
+        withheld = changed_fields
         if len(assigned) > 1:
             variable_key = None
             withheld.add("identity")
@@ -312,6 +321,7 @@ def apply_occurrence_cases(
                 sorted(
                     (
                         *field_owners[ref],
+                        *matching_owners,
                         *support_uses.get(ref, ()),
                         *(owner for _, owner in identity_claims),
                     ),

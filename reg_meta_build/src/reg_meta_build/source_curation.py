@@ -372,12 +372,23 @@ class FormVariableDecision(_CurationModel):
         return self
 
 
+def _unique_conditions(
+    conditions: tuple[FieldExpectation, ...],
+) -> tuple[FieldExpectation, ...]:
+    if len({field.name for field in conditions}) != len(conditions):
+        raise ValueError("effect conditions must use unique field names")
+    return conditions
+
+
 class CheckedFieldChange(_CurationModel):
     """Replace one checked field of an exact semantic source member."""
 
     kind: Literal["field"] = "field"
     ref: SourceRecordRef
     replacement: FieldExpectation
+    when: tuple[FieldExpectation, ...] = ()
+
+    _conditions = field_validator("when")(_unique_conditions)
 
 
 class CheckedPeriodChange(_CurationModel):
@@ -397,12 +408,12 @@ class CheckedIdentityChange(_CurationModel):
     variable_key: NativeKey
     when: tuple[FieldExpectation, ...] = ()
 
+    _conditions = field_validator("when")(_unique_conditions)
+
     @model_validator(mode="after")
     def _explicit_identity(self) -> Self:
         if not self.variable_key or any(part == "" for part in self.variable_key):
             raise ValueError("an identity assignment needs an exact nonempty key")
-        if len({field.name for field in self.when}) != len(self.when):
-            raise ValueError("identity conditions must use unique field names")
         return self
 
 

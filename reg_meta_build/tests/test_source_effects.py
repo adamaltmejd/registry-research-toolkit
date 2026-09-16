@@ -10,7 +10,11 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.db import open_db
 from reg_meta_build.catalog_resolution import resolve_parents
-from reg_meta_build.convert_errata import ErrataEditionBinding, convert_delivered_entry
+from reg_meta_build.convert_errata import (
+    ErrataEditionBinding,
+    capture_expectations,
+    convert_delivered_entry,
+)
 from reg_meta_build.convert_identity import convert_column_partitions
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
@@ -252,6 +256,81 @@ def test_variant_routing_cannot_move_a_native_edition_implicitly() -> None:
     )
     with pytest.raises(ValueError, match="cannot implicitly reparent"):
         apply_occurrence_cases((record,), (case,))
+
+
+@pytest.mark.parametrize("conflicting", [False, True])
+def test_field_conditions_select_original_alternative_without_touching_its_peer(
+    conflicting: bool,
+) -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(update={"name": value_field(label)})
+            }
+        )
+        for record, label in (
+            (_record(row=1, column="INVARN8"), "Date 8"),
+            (_record(row=2, column="INVARN8"), "Date 9"),
+        )
+    )
+    first = records[0]
+    condition = FieldExpectation(name="name", status="value", value="Date 9")
+    correction = CheckedFieldChange(
+        ref=record_ref(first),
+        replacement=FieldExpectation(
+            name="column_name", status="value", value="INVARN9"
+        ),
+        when=(condition,),
+    )
+    case = _case(first, correction).model_copy(
+        update={
+            "targets": capture_expectations(records, fields=("name", "column_name"))
+        }
+    )
+    # Conditions inspect source fields even when another case changes that field.
+    rename = case.model_copy(
+        update={
+            "case_id": "change-label",
+            "decision": case.decision.model_copy(
+                update={"effects": (_field(first, "name", "Changed label"),)}
+            ),
+        }
+    )
+    cases = (case, rename)
+    if conflicting:
+        cases += (
+            case.model_copy(
+                update={
+                    "case_id": "competing-column",
+                    "decision": case.decision.model_copy(
+                        update={
+                            "effects": (
+                                correction.model_copy(
+                                    update={
+                                        "replacement": FieldExpectation(
+                                            name="column_name",
+                                            status="value",
+                                            value="OTHER",
+                                        )
+                                    }
+                                ),
+                            )
+                        }
+                    ),
+                }
+            ),
+        )
+    result = apply_occurrence_cases(records, cases)
+    left, right = result.occurrences
+    assert left.fields.column_name == first.fields.column_name
+    assert left.fields.name is not None and right.fields.name is not None
+    assert right.fields.column_name is not None
+    assert left.fields.name.value == right.fields.name.value == "Changed label"
+    assert right.fields.column_name.value == (None if conflicting else "INVARN9")
+    assert right.withheld_fields == (("column_name",) if conflicting else ())
+    assert left.withheld_fields == ()
+    assert bool(result.diagnostics) == conflicting
+    assert apply_occurrence_cases(records, cases[::-1]) == result
 
 
 def test_checked_identity_partition_keeps_physical_evidence_and_rejects_new_peers() -> (

@@ -115,15 +115,15 @@ source facts.
 > exercises an explicitly selected slice. This branch is not ready for catalog
 > activation.
 
-Identity assignments can select an exact checked field alternative under a native source
-member. This matters when the same delivered CVID carries different column assertions:
-assigning every physical row with that CVID to one sibling would lose the existing
-partition. Conditions always inspect the original source, so an earlier field correction
-cannot make an identity decision apply. Equal assignments compose; contradictory
-assignments withhold that occurrence's identity. The offline conversion of
-column-discriminated naming entries requires a unique, complete mapping to the delivered
-columns. Renames, shape splits and discriminator collisions remain explicit conversion
-work.
+Field corrections and identity assignments can select an exact checked field alternative
+under a native source member. This matters when the same delivered key carries different
+column assertions or labels: correcting every physical row with that key would lose the
+existing partition. Conditions always inspect the original source, so an earlier field
+correction cannot make another decision apply. Equal assignments compose; contradictory
+assignments withhold only the affected occurrence's disputed field or identity. The
+offline conversion of column-discriminated naming entries requires a unique, complete
+mapping to the delivered columns. Renames, shape splits and discriminator collisions
+remain explicit conversion work.
 
 Checked source-use decisions retain lookup rows as support evidence without forming
 research variables or variants from them. Parent resolution accounts for those records
