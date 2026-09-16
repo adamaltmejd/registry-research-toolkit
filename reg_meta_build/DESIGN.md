@@ -125,13 +125,13 @@ existing partition. Conditions always inspect the original source, so an earlier
 correction cannot make another decision apply. Equal assignments compose; contradictory
 assignments withhold only the affected occurrence's disputed field or identity. The
 offline conversion of column-discriminated naming entries requires a unique, complete
-mapping to the delivered columns. Existing case/diacritic components may retain several
-literal spellings when they never share an edition; co-delivered twins and other slug
-collisions still require their existing representation decisions. Checked identity
-assignments let formation retain distinct historical column spellings without changing
-source fields. Identity alone does not choose a primary parallel column: an unresolved
-overlap withholds only the affected state period. Renames and shape splits remain
-explicit conversion work.
+mapping to literal delivered columns. A shared folded slug does not establish identity
+between different column spellings, even when their editions never coincide. Those
+spellings require an evidence-backed identity decision. Checked identity assignments let
+formation retain distinct historical column spellings without changing source fields.
+Identity alone does not choose a primary parallel column: an unresolved overlap
+withholds only the affected state period. Renames and shape splits remain explicit
+conversion work.
 
 Canonical classification membership uses the explicitly selected prepared codebook. The
 common resolver retains literal codes, deduplicates equal code/label payloads, and

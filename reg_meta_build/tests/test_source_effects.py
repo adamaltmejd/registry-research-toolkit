@@ -679,16 +679,38 @@ def test_existing_shape_split_or_rename_cluster_is_not_guessed_from_discriminato
     assert converted.case is None
 
 
-def test_accepted_case_twins_keep_exact_columns_and_periods(tmp_path: Path) -> None:
+def test_explicit_identity_decision_keeps_exact_columns_and_periods(
+    tmp_path: Path,
+) -> None:
     records = (
         _record(column="ANSWER", year="2020"),
         _record(cvid=21, column="Answer", year="2021"),
     )
-    converted = convert_column_partitions(
-        records, source_id="1.5", split_ids=("1.5.answer",)
+    expected = capture_expectations(records, fields=("column_name",))
+    case = CurationCase(
+        case_id="reviewed-column-identity",
+        targets=expected,
+        peer_guards=(
+            PeerGuard(
+                guard_id="complete-family",
+                source=records[0].source,
+                native=NativeCoordinates(register_id=1, variable_id=5),
+                expected_members=tuple(item.ref for item in expected),
+            ),
+        ),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            effects=tuple(
+                CheckedIdentityChange(
+                    ref=record_ref(record), variable_key=("reviewed",)
+                )
+                for record in records
+            ),
+            reason="Fixture explicitly establishes the same variable in these two editions.",
+            provenance="Independent reviewed identity evidence in the fixture",
+        ),
     )
-    assert converted.case is not None and not converted.diagnostics
-    result = apply_occurrence_cases(records, (converted.case,))
+    result = apply_occurrence_cases(records, (case,))
     assert all(record.identity_checked for record in result.occurrences)
     assert [record.fields for record in result.occurrences] == [
         record.fields for record in records
@@ -727,7 +749,7 @@ def test_accepted_case_twins_keep_exact_columns_and_periods(tmp_path: Path) -> N
             ("Answer", "2021-01-01", "2021-12-31"),
         ]
     changed = (records[0], _record(cvid=21, column="OTHER", year="2021"))
-    stale = apply_occurrence_cases(changed, (converted.case,))
+    stale = apply_occurrence_cases(changed, (case,))
     assert stale.accounting[0].disposition == "stale"
     assert not any(record.identity_checked for record in stale.occurrences)
 
@@ -736,10 +758,12 @@ def test_accepted_case_twins_keep_exact_columns_and_periods(tmp_path: Path) -> N
     ("first", "second", "year", "suffix"),
     [
         ("ANSWER", "Answer", "2020", "answer"),
+        ("ANSWER", "Answer", "2021", "answer"),
+        ("Kön", "Kon", "2021", "kon"),
         ("ANSWER_A", "ANSWER-A", "2021", "answer-a"),
     ],
 )
-def test_case_component_conversion_keeps_codelivery_and_slug_collision_guards(
+def test_naming_pin_does_not_establish_identity_for_distinct_column_spellings(
     first: str, second: str, year: str, suffix: str
 ) -> None:
     converted = convert_column_partitions(
