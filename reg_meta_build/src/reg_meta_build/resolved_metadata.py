@@ -133,15 +133,7 @@ class ResolvedVariableGroup(_ResolvedGroup):
     @model_validator(mode="after")
     def _members(self) -> Self:
         _unique(
-            (
-                (
-                    m.variable,
-                    m.delivery_column_name.lower()
-                    if m.delivery_column_name is not None
-                    else None,
-                )
-                for m in self.members
-            ),
+            ((m.variable, m.delivery_column_name) for m in self.members),
             "group member",
         )
         axes = {axis.axis for axis in self.axes}
@@ -152,8 +144,6 @@ class ResolvedVariableGroup(_ResolvedGroup):
             _unique((facet.axis for facet in member.facets), "member facet axis")
             if {facet.axis for facet in member.facets} != axes:
                 raise ValueError("member must supply one facet per declared axis")
-            if len(axes) > 1 and member.delivery_column_name is None:
-                raise ValueError("multi-axis members require a delivery column")
             grains[member.variable].add(member.delivery_column_name is None)
         if any(len(value) > 1 for value in grains.values()):
             raise ValueError("group mixes whole-variable and representation members")
@@ -488,13 +478,18 @@ def prepare_resolved_metadata(
                 state.value_set_version_label,
             )
             states[key] = state
-            representations.add(
-                (fqid, state.variant.slug, state.delivery_column_name.lower())
-            )
+            representations.add((fqid, state.variant.slug, state.delivery_column_name))
         for alias in variable.aliases:
-            representations.add(
-                (fqid, alias.variant.slug, alias.delivery_column_name.lower())
-            )
+            representations.add((fqid, alias.variant.slug, alias.delivery_column_name))
+    literal_representation_columns = {
+        (variable, column) for variable, _, column in representations
+    }
+    # Groups enumerate literal delivered spellings; succession has a separate
+    # case-insensitive endpoint contract. Keep both indexes without merging facts.
+    representations = {
+        (variable, variant, column.lower())
+        for variable, variant, column in representations
+    }
     representation_columns = {
         (variable, column) for variable, _, column in representations
     }
@@ -569,7 +564,11 @@ def prepare_resolved_metadata(
                     raise ValueError("variable belongs to multiple resolved groups")
                 grouped_variables[member.variable] = key
                 if member.delivery_column_name is not None:
-                    representation(member.variable, member.delivery_column_name)
+                    require(
+                        literal_representation_columns,
+                        (member.variable, member.delivery_column_name),
+                        "group representation",
+                    )
                 member_id = mint(
                     "resolved-catalog",
                     "group-member",

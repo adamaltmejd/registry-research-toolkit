@@ -620,6 +620,14 @@ active predecessors, the pointer selects the first literal slug while the full g
 preserves every relationship. Canonical codebooks do not carry a separately editable
 predecessor. No edition sequence is inferred from names or years.
 
+Group membership preserves literal delivery-column spellings, including separately
+declared case variants. Each representation member must match an observed spelling
+exactly; an unobserved case variant is an error. Succession endpoints retain their
+separate case-insensitive lookup contract without changing group membership. Groups with
+multiple axes may attach whole variables or particular delivery columns; every member
+supplies all declared facets. The same variable cannot mix whole-variable and
+representation membership within a group.
+
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across

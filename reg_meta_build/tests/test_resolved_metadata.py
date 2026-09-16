@@ -455,6 +455,80 @@ def test_all_explicit_metadata_surfaces_are_written_without_derivation(
         assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 3
 
 
+def test_group_members_preserve_case_distinct_declared_columns(tmp_path: Path) -> None:
+    variable = _variable("one")
+    variable = variable.model_copy(
+        update={
+            "aliases": (
+                *variable.aliases,
+                ResolvedAlias(
+                    variant=variable.states[0].variant, delivery_column_name="ONECOLUMN"
+                ),
+            )
+        }
+    )
+    group = ResolvedVariableGroup(
+        register="scb/example",
+        key="spellings",
+        label="Accepted spellings",
+        source="curated",
+        members=tuple(
+            ResolvedGroupVariable(
+                variable="scb/example/one", delivery_column_name=column
+            )
+            for column in ("oneColumn", "ONECOLUMN")
+        ),
+    )
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog(
+        (variable,),
+        output,
+        manifest={},
+        metadata=ResolvedMetadata(variable_groups=(group,)),
+    )
+    with closing(open_db(output)) as conn:
+        assert [
+            row[0]
+            for row in conn.execute(
+                "SELECT delivery_column_name FROM concept_group_variable "
+                "ORDER BY delivery_column_name"
+            )
+        ] == ["ONECOLUMN", "oneColumn"]
+
+
+def test_multi_axis_group_can_attach_whole_variables(tmp_path: Path) -> None:
+    group = _metadata().variable_groups[0]
+    group = group.model_copy(
+        update={
+            "members": tuple(
+                member.model_copy(update={"delivery_column_name": None})
+                for member in group.members
+            )
+        }
+    )
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog(
+        (_variable("one"), _variable("two")),
+        output,
+        manifest={},
+        metadata=ResolvedMetadata(variable_groups=(group,)),
+    )
+    with closing(open_db(output)) as conn:
+        assert [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT v.slug, m.delivery_column_name, f.axis, f.value "
+                "FROM concept_group_variable m JOIN variable v USING(variable_id) "
+                "JOIN concept_group_variable_facet f USING(member_id) ORDER BY v.slug, f.axis"
+            )
+        ] == [
+            ("one", None, "rank", "1"),
+            ("one", None, "unit", "person"),
+            ("two", None, "rank", "2"),
+            ("two", None, "unit", "person"),
+        ]
+
+
 def test_metadata_reordering_produces_identical_bytes(tmp_path: Path) -> None:
     metadata = _metadata()
     output = tmp_path / "catalog.db"
@@ -641,7 +715,8 @@ def test_unknown_dependent_references_preserve_previous_catalog(
         "state_duplicate",
         "no_source_warning",
         "classification_self_equivalence",
-        "case_duplicate_members",
+        "column_case_typo",
+        "duplicate_members",
     ],
 )
 def test_invalid_metadata_contracts_fail_before_output(
@@ -736,7 +811,7 @@ def test_invalid_metadata_contracts_fail_before_output(
                 ),
             }
         )
-    elif defect == "case_duplicate_members":
+    elif defect in {"column_case_typo", "duplicate_members"}:
         first = group.members[0]
         metadata = metadata.model_copy(
             update={
@@ -746,7 +821,11 @@ def test_invalid_metadata_contracts_fail_before_output(
                             "members": (
                                 first,
                                 first.model_copy(
-                                    update={"delivery_column_name": "ONECOLUMN"}
+                                    update={
+                                        "delivery_column_name": "ONECOLUMN"
+                                        if defect == "column_case_typo"
+                                        else first.delivery_column_name
+                                    }
                                 ),
                             ),
                         }
