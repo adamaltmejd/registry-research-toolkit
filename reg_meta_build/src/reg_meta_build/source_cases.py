@@ -472,8 +472,7 @@ def evaluate_hamn_signal_source_case(
             continue
         if (
             native.register_variant_id is not None
-            and native.register_variant_id
-            != case.scope_dependency.register_variant_id
+            and native.register_variant_id != case.scope_dependency.register_variant_id
         ):
             continue
         matches_identity = native.variable_id == case.source_dependency.variable_id
@@ -597,9 +596,7 @@ def evaluate_hamn_signal_source_case(
             )
             continue
         occurrences = tuple(
-            (record, locator)
-            for record in records
-            for locator in record.locators
+            (record, locator) for record in records for locator in record.locators
         )
         if len(occurrences) != 2:
             _block(
@@ -706,11 +703,7 @@ def evaluate_hamn_signal_source_case(
 
     evidence_occurrences = tuple(
         sorted(
-            (
-                (record, locator)
-                for record in relevant
-                for locator in record.locators
-            ),
+            ((record, locator) for record in relevant for locator in record.locators),
             key=lambda occurrence: (
                 *_record_semantic_sort_key(occurrence[0]),
                 _locator_sort_key(occurrence[1]),

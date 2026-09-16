@@ -1047,9 +1047,7 @@ def test_hamn_case_reports_exact_source_only_proposal_and_typed_output(
         for record in report.evaluation.evidence
     )
     assert report.evaluation.receipt.evidence_locators == tuple(
-        locator
-        for record in report.evaluation.evidence
-        for locator in record.locators
+        locator for record in report.evaluation.evidence for locator in record.locators
     )
     assert {check.name for check in report.evaluation.receipt.checks} == {
         "source_dependency",
@@ -1370,10 +1368,7 @@ def test_hamn_case_counts_coalesced_and_expanded_duplicate_occurrences(
 
     coalesced = evaluate_hamn_signal_source_case(
         expanded_report.case_artifact,
-        (
-            ScbObservation(record=record, issue=None)
-            for record in coalesced_records
-        ),
+        (ScbObservation(record=record, issue=None) for record in coalesced_records),
         expanded.receipt.source_revision,
     )
 
