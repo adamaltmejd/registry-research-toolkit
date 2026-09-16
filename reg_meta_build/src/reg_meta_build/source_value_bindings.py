@@ -407,7 +407,11 @@ def bind_code_lists(
     locators or supplied item validity. Distinct effective periods have distinct
     claim identities even when they use the same checked donor.
     """
-    sessions = tuple(sessions)
+    sessions = tuple(
+        session
+        for session in sessions
+        if session.join is not None and record.source in session.join.record_sources
+    )
     results = tuple(session.bind(record, scope=scope) for session in sessions)
     claims = tuple(claim for result in results for claim in result.claims)
     issues = tuple(issue for result in results for issue in result.issues)
