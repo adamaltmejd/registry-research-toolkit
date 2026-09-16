@@ -11,6 +11,7 @@ from typing import Literal
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from pydantic import ValidationError
 from reg_meta_build.source_curation import (
     BoundedUnresolvedDecision,
     CurationCase,
@@ -19,6 +20,7 @@ from reg_meta_build.source_curation import (
     RecordExpectation,
     RecordProjection,
     SourceRecordRef,
+    UnresolvedAspect,
     evaluate_case,
 )
 from reg_meta_build.source_records import (
@@ -158,12 +160,23 @@ def _expectation(
     )
 
 
-def _unresolved(*aspects: str) -> BoundedUnresolvedDecision:
+def _unresolved(*aspects: UnresolvedAspect) -> BoundedUnresolvedDecision:
     return BoundedUnresolvedDecision(
         reviewed=True,
         withheld_aspects=aspects,
         reason="Retained source evidence does not justify a semantic winner.",
     )
+
+
+def test_unresolved_aspects_cannot_bypass_checks_by_using_an_unknown_label() -> None:
+    with pytest.raises(ValidationError, match="withheld_aspects"):
+        BoundedUnresolvedDecision.model_validate(
+            {
+                "reviewed": True,
+                "withheld_aspects": ("code_set_binding",),
+                "reason": "Use the explicit coding aspect and its dependency checks.",
+            }
+        )
 
 
 def test_projection_order_and_value_rules_reuse_the_common_source_contract() -> None:
@@ -380,11 +393,11 @@ def _lisa_case(known: SourceRecord, blank: SourceRecord) -> CurationCase:
             ),
         ),
         decision=_unresolved(
-            "fields.column_name",
-            "fields.data_type",
-            "fields.data_length",
+            "column_name",
+            "data_type",
+            "data_length",
             "identity",
-            "code_set_binding",
+            "coding",
         ),
     )
 
@@ -564,9 +577,9 @@ def _lova_case(records: tuple[SourceRecord, ...]) -> CurationCase:
         # decision therefore withholds binding but does not claim link-change coverage.
         decision=_unresolved(
             "identity",
-            "data_type_winner",
-            "edition_scope_inheritance",
-            "code_set_binding",
+            "data_type",
+            "period",
+            "coding",
         ),
     )
 
@@ -615,7 +628,7 @@ def test_lova_case_preserves_three_occurrences_and_unknown_open_scopes() -> None
     assert records[1].edition_scope.kind == records[2].edition_scope.kind == "unknown"
     assert result.decision is not None
     assert "identity" in result.decision.withheld_aspects
-    assert "edition_scope_inheritance" in result.decision.withheld_aspects
+    assert "period" in result.decision.withheld_aspects
 
 
 def test_projection_sets_keep_conflicts_but_ignore_identical_duplicates() -> None:
@@ -651,7 +664,7 @@ def test_projection_sets_keep_conflicts_but_ignore_identical_duplicates() -> Non
     case = CurationCase(
         case_id="illustrative-same-key-conflict",
         targets=(expected,),
-        decision=_unresolved("data_type_winner"),
+        decision=_unresolved("data_type"),
     )
     duplicate_integer = _replacement(
         base,

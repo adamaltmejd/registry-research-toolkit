@@ -9,6 +9,7 @@ import pytest
 from pydantic import ValidationError
 from reg_meta.catalog import Catalog, ResolvedVariable as CatalogVariable
 from reg_meta.db import open_db
+from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
 from reg_meta.search import VariableSearchResult
 from reg_meta_build.resolved_catalog import (
@@ -16,6 +17,7 @@ from reg_meta_build.resolved_catalog import (
     ResolvedState,
     ResolvedVariable,
     ResolvedVariant,
+    validate_resolved_variables,
     write_resolved_catalog,
 )
 from reg_meta_build.validate import ValidationResult, validate_built_db
@@ -190,10 +192,25 @@ def test_conflicts_preserve_previous_catalog(tmp_path: Path, conflict: str) -> N
         other = variable
     else:
         metadata = {"schema_version": "invalid"}
+    if conflict != "manifest":
+        with pytest.raises(ValueError, match="inconsistent|duplicate"):
+            validate_resolved_variables((variable, other))
     with pytest.raises(ValueError, match="inconsistent|duplicate|manifest"):
         write_resolved_catalog((variable, other), output, manifest=metadata)
     assert output.read_bytes() == original
     assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]
+
+
+def test_shared_preflight_rejects_invalid_contracts_and_unknown_providers() -> None:
+    with pytest.raises(ValueError, match="empty"):
+        validate_resolved_variables(())
+    invalid = _variable().model_copy(update={"states": ()})
+    with pytest.raises(ValidationError, match="at least one finite state"):
+        validate_resolved_variables((invalid,))
+    with pytest.raises(RegMetaError) as error:
+        validate_resolved_variables((_variable("unknown-provider"),))
+    assert error.value.code == "unknown_provider"
+    assert "No provider_id seed" in error.value.message
 
 
 def test_failed_structural_validation_preserves_previous_catalog(

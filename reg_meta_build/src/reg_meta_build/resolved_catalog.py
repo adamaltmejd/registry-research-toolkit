@@ -154,35 +154,19 @@ def _storage_id(provider: str, kind: str, *coordinates: str) -> int:
     return allocate("resolved-catalog", kind, provider, *coordinates)
 
 
-def write_resolved_catalog(
+def validate_resolved_variables(
     variables: tuple[ResolvedVariable, ...],
-    output: Path,
-    *,
-    manifest: dict[str, str],
-) -> Path:
-    """Validate, write, and atomically publish a resolved catalog slice.
-
-    No time, source precedence, slug derivation, or state coalescing is inferred.
-    The caller supplies reproducible manifest values; schema-owned keys are fixed.
-    """
+) -> tuple[
+    tuple[ResolvedVariable, ...],
+    dict[tuple[str, str], ResolvedRegister],
+    dict[tuple[str, str, str], ResolvedVariant],
+]:
+    """Check the whole resolved collection and return its shared identity indexes."""
     variables = TypeAdapter(tuple[ResolvedVariable, ...]).validate_python(
         variables, strict=True
     )
     if not variables:
         raise ValueError("refusing to publish an empty resolved catalog")
-    metadata = TypeAdapter(dict[str, str]).validate_python(manifest, strict=True)
-    for key, value in {
-        "schema_version": SCHEMA_VERSION,
-        CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY: str(
-            CLASSIFICATION_SUCCESSION_AS_OF_YEAR
-        ),
-    }.items():
-        if key in metadata and metadata[key] != value:
-            raise ValueError(
-                f"manifest conflicts with catalog {key}: {metadata[key]!r}"
-            )
-        metadata[key] = value
-
     registers: dict[tuple[str, str], ResolvedRegister] = {}
     variants: dict[tuple[str, str, str], ResolvedVariant] = {}
     variable_keys: set[tuple[str, str, str]] = set()
@@ -206,6 +190,34 @@ def write_resolved_catalog(
                     f"inconsistent variant definition: {'/'.join(variant_key)}"
                 )
             variants[variant_key] = state.variant
+
+    return variables, registers, variants
+
+
+def write_resolved_catalog(
+    variables: tuple[ResolvedVariable, ...],
+    output: Path,
+    *,
+    manifest: dict[str, str],
+) -> Path:
+    """Validate, write, and atomically publish a resolved catalog slice.
+
+    No time, source precedence, slug derivation, or state coalescing is inferred.
+    The caller supplies reproducible manifest values; schema-owned keys are fixed.
+    """
+    variables, registers, variants = validate_resolved_variables(variables)
+    metadata = TypeAdapter(dict[str, str]).validate_python(manifest, strict=True)
+    for key, value in {
+        "schema_version": SCHEMA_VERSION,
+        CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY: str(
+            CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+        ),
+    }.items():
+        if key in metadata and metadata[key] != value:
+            raise ValueError(
+                f"manifest conflicts with catalog {key}: {metadata[key]!r}"
+            )
+        metadata[key] = value
 
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)

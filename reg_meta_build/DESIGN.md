@@ -92,8 +92,12 @@ The builder has three stages:
    indexes/search, validate and atomically activate. This stage makes no independent
    semantic choices.
 
-These are responsibilities inside one builder, not separate frameworks or services. PDF
-extraction remains upstream; cleaning consumes its reviewed machine-readable output.
+These are responsibilities inside one builder, not separate frameworks or services.
+Agents may read and interpret PDFs outside the pipeline and author checked, structured
+curation with document/page references and explicit assumptions. PDF interpretation is
+not a cleaning adapter. Preparation, curation application, and materialization never
+call an LLM. Catalog document indexing is a separate responsibility; it does not resolve
+source facts.
 
 > **Status: partial replacement.** The source-record model and diagnostic SCB/LISA
 > readers exist. A Socialstyrelsen reader emits variable and parent-metadata claims
@@ -281,8 +285,9 @@ Authority is purpose-, fact-, population-, and scope-specific:
   and editions. It does not supply historical meaning, coding, type, or identity unless
   it explicitly contains that fact.
 - An official handbook or quality declaration establishes only the meanings and scopes
-  it states. PDF acquisition, extraction/OCR, and human review remain upstream and
-  produce a reviewed machine-readable input; `build-db` does not parse PDFs.
+  it states. Agents investigate and interpret these documents outside the pipeline, then
+  author structured curation with checked dependencies and cited evidence. Neither
+  cleaning nor `build-db` extracts or interprets PDF content.
 - Canonical classification sources establish their own identities and code vintages, not
   that an arbitrary provider variable uses them.
 - SWECOV holdings establish possession by that project, not universal availability,
@@ -321,9 +326,11 @@ Changed relevant facts, missing support or unexpected members in a declared peer
 make the case stale. Peer guards only check membership; they never select correction
 targets. A peer guard can name exact edition scopes so unrelated later editions do not
 invalidate an older case. An applicable bounded-unresolved decision preserves source
-records and declares which unsupported results must be withheld; the current formation
-path rejects unresolved cases rather than silently producing an empty successful
-catalog.
+records and withholds its whole targets; independently safe cases can still form output.
+An empty catalog is never a successful result. Projections can check source-local
+code-set reference identities and content hashes independently of physical locators. An
+unresolved coding decision must check these references on every target, including an
+explicit empty collection when no references are supplied.
 
 The first formation operation, `form_variable`, assigns explicitly enumerated source
 occurrences to one reviewed variable identity and delivery-column spelling. The spelling
@@ -334,6 +341,24 @@ length and operational definition; it cannot rename a different known column or 
 annual availability from pooled, negative or unknown observations. Concurrent
 assignments of the same source member or output identity block. Broader conflict
 resolution and whole-input discrepancy discovery remain unfinished.
+
+`inspect-curation` and `build-curated-db` share one structured reconciliation report.
+Their selected prepared collection is finite and explicitly partial. Every semantic
+member must be accounted for as a formation target, an accepted bounded-unresolved
+target, checked supporting evidence, or an explicitly enumerated peer-review context
+member. Unaccounted members block publication. Context-only members remain visible in
+the report; a peer guard checks membership, not every field's meaning. The shared report
+carries applicability failures, conflicting assignments, formation errors, cross-case
+register/variant identity conflicts, and missing optional output metadata, and supplies
+the same resolution gate to both commands. Database structural validation remains an
+additional mandatory gate before publication.
+
+An accepted unresolved decision preserves the original sources and withholds its whole
+targets. Independently safe, separate cases may still form output. This does not
+implement aspect-level uncertainty, code-set resolution, general conflict discovery, or
+full-corpus completeness. It completes the scoped pipeline's accounting and gate before
+further content curation; it does not prescribe one case per variable for the eventual
+complete resolver.
 
 ### First prepared-to-catalog path
 
@@ -356,6 +381,12 @@ intact. A failed optional report write after publication reports the successful
 publication and exact database hash separately. Input and case digests are recorded in
 the database manifest. No legacy adapter, post-build correction pass, or
 SQL-to-IR-to-SQL materialization runs in this path.
+
+`inspect-curation --records FILE --records-sha256 SHA256 --cases FILE` performs the same
+reconciliation without writing a database. Both commands return structured diagnostics,
+semantic source accounting with physical locators, and the resolved catalog preview. A
+blocked result returns a nonzero status. The warm path never generates cases, reads a
+PDF, asks an LLM, or updates its input expectations.
 
 The supported output currently has finite, non-overlapping annual occurrences and
 explicitly withheld coding. It preserves uncertainty as null type/length and records the

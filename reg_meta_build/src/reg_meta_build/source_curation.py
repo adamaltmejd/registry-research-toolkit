@@ -8,6 +8,7 @@ the source observations are never modified.
 from __future__ import annotations
 
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import date
 from typing import TYPE_CHECKING, Literal, Self
 
@@ -17,6 +18,7 @@ from reg_meta_build.source_records import (
     FieldScalar,
     FieldState,
     NativeCoordinates,
+    RecordLocator,
     SourceField,
     SourceFields,
     SourceRecord,
@@ -79,6 +81,13 @@ class FieldExpectation(_CurationModel):
         return self
 
 
+class CodeSetExpectation(_CurationModel):
+    """A source-local code-set identity, independent of physical layout."""
+
+    reference_id: str = Field(min_length=1)
+    content_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
 class RecordProjection(_CurationModel):
     """The explicitly relevant cleaned part of one source observation."""
 
@@ -86,6 +95,18 @@ class RecordProjection(_CurationModel):
     edition_scope: TemporalScope | None = None
     edition_period_scope: TemporalScope | None = None
     subject: SourceSubject | None = None
+    code_set_references: tuple[CodeSetExpectation, ...] | None = None
+
+    @field_validator("code_set_references")
+    @classmethod
+    def _ordered_code_references(
+        cls, references: tuple[CodeSetExpectation, ...] | None
+    ) -> tuple[CodeSetExpectation, ...] | None:
+        if references is None:
+            return None
+        return tuple(
+            sorted(set(references), key=lambda r: (r.reference_id, r.content_sha256))
+        )
 
     @field_validator("fields")
     @classmethod
@@ -104,6 +125,7 @@ class RecordProjection(_CurationModel):
             and self.edition_scope is None
             and self.edition_period_scope is None
             and self.subject is None
+            and self.code_set_references is None
         ):
             raise ValueError("a record projection must select at least one fact")
         return self
@@ -111,12 +133,13 @@ class RecordProjection(_CurationModel):
 
 def _projection_shape(
     projection: RecordProjection,
-) -> tuple[tuple[str, ...], bool, bool, bool]:
+) -> tuple[tuple[str, ...], bool, bool, bool, bool]:
     return (
         tuple(field.name for field in projection.fields),
         projection.edition_scope is not None,
         projection.edition_period_scope is not None,
         projection.subject is not None,
+        projection.code_set_references is not None,
     )
 
 
@@ -180,12 +203,23 @@ class PeerGuard(_CurationModel):
         return self
 
 
+UnresolvedAspect = Literal[
+    "identity",
+    "availability",
+    "column_name",
+    "data_type",
+    "data_length",
+    "period",
+    "coding",
+]
+
+
 class BoundedUnresolvedDecision(_CurationModel):
     """Reviewed uncertainty that preserves source facts and withholds unsafe output."""
 
     kind: Literal["bounded_unresolved"] = "bounded_unresolved"
     reviewed: Literal[True]
-    withheld_aspects: tuple[str, ...]
+    withheld_aspects: tuple[UnresolvedAspect, ...]
     reason: str
     safe_behavior: Literal["preserve_source_records"] = "preserve_source_records"
 
@@ -333,6 +367,17 @@ def _project_record(record: SourceRecord, shape: RecordProjection) -> RecordProj
             else None
         ),
         subject=record.subject if shape.subject is not None else None,
+        code_set_references=(
+            tuple(
+                CodeSetExpectation(
+                    reference_id=reference.reference_id,
+                    content_sha256=reference.content_sha256,
+                )
+                for reference in record.code_set_references
+            )
+            if shape.code_set_references is not None
+            else None
+        ),
     )
 
 
@@ -422,7 +467,14 @@ def evaluate_case(
     )
     for record in records:
         grouped[_record_key(record)].append(record)
+    return _evaluate_case(case, records, grouped)
 
+
+def _evaluate_case(
+    case: CurationCase,
+    records: tuple[SourceRecord, ...],
+    grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]],
+) -> CaseEvaluation:
     issues: list[ApplicabilityIssue] = []
     for role, expectations in (
         ("target", case.targets),
@@ -432,7 +484,7 @@ def evaluate_case(
             issue = _compare_expectation(
                 role=role,
                 expected=expected,
-                records=grouped[_ref_key(expected.ref)],
+                records=grouped.get(_ref_key(expected.ref), []),
             )
             if issue is not None:
                 issues.append(issue)
@@ -480,6 +532,58 @@ def evaluate_case(
 
 class CurationResolutionError(ValueError):
     """The reviewed cases cannot safely form the selected catalog content."""
+
+
+class ResolutionDiagnostic(_CurationModel):
+    """One actionable problem or explicitly retained uncertainty."""
+
+    code: str
+    severity: Literal["error", "warning"]
+    case_id: str | None = None
+    subject: str
+    detail: str
+    refs: tuple[SourceRecordRef, ...] = ()
+    applicability_issue: ApplicabilityIssue | None = None
+
+
+class SourceAccounting(_CurationModel):
+    """Declared roles of one semantic member, including its physical evidence."""
+
+    ref: SourceRecordRef
+    roles: tuple[Literal["target", "support", "review_context"], ...]
+    case_ids: tuple[str, ...]
+    locators: tuple[RecordLocator, ...]
+
+
+@dataclass(frozen=True)
+class CurationInspection:
+    variables: tuple[ResolvedVariable, ...]
+    diagnostics: tuple[ResolutionDiagnostic, ...]
+    source_accounting: tuple[SourceAccounting, ...]
+
+    @property
+    def buildable(self) -> bool:
+        return bool(self.variables) and not any(
+            diagnostic.severity == "error" for diagnostic in self.diagnostics
+        )
+
+    def report(self) -> dict[str, object]:
+        """Return the same finite-scope preview used to gate publication."""
+        return {
+            "status": "ready" if self.buildable else "blocked",
+            "partial_catalog": True,
+            "variables": len(self.variables),
+            "states": sum(len(variable.states) for variable in self.variables),
+            "errors": sum(d.severity == "error" for d in self.diagnostics),
+            "warnings": sum(d.severity == "warning" for d in self.diagnostics),
+            "diagnostics": [d.model_dump(mode="json") for d in self.diagnostics],
+            "source_accounting": [
+                item.model_dump(mode="json") for item in self.source_accounting
+            ],
+            "catalog_preview": [
+                variable.model_dump(mode="json") for variable in self.variables
+            ],
+        }
 
 
 _CANONICAL_FIELDS = (
@@ -539,15 +643,293 @@ def _text(record: SourceRecord, name: str) -> str | None:
     return field.value
 
 
+def inspect_cases(
+    cases: tuple[CurationCase, ...],
+    records: Iterable[SourceRecord],
+) -> CurationInspection:
+    """Account for the entire prepared slice and collect independent blockers.
+
+    Only named targets form output. Checked support and exact expected peer members
+    remain visible evidence roles, not implied catalog coverage. This finite-slice
+    gate does not discover relationships or infer policies for the full corpus.
+    Records must already satisfy the source contract, as checked at preparation and
+    artifact-read boundaries; inspection does not revalidate original source inputs.
+    """
+    records = tuple(records)
+    grouped: defaultdict[tuple[str, tuple[str, ...]], list[SourceRecord]] = defaultdict(
+        list
+    )
+    for record in records:
+        grouped[_record_key(record)].append(record)
+    ordered_cases = sorted(cases, key=lambda case: (case.case_id, _model_token(case)))
+    diagnostics: list[ResolutionDiagnostic] = []
+    case_counts: defaultdict[str, int] = defaultdict(int)
+    roles: defaultdict[
+        tuple[str, tuple[str, ...]],
+        set[Literal["target", "support", "review_context"]],
+    ] = defaultdict(set)
+    owners: defaultdict[tuple[str, tuple[str, ...]], set[str]] = defaultdict(set)
+    target_owners: defaultdict[tuple[str, tuple[str, ...]], set[str]] = defaultdict(set)
+    for case in ordered_cases:
+        case_counts[case.case_id] += 1
+        for role, expectations in (("target", case.targets), ("support", case.support)):
+            for expectation in expectations:
+                key = _ref_key(expectation.ref)
+                roles[key].add(role)
+                owners[key].add(case.case_id)
+                if role == "target":
+                    target_owners[key].add(case.case_id)
+        for guard in case.peer_guards:
+            for member in guard.expected_members:
+                key = _ref_key(member)
+                roles[key].add("review_context")
+                owners[key].add(case.case_id)
+
+    for case_id, count in sorted(case_counts.items()):
+        if count > 1:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="duplicate_case_id",
+                    severity="error",
+                    case_id=case_id,
+                    subject=case_id,
+                    detail="resolution requires unique case IDs",
+                )
+            )
+    for (source, semantic_key), assigned in sorted(target_owners.items()):
+        if len(assigned) > 1:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="target_assignment_conflict",
+                    severity="error",
+                    subject="/".join((source, *semantic_key)),
+                    detail=f"target already assigned by multiple cases: {', '.join(sorted(assigned))}",
+                    refs=(
+                        SourceRecordRef(
+                            source=source, semantic_record_key=semantic_key
+                        ),
+                    ),
+                )
+            )
+
+    accounting: list[SourceAccounting] = []
+    for key, observations in sorted(grouped.items()):
+        ref = SourceRecordRef(source=key[0], semantic_record_key=key[1])
+        locators = {
+            locator.model_dump_json(): locator
+            for observation in observations
+            for locator in observation.locators
+        }
+        accounting.append(
+            SourceAccounting(
+                ref=ref,
+                roles=tuple(sorted(roles[key])),
+                case_ids=tuple(sorted(owners[key])),
+                locators=tuple(locators[token] for token in sorted(locators)),
+            )
+        )
+        if not roles[key]:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="unaccounted_source_member",
+                    severity="error",
+                    subject="/".join((key[0], *key[1])),
+                    detail=(
+                        "Prepared member has no target, checked-support or explicit "
+                        "review-context role. Resolve it or correct the prepared scope; "
+                        "it cannot silently disappear from the selected input."
+                    ),
+                    refs=(ref,),
+                )
+            )
+
+    variables: list[ResolvedVariable] = []
+    identities: dict[tuple[str, str, str], str] = {}
+    for case in ordered_cases:
+        evaluation = _evaluate_case(case, records, grouped)
+        for issue in evaluation.issues:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code=issue.code,
+                    severity="error",
+                    case_id=case.case_id,
+                    subject=issue.subject,
+                    detail=issue.detail,
+                    applicability_issue=issue,
+                )
+            )
+        if (
+            evaluation.status == "stale"
+            or case_counts[case.case_id] > 1
+            or any(len(target_owners[_ref_key(t.ref)]) > 1 for t in case.targets)
+        ):
+            continue
+        target_refs = tuple(sorted((t.ref for t in case.targets), key=_ref_key))
+        if isinstance(case.decision, BoundedUnresolvedDecision):
+            if "coding" in case.decision.withheld_aspects and any(
+                target.alternatives[0].code_set_references is None
+                for target in case.targets
+            ):
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="unresolved_dependencies_missing",
+                        severity="error",
+                        case_id=case.case_id,
+                        subject=case.case_id,
+                        detail=(
+                            "Coding uncertainty needs checked code_set_references "
+                            "on each target, including an explicit empty collection "
+                            "when the source supplies none."
+                        ),
+                        refs=target_refs,
+                    )
+                )
+                continue
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="accepted_unresolved",
+                    severity="warning",
+                    case_id=case.case_id,
+                    subject=case.case_id,
+                    detail=(
+                        f"Source records retained; entire target content withheld. "
+                        f"Unresolved aspects: {', '.join(case.decision.withheld_aspects)}. "
+                        f"{case.decision.reason}"
+                    ),
+                    refs=target_refs,
+                )
+            )
+            continue
+        try:
+            variable = _form_variable(case, grouped)
+        except ValueError as exc:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="formation_invalid",
+                    severity="error",
+                    case_id=case.case_id,
+                    subject=case.case_id,
+                    detail=str(exc),
+                    refs=target_refs,
+                )
+            )
+            continue
+        identity = (
+            variable.register_ref.provider,
+            variable.register_ref.slug,
+            variable.slug,
+        )
+        if identity in identities:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="output_identity_conflict",
+                    severity="error",
+                    case_id=case.case_id,
+                    subject="/".join(identity),
+                    detail=f"multiple cases assign the same catalog identity: {identities[identity]}, {case.case_id}",
+                    refs=target_refs,
+                )
+            )
+        identities[identity] = case.case_id
+        variables.append(variable)
+        for field_name in ("data_type", "data_length"):
+            missing = tuple(
+                target.ref
+                for target in sorted(
+                    case.targets, key=lambda target: _ref_key(target.ref)
+                )
+                if _text(grouped[_ref_key(target.ref)][0], field_name) is None
+            )
+            if missing:
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code=f"missing_{field_name}",
+                        severity="warning",
+                        case_id=case.case_id,
+                        subject="/".join(identity),
+                        detail=f"Undocumented {field_name} remains unknown in the named target states.",
+                        refs=missing,
+                    )
+                )
+        diagnostics.append(
+            ResolutionDiagnostic(
+                code="coding_withheld",
+                severity="warning",
+                case_id=case.case_id,
+                subject="/".join(identity),
+                detail=(
+                    "This partial formation path does not yet resolve coding. "
+                    "No code binding is emitted; source coding may exist. "
+                    f"{case.decision.coding_reason}"
+                ),
+                refs=target_refs,
+            )
+        )
+    if variables:
+        from reg_meta.errors import RegMetaError
+
+        from reg_meta_build.resolved_catalog import validate_resolved_variables
+
+        try:
+            validate_resolved_variables(tuple(variables))
+        except (ValueError, RegMetaError) as exc:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="output_contract_invalid",
+                    severity="error",
+                    subject="selected-scope",
+                    detail=exc.message if isinstance(exc, RegMetaError) else str(exc),
+                )
+            )
+    else:
+        diagnostics.append(
+            ResolutionDiagnostic(
+                code="no_catalog_content",
+                severity="error",
+                subject="selected-scope",
+                detail="No safely formed variables; refusing to publish an empty catalog.",
+            )
+        )
+    return CurationInspection(
+        variables=tuple(variables),
+        diagnostics=tuple(
+            sorted(
+                diagnostics,
+                key=lambda d: (
+                    d.severity,
+                    d.case_id or "",
+                    d.code,
+                    d.subject,
+                    _model_token(d),
+                ),
+            )
+        ),
+        source_accounting=tuple(accounting),
+    )
+
+
 def resolve_cases(
     cases: tuple[CurationCase, ...],
     records: Iterable[SourceRecord],
 ) -> tuple[ResolvedVariable, ...]:
-    """Form a finite catalog slice; reject stale or intersecting decisions first.
+    """Return the shared inspection's output only when its publication gate passes."""
+    inspection = inspect_cases(cases, records)
+    if not inspection.buildable:
+        raise CurationResolutionError(
+            "; ".join(
+                f"{d.code}: {d.detail}"
+                for d in inspection.diagnostics
+                if d.severity == "error"
+            )
+        )
+    return inspection.variables
 
-    Unresolved cases remain inspectable with ``evaluate_case`` but cannot silently
-    become an empty/successful catalog through this first formation operation.
-    """
+
+def _form_variable(
+    case: CurationCase,
+    grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]],
+) -> ResolvedVariable:
+    """Form one already-applicable case without selecting between other cases."""
     from reg_meta_build.resolved_catalog import (
         ResolvedRegister,
         ResolvedState,
@@ -555,203 +937,168 @@ def resolve_cases(
         ResolvedVariant,
     )
 
-    records = tuple(records)
-    if not cases or len({case.case_id for case in cases}) != len(cases):
-        raise CurationResolutionError("resolution requires non-empty unique case IDs")
-    evaluations = tuple(evaluate_case(case, records) for case in cases)
-    stale = [
-        result.model_dump(mode="json")
-        for result in evaluations
-        if result.status == "stale"
-    ]
-    if stale:
-        import json
-
+    decision = case.decision
+    if not isinstance(decision, FormVariableDecision):
         raise CurationResolutionError(
-            f"stale curation cases: {json.dumps(stale, ensure_ascii=False)}"
+            f"{case.case_id}: unresolved case cannot form catalog content"
         )
-
-    grouped: defaultdict[tuple[str, tuple[str, ...]], list[SourceRecord]] = defaultdict(
-        list
+    if not case.support:
+        raise CurationResolutionError(
+            f"{case.case_id}: formation requires checked supporting evidence"
+        )
+    spelling = FieldExpectation(
+        name="column_name", status="value", value=decision.delivery_column_name
     )
-    for record in records:
-        grouped[_record_key(record)].append(record)
-    claimed: set[tuple[str, tuple[str, ...]]] = set()
-    identities: set[tuple[str, str, str]] = set()
-    result: list[ResolvedVariable] = []
-    for case in sorted(cases, key=lambda item: item.case_id):
-        decision = case.decision
-        if not isinstance(decision, FormVariableDecision):
-            raise CurationResolutionError(
-                f"{case.case_id}: unresolved case cannot form catalog content"
-            )
-        if not case.support:
-            raise CurationResolutionError(
-                f"{case.case_id}: formation requires checked supporting evidence"
-            )
-        spelling = FieldExpectation(
-            name="column_name", status="value", value=decision.delivery_column_name
+    if not any(
+        all(spelling in alternative.fields for alternative in support.alternatives)
+        for support in case.support
+    ):
+        raise CurationResolutionError(
+            f"{case.case_id}: column spelling needs checked source support"
         )
-        if not any(
-            all(spelling in alternative.fields for alternative in support.alternatives)
-            for support in case.support
+    expectations = {_ref_key(item.ref): item for item in (*case.support, *case.targets)}
+    anchor_expectation = expectations.get(_ref_key(decision.canonical_source))
+    if anchor_expectation is None:
+        raise CurationResolutionError(
+            f"{case.case_id}: canonical source must be a checked target or support"
+        )
+    _require_projection(anchor_expectation, _CANONICAL_FIELDS)
+    anchor = _unique_projection(
+        tuple(grouped[_ref_key(anchor_expectation.ref)]),
+        anchor_expectation.alternatives[0],
+    )
+    canonical_name = _text(anchor, "name")
+    if not canonical_name:
+        raise CurationResolutionError(f"{case.case_id}: canonical name is unknown")
+
+    states = []
+    register = None
+    for target in case.targets:
+        key = _ref_key(target.ref)
+        _require_projection(target, _STATE_FIELDS, scope=True)
+        record = _unique_projection(tuple(grouped[key]), target.alternatives[0])
+        subject = record.subject
+        if (
+            subject.register_name.status != "value"
+            or not subject.register_name.name
+            or subject.variant.status != "value"
+            or not subject.variant.name
         ):
             raise CurationResolutionError(
-                f"{case.case_id}: column spelling needs checked source support"
+                f"{case.case_id}: target register or variant name is unknown"
             )
-        expectations = {
-            _ref_key(item.ref): item for item in (*case.support, *case.targets)
-        }
-        anchor_expectation = expectations.get(_ref_key(decision.canonical_source))
-        if anchor_expectation is None:
-            raise CurationResolutionError(
-                f"{case.case_id}: canonical source must be a checked target or support"
-            )
-        _require_projection(anchor_expectation, _CANONICAL_FIELDS)
-        anchor = _unique_projection(
-            tuple(grouped[_ref_key(anchor_expectation.ref)]),
-            anchor_expectation.alternatives[0],
+        candidate_register = ResolvedRegister(
+            provider=subject.provider,
+            slug=decision.register_slug,
+            name=subject.register_name.name,
         )
-        canonical_name = _text(anchor, "name")
-        if not canonical_name:
-            raise CurationResolutionError(f"{case.case_id}: canonical name is unknown")
-
-        states = []
-        register = None
-        for target in case.targets:
-            key = _ref_key(target.ref)
-            if key in claimed:
-                raise CurationResolutionError(
-                    f"{case.case_id}: target already assigned by another case: {target.ref}"
-                )
-            claimed.add(key)
-            _require_projection(target, _STATE_FIELDS, scope=True)
-            record = _unique_projection(tuple(grouped[key]), target.alternatives[0])
-            subject = record.subject
-            if (
-                subject.register_name.status != "value"
-                or not subject.register_name.name
-                or subject.variant.status != "value"
-                or not subject.variant.name
-            ):
-                raise CurationResolutionError(
-                    f"{case.case_id}: target register or variant name is unknown"
-                )
-            candidate_register = ResolvedRegister(
-                provider=subject.provider,
-                slug=decision.register_slug,
-                name=subject.register_name.name,
-            )
-            if register is not None and register != candidate_register:
-                raise CurationResolutionError(
-                    f"{case.case_id}: targets disagree about the register"
-                )
-            register = candidate_register
-            if _actual_field(record, "availability") != FieldExpectation(
-                name="availability", status="value", value=True
-            ):
-                raise CurationResolutionError(
-                    f"{case.case_id}: target does not assert availability"
-                )
-            if _text(record, "column_name") not in (
-                None,
-                decision.delivery_column_name,
-            ):
-                raise CurationResolutionError(
-                    f"{case.case_id}: this operation cannot rename an existing different column"
-                )
-            scope = record.edition_scope
-            if scope.kind != "intervals" or len(scope.intervals) != 1:
-                raise CurationResolutionError(
-                    f"{case.case_id}: formation requires one explicit annual source occurrence"
-                )
-            interval = scope.intervals[0]
-            if (
-                interval.start != interval.end
-                or len(interval.start) != 4
-                or not interval.start.isascii()
-                or not interval.start.isdigit()
-            ):
-                raise CurationResolutionError(
-                    f"{case.case_id}: pooled or nonannual scope cannot establish annual availability"
-                )
-            year = int(interval.start)
-            start = date(year, 1, 1).isoformat()
-            end = date(year, 12, 31).isoformat()
-            period = record.edition_period_scope
-            if (
-                period.kind != "intervals"
-                or len(period.intervals) != 1
-                or period.intervals[0].start != start
-                or period.intervals[0].end != end
-            ):
-                raise CurationResolutionError(
-                    f"{case.case_id}: exact source period does not support full-year availability"
-                )
-            provenance = (
-                f"curation:{case.case_id}\n{decision.reason}\n"
-                f"Coding withheld: {decision.coding_reason}"
-            )
-            states.append(
-                ResolvedState(
-                    variant=ResolvedVariant(
-                        slug=decision.variant_slug, name=subject.variant.name
-                    ),
-                    valid_from=start,
-                    valid_to=end,
-                    delivery_column_name=decision.delivery_column_name,
-                    data_type=_text(record, "data_type"),
-                    data_length=_text(record, "data_length"),
-                    operational_definition=_text(record, "operational_definition"),
-                    provenance=provenance,
-                )
-            )
-        assert register is not None
-        identity = (register.provider, register.slug, decision.variable_slug)
-        if identity in identities:
+        if register is not None and register != candidate_register:
             raise CurationResolutionError(
-                f"multiple cases assign the same catalog identity: {identity}"
+                f"{case.case_id}: targets disagree about the register"
             )
-        identities.add(identity)
-        result.append(
-            ResolvedVariable(
-                register=register,
-                slug=decision.variable_slug,
-                provider_key=decision.provider_key,
-                name=canonical_name,
-                definition=_text(anchor, "definition"),
-                description=_text(anchor, "description"),
-                operational_definition=_text(anchor, "operational_definition"),
-                measurement_unit=_text(anchor, "measurement_unit"),
-                is_sensitive=decision.is_sensitive,
-                is_identifier=decision.is_identifier,
-                states=tuple(
-                    sorted(
-                        states,
-                        key=lambda state: (
-                            state.variant.slug,
-                            state.valid_from,
-                            state.valid_to,
-                        ),
-                    )
+        register = candidate_register
+        if _actual_field(record, "availability") != FieldExpectation(
+            name="availability", status="value", value=True
+        ):
+            raise CurationResolutionError(
+                f"{case.case_id}: target does not assert availability"
+            )
+        if _text(record, "column_name") not in (
+            None,
+            decision.delivery_column_name,
+        ):
+            raise CurationResolutionError(
+                f"{case.case_id}: this operation cannot rename an existing different column"
+            )
+        scope = record.edition_scope
+        if scope.kind != "intervals" or len(scope.intervals) != 1:
+            raise CurationResolutionError(
+                f"{case.case_id}: formation requires one explicit annual source occurrence"
+            )
+        interval = scope.intervals[0]
+        if (
+            interval.start != interval.end
+            or len(interval.start) != 4
+            or not interval.start.isascii()
+            or not interval.start.isdigit()
+        ):
+            raise CurationResolutionError(
+                f"{case.case_id}: pooled or nonannual scope cannot establish annual availability"
+            )
+        year = int(interval.start)
+        start = date(year, 1, 1).isoformat()
+        end = date(year, 12, 31).isoformat()
+        period = record.edition_period_scope
+        if (
+            period.kind != "intervals"
+            or len(period.intervals) != 1
+            or period.intervals[0].start != start
+            or period.intervals[0].end != end
+        ):
+            raise CurationResolutionError(
+                f"{case.case_id}: exact source period does not support full-year availability"
+            )
+        provenance = (
+            f"curation:{case.case_id}\n{decision.reason}\n"
+            f"Coding withheld: {decision.coding_reason}"
+        )
+        states.append(
+            ResolvedState(
+                variant=ResolvedVariant(
+                    slug=decision.variant_slug, name=subject.variant.name
+                ),
+                valid_from=start,
+                valid_to=end,
+                delivery_column_name=decision.delivery_column_name,
+                data_type=_text(record, "data_type"),
+                data_length=_text(record, "data_length"),
+                operational_definition=_text(record, "operational_definition"),
+                provenance=provenance,
+            )
+        )
+    assert register is not None
+    return ResolvedVariable(
+        register=register,
+        slug=decision.variable_slug,
+        provider_key=decision.provider_key,
+        name=canonical_name,
+        definition=_text(anchor, "definition"),
+        description=_text(anchor, "description"),
+        operational_definition=_text(anchor, "operational_definition"),
+        measurement_unit=_text(anchor, "measurement_unit"),
+        is_sensitive=decision.is_sensitive,
+        is_identifier=decision.is_identifier,
+        states=tuple(
+            sorted(
+                states,
+                key=lambda state: (
+                    state.variant.slug,
+                    state.valid_from,
+                    state.valid_to,
                 ),
             )
-        )
-    return tuple(result)
+        ),
+    )
 
 
 __all__ = [
     "ApplicabilityIssue",
     "BoundedUnresolvedDecision",
     "CaseEvaluation",
+    "CodeSetExpectation",
     "CurationCase",
+    "CurationInspection",
     "CurationResolutionError",
     "FieldExpectation",
     "FormVariableDecision",
     "PeerGuard",
     "RecordExpectation",
     "RecordProjection",
+    "ResolutionDiagnostic",
+    "SourceAccounting",
     "SourceRecordRef",
+    "UnresolvedAspect",
     "evaluate_case",
+    "inspect_cases",
     "resolve_cases",
 ]

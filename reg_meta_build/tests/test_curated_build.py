@@ -12,6 +12,8 @@ from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.prepared_sources import prepare_source_records
 from reg_meta_build.source_curation import (
+    BoundedUnresolvedDecision,
+    CodeSetExpectation,
     CurationCase,
     CurationResolutionError,
     FieldExpectation,
@@ -21,9 +23,11 @@ from reg_meta_build.source_curation import (
     RecordProjection,
     SourceRecordRef,
     evaluate_case,
+    inspect_cases,
     resolve_cases,
 )
 from reg_meta_build.source_records import (
+    CodeSetReference,
     NativeCoordinates,
     RecordLocator,
     ScopeInterval,
@@ -65,6 +69,7 @@ def _record(
     column: str | None = None,
     description: str = "description",
     data_type: str | None = None,
+    code_set_references: tuple[CodeSetReference, ...] = (),
 ) -> SourceRecord:
     member = member or year
     fields = SourceFields(
@@ -112,6 +117,7 @@ def _record(
             intervals=(ScopeInterval(start=f"{year}-01-01", end=f"{year}-12-31"),),
         ),
         fields=fields,
+        code_set_references=code_set_references,
     )
 
 
@@ -462,3 +468,412 @@ def test_late_report_failure_explicitly_reports_published_database(
         receipt["db_sha256"]
         == hashlib.sha256((tmp_path / "reg_meta.db").read_bytes()).hexdigest()
     )
+
+
+def test_inspection_preserves_unknown_metadata_with_actionable_warnings(
+    case_inputs,
+) -> None:
+    case, records = case_inputs
+    inspection = inspect_cases((case,), records)
+
+    assert inspection.buildable
+    state = inspection.variables[0].states[0]
+    assert state.data_type is None
+    assert state.data_length is None
+    warnings = {item.code: item for item in inspection.diagnostics}
+    assert set(warnings) == {
+        "missing_data_type",
+        "missing_data_length",
+        "coding_withheld",
+    }
+    assert all(item.severity == "warning" for item in warnings.values())
+    assert all(item.refs == (_ref(records[1]),) for item in warnings.values())
+    assert all(item.case_id == case.case_id for item in warnings.values())
+    assert "does not yet resolve coding" in warnings["coding_withheld"].detail
+    assert inspection.report()["status"] == "ready"
+
+
+def test_selected_prepared_member_cannot_silently_disappear(case_inputs) -> None:
+    case, records = case_inputs
+    added = _record(2025)
+    inspection = inspect_cases((case,), (*records, added))
+
+    assert not inspection.buildable
+    errors = [item for item in inspection.diagnostics if item.severity == "error"]
+    assert [item.code for item in errors] == ["unaccounted_source_member"]
+    assert errors[0].refs == (_ref(added),)
+    member = next(
+        item for item in inspection.source_accounting if item.ref == _ref(added)
+    )
+    assert member.roles == ()
+    assert member.case_ids == ()
+    assert member.locators == added.locators
+    with pytest.raises(CurationResolutionError, match="unaccounted_source_member"):
+        resolve_cases((case,), (*records, added))
+
+
+def test_only_explicit_expected_peer_members_are_review_context(case_inputs) -> None:
+    case, records = case_inputs
+    peer = _record(2017, member=12345)
+    guard = case.peer_guards[0]
+    reviewed = case.model_copy(
+        update={
+            "peer_guards": (
+                guard.model_copy(
+                    update={"expected_members": (*guard.expected_members, _ref(peer))}
+                ),
+            )
+        }
+    )
+    inspection = inspect_cases((reviewed,), (*records, peer))
+
+    assert inspection.buildable
+    assert len(inspection.variables[0].states) == 1
+    member = next(
+        item for item in inspection.source_accounting if item.ref == _ref(peer)
+    )
+    assert member.roles == ("review_context",)
+    assert member.case_ids == (case.case_id,)
+    assert member.locators == peer.locators
+
+    unexpected = inspect_cases((case,), (*records, peer))
+    assert not unexpected.buildable
+    assert {item.code for item in unexpected.diagnostics} >= {
+        "peer_membership_changed",
+        "unaccounted_source_member",
+    }
+    unclassified = next(
+        item for item in unexpected.source_accounting if item.ref == _ref(peer)
+    )
+    assert unclassified.roles == ()
+
+
+def _withhold(
+    record: SourceRecord, *, case_id: str = "unresolved-2018"
+) -> CurationCase:
+    return CurationCase(
+        case_id=case_id,
+        targets=(_expect(record, ("data_type",)),),
+        decision=BoundedUnresolvedDecision(
+            reviewed=True,
+            withheld_aspects=("data_type",),
+            reason="The exact member awaits evidence; exclude its entire catalog content.",
+        ),
+    )
+
+
+def test_bounded_unresolved_withholds_whole_target_but_allows_separate_safe_output(
+    case_inputs,
+) -> None:
+    case, records = case_inputs
+    withheld = _record(2018)
+    unresolved = _withhold(withheld)
+    inspection = inspect_cases((unresolved, case), (*records, withheld))
+
+    assert inspection.buildable
+    assert inspection.variables == resolve_cases((case,), records)
+    accepted = next(
+        item for item in inspection.diagnostics if item.code == "accepted_unresolved"
+    )
+    assert accepted.severity == "warning"
+    assert accepted.case_id == unresolved.case_id
+    assert accepted.refs == (_ref(withheld),)
+    assert "entire target content withheld" in accepted.detail
+    member = next(
+        item for item in inspection.source_accounting if item.ref == _ref(withheld)
+    )
+    assert member.roles == ("target",)
+
+
+@pytest.mark.parametrize("problem", ["stale", "overlap"])
+def test_bounded_unresolved_cannot_waive_staleness_or_target_conflicts(
+    case_inputs, problem: str
+) -> None:
+    case, records = case_inputs
+    if problem == "stale":
+        unresolved = _withhold(_record(2018))
+        selected = (*records, _record(2018, data_type="text"))
+        expected_code = "target_projection_changed"
+    else:
+        unresolved = _withhold(records[1])
+        selected = records
+        expected_code = "target_assignment_conflict"
+    inspection = inspect_cases((case, unresolved), selected)
+
+    assert not inspection.buildable
+    assert any(
+        item.code == expected_code and item.severity == "error"
+        for item in inspection.diagnostics
+    )
+    assert not any(
+        item.code == "accepted_unresolved" for item in inspection.diagnostics
+    )
+    with pytest.raises(CurationResolutionError, match=expected_code):
+        resolve_cases((case, unresolved), selected)
+
+
+def test_inspection_collects_independent_blockers_without_mutating_sources(
+    case_inputs,
+) -> None:
+    case, records = case_inputs
+    extra = _record(2018)
+    invalid = case.model_copy(
+        update={
+            "case_id": "invalid-formation",
+            "targets": (_expect(extra, ("data_type",)),),
+            "peer_guards": (),
+            "support": (),
+        }
+    )
+    selected = (
+        records[0],
+        _record(2017, data_type="text"),
+        extra,
+        _record(2025),
+    )
+    before = tuple(record.model_dump_json() for record in selected)
+    cases_before = (case.model_dump_json(), invalid.model_dump_json())
+    inspection = inspect_cases((case, invalid), selected)
+
+    assert not inspection.buildable
+    assert {item.code for item in inspection.diagnostics} >= {
+        "target_projection_changed",
+        "formation_invalid",
+        "unaccounted_source_member",
+        "no_catalog_content",
+    }
+    assert tuple(record.model_dump_json() for record in selected) == before
+    assert (case.model_dump_json(), invalid.model_dump_json()) == cases_before
+    assert inspect_cases((invalid, case), reversed(selected)).report() == (
+        inspection.report()
+    )
+
+
+def test_successful_inspection_report_is_input_order_independent(case_inputs) -> None:
+    case, records = case_inputs
+    withheld = _record(2018)
+    unresolved = _withhold(withheld)
+    selected = (*records, withheld)
+    inspection = inspect_cases((case, unresolved), selected)
+
+    assert inspection.buildable
+    assert (
+        inspection.report()
+        == inspect_cases((unresolved, case), reversed(selected)).report()
+    )
+
+
+@pytest.mark.parametrize("selection", ["empty", "unaccounted", "withheld"])
+def test_inspection_never_reports_an_empty_catalog_as_success(selection: str) -> None:
+    record = _record(2018)
+    records = () if selection == "empty" else (record,)
+    cases = (_withhold(record),) if selection == "withheld" else ()
+    inspection = inspect_cases(cases, records)
+
+    assert not inspection.buildable
+    assert inspection.variables == ()
+    assert inspection.report()["status"] == "blocked"
+    assert any(
+        item.code == "no_catalog_content" and item.severity == "error"
+        for item in inspection.diagnostics
+    )
+    with pytest.raises(CurationResolutionError, match="no_catalog_content"):
+        resolve_cases(cases, records)
+
+
+@pytest.mark.parametrize("problem", ["register", "variant", "provider"])
+def test_inspection_blocks_cross_case_output_contract_failures(
+    case_inputs, problem: str
+) -> None:
+    case, records = case_inputs
+    second = _record(2018)
+    field_name = "register_name" if problem == "register" else problem
+    value = (
+        "unsupported-provider"
+        if problem == "provider"
+        else SourceCoordinate(status="value", name="Inconsistent name")
+    )
+    second = SourceRecord.create(
+        revision=_REVISION,
+        locators=second.locators,
+        subject=second.subject.model_copy(update={field_name: value}),
+        edition_scope=second.edition_scope,
+        edition_period_scope=second.edition_period_scope,
+        fields=second.fields,
+    )
+    second_case = case.model_copy(
+        update={
+            "case_id": "second-variable",
+            "targets": (
+                _expect(
+                    second,
+                    tuple(
+                        field.name for field in case.targets[0].alternatives[0].fields
+                    ),
+                ),
+            ),
+            "peer_guards": (),
+            "decision": case.decision.model_copy(
+                update={"variable_slug": "second-benefit", "provider_key": "12"}
+            ),
+        }
+    )
+    inspection = inspect_cases((case, second_case), (*records, second))
+
+    assert not inspection.buildable
+    assert inspection.report()["status"] == "blocked"
+    failures = [
+        item
+        for item in inspection.diagnostics
+        if item.code == "output_contract_invalid"
+    ]
+    assert len(failures) == 1
+    assert failures[0].severity == "error"
+    assert problem in failures[0].detail
+    with pytest.raises(CurationResolutionError, match="output_contract_invalid"):
+        resolve_cases((case, second_case), (*records, second))
+
+
+@pytest.fixture
+def coding_case_inputs(case_inputs):
+    case, records = case_inputs
+    reference = CodeSetReference(
+        reference_id="benefit-codes",
+        content_sha256=hashlib.sha256(b"0:No;1:Yes").hexdigest(),
+        physical_locator="codes.csv:10-11",
+    )
+    coded = _record(2018, code_set_references=(reference,))
+    unresolved = _withhold(coded).model_copy(
+        update={
+            "decision": BoundedUnresolvedDecision(
+                reviewed=True,
+                withheld_aspects=("coding",),
+                reason="Competing source coding needs review; withhold this entire target.",
+            )
+        }
+    )
+    target = unresolved.targets[0]
+    checked = target.model_copy(
+        update={
+            "alternatives": (
+                target.alternatives[0].model_copy(
+                    update={
+                        "code_set_references": (
+                            CodeSetExpectation(
+                                reference_id=reference.reference_id,
+                                content_sha256=reference.content_sha256,
+                            ),
+                        )
+                    }
+                ),
+            )
+        }
+    )
+    return (
+        case,
+        unresolved.model_copy(update={"targets": (checked,)}),
+        (*records, coded),
+    )
+
+
+def test_coding_unresolved_decision_requires_checked_coding_dependencies(
+    coding_case_inputs,
+) -> None:
+    case, unresolved, records = coding_case_inputs
+    target = unresolved.targets[0]
+    unchecked = target.model_copy(
+        update={
+            "alternatives": (
+                target.alternatives[0].model_copy(update={"code_set_references": None}),
+            )
+        }
+    )
+    unresolved = unresolved.model_copy(update={"targets": (unchecked,)})
+    inspection = inspect_cases((case, unresolved), records)
+
+    assert not inspection.buildable
+    assert any(
+        item.code == "unresolved_dependencies_missing" and item.severity == "error"
+        for item in inspection.diagnostics
+    )
+    assert not any(
+        item.code == "accepted_unresolved" for item in inspection.diagnostics
+    )
+
+
+@pytest.mark.parametrize("change", ["reference", "content"])
+def test_changed_coding_evidence_stales_exact_unresolved_decision(
+    coding_case_inputs, change: str
+) -> None:
+    case, unresolved, records = coding_case_inputs
+    reference = records[-1].code_set_references[0]
+    update = (
+        {"reference_id": "replacement-codes"}
+        if change == "reference"
+        else {"content_sha256": hashlib.sha256(b"1:No;2:Yes").hexdigest()}
+    )
+    changed = _record(2018, code_set_references=(reference.model_copy(update=update),))
+    inspection = inspect_cases((case, unresolved), (*records[:-1], changed))
+
+    assert not inspection.buildable
+    stale = next(
+        item
+        for item in inspection.diagnostics
+        if item.code == "target_projection_changed"
+    )
+    assert stale.case_id == unresolved.case_id
+    assert stale.applicability_issue is not None
+    assert stale.applicability_issue.missing_projections[0].code_set_references == (
+        unresolved.targets[0].alternatives[0].code_set_references
+    )
+    assert not any(
+        item.code == "accepted_unresolved" for item in inspection.diagnostics
+    )
+
+
+def test_moving_coding_evidence_without_content_change_keeps_decision_applicable(
+    coding_case_inputs,
+) -> None:
+    case, unresolved, records = coding_case_inputs
+    reference = records[-1].code_set_references[0]
+    moved = _record(
+        2018,
+        code_set_references=(
+            reference.model_copy(
+                update={"physical_locator": "repacked/codes.csv:44-45"}
+            ),
+        ),
+    )
+    inspection = inspect_cases((case, unresolved), (*records[:-1], moved))
+
+    assert inspection.buildable
+    assert inspection.report() == inspect_cases((case, unresolved), records).report()
+    assert any(item.code == "accepted_unresolved" for item in inspection.diagnostics)
+
+
+def test_explicitly_empty_coding_projection_accepts_absence_and_stales_on_arrival(
+    coding_case_inputs,
+) -> None:
+    case, unresolved, records = coding_case_inputs
+    target = unresolved.targets[0]
+    unresolved = unresolved.model_copy(
+        update={
+            "targets": (
+                target.model_copy(
+                    update={
+                        "alternatives": (
+                            target.alternatives[0].model_copy(
+                                update={"code_set_references": ()}
+                            ),
+                        )
+                    }
+                ),
+            )
+        }
+    )
+
+    inspection = inspect_cases((case, unresolved), (*records[:-1], _record(2018)))
+    assert inspection.buildable
+    assert any(item.code == "accepted_unresolved" for item in inspection.diagnostics)
+    with pytest.raises(CurationResolutionError, match="target_projection_changed"):
+        resolve_cases((case, unresolved), records)
