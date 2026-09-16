@@ -279,6 +279,38 @@ def test_accepted_omission_survives_classification_application():
     assert result.coding == {key: omitted} and result.diagnostics == ()
 
 
+def test_declared_classification_does_not_hide_an_uncovered_coding_period():
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    claim = replace(
+        original.claims[0],
+        scope=TemporalScope(
+            kind="intervals",
+            intervals=(ScopeInterval(start="2020-01-01", end="2020-06-30"),),
+        ),
+    )
+    case = setup[1].model_copy(
+        update={
+            "decision": setup[1].decision.model_copy(
+                update={
+                    "expected_codings": coding_expectations(
+                        (claim,), "2020-01-01", "2020-12-31"
+                    )
+                }
+            )
+        }
+    )
+    result = _apply(setup, (case,), coding={key: resolve_code_membership((claim,))})
+    issue = result.coding[key].issues[-1]
+    assert (issue.code, issue.valid_from, issue.valid_to) == (
+        "missing_coding_period",
+        "2020-07-01",
+        "2020-12-31",
+    )
+    assert result.coding[key].segments[-1].code_set is None
+    assert result.coding[key].claims == (claim,)
+
+
 def test_missing_conversion_is_fatal_and_original_membership_change_is_stale():
     setup = _setup()
     with pytest.raises(ValueError, match="unconverted canonical"):
