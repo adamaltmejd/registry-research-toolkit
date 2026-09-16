@@ -160,6 +160,12 @@ upper bound. A literal source year 9999 is not accepted as dated evidence. Exist
 authored defaults and inherited bounds still require their checked conversion before
 they can supply such a scope.
 
+SOS variable coverage accepts two explicitly supplied year, compact month/day or Excel
+calendar-date bounds. Blank or formula bounds remain unknown; code-list conventions for
+blank open bounds do not supply variable availability. The delivered classification
+reference is retained as source text, alongside its original hyperlink evidence. Mapping
+that reference to a catalog classification remains a checked curation responsibility.
+
 An accepted column or delivery declaration may target a concrete edition whose coverage
 is pooled or unknown. Resolution retains that edition membership and diagnoses its
 unsupported period; it cannot emit annual states from it. Existing `all_versions`

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import replace
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 import pytest
@@ -21,6 +22,7 @@ from reg_meta_build.source_reference_records import (
 from reg_meta_build.sources.sos import SosParseIssue, parse_register_file
 from reg_meta_build.sources.sos_records import (
     clean_sos_source,
+    clean_sos_variable,
     iter_sos_variable_records,
 )
 
@@ -29,6 +31,46 @@ if TYPE_CHECKING:
 
 
 _CLASSIFICATION_URL = "https://example.test/classifications/ssyk"
+
+
+@pytest.mark.parametrize(
+    ("start", "end", "expected"),
+    [
+        # Excel calendar cells have no timezone.
+        (datetime(2014, 2, 3), datetime(2015, 4, 5), ("2014-02-03", "2015-04-05")),  # noqa: DTZ001
+        ("201402", "201503", ("2014-02-01", "2015-03-31")),
+        ("20140203", "20150405", ("2014-02-03", "2015-04-05")),
+        ("2014-02-03", "2015-04-05", ("2014-02-03", "2015-04-05")),
+        ("20140203", None, None),
+        ("20140230", "20150405", None),
+        ("20150405", "20140203", None),
+        ("=2001", "2020", None),
+    ],
+)
+def test_variable_coverage_preserves_explicit_date_bounds(
+    tmp_path: Path, start: object, end: object, expected: tuple[str, str] | None
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    sheet = workbook["Metadata - Variabelnivå"]
+    sheet["H2"], sheet["I2"] = start, end
+    workbook.save(path)
+    register = parse_register_file(path)
+    record = clean_sos_variable(register, register.variables[0], _revision(path))
+    if expected is None:
+        assert record.edition_scope.kind == "unknown"
+    else:
+        assert record.edition_scope.kind == "intervals"
+        assert tuple((i.start, i.end) for i in record.edition_scope.intervals) == (
+            expected,
+        )
+    assert record.fields.classification_declared == value_field(_CLASSIFICATION_URL)
+    assert next(
+        cell for cell in record.delivered_cells if cell.name == "Data från"
+    ).raw_value == str(start)
 
 
 def test_absent_formula_cache_does_not_change_existing_source_payloads() -> None:

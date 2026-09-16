@@ -147,25 +147,42 @@ def _coverage_scope(evidence: SosRowEvidence) -> TemporalScope:
     if from_cell is None and to_cell is None:
         return TemporalScope(kind="not_applicable")
 
-    def source_year(cell: SosCellEvidence | None) -> int | None:
-        if cell is None or cell.display_value is None:
+    def boundary(cell: SosCellEvidence | None) -> str | None:
+        if cell is None or cell.data_type == "f":
             return None
-        if not re.fullmatch(r"[0-9]{4}", cell.display_value):
+        if isinstance(cell.raw_value, datetime):
+            if cell.raw_value.time() != datetime.min.time():
+                return None
+            return cell.raw_value.date().isoformat()
+        if isinstance(cell.raw_value, date):
+            return cell.raw_value.isoformat()
+        field = _text_field(cell, token=True)
+        if field is None or field.status != "value" or not isinstance(field.value, str):
             return None
-        return int(cell.display_value)
+        return field.value
 
-    start = source_year(from_cell)
-    end = source_year(to_cell)
-    if start is not None and end is not None and start <= end:
-        return TemporalScope(
-            kind="intervals",
-            intervals=(
-                ScopeInterval(
-                    start=str(start),
-                    end=str(end),
+    start = boundary(from_cell)
+    end = boundary(to_cell)
+    # Unlike code validity, blank variable coverage has no established open-bound
+    # meaning. Interpret only two supplied bounds using the actual date formats.
+    if start is not None and end is not None:
+        window = value_window(start, end, compact_dates=True)
+        if (
+            window.status == "known"
+            and window.start is not None
+            and window.end is not None
+        ):
+            return TemporalScope(
+                kind="intervals",
+                intervals=(
+                    ScopeInterval(
+                        start=start
+                        if re.fullmatch(r"[0-9]{4}", start)
+                        else window.start,
+                        end=end if re.fullmatch(r"[0-9]{4}", end) else window.end,
+                    ),
                 ),
-            ),
-        )
+            )
 
     def shown(cell: SosCellEvidence | None) -> str:
         if cell is None:
@@ -300,6 +317,9 @@ def clean_sos_variable(
             representation=_text_field(
                 _cell(evidence, "value_set_text"),
                 multiline=True,
+            ),
+            classification_declared=_text_field(
+                _cell(evidence, "external_classification"), multiline=True
             ),
             source_attribution=_text_field(
                 _cell(evidence, "source_detail"),
