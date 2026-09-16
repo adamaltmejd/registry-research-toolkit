@@ -28,7 +28,6 @@ from _csv_fixtures import (
 )
 from _lisa_fixtures import write_lisa_workbook
 from reg_meta.errors import RegMetaError
-from reg_meta_build._curation import repo_curation_path
 from reg_meta_build.db import _open_scb_csv, _open_scb_csv_prepared, _open_scb_csv_raw
 from reg_meta_build.input_snapshot import (
     LISA_BUNDLE_PATH,
@@ -53,10 +52,6 @@ from reg_meta_build.input_snapshot import (
     verify_build_lock,
     verify_input_bundle,
     verify_snapshot,
-)
-from reg_meta_build.source_cases import (
-    HAMN_SIGNAL_CASE_FILE,
-    load_hamn_signal_source_case,
 )
 
 from reg_meta_build import input_snapshot as snapshot_module
@@ -841,65 +836,6 @@ def test_catalog_bundle_manifest_changes_with_meaningful_auxiliary_input(
     assert first.manifest_sha256 != second.manifest_sha256
 
 
-def test_catalog_bundle_captures_and_validates_authored_hamn_case(
-    tmp_path: Path,
-) -> None:
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir)
-    curation = tmp_path / "curation"
-    curation.mkdir()
-    source = repo_curation_path(HAMN_SIGNAL_CASE_FILE)
-    assert source is not None
-    authored_bytes = source.read_bytes()
-    (curation / HAMN_SIGNAL_CASE_FILE).write_bytes(authored_bytes)
-
-    selection = write_input_bundle(
-        tmp_path / "accepted", input_dir, curation_dir=curation
-    )
-    bundle = open_input_bundle(selection)
-    item = next(
-        item
-        for item in bundle.manifest.files
-        if item.path == f"curation/{HAMN_SIGNAL_CASE_FILE}"
-    )
-
-    assert item.present is True
-    assert item.sha256 == hashlib.sha256(authored_bytes).hexdigest()
-    assert (bundle.curation_dir / HAMN_SIGNAL_CASE_FILE).read_bytes() == authored_bytes
-    assert (
-        load_hamn_signal_source_case(
-            bundle.curation_dir / HAMN_SIGNAL_CASE_FILE
-        ).authored_case.case_id
-        == "hamn-signal-unresolved-length"
-    )
-    assert verify_input_bundle(selection).schema_version == 2
-
-
-def test_catalog_bundle_manifest_changes_with_authored_hamn_case_bytes(
-    tmp_path: Path,
-) -> None:
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir)
-    curation = tmp_path / "curation"
-    curation.mkdir()
-    source = repo_curation_path(HAMN_SIGNAL_CASE_FILE)
-    assert source is not None
-    case_path = curation / HAMN_SIGNAL_CASE_FILE
-    case_path.write_bytes(source.read_bytes())
-    first = write_input_bundle(
-        tmp_path / "accepted-a", input_dir, curation_dir=curation
-    )
-
-    payload = json.loads(case_path.read_text(encoding="utf-8"))
-    payload["proposal"]["rationale"] += " Reviewed again."
-    case_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-    second = write_input_bundle(
-        tmp_path / "accepted-b", input_dir, curation_dir=curation
-    )
-
-    assert first.manifest_sha256 != second.manifest_sha256
-
-
 def test_catalog_bundle_declares_unselected_lisa_without_documentation_fallback(
     tmp_path: Path,
 ) -> None:
@@ -1296,7 +1232,6 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
     ("source_root", "relative", "payload", "expected_exception"),
     (
         ("curation", "lineage.toml", b"not = [valid", RegMetaError),
-        ("curation", HAMN_SIGNAL_CASE_FILE, b"{}", SnapshotError),
         ("input", "SCB/ID-kolumner.xlsx", b"not a zip", BadZipFile),
         ("input", "SCB/Tabelldefinitioner.sql", b"\x81", UnicodeDecodeError),
     ),

@@ -44,22 +44,5 @@ each comparison identifies its finite, unresolved workbook-table/native-variant
 assumptions. It applies no correction and makes no catalog-impact, acceptance,
 validation, or publication claim.
 
-The same command can replay the captured finite HAMN Signal unresolved-length proposal
-without selecting LISA or hydrating cold values:
-
-```sh
-reg-meta-build --output /tmp/hamn-signal-source-case.json inspect-source-records \
-  --input-bundle .local/catalog-inputs/bundles/candidate \
-  --input-commit <accepted-full-commit> \
-  --input-manifest-sha256 <catalog-bundle-json-sha256> \
-  --case hamn-signal-unresolved-length
-```
-
-Its typed result is `source_target_only`: it preserves both char-length alternatives,
-checks the exact twenty occurrences, ten native members, semantic dependencies and
-finite competing-spelling scope, then proposes withholding length only. Production
-application, identity/coding proof and final effects remain pending; the ordinary
-builder does not activate the proposal.
-
 See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is tracked in
 `REFACTOR_SPEC.md` at repo root.

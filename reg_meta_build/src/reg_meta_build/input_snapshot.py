@@ -71,7 +71,6 @@ CATALOG_CURATION_FILES = (
     "concept_groups.auto.toml",
     "concept_groups.toml",
     "delivery_enrichment.generated.toml",
-    "hamn_signal_unresolved_length.json",
     "lineage.toml",
     "period_family_merges.toml",
     "relations.toml",
@@ -2830,7 +2829,6 @@ def _validate_bundle_contract(root: Path) -> None:
     from .period_family_merges import load_period_family_merges
     from .relations import load_relations
     from .scb_errata import load_scb_errata
-    from .source_cases import load_hamn_signal_source_case
     from .sources.curated import CanonicalScbAdapter, CuratedAdapter
     from .sources.scb import _import_id_kolumner, _import_tabelldefinitioner
     from .sources.sos import parse_directory
@@ -2909,9 +2907,6 @@ def _validate_bundle_contract(root: Path) -> None:
     load_code_label_pairs(concept_groups)
     load_concept_groups(curation_path("concept_groups.auto.toml"))
     load_delivery_enrichment(curation_path("delivery_enrichment.generated.toml"))
-    hamn_case = curation_path("hamn_signal_unresolved_length.json")
-    if hamn_case is not None:
-        load_hamn_signal_source_case(hamn_case)
     load_lineage_config(curation_path("lineage.toml"))
     load_period_family_merges(curation_path("period_family_merges.toml"))
     load_relations(curation_path("relations.toml"))

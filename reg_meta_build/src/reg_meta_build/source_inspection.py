@@ -22,14 +22,6 @@ from reg_meta_build.input_snapshot import (
     _tracked_source_commit,
     _update_record_hash,
 )
-from reg_meta_build.source_cases import (
-    HAMN_SIGNAL_CASE_FILE,
-    HAMN_SIGNAL_CASE_ID,
-    HamnSourceCaseEvaluation,
-    SourceCaseArtifact,
-    evaluate_hamn_signal_source_case,
-    load_hamn_signal_source_case,
-)
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
@@ -56,10 +48,9 @@ if TYPE_CHECKING:
         SupplementalDataset,
     )
 
-INTERPRETATION_ID = "scb-lisa-source-record-inspection-v3"
+INTERPRETATION_ID = "scb-lisa-source-record-inspection-v4"
 SCB_DATASET_ID = "scb-registerinformation"
-CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v3"
-SOURCE_CASE_INTERPRETATION_ID = "hamn-signal-source-case-v1"
+CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v4"
 OutcomeStatus = Literal[
     "agreement",
     "unobserved_counterpart",
@@ -217,36 +208,6 @@ class SourceInspectionReport(_ReportModel):
             referenced_assumptions.update(self.target_preview.assumption_ids)
         if not referenced_assumptions <= reported_assumptions:
             raise ValueError("comparison outcome references an unreported assumption")
-        return self
-
-
-class SourceCaseInspectionPins(_ReportModel):
-    bundle_id: str
-    input_repository_commit: str
-    bundle_manifest_sha256: str
-    scb_snapshot_manifest_sha256: str
-    code_commit: str
-    interpretation_id: Literal["hamn-signal-source-case-v1"]
-    case_artifact_sha256: str
-
-
-class SourceCaseInspectionReport(_ReportModel):
-    format: Literal["reg-meta-build-source-case-inspection"]
-    schema_version: Literal[1]
-    diagnostic_only: Literal[True]
-    preview_level: Literal["source_target_only"]
-    complete: bool
-    case_artifact: SourceCaseArtifact
-    pins: SourceCaseInspectionPins
-    evaluation: HamnSourceCaseEvaluation
-    limitations: tuple[str, ...]
-
-    @model_validator(mode="after")
-    def _coherent(self) -> Self:
-        if self.complete != self.evaluation.applicable:
-            raise ValueError("report completeness must agree with case applicability")
-        if self.preview_level != self.evaluation.preview_level:
-            raise ValueError("report and evaluation preview levels disagree")
         return self
 
 
@@ -567,7 +528,6 @@ def source_interpreter_commit() -> str:
         (
             here,
             package / "source_records.py",
-            package / "source_cases.py",
             package / "input_snapshot.py",
             package / "cli.py",
             package / "db.py",
@@ -1541,62 +1501,9 @@ def inspect_bundle_source_records(
     )
 
 
-def report_semantic_sha256(
-    report: SourceInspectionReport | SourceCaseInspectionReport,
-) -> str:
+def report_semantic_sha256(report: SourceInspectionReport) -> str:
     """Stable identity of the deterministic report payload."""
     return canonical_sha256(report.model_dump(mode="json", exclude_none=True))
-
-
-def inspect_hamn_signal_source_case(
-    bundle: CatalogBundleReader, *, code_commit: str
-) -> SourceCaseInspectionReport:
-    """Replay the captured finite HAMN proposal against original observations."""
-    relative = f"curation/{HAMN_SIGNAL_CASE_FILE}"
-    item = next((item for item in bundle.manifest.files if item.path == relative), None)
-    if item is None:
-        raise SnapshotError(
-            f"catalog bundle does not list source case {HAMN_SIGNAL_CASE_ID!r}"
-        )
-    if not item.present:
-        raise SnapshotError(
-            f"source case {HAMN_SIGNAL_CASE_ID!r} was not captured when this bundle "
-            "was prepared"
-        )
-    artifact = load_hamn_signal_source_case(bundle.root / relative)
-    if item.size != artifact.size or item.sha256 != artifact.sha256:
-        raise SnapshotError(
-            f"captured source case {HAMN_SIGNAL_CASE_ID!r} does not match its bundle "
-            "inventory identity"
-        )
-    revision = _scb_revision(bundle)
-    observations = tuple(
-        iter_scb_observations(bundle.snapshot, revision, register_id=161)
-    )
-    evaluation = evaluate_hamn_signal_source_case(artifact, observations, revision)
-    return SourceCaseInspectionReport(
-        format="reg-meta-build-source-case-inspection",
-        schema_version=1,
-        diagnostic_only=True,
-        preview_level="source_target_only",
-        complete=evaluation.applicable,
-        case_artifact=artifact,
-        pins=SourceCaseInspectionPins(
-            bundle_id=bundle.manifest.bundle_id,
-            input_repository_commit=bundle.provenance["input_repository_commit"],
-            bundle_manifest_sha256=bundle.provenance["bundle_manifest_sha256"],
-            scb_snapshot_manifest_sha256=bundle.manifest.scb_manifest_sha256,
-            code_commit=code_commit,
-            interpretation_id=SOURCE_CASE_INTERPRETATION_ID,
-            case_artifact_sha256=artifact.sha256,
-        ),
-        evaluation=evaluation,
-        limitations=(
-            "Source-target-only proposal; the default builder did not apply a correction.",
-            "Production identity, raw coding absence, activation and final effects remain pending.",
-            "Ten absent warm projection rows are not proof that raw coding is absent.",
-        ),
-    )
 
 
 def _scb_revision(bundle: CatalogBundleReader) -> SourceRevision:
@@ -2344,12 +2251,10 @@ __all__ = [
     "ComparisonOutcome",
     "InspectionSummary",
     "InterpretationIssue",
-    "SourceCaseInspectionReport",
     "SourceInspectionReport",
     "SourceTargetPreview",
     "compare_availability_records",
     "inspect_bundle_source_records",
-    "inspect_hamn_signal_source_case",
     "report_semantic_sha256",
     "source_interpreter_commit",
     "write_scb_observation_census",

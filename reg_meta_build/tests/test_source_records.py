@@ -4,8 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import pytest
 from _csv_fixtures import (
     HAMN_SIGNAL_TARGETS,
+    REGISTERINFORMATION_HEADER,
+    _var_row,
     hamn_signal_rows,
     scb_interpretation_rows,
     write_scb_input,
@@ -25,7 +28,7 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
-from reg_meta_build.sources.scb_records import iter_scb_observations
+from reg_meta_build.sources.scb_records import clean_scb_row, iter_scb_observations
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -335,3 +338,68 @@ def test_hamn_fixture_yields_twenty_lossless_observations_for_ten_exact_members(
             == ""
             for record in members
         )
+
+
+def _clean_row(**changes: object) -> SourceRecord:
+    header = REGISTERINFORMATION_HEADER.split("|")
+    row = _var_row(colname="Example", cvid=1001, var_id=101, **changes).split("|")
+    cells = {
+        name: (True, value, value) for name, value in zip(header, row, strict=True)
+    }
+    return clean_scb_row(header, 2, cells, _revision()).record
+
+
+@pytest.mark.parametrize(
+    ("declared", "expected"),
+    [
+        ("tinyint", "integer"),
+        ("smallint", "integer"),
+        (" int ", "integer"),
+        ("integer", "integer"),
+        ("BIGINT", "integer"),
+        ("char", "text"),
+        ("varchar", "text"),
+        ("nchar", "text"),
+        (" NVARCHAR ", "text"),
+        ("text", "text"),
+        ("ntext", "text"),
+        ("numeric", "numeric"),
+        ("decimal", "decimal"),
+        ("float", "float"),
+        ("date", "date"),
+        ("unrecognized declaration", "unrecognized declaration"),
+    ],
+)
+def test_scb_storage_types_normalize_without_discarding_declaration_or_width(
+    declared: str, expected: str
+) -> None:
+    record = _clean_row(data_type=declared, data_length="12")
+
+    assert record.fields.data_type == value_field(expected, raw=declared)
+    assert record.fields.data_length == value_field("12")
+    delivered = next(cell for cell in record.delivered_cells if cell.name == "Datatyp")
+    assert delivered.raw_value == declared
+    assert delivered.interpreted_value == declared
+
+
+def test_scb_normalization_retains_distinct_observations_and_substantive_types() -> (
+    None
+):
+    small, big, text = (
+        _clean_row(data_type=kind) for kind in ("smallint", "bigint", "varchar")
+    )
+
+    assert small.fields.data_type.value == big.fields.data_type.value == "integer"
+    assert text.fields.data_type.value == "text"
+    assert len({record.record_id for record in (small, big, text)}) == 3
+
+
+def test_cleaning_keeps_projection_register_range_pooled() -> None:
+    record = _clean_row(
+        register=("Befolkningsframskrivningar", 310, 10),
+        versionname="2024-2070",
+    )
+
+    assert record.edition_scope == TemporalScope(kind="pooled", label="2024-2070")
+    assert record.reference_period_scope == record.edition_scope
+    assert record.original_period_text == "2024-2070"

@@ -95,10 +95,8 @@ from .input_snapshot import (
     prepare_input_bundle,
     verify_input_bundle,
 )
-from .source_cases import HAMN_SIGNAL_CASE_ID
 from .source_inspection import (
     inspect_bundle_source_records,
-    inspect_hamn_signal_source_case,
     report_semantic_sha256,
     source_interpreter_commit,
     write_scb_observation_census,
@@ -360,12 +358,6 @@ def _build_parser() -> argparse.ArgumentParser:
         "--column",
         default=None,
         help="Inspect one exact workbook column spelling (for example AmPolTyp).",
-    )
-    inspect_records_p.add_argument(
-        "--case",
-        choices=(HAMN_SIGNAL_CASE_ID,),
-        default=None,
-        help="Replay one captured finite source proposal without applying it.",
     )
     inspect_records_p.add_argument(
         "--all-scb",
@@ -1326,44 +1318,6 @@ def _cmd_inspect_source_records(
             message=str(exc),
             remediation="Select an accepted catalog input bundle with exact pins.",
         ) from exc
-    if args.case is not None:
-        if args.column is not None or args.all_scb or args.evidence is not None:
-            raise RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="source_record_inspection_selection_invalid",
-                error_class="usage",
-                message="--case cannot be combined with --column, --all-scb, or --evidence.",
-                remediation="Choose one captured case, focused LISA inspection, or an all-SCB census.",
-            )
-        try:
-            report = inspect_hamn_signal_source_case(
-                bundle, code_commit=source_interpreter_commit()
-            )
-        except SnapshotError as exc:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="source_record_inspection_invalid",
-                error_class="configuration",
-                message=str(exc),
-                remediation=(
-                    "Prepare and accept a bundle that captures the strict authored "
-                    "source case and the current SCB observations."
-                ),
-            ) from exc
-        data = report.model_dump(mode="json", exclude_none=True)
-        data["semantic_sha256"] = report_semantic_sha256(report)
-        return success_envelope(
-            command="inspect-source-records",
-            args_payload={
-                "input_bundle": args.input_bundle,
-                "input_commit": args.input_commit,
-                "input_manifest_sha256": args.input_manifest_sha256,
-                "case": args.case,
-            },
-            db_info=None,
-            data=data,
-            duration_ms=int((time.perf_counter() - start) * 1000),
-        ), 0
     if args.all_scb:
         if args.column is not None or args.evidence is None:
             raise RegMetaError(
@@ -2416,7 +2370,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Exhaustively verify an accepted catalog-input bundle.",
     ),
     (
-        "inspect-source-records --input-bundle DIR ... [--column NAME | --case NAME | --all-scb --evidence FILE.jsonl.gz]",
+        "inspect-source-records --input-bundle DIR ... [--column NAME | --all-scb --evidence FILE.jsonl.gz]",
         "Inspect captured LISA and raw SCB source records.",
     ),
     (

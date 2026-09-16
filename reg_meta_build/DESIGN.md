@@ -72,24 +72,36 @@ The target serves the maintainer, working with agents, in five jobs:
    changed or did not; and
 5. repair a provider adapter when an actual delivered format changes.
 
-The minimum flow supporting those jobs is:
+The builder has three stages:
 
-```text
-exact prepared inputs
-  → actual-format provider/source adapters
-  → compact normalized source records and referenced code sets
-  → one shared reconciliation boundary
-  → direct catalog formation and writing
-  → derived navigation/search, validation, and atomic activation
-```
+1. **Cleaning.** Provider/source-format adapters decode the actual delivered layouts
+   into a shared, source-faithful representation. They retain native coordinates,
+   original cells, population/variant/period context, conflicting observations, and
+   provenance. Mechanical storage differences such as `smallint` versus `bigint` or
+   `char` versus `varchar` normalize here; the original declarations and widths remain
+   evidence. Identical value-set content may be stored once while retaining every
+   original membership and validity association. Cleaning assigns no catalog FQIDs or
+   logical identities and chooses no winner between sources.
+2. **Curation.** One provider-neutral implementation resolves meaning, identity,
+   availability and coding, including disagreements between an SCB dump and a LISA
+   workbook. A text-to-integer change belongs here. Exact source coordinates, expected
+   values, finite periods and supporting evidence belong in curation data. This stage
+   assigns FQIDs, names, groups, relations and tags. It must not acquire per-register
+   Python contracts or a parallel set of post-build correction routes.
+3. **Build.** Materialize the resolved content, assign internal database IDs, derive
+   indexes/search, validate and atomically activate. This stage makes no independent
+   semantic choices.
 
-These are responsibilities inside one builder, not six frameworks, persisted databases,
-or services.
+These are responsibilities inside one builder, not separate frameworks or services. PDF
+extraction remains upstream; cleaning consumes its reviewed machine-readable output.
 
-> **Status: target architecture, not shipped behavior.** The current implementation
-> traced below remains transitional. It does not yet produce the source records, checked
-> discrepancy cases, shared acceptance gate, or direct catalog write described here.
-> This documentation is not evidence that the target works on the real corpus.
+> **Status: partial replacement.** The source-record model and diagnostic SCB/LISA
+> readers exist. SCB row cleaning owns the shared compact parser and uses format-only
+> period interpretation, independent of catalog identity or forecast-vintage policy.
+> Known integer/text storage declarations normalize without losing their source cells.
+> Complete cleaned value memberships, other source readers, unified curation and direct
+> materialization are still pending. The normal builder continues to use the legacy
+> semantic pipeline described below; source inspection does not activate corrections.
 
 ### Why the boundary moves earlier
 
@@ -344,7 +356,7 @@ validation:
 
   | Shipped surface                                                                                                          | Cutover disposition                                                                                                                                                                                                                     |
   | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `input_snapshot.py`, prepared bundles/readers, and value prestage                                                        | Retain exact capture, manifests, quick checks, deterministic reads, and the verified large-value cache.                                                                                                                                 |
+  | `input_snapshot.py`, prepared bundles/readers, and value prestage                                                        | Retain exact capture, manifests, quick checks and lossless prepared dictionaries/occurrences. The projected warm cache serves the legacy build only; it is not neutral cleaned evidence.                                                |
   | SCB/SOS/thin-provider readers                                                                                            | Reuse sound format and normalization leaves, but emit source records before first-wins, identity, period, or coding selection. Reject unsupported actual layouts.                                                                       |
   | `scb_errata.py` and `curation/scb_errata.toml`                                                                           | Delete the errata loader/apply path, dynamic nearest-row copying, `all_versions` expansion, and synthetic occurrence mutation. Preserve exact-target, now-present, finite-scope, copied-fact, and cardinality guards in reconciliation. |
   | Curated `alias_windows.py` and `period_family_merges.py` routes                                                          | Delete their independent mutation/authoring paths. Preserve exact variant/column/period, disjointness, parallelism, completeness, and containment guards. Retain genuinely source-derived alias projection after resolution.            |
@@ -354,7 +366,7 @@ validation:
   | `delivery_enrichment.py` and generated description/alias or identity application                                         | Delete unchecked global application. A generator may remain a review worklist; accepted description, representation, or identity facts come through source records and reviewed cases.                                                  |
   | Identity-affecting `same_as` entries in `relations.toml`                                                                 | Delete the post-formation identity mutation route after cases form identities directly. Preserve cycle/component checks. Retain directional `replaced_by`/`derived_from` and source-supported succession as distinct relationships.     |
   | `IRVariable`/`IRVariableState` buffering and `_reinsert_core_graph_from_ir`                                              | Delete the final-IR round trip. Form and validate final rows from reconciled records and write the catalog once; do not preserve incidental IDs merely to reproduce the transition.                                                     |
-  | Concept/navigation groups, tags, naming/slugs, directional relations, search, validation, documents, and steward routing | Retain for their distinct consumer jobs. They derive from resolved catalog content and cannot establish source facts or identity.                                                                                                       |
+  | Concept/navigation groups, tags, naming/slugs, directional relations, search, validation, documents, and steward routing | Retain for their distinct consumer jobs. Curation owns semantic assignments; build owns mechanical navigation/search. Neither derives source truth from a prior catalog.                                                                |
   | `_curation.py` and provider-blind helpers                                                                                | Retain useful parsing, normalization, deterministic interval, fail-fast, and validation leaves; delete loaders and writers made dead at cutover.                                                                                        |
 
 The code checkout remains the authoring home for reviewed cases and policy; prepared
@@ -362,34 +374,28 @@ inputs capture the exact bytes a candidate uses. This does not require a generic
 or rule engine, arbitrary JSON/SQL patches, migration readers, dual publication, or a
 new storage service.
 
-### Package-local implementation sequence
+### Replacement checkpoints
 
-This is a short dependency order for later, bounded tickets, not a permanent tracker or
-an automatically created backlog. Remove this subsection when the replacement ships.
+This temporary sequence is deleted when the replacement ships. Work proceeds in an
+isolated refactor branch with explicit checkpoints; Yard remains paused during this
+replacement. A checkpoint may leave documented tests or consumers incomplete. Never
+weaken an invariant or add a compatibility layer solely to make the checkpoint green.
+Final acceptance still requires the relevant tests and real-source validation.
 
-1. **Focused source records and inspection.** Amend held Y-157 to emit compact records
-   from pinned raw SCB and the four actual LISA sheet layouts, then provide
-   deterministic targeted inspection and the exact AmPolTyp source-target preview. Reuse
-   sound partial readers and discard atomized machinery if present. Exclude correction
-   authoring, full catalog preview, generic adapter conversion, and the direct writer
-   from this first runtime lane. At this decision, Y-157/1 is stopped and parked with no
-   candidate; this documentation ticket does not operate it.
-2. **Checked cases through the shared resolver.** Prove one correction end to end, then
-   add materially different membership, coding, and source cases. Inspection and
-   candidate building share the resolver. Tests cover new years, changed meaning/codes,
-   target cardinality, conflicting cases, upstream repairs, and stale unresolved
-   acknowledgements. Split work into bounded independently useful tickets rather than
-   one giant engine ticket.
-3. **Conversion and direct formation.** Convert the remaining providers and curation,
-   review baseline discrepancies and silent winner choices, and make catalog formation
-   write once. Delete every displaced route at the explicit cutover. Temporary
-   comparison with the current builder is validation work, not compatibility mode or a
-   second publisher.
-4. **Replacement acceptance.** Require focused and full tests, actual maintained-source
-   builds, explained semantic dbdiffs, deterministic replay, and warm
-   performance/storage checks. Resolve every full-corpus disagreement or explicitly
-   review it as a bounded unknown with safe output. Verify invalid input or cases cannot
-   activate a catalog; then remove the remaining transition machinery.
+1. Separate source cleaning from catalog policy and remove register-specific production
+   machinery. Verify original-source examples from LISA, IoT, RTB, RAMS, FDB and the
+   education registers. A small HAMN duplicate/conflict fixture is ordinary regression
+   data, not a dedicated contract or required production slice.
+2. Expose lossless value dictionaries, ordered occurrence associations and exact
+   validity records; finish actual-format readers against the common representation. The
+   warm projected value cache cannot reconstruct discarded source associations.
+3. Implement unified curation and move existing evidence into exact, checked data.
+   Preserve finite scope, expected-value and cardinality guards. Review conflicts and
+   bounded unresolved cases using source evidence, with the existing catalog only as a
+   discovery and comparison aid.
+4. Replace the remaining legacy semantic routes and materialize resolved content once.
+   Validate maintained-source outputs, explained semantic diffs, deterministic replay,
+   and measured performance/storage. Delete displaced code and this sequence.
 
 The retained accepted warm build supplies baseline triage, not accepted cases or a
 warning waiver: 406 SOS variable/subset period conflicts (all `ekb`), 24 same-name type
@@ -1214,40 +1220,17 @@ occurrences remain diagnostic witnesses. The report is diagnostic and
 source-target-only: it applies no curation, previews no complete catalog blast radius,
 and claims no catalog validation, acceptance, or publication.
 
-Catalog import and source evidence share one compact interpretation of each row's native
-coordinates and stripped named fields, then retain their separate catalog and
-lossless-evidence projections.
+Catalog import consumes the compact native-coordinate parser owned by
+`sources/scb_records.py`; source cleaning does not import the legacy SCB adapter.
+`clean_scb_row` is pure. The streaming reader still uses the existing validated prepared
+CSV IO leaf in `db.py`. Source evidence normalizes known integer/text storage aliases
+while retaining original declarations, widths and all delivered cells. Annual and
+subannual edition formats can establish intervals; multi-year ranges remain pooled,
+including forecast registers. Catalog vintage selection belongs to curation.
 
-One captured source proposal uses this same observation boundary:
-`curation/hamn_signal_unresolved_length.json` explicitly authors the ten HAMN Signal
-members for 2003--2012, their char/10 and char/11 alternatives, and independent source,
-meaning, member and finite trimmed-case-insensitive spelling dependencies. Input-bundle
-preparation and verification parse that strict JSON contract and bind its exact bytes in
-the existing curation inventory. Inspection reads only those captured bytes -- never a
-checkout fallback -- and selects the proposal explicitly:
-
-```console
-reg-meta-build --output /tmp/hamn-signal-source-case.json inspect-source-records \
-  --input-bundle .local/catalog-inputs/bundles/candidate \
-  --input-commit <accepted-full-commit> \
-  --input-manifest-sha256 <catalog-bundle-json-sha256> \
-  --case hamn-signal-unresolved-length
-```
-
-The pure evaluator consumes the authored contract plus original, uncoalesced Y-162 SCB
-observations. It requires exactly one char/10 and one char/11 occurrence for each exact
-native target, all ten targets, and no other native-variable or competing `Signal`
-occupancy in the independently listed annual scope. Thus an exact duplicate changes
-multiplicity, while source row movement, input order, administrative approval-date
-changes and a proven annual 2013 member do not change applicability. The result retains
-both alternatives, current locators and source revision, and returns ten typed proposed
-members whose `data_length` is unknown while `data_type=char` remains supported.
-
-This result is the future production handoff, not a preview approximation, but it is
-still labelled `source_target_only`: production dependencies and final effects are
-pending, no raw-coding absence or final identity is proved, and neither
-`_import_registerinformation` nor the default builder reads or activates the case. Y-160
-must reuse this captured contract and evaluator if production work resumes.
+There is no register-specific proposal evaluator at this boundary. Conflicting native
+members remain source observations until the shared curation stage resolves them or
+records an explicitly bounded unknown.
 
 The same command can select the complete SCB observation census without selecting the
 LISA workbook:

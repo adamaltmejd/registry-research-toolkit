@@ -96,6 +96,7 @@ from reg_meta_build.scb_errata import (
     apply_scb_errata,
     scoped_state_provenance,
 )
+from reg_meta_build.sources.scb_records import _interpret_registerinformation_row
 
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
 _RESOLUTION_GAP_PROVENANCE = "inferred:resolution-gap"
@@ -140,81 +141,6 @@ def _first_non_empty(current: str | None, candidate: str) -> str | None:
     if current:
         return current
     return candidate or current
-
-
-@dataclass(frozen=True, slots=True)
-class _RegisterinformationRow:
-    """Compact interpretation shared by catalog import and source evidence."""
-
-    register_id: int
-    register_variant_id: int
-    edition_id: int
-    variable_id: int
-    member_id: int
-    register_name: str
-    variant_name: str
-    edition_name: str
-    variable_name: str
-    column_name: str
-    variable_definition: str
-    variable_description: str
-    operational_definition: str
-    source_attribution: str
-    measurement_unit: str
-    population_name: str
-    population_definition: str
-    population_comment: str
-    population_date: str
-
-
-def _scb_native_id(value: str, field: str, row_number: int) -> int:
-    try:
-        return int(value)
-    except ValueError as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="scb_native_id_invalid",
-            error_class="configuration",
-            message=(
-                "Invalid SCB native ID in Registerinformation.csv "
-                f"at row {row_number}, field {field}: {value!r}."
-            ),
-            remediation="Re-export the file from mikrometadata.scb.se.",
-        ) from exc
-
-
-def _interpret_registerinformation_row(
-    text: Callable[[str], str],
-    row_number: int,
-    *,
-    register_id: int | None = None,
-) -> _RegisterinformationRow:
-    """Interpret the shared coordinates and stripped fields of one source row."""
-    return _RegisterinformationRow(
-        register_id=(
-            register_id
-            if register_id is not None
-            else _scb_native_id(text("RegisterId"), "RegisterId", row_number)
-        ),
-        register_variant_id=_scb_native_id(text("RegVarID"), "RegVarID", row_number),
-        edition_id=_scb_native_id(text("RegVerID"), "RegVerID", row_number),
-        variable_id=_scb_native_id(text("VarId"), "VarId", row_number),
-        member_id=_scb_native_id(text("CVID"), "CVID", row_number),
-        register_name=text("Registernamn").strip(),
-        variant_name=text("Registervariantnamn").strip(),
-        edition_name=text("Registerversionnamn").strip(),
-        variable_name=text("Variabelnamn").strip(),
-        column_name=text("Kolumnnamn").strip(),
-        variable_definition=text("Variabeldefinition").strip(),
-        variable_description=text("Variabelbeskrivning").strip(),
-        operational_definition=text("VariabelOperationell_definition").strip(),
-        source_attribution=text("VariabelRegister_Källa").strip(),
-        measurement_unit=text("Mattenhet").strip(),
-        population_name=text("Populationnamn").strip(),
-        population_definition=text("Populationdefinition").strip(),
-        population_comment=text("Populationkommentar").strip(),
-        population_date=text("Populationdatum").strip(),
-    )
 
 
 _OPAQUE_SOURCE_CODE_RE = re.compile(r"^[A-Za-z]\d+[A-Za-z0-9]*$")
