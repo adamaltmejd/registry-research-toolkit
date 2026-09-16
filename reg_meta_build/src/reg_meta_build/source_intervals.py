@@ -81,6 +81,27 @@ def scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     return tuple(result)
 
 
+def covers_window(
+    intervals: Iterable[tuple[str, str]], valid_from: str, valid_to: str
+) -> bool:
+    """Whether known inclusive ISO intervals cover a window without a gap."""
+    next_day = date.fromisoformat(valid_from).toordinal()
+    last_day = date.fromisoformat(valid_to).toordinal()
+    if next_day > last_day:
+        raise ValueError("coverage bounds are reversed")
+    for start, end in sorted(intervals):
+        lower, upper = (
+            date.fromisoformat(start).toordinal(),
+            date.fromisoformat(end).toordinal(),
+        )
+        if lower > next_day:
+            break
+        next_day = max(next_day, upper + 1)
+        if next_day > last_day:
+            return True
+    return False
+
+
 def _periods(record: EffectiveOccurrence) -> tuple[tuple[int, int], ...] | None:
     scope = record.edition_period_scope
     if scope.kind == "not_applicable":

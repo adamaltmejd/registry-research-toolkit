@@ -30,7 +30,7 @@ from reg_meta_build.source_curation import (
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
-from reg_meta_build.source_intervals import scope_bounds
+from reg_meta_build.source_intervals import covers_window, scope_bounds
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
 
 if TYPE_CHECKING:
@@ -91,17 +91,8 @@ def coding_for_period(
 
 
 def _covers(resolution: CodingResolution, start: str, end: str) -> bool:
-    segments = resolution.segments
-    return bool(
-        segments
-        and not resolution.issues
-        and segments[0].valid_from == start
-        and segments[-1].valid_to == end
-        and all(
-            date.fromisoformat(left.valid_to).toordinal() + 1
-            == date.fromisoformat(right.valid_from).toordinal()
-            for left, right in pairwise(segments)
-        )
+    return not resolution.issues and covers_window(
+        ((s.valid_from, s.valid_to) for s in resolution.segments), start, end
     )
 
 

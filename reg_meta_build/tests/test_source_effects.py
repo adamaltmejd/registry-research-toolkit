@@ -25,7 +25,7 @@ from reg_meta_build.resolved_catalog import (
     write_resolved_catalog,
 )
 from reg_meta_build.scb_errata import ErrataColumn, ErrataDelivered
-from reg_meta_build.source_annotations import apply_search_aliases
+from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
@@ -197,7 +197,7 @@ def test_search_alias_is_guarded_metadata_without_added_availability(
     tmp_path: Path,
 ) -> None:
     record, case, variable, key, variants = _search_alias_fixture()
-    result = apply_search_aliases(
+    result = apply_alias_cases(
         (record,), (case,), variables={key: variable}, variants=variants
     )
     assert result.diagnostics == ()
@@ -220,14 +220,14 @@ def test_search_alias_is_guarded_metadata_without_added_availability(
             == 0
         )
         assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 1
-    same = apply_search_aliases(
+    same = apply_alias_cases(
         (_record(column=" VALUE "),),
         (case,),
         variables={key: variable},
         variants=variants,
     )
     assert same.diagnostics == () and same.variables == result.variables
-    stale = apply_search_aliases(
+    stale = apply_alias_cases(
         (record, _record(cvid=21, column="VALUE", year="2021")),
         (case,),
         variables={key: variable},
@@ -245,7 +245,7 @@ def test_search_alias_preserves_existing_precise_windows() -> None:
         windows=(ResolvedAliasWindow(valid_from="2020-03-01", valid_to="2020-04-30"),),
     )
     variable = variable.model_copy(update={"aliases": (alias,)})
-    result = apply_search_aliases(
+    result = apply_alias_cases(
         (record,), (case,), variables={key: variable}, variants=variants
     )
     assert result.diagnostics == () and result.variables[key] == variable
@@ -255,7 +255,7 @@ def test_search_alias_distinguishes_withheld_dependencies_from_missing_conversio
     None
 ):
     record, case, variable, key, variants = _search_alias_fixture()
-    withheld = apply_search_aliases(
+    withheld = apply_alias_cases(
         (record,), (case,), variables={key: None}, variants=variants
     )
     assert withheld.variables[key] is None
@@ -265,9 +265,7 @@ def test_search_alias_distinguishes_withheld_dependencies_from_missing_conversio
     assert withheld.evaluations[0].status == "applicable"
     for variables, parents in (({}, variants), ({key: variable}, {})):
         with pytest.raises(ValueError, match="unconverted"):
-            apply_search_aliases(
-                (record,), (case,), variables=variables, variants=parents
-            )
+            apply_alias_cases((record,), (case,), variables=variables, variants=parents)
 
 
 def _field(record: SourceRecord, name: str, value: str) -> CheckedFieldChange:
@@ -1120,3 +1118,253 @@ def test_conversion_reports_original_evidence_conflicts(
     result = _convert_delivered(records, target)
     assert result.case is None
     assert any(item.startswith(blocker + ":") for item in result.blockers)
+
+
+def _window_case(
+    case, key, variant_key, *, start="2020-03-01", end="2020-04-30", name="window"
+):
+    from reg_meta_build.source_curation import AliasWindowDecision
+
+    return case.model_copy(
+        update={
+            "case_id": name,
+            "decision": AliasWindowDecision(
+                reviewed=True,
+                variable_key=key,
+                variant_key=variant_key,
+                column="ALTERNATIVE",
+                valid_from=start,
+                valid_to=end,
+                reason="Existing accepted omitted representation",
+                provenance="accepted alias_windows entry",
+            ),
+        }
+    )
+
+
+def test_alias_window_needs_owned_alias_and_does_not_expand_states(
+    tmp_path: Path,
+) -> None:
+    record, search, variable, key, variants = _search_alias_fixture()
+    variant_key, variant = next(iter(variants.items()))
+    owned = variable.model_copy(
+        update={
+            "aliases": (
+                ResolvedAlias(variant=variant, delivery_column_name="ALTERNATIVE"),
+            )
+        }
+    )
+    case = _window_case(search, key, variant_key)
+    result = apply_alias_cases(
+        (record,), (case,), variables={key: owned}, variants=variants
+    )
+    assert result.diagnostics == ()
+    updated = result.variables[key]
+    assert updated is not None and updated.states == variable.states
+    assert [(w.valid_from, w.valid_to) for w in updated.aliases[0].windows] == [
+        ("2020-03-01", "2020-04-30"),
+    ]
+    assert updated.aliases[0].windows[0].provenance is not None
+    output = tmp_path / "window.db"
+    write_resolved_catalog((updated,), output, manifest={})
+    with closing(open_db(output)) as conn:
+        assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 1
+        assert tuple(
+            conn.execute(
+                "SELECT delivery_column_name, valid_from, valid_to FROM variable_alias_window"
+            ).fetchone()
+        ) == ("ALTERNATIVE", "2020-03-01", "2020-04-30")
+    unowned = apply_alias_cases(
+        (record,), (case,), variables={key: variable}, variants=variants
+    )
+    assert unowned.variables[key] == variable
+    assert [d.code for d in unowned.diagnostics] == ["unowned_alias_window"]
+    future = _window_case(
+        search, key, variant_key, start="2021-01-01", end="2021-12-31"
+    )
+    outside = apply_alias_cases(
+        (record,), (future,), variables={key: owned}, variants=variants
+    )
+    assert outside.variables[key] == owned
+    assert [d.code for d in outside.diagnostics] == ["unsupported_alias_window"]
+
+
+def test_alias_window_checks_original_ownership_and_complete_period_coverage() -> None:
+    record, search, variable, key, variants = _search_alias_fixture()
+    variant_key, variant = next(iter(variants.items()))
+    window = _window_case(search, key, variant_key)
+    result = apply_alias_cases(
+        (record,), (search, window), variables={key: variable}, variants=variants
+    )
+    assert result == apply_alias_cases(
+        (record,), (window, search), variables={key: variable}, variants=variants
+    )
+    assert [d.code for d in result.diagnostics] == ["unowned_alias_window"]
+    annotated = result.variables[key]
+    assert annotated is not None
+    assert annotated.aliases[0].windows == ()
+    owned = variable.model_copy(
+        update={
+            "aliases": (
+                ResolvedAlias(variant=variant, delivery_column_name="ALTERNATIVE"),
+            )
+        }
+    )
+    split = owned.model_copy(
+        update={
+            "states": (
+                owned.states[0].model_copy(update={"valid_to": "2020-03-31"}),
+                owned.states[0].model_copy(update={"valid_from": "2020-04-01"}),
+            )
+        }
+    )
+    assert (
+        apply_alias_cases(
+            (record,), (window,), variables={key: split}, variants=variants
+        ).diagnostics
+        == ()
+    )
+    gap = split.model_copy(
+        update={
+            "states": (
+                split.states[0],
+                split.states[1].model_copy(update={"valid_from": "2020-04-02"}),
+            )
+        }
+    )
+    result = apply_alias_cases(
+        (record,), (window,), variables={key: gap}, variants=variants
+    )
+    assert [d.code for d in result.diagnostics] == ["unsupported_alias_window"]
+    assert result.variables[key] == gap
+
+
+def test_overlapping_alias_windows_compose_with_scoped_provenance_and_stale_guards() -> (
+    None
+):
+    record, search, variable, key, variants = _search_alias_fixture()
+    variant_key, variant = next(iter(variants.items()))
+    owned = variable.model_copy(
+        update={
+            "aliases": (
+                ResolvedAlias(variant=variant, delivery_column_name="ALTERNATIVE"),
+            )
+        }
+    )
+    first = _window_case(search, key, variant_key, name="first")
+    second = _window_case(
+        search, key, variant_key, start="2020-04-01", end="2020-05-31", name="second"
+    )
+    result = apply_alias_cases(
+        (record,), (first, second), variables={key: owned}, variants=variants
+    )
+    assert result == apply_alias_cases(
+        (record,), (second, first), variables={key: owned}, variants=variants
+    )
+    updated = result.variables[key]
+    assert updated is not None and result.diagnostics == ()
+    windows = updated.aliases[0].windows
+    assert [(w.valid_from, w.valid_to) for w in windows] == [
+        ("2020-03-01", "2020-03-31"),
+        ("2020-04-01", "2020-04-30"),
+        ("2020-05-01", "2020-05-31"),
+    ]
+    assert windows[1].provenance is not None
+    assert "first:" in windows[1].provenance and "second:" in windows[1].provenance
+    stale = apply_alias_cases(
+        (_record(column="OTHER"),), (first,), variables={key: owned}, variants=variants
+    )
+    assert stale.variables[key] == owned and stale.evaluations[0].status == "stale"
+
+
+def test_alias_window_rejects_another_supported_owner_in_the_same_period() -> None:
+    record, search, variable, key, variants = _search_alias_fixture()
+    variant_key, variant = next(iter(variants.items()))
+    owned = variable.model_copy(
+        update={
+            "aliases": (
+                ResolvedAlias(variant=variant, delivery_column_name="ALTERNATIVE"),
+            )
+        }
+    )
+    other = variable.model_copy(
+        update={
+            "slug": "other",
+            "states": (
+                variable.states[0].model_copy(
+                    update={"delivery_column_name": "ALTERNATIVE"}
+                ),
+            ),
+        }
+    )
+    window = _window_case(search, key, variant_key)
+    result = apply_alias_cases(
+        (record,),
+        (window,),
+        variables={key: owned, (*key, "other"): other},
+        variants=variants,
+    )
+    assert [d.code for d in result.diagnostics] == ["conflicting_alias_window_owner"]
+    assert result.variables[key] == owned
+    future = other.model_copy(
+        update={
+            "states": (
+                other.states[0].model_copy(
+                    update={"valid_from": "2021-01-01", "valid_to": "2021-12-31"}
+                ),
+            )
+        }
+    )
+    assert (
+        apply_alias_cases(
+            (record,),
+            (window,),
+            variables={key: owned, (*key, "other"): future},
+            variants=variants,
+        ).diagnostics
+        == ()
+    )
+
+
+def test_competing_alias_window_decisions_withhold_only_their_overlap() -> None:
+    record, search, variable, key, variants = _search_alias_fixture()
+    variant_key, variant = next(iter(variants.items()))
+    owned = variable.model_copy(
+        update={
+            "aliases": (
+                ResolvedAlias(variant=variant, delivery_column_name="ALTERNATIVE"),
+            )
+        }
+    )
+    other_key = (*key, "other")
+    other = owned.model_copy(update={"slug": "other"})
+    first = _window_case(search, key, variant_key, name="first")
+    second = _window_case(
+        search,
+        other_key,
+        variant_key,
+        start="2020-04-01",
+        end="2020-05-31",
+        name="second",
+    )
+    result = apply_alias_cases(
+        (record,),
+        (first, second),
+        variables={key: owned, other_key: other},
+        variants=variants,
+    )
+    assert result == apply_alias_cases(
+        (record,),
+        (second, first),
+        variables={key: owned, other_key: other},
+        variants=variants,
+    )
+    assert len(result.diagnostics) == 2
+    assert {(d.code, d.valid_from, d.valid_to) for d in result.diagnostics} == {
+        ("conflicting_alias_window_decisions", "2020-04-01", "2020-04-30"),
+    }
+    assert [
+        [(w.valid_from, w.valid_to) for w in v.aliases[0].windows]
+        for v in (result.variables[key], result.variables[other_key])
+        if v is not None
+    ] == [[("2020-03-01", "2020-03-31")], [("2020-05-01", "2020-05-31")]]

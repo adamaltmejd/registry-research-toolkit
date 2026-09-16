@@ -145,6 +145,16 @@ window. A source change invalidates their original membership guard. Unsupported
 dependencies withhold the affected alias; missing conversion mappings remain fatal
 engineering errors.
 
+An exact alias-window decision makes an already owned spelling orderable within an
+existing variable/variant's supported state coverage. It adds no state or identity and
+does not transfer an alias across variants. Search spellings and windows are applied by
+the same annotation entry point against original resolved dependencies; one annotation
+cannot establish another's ownership. Adjacent states may jointly cover a window, but a
+coverage gap withholds it. Supported competing owners are errors. Competing window
+decisions for different variables withhold their precise overlap on both sides; equal
+declarations on one variable retain all provenance. Original source facts and annual
+state boundaries remain unchanged.
+
 Checked coding decisions name an exact column identity, a finite date interval and the
 semantic fingerprints of every competing observation in that interval. Both original
 record membership and coding expectations must still match. Incomplete lists retain

@@ -543,21 +543,52 @@ class SearchAliasDecision(_CurationModel):
         return self
 
 
-class CodingWindow(_CurationModel):
-    """The complete observed coding evidence for one finite period."""
+class FiniteCurationWindow(_CurationModel):
+    """An explicitly reviewed interval, with no automatic future extension."""
 
     valid_from: str
     valid_to: str
-    expected_codings: tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...]
 
     @model_validator(mode="after")
     def _bounded(self) -> Self:
         for value in (self.valid_from, self.valid_to):
             parsed = date.fromisoformat(value)
             if parsed.isoformat() != value or parsed.year == 9999:
-                raise ValueError("coding windows require finite ISO date bounds")
+                raise ValueError("curation windows require finite ISO date bounds")
         if self.valid_from > self.valid_to:
-            raise ValueError("coding window bounds are reversed")
+            raise ValueError("curation window bounds are reversed")
+        return self
+
+
+class AliasWindowDecision(FiniteCurationWindow):
+    """Make one already-owned alias orderable within an existing state period."""
+
+    kind: Literal["alias_window"] = "alias_window"
+    reviewed: Literal[True]
+    variable_key: NativeKey
+    variant_key: NativeKey
+    column: str = Field(min_length=1)
+    reason: str = Field(min_length=1)
+    provenance: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _exact(self) -> Self:
+        if any(not key or "" in key for key in (self.variable_key, self.variant_key)):
+            raise ValueError("an alias window needs exact variable and variant keys")
+        if self.column != self.column.strip() or not self.column.strip():
+            raise ValueError("an alias window column must be nonempty and trimmed")
+        if not self.reason.strip() or not self.provenance.strip():
+            raise ValueError("an alias window needs rationale and provenance")
+        return self
+
+
+class CodingWindow(FiniteCurationWindow):
+    """The complete observed coding evidence for one finite period."""
+
+    expected_codings: tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...]
+
+    @model_validator(mode="after")
+    def _unique(self) -> Self:
         if len(set(self.expected_codings)) != len(self.expected_codings):
             raise ValueError("expected coding fingerprints must be unique")
         return self
@@ -599,6 +630,7 @@ type CurationDecision = (
     | FormVariableDecision
     | OccurrenceCorrectionDecision
     | SearchAliasDecision
+    | AliasWindowDecision
     | CodingDecision
 )
 
@@ -1273,7 +1305,12 @@ def inspect_cases(
     for case in ordered_cases:
         if isinstance(
             case.decision,
-            (OccurrenceCorrectionDecision, SearchAliasDecision, CodingDecision),
+            (
+                OccurrenceCorrectionDecision,
+                SearchAliasDecision,
+                AliasWindowDecision,
+                CodingDecision,
+            ),
         ):
             raise TypeError(
                 "occurrence, alias and coding corrections require the ordinary formation path"
