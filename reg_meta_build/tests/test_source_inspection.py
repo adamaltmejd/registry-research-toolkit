@@ -39,6 +39,7 @@ from reg_meta_build.source_inspection import (
     report_semantic_sha256,
     write_scb_observation_census,
 )
+from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
@@ -56,7 +57,6 @@ from reg_meta_build.sources import lisa as lisa_module
 from reg_meta_build.sources.lisa import LisaWorkbookError, read_lisa_source
 from reg_meta_build.sources.scb_records import (
     LISA_REGISTER_ID,
-    _scopes,
     iter_scb_observations,
 )
 
@@ -658,7 +658,7 @@ def test_selected_scb_observation_invalid_native_id_names_field_and_row(
 def test_scb_scope_rejects_multi_year_tokens_only_on_single_claim_fallback(
     version_name: str, expected_kind: str, expected_issue: str | None
 ) -> None:
-    edition_scope, reference_scope, issue = _scopes(version_name)
+    edition_scope, reference_scope, issue = source_scopes(version_name)
 
     assert edition_scope.kind == expected_kind
     assert reference_scope.kind == expected_kind
@@ -2151,7 +2151,7 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
         "bundle_manifest_sha256": selection.manifest_sha256,
         "code_commit": "c" * 40,
         "input_repository_commit": selection.input_commit,
-        "interpretation_id": "scb-lisa-source-record-inspection-v4",
+        "interpretation_id": "scb-lisa-source-record-inspection-v5",
         "scb_snapshot_manifest_sha256": bundle.manifest.scb_manifest_sha256,
     }
     assert report["scope"]["selected_sources"] == [
@@ -2260,3 +2260,31 @@ def test_source_interpreter_pin_rejects_a_loaded_dependency_from_another_checkou
 
     with pytest.raises(SnapshotError, match="must come from the same Git checkout"):
         inspection_module.source_interpreter_commit()
+
+
+def test_lisa_cleaning_uses_shared_text_rules_without_changing_code_spelling(
+    tmp_path: Path,
+) -> None:
+    path = write_lisa_workbook(tmp_path / "lisa.xlsx")
+    workbook = load_workbook(path)
+    sheet = workbook["Individ"]
+    raw_description = "Åtga\u0308rd\r\n\r\n  - Förklaring\u00a0 "
+    sheet["A600"] = " A\u030a_01 "
+    sheet["B600"] = raw_description
+    sheet["E600"] = " I\u00a0  vissa\tfall "
+    sheet["F600"] = " Arbets\u00a0 förmedlingen "
+    workbook.save(path)
+    workbook.close()
+
+    source = read_lisa_source(path, _revision(path))
+    record = next(
+        record for record in source.records if record.fields.column_name.value == "Å_01"
+    )
+
+    assert record.fields.column_name.raw_value == " A\u030a_01 "
+    assert record.fields.description.value == "Åtgärd\n\n  - Förklaring"
+    # The workbook XML reader normalizes CRLF before returning the cell text.
+    assert record.fields.description.raw_value == raw_description.replace("\r\n", "\n")
+    assert record.fields.sensitivity.value == "conditional"
+    assert record.fields.sensitivity.raw_value == " I\u00a0  vissa\tfall "
+    assert record.fields.base_register.value == "Arbets förmedlingen"

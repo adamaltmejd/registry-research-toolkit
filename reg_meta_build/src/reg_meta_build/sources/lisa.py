@@ -10,6 +10,7 @@ from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 
 from reg_meta_build.input_snapshot import SnapshotError
+from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
@@ -394,14 +395,14 @@ def _optional_text_field(value: Any) -> SourceField | None:
     text = _cell_text(value)
     if text is None:
         return None
-    return value_field(text.strip(), raw=text)
+    return value_field(normalize_text(text), raw=text)
 
 
 def _sensitivity_field(value: Any, coordinate: str) -> SourceField | None:
     text = _cell_text(value)
     if text is None:
         return None
-    normalized = text.strip()
+    normalized = normalize_text(text)
     values: dict[str, bool | str] = {
         "Ja": True,
         "Nej": False,
@@ -647,7 +648,7 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                         f"{sheet_name}!{get_column_letter(spec.period_column)}{row_number}",
                     )
 
-                interpreted_column = column_text.strip()
+                interpreted_column = normalize_token(column_text)
                 semantic_key = (spec.table_key, section_key, interpreted_column)
                 if semantic_key in semantic_keys:
                     raise LisaWorkbookError(
@@ -679,7 +680,7 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                         subject=SourceSubject(
                             provider="scb",
                             register=SourceCoordinate(
-                                status="value", name=register_text.strip()
+                                status="value", name=normalize_text(register_text)
                             ),
                             variant=SourceCoordinate(
                                 status="value", name=spec.table_key
@@ -698,10 +699,11 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                                 interpreted_column, raw=column_text
                             ),
                             description=value_field(
-                                description.strip(), raw=description
+                                normalize_text(description.strip(), multiline=True),
+                                raw=description,
                             ),
                             source_attribution=value_field(
-                                register_text.strip(), raw=register_text
+                                normalize_text(register_text), raw=register_text
                             ),
                             sensitivity=sensitivity,
                             base_register=base_register,

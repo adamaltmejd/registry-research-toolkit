@@ -403,3 +403,28 @@ def test_cleaning_keeps_projection_register_range_pooled() -> None:
     assert record.edition_scope == TemporalScope(kind="pooled", label="2024-2070")
     assert record.reference_period_scope == record.edition_scope
     assert record.original_period_text == "2024-2070"
+
+
+def test_scb_text_cleaning_compares_clean_values_and_retains_original_evidence() -> (
+    None
+):
+    first = _clean_row(varname=" A\u030ars\u00a0  inkomst ", data_length="+0004")
+    second = _clean_row(varname="Års inkomst", data_length="4")
+
+    assert first.fields.name.value == second.fields.name.value == "Års inkomst"
+    assert first.subject.member.name == second.subject.member.name == "Års inkomst"
+    assert first.fields.name.raw_value == " A\u030ars\u00a0  inkomst "
+    assert first.fields.data_length.value == second.fields.data_length.value == "4"
+    assert first.fields.data_length.raw_value == "+0004"
+    assert first.record_id != second.record_id
+
+
+def test_scb_paragraph_cleaning_retains_layout_and_real_text_differences() -> None:
+    raw = "Rubrik\r\n\r\n  - Kön\u00a0 \r\nA  B\tC"
+    first = _clean_row(vardesc=raw)
+    second = _clean_row(vardesc="Rubrik\n\n  - Ålder\nA  B\tC")
+
+    assert first.fields.description.value == "Rubrik\n\n  - Kön\nA  B\tC"
+    assert first.fields.description.raw_value == raw
+    assert first.fields.description.value != second.fields.description.value
+    assert _clean_row(data_length="1,5").fields.data_length.value == "1,5"

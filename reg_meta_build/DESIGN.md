@@ -98,10 +98,65 @@ extraction remains upstream; cleaning consumes its reviewed machine-readable out
 > **Status: partial replacement.** The source-record model and diagnostic SCB/LISA
 > readers exist. SCB row cleaning owns the shared compact parser and uses format-only
 > period interpretation, independent of catalog identity or forecast-vintage policy.
-> Known integer/text storage declarations normalize without losing their source cells.
-> Complete cleaned value memberships, other source readers, unified curation and direct
-> materialization are still pending. The normal builder continues to use the legacy
-> semantic pipeline described below; source inspection does not activate corrections.
+> Shared text/token cleaning, integer/text storage normalization and exact snapshot-date
+> interpretation now serve SCB/LISA source inspection. A separate SCB value-source
+> reader exposes normalized dictionaries, exact validity text and streamed original
+> associations; it does not select final code-set membership. Other source readers,
+> unified curation and direct materialization remain pending. The normal builder
+> continues to use the legacy semantic pipeline below; source inspection does not
+> activate corrections.
+
+### Mechanical normalization
+
+`normalization.py` supplies small shared functions, called by actual-format adapters
+once the source encoding and field role are known. Normalization is idempotent; source
+revisions, raw cells and locators remain available independently of cleaned values.
+
+- **Single-line names and labels:** Unicode NFC, normalized line endings, ordinary and
+  nonbreaking space equivalence, trimmed edges and collapsed whitespace. Case,
+  diacritics, words and punctuation remain unchanged.
+- **Paragraph text:** Unicode NFC, line endings and nonbreaking spaces normalize;
+  trailing line padding is removed. Internal spacing, indentation, tabs and paragraph
+  breaks remain because they may encode tables or lists. The cleaner does not guess
+  whether a line break is wrapping, remove arbitrary invisible characters, repair
+  arbitrary mojibake, unescape HTML, or rewrite wording. Known SCB byte repairs remain
+  in the existing source decoder. Additional repairs require actual format evidence.
+- **Codes and column tokens:** NFC and outer padding only. Leading zeros, case,
+  punctuation and internal spacing are significant. Numeric-looking strings do not
+  become numbers. Source-format readers remain responsible for Excel display codes.
+- **Typed metadata:** Known SQL integer/text aliases normalize without losing the
+  declaration. A nonnegative integer spelling in SCB `Datalängd` becomes its canonical
+  decimal spelling (`+0004` becomes `4`); other supplied length forms remain evidence.
+  LISA's explicit sensitivity markers become booleans or the conditional marker.
+- **Periods:** Single ISO dates and the observed Swedish October snapshot-date format
+  retain exact edition-label intervals; the edition coordinate retains its year.
+  Same-year ISO ranges retain their exact endpoints. Malformed or ambiguous recognized
+  date shapes become diagnostic unknowns. Multi-year/academic ranges remain pooled; they
+  do not establish annual observations. Original period text is preserved. The current
+  `reference_period_scope` is the parsed edition-label window, not an independently
+  established measurement period for each variable; `VariabelReferenstid` remains
+  original source evidence for later interpretation.
+- **Value-set content:** `canonical_value_set_content` gives an explicitly unordered
+  collection deterministic cleaned content, dropping exact repeated members. Equal codes
+  with different labels remain distinct. It does not decide which members belong
+  together, establish common variable identity, or discard source ordering/bindings.
+
+`sources/scb_values.py` decodes the prepared descriptor/value dictionaries once and
+streams every original CVID/ItemId/descriptor/value association in order, including
+exact duplicates and disconnected identifiers. It keeps original dictionary keys/cells
+and logical CSV row locators, bound to the accepted input commit and snapshot manifest
+in the result's provenance. Missing, supplied empty and zero remain distinct in both raw
+and normalized values. Validity rows retain exact supplied boundaries, duplicates and
+missing/empty distinctions; they are not truncated to years or used for filtering. A
+descriptor version label alone is never a global code-set identity. This reader has
+synthetic losslessness checks; a complete maintained-source value traversal remains
+pending while the cold occurrence files are sparse-omitted.
+
+Observation IDs identify supplied evidence, so a whitespace-only revision can still
+change an observation ID. Curation must compare the relevant cleaned values and scoped
+membership, not use raw observation-ID equality as semantic equivalence. Original
+payloads remain inspectable; normalization does not itself resolve disagreements or make
+source statements authoritative.
 
 ### Why the boundary moves earlier
 

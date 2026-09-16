@@ -48,9 +48,9 @@ if TYPE_CHECKING:
         SupplementalDataset,
     )
 
-INTERPRETATION_ID = "scb-lisa-source-record-inspection-v4"
+INTERPRETATION_ID = "scb-lisa-source-record-inspection-v5"
 SCB_DATASET_ID = "scb-registerinformation"
-CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v4"
+CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v5"
 OutcomeStatus = Literal[
     "agreement",
     "unobserved_counterpart",
@@ -528,6 +528,8 @@ def source_interpreter_commit() -> str:
         (
             here,
             package / "source_records.py",
+            package / "normalization.py",
+            package / "source_periods.py",
             package / "input_snapshot.py",
             package / "cli.py",
             package / "db.py",

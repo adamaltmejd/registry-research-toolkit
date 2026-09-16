@@ -4,24 +4,22 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import _YEAR
 
-from reg_meta_build.edition_bounds import edition_claims
+from reg_meta_build.normalization import normalize_text, normalize_token
+from reg_meta_build.source_periods import SourcePeriodIssue, source_scopes
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
     RecordLocator,
-    ScopeInterval,
     SourceCoordinate,
     SourceField,
     SourceFields,
     SourceRecord,
     SourceRevision,
     SourceSubject,
-    TemporalScope,
     value_field,
 )
 
@@ -31,8 +29,6 @@ if TYPE_CHECKING:
     from reg_meta_build.input_snapshot import ScbSnapshotReader
 
 LISA_REGISTER_ID = 34
-IssueKind = Literal["pooled_period", "unparseable_period"]
-_YEAR_TOKEN_RE = re.compile(rf"(?<!\d)({_YEAR})(?!\d)")
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,7 +108,7 @@ def _interpret_registerinformation_row(
 
 @dataclass(frozen=True)
 class ScbInterpretationIssue:
-    kind: IssueKind
+    kind: SourcePeriodIssue
     physical_record: str
     detail: str
     record_id: str
@@ -130,7 +126,7 @@ def _cell_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
         return SourceField(status="unknown", raw_value=None)
     if not interpreted.strip():
         return SourceField(status="unknown", raw_value=raw)
-    return value_field(interpreted.strip(), raw=raw)
+    return value_field(normalize_token(interpreted), raw=raw)
 
 
 def _data_type_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
@@ -147,41 +143,25 @@ def _data_type_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
     return SourceField(status="value", value=kind, raw_value=field.raw_value)
 
 
-def _scopes(version_name: str) -> tuple[TemporalScope, TemporalScope, IssueKind | None]:
-    claims = edition_claims(version_name)
-    if len(claims) == 1 and len(set(_YEAR_TOKEN_RE.findall(version_name))) > 1:
-        claims = ()
-    if len(claims) == 1:
-        year, low, high = claims[0]
-        return (
-            TemporalScope(
-                kind="intervals",
-                intervals=(ScopeInterval(start=str(year), end=str(year)),),
-            ),
-            TemporalScope(
-                kind="intervals",
-                intervals=(ScopeInterval(start=low, end=high),),
-            ),
-            None,
-        )
-    label = version_name or "<blank Registerversionnamn>"
-    if claims:
-        return (
-            TemporalScope(kind="pooled", label=label),
-            TemporalScope(kind="pooled", label=label),
-            "pooled_period",
-        )
-    return (
-        TemporalScope(kind="unknown", label=label),
-        TemporalScope(kind="unknown", label=label),
-        "unparseable_period",
-    )
-
-
-def _optional_text_field(value: str, raw: str) -> SourceField | None:
+def _optional_text_field(
+    value: str, raw: str, *, multiline: bool = False
+) -> SourceField | None:
     if not value:
         return None
-    return value_field(value, raw=raw)
+    return value_field(normalize_text(value, multiline=multiline), raw=raw)
+
+
+def _data_length_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
+    field = _cell_field(cell)
+    if (
+        field is not None
+        and isinstance(field.value, str)
+        and re.fullmatch(r"\+?[0-9]+", field.value)
+    ):
+        return SourceField(
+            status="value", value=str(int(field.value)), raw_value=field.raw_value
+        )
+    return field
 
 
 def clean_scb_row(
@@ -197,7 +177,7 @@ def clean_scb_row(
 
     interpreted = _interpret_registerinformation_row(text, row_number)
     original_column = text("Kolumnnamn")
-    edition_scope, reference_scope, issue_kind = _scopes(interpreted.edition_name)
+    edition_scope, reference_scope, issue_kind = source_scopes(interpreted.edition_name)
     semantic_key = (
         f"register:{interpreted.register_id}",
         f"variant:{interpreted.register_variant_id}",
@@ -224,22 +204,24 @@ def clean_scb_row(
             register=SourceCoordinate(
                 status="value",
                 native_id=interpreted.register_id,
-                name=interpreted.register_name or None,
+                name=normalize_text(interpreted.register_name) or None,
             ),
             variant=SourceCoordinate(
                 status="value",
                 native_id=interpreted.register_variant_id,
-                name=interpreted.variant_name or None,
+                name=normalize_text(interpreted.variant_name) or None,
             ),
             population=(
-                SourceCoordinate(status="value", name=interpreted.population_name)
+                SourceCoordinate(
+                    status="value", name=normalize_text(interpreted.population_name)
+                )
                 if interpreted.population_name
                 else SourceCoordinate(status="unknown")
             ),
             member=SourceCoordinate(
                 status="value",
                 native_id=interpreted.member_id,
-                name=interpreted.variable_name or None,
+                name=normalize_text(interpreted.variable_name) or None,
             ),
             native=NativeCoordinates(
                 register_id=interpreted.register_id,
@@ -254,26 +236,34 @@ def clean_scb_row(
         fields=SourceFields(
             availability=value_field(True),
             column_name=(
-                value_field(interpreted.column_name, raw=original_column)
+                value_field(
+                    normalize_token(interpreted.column_name), raw=original_column
+                )
                 if interpreted.column_name
                 else SourceField(status="unknown", raw_value=original_column)
             ),
             name=_optional_text_field(interpreted.variable_name, text("Variabelnamn")),
             definition=_optional_text_field(
-                interpreted.variable_definition, text("Variabeldefinition")
+                interpreted.variable_definition,
+                text("Variabeldefinition"),
+                multiline=True,
             ),
             description=_optional_text_field(
-                interpreted.variable_description, text("Variabelbeskrivning")
+                interpreted.variable_description,
+                text("Variabelbeskrivning"),
+                multiline=True,
             ),
             operational_definition=_optional_text_field(
                 interpreted.operational_definition,
                 text("VariabelOperationell_definition"),
+                multiline=True,
             ),
             data_type=_data_type_field(cells["Datatyp"]),
-            data_length=_cell_field(cells["Datalängd"]),
+            data_length=_data_length_field(cells["Datalängd"]),
             source_attribution=_optional_text_field(
                 interpreted.source_attribution,
                 text("VariabelRegister_Källa"),
+                multiline=True,
             ),
             measurement_unit=_optional_text_field(
                 interpreted.measurement_unit, text("Mattenhet")
@@ -281,9 +271,12 @@ def clean_scb_row(
             population_definition=_optional_text_field(
                 interpreted.population_definition,
                 text("Populationdefinition"),
+                multiline=True,
             ),
             population_comment=_optional_text_field(
-                interpreted.population_comment, text("Populationkommentar")
+                interpreted.population_comment,
+                text("Populationkommentar"),
+                multiline=True,
             ),
             population_date=_optional_text_field(
                 interpreted.population_date, text("Populationdatum")
