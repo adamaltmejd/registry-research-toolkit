@@ -1689,11 +1689,7 @@ def _open_scb_source_raw(
                     remediation="Re-export the file from mikrometadata.scb.se.",
                 ) from exc
 
-            def rows() -> Iterator[list[str | None]]:
-                for row in reader:
-                    yield cast("list[str | None]", row)
-
-            yield header, rows()
+            yield header, cast("Iterator[list[str | None]]", reader)
         return
 
     from .input_snapshot import SnapshotError
@@ -1702,20 +1698,34 @@ def _open_scb_source_raw(
         with snapshot.open_csv(path.name) as (raw_header, raw_rows):
             header = ["" if value is None else value for value in raw_header]
 
-            def rows() -> Iterator[list[str | None]]:
-                yield from raw_rows
-
-            yield header, rows()
+            yield header, raw_rows
     except SnapshotError as exc:
         raise _scb_snapshot_error(exc) from exc
 
 
-class _ScbRawFields(list[str]):
-    """Legacy-compatible interpreted-input cells plus prepared presence state."""
+@contextmanager
+def _open_scb_csv_rows(
+    path: Path,
+    snapshot: ScbSnapshotReader | None = None,
+) -> Iterator[tuple[list[str], Iterator[tuple[int, list[str | None]]]]]:
+    """Share SCB header and row-width validation before cell interpretation."""
+    with _open_scb_source_raw(path, snapshot) as (raw_header, reader):
+        header = _validated_scb_header(path.name, raw_header)
+        ncols = len(header)
 
-    def __init__(self, values: list[str | None]) -> None:
-        self.present = tuple(value is not None for value in values)
-        super().__init__("" if value is None else value for value in values)
+        def rows() -> Iterator[tuple[int, list[str | None]]]:
+            for row_number, fields in enumerate(reader, start=2):
+                if len(fields) != ncols:
+                    raise RegMetaError(
+                        exit_code=EXIT_CONFIG,
+                        code="csv_bad_row",
+                        error_class="configuration",
+                        message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
+                        remediation="Re-export the file from mikrometadata.scb.se.",
+                    )
+                yield row_number, fields
+
+        yield header, rows()
 
 
 @contextmanager
@@ -1729,26 +1739,23 @@ def _open_scb_csv_raw(
     is the RAW latin-1 field LIST — NOT decoded, NOT keyed into a dict. The
     102M-row Vardemangder loop indexes columns positionally and decodes only the
     few it keeps; per-row dict-building and per-field `_decode_cp1252` otherwise
-    dominate the whole build. The header IS decoded (cheap, once).
+    dominate the whole build. Prepared NULLs are normalized in place so this
+    hot default traversal retains the source row list without a per-row copy or
+    presence sidecar. The header IS decoded (cheap, once).
     """
-    with _open_scb_source_raw(path, snapshot) as (raw_header, reader):
-        header = _validated_scb_header(path.name, raw_header)
+    with _open_scb_csv_rows(path, snapshot) as (header, source_rows):
+        if snapshot is None:
+            yield header, cast("Iterator[tuple[int, list[str]]]", source_rows)
+            return
 
-        ncols = len(header)
+        def raw_rows() -> Iterator[tuple[int, list[str]]]:
+            for row_number, fields in source_rows:
+                for index, value in enumerate(fields):
+                    if value is None:
+                        fields[index] = ""
+                yield row_number, cast("list[str]", fields)
 
-        def raw_iter() -> Iterator[tuple[int, list[str]]]:
-            for row_number, fields in enumerate(reader, start=2):
-                if len(fields) != ncols:
-                    raise RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="csv_bad_row",
-                        error_class="configuration",
-                        message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
-                        remediation="Re-export the file from mikrometadata.scb.se.",
-                    )
-                yield row_number, _ScbRawFields(fields)
-
-        yield header, raw_iter()
+        yield header, raw_rows()
 
 
 def _validated_scb_header(filename: str, raw_header: Sequence[str]) -> list[str]:
@@ -1803,23 +1810,19 @@ def _open_scb_csv_prepared(
     prepared NULL from a supplied empty scalar; interpreted values use the same
     cp1252 repair as :func:`_open_scb_csv`.
     """
-    with _open_scb_csv_raw(path, snapshot) as (header, raw_rows):
+    with _open_scb_csv_rows(path, snapshot) as (header, raw_rows):
 
         def rows() -> Iterator[tuple[int, dict[str, tuple[bool, str | None, str]]]]:
             for row_number, fields in raw_rows:
-                if not isinstance(fields, _ScbRawFields):
-                    raise TypeError("SCB raw traversal lost prepared presence state")
                 yield (
                     row_number,
                     {
                         name: (
-                            present,
-                            value if present else None,
-                            _decode_cp1252(value),
+                            value is not None,
+                            value,
+                            _decode_cp1252(value or ""),
                         )
-                        for name, value, present in zip(
-                            header, fields, fields.present, strict=True
-                        )
+                        for name, value in zip(header, fields, strict=True)
                     },
                 )
 

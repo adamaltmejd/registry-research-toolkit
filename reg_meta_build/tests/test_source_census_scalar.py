@@ -93,7 +93,7 @@ def test_census_reports_same_shape_non_shape_scalar_disagreements(
     completion = CensusCompletion.model_validate_json(
         json.dumps(lines[-1], ensure_ascii=False)
     )
-    assert completion.schema_version == 2
+    assert completion.schema_version == 3
     assert completion.pins.interpretation_id == CENSUS_INTERPRETATION_ID
     assert completion.counts.unique_observations == 2
     assert completion.counts.duplicate_occurrences == 1

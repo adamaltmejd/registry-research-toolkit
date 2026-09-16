@@ -50,7 +50,7 @@ if TYPE_CHECKING:
 
 INTERPRETATION_ID = "scb-lisa-source-record-inspection-v3"
 SCB_DATASET_ID = "scb-registerinformation"
-CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v2"
+CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v3"
 OutcomeStatus = Literal[
     "agreement",
     "unobserved_counterpart",
@@ -1353,10 +1353,10 @@ def inspect_bundle_source_records(
     workbook_all = workbook_read.records
     scb_by_id: dict[str, SourceRecord] = {}
     raw_issues = []
-    for observation in iter_scb_observations(bundle.snapshot, scb_revision):
+    for observation in iter_scb_observations(
+        bundle.snapshot, scb_revision, register_id=LISA_REGISTER_ID
+    ):
         record = observation.record
-        if record.subject.native.register_id != LISA_REGISTER_ID:
-            continue
         if (existing := scb_by_id.get(record.record_id)) is None:
             scb_by_id[record.record_id] = record
         else:
@@ -1657,7 +1657,7 @@ class CensusAffectedMemberships(_ReportModel):
 class CensusCompletion(_ReportModel):
     type: Literal["completion"]
     format: Literal["reg-meta-build-scb-observation-census"]
-    schema_version: Literal[2]
+    schema_version: Literal[3]
     complete: Literal[True]
     pins: CensusPins
     source_revision: SourceRevision
@@ -1673,7 +1673,7 @@ type _CellPayload = tuple[bool, str | None, str]
 type _Member = tuple[bytes, int]
 type _Native = tuple[int, int, int, int, int]
 type _EditionKey = tuple[int, int, int, int, int, bytes]
-type _TemporalKey = tuple[int, int, int, int, bytes]
+type _TemporalKey = tuple[int, int, int, bytes]
 type _ColumnKey = tuple[int, bytes]
 
 
@@ -1899,12 +1899,12 @@ def write_scb_observation_census(
                 "Registerinformation.csv census differs from the accepted lossless stream"
             )
 
-        edition_shapes: dict[_EditionKey, bytes | set[bytes]] = {}
         edition_contexts: dict[_EditionKey, bytes | set[bytes]] = {}
+        edition_context_shape_sets: dict[_EditionKey, bytes | set[bytes]] = {}
         temporal_shapes: dict[_TemporalKey, bytes | set[bytes]] = {}
+        temporal_editions: dict[_TemporalKey, bytes | set[bytes]] = {}
         column_shapes: dict[_ColumnKey, bytes | set[bytes]] = {}
         cvid_columns: dict[int, set[bytes]] = defaultdict(set)
-        edition_with_complete_alternatives: set[_EditionKey] = set()
         unique_observations = 0
         for context_fingerprint, context in contexts.items():
             native = context.native
@@ -1913,42 +1913,41 @@ def write_scb_observation_census(
                 native[0],
                 native[1],
                 native[3],
-                native[4],
                 context.column_fingerprint,
             )
             column_key = (native[4], context.column_fingerprint)
             cvid_columns[native[4]].add(context.column_fingerprint)
             _note_distinct(edition_contexts, edition_key, context_fingerprint)
             shapes = context.shapes()
+            _note_distinct(
+                edition_context_shape_sets,
+                edition_key,
+                _fingerprint([shape.hex() for shape in sorted(shapes)]),
+            )
             unique_observations += len(shapes)
-            if len(shapes) > 1:
-                edition_with_complete_alternatives.add(edition_key)
+            _note_distinct(
+                temporal_editions,
+                temporal_key,
+                str(native[2]).encode(),
+            )
             for shape in shapes:
-                _note_distinct(edition_shapes, edition_key, shape)
                 _note_distinct(temporal_shapes, temporal_key, shape)
                 _note_distinct(column_shapes, column_key, shape)
 
         context_separated_keys = {
             key
-            for key, shapes in edition_shapes.items()
-            if _multiple_values(shapes)
-            and key not in edition_with_complete_alternatives
+            for key, shape_sets in edition_context_shape_sets.items()
+            if _multiple_values(shape_sets)
         }
         scalar_alternative_keys = {
             key
             for key, context_fingerprints in edition_contexts.items()
             if _multiple_values(context_fingerprints)
         }
-        temporal_with_edition_alternatives = {
-            (key[0], key[1], key[3], key[4], key[5])
-            for key, shapes in edition_shapes.items()
-            if _multiple_values(shapes)
-        }
         temporal_keys = {
             key
             for key, shapes in temporal_shapes.items()
-            if _multiple_values(shapes)
-            and key not in temporal_with_edition_alternatives
+            if _multiple_values(shapes) and _multiple_values(temporal_editions[key])
         }
         across_column_cvids = {
             cvid
@@ -1988,7 +1987,6 @@ def write_scb_observation_census(
                 native[0],
                 native[1],
                 native[3],
-                native[4],
                 context.column_fingerprint,
             )
             for shape, members in context.members():
@@ -2135,10 +2133,9 @@ def write_scb_observation_census(
                     f"register:{key[0]}",
                     f"variant:{key[1]}",
                     f"variable:{key[2]}",
-                    f"member:{key[3]}",
-                    f"column:{key[4].hex()}",
+                    f"column:{key[3].hex()}",
                 ),
-                columns=(column_payloads[key[4]],),
+                columns=(column_payloads[key[3]],),
                 alternatives=alternatives(grouped),
                 temporal_applicability=("unproved_across_delivered_edition_contexts"),
             )
@@ -2158,11 +2155,16 @@ def write_scb_observation_census(
 
         context_separated_cvids = {key[4] for key in context_separated_keys}
         scalar_alternative_cvids = {key[4] for key in scalar_alternative_keys}
-        temporal_cvids = {key[3] for key in temporal_keys}
+        temporal_cvids = {
+            reference[1].native[4]
+            for grouped in temporal.values()
+            for references in grouped.values()
+            for reference in references
+        }
         completion = CensusCompletion(
             type="completion",
             format="reg-meta-build-scb-observation-census",
-            schema_version=2,
+            schema_version=3,
             complete=True,
             pins=CensusPins(
                 bundle_id=bundle.manifest.bundle_id,

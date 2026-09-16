@@ -1193,11 +1193,15 @@ The command reads the four supported LISA layouts and raw prepared SCB
 emit deterministic source witnesses, scoped comparison outcomes, input/code pins,
 unresolved applicability, source-only SCB observations, validated worksheet-level
 workbook context, and (for a filter) non-executable source-target membership. The report
-identifies the finite, unresolved workbook-table/population to native-variant assumption
-used by each comparison; witnesses outside those scopes remain source-only or unknown in
-applicability. An exact-name/native anchor may occur anywhere inside the same finite
-assumption, but only a blank-name annual occurrence covered by the selected workbook
-declaration and carrying no competing finite native-variable spelling is
+selects native register 34 before interpreting the rest of an SCB row or constructing a
+source record, so unrelated provider-row interpretation failures do not alter focused
+LISA behavior. The ordinary raw SCB traversal remains allocation-light; lossless
+missing/present cell metadata is materialized only by the explicit observation reader.
+The report identifies the finite, unresolved workbook-table/population to native-variant
+assumption used by each comparison; witnesses outside those scopes remain source-only or
+unknown in applicability. An exact-name/native anchor may occur anywhere inside the same
+finite assumption, but only a blank-name annual occurrence covered by the selected
+workbook declaration and carrying no competing finite native-variable spelling is
 target-eligible. Competing spellings, pooled, unparseable, and out-of-coverage
 occurrences remain diagnostic witnesses. The report is diagnostic and
 source-target-only: it applies no curation, previews no complete catalog blast radius,
@@ -1230,10 +1234,14 @@ delivered context, unproved cross-edition alternatives, and shapes that differ o
 across distinct supplied columns. Separate non-shape disagreement groups retain the
 complete-context fingerprints and memberships for multiple other-34-field observations
 under one native edition and exact supplied column; their full scalar payloads remain in
-the referenced observation records. Pooled periods remain pooled, and cross-edition
-overlap is not treated as competing annual delivery. The deterministic gzip JSONL is
-diagnostic evidence: it chooses no winner or unknown, reads no values/cache, and changes
-no catalog formation.
+the referenced observation records. Context-separated groups compare the complete set of
+shape memberships in each delivered context even when one context also has its own
+alternatives. Cross-edition groups use register, variant, native variable and exact
+column as their comparison association; edition-specific CVIDs remain on every member
+rather than partitioning that association. Pooled periods remain pooled, and
+cross-edition overlap is not treated as competing annual delivery. The deterministic
+gzip JSONL is diagnostic evidence: it chooses no winner or unknown, reads no
+values/cache, and changes no catalog formation.
 
 After acceptance, the normal builder selects exactly that bundle:
 

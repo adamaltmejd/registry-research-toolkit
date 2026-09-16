@@ -63,13 +63,13 @@ def _cell_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
     return value_field(interpreted.strip(), raw=raw)
 
 
-def _native_int(row: dict[str, str], field: str, row_number: int) -> int:
+def _native_int(value: str, field: str, row_number: int) -> int:
     try:
-        return int(row[field])
+        return int(value)
     except ValueError as exc:
         raise ScbRecordError(
             f"invalid SCB native id at Registerinformation.csv row {row_number}, "
-            f"field {field}: {row[field]!r}"
+            f"field {field}: {value!r}"
         ) from exc
 
 
@@ -114,18 +114,29 @@ def _optional_text_field(raw: str) -> SourceField | None:
 
 
 def iter_scb_observations(
-    snapshot: ScbSnapshotReader, revision: SourceRevision
+    snapshot: ScbSnapshotReader,
+    revision: SourceRevision,
+    *,
+    register_id: int | None = None,
 ) -> Iterator[ScbObservation]:
-    """Stream lossless normalized Registerinformation observations once."""
+    """Stream lossless normalized Registerinformation observations once.
+
+    A register selection is applied after decoding its required native ID and
+    before interpreting the rest of the row or constructing strict models.
+    """
     path = snapshot.root / "Registerinformation.csv"
     with _open_scb_csv_prepared(path, snapshot) as (header, rows):
         for row_number, cells in rows:
+            row_register_id = _native_int(
+                cells["RegisterId"][2], "RegisterId", row_number
+            )
+            if register_id is not None and row_register_id != register_id:
+                continue
             row = {name: cell[2] for name, cell in cells.items()}
-            register_id = _native_int(row, "RegisterId", row_number)
-            register_variant_id = _native_int(row, "RegVarID", row_number)
-            edition_id = _native_int(row, "RegVerID", row_number)
-            variable_id = _native_int(row, "VarId", row_number)
-            member_id = _native_int(row, "CVID", row_number)
+            register_variant_id = _native_int(row["RegVarID"], "RegVarID", row_number)
+            edition_id = _native_int(row["RegVerID"], "RegVerID", row_number)
+            variable_id = _native_int(row["VarId"], "VarId", row_number)
+            member_id = _native_int(row["CVID"], "CVID", row_number)
             register_name = row["Registernamn"].strip()
             variant_name = row["Registervariantnamn"].strip()
             version_name = row["Registerversionnamn"].strip()
@@ -133,10 +144,10 @@ def iter_scb_observations(
             original_column = row["Kolumnnamn"]
             column = original_column.strip()
             edition_scope, reference_scope, issue_kind = _scopes(
-                register_id, version_name
+                row_register_id, version_name
             )
             semantic_key = (
-                f"register:{register_id}",
+                f"register:{row_register_id}",
                 f"variant:{register_variant_id}",
                 f"edition:{edition_id}",
                 f"variable:{variable_id}",
@@ -160,7 +171,7 @@ def iter_scb_observations(
                     provider="scb",
                     register=SourceCoordinate(
                         status="value",
-                        native_id=register_id,
+                        native_id=row_register_id,
                         name=register_name or None,
                     ),
                     variant=SourceCoordinate(
@@ -181,7 +192,7 @@ def iter_scb_observations(
                         name=variable_name or None,
                     ),
                     native=NativeCoordinates(
-                        register_id=register_id,
+                        register_id=row_register_id,
                         register_variant_id=register_variant_id,
                         edition_id=edition_id,
                         variable_id=variable_id,
