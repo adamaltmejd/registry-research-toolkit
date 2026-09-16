@@ -3,7 +3,12 @@
 from dataclasses import replace
 
 import pytest
-from reg_meta_build.source_classifications import resolve_canonical_codes
+from reg_meta_build.resolved_catalog import ResolvedCodeSet
+from reg_meta_build.source_classifications import (
+    resolve_canonical_codes,
+    resolve_classification_conformance,
+)
+from reg_meta_build.source_curation import SourceRecordRef
 from reg_meta_build.source_records import RecordLocator
 from reg_meta_build.source_values import SourceValue
 
@@ -91,3 +96,56 @@ def test_inconsistent_payload_identity_is_a_contract_error() -> None:
             source="fixture",
             subject="class/fixture",
         )
+
+
+def _conformance(pairs, canonical):
+    return resolve_classification_conformance(
+        ResolvedCodeSet(members=tuple(pairs)),
+        classification="fixture",
+        canonical_codes=frozenset(canonical),
+        subject="scb/example/variable",
+        refs=(SourceRecordRef(source="fixture", semantic_record_key=("row", "1")),),
+        valid_from="2020-01-01",
+        valid_to="2020-12-31",
+    )
+
+
+def test_conformance_checks_literal_codes_without_rewriting_source_labels() -> None:
+    result = _conformance(
+        (("01", "Source wording"), ("01", "Another supplied label"), ("02", "")),
+        {"01", "02", "03"},
+    )
+    assert result.diagnostics == ()
+    assert result.conformance.status == "kept"
+    assert result.conformance.checked_codes == ("01", "02")
+    assert result.conformance.nonconforming_members == ()
+
+
+@pytest.mark.parametrize("outside", ["", "9", "99", "?", "1"])
+def test_noncanonical_tokens_are_not_guessed_to_be_sentinels(outside: str) -> None:
+    result = _conformance((("01", "Agreed"), (outside, "Literal source label")), {"01"})
+    assert result.conformance.status == "severed"
+    assert result.conformance.declared_classification == "fixture"
+    assert result.conformance.nonconforming_members == (
+        (outside, "Literal source label"),
+    )
+    issue = result.diagnostics[0]
+    assert issue.code == "nonconforming_classification_codes"
+    assert issue.severity == "error" and issue.withheld_output == (
+        "state.classification",
+    )
+    assert issue.refs[0].semantic_record_key == ("row", "1")
+    assert (issue.valid_from, issue.valid_to) == ("2020-01-01", "2020-12-31")
+
+
+def test_high_overlap_does_not_waive_one_unexplained_code() -> None:
+    pairs = tuple((str(i), f"Label {i}") for i in range(100))
+    result = _conformance(pairs, {str(i) for i in range(99)})
+    assert result.conformance.status == "severed"
+    assert result.conformance.nonconforming_members == (("99", "Label 99"),)
+    assert result == _conformance(tuple(reversed(pairs)), {str(i) for i in range(99)})
+
+
+def test_missing_canonical_conversion_is_fatal_not_a_curation_issue() -> None:
+    with pytest.raises(ValueError, match="nonempty codebook"):
+        _conformance((("01", "Label"),), set())

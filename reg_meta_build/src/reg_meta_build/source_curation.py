@@ -655,13 +655,9 @@ class CodingSelection(CodingWindow):
         return self
 
 
-class CodingDecision(CodingWindow):
-    """Assign coding, explicit uncoded meaning, or omission to one exact window."""
-
-    kind: Literal["coding"] = "coding"
+class _ColumnDecision(CodingWindow):
     reviewed: Literal[True]
     column_key: NativeKey
-    selection: CodingSelection | Literal["uncoded", "omit_state"]
     reason: str = Field(min_length=1)
     provenance: str = Field(min_length=1)
 
@@ -674,6 +670,22 @@ class CodingDecision(CodingWindow):
         return self
 
 
+class CodingDecision(_ColumnDecision):
+    """Assign coding, explicit uncoded meaning, or omission to one exact window."""
+
+    kind: Literal["coding"] = "coding"
+    selection: CodingSelection | Literal["uncoded", "omit_state"]
+
+
+class ClassificationDecision(_ColumnDecision):
+    """Bind an exact existing codebook, without copying its codes into the source."""
+
+    kind: Literal["classification"] = "classification"
+    classification: str = Field(min_length=1)
+    expected_classification: str = Field(pattern=r"^[0-9a-f]{64}$")
+    binding_scope: Literal["inline_coding", "declared"]
+
+
 type CurationDecision = (
     BoundedUnresolvedDecision
     | FormVariableDecision
@@ -682,6 +694,7 @@ type CurationDecision = (
     | AliasWindowDecision
     | RepresentationDecision
     | CodingDecision
+    | ClassificationDecision
 )
 
 
@@ -1361,6 +1374,7 @@ def inspect_cases(
                 AliasWindowDecision,
                 RepresentationDecision,
                 CodingDecision,
+                ClassificationDecision,
             ),
         ):
             raise TypeError(

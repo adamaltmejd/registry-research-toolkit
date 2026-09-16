@@ -585,6 +585,22 @@ donor. Structural alias windows select the actual delivered column; their attrib
 kept on the shared state. Month-name parsing is confined to offline conversion of
 existing accepted families, not common resolution.
 
+Classification declarations also resolve before state formation. Each checked case names
+an exact column and period, pins its original coding observations and the semantic
+content of its selected canonical codebook, and retains its source membership guards.
+Existing inline-only overrides apply only where inline codes exist; authored references
+may name a classification without inventing a source code list. Equal declarations
+compose, conflicting declarations withhold the binding only on their overlap, and an
+accepted omitted state remains omitted. Missing conversion mappings are fatal.
+
+Conformance compares literal code strings against the canonical dictionary without
+rewriting source labels. A noncanonical code retains its source membership and declared
+classification as conformance evidence, but withholds the state classification link and
+emits a bounded error. A global sentinel list or overlap percentage cannot acknowledge
+that discrepancy. This replaces those legacy heuristics in the common path; it does not
+change ordinary build-db until cutover. Original coding issues remain visible, and
+classification annotations cannot make an unsupported coding period complete.
+
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across

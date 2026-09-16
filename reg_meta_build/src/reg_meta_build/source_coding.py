@@ -20,6 +20,7 @@ from reg_meta_build.source_intervals import scope_bounds
 from reg_meta_build.source_records import canonical_sha256
 
 if TYPE_CHECKING:
+    from reg_meta_build.resolved_catalog import ResolvedConformance
     from reg_meta_build.source_records import TemporalScope
     from reg_meta_build.source_values import SourceValueAssociation, SourceValueValidity
 
@@ -70,6 +71,8 @@ class CodingSegment:
     version_label: str = ""
     provenance: tuple[str, ...] = ()
     state_disposition: Literal["include", "omit", "withhold"] = "include"
+    classification: str | None = None
+    conformance: ResolvedConformance | None = None
 
 
 @dataclass(frozen=True)
