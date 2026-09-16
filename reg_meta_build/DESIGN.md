@@ -578,11 +578,12 @@ evidence over the shared metadata period. Formation reconciles all siblings befo
 emitting one shared state. Conflicting optional facts or coding remain unknown with
 errors; missing members or incompatible declarations withhold the affected state.
 Representation windows do not split annual metadata into monthly states. The database
-requires a representative column label, so formation selects the first literal column in
-sorted order only after reconciliation. This label never selects a metadata donor.
-Structural alias windows select the actual delivered column; their attribution is kept
-on the shared state. Month-name parsing is confined to offline conversion of existing
-accepted families, not common resolution.
+requires a representative column label, so formation selects a column participating in
+the resulting state's period after reconciliation, preferring one covering that whole
+period and sorting literal names to break ties. This label never selects a metadata
+donor. Structural alias windows select the actual delivered column; their attribution is
+kept on the shared state. Month-name parsing is confined to offline conversion of
+existing accepted families, not common resolution.
 
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code

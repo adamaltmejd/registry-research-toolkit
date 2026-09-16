@@ -332,12 +332,22 @@ def form_representations(
                     | set(attribution)
                 )
             )
+            participating = [
+                c for c in first.columns if c.valid_from <= end and c.valid_to >= start
+            ]
+            covering = [
+                c for c in participating if c.valid_from <= start and c.valid_to >= end
+            ]
+            # Coding can split metadata inside one representation window. The
+            # stored base must participate in that slice, and an exact source
+            # window must remain the base when one covers the complete slice.
+            representative = min(c.column for c in (covering or participating))
             result.append(
                 ResolvedState(
                     variant=variant,
                     valid_from=start,
                     valid_to=end,
-                    delivery_column_name=min(columns),
+                    delivery_column_name=representative,
                     **values,
                     value_set=codes,
                     value_set_version_label=label,

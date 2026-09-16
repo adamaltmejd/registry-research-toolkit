@@ -261,6 +261,50 @@ def test_sibling_descriptions_and_state_facts_are_not_copied_from_representative
     }
 
 
+def test_coding_cut_inside_alias_window_keeps_a_participating_base(
+    tmp_path: Path,
+) -> None:
+    claims = tuple(
+        CodeListClaim(
+            name,
+            TemporalScope(
+                kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
+            ),
+            (
+                CodeMembershipClaim(
+                    code, "Label", TemporalScope(kind="year_independent")
+                ),
+            ),
+        )
+        for name, code, start, end in (
+            ("before", "01", "2020-01-01", "2020-09-14"),
+            ("after", "02", "2020-09-15", "2020-12-31"),
+        )
+    )
+    formed, _ = _form(_setup(claims={"First": claims, "Second": claims}))
+    assert formed.variable is not None and formed.diagnostics == ()
+    assert [s.delivery_column_name for s in formed.variable.states] == [
+        "First",
+        "Second",
+    ]
+    write_resolved_catalog((formed.variable,), tmp_path / "reg_meta.db", manifest={})
+    catalog = Catalog.open(tmp_path)
+    try:
+        assert [
+            s.delivery_column_name
+            for s in catalog.resolve_at("scb/example/income", "2020-10")
+        ] == ["Second"]
+        september = catalog.resolve_at("scb/example/income", "2020-09")
+        assert len(september) == 2
+        assert {s.delivery_column_name for s in september} == {"Second"}
+        assert [(s.valid_from, s.valid_to) for s in september] == [
+            ("2020-07-01", "2020-09-14"),
+            ("2020-09-15", "2020-12-31"),
+        ]
+    finally:
+        catalog.close()
+
+
 def _claim(name, code, year=2020):
     return CodeListClaim(
         name,
