@@ -1227,7 +1227,10 @@ completion record.
 Alternative groups compare `Datatyp`/`Datalängd` independently of observation identity.
 They distinguish identical-other-34-field alternatives, alternatives separated by other
 delivered context, unproved cross-edition alternatives, and shapes that differ only
-across distinct supplied columns. Pooled periods remain pooled, and cross-edition
+across distinct supplied columns. Separate non-shape disagreement groups retain the
+complete-context fingerprints and memberships for multiple other-34-field observations
+under one native edition and exact supplied column; their full scalar payloads remain in
+the referenced observation records. Pooled periods remain pooled, and cross-edition
 overlap is not treated as competing annual delivery. The deterministic gzip JSONL is
 diagnostic evidence: it chooses no winner or unknown, reads no values/cache, and changes
 no catalog formation.

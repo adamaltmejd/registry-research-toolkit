@@ -50,7 +50,7 @@ if TYPE_CHECKING:
 
 INTERPRETATION_ID = "scb-lisa-source-record-inspection-v3"
 SCB_DATASET_ID = "scb-registerinformation"
-CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v1"
+CENSUS_INTERPRETATION_ID = "scb-registerinformation-observation-census-v2"
 OutcomeStatus = Literal[
     "agreement",
     "unobserved_counterpart",
@@ -1574,6 +1574,32 @@ class CensusAlternativeGroup(_ReportModel):
         return self
 
 
+class CensusScalarAlternative(_ReportModel):
+    context_fingerprint: str
+    members: tuple[CensusMembership, ...]
+
+    @model_validator(mode="after")
+    def _has_members(self) -> Self:
+        if not self.members:
+            raise ValueError("a scalar alternative needs at least one member")
+        return self
+
+
+class CensusScalarAlternativeGroup(_ReportModel):
+    type: Literal["non_shape_scalar_disagreements"]
+    comparison_key: tuple[str, ...]
+    column: DeliveredCell
+    alternatives: tuple[CensusScalarAlternative, ...]
+    comparison_scope: Literal["same_native_edition_and_exact_column"]
+
+    @model_validator(mode="after")
+    def _has_alternatives(self) -> Self:
+        fingerprints = [item.context_fingerprint for item in self.alternatives]
+        if len(fingerprints) < 2 or len(fingerprints) != len(set(fingerprints)):
+            raise ValueError("a scalar group needs at least two distinct contexts")
+        return self
+
+
 class CensusInterpretationIssue(_ReportModel):
     kind: Literal["pooled_period", "unparseable_period"]
     physical_record: str
@@ -1611,6 +1637,8 @@ class CensusCounts(_ReportModel):
     same_complete_context_cvids: int
     context_separated_groups: int
     context_separated_cvids: int
+    non_shape_scalar_groups: int
+    non_shape_scalar_cvids: int
     unproved_temporal_groups: int
     unproved_temporal_cvids: int
     across_column_only_groups: int
@@ -1621,6 +1649,7 @@ class CensusCounts(_ReportModel):
 class CensusAffectedMemberships(_ReportModel):
     same_complete_context_cvids: tuple[int, ...]
     context_separated_cvids: tuple[int, ...]
+    non_shape_scalar_cvids: tuple[int, ...]
     unproved_temporal_cvids: tuple[int, ...]
     across_column_only_cvids: tuple[int, ...]
 
@@ -1628,7 +1657,7 @@ class CensusAffectedMemberships(_ReportModel):
 class CensusCompletion(_ReportModel):
     type: Literal["completion"]
     format: Literal["reg-meta-build-scb-observation-census"]
-    schema_version: Literal[1]
+    schema_version: Literal[2]
     complete: Literal[True]
     pins: CensusPins
     source_revision: SourceRevision
@@ -1684,20 +1713,20 @@ def _cell_payload(cell: DeliveredCell) -> _CellPayload:
     return (cell.present, cell.raw_value, cell.interpreted_value)
 
 
-def _note_shape[Key](
-    index: dict[Key, bytes | set[bytes]], key: Key, shape: bytes
+def _note_distinct[Key](
+    index: dict[Key, bytes | set[bytes]], key: Key, fingerprint: bytes
 ) -> None:
     known = index.get(key)
     if known is None:
-        index[key] = shape
+        index[key] = fingerprint
     elif isinstance(known, bytes):
-        if known != shape:
-            index[key] = {known, shape}
+        if known != fingerprint:
+            index[key] = {known, fingerprint}
     else:
-        known.add(shape)
+        known.add(fingerprint)
 
 
-def _multiple_shapes(value: bytes | set[bytes]) -> bool:
+def _multiple_values(value: bytes | set[bytes]) -> bool:
     return isinstance(value, set) and len(value) > 1
 
 
@@ -1871,12 +1900,13 @@ def write_scb_observation_census(
             )
 
         edition_shapes: dict[_EditionKey, bytes | set[bytes]] = {}
+        edition_contexts: dict[_EditionKey, bytes | set[bytes]] = {}
         temporal_shapes: dict[_TemporalKey, bytes | set[bytes]] = {}
         column_shapes: dict[_ColumnKey, bytes | set[bytes]] = {}
         cvid_columns: dict[int, set[bytes]] = defaultdict(set)
         edition_with_complete_alternatives: set[_EditionKey] = set()
         unique_observations = 0
-        for context in contexts.values():
+        for context_fingerprint, context in contexts.items():
             native = context.native
             edition_key: _EditionKey = (*native, context.column_fingerprint)
             temporal_key: _TemporalKey = (
@@ -1888,30 +1918,36 @@ def write_scb_observation_census(
             )
             column_key = (native[4], context.column_fingerprint)
             cvid_columns[native[4]].add(context.column_fingerprint)
+            _note_distinct(edition_contexts, edition_key, context_fingerprint)
             shapes = context.shapes()
             unique_observations += len(shapes)
             if len(shapes) > 1:
                 edition_with_complete_alternatives.add(edition_key)
             for shape in shapes:
-                _note_shape(edition_shapes, edition_key, shape)
-                _note_shape(temporal_shapes, temporal_key, shape)
-                _note_shape(column_shapes, column_key, shape)
+                _note_distinct(edition_shapes, edition_key, shape)
+                _note_distinct(temporal_shapes, temporal_key, shape)
+                _note_distinct(column_shapes, column_key, shape)
 
         context_separated_keys = {
             key
             for key, shapes in edition_shapes.items()
-            if _multiple_shapes(shapes)
+            if _multiple_values(shapes)
             and key not in edition_with_complete_alternatives
+        }
+        scalar_alternative_keys = {
+            key
+            for key, context_fingerprints in edition_contexts.items()
+            if _multiple_values(context_fingerprints)
         }
         temporal_with_edition_alternatives = {
             (key[0], key[1], key[3], key[4], key[5])
             for key, shapes in edition_shapes.items()
-            if _multiple_shapes(shapes)
+            if _multiple_values(shapes)
         }
         temporal_keys = {
             key
             for key, shapes in temporal_shapes.items()
-            if _multiple_shapes(shapes)
+            if _multiple_values(shapes)
             and key not in temporal_with_edition_alternatives
         }
         across_column_cvids = {
@@ -1919,7 +1955,7 @@ def write_scb_observation_census(
             for cvid, columns in cvid_columns.items()
             if len(columns) > 1
             and all(
-                not _multiple_shapes(column_shapes[(cvid, column)])
+                not _multiple_values(column_shapes[(cvid, column)])
                 for column in columns
             )
             and len(
@@ -1934,6 +1970,9 @@ def write_scb_observation_census(
 
         type _Reference = tuple[bytes, _CompleteContext, _Member]
         context_separated: dict[_EditionKey, dict[bytes, list[_Reference]]] = (
+            defaultdict(lambda: defaultdict(list))
+        )
+        scalar_alternatives: dict[_EditionKey, dict[bytes, list[_Reference]]] = (
             defaultdict(lambda: defaultdict(list))
         )
         temporal: dict[_TemporalKey, dict[bytes, list[_Reference]]] = defaultdict(
@@ -1958,6 +1997,10 @@ def write_scb_observation_census(
                 ]
                 if edition_key in context_separated_keys:
                     context_separated[edition_key][shape].extend(references)
+                if edition_key in scalar_alternative_keys:
+                    scalar_alternatives[edition_key][context_fingerprint].extend(
+                        references
+                    )
                 if temporal_key in temporal_keys:
                     temporal[temporal_key][shape].extend(references)
                 if native[4] in across_column_cvids:
@@ -1999,6 +2042,12 @@ def write_scb_observation_census(
                 ],
             )
 
+        def memberships(references: list[_Reference]) -> tuple[CensusMembership, ...]:
+            return tuple(
+                membership(reference)
+                for reference in sorted(references, key=lambda item: item[2][1])
+            )
+
         def alternatives(
             grouped: dict[bytes, list[_Reference]],
         ) -> tuple[CensusAlternative, ...]:
@@ -2007,10 +2056,7 @@ def write_scb_observation_census(
                     payload_fingerprint=shape.hex(),
                     data_type=shape_payloads[shape][0],
                     data_length=shape_payloads[shape][1],
-                    members=tuple(
-                        membership(reference)
-                        for reference in sorted(references, key=lambda item: item[2][1])
-                    ),
+                    members=memberships(references),
                 )
                 for shape, references in sorted(grouped.items())
             )
@@ -2059,6 +2105,29 @@ def write_scb_observation_census(
             )
             output.write(encoded(group.model_dump(mode="json")))
 
+        for key, grouped in sorted(scalar_alternatives.items()):
+            group = CensusScalarAlternativeGroup(
+                type="non_shape_scalar_disagreements",
+                comparison_key=(
+                    f"register:{key[0]}",
+                    f"variant:{key[1]}",
+                    f"edition:{key[2]}",
+                    f"variable:{key[3]}",
+                    f"member:{key[4]}",
+                    f"column:{key[5].hex()}",
+                ),
+                column=column_payloads[key[5]],
+                alternatives=tuple(
+                    CensusScalarAlternative(
+                        context_fingerprint=context_fingerprint.hex(),
+                        members=memberships(references),
+                    )
+                    for context_fingerprint, references in sorted(grouped.items())
+                ),
+                comparison_scope="same_native_edition_and_exact_column",
+            )
+            output.write(encoded(group.model_dump(mode="json")))
+
         for key, grouped in sorted(temporal.items()):
             group = CensusAlternativeGroup(
                 type="unproved_temporal_alternatives",
@@ -2088,11 +2157,12 @@ def write_scb_observation_census(
             output.write(encoded(group.model_dump(mode="json")))
 
         context_separated_cvids = {key[4] for key in context_separated_keys}
+        scalar_alternative_cvids = {key[4] for key in scalar_alternative_keys}
         temporal_cvids = {key[3] for key in temporal_keys}
         completion = CensusCompletion(
             type="completion",
             format="reg-meta-build-scb-observation-census",
-            schema_version=1,
+            schema_version=2,
             complete=True,
             pins=CensusPins(
                 bundle_id=bundle.manifest.bundle_id,
@@ -2112,7 +2182,8 @@ def write_scb_observation_census(
                 interpreted=(
                     "Datatyp/Datalängd alternatives under exact other-34-field, "
                     "same native-edition/column, cross-edition, and distinct-column "
-                    "comparison scopes"
+                    "comparison scopes, plus non-shape scalar alternatives within "
+                    "one native edition and exact column"
                 ),
             ),
             counts=CensusCounts(
@@ -2124,6 +2195,8 @@ def write_scb_observation_census(
                 same_complete_context_cvids=len(same_context_cvids),
                 context_separated_groups=len(context_separated),
                 context_separated_cvids=len(context_separated_cvids),
+                non_shape_scalar_groups=len(scalar_alternatives),
+                non_shape_scalar_cvids=len(scalar_alternative_cvids),
                 unproved_temporal_groups=len(temporal),
                 unproved_temporal_cvids=len(temporal_cvids),
                 across_column_only_groups=len(across_columns),
@@ -2133,6 +2206,7 @@ def write_scb_observation_census(
             affected_memberships=CensusAffectedMemberships(
                 same_complete_context_cvids=tuple(sorted(same_context_cvids)),
                 context_separated_cvids=tuple(sorted(context_separated_cvids)),
+                non_shape_scalar_cvids=tuple(sorted(scalar_alternative_cvids)),
                 unproved_temporal_cvids=tuple(sorted(temporal_cvids)),
                 across_column_only_cvids=tuple(sorted(across_column_cvids)),
             ),
@@ -2160,6 +2234,7 @@ def write_scb_observation_census(
 __all__ = [
     "CensusAlternativeGroup",
     "CensusCompletion",
+    "CensusScalarAlternativeGroup",
     "ComparisonOutcome",
     "InspectionSummary",
     "InterpretationIssue",
