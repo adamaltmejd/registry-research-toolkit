@@ -82,7 +82,7 @@ class ResolvedVariant(_ResolvedModel):
     @field_validator("slug")
     @classmethod
     def _slug(cls, value: str) -> str:
-        validate_slug(value, "register_variant")
+        validate_slug(value, "register_variant", allow_default=True)
         return value
 
 

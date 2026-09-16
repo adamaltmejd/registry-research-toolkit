@@ -99,26 +99,33 @@ not a cleaning adapter. Preparation, curation application, and materialization n
 call an LLM. Catalog document indexing is a separate responsibility; it does not resolve
 source facts.
 
-> **Status: partial replacement.** The source-record model and diagnostic SCB/LISA
-> readers exist. A Socialstyrelsen reader emits variable and parent-metadata claims
-> through the same model; its parser retains original sheet evidence. SCB row cleaning
-> owns the shared compact parser and uses format-only period interpretation, independent
-> of catalog identity or forecast-vintage policy. Shared text/token cleaning,
-> integer/text storage normalization and exact snapshot-date interpretation now serve
-> SCB/LISA source inspection. A separate SCB value-source reader exposes normalized
-> dictionaries, exact validity text and streamed original associations; it does not
-> select final code-set membership. SCB and Socialstyrelsen share compact value,
-> descriptor, association and validity types. A first complete, scoped path stores
-> indexed prepared records, checks reviewed cases, forms a variable with exact annual
-> column windows and writes a normal catalog database directly. The writer accepts
-> resolved code memberships; source-to-code binding remains incomplete. Remaining
-> readers, full-corpus prepared integration, broader curation and the full builder
-> cutover remain pending. Ordinary `build-db` continues to use the legacy semantic
-> pipeline below; `build-curated-db` exercises the replacement on an explicitly selected
-> slice. Shared reader changes can alter its inputs: retaining formerly omitted SOS
-> hyperlinks can affect its automatic classification matching. Catalog behavior on this
-> isolated branch has not yet been verified across the complete corpus, and this
-> checkpoint is not ready for catalog activation.
+> **Status: partial replacement.** Complete source preparation has run against all 146
+> selected inputs: 113 machine-readable sources are prepared, and the 14 curation and 19
+> naming files are separately accounted for. The prepared artifact retains 1,078,241
+> source records and 98 compact value sources. Common resolution binds source code
+> lists, reconciles parent metadata and ordinary variable families, and applies checked
+> field, period, identity, source-use and added-occurrence decisions before direct
+> writing. Existing naming and curation conversion is incomplete. The first full
+> resolution probe exposed missing conversion of SOS lookup-table roles; the lookup
+> distinction is now represented by checked common decisions. The full replacement
+> database and old/new comparison are still pending. Ordinary `build-db` continues to
+> use the legacy semantic pipeline below; `build-curated-db` exercises an explicitly
+> selected slice. This branch is not ready for catalog activation.
+
+Identity assignments can select an exact checked field alternative under a native source
+member. This matters when the same delivered CVID carries different column assertions:
+assigning every physical row with that CVID to one sibling would lose the existing
+partition. Conditions always inspect the original source, so an earlier field correction
+cannot make an identity decision apply. Equal assignments compose; contradictory
+assignments withhold that occurrence's identity. The offline conversion of
+column-discriminated naming entries requires a unique, complete mapping to the delivered
+columns. Renames, shape splits and discriminator collisions remain explicit conversion
+work.
+
+Checked source-use decisions retain lookup rows as support evidence without forming
+research variables or variants from them. Parent resolution accounts for those records
+and for explicit translations outside the requested catalog language. Missing naming
+bindings remain implementation failures; they are not curation waivers.
 
 ### Mechanical normalization
 

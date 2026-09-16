@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build.source_coordinates import (
     NativeKey,
@@ -38,6 +38,7 @@ class EffectiveOccurrence:
     occurrence_key: str | None = None
     corrections: tuple[AppliedCorrection, ...] = ()
     withheld_fields: tuple[str, ...] = ()
+    use: Literal["catalog", "support"] = "catalog"
 
     @property
     def evidence(self) -> tuple[SourceRecord, ...]:

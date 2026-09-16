@@ -16,6 +16,7 @@ from reg_meta_build.source_occurrences import EffectiveOccurrence, effective_occ
 from reg_meta_build.source_records import (
     SourceField,
     SourceFields,
+    SourceParentObservation,
     SourceRecord,
     TemporalScope,
 )
@@ -89,7 +90,7 @@ def _column(record: EffectiveOccurrence) -> str | None:
 
 
 def reconcile_source_fields(
-    records: tuple[SourceRecord | EffectiveOccurrence, ...],
+    records: tuple[SourceRecord | EffectiveOccurrence | SourceParentObservation, ...],
 ) -> tuple[SourceFields, tuple[str, ...]]:
     resolved = {}
     conflicts = []

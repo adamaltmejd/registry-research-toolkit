@@ -168,6 +168,101 @@ def _unresolved(*aspects: UnresolvedAspect) -> BoundedUnresolvedDecision:
     )
 
 
+def test_native_identity_projection_ignores_unselected_metadata() -> None:
+    original = _record(
+        source="scb-source",
+        key=("member",),
+        register_name="Register",
+        member_name="Variable",
+        fields=SourceFields(data_type=value_field("text")),
+        edition_scope=_interval("2020", "2020"),
+        native=NativeCoordinates(register_id=1, variable_id=5),
+    )
+    case = CurationCase(
+        case_id="register-name",
+        decision=_unresolved("identity"),
+        targets=(
+            RecordExpectation(
+                ref=_ref(original),
+                alternatives=(
+                    RecordProjection(native=NativeCoordinates(register_id=1)),
+                ),
+            ),
+        ),
+    )
+    changed = original.model_copy(
+        update={"fields": SourceFields(data_type=value_field("integer"))}
+    )
+    assert evaluate_case(case, (changed,)).status == "applicable"
+    changed = original.model_copy(
+        update={
+            "subject": original.subject.model_copy(
+                update={"native": NativeCoordinates(register_id=2, variable_id=5)}
+            )
+        }
+    )
+    assert evaluate_case(case, (changed,)).status == "stale"
+    with pytest.raises(ValidationError, match="select at least one coordinate"):
+        RecordProjection(native=NativeCoordinates())
+
+
+def test_peer_coordinates_match_native_identity_without_using_its_label() -> None:
+    record = _record(
+        source="provider-source",
+        key=("member",),
+        register_name="Register",
+        member_name="Variable",
+        fields=SourceFields(data_type=value_field("text")),
+        edition_scope=_interval("2020", "2020"),
+    )
+    record = record.model_copy(
+        update={
+            "subject": record.subject.model_copy(
+                update={
+                    "variable": SourceCoordinate(
+                        status="value", native_id="CODE", name="New label"
+                    )
+                }
+            )
+        }
+    )
+    expected = _expectation(record, _expected_field(record, "data_type"))
+    case = CurationCase(
+        case_id="native-column",
+        decision=_unresolved("identity"),
+        targets=(expected,),
+        peer_guards=(
+            PeerGuard(
+                guard_id="family",
+                source=record.source,
+                coordinates=(
+                    (
+                        "variable",
+                        SourceCoordinate(
+                            status="value", native_id="CODE", name="Old label"
+                        ),
+                    ),
+                ),
+                expected_members=(_ref(record),),
+            ),
+        ),
+    )
+    assert evaluate_case(case, (record,)).status == "applicable"
+    another = record.model_copy(
+        update={
+            "locators": (
+                record.locators[0].model_copy(
+                    update={"semantic_record_key": ("new-member",)}
+                ),
+            )
+        }
+    )
+    assert (
+        evaluate_case(case, (record, another)).issues[0].code
+        == "peer_membership_changed"
+    )
+
+
 def test_unresolved_aspects_cannot_bypass_checks_by_using_an_unknown_label() -> None:
     with pytest.raises(ValidationError, match="withheld_aspects"):
         BoundedUnresolvedDecision.model_validate(

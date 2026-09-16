@@ -69,10 +69,23 @@ def _variable(provider: str = "scb", slug: str = "ampoltyp") -> ResolvedVariable
 
 
 @pytest.mark.parametrize("provider", ["scb", "sos"])
+@pytest.mark.parametrize("variant", ["individuals", "_default"])
 def test_normal_catalog_api_search_and_structural_validation(
-    tmp_path: Path, provider: str
+    tmp_path: Path, provider: str, variant: str
 ) -> None:
     variable = _variable(provider)
+    variable = variable.model_copy(
+        update={
+            "states": tuple(
+                state.model_copy(
+                    update={
+                        "variant": state.variant.model_copy(update={"slug": variant})
+                    }
+                )
+                for state in variable.states
+            )
+        }
+    )
     output = tmp_path / "reg_meta.db"
     assert (
         write_resolved_catalog((variable,), output, manifest={"input": "fixture"})
@@ -96,7 +109,7 @@ def test_normal_catalog_api_search_and_structural_validation(
         assert catalog.resolve_at(fqid, 1999) == []
         assert catalog.resolve_at(fqid, 2001) == []
         assert catalog.resolve_at(fqid, 2003) == []
-        state = catalog.resolve_at(fqid, 2002, variant="individuals")[0]
+        state = catalog.resolve_at(fqid, 2002, variant=variant)[0]
         assert (state.valid_from, state.valid_to) == ("2002-01-01", "2002-12-31")
         assert state.delivery_column_name == "AmPolTypUpdated"
         assert (state.data_type, state.data_length) == ("integer", "8")
@@ -931,7 +944,7 @@ def test_identity_and_state_ambiguity_are_rejected() -> None:
             {k: v for k, v in _variable().model_dump().items() if k != "is_sensitive"}
         )
     with pytest.raises(ValidationError, match="reserved"):
-        ResolvedVariant(slug="_default", name="Default")
+        ResolvedVariable.model_validate(_variable().model_dump() | {"slug": "_default"})
 
 
 @pytest.mark.parametrize("conflict", ["register", "variant", "variable", "manifest"])

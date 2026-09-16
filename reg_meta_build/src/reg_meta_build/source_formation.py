@@ -172,6 +172,8 @@ def form_native_variable(
     different questions. Each physical input occurrence remains in the result.
     """
     effective = tuple(effective_occurrence(record) for record in records)
+    if any(record.use != "catalog" for record in effective):
+        raise ValueError("support-only source records cannot form catalog variables")
     keys = {record.variable_key for record in effective}
     if not records or None in keys or len(keys) != 1:
         raise ValueError(

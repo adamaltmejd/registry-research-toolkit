@@ -81,6 +81,21 @@ def _variable(slug: str, provider: str = "scb") -> ResolvedVariable:
     )
 
 
+def test_default_variant_references_preserve_reserved_slug_scope() -> None:
+    assert (
+        ResolvedVariantRef(register="scb/example", variant="_default").variant
+        == "_default"
+    )
+    assert (
+        ResolvedStateRef.model_validate(
+            _state_ref().model_dump() | {"variant": "_default"}
+        ).variant
+        == "_default"
+    )
+    with pytest.raises(ValidationError, match="reserved"):
+        ResolvedClassificationRef(provider="scb", classification="_default")
+
+
 def _classification(slug: str) -> ResolvedClassification:
     return ResolvedClassification(
         slug=slug,

@@ -55,7 +55,12 @@ def _register(value: str) -> str:
 
 
 def _slug(value: str) -> str:
-    validate_slug(value, "register_variant")
+    validate_slug(value, "slug")
+    return value
+
+
+def _variant_slug(value: str) -> str:
+    validate_slug(value, "register_variant", allow_default=True)
     return value
 
 
@@ -265,7 +270,7 @@ class ResolvedVariantRef(_ResolvedModel):
     variant: str
 
     _register = field_validator("register_ref")(_register)
-    _variant = field_validator("variant")(_slug)
+    _variant = field_validator("variant")(_variant_slug)
 
 
 class ResolvedVariantSuccession(_ResolvedModel):
@@ -325,7 +330,7 @@ class ResolvedStateRef(_ResolvedWindow):
     value_set_version_label: str = ""
 
     _variable = field_validator("variable")(_variable)
-    _variant = field_validator("variant")(_slug)
+    _variant = field_validator("variant")(_variant_slug)
     _column = field_validator("delivery_column_name")(_require_trimmed)
 
 

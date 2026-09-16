@@ -16,7 +16,8 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from reg_meta_build._curation import fold_column
 from reg_meta_build.source_coordinates import (
-    NativeKey,  # noqa: TC001 — Pydantic contract
+    NativeKey,
+    _coordinate_key,
 )
 from reg_meta_build.source_records import (
     FieldScalar,
@@ -139,8 +140,20 @@ class RecordProjection(_CurationModel):
     edition_scope: TemporalScope | None = None
     edition_period_scope: TemporalScope | None = None
     subject: SourceSubject | None = None
+    native: NativeCoordinates | None = None
     code_set_references: tuple[CodeSetExpectation, ...] | None = None
     parent_facts: tuple[ParentFactProjection, ...] | None = None
+
+    @field_validator("native")
+    @classmethod
+    def _selected_native_coordinates(
+        cls, native: NativeCoordinates | None
+    ) -> NativeCoordinates | None:
+        if native is not None and all(
+            getattr(native, name) is None for name in NativeCoordinates.model_fields
+        ):
+            raise ValueError("a native projection must select at least one coordinate")
+        return native
 
     @field_validator("parent_facts")
     @classmethod
@@ -177,6 +190,7 @@ class RecordProjection(_CurationModel):
             and self.edition_scope is None
             and self.edition_period_scope is None
             and self.subject is None
+            and self.native is None
             and self.code_set_references is None
             and self.parent_facts is None
         ):
@@ -186,7 +200,7 @@ class RecordProjection(_CurationModel):
 
 def _projection_shape(
     projection: RecordProjection,
-) -> tuple[tuple[str, ...], bool, bool, bool, bool, bool]:
+) -> tuple[tuple[str, ...], bool, bool, bool, bool, bool, tuple[str, ...]]:
     return (
         tuple(field.name for field in projection.fields),
         projection.edition_scope is not None,
@@ -194,6 +208,12 @@ def _projection_shape(
         projection.subject is not None,
         projection.code_set_references is not None,
         projection.parent_facts is not None,
+        tuple(
+            name
+            for name in NativeCoordinates.model_fields
+            if projection.native is not None
+            and getattr(projection.native, name) is not None
+        ),
     )
 
 
@@ -231,6 +251,13 @@ class PeerGuard(_CurationModel):
     fields: tuple[FieldExpectation, ...] = ()
     edition_scopes: tuple[TemporalScope, ...] = ()
     folded_column: str | None = None
+    coordinates: tuple[
+        tuple[
+            Literal["register", "variant", "variable", "population", "member"],
+            SourceCoordinate,
+        ],
+        ...,
+    ] = ()
 
     @model_validator(mode="after")
     def _valid_guard(self) -> Self:
@@ -243,8 +270,13 @@ class PeerGuard(_CurationModel):
             and self.register_name is None
             and not self.fields
             and self.folded_column is None
+            and not self.coordinates
         ):
             raise ValueError("a peer guard needs review matching criteria")
+        if len({name for name, _coordinate in self.coordinates}) != len(
+            self.coordinates
+        ):
+            raise ValueError("peer coordinate roles must be unique")
         if self.folded_column is not None and (
             not self.folded_column
             or fold_column(self.folded_column) != self.folded_column
@@ -357,6 +389,31 @@ class CheckedPeriodChange(_CurationModel):
     edition_period_scope: TemporalScope
 
 
+class CheckedIdentityChange(_CurationModel):
+    """Assign a checked source occurrence to an explicitly named variable identity."""
+
+    kind: Literal["identity"] = "identity"
+    ref: SourceRecordRef
+    variable_key: NativeKey
+    when: tuple[FieldExpectation, ...] = ()
+
+    @model_validator(mode="after")
+    def _explicit_identity(self) -> Self:
+        if not self.variable_key or any(part == "" for part in self.variable_key):
+            raise ValueError("an identity assignment needs an exact nonempty key")
+        if len({field.name for field in self.when}) != len(self.when):
+            raise ValueError("identity conditions must use unique field names")
+        return self
+
+
+class CheckedSourceUse(_CurationModel):
+    """Retain checked lookup/documentation rows as support rather than catalog data."""
+
+    kind: Literal["source_use"] = "source_use"
+    ref: SourceRecordRef
+    use: Literal["support"] = "support"
+
+
 class CuratedOccurrenceAddition(_CurationModel):
     """A declared delivery, not an invented physical source row or native ID.
 
@@ -397,7 +454,11 @@ class CuratedOccurrenceAddition(_CurationModel):
 
 
 type OccurrenceEffect = (
-    CheckedFieldChange | CheckedPeriodChange | CuratedOccurrenceAddition
+    CheckedFieldChange
+    | CheckedPeriodChange
+    | CheckedIdentityChange
+    | CheckedSourceUse
+    | CuratedOccurrenceAddition
 )
 
 
@@ -509,6 +570,15 @@ def _project_record(record: SourceRecord, shape: RecordProjection) -> RecordProj
             else None
         ),
         subject=record.subject if shape.subject is not None else None,
+        native=NativeCoordinates.model_validate(
+            {
+                name: getattr(record.subject.native, name)
+                for name in NativeCoordinates.model_fields
+                if getattr(shape.native, name) is not None
+            }
+        )
+        if shape.native is not None
+        else None,
         parent_facts=tuple(
             parent_fact_projection(parent) for parent in record.parent_facts
         )
@@ -535,6 +605,14 @@ def _field_matches(record: SourceRecord, expected: FieldExpectation) -> bool:
 def _peer_matches(record: SourceRecord, guard: PeerGuard) -> bool:
     if record.source != guard.source:
         return False
+    for name, expected in guard.coordinates:
+        actual = getattr(
+            record.subject, "register_name" if name == "register" else name
+        )
+        if actual.status != expected.status or _coordinate_key(
+            actual
+        ) != _coordinate_key(expected):
+            return False
     if guard.edition_scopes and record.edition_scope not in guard.edition_scopes:
         return False
     if guard.folded_column is not None:

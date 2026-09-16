@@ -14,12 +14,15 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta_build.source_curation import (
     CaseEvaluation,
     CheckedFieldChange,
+    CheckedIdentityChange,
     CheckedPeriodChange,
+    CheckedSourceUse,
     CuratedOccurrenceAddition,
     CurationCase,
     OccurrenceCorrectionDecision,
     ResolutionDiagnostic,
     SourceRecordRef,
+    _field_matches,
     evaluate_case,
 )
 from reg_meta_build.source_intervals import finite_scope_bounds
@@ -113,11 +116,28 @@ def _check_contract(case: CurationCase) -> None:
                             )
         else:
             if effect.ref not in targets:
-                raise ValueError("a field or period effect must name an exact target")
+                raise ValueError("an occurrence effect must name an exact target")
+            if isinstance(
+                effect, (CheckedIdentityChange, CheckedSourceUse)
+            ) and not any(
+                effect.ref in guard.expected_members for guard in case.peer_guards
+            ):
+                raise ValueError(
+                    "an identity/use assignment requires guarded source membership"
+                )
+            if isinstance(effect, CheckedIdentityChange) and not any(
+                all(field in alternative.fields for field in effect.when)
+                for alternative in targets[effect.ref].alternatives
+            ):
+                raise ValueError(
+                    "identity conditions must match a checked source alternative"
+                )
             _require_checked(
                 targets[effect.ref],
                 (effect.replacement.name,)
                 if isinstance(effect, CheckedFieldChange)
+                else ("column_name", *(field.name for field in effect.when))
+                if isinstance(effect, CheckedIdentityChange)
                 else (),
             )
 
@@ -141,6 +161,8 @@ def apply_occurrence_cases(
         evidence[record_ref(record)].append(record)
     fields = defaultdict(list)
     periods = defaultdict(list)
+    identities = defaultdict(list)
+    support_uses = defaultdict(list)
     additions = defaultdict(list)
     diagnostics = []
     for case, evaluation in zip(ordered, evaluations, strict=True):
@@ -167,6 +189,10 @@ def apply_occurrence_cases(
                 fields[effect.ref, effect.replacement.name].append((effect, correction))
             elif isinstance(effect, CheckedPeriodChange):
                 periods[effect.ref].append((effect, correction))
+            elif isinstance(effect, CheckedIdentityChange):
+                identities[effect.ref].append((effect, correction))
+            elif isinstance(effect, CheckedSourceUse):
+                support_uses[effect.ref].append(correction)
             else:
                 additions[effect.occurrence_key].append((effect, correction))
 
@@ -225,6 +251,7 @@ def apply_occurrence_cases(
             period_changes[ref] = next(iter(replacements))
         field_owners[ref].extend(owner for _, owner in claims)
 
+    reported_identity_conflicts = set()
     occurrences = []
     for record in records:
         ref = record_ref(record)
@@ -236,16 +263,48 @@ def apply_occurrence_cases(
         scope, period = period_changes.get(
             ref, (record.edition_scope, record.edition_period_scope)
         )
+        identity_claims = [
+            (effect, owner)
+            for effect, owner in identities.get(ref, ())
+            if all(_field_matches(record, field) for field in effect.when)
+        ]
+        assigned = {effect.variable_key for effect, _ in identity_claims}
+        variable_key = occurrence.variable_key
+        withheld = set(withheld_fields[ref])
+        if len(assigned) > 1:
+            variable_key = None
+            withheld.add("identity")
+            signature = (ref, tuple(owner for _, owner in identity_claims))
+            if signature not in reported_identity_conflicts:
+                conflict(
+                    identity_claims,
+                    str(ref),
+                    (ref,),
+                    ("identity",),
+                    ("occurrence.identity",),
+                )
+                reported_identity_conflicts.add(signature)
+        elif assigned:
+            variable_key = next(iter(assigned))
         occurrences.append(
             replace(
                 occurrence,
+                variable_key=variable_key,
+                use="support" if support_uses.get(ref) else occurrence.use,
                 fields=SourceFields.model_validate(values),
                 edition_scope=scope,
                 edition_period_scope=period,
                 corrections=tuple(
-                    sorted(field_owners[ref], key=lambda c: (c.case_id, c.effect_index))
+                    sorted(
+                        (
+                            *field_owners[ref],
+                            *support_uses.get(ref, ()),
+                            *(owner for _, owner in identity_claims),
+                        ),
+                        key=lambda c: (c.case_id, c.effect_index),
+                    )
                 ),
-                withheld_fields=tuple(sorted(withheld_fields[ref])),
+                withheld_fields=tuple(sorted(withheld)),
             )
         )
     for key, claims in sorted(additions.items()):

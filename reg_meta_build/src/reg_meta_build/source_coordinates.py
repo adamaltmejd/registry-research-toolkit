@@ -5,7 +5,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from reg_meta_build.source_records import SourceCoordinate, SourceRecord
+    from reg_meta_build.source_records import (
+        SourceCoordinate,
+        SourceParentObservation,
+        SourceRecord,
+    )
 
 
 type NativeKey = tuple[str | int, ...]
@@ -68,3 +72,29 @@ def native_column_key(record: SourceRecord) -> NativeKey | None:
     ):
         return None
     return (*variable, "variant-key", *variant, "column", field.value)
+
+
+def native_parent_key(
+    source: str, provider: str, parent: SourceParentObservation
+) -> NativeKey | None:
+    """Use the same native topology for parent claims and variable occurrences."""
+    register = _coordinate_key(parent.register_name)
+    if register is None:
+        return None
+    register_key = (source, provider, "register", *register)
+    if parent.kind == "register":
+        return register_key
+    variant = _coordinate_key(parent.variant) if parent.variant is not None else None
+    if variant is None:
+        return None
+    variant_key = (*register_key, "variant", *variant)
+    if parent.kind == "variant":
+        return variant_key
+    edition = _coordinate_key(parent.edition) if parent.edition is not None else None
+    if edition is None:
+        return None
+    edition_key = (*variant_key, "edition", *edition)
+    if parent.kind == "edition":
+        return edition_key
+    coordinate = _coordinate_key(parent.coordinate)
+    return (*edition_key, parent.kind, *coordinate) if coordinate is not None else None
