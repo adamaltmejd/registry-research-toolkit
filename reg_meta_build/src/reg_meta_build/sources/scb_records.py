@@ -347,13 +347,10 @@ def clean_scb_row(
                 native_id=interpreted.register_variant_id,
                 name=normalize_text(interpreted.variant_name) or None,
             ),
-            population=(
-                SourceCoordinate(
-                    status="value", name=normalize_text(interpreted.population_name)
-                )
-                if interpreted.population_name
-                else SourceCoordinate(status="unknown")
-            ),
+            # The export joins edition-level populations onto every CVID row.
+            # It supplies no variable-to-population assignment; parent_facts keeps
+            # every description at its actual edition scope.
+            population=SourceCoordinate(status="unknown"),
             variable=SourceCoordinate(
                 status="value",
                 native_id=interpreted.variable_id,

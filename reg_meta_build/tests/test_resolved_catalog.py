@@ -603,8 +603,8 @@ def test_parallel_resolved_columns_keep_distinct_coding_states(
     assert output.read_bytes() == previous
 
 
-@pytest.mark.parametrize("end", ["2021-02-29", "9999-12-31"])
-def test_alias_windows_require_finite_real_calendar_dates(end: str) -> None:
+@pytest.mark.parametrize("end", ["2021-02-29", "9999-01-01"])
+def test_alias_windows_require_real_calendar_dates(end: str) -> None:
     with pytest.raises(ValueError):
         ResolvedAliasWindow(valid_from="2021-02-01", valid_to=end)
 
@@ -923,7 +923,7 @@ def test_malformed_memberships_fail_shared_preflight_and_preserve_catalog(
         {"valid_from": "20000101"},
         {"valid_from": "2000-02-30"},
         {"valid_from": "2001-01-01"},
-        {"valid_to": "9999-12-31"},
+        {"valid_to": "9999-01-01"},
         {"delivery_column_name": " AmPolTyp"},
     ],
 )
@@ -995,7 +995,7 @@ def test_shared_preflight_rejects_invalid_contracts_and_unknown_providers() -> N
     with pytest.raises(ValueError, match="empty"):
         validate_resolved_variables(())
     invalid = _variable().model_copy(update={"states": ()})
-    with pytest.raises(ValidationError, match="at least one finite state"):
+    with pytest.raises(ValidationError, match="at least one delivery state"):
         validate_resolved_variables((invalid,))
     with pytest.raises(RegMetaError) as error:
         validate_resolved_variables((_variable("unknown-provider"),))

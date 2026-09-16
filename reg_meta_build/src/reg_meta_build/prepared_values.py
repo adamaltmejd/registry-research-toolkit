@@ -747,8 +747,10 @@ class PreparedValueSession:
     ) -> Iterator[SourceValueAssociation]:
         if self.postings is None:
             return
+        # SQLite otherwise favors the (kind, ordinal) primary key and scans every
+        # token of this kind on the full corpus. These indexes belong to this format.
         entries = self.conn.execute(
-            f"SELECT posting_offset, posting_count FROM token WHERE kind='member' AND {column} IS ? ORDER BY ordinal",
+            f"SELECT posting_offset, posting_count FROM token INDEXED BY token_{column} WHERE kind='member' AND {column} IS ? ORDER BY ordinal",
             (key,),
         )
 
@@ -797,7 +799,8 @@ class PreparedValueSession:
 
     def _native_item_coordinate(self, raw: str | None) -> int | None:
         row = self.conn.execute(
-            "SELECT coordinate FROM token WHERE kind='item' AND value IS ?", (raw,)
+            "SELECT coordinate FROM token INDEXED BY token_value WHERE kind='item' AND value IS ?",
+            (raw,),
         ).fetchone()
         return row[0] if row else None
 
@@ -818,13 +821,10 @@ class PreparedValueSession:
         if join is None or join.validity_target == "none":
             return ()
         if join.validity_target == "item":
-            token = self.conn.execute(
-                "SELECT coordinate FROM token WHERE kind='item' AND value IS ?",
-                (item_id,),
-            ).fetchone()
-            if token is None or token[0] is None:
+            coordinate = self.native_item_coordinate(item_id)
+            if coordinate is None:
                 return ()
-            column, key = "coordinate", token[0]
+            column, key = "coordinate", coordinate
         else:
             column, key = "locator", locator
         return tuple(

@@ -145,12 +145,16 @@ class SourceSubject(_SourceModel):
 
 
 class ScopeInterval(_SourceModel):
+    """A known period; an explicit null end means open-ended, never unknown."""
+
     start: str
-    end: str
+    end: str | None
 
     @model_validator(mode="after")
     def _ordered(self) -> Self:
-        if not self.start or not self.end or self.end < self.start:
+        if not self.start or (
+            self.end is not None and (not self.end or self.end < self.start)
+        ):
             raise ValueError("scope interval must have non-empty ordered bounds")
         return self
 
@@ -168,7 +172,7 @@ class TemporalScope(_SourceModel):
             if not self.intervals or self.label is not None:
                 raise ValueError("interval scope requires intervals and no label")
             for previous, current in zip(self.intervals, self.intervals[1:]):
-                if current.start <= previous.end:
+                if previous.end is None or current.start <= previous.end:
                     raise ValueError("scope intervals must be ordered and disjoint")
         elif self.kind in {"unknown", "pooled"}:
             if self.intervals or not self.label:

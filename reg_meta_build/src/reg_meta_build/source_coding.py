@@ -16,7 +16,7 @@ from itertools import pairwise
 from typing import TYPE_CHECKING
 
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
-from reg_meta_build.source_intervals import finite_scope_bounds
+from reg_meta_build.source_intervals import scope_bounds
 
 if TYPE_CHECKING:
     from reg_meta_build.source_records import TemporalScope
@@ -83,20 +83,23 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
     union or largest-list choice would manufacture an unsupported list. An empty
     active list is reported, never converted into explicit uncoded-variable proof.
     """
-    identities = [claim.claim_id for claim in claims]
-    if any(not identity for identity in identities) or len(identities) != len(
-        set(identities)
-    ):
-        raise ValueError("coding claims require unique nonempty identities")
-    claim_by_id = {claim.claim_id: claim for claim in claims}
+    claim_by_id: dict[str, CodeListClaim] = {}
+    for claim in claims:
+        if not claim.claim_id:
+            raise ValueError("coding claims require nonempty identities")
+        previous = claim_by_id.setdefault(claim.claim_id, claim)
+        if previous != claim:
+            raise ValueError("one coding claim identity has conflicting content")
     issues: list[CodingIssue] = []
     # Each event changes one active occurrence and/or one member position. Counts
     # preserve overlapping constraints while dictionary keys deduplicate content.
     claim_changes: dict[int, list[tuple[str, int]]] = defaultdict(list)
     member_changes: dict[int, list[tuple[str, int, int]]] = defaultdict(list)
     invalid_members: set[tuple[str, int]] = set()
-    for claim in sorted(claims, key=lambda c: c.claim_id):
-        periods = finite_scope_bounds(claim.scope)
+    # Duplicate physical record bindings may share one source-native list. Keep
+    # every input claim in accounting; process its membership events only once.
+    for claim in sorted(claim_by_id.values(), key=lambda c: c.claim_id):
+        periods = scope_bounds(claim.scope)
         if periods is None:
             issues.append(
                 CodingIssue("unsupported_coding_scope", (claim.claim_id,), None, None)
@@ -109,7 +112,7 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
             if member.scope.kind in {"not_applicable", "year_independent"}:
                 member_periods = periods
             else:
-                member_periods = finite_scope_bounds(member.scope)
+                member_periods = scope_bounds(member.scope)
             if member.code is None or member.label is None or member_periods is None:
                 invalid_members.add((claim.claim_id, position))
             if member_periods is None:

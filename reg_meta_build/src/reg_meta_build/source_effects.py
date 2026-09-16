@@ -25,7 +25,7 @@ from reg_meta_build.source_curation import (
     _field_matches,
     evaluate_case,
 )
-from reg_meta_build.source_intervals import finite_scope_bounds
+from reg_meta_build.source_intervals import scope_bounds
 from reg_meta_build.source_occurrences import (
     AppliedCorrection,
     EffectiveOccurrence,
@@ -93,9 +93,9 @@ def _check_contract(case: CurationCase) -> None:
             scope = effect.edition_period_scope
             if scope.kind == "not_applicable":
                 scope = effect.edition_scope
-            if finite_scope_bounds(scope) is None:
+            if scope_bounds(scope) is None:
                 raise ValueError(
-                    "an added occurrence requires an explicit finite period"
+                    "an added occurrence requires an explicit known period"
                 )
             if effect.donor is not None:
                 for alternative in checked[effect.donor].alternatives:

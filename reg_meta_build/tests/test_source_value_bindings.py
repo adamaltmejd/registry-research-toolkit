@@ -205,6 +205,71 @@ def test_native_join_preserves_raw_tokens_uses_one_session_and_exact_validity(
     assert source.manifest.auxiliary_count == 0
 
 
+def test_checked_effective_scope_preserves_source_validity_and_evidence(
+    tmp_path: Path,
+) -> None:
+    row = SourceValueAssociation(
+        2, "list", "a", "values", member_id="1001", item_id="1"
+    )
+    validity = SourceValueValidity(
+        2, "1", "2020-07-01", None, "validity", window=value_window("2020-07-01", None)
+    )
+    source = _prepare(
+        tmp_path / "values", join=_join(), rows=(row,), validity=(validity,)
+    )
+    record = _record()
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="2021-01-01", end=None),)
+    )
+    with open_value_bindings((source,)) as sessions:
+        original = bind_code_lists(record, sessions)
+        corrected = bind_code_lists(record, sessions, scope=scope)
+    assert corrected.bindings[0].record_id == record.record_id
+    assert corrected.bindings[0].record_locators == record.locators
+    assert corrected.claims[0].claim_id != original.claims[0].claim_id
+    assert corrected.claims[0].members[0].associations == (row,)
+    assert corrected.claims[0].members[0].validity == (validity,)
+    resolved = resolve_code_membership(corrected.claims)
+    assert resolved.issues == ()
+    assert [(s.valid_from, s.valid_to) for s in resolved.segments] == [
+        ("2021-01-01", "9999-12-31")
+    ]
+
+
+def test_native_list_reuse_keeps_each_record_binding_and_checks_scope(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = _prepare(tmp_path / "values", join=_join())
+    first, duplicate = _record(), _record(description="Different parent/prose evidence")
+    assert first.record_id != duplicate.record_id
+    with open_value_bindings((source,)) as sessions:
+        session = sessions[0].session
+        lookups = []
+        lookup = session.lookup_native_member
+
+        def tracked(member):
+            lookups.append(member)
+            return lookup(member)
+
+        monkeypatch.setattr(session, "lookup_native_member", tracked)
+        a = bind_code_lists(first, sessions)
+        b = bind_code_lists(duplicate, sessions)
+        assert len(lookups) == 1
+        assert a.claims == b.claims
+        assert a.bindings[0].record_id == first.record_id
+        assert b.bindings[0].record_id == duplicate.record_id
+        later = TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2021", end="2021"),)
+        )
+        c = bind_code_lists(first, sessions, scope=later)
+        assert len(lookups) == 2
+        assert c.claims[0].claim_id != a.claims[0].claim_id
+        bind_code_lists(_record(member=1002), sessions)
+        assert lookups == [1001, 1001, 1002]
+    resolved = resolve_code_membership((*a.claims, *b.claims))
+    assert resolved.segments == resolve_code_membership(a.claims).segments
+
+
 @pytest.mark.parametrize(
     "missing,window,expected",
     [

@@ -242,7 +242,15 @@ def test_scb_observations_share_coordinates_and_stripped_fields_without_losing_c
     )
     assert first.record.subject.register_name.name == "LISA"
     assert first.record.subject.variant.name == "Individer"
-    assert first.record.subject.population.name == "Population A"
+    assert first.record.subject.population.status == "unknown"
+    assert (
+        next(
+            parent.coordinate.name
+            for parent in first.record.parent_facts
+            if parent.kind == "population"
+        )
+        == "Population A"
+    )
     assert first.record.subject.variable == SourceCoordinate(
         status="value", native_id=1880, name="Signal variable"
     )

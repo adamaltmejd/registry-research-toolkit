@@ -1,6 +1,6 @@
 """Materialize explicitly resolved catalog variables and code memberships.
 
-Identity, canonical text, flags, and finite state windows are curation inputs.
+Identity, canonical text, flags, and explicit state windows are curation inputs.
 This writer only assigns storage IDs and builds the normal catalog database.
 """
 
@@ -314,7 +314,7 @@ class ResolvedVariable(_ResolvedModel):
     def _resolved_identity_and_states(self) -> Self:
         Fqid.binding_fqid(self.register_ref.provider, self.register_ref.slug, self.slug)
         if not self.states:
-            raise ValueError("a resolved variable needs at least one finite state")
+            raise ValueError("a resolved variable needs at least one delivery state")
         previous: dict[tuple[str, str], ResolvedState] = {}
         for state in sorted(
             self.states,

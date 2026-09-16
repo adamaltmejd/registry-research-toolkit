@@ -183,10 +183,14 @@ def test_no_active_members_reports_missing_coding_and_keeps_occurrence_coverage(
     assert result.issues[0].code == "empty_active_coding"
 
 
-def test_duplicate_claim_identity_is_a_contract_failure_not_a_curation_issue() -> None:
+def test_repeated_identical_claims_keep_accounting_without_repeating_events() -> None:
     claim = _claim("a", _member("1"))
-    with pytest.raises(ValueError, match="unique"):
-        resolve_code_membership((claim, claim))
+    result = resolve_code_membership((claim, claim))
+    assert result.claims == (claim, claim)
+    assert result.segments == resolve_code_membership((claim,)).segments
+    assert result.issues == ()
+    with pytest.raises(ValueError, match="conflicting content"):
+        resolve_code_membership((claim, _claim("a", _member("2"))))
 
 
 def test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label() -> None:

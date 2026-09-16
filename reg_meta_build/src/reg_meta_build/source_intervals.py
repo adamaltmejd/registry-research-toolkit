@@ -53,14 +53,21 @@ class OccurrenceResolution:
     unsupported_occurrences: tuple[SourceRecord, ...]
 
 
-def finite_scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
-    """Return real-calendar ordinal bounds for an already interpreted finite scope."""
+def scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
+    """Resolve known bounds; date.max represents an explicitly open upper bound.
+
+    Unknown and pooled scopes stay unresolved. A literal source year 9999 is not
+    accepted as evidence; only an explicit open end uses the storage sentinel.
+    """
     if scope.kind != "intervals":
         return None
     result = []
     for interval in scope.intervals:
         bounds = []
         for value, tail in ((interval.start, "01-01"), (interval.end, "12-31")):
+            if value is None:
+                bounds.append(date.max.toordinal())
+                continue
             if len(value) == 4 and value.isascii() and value.isdigit():
                 value = f"{value}-{tail}"
             try:
@@ -78,7 +85,7 @@ def _periods(record: EffectiveOccurrence) -> tuple[tuple[int, int], ...] | None:
     scope = record.edition_period_scope
     if scope.kind == "not_applicable":
         scope = record.edition_scope
-    return finite_scope_bounds(scope)
+    return scope_bounds(scope)
 
 
 def _column(record: EffectiveOccurrence) -> str | None:

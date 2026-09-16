@@ -552,7 +552,8 @@ def _scope_years(scope: TemporalScope) -> tuple[int, ...] | None:
     years: list[int] = []
     for interval in scope.intervals:
         if (
-            len(interval.start) != 4
+            interval.end is None
+            or len(interval.start) != 4
             or len(interval.end) != 4
             or not interval.start.isdigit()
             or not interval.end.isdigit()

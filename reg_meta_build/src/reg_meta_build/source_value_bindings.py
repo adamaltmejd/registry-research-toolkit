@@ -10,12 +10,12 @@ from __future__ import annotations
 
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from typing import TYPE_CHECKING
 
 from reg_meta_build.source_coding import CodeListClaim, CodeMembershipClaim
-from reg_meta_build.source_intervals import finite_scope_bounds
+from reg_meta_build.source_intervals import scope_bounds
 from reg_meta_build.source_records import (
     ScopeInterval,
     SourceRecord,
@@ -95,7 +95,7 @@ def _member_scope(
         ), "unknown_code_validity"
     if not constraints and not alternatives:
         return TemporalScope(kind="year_independent"), None
-    bounds = finite_scope_bounds(occurrence)
+    bounds = scope_bounds(occurrence)
     if bounds is None:
         return _unknown(
             "code membership requires a finite occurrence scope"
@@ -138,7 +138,9 @@ def _member_scope(
         intervals=tuple(
             ScopeInterval(
                 start=date.fromordinal(start).isoformat(),
-                end=date.fromordinal(end).isoformat(),
+                end=None
+                if end == date.max.toordinal()
+                else date.fromordinal(end).isoformat(),
             )
             for start, end in merged
         ),
@@ -152,6 +154,8 @@ class ValueBindingSession:
         self.session = session
         self.source = session.source.manifest.revision.dataset
         self.join = session.source.manifest.join
+        self._last_native_key: tuple[str, int, TemporalScope] | None = None
+        self._last_native_result: ValueBindingResult | None = None
         # Native stores have thousands of descriptors but need none until selected.
         # Named-list stores have finite declared dictionaries; rows remain indexed.
         self.descriptors = (
@@ -195,13 +199,16 @@ class ValueBindingSession:
                         "unresolved_list_reference", self.source, descriptor.payload_key
                     )
 
-    def bind(self, record: SourceRecord) -> ValueBindingResult:
+    def bind(
+        self, record: SourceRecord, *, scope: TemporalScope | None = None
+    ) -> ValueBindingResult:
         join = self.join
         if join is None or record.source not in join.record_sources:
             return ValueBindingResult((), (), ())
-        scope = record.edition_period_scope
-        if scope.kind == "not_applicable":
-            scope = record.edition_scope
+        if scope is None:
+            scope = record.edition_period_scope
+            if scope.kind == "not_applicable":
+                scope = record.edition_scope
         groups: dict[str, list[SourceValueAssociation]] = defaultdict(list)
         issues: list[ValueBindingIssue] = []
         contradictory: set[str] = set()
@@ -217,6 +224,28 @@ class ValueBindingSession:
                             self.source,
                             record_id=record.record_id,
                         ),
+                    ),
+                )
+            native_key = (record.source, member, scope)
+            if native_key == self._last_native_key:
+                cached = self._last_native_result
+                assert cached is not None
+                # Parent/prose duplicates describe the same native code list.
+                # Share its immutable claims, but retain this physical record's
+                # evidence binding and issue locators. Keep only one list cached.
+                return ValueBindingResult(
+                    cached.claims,
+                    tuple(
+                        replace(
+                            binding,
+                            record_id=record.record_id,
+                            record_locators=record.locators,
+                        )
+                        for binding in cached.bindings
+                    ),
+                    tuple(
+                        replace(issue, record_id=record.record_id)
+                        for issue in cached.issues
                     ),
                 )
             for association in self.session.lookup_native_member(member):
@@ -285,8 +314,11 @@ class ValueBindingSession:
             claim_id = canonical_sha256(
                 [
                     self.session.source.manifest.revision.revision_id,
-                    record.record_id,
+                    ("native_member", record.source, record.subject.member.native_id)
+                    if join.member_target == "native_member"
+                    else ("record", record.record_id),
                     descriptor_key,
+                    scope.model_dump(mode="json"),
                 ]
             )
             members, inactive = [], []
@@ -344,7 +376,11 @@ class ValueBindingSession:
                     tuple(inactive),
                 )
             )
-        return ValueBindingResult(tuple(claims), tuple(bindings), tuple(issues))
+        result = ValueBindingResult(tuple(claims), tuple(bindings), tuple(issues))
+        if join.member_target == "native_member":
+            self._last_native_key = native_key
+            self._last_native_result = result
+        return result
 
 
 @contextmanager
@@ -359,10 +395,19 @@ def open_value_bindings(
 
 
 def bind_code_lists(
-    record: SourceRecord, sessions: Iterable[ValueBindingSession]
+    record: SourceRecord,
+    sessions: Iterable[ValueBindingSession],
+    *,
+    scope: TemporalScope | None = None,
 ) -> ValueBindingResult:
+    """Bind original evidence at its own or an already checked effective scope.
+
+    A corrected delivery period changes membership intersections, never the source
+    locators or supplied item validity. Distinct effective periods have distinct
+    claim identities even when they use the same checked donor.
+    """
     sessions = tuple(sessions)
-    results = tuple(session.bind(record) for session in sessions)
+    results = tuple(session.bind(record, scope=scope) for session in sessions)
     claims = tuple(claim for result in results for claim in result.claims)
     issues = tuple(issue for result in results for issue in result.issues)
     declared = record.fields.value_set_declared

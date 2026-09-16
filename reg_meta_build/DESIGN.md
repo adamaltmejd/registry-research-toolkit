@@ -105,12 +105,15 @@ source facts.
 > source records and 98 compact value sources. Common resolution binds source code
 > lists, reconciles parent metadata and ordinary variable families, and applies checked
 > field, period, identity, source-use and added-occurrence decisions before direct
-> writing. Existing naming and curation conversion is incomplete. The first full
-> resolution probe exposed missing conversion of SOS lookup-table roles; the lookup
-> distinction is now represented by checked common decisions. The full replacement
-> database and old/new comparison are still pending. Ordinary `build-db` continues to
-> use the legacy semantic pipeline below; `build-curated-db` exercises an explicitly
-> selected slice. This branch is not ready for catalog activation.
+> writing. Existing naming and curation conversion is incomplete. A complete resolution
+> probe has scanned all 45,368 native families, including every maintained occurrence
+> source. It exposed missing conversions and an incorrect variable-level interpretation
+> of SCB's joined population prose. The latter belongs to edition metadata and is fixed
+> in cleaning; corrected record preparation and conversion replay are being verified.
+> The full replacement database and old/new comparison are still pending. Ordinary
+> `build-db` continues to use the legacy semantic pipeline below; `build-curated-db`
+> exercises an explicitly selected slice. This branch is not ready for catalog
+> activation.
 
 Identity assignments can select an exact checked field alternative under a native source
 member. This matters when the same delivered CVID carries different column assertions:
@@ -126,6 +129,19 @@ Checked source-use decisions retain lookup rows as support evidence without form
 research variables or variants from them. Parent resolution accounts for those records
 and for explicit translations outside the requested catalog language. Missing naming
 bindings remain implementation failures; they are not curation waivers.
+
+SCB's joined population descriptions belong to the edition, alongside its object-type
+metadata. They do not assign the CVID to one particular population. Cleaning retains
+every parent assertion and original row while leaving the variable's population
+assignment unknown. Repeated parent rows must not manufacture a variable-scope conflict.
+
+An explicitly declared open upper bound is different from an unknown period.
+`ScopeInterval.end = None` represents the former; unknown and pooled scopes remain
+unresolved. Resolution preserves a known start and the open end without inventing a
+closing year. Materialization uses the existing catalog sentinel `9999-12-31` only as an
+upper bound. A literal source year 9999 is not accepted as dated evidence. Existing
+authored defaults and inherited bounds still require their checked conversion before
+they can supply such a scope.
 
 ### Mechanical normalization
 
@@ -384,8 +400,8 @@ provider files, parse spreadsheets or repeat source interpretation. Records are 
 on demand with bounded caches; exact semantic-key lookups use an index. The manifest's
 data hash is a preparation proof, not a repeated warm-build workload. The accepted Git
 revision is the trust boundary. Original large value-association streams remain in the
-existing lossless compact input storage; integration with this record store is still
-pending.
+existing lossless compact input storage; `prepared_catalog.py` integrates them with this
+record store.
 
 `build-curated-db --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE --db-path DB`
 loads that selection and a JSON array of reviewed cases. It resolves every case before
@@ -430,13 +446,21 @@ comparison remain completion gates.
 Occurrence corrections compose against the original cleaned evidence. Exact field and
 period assignments can agree or affect different facts. Conflicting assignments retain
 all claims and withhold the disputed fact; another observation cannot silently fill it
-back in. A declared delivery has an explicit variable, variant, edition and finite
+back in. A declared delivery has an explicit variable, variant, edition and known
 period, checked supporting members and correction provenance. It never becomes a
 fabricated physical source row. An offline converter can freeze an existing errata donor
 choice and target membership; warm application cannot reselect the nearest donor. Source
 updates invalidate relevant pins, while unrelated variable changes and physical layout
 changes do not. Conversion of the remaining accepted surfaces, including the coding
 dependencies of copied deliveries, remains required before cutover.
+
+Native-member code-list bindings share immutable claims when the source member and
+effective scope agree. Each physical record keeps its own evidence binding, and every
+original code association remains available. A one-list cache avoids rebuilding those
+claims for adjacent parent/prose duplicates without retaining an unbounded working set.
+Identical repeated claim IDs contribute membership events once; different content under
+one claim ID is a fatal contract error. A checked corrected scope changes the claim
+identity and membership intersections, but never rewrites source validity or locators.
 
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code

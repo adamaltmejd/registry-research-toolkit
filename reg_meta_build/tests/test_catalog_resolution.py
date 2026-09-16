@@ -146,6 +146,36 @@ def test_parent_conflict_does_not_choose_first_prose_or_change_delivery_dates() 
     assert parents == resolve_parents((other, first), _names(first))
 
 
+def test_edition_populations_do_not_become_competing_variable_assignments() -> None:
+    records = (
+        _record(Populationnamn="Adults"),
+        _record(3, Populationnamn="Children"),
+    )
+    parents = resolve_parents(records, _names(records[0]))
+    register_key = source_register_key(records[0])
+    column_key = native_column_key(records[0])
+    assert register_key is not None and column_key is not None
+    formed = form_native_variable(
+        records,
+        register=parents.registers[register_key],
+        variants=parents.variants,
+        slug="value",
+        provider_key="5",
+        flags=SourceFields(
+            identifier=value_field(False), sensitivity=value_field(False)
+        ),
+        coding={column_key: ()},
+    )
+    assert formed.variable is not None and formed.diagnostics == ()
+    assert len(formed.variable.states) == 1
+    assert formed.occurrences == records
+    assert {
+        population.name
+        for edition in parents.editions.values()
+        for population in edition.populations
+    } == {"Adults", "Children"}
+
+
 def test_missing_naming_is_an_implementation_failure() -> None:
     with pytest.raises(ValueError, match="missing checked parent naming"):
         resolve_parents((_record(),), ())

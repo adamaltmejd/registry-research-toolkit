@@ -123,6 +123,32 @@ def _form(
     )
 
 
+def test_explicit_open_ended_coverage_survives_formation_and_storage(
+    tmp_path: Path,
+) -> None:
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="2004-01-01", end=None),)
+    )
+    record = _record(2004).model_copy(update={"edition_period_scope": scope})
+    claim = CodeListClaim(
+        claim_id="accepted-list",
+        scope=scope,
+        members=(
+            CodeMembershipClaim("01", "One", TemporalScope(kind="year_independent")),
+        ),
+    )
+    result = _form((record,), claims=(claim,))
+    assert result.variable is not None and result.diagnostics == ()
+    state = result.variable.states[0]
+    assert (state.valid_from, state.valid_to) == ("2004-01-01", "9999-12-31")
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog((result.variable,), output, manifest={})
+    with closing(open_db(output)) as conn:
+        assert tuple(
+            conn.execute("SELECT valid_from, valid_to FROM variable_state").fetchone()
+        ) == ("2004-01-01", "9999-12-31")
+
+
 def test_prepared_native_family_forms_and_writes_without_handwritten_cases(
     tmp_path: Path,
 ) -> None:

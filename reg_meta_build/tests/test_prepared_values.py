@@ -21,6 +21,7 @@ from reg_meta_build.source_values import (
     SourceValue,
     SourceValueAssociation,
     SourceValueDescriptor,
+    SourceValueJoin,
     SourceValueValidity,
 )
 
@@ -225,6 +226,44 @@ def test_empty_stream_and_dictionaries_are_valid(tmp_path):
         == tuple(reader.validity())
         == ()
     )
+
+
+def test_point_lookups_do_not_scan_unrelated_member_or_item_tokens(tmp_path):
+    root = tmp_path / "values"
+    rows = tuple(
+        replace(_association(i + 2, str(i)), item_id=str(i)) for i in range(10_000)
+    ) + (replace(_association(10_002, None), item_id=None),)
+    validity = SourceValueValidity(2, "9999", "2020", "2020", "validity.csv")
+    manifest = _prepare(
+        root,
+        associations=iter(rows),
+        validity=(validity,),
+        validity_revision=_revision("validity", "b"),
+        join=SourceValueJoin(
+            record_sources=("records",),
+            member_target="native_member",
+            member_format="integer",
+            validity_target="item",
+            missing_validity="unknown",
+            rule="Fixture exact integer coordinates",
+            provenance=("fixture format",),
+        ),
+    )
+    reader = _open(root, manifest)
+    # Dictionary loading is a single session startup cost, outside point lookups.
+    _ = reader._references
+    with reader.session() as session:
+        # Abort a query that scans the 10,000 unrelated tokens. This exercises the
+        # cost bound without depending on SQLite's version-specific plan text.
+        session.conn.set_progress_handler(lambda: 1, 2_000)
+        assert tuple(session.lookup_native_member(9999)) == (rows[-2],)
+        assert tuple(session.lookup_member("9999")) == (rows[-2],)
+        assert tuple(session.lookup_member(None)) == (rows[-1],)
+        assert tuple(session.lookup_member("absent")) == ()
+        assert session.native_item_coordinate("9999") == 9999
+        assert session.native_item_coordinate(None) is None
+        assert session.native_item_coordinate("absent") is None
+        assert session.validity_for(item_id="9999") == (validity,)
 
 
 def test_preparation_is_byte_deterministic(tmp_path):
