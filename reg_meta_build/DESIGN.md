@@ -1214,6 +1214,37 @@ occurrences remain diagnostic witnesses. The report is diagnostic and
 source-target-only: it applies no curation, previews no complete catalog blast radius,
 and claims no catalog validation, acceptance, or publication.
 
+One captured source proposal uses this same observation boundary:
+`curation/hamn_signal_unresolved_length.json` explicitly authors the ten HAMN Signal
+members for 2003--2012, their char/10 and char/11 alternatives, and independent source,
+meaning, member and finite trimmed-case-insensitive spelling dependencies. Input-bundle
+preparation and verification parse that strict JSON contract and bind its exact bytes in
+the existing curation inventory. Inspection reads only those captured bytes -- never a
+checkout fallback -- and selects the proposal explicitly:
+
+```console
+reg-meta-build --output /tmp/hamn-signal-source-case.json inspect-source-records \
+  --input-bundle .local/catalog-inputs/bundles/candidate \
+  --input-commit <accepted-full-commit> \
+  --input-manifest-sha256 <catalog-bundle-json-sha256> \
+  --case hamn-signal-unresolved-length
+```
+
+The pure evaluator consumes the authored contract plus original, uncoalesced Y-162 SCB
+observations. It requires exactly one char/10 and one char/11 occurrence for each exact
+native target, all ten targets, and no other native-variable or competing `Signal`
+occupancy in the independently listed annual scope. Thus an exact duplicate changes
+multiplicity, while source row movement, input order, administrative approval-date
+changes and a proven annual 2013 member do not change applicability. The result retains
+both alternatives, current locators and source revision, and returns ten typed proposed
+members whose `data_length` is unknown while `data_type=char` remains supported.
+
+This result is the future production handoff, not a preview approximation, but it is
+still labelled `source_target_only`: production dependencies and final effects are
+pending, no raw-coding absence or final identity is proved, and neither
+`_import_registerinformation` nor the default builder reads or activates the case. Y-160
+must reuse this captured contract and evaluator if production work resumes.
+
 The same command can select the complete SCB observation census without selecting the
 LISA workbook:
 

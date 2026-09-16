@@ -2,6 +2,15 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+from _csv_fixtures import (
+    HAMN_SIGNAL_TARGETS,
+    hamn_signal_rows,
+    write_scb_input,
+    write_scb_snapshot,
+)
+from reg_meta_build.input_snapshot import open_scb_snapshot
 from reg_meta_build.source_records import (
     CodeSetReference,
     DeliveredCell,
@@ -15,6 +24,10 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
+from reg_meta_build.sources.scb_records import iter_scb_observations
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _revision(
@@ -164,3 +177,66 @@ def test_delivered_cells_distinguish_missing_from_supplied_empty() -> None:
         "interpreted_value": "",
     }
     assert empty.model_dump(mode="json", exclude_none=True)["raw_value"] == ""
+
+
+def test_hamn_fixture_yields_twenty_lossless_observations_for_ten_exact_members(
+    tmp_path: Path,
+) -> None:
+    source = write_scb_input(
+        tmp_path / "source", registerinformation_rows=hamn_signal_rows()
+    )
+    selection = write_scb_snapshot(tmp_path / "accepted", source)
+    snapshot = open_scb_snapshot(selection)
+    item = next(
+        item
+        for item in snapshot.manifest.files
+        if item.name == "Registerinformation.csv"
+    )
+    assert item.raw_size is not None and item.raw_sha256 is not None
+    revision = SourceRevision.create(
+        dataset="scb-registerinformation",
+        publisher="SCB",
+        purpose="HAMN fixture",
+        upstream_revision=snapshot.manifest.edition,
+        artifact_path="Registerinformation.csv",
+        artifact_size=item.raw_size,
+        artifact_sha256=item.raw_sha256,
+    )
+
+    observations = tuple(iter_scb_observations(snapshot, revision, register_id=161))
+
+    assert len(observations) == 20
+    assert {
+        (
+            int(observation.record.original_period_text),
+            observation.record.subject.native.edition_id,
+            observation.record.subject.native.member_id,
+        )
+        for observation in observations
+    } == {
+        (year, regver_id, cvid) for year, regver_id, cvid, *_rest in HAMN_SIGNAL_TARGETS
+    }
+    for target in {
+        (year, regver_id, cvid) for year, regver_id, cvid, *_rest in HAMN_SIGNAL_TARGETS
+    }:
+        members = [
+            observation.record
+            for observation in observations
+            if (
+                int(observation.record.original_period_text),
+                observation.record.subject.native.edition_id,
+                observation.record.subject.native.member_id,
+            )
+            == target
+        ]
+        assert {record.fields.data_length.value for record in members} == {"10", "11"}
+        assert all(len(record.delivered_cells) == 36 for record in members)
+        assert all(
+            next(
+                cell
+                for cell in record.delivered_cells
+                if cell.name == "Populationkommentar"
+            ).raw_value
+            == ""
+            for record in members
+        )

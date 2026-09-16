@@ -5,13 +5,17 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import sqlite3
 import subprocess
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import (
+    HAMN_SIGNAL_TARGETS,
     _var_row,
+    hamn_signal_rows,
+    replace_registerinformation_cell,
     sparsify_scb_values,
     write_input_bundle,
     write_scb_input,
@@ -21,6 +25,8 @@ from _lisa_fixtures import write_lisa_workbook
 from openpyxl import load_workbook
 from pydantic import ValidationError
 from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
+from reg_meta_build._curation import repo_curation_path
+from reg_meta_build.db import build_db
 from reg_meta_build.input_snapshot import (
     LISA_DATASET_ID,
     LisaWorkbookSelection,
@@ -29,11 +35,13 @@ from reg_meta_build.input_snapshot import (
     open_input_bundle,
     open_scb_snapshot,
 )
+from reg_meta_build.source_cases import HAMN_SIGNAL_CASE_FILE, ProposedHamnSourceMember
 from reg_meta_build.source_inspection import (
     CensusCompletion,
     SourceInspectionReport,
     compare_availability_records,
     inspect_bundle_source_records,
+    inspect_hamn_signal_source_case,
     report_semantic_sha256,
     write_scb_observation_census,
 )
@@ -934,6 +942,306 @@ def test_scb_census_semantics_survive_source_row_reordering(tmp_path: Path) -> N
 
     assert summaries[0] == summaries[1]
     assert group_shapes[0] == group_shapes[1]
+
+
+def _hamn_curation(root: Path) -> Path:
+    curation = root / "curation"
+    curation.mkdir(parents=True)
+    source = repo_curation_path(HAMN_SIGNAL_CASE_FILE)
+    assert source is not None
+    (curation / HAMN_SIGNAL_CASE_FILE).write_bytes(source.read_bytes())
+    return curation
+
+
+def _hamn_report(root: Path, rows: list[str]):
+    selection = _hamn_selection(root, rows)
+    return inspect_hamn_signal_source_case(
+        open_input_bundle(selection), code_commit="c" * 40
+    )
+
+
+def _hamn_selection(root: Path, rows: list[str]):
+    input_dir = root / "source"
+    write_scb_input(input_dir, registerinformation_rows=rows)
+    return write_input_bundle(
+        root / "accepted",
+        input_dir,
+        curation_dir=_hamn_curation(root),
+    )
+
+
+def test_hamn_case_reports_exact_source_only_proposal_and_typed_output(
+    tmp_path: Path,
+) -> None:
+    report = _hamn_report(tmp_path, hamn_signal_rows())
+
+    assert report.complete is True
+    assert report.preview_level == "source_target_only"
+    assert report.evaluation.applicable is True
+    assert report.evaluation.catalog_changed is False
+    assert report.evaluation.production_dependencies == "pending"
+    assert report.evaluation.final_effects == "pending"
+    assert len(report.evaluation.evidence) == 20
+    assert len(report.evaluation.proposed_members) == 10
+    assert all(
+        isinstance(member, ProposedHamnSourceMember)
+        for member in report.evaluation.proposed_members
+    )
+    assert {
+        (member.edition, member.edition_id, member.member_id)
+        for member in report.evaluation.proposed_members
+    } == {
+        (year, regver_id, cvid) for year, regver_id, cvid, *_rest in HAMN_SIGNAL_TARGETS
+    }
+    assert all(
+        member.fields.data_length == SourceField(status="unknown", raw_value=None)
+        and member.fields.data_type == value_field("char", raw="char")
+        for member in report.evaluation.proposed_members
+    )
+    assert {
+        record.fields.data_length.value for record in report.evaluation.evidence
+    } == {"10", "11"}
+    assert all(check.passed for check in report.evaluation.receipt.checks)
+    assert report.pins.case_artifact_sha256 == report.case_artifact.sha256
+    assert all(
+        record.source_revision_id
+        == report.evaluation.receipt.source_revision.revision_id
+        for record in report.evaluation.evidence
+    )
+    assert report.evaluation.receipt.evidence_locators == tuple(
+        record.locators[0] for record in report.evaluation.evidence
+    )
+    assert {check.name for check in report.evaluation.receipt.checks} == {
+        "source_dependency",
+        "context_dependency",
+        "target_coordinates",
+        "annual_scope_dependency",
+        "finite_membership",
+        "competing_spelling_scope",
+        "before_alternatives",
+        "physical_multiplicity",
+    }
+    assert report.case_artifact.authored_case.provenance.source_artifact_sha256 == (
+        "b5724ccdf4325636036cda5f963d6dcfc0981e3f9b3a1f87aa865bb509dab74e"
+    )
+    assert all(
+        member.before_alternatives[0].data_length == "10"
+        and member.before_alternatives[1].data_length == "11"
+        for member in report.case_artifact.authored_case.member_dependency
+    )
+
+
+def test_hamn_case_cli_uses_captured_bytes_without_lisa_or_cold_values(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    selection = _hamn_selection(tmp_path, hamn_signal_rows())
+    sparsify_scb_values(selection)
+    monkeypatch.setattr(cli_module, "source_interpreter_commit", lambda: "c" * 40)
+    output = tmp_path / "hamn-report.json"
+
+    exit_code = cli_module.run(
+        [
+            "--output",
+            str(output),
+            "inspect-source-records",
+            "--input-bundle",
+            str(selection.path),
+            "--input-commit",
+            selection.input_commit,
+            "--input-manifest-sha256",
+            selection.manifest_sha256,
+            "--case",
+            "hamn-signal-unresolved-length",
+        ]
+    )
+
+    assert exit_code == 0
+    assert capsys.readouterr().out == ""
+    data = json.loads(output.read_text(encoding="utf-8"))
+    assert data["preview_level"] == "source_target_only"
+    assert data["complete"] is True
+    assert data["evaluation"]["catalog_changed"] is False
+    assert len(data["evaluation"]["evidence"]) == 20
+    assert len(data["evaluation"]["proposed_members"]) == 10
+
+
+def test_hamn_case_inspection_never_falls_back_to_checkout_curation(
+    tmp_path: Path,
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir, registerinformation_rows=hamn_signal_rows())
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+
+    with pytest.raises(SnapshotError, match="was not captured"):
+        inspect_hamn_signal_source_case(
+            open_input_bundle(selection), code_commit="c" * 40
+        )
+
+
+def test_hamn_case_capture_does_not_activate_the_proposal_in_an_ordinary_build(
+    tmp_path: Path,
+) -> None:
+    selection = _hamn_selection(tmp_path, hamn_signal_rows())
+
+    result = build_db(
+        input_dir=None,
+        input_bundle=selection,
+        db_dir=tmp_path / "db",
+        skip_classifications=True,
+        skip_slugs=True,
+    )
+    with sqlite3.connect(result["db_path"]) as conn:
+        row = conn.execute(
+            "SELECT vs.data_type, vs.data_length "
+            "FROM variable v JOIN variable_state vs USING (variable_id) "
+            "WHERE v.register_id = 161 AND v.provider_key = '1880'"
+        ).fetchone()
+
+    assert row == ("char", "10")
+
+
+def test_hamn_case_semantics_survive_rows_moving_and_unrelated_changes(
+    tmp_path: Path,
+) -> None:
+    rows = hamn_signal_rows()
+    moved = _hamn_report(tmp_path / "moved", list(reversed(rows)))
+    administrative = rows.copy()
+    administrative[0] = replace_registerinformation_cell(
+        administrative[0], "Registerversion_SenastGodkandDatum", ""
+    )
+    administrative_report = _hamn_report(tmp_path / "administrative", administrative)
+    unrelated = [
+        *rows,
+        _var_row(
+            colname="Other",
+            cvid=999999,
+            var_id=999999,
+            year="2003",
+            regver_id=204,
+            register=("HAMN", 161, 232),
+        ),
+    ]
+    unrelated_report = _hamn_report(tmp_path / "unrelated", unrelated)
+
+    assert moved.evaluation.applicable
+    assert administrative_report.evaluation.applicable
+    assert unrelated_report.evaluation.applicable
+    assert {record.record_id for record in moved.evaluation.evidence} == {
+        record.record_id
+        for record in _hamn_report(tmp_path / "baseline", rows).evaluation.evidence
+    }
+    assert {
+        locator.physical_record
+        for locator in moved.evaluation.receipt.evidence_locators
+    } == {f"row:{row}" for row in range(2, 22)}
+
+
+def _hamn_drift(kind: str) -> list[str]:
+    rows = hamn_signal_rows()
+    if kind == "duplicate":
+        return [*rows, rows[0]]
+    if kind == "10_to_12":
+        rows[1] = replace_registerinformation_cell(rows[1], "Datalängd", "12")
+    elif kind == "extra_alternative":
+        return [
+            *rows,
+            replace_registerinformation_cell(rows[0], "Datalängd", "12"),
+        ]
+    elif kind == "disappeared_disagreement":
+        rows[1] = replace_registerinformation_cell(rows[1], "Datalängd", "10")
+    elif kind == "missing_member":
+        return rows[2:]
+    elif kind == "new_member":
+        rows[0] = replace_registerinformation_cell(rows[0], "CVID", "999999")
+    elif kind == "changed_context":
+        rows[0] = replace_registerinformation_cell(
+            rows[0], "Variabeldefinition", "Changed meaning"
+        )
+    elif kind == "missing_supplied_empty":
+        rows[0] = replace_registerinformation_cell(rows[0], "Populationkommentar", "")
+    elif kind == "changed_source":
+        rows[0] = replace_registerinformation_cell(
+            rows[0], "Registersyfte", "Changed purpose"
+        )
+    elif kind == "changed_scope":
+        rows[0] = replace_registerinformation_cell(
+            rows[0], "Registerversionnamn", "2003-2004"
+        )
+    elif kind == "new_regver_in_scope":
+        rows[0] = replace_registerinformation_cell(rows[0], "RegVerID", "999999")
+    elif kind == "competing_spelling":
+        extra = replace_registerinformation_cell(rows[0], "VarId", "999999")
+        extra = replace_registerinformation_cell(extra, "CVID", "999999")
+        extra = replace_registerinformation_cell(extra, "Kolumnnamn", " signal ")
+        return [*rows, extra]
+    else:
+        raise AssertionError(kind)
+    return rows
+
+
+@pytest.mark.parametrize(
+    ("kind", "expected_check"),
+    (
+        ("duplicate", "physical_multiplicity"),
+        ("10_to_12", "before_alternatives"),
+        ("extra_alternative", "before_alternatives"),
+        ("disappeared_disagreement", "before_alternatives"),
+        ("missing_member", "finite_membership"),
+        ("new_member", "finite_membership"),
+        ("changed_context", "context_dependency"),
+        ("missing_supplied_empty", "context_dependency"),
+        ("changed_source", "source_dependency"),
+        ("changed_scope", "annual_scope_dependency"),
+        ("new_regver_in_scope", "finite_membership"),
+        ("competing_spelling", "competing_spelling_scope"),
+    ),
+)
+def test_hamn_case_blocks_changed_finite_evidence(
+    tmp_path: Path, kind: str, expected_check: str
+) -> None:
+    report = _hamn_report(tmp_path, _hamn_drift(kind))
+
+    assert report.complete is False
+    assert report.evaluation.applicable is False
+    assert report.evaluation.proposed_members == ()
+    assert expected_check in {blocker.check for blocker in report.evaluation.blockers}
+
+
+def test_hamn_case_does_not_enroll_a_supported_2013_member(tmp_path: Path) -> None:
+    rows = hamn_signal_rows()
+    extra = []
+    for row in rows[-2:]:
+        row = replace_registerinformation_cell(row, "Registerversionnamn", "2013")
+        row = replace_registerinformation_cell(
+            row,
+            "Registerversionbeskrivning",
+            "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2013",
+        )
+        row = replace_registerinformation_cell(
+            row,
+            "Registerversionmätinformation",
+            "Enstaka fartygsanlöp kan avse år 2012 eller år 2014",
+        )
+        row = replace_registerinformation_cell(
+            row, "Registerversion_ForstaGodkannandeDatum", "2014-07-03"
+        )
+        row = replace_registerinformation_cell(
+            row, "Registerversion_SenastGodkandDatum", "2014-07-04"
+        )
+        row = replace_registerinformation_cell(
+            row, "Populationdatum", "2013-01-01 - 2013-12-31"
+        )
+        row = replace_registerinformation_cell(row, "RegVerID", "5000")
+        row = replace_registerinformation_cell(row, "CVID", "300000")
+        extra.append(row)
+
+    report = _hamn_report(tmp_path, [*rows, *extra])
+
+    assert report.evaluation.applicable is True
+    assert len(report.evaluation.evidence) == 20
+    assert all(member.edition <= 2012 for member in report.evaluation.proposed_members)
 
 
 def test_all_scb_cli_guards_census_destination(

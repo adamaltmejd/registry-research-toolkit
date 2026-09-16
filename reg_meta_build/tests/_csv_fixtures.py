@@ -229,6 +229,186 @@ def _var_row(
     )
 
 
+HAMN_SIGNAL_TARGETS = (
+    (
+        2003,
+        204,
+        2181,
+        "2007-03-14",
+        "2008-06-05",
+        "Egen insamling",
+        "2003-01-01 - 2003-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2003.",
+        "Enstaka fartygsanlöp kan avse år 2002 eller år 2004",
+    ),
+    (
+        2004,
+        466,
+        6294,
+        "2008-02-06",
+        "2008-06-05",
+        "Övrigt",
+        "2004-01-01 - 2004-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2004.",
+        "Enstaka fartygsanlöp kan avse år 2003 eller år 2005",
+    ),
+    (
+        2005,
+        921,
+        27053,
+        "2008-02-06",
+        "2008-06-05",
+        "Övrigt",
+        "2005-01-01 - 2005-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2005.",
+        "Enstaka fartygsanlöp kan avse år 2004 eller år 2006",
+    ),
+    (
+        2006,
+        923,
+        27100,
+        "2008-02-06",
+        "2008-06-05",
+        "Övrigt",
+        "2006-01-01 - 2006-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2006.",
+        "Enstaka fartygsanlöp kan avse år 2005 eller år 2007",
+    ),
+    (
+        2007,
+        1295,
+        103752,
+        "2008-09-25",
+        "2008-09-25",
+        "Övrigt",
+        "2007-01-01 - 2007-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2007.",
+        "Enstaka fartygsanlöp kan avse år 2006 eller år 2008",
+    ),
+    (
+        2008,
+        1447,
+        108315,
+        "2010-02-04",
+        "2010-02-12",
+        "Övrigt",
+        "2008-01-01 - 2008-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2008.",
+        "Enstaka fartygsanlöp kan avse år 2007 eller år 2009",
+    ),
+    (
+        2009,
+        2932,
+        172858,
+        "2012-01-13",
+        "2012-01-16",
+        "Övrigt",
+        "2009-01-31 - 2009-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2009",
+        "Enstaka fartygsanlöp kan avse år 2008 eller år 2010",
+    ),
+    (
+        2010,
+        3823,
+        236400,
+        "2012-08-16",
+        "2012-08-17",
+        "Övrigt",
+        "2010-01-01 - 2010-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2010",
+        "Enstaka fartygsanlöp kan avse år 2009 eller år 2011",
+    ),
+    (
+        2011,
+        4301,
+        274240,
+        "2012-10-18",
+        "2012-10-19",
+        "Övrigt",
+        "2011-01-01 - 2011-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2011",
+        "Enstaka fartygsanlöp kan avse år 2010 eller år 2012",
+    ),
+    (
+        2012,
+        4706,
+        292587,
+        "2013-07-03",
+        "2013-07-04",
+        "Övrigt",
+        "2012-01-01 - 2012-12-31",
+        "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser 2012",
+        "Enstaka fartygsanlöp kan avse år 2011 eller år 2013",
+    ),
+)
+
+
+def hamn_signal_rows() -> list[str]:
+    """Reconstruct the ticket's twenty independent 36-cell source observations."""
+    rows: list[str] = []
+    for (
+        year,
+        regver_id,
+        cvid,
+        first_date,
+        last_date,
+        variable_from,
+        population_date,
+        version_description,
+        version_measurement,
+    ) in HAMN_SIGNAL_TARGETS:
+        for length in ("10", "11"):
+            row = _ri_row(
+                "Utrikes och inrikes trafik med fartyg (HAMN)",
+                "Trafik med fartyg",
+                "Innehåller information om fartygs-,varu- och passagerartrafiken i svenska hamnar och lastageplatser.",
+                "Utrikes och inrikes trafik med fartyg",
+                "Trafik med fartyg",
+                "Innehåller information om fartygs-, varu- och passagerartrafiken i svenska hamnar och lastageplatser.",
+                "Sekretess i 70 år enligt 24 kap. 8 § offentlighets- och  sekretesslagen (2009:400)",
+                str(year),
+                version_description,
+                version_measurement,
+                "Offentlig",
+                first_date,
+                last_date,
+                "Havsgående fartyg",
+                '"Havsgående fartyg med en bruttodräktighet om 20 och däröver som anlöper svenska hamnar och lastageplatser för att lossa/lasta gods eller för att embarkera/debarkera passagerare.\r\n\r\nMed detta avses fartyg som seglar till havs samt fartyg som fraktar gods på Vänern och Mälaren, men däremot inte fartyg som endast seglar på övriga inre vattenvägar eller i nära anslutning till skyddade vatten samt inom områden som omfattas av hamnföreskrifter."',
+                "",
+                population_date,
+                "Flyttbart objekt",
+                "Används då objektet är en nyttighet som entydigt kan hänföras till icke-fast objekt, men där inte någon av undertyperna är tillämplig",
+                "Fartygets signal",
+                "Fartygets anropssignal är unikt för fartyget och kan hänföras till ett lands skeppsregister",
+                "",
+                "",
+                "",
+                variable_from,
+                "",
+                "",
+                "Okänd",
+                "Signal",
+                "char",
+                length,
+                str(cvid),
+                "161",
+                "232",
+                str(regver_id),
+                "1880",
+            )
+            rows.append(
+                PIPE.join('""' if cell == "" else cell for cell in row.split(PIPE))
+            )
+    return rows
+
+
+def replace_registerinformation_cell(row: str, name: str, value: str) -> str:
+    """Replace one fixture cell without coupling tests to its column ordinal."""
+    cells = row.split(PIPE)
+    cells[REGISTERINFORMATION_HEADER.split(PIPE).index(name)] = value
+    return PIPE.join(cells)
+
+
 REGISTERINFORMATION_ROWS = [
     _ri_row(
         "TESTREG",
