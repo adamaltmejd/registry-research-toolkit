@@ -470,7 +470,11 @@ def evaluate_hamn_signal_source_case(
         native = record.subject.native
         if native.register_id != case.scope_dependency.register_id:
             continue
-        if native.register_variant_id != case.scope_dependency.register_variant_id:
+        if (
+            native.register_variant_id is not None
+            and native.register_variant_id
+            != case.scope_dependency.register_variant_id
+        ):
             continue
         matches_identity = native.variable_id == case.source_dependency.variable_id
         matches_spelling = _spelling(record) == expected_spelling
@@ -531,7 +535,14 @@ def evaluate_hamn_signal_source_case(
             )
             continue
         groups[target].append(record)
-        if (
+        if native.register_variant_id is None:
+            _block(
+                blockers,
+                "target_coordinates",
+                "potentially intersecting record has unknown register variant",
+                target,
+            )
+        elif (
             native.register_id != case.source_dependency.register_id
             or native.register_variant_id != case.source_dependency.register_variant_id
             or native.variable_id != case.source_dependency.variable_id

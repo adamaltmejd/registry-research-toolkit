@@ -976,6 +976,38 @@ def _hamn_selection(root: Path, rows: list[str]):
     )
 
 
+def _hamn_record_with_variant(
+    record: SourceRecord,
+    revision: SourceRevision,
+    variant_id: int | None,
+) -> SourceRecord:
+    variant = (
+        SourceCoordinate(status="unknown")
+        if variant_id is None
+        else SourceCoordinate(status="value", native_id=variant_id)
+    )
+    subject = record.subject.model_copy(
+        update={
+            "variant": variant,
+            "native": record.subject.native.model_copy(
+                update={"register_variant_id": variant_id}
+            ),
+        }
+    )
+    return SourceRecord.create(
+        revision=revision,
+        locators=record.locators,
+        subject=subject,
+        edition_scope=record.edition_scope,
+        reference_period_scope=record.reference_period_scope,
+        fields=record.fields,
+        code_set_references=record.code_set_references,
+        original_period_text=record.original_period_text,
+        context=record.context,
+        delivered_cells=record.delivered_cells,
+    )
+
+
 def test_hamn_case_reports_exact_source_only_proposal_and_typed_output(
     tmp_path: Path,
 ) -> None:
@@ -1071,6 +1103,62 @@ def test_hamn_case_accepts_the_authored_2009_reference_period(
     assert evaluation.applicable is True
     assert len(evaluation.evidence) == 20
     assert len(evaluation.proposed_members) == 10
+
+
+def test_hamn_case_blocks_a_matching_record_with_unknown_variant(
+    tmp_path: Path,
+) -> None:
+    report = _hamn_report(tmp_path, hamn_signal_rows())
+    revision = report.evaluation.receipt.source_revision
+    original = report.evaluation.evidence[0]
+    unknown_variant = _hamn_record_with_variant(original, revision, None)
+    observations = (
+        ScbObservation(
+            record=(
+                unknown_variant if record.record_id == original.record_id else record
+            ),
+            issue=None,
+        )
+        for record in report.evaluation.evidence
+    )
+
+    evaluation = evaluate_hamn_signal_source_case(
+        report.case_artifact, observations, revision
+    )
+
+    assert evaluation.applicable is False
+    assert len(evaluation.evidence) == 20
+    assert unknown_variant.record_id in evaluation.receipt.evidence_record_ids
+    assert any(
+        blocker.check == "target_coordinates"
+        and blocker.target == (2003, 204, 2181)
+        and blocker.detail
+        == "potentially intersecting record has unknown register variant"
+        for blocker in evaluation.blockers
+    )
+
+
+def test_hamn_case_ignores_a_matching_record_in_a_concrete_other_variant(
+    tmp_path: Path,
+) -> None:
+    report = _hamn_report(tmp_path, hamn_signal_rows())
+    revision = report.evaluation.receipt.source_revision
+    outside_variant = _hamn_record_with_variant(
+        report.evaluation.evidence[0], revision, 999
+    )
+    observations = (
+        ScbObservation(record=record, issue=None)
+        for record in (*report.evaluation.evidence, outside_variant)
+    )
+
+    evaluation = evaluate_hamn_signal_source_case(
+        report.case_artifact, observations, revision
+    )
+
+    assert evaluation.applicable is True
+    assert len(evaluation.evidence) == 20
+    assert len(evaluation.proposed_members) == 10
+    assert outside_variant.record_id not in evaluation.receipt.evidence_record_ids
 
 
 def test_hamn_case_cli_uses_captured_bytes_without_lisa_or_cold_values(
