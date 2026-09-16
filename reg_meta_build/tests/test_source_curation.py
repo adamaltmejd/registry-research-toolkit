@@ -19,6 +19,7 @@ from reg_meta_build.source_curation import (
     PeerGuard,
     RecordExpectation,
     RecordProjection,
+    SourceEvidence,
     SourceRecordRef,
     UnresolvedAspect,
     evaluate_case,
@@ -324,9 +325,12 @@ def test_batch_guards_find_new_peers_and_keep_residual_conditions(
         e.status == "applicable"
         for e in evaluate_cases(cases, (record, record, excluded))
     )
-    evaluations = evaluate_cases(cases, iter((record, excluded, another)))
+    evidence = SourceEvidence(iter((record, excluded, another)))
+    evaluations = evaluate_cases(cases, evidence)
     assert all(e.status == "stale" for e in evaluations)
     assert all(e.issues[0].added_members == (_ref(another),) for e in evaluations)
+    assert evaluate_case(case, evidence) == evaluations[0]
+    assert tuple(evidence) == (record, excluded, another)
 
 
 def test_unresolved_aspects_cannot_bypass_checks_by_using_an_unknown_label() -> None:

@@ -36,7 +36,7 @@ from reg_meta_build.source_records import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Iterator
 
     from reg_meta_build.resolved_catalog import ResolvedVariable
 
@@ -735,23 +735,33 @@ def evaluate_cases(
     cases: tuple[CurationCase, ...], records: Iterable[SourceRecord]
 ) -> tuple[CaseEvaluation, ...]:
     """Check decisions together against one complete, unchanged source slice."""
-    evidence = _SourceEvidence(tuple(records))
+    evidence = (
+        records if isinstance(records, SourceEvidence) else SourceEvidence(records)
+    )
     return tuple(_evaluate_case(case, evidence) for case in cases)
 
 
-class _SourceEvidence:
-    """Per-slice indexes; every index includes new evidence, not just expected peers."""
+class SourceEvidence:
+    """Original source slice shared by correction and naming applicability checks.
 
-    def __init__(self, records: tuple[SourceRecord, ...]) -> None:
-        self.records = records
+    Every index includes newly supplied evidence, not just expected peers. Reuse
+    this object only for the same immutable prepared slice; corrected occurrences
+    are output and must never be substituted as its original evidence.
+    """
+
+    def __init__(self, records: Iterable[SourceRecord]) -> None:
+        self.records = tuple(records)
         self.grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]] = (
             defaultdict(list)
         )
-        for record in records:
+        for record in self.records:
             self.grouped[_record_key(record)].append(record)
         self.indexes: dict[
             tuple[str, str], dict[tuple[str, object], list[SourceRecord]]
         ] = {}
+
+    def __iter__(self) -> Iterator[SourceRecord]:
+        return iter(self.records)
 
     @staticmethod
     def _value(record: SourceRecord, selector: tuple[str, str]) -> object:
@@ -826,7 +836,10 @@ def evaluate_source_expectations(
     passing only the previously expected members would hide newly added peers.
     """
     return _evaluate_source_expectations(
-        targets, support, peer_guards, _SourceEvidence(tuple(records))
+        targets,
+        support,
+        peer_guards,
+        records if isinstance(records, SourceEvidence) else SourceEvidence(records),
     )
 
 
@@ -834,7 +847,7 @@ def _evaluate_source_expectations(
     targets: tuple[RecordExpectation, ...],
     support: tuple[RecordExpectation, ...],
     peer_guards: tuple[PeerGuard, ...],
-    evidence: _SourceEvidence,
+    evidence: SourceEvidence,
 ) -> tuple[ApplicabilityIssue, ...]:
     issues: list[ApplicabilityIssue] = []
     for role, expectations in (
@@ -880,7 +893,7 @@ def _evaluate_source_expectations(
 
 def _evaluate_case(
     case: CurationCase,
-    evidence: _SourceEvidence,
+    evidence: SourceEvidence,
 ) -> CaseEvaluation:
     issues = _evaluate_source_expectations(
         case.targets, case.support, case.peer_guards, evidence
@@ -1064,8 +1077,10 @@ def inspect_cases(
     """
     from reg_meta_build.resolved_catalog import unresolved_variable_flags
 
-    records = tuple(records)
-    evidence = _SourceEvidence(records)
+    evidence = (
+        records if isinstance(records, SourceEvidence) else SourceEvidence(records)
+    )
+    records = evidence.records
     grouped = evidence.grouped
     ordered_cases = sorted(cases, key=lambda case: (case.case_id, _model_token(case)))
     diagnostics: list[ResolutionDiagnostic] = []

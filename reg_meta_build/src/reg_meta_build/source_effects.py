@@ -22,6 +22,7 @@ from reg_meta_build.source_curation import (
     CurationCase,
     OccurrenceCorrectionDecision,
     ResolutionDiagnostic,
+    SourceEvidence,
     SourceRecordRef,
     _field_matches,
     evaluate_cases,
@@ -149,7 +150,7 @@ def _check_contract(case: CurationCase) -> None:
 
 
 def apply_occurrence_cases(
-    records: tuple[SourceRecord, ...], cases: tuple[CurationCase, ...]
+    records: tuple[SourceRecord, ...] | SourceEvidence, cases: tuple[CurationCase, ...]
 ) -> OccurrenceCorrections:
     """Resolve a complete relevant source slice; never select only expected peers.
 
@@ -162,6 +163,8 @@ def apply_occurrence_cases(
     for case in ordered:
         _check_contract(case)
     evaluations = evaluate_cases(ordered, records)
+    if isinstance(records, SourceEvidence):
+        records = records.records
     evidence: dict[SourceRecordRef, list[SourceRecord]] = defaultdict(list)
     for record in records:
         evidence[record_ref(record)].append(record)
