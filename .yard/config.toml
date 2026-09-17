@@ -8,21 +8,23 @@ dockerfile = ".yard/Dockerfile"
 
 # Agents hold harness/model/session settings. Jobs below hold access,
 # instructions and timeouts; workflows select an implementation agent.
-# Preserve the existing Codex quota fallbacks and Sonnet light agents.
+# Opus implements and resolves conflicts; Fable plans; Sonnet handles light work.
 [agents.implementation]
-harness = "codex"
-model = "gpt-5.6-sol"
+harness = "claude"
+model = "claude-opus-5"
 effort = "xhigh"
 tools = { subagents = true }
+context_limit_tokens = 300000
+compaction_threshold_share = 0.7
 
 [agents.planning]
-harness = "codex"
-model = "gpt-6-astra"
-effort = "xhigh"
+harness = "claude"
+model = "claude-fable-5-1"
+effort = "high"
 
 [agents.conflict]
-harness = "codex"
-model = "gpt-5.6-sol"
+harness = "claude"
+model = "claude-opus-5"
 effort = "high"
 tools = { subagents = true }
 
@@ -318,9 +320,7 @@ reviewer = "codex:gpt-5.6-sol:high"
 # (reg_webapp/frontend/DESIGN.md, ~15 KB), not the 178 KB engineering doc, and
 # never src/tokens.css — autoreview rejects that filename as sensitive.
 [checks.review.reviewers.design]
-# Temporary Claude availability fallback (2026-09-13). Restore the Claude
-# binding after its host CLI/preflight and account access work again.
-reviewer = "codex:gpt-5.6-sol:high"
+reviewer = "claude:claude-opus-5:high"
 context = [
   ".claude/skills/reg-webapp-design-reviewer/SKILL.md",
   "reg_webapp/frontend/DESIGN.md",
