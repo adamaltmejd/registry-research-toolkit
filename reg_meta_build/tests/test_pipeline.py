@@ -52,6 +52,13 @@ def selection(tmp_path, request):
         if getattr(request, "param", True)
         else ("registerinformation",),
     )
+    if getattr(request, "param", None) == "unbound_values":
+        write_scb_input(
+            source,
+            include=("vardemangder", "valid_dates"),
+            vardemangder_rows=["List|1|1|One|broken|5001"],
+            valid_dates_rows=["5001|2020-01-01|2020-12-31"],
+        )
     curation = tmp_path / "curation"
     curation.mkdir()
     (curation / "delivery_enrichment.generated.toml").write_text(
@@ -194,6 +201,30 @@ def test_cli_summary_cannot_overwrite_selected_declarations(selection, tmp_path)
     )
     assert status == EXIT_USAGE
     assert selection.read_bytes() == original
+
+
+@pytest.mark.parametrize("selection", ["unbound_values"], indirect=True)
+def test_unbindable_value_rows_are_reported_without_a_target_occurrence(
+    selection, tmp_path
+):
+    report = tmp_path / "report"
+    result = build_selected_catalog(
+        selection, tmp_path / "diagnostic.db", report, diagnostic=True
+    )
+    assert result["status"] == "diagnostic_complete"
+    assert result["counts"]["value_associations"] == 1
+    with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+        events = [json.loads(line) for line in stream]
+    (problem,) = [e for e in events if e["kind"] == "value_source_issue"]
+    assert problem["code"] == "unknown_native_member_token"
+    assert problem["raw_member_tokens"] == ["broken"]
+    assert problem["occurrence_count"] == 1
+    assert any(
+        e["kind"] == "issue"
+        and e["code"] == problem["code"]
+        and e["severity"] == "error"
+        for e in events
+    )
 
 
 def test_strict_curation_failure_preserves_previous_catalog(selection, tmp_path):

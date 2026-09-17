@@ -13,6 +13,7 @@ import json
 import time
 from collections import Counter
 from contextlib import ExitStack
+from dataclasses import asdict
 from pathlib import Path
 from typing import Literal
 
@@ -382,6 +383,46 @@ def build_selected_catalog(
             for value in support.diagnostics:
                 issue(value)
             sessions = stack.enter_context(open_value_bindings(prepared.value_sources))
+            value_roles = {
+                entry.revision.dataset: entry.role
+                for entry in prepared.manifest.inputs
+                if entry.revision is not None
+            }
+            for session in sessions:
+                manifest = session.session.source.manifest
+                canonical = value_roles[session.source] == "code_list"
+                if session.join is None and not canonical:
+                    raise ValueError(
+                        f"value source lacks an implemented join contract: {session.source}"
+                    )
+                event(
+                    "value_source",
+                    {
+                        "source": session.source,
+                        "disposition": "canonical_evidence"
+                        if canonical
+                        else "occurrence_coding",
+                        "associations": manifest.association_count,
+                        "validity_rows": manifest.validity_count,
+                    },
+                )
+                counts["value_associations"] += manifest.association_count
+                if canonical:
+                    continue
+                for problem in session.source_issues():
+                    # An unbindable list has no target occurrence to visit later.
+                    # Preserve its exact lookup tokens separately from field issues.
+                    event("value_source_issue", asdict(problem))
+                    issue(
+                        ResolutionDiagnostic(
+                            code=problem.code,
+                            severity="error",
+                            subject=session.source,
+                            detail=f"Source code-list evidence cannot identify its target: {problem!r}",
+                            fields=("coding",),
+                            withheld_output=("unbound_value_membership",),
+                        )
+                    )
             _emit_timing("pipeline: reference metadata and support", phase_started)
             phase_started = time.perf_counter()
             for entry in entries:
