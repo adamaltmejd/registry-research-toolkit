@@ -1,62 +1,17 @@
-"""Tests for the delivery-list enrichment overlay (#365 PR1a;
-`delivery_enrichment.py`).
-
-Covers the TOML loader (structural validation, EXIT_CONFIG on defects) and the
-description-backfill apply pass against hand-curated slugged DBs: gap-fill-only
-(never overwrites), fail-fast included-provider resolution, idempotency, and the
-provider gate."""
+"""Validate accepted delivery-description and alias input declarations."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_variable, build_slugged_db
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.delivery_enrichment import (
-    CuratedAlias,
-    DeliveryEnrichment,
-    DescriptionBackfill,
-    apply_delivery_enrichment,
     load_delivery_enrichment,
 )
 
 if TYPE_CHECKING:
-    import sqlite3
     from pathlib import Path
-
-_SCB = frozenset({"scb"})
-
-
-def _desc(counts: dict[str, int]) -> dict[str, int]:
-    """The description-backfill counts only (apply also returns alias_* keys)."""
-    return {k: counts[k] for k in ("applied", "skipped", "provider_skipped")}
-
-
-def _alias(counts: dict[str, int]) -> dict[str, int]:
-    return {
-        k.removeprefix("alias_"): counts[k] for k in counts if k.startswith("alias_")
-    }
-
-
-def _bf(variable: str, description: str, register: str = "lisa") -> DescriptionBackfill:
-    return DescriptionBackfill(
-        provider="scb",
-        register=register,
-        variable=variable,
-        description=description,
-        provenance="test.xlsx",
-    )
-
-
-def _description(conn: sqlite3.Connection, slug: str) -> str | None:
-    return conn.execute(
-        "SELECT description FROM variable WHERE slug = ?", (slug,)
-    ).fetchone()[0]
-
-
-def _set_description(conn: sqlite3.Connection, slug: str, value: str) -> None:
-    conn.execute("UPDATE variable SET description = ? WHERE slug = ?", (value, slug))
 
 
 def _write(path: Path, body: str) -> Path:
@@ -159,119 +114,7 @@ class TestLoader:
         assert exc.value.exit_code == EXIT_CONFIG
 
 
-# ── apply ────────────────────────────────────────────────────────────────────
-
-
-class TestApply:
-    def test_fills_empty_description(self) -> None:
-        conn = build_slugged_db(classification=None)
-        add_variable(conn, register_id=1, var_id=90, name="Inkomst", slug="ink")
-        assert _description(conn, "ink") is None
-
-        counts = apply_delivery_enrichment(
-            conn, DeliveryEnrichment((_bf("ink", "Inkomst av tjänst"),)), providers=_SCB
-        )
-        assert _desc(counts) == {"applied": 1, "skipped": 0, "provider_skipped": 0}
-        assert _description(conn, "ink") == "Inkomst av tjänst"
-
-    def test_does_not_overwrite_existing_description(self) -> None:
-        conn = build_slugged_db(classification=None)
-        add_variable(conn, register_id=1, var_id=90, name="Inkomst", slug="ink")
-        _set_description(conn, "ink", "Official SCB description")
-
-        counts = apply_delivery_enrichment(
-            conn,
-            DeliveryEnrichment((_bf("ink", "Delivery-list text"),)),
-            providers=_SCB,
-        )
-        assert _desc(counts) == {"applied": 0, "skipped": 1, "provider_skipped": 0}
-        assert _description(conn, "ink") == "Official SCB description"
-
-    def test_blank_whitespace_description_is_gap_filled(self) -> None:
-        conn = build_slugged_db(classification=None)
-        add_variable(conn, register_id=1, var_id=90, name="Inkomst", slug="ink")
-        _set_description(conn, "ink", "   ")  # whitespace-only counts as empty
-
-        counts = apply_delivery_enrichment(
-            conn, DeliveryEnrichment((_bf("ink", "Filled"),)), providers=_SCB
-        )
-        assert counts["applied"] == 1
-        assert _description(conn, "ink") == "Filled"
-
-    def test_unresolved_included_provider_target_fails(self) -> None:
-        conn = build_slugged_db(classification=None)
-
-        with pytest.raises(RegMetaError) as exc:
-            apply_delivery_enrichment(
-                conn,
-                DeliveryEnrichment((_bf("does-not-exist", "x"),)),
-                providers=_SCB,
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "delivery_enrichment_unresolved"
-        assert "scb/lisa/does-not-exist" in exc.value.message
-
-    def test_wrong_register_does_not_cross_resolve(self) -> None:
-        conn = build_slugged_db(classification=None)
-        add_variable(conn, register_id=1, var_id=90, name="Inkomst", slug="ink")
-        # register 'agi' isn't in the fixture (only lisa) → included-provider drift
-        with pytest.raises(RegMetaError) as exc:
-            apply_delivery_enrichment(
-                conn,
-                DeliveryEnrichment((_bf("ink", "x", register="agi"),)),
-                providers=_SCB,
-            )
-        assert exc.value.code == "delivery_enrichment_unresolved"
-
-    def test_provider_gate_skips_inactive_provider(self) -> None:
-        conn = build_slugged_db(classification=None)
-        add_variable(conn, register_id=1, var_id=90, name="Inkomst", slug="ink")
-        # scb entry, but only sos is active → filtered out entirely (not unresolved)
-        counts = apply_delivery_enrichment(
-            conn,
-            DeliveryEnrichment((_bf("ink", "x"),)),
-            providers=frozenset({"sos"}),
-        )
-        assert _desc(counts) == {"applied": 0, "skipped": 0, "provider_skipped": 1}
-        assert _description(conn, "ink") is None
-
-    def test_idempotent_second_run_is_skip(self) -> None:
-        conn = build_slugged_db(classification=None)
-        add_variable(conn, register_id=1, var_id=90, name="Inkomst", slug="ink")
-        enr = DeliveryEnrichment((_bf("ink", "Inkomst av tjänst"),))
-
-        first = apply_delivery_enrichment(conn, enr, providers=_SCB)
-        second = apply_delivery_enrichment(conn, enr, providers=_SCB)
-        assert first["applied"] == 1
-        assert _desc(second) == {
-            "applied": 0,
-            "skipped": 1,
-            "provider_skipped": 0,
-        }
-
-
 # ── alias loader ─────────────────────────────────────────────────────────────
-
-
-def _ca(variable: str, delivery_column: str, register: str = "lisa") -> CuratedAlias:
-    return CuratedAlias(
-        provider="scb",
-        register=register,
-        variable=variable,
-        delivery_column=delivery_column,
-        provenance="",
-    )
-
-
-def _alias_columns(conn: sqlite3.Connection, slug: str) -> set[str]:
-    return {
-        r[0]
-        for r in conn.execute(
-            "SELECT va.delivery_column_name FROM variable_alias va "
-            "JOIN variable v ON va.variable_id = v.variable_id WHERE v.slug = ?",
-            (slug,),
-        )
-    }
 
 
 class TestAliasLoader:
@@ -338,73 +181,3 @@ class TestAliasLoader:
             ("kurs", "Amneskod_omkodad"),
             ("kurs", "Kurskod_omkodad"),
         ]
-
-
-class TestApplyAliases:
-    def test_inserts_alias_on_variant_with_state(self) -> None:
-        conn = build_slugged_db()  # scb/lisa/kon, state + alias "Kon" under variant 10
-        counts = apply_delivery_enrichment(
-            conn, DeliveryEnrichment((), (_ca("kon", "LopNr_Kon"),)), providers=_SCB
-        )
-        assert _alias(counts) == {
-            "applied": 1,
-            "skipped": 0,
-            "provider_skipped": 0,
-        }
-        assert _alias_columns(conn, "kon") == {"Kon", "LopNr_Kon"}
-
-    def test_existing_column_is_skipped(self) -> None:
-        conn = build_slugged_db()
-        counts = apply_delivery_enrichment(
-            conn, DeliveryEnrichment((), (_ca("kon", "Kon"),)), providers=_SCB
-        )
-        assert _alias(counts) == {
-            "applied": 0,
-            "skipped": 1,
-            "provider_skipped": 0,
-        }
-
-    def test_idempotent_second_run_skips(self) -> None:
-        conn = build_slugged_db()
-        enr = DeliveryEnrichment((), (_ca("kon", "LopNr_Kon"),))
-        apply_delivery_enrichment(conn, enr, providers=_SCB)
-        second = apply_delivery_enrichment(conn, enr, providers=_SCB)
-        assert _alias(second) == {
-            "applied": 0,
-            "skipped": 1,
-            "provider_skipped": 0,
-        }
-
-    def test_unresolved_included_provider_alias_fails(self) -> None:
-        conn = build_slugged_db()
-        with pytest.raises(RegMetaError) as exc:
-            apply_delivery_enrichment(
-                conn, DeliveryEnrichment((), (_ca("nope", "X"),)), providers=_SCB
-            )
-        assert exc.value.code == "delivery_enrichment_unresolved"
-
-    def test_variable_without_state_fails(self) -> None:
-        conn = build_slugged_db()
-        # a variable with NO variable_state → no variant to attach to
-        add_variable(conn, register_id=1, var_id=91, name="Bistånd", slug="stateless")
-        with pytest.raises(RegMetaError) as exc:
-            apply_delivery_enrichment(
-                conn,
-                DeliveryEnrichment((), (_ca("stateless", "X"),)),
-                providers=_SCB,
-            )
-        assert exc.value.code == "delivery_enrichment_unresolved"
-
-    def test_provider_gate_skips_inactive(self) -> None:
-        conn = build_slugged_db()
-        counts = apply_delivery_enrichment(
-            conn,
-            DeliveryEnrichment((), (_ca("kon", "LopNr_Kon"),)),
-            providers=frozenset({"sos"}),
-        )
-        assert _alias(counts) == {
-            "applied": 0,
-            "skipped": 0,
-            "provider_skipped": 1,
-        }
-        assert "LopNr_Kon" not in _alias_columns(conn, "kon")
