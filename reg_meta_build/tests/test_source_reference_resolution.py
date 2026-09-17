@@ -22,7 +22,9 @@ from reg_meta_build.source_reference_records import (
 from reg_meta_build.source_reference_resolution import (
     ExportDeclaration,
     resolve_export_metadata,
+    resolve_identifier_metadata,
 )
+from test_source_scope import record
 
 REVISION = SourceRevision.create(
     dataset="schema",
@@ -83,6 +85,42 @@ def test_export_metadata_coalesces_equal_assertions_and_keeps_known_optional_tex
     assert result.metadata.source_columns[0].nullable
     assert result.metadata.source_join_keys[0].description == "Identifier"
     assert resolve_export_metadata(reversed(declarations)) == result
+
+
+def test_identifier_descriptions_keep_supported_fields_and_report_conflicts():
+    original = record()
+    original = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={
+                    "name": value_field("Identifier"),
+                    "definition": value_field("Original definition"),
+                }
+            )
+        }
+    )
+    missing = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={"definition": SourceField(status="unknown")}
+            )
+        }
+    )
+    supported = resolve_identifier_metadata((original, missing))
+    assert not supported.diagnostics
+    assert supported.metadata.identifiers[0].definition == "Original definition"
+    changed = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={"definition": value_field("Other definition")}
+            )
+        }
+    )
+    disputed = resolve_identifier_metadata((original, changed))
+    assert disputed.metadata.identifiers[0].name == "Identifier"
+    assert disputed.metadata.identifiers[0].definition is None
+    assert disputed.diagnostics[0].code == "conflicting_identifier_metadata"
+    assert resolve_identifier_metadata((changed, original)) == disputed
 
 
 def test_conflicting_export_types_withhold_the_column_and_its_dependent_key() -> None:

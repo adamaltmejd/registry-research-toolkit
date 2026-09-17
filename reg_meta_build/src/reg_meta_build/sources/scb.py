@@ -48,6 +48,7 @@ from reg_meta_build._curation import (
     _data_type_class,
     _looks_like_code_label_pair,
     fold_column,
+    sibling_shape_conflict,
 )
 
 # Shared SCB-CSV / hashing / progress infra + the Vardemangder sentinel
@@ -1911,12 +1912,9 @@ def _import_bug_suspect(a: _StateGroup | None, b: _StateGroup | None) -> bool:
     nearly every split, diluting the taxonomy."""
     if a is None or b is None:
         return False
-    class_a, class_b = _data_type_class(a.data_type), _data_type_class(b.data_type)
-    if {class_a, class_b} == {"numeric", "text"}:
-        return True
-    if "other" in (class_a, class_b) and a.data_length and b.data_length:
-        return a.data_length != b.data_length
-    return False
+    return sibling_shape_conflict(
+        (a.data_type, a.data_length), (b.data_type, b.data_length)
+    )
 
 
 def _split_relation_kind(

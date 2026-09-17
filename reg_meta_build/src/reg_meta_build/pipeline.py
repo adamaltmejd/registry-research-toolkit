@@ -24,8 +24,12 @@ from reg_meta_build.catalog_dependencies import (
     resolve_panel_dependencies,
     resolve_variable_edge_groups,
 )
+from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
-from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+from reg_meta_build.prepared_catalog import (
+    ReferenceEvidence,
+    open_prepared_catalog_sources,
+)
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
@@ -35,13 +39,27 @@ from reg_meta_build.resolved_catalog import (
 from reg_meta_build.resolved_metadata import ResolvedMetadata
 from reg_meta_build.source_classifications import resolve_canonical_codes
 from reg_meta_build.source_coordinates import NativeKey  # noqa: TC001
-from reg_meta_build.source_curation import (  # noqa: TC001
+from reg_meta_build.source_curation import (
     CurationCase,
+    PeerGuard,
+    RecordExpectation,
     ResolutionDiagnostic,
+    SourceRecordRef,
+    evaluate_source_expectations,
 )
 from reg_meta_build.source_naming import (  # noqa: TC001
     NamingAmbiguity,
     NamingDeclaration,
+)
+from reg_meta_build.source_records import SourceRevision  # noqa: TC001
+from reg_meta_build.source_reference_records import (
+    SourceColumnTypeDeclaration,
+    SourceEventDeclaration,
+    SourceJoinKeyDeclaration,
+)
+from reg_meta_build.source_reference_resolution import (
+    resolve_export_metadata,
+    resolve_identifier_metadata,
 )
 from reg_meta_build.source_scope import resolve_source_scope
 from reg_meta_build.source_support import SourceSupportBindings
@@ -50,6 +68,21 @@ from reg_meta_build.source_value_bindings import open_value_bindings
 
 class _Model(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
+
+
+class UnappliedCuration(_Model):
+    """An existing decision lacking sufficient evidence to apply it safely.
+
+    Always an error, never an accepted waiver. Preserve the input entry and exact
+    observed ambiguity. Missing implementation belongs in selection.unconverted.
+    """
+
+    revision: SourceRevision
+    pointer: str = Field(pattern=r"^/")
+    reason: str = Field(min_length=1)
+    targets: tuple[RecordExpectation, ...] = Field(min_length=1)
+    peer_guards: tuple[PeerGuard, ...] = Field(min_length=1)
+    missing_variable: str | None = None
 
 
 class ScopeDeclarations(_Model):
@@ -62,6 +95,7 @@ class ScopeDeclarations(_Model):
     naming_ambiguities: tuple[NamingAmbiguity, ...] = ()
     provider_keys: tuple[tuple[NativeKey, str | None], ...] = ()
     variants: tuple[tuple[NativeKey, ResolvedVariant], ...] = ()
+    unapplied_curation: tuple[UnappliedCuration, ...] = ()
 
 
 class ScopeFile(_Model):
@@ -89,7 +123,8 @@ class PipelineSelection(_Model):
     classification_successions: tuple[ResolvedClassificationSuccession, ...] = ()
     metadata: ResolvedMetadata = ResolvedMetadata()
     code_label_pairs: tuple[CodeLabelPair, ...] = ()
-    foldable_sibling_pairs: tuple[tuple[str, str], ...] = ()
+    identifier_sources: tuple[str, ...] = ()
+    lineage_defaults: tuple[tuple[str, str], ...] = ()
     # A converter must disclose unfinished required work. Neither diagnostic mode
     # nor a successful partial source scan may turn it into a publication waiver.
     unconverted: tuple[str, ...] = ()
@@ -180,11 +215,37 @@ def build_selected_catalog(
         raise ValueError(
             "curation scopes do not cover the complete prepared occurrence-source selection"
         )
+    support_sources = {
+        e.revision.dataset
+        for e in prepared.manifest.inputs
+        if e.record_usage == "field_support" and e.revision is not None
+    }
+    if (
+        len(set(selected.identifier_sources)) != len(selected.identifier_sources)
+        or not set(selected.identifier_sources) <= support_sources
+    ):
+        raise ValueError(
+            "identifier metadata must select distinct prepared support sources"
+        )
+    if any(
+        getattr(selected.metadata, name)
+        for name in (
+            "identifiers",
+            "source_columns",
+            "source_join_keys",
+            "timeseries_events",
+        )
+    ):
+        raise ValueError(
+            "literal reference metadata must be resolved from prepared sources"
+        )
     report_dir.mkdir(parents=True, exist_ok=False)
     counts: Counter[str] = Counter()
     seen_scopes, seen_cases = set(), set()
+    seen_unapplied = set()
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
+    sibling_pairs = set()
     with ExitStack() as stack:
         events = stack.enter_context(
             gzip.open(report_dir / "events.jsonl.gz", "wt", encoding="utf-8")
@@ -203,6 +264,57 @@ def build_selected_catalog(
         try:
             for entry in prepared.manifest.inputs:
                 event("input", entry.model_dump(mode="json"))
+            declarations = []
+            for index, item in enumerate(prepared.iter_evidence()):
+                disposition = "source_context"
+                if isinstance(item, ReferenceEvidence):
+                    declaration = item.declaration
+                    if isinstance(
+                        declaration,
+                        SourceColumnTypeDeclaration
+                        | SourceEventDeclaration
+                        | SourceJoinKeyDeclaration,
+                    ):
+                        declarations.append(declaration)
+                        disposition = "literal_metadata"
+                    else:
+                        disposition = "unbound_relationship"
+                        issue(
+                            ResolutionDiagnostic(
+                                code="unbound_source_relationship",
+                                severity="error",
+                                subject=repr(declaration.locator.semantic_record_key),
+                                detail="A literal source relationship has no accepted binding to catalog endpoints; its evidence is retained without inventing that binding.",
+                                refs=(
+                                    SourceRecordRef(
+                                        source=declaration.revision.dataset,
+                                        semantic_record_key=declaration.locator.semantic_record_key,
+                                    ),
+                                ),
+                                withheld_output=("catalog_relationship",),
+                            )
+                        )
+                event(
+                    "prepared_evidence",
+                    {
+                        "index": index,
+                        "revision_id": item.revision_id,
+                        "evidence_kind": item.kind,
+                        "disposition": disposition,
+                    },
+                )
+                counts["prepared_evidence"] += 1
+            exports = resolve_export_metadata(declarations)
+            identifiers = resolve_identifier_metadata(
+                record
+                for source in selected.identifier_sources
+                for record in prepared.records.iter_records(source=source)
+            )
+            for value in (*exports.diagnostics, *identifiers.diagnostics):
+                issue(value)
+            source_metadata = exports.metadata.model_copy(
+                update={"identifiers": identifiers.metadata.identifiers}
+            )
             value_sources = {
                 v.manifest.revision.dataset: v for v in prepared.value_sources
             }
@@ -306,7 +418,68 @@ def build_selected_catalog(
                         ),
                         on_diagnostic=issue,
                     )
+                    for gap in scope.unapplied_curation:
+                        entry_key = gap.revision.revision_id, gap.pointer
+                        if entry_key in seen_unapplied:
+                            raise ValueError("unapplied curation entry is repeated")
+                        seen_unapplied.add(entry_key)
+                        if gap.revision not in tuple(
+                            e.revision for e in prepared.manifest.inputs
+                        ):
+                            raise ValueError(
+                                "unapplied curation is not from the selected input revision"
+                            )
+                        if (
+                            gap.missing_variable is not None
+                            and ("variable", gap.missing_variable)
+                            not in result.withheld_dependencies
+                        ):
+                            raise ValueError(
+                                "unapplied curation target is not an evidenced withheld variable; finish its conversion"
+                            )
+                        stale = evaluate_source_expectations(
+                            gap.targets, (), gap.peer_guards, originals
+                        )
+                        entry = f"{gap.revision.dataset}#{gap.pointer}"
+                        issue(
+                            ResolutionDiagnostic(
+                                code="stale_unapplied_curation"
+                                if stale
+                                else "unapplied_existing_curation",
+                                severity="error",
+                                subject=entry,
+                                detail="Recorded curation ambiguity changed; re-evaluate the entry."
+                                if stale
+                                else gap.reason,
+                                refs=tuple(target.ref for target in gap.targets),
+                                withheld_output=(entry,),
+                            )
+                        )
+                        event(
+                            "unapplied_curation",
+                            {
+                                "entry": entry,
+                                "reason": gap.reason,
+                                "applicability_issues": [
+                                    s.model_dump(mode="json") for s in stale
+                                ],
+                            },
+                        )
+                        counts["unapplied_curation"] += 1
                     seen_scopes.add(scope_key)
+                    sibling_pairs.update(result.siblings.pairs)
+                    for pair in result.siblings.decisions:
+                        event(
+                            "sibling_pair",
+                            {
+                                "family": pair.family,
+                                "a": pair.a,
+                                "b": pair.b,
+                                "columns": pair.columns,
+                                "disposition": pair.kind,
+                                "refs": [r.model_dump(mode="json") for r in pair.refs],
+                            },
+                        )
                     for declaration in scope.naming:
                         if declaration.target.kind == "register_variant":
                             key = declaration.target.source_key
@@ -400,8 +573,6 @@ def build_selected_catalog(
                 raise ValueError(
                     "full source occurrence count differs from preparation"
                 )
-            from reg_meta_build.source_curation import SourceRecordRef
-
             refs = {
                 fqid: tuple(
                     SourceRecordRef(source=s, semantic_record_key=k)
@@ -434,7 +605,7 @@ def build_selected_catalog(
             edges = resolve_variable_edge_groups(
                 selected.code_label_pairs,
                 panel.variables,
-                foldable_sibling_pairs=selected.foldable_sibling_pairs,
+                foldable_sibling_pairs=tuple(sorted(sibling_pairs)),
                 curated_groups=selected.metadata.variable_groups,
                 evidence=refs,
                 withheld=withheld,
@@ -449,11 +620,20 @@ def build_selected_catalog(
                 issue(value)
             metadata = selected.metadata.model_copy(
                 update={
+                    **{
+                        name: getattr(source_metadata, name)
+                        for name in (
+                            "identifiers",
+                            "source_columns",
+                            "source_join_keys",
+                            "timeseries_events",
+                        )
+                    },
                     "variable_groups": (
                         *selected.metadata.variable_groups,
                         *edges.groups,
                         *months.groups,
-                    )
+                    ),
                 }
             )
             resolved_metadata = resolve_metadata_dependencies(
@@ -465,6 +645,17 @@ def build_selected_catalog(
                 withheld=withheld,
             )
             for value in resolved_metadata.diagnostics:
+                issue(value)
+            lineage = resolve_catalog_lineage(
+                panel.variables,
+                registers=panel.registers,
+                variants=panel.variants,
+                defaults=_unique_pairs(selected.lineage_defaults, "lineage default"),
+                metadata=resolved_metadata.metadata,
+                evidence=refs,
+                withheld=withheld,
+            )
+            for value in lineage.diagnostics:
                 issue(value)
             successions = resolve_classification_successions(
                 tuple(books.values()), selected.classification_successions
@@ -479,7 +670,7 @@ def build_selected_catalog(
             }
             if diagnostic or not counts["error"]:
                 write_resolved_catalog(
-                    panel.variables,
+                    lineage.variables,
                     output,
                     diagnostic=diagnostic,
                     manifest={
@@ -494,7 +685,7 @@ def build_selected_catalog(
                     editions=panel.editions,
                     classifications=tuple(books.values()),
                     classification_successions=successions,
-                    metadata=resolved_metadata.metadata,
+                    metadata=lineage.metadata,
                 )
                 result.update(
                     status="diagnostic_complete" if diagnostic else "complete",

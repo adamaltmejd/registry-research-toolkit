@@ -6,16 +6,19 @@ import gzip
 import hashlib
 import json
 import sqlite3
+from pathlib import Path
 
 import pytest
 from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
 from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
 from reg_meta_build.cli import run
+from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.pipeline import (
     PipelineSelection,
     ScopeDeclarations,
     ScopeFile,
+    UnappliedCuration,
     build_selected_catalog,
 )
 from reg_meta_build.prepared_catalog import (
@@ -27,7 +30,9 @@ from reg_meta_build.source_coordinates import (
     native_variable_key,
     source_register_key,
 )
+from reg_meta_build.source_curation import PeerGuard
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
+from reg_meta_build.source_records import NativeCoordinates
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
@@ -43,11 +48,17 @@ def selection(tmp_path, request):
         unika_rows=[
             "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
         ],
-        include=("registerinformation", "unika")
+        include=("registerinformation", "unika", "identifierare", "timeseries")
         if getattr(request, "param", True)
         else ("registerinformation",),
     )
-    bundle = write_input_bundle(tmp_path / "inputs", source)
+    curation = tmp_path / "curation"
+    curation.mkdir()
+    (curation / "delivery_enrichment.generated.toml").write_text(
+        '[[description]]\nregister="scb/sample"\nvariable="value"\n'
+        'description="Existing description"\n'
+    )
+    bundle = write_input_bundle(tmp_path / "inputs", source, curation_dir=curation)
     destination = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(bundle, destination)
     commit = accept_prepared(destination)
@@ -108,6 +119,11 @@ def selection(tmp_path, request):
         prepared_path=str(destination),
         prepared_commit=commit,
         prepared_sha256=manifest.sha256,
+        identifier_sources=tuple(
+            e.revision.dataset
+            for e in manifest.inputs
+            if e.revision and e.path == "Identifierare.csv"
+        ),
         scopes=(
             ScopeFile(
                 source=record.source,
@@ -148,6 +164,10 @@ def test_real_build_command_writes_nonpublishable_full_selection(
         flags = dict(conn.execute("SELECT key, value FROM import_manifest"))
         assert flags["catalog_publishable"] == "false"
         assert flags["catalog_completeness"] == "incomplete"
+        assert (
+            conn.execute("SELECT COUNT(*) FROM identifier_semantics").fetchone()[0] == 1
+        )
+        assert conn.execute("SELECT COUNT(*) FROM timeseries_event").fetchone()[0] > 0
     with gzip.open(report / "events.jsonl.gz", "rt") as stream:
         events = [json.loads(line) for line in stream]
     assert sum(e["kind"] == "source_occurrence" for e in events) == 1
@@ -180,6 +200,79 @@ def test_strict_curation_failure_preserves_previous_catalog(selection, tmp_path)
     assert result["database"] is None
     assert output.read_bytes() == b"previous catalog"
     assert not output.with_suffix(".db.prev").exists()
+
+
+def test_unapplied_existing_curation_is_an_error_and_cannot_hide_a_resolved_target(
+    selection, tmp_path
+):
+    selected = PipelineSelection.model_validate_json(selection.read_bytes())
+    prepared = open_prepared_catalog_sources(
+        Path(selected.prepared_path),
+        input_commit=selected.prepared_commit,
+        expected_sha256=selected.prepared_sha256,
+    )
+    file = selected.scopes[0]
+    scope = ScopeDeclarations.model_validate_json(
+        gzip.decompress((selection.parent / file.path).read_bytes())
+    )
+    records = tuple(prepared.records.iter_records(source=scope.source))
+    expected = capture_expectations(records, fields=("column_name",))
+    gap = UnappliedCuration(
+        revision=next(
+            e.revision
+            for e in prepared.manifest.inputs
+            if e.role == "curation" and e.revision is not None
+        ),
+        pointer="/description/0",
+        reason="Existing input decision has unresolved target evidence.",
+        targets=expected,
+        peer_guards=(
+            PeerGuard(
+                guard_id="gap",
+                source=scope.source,
+                native=NativeCoordinates(variable_id=101),
+                expected_members=tuple(e.ref for e in expected),
+            ),
+        ),
+    )
+
+    def save(gap):
+        payload = gzip.compress(
+            scope.model_copy(update={"unapplied_curation": (gap,)})
+            .model_dump_json()
+            .encode(),
+            mtime=0,
+        )
+        (selection.parent / file.path).write_bytes(payload)
+        selection.write_text(
+            selected.model_copy(
+                update={
+                    "scopes": (
+                        file.model_copy(
+                            update={"sha256": hashlib.sha256(payload).hexdigest()}
+                        ),
+                    )
+                }
+            ).model_dump_json()
+        )
+
+    save(gap)
+    report = tmp_path / "gap-report"
+    result = build_selected_catalog(
+        selection, tmp_path / "gap.db", report, diagnostic=True
+    )
+    assert result["status"] == "diagnostic_complete"
+    assert result["counts"]["unapplied_curation"] == 1
+    with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+        assert any(
+            json.loads(line).get("code") == "unapplied_existing_curation"
+            for line in stream
+        )
+    save(gap.model_copy(update={"missing_variable": "scb/sample/value"}))
+    with pytest.raises(ValueError, match="finish its conversion"):
+        build_selected_catalog(
+            selection, tmp_path / "bad-gap.db", tmp_path / "bad-gap", diagnostic=True
+        )
 
 
 def test_diagnostic_database_is_deterministic_and_create_only(selection, tmp_path):

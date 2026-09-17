@@ -7,12 +7,14 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from reg_meta_build.resolved_metadata import (
+    ResolvedIdentifierMetadata,
     ResolvedMetadata,
     ResolvedSourceColumn,
     ResolvedSourceJoinKey,
     ResolvedTimeseriesEvent,
 )
 from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
+from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_reference_records import (
     SourceColumnTypeDeclaration,
     SourceEventDeclaration,
@@ -21,6 +23,8 @@ from reg_meta_build.source_reference_records import (
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+    from reg_meta_build.source_records import SourceRecord
 
 type ExportDeclaration = (
     SourceColumnTypeDeclaration | SourceEventDeclaration | SourceJoinKeyDeclaration
@@ -32,6 +36,58 @@ class ReferenceMetadataResolution:
     metadata: ResolvedMetadata
     diagnostics: tuple[ResolutionDiagnostic, ...]
     withheld: tuple[SourceRecordRef, ...]
+
+
+def resolve_identifier_metadata(
+    records: Iterable[SourceRecord],
+) -> ReferenceMetadataResolution:
+    """Resolve explicitly selected native identifier descriptions, field by field.
+
+    The selected source role supplies integer native IDs. This is reference
+    metadata, not assignment of catalog identities or flags to other records.
+    """
+    grouped = defaultdict(list)
+    for record in records:
+        identifier = record.subject.variable.native_id
+        if type(identifier) is not int or identifier < 1:
+            raise ValueError("identifier metadata requires positive integer native IDs")
+        grouped[identifier].append(record)
+    result, diagnostics, withheld = [], [], set()
+    for identifier, group in sorted(grouped.items()):
+        fields = {}
+        for name in ("name", "definition"):
+            candidates = {
+                field.value
+                for record in group
+                if (field := getattr(record.fields, name)) is not None
+                and field.status == "value"
+            }
+            if any(not isinstance(value, str) for value in candidates):
+                raise TypeError("identifier name and definition must be text")
+            fields[name] = next(iter(candidates)) if len(candidates) == 1 else None
+            if len(candidates) > 1:
+                refs = tuple(sorted({record_ref(r) for r in group}, key=repr))
+                withheld.update(refs)
+                output = f"identifier:{identifier}:{name}"
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="conflicting_identifier_metadata",
+                        severity="error",
+                        subject=output,
+                        detail="Competing identifier descriptions require an explicit correction.",
+                        refs=refs,
+                        fields=(name,),
+                        withheld_output=(output,),
+                    )
+                )
+        result.append(
+            ResolvedIdentifierMetadata(native_variable_id=identifier, **fields)
+        )
+    return ReferenceMetadataResolution(
+        ResolvedMetadata(identifiers=tuple(result)),
+        tuple(diagnostics),
+        tuple(sorted(withheld, key=repr)),
+    )
 
 
 def resolve_export_metadata(

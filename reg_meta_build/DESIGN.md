@@ -120,6 +120,15 @@ code lists into curation data. One event stream records input dispositions, phys
 record uses, case outcomes and issues; full original evidence stays in the prepared
 store.
 
+Literal schema, join-key and event metadata is resolved from prepared evidence during
+the build. Identifier descriptions use explicitly selected support sources; disputed
+fields stay unknown. Worksheet context, headers and original interpretation signals
+remain referenced evidence. Unbound source crosswalks and derivations produce errors
+instead of guessed catalog relationships. Existing corrections that cannot be applied
+because their source meaning is ambiguous retain the original input revision, entry,
+checked observations and peer guards. These are errors, never accepted exceptions;
+missing implementation still blocks the build before resolution.
+
 Completion requires retiring both displaced build paths, separating one-time conversion
 from maintained runtime modules, and removing redundant naming membership guards.
 Ordinary naming needs the established native identity; only actual ownership or
@@ -753,9 +762,18 @@ shared variable to competing groups. Explicit group membership takes precedence 
 components form, so an excluded bridge cannot connect the surviving variables. The
 deterministic component uses its first literal member slug as its key and that member's
 name as its label. A common native definition alone does not establish a foldable pair:
-source-to-pair derivation must preserve the existing code/label and type-shape
-exclusions. That derivation, month groups and full metadata assembly still need
-connecting before cutover.
+source-to-pair derivation preserves the existing code/label and type-shape exclusions.
+It uses checked partitions, actual edition co-delivery and all equally recent shapes;
+withheld identity, availability and shape facts cannot silently become group evidence.
+The connected builder derives these pairs and month groups before materialization.
+
+Source attribution matches literal register names and their explicit parenthesized
+abbreviations within a provider. Competing matches produce errors; unmatched external
+labels remain text. State lineage requires an accepted variable `same_as` path into the
+attributed source register. Equal slugs across registers are insufficient. An explicit
+source-variant default resolves multiple possible variants, and every default is checked
+even when unused. Edges contain only endpoint period intersections. Missing identity or
+variant evidence produces blocking diagnostics and retained lineage warnings.
 
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code

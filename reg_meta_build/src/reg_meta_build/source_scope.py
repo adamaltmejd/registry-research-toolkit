@@ -34,6 +34,7 @@ from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_naming import check_naming_target
 from reg_meta_build.source_representations import resolve_representation_cases
+from reg_meta_build.source_siblings import SiblingResolution, resolve_sibling_pairs
 from reg_meta_build.source_value_bindings import bind_occurrence_code_lists
 
 if TYPE_CHECKING:
@@ -72,6 +73,7 @@ class ScopeResolution:
     error_count: int
     warning_count: int
     withheld_dependencies: dict[DependencyKey, tuple[ResolutionDiagnostic, ...]]
+    siblings: SiblingResolution
 
 
 def resolve_source_scope(
@@ -456,6 +458,25 @@ def resolve_source_scope(
         raise ValueError(
             "source scope did not evaluate every selected case exactly once"
         )
+    sibling_identities = {}
+    for occurrence in corrected.occurrences:
+        key = occurrence.variable_key
+        if key is None or key in sibling_identities:
+            continue
+        declaration = names.get(("variable", key))
+        sibling_identities[key] = (
+            f"{register_fqids[declaration.target.register_key]}/{declaration.naming.slug}"
+            if declaration is not None
+            and declaration.naming.slug is not None
+            and declaration.target.register_key in register_fqids
+            and key not in withheld_naming
+            else None
+        )
+    siblings = resolve_sibling_pairs(
+        corrected.occurrences, identities=sibling_identities
+    )
+    for issue in siblings.diagnostics:
+        emit(issue)
     return ScopeResolution(
         parents,
         corrected,
@@ -465,6 +486,7 @@ def resolve_source_scope(
         counts["error"],
         counts["warning"],
         withheld_dependencies,
+        siblings,
     )
 
 

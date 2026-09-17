@@ -137,6 +137,19 @@ def _looks_like_code_label_pair(col_a: str, col_b: str) -> bool:
     return _is_code_then_label(a, b) or _is_code_then_label(b, a)
 
 
+def sibling_shape_conflict(
+    a: tuple[str | None, str | None], b: tuple[str | None, str | None]
+) -> bool:
+    """Existing split-group guard: numeric/text mismatch, else unknown-type width.
+
+    Different lengths within a known type class do not establish a conflict.
+    """
+    class_a, class_b = _data_type_class(a[0]), _data_type_class(b[0])
+    if {class_a, class_b} == {"numeric", "text"}:
+        return True
+    return bool("other" in (class_a, class_b) and a[1] and b[1] and a[1] != b[1])
+
+
 def canonical_int(value: object) -> int | None:
     """Coerce a TOML `register_id` / `var_id` value to its canonical int, or None
     if it isn't one. A TOML integer is already canonical (the format forbids
