@@ -809,6 +809,13 @@ curation, or claims that this documentation re-audited the host corpus.
 
 **CIS matrix membership.**
 
+- The offline `convert_matrix.py` bridge converts the two already accepted answer
+  declarations to ordinary checked identity/field changes and naming declarations. For
+  the blank CIS 2014 source it retains the original row as support and adds exactly the
+  declared answers, with an explicit checked coding donor. It preserves unknown metadata
+  and pooled editions; neither old false defaults nor inferred annual states are copied.
+  The declaration, coordinates and document/page evidence remain in provenance. No
+  matrix-specific pass runs in common resolution.
 - **Before.** The reviewed CIS 2016 source selector is
   `(register_id=257, register_variant_id=553, edition="2014 - 2016", regver_id=11529, var_id=15662, cvid=469456)`.
   One source question identity covers several answer-column members.
