@@ -47,7 +47,7 @@ def convert_column_partitions(
     *,
     source_id: str,
     split_ids: tuple[str, ...],
-    declared_columns: Mapping[str, str] | None = None,
+    declared_columns: Mapping[str, str | None] | None = None,
     declaration_reference: str | None = None,
 ) -> ColumnPartitionConversion:
     """Check a complete family and bind independently identifiable accepted splits.
@@ -57,7 +57,10 @@ def convert_column_partitions(
     New members or changed relevant facts invalidate the entire checked decision.
     ``declared_columns`` is a complete literal column-to-split-key map already
     asserted by accepted curation, with its original declaration reference. This
-    converter verifies its coverage; it never discovers column equivalence.
+    converter verifies its coverage; it never discovers column equivalence. An
+    explicit None records an unassigned original column, not an identity claim
+    or a curation waiver. Such rows retain their native unresolved identity while
+    independently declared ownership is converted and guarded by the whole family.
     """
     keys = {native_variable_key(record) for record in records}
     if not records or None in keys or len(keys) != 1:
@@ -87,9 +90,9 @@ def convert_column_partitions(
             raise ValueError(
                 "explicit column ownership needs its declaration reference"
             )
-        if set(declared_columns) != set(columns) or set(
-            declared_columns.values()
-        ) != set(split_ids):
+        if set(declared_columns) != set(columns) or {
+            owner for owner in declared_columns.values() if owner is not None
+        } != set(split_ids):
             raise ValueError(
                 "explicit column ownership must cover the complete columns and split keys"
             )
@@ -101,6 +104,33 @@ def convert_column_partitions(
             )
             for key in split_ids
         }
+        unassigned = tuple(
+            sorted(
+                column for column, owner in declared_columns.items() if owner is None
+            )
+        )
+        if unassigned:
+            diagnostics = (
+                ResolutionDiagnostic(
+                    code="unassigned_original_columns",
+                    severity="error",
+                    subject=source_id,
+                    detail="Accepted literal ownership covers only part of the original family. "
+                    f"Unassigned original columns={unassigned!r}; their identity remains unresolved.",
+                    refs=tuple(
+                        sorted(
+                            {
+                                record_ref(record)
+                                for column in unassigned
+                                for record in columns[column]
+                            },
+                            key=str,
+                        )
+                    ),
+                    fields=("identity", "column_name"),
+                    withheld_output=(source_id,),
+                ),
+            )
     elif declaration_reference is not None:
         raise ValueError("a declaration reference requires explicit column ownership")
     else:

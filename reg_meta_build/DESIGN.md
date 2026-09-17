@@ -131,15 +131,19 @@ spellings require an evidence-backed identity decision. Accepted group members t
 explicitly pair a variable with a literal delivery column can supply that ownership;
 group relatedness alone cannot. Conversion requires complete coverage of the native
 family and accepted split keys, retaining the original declaration reference and exact
-source guards. When the complete accepted discriminator inventory matches the source
-inventory, a unique literal partition may convert independently of an ambiguous sibling.
-The ambiguous spellings keep their original identity and an exact unresolved split-key
-report. All original peers still guard the partial decision. Mismatched inventories may
-encode shape splits or rename clusters and do not permit this partial conversion.
-Checked identity assignments let formation retain distinct historical column spellings
-without changing source fields. Identity alone does not choose a primary parallel
-column: an unresolved overlap withholds only the affected state period. Renames and
-shape splits remain explicit conversion work.
+source guards. A complete literal inventory may explicitly leave columns unassigned:
+those retain their native unresolved identity and an error with their exact source
+references, while independently declared ownership converts. Unassigned columns remain
+part of the whole-family guard; they are not acknowledged or silently excluded. When the
+complete accepted discriminator inventory matches the source inventory, a unique literal
+partition may convert independently of an ambiguous sibling. The ambiguous spellings
+keep their original identity and an exact unresolved split-key report. All original
+peers still guard the partial decision. Mismatched inventories may encode shape splits
+or rename clusters and do not permit this partial conversion. Checked identity
+assignments let formation retain distinct historical column spellings without changing
+source fields. Identity alone does not choose a primary parallel column: an unresolved
+overlap withholds only the affected state period. Renames and shape splits remain
+explicit conversion work.
 
 Canonical classification membership uses the explicitly selected prepared codebook. The
 common resolver retains literal codes, deduplicates equal code/label payloads, and

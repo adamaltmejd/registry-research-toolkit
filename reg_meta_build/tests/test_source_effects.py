@@ -816,6 +816,50 @@ def test_declared_column_ownership_requires_original_declaration_reference() -> 
         )
 
 
+def test_explicit_unassigned_columns_do_not_block_independent_reviewed_ownership() -> (
+    None
+):
+    records = (
+        _record(column="ANSWER"),
+        _record(cvid=21, column="Answer"),
+        _record(cvid=22, column="UNASSIGNED"),
+    )
+    converted = convert_column_partitions(
+        records,
+        source_id="1.5",
+        split_ids=("1.5.answer",),
+        declared_columns={
+            "ANSWER": "1.5.answer",
+            "Answer": "1.5.answer",
+            "UNASSIGNED": None,
+        },
+        declaration_reference="Existing exact ownership of ANSWER and Answer",
+    )
+    assert converted.case is not None and len(converted.bindings) == 1
+    assert [(d.code, d.severity, d.refs) for d in converted.diagnostics] == [
+        ("unassigned_original_columns", "error", (record_ref(records[2]),))
+    ]
+    result = apply_occurrence_cases(records, (converted.case,))
+    assert not result.diagnostics
+    assert (
+        result.occurrences[0].variable_key
+        == result.occurrences[1].variable_key
+        == converted.bindings[0].target.source_key
+    )
+    assert result.occurrences[2] == source_occurrence(records[2])
+    assert all(
+        o.fields == r.fields for o, r in zip(result.occurrences, records, strict=True)
+    )
+    # The unassigned part is evidence too; adding a member invalidates the case.
+    added = _record(cvid=23, column="UNASSIGNED", year="2021")
+    assert (
+        apply_occurrence_cases((*records, added), (converted.case,))
+        .accounting[0]
+        .disposition
+        == "stale"
+    )
+
+
 def test_explicit_identity_decision_keeps_exact_columns_and_periods(
     tmp_path: Path,
 ) -> None:
