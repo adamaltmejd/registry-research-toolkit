@@ -270,6 +270,38 @@ def test_checked_effective_scope_preserves_source_validity_and_evidence(
     ]
 
 
+def test_equal_membership_periods_keep_distinct_association_and_validity_evidence(
+    tmp_path: Path,
+) -> None:
+    window = value_window("2020-07-01", None)
+    rows = tuple(
+        SourceValueAssociation(
+            index + 2, "list", code, "values", member_id="1001", item_id=str(index)
+        )
+        for index, code in enumerate(("a", "b"))
+    )
+    validity = tuple(
+        SourceValueValidity(
+            index + 2, str(index), "2020-07-01", None, "validity", window=window
+        )
+        for index in range(2)
+    )
+    source = _prepare(tmp_path / "values", join=_join(), rows=rows, validity=validity)
+    with open_value_bindings((source,)) as sessions:
+        members = bind_code_lists(_record(), sessions).claims[0].members
+        assert [member.scope for member in members] == [
+            TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start="2020-07-01", end="2020-12-31"),),
+            )
+        ] * 2
+        assert [member.associations for member in members] == [(rows[0],), (rows[1],)]
+        assert [member.validity for member in members] == [
+            (validity[0],),
+            (validity[1],),
+        ]
+
+
 def test_native_list_reuse_keeps_each_record_binding_and_checks_scope(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

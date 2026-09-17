@@ -12,6 +12,7 @@ from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
 from datetime import date
+from functools import lru_cache
 from typing import TYPE_CHECKING
 
 from reg_meta_build.source_coding import CodeListClaim, CodeMembershipClaim
@@ -33,10 +34,7 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.source_occurrences import EffectiveOccurrence
     from reg_meta_build.source_records import RecordLocator
-    from reg_meta_build.source_values import (
-        SourceValueAssociation,
-        SourceValueValidity,
-    )
+    from reg_meta_build.source_values import SourceValueAssociation
 
 
 @dataclass(frozen=True)
@@ -101,21 +99,22 @@ def _unknown(reason: str) -> TemporalScope:
     return TemporalScope(kind="unknown", label=reason)
 
 
+@lru_cache(maxsize=4096)
 def _member_scope(
     occurrence: TemporalScope,
-    association: SourceValueAssociation,
-    validity: tuple[SourceValueValidity, ...],
+    supplied_window: SourceValueWindow | None,
+    section_window: SourceValueWindow | None,
+    alternatives: tuple[SourceValueWindow | None, ...],
     *,
     missing_validity: str,
     invalid_item: bool,
 ) -> tuple[TemporalScope | None, str | None]:
+    # Source lists repeat the same periods across thousands of codes. Cache only
+    # immutable period results; each membership retains its own source evidence.
     constraints = tuple(
-        window
-        for window in (association.supplied_window, association.section_window)
-        if window is not None
+        window for window in (supplied_window, section_window) if window is not None
     )
-    alternatives = tuple(value.window for value in validity)
-    if invalid_item or (not validity and missing_validity == "unknown"):
+    if invalid_item or (not alternatives and missing_validity == "unknown"):
         return _unknown("source item validity is unknown"), "unknown_code_validity"
     if any(
         window is None or window.status == "unknown" for window in alternatives
@@ -362,8 +361,9 @@ class ValueBindingSession:
                 )
                 member_scope, issue = _member_scope(
                     scope,
-                    association,
-                    validity,
+                    association.supplied_window,
+                    association.section_window,
+                    tuple(value.window for value in validity),
                     missing_validity=join.missing_validity,
                     invalid_item=invalid_item,
                 )
