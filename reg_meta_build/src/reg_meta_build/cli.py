@@ -912,8 +912,30 @@ def _database_paths(output: Path) -> set[Path]:
     return {output, output.with_name(output.name + ".prev").resolve()}
 
 
+def _pipeline_report_failure(
+    result: dict[str, Any],
+    report_dir: str,
+    curation_exit_code: int,
+    error: Exception,
+) -> dict[str, Any]:
+    return {
+        "error": {
+            "code": "pipeline_report_failed",
+            "class": "diagnostic_output",
+            "message": f"Catalog artifact completed; pipeline reporting failed: {error}",
+            "artifact_complete": True,
+            "status": result["status"],
+            "publication_ready": result["publication_ready"],
+            "database": result["database"],
+            "curation_exit_code": curation_exit_code,
+            "report_dir": report_dir,
+            "remediation": "Keep the completed artifact; repair the report destination. Event or summary reports may be incomplete.",
+        }
+    }
+
+
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .pipeline import build_selected_catalog
+    from .pipeline import CompletedArtifactError, build_selected_catalog
 
     if args.timing:
         os.environ["REG_META_BUILD_TIMING"] = "1"
@@ -939,6 +961,13 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             Path(args.report_dir),
             diagnostic=args.diagnostic,
         )
+    except CompletedArtifactError as exc:
+        return _pipeline_report_failure(
+            exc.result,
+            str(exc.report_dir),
+            EXIT_CONFIG if args.diagnostic else 0,
+            exc,
+        ), EXIT_OUTPUT
     except (ValueError, OSError, KeyError) as exc:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -2414,23 +2443,14 @@ def run(argv: list[str] | None = None) -> int:
                 write_json(payload.get("data", payload), output_path)
         except Exception as exc:
             data = payload.get("data", payload)
-            if args.command == "build-db" and data.get("database"):
+            if args.command == "build-db" and (
+                data.get("database") or data.get("error", {}).get("artifact_complete")
+            ):
                 sys.stderr.write(
                     json.dumps(
-                        {
-                            "error": {
-                                "code": "pipeline_report_failed",
-                                "class": "diagnostic_output",
-                                "message": f"Catalog artifact completed; writing the CLI summary failed: {exc}",
-                                "artifact_complete": True,
-                                "status": data["status"],
-                                "publication_ready": data["publication_ready"],
-                                "database": data["database"],
-                                "curation_exit_code": exit_code,
-                                "report_dir": args.report_dir,
-                                "remediation": "Keep the completed artifact and event report; choose a writable CLI summary destination.",
-                            }
-                        },
+                        _pipeline_report_failure(data, args.report_dir, exit_code, exc)
+                        if data.get("database")
+                        else data,
                         ensure_ascii=False,
                     )
                     + "\n"

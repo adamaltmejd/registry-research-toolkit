@@ -6,6 +6,8 @@ import gzip
 import hashlib
 import json
 import sqlite3
+from contextlib import contextmanager
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -14,6 +16,7 @@ from _prepared_fixtures import accept_prepared
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
+from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.pipeline import (
     PipelineSelection,
     ScopeDeclarations,
@@ -382,6 +385,115 @@ def test_late_cli_summary_failure_reports_completed_artifact(
     assert receipt["curation_exit_code"] == EXIT_CONFIG
     assert receipt["database"] == str(output)
     assert json.loads((report / "summary.json").read_text())["database"] == str(output)
+
+
+@pytest.mark.parametrize("selection", ["typed"], indirect=True)
+def test_pipeline_artifact_dates_its_pinned_preparation_and_boots_backend(
+    selection, tmp_path, monkeypatch
+):
+    from fastapi.testclient import TestClient
+    from reg_webapp.app import create_app
+
+    selected = PipelineSelection.model_validate_json(selection.read_bytes())
+    committed = _git(
+        input_bundle_repository(Path(selected.prepared_path)),
+        "show",
+        "-s",
+        "--format=%cI",
+        selected.prepared_commit,
+    )
+    expected = datetime.fromisoformat(committed).astimezone(UTC)
+    output = tmp_path / "artifact" / "reg_meta.db"
+    build_selected_catalog(selection, output, tmp_path / "report", diagnostic=True)
+    monkeypatch.setenv("REG_META_DB", str(output.parent))
+    monkeypatch.delenv("REG_WEBAPP_STEWARD", raising=False)
+    monkeypatch.delenv("REG_WEBAPP_DELIVERY_INVENTORY", raising=False)
+    with TestClient(create_app()) as client:
+        response = client.get("/api/context")
+    assert response.status_code == 200
+    import_date = response.json()["reg_meta"]["import_date"]
+    assert import_date.endswith("Z")
+    assert datetime.fromisoformat(import_date) == expected
+
+
+@pytest.mark.parametrize("selection", ["typed"], indirect=True)
+@pytest.mark.parametrize("diagnostic", [False, True])
+@pytest.mark.parametrize("failure", ["summary", "events", "summary_and_cli"])
+def test_internal_report_failure_retains_completed_artifact_receipt(
+    selection, tmp_path, monkeypatch, capsys, diagnostic, failure
+):
+    from reg_meta_build import cli, pipeline, resolved_catalog
+
+    # A one-variable fixture cannot meet the real-corpus floors. Retain actual
+    # structural validation and publication while exercising report finalization.
+    validate = resolved_catalog.validate_built_db
+    monkeypatch.setattr(
+        resolved_catalog,
+        "validate_built_db",
+        lambda path, *, corpus: validate(path, corpus=False),
+    )
+    output, report = tmp_path / "artifact" / "reg_meta.db", tmp_path / "report"
+    if not diagnostic:
+        output.parent.mkdir()
+        output.write_bytes(b"previous catalog")
+    original_write = Path.write_text
+    original_open = gzip.open
+
+    def fail_summary(path, *args, **kwargs):
+        if path == report / "summary.json":
+            raise OSError("internal summary failure")
+        return original_write(path, *args, **kwargs)
+
+    @contextmanager
+    def fail_events(*args, **kwargs):
+        with original_open(*args, **kwargs) as stream:
+            yield stream
+        if Path(args[0]) == report / "events.jsonl.gz":
+            raise OSError("event close failure")
+
+    if failure.startswith("summary"):
+        monkeypatch.setattr(Path, "write_text", fail_summary)
+    else:
+        monkeypatch.setattr(pipeline.gzip, "open", fail_events)
+    if failure == "summary_and_cli":
+
+        def fail_cli(*args, **kwargs):
+            raise OSError("CLI summary failure")
+
+        monkeypatch.setattr(cli, "write_json", fail_cli)
+    options = (
+        ["--diagnostic", "--diagnostic-db-path", str(output)]
+        if diagnostic
+        else ["--db", str(output.parent)]
+    )
+    assert (
+        run(
+            [
+                "build-db",
+                "--selection",
+                str(selection),
+                "--report-dir",
+                str(report),
+                *options,
+            ]
+        )
+        == EXIT_OUTPUT
+    )
+    captured = capsys.readouterr()
+    receipt = json.loads(
+        captured.err.splitlines()[-1] if failure == "summary_and_cli" else captured.out
+    )["error"]
+    assert receipt["code"] == "pipeline_report_failed"
+    assert receipt["artifact_complete"] is True
+    assert receipt["status"] == ("diagnostic_complete" if diagnostic else "complete")
+    assert receipt["publication_ready"] is (not diagnostic)
+    assert receipt["database"] == str(output)
+    assert receipt["curation_exit_code"] == (EXIT_CONFIG if diagnostic else 0)
+    assert receipt["report_dir"] == str(report)
+    with sqlite3.connect(output) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0] == 1
+    if not diagnostic:
+        assert Path(str(output) + ".prev").read_bytes() == b"previous catalog"
 
 
 @pytest.mark.parametrize("selection", ["unbound_values"], indirect=True)

@@ -428,6 +428,9 @@ class CuratedOccurrenceAddition(_CurationModel):
     donor: SourceRecordRef | None = None
     copied_fields: tuple[str, ...] = ()
     copy_coding: bool = False
+    expected_codings: (
+        tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...] | None
+    ) = None
 
     @model_validator(mode="after")
     def _explicit_membership(self) -> Self:
@@ -443,6 +446,14 @@ class CuratedOccurrenceAddition(_CurationModel):
             raise ValueError("copied fields and their donor must be supplied together")
         if self.copy_coding and self.donor is None:
             raise ValueError("copied coding requires an explicit checked donor")
+        if self.copy_coding != (self.expected_codings is not None):
+            raise ValueError(
+                "copied coding requires explicit original coding fingerprints"
+            )
+        if self.expected_codings is not None and len(set(self.expected_codings)) != len(
+            self.expected_codings
+        ):
+            raise ValueError("copied coding fingerprints must be unique")
         if len(set(self.copied_fields)) != len(self.copied_fields) or any(
             name not in SourceFields.model_fields for name in self.copied_fields
         ):
@@ -691,6 +702,7 @@ IssueCode = Literal[
     "support_missing",
     "support_projection_changed",
     "peer_membership_changed",
+    "copied_coding_evidence_changed",
 ]
 
 

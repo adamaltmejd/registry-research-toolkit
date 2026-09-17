@@ -172,14 +172,13 @@ def _coverage_scope(evidence: SosRowEvidence) -> TemporalScope:
             and window.start is not None
             and window.end is not None
         ):
+            years_only = all(re.fullmatch(r"[0-9]{4}", bound) for bound in (start, end))
             return TemporalScope(
                 kind="intervals",
                 intervals=(
                     ScopeInterval(
-                        start=start
-                        if re.fullmatch(r"[0-9]{4}", start)
-                        else window.start,
-                        end=end if re.fullmatch(r"[0-9]{4}", end) else window.end,
+                        start=start if years_only else window.start,
+                        end=end if years_only else window.end,
                     ),
                 ),
             )

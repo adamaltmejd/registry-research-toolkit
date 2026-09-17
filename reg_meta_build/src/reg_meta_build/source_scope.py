@@ -35,7 +35,10 @@ from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_naming import check_naming_target
 from reg_meta_build.source_representations import resolve_representation_cases
 from reg_meta_build.source_siblings import SiblingResolution, resolve_sibling_pairs
-from reg_meta_build.source_value_bindings import bind_occurrence_code_lists
+from reg_meta_build.source_value_bindings import (
+    bind_copied_coding,
+    bind_occurrence_code_lists,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping
@@ -140,9 +143,11 @@ def resolve_source_scope(
             emit(issue)
         if issues:
             withheld_naming.add(target.source_key)
-    corrected = apply_occurrence_cases(
-        evidence, tuple(c for c in cases if c.decision.kind == "correct_occurrences")
+    occurrence_cases = tuple(
+        c for c in cases if c.decision.kind == "correct_occurrences"
     )
+    copied_coding = bind_copied_coding(evidence, occurrence_cases, value_sessions)
+    corrected = apply_occurrence_cases(evidence, occurrence_cases, coding=copied_coding)
     for issue in corrected.diagnostics:
         emit(issue)
     evaluations = [a.evaluation for a in corrected.accounting]

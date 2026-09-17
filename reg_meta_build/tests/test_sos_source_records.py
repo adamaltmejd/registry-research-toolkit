@@ -19,7 +19,7 @@ from reg_meta_build.source_reference_records import (
     SourceCodeCrosswalkDeclaration,
     SourceDerivationDeclaration,
 )
-from reg_meta_build.sources.sos import SosParseIssue, parse_register_file
+from reg_meta_build.sources.sos import SosParseError, SosParseIssue, parse_register_file
 from reg_meta_build.sources.sos_records import (
     clean_sos_source,
     clean_sos_variable,
@@ -41,6 +41,10 @@ _CLASSIFICATION_URL = "https://example.test/classifications/ssyk"
         ("201402", "201503", ("2014-02-01", "2015-03-31")),
         ("20140203", "20150405", ("2014-02-03", "2015-04-05")),
         ("2014-02-03", "2015-04-05", ("2014-02-03", "2015-04-05")),
+        ("2020-02-03", "2020", ("2020-02-03", "2020-12-31")),
+        ("202002", "2020", ("2020-02-01", "2020-12-31")),
+        ("2020", "20200203", ("2020-01-01", "2020-02-03")),
+        ("2020", "2020", ("2020", "2020")),
         ("20140203", None, None),
         ("20140230", "20150405", None),
         ("20150405", "20140203", None),
@@ -71,6 +75,37 @@ def test_variable_coverage_preserves_explicit_date_bounds(
     assert next(
         cell for cell in record.delivered_cells if cell.name == "Data från"
     ).raw_value == str(start)
+    assert next(
+        cell for cell in record.delivered_cells if cell.name == "Data till"
+    ).raw_value == (str(end) if end is not None else "")
+
+
+@pytest.mark.parametrize(
+    ("header", "field"),
+    [
+        ("Variabelnamn", "name"),
+        (" variabelNAMN ", "name"),
+        ("Datavynamn", "deldatamangd"),
+        ("Data från", "data_from"),
+        ("Datatyp", "data_type"),
+    ],
+)
+def test_variable_headers_reject_duplicate_semantic_fields(
+    tmp_path: Path, header: str, field: str
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "source.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    sheet = workbook["Metadata - Variabelnivå"]
+    sheet["L1"], sheet["L2"] = header, "SECOND_VALUE"
+    workbook.save(path)
+    original = path.read_bytes()
+
+    with pytest.raises(SosParseError, match=f"ambiguous headers for '{field}'"):
+        parse_register_file(path)
+    assert path.read_bytes() == original
 
 
 def test_absent_formula_cache_does_not_change_existing_source_payloads() -> None:

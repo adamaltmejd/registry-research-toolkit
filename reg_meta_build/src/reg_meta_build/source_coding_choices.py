@@ -20,7 +20,7 @@ from reg_meta_build.source_coding import (
     CodingResolution,
     CodingSegment,
     coding_content_sha256,
-    coding_observation_sha256,
+    coding_observation_fingerprints,
     resolve_code_membership,
 )
 from reg_meta_build.source_curation import (
@@ -202,13 +202,8 @@ def coding_expectations(
     claims: tuple[CodeListClaim, ...], valid_from: str, valid_to: str
 ) -> tuple[str, ...]:
     """Capture exact observed alternatives, including known empty/unknown lists."""
-    return tuple(
-        sorted(
-            {
-                coding_observation_sha256(claim)
-                for claim in coding_for_period(claims, valid_from, valid_to)
-            }
-        )
+    return coding_observation_fingerprints(
+        coding_for_period(claims, valid_from, valid_to)
     )
 
 

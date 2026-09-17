@@ -42,7 +42,11 @@ from reg_meta_build.source_curation import (
     RecordProjection,
     SearchAliasDecision,
 )
-from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
+from reg_meta_build.source_effects import (
+    apply_occurrence_cases,
+    copied_coding_key,
+    record_ref,
+)
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_intervals import resolve_occurrence_intervals
 from reg_meta_build.source_occurrences import source_occurrence
@@ -322,7 +326,7 @@ def test_added_occurrence_copies_coding_only_with_explicit_checked_declaration()
     metadata_only = apply_occurrence_cases((record,), (_case(record, addition),))
     assert metadata_only.occurrences[-1].coding_records == ()
 
-    copied = addition.model_copy(update={"copy_coding": True})
+    copied = addition.model_copy(update={"copy_coding": True, "expected_codings": ()})
     case = _case(record, copied)
     with pytest.raises(ValueError, match="checked code-set references"):
         apply_occurrence_cases((record,), (case,))
@@ -333,9 +337,16 @@ def test_added_occurrence_copies_coding_only_with_explicit_checked_declaration()
             )
         }
     )
-    result = apply_occurrence_cases((record,), (case,))
+    with pytest.raises(ValueError, match="original donor binding evidence"):
+        apply_occurrence_cases((record,), (case,))
+    result = apply_occurrence_cases(
+        (record,), (case,), coding={copied_coding_key(copied): ()}
+    )
     assert result.diagnostics == ()
     assert result.occurrences[-1].coding_records == (record,)
+    without_guard = copied.model_dump(exclude={"expected_codings"})
+    with pytest.raises(ValueError, match="original coding fingerprints"):
+        CuratedOccurrenceAddition.model_validate(without_guard)
 
 
 def test_addition_cannot_omit_coverage_without_marking_it_unresolved() -> None:

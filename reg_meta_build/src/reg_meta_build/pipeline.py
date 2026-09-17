@@ -12,10 +12,11 @@ import hashlib
 import json
 import time
 from collections import Counter
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 from dataclasses import asdict
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -30,6 +31,7 @@ from reg_meta_build.catalog_dependencies import (
 from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
 from reg_meta_build.db import _emit_timing, _paths_overlap
+from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
@@ -70,6 +72,32 @@ from reg_meta_build.source_scope import resolve_source_scope
 from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_bindings import open_value_bindings
 from reg_meta_build.validate import validate_built_db
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+
+class CompletedArtifactError(Exception):
+    """Report finalization failed after the catalog reached its destination."""
+
+    def __init__(
+        self, cause: Exception, result: dict[str, object], report_dir: Path
+    ) -> None:
+        super().__init__(str(cause))
+        self.result = dict(result)
+        self.report_dir = report_dir
+
+
+@contextmanager
+def _retain_completed_artifact(
+    result: dict[str, object], report_dir: Path
+) -> Iterator[None]:
+    try:
+        yield
+    except Exception as exc:
+        if result.get("database"):
+            raise CompletedArtifactError(exc, result, report_dir) from exc
+        raise
 
 
 class _Model(BaseModel):
@@ -215,6 +243,24 @@ def build_selected_catalog(
         input_commit=selected.prepared_commit,
         expected_sha256=selected.prepared_sha256,
     )
+    # The accepted preparation's immutable commit dates the catalog vintage;
+    # rebuild wall time would make identical selected inputs produce new bytes.
+    import_date = (
+        datetime.fromtimestamp(
+            int(
+                _git(
+                    input_bundle_repository(prepared_path),
+                    "show",
+                    "-s",
+                    "--format=%ct",
+                    selected.prepared_commit,
+                )
+            ),
+            UTC,
+        )
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
     if _paths_overlap(
         output_paths,
         input_paths
@@ -274,7 +320,8 @@ def build_selected_catalog(
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
     sibling_pairs = set()
-    with ExitStack() as stack:
+    build_result: dict[str, object] = {}
+    with _retain_completed_artifact(build_result, report_dir), ExitStack() as stack:
         events = stack.enter_context(
             gzip.open(report_dir / "events.jsonl.gz", "wt", encoding="utf-8")
         )
@@ -748,14 +795,16 @@ def build_selected_catalog(
                 lineage.metadata, lineage.variables, successions
             )
             _emit_timing("pipeline: catalog dependencies", phase_started)
-            result = {
-                "status": "blocked" if counts["error"] else "ready",
-                "publication_ready": not diagnostic and not counts["error"],
-                "counts": dict(counts),
-                "variables": len(panel.variables),
-                "states": sum(len(v.states) for v in panel.variables),
-                "database": None,
-            }
+            build_result.update(
+                {
+                    "status": "blocked" if counts["error"] else "ready",
+                    "publication_ready": not diagnostic and not counts["error"],
+                    "counts": dict(counts),
+                    "variables": len(panel.variables),
+                    "states": sum(len(v.states) for v in panel.variables),
+                    "database": None,
+                }
+            )
             if diagnostic or not counts["error"]:
                 phase_started = time.perf_counter()
                 write_resolved_catalog(
@@ -764,6 +813,7 @@ def build_selected_catalog(
                     diagnostic=diagnostic,
                     corpus=not diagnostic,
                     manifest={
+                        "import_date": import_date,
                         "prepared_commit": selected.prepared_commit,
                         "prepared_manifest_sha256": selected.prepared_sha256,
                         "curation_selection_sha256": hashlib.sha256(
@@ -777,11 +827,11 @@ def build_selected_catalog(
                     classification_successions=successions,
                     metadata=final_metadata,
                 )
-                _emit_timing("pipeline: database materialization", phase_started)
-                result.update(
+                build_result.update(
                     status="diagnostic_complete" if diagnostic else "complete",
                     database=str(output),
                 )
+                _emit_timing("pipeline: database materialization", phase_started)
                 if diagnostic:
                     # Structural validation already passed before placement. Keep
                     # the unchanged corpus safeguards visible on partial output.
@@ -790,9 +840,11 @@ def build_selected_catalog(
                         "passed": validation.passed,
                         "failures": validation.failures,
                     }
-                    result["corpus_validation"] = corpus_report
+                    build_result["corpus_validation"] = corpus_report
                     event("corpus_validation", corpus_report)
         except Exception as exc:
+            if build_result.get("database"):
+                raise
             (report_dir / "summary.json").write_text(
                 json.dumps(
                     {
@@ -805,6 +857,9 @@ def build_selected_catalog(
                 + "\n"
             )
             raise
-    (report_dir / "summary.json").write_text(json.dumps(result, indent=2) + "\n")
-    _emit_timing("pipeline: total", started)
-    return result
+    with _retain_completed_artifact(build_result, report_dir):
+        (report_dir / "summary.json").write_text(
+            json.dumps(build_result, indent=2) + "\n"
+        )
+        _emit_timing("pipeline: total", started)
+    return build_result

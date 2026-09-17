@@ -1009,6 +1009,14 @@ def _parse_variables(
             continue
         stem = _VAR_HEADERS.get(cleaned.lower())
         if stem:
+            if stem in col_map:
+                previous = header_cells[col_map[stem]]
+                raise SosParseError(
+                    f"variable sheet {ws.title!r} has ambiguous headers for {stem!r}: "
+                    f"{previous.value!r} at {previous.coordinate} and "
+                    f"{h!r} at {header_cells[i].coordinate}; "
+                    "expected one column per semantic field"
+                )
             col_map[stem] = i
 
     if "name" not in col_map:

@@ -11,7 +11,11 @@ from reg_meta_build.prepared_values import (
     open_prepared_source_values,
     prepare_source_values,
 )
-from reg_meta_build.source_coding import resolve_code_membership
+from reg_meta_build.source_coding import (
+    coding_observation_fingerprints,
+    copied_coding_fingerprints,
+    resolve_code_membership,
+)
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,
@@ -182,6 +186,91 @@ def test_occurrence_binding_distinguishes_coding_evidence_from_metadata_support(
     assert len(copied.bindings) == 1
     assert {claim.scope for claim in copied.claims} == {declared.edition_scope}
     assert copied.bindings[0].record_locators == record.locators
+
+
+@pytest.mark.parametrize("kind", ("pooled", "unknown"))
+@pytest.mark.parametrize("constraint", ("item", "row", "section"))
+def test_undated_copied_coding_pins_original_validity_constraints(
+    tmp_path: Path, kind, constraint
+) -> None:
+    record = _record()
+    copied = replace(
+        source_occurrence(record),
+        source_records=(),
+        coding_records=(record,),
+        support_records=(record,),
+        occurrence_key="undated-copy",
+        edition_scope=TemporalScope(kind=kind, label="Original unresolved coverage"),
+    )
+    fingerprints = []
+    for year in (2019, 2020):
+        window = SourceValueWindow("known", f"{year}-01-01", f"{year}-12-31")
+        association = SourceValueAssociation(
+            2,
+            "list",
+            "a",
+            "values",
+            member_id="1001",
+            item_id="1",
+            supplied_window=window if constraint == "row" else None,
+            section_window=window if constraint == "section" else None,
+        )
+        validity = (
+            (
+                SourceValueValidity(
+                    2, "1", window.start, window.end, "validity", window=window
+                ),
+            )
+            if constraint == "item"
+            else ()
+        )
+        source = _prepare(
+            tmp_path / str(year) / "values",
+            join=_join(),
+            rows=(association,),
+            validity=validity,
+        )
+        with open_value_bindings((source,)) as sessions:
+            bound = bind_occurrence_code_lists(copied, sessions)
+        fingerprints.append(coding_observation_fingerprints(bound.claims))
+        assert bound.claims[0].members[0].associations == (association,)
+        assert resolve_code_membership(bound.claims).segments == ()
+    assert fingerprints[0] != fingerprints[1]
+
+
+def test_finite_copy_pins_changed_validity_even_when_both_intersections_are_unknown(
+    tmp_path: Path,
+) -> None:
+    association = SourceValueAssociation(
+        2,
+        "list",
+        "a",
+        "values",
+        member_id="1001",
+        item_id="1",
+        supplied_window=SourceValueWindow("known", "2020-01-01", "2020-03-31"),
+    )
+    observations, copies = [], []
+    for start, end in (("2020-07-01", "2020-09-30"), ("2020-10-01", "2020-12-31")):
+        window = SourceValueWindow("known", start, end)
+        source = _prepare(
+            tmp_path / start / "values",
+            join=_join(),
+            rows=(association,),
+            validity=(
+                SourceValueValidity(2, "1", start, end, "validity", window=window),
+            ),
+        )
+        with open_value_bindings((source,)) as sessions:
+            bound = bind_code_lists(_record(), sessions)
+        assert [issue.code for issue in bound.issues] == ["conflicting_code_validity"]
+        assert bound.claims[0].members[0].scope.kind == "unknown"
+        observations.append(coding_observation_fingerprints(bound.claims))
+        copies.append(copied_coding_fingerprints(bound.claims))
+    # Copy guards preserve the conflicting assertions while existing finite coding
+    # decision fingerprints keep their scoped observation contract.
+    assert observations[0] == observations[1]
+    assert copies[0] != copies[1]
 
 
 @pytest.mark.parametrize("mixed", [False, True])

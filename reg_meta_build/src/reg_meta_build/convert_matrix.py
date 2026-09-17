@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 from reg_meta_build.cis2016_matrix import Cis2014Matrix
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.fqid_slugs import SlugEntry
+from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_coordinates import source_register_key
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
@@ -29,9 +30,12 @@ from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import NativeCoordinates, SourceFields, value_field
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from reg_meta_build.cis2016_matrix import Cis2016Matrix
+    from reg_meta_build.source_coding import CodeListClaim
     from reg_meta_build.source_coordinates import NativeKey
-    from reg_meta_build.source_curation import OccurrenceEffect
+    from reg_meta_build.source_curation import OccurrenceEffect, SourceRecordRef
     from reg_meta_build.source_records import SourceRecord
 
 
@@ -48,6 +52,7 @@ def convert_matrix(
     *,
     case_id: str,
     provenance: str,
+    coding: Mapping[SourceRecordRef, tuple[CodeListClaim, ...]] | None = None,
 ) -> MatrixConversion:
     """Bind an accepted answer partition to its complete original source scope.
 
@@ -97,6 +102,13 @@ def convert_matrix(
     donor = expected[0]
     if blank and len(donor.alternatives) != 1:
         raise ValueError("blank matrix donor has competing occurrence metadata")
+    if blank and (coding is None or donor.ref not in coding):
+        raise ValueError("blank matrix conversion requires original bound donor coding")
+    copied_codings = (
+        copied_coding_fingerprints(coding[donor.ref])
+        if blank and coding is not None
+        else None
+    )
     guard = PeerGuard(
         guard_id=f"{case_id}:complete-partition",
         source=selected[0].source,
@@ -151,6 +163,7 @@ def convert_matrix(
                             if name not in {*authored, "column_name"}
                         ),
                         copy_coding=True,
+                        expected_codings=copied_codings,
                     )
                 )
             else:

@@ -2028,25 +2028,6 @@ def _insert_core_graph_from_ir(
     )
 
 
-# The directional code-less ↔ code-bearing overlap JOIN, shared by the three
-# code-less overlap SELECTs in this module (`_drop_fullcover_codeless_states`'
-# main overlap query and `_resolve_curated_codeless_overlaps`' main overlap query
-# + its post-resolution mandatory-curation gate). Centralizes the overlap
-# semantics so they can't drift apart: null-safe `delivery_column_name IS` column
-# match (two NULL delivery columns still pair); code-less (`cl.value_set_id IS
-# NULL`) ↔ code-bearing (`cb.value_set_id IS NOT NULL`) direction; closed-interval
-# intersection. The ON clause references only `cl`/`cb`, so it is valid in any of
-# the three SELECTs regardless of the slug JOINs (`variable`/`register`/`provider`)
-# that #2/#3 prepend. Leading/trailing spaces keep the assembled SQL valid when
-# concatenated.
-#
-# MUST stay in sync with validate.py's `_check_one_value_set_per_period` /
-# `_check_no_codeless_codebearing_overlap`, which assert the same overlap class
-# with a structurally DIFFERENT *symmetric* `a`/`b` form (not this directional
-# `cl`/`cb` form) — so they are NOT folded into this constant; a change here must
-# be mirrored there by hand.
-
-
 def _provider_id_for(provider: str) -> int:
     """Map an IR provider slug to its stable `provider.provider_id` seed value."""
     for pid, slug, _name in _PROVIDER_SEED:

@@ -10,7 +10,7 @@ remain in the result so duplicate source associations are not lost in accounting
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
@@ -20,6 +20,8 @@ from reg_meta_build.source_intervals import scope_bounds
 from reg_meta_build.source_records import canonical_sha256
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from reg_meta_build.resolved_catalog import ResolvedConformance
     from reg_meta_build.source_records import TemporalScope
     from reg_meta_build.source_values import SourceValueAssociation, SourceValueValidity
@@ -243,6 +245,30 @@ def coding_content_sha256(claim: CodeListClaim) -> str | None:
     return canonical_sha256(segments)
 
 
+def _member_validity_evidence(
+    member: CodeMembershipClaim,
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    constraints = {
+        canonical_sha256(
+            (
+                asdict(row.supplied_window) if row.supplied_window else None,
+                asdict(row.section_window) if row.section_window else None,
+            )
+        )
+        for row in member.associations
+        if row.supplied_window is not None or row.section_window is not None
+    }
+    validity = {
+        canonical_sha256(
+            asdict(row.window)
+            if row.window is not None
+            else ("unknown", row.valid_from, row.valid_to)
+        )
+        for row in member.validity
+    }
+    return tuple(sorted(constraints)), tuple(sorted(validity))
+
+
 def coding_observation_sha256(claim: CodeListClaim) -> str:
     """Fingerprint known or incomplete evidence without making unknowns equal.
 
@@ -255,7 +281,26 @@ def coding_observation_sha256(claim: CodeListClaim) -> str:
         return complete
     periods = scope_bounds(claim.scope)
     if periods is None:
-        raise ValueError("coding expectations require independently dated claims")
+        members = set()
+        for member in claim.members:
+            members.add(
+                canonical_sha256(
+                    (
+                        member.code,
+                        member.label,
+                        member.scope.model_dump(mode="json"),
+                        *_member_validity_evidence(member),
+                    )
+                )
+            )
+        return canonical_sha256(
+            (
+                "unresolved_scope",
+                claim.scope.model_dump(mode="json"),
+                claim.version_label,
+                sorted(members),
+            )
+        )
     members = set()
     for member in claim.members:
         bounds = (
@@ -281,3 +326,35 @@ def coding_observation_sha256(claim: CodeListClaim) -> str:
     return canonical_sha256(
         ("incomplete", sorted(set(periods)), claim.version_label, sorted(members))
     )
+
+
+def coding_observation_fingerprints(claims: Iterable[CodeListClaim]) -> tuple[str, ...]:
+    """Pin all semantic alternatives, including unresolved scopes, without dating them."""
+    return tuple(sorted({coding_observation_sha256(claim) for claim in claims}))
+
+
+def copied_coding_fingerprints(claims: Iterable[CodeListClaim]) -> tuple[str, ...]:
+    """Pin copied source validity even when its intersection remains unresolved."""
+    fingerprints = set()
+    for claim in claims:
+        fingerprint = coding_observation_sha256(claim)
+        unresolved = (
+            {
+                canonical_sha256(
+                    (member.code, member.label, _member_validity_evidence(member))
+                )
+                for member in claim.members
+                if member.scope.kind not in {"not_applicable", "year_independent"}
+                and scope_bounds(member.scope) is None
+            }
+            if scope_bounds(claim.scope) is not None
+            else set()
+        )
+        fingerprints.add(
+            canonical_sha256(
+                ("copied_unresolved_validity", fingerprint, sorted(unresolved))
+            )
+            if unresolved
+            else fingerprint
+        )
+    return tuple(sorted(fingerprints))

@@ -19,6 +19,7 @@ from reg_meta_build.prepared_values import (
     open_prepared_source_values,
     prepare_source_values,
 )
+from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_parent_key,
@@ -28,13 +29,17 @@ from reg_meta_build.source_coordinates import (
 )
 from reg_meta_build.source_curation import (
     AliasWindowDecision,
+    CheckedFieldChange,
     CheckedIdentityChange,
     CodingDecision,
+    CuratedOccurrenceAddition,
     CurationCase,
+    FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
+    SourceEvidence,
 )
-from reg_meta_build.source_effects import record_ref
+from reg_meta_build.source_effects import copied_coding_key, record_ref
 from reg_meta_build.source_naming import (
     AcceptedNamingEntry,
     NamingAmbiguity,
@@ -42,6 +47,8 @@ from reg_meta_build.source_naming import (
     NativeNamingTarget,
 )
 from reg_meta_build.source_records import (
+    ScopeInterval,
+    SourceFields,
     SourceRecord,
     SourceRevision,
     TemporalScope,
@@ -50,12 +57,13 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.source_scope import resolve_source_scope
 from reg_meta_build.source_support import SourceSupportBindings
-from reg_meta_build.source_value_bindings import open_value_bindings
+from reg_meta_build.source_value_bindings import bind_copied_coding, open_value_bindings
 from reg_meta_build.source_values import (
     SourceValue,
     SourceValueAssociation,
     SourceValueDescriptor,
     SourceValueJoin,
+    SourceValueWindow,
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
 
@@ -499,6 +507,225 @@ def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(
     assert [
         (s.valid_from, s.valid_to, s.value_set.members) for s in variable.states
     ] == [("2020-01-01", "2020-12-31", (("01", "One"),))]
+
+
+@pytest.mark.parametrize(
+    "status,value,expected",
+    [
+        ("value", "New", (("N", "New meaning"),)),
+        ("absent", None, None),
+        ("unknown", None, None),
+        ("value", "Missing", None),
+    ],
+)
+def test_checked_list_declaration_controls_binding_without_replacing_evidence(
+    tmp_path, status, value, expected
+):
+    item = record()
+    item = item.model_copy(
+        update={
+            "fields": item.fields.model_copy(
+                update={"value_set_declared": value_field("Old")}
+            )
+        }
+    )
+    case = CurationCase(
+        case_id="correct-list",
+        targets=capture_expectations((item,), fields=("value_set_declared",)),
+        peer_guards=(guard(item),),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            reason="Checked list correction",
+            provenance="fixture",
+            effects=(
+                CheckedFieldChange(
+                    ref=record_ref(item),
+                    replacement=FieldExpectation(
+                        name="value_set_declared", status=status, value=value
+                    ),
+                ),
+            ),
+        ),
+    )
+    root = tmp_path / "values"
+    manifest = prepare_source_values(
+        root,
+        revision=REVISION,
+        descriptors=(
+            SourceValueDescriptor("old", name="Old"),
+            SourceValueDescriptor("new", name="New"),
+        ),
+        values=(
+            SourceValue("old", "O", "Old meaning"),
+            SourceValue("new", "N", "New meaning"),
+        ),
+        associations=(
+            SourceValueAssociation(1, "old", "old", "values"),
+            SourceValueAssociation(2, "new", "new", "values"),
+        ),
+        join=SourceValueJoin(
+            record_sources=(REVISION.dataset,),
+            member_target="declared_list",
+            member_format="none",
+            validity_target="row",
+            missing_validity="unrestricted",
+            rule="Exact declared fixture list",
+            provenance=("fixture",),
+        ),
+    )
+    source = open_prepared_source_values(
+        root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
+    )
+    with open_value_bindings((source,)) as sessions:
+        result = resolve((item,), cases=(case,), value_sessions=sessions)
+    variable = result.variables[native_variable_key(item)]
+    assert variable is not None and len(variable.states) == 1
+    codes = variable.states[0].value_set
+    assert (codes.members if codes else None) == expected
+    assert result.corrections.accounting[0].disposition == "applied"
+    assert result.corrections.occurrences[0].source_records == (item,)
+    assert item.fields.value_set_declared.value == "Old"
+    assert [d.code for d in result.diagnostics] == (
+        ["declared_value_list_not_found"] if value == "Missing" else []
+    )
+
+
+@pytest.mark.parametrize("change", ("code", "validity", "irrelevant_future"))
+def test_copied_coding_checks_original_external_evidence_before_any_effects(
+    tmp_path, change
+):
+    item = record()
+    donor = record_ref(item)
+    addition = CuratedOccurrenceAddition(
+        occurrence_key="copied-2019",
+        provider="scb",
+        variable_key=native_variable_key(item),
+        variant_key=native_variant_key(item),
+        fields=item.fields,
+        edition_scope=TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2019", end="2019"),)
+        ),
+        edition_period_scope=TemporalScope(kind="not_applicable"),
+        evidence=(donor,),
+        donor=donor,
+        copied_fields=tuple(SourceFields.model_fields),
+        copy_coding=True,
+        expected_codings=(),
+    )
+    case = CurationCase(
+        case_id="checked-copy",
+        targets=capture_expectations(
+            (item,), fields=tuple(SourceFields.model_fields), coding=True
+        ),
+        peer_guards=(guard(item),),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            reason="Existing checked donor copy",
+            provenance="fixture",
+            effects=(addition,),
+        ),
+    )
+
+    def prepare(name, *, code="01", start="2019-01-01", future=False):
+        root = tmp_path / name / "values"
+        rows = (
+            SourceValueAssociation(
+                1,
+                "list",
+                "code",
+                "values",
+                member_id="1",
+                item_id="1",
+                supplied_window=SourceValueWindow("known", start, "2020-12-31"),
+            ),
+        )
+        if future:
+            rows += (
+                SourceValueAssociation(
+                    2,
+                    "list",
+                    "future",
+                    "values",
+                    member_id="1",
+                    item_id="2",
+                    supplied_window=SourceValueWindow(
+                        "known", "2021-01-01", "2021-12-31"
+                    ),
+                ),
+            )
+        manifest = prepare_source_values(
+            root,
+            revision=REVISION,
+            validity_revision=REVISION,
+            descriptors=(SourceValueDescriptor("list"),),
+            values=(
+                SourceValue("code", code, "Original label"),
+                SourceValue("future", "99", "Future"),
+            ),
+            associations=rows,
+            join=SourceValueJoin(
+                record_sources=(REVISION.dataset,),
+                member_target="native_member",
+                member_format="integer",
+                validity_target="item",
+                missing_validity="unrestricted",
+                rule="Exact fixture member",
+                provenance=("fixture",),
+            ),
+        )
+        return open_prepared_source_values(
+            root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
+        )
+
+    with open_value_bindings((prepare("original"),)) as sessions:
+        bound = bind_copied_coding(SourceEvidence((item,)), (case,), sessions)
+        accepted = addition.model_copy(
+            update={
+                "expected_codings": copied_coding_fingerprints(
+                    bound[copied_coding_key(addition)]
+                )
+            }
+        )
+        case = case.model_copy(
+            update={
+                "decision": case.decision.model_copy(update={"effects": (accepted,)})
+            }
+        )
+        original = resolve((item,), cases=(case,), value_sessions=sessions)
+    assert original.diagnostics == ()
+    original_variable = original.variables[native_variable_key(item)]
+    assert original_variable is not None
+    assert [s.valid_from for s in original_variable.states] == [
+        "2019-01-01",
+        "2020-01-01",
+    ]
+    assert original.corrections.occurrences[-1].coding_records == (item,)
+
+    changed = prepare(
+        "changed",
+        code="02" if change == "code" else "01",
+        start="2020-01-01" if change == "validity" else "2019-01-01",
+        future=change == "irrelevant_future",
+    )
+    with open_value_bindings((changed,)) as sessions:
+        result = resolve((item,), cases=(case,), value_sessions=sessions)
+    variable = result.variables[native_variable_key(item)]
+    assert variable is not None
+    if change == "irrelevant_future":
+        assert result.diagnostics == ()
+        assert variable == original_variable
+    else:
+        assert (
+            result.evaluations[0].status
+            == result.corrections.accounting[0].disposition
+            == "stale"
+        )
+        assert [s.valid_from for s in variable.states] == ["2020-01-01"]
+        assert [d.code for d in result.diagnostics] == [
+            "copied_coding_evidence_changed"
+        ]
+        assert result.corrections.occurrences[0].source_records == (item,)
+        assert len(result.corrections.occurrences) == 1
 
 
 def test_checked_naming_retains_accepted_deprecation():

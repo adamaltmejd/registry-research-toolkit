@@ -9,6 +9,7 @@ from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
     coding_content_sha256,
+    coding_observation_fingerprints,
     resolve_code_membership,
 )
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
@@ -239,3 +240,17 @@ def test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label() ->
     assert result.segments[0].version_label == ""
     assert result.issues[0].code == "conflicting_coding_labels"
     assert result.issues[0].withheld == "coding_label"
+
+
+@pytest.mark.parametrize("kind", ("pooled", "unknown"))
+def test_undated_copy_fingerprint_pins_evidence_without_inventing_periods(kind):
+    scope = TemporalScope(kind=kind, label="Original undated evidence")
+    claim = _claim("original", _member("1"), _member("2"), scope=scope)
+    identical = replace(claim, claim_id="moved", members=tuple(reversed(claim.members)))
+    assert coding_observation_fingerprints(
+        (claim, claim)
+    ) == coding_observation_fingerprints((identical,))
+    assert coding_observation_fingerprints((claim,)) != coding_observation_fingerprints(
+        (_claim("changed", _member("1"), scope=scope),)
+    )
+    assert resolve_code_membership((claim,)).segments == ()

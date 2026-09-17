@@ -235,6 +235,14 @@ column presence does not copy type, flags or coding from another edition. Any do
 metadata or membership must be explicitly selected and guarded. Undated `all_versions`
 holdings preserve unknown coverage; pooled editions cannot create annual states.
 
+Copied coding pins the original bound donor evidence at the declared occurrence scope
+with explicit `expected_codings`. Missing fingerprints are a contract error; changed
+membership or validity makes the entire occurrence case stale before effects run.
+Unknown and pooled scopes retain their original validity constraints in the fingerprint
+without acquiring dates. Fingerprints are captured during offline conversion, never
+generated or refreshed by a build. Checked value-list field corrections bind using the
+effective declaration while retaining the original source record as evidence.
+
 An explicitly open upper bound differs from an unknown period. Resolution can retain a
 known start and explicit open end; the writer uses `9999-12-31` as the storage sentinel.
 A literal source year 9999 is not dated evidence.

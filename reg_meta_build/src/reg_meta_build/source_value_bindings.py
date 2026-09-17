@@ -16,9 +16,18 @@ from functools import lru_cache
 from typing import TYPE_CHECKING
 
 from reg_meta_build.source_coding import CodeListClaim, CodeMembershipClaim
+from reg_meta_build.source_curation import (
+    CuratedOccurrenceAddition,
+    CurationCase,
+    OccurrenceCorrectionDecision,
+    SourceEvidence,
+    SourceRecordRef,
+)
+from reg_meta_build.source_effects import copied_coding_key
 from reg_meta_build.source_intervals import scope_bounds
 from reg_meta_build.source_records import (
     ScopeInterval,
+    SourceFields,
     SourceRecord,
     TemporalScope,
     canonical_sha256,
@@ -201,7 +210,11 @@ class ValueBindingSession:
                     )
 
     def bind(
-        self, record: SourceRecord, *, scope: TemporalScope | None = None
+        self,
+        record: SourceRecord,
+        *,
+        scope: TemporalScope | None = None,
+        fields: SourceFields | None = None,
     ) -> ValueBindingResult:
         join = self.join
         if join is None or record.source not in join.record_sources:
@@ -255,7 +268,7 @@ class ValueBindingSession:
                 groups[association.descriptor_key].append(association)
         else:
             member_name = record.subject.member.name
-            declared = record.fields.value_set_declared
+            declared = (record.fields if fields is None else fields).value_set_declared
             declared_name = (
                 declared.value
                 if declared is not None and declared.status == "value"
@@ -411,22 +424,26 @@ def bind_code_lists(
     sessions: Iterable[ValueBindingSession],
     *,
     scope: TemporalScope | None = None,
+    fields: SourceFields | None = None,
 ) -> ValueBindingResult:
     """Bind original evidence at its own or an already checked effective scope.
 
     A corrected delivery period changes membership intersections, never the source
-    locators or supplied item validity. Distinct effective periods have distinct
-    claim identities even when they use the same checked donor.
+    locators or supplied item validity. Checked effective fields can replace the
+    declared list name without replacing the original evidence record. Distinct
+    effective periods have distinct claim identities even with one checked donor.
     """
     sessions = tuple(
         session
         for session in sessions
         if session.join is not None and record.source in session.join.record_sources
     )
-    results = tuple(session.bind(record, scope=scope) for session in sessions)
+    results = tuple(
+        session.bind(record, scope=scope, fields=fields) for session in sessions
+    )
     claims = tuple(claim for result in results for claim in result.claims)
     issues = tuple(issue for result in results for issue in result.issues)
-    declared = record.fields.value_set_declared
+    declared = (record.fields if fields is None else fields).value_set_declared
     if declared is not None and declared.status == "value":
         named = tuple(
             session
@@ -469,7 +486,12 @@ def bind_occurrence_code_lists(
         scope = occurrence.edition_scope
     sessions = tuple(sessions)
     results = tuple(
-        bind_code_lists(record, sessions, scope=scope)
+        bind_code_lists(
+            record,
+            sessions,
+            scope=scope,
+            fields=occurrence.fields if occurrence.source_records else None,
+        )
         for record in {record.record_id: record for record in records}.values()
     )
     return ValueBindingResult(
@@ -479,12 +501,46 @@ def bind_occurrence_code_lists(
     )
 
 
+def bind_copied_coding(
+    evidence: SourceEvidence,
+    cases: Iterable[CurationCase],
+    sessions: Iterable[ValueBindingSession],
+) -> dict[tuple[SourceRecordRef, TemporalScope], tuple[CodeListClaim, ...]]:
+    """Bind original copy witnesses before effects, also for offline guard capture.
+
+    This returns evidence only. It never creates or updates an accepted fingerprint.
+    """
+    sessions = tuple(sessions)
+    coding = {}
+    for case in cases:
+        if not isinstance(case.decision, OccurrenceCorrectionDecision):
+            continue
+        for effect in case.decision.effects:
+            if (
+                not isinstance(effect, CuratedOccurrenceAddition)
+                or not effect.copy_coding
+            ):
+                continue
+            key = copied_coding_key(effect)
+            if key not in coding:
+                ref, scope = key
+                coding[key] = tuple(
+                    claim
+                    for record in evidence.grouped.get(
+                        (ref.source, ref.semantic_record_key), ()
+                    )
+                    for claim in bind_code_lists(record, sessions, scope=scope).claims
+                )
+    return coding
+
+
 __all__ = [
     "ValueBindingIssue",
     "ValueBindingResult",
     "ValueBindingSession",
     "ValueListBinding",
     "bind_code_lists",
+    "bind_copied_coding",
     "bind_occurrence_code_lists",
     "open_value_bindings",
 ]
