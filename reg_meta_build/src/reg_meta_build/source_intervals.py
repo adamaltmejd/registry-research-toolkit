@@ -81,7 +81,10 @@ def scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     return tuple(result)
 
 
-def _periods(record: EffectiveOccurrence) -> tuple[tuple[int, int], ...] | None:
+def occurrence_bounds(
+    record: EffectiveOccurrence,
+) -> tuple[tuple[int, int], ...] | None:
+    """Known effective coverage, retaining pooled and unknown scopes as unresolved."""
     scope = record.edition_period_scope
     if scope.kind == "not_applicable":
         scope = record.edition_scope
@@ -159,7 +162,7 @@ def resolve_occurrence_intervals(
         )
     for ordinal, record in enumerate(source_records):
         column = _column(record)
-        periods = _periods(record)
+        periods = occurrence_bounds(record)
         availability = record.fields.availability
         missing = []
         if column is None:

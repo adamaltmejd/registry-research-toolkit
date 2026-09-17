@@ -12,6 +12,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_meta_build.catalog_dependencies import variable_dependency_keys
 from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_classification_bindings import apply_classification_cases
@@ -37,6 +38,7 @@ from reg_meta_build.source_value_bindings import bind_occurrence_code_lists
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping
 
+    from reg_meta_build.catalog_dependencies import DependencyKey
     from reg_meta_build.resolved_catalog import (
         ResolvedClassification,
         ResolvedVariable,
@@ -64,6 +66,7 @@ class ScopeResolution:
     diagnostics: tuple[ResolutionDiagnostic, ...]
     error_count: int
     warning_count: int
+    withheld_dependencies: dict[DependencyKey, tuple[ResolutionDiagnostic, ...]]
 
 
 def resolve_source_scope(
@@ -90,6 +93,8 @@ def resolve_source_scope(
     identity, and a withheld variant does not discard safe sibling states.
     A diagnostic sink streams the full ledger instead of retaining it in memory;
     severity counts are always returned, including when the sink is used.
+    Exact evidenced dependency omissions are returned independently of that sink.
+    Missing references are never converted to omissions merely because absent.
     """
     if len({c.case_id for c in cases}) != len(cases):
         raise ValueError("source scope case IDs must be unique")
@@ -140,6 +145,33 @@ def resolve_source_scope(
     )
     for issue in parents.diagnostics:
         emit(issue)
+    register_fqids = {
+        key: f"{declaration.naming.provider}/{declaration.naming.slug}"
+        for (kind, key), declaration in names.items()
+        if kind == "register" and declaration.naming.slug is not None
+    }
+    withheld = defaultdict(list)
+    parent_causes = defaultdict(list)
+    for issue in parents.diagnostics:
+        if issue.code in {"unknown_parent_name", "withheld_parent_naming"}:
+            parent_causes[issue.subject].append(issue)
+    for key, fqid in register_fqids.items():
+        if key not in parents.registers and (causes := parent_causes.get(repr(key))):
+            withheld["register", fqid].extend(causes)
+    for (kind, key), declaration in names.items():
+        if (
+            kind != "register_variant"
+            or key in parents.variants
+            or declaration.naming.slug is None
+        ):
+            continue
+        fqid = register_fqids.get(declaration.target.register_key)
+        if fqid is not None:
+            causes = parent_causes.get(repr(key)) or withheld.get(
+                ("register", fqid), ()
+            )
+            if causes:
+                withheld["variant", fqid, declaration.naming.slug].extend(causes)
     variants: dict[NativeKey, ResolvedVariant | None] = {
         key: parents.variants.get(key)
         for kind, key in names
@@ -244,6 +276,14 @@ def resolve_source_scope(
             for issue in result.diagnostics:
                 emit(issue)
         declaration = names.get(("variable", key))
+        register_fqid = (
+            register_fqids.get(declaration.target.register_key) if declaration else None
+        )
+        fqid = (
+            f"{register_fqid}/{declaration.naming.slug}"
+            if register_fqid and declaration and declaration.naming.slug
+            else None
+        )
         provider_key = provider_keys[key]
         if provider_key is not None and (
             declaration is None or declaration.naming.slug is None
@@ -256,19 +296,20 @@ def resolve_source_scope(
         )
         variables[key] = None
         if provider_key is None or key in withheld_naming or register is None:
-            emit(
-                ResolutionDiagnostic(
-                    code="unresolved_catalog_identity"
-                    if provider_key is None or key in withheld_naming
-                    else "withheld_register_dependency",
-                    severity="error",
-                    subject=repr(key),
-                    detail="Catalog formation is withheld; source-level decisions were still evaluated against the complete original scope.",
-                    refs=refs,
-                    fields=("identity",),
-                    withheld_output=("variable",),
-                )
+            issue = ResolutionDiagnostic(
+                code="unresolved_catalog_identity"
+                if provider_key is None or key in withheld_naming
+                else "withheld_register_dependency",
+                severity="error",
+                subject=repr(key),
+                detail="Catalog formation is withheld; source-level decisions were still evaluated against the complete original scope.",
+                refs=refs,
+                fields=("identity",),
+                withheld_output=("variable",),
             )
+            emit(issue)
+            if fqid is not None:
+                withheld["variable", fqid].append(issue)
             for column, coding in classified.coding.items():
                 for issue in coding.issues:
                     emit(
@@ -315,12 +356,49 @@ def resolve_source_scope(
         )
         for issue in formed.diagnostics:
             emit(issue)
+        assert fqid is not None
+        if formed.variable is None:
+            causes = tuple(
+                issue for issue in formed.diagnostics if fqid in issue.withheld_output
+            )
+            if not causes:
+                raise ValueError(
+                    "variable formation omitted output without a terminal source outcome"
+                )
+            withheld["variable", fqid].extend(causes)
+        else:
+            for variant, causes in formed.withheld_variant_states.items():
+                withheld["variant_states", fqid, variant].extend(causes)
+            for (variant, column), causes in formed.withheld_representations.items():
+                withheld["representation", fqid, column].extend(causes)
+                withheld["succession_representation", fqid, column.lower()].extend(
+                    causes
+                )
+                withheld[
+                    "succession_representation", fqid, column.lower(), variant
+                ].extend(causes)
     annotated = apply_alias_cases(
         evidence, tuple(aliases), variables=variables, variants=variants
     )
     evaluations.extend(annotated.evaluations)
     for issue in annotated.diagnostics:
         emit(issue)
+    available = {
+        key
+        for variable in annotated.variables.values()
+        if variable is not None
+        for key in variable_dependency_keys(variable)
+    }
+    available.update(("register", register_fqids[key]) for key in parents.registers)
+    for key, variant in parents.variants.items():
+        register_key = names["register_variant", key].target.register_key
+        assert register_key is not None
+        available.add(("variant", register_fqids[register_key], variant.slug))
+    withheld_dependencies = {
+        key: tuple(dict.fromkeys(causes))
+        for key, causes in withheld.items()
+        if key not in available
+    }
     if {e.case_id for e in evaluations} != {c.case_id for c in cases} or len(
         evaluations
     ) != len(cases):
@@ -335,4 +413,5 @@ def resolve_source_scope(
         tuple(diagnostics),
         counts["error"],
         counts["warning"],
+        withheld_dependencies,
     )

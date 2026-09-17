@@ -694,6 +694,15 @@ and standalone-parent references share the resulting variant definition. This is
 resolution behavior in both strict and diagnostic mode; it changes no source facts and
 does not invent variable identities or availability.
 
+Scope resolution returns evidenced dependency omissions even when full diagnostics are
+streamed. Parent and whole-variable omissions remain distinct from a variable's withheld
+variant or literal column. Interval resolution records a variant whose occurrences
+cannot supply finite states; representation resolution records the exact variant,
+competing columns and overlap it removes. A supported representation in another period
+or variant remains available. Conflict evidence excludes unrelated variants and periods.
+These outcomes feed dependency checks directly; missing or unconverted references still
+fail rather than receiving an inferred omission.
+
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across

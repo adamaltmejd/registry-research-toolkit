@@ -32,6 +32,37 @@ if TYPE_CHECKING:
 type DependencyKey = tuple[str, ...]
 
 
+def variable_dependency_keys(variable: ResolvedVariable) -> set[DependencyKey]:
+    """Exact materialized references, shared by resolution and dependency checks."""
+    fqid = (
+        f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug}"
+    )
+    keys: set[DependencyKey] = {("variable", fqid)}
+    for item in (*variable.states, *variable.aliases):
+        column = item.delivery_column_name
+        keys.update(
+            (
+                ("representation", fqid, column),
+                ("succession_representation", fqid, column.lower()),
+                ("succession_representation", fqid, column.lower(), item.variant.slug),
+            )
+        )
+    for item in variable.states:
+        keys.add(("variant_states", fqid, item.variant.slug))
+        keys.add(
+            (
+                "state",
+                fqid,
+                item.variant.slug,
+                item.valid_from,
+                item.valid_to,
+                item.delivery_column_name,
+                item.value_set_version_label,
+            )
+        )
+    return keys
+
+
 @dataclass(frozen=True)
 class MissingCatalogDependency:
     key: DependencyKey
@@ -149,33 +180,7 @@ def resolve_metadata_dependencies(
         ("source_column", c.table_name, c.column_name) for c in metadata.source_columns
     )
     for variable in variables:
-        fqid = f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug}"
-        available.add(("variable", fqid))
-        for item in (*variable.states, *variable.aliases):
-            column = item.delivery_column_name
-            available.add(("representation", fqid, column))
-            available.add(("succession_representation", fqid, column.lower()))
-            available.add(
-                (
-                    "succession_representation",
-                    fqid,
-                    column.lower(),
-                    item.variant.slug,
-                )
-            )
-        for item in variable.states:
-            available.add(("variant_states", fqid, item.variant.slug))
-            available.add(
-                (
-                    "state",
-                    fqid,
-                    item.variant.slug,
-                    item.valid_from,
-                    item.valid_to,
-                    item.delivery_column_name,
-                    item.value_set_version_label,
-                )
-            )
+        available.update(variable_dependency_keys(variable))
     dependencies = CatalogDependencies(available, withheld)
 
     def entity(fqid: str, output: str) -> bool:
@@ -438,19 +443,9 @@ def resolve_panel_dependencies(
     for edition in editions:
         variant_parent(edition.register_ref, edition.variant)
 
-    available: set[DependencyKey] = {
-        (
-            "variant_states",
-            f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}",
-            s.variant.slug,
-        )
-        for v in variables
-        for s in v.states
+    available = {
+        key for variable in variables for key in variable_dependency_keys(variable)
     }
-    available.update(
-        ("variable", f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}")
-        for v in variables
-    )
     dependencies = CatalogDependencies(available, withheld)
     for key, variant in by_variant.items():
         register = "/".join(key[:2])

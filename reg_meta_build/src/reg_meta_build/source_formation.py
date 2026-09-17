@@ -8,7 +8,7 @@ column spelling, merges different source families, or chooses a conflicting fact
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
@@ -22,6 +22,7 @@ from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
 from reg_meta_build.source_intervals import (
     OccurrenceResolution,
     SourceSegment,
+    occurrence_bounds,
     reconcile_source_fields,
     resolve_occurrence_intervals,
 )
@@ -75,6 +76,12 @@ class VariableFormation:
     occurrences: tuple[SourceRecord | EffectiveOccurrence, ...]
     intervals: tuple[OccurrenceResolution, ...]
     coding: tuple[CodingResolution, ...]
+    withheld_variant_states: dict[str, tuple[ResolutionDiagnostic, ...]] = field(
+        default_factory=dict
+    )
+    withheld_representations: dict[
+        tuple[str, str], tuple[ResolutionDiagnostic, ...]
+    ] = field(default_factory=dict)
 
 
 def _coded_states(
@@ -173,7 +180,12 @@ def _disjoint_representations(
     states: list[ResolvedState],
     records: tuple[EffectiveOccurrence, ...],
     subject: str,
-) -> tuple[list[ResolvedState], list[ResolutionDiagnostic]]:
+    variants: Mapping[NativeKey, ResolvedVariant | None],
+) -> tuple[
+    list[ResolvedState],
+    list[ResolutionDiagnostic],
+    dict[tuple[str, str], tuple[ResolutionDiagnostic, ...]],
+]:
     """Withhold only overlapping representations lacking a canonical choice.
 
     An identity assignment establishes the variable, not which parallel column
@@ -184,6 +196,7 @@ def _disjoint_representations(
         groups[state.variant.slug, state.value_set_version_label].append(state)
     result = []
     diagnostics = []
+    withheld: dict[tuple[str, str], list[ResolutionDiagnostic]] = defaultdict(list)
     for members in groups.values():
         ordered = sorted(members, key=lambda state: state.valid_from)
         if all(left.valid_to < right.valid_from for left, right in pairwise(ordered)):
@@ -219,27 +232,34 @@ def _disjoint_representations(
             columns = {ordered[index].delivery_column_name for index in active}
             if len(columns) == 1:
                 raise ValueError("formation produced overlapping states for one column")
-            diagnostics.append(
-                ResolutionDiagnostic(
-                    code="unresolved_column_representation",
-                    severity="error",
-                    subject=subject,
-                    detail="The checked identity has parallel columns without an unambiguous catalog representation: "
-                    + ", ".join(sorted(columns)),
-                    refs=_refs(
-                        tuple(
-                            record
-                            for record in records
-                            if _text(record.fields, "column_name") in columns
+            problem = ResolutionDiagnostic(
+                code="unresolved_column_representation",
+                severity="error",
+                subject=subject,
+                detail="The checked identity has parallel columns without an unambiguous catalog representation: "
+                + ", ".join(sorted(columns)),
+                refs=_refs(
+                    tuple(
+                        record
+                        for record in records
+                        if _text(record.fields, "column_name") in columns
+                        and record.variant_key is not None
+                        and variants.get(record.variant_key) == ordered[0].variant
+                        and any(
+                            lo < next_start and hi >= start
+                            for lo, hi in (occurrence_bounds(record) or ())
                         )
-                    ),
-                    fields=("column_name",),
-                    valid_from=lower,
-                    valid_to=upper,
-                    withheld_output=("state",),
-                )
+                    )
+                ),
+                fields=("column_name",),
+                valid_from=lower,
+                valid_to=upper,
+                withheld_output=("state",),
             )
-    return result, diagnostics
+            diagnostics.append(problem)
+            for column in sorted(columns):
+                withheld[ordered[0].variant.slug, column].append(problem)
+    return result, diagnostics, {key: tuple(causes) for key, causes in withheld.items()}
 
 
 def form_native_variable(
@@ -329,12 +349,12 @@ def form_native_variable(
         "measurement_unit",
         "source_attribution",
     }
-    for field in sorted(canonical_fields & set(conflicts)):
+    for field_name in sorted(canonical_fields & set(conflicts)):
         issue(
             "conflicting_variable_fact",
             "Source occurrences disagree on a register-level variable fact; no source winner was selected.",
-            (field,),
-            (f"variable.{field}",),
+            (field_name,),
+            (f"variable.{field_name}",),
         )
     name = _text(canonical, "name")
     if not name:
@@ -371,25 +391,29 @@ def form_native_variable(
     states = []
     intervals = []
     coding_results = []
+    withheld_variants = {}
     for key, members in sorted(by_variant.items(), key=lambda item: repr(item[0])):
         variant = variants[key]
         assert variant is not None
         resolution = resolve_occurrence_intervals(members)
         intervals.append(resolution)
+        variant_issues = []
         for problem in resolution.issues:
-            diagnostics.append(
-                ResolutionDiagnostic(
-                    code=problem.code,
-                    severity="error",
-                    subject=subject,
-                    detail="Source occurrence facts cannot be safely resolved for the stated fields and period.",
-                    refs=_refs(problem.occurrences),
-                    fields=problem.fields,
-                    valid_from=problem.valid_from,
-                    valid_to=problem.valid_to,
-                    withheld_output=problem.withheld,
-                )
+            diagnosis = ResolutionDiagnostic(
+                code=problem.code,
+                severity="error",
+                subject=subject,
+                detail="Source occurrence facts cannot be safely resolved for the stated fields and period.",
+                refs=_refs(problem.occurrences),
+                fields=problem.fields,
+                valid_from=problem.valid_from,
+                valid_to=problem.valid_to,
+                withheld_output=problem.withheld,
             )
+            diagnostics.append(diagnosis)
+            variant_issues.append(diagnosis)
+        if not resolution.segments and variant_issues:
+            withheld_variants[variant.slug] = tuple(variant_issues)
         by_column: dict[str, list[SourceSegment]] = defaultdict(list)
         for segment in resolution.segments:
             by_column[segment.delivery_column_name].append(segment)
@@ -446,10 +470,33 @@ def form_native_variable(
         subject=subject,
     )
     diagnostics.extend(grouping_issues)
-    states, representation_issues = _disjoint_representations(
-        states, effective, subject
+    previous_variants = {state.variant.slug for state in states}
+    states, representation_issues, withheld_representations = _disjoint_representations(
+        states, effective, subject, variants
     )
     diagnostics.extend(representation_issues)
+    for variant in sorted(previous_variants - {state.variant.slug for state in states}):
+        causes = tuple(
+            dict.fromkeys(
+                problem
+                for (slug, _column), problems in withheld_representations.items()
+                if slug == variant
+                for problem in problems
+            )
+        )
+        if not causes:
+            raise ValueError(
+                "representation resolution lost a variant without an omission cause"
+            )
+        withheld_variants[variant] = causes
+    present_representations = {
+        (item.variant.slug, item.delivery_column_name) for item in (*states, *aliases)
+    }
+    withheld_representations = {
+        key: causes
+        for key, causes in withheld_representations.items()
+        if key not in present_representations
+    }
     if not states:
         accepted_omission = any(
             d.code == "curated_state_omission" for d in diagnostics
@@ -463,7 +510,13 @@ def form_native_variable(
         )
     if not name or not states:
         return VariableFormation(
-            None, tuple(diagnostics), records, tuple(intervals), tuple(coding_results)
+            None,
+            tuple(diagnostics),
+            records,
+            tuple(intervals),
+            tuple(coding_results),
+            withheld_variants,
+            withheld_representations,
         )
     flag_values = {}
     for source_name, output_name in (
@@ -507,5 +560,11 @@ def form_native_variable(
         )
         variable = None
     return VariableFormation(
-        variable, tuple(diagnostics), records, tuple(intervals), tuple(coding_results)
+        variable,
+        tuple(diagnostics),
+        records,
+        tuple(intervals),
+        tuple(coding_results),
+        withheld_variants,
+        withheld_representations,
     )
