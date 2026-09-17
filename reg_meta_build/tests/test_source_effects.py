@@ -708,6 +708,80 @@ def test_existing_shape_split_or_rename_cluster_is_not_guessed_from_discriminato
     assert converted.case is None
 
 
+def test_existing_literal_ownership_converts_renames_without_changing_source_facts() -> (
+    None
+):
+    records = (
+        _record(column="ANSWER", year="2020"),
+        _record(cvid=21, column="Answer", year="2021"),
+        _record(cvid=22, column="OTHER", year="2021"),
+    )
+    converted = convert_column_partitions(
+        records,
+        source_id="1.5",
+        split_ids=("1.5.answer", "1.5.other"),
+        declared_columns={
+            "ANSWER": "1.5.answer",
+            "Answer": "1.5.answer",
+            "OTHER": "1.5.other",
+        },
+        declaration_reference="accepted concept group, literal members 0-2",
+    )
+    assert converted.case is not None and not converted.diagnostics
+    result = apply_occurrence_cases(records, (converted.case,))
+    assert not result.diagnostics
+    assert result.occurrences[0].variable_key == result.occurrences[1].variable_key
+    assert result.occurrences[2].variable_key != result.occurrences[1].variable_key
+    assert all(
+        o.fields == r.fields for o, r in zip(result.occurrences, records, strict=True)
+    )
+    assert converted.case.decision.kind == "correct_occurrences"
+    assert "literal members 0-2" in converted.case.decision.provenance
+    added = _record(cvid=23, column="ANSWER_NEW", year="2022")
+    assert (
+        apply_occurrence_cases((*records, added), (converted.case,))
+        .accounting[0]
+        .disposition
+        == "stale"
+    )
+    moved = (records[0], _record(cvid=21, column="Answer", year="2022"), records[2])
+    assert (
+        apply_occurrence_cases(moved, (converted.case,)).accounting[0].disposition
+        == "stale"
+    )
+
+
+@pytest.mark.parametrize(
+    "ownership",
+    [
+        {"ANSWER": "1.5.answer"},
+        {"ANSWER": "1.5.answer", "Answer": "1.5.unknown"},
+        {"ANSWER": "1.5.answer", "Answer": "1.5.answer", "ADDED": "1.5.answer"},
+    ],
+)
+def test_declared_ownership_cannot_leave_or_invent_columns_or_split_keys(
+    ownership: dict[str, str],
+) -> None:
+    with pytest.raises(ValueError, match="complete columns and split keys"):
+        convert_column_partitions(
+            (_record(column="ANSWER"), _record(cvid=21, column="Answer")),
+            source_id="1.5",
+            split_ids=("1.5.answer",),
+            declared_columns=ownership,
+            declaration_reference="accepted literal members",
+        )
+
+
+def test_declared_column_ownership_requires_original_declaration_reference() -> None:
+    with pytest.raises(ValueError, match="declaration reference"):
+        convert_column_partitions(
+            (_record(column="ANSWER"),),
+            source_id="1.5",
+            split_ids=("1.5.answer",),
+            declared_columns={"ANSWER": "1.5.answer"},
+        )
+
+
 def test_explicit_identity_decision_keeps_exact_columns_and_periods(
     tmp_path: Path,
 ) -> None:

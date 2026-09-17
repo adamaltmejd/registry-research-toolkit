@@ -127,11 +127,14 @@ assignments withhold only the affected occurrence's disputed field or identity. 
 offline conversion of column-discriminated naming entries requires a unique, complete
 mapping to literal delivered columns. A shared folded slug does not establish identity
 between different column spellings, even when their editions never coincide. Those
-spellings require an evidence-backed identity decision. Checked identity assignments let
-formation retain distinct historical column spellings without changing source fields.
-Identity alone does not choose a primary parallel column: an unresolved overlap
-withholds only the affected state period. Renames and shape splits remain explicit
-conversion work.
+spellings require an evidence-backed identity decision. Accepted group members that
+explicitly pair a variable with a literal delivery column can supply that ownership;
+group relatedness alone cannot. Conversion requires complete coverage of the native
+family and accepted split keys, retaining the original declaration reference and exact
+source guards. Checked identity assignments let formation retain distinct historical
+column spellings without changing source fields. Identity alone does not choose a
+primary parallel column: an unresolved overlap withholds only the affected state period.
+Renames and shape splits remain explicit conversion work.
 
 Canonical classification membership uses the explicitly selected prepared codebook. The
 common resolver retains literal codes, deduplicates equal code/label payloads, and

@@ -1,8 +1,9 @@
 """Convert accepted column-discriminated names into checked identity assignments.
 
-This is an offline bridge for the existing naming format. Only a bijection between
-its explicit discriminators and literal delivered columns is converted. A folded
-name does not establish that distinct spellings mean the same variable.
+This is an offline bridge for the existing naming format. Its discriminators must
+identify unique literal columns, or existing declarations must supply complete
+literal ownership. A folded name does not establish that distinct spellings mean
+the same variable.
 Other rename clusters, shape splits and discriminator collisions need their existing
 decisions converted separately; no source identity is inferred from similar names.
 """
@@ -29,6 +30,8 @@ from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_naming import LegacyNamingBinding, NativeNamingTarget
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from reg_meta_build.source_records import SourceRecord
 
 
@@ -44,12 +47,17 @@ def convert_column_partitions(
     *,
     source_id: str,
     split_ids: tuple[str, ...],
+    declared_columns: Mapping[str, str] | None = None,
+    declaration_reference: str | None = None,
 ) -> ColumnPartitionConversion:
     """Bind a complete native family to its already accepted naming discriminators.
 
     ``split_ids`` must include every active split key for this native family. Blank
     source columns remain original evidence; they are not assigned to a sibling.
     New members or changed relevant facts invalidate the entire checked decision.
+    ``declared_columns`` is a complete literal column-to-split-key map already
+    asserted by accepted curation, with its original declaration reference. This
+    converter verifies its coverage; it never discovers column equivalence.
     """
     keys = {native_variable_key(record) for record in records}
     if not records or None in keys or len(keys) != 1:
@@ -73,7 +81,28 @@ def convert_column_partitions(
     for column in columns:
         candidates[derive_variable_slug(column) or "x"].append(column)
     suffixes = {key[len(source_id) + 1 :] for key in split_ids}
-    if set(candidates) != suffixes or any(
+    if declared_columns is not None:
+        if not declaration_reference or not declaration_reference.strip():
+            raise ValueError(
+                "explicit column ownership needs its declaration reference"
+            )
+        if set(declared_columns) != set(columns) or set(
+            declared_columns.values()
+        ) != set(split_ids):
+            raise ValueError(
+                "explicit column ownership must cover the complete columns and split keys"
+            )
+        partition_columns = {
+            key: tuple(
+                sorted(
+                    column for column, owner in declared_columns.items() if owner == key
+                )
+            )
+            for key in split_ids
+        }
+    elif declaration_reference is not None:
+        raise ValueError("a declaration reference requires explicit column ownership")
+    elif set(candidates) != suffixes or any(
         len(items) != 1 for items in candidates.values()
     ):
         return ColumnPartitionConversion(
@@ -97,6 +126,10 @@ def convert_column_partitions(
                 ),
             ),
         )
+    else:
+        partition_columns = {
+            key: tuple(candidates[key[len(source_id) + 1 :]]) for key in split_ids
+        }
     first = records[0]
     native = native_variable_key(first)
     register = source_register_key(first)
@@ -114,9 +147,8 @@ def convert_column_partitions(
     effects = {}
     bindings = []
     for split_id in sorted(split_ids):
-        suffix = split_id[len(source_id) + 1 :]
         key = (*native, "accepted-partition", split_id)
-        for column in candidates[suffix]:
+        for column in partition_columns[split_id]:
             for record in columns[column]:
                 ref = record_ref(record)
                 effect = CheckedIdentityChange(
@@ -154,7 +186,15 @@ def convert_column_partitions(
             reviewed=True,
             effects=tuple(effects[ref] for ref in sorted(effects, key=str)),
             reason="Preserve the exact column partitions already named by the accepted split entries.",
-            provenance="existing naming entries: " + ", ".join(sorted(split_ids)),
+            provenance=(
+                "existing naming entries: "
+                + ", ".join(sorted(split_ids))
+                + (
+                    "; column ownership: " + declaration_reference
+                    if declaration_reference
+                    else ""
+                )
+            ),
         ),
     )
     return ColumnPartitionConversion(tuple(bindings), case, ())
