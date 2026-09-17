@@ -153,7 +153,9 @@ class SourceEventBindings:
             description = (
                 event.description.value if event.description.status == "value" else None
             )
-            grouped[endpoints].append((description, refs))
+            # Description disagreements concern the event rows themselves; the
+            # repeated parent/variable occurrences do not supply that prose.
+            grouped[endpoints].append((description, (event_ref,)))
 
         existing = {(e.predecessor, e.successor) for e in metadata.successions}
         existing_variants = {

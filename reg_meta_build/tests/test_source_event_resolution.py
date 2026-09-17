@@ -159,6 +159,8 @@ def test_competing_descriptions_withhold_prose_but_preserve_the_explicit_edge():
     assert len(result.metadata.successions) == 1
     assert result.metadata.successions[0].description is None
     assert result.diagnostics[0].code == "conflicting_source_event_description"
+    assert len(result.diagnostics[0].refs) == 2
+    assert {ref.source for ref in result.diagnostics[0].refs} == {REVISION.dataset}
     assert result.diagnostics[0].withheld_output == ("catalog_succession.description",)
 
 
