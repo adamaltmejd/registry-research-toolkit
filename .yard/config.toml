@@ -1,132 +1,71 @@
-# Yard project configuration.
-# Every key that has a default is written out below, set to that default.
-# Commented lines are examples of keys that have none.
-# Unknown keys are errors.
+# Yard project configuration. Unknown keys are errors.
 
-# Finished work lands on this branch.
 [target]
 ref = "main"
 
-# Lanes and gates run in a container built from the named Dockerfile.
 [isolation]
 dockerfile = ".yard/Dockerfile"
 
-# The implementation role writes code.
-# backend selects "claude" or "codex", and model names a model that backend
-# offers. effort sets reasoning depth to "low", "medium", "high", "xhigh", or
-# "max". access grants "writable" or "read-only" workspace access, and tools
-# turns subagents on or off. instructions add your own standing guidance to
-# every prompt for the role.
-# If a worker emits no events for inactivity_timeout_minutes, Yard kills the
-# generation and starts a fresh one with the same session. Zero disables that,
-# and zero is the shipped default because silence is not proof of a wedge: a
-# worker inside one long tool call is legitimately silent for exactly as long
-# as that call takes. Recommended when you leave lanes running unattended or
-# watch the board for stalls: set it above this project's longest silent step
-# (its slowest test run or image build) with room to spare. A value below that
-# makes healthy lanes kill and repeat their own slow step, without attention,
-# until the total-work budget is gone.
-# total_work_timeout_minutes is the unconditional stop across every automatic
-# restart, and automation never resets it. It applies whatever the setting
-# above is, and a worker wedged under it is reported by its lane's last-event
-# age in the status board and by worker-failed attention when it runs out.
-# A lane's rounds all resume one session, so its context grows across them,
-# and the two settings below are how that is managed in the open rather than
-# left to whatever the CLI does when it runs out.
-# context_limit_tokens states the window this model actually runs with and is
-# passed straight to the backend, so the CLI's own mid-round auto-compaction
-# triggers there rather than wherever it would have on its own. Claude takes
-# 100000 to 1000000 tokens; Codex takes no such setting and refuses one.
-# compaction_threshold_share is the better moment: when a round ends with more
-# than this share of that window occupied, Yard compacts the session before the
-# next round resumes it -- at a boundary where the round's conclusion is already
-# stated, instead of mid-thought. It runs while the round is being reviewed and
-# gated, so it usually costs no wall-clock. Occupancy is read from the backend's
-# own reports; a round that reports none is left alone and says so in the lane's
-# history.
-# 300000 with a 0.7 share is the shipped pair, and the arithmetic is the point:
-# a round starts at 210000 or less with about 90000 of headroom, so the
-# provider's mid-round fallback should essentially never fire, while every round
-# after a full one starts from a compacted brief. A far larger window is not the
-# better default it looks like -- a repair round reasons better from a current
-# brief than from stale plans and old tool output it is still carrying. Raise it
-# if your work genuinely needs a bigger window.
-# The profile below is quality-first: Opus at xhigh effort, with subagents on.
-# Fable is the stronger model, but implementation is by far this board's
-# highest-token role, and xhigh -- the documented sweet spot for coding and
-# agentic work -- earns more here than Fable's 2x per-token price would. It is
-# the setting for a ticket whose difficulty you cannot bound in advance. Simple
-# work you still mean to land is what the light role and the light workflow
-# further down are for, and they are selected per ticket, so this dial stays
-# where hard work needs it. Yard meters no cost, enforces no budget, and quotes
-# no price; every model turn here is billed by the provider whose CLI ran it,
-# and their usage reporting is the only account of it.
-[roles.implementation]
-# Temporary Claude weekly-quota fallback (2026-09-12). Restore claude /
-# claude-opus-5, context_limit_tokens = 300000 and
-# compaction_threshold_share = 0.7 when switching back.
-backend = "codex"
+# Agents hold harness/model/session settings. Jobs below hold access,
+# instructions and timeouts; workflows select an implementation agent.
+# Preserve the existing Codex quota fallbacks and Sonnet light agents.
+[agents.implementation]
+harness = "codex"
 model = "gpt-5.6-sol"
 effort = "xhigh"
-access = "writable"
 tools = { subagents = true }
-inactivity_timeout_minutes = 0
-total_work_timeout_minutes = 360
-instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead. Before declaring the candidate, once your own checks pass: invoke the built-in /simplify skill directly in your implementation session over the candidate diff (reuse, simplification, efficiency, altitude — quality only, no behavior change). Do not delegate the /simplify invocation to another subagent. Let the skill complete its own review and fix phases, then re-run the checks; if the skill is unavailable, do that pass yourself. If the ticket changes rendered reg_webapp frontend UI: load the repo skill reg-webapp-frontend-design before authoring (if the Skill tool does not list it, read .claude/skills/reg-webapp-frontend-design/SKILL.md), and before declaring the candidate run reg-webapp-design-reviewer (.claude/skills/reg-webapp-design-reviewer/SKILL.md) in a clean subagent and fix or explicitly dismiss what it finds."
 
-# Plan-first tickets need the planning role. Without it, such a ticket waits
-# for the operator instead of planning itself.
-# The frozen planning prompt already asks every plan for its named consumer,
-# the minimum behavior that consumer needs, which assumptions were stated and
-# which inferred, the deployment's own threat model, and its exclusions -- and
-# to delete or defer behavior before splitting it. That half is universal, so
-# it is not yours to write. instructions is the other half: what is true of
-# this project only, and nowhere in the ticket. The plan document a ticket is
-# planned against earns its place, and so does a size ceiling this project wants
-# held -- though Yard ships no number of its own, because a budget in the
-# scaffold reads as a contract and size is a signal read after the fact.
-[roles.planning]
-# Temporary Claude-credit fallback (2026-09-14); restore original claude/claude-fable-5-1/high.
-backend = "codex"
+[agents.planning]
+harness = "codex"
 model = "gpt-6-astra"
 effort = "xhigh"
-instructions = "Plan against this repository's CLAUDE.md conventions and each package's DESIGN.md; name the package(s) each ticket touches. This project is shedding overengineering: delete or defer behavior before splitting it, and split only what is independently useful — answer a frightening size by shrinking the scope, never by subdividing it into a backlog. Every ticket names its consumer and the observable behavior they get. Problems that have not happened are not requirements, and this single-maintainer research tool is not an adversarial environment."
 
-# The conflict role resolves a conflicted retarget and takes the same keys as
-# the implementation role. Without it, the lane stops for the operator.
-[roles.conflict]
-# Temporary quota fallback; restore claude / claude-opus-5 / high.
-backend = "codex"
+[agents.conflict]
+harness = "codex"
 model = "gpt-5.6-sol"
 effort = "high"
-access = "writable"
 tools = { subagents = true }
-inactivity_timeout_minutes = 0
-total_work_timeout_minutes = 360
 
-# A role table named anything other than implementation, planning, conflict, or
-# review is an additional worker role a workflow can select, and it takes the
-# same keys as the roles above. This one is for simple work, and the light
-# workflow further down is what puts a lane on it. Its candidates are meant to
-# land, so the model is one that finishes a small task correctly rather than the
-# least this backend can run; medium effort is what such a task takes, and
-# subagents are off because work small enough to select this role is work one
-# worker holds in its own context.
-[roles.light]
-backend = "claude"
+[agents.light]
+harness = "claude"
 model = "claude-sonnet-5"
 effort = "medium"
 tools = { subagents = false }
 
-# Same worker as light, at full effort instead of medium, for the rendered
-# candidates the light-ui workflow further down puts on it: a small change
-# whose picture a flow gate already retains, so the operator reviews screenshots
-# rather than rebuilding the render environment to look for themselves.
-[roles.light-ui]
-backend = "claude"
+[agents.light-ui]
+harness = "claude"
 model = "claude-sonnet-5"
 effort = "xhigh"
 tools = { subagents = false }
+
+# Explicitly selected for bounded trials, using OPENROUTER_API_KEY in
+# operator.env. Contributor prompts and outputs may be used by Meta for training.
+# Pi has no subagent tool and does not accept context/compaction overrides.
+[agents.muse]
+harness = "pi"
+provider = "openrouter"
+model = "meta/muse-spark-1.3-contributor"
+effort = "high"
+tools = { subagents = false }
+
+# Every workflow inherits these job settings. Light agents and Pi do their
+# simplification pass themselves; light-ui leaves rendered evidence to gates.
+[implementation]
+agent = "implementation"
+access = "writable"
+inactivity_timeout_minutes = 0
+total_work_timeout_minutes = 360
+instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead. For a workflow using an agent with subagents enabled, before declaring the candidate, once your own checks pass: invoke the built-in /simplify skill directly in your implementation session over the candidate diff (reuse, simplification, efficiency, altitude — quality only, no behavior change). Do not delegate the /simplify invocation to another subagent. Let the skill complete its own review and fix phases, then re-run the checks; if the skill is unavailable, do that pass yourself. For agents with subagents disabled (including light, light-ui and muse), make the simplification pass yourself and re-run checks; do not request subagents. If the ticket changes rendered reg_webapp frontend UI: load the repo skill reg-webapp-frontend-design before authoring (if the Skill tool does not list it, read .claude/skills/reg-webapp-frontend-design/SKILL.md), and, when subagents are enabled, before declaring the candidate run reg-webapp-design-reviewer (.claude/skills/reg-webapp-design-reviewer/SKILL.md) in a clean subagent and fix or explicitly dismiss what it finds. On light-ui, do not run that reviewer or render screenshots yourself: the flow gates retain the pictures and the operator judges them."
+
+[planning]
+agent = "planning"
+instructions = "Plan against this repository's CLAUDE.md conventions and each package's DESIGN.md; name the package(s) each ticket touches. This project is shedding overengineering: delete or defer behavior before splitting it, and split only what is independently useful — answer a frightening size by shrinking the scope, never by subdividing it into a backlog. Every ticket names its consumer and the observable behavior they get. Problems that have not happened are not requirements, and this single-maintainer research tool is not an adversarial environment."
+
+[conflict]
+agent = "conflict"
+access = "writable"
+inactivity_timeout_minutes = 0
+total_work_timeout_minutes = 360
 
 # Each [checks.<name>] section defines a gate, and each workflow's checks key
 # (see [workflows.*] below) selects which gates its candidates must pass — a
@@ -389,7 +328,7 @@ context = [
 instructions = "Review this reg_webapp frontend candidate using only the diff and supplied context files. Judge markup, styles, copy, component states, keyboard focus and interaction semantics against the source-visible checklist, design-system contract and semantic tokens. Check accessibility, component reuse, responsive rules and error-state affordances where the supplied source supports a conclusion. The supplied skill's rendering, self-check and rendered-evidence reporting procedures belong to the implementation worker and operator; they do not apply to this seat. Do not claim rendered verification or raise findings merely because this seat has no rendered evidence. Report concrete defects supported by the supplied source, with file and line, severity, user impact and the smallest correction; distinguish established defects from behavior the available context cannot establish."
 
 # A workflow is a named binding of the knobs above, never a step language. It
-# states three: role names the worker role its lanes run as, review is a list
+# states three: agent names the implementer its lanes run as, review is a list
 # of the seat names above -- or "none" for no review at all -- and checks is
 # either "all" or a list of the gate names such a lane must pass. A ticket
 # selects one with yard ticket new --workflow NAME, and a ticket that names none
@@ -397,7 +336,7 @@ instructions = "Review this reg_webapp frontend candidate using only the diff an
 # below rather than by touching the backlog. yard workflow list shows what every
 # workflow this project declares binds.
 [workflows.default]
-role = "implementation"
+agent = "implementation"
 review = ["codex"]
 # The three CI-mirroring gates, listed rather than "all": a gate is added for
 # the workflow that needs it (project-flows below), and an unrelated candidate
@@ -410,12 +349,12 @@ checks = ["lint", "test", "frontend"]
 # replace-flows are what hand them pictures — one gate per artifact list, not
 # per concern.
 [workflows.ui]
-role = "implementation"
+agent = "implementation"
 review = ["codex", "design"]
 checks = ["lint", "test", "frontend", "project-flows", "catalog-flows", "replace-flows"]
 
 # The light workflow is the everyday lane for simple work, selected one ticket
-# at a time: the role above, the CI gates, and no review. Skipping the review
+# at a time: the agent above, the CI gates, and no review. Skipping the review
 # panel is its one economy, and it is the right one for a rename, a message, or
 # a small fix -- work where a panel would cost more than it catches. The gates
 # are not part of that economy: a light candidate you might land has passed the
@@ -430,13 +369,13 @@ checks = ["lint", "test", "frontend", "project-flows", "catalog-flows", "replace
 # candidate that needed a reviewer spends the difference again on repair rounds
 # you drive yourself.
 [workflows.light]
-role = "light"
+agent = "light"
 review = "none"
 checks = ["lint", "test", "frontend"]
 
 # The light-ui workflow is light's economy applied to a rendered change: the
 # worker is light's model at full effort (Sonnet at xhigh -- more reasoning per
-# turn than light's medium, not the Opus implementation role), and what it drops
+# turn than light's medium), and what it drops
 # is the in-session review machinery -- no /simplify subagent round, no
 # reg-webapp-design-reviewer seat. What it keeps is the rendered flow gates, so
 # the operator still gets pictures: project-flows, catalog-flows and
@@ -445,9 +384,16 @@ checks = ["lint", "test", "frontend"]
 # copy change, a gate flip, a label source. A change on a route the scenarios
 # do not render still needs the operator's own render, or the ui workflow.
 [workflows.light-ui]
-role = "light-ui"
+agent = "light-ui"
 review = "none"
 checks = ["lint", "test", "frontend", "project-flows", "catalog-flows", "replace-flows"]
+
+# Bounded non-UI trials retain the default code review and all three CI gates.
+# Rendered frontend changes still use ui/light-ui and their visual evidence.
+[workflows.muse]
+agent = "muse"
+review = ["codex"]
+checks = ["lint", "test", "frontend"]
 
 # concurrency limits how many ready tickets run at once.
 [scheduler]
