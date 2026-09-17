@@ -173,6 +173,88 @@ class NamingDeclaration(_NamingModel):
     contributors: tuple[AcceptedNamingEntry, ...]
 
 
+class NamingAmbiguity(_NamingModel):
+    """Accepted names affected by unresolved ownership within one source family.
+
+    This is diagnostic attribution, not a binding or an accepted unresolved
+    decision. It cannot form a variable, assign a column or lower error severity.
+    The offline conversion must retain the exact original names and whole-family
+    evidence after checking for an existing accepted ownership declaration.
+    """
+
+    family: NativeNamingTarget
+    entries: tuple[AcceptedNamingEntry, ...]
+    candidate_columns: tuple[tuple[str, str], ...]
+    reason: str
+
+    @property
+    def names(self) -> tuple[SlugEntry, ...]:
+        grouped: defaultdict[str, list[AcceptedNamingEntry]] = defaultdict(list)
+        for entry in self.entries:
+            grouped[entry.entry.source_id].append(entry)
+        return tuple(_effective(grouped[key])[0] for key in sorted(grouped))
+
+    @model_validator(mode="after")
+    def _bounded(self) -> Self:
+        if (
+            self.family.kind != "variable"
+            or not self.family.expectations
+            or not self.family.peer_guards
+        ):
+            raise ValueError(
+                "naming ambiguity needs a complete original variable family"
+            )
+        if not self.entries or not self.reason.strip():
+            raise ValueError("naming ambiguity needs original entries and a reason")
+        if any(
+            projection.subject is None
+            or "column_name" not in {field.name for field in projection.fields}
+            for expectation in self.family.expectations
+            for projection in expectation.alternatives
+        ):
+            raise ValueError(
+                "naming ambiguity must pin every original subject and column"
+            )
+        origins = set()
+        for item in self.entries:
+            if (
+                item.entry.kind != "variable"
+                or item.entry.provider != self.family.provider
+            ):
+                raise ValueError(
+                    "ambiguous names must share the source family's namespace"
+                )
+            key = item.entry.source_id, item.origin
+            if key in origins:
+                raise ValueError("duplicate ambiguous naming origin")
+            origins.add(key)
+        names = self.names
+        if any(not name.slug for name in names) or len({n.slug for n in names}) != len(
+            names
+        ):
+            raise ValueError("ambiguous names need distinct effective slugs")
+        if (
+            {key for key, _ in self.candidate_columns} != {n.source_id for n in names}
+            or len(set(self.candidate_columns)) != len(self.candidate_columns)
+            or any(not column.strip() for _, column in self.candidate_columns)
+        ):
+            raise ValueError(
+                "each ambiguous name needs unique literal column candidates"
+            )
+        observed = {
+            field.value
+            for expectation in self.family.expectations
+            for projection in expectation.alternatives
+            for field in projection.fields
+            if field.name == "column_name" and field.status == "value"
+        }
+        if any(column not in observed for _, column in self.candidate_columns):
+            raise ValueError(
+                "ambiguous name candidates must occur in the original family"
+            )
+        return self
+
+
 class NamingEntryDisposition(_NamingModel):
     entry_id: str
     status: Literal[

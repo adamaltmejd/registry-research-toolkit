@@ -145,6 +145,15 @@ source fields. Identity alone does not choose a primary parallel column: an unre
 overlap withholds only the affected state period. Renames and shape splits remain
 explicit conversion work.
 
+Audited naming ambiguities connect exact accepted names to source identity errors. Each
+attribution pins the complete original family, retains the original naming entries and
+enumerates literal candidate columns. Common resolution requires an actual unresolved
+identity outcome for those candidate observations. It preserves supported variables and
+states, naming only missing dependencies in the observed variants and columns. These
+attributions always remain errors; they assign no identities and acknowledge no
+unresolved decisions. A stale attribution bridge or an unexplained missing reference
+remains an engineering failure requiring repair.
+
 Canonical classification membership uses the explicitly selected prepared codebook. The
 common resolver retains literal codes, deduplicates equal code/label payloads, and
 diagnoses competing or incomplete members without choosing a label. The original rows

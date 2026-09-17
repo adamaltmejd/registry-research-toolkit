@@ -17,6 +17,7 @@ from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_classification_bindings import apply_classification_cases
 from reg_meta_build.source_coding_choices import apply_coding_choices
+from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
     ClassificationDecision,
     CodingDecision,
@@ -46,8 +47,12 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.source_coding import CodeListClaim
     from reg_meta_build.source_coordinates import NativeKey
-    from reg_meta_build.source_curation import CaseEvaluation, CurationCase
-    from reg_meta_build.source_naming import NamingDeclaration
+    from reg_meta_build.source_curation import (
+        CaseEvaluation,
+        CurationCase,
+        SourceRecordRef,
+    )
+    from reg_meta_build.source_naming import NamingAmbiguity, NamingDeclaration
     from reg_meta_build.source_occurrences import EffectiveOccurrence
     from reg_meta_build.source_records import SourceRecord, SourceRevision
     from reg_meta_build.source_support import SourceSupportBindings
@@ -74,6 +79,7 @@ def resolve_source_scope(
     *,
     cases: tuple[CurationCase, ...],
     naming: tuple[NamingDeclaration, ...],
+    naming_ambiguities: tuple[NamingAmbiguity, ...] = (),
     provider_keys: Mapping[NativeKey, str | None],
     value_sessions: tuple[ValueBindingSession, ...],
     support: SourceSupportBindings,
@@ -412,6 +418,33 @@ def resolve_source_scope(
         register_key = names["register_variant", key].target.register_key
         assert register_key is not None
         available.add(("variant", register_fqids[register_key], variant.slug))
+    for key, causes in _attribute_unresolved_names(
+        naming_ambiguities,
+        originals=originals,
+        evidence=evidence,
+        groups=groups,
+        occurrences=corrected.occurrences,
+        variables=annotated.variables,
+        unresolved_keys=frozenset(
+            k for k, provider_key in provider_keys.items() if provider_key is None
+        ),
+        register_fqids=register_fqids,
+        variant_slugs={
+            key: name.naming.slug
+            for (kind, key), name in names.items()
+            if kind == "register_variant" and name.naming.slug is not None
+        },
+        available=available,
+    ).items():
+        withheld[key].extend(causes)
+    # One attributed issue can explain several exact dependency keys.
+    for issue in dict.fromkeys(
+        cause
+        for causes in withheld.values()
+        for cause in causes
+        if cause.code == "ambiguous_named_identity"
+    ):
+        emit(issue)
     withheld_dependencies = {
         key: tuple(dict.fromkeys(causes))
         for key, causes in withheld.items()
@@ -433,3 +466,137 @@ def resolve_source_scope(
         counts["warning"],
         withheld_dependencies,
     )
+
+
+def _attribute_unresolved_names(
+    ambiguities: tuple[NamingAmbiguity, ...],
+    *,
+    originals: tuple[SourceRecord, ...],
+    evidence: SourceEvidence,
+    groups: Mapping[NativeKey, list[EffectiveOccurrence]],
+    occurrences: tuple[EffectiveOccurrence, ...],
+    variables: Mapping[NativeKey, ResolvedVariable | None],
+    unresolved_keys: frozenset[NativeKey],
+    register_fqids: Mapping[NativeKey, str],
+    variant_slugs: Mapping[NativeKey, str],
+    available: set[DependencyKey],
+) -> dict[DependencyKey, tuple[ResolutionDiagnostic, ...]]:
+    """Attribute actual unresolved source outcomes, never an absent-reference fallback.
+
+    The diagnostic bridge itself must still match its complete pinned family.
+    Stale/broken bridge inputs require conversion repair, not a curation waiver.
+    A partially supported name keeps its variable and every supported dependency;
+    only exact missing variant/column references in the unresolved rows are named.
+    """
+    wanted = {a.family.source_key for a in ambiguities}
+    if len(wanted) != len(ambiguities):
+        raise ValueError("duplicate ambiguous naming family")
+    if not wanted:
+        return {}
+    original_families: dict[NativeKey, list[SourceRecord]] = defaultdict(list)
+    for record in originals:
+        if (key := native_variable_key(record)) in wanted:
+            assert key is not None
+            original_families[key].append(record)
+    unresolved = {
+        key: list(groups[key])
+        for key in wanted & unresolved_keys
+        if key in variables and variables[key] is None
+    }
+    for occurrence in occurrences:
+        if occurrence.use != "catalog" or "identity" not in occurrence.withheld_fields:
+            continue
+        for key in {native_variable_key(r) for r in occurrence.source_records} & wanted:
+            assert key is not None
+            unresolved.setdefault(key, []).append(occurrence)
+    withheld: dict[DependencyKey, list[ResolutionDiagnostic]] = defaultdict(list)
+    for ambiguity in ambiguities:
+        family = ambiguity.family
+        key = family.source_key
+        records = original_families[key]
+        if (
+            not records
+            or {record_ref(r) for r in records} != {e.ref for e in family.expectations}
+            or any(source_register_key(r) != family.register_key for r in records)
+            or check_naming_target(family, evidence)
+        ):
+            raise ValueError(
+                f"ambiguous naming bridge is stale or belongs to another family: {key!r}"
+            )
+        if not unresolved.get(key):
+            raise ValueError(
+                f"ambiguous naming lacks an unresolved native identity: {key!r}"
+            )
+        assert family.register_key is not None
+        register = register_fqids.get(family.register_key)
+        if register is None:
+            raise ValueError(f"ambiguous naming lacks a converted register: {key!r}")
+        for name in ambiguity.names:
+            fqid = f"{register}/{name.slug}"
+            candidates = {
+                column
+                for source_id, column in ambiguity.candidate_columns
+                if source_id == name.source_id
+            }
+            pending = tuple(
+                occurrence
+                for occurrence in unresolved[key]
+                if any(
+                    native_variable_key(record) == key
+                    and record.fields.column_name is not None
+                    and record.fields.column_name.status == "value"
+                    and record.fields.column_name.value in candidates
+                    for record in occurrence.source_records
+                )
+            )
+            if not pending:
+                raise ValueError(
+                    f"ambiguous name has no unresolved candidate observations: {fqid}"
+                )
+            affected: dict[DependencyKey, set[SourceRecordRef]] = defaultdict(set)
+            for occurrence in pending:
+                refs = {record_ref(r) for r in occurrence.evidence}
+                if ("variable", fqid) not in available:
+                    affected["variable", fqid].update(refs)
+                    continue
+                variant = (
+                    variant_slugs.get(occurrence.variant_key)
+                    if occurrence.variant_key is not None
+                    else None
+                )
+                if variant is None:
+                    continue
+                affected["variant_states", fqid, variant].update(refs)
+                column = occurrence.fields.column_name
+                if (
+                    column is not None
+                    and column.status == "value"
+                    and isinstance(column.value, str)
+                    and column.value
+                ):
+                    text = column.value
+                    for dependency in (
+                        ("representation", fqid, text),
+                        ("succession_representation", fqid, text.lower()),
+                        ("succession_representation", fqid, text.lower(), variant),
+                    ):
+                        affected[dependency].update(refs)
+            for dependency, refs in affected.items():
+                if dependency in available:
+                    continue
+                issue = ResolutionDiagnostic(
+                    code="ambiguous_named_identity",
+                    severity="error",
+                    subject=fqid,
+                    detail=f"Accepted name {name.source_id!r} cannot establish ownership within original family {key!r}: {ambiguity.reason} Naming evidence: "
+                    + ", ".join(
+                        e.entry_id
+                        for e in ambiguity.entries
+                        if e.entry.source_id == name.source_id
+                    ),
+                    refs=tuple(sorted(refs, key=repr)),
+                    fields=("identity", "column_name"),
+                    withheld_output=(repr(dependency),),
+                )
+                withheld[dependency].append(issue)
+    return {key: tuple(causes) for key, causes in withheld.items()}
