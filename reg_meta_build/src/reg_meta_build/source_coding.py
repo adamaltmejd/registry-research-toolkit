@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from reg_meta_build.source_values import SourceValueAssociation, SourceValueValidity
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class CodeMembershipClaim:
     """One supplied code/label and its independently interpreted validity.
 
@@ -41,7 +41,7 @@ class CodeMembershipClaim:
     validity: tuple[SourceValueValidity, ...] = ()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class CodeListClaim:
     """One whole source list, already bound to a finite occurrence scope."""
 
