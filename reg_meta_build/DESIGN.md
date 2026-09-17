@@ -198,6 +198,12 @@ research variables or variants from them. Parent resolution accounts for those r
 and for explicit translations outside the requested catalog language. Missing naming
 bindings remain implementation failures; they are not curation waivers.
 
+Register and variant naming can check a fixed source identity anchor without asserting
+that all metadata rows belong to that anchor. Additional contact, description or
+translation rows do not change the named native coordinate; parent resolution still
+reconciles their assertions. Variable naming continues to require complete membership
+guards. Any explicitly supplied parent membership guard remains binding.
+
 Checked variant assignments preserve existing finite token-to-variant decisions in the
 common layer. One delivered row may support several explicitly named variants, while
 retaining its original physical evidence, fields and unresolved period. Assignments

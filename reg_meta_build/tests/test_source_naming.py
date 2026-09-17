@@ -414,3 +414,60 @@ def test_source_artifact_identity_requires_the_exact_selected_revision() -> None
     target = _target()
     assert not check_naming_target(target, (), revisions=(_revision(),))
     assert check_naming_target(target, ())[0].code == "naming_identity_revision_changed"
+
+
+@pytest.mark.parametrize("kind", ["register", "register_variant"])
+def test_parent_naming_checks_identity_anchor_without_claiming_peer_membership(
+    kind: Literal["register", "register_variant"],
+) -> None:
+    record = _record()
+    ref = SourceRecordRef(
+        source=record.source, semantic_record_key=record.locators[0].semantic_record_key
+    )
+    target = NativeNamingTarget(
+        kind=kind,
+        provider="scb",
+        source_key=("source", kind, 1),
+        register_key=("source", "register", 1) if kind == "register_variant" else None,
+        expectations=(
+            RecordExpectation(
+                ref=ref, alternatives=(RecordProjection(subject=record.subject),)
+            ),
+        ),
+    )
+    assert not check_naming_target(target, (record, _record(cvid=1002)))
+    assert not check_naming_target(target, (_record(description="irrelevant prose"),))
+    assert check_naming_target(target, (_record(cvid=1002),))
+    changed = record.model_copy(
+        update={
+            "subject": record.subject.model_copy(
+                update={
+                    "register_name": record.subject.register_name.model_copy(
+                        update={"native_id": 2}
+                    )
+                }
+            )
+        }
+    )
+    assert check_naming_target(target, (changed,))
+    guarded = target.model_copy(
+        update={
+            "peer_guards": (
+                PeerGuard(
+                    guard_id="explicit-parent-membership",
+                    source=record.source,
+                    native=NativeCoordinates(register_id=1),
+                    expected_members=(ref,),
+                ),
+            )
+        }
+    )
+    assert check_naming_target(guarded, (record, _record(cvid=1002)))
+    with pytest.raises(ValidationError, match="complete peer guards"):
+        NativeNamingTarget.model_validate(
+            {
+                **target.model_dump(),
+                "kind": "variable",
+                "register_key": ("source", "register", 1),
+            }
+        )

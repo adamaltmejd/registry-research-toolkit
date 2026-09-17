@@ -61,12 +61,14 @@ class _NamingModel(BaseModel):
 
 
 class NativeNamingTarget(_NamingModel):
-    """One exact native entity, guarded by source members or a source artifact.
+    """One exact native entity, guarded by source evidence or a source artifact.
 
     Keys are opaque to this module and retain integer/string distinctions. Variable
     and variant names are scoped by their exact native register_key. A declaration
     without row members (for example a standalone code-list identity) is guarded by
     its selected identity_revision instead of invented variable observations.
+    Parent names can use checked identity anchors without a peer-set assertion:
+    naming a register or variant does not assign its other members to a variable.
     """
 
     kind: EntityKind
@@ -95,9 +97,11 @@ class NativeNamingTarget(_NamingModel):
         if self.identity_revision is not None:
             if self.expectations or self.peer_guards:
                 raise ValueError("use member guards or an identity revision, not both")
-        elif not self.expectations or not self.peer_guards:
+        elif not self.expectations or (
+            not self.peer_guards and self.kind not in {"register", "register_variant"}
+        ):
             raise ValueError(
-                "member naming needs expectations and complete peer guards"
+                "member naming needs expectations and non-parent identities need complete peer guards"
             )
         expected = {
             (e.ref.source, e.ref.semantic_record_key) for e in self.expectations
@@ -109,7 +113,7 @@ class NativeNamingTarget(_NamingModel):
             for guard in self.peer_guards
             for ref in guard.expected_members
         }
-        if expected != guarded:
+        if self.peer_guards and expected != guarded:
             raise ValueError(
                 "naming peer guards must cover exactly the expected members"
             )
@@ -546,11 +550,13 @@ def check_naming_target(
     *,
     revisions: Iterable[SourceRevision] = (),
 ) -> tuple[ResolutionDiagnostic, ...]:
-    """Check naming applicability against the complete exact native family.
+    """Check naming applicability against its original source evidence.
 
     Call once per unique target, not once per entry or over the full source corpus.
-    Include new members of this native identity, not only its previously pinned
-    members. Independent source identities are never peers by name resemblance.
+    When membership guards are present, include new members of this native identity,
+    not only its previously pinned members. Parent identity anchors without membership
+    guards need only their exact referenced records. Independent source identities are
+    never peers by name resemblance.
     """
     if target.identity_revision is not None:
         if target.identity_revision in revisions:
