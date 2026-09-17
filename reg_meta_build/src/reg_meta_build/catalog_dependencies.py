@@ -32,6 +32,23 @@ if TYPE_CHECKING:
 type DependencyKey = tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class MissingCatalogDependency:
+    key: DependencyKey
+    output: str
+
+
+class CatalogDependencyError(ValueError):
+    """All unexplained missing references; no resolved result may be written."""
+
+    def __init__(self, missing: tuple[MissingCatalogDependency, ...]) -> None:
+        self.missing = missing
+        super().__init__(
+            f"{len(missing)} unexplained missing catalog dependencies: "
+            + "; ".join(f"{m.key!r} for {m.output}" for m in missing[:10])
+        )
+
+
 class CatalogDependencies:
     """Exact available references and evidenced omissions, never a missing fallback.
 
@@ -55,6 +72,11 @@ class CatalogDependencies:
         self.available = available
         self.withheld = withheld
         self.diagnostics: list[ResolutionDiagnostic] = []
+        self.missing: list[MissingCatalogDependency] = []
+
+    def check(self) -> None:
+        if self.missing:
+            raise CatalogDependencyError(tuple(self.missing))
 
     def require(
         self,
@@ -70,9 +92,8 @@ class CatalogDependencies:
             None,
         )
         if causes is None:
-            raise ValueError(
-                f"unexplained missing catalog dependency: {key!r} for {output}"
-            )
+            self.missing.append(MissingCatalogDependency(key, output))
+            return False
         for cause in causes:
             self.diagnostics.append(
                 cause.model_copy(
@@ -375,6 +396,7 @@ def resolve_metadata_dependencies(
             ],
         ),
     }
+    dependencies.check()
     return MetadataResolution(
         metadata.model_copy(update=updates), tuple(dependencies.diagnostics)
     )
@@ -452,6 +474,8 @@ def resolve_panel_dependencies(
                 updates[field] = None
         if updates:
             by_variant[key] = variant.model_copy(update=updates)
+
+    dependencies.check()
 
     def resolved_variant(
         register: ResolvedRegister, variant: ResolvedVariant

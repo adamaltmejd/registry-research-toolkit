@@ -6,6 +6,7 @@ import pytest
 from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta_build.catalog_dependencies import (
+    CatalogDependencyError,
     resolve_metadata_dependencies,
     resolve_panel_dependencies,
 )
@@ -132,7 +133,7 @@ def test_panel_requires_state_in_its_own_variant_not_only_variable():
     populated = ResolvedVariant(slug="populated", name="Populated")
     independent = ResolvedVariant(slug="other", name="Other", panel_entity_key="key")
     key = _variable(populated, "key")
-    with pytest.raises(ValueError, match="unexplained missing catalog dependency"):
+    with pytest.raises(ValueError, match="unexplained missing catalog dependenc"):
         resolve_panel_dependencies(
             (key,), variants=((key.register_ref, independent),), withheld={}
         )
@@ -370,7 +371,7 @@ def test_representation_withholding_is_literal_but_succession_preserves_its_cont
             ),
         ),
     )
-    with pytest.raises(ValueError, match="unexplained missing catalog dependency"):
+    with pytest.raises(ValueError, match="unexplained missing catalog dependenc"):
         _metadata_result(ResolvedMetadata(variable_groups=(group,)))
     result = _metadata_result(
         ResolvedMetadata(variable_groups=(group,)),
@@ -397,7 +398,7 @@ def test_exact_missing_state_withholds_lineage_without_removing_live_variables()
             ),
         )
     )
-    with pytest.raises(ValueError, match="unexplained missing catalog dependency"):
+    with pytest.raises(ValueError, match="unexplained missing catalog dependenc"):
         _metadata_result(metadata)
     result = _metadata_result(
         metadata,
@@ -443,3 +444,28 @@ def test_explicit_historical_predecessor_is_not_confused_with_withheld_entity():
         _metadata_result(
             metadata, withheld={("variable", "scb/example/old"): (_cause(),)}
         )
+
+
+@pytest.mark.parametrize("surface", ["panel", "relation"])
+def test_dependency_failure_reports_every_missing_endpoint(surface):
+    with pytest.raises(CatalogDependencyError) as error:
+        if surface == "panel":
+            variant = ResolvedVariant(
+                slug="people", name="People", panel_entity_key=("key", "absent")
+            )
+            resolve_panel_dependencies((_variable(variant),), withheld={})
+        else:
+            _metadata_result(
+                ResolvedMetadata(
+                    variable_same_as=(
+                        ResolvedVariableSameAs(
+                            a="scb/example/key", b="scb/example/absent"
+                        ),
+                    )
+                )
+            )
+    assert tuple(m.key[1] for m in error.value.missing) == (
+        "scb/example/key",
+        "scb/example/absent",
+    )
+    assert all(m.output for m in error.value.missing)
