@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
-from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
+from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.pipeline import (
@@ -201,6 +201,93 @@ def test_cli_summary_cannot_overwrite_selected_declarations(selection, tmp_path)
     )
     assert status == EXIT_USAGE
     assert selection.read_bytes() == original
+
+
+@pytest.mark.parametrize("member", ["selection", "scope", "manifest", "records"])
+@pytest.mark.parametrize("link", ["hard", "symbolic"])
+def test_cli_summary_temporary_alias_cannot_overwrite_inputs(
+    selection, tmp_path, member, link
+):
+    selected = PipelineSelection.model_validate_json(selection.read_bytes())
+    prepared = Path(selected.prepared_path)
+    target = {
+        "selection": selection,
+        "scope": selection.parent / selected.scopes[0].path,
+        "manifest": prepared / "manifest.json",
+        "records": prepared / "files/records/files/records.sqlite",
+    }[member]
+    original = target.read_bytes()
+    summary = tmp_path / "summary.json"
+    temporary = summary.with_suffix(".json.tmp")
+    if link == "hard":
+        temporary.hardlink_to(target)
+    else:
+        temporary.symlink_to(target)
+    report = tmp_path / "report"
+    assert (
+        run(
+            [
+                "--output",
+                str(summary),
+                "build-db",
+                "--selection",
+                str(selection),
+                "--report-dir",
+                str(report),
+            ]
+        )
+        == EXIT_USAGE
+    )
+    assert not report.exists()
+    assert target.read_bytes() == original
+
+
+@pytest.mark.parametrize("backup", [False, True])
+def test_catalog_paths_cannot_alias_prepared_inputs(selection, tmp_path, backup):
+    selected = PipelineSelection.model_validate_json(selection.read_bytes())
+    target = Path(selected.prepared_path) / "files/records/files/records.sqlite"
+    original = target.read_bytes()
+    output = tmp_path / "catalog.db"
+    alias = Path(str(output) + ".prev") if backup else output
+    alias.hardlink_to(target)
+    with pytest.raises(ValueError, match="must not alias selected inputs"):
+        build_selected_catalog(selection, output, tmp_path / "report")
+    assert target.read_bytes() == original
+    assert not (tmp_path / "report").exists()
+
+
+def test_late_cli_summary_failure_reports_completed_artifact(
+    selection, tmp_path, capsys, monkeypatch
+):
+    from reg_meta_build import cli
+
+    def fail(*args, **kwargs):
+        raise OSError("late summary failure")
+
+    monkeypatch.setattr(cli, "write_json", fail)
+    output, report = tmp_path / "diagnostic.db", tmp_path / "report"
+    assert (
+        run(
+            [
+                "build-db",
+                "--selection",
+                str(selection),
+                "--report-dir",
+                str(report),
+                "--diagnostic",
+                "--diagnostic-db-path",
+                str(output),
+            ]
+        )
+        == EXIT_OUTPUT
+    )
+    receipt = json.loads(capsys.readouterr().err.splitlines()[-1])["error"]
+    assert receipt["artifact_complete"] is True
+    assert receipt["status"] == "diagnostic_complete"
+    assert receipt["publication_ready"] is False
+    assert receipt["curation_exit_code"] == EXIT_CONFIG
+    assert receipt["database"] == str(output)
+    assert json.loads((report / "summary.json").read_text())["database"] == str(output)
 
 
 @pytest.mark.parametrize("selection", ["unbound_values"], indirect=True)

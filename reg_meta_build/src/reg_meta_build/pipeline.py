@@ -28,7 +28,7 @@ from reg_meta_build.catalog_dependencies import (
 )
 from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
-from reg_meta_build.db import _emit_timing
+from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
@@ -211,6 +211,13 @@ def build_selected_catalog(
         input_commit=selected.prepared_commit,
         expected_sha256=selected.prepared_sha256,
     )
+    if _paths_overlap(
+        output_paths,
+        input_paths
+        | {prepared_path / "manifest.json"}
+        | {prepared_path / item.path for item in prepared.manifest.files},
+    ) or any(path.exists() and not path.is_file() for path in output_paths):
+        raise ValueError("catalog and backup paths must not alias selected inputs")
     _emit_timing("pipeline: open selected inputs", started)
     phase_started = time.perf_counter()
     entries = tuple(

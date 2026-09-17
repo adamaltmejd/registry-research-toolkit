@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
-import hashlib
 import json
 import os
 import sys
@@ -59,7 +58,7 @@ from .concept_groups import (
     load_concept_group_accepts,
 )
 from .db import (
-    _file_sha256,
+    _paths_overlap,
     _reject_input_repository_destination,
     _scb_snapshot_error,
     build_db,
@@ -170,50 +169,6 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     sub = parser.add_subparsers(dest="command")
-
-    curated_p = sub.add_parser(
-        "build-curated-db",
-        help="Build a scoped catalog from prepared records and reviewed cases.",
-        description=(
-            "Build and structurally validate the explicit catalog slice selected by "
-            "reviewed curation cases. Reads prepared source records only; does not "
-            "parse provider inputs or run legacy correction passes. This partial "
-            "replacement does not build the complete maintained catalog."
-        ),
-    )
-    inspect_curation_p = sub.add_parser(
-        "inspect-curation",
-        help="Report curation blockers and warnings without creating a catalog.",
-        description=(
-            "Check prepared source records and fixed reviewed cases using the same "
-            "publication gate as build-curated-db. Emits structured diagnostics "
-            "without opening provider inputs or writing a database."
-        ),
-    )
-    for command_p in (curated_p, inspect_curation_p):
-        command_p.add_argument(
-            "--records", required=True, help="Prepared source directory."
-        )
-        command_p.add_argument(
-            "--records-sha256", required=True, help="SHA256 of its manifest.json."
-        )
-        command_p.add_argument(
-            "--records-commit", required=True, help="Accepted input Git commit."
-        )
-        command_p.add_argument("--cases", required=True)
-    curated_output = curated_p.add_mutually_exclusive_group(required=True)
-    curated_output.add_argument(
-        "--db-path", help="Explicit strict-build output SQLite path."
-    )
-    curated_output.add_argument(
-        "--diagnostic-db-path",
-        help="New, separate SQLite path for a nonpublishable diagnostic artifact.",
-    )
-    curated_p.add_argument(
-        "--diagnostic",
-        action="store_true",
-        help="Complete a diagnostic artifact despite curation blockers; requires --diagnostic-db-path.",
-    )
 
     build_p = sub.add_parser(
         "build-db",
@@ -1140,189 +1095,8 @@ def _parse_scb_trace_cvids(raw: str | None) -> tuple[int, ...] | None:
     return tuple(sorted(values))
 
 
-def _curated_database_paths(output: Path) -> set[Path]:
+def _database_paths(output: Path) -> set[Path]:
     return {output, output.with_name(output.name + ".prev").resolve()}
-
-
-def _curated_source_paths(args: argparse.Namespace) -> set[Path]:
-    from .prepared_sources import prepared_source_paths
-
-    records = Path(args.records).expanduser().resolve()
-    return {
-        records,
-        *(path.resolve() for path in prepared_source_paths(records)),
-        Path(args.cases).expanduser().resolve(),
-    }
-
-
-def _curated_paths_overlap(destinations: set[Path], inputs: set[Path]) -> bool:
-    # The report temporary file is opened before replacement; a symlink or hard
-    # link there must not turn a distinct-looking report into an input overwrite.
-    return any(
-        destination == input_path
-        or (input_path.is_dir() and destination.is_relative_to(input_path))
-        or (
-            destination.exists()
-            and input_path.exists()
-            and destination.samefile(input_path)
-        )
-        for destination in destinations
-        for input_path in inputs
-    )
-
-
-def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from pydantic import TypeAdapter
-
-    from .prepared_sources import open_prepared_source_records
-    from .resolved_catalog import write_resolved_catalog
-    from .source_curation import CurationCase, inspect_cases
-
-    start = time.perf_counter()
-    records_path = Path(args.records).expanduser().resolve()
-    cases_path = Path(args.cases).expanduser().resolve()
-    diagnostic = getattr(args, "diagnostic", False)
-    diagnostic_path = getattr(args, "diagnostic_db_path", None)
-    if diagnostic != bool(diagnostic_path):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="curated_diagnostic_output_required",
-            error_class="usage",
-            message="--diagnostic and a separate --diagnostic-db-path must be used together.",
-            remediation="Choose a new diagnostic output path, or use --db-path for a strict build.",
-        )
-    output = (
-        Path(diagnostic_path or args.db_path).expanduser().resolve()
-        if args.command == "build-curated-db"
-        else None
-    )
-    if output is not None and any(
-        path.exists() and not path.is_file() for path in _curated_database_paths(output)
-    ):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="curated_build_output_conflict",
-            error_class="usage",
-            message="--db-path and its .prev backup must name files, not directories.",
-            remediation="Choose an explicit SQLite file path with a file backup destination.",
-        )
-    if args.db is not None or (
-        output is not None
-        and _curated_paths_overlap(
-            _curated_database_paths(output), _curated_source_paths(args)
-        )
-    ):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="curated_build_output_conflict",
-            error_class="usage",
-            message="--db is not used by these commands; --db-path and its .prev backup must be distinct from prepared records and cases.",
-            remediation="Omit --db and choose a distinct explicit SQLite output path for build-curated-db.",
-        )
-    try:
-        prepared = open_prepared_source_records(
-            records_path,
-            expected_sha256=args.records_sha256,
-            input_commit=args.records_commit,
-        )
-        case_bytes = cases_path.read_bytes()
-        cases = TypeAdapter(tuple[CurationCase, ...]).validate_json(case_bytes)
-        inspection = inspect_cases(cases, prepared.records)
-    except (OSError, ValueError) as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="curated_input_invalid",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Repair the pinned source artifact or reviewed case contract; no database was written.",
-        ) from exc
-
-    case_sha256 = hashlib.sha256(case_bytes).hexdigest()
-    data = {
-        **inspection.report(),
-        "scope": prepared.manifest.scope,
-        "prepared_sources_sha256": args.records_sha256,
-        "prepared_sources_commit": args.records_commit,
-        "curation_cases_sha256": case_sha256,
-    }
-    args_payload = {"records": str(records_path), "cases": str(cases_path)}
-    if output is not None:
-        args_payload["db_path"] = str(output)
-        data.update(
-            db_path=str(output),
-            catalog_published=False,
-            artifact_complete=False,
-            artifact_kind="diagnostic" if diagnostic else "catalog",
-            publication_ready=inspection.buildable and not diagnostic,
-            curation_status=data["status"],
-            curation_exit_code=0 if inspection.buildable else EXIT_CONFIG,
-        )
-        fatal_issues = [
-            item
-            for item in inspection.diagnostics
-            if item.code
-            in {"output_contract_invalid", "formation_invalid", "no_catalog_content"}
-        ]
-        if diagnostic and fatal_issues:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="curated_diagnostic_contract_invalid",
-                error_class="configuration",
-                message="Diagnostic artifact cannot bypass invalid or empty resolved content: "
-                + "; ".join(f"{item.code}: {item.detail}" for item in fatal_issues),
-                remediation="Repair the formation or resolved contract; no diagnostic artifact was written.",
-            )
-        if inspection.buildable or diagnostic:
-            manifest = {
-                "build_mode": "scoped-curation",
-                "source_scope": prepared.manifest.scope,
-                "prepared_sources_sha256": args.records_sha256,
-                "prepared_sources_commit": args.records_commit,
-                "curation_cases_sha256": case_sha256,
-            }
-            if diagnostic:
-                manifest["diagnostic_accounting"] = json.dumps(
-                    {
-                        key: value
-                        for key, value in inspection.report().items()
-                        if key != "catalog_preview"
-                    },
-                    ensure_ascii=False,
-                    sort_keys=True,
-                    separators=(",", ":"),
-                )
-            try:
-                write_resolved_catalog(
-                    inspection.variables,
-                    output,
-                    manifest=manifest,
-                    diagnostic=diagnostic,
-                )
-            except ValueError as exc:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="curated_build_rejected",
-                    error_class="configuration",
-                    message=str(exc),
-                    remediation="Repair the resolved catalog contract; the previous database is preserved.",
-                ) from exc
-            data.update(
-                db_sha256=_file_sha256(output),
-                structural_validation="passed",
-                catalog_published=not diagnostic,
-                artifact_complete=True,
-            )
-            if diagnostic:
-                data.update(status="diagnostic_complete", incomplete=True)
-    return success_envelope(
-        command=args.command,
-        args_payload=args_payload,
-        db_info={"schema_version": SCHEMA_VERSION}
-        if data.get("artifact_complete")
-        else None,
-        data=data,
-        duration_ms=int((time.perf_counter() - start) * 1000),
-    ), 0 if inspection.buildable else EXIT_CONFIG
 
 
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -2641,8 +2415,6 @@ def _cmd_doc_coverage(
 COMMAND_DISPATCH: dict[
     str, Callable[[argparse.Namespace], tuple[dict[str, Any], int]]
 ] = {
-    "build-curated-db": _cmd_curated_catalog,
-    "inspect-curation": _cmd_curated_catalog,
     "build-db": _cmd_build_db,
     "prepare-input-bundle": _cmd_prepare_input_bundle,
     "verify-input-bundle": _cmd_verify_input_bundle,
@@ -2668,14 +2440,6 @@ COMMAND_DISPATCH: dict[
 
 
 _COMMAND_OVERVIEW: list[tuple[str, str]] = [
-    (
-        "inspect-curation --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE",
-        "Report curation blockers and warnings without creating a catalog.",
-    ),
-    (
-        "build-curated-db --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE --db-path DB",
-        "Build a scoped catalog from prepared records and reviewed cases.",
-    ),
     (
         "build-db --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256",
         "Build the metadata DB from one complete accepted input bundle.",
@@ -2787,6 +2551,7 @@ def _confined_bundle_output_path(
         selection_path := getattr(args, "selection", None)
     ):
         from .pipeline import PipelineSelection
+        from .prepared_catalog import prepared_catalog_paths
 
         selection_file = Path(selection_path).expanduser().resolve()
         try:
@@ -2799,6 +2564,15 @@ def _confined_bundle_output_path(
         prepared = Path(selected.prepared_path)
         if not prepared.is_absolute():
             prepared = selection_file.parent / prepared
+        try:
+            protected = {
+                selection_file,
+                *(selection_file.parent / scope.path for scope in selected.scopes),
+                *prepared_catalog_paths(prepared),
+            }
+        except ValueError, OSError:
+            # Invalid inputs must not direct even an error report into an alias.
+            return None
         directories = {selection_file.parent, prepared.resolve()}
         if args.report_dir:
             directories.add(Path(args.report_dir).expanduser().resolve())
@@ -2809,13 +2583,17 @@ def _confined_bundle_output_path(
         )
         report_paths = {
             resolved_output,
-            resolved_output.with_suffix(resolved_output.suffix + ".tmp"),
+            resolved_output.with_suffix(resolved_output.suffix + ".tmp").resolve(),
         }
-        if any(
-            path.is_relative_to(directory)
-            for path in report_paths
-            for directory in directories
-        ) or _curated_paths_overlap(report_paths, _curated_database_paths(database)):
+        if (
+            (resolved_output.exists() and not resolved_output.is_file())
+            or any(
+                path.is_relative_to(directory)
+                for path in report_paths
+                for directory in directories
+            )
+            or _paths_overlap(report_paths, protected | _database_paths(database))
+        ):
             raise RegMetaError(
                 exit_code=EXIT_USAGE,
                 code="pipeline_report_output_conflict",
@@ -2824,39 +2602,6 @@ def _confined_bundle_output_path(
                 remediation="Choose a separate summary path or use stdout.",
             )
         return output_path
-    if (
-        args.command in {"build-curated-db", "inspect-curation"}
-        and resolved_output.exists()
-        and not resolved_output.is_file()
-    ):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="curated_build_output_conflict",
-            error_class="usage",
-            message="CLI JSON --output must name a file, not a directory.",
-            remediation="Choose a separate report file.",
-        )
-    if args.command in {"build-curated-db", "inspect-curation"}:
-        protected = _curated_source_paths(args)
-        if (
-            database_path := getattr(args, "diagnostic_db_path", None)
-            or getattr(args, "db_path", None)
-        ) is not None:
-            protected.update(
-                _curated_database_paths(Path(database_path).expanduser().resolve())
-            )
-        report_paths = {
-            resolved_output,
-            resolved_output.with_suffix(resolved_output.suffix + ".tmp").resolve(),
-        }
-        if _curated_paths_overlap(report_paths, protected):
-            raise RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="curated_build_output_conflict",
-                error_class="usage",
-                message="CLI JSON --output and its temporary file must be distinct from source records, cases, the SQLite database and its .prev backup.",
-                remediation="Choose a separate report path.",
-            )
     if (
         args.command == "inspect-source-records"
         and (evidence := getattr(args, "evidence", None)) is not None
@@ -2956,22 +2701,21 @@ def run(argv: list[str] | None = None) -> int:
                 write_json(payload.get("data", payload), output_path)
         except Exception as exc:
             data = payload.get("data", payload)
-            if args.command == "build-curated-db" and data.get("artifact_complete"):
+            if args.command == "build-db" and data.get("database"):
                 sys.stderr.write(
                     json.dumps(
                         {
                             "error": {
-                                "code": "curated_build_report_failed",
+                                "code": "pipeline_report_failed",
                                 "class": "diagnostic_output",
-                                "message": f"Catalog artifact completed; writing its report failed: {exc}",
-                                "catalog_published": data["catalog_published"],
+                                "message": f"Catalog artifact completed; writing the CLI summary failed: {exc}",
                                 "artifact_complete": True,
-                                "artifact_kind": data["artifact_kind"],
+                                "status": data["status"],
                                 "publication_ready": data["publication_ready"],
-                                "curation_exit_code": data["curation_exit_code"],
-                                "db_path": data["db_path"],
-                                "db_sha256": data["db_sha256"],
-                                "remediation": "Keep the completed artifact; choose a writable report destination. Diagnostic accounting is retained in its manifest.",
+                                "database": data["database"],
+                                "curation_exit_code": exit_code,
+                                "report_dir": args.report_dir,
+                                "remediation": "Keep the completed artifact and event report; choose a writable CLI summary destination.",
                             }
                         },
                         ensure_ascii=False,

@@ -960,6 +960,13 @@ class PreparedCatalogSources:
             )
 
 
+def prepared_catalog_paths(root: Path) -> tuple[Path, ...]:
+    """Enumerate immutable members before opening any output or report file."""
+    manifest_path = root / "manifest.json"
+    manifest = _manifest(manifest_path.read_bytes())
+    return manifest_path, *(root / item.path for item in manifest.files)
+
+
 def open_prepared_catalog_sources(
     path: Path, *, expected_sha256: str, input_commit: str
 ) -> PreparedCatalogSources:

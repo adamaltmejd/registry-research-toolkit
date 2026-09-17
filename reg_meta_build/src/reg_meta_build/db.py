@@ -1691,6 +1691,22 @@ def _scb_snapshot_error(exc: Exception) -> RegMetaError:
     )
 
 
+def _paths_overlap(destinations: set[Path], inputs: set[Path]) -> bool:
+    # The report temporary file is opened before replacement; a symlink or hard
+    # link there must not turn a distinct-looking report into an input overwrite.
+    return any(
+        destination == input_path
+        or (input_path.is_dir() and destination.is_relative_to(input_path))
+        or (
+            destination.exists()
+            and input_path.exists()
+            and destination.samefile(input_path)
+        )
+        for destination in destinations
+        for input_path in inputs
+    )
+
+
 def _file_sha256(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:

@@ -107,9 +107,9 @@ source facts.
 > full-corpus diagnostic database. Semantic comparison and cutover remain unfinished;
 > corpus safeguards still report failures requiring explanation. Existing decisions that
 > cannot safely apply remain explicit errors in the curation export. The old input flags
-> still select the legacy builder until cutover; the earlier `build-curated-db`
-> whole-variable-case prototype is displaced by this connection and will be removed.
-> This branch is not ready for catalog activation.
+> still select the legacy builder until cutover. The earlier whole-variable-case
+> prototype and its separate build/inspection commands have been removed. This branch is
+> not ready for catalog activation.
 
 The maintained call path is `pipeline.build_selected_catalog` →
 `open_prepared_catalog_sources` → `resolve_source_scope` for each complete scope →
@@ -502,42 +502,13 @@ physical row moves, artifact changes, irrelevant fields and identical duplicate 
 Changed relevant facts, missing support or unexpected members in a declared peer scope
 make the case stale. Peer guards only check membership; they never select correction
 targets. A peer guard can name exact edition scopes so unrelated later editions do not
-invalidate an older case. An applicable bounded-unresolved decision preserves source
-records and withholds its whole targets; independently safe cases can still form output.
-An empty catalog is never a successful result. Projections can check source-local
-code-set reference identities and content hashes independently of physical locators. An
-unresolved coding decision must check these references on every target, including an
-explicit empty collection when no references are supplied.
+invalidate an older case. Diagnostic resolution preserves source records and withholds
+only unsafe output; independently supported content can still form a nonpublishable
+artifact. Projections can check source-local code-set reference identities and content
+hashes independently of physical locators. A coding decision must check these references
+on every target, including an explicit empty collection when no references are supplied.
 
-The first formation operation, `form_variable`, assigns explicitly enumerated source
-occurrences to one reviewed variable identity and delivery-column spelling. The spelling
-must have checked source support. Canonical text comes from one explicitly selected,
-checked observation. Every field used by resolution, each target subject and each annual
-scope must be in its dependency projection. The operation retains targets' own type,
-length and operational definition; it cannot rename a different known column or infer
-annual availability from pooled, negative or unknown observations. Concurrent
-assignments of the same source member or output identity block. Broader conflict
-resolution and whole-input discrepancy discovery remain unfinished.
-
-`inspect-curation` and `build-curated-db` share one structured reconciliation report.
-Their selected prepared collection is finite and explicitly partial. Every semantic
-member must be accounted for as a formation target, an accepted bounded-unresolved
-target, checked supporting evidence, or an explicitly enumerated peer-review context
-member. Unaccounted members block publication. Context-only members remain visible in
-the report; a peer guard checks membership, not every field's meaning. The shared report
-carries applicability failures, conflicting assignments, formation errors, cross-case
-register/variant identity conflicts, and missing optional output metadata, and supplies
-the same resolution gate to both commands. Database structural validation remains an
-additional mandatory gate before publication.
-
-An accepted unresolved decision preserves the original sources and withholds its whole
-targets. Independently safe, separate cases may still form output. This does not
-implement aspect-level uncertainty, code-set resolution, general conflict discovery, or
-full-corpus completeness. It completes the scoped pipeline's accounting and gate before
-further content curation; it does not prescribe one case per variable for the eventual
-complete resolver.
-
-### First prepared-to-catalog path
+### Prepared-to-catalog path
 
 `prepared_sources.py` stores ordered observations in an indexed SQLite file beside a
 small JSON manifest. Repeated metadata and original delivered cells are interned; source
@@ -565,36 +536,23 @@ establishes target cardinality; the resolution pass still visits every original 
 occurrence. A source update therefore cannot hide a new competing target through the
 optimization.
 
-`build-curated-db --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE --db-path DB`
-loads that selection and a JSON array of reviewed cases. It resolves every case before
-writing anything, then passes resolved natural identities, flags, text and full-date
-state windows to `resolved_catalog.py`. That writer assigns storage IDs, inserts final
-rows and aliases once, builds search indexes, runs the existing complete structural
-validator (`corpus=False` for an explicitly partial catalog), and atomically replaces
-the requested database. Failed applicability or validation leaves the prior database
-intact. A failed optional report write after publication reports the successful
-publication and exact database hash separately. The input commit and manifest/case
-digests are recorded in the database manifest. No legacy adapter, post-build correction
-pass, or SQL-to-IR-to-SQL materialization runs in this path.
+`build-db --selection FILE --report-dir DIR` resolves all selected source scopes before
+the direct writer assigns storage IDs, inserts final rows and aliases, builds search
+indexes and runs structural validation. A strict curation failure leaves the previous
+catalog intact. Diagnostic mode requires its own new output path and marks the artifact
+incomplete and nonpublishable. The report keeps strict issue severity and
+source-occurrence dispositions. Builder publication (`publish_db`, including
+`extend-db`) rejects diagnostic artifacts. Invalid contracts, pins, broken references
+and unsupported implementation remain fatal in both modes.
 
-`inspect-curation --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE`
-performs the same reconciliation without writing a database. Both commands return
-structured diagnostics, semantic source accounting with physical locators, and the
-resolved catalog preview. A blocked result returns a nonzero status. The warm path never
-generates cases, reads a PDF, asks an LLM, or updates its input expectations.
-
-An explicit `--diagnostic --diagnostic-db-path DB` replaces `--db-path` to write
-independently resolved output despite curation blockers. It uses the same inspection and
-structural checks. The destination must be new and distinct from the active catalog;
-creation cannot overwrite another file. The manifest marks the artifact diagnostic,
-incomplete and nonpublishable, and retains its issue, case-disposition and
-source-occurrence ledger, including duplicate observations. The result distinguishes
-`status=diagnostic_complete` and `artifact_complete=true` from
-`publication_ready=false`, and preserves the strict `curation_exit_code` even when the
-artifact completed. Malformed contracts, pins, formation errors and empty resolved
-output remain fatal. Builder publication (`publish_db`, including `extend-db`) rejects
-diagnostic artifacts. Reader and download-installation behavior in `reg_meta` is outside
-this builder-only change; local comparison can read the artifact explicitly.
+Output, backup and CLI summary paths cannot alias selected declarations or prepared
+members, including through hard links and temporary report files. A late CLI summary
+failure reports the already completed artifact and retained event report separately. The
+input commit and manifest/selection digests remain in the database manifest. No legacy
+adapter, post-build correction pass or SQL-to-IR-to-SQL materialization runs in this
+path. The warm path never generates cases, reads a PDF, asks an LLM or updates input
+expectations. Reader and download-installation behavior in `reg_meta` is outside this
+builder-only change.
 
 The replacement source preparation now covers the maintained input inventory through
 `prepared_catalog.py`, including separate source-value dictionaries and indexed native
