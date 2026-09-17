@@ -246,7 +246,7 @@ def form_native_variable(
     records: tuple[SourceRecord | EffectiveOccurrence, ...],
     *,
     register: ResolvedRegister,
-    variants: Mapping[NativeKey, ResolvedVariant],
+    variants: Mapping[NativeKey, ResolvedVariant | None],
     slug: str,
     provider_key: str,
     flags: SourceFields,
@@ -358,11 +358,22 @@ def form_native_variable(
             continue
         if key not in variants:
             raise ValueError(f"missing resolved variant mapping: {key!r}")
+        if variants[key] is None:
+            issue(
+                "withheld_variant_dependency",
+                "The source variant is unresolved; only its dependent delivery states are withheld.",
+                ("variant",),
+                ("state",),
+                (record,),
+            )
+            continue
         by_variant[key].append(record)
     states = []
     intervals = []
     coding_results = []
     for key, members in sorted(by_variant.items(), key=lambda item: repr(item[0])):
+        variant = variants[key]
+        assert variant is not None
         resolution = resolve_occurrence_intervals(members)
         intervals.append(resolution)
         for problem in resolution.issues:
@@ -411,7 +422,7 @@ def form_native_variable(
                 )
             for segment in segments:
                 new_states, new_issues = _coded_states(
-                    segment, variants[key], code_result, subject
+                    segment, variant, code_result, subject
                 )
                 states.extend(new_states)
                 diagnostics.extend(new_issues)

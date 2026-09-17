@@ -146,7 +146,7 @@ def form_representations(
     cases: tuple[CurationCase, ...],
     *,
     variable_key: NativeKey,
-    variants: Mapping[NativeKey, ResolvedVariant],
+    variants: Mapping[NativeKey, ResolvedVariant | None],
     subject: str,
 ) -> tuple[list[ResolvedState], tuple[ResolvedAlias, ...], list[ResolutionDiagnostic]]:
     """Combine agreeing metadata; never select a sibling as the source winner.
@@ -164,6 +164,7 @@ def form_representations(
     by_variant: dict[
         ResolvedVariant, list[tuple[CurationCase, RepresentationDecision]]
     ] = defaultdict(list)
+    diagnostics = []
     for case in cases:
         decision = case.decision
         if (
@@ -173,9 +174,25 @@ def form_representations(
             raise ValueError("representation case does not belong to this variable")
         if decision.variant_key not in variants:
             raise ValueError("representation has an unconverted variant identity")
-        by_variant[variants[decision.variant_key]].append((case, decision))
+        variant = variants[decision.variant_key]
+        if variant is None:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="withheld_representation_dependency",
+                    severity="error",
+                    case_id=case.case_id,
+                    subject=subject,
+                    detail="The declared representation's variant is unresolved.",
+                    refs=tuple(t.ref for t in (*case.targets, *case.support)),
+                    fields=("variant",),
+                    valid_from=decision.valid_from,
+                    valid_to=decision.valid_to,
+                    withheld_output=("representations",),
+                )
+            )
+            continue
+        by_variant[variant].append((case, decision))
     result = []
-    diagnostics = []
     aliases: dict[tuple[ResolvedVariant, str], list[ResolvedAliasWindow]] = defaultdict(
         list
     )

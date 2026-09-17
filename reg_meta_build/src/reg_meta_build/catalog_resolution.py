@@ -60,6 +60,7 @@ def resolve_parents(
     naming: tuple[NamingDeclaration, ...],
     *,
     language: str = "sv",
+    withheld_naming: frozenset[NativeKey] = frozenset(),
 ) -> ParentResolution:
     """Resolve supplied parent facts; names come from checked naming declarations.
 
@@ -206,6 +207,21 @@ def resolve_parents(
                 )
                 continue
             if kind in {"register", "variant"}:
+                if key in withheld_naming:
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code="withheld_parent_naming",
+                            severity="error",
+                            subject=repr(key),
+                            detail="The parent's naming declaration no longer applies to the selected source evidence.",
+                            refs=tuple(
+                                dict.fromkeys(r for _, r in claims[key].values())
+                            ),
+                            fields=("identity",),
+                            withheld_output=(kind,),
+                        )
+                    )
+                    continue
                 if key not in names:
                     raise ValueError(f"missing checked parent naming binding: {key!r}")
                 declaration = names[key]

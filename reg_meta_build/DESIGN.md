@@ -550,6 +550,21 @@ relation, tag, alias, edition and search contract. These components are implemen
 ordinary `build-db` has not yet switched to them, and full-corpus replacement output and
 comparison remain completion gates.
 
+`source_scope.resolve_source_scope` composes the common stages over complete original
+register scopes. It checks every naming guard, applies occurrence corrections, resolves
+parents, binds coding, evaluates coding/classification/representation decisions, forms
+variables, and finally checks aliases against all competing variables in the scope.
+Catalog identity cannot prevent a source-level coding decision from being evaluated. An
+explicitly unresolved identity withholds that variable; an unresolved variant withholds
+only dependent states, preserving safe sibling variants. Missing conversion mappings
+remain fatal, distinct from explicitly withheld dependencies. Provider keys are literal
+converted values supplied separately from legacy naming IDs; the common resolver does
+not parse those IDs. Diagnostics may stream to a ledger while strict severity counts
+remain available. Correction output retains all original occurrences, including
+duplicates and support-only records. The resolver has no diagnostic-mode semantic fork.
+Complete input selection, global metadata composition, disposition reporting and
+ordinary command cutover remain required above this scope resolver.
+
 Occurrence corrections compose against the original cleaned evidence. Exact field and
 period assignments can agree or affect different facts. Conflicting assignments retain
 all claims and withhold the disputed fact; another observation cannot silently fill it
