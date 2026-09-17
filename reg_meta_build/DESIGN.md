@@ -129,12 +129,14 @@ because their source meaning is ambiguous retain the original input revision, en
 checked observations and peer guards. These are errors, never accepted exceptions;
 missing implementation still blocks the build before resolution.
 
-Completion requires retiring both displaced build paths, separating one-time conversion
-from maintained runtime modules, and removing redundant naming membership guards.
-Ordinary naming needs the established native identity; only actual ownership or
-correction decisions should guard the source facts and membership they depend on. The
-current guarded naming format remains in use during this connection. No unsupported
-legacy assumption becomes an accepted correction merely to reproduce the old database.
+Completion requires retiring both displaced build paths and separating one-time
+conversion from maintained runtime modules. Ordinary naming needs the established native
+identity; only actual ownership or correction decisions should guard the source facts
+and membership they depend on. The common resolver checks an ordinary name against its
+exact native variable key and provider/register scope. Added deliveries or unrelated
+descriptions do not stale that name. Curated partitions still require checked ownership
+and membership. No unsupported legacy assumption becomes an accepted correction merely
+to reproduce the old database.
 
 Field corrections and identity assignments can select an exact checked field alternative
 under a native source member. This matters when the same delivered key carries different

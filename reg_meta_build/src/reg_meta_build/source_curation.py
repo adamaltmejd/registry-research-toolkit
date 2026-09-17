@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
+from functools import cached_property
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -19,6 +20,8 @@ from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.source_coordinates import (
     NativeKey,
     _coordinate_key,
+    native_variable_key,
+    source_register_key,
 )
 from reg_meta_build.source_records import (
     FieldScalar,
@@ -946,6 +949,15 @@ class SourceEvidence:
 
     def __iter__(self) -> Iterator[SourceRecord]:
         return iter(self.records)
+
+    @cached_property
+    def native_variable_anchors(self) -> dict[NativeKey, tuple[str, NativeKey | None]]:
+        """Existing native identities; naming them asserts no delivery membership."""
+        return {
+            key: (record.subject.provider, source_register_key(record))
+            for record in self.records
+            if (key := native_variable_key(record)) is not None
+        }
 
     @staticmethod
     def _value(record: SourceRecord, selector: tuple[str, str]) -> object:

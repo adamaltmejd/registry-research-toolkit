@@ -9,10 +9,12 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
 from reg_meta_build.id import mint, mint_canonical_scb
+from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
     PeerGuard,
     RecordExpectation,
     RecordProjection,
+    SourceEvidence,
     SourceRecordRef,
 )
 from reg_meta_build.source_naming import (
@@ -408,6 +410,30 @@ def test_naming_guards_check_identity_and_new_peers_without_unrelated_fields() -
                 ),
             }
         )
+
+
+def test_native_name_depends_on_existing_identity_not_delivery_membership() -> None:
+    original = _record()
+    target = NativeNamingTarget(
+        kind="variable",
+        provider="scb",
+        source_key=native_variable_key(original),
+        register_key=source_register_key(original),
+    )
+    assert not check_naming_target(target, SourceEvidence((original,)))
+    changed = SourceEvidence((_record(description="changed prose"), _record(cvid=1002)))
+    assert not check_naming_target(target, changed)
+    assert (
+        check_naming_target(target, (_record(var_id=102),))[0].code
+        == "naming_native_identity_missing"
+    )
+    assert check_naming_target(target.model_copy(update={"provider": "other"}), changed)
+    assert check_naming_target(
+        target.model_copy(
+            update={"source_key": (*target.source_key, "accepted-partition", "other")}
+        ),
+        changed,
+    )
 
 
 def test_source_artifact_identity_requires_the_exact_selected_revision() -> None:

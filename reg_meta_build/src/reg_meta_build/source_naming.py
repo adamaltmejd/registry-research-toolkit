@@ -37,6 +37,7 @@ from reg_meta_build.source_curation import (
     PeerGuard,
     RecordExpectation,
     ResolutionDiagnostic,
+    SourceEvidence,
     evaluate_source_expectations,
 )
 from reg_meta_build.source_records import SourceRevision, canonical_sha256
@@ -67,8 +68,9 @@ class NativeNamingTarget(_NamingModel):
     and variant names are scoped by their exact native register_key. A declaration
     without row members (for example a standalone code-list identity) is guarded by
     its selected identity_revision instead of invented variable observations.
-    Parent names can use checked identity anchors without a peer-set assertion:
-    naming a register or variant does not assign its other members to a variable.
+    A native variable can be named by its exact existing key without asserting
+    delivery membership. A curated partition still requires its checked members.
+    Parent names can use checked identity anchors without a peer-set assertion.
     """
 
     kind: EntityKind
@@ -97,6 +99,8 @@ class NativeNamingTarget(_NamingModel):
         if self.identity_revision is not None:
             if self.expectations or self.peer_guards:
                 raise ValueError("use member guards or an identity revision, not both")
+        elif self.kind == "variable" and not self.expectations and not self.peer_guards:
+            pass  # Exact native existence is checked against the selected evidence.
         elif not self.expectations or (
             not self.peer_guards and self.kind not in {"register", "register_variant"}
         ):
@@ -649,6 +653,23 @@ def check_naming_target(
                 severity="error",
                 subject=repr(target.source_key),
                 detail="the selected source declaration revision no longer matches its naming binding",
+            ),
+        )
+    if target.kind == "variable" and not target.expectations and not target.peer_guards:
+        evidence = (
+            records if isinstance(records, SourceEvidence) else SourceEvidence(records)
+        )
+        if evidence.native_variable_anchors.get(target.source_key) == (
+            target.provider,
+            target.register_key,
+        ):
+            return ()
+        return (
+            ResolutionDiagnostic(
+                code="naming_native_identity_missing",
+                severity="error",
+                subject=repr(target.source_key),
+                detail="Naming requires this exact existing native variable in its declared provider and register; curated partitions need their ownership guards.",
             ),
         )
     return tuple(
