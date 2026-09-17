@@ -13,8 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import _var_row
-from _shared_fixtures import build_with_rows, vm_rows
+from _representation_fixtures import build_month_family
 from reg_meta.catalog import Catalog, ValueSetMember
 from reg_meta.db import open_db
 
@@ -23,49 +22,11 @@ if TYPE_CHECKING:
 
 _MONTHS = [("jan", 1), ("feb", 2), ("mars", 3)]
 _YEARS = [2018, 2019]
-_CODES = [("1", "Låg"), ("2", "Hög")]
 _FQID = "scb/testreg/lonfink"
 
 
 def _build(tmp_path: Path, monkeypatch) -> Path:
-    import reg_meta_build.db as _db
-
-    toml = tmp_path / "period_family_merges.toml"
-    toml.write_text(
-        '[[period_family]]\nregister = "scb/testreg"\n'
-        'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(
-        _db,
-        "repo_curation_path",
-        lambda name: toml if name == "period_family_merges.toml" else None,
-    )
-
-    ri: list[str] = []
-    vm: list[str] = []
-    for mi, (token, _month) in enumerate(_MONTHS):
-        var_id = 800 + mi
-        colname = f"LonFink{token.capitalize()}"
-        for yi, year in enumerate(_YEARS):
-            cvid = 8000 + mi * 10 + yi
-            ri.append(
-                _var_row(
-                    colname=colname,
-                    cvid=cvid,
-                    var_id=var_id,
-                    varname=f"Inkomst {token}",
-                    year=str(year),
-                    regver_id=800 + mi * 10 + yi,
-                    data_length="1",
-                )
-            )
-            vm.extend(vm_rows(cvid, f"LonFink{year}", _CODES))
-    # build_with_rows writes the DB under tmp_path/db and returns a connection;
-    # we want the path to reopen read-only via open_db.
-    conn = build_with_rows(tmp_path, ri, vm)
-    conn.close()
-    return tmp_path / "db" / "reg_meta.db"
+    return build_month_family(tmp_path)
 
 
 @pytest.fixture
@@ -204,46 +165,7 @@ def test_non_merged_variable_unaffected(merged_db: Path) -> None:
 
 
 def _build_gap_year(tmp_path: Path, monkeypatch) -> Path:
-    """A family where `mars` delivers ONLY 2019 (not 2018) — so the 2018 annual
-    claim has jan/feb windows but NO march window. Exercises the
-    `_expand_state_windows` fallback: a query for a month with no window in that
-    year keeps the raw annual state (never silently dropped)."""
-    import reg_meta_build.db as _db
-
-    toml = tmp_path / "period_family_merges.toml"
-    toml.write_text(
-        '[[period_family]]\nregister = "scb/testreg"\n'
-        'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(
-        _db,
-        "repo_curation_path",
-        lambda name: toml if name == "period_family_merges.toml" else None,
-    )
-
-    ri: list[str] = []
-    vm: list[str] = []
-    for mi, (token, _month) in enumerate(_MONTHS):
-        # jan/feb deliver both years; mars only 2019 → 2018 has no march window.
-        years = [2019] if token == "mars" else _YEARS
-        for year in years:
-            cvid = 8000 + mi * 10 + year
-            ri.append(
-                _var_row(
-                    colname=f"LonFink{token.capitalize()}",
-                    cvid=cvid,
-                    var_id=800 + mi,
-                    varname=f"Inkomst {token}",
-                    year=str(year),
-                    regver_id=8000 + mi * 10 + year,
-                    data_length="1",
-                )
-            )
-            vm.extend(vm_rows(cvid, f"LonFink{year}", _CODES))
-    conn = build_with_rows(tmp_path, ri, vm)
-    conn.close()
-    return tmp_path / "db" / "reg_meta.db"
+    return build_month_family(tmp_path, march_2018=False)
 
 
 def test_gap_year_month_falls_back_to_annual_state(tmp_path: Path, monkeypatch) -> None:

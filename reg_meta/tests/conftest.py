@@ -18,7 +18,6 @@ sys.path.insert(
 )
 
 from _shared_fixtures import (  # noqa: F401
-    _no_repo_curation,
     db_conn,
     db_path,
     fixture_db,

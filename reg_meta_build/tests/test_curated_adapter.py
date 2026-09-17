@@ -8,8 +8,6 @@ seeded non-SCB provider.
 
 from __future__ import annotations
 
-import shutil
-import sqlite3
 from pathlib import Path
 
 import pytest
@@ -24,7 +22,6 @@ from reg_meta_build.ir import (
     IRVariant,
 )
 from reg_meta_build.sources.curated import CuratedAdapter
-from reg_meta_build.validate import validate_built_db
 
 _REPO = Path(__file__).resolve().parents[1]  # reg_meta_build/
 _REAL_INPUT = _REPO / "input_data"
@@ -559,70 +556,6 @@ def test_classification_empty_string_records_no_candidate(tmp_path: Path) -> Non
     assert adapter.classification_candidates == []
 
 
-def test_classification_candidate_backfills_state(tmp_path: Path) -> None:
-    """End-to-end of the curated → feed → backfill path WITHOUT the SOS corpus:
-    the candidate the adapter emits, once fed into the provider-blind
-    `classification_candidate` table and run through `_backfill_state_classifications`,
-    tags the code-less `variable_state` row (keyed on `(variable_id, NULL)`).
-
-    A full `build_db` end-to-end assertion is NOT used: ICD-10-SE/ATC are
-    `provider = "sos"` seed entries, so a `fohm`-only build skips them (the
-    provider gate) and the candidate would resolve to nothing — the real corpus
-    builds SOS too, where the link lands. This focused test exercises the same
-    provider-blind feed + backfill the build runs, without the SOS seed.
-    """
-    from reg_meta_build.db import (
-        DDL,
-        _backfill_state_classifications,
-        _feed_classification_candidates,
-    )
-
-    src = tmp_path / "src"
-    src.mkdir()
-    (src / "fohm.toml").write_text(_CLASSIFICATION_TOML, encoding="utf-8")
-    adapter = CuratedAdapter("fohm")
-    objs = list(adapter.emit(src))
-
-    diagnos_id = mint("fohm", "reg1", "diagnos")
-    diagnos_states = [
-        o
-        for o in objs
-        if isinstance(o, IRVariableState) and o.variable_id == diagnos_id
-    ]
-    assert diagnos_states and all(s.value_set_id is None for s in diagnos_states)
-
-    conn = sqlite3.connect(":memory:")
-    try:
-        conn.executescript(DDL)
-        cls_id = conn.execute(
-            "INSERT INTO classification (short_name, name, publisher) "
-            "VALUES ('ICD-10-SE', 'ICD-10-SE', 'Socialstyrelsen') RETURNING id"
-        ).fetchone()[0]
-        # Insert the code-less states the adapter emitted.
-        conn.executemany(
-            "INSERT INTO variable_state "
-            "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
-            "value_set_id) VALUES (?, ?, ?, ?, '9999-12-31', NULL)",
-            [
-                (s.state_id, s.variable_id, s.register_variant_id, s.valid_from)
-                for s in diagnos_states
-            ],
-        )
-        # Feed the adapter's candidates, then run the provider-blind backfill.
-        n = _feed_classification_candidates(conn, adapter.classification_candidates)
-        assert n == 1
-        _backfill_state_classifications(conn)
-
-        tagged = conn.execute(
-            "SELECT DISTINCT classification_id FROM variable_state "
-            "WHERE variable_id = ?",
-            (diagnos_id,),
-        ).fetchall()
-        assert tagged == [(cls_id,)]
-    finally:
-        conn.close()
-
-
 @pytest.mark.parametrize(
     "toml, fragment",
     [
@@ -759,81 +692,6 @@ def test_missing_file_raises(tmp_path: Path) -> None:
 # ── end-to-end build over the REAL committed FOHM catalog ────────────────────
 
 
-@pytest.fixture
-def fohm_db(tmp_path: Path) -> Path:
-    """Build a `fohm`-only DB from the committed catalog + slug TOML."""
-    from reg_meta_build.db import build_db
-
-    slug_dir = tmp_path / "slugs"
-    slug_dir.mkdir()
-    shutil.copy(_REAL_SLUG, slug_dir / "fohm.toml")
-    build_db(
-        input_dir=_REAL_INPUT,
-        db_dir=tmp_path / "db",
-        providers=("fohm",),
-        skip_classifications=True,
-        slug_dir=slug_dir,
-    )
-    return tmp_path / "db" / "reg_meta.db"
-
-
-def test_real_fohm_catalog_builds(fohm_db: Path) -> None:
-    conn = sqlite3.connect(fohm_db)
-    try:
-        regs = dict(conn.execute("SELECT slug, name FROM register").fetchall())
-        assert regs == {
-            "sminet": "SmiNet",
-            "nvr": "Nationella vaccinationsregistret",
-        }
-        # Every register gets the synthesized single-table variant.
-        variant_slugs = [
-            r[0] for r in conn.execute("SELECT slug FROM register_variant").fetchall()
-        ]
-        assert variant_slugs == ["_default", "_default"]
-
-        # Panel coordinates land from the slug TOML.
-        sminet_panel = conn.execute(
-            "SELECT panel_entity_key, panel_time_key, panel_time_grain "
-            "FROM register_variant rv JOIN register r USING (register_id) "
-            "WHERE r.slug = 'sminet'"
-        ).fetchone()
-        assert sminet_panel == ("personnr", "diagnosdatum", "row")
-
-        # Identifier + sensitivity flags survived.
-        pnr = conn.execute(
-            "SELECT is_identifier, is_sensitive FROM variable v "
-            "JOIN register r USING (register_id) "
-            "WHERE r.slug = 'sminet' AND v.slug = 'personnr'"
-        ).fetchone()
-        assert pnr == (1, 1)
-        diagnos = conn.execute(
-            "SELECT is_identifier, is_sensitive FROM variable v "
-            "JOIN register r USING (register_id) "
-            "WHERE r.slug = 'sminet' AND v.slug = 'diagnos'"
-        ).fetchone()
-        assert diagnos == (0, 1)
-
-        # Every variable has a state + an alias; no value sets (deferred).
-        n_var, n_state, n_alias, n_vset = (
-            conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0],
-            conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[0],
-            conn.execute("SELECT COUNT(*) FROM variable_alias").fetchone()[0],
-            conn.execute("SELECT COUNT(*) FROM value_set").fetchone()[0],
-        )
-        assert n_var == n_state == n_alias > 0
-        assert n_vset == 0
-
-        # Per-variable coverage override (NVR dosnummer is covid-only from 2021).
-        dosnummer_from = conn.execute(
-            "SELECT vs.valid_from FROM variable_state vs "
-            "JOIN variable v USING (variable_id) JOIN register r USING (register_id) "
-            "WHERE r.slug = 'nvr' AND v.slug = 'dosnummer'"
-        ).fetchone()[0]
-        assert dosnummer_from == "2021-01-01"
-    finally:
-        conn.close()
-
-
 def test_real_fk_variant_and_register_windows_emit() -> None:
     objs = list(CuratedAdapter("fk").emit(_REAL_FK_INPUT))
     states = {
@@ -877,75 +735,6 @@ def test_real_fk_variant_and_register_windows_emit() -> None:
     assert riskgrupper.valid_to == "2022-03-31"
 
 
-def test_real_fohm_catalog_validates(fohm_db: Path) -> None:
-    result = validate_built_db(fohm_db, corpus=False)
-    assert not result.failures, result.failures
-
-
-def test_fohm_ids_are_high_band(fohm_db: Path) -> None:
-    conn = sqlite3.connect(fohm_db)
-    try:
-        for table, col in (
-            ("register", "register_id"),
-            ("register_variant", "register_variant_id"),
-            ("variable", "variable_id"),
-            ("variable_state", "state_id"),
-        ):
-            lo = conn.execute(f"SELECT MIN({col}) FROM {table}").fetchone()[0]
-            assert lo >= _MINT_BIT, f"{table}.{col} not minted high-band"
-    finally:
-        conn.close()
-
-
-def test_global_band_check_catches_low_band_fohm(fohm_db: Path) -> None:
-    """#422: the GLOBAL (non-flavored) band check now enforces every seeded
-    non-SCB provider — a low-band FOHM id is caught without `flavored=True`."""
-    conn = sqlite3.connect(fohm_db)
-    rid = conn.execute("SELECT register_id FROM register LIMIT 1").fetchone()[0]
-    conn.execute("UPDATE register SET register_id = 5 WHERE register_id = ?", (rid,))
-    conn.execute(
-        "UPDATE register_variant SET register_id = 5 WHERE register_id = ?", (rid,)
-    )
-    conn.execute("UPDATE variable SET register_id = 5 WHERE register_id = ?", (rid,))
-    conn.commit()
-    conn.close()
-    result = validate_built_db(fohm_db, corpus=False)
-    assert any("below the minted band" in f for f in result.failures), result.failures
-
-
-def test_canonical_scb_adapter_real_uht() -> None:
-    """The committed canonical-SCB content (#444, Utrikeshandel med tjänster)
-    emits under provider='scb' with LOW-band ids in the reserved sub-band
-    [2^61, 2^62), and interns its column value sets (landkoder/scbkoder)."""
-    from reg_meta_build.db import DDL
-    from reg_meta_build.id import mint_canonical_scb
-    from reg_meta_build.sources.curated import CanonicalScbAdapter
-
-    conn = sqlite3.connect(":memory:")
-    conn.executescript(DDL)
-    objs = list(CanonicalScbAdapter(conn).emit(_REAL_INPUT / "scb_canonical"))
-    regs = [o for o in objs if isinstance(o, IRRegister)]
-    states = [o for o in objs if isinstance(o, IRVariableState)]
-    assert regs and all(r.provider == "scb" for r in regs)
-    # Every grain id sits in the canonical sub-band [2^61, 2^62): low-band (passes
-    # the SCB band check `id < 2^62`), disjoint from the minted band `>= 2^62`.
-    ids = (
-        [r.register_id for r in regs]
-        + [o.variable_id for o in objs if isinstance(o, IRVariable)]
-        + [s.state_id for s in states]
-    )
-    assert all((1 << 61) <= i < _MINT_BIT for i in ids)
-    # Categorical columns are linked to interned value sets.
-    linked = {s.delivery_column_name: s.value_set_id for s in states if s.value_set_id}
-    assert "Scbkod" in linked and "Landkod" in linked
-    assert conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0] > 0
-    # The minted register id matches the committed fqid_slugs/scb.toml entry.
-    assert any(
-        r.register_id == mint_canonical_scb("scb", "utrikeshandel-tjanster")
-        for r in regs
-    )
-
-
 def test_value_set_rejected_on_thin_provider(tmp_path: Path) -> None:
     """`value_set` is canonical-SCB-only; a thin-provider TOML that sets it must
     fail-fast at load (not silently emit a code-less catalog)."""
@@ -963,38 +752,3 @@ _CANONICAL_ONE_VS = (
     '[[register]]\nkey = "r"\nname = "R"\nvalid_from = "2020-01-01"\n'
     '[[register.variable]]\nname = "V"\ncolumn = "Col"\nvalue_set = "codes"\n'
 )
-
-
-def _emit_canonical(toml_text: str, csv_text: str, tmp_path: Path) -> list:
-    from reg_meta_build.db import DDL
-    from reg_meta_build.sources.curated import CanonicalScbAdapter
-
-    src = tmp_path / "scb_canonical"
-    src.mkdir()
-    (src / "scb_canonical.toml").write_text(toml_text, encoding="utf-8")
-    (src / "codes.csv").write_text(csv_text, encoding="utf-8")
-    conn = sqlite3.connect(":memory:")
-    conn.executescript(DDL)
-    return list(CanonicalScbAdapter(conn).emit(src))
-
-
-@pytest.mark.parametrize(
-    ("csv_text", "fragment"),
-    [
-        ("", "code,label"),  # empty file → no header
-        ("code;label\n1;Ett\n", "code,label"),  # wrong delimiter → one column
-        ("kod,etikett\n1,Ett\n", "code,label"),  # wrong header names
-        ("code,label\n", "no code,label rows"),  # header only → empty value set
-        ("code,label\n1\n", "malformed row"),  # data row missing the label column
-    ],
-)
-def test_canonical_value_set_csv_fails_fast(
-    csv_text: str, fragment: str, tmp_path: Path
-) -> None:
-    """A committed value-set CSV that is empty, mis-delimited, mis-headed, or has a
-    malformed row must fail-fast — never silently drop codes from a categorical
-    column (which `_ensure_value_set([])` would turn into no value set at all)."""
-    with pytest.raises(RegMetaError) as exc:
-        _emit_canonical(_CANONICAL_ONE_VS, csv_text, tmp_path)
-    assert exc.value.code == "curated_value_set_invalid"
-    assert fragment in exc.value.message

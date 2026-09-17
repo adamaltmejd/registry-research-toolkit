@@ -17,7 +17,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from _shared_fixtures import (  # noqa: F401
-    _no_repo_curation,
     db_conn,
     db_path,
     fixture_db,

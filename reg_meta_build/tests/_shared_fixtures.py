@@ -11,9 +11,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import write_scb_input
 from reg_meta.db import register_py_lower
-from reg_meta_build.db import build_db
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -48,28 +46,6 @@ def fail_replace_onto(monkeypatch: pytest.MonkeyPatch, live: Path) -> None:
         return real_replace(src, dst, **kwargs)
 
     monkeypatch.setattr(os, "replace", _fail_on_live)
-
-
-@pytest.fixture(scope="session", autouse=True)
-def _no_repo_curation() -> Iterator[None]:
-    """Synthetic test builds run with EMPTY curation maps — the documented
-    contract for the maintainer TOMLs (codelivery, etc.).
-    A checkout-run `build_db` would otherwise load the REPO TOMLs, which are keyed
-    on real SCB source ids that can collide with the fixture register ids (e.g. a
-    real codelivery entry on a low register id binds the fixture's OTHERREG
-    and fails every build). Session-scoped + autouse so it lands before
-    the session-scoped `fixture_db` build; tests that exercise a curation surface
-    monkeypatch their own file path on top (function-scoped, applied after, undone
-    per test)."""
-    import reg_meta_build.db as _db
-
-    mp = pytest.MonkeyPatch()
-    # Every catalog overlay now resolves through this one build-time boundary.
-    # Synthetic builds pass their classification seed explicitly and otherwise
-    # need an empty curation directory so real-corpus FQIDs cannot bind fixtures.
-    mp.setattr(_db, "repo_curation_path", lambda _name: None)
-    yield
-    mp.undo()
 
 
 @pytest.fixture(scope="session")
@@ -187,30 +163,6 @@ def vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
     from _csv_fixtures import PIPE
 
     return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
-
-
-def build_with_rows(
-    tmp_path: Path, ri_extra: list[str], vm_extra: list[str]
-) -> sqlite3.Connection:
-    """Run a real SCB build with the standard fixture plus the extra rows; return
-    a connection to the built DB. Never touches the live DB (tmp only)."""
-    from _csv_fixtures import REGISTERINFORMATION_ROWS, VARDEMANGDER_ROWS
-
-    input_dir = tmp_path / "input"
-    db_dir = tmp_path / "db"
-    slug_dir = tmp_path / "slugs"
-    for d in (input_dir, db_dir, slug_dir):
-        d.mkdir()
-    write_scb_input(
-        input_dir,
-        registerinformation_rows=REGISTERINFORMATION_ROWS + ri_extra,
-        vardemangder_rows=VARDEMANGDER_ROWS + vm_extra,
-    )
-    _write_fixture_slug_dir(slug_dir)
-    build_db(
-        input_dir=input_dir, db_dir=db_dir, skip_classifications=True, slug_dir=slug_dir
-    )
-    return connect_built_db(db_dir / "reg_meta.db")
 
 
 def errata_version(name: str) -> str:

@@ -14,15 +14,8 @@ from typing import TYPE_CHECKING, Protocol, get_type_hints, runtime_checkable
 
 import pytest
 from pydantic import BaseModel
-from reg_meta.errors import RegMetaError
 from reg_meta_build.db import (
-    DDL,
-    PROVENANCE_DB_FILENAME,
-    _insert_core_graph_from_ir,
-    _reinsert_core_graph_from_ir,
-    create_empty_provenance_db,
     publish_db,
-    seed_providers,
 )
 from reg_meta_build.ir import (
     IRClassification,
@@ -295,49 +288,6 @@ def test_irobject_union_covers_every_ir_class() -> None:
     )
 
 
-def test_core_graph_reinsert_preserves_existing_alias_windows() -> None:
-    """Alias-window producers that run outside the IR stream retain their rows."""
-    conn = sqlite3.connect(":memory:")
-    conn.executescript(DDL)
-    seed_providers(conn)
-    register = IRRegister.model_validate(_IR_FACTORIES["IRRegister"][1])
-    variant = IRVariant.model_validate(_IR_FACTORIES["IRVariant"][1])
-    variable = IRVariable.model_validate(_IR_FACTORIES["IRVariable"][1])
-    state = IRVariableState.model_validate(
-        _IR_FACTORIES["IRVariableState"][1]
-        | {"valid_from": "2018-01-01", "valid_to": "2018-12-31"}
-    )
-    alias = IRVariableAlias.model_validate(_IR_FACTORIES["IRVariableAlias"][1])
-    window = IRVariableAliasWindow.model_validate(
-        _IR_FACTORIES["IRVariableAliasWindow"][1] | {"valid_to": "2018-12-31"}
-    )
-    _insert_core_graph_from_ir(
-        conn,
-        registers=[register],
-        variants=[variant],
-        variables=[variable],
-        states=[state],
-        aliases=[alias],
-        alias_windows=[window],
-    )
-
-    _reinsert_core_graph_from_ir(
-        conn,
-        registers=[register],
-        variants=[variant],
-        variables=[variable],
-        states=[state],
-        aliases=[alias],
-        alias_windows=[],
-    )
-
-    assert conn.execute(
-        "SELECT variable_id, register_variant_id, delivery_column_name, "
-        "valid_from, valid_to, provenance FROM variable_alias_window"
-    ).fetchall() == [(100, 10, "Kon", "2018-01-01", "2018-12-31", "errata:test\nheld")]
-    conn.close()
-
-
 def _staged_database(path: Path) -> bytes:
     with sqlite3.connect(path) as conn:
         conn.execute("CREATE TABLE payload (value TEXT)")
@@ -422,54 +372,3 @@ def test_publish_db_replace_failure_leaves_live_db_intact(
 
     assert live.read_bytes() == b"live generation"
     assert staged.read_bytes() == staged_bytes
-
-
-def test_create_empty_provenance_db_schema(tmp_path: Path) -> None:
-    path = tmp_path / PROVENANCE_DB_FILENAME
-    create_empty_provenance_db(path)
-
-    assert path.exists()
-    conn = sqlite3.connect(path)
-    try:
-        # build_manifest table exists with the four expected columns.
-        cols = {
-            row[1]: row[2]  # name → declared type
-            for row in conn.execute("PRAGMA table_info(build_manifest)")
-        }
-        assert cols == {
-            "schema_version": "TEXT",
-            "universal_db_path": "TEXT",
-            "universal_db_sha256": "TEXT",
-            "build_date": "TEXT",
-        }
-        # A4.2 added the population tables. All present, all empty in the
-        # create-empty helper (write_provenance_db is the populating variant).
-        tables = {
-            row[0]
-            for row in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' "
-                "AND name NOT LIKE 'sqlite_%'"
-            )
-        }
-        assert tables == {
-            "build_manifest",
-            "scb_register_id_map",
-            "adapter_warning",
-            "delivery_approval",
-        }
-        for table in tables:
-            (count,) = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()
-            assert count == 0, f"{table} should be empty in create_empty"
-    finally:
-        conn.close()
-
-
-def test_create_empty_provenance_db_refuses_to_overwrite(tmp_path: Path) -> None:
-    """The helper refuses to clobber an existing file — caller stages + publishes."""
-    path = tmp_path / PROVENANCE_DB_FILENAME
-    create_empty_provenance_db(path)
-    # RegMetaError is a dataclass-based Exception with an empty str(); the
-    # discriminator is the `.code` field.
-    with pytest.raises(RegMetaError) as excinfo:
-        create_empty_provenance_db(path)
-    assert excinfo.value.code == "provenance_db_exists"

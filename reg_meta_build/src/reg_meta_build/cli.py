@@ -908,51 +908,6 @@ def _build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 
-def _build_validate_hook(
-    *, bootstrap: bool = False
-) -> Callable[[Path, Path | None], None]:
-    """Return a build_db pre_rename_hook that runs the post-build validator
-    against the staging DB and raises on failure. Defined as a helper so the
-    closure stays narrowly scoped.
-
-    Runs with ``corpus=True``: build-db is the real maintainer build, so the
-    provider-specific corpus-volume gates apply here (synthetic CI uses
-    ``corpus=False``). ``slug_dir`` is the SAME resolved curation dir the build
-    loaded, threaded through so the mandatory entity-key curation gate (#546) can
-    read the curated ``[variable]`` pins.
-
-    ``bootstrap`` is the build's own ``--skip-slugs`` flag: it tells the validator
-    which producer passes this build deliberately omitted, so the bootstrap
-    workflow validates for real instead of needing ``--no-validate``. It also
-    leaves ``slug_dir`` unread, keeping the flag's own promise (see
-    ``_check_entity_key_vars_curated``)."""
-
-    def hook(staging_db: Path, slug_dir: Path | None) -> None:
-        validation = validate_built_db(
-            staging_db, corpus=True, bootstrap=bootstrap, slug_dir=slug_dir
-        )
-        sys.stderr.write(validation.format_report() + "\n")
-        sys.stderr.flush()
-        if validation.failures:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="validation_failed",
-                error_class="configuration",
-                message=(
-                    f"Post-build validation failed: {len(validation.failures)} "
-                    f"check(s) — {'; '.join(validation.failures)}"
-                ),
-                remediation=(
-                    "Inspect the [FAIL] lines above. The staging DB has been "
-                    "discarded and the previously-installed DB is unchanged. "
-                    "Fix the underlying build issue and rerun `reg-meta-build "
-                    "build-db` (pass `--no-validate` to skip these checks)."
-                ),
-            )
-
-    return hook
-
-
 def _database_paths(output: Path) -> set[Path]:
     return {output, output.with_name(output.name + ".prev").resolve()}
 
@@ -1272,8 +1227,8 @@ def _flavored_validate_hook(
     slug_dir: Path | None, delivery_inventory: DeliveryInventory | HoldingsGate
 ) -> Callable[[Path], None]:
     """Return an extend_db pre_rename_hook running the FLAVORED validator against
-    the staging DB. Same fail-on-failures shape as ``_build_validate_hook``, but
-    ``flavored=True`` (the tightened non-SCB minted-id band check) and
+    the staging DB. Uses ``flavored=True`` (the tightened non-SCB minted-id
+    band check) and
     ``corpus=False`` (a flavor adds a steward tail, not the SCB/SOS bulk, so the
     real-corpus volume floors don't apply).
 

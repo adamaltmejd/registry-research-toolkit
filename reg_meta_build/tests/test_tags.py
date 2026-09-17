@@ -420,8 +420,7 @@ def test_validator_closure_passes_on_materialized_tags() -> None:
 
 
 def test_synthetic_build_ships_empty_tags(fixture_db) -> None:
-    """The standard synthetic build (no tags.toml — `_no_repo_curation`) ships the
-    tag tables present but EMPTY (machinery-only state)."""
+    """The explicit synthetic catalog has empty, queryable tag tables."""
     import sqlite3
 
     conn = sqlite3.connect(fixture_db)

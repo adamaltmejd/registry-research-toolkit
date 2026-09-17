@@ -1,41 +1,8 @@
-"""Provider-specific parsers that feed the reg_meta DB.
+"""Actual-format source readers and the steward extension IR contract.
 
-reg_meta is intentionally data-provider-agnostic: one metadata DB, one docs
-DB, one query surface. Each upstream provider has its own parser module
-here that reads the provider's native delivery format and yields a
-structured representation consumed by `build-db`.
-
-Current providers:
-
-- `scb` — Statistics Sweden microdata-catalog CSV/SQL/xlsx exports
-  (`reg_meta_build.sources.scb.SCBAdapter`, A4.1).
-- `sos` — Socialstyrelsen metadata Excel workbooks.
-- `fohm` — Folkhälsomyndigheten (SmiNet + national vaccination register);
-  thin curated provider with no machine-readable export, read from
-  `input_data/Folkhalsomyndigheten/fohm.toml` via `CuratedAdapter`.
-- `fk` — Försäkringskassan (MiDAS social-insurance benefit registers); thin
-  curated provider read from `input_data/Forsakringskassan/fk.toml` via
-  `CuratedAdapter`.
-- `lakemedelsverket` — Läkemedelsverket (suspected adverse-drug-reaction
-  register); thin curated provider read from
-  `input_data/Lakemedelsverket/lakemedelsverket.toml` via `CuratedAdapter`.
-- `pliktverket` — Pliktverket / Plikt- och prövningsverket (enlistment/
-  conscription assessment register, 1997-2010); thin curated provider read from
-  `input_data/Pliktverket/pliktverket.toml` via `CuratedAdapter`.
-- `riksarkivet` — Riksarkivet / Krigsarkivet (historical conscription/mönstring
-  inskrivningsregister predating Pliktverket); thin curated provider read from
-  `input_data/Riksarkivet/riksarkivet.toml` via `CuratedAdapter`.
-- `umu` — Umeå universitet (högskoleprovet / SweSAT provresultat database); thin
-  curated provider read from `input_data/UMU/umu.toml` via `CuratedAdapter`.
-
-The post-refactor contract every adapter must implement is the `IRAdapter`
-protocol below. Native-format providers get their own module (`scb.py`,
-`sos.py`); thin curated providers — agencies without machine-readable
-exports (FOHM and Försäkringskassan today; Skatteverket etc. to follow) —
-share `curated.py`, parameterized by provider. All adapters emit a stream of
-IR objects (`reg_meta_build.ir.*`) consumed by the provider-blind
-materializer in `reg_meta_build.db`. See DESIGN.md → IR + adapter
-architecture, and → Curated thin providers.
+Global preparation uses scb_records, sos_records and curated_records to preserve
+source evidence. Common resolution and resolved_catalog produce the global DB.
+The IR protocol below is retained for the separate steward extend-db path.
 """
 
 from __future__ import annotations
@@ -80,49 +47,12 @@ IRObject = (
 
 
 class IRAdapter(Protocol):
-    """Provider-specific source parser. Emits a stream of IR objects.
-
-    Concrete adapters live at `reg_meta_build/sources/<provider>.py`
-    (e.g. `scb.py`, `sos.py`). The materializer in `reg_meta_build.db`
-    is provider-blind — it consumes the IR stream and writes the
-    universal SQLite catalog. See DESIGN.md → IR + adapter architecture.
-    """
+    """Steward source adapter emitting an FK-ordered extension graph."""
 
     provider: str  # short identifier: 'scb', 'sos', 'fk', ...
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
-        """Parse the provider's native source files and emit IR objects.
-
-        Emit order is the FK-topological order so the materializer can insert
-        in stream order and FK targets always exist when a child is seen:
-
-          1. ``IRRegister``        (all)
-          2. ``IRClassification``  (all; reference for value-set linkage)
-          3. ``IRVariant``         (FK → register)
-          4. ``IRVariable``        (FK → register, optional source_register_id)
-          5. ``IRVariableState`` / ``IRVariableAlias`` /
-             ``IRVariableAliasWindow`` (FK → variable + variant
-             [+ value_set for states])
-          6. ``IRLineageEdge`` / ``IRReplacedByEdge``
-          7. ``IRWarning`` / ``IRDeliveryProvenance`` (order-free sinks)
-
-        The order constrains only the types an adapter actually emits — an
-        adapter MAY emit a subset (e.g. in A4.1 ``SCBAdapter`` leaves
-        ``IRClassification`` and ``IRLineageEdge`` materializer-derived and does
-        not emit them). Conformance is about ordering what you do emit, not
-        emitting every type.
-
-        No adapter emits a value-set object: the value tables (``value_set`` /
-        ``value_code`` / ``value_set_member``) are content-addressed and shared
-        across providers by content, so each adapter writes them DIRECTLY and a
-        state's ``value_set_id`` points at rows that already exist (see
-        DESIGN.md → Materializer). ``IRValueCode`` is a leaf model the SOS
-        adapter buffers on the way to that write, never a stream object.
-
-        Every IR ``*_id`` field is an explicit int the adapter bakes in the
-        provider's native ID-assignment order; emit order is independent of ID
-        assignment (it only governs FK-referential safety).
-        """
+        """Emit parents before child entities and edges referencing them."""
         ...
 
 

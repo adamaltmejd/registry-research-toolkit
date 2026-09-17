@@ -44,7 +44,7 @@ and helpers both packages agree on — lives in `reg_meta`.
 
   | Module                                                                                           | Package          |
   | ------------------------------------------------------------------------------------------------ | ---------------- |
-  | `db.py` (DDL, build_db, materializer, provenance DB)                                             | `reg_meta_build` |
+  | `db.py` (DDL, source IO, search indexes, atomic publication)                                     | `reg_meta_build` |
   | `db.py` (open_db, schema constants)                                                              | `reg_meta`       |
   | `ir/` (transitional provider-neutral resolved-row contract)                                      | `reg_meta_build` |
   | `id.py` (deterministic ID minting)                                                               | `reg_meta_build` |
@@ -57,7 +57,7 @@ and helpers both packages agree on — lives in `reg_meta`.
   | `validate.py`                                                                                    | `reg_meta_build` |
   | `dbdiff.py` (content diff harness)                                                               | `reg_meta_build` |
   | `extend_db.py` (steward-flavored DB overlay, extend-db)                                          | `reg_meta_build` |
-  | `sources/` (actual-format adapters; currently final-IR emitters: scb, sos)                       | `reg_meta_build` |
+  | `sources/` (actual-format source readers; steward extension adapter)                             | `reg_meta_build` |
   | `fqid.py`, `catalog.py`, `queries.py`, `doc_queries.py`, `errors.py`, `update.py`, `download.py` | `reg_meta`       |
 
 ## Source-to-catalog reconciliation architecture
@@ -104,10 +104,12 @@ source facts.
 > dependencies and the direct writer. `--diagnostic --diagnostic-db-path FILE` writes a
 > separate, nonpublishable artifact while retaining curation errors. The connected path
 > has produced a structurally valid full-corpus diagnostic database. Semantic
-> comparison, remaining internal legacy-code deletion and final verification are
-> unfinished; corpus safeguards still report failures requiring explanation. The earlier
-> whole-variable prototype and both legacy CLI entry paths have been removed. This
-> branch is not ready for catalog activation.
+> comparison, curation accounting and final verification are unfinished; corpus
+> safeguards still report failures requiring explanation. The raw build entry point,
+> SCB/SOS inference adapters, canonical-SCB final-row adapter and SQL-to-IR-to-SQL round
+> trip are removed. The remaining conversion loaders, steward path and historical design
+> sections still need the final dependency/documentation cleanup. This branch is not
+> ready for catalog activation.
 
 The maintained call path is `pipeline.build_selected_catalog` →
 `open_prepared_catalog_sources` → `resolve_source_scope` for each complete scope →

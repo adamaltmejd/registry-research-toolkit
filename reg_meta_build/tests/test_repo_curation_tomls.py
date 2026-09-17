@@ -1,12 +1,8 @@
 """The REAL repo curation TOMLs must always parse.
 
-Synthetic builds run with EMPTY curation maps (`_no_repo_curation`, the
-session-scoped autouse fixture in `_shared_fixtures.py`) because the repo TOMLs
-are keyed on real SCB source ids that collide with fixture register ids. That
-fixture removed the incidental coverage the fixture build used to provide: a
-malformed entry in the maintainer-edited TOMLs would otherwise surface only on
-a real-data `build-db`. This test loads the actual files by DIRECT path — the
-autouse fixture only nulls the shared repo curation resolver, not the loaders.
+Synthetic fixtures use explicit catalog rows and do not read repository
+curation. Load the actual maintainer files directly so malformed entries are
+caught without a real-data build.
 
 Scope: load-time validation only (TOML shape, canonical ints, folded-column
 group rules). The build-time half (named columns exist for the var) needs the

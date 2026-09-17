@@ -68,7 +68,6 @@ unprefixed convention above remains unchanged.
 
 from __future__ import annotations
 
-import csv
 import re
 import tomllib
 from dataclasses import dataclass, replace
@@ -79,8 +78,8 @@ from reg_meta.fqid import FqidError, period_token_to_bounds
 
 from reg_meta_build._curation import curation_error, require_bool
 from reg_meta_build.classifications import declared_short_names
-from reg_meta_build.db import _file_sha256, _value_set_hash
-from reg_meta_build.id import mint, mint_canonical_scb
+from reg_meta_build.db import _file_sha256
+from reg_meta_build.id import mint
 from reg_meta_build.ir import (
     IRRegister,
     IRVariable,
@@ -91,7 +90,6 @@ from reg_meta_build.ir import (
 )
 
 if TYPE_CHECKING:
-    import sqlite3
     from collections.abc import Iterator
     from pathlib import Path
 
@@ -998,166 +996,3 @@ class CuratedAdapter:
             return value
         lo, hi = period_token_to_bounds(value)
         return hi if end else lo
-
-
-class CanonicalScbAdapter(CuratedAdapter):
-    """Emit IR for CANONICAL-SCB content curated onto the `scb` provider (#444).
-
-    SCB registers SWECOV holds but that are absent from SCB's machine export
-    (Utrikeshandel med tjänster; the AGI employer-declaration header). It reuses
-    `CuratedAdapter`'s TOML parsing but differs in two ways:
-
-    - **Low-band ids.** `mint_canonical_scb` puts register/variant/variable/state
-      ids in the reserved sub-band ``[2^61, 2^62)`` so they pass the SCB-provider
-      band check (SCB ids must be ``< 2^62``) yet stay disjoint from real
-      source-derived SCB ids. The provider is ``"scb"`` → the materializer attributes
-      the rows to provider_id 1 (no new provider seed).
-    - **Real value sets.** A categorical column carries ``value_set = "<name>"``; the
-      adapter loads ``<name>.csv`` (``code,label``) and interns it into
-      ``value_code`` / ``value_set`` / ``value_set_member`` content-addressed (the
-      same INSERT-OR-IGNORE pattern SCB/SOS use), then links the state's
-      ``value_set_id``. This needs a DB connection and MUST run AFTER the SCB adapter
-      so the AUTOINCREMENT ``value_code`` ids pick up after SCB's high-water mark.
-
-    The committed input is `input_data/scb_canonical/scb_canonical.toml` plus the
-    `<name>.csv` code lists.
-    """
-
-    SOURCE_FILE = "scb_canonical.toml"
-
-    def __init__(
-        self,
-        conn: sqlite3.Connection,
-        *,
-        classification_seed_path: Path | None = None,
-    ) -> None:
-        super().__init__("scb", classification_seed_path=classification_seed_path)
-        self._mint = mint_canonical_scb
-        self._supports_value_sets = True
-        self._conn = conn
-        self._source_dir: Path | None = None
-        self._set_id_by_hash: dict[bytes, int] = {}
-        self._codes_cache: dict[str, list[tuple[str, str]]] = {}
-
-    def emit(self, source_dir: Path) -> Iterator[IRObject]:
-        self._source_dir = source_dir
-        toml_path = source_dir / self.SOURCE_FILE
-        if not toml_path.is_file():
-            raise curation_error(
-                "curated_toml_not_found",
-                f"Canonical-SCB file not found: {toml_path}",
-                f"Author {self.SOURCE_FILE} under {source_dir}.",
-            )
-        self.source_checksums[toml_path.name] = _file_sha256(toml_path)
-        for reg in self._load(toml_path):
-            yield from self._emit_register(reg)
-
-    def _value_set_id_for(
-        self, reg: _CuratedRegister, var: _CuratedVariable
-    ) -> int | None:
-        if var.value_set is None:
-            return None
-        return self._ensure_value_set(self._load_codes(var.value_set))
-
-    def _load_codes(self, name: str) -> list[tuple[str, str]]:
-        if name in self._codes_cache:
-            return self._codes_cache[name]
-        assert self._source_dir is not None
-        csv_path = self._source_dir / f"{name}.csv"
-        if not csv_path.is_file():
-            raise curation_error(
-                "curated_value_set_missing",
-                f"Value-set code list not found: {csv_path}",
-                f"Author {name}.csv (header `code,label`) under {self._source_dir}.",
-            )
-        pairs: list[tuple[str, str]] = []
-        # utf-8-sig strips an Excel BOM so the first code never becomes "﻿…".
-        label_of: dict[str, str] = {}
-        with csv_path.open(newline="", encoding="utf-8-sig") as fh:
-            reader = csv.reader(fh)
-            header = next(reader, None)
-            # Committed curation input → fail fast, not silently. A wrong delimiter
-            # (`code;label` → one column) or a missing header would otherwise let
-            # every row drop and yield an empty (= no) value set on a column that
-            # must be categorical. Require the exact `code,label` header.
-            if header is None or [c.strip().lower() for c in header[:2]] != [
-                "code",
-                "label",
-            ]:
-                raise curation_error(
-                    "curated_value_set_invalid",
-                    f"{csv_path.name}: expected a `code,label` header, got {header!r}.",
-                    "Author the file comma-separated with a `code,label` first row.",
-                )
-            for lineno, row in enumerate(reader, start=2):
-                if not any(cell.strip() for cell in row):
-                    continue  # tolerate blank lines (e.g. a trailing newline)
-                if len(row) < 2 or not row[0].strip():
-                    raise curation_error(
-                        "curated_value_set_invalid",
-                        f"{csv_path.name}:{lineno}: malformed row {row!r} "
-                        "(need a non-empty `code,label` pair).",
-                        "Each non-blank row must be a comma-separated code,label pair.",
-                    )
-                code, label = row[0].strip(), row[1].strip()
-                # Dedup + reject a code that maps to two labels, mirroring the SOS
-                # value-set contract (a code is a single key into one label): a
-                # duplicate would inflate the member_hash and break content-sharing
-                # with an identical SCB/SOS set, and a conflicting label is a data bug.
-                if code in label_of:
-                    if label_of[code] != label:
-                        raise curation_error(
-                            "curated_value_set_invalid",
-                            f"{csv_path.name}: code {code!r} maps to two labels "
-                            f"({label_of[code]!r} vs {label!r}).",
-                            "Each code must map to exactly one label.",
-                        )
-                    continue
-                label_of[code] = label
-                pairs.append((code, label))
-        if not pairs:
-            raise curation_error(
-                "curated_value_set_invalid",
-                f"{csv_path.name}: no code,label rows found.",
-                "A value-set CSV must list at least one code.",
-            )
-        self.source_checksums[csv_path.name] = _file_sha256(csv_path)
-        self._codes_cache[name] = pairs
-        return pairs
-
-    def _ensure_value_set(self, codes: list[tuple[str, str]]) -> int | None:
-        """Content-addressed value-set write (mirrors sos._ensure_value_set):
-        `value_code` dedups on (code, label), `value_set` on member_hash; both keep
-        AUTOINCREMENT ids, provider-shared and unbanded. Returns the shared
-        value_set_id, or None for an empty list."""
-        if not codes:
-            return None
-        conn = self._conn
-        member_hash = _value_set_hash(codes)
-        cached = self._set_id_by_hash.get(member_hash)
-        if cached is not None:
-            return cached
-        code_id_of: dict[tuple[str, str], int] = {}
-        for code, label in codes:
-            conn.execute(
-                "INSERT OR IGNORE INTO value_code (code, label) VALUES (?, ?)",
-                (code, label),
-            )
-            code_id_of[(code, label)] = conn.execute(
-                "SELECT code_id FROM value_code WHERE code = ? AND label = ?",
-                (code, label),
-            ).fetchone()[0]
-        conn.execute(
-            "INSERT OR IGNORE INTO value_set (member_hash) VALUES (?)", (member_hash,)
-        )
-        set_id = conn.execute(
-            "SELECT value_set_id FROM value_set WHERE member_hash = ?", (member_hash,)
-        ).fetchone()[0]
-        for code, label in codes:
-            conn.execute(
-                "INSERT OR IGNORE INTO value_set_member (value_set_id, code_id) "
-                "VALUES (?, ?)",
-                (set_id, code_id_of[(code, label)]),
-            )
-        self._set_id_by_hash[member_hash] = set_id
-        return set_id
