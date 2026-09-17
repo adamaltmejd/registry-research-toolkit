@@ -404,20 +404,11 @@ class TestDocList:
 class TestDocDbRequired:
     """Query commands refuse to run without a doc DB installed."""
 
-    def test_search_without_docs_raises(self, tmp_path: Path):
-        # Build a main DB in an empty dir — no doc DB present.
-        from _csv_fixtures import write_scb_input
-        from reg_meta_build.db import build_db
-
-        write_scb_input(tmp_path / "input", include=("registerinformation",))
+    def test_search_without_docs_raises(self, tmp_path: Path, fixture_db: Path):
+        # Copy only the catalog; its sibling doc DB must remain absent.
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(
-            input_dir=tmp_path / "input",
-            db_dir=db_dir,
-            skip_classifications=True,
-            skip_slugs=True,
-        )
+        (db_dir / "reg_meta.db").write_bytes(fixture_db.read_bytes())
 
         data, code = _run_json(
             ["--db", str(db_dir), "search", "--query", "testvariabel"],
@@ -428,19 +419,10 @@ class TestDocDbRequired:
         assert code == 10
         assert data["error"]["code"] == "doc_db_not_found"
 
-    def test_get_without_docs_raises(self, tmp_path: Path):
-        from _csv_fixtures import write_scb_input
-        from reg_meta_build.db import build_db
-
-        write_scb_input(tmp_path / "input", include=("registerinformation",))
+    def test_get_without_docs_raises(self, tmp_path: Path, fixture_db: Path):
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(
-            input_dir=tmp_path / "input",
-            db_dir=db_dir,
-            skip_classifications=True,
-            skip_slugs=True,
-        )
+        (db_dir / "reg_meta.db").write_bytes(fixture_db.read_bytes())
 
         data, code = _run_json(
             ["--db", str(db_dir), "get", "register", "1"],
@@ -494,22 +476,14 @@ class TestBuildDocs:
 
 
 @pytest.fixture(scope="session")
-def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) -> str:
+def combined_db_dir(
+    tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path, fixture_db: Path
+) -> str:
     """Create a DB dir with both reg_meta.db and reg_meta_docs.db."""
     import shutil
 
-    from reg_meta_build.db import build_db
-
     combined = tmp_path_factory.mktemp("combined")
-
-    # Build a minimal metadata DB
-    input_dir = tmp_path_factory.mktemp("input_combined")
-    from _csv_fixtures import write_scb_input
-
-    write_scb_input(input_dir, include=("registerinformation",))
-    build_db(
-        input_dir=input_dir, db_dir=combined, skip_classifications=True, skip_slugs=True
-    )
+    shutil.copy(fixture_db, combined / "reg_meta.db")
 
     # Copy the doc DB alongside it
     shutil.copy(doc_db_dir / "reg_meta_docs.db", combined / "reg_meta_docs.db")

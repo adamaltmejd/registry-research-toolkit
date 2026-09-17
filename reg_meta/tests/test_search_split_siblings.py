@@ -1,16 +1,10 @@
 """Regression: value→variable search must attribute a value code only to the
 split sibling(s) whose value set actually contains it.
 
-A2.2 triage splits one source `var_id` into sibling `variable` rows that SHARE a
-`provider_key` (#139). Before `code_variable_map` was re-grained to
-`(code_id, variable_id)` (SCHEMA 5.1.0), the search joined on
-`(register_id, provider_key)`, so a code fanned across EVERY sibling — including
-ones whose value set excluded it (false positives). The fix carries each cvid's
-owning `variable_id` via the coalescer's ground-truth stamp (#150).
-
-Builds through the real build pipeline (the build helpers are on `sys.path` via
-the reg_meta test conftest) so it exercises both the build-time population and
-the query-time join end to end.
+The two explicitly resolved siblings share a native provider key, but have
+separate code sets. Exercise the actual writer and the query join together: a
+code must never fan out through the shared provider key to the other sibling.
+Source identity formation has its own tests in reg_meta_build.
 """
 
 from __future__ import annotations
@@ -18,62 +12,59 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import (
-    REGISTERINFORMATION_ROWS,
-    VARDEMANGDER_ROWS,
-    _var_row,
-    write_scb_input,
-)
 from reg_meta.db import open_db
 from reg_meta.queries import search
-from reg_meta_build.db import build_db
+from reg_meta_build.resolved_catalog import (
+    ResolvedCodeSet,
+    ResolvedRegister,
+    ResolvedState,
+    ResolvedVariable,
+    ResolvedVariant,
+    write_resolved_catalog,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-PIPE = "|"
-
-# Hemkommun + Skolkommun under one var_id (920), same edition/year (the #139
-# canonical split geometry) → two siblings sharing provider_key '920'.
-_SPLIT_ROWS = [
-    _var_row(colname="Hemkommun", cvid=9300, var_id=920, year="2019"),
-    _var_row(colname="Skolkommun", cvid=9301, var_id=920, year="2019"),
-]
-
-# Disjoint value sets: '0180'/Stockholm only in the Hemkommun sibling,
-# '1480'/Göteborg only in Skolkommun. Distinct version label keeps kod != version
-# so the importer's `vardemangder_drift` guard (kod==version) stays quiet.
-_SPLIT_VARDEMANGDER = [
-    PIPE.join(["Kommun", "1", "0180", "Stockholms kommun", "9300", "7001"]),
-    PIPE.join(["Kommun", "1", "1480", "Göteborgs kommun", "9301", "7002"]),
-]
-
 
 @pytest.fixture(scope="module")
 def split_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    input_dir = tmp_path_factory.mktemp("split_input")
-    db_dir = tmp_path_factory.mktemp("split_db")
-    slug_dir = tmp_path_factory.mktemp("split_slugs")
-    write_scb_input(
-        input_dir,
-        registerinformation_rows=REGISTERINFORMATION_ROWS + _SPLIT_ROWS,
-        vardemangder_rows=list(VARDEMANGDER_ROWS) + _SPLIT_VARDEMANGDER,
+    output = tmp_path_factory.mktemp("split_db") / "reg_meta.db"
+    register = ResolvedRegister(provider="scb", slug="testreg", name="TESTREG")
+    variant = ResolvedVariant(slug="individer", name="Individer")
+    variables = tuple(
+        ResolvedVariable(
+            register=register,
+            slug=column.lower(),
+            provider_key="920",
+            name=column,
+            definition=None,
+            description=None,
+            operational_definition=None,
+            measurement_unit=None,
+            is_identifier=False,
+            is_sensitive=False,
+            states=(
+                ResolvedState(
+                    variant=variant,
+                    valid_from="2019-01-01",
+                    valid_to="2019-12-31",
+                    delivery_column_name=column,
+                    data_type="text",
+                    data_length="4",
+                    operational_definition=None,
+                    provenance=None,
+                    value_set=ResolvedCodeSet(members=((code, label),)),
+                ),
+            ),
+        )
+        for column, code, label in (
+            ("Hemkommun", "0180", "Stockholms kommun"),
+            ("Skolkommun", "1480", "Göteborgs kommun"),
+        )
     )
-    (slug_dir / "scb.toml").write_text(
-        '[register."1"]\nslug = "testreg"\n'
-        '[register."2"]\nslug = "otherreg"\n'
-        '[register_variant."1.10"]\nslug = "individer"\n'
-        '[register_variant."2.20"]\nslug = "foretag"\n',
-        encoding="utf-8",
-    )
-    (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
-    build_db(
-        input_dir=input_dir,
-        db_dir=db_dir,
-        skip_classifications=True,
-        slug_dir=slug_dir,
-    )
-    return db_dir / "reg_meta.db"
+    write_resolved_catalog(variables, output, manifest={})
+    return output
 
 
 def _slug_by_column(conn) -> dict[str, str]:
@@ -81,7 +72,8 @@ def _slug_by_column(conn) -> dict[str, str]:
     rows = conn.execute(
         "SELECT DISTINCT vs.delivery_column_name, v.slug "
         "FROM variable v JOIN variable_state vs ON vs.variable_id = v.variable_id "
-        "WHERE v.register_id = 1 AND v.provider_key = '920' "
+        "JOIN register r ON r.register_id = v.register_id "
+        "WHERE r.slug = 'testreg' AND v.provider_key = '920' "
         "AND vs.delivery_column_name IN ('Hemkommun', 'Skolkommun')"
     ).fetchall()
     return {r["delivery_column_name"]: r["slug"] for r in rows}
@@ -104,7 +96,7 @@ def _owner_slugs(hits: list) -> set[str]:
 def test_value_search_attributes_code_to_owning_sibling_only(split_db: Path) -> None:
     conn = open_db(split_db)
     try:
-        # Precondition: the split fired into two siblings with distinct slugs.
+        # Precondition: the writer retained two siblings with distinct slugs.
         slug_by_col = _slug_by_column(conn)
         assert set(slug_by_col) == {"Hemkommun", "Skolkommun"}, slug_by_col
         hem_slug, sko_slug = slug_by_col["Hemkommun"], slug_by_col["Skolkommun"]
