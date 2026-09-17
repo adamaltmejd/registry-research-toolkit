@@ -2,7 +2,7 @@
 # ([isolation].dockerfile in .yard/config.toml). Lanes read this file from the
 # candidate's history, not from your working tree — commit changes to it.
 #
-# Contract: keep /bin/sh, /usr/bin/env, sleep, git, and /yard/state/tmp.
+# Contract: keep /bin/sh, /usr/bin/env, sleep, and git.
 #
 # Gates run network-disabled under `env -i` (no image ENV reaches them), so
 # everything a gate needs is pre-warmed here at image build time (which does
@@ -25,7 +25,6 @@ RUN apt-get update \
        # node` launcher — playwright's install CLI included — dies at load
        # time. The node 24 this replaced did not link it.
        libatomic1 \
-    && install -d -m 1777 /yard/state/tmp \
     && rm -rf /var/lib/apt/lists/*
 
 # node: the frontend tools' launchers (biome, svelte-check, vitest, vite,

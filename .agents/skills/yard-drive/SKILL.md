@@ -2,7 +2,7 @@
 name: yard-drive
 description: Drive a Yard board — hold the wake-driven loop across every decision, answer a stopped lane through the exits its attention item names, read a candidate before approving it, dispose of advisory findings, and retire a ticket in the order that sticks. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard board, or when you are about to answer a `yard status` attention item.
 ---
-<!-- yard-scaffold: yard 0.14.10 (commit b0c58aac706e5cb528c9aa5cdb7226086d0a22b9) -->
+<!-- yard-scaffold: yard 0.15.3 (commit 19903129db8a14c99b77abd501cde1fbca6b0e87) -->
 
 # /yard-drive
 
@@ -170,7 +170,7 @@ configuration enables — a ticket unparked, a ticket moved to a workflow it now
 declares — then `yard resume`. The pause holds only what starts; lanes already
 working run on. Without it a ready ticket can be admitted into the gap around
 the restart and spend a whole attempt under the configuration you just
-replaced, because a lane's workflow, role and brief are chosen when it is
+replaced, because a lane's workflow, agent and brief are chosen when it is
 admitted and hold for the life of the attempt. README's "Restarting the
 daemon" is the same sequence in full.
 
