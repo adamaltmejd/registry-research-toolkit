@@ -9,7 +9,7 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
+from _csv_fixtures import _var_row, timeseries_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.cli import run
@@ -50,6 +50,11 @@ def selection(tmp_path, request):
                 data_type="int" if getattr(request, "param", None) == "typed" else "",
             )
         ],
+        timeseries_rows=[
+            timeseries_row(entitet="AktuellVariabel", id1="1001", id2="404")
+        ]
+        if getattr(request, "param", None) == "source_event"
+        else None,
         unika_rows=[
             "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
         ],
@@ -136,6 +141,13 @@ def selection(tmp_path, request):
             for e in manifest.inputs
             if e.revision and e.path == "Identifierare.csv"
         ),
+        event_sources=tuple(
+            (e.revision.dataset, revision.dataset)
+            for e in manifest.inputs
+            if e.revision and e.path == "Timeseries.csv"
+        )
+        if getattr(request, "param", None) == "source_event"
+        else (),
         scopes=(
             ScopeFile(
                 source=record.source,
@@ -148,6 +160,30 @@ def selection(tmp_path, request):
     path = directory / "selection.json"
     path.write_text(selected.model_dump_json())
     return path
+
+
+@pytest.mark.parametrize("selection", ["source_event"], indirect=True)
+def test_native_source_event_is_resolved_and_missing_endpoint_is_reported(
+    selection, tmp_path
+):
+    output, report = tmp_path / "event.db", tmp_path / "report"
+    result = build_selected_catalog(
+        selection, output=output, report_dir=report, diagnostic=True
+    )
+    assert result["status"] == "diagnostic_complete"
+    with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            json.loads(line)
+            for line in stream
+            if '"unresolved_source_event_endpoint"' in line
+        ]
+    assert len(issues) == 1 and issues[0]["severity"] == "error"
+    assert "404" in issues[0]["detail"]
+    with sqlite3.connect(output) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0] == 1
+        assert (
+            conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0] == 0
+        )
 
 
 def test_real_build_command_writes_nonpublishable_full_selection(

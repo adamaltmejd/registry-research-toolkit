@@ -51,6 +51,7 @@ from reg_meta_build.source_curation import (
     SourceRecordRef,
     evaluate_source_expectations,
 )
+from reg_meta_build.source_event_resolution import SourceEventBindings
 from reg_meta_build.source_naming import (  # noqa: TC001
     NamingAmbiguity,
     NamingDeclaration,
@@ -129,6 +130,7 @@ class PipelineSelection(_Model):
     metadata: ResolvedMetadata = ResolvedMetadata()
     code_label_pairs: tuple[CodeLabelPair, ...] = ()
     identifier_sources: tuple[str, ...] = ()
+    event_sources: tuple[tuple[str, str], ...] = ()
     lineage_defaults: tuple[tuple[str, str], ...] = ()
     # A converter must disclose unfinished required work. Neither diagnostic mode
     # nor a successful partial source scan may turn it into a publication waiver.
@@ -242,6 +244,17 @@ def build_selected_catalog(
         raise ValueError(
             "identifier metadata must select distinct prepared support sources"
         )
+    event_sources = _unique_pairs(selected.event_sources, "event source")
+    prepared_sources = {
+        e.revision.dataset for e in prepared.manifest.inputs if e.revision is not None
+    }
+    if (
+        not event_sources.keys() <= prepared_sources
+        or not set(event_sources.values()) <= sources
+    ):
+        raise ValueError(
+            "event bindings must name selected reference and occurrence sources"
+        )
     if any(
         getattr(selected.metadata, name)
         for name in (
@@ -319,6 +332,10 @@ def build_selected_catalog(
                     },
                 )
                 counts["prepared_evidence"] += 1
+            event_bindings = SourceEventBindings(
+                (d for d in declarations if isinstance(d, SourceEventDeclaration)),
+                event_sources,
+            )
             exports = resolve_export_metadata(declarations)
             identifiers = resolve_identifier_metadata(
                 record
@@ -612,6 +629,7 @@ def build_selected_catalog(
                         raise ValueError(
                             "physical source occurrence accounting is incomplete"
                         )
+                    event_bindings.observe_scope(originals, result, uses)
                     for record_id, dispositions in uses.items():
                         event(
                             "source_occurrence",
@@ -699,8 +717,11 @@ def build_selected_catalog(
                     ),
                 }
             )
+            source_events = event_bindings.resolve(metadata)
+            for value in source_events.diagnostics:
+                issue(value)
             resolved_metadata = resolve_metadata_dependencies(
-                metadata,
+                source_events.metadata,
                 panel.variables,
                 registers=panel.registers,
                 variants=panel.variants,

@@ -103,13 +103,14 @@ source facts.
 > command. It connects pinned prepared inputs, common source resolution, catalog
 > dependencies and the direct writer. `--diagnostic --diagnostic-db-path FILE` writes a
 > separate, nonpublishable artifact while retaining curation errors. The connected path
-> has produced a structurally valid full-corpus diagnostic database. Semantic
-> comparison, curation accounting and final verification are unfinished; corpus
-> safeguards still report failures requiring explanation. The raw build entry point,
-> SCB/SOS inference adapters, canonical-SCB final-row adapter and SQL-to-IR-to-SQL round
-> trip are removed. The remaining conversion loaders, steward path and historical design
-> sections still need the final dependency/documentation cleanup. This branch is not
-> ready for catalog activation.
+> has produced a structurally valid full-corpus diagnostic database. Semantic comparison
+> and final verification are unfinished; existing curation is accounted for, including
+> entries blocked by exact source issues. Corpus safeguards still report failures
+> requiring explanation. The raw build entry point, SCB/SOS inference adapters,
+> canonical-SCB final-row adapter and SQL-to-IR-to-SQL round trip are removed. The
+> remaining conversion loaders, steward path and historical design sections still need
+> the final dependency/documentation cleanup. This branch is not ready for catalog
+> activation.
 
 The maintained call path is `pipeline.build_selected_catalog` →
 `open_prepared_catalog_sources` → `resolve_source_scope` for each complete scope →
@@ -123,12 +124,21 @@ store.
 
 Literal schema, join-key and event metadata is resolved from prepared evidence during
 the build. Identifier descriptions use explicitly selected support sources; disputed
-fields stay unknown. Worksheet context, headers and original interpretation signals
-remain referenced evidence. Unbound source crosswalks and derivations produce errors
-instead of guessed catalog relationships. Existing corrections that cannot be applied
-because their source meaning is ambiguous retain the original input revision, entry,
-checked observations and peer guards. These are errors, never accepted exceptions;
-missing implementation still blocks the build before resolution.
+fields stay unknown. `event_sources` explicitly binds each native event namespace to its
+occurrence source. Succession events use already resolved register, variant or variable
+identities; absent or ambiguous native endpoints produce errors. Reciprocal events
+coalesce. Conflicting descriptions remain unknown without discarding an agreed edge. The
+existing classification-edition rule also derives variable successions in this common
+layer: only adjacent editions within an unambiguous slug stream qualify, and variables
+spanning multiple editions are excluded. Explicit edges retain their attribution, and
+the combined graph must remain acyclic.
+
+Worksheet context, headers and original interpretation signals remain referenced
+evidence. Unbound source crosswalks and derivations produce errors instead of guessed
+catalog relationships. Existing corrections that cannot be applied because their source
+meaning is ambiguous retain the original input revision, entry, checked observations and
+peer guards. These are errors, never accepted exceptions; missing implementation still
+blocks the build before resolution.
 
 Completion requires deleting the remaining displaced internal passes and separating
 one-time conversion from maintained runtime modules. Ordinary naming needs the
