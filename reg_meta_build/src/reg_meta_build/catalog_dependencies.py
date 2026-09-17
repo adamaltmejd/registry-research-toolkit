@@ -16,6 +16,10 @@ from reg_meta_build.concept_groups import (
     classification_succession_edges,
     month_group_candidates,
 )
+from reg_meta_build.relations import (
+    _REPLACED_BY_NOTE_VINTAGE_LIFT,
+    variable_vintage_succession_edges,
+)
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
@@ -32,6 +36,7 @@ from reg_meta_build.resolved_metadata import (
     ResolvedGroupVariable,
     ResolvedMetadata,
     ResolvedStateRef,
+    ResolvedSuccession,
     ResolvedVariableGroup,
     validate_metadata_structure,
 )
@@ -73,6 +78,50 @@ def resolve_classification_successions(
         sorted((*derived, *declared), key=lambda e: (e.predecessor, e.successor))
     )
     _prepare_classification_succession(classifications, combined)
+    return combined
+
+
+def resolve_variable_successions(
+    metadata: ResolvedMetadata,
+    variables: tuple[ResolvedVariable, ...],
+    classifications: tuple[ResolvedClassificationSuccession, ...],
+) -> ResolvedMetadata:
+    """Add existing classification-derived variable links before writing the DB.
+
+    Explicit source/curated edges retain their richer attribution. Validate the
+    combined graph so a derived edge cannot close a cycle through those edges.
+    """
+    edges = variable_vintage_succession_edges(
+        (
+            (
+                f"{v.register_ref.provider}/{v.register_ref.slug}",
+                v.name,
+                v.slug,
+                state.classification,
+            )
+            for v in variables
+            for state in v.states
+            if state.classification is not None
+        ),
+        ((e.predecessor, e.successor, e.effective_year) for e in classifications),
+    )
+    existing = {(e.predecessor, e.successor) for e in metadata.successions}
+    combined = metadata.model_copy(
+        update={
+            "successions": metadata.successions
+            + tuple(
+                ResolvedSuccession(
+                    predecessor=a,
+                    successor=b,
+                    effective_year=year,
+                    note=_REPLACED_BY_NOTE_VINTAGE_LIFT,
+                )
+                for a, b, year in edges
+                if (a, b) not in existing
+            )
+        }
+    )
+    validate_metadata_structure(combined)
     return combined
 
 

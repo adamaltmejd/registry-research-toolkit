@@ -2063,214 +2063,48 @@ def materialize_curated_replaced_by(
 # ---------------------------------------------------------------------------
 
 
-def derive_variable_vintage_succession(
-    conn: sqlite3.Connection, *, progress: Any | None = None
-) -> int:
-    """Lift `classification_replaced_by` EDITION succession (#571) to the variable
-    grain through value-set bindings (#584, clean tier).
+def variable_vintage_succession_edges(
+    bindings: Iterable[tuple[str, str, str, str]],
+    edition_edges: Iterable[tuple[str, str, int | None]],
+) -> tuple[tuple[str, str, int | None], ...]:
+    """Lift adjacent classification editions within unambiguous variable streams.
 
-    Two variables A, B in the SAME register whose value-set classifications C_A,
-    C_B are ADJACENT in a `classification_replaced_by` chain — and that are
-    otherwise the same series (same `variable.name`, and when needed the same
-    slug-stem stream inside that family) — mint `variable_replaced_by` (A → B)
-    with `effective_year` from the classification edge and
-    `note = 'derived:classification_vintage_lift'`. Adjacent-chain (the edge's
-    predecessor→successor verbatim, NOT predecessor→latest), mirroring
-    `concept_groups.derive_classification_succession`.
+    Bindings carry (register FQID, variable name, variable slug, classification
+    slug). The existing rule retains population/role/level tokens in each stream,
+    excludes variables spanning multiple chained editions, and never guesses a
+    match when a stream has several variables on either side.
+    """
+    edges = tuple(edition_edges)
+    chained = {slug for a, b, _year in edges for slug in (a, b)}
+    families: dict[tuple[str, str], dict[str, set[str]]] = {}
+    for register, name, variable, classification in bindings:
+        if classification in chained:
+            families.setdefault((register, name), {}).setdefault(variable, set()).add(
+                classification
+            )
 
-    Family key = `(register_id, variable.name)`. The original **clean tier** still
-    fires when an adjacent classification edge maps 1:1 to variables in a family,
-    but it must pass the same slug-stream guard as the entangled tier (#592). The
-    stream key removes the adjacent classification edge's digit-bearing vintage
-    tokens from the variable slug. That keeps parallel axes (population /
-    parental role / level / grain) in the key, so `fars-*` never links to
-    `mors-*`, `individ-*` never links to `foretag-*`, and `grov-*` never links to
-    `utokad-*`. A stream with more than one variable on either side is skipped
-    rather than guessed.
-
-    Interval-native variables (#271, no lift owed) stay out of all lifted
-    candidate pairs: a single variable spanning >1 chained edition across its
-    own states already carries the lineage in ONE `variable_id`.
-
-    Dedup: an edge already in `variable_replaced_by` (curated #375/#440 or auto
-    `timeseries_event`) WINS — `INSERT OR IGNORE` against the PK leaves it
-    untouched. The pass runs AFTER `_materialize_replaced_by_edges`, so those
-    rows already exist and `variable.slug` is populated. Caller guards under
-    `skip_slugs` (every slug is NULL there). Returns the count of edges minted."""
-    # Classification edition edges: predecessor_slug → (successor_slug, year).
-    edition_edges = conn.execute(
-        "SELECT predecessor_slug, successor_slug, effective_year "
-        "FROM classification_replaced_by"
-    ).fetchall()
-    if not edition_edges:
-        if progress is not None:
-            progress("  0 variable vintage-lift edges (no classification chains)")
-        return 0
-
-    # Slugs that participate in any edition chain — restrict the family edition
-    # map to these so a variable's unrelated classifications don't break the
-    # bijection (only chained editions matter for the lift).
-    chain_slugs: set[str] = set()
-    for pred, succ, _year in edition_edges:
-        chain_slugs.add(pred)
-        chain_slugs.add(succ)
-
-    # Per (register_id, variable.name) family: edition_slug → {variable_id}, and
-    # variable_id → {edition_slug}. Built from the live state→classification
-    # bindings, restricted to chained editions. Entangled cross-product families
-    # intentionally stay under this coarse human name; the adjacent-edge loop
-    # below partitions them by a slug-stem stream key only when the old clean
-    # bijection guard would have skipped the family whole. The reverse map keeps
-    # interval-native variables (one variable_id spanning >1 chained edition)
-    # out of all candidate pairs.
-    family_edition_vars: dict[tuple[int, str], dict[str, set[int]]] = {}
-    family_var_editions: dict[tuple[int, str], dict[int, set[str]]] = {}
-    variable_slug_of: dict[int, str] = {}
-    rows = conn.execute(
-        "SELECT DISTINCT v.register_id, v.name, vs.variable_id, v.slug, c.slug "
-        "FROM variable_state vs "
-        "JOIN variable v ON v.variable_id = vs.variable_id "
-        "JOIN classification c ON c.id = vs.classification_id "
-        "WHERE vs.classification_id IS NOT NULL "
-        "  AND c.slug IS NOT NULL "
-        "  AND v.name IS NOT NULL "
-        "  AND v.slug IS NOT NULL"
-    ).fetchall()
-    for register_id, name, variable_id, variable_slug, classification_slug in rows:
-        if classification_slug not in chain_slugs:
-            continue
-        key = (register_id, name)
-        family_edition_vars.setdefault(key, {}).setdefault(
-            classification_slug, set()
-        ).add(variable_id)
-        family_var_editions.setdefault(key, {}).setdefault(variable_id, set()).add(
-            classification_slug
-        )
-        variable_slug_of[variable_id] = variable_slug
-
-    # Resolve a variable_id to its FQID slug tuple (provider, register, variable)
-    # for the edge endpoints. The lift only links live, slugged variables.
-    fqid_of: dict[int, tuple[str, str, str]] = {
-        r[0]: (r[1], r[2], r[3])
-        for r in conn.execute(
-            "SELECT v.variable_id, p.slug, r.slug, v.slug "
-            "FROM variable v "
-            "JOIN register r ON v.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL AND p.slug IS NOT NULL"
-        )
-    }
-
-    pending: list[tuple[str, str, str, str, str, str, int | None]] = []
-    for key in sorted(family_edition_vars):
-        edition_vars = family_edition_vars[key]
-        var_editions = family_var_editions[key]
-        # Walk each classification edge whose BOTH endpoints are bound in this
-        # family. Variables already bound to multiple chained editions are
-        # interval-native and never participate. The clean tier remains the fast
-        # path: exactly one remaining same-stream variable on each side mints the
-        # same edge as #584. When either side has several variables, partition by
-        # a slug-stem key with only the adjacent edge's digit-bearing vintage
-        # tokens stripped. Ambiguous streams (more than one variable on either
-        # side) are skipped rather than guessed.
-        for pred_slug, succ_slug, year in edition_edges:
-            if pred_slug not in edition_vars or succ_slug not in edition_vars:
-                continue
-            pred_vids = {
-                vid for vid in edition_vars[pred_slug] if len(var_editions[vid]) == 1
-            }
-            succ_vids = {
-                vid for vid in edition_vars[succ_slug] if len(var_editions[vid]) == 1
-            }
-            if not pred_vids or not succ_vids:
-                continue
-            if len(pred_vids) == 1 and len(succ_vids) == 1:
-                pred_vid = next(iter(pred_vids))
-                succ_vid = next(iter(succ_vids))
-                if _variable_vintage_stream_key(
-                    variable_slug_of[pred_vid], pred_slug, succ_slug
-                ) == _variable_vintage_stream_key(
-                    variable_slug_of[succ_vid], pred_slug, succ_slug
-                ):
-                    candidate_pairs = [(pred_vid, succ_vid)]
-                else:
-                    candidate_pairs = []
-            else:
-                pred_by_stream: dict[tuple[str, ...], set[int]] = {}
-                succ_by_stream: dict[tuple[str, ...], set[int]] = {}
-                for pred_vid in pred_vids:
-                    pred_by_stream.setdefault(
-                        _variable_vintage_stream_key(
-                            variable_slug_of[pred_vid], pred_slug, succ_slug
-                        ),
-                        set(),
-                    ).add(pred_vid)
-                for succ_vid in succ_vids:
-                    succ_by_stream.setdefault(
-                        _variable_vintage_stream_key(
-                            variable_slug_of[succ_vid], pred_slug, succ_slug
-                        ),
-                        set(),
-                    ).add(succ_vid)
-                candidate_pairs = []
-                for stream in sorted(pred_by_stream.keys() & succ_by_stream.keys()):
-                    pred_stream = pred_by_stream[stream]
-                    succ_stream = succ_by_stream[stream]
-                    if len(pred_stream) == 1 and len(succ_stream) == 1:
-                        candidate_pairs.append(
-                            (next(iter(pred_stream)), next(iter(succ_stream)))
-                        )
-
-            for pred_vid, succ_vid in candidate_pairs:
-                pred_fqid = fqid_of.get(pred_vid)
-                succ_fqid = fqid_of.get(succ_vid)
-                if pred_fqid is None or succ_fqid is None:
-                    continue
-                if pred_fqid == succ_fqid:
-                    continue  # same variable both ends — no self-edge
-                pending.append((*pred_fqid, *succ_fqid, year))
-
-    # INSERT OR IGNORE: a curated (#375/#440) or auto (timeseries_event) edge on
-    # the same PK already present WINS — the derived row is silently dropped, never
-    # clobbering richer provenance. `executemany` skips on PK collision per row.
-    conn.executemany(
-        "INSERT OR IGNORE INTO variable_replaced_by ("
-        "predecessor_provider, predecessor_register, predecessor_variable, "
-        "successor_provider, successor_register, successor_variable, "
-        "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, "
-        f"'{_REPLACED_BY_NOTE_VINTAGE_LIFT}')",
-        pending,
-    )
-    # The lift is the ONLY `variable_replaced_by` writer that inserts AFTER the
-    # curated/auto passes have run, so it's the one writer that must re-check the
-    # COMBINED graph for cycles: a pre-existing reversed edge `B -> A` (curated,
-    # auto, or contradictory source) plus a lift's chain-direction `A -> B` closes
-    # a cycle that the earlier passes couldn't see (the lift edge didn't exist
-    # yet). Read back the full graph and reuse `reject_replaced_by_cycles` so any
-    # cycle the lift closed — with any auto/curated edge, possibly multi-hop —
-    # fails the build loudly rather than shipping a graph with no terminal
-    # successor (which breaks the webapp's terminal-successor walk). The node key
-    # is the variable FQID slug tuple, matching the existing combined check.
-    full_graph = [
-        ((row[0], row[1], row[2]), (row[3], row[4], row[5]))
-        for row in conn.execute(
-            "SELECT predecessor_provider, predecessor_register, "
-            "predecessor_variable, successor_provider, successor_register, "
-            "successor_variable FROM variable_replaced_by"
-        )
-    ]
-    reject_replaced_by_cycles(full_graph)
-
-    # Count the note-stamped rows so the return is authoritative regardless of
-    # how many `INSERT OR IGNORE` rows collided with a pre-existing edge.
-    n_minted = conn.execute(
-        "SELECT COUNT(*) FROM variable_replaced_by WHERE note = ?",
-        (_REPLACED_BY_NOTE_VINTAGE_LIFT,),
-    ).fetchone()[0]
-    if progress is not None:
-        n_dropped = len(pending) - n_minted
-        progress(
-            f"  {n_minted:,} variable vintage-lift edges "
-            f"({n_dropped:,} dedup-collapsed onto curated/auto edges)"
-        )
-    return n_minted
+    pending: list[tuple[str, str, int | None]] = []
+    for (register, _name), variables in sorted(families.items()):
+        edition_variables: dict[str, set[str]] = {}
+        for variable, classifications in variables.items():
+            if len(classifications) == 1:
+                edition_variables.setdefault(next(iter(classifications)), set()).add(
+                    variable
+                )
+        for predecessor, successor, year in edges:
+            streams: list[dict[tuple[str, ...], set[str]]] = []
+            for edition in (predecessor, successor):
+                by_stream: dict[tuple[str, ...], set[str]] = {}
+                for variable in edition_variables.get(edition, ()):
+                    stream = _variable_vintage_stream_key(
+                        variable, predecessor, successor
+                    )
+                    by_stream.setdefault(stream, set()).add(variable)
+                streams.append(by_stream)
+            before, after = streams
+            for stream in sorted(before.keys() & after.keys()):
+                if len(before[stream]) == len(after[stream]) == 1:
+                    a, b = next(iter(before[stream])), next(iter(after[stream]))
+                    if a != b:
+                        pending.append((f"{register}/{a}", f"{register}/{b}", year))
+    return tuple(sorted(pending, key=lambda edge: edge[:2]))

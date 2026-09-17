@@ -25,6 +25,7 @@ from reg_meta_build.catalog_dependencies import (
     resolve_month_groups,
     resolve_panel_dependencies,
     resolve_variable_edge_groups,
+    resolve_variable_successions,
 )
 from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
@@ -722,6 +723,9 @@ def build_selected_catalog(
             successions = resolve_classification_successions(
                 tuple(books.values()), selected.classification_successions
             )
+            final_metadata = resolve_variable_successions(
+                lineage.metadata, lineage.variables, successions
+            )
             _emit_timing("pipeline: catalog dependencies", phase_started)
             result = {
                 "status": "blocked" if counts["error"] else "ready",
@@ -750,7 +754,7 @@ def build_selected_catalog(
                     editions=panel.editions,
                     classifications=tuple(books.values()),
                     classification_successions=successions,
-                    metadata=lineage.metadata,
+                    metadata=final_metadata,
                 )
                 _emit_timing("pipeline: database materialization", phase_started)
                 result.update(

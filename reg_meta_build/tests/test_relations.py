@@ -29,18 +29,26 @@ from _slugged_db import (
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind, parse as parse_fqid
+from reg_meta_build.catalog_dependencies import resolve_variable_successions
 from reg_meta_build.relations import (
     _SAME_AS_MAX_COMPONENT,
     CuratedClassificationDerivedFrom,
     CuratedReplacedBy,
     CuratedSameAs,
-    derive_variable_vintage_succession,
     load_relations,
     materialize_classification_derived_from,
     materialize_curated_replaced_by,
     materialize_same_as,
     reject_nonmonotone_representation_cycles,
 )
+from reg_meta_build.resolved_catalog import (
+    ResolvedClassificationSuccession,
+    ResolvedRegister,
+    ResolvedState,
+    ResolvedVariable,
+    ResolvedVariant,
+)
+from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedSuccession
 
 if TYPE_CHECKING:
     import sqlite3
@@ -2178,6 +2186,100 @@ def _vintage_db() -> sqlite3.Connection:
     return conn
 
 
+def _resolve_vintage_fixture(conn: sqlite3.Connection) -> int:
+    """Project the existing relation fixtures into the common resolver.
+
+    Keep their original assertions and table-shaped setup. The fixture's omitted
+    column names are irrelevant to edition succession; use the variable slug.
+    """
+    variables = []
+    for row in conn.execute(
+        "SELECT v.*, p.slug AS provider, r.slug AS register_slug "
+        "FROM variable v JOIN register r USING (register_id) "
+        "JOIN provider p USING (provider_id)"
+    ):
+        states = tuple(
+            ResolvedState(
+                variant=ResolvedVariant(
+                    slug=state["variant_slug"], name=state["variant_name"]
+                ),
+                valid_from=state["valid_from"],
+                valid_to=state["valid_to"],
+                delivery_column_name=state["delivery_column_name"] or row["slug"],
+                value_set_version_label=state["value_set_version_label"],
+                data_type=state["data_type"],
+                data_length=None,
+                operational_definition=None,
+                provenance=None,
+                classification=state["classification_slug"],
+            )
+            for state in conn.execute(
+                "SELECT s.*, rv.slug AS variant_slug, rv.name AS variant_name, "
+                "c.slug AS classification_slug FROM variable_state s "
+                "JOIN register_variant rv USING (register_variant_id) "
+                "LEFT JOIN classification c ON c.id = s.classification_id "
+                "WHERE s.variable_id = ?",
+                (row["variable_id"],),
+            )
+        )
+        if states:
+            variables.append(
+                ResolvedVariable(
+                    register=ResolvedRegister(
+                        provider=row["provider"],
+                        slug=row["register_slug"],
+                        name=row["register_slug"],
+                    ),
+                    slug=row["slug"],
+                    provider_key=row["provider_key"],
+                    name=row["name"],
+                    definition=None,
+                    description=None,
+                    operational_definition=None,
+                    measurement_unit=None,
+                    is_sensitive=False,
+                    is_identifier=False,
+                    states=states,
+                )
+            )
+    metadata = ResolvedMetadata(
+        successions=tuple(
+            ResolvedSuccession(
+                predecessor="/".join(row[:3]),
+                successor="/".join(row[3:6]),
+                effective_year=row[6],
+                note=row[7],
+                description=row[8],
+            )
+            for row in conn.execute("SELECT * FROM variable_replaced_by")
+        )
+    )
+    classifications = tuple(
+        ResolvedClassificationSuccession(
+            predecessor=a, successor=b, effective_year=year
+        )
+        for a, b, year in conn.execute(
+            "SELECT predecessor_slug, successor_slug, effective_year FROM classification_replaced_by"
+        )
+    )
+    result = resolve_variable_successions(metadata, tuple(variables), classifications)
+    added = result.successions[len(metadata.successions) :]
+    conn.executemany(
+        "INSERT INTO variable_replaced_by VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+            (
+                *e.predecessor.split("/"),
+                *e.successor.split("/"),
+                e.effective_year,
+                e.note,
+                e.description,
+            )
+            for e in added
+        ],
+    )
+    return len(added)
+
+
 class TestVariableVintageSuccession:
     def test_clean_pair_mints_one_edge(self) -> None:
         # Two DISTINCT variables, same name, one per edition → a bijection.
@@ -2199,7 +2301,7 @@ class TestVariableVintageSuccession:
             classification_id=_cid(conn, "sni2007"),
         )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 1
         assert _lift_rows(conn) == [("sni-2002", "sni-2007", 2007)]
 
@@ -2225,7 +2327,7 @@ class TestVariableVintageSuccession:
             classification_id=_cid(conn, "sni2007"),
         )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 0
         assert _lift_rows(conn) == []
 
@@ -2249,7 +2351,7 @@ class TestVariableVintageSuccession:
                 classification_id=cid,
             )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 2
         # Adjacent hops only — no 2002→2012 star edge.
         assert _lift_rows(conn) == [
@@ -2284,7 +2386,7 @@ class TestVariableVintageSuccession:
                 classification_id=_cid(conn, cls),
             )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 2
         assert _lift_rows(conn) == [
             ("fars-sni-2002", "fars-sni-2007", 2007),
@@ -2311,7 +2413,7 @@ class TestVariableVintageSuccession:
                 classification_id=_cid(conn, cls),
             )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 2
         assert _lift_rows(conn) == [
             ("foretag-sni-2002", "foretag-sni-2007", 2007),
@@ -2343,7 +2445,7 @@ class TestVariableVintageSuccession:
                 classification_id=_cid(conn, cls),
             )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 0
         assert _lift_rows(conn) == []
 
@@ -2372,7 +2474,7 @@ class TestVariableVintageSuccession:
             classification_id=_cid(conn, "sni2007"),
         )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 0
         assert _lift_rows(conn) == []
 
@@ -2410,7 +2512,7 @@ class TestVariableVintageSuccession:
             classification_id=_cid(conn, "sni2007"),
         )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 0
         assert _lift_rows(conn) == []
 
@@ -2445,7 +2547,7 @@ class TestVariableVintageSuccession:
             "2007, 'curated:slug_toml', 'hand reason')"
         )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 0  # the derived row collapsed onto the curated PK
         # Exactly ONE row on that PK, and it kept the curated note + beskrivning.
         rows = conn.execute(
@@ -2492,7 +2594,7 @@ class TestVariableVintageSuccession:
         )
         conn.commit()
         with pytest.raises(RegMetaError) as exc:
-            derive_variable_vintage_succession(conn)
+            _resolve_vintage_fixture(conn)
         assert exc.value.exit_code == EXIT_CONFIG
 
     def test_distinct_levels_do_not_cross_link(self) -> None:
@@ -2549,7 +2651,7 @@ class TestVariableVintageSuccession:
             classification_id=cid_ug_2007,
         )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 2
         assert _lift_rows(conn) == [
             ("sni-grov-2002", "sni-grov-2007", 2007),
@@ -2582,7 +2684,7 @@ class TestVariableVintageSuccession:
                 classification_id=cid,
             )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 2
         assert _lift_rows(conn) == [
             ("sni-grov-2002", "sni-grov-2007", 2007),
@@ -2611,7 +2713,7 @@ class TestVariableVintageSuccession:
                 classification_id=_cid(conn, cls),
             )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 0
         assert _lift_rows(conn) == []
 
@@ -2650,7 +2752,7 @@ class TestVariableVintageSuccession:
             classification_id=_cid(conn, "sni2007"),
         )
         conn.commit()
-        n = derive_variable_vintage_succession(conn)
+        n = _resolve_vintage_fixture(conn)
         assert n == 1
         row = conn.execute(
             "SELECT predecessor_variable, successor_variable, effective_year "
