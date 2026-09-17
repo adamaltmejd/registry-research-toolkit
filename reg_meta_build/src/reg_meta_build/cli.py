@@ -61,7 +61,6 @@ from .db import (
     _paths_overlap,
     _reject_input_repository_destination,
     _scb_snapshot_error,
-    build_db,
 )
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
@@ -172,29 +171,23 @@ def _build_parser() -> argparse.ArgumentParser:
 
     build_p = sub.add_parser(
         "build-db",
-        help="Build the metadata DB from SCB inputs (maintainer-only).",
+        help="Build the complete catalog from pinned prepared sources and curation.",
         description=(
-            "Build the metadata database from an explicitly pinned complete catalog\n"
-            "input bundle. Raw input remains an explicit preparation/testing mode. This\n"
-            "replaces the database entirely (not incremental). End users\n"
-            "should use `reg-meta update` to fetch the pre-built DB instead.\n\n"
-            "Raw mode's input directory must contain:\n"
-            "  <input-dir>/SCB/*.csv             — SCB exports\n"
-            "  <input-dir>/classifications/*.csv — canonical classification CSVs (optional)\n\n"
-            "Examples:\n"
-            "  reg-meta-build build-db --input-dir reg_meta_build/input_data/\n"
-            "  reg-meta-build build-db --input-dir reg_meta_build/input_data/ --skip-slugs\n"
-            "  reg-meta-build build-db --input-bundle .local/catalog-inputs/bundles/accepted "
-            "--input-commit <commit> --input-manifest-sha256 <sha256>"
+            "Resolve one complete prepared-source selection and materialize the catalog. "
+            "Strict publication is the default and preserves the previous catalog on "
+            "failure. Diagnostic mode requires a separate new output path and retains "
+            "all curation blockers. Prepare or update sources with prepare-sources."
         ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     build_p.add_argument(
         "--selection",
-        help="Three-stage build selection: pinned prepared sources and common declarations.",
+        required=True,
+        help="Pinned prepared sources and provider-neutral curation declarations.",
     )
     build_p.add_argument(
-        "--report-dir", help="New directory for structured build issues and accounting."
+        "--report-dir",
+        required=True,
+        help="New directory for structured build issues and source accounting.",
     )
     build_p.add_argument(
         "--diagnostic",
@@ -206,114 +199,9 @@ def _build_parser() -> argparse.ArgumentParser:
         help="New explicit SQLite path required with --diagnostic.",
     )
     build_p.add_argument(
-        "--input-dir",
-        default=None,
-        help=(
-            "Explicit raw preparation/testing directory containing SCB/ and "
-            "classifications/ subdirectories. Mutually exclusive with --input-bundle."
-        ),
-    )
-    build_p.add_argument(
-        "--input-bundle",
-        default=None,
-        help=(
-            "Accepted catalog bundle directory. Requires --input-commit and "
-            "--input-manifest-sha256 and excludes loose input/slug overrides."
-        ),
-    )
-    build_p.add_argument(
-        "--input-commit",
-        default=None,
-        help="Full Git commit pin for --input-bundle's local input repository.",
-    )
-    build_p.add_argument(
-        "--input-manifest-sha256",
-        default=None,
-        help="SHA-256 pin for --input-bundle/catalog-bundle.json.",
-    )
-    build_p.add_argument(
-        "--slug-dir",
-        default=None,
-        help=(
-            "Directory of curated slug TOMLs (default: reg_meta_build/fqid_slugs/ "
-            "when run from a repo checkout)."
-        ),
-    )
-    build_p.add_argument(
-        "--skip-slugs",
-        action="store_true",
-        help=(
-            "Skip slug TOML loading and the strict-coverage check. Used to "
-            "bootstrap the DB so `seed-slugs` has something to read from "
-            "before the slug TOMLs exist (see DESIGN.md → Slug immutability). "
-            "Implies `--slug-dir` is ignored; the resulting DB has empty slug "
-            "columns and is intended only as input to `seed-slugs`, not for "
-            "downstream queries that depend on FQIDs. Post-build validation "
-            "still runs (no `--no-validate` needed): only the checks of the "
-            "producer passes this flag skips are omitted."
-        ),
-    )
-    build_p.add_argument(
-        "--no-validate",
-        action="store_true",
-        help=(
-            "Skip post-build invariant checks. By default build-db validates the "
-            "freshly-built DB (schema shape, value-set dedup, year-projection "
-            "anchors, FK integrity, minted-id bands, freelist ceiling, and — as a "
-            "real maintainer build — the SOS corpus-volume gate) and fails with "
-            "EXIT_CONFIG on any violation. Maintainer escape hatch only."
-        ),
-    )
-    build_p.add_argument(
-        "--providers",
-        default="scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet,umu",
-        help=(
-            "Comma-separated provider adapters to build (default: "
-            "scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet,umu). Pass "
-            "`--providers scb` for the "
-            "SCB-only DB that reproduces the byte-identical A4.3b dbdiff gate. "
-            "Non-SCB providers are purely additive: they add rows in a disjoint id "
-            "band (>= 2^62), never alter SCB's. `fohm`/`fk` (#422) and "
-            "`lakemedelsverket`/`pliktverket`/`riksarkivet`/`umu` (#443) are thin "
-            "curated providers whose committed TOMLs ship with the repo. (The `build_db()` function default stays "
-            "`('scb',)` so synthetic SCB-only test fixtures need no extra inputs.)"
-        ),
-    )
-    build_p.add_argument(
-        "--trace-scb-cvids",
-        default=None,
-        help=(
-            "Opt-in diagnostic for a finite comma-separated list of native SCB "
-            "CVIDs. The build result records staging, assignment, actual emission, "
-            "and final state fate without changing catalog formation."
-        ),
-    )
-    build_p.add_argument(
         "--timing",
         action="store_true",
-        help=(
-            "Emit per-stage `[timing] <stage>: <s>` lines to stderr (equivalent to "
-            "REG_META_BUILD_TIMING=1). Off by default; a profiler-free way to see "
-            "where build time goes."
-        ),
-    )
-    build_p.add_argument(
-        "--scb-value-prestage-cache",
-        default=None,
-        help=(
-            "Optional SQLite cache file for SCB's projected Vardemangder value-set "
-            "layer. When supplied, build-db validates it against the original-source "
-            "Vardemangder identities and SCB projection backbone, uses it when valid, "
-            "and rebuilds it automatically when missing or stale."
-        ),
-    )
-    build_p.add_argument(
-        "--refresh-scb-value-prestage-cache",
-        action="store_true",
-        help=(
-            "Force rebuilding --scb-value-prestage-cache even when its fingerprint "
-            "matches. Ignored unless --scb-value-prestage-cache is supplied."
-        ),
+        help="Emit phase and source-scope durations to stderr.",
     )
 
     prepare_sources_p = sub.add_parser(
@@ -1065,243 +953,48 @@ def _build_validate_hook(
     return hook
 
 
-def _parse_scb_trace_cvids(raw: str | None) -> tuple[int, ...] | None:
-    if raw is None:
-        return None
-    tokens = raw.split(",")
-    if not tokens or any(not token.strip() for token in tokens):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="scb_trace_selection_invalid",
-            error_class="usage",
-            message="--trace-scb-cvids requires a non-empty comma-list of native CVIDs.",
-            remediation="Pass distinct positive integers, for example 421800,590946.",
-        )
-    values: list[int] = []
-    for token in tokens:
-        stripped = token.strip()
-        if not stripped.isascii() or not stripped.isdecimal():
-            raise RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="scb_trace_selection_invalid",
-                error_class="usage",
-                message=f"Invalid native CVID in --trace-scb-cvids: {token!r}.",
-                remediation="Pass distinct positive base-10 integers only.",
-            )
-        value = int(stripped)
-        if not 0 < value < 2**63:
-            raise RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="scb_trace_selection_invalid",
-                error_class="usage",
-                message=f"Native CVID is outside the supported range: {stripped}.",
-                remediation="Pass positive native IDs below 2^63.",
-            )
-        values.append(value)
-    if len(set(values)) != len(values):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="scb_trace_selection_invalid",
-            error_class="usage",
-            message="--trace-scb-cvids contains a duplicate native CVID.",
-            remediation="List each selected native CVID exactly once.",
-        )
-    return tuple(sorted(values))
-
-
 def _database_paths(output: Path) -> set[Path]:
     return {output, output.with_name(output.name + ".prev").resolve()}
 
 
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    # Shared timing instrumentation covers both paths until the legacy cutover.
+    from .pipeline import build_selected_catalog
+
     if args.timing:
         os.environ["REG_META_BUILD_TIMING"] = "1"
-    if args.selection is not None:
-        from .pipeline import build_selected_catalog
-
-        if (
-            not args.report_dir
-            or args.diagnostic != bool(args.diagnostic_db_path)
-            or args.input_dir is not None
-            or args.input_bundle is not None
-            or args.input_commit is not None
-            or args.input_manifest_sha256 is not None
-            or args.slug_dir is not None
-            or args.skip_slugs
-            or args.no_validate
-            or args.trace_scb_cvids is not None
-            or args.scb_value_prestage_cache is not None
-            or args.refresh_scb_value_prestage_cache
-            or args.providers
-            != "scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet,umu"
-            or (args.diagnostic and args.db is not None)
-        ):
-            raise RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="pipeline_selection_options_invalid",
-                error_class="usage",
-                message="A full selection requires --report-dir and excludes legacy input overrides; diagnostic mode requires its separate explicit output path.",
-                remediation="Use --selection and --report-dir, adding both --diagnostic and --diagnostic-db-path for comparison output.",
-            )
-        output = (
-            Path(args.diagnostic_db_path)
-            if args.diagnostic
-            else Path(args.db or default_db_dir()) / DB_FILENAME
-        )
-        try:
-            result = build_selected_catalog(
-                Path(args.selection),
-                output,
-                Path(args.report_dir),
-                diagnostic=args.diagnostic,
-            )
-        except (ValueError, OSError, KeyError) as exc:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="pipeline_build_failed",
-                error_class="configuration",
-                message=str(exc),
-                remediation="Repair the selected declarations or implementation; inspect the report directory if source resolution started.",
-            ) from exc
-        return result, EXIT_CONFIG if result[
-            "status"
-        ] == "blocked" or args.diagnostic else 0
-    if args.report_dir or args.diagnostic or args.diagnostic_db_path:
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="pipeline_selection_required",
-            error_class="usage",
-            message="The diagnostic pipeline and its report options require --selection.",
-            remediation="Supply a complete three-stage build selection.",
-        )
-    start = time.perf_counter()
-    db_dir = Path(args.db) if args.db else default_db_dir()
-    providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
-    trace_cvids = _parse_scb_trace_cvids(args.trace_scb_cvids)
-    if trace_cvids is not None and "scb" not in providers:
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="scb_trace_requires_scb",
-            error_class="usage",
-            message="--trace-scb-cvids requires scb in --providers.",
-            remediation="Include scb in --providers or omit the trace selection.",
-        )
-    bundle_values = (
-        args.input_bundle,
-        args.input_commit,
-        args.input_manifest_sha256,
-    )
-    bundle_options_present = tuple(value is not None for value in bundle_values)
-    if any(bundle_options_present) and (
-        not all(bundle_options_present) or not all(bundle_values)
+    if args.diagnostic != bool(args.diagnostic_db_path) or (
+        args.diagnostic and args.db is not None
     ):
         raise RegMetaError(
             exit_code=EXIT_USAGE,
-            code="catalog_input_selection_incomplete",
+            code="pipeline_selection_options_invalid",
             error_class="usage",
-            message=(
-                "--input-bundle, --input-commit, and "
-                "--input-manifest-sha256 must be supplied together."
-            ),
-            remediation="Supply all three bundle-selection flags or none of them.",
+            message="Diagnostic mode requires a separate explicit --diagnostic-db-path and excludes --db.",
+            remediation="Use both --diagnostic and --diagnostic-db-path, or omit both for a strict build.",
         )
-    if args.input_dir is None and not all(bundle_options_present):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="catalog_input_selection_missing",
-            error_class="usage",
-            message="build-db requires either --input-dir or a complete --input-bundle selection.",
-            remediation="Use the pinned bundle for routine builds; reserve --input-dir for raw preparation/testing.",
-        )
-    if args.input_dir is not None and any(bundle_options_present):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="catalog_input_selection_ambiguous",
-            error_class="usage",
-            message="--input-dir cannot be combined with a pinned --input-bundle selection.",
-            remediation="Select exactly one input mode.",
-        )
-    if args.input_bundle is not None and args.slug_dir is not None:
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="catalog_input_selection_ambiguous",
-            error_class="usage",
-            message="--slug-dir cannot override the slug state captured by --input-bundle.",
-            remediation="Prepare and explicitly accept a new bundle containing the desired slug state.",
-        )
-
-    input_bundle = (
-        CatalogBundleSelection(
-            path=Path(args.input_bundle),
-            input_commit=args.input_commit,
-            manifest_sha256=args.input_manifest_sha256,
-        )
-        if all(bundle_options_present)
-        else None
-    )
-    slug_dir = (
-        None
-        if input_bundle is not None
-        else Path(args.slug_dir).expanduser().resolve()
-        if args.slug_dir
-        else repo_slug_dir()
+    output = (
+        Path(args.diagnostic_db_path)
+        if args.diagnostic
+        else Path(args.db or default_db_dir()) / DB_FILENAME
     )
     try:
-        trace_code_commit = (
-            source_interpreter_commit() if trace_cvids is not None else None
+        result = build_selected_catalog(
+            Path(args.selection),
+            output,
+            Path(args.report_dir),
+            diagnostic=args.diagnostic,
         )
-    except SnapshotError as exc:
+    except (ValueError, OSError, KeyError) as exc:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="scb_trace_code_pin_invalid",
+            code="pipeline_build_failed",
             error_class="configuration",
-            message=f"Cannot pin the builder code used by the SCB trace: {exc}",
-            remediation="Run the diagnostic from a clean tracked builder checkout.",
+            message=str(exc),
+            remediation="Repair the selected declarations or implementation; inspect the report directory if source resolution started.",
         ) from exc
-
-    pre_rename_hook = (
-        None if args.no_validate else _build_validate_hook(bootstrap=args.skip_slugs)
-    )
-    result = build_db(
-        input_dir=Path(args.input_dir) if args.input_dir else None,
-        db_dir=db_dir,
-        slug_dir=slug_dir,
-        skip_slugs=args.skip_slugs,
-        providers=providers,
-        input_bundle=input_bundle,
-        scb_value_prestage_cache=(
-            Path(args.scb_value_prestage_cache)
-            if args.scb_value_prestage_cache
-            else None
-        ),
-        refresh_scb_value_prestage=args.refresh_scb_value_prestage_cache,
-        pre_rename_hook=pre_rename_hook,
-        scb_trace_cvids=trace_cvids,
-        scb_trace_code_commit=trace_code_commit,
-    )
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    return success_envelope(
-        command="build-db",
-        args_payload={
-            "input_dir": args.input_dir,
-            "skip_slugs": args.skip_slugs,
-            "validate": not args.no_validate,
-            "providers": list(providers),
-            "input_bundle": args.input_bundle,
-            "input_commit": args.input_commit,
-            "input_manifest_sha256": args.input_manifest_sha256,
-            "scb_value_prestage_cache": args.scb_value_prestage_cache,
-            "refresh_scb_value_prestage_cache": args.refresh_scb_value_prestage_cache,
-            "trace_scb_cvids": list(trace_cvids) if trace_cvids is not None else None,
-        },
-        db_info={
-            "schema_version": SCHEMA_VERSION,
-            "import_date": result["import_date"],
-        },
-        data=result,
-        duration_ms=duration_ms,
-    ), 0
+    return result, EXIT_CONFIG if result[
+        "status"
+    ] == "blocked" or args.diagnostic else 0
 
 
 def _default_curation_dir() -> Path:
@@ -2491,8 +2184,8 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Clean and validate sources once; write a new candidate for acceptance.",
     ),
     (
-        "build-db --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256",
-        "Build the metadata DB from one complete accepted input bundle.",
+        "build-db --selection FILE --report-dir DIR [--diagnostic --diagnostic-db-path DB]",
+        "Build from prepared sources and common curation; strict publication is the default.",
     ),
     (
         "prepare-input-bundle --input-dir DIR --scb-snapshot DIR ...",
@@ -2788,30 +2481,7 @@ def run(argv: list[str] | None = None) -> int:
                     + "\n"
                 )
                 return EXIT_OUTPUT
-            if args.command != "build-db" or not getattr(args, "trace_scb_cvids", None):
-                raise
-            data = payload.get("data", payload)
-            generation = data["scb_trace"]["identity"]["completed_output"]
-            diagnostic_error = {
-                "error": {
-                    "code": "scb_trace_output_failed",
-                    "class": "diagnostic_output",
-                    "message": (
-                        "Catalog publication succeeded, but the SCB trace result "
-                        f"could not be written: {type(exc).__name__}: {exc}"
-                    ),
-                    "remediation": (
-                        "Keep the published catalog identified here, choose a "
-                        "writable --output path, and rerun the diagnostic."
-                    ),
-                    "catalog_published": True,
-                    "completed_output": generation,
-                }
-            }
-            sys.stderr.write(
-                json.dumps(diagnostic_error, ensure_ascii=False, sort_keys=True) + "\n"
-            )
-            return EXIT_OUTPUT
+            raise
         return exit_code
     except Exception as exc:  # noqa: BLE001 — CLI top-level boundary: map any failure to a stable exit code
         return handle_cli_exception(exc, output_path)

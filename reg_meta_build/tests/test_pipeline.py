@@ -193,6 +193,57 @@ def test_real_build_command_writes_nonpublishable_full_selection(
     assert json.loads((report / "summary.json").read_text()) == result
 
 
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        ["--input-dir", "raw"],
+        ["--skip-slugs"],
+        ["--no-validate"],
+        ["--providers", "scb"],
+        ["--trace-scb-cvids", "1001"],
+        ["--scb-value-prestage-cache", "cache.sqlite"],
+    ],
+)
+def test_build_command_has_no_legacy_or_validation_bypass(overrides):
+    assert (
+        run(
+            [
+                "build-db",
+                "--selection",
+                "selection.json",
+                "--report-dir",
+                "report",
+                *overrides,
+            ]
+        )
+        == EXIT_USAGE
+    )
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        ["--diagnostic"],
+        ["--diagnostic-db-path", "comparison.db"],
+        ["--diagnostic", "--diagnostic-db-path", "comparison.db", "--db", "active"],
+    ],
+)
+def test_diagnostic_command_requires_its_separate_output(options):
+    assert (
+        run(
+            [
+                "build-db",
+                "--selection",
+                "selection.json",
+                "--report-dir",
+                "report",
+                *options,
+            ]
+        )
+        == EXIT_USAGE
+    )
+
+
 def test_cli_summary_cannot_overwrite_selected_declarations(selection, tmp_path):
     original = selection.read_bytes()
     status = run(

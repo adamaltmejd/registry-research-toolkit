@@ -99,17 +99,16 @@ not a cleaning adapter. Preparation, curation application, and materialization n
 call an LLM. Catalog document indexing is a separate responsibility; it does not resolve
 source facts.
 
-> **Status: partial replacement.**
-> `build-db --selection selection.json --report-dir DIR` connects pinned prepared
-> inputs, common source resolution, catalog dependencies and the direct writer.
-> `--diagnostic --diagnostic-db-path FILE` writes a separate, nonpublishable artifact
-> while retaining curation errors. The connected path has produced a structurally valid
-> full-corpus diagnostic database. Semantic comparison and cutover remain unfinished;
-> corpus safeguards still report failures requiring explanation. Existing decisions that
-> cannot safely apply remain explicit errors in the curation export. The old input flags
-> still select the legacy builder until cutover. The earlier whole-variable-case
-> prototype and its separate build/inspection commands have been removed. This branch is
-> not ready for catalog activation.
+> **Status: default command switched; refactor verification unfinished.**
+> `build-db --selection selection.json --report-dir DIR` is the only catalog build
+> command. It connects pinned prepared inputs, common source resolution, catalog
+> dependencies and the direct writer. `--diagnostic --diagnostic-db-path FILE` writes a
+> separate, nonpublishable artifact while retaining curation errors. The connected path
+> has produced a structurally valid full-corpus diagnostic database. Semantic
+> comparison, remaining internal legacy-code deletion and final verification are
+> unfinished; corpus safeguards still report failures requiring explanation. The earlier
+> whole-variable prototype and both legacy CLI entry paths have been removed. This
+> branch is not ready for catalog activation.
 
 The maintained call path is `pipeline.build_selected_catalog` →
 `open_prepared_catalog_sources` → `resolve_source_scope` for each complete scope →
@@ -130,14 +129,14 @@ because their source meaning is ambiguous retain the original input revision, en
 checked observations and peer guards. These are errors, never accepted exceptions;
 missing implementation still blocks the build before resolution.
 
-Completion requires retiring both displaced build paths and separating one-time
-conversion from maintained runtime modules. Ordinary naming needs the established native
-identity; only actual ownership or correction decisions should guard the source facts
-and membership they depend on. The common resolver checks an ordinary name against its
-exact native variable key and provider/register scope. Added deliveries or unrelated
-descriptions do not stale that name. Curated partitions still require checked ownership
-and membership. No unsupported legacy assumption becomes an accepted correction merely
-to reproduce the old database.
+Completion requires deleting the remaining displaced internal passes and separating
+one-time conversion from maintained runtime modules. Ordinary naming needs the
+established native identity; only actual ownership or correction decisions should guard
+the source facts and membership they depend on. The common resolver checks an ordinary
+name against its exact native variable key and provider/register scope. Added deliveries
+or unrelated descriptions do not stale that name. Curated partitions still require
+checked ownership and membership. No unsupported legacy assumption becomes an accepted
+correction merely to reproduce the old database.
 
 Field corrections and identity assignments can select an exact checked field alternative
 under a native source member. This matters when the same delivered key carries different
@@ -1010,7 +1009,8 @@ an identity result even if one present consumer uses it only for discovery.
 Top-level commands (no `maintain` subgroup; that group is dissolved):
 
 ```text
-reg-meta-build build-db [--no-validate] [--skip-slugs] ...
+reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir DIR
+reg-meta-build build-db --selection FILE --report-dir DIR [--diagnostic --diagnostic-db-path DB]
 reg-meta-build extend-db --base-db DB [--providers-dir DIR] [--steward S] ...
 reg-meta-build build-docs ...
 reg-meta-build seed-slugs [--out-dir DIR] [--propose-panel] ...
@@ -1945,11 +1945,10 @@ overwrite edits. `reapply` does not remove a directory added for hydration. Do n
 hard reset, expand the whole repository as generic recovery, hide changes with index
 flags, or store the saved specification/output/cache inside accepted inputs.
 
-`--no-validate` still controls only post-build catalog invariant validation; this trust
-boundary is not permission to skip those invariants by default. Quick-use failures and
-consumed structural failures remove the staging DB and leave the published catalog
-unchanged. Exhaustive corruption detection belongs to preparation/acceptance and the
-explicit verification/replay commands below, not each ordinary build.
+The ordinary build command has no validation bypass. Quick-use failures and consumed
+structural failures leave the published catalog unchanged. Exhaustive corruption
+detection belongs to preparation/acceptance and the explicit verification/replay
+commands below, not each ordinary build.
 
 Snapshot null tokens remain distinct in the prepared representation and reader; the SCB
 interpretation boundary collapses unquoted-null and quoted-empty cells to the empty
@@ -3749,26 +3748,13 @@ registers that dir curates and excludes the global base's already-pinned variabl
 providers' pins to a single inspection file; the two are mutually exclusive. The emitted
 pins are dbdiff-identical (each reproduces the slug the variable already carries).
 
-The build-side gate (`validate._check_entity_key_vars_curated`) makes the pin MANDATORY
-on the real build (`corpus=True`, i.e. a maintainer's `build-db` without
-`--no-validate`): any entity-key variable (any global provider) without a curated
-`[variable]` pin is a hard build failure. The gate and generator share
-`iter_entity_key_variables` (and derive both the curated slug map and the optional
-steward register-id scope via `_entity_key_curation_basis`), so they enforce the
-identical set. Synthetic CI (`corpus=False`, `slug_dir=None`) skips the gate — the
-fixtures carry no curated slug dir — and so does a `--skip-slugs` bootstrap build
-(`bootstrap=True`), before it reads `slug_dir` at all: the slug population that writes
-`panel_entity_key` never ran, and the flag documents `--slug-dir` as ignored.
-
-**Chicken-and-egg:** when a new register variant with a `panel_entity_key` is onboarded,
-the first gated `build-db` will fail the entity-key gate because the pin doesn't exist
-yet. Workflow:
-
-1. `reg-meta-build --db ... build-db --no-validate` to produce the DB without the gate.
-2. `reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/new_pins/`
-3. Fold the non-duplicate entries from each `/tmp/new_pins/<provider>.toml` into
-   `fqid_slugs/<provider>.toml`.
-4. Commit the pins, then rebuild with validation (`build-db` without `--no-validate`).
+The legacy pin validator and generator share `iter_entity_key_variables`; they remain
+available to the steward overlay while that path is retained. The common pipeline takes
+all names and panel references from the pinned selection. It cannot silently derive a
+missing name during a warm build, and unresolved dependencies block strict publication.
+Use a separate diagnostic artifact to inspect source or naming problems, author exact
+checked declarations, and rerun the strict build. There is no unvalidated bootstrap
+publication route.
 
 ## Concept-group derivation (#303)
 

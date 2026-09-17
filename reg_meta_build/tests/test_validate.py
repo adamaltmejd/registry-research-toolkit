@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import write_input_bundle, write_scb_input
@@ -23,6 +23,9 @@ from reg_meta_build.db import build_db
 from reg_meta_build.validate import validate_built_db
 
 from reg_meta_build import validate as validate_mod
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestValidateModule:
@@ -1694,371 +1697,7 @@ class TestValidateModule:
         )
 
 
-class TestBuildDbProvidersDefault:
-    def test_cli_default_is_combined_global_build(self):
-        """The CLI `--providers` default is the full global build: `scb,sos`
-        (A4.5) plus the thin curated `fohm` + `fk` providers (#422).
-        `--providers scb` still selects the SCB-only DB (the A4.3b byte-identical
-        gate). Only the CLI surface carries the default — `build_db()`'s function
-        default stays `('scb',)` so synthetic SCB-only fixtures need no extra
-        inputs."""
-        from reg_meta_build.cli import _build_parser
-
-        parser = _build_parser()
-        ns = parser.parse_args(["build-db", "--input-dir", "x"])
-        assert (
-            ns.providers
-            == "scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet,umu"
-        )
-        ns = parser.parse_args(["build-db", "--input-dir", "x", "--providers", "scb"])
-        assert ns.providers == "scb"
-
-
-class TestBuildDbValidateFlag:
-    def test_argparse_exposes_no_validate(self):
-        """Validation is on by default; `--no-validate` is the opt-out wired
-        into `reg-meta-build build-db`'s argparse subparser."""
-        from reg_meta_build.cli import _build_parser
-
-        parser = _build_parser()
-        ns = parser.parse_args(["build-db", "--input-dir", "x"])
-        assert ns.no_validate is False
-        ns = parser.parse_args(["build-db", "--input-dir", "x", "--no-validate"])
-        assert ns.no_validate is True
-
-
-class TestBuildDbScbTrace:
-    @pytest.mark.parametrize("raw", ("", "1,,2", "abc", "0", "-1", str(2**63), "1,1"))
-    def test_malformed_selection_fails_clearly(self, raw: str) -> None:
-        from reg_meta_build import cli as cli_mod
-
-        with pytest.raises(RegMetaError) as exc_info:
-            cli_mod._parse_scb_trace_cvids(raw)
-        assert exc_info.value.code == "scb_trace_selection_invalid"
-
-    def test_missing_selection_value_is_argparse_usage_error(self) -> None:
-        from reg_meta_build.cli import _build_parser
-
-        with pytest.raises(SystemExit) as exc_info:
-            _build_parser().parse_args(
-                ["build-db", "--input-dir", "x", "--trace-scb-cvids"]
-            )
-        assert exc_info.value.code == 2
-
-    def test_selection_and_code_pin_reach_build(self, monkeypatch, tmp_path: Path):
-        from reg_meta_build import cli as cli_mod
-
-        seen = {}
-        monkeypatch.setattr(cli_mod, "source_interpreter_commit", lambda: "c" * 40)
-
-        def fake_build_db(**kwargs):
-            seen.update(kwargs)
-            return {"import_date": "2026-09-16"}
-
-        monkeypatch.setattr(cli_mod, "build_db", fake_build_db)
-        args = cli_mod._build_parser().parse_args(
-            [
-                "--db",
-                str(tmp_path / "db"),
-                "build-db",
-                "--providers",
-                "scb",
-                "--no-validate",
-                "--input-dir",
-                "input",
-                "--trace-scb-cvids",
-                "590946,421800",
-            ]
-        )
-
-        envelope, exit_code = cli_mod._cmd_build_db(args)
-
-        assert exit_code == 0
-        assert seen["scb_trace_cvids"] == (421800, 590946)
-        assert seen["scb_trace_code_commit"] == "c" * 40
-        assert envelope["request"]["args"]["trace_scb_cvids"] == [421800, 590946]
-
-    def test_trace_requires_scb_before_build(self, monkeypatch, tmp_path: Path):
-        from reg_meta_build import cli as cli_mod
-
-        monkeypatch.setattr(
-            cli_mod,
-            "build_db",
-            lambda **_kwargs: pytest.fail("SCB-excluded trace reached build_db"),
-        )
-        args = cli_mod._build_parser().parse_args(
-            [
-                "--db",
-                str(tmp_path / "db"),
-                "build-db",
-                "--providers",
-                "sos",
-                "--no-validate",
-                "--input-dir",
-                "input",
-                "--trace-scb-cvids",
-                "421800",
-            ]
-        )
-
-        with pytest.raises(RegMetaError) as exc_info:
-            cli_mod._cmd_build_db(args)
-        assert exc_info.value.code == "scb_trace_requires_scb"
-
-    def test_post_publication_output_failure_is_diagnostic_only(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        tmp_path: Path,
-        capsys: pytest.CaptureFixture[str],
-    ) -> None:
-        from reg_meta.errors import EXIT_OUTPUT
-
-        from reg_meta_build import cli as cli_mod
-
-        generation = {
-            "path": str(tmp_path / "db" / DB_FILENAME),
-            "sha256": "d" * 64,
-            "schema_version": "test",
-            "import_date": "2026-09-16",
-        }
-        monkeypatch.setattr(cli_mod, "source_interpreter_commit", lambda: "c" * 40)
-        monkeypatch.setattr(
-            cli_mod,
-            "build_db",
-            lambda **_kwargs: {
-                "import_date": "2026-09-16",
-                "scb_trace": {"identity": {"completed_output": generation}},
-            },
-        )
-        writes = 0
-
-        def fail_output(*_args, **_kwargs):
-            nonlocal writes
-            writes += 1
-            raise OSError("fixture destination refused")
-
-        monkeypatch.setattr(cli_mod, "write_json", fail_output)
-        exit_code = cli_mod.run(
-            [
-                "--db",
-                str(tmp_path / "db"),
-                "--output",
-                str(tmp_path / "trace.json"),
-                "build-db",
-                "--providers",
-                "scb",
-                "--no-validate",
-                "--input-dir",
-                "input",
-                "--trace-scb-cvids",
-                "421800",
-            ]
-        )
-
-        assert exit_code == EXIT_OUTPUT
-        assert writes == 1
-        error = json.loads(capsys.readouterr().err)["error"]
-        assert error["code"] == "scb_trace_output_failed"
-        assert error["class"] == "diagnostic_output"
-        assert error["catalog_published"] is True
-        assert error["completed_output"] == generation
-
-
-class TestBuildDbBundleSelection:
-    def test_argparse_exposes_all_three_bundle_pins(self):
-        from reg_meta_build.cli import _build_parser
-
-        ns = _build_parser().parse_args(
-            [
-                "build-db",
-                "--input-bundle",
-                "inputs/bundle",
-                "--input-commit",
-                "a" * 40,
-                "--input-manifest-sha256",
-                "b" * 64,
-            ]
-        )
-        assert ns.input_bundle == "inputs/bundle"
-        assert ns.input_commit == "a" * 40
-        assert ns.input_manifest_sha256 == "b" * 64
-
-    def test_incomplete_selection_fails_before_build(self, monkeypatch):
-        from reg_meta_build import cli as cli_mod
-
-        monkeypatch.setattr(
-            cli_mod,
-            "build_db",
-            lambda **_kwargs: pytest.fail("incomplete selection reached build_db"),
-        )
-        args = cli_mod._build_parser().parse_args(
-            [
-                "build-db",
-                "--input-bundle",
-                "inputs/bundle",
-            ]
-        )
-        with pytest.raises(RegMetaError) as exc_info:
-            cli_mod._cmd_build_db(args)
-        assert exc_info.value.code == "catalog_input_selection_incomplete"
-
-    @pytest.mark.parametrize(
-        ("bundle_args", "expected_code"),
-        [
-            (("--input-bundle", ""), "catalog_input_selection_incomplete"),
-            (
-                (
-                    "--input-bundle",
-                    "",
-                    "--input-commit",
-                    "",
-                    "--input-manifest-sha256",
-                    "",
-                ),
-                "catalog_input_selection_incomplete",
-            ),
-        ],
-        ids=["empty-bundle-only", "all-empty"],
-    )
-    def test_explicit_empty_selection_never_falls_back_to_raw(
-        self,
-        bundle_args: tuple[str, ...],
-        expected_code: str,
-        tmp_path: Path,
-    ) -> None:
-        from reg_meta_build import cli as cli_mod
-
-        input_dir = tmp_path / "input"
-        write_scb_input(input_dir)
-        db_dir = tmp_path / "db"
-        db_dir.mkdir()
-        live = db_dir / DB_FILENAME
-        live_bytes = b"EXISTING-CATALOG"
-        live.write_bytes(live_bytes)
-        args = cli_mod._build_parser().parse_args(
-            [
-                "--db",
-                str(db_dir),
-                "build-db",
-                "--providers",
-                "scb",
-                "--skip-slugs",
-                "--no-validate",
-                *bundle_args,
-            ]
-        )
-
-        with pytest.raises(RegMetaError) as exc_info:
-            cli_mod._cmd_build_db(args)
-
-        assert exc_info.value.code == expected_code
-        assert live.read_bytes() == live_bytes
-
-    def test_complete_selection_reaches_one_build_argument(
-        self, tmp_path: Path, monkeypatch
-    ):
-        from reg_meta_build import cli as cli_mod
-
-        seen = {}
-
-        def fake_build_db(**kwargs):
-            seen.update(kwargs)
-            return {"import_date": "2026-09-14"}
-
-        monkeypatch.setattr(cli_mod, "build_db", fake_build_db)
-        args = cli_mod._build_parser().parse_args(
-            [
-                "--db",
-                str(tmp_path / "db"),
-                "build-db",
-                "--providers",
-                "scb",
-                "--no-validate",
-                "--input-bundle",
-                "inputs/bundle",
-                "--input-commit",
-                "a" * 40,
-                "--input-manifest-sha256",
-                "b" * 64,
-            ]
-        )
-        envelope, exit_code = cli_mod._cmd_build_db(args)
-        assert exit_code == 0
-        assert envelope["request"]["args"]["input_bundle"] == "inputs/bundle"
-        selection = seen["input_bundle"]
-        assert selection.path == Path("inputs/bundle")
-        assert selection.input_commit == "a" * 40
-        assert selection.manifest_sha256 == "b" * 64
-
-    @pytest.mark.parametrize(
-        "destination_kind", ("tracked", "untracked"), ids=("tracked", "untracked")
-    )
-    def test_cli_output_inside_input_repository_is_rejected_before_build(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
-        capsys: pytest.CaptureFixture[str],
-        destination_kind: str,
-    ) -> None:
-        from reg_meta.errors import EXIT_CONFIG
-        from reg_meta_build.input_snapshot import open_input_bundle
-
-        from reg_meta_build import cli as cli_mod
-
-        input_dir = tmp_path / "input"
-        write_scb_input(input_dir)
-        selection = write_input_bundle(tmp_path / "accepted", input_dir)
-        repository = selection.path.parent
-        output = (
-            selection.path / "catalog-bundle.json"
-            if destination_kind == "tracked"
-            else repository / "results" / "build-result.json"
-        )
-        original_output = output.read_bytes() if output.exists() else None
-        db_dir = tmp_path / "db"
-        db_dir.mkdir()
-        published = db_dir / DB_FILENAME
-        published_bytes = b"EXISTING-CATALOG"
-        published.write_bytes(published_bytes)
-        build_called = False
-
-        def record_build(**_kwargs):
-            nonlocal build_called
-            build_called = True
-            return {"import_date": "2026-09-15"}
-
-        monkeypatch.setattr(cli_mod, "build_db", record_build)
-        exit_code = cli_mod.run(
-            [
-                "--db",
-                str(db_dir),
-                "--output",
-                str(output),
-                "build-db",
-                "--providers",
-                "scb",
-                "--skip-slugs",
-                "--no-validate",
-                "--input-bundle",
-                str(selection.path),
-                "--input-commit",
-                selection.input_commit,
-                "--input-manifest-sha256",
-                selection.manifest_sha256,
-            ]
-        )
-
-        assert exit_code == EXIT_CONFIG
-        assert not build_called
-        error = json.loads(capsys.readouterr().out)["error"]
-        assert error["code"] == "catalog_input_output_conflict"
-        if original_output is None:
-            assert not output.exists()
-        else:
-            assert output.read_bytes() == original_output
-        assert published.read_bytes() == published_bytes
-        open_input_bundle(selection)
-
+class TestBundleCommandOutputProtection:
     @pytest.mark.parametrize(
         ("command", "destination_kind", "handler_error"),
         (
@@ -2165,12 +1804,11 @@ class TestBuildDbBundleSelection:
     @pytest.mark.parametrize(
         "command",
         (
-            "build-db",
             "prepare-input-bundle",
             "verify-input-bundle",
             "inspect-source-records",
         ),
-        ids=("build", "prepare", "verify", "inspect"),
+        ids=("prepare", "verify", "inspect"),
     )
     def test_missing_bundle_selection_suppresses_tracked_and_untracked_output(
         self,
@@ -2202,23 +1840,7 @@ class TestBuildDbBundleSelection:
         missing_selection = tmp_path / "missing-selection"
         candidate = repository / "candidate"
 
-        if command == "build-db":
-            command_args = [
-                "--db",
-                str(db_dir),
-                command,
-                "--providers",
-                "scb",
-                "--skip-slugs",
-                "--no-validate",
-                "--input-bundle",
-                str(missing_selection),
-                "--input-commit",
-                "0" * 40,
-                "--input-manifest-sha256",
-                "0" * 64,
-            ]
-        elif command == "prepare-input-bundle":
+        if command == "prepare-input-bundle":
             command_args = [
                 command,
                 "--input-dir",
@@ -2262,55 +1884,6 @@ class TestBuildDbBundleSelection:
             assert not (repository / "results").exists()
             assert not candidate.exists()
             open_input_bundle(selection)
-
-    def test_cli_timing_separates_prepared_dictionary_and_occurrences(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
-        capsys: pytest.CaptureFixture[str],
-    ) -> None:
-        from reg_meta_build import cli as cli_mod
-
-        input_dir = tmp_path / "input"
-        write_scb_input(input_dir)
-        selection = write_input_bundle(tmp_path / "snapshot-fixture", input_dir)
-        monkeypatch.delenv("REG_META_BUILD_TIMING", raising=False)
-        actual_build_db = cli_mod.build_db
-
-        def build_without_classifications(**kwargs):
-            return actual_build_db(skip_classifications=True, **kwargs)
-
-        monkeypatch.setattr(cli_mod, "build_db", build_without_classifications)
-        args = cli_mod._build_parser().parse_args(
-            [
-                "--db",
-                str(tmp_path / "db"),
-                "build-db",
-                "--providers",
-                "scb",
-                "--skip-slugs",
-                "--no-validate",
-                "--timing",
-                "--input-bundle",
-                str(selection.path),
-                "--input-commit",
-                selection.input_commit,
-                "--input-manifest-sha256",
-                selection.manifest_sha256,
-            ]
-        )
-
-        _envelope, exit_code = cli_mod._cmd_build_db(args)
-
-        assert exit_code == 0
-        stderr = capsys.readouterr().err
-        labels = [
-            "[timing] catalog:bundle_quick_check:",
-            "[timing] scb:vardemangder_dictionary_prepare:",
-            "[timing] scb:vardemangder_occurrence_import:",
-        ]
-        positions = [stderr.index(label) for label in labels]
-        assert positions == sorted(positions)
 
 
 class TestBuildDbPublicationValidation:
@@ -2481,50 +2054,6 @@ class TestBootstrapValidation:
         assert not (db_dir / DB_FILENAME).exists()
 
 
-class TestBuildDbBootstrapWiring:
-    """`build-db --skip-slugs` reaches the validator as bootstrap intent."""
-
-    @pytest.mark.parametrize("skip_slugs", [True, False])
-    def test_skip_slugs_declares_the_build_to_the_validator(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, skip_slugs: bool
-    ):
-        """The flag the maintainer types is what the validator is told: parse the
-        real argv, stub the build itself, and read the kwargs the installed
-        pre-rename hook hands `validate_built_db`. `corpus` stays True either way —
-        build-db is the real maintainer build in both modes."""
-        from reg_meta_build import cli as cli_mod
-
-        seen: dict[str, object] = {}
-
-        def record(_db_path: Path, **kwargs) -> validate_mod.ValidationResult:
-            seen.update(kwargs)
-            return validate_mod.ValidationResult()
-
-        def fake_build_db(**kwargs):
-            kwargs["pre_rename_hook"](tmp_path / "staging.db", kwargs["slug_dir"])
-            return {"import_date": "2026-01-01"}
-
-        monkeypatch.setattr(cli_mod, "validate_built_db", record)
-        monkeypatch.setattr(cli_mod, "build_db", fake_build_db)
-        argv = [
-            "--db",
-            str(tmp_path / "out"),
-            "build-db",
-            "--input-dir",
-            str(tmp_path / "input"),
-            "--slug-dir",
-            str(tmp_path / "slugs"),
-        ]
-        if skip_slugs:
-            argv.append("--skip-slugs")
-        _envelope, exit_code = cli_mod._cmd_build_db(
-            cli_mod._build_parser().parse_args(argv)
-        )
-        assert exit_code == 0
-        assert seen["bootstrap"] is skip_slugs
-        assert seen["corpus"] is True
-
-
 class TestBootstrapIgnoresSlugDir:
     """`--skip-slugs` advertises `--slug-dir` as ignored; the publication
     validator that runs after the build honors that too."""
@@ -2539,63 +2068,6 @@ class TestBootstrapIgnoresSlugDir:
             '[register.\nslug = "testreg"\n', encoding="utf-8"
         )
         return slug_dir
-
-    def test_bootstrap_cli_publishes_despite_malformed_ignored_toml(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
-        capsys: pytest.CaptureFixture[str],
-    ):
-        """The advertised bootstrap invocation, from real argv: the build logs
-        that it skipped the slug TOMLs, so the validator must not then open the
-        dir the flag ignores. Previously that read failed publication with
-        `slug_toml_unreadable` after every producer pass had already run."""
-        from reg_meta_build import cli as cli_mod, db as db_mod
-
-        input_dir = tmp_path / "input"
-        db_dir = tmp_path / "db"
-        write_scb_input(input_dir)
-        # build-db always seeds classifications (no `--skip-classifications` on
-        # the CLI), so point the seed at a synthetic one — the repo seed needs the
-        # real classification CSVs.
-        cls_dir = input_dir / "classifications"
-        cls_dir.mkdir(parents=True, exist_ok=True)
-        (cls_dir / "testkon.csv").write_text(
-            "vardekod,vardebenamning\n1,Man\n2,Kvinna\n", encoding="utf-8"
-        )
-        seed = tmp_path / "classifications.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "TESTKON"\nname = "Test"\n'
-            'valid_codes_file = "testkon.csv"\nvardemangdsversion = ["Kön"]\n',
-            encoding="utf-8",
-        )
-        monkeypatch.setattr(
-            db_mod,
-            "repo_curation_path",
-            lambda name: seed if name == "classifications.toml" else None,
-        )
-
-        exit_code = cli_mod.run(
-            [
-                "--db",
-                str(db_dir),
-                "build-db",
-                "--input-dir",
-                str(input_dir),
-                "--providers",
-                "scb",
-                "--skip-slugs",
-                "--slug-dir",
-                str(self._malformed_slug_dir(tmp_path)),
-            ]
-        )
-
-        assert exit_code == 0
-        assert (db_dir / DB_FILENAME).exists()
-        assert (
-            "entity-key curation gate skipped — --skip-slugs bootstrap build"
-            in capsys.readouterr().err
-        )
 
     @pytest.mark.parametrize("flavored", [False, True], ids=["global", "flavored"])
     def test_non_bootstrap_validation_still_reads_the_curation(
