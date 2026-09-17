@@ -174,8 +174,7 @@ class TestBuildDb:
         assert manifest["schema_version"] == SCHEMA_VERSION
         assert "import_date" in manifest
         row_counts = json.loads(manifest["row_counts"])
-        assert "period_family_merges" in row_counts
-        assert "monthly_family_merges" not in row_counts
+        assert row_counts == {"variables": 8, "states": 9}
 
     def test_complete_bundle_build_records_identity_without_loose_fallback(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -856,20 +855,18 @@ class TestBuildDb:
         assert orphans == []
 
     def test_variable_state_count_summary(self, db_conn: sqlite3.Connection):
-        """A2.1: total variable_state row count matches the manifest's
-        coalesce_stats.n_variable_states. Catches a future regression
-        where the stats accounting drifts from the SQL truth."""
+        """The explicit fixture's manifest describes its complete graph."""
         from_table = db_conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[
             0
         ]
         import json as _json
 
         manifest = db_conn.execute(
-            "SELECT value FROM import_manifest WHERE key = 'coalesce_stats'"
+            "SELECT value FROM import_manifest WHERE key = 'row_counts'"
         ).fetchone()
         assert manifest is not None
         stats = _json.loads(manifest["value"])
-        assert stats["n_variable_states"] == from_table
+        assert stats["states"] == from_table
 
     def test_identifierare_imported(self, db_conn: sqlite3.Connection):
         row = db_conn.execute(

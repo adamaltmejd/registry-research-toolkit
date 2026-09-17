@@ -7,6 +7,7 @@ from __future__ import annotations
 import json
 import os
 import sqlite3
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -16,7 +17,6 @@ from reg_meta_build.db import build_db
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
-    from pathlib import Path
 
 
 def connect_built_db(db: Path | str) -> sqlite3.Connection:
@@ -74,29 +74,38 @@ def _no_repo_curation() -> Iterator[None]:
 
 @pytest.fixture(scope="session")
 def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """Build a small SQLite DB from synthetic CSV fixtures.
+    """Seed a small explicit catalog, independent of source-resolution rules.
 
-    Builds *with* slugs — `link_variable_state_lineage` (A2.4) keys on the
-    curated variant/variable slugs, so `skip_slugs=True` would leave them
-    NULL and zero out lineage edges. Also seeds a minimal doc DB so query
-    commands (search/get/resolve) pass the "docs not installed" guard.
+    Reader and structural-validator tests need stable graph identities, not a
+    source build. Pipeline tests exercise preparation and the resolved writer.
     """
-    input_dir = tmp_path_factory.mktemp("input")
+    from contextlib import closing
+
+    from reg_meta.db import SCHEMA_VERSION
+    from reg_meta_build.db import DDL, _populate_fts, seed_providers
+
     db_dir = tmp_path_factory.mktemp("db")
-    slug_dir = tmp_path_factory.mktemp("slugs")
-
-    write_scb_input(input_dir)
-    _write_fixture_slug_dir(slug_dir)
-
-    build_db(
-        input_dir=input_dir,
-        db_dir=db_dir,
-        skip_classifications=True,
-        slug_dir=slug_dir,
-    )
+    output = db_dir / "reg_meta.db"
+    with closing(sqlite3.connect(output)) as conn:
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.executescript(
+            Path(__file__).with_name("_catalog_fixture.sql").read_text(encoding="utf-8")
+        )
+        conn.executemany(
+            "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
+            (
+                ("schema_version", SCHEMA_VERSION),
+                ("import_date", "2020-01-01T00:00:00Z"),
+                ("row_counts", json.dumps({"variables": 8, "states": 9})),
+            ),
+        )
+        _populate_fts(conn)
+        conn.commit()
+        conn.execute("VACUUM")
     _build_stub_doc_db(db_dir, tmp_path_factory)
 
-    return db_dir / "reg_meta.db"
+    return output
 
 
 def _write_fixture_slug_dir(slug_dir: Path) -> None:
