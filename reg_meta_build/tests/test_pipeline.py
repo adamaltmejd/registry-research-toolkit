@@ -43,7 +43,12 @@ def selection(tmp_path, request):
     write_scb_input(
         source,
         registerinformation_rows=[
-            _var_row(cvid=1001, var_id=101, colname="VALUE", data_type="")
+            _var_row(
+                cvid=1001,
+                var_id=101,
+                colname="VALUE",
+                data_type="int" if getattr(request, "param", None) == "typed" else "",
+            )
         ],
         unika_rows=[
             "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
@@ -169,6 +174,8 @@ def test_real_build_command_writes_nonpublishable_full_selection(
     assert status == EXIT_CONFIG
     assert result["status"] == "diagnostic_complete"
     assert result["publication_ready"] is False
+    assert result["corpus_validation"]["passed"] is False
+    assert result["corpus_validation"]["failures"]
     assert result["counts"]["physical_occurrences"] == 1
     with sqlite3.connect(output) as conn:
         assert conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0] == 1
@@ -320,6 +327,20 @@ def test_strict_curation_failure_preserves_previous_catalog(selection, tmp_path)
     result = build_selected_catalog(selection, output, tmp_path / "strict-report")
     assert result["status"] == "blocked"
     assert result["database"] is None
+    assert output.read_bytes() == b"previous catalog"
+    assert not output.with_suffix(".db.prev").exists()
+
+
+@pytest.mark.parametrize("selection", ["typed"], indirect=True)
+def test_strict_corpus_failure_preserves_previous_catalog(selection, tmp_path):
+    output = tmp_path / "catalog.db"
+    output.write_bytes(b"previous catalog")
+    report = tmp_path / "report"
+    with pytest.raises(ValueError, match="resolved catalog validation failed"):
+        build_selected_catalog(selection, output, report)
+    summary = json.loads((report / "summary.json").read_text())
+    assert summary["status"] == "engineering_failure"
+    assert summary["counts"].get("error", 0) == 0
     assert output.read_bytes() == b"previous catalog"
     assert not output.with_suffix(".db.prev").exists()
 

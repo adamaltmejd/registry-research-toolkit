@@ -1146,23 +1146,26 @@ def test_shared_preflight_rejects_invalid_contracts_and_unknown_providers() -> N
     assert "No provider_id seed" in error.value.message
 
 
-def test_failed_structural_validation_preserves_previous_catalog(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize("corpus", [False, True])
+def test_failed_validation_preserves_previous_catalog(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, corpus: bool
 ) -> None:
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((_variable(),), output, manifest={})
     original = output.read_bytes()
 
+    expected_corpus = corpus
+
     def fail_validation(path: Path, *, corpus: bool) -> ValidationResult:
         assert path != output
-        assert corpus is False
-        assert validate_built_db(path, corpus=corpus).passed
+        assert corpus is expected_corpus
+        assert validate_built_db(path, corpus=False).passed
         result = ValidationResult()
         result.fail("synthetic publication gate failure")
         return result
 
     monkeypatch.setattr(resolved_catalog, "validate_built_db", fail_validation)
     with pytest.raises(ValueError, match="synthetic publication gate failure"):
-        write_resolved_catalog((_variable("sos"),), output, manifest={})
+        write_resolved_catalog((_variable("sos"),), output, manifest={}, corpus=corpus)
     assert output.read_bytes() == original
     assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]

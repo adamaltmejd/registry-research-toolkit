@@ -552,6 +552,12 @@ source-occurrence dispositions. Builder publication (`publish_db`, including
 `extend-db`) rejects diagnostic artifacts. Invalid contracts, pins, broken references
 and unsupported implementation remain fatal in both modes.
 
+Strict full builds run the existing corpus safeguards before publication. Diagnostic
+builds first require all structural invariants and then report the unchanged corpus
+safeguards against their incomplete output. A diagnostic completion does not claim that
+these safeguards passed; failed counts still require an explanation in the omission
+audit. No volume threshold is lowered to accommodate withheld source content.
+
 Output, backup and CLI summary paths cannot alias selected declarations or prepared
 members, including through hard links and temporary report files. A late CLI summary
 failure reports the already completed artifact and retained event report separately. The

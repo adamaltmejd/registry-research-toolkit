@@ -67,6 +67,7 @@ from reg_meta_build.source_reference_resolution import (
 from reg_meta_build.source_scope import resolve_source_scope
 from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_bindings import open_value_bindings
+from reg_meta_build.validate import validate_built_db
 
 
 class _Model(BaseModel):
@@ -736,6 +737,7 @@ def build_selected_catalog(
                     lineage.variables,
                     output,
                     diagnostic=diagnostic,
+                    corpus=not diagnostic,
                     manifest={
                         "prepared_commit": selected.prepared_commit,
                         "prepared_manifest_sha256": selected.prepared_sha256,
@@ -755,6 +757,16 @@ def build_selected_catalog(
                     status="diagnostic_complete" if diagnostic else "complete",
                     database=str(output),
                 )
+                if diagnostic:
+                    # Structural validation already passed before placement. Keep
+                    # the unchanged corpus safeguards visible on partial output.
+                    validation = validate_built_db(output, corpus=True)
+                    corpus_report: dict[str, object] = {
+                        "passed": validation.passed,
+                        "failures": validation.failures,
+                    }
+                    result["corpus_validation"] = corpus_report
+                    event("corpus_validation", corpus_report)
         except Exception as exc:
             (report_dir / "summary.json").write_text(
                 json.dumps(

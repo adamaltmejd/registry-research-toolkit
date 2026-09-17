@@ -685,6 +685,7 @@ def write_resolved_catalog(
     *,
     manifest: dict[str, str],
     diagnostic: bool = False,
+    corpus: bool = False,
     parent_registers: tuple[ResolvedRegister, ...] = (),
     parent_variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...] = (),
     editions: tuple[ResolvedEdition, ...] = (),
@@ -700,6 +701,8 @@ def write_resolved_catalog(
     are marked incomplete/nonpublishable and can never replace an existing file.
     Independently resolved registers and (register, variant) pairs remain present
     even when their variable states are withheld. Shared definitions must agree.
+    The complete pipeline additionally requires corpus safeguards before strict
+    publication; partial writer fixtures leave those volume expectations disabled.
     """
     diagnostic = TypeAdapter(bool).validate_python(diagnostic, strict=True)
     variables, registers, variants = validate_resolved_variables(
@@ -974,7 +977,7 @@ def write_resolved_catalog(
             _populate_fts(conn)
             conn.commit()
             conn.execute("VACUUM")
-        validation = validate_built_db(staged, corpus=False)
+        validation = validate_built_db(staged, corpus=corpus)
         if not validation.passed:
             raise ValueError(
                 "resolved catalog validation failed: " + "; ".join(validation.failures)
