@@ -1,77 +1,14 @@
-"""Generic adapter for *thin curated* providers (FOHM, Försäkringskassan, …).
+"""Read the steward extension's explicit provider, variable and state declarations.
 
-Most providers ship a machine-readable native delivery the build parses
-(SCB's CSV exports, SOS's `.xlsx` workbooks). A *thin curated* provider has
-none: a public agency whose register/variable documentation we transcribe by
-hand from public sources into a maintainer-authored TOML. That TOML **is** the
-provider's source delivery — the authoritative, citable artifact, committed
-alongside the build (unlike the untracked SCB/SOS seed).
-
-Rather than a near-identical `fohm.py` / `fk.py` / `iaf.py` adapter per agency
-(they'd all do the same thing), one `CuratedAdapter` reads a
-provider-parameterized TOML and emits the universal IR. Adding a thin provider
-is then: append a `provider` seed row (`db._PROVIDER_SEED`), register the
-agency's input dir (`db._CURATED_PROVIDERS`), drop the curated TOML under
-`input_data/<Agency>/<provider>.toml`, and curate register/variant slugs in
-`fqid_slugs/<provider>.toml`. See DESIGN.md → Curated thin providers.
-
-Global thin-provider ids are `mint()`ed into the high band `[2^62, 2^63)` (the
-provider name is the first `mint` part, so a thin provider never collides with SOS's
-`mint("sos", …)` ids — same disjointness argument as DESIGN.md → Deterministic
-ID minting). The adapter emits no value sets (categorical code *lists* are a
-follow-up; see #422) and writes no build-scratch — it is pure IR, like the SOS
-adapter. A categorical variable may still LINK to an existing catalog
-classification via the optional `classification` key (it reuses the catalog
-classification, minting no codes; see #446).
-
-TOML shape (one entry per register; a register with no `[[register.variant]]`
-gets a synthesized `_default` variant, the single-table case):
-
-    [[register]]
-    key = "sminet"                 # stable; mint("<provider>", key) → register_id
-    name = "SmiNet"
-    purpose = "…"                  # catalog browse-card prose (register.purpose)
-    valid_from = "2004-01-01"      # coverage start; default for its variables
-    valid_to = "2010-12-31"        # OPTIONAL; a closed register (Pliktverket
-                                   # 1997-2010, a discontinued benefit) — bounds
-                                   # every variable state unless the variable
-                                   # overrides it. Omit → open-ended (9999 sentinel)
-
-      [[register.variant]]         # OPTIONAL; omit for a single-table register
-      key = "fall"
-      name = "…"
-      description = "…"
-      valid_from = "2004-01-01"    # OPTIONAL per-variant coverage window
-      valid_to = "2010-12-31"
-
-      [[register.variable]]
-      name = "Personnummer"        # source/display name → variable.name
-      column = "personnummer"      # delivery column → variable_alias + auto-slug
-      definition = "…"
-      data_type = "text"
-      is_identifier = true
-      is_sensitive = true
-      valid_from = "2004-01-01"    # OPTIONAL per-variable override
-      variants = ["fall"]          # OPTIONAL; default = every variant of register
-      classification = "ICD-10-SE" # OPTIONAL; short_name of an existing catalog
-                                   # classification — links the variable's states,
-                                   # mints no codes
-
-A steward provider adds a required ``[provider]`` table (display ``name`` and
-``source_label`` provenance), may omit unknown register dates, and uses an
-explicit variable key with one or more ``[[register.variable.state]]`` tables.
-Repeated variable keys are pooled across their ``variants`` deliveries; each
-state may carry co-delivered ``aliases``. ``steward=...`` selects the established
-prefixed identity inputs (``mint("register", provider, key)`` etc.); the global
-unprefixed convention above remains unchanged.
+Global catalog preparation reads thin-provider TOMLs through curated_records.
+This adapter serves extend-db only. It preserves steward-prefixed IDs, pooled
+variable keys across distinct variants, authored windows and co-delivered aliases.
 """
 
 from __future__ import annotations
 
-import re
 import tomllib
 from dataclasses import dataclass, replace
-from datetime import date
 from typing import TYPE_CHECKING
 
 from reg_meta.fqid import FqidError, period_token_to_bounds
@@ -100,24 +37,11 @@ if TYPE_CHECKING:
 # register_variant; the runtime resolver looks it up exactly.
 _DEFAULT_VARIANT = "_default"
 
-_ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-
 # Allowed keys per table type — rejected-on-unknown so a curated typo
 # (`is_identifer`, `purpse`) fails the build loudly instead of silently
 # defaulting, mirroring the IR's `extra="forbid"` strict contract.
 _PROVIDER_KEYS = frozenset({"name", "source_label"})
-_GLOBAL_REGISTER_KEYS = frozenset(
-    {
-        "key",
-        "name",
-        "purpose",
-        "valid_from",
-        "valid_to",
-        "variant",
-        "variable",
-    }
-)
-_STEWARD_REGISTER_KEYS = frozenset(
+_REGISTER_KEYS = frozenset(
     {
         "key",
         "name",
@@ -130,7 +54,7 @@ _STEWARD_REGISTER_KEYS = frozenset(
     }
 )
 _VARIANT_KEYS = frozenset({"key", "name", "description", "valid_from", "valid_to"})
-_GLOBAL_VARIABLE_KEYS = frozenset(
+_VARIABLE_KEYS = frozenset(
     {
         "name",
         "column",
@@ -145,9 +69,10 @@ _GLOBAL_VARIABLE_KEYS = frozenset(
         "variants",
         "classification",
         "value_set",
+        "key",
+        "state",
     }
 )
-_STEWARD_VARIABLE_KEYS = _GLOBAL_VARIABLE_KEYS | {"key", "state"}
 _STATE_KEYS = frozenset(
     {
         "column",
@@ -192,7 +117,7 @@ class _CuratedVariable:
     valid_from: str | None  # None → inherit the register coverage start
     valid_to: str | None  # None → open-ended (materializer writes the sentinel)
     classification: str | None  # None → unlinked; else an existing catalog short_name
-    value_set: str | None  # None → no value set; else a code-list name (canonical-scb)
+    value_set: str | None  # nonempty declarations are rejected for steward extensions
     deliveries: tuple[_CuratedDelivery, ...]
 
 
@@ -219,45 +144,24 @@ class _CuratedRegister:
 
 
 class CuratedAdapter:
-    """Emit IR for a thin curated provider from its `<provider>.toml`.
-
-    `provider` is the seed slug (`'fohm'`, `'fk'`, …) and TOML basename.
-    ``steward`` explicitly selects the steward contract and identity convention.
-    """
+    """Emit the steward extension graph from its `<provider>.toml`."""
 
     def __init__(
         self,
         provider: str,
         *,
-        steward: str | None = None,
+        steward: str,
         classification_seed_path: Path | None = None,
     ) -> None:
         self.provider = provider
         self.steward = steward
         self.provider_name: str | None = None
         self.source_label: str | None = None
-        # The id-minting function. The base thin-provider adapter mints into the
-        # high band; `CanonicalScbAdapter` overrides this with `mint_canonical_scb`
-        # to keep its `scb`-provider ids in the low band (#444).
-        self._mint = mint
-        # Value sets are a canonical-SCB-only feature (the base adapter has no conn
-        # to intern codes). `False` here makes a `value_set` key on a thin-provider
-        # TOML fail-fast at load rather than silently produce a code-less catalog.
-        self._supports_value_sets = False
-        # The seed the build was invoked with (`build_db(seed_path=...)`), so
-        # `classification` validation checks the SAME manifest
-        # `populate_classifications` seeds; None → the in-repo default.
+        # Validate authored classification names before extend-db rejects linkage.
         self._classification_seed_path = classification_seed_path
-        # Side channels the materializer drains off every adapter (db.materialize).
-        # A thin provider has no sibling edges, fold hints, or coalesce stats.
         self.row_counts: dict[str, int] = {}
         self.source_checksums: dict[str, str] = {}
-        self.sibling_edges: list[tuple[int, int]] = []
-        self.fold_slug_hints: dict[int, str] = {}
-        # `(variable_id, value_set_id, short_name)` — the same provider-blind
-        # classification side channel SOS feeds; the materializer drains it and
-        # resolves short_name → classification_id at feed time. value_set_id is
-        # always None here (curated emits no value sets).
+        # extend-db rejects classification linkage before writing its output.
         self.classification_candidates: list[tuple[int, int | None, str]] = []
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
@@ -285,11 +189,7 @@ class CuratedAdapter:
                 "Fix the TOML syntax.",
             ) from exc
 
-        top_level_keys = (
-            frozenset({"provider", "register"})
-            if self.steward is not None
-            else frozenset({"register"})
-        )
+        top_level_keys = frozenset({"provider", "register"})
         self._reject_unknown(path, raw, top_level_keys, "top level")
         provider = raw.get("provider")
         if provider is not None:
@@ -304,7 +204,7 @@ class CuratedAdapter:
             self.source_label = self._req_str(
                 path, provider, "source_label", "provider"
             )
-        elif self.steward is not None:
+        else:
             raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: steward provider needs a [provider] table.",
@@ -368,16 +268,9 @@ class CuratedAdapter:
                 "Each register key must be unique within the provider.",
             )
         seen_reg_keys.add(key)
-        register_keys = (
-            _STEWARD_REGISTER_KEYS
-            if self.steward is not None
-            else _GLOBAL_REGISTER_KEYS
-        )
-        self._reject_unknown(path, entry, register_keys, f"register {key!r}")
+        self._reject_unknown(path, entry, _REGISTER_KEYS, f"register {key!r}")
         name = self._req_str(path, entry, "name", f"register {key!r}")
         valid_from = self._opt_str(entry, "valid_from")
-        if valid_from is None and self.steward is None:
-            valid_from = self._req_str(path, entry, "valid_from", f"register {key!r}")
         valid_to = self._opt_str(entry, "valid_to")
         self._check_authored_window(path, valid_from, valid_to, f"register {key!r}")
 
@@ -451,9 +344,8 @@ class CuratedAdapter:
                 "Declare at least one variable per register.",
             )
         variables_by_key: dict[str, _CuratedVariable] = {}
-        seen_columns: set[str] = set()
         for ve in var_entries:
-            var = self._load_variable(path, key, ve, variant_keys, seen_columns)
+            var = self._load_variable(path, key, ve, variant_keys)
             prior = variables_by_key.get(var.key)
             if prior is None:
                 variables_by_key[var.key] = var
@@ -515,17 +407,11 @@ class CuratedAdapter:
         reg_key: str,
         entry: dict,
         variant_keys: set[str],
-        seen_columns: set[str],
     ) -> _CuratedVariable:
         ctx = f"register {reg_key!r} variable"
         name = self._req_str(path, entry, "name", ctx)
-        variable_keys = (
-            _STEWARD_VARIABLE_KEYS
-            if self.steward is not None
-            else _GLOBAL_VARIABLE_KEYS
-        )
         self._reject_unknown(
-            path, entry, variable_keys, f"register {reg_key!r} variable {name!r}"
+            path, entry, _VARIABLE_KEYS, f"register {reg_key!r} variable {name!r}"
         )
         valid_from = self._opt_str(entry, "valid_from")
         valid_to = self._opt_str(entry, "valid_to")
@@ -533,54 +419,33 @@ class CuratedAdapter:
 
         variants = self._load_variant_refs(path, entry, ctx, name, variant_keys)
         state_entries = entry.get("state")
-        if self.steward is not None and state_entries is None:
+        if state_entries is None:
             raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: {ctx} {name!r} needs at least one `state`.",
                 "Declare one or more [[register.variable.state]] tables.",
             )
-        if state_entries is None:
-            column = self._req_str(path, entry, "column", f"{ctx} {name!r}")
-            if column in seen_columns:
-                raise curation_error(
-                    "curated_toml_invalid",
-                    f"{path.name}: register {reg_key!r}: duplicate column {column!r}.",
-                    "Each variable's delivery column must be unique within the register.",
-                )
-            seen_columns.add(column)
-            key = self._opt_str(entry, "key") or column
-            states = (
-                _CuratedState(
-                    column=column,
-                    data_type=self._opt_str(entry, "data_type"),
-                    valid_from=None,
-                    valid_to=None,
-                    aliases=(),
-                    value_set_version_label=None,
-                ),
+        if "column" in entry or "data_type" in entry:
+            raise curation_error(
+                "curated_toml_invalid",
+                f"{path.name}: {ctx} {name!r} mixes flat fields with `state`.",
+                "Put column/data_type on each [[register.variable.state]].",
             )
-        else:
-            if "column" in entry or "data_type" in entry:
-                raise curation_error(
-                    "curated_toml_invalid",
-                    f"{path.name}: {ctx} {name!r} mixes flat fields with `state`.",
-                    "Put column/data_type on each [[register.variable.state]].",
-                )
-            key = self._req_str(path, entry, "key", f"{ctx} {name!r}")
-            if (
-                not isinstance(state_entries, list)
-                or not state_entries
-                or not all(isinstance(state, dict) for state in state_entries)
-            ):
-                raise curation_error(
-                    "curated_toml_invalid",
-                    f"{path.name}: {ctx} {name!r}: `state` must be a non-empty array.",
-                    "Declare at least one [[register.variable.state]].",
-                )
-            states = tuple(
-                self._load_state(path, reg_key, key, state, i)
-                for i, state in enumerate(state_entries)
+        key = self._req_str(path, entry, "key", f"{ctx} {name!r}")
+        if (
+            not isinstance(state_entries, list)
+            or not state_entries
+            or not all(isinstance(state, dict) for state in state_entries)
+        ):
+            raise curation_error(
+                "curated_toml_invalid",
+                f"{path.name}: {ctx} {name!r}: `state` must be a non-empty array.",
+                "Declare at least one [[register.variable.state]].",
             )
+        states = tuple(
+            self._load_state(path, reg_key, key, state, i)
+            for i, state in enumerate(state_entries)
+        )
 
         if "." in key:
             raise curation_error(
@@ -639,7 +504,7 @@ class CuratedAdapter:
                 f"{path.name}: {ctx} {name!r}: unknown variant(s) {unknown}.",
                 f"Use declared variant keys: {sorted(variant_keys)}.",
             )
-        if self.steward is not None and len(set(variants)) != len(variants):
+        if len(set(variants)) != len(variants):
             raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: {ctx} {name!r}: duplicate variant reference.",
@@ -686,16 +551,14 @@ class CuratedAdapter:
         return state
 
     def _value_set_field(self, path: Path, entry: dict, name: str) -> str | None:
-        """Parse the optional `value_set` key, rejecting it on adapters that can't
-        intern code lists (every thin provider) — otherwise the code list would be
-        silently dropped (the base `_value_set_id_for` returns None)."""
+        """Reject unsupported value membership instead of silently dropping it."""
         value_set = self._opt_str(entry, "value_set")
-        if value_set is not None and not self._supports_value_sets:
+        if value_set is not None:
             raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: variable {name!r} sets `value_set` but provider "
                 f"{self.provider!r} does not support value sets.",
-                "Value sets are canonical-SCB-only (CanonicalScbAdapter).",
+                "Steward extensions cannot introduce value sets.",
             )
         return value_set
 
@@ -736,29 +599,14 @@ class CuratedAdapter:
         )
 
     def _check_boundary(self, path: Path, value: str, ctx: str) -> None:
-        if self.steward is not None:
-            try:
-                period_token_to_bounds(value)
-            except FqidError as exc:
-                raise curation_error(
-                    "curated_toml_invalid",
-                    f"{path.name}: {ctx}: {value!r} is not a valid ISO period.",
-                    "Use YYYY, YYYY-MM, YYYY-MM-DD, or omit an unknown/open bound.",
-                ) from exc
-            return
-
-        valid = bool(_ISO_DATE.match(value))
-        if valid:
-            try:
-                date.fromisoformat(value)
-            except ValueError:
-                valid = False
-        if not valid:
+        try:
+            period_token_to_bounds(value)
+        except FqidError as exc:
             raise curation_error(
                 "curated_toml_invalid",
-                f"{path.name}: {ctx}: {value!r} must be a valid ISO date YYYY-MM-DD.",
-                "Use a real ten-character ISO 8601 date.",
-            )
+                f"{path.name}: {ctx}: {value!r} is not a valid ISO period.",
+                "Use YYYY, YYYY-MM, YYYY-MM-DD, or omit an unknown/open bound.",
+            ) from exc
 
     def _check_authored_window(
         self,
@@ -800,11 +648,7 @@ class CuratedAdapter:
     # -- emit ----------------------------------------------------------------
 
     def _emit_register(self, reg: _CuratedRegister) -> Iterator[IRObject]:
-        register_id = (
-            mint("register", self.provider, reg.key)
-            if self.steward is not None
-            else self._mint(self.provider, reg.key)
-        )
+        register_id = mint("register", self.provider, reg.key)
         self.row_counts[f"{self.provider}:{reg.key}"] = len(reg.variables)
         yield IRRegister(
             register_id=register_id,
@@ -817,11 +661,7 @@ class CuratedAdapter:
 
         variant_ids: dict[str, int] = {}
         for variant in reg.variants:
-            variant_id = (
-                mint("variant", self.provider, reg.key, variant.key)
-                if self.steward is not None
-                else self._mint(self.provider, reg.key, variant.key)
-            )
+            variant_id = mint("variant", self.provider, reg.key, variant.key)
             variant_ids[variant.key] = variant_id
             yield IRVariant(
                 register_variant_id=variant_id,
@@ -841,14 +681,6 @@ class CuratedAdapter:
                 reg, register_id, variant_ids, variant_by_key, all_variant_keys, var
             )
 
-    def _value_set_id_for(
-        self, reg: _CuratedRegister, var: _CuratedVariable
-    ) -> int | None:
-        """The shared `value_set_id` a variable's states reference. The base
-        thin-provider adapter emits no value sets, so always None. Overridden by
-        `CanonicalScbAdapter` to intern a column's code list (#444)."""
-        return None
-
     def _emit_variable(
         self,
         reg: _CuratedRegister,
@@ -858,21 +690,10 @@ class CuratedAdapter:
         all_variant_keys: tuple[str, ...],
         var: _CuratedVariable,
     ) -> Iterator[IRObject]:
-        variable_id = (
-            mint("variable", self.provider, reg.key, var.key)
-            if self.steward is not None
-            else self._mint(self.provider, reg.key, var.key)
-        )
-        # Per-variable value set: None for the base thin-provider adapter (it emits
-        # no value sets); `CanonicalScbAdapter` interns a code list and returns its
-        # shared value_set_id. Every state of this variable shares it.
-        value_set_id = self._value_set_id_for(reg, var)
+        variable_id = mint("variable", self.provider, reg.key, var.key)
         if var.classification is not None:
-            # ONE candidate per variable (not per state): the candidate keys on
-            # variable_id. The link is by the catalog classification's `short_name`,
-            # resolved provider-blind at feed time (db._feed_classification_candidates).
             self.classification_candidates.append(
-                (variable_id, value_set_id, var.classification)
+                (variable_id, None, var.classification)
             )
         yield IRVariable(
             variable_id=variable_id,
@@ -914,19 +735,15 @@ class CuratedAdapter:
                             "give distinct state windows.",
                         )
                     seen_state_keys.add(state_key)
-                    state_id = (
-                        mint(
-                            "state",
-                            self.provider,
-                            reg.key,
-                            vk,
-                            var.key,
-                            state.column,
-                            valid_from or "0001-01-01",
-                            label,
-                        )
-                        if self.steward is not None
-                        else self._mint(self.provider, reg.key, var.key, vk)
+                    state_id = mint(
+                        "state",
+                        self.provider,
+                        reg.key,
+                        vk,
+                        var.key,
+                        state.column,
+                        valid_from or "0001-01-01",
+                        label,
                     )
                     yield IRVariableState(
                         state_id=state_id,
@@ -937,13 +754,9 @@ class CuratedAdapter:
                         data_type=state.data_type,
                         data_length=None,
                         delivery_column_name=state.column,
-                        value_set_id=value_set_id,
+                        value_set_id=None,
                         value_set_version_label=state.value_set_version_label,
-                        provenance=(
-                            f"steward:{self.steward}"
-                            if self.steward is not None
-                            else None
-                        ),
+                        provenance=f"steward:{self.steward}",
                     )
                     for column in state.columns:
                         yield IRVariableAlias(
@@ -992,7 +805,5 @@ class CuratedAdapter:
         return min(present) if present else None
 
     def _expanded_boundary(self, value: str, *, end: bool) -> str:
-        if self.steward is None:
-            return value
         lo, hi = period_token_to_bounds(value)
         return hi if end else lo
