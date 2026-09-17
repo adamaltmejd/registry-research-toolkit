@@ -2,7 +2,7 @@
 name: yard-file
 description: File work into a Yard project — decide a proposal by the admission rule, size a ticket to one lane's worth, park it before anything spends on it, write a body a worker can converge on, and report a Yard defect upstream instead of ticketing it here. Load this whenever you are about to create a Yard ticket, decide or accept a proposal, write or edit a ticket body, or read an outside report — an issue, a bug report, a finding somebody handed you — that might become one.
 ---
-<!-- yard-scaffold: yard 0.14.8 (commit 4be7bdf402007dac2285bd377fc4974cbd4418ef) -->
+<!-- yard-scaffold: yard 0.15.3 (commit 19903129db8a14c99b77abd501cde1fbca6b0e87) -->
 
 # /yard-file
 
@@ -98,7 +98,7 @@ stop and its exits are read.
   only what is independently useful.
 
 Where plans keep arriving carrying scope no ticket asked for, `instructions` on
-the role in `.yard/config.toml` is where this project's own ceilings go — a size
+the `[planning]` job in `.yard/config.toml` is where this project's own ceilings go — a size
 ceiling, or the plan document its tickets are planned against. Yard's own frozen
 prompts already ask every plan for its consumer, its minimum behavior, its
 inferred assumptions and its exclusions; what is true of this project only is
@@ -118,10 +118,20 @@ for both, and it carries five things:
   behavior, and in what situation they reach for it.
 - **The behavior, as a list.** One entry per thing that is true afterwards,
   stated as what an operator or a caller observes rather than as an
-  implementation. That list is what the candidate is read against.
+  implementation. That list is what the candidate is read against. A helper
+  the change must reuse belongs on this list as an entry, not in the mechanism
+  as background: a worker reads the mechanism as context and the list as
+  instruction, and one that re-derives `totalWorkDeadline` inline has done
+  what the body asked.
 - **What proves it.** The test files that carry the behavior, named — an
   existing case to extend where there is one, so the suite gains coverage
-  rather than a second fixture for the same path.
+  rather than a second fixture for the same path. Name the base tests that
+  pin the shape the change moves, too (a step census, a prompt sentence, a
+  step count): a repair worker may not edit a base test, so an unnamed one
+  stalls the lane at the guard until you nudge. And say where the proof does
+  *not* go — "one case in X, extended in place; no new file" — because a
+  Proof that only names a home is read as a floor, and the candidate arrives
+  with a second suite beside it.
 - **What is out of scope.** The neighbouring work this ticket is not, and the
   generalization a worker would otherwise infer. Unstated, it arrives in the
   candidate and costs a review round to remove.
