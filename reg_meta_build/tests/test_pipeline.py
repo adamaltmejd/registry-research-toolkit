@@ -139,8 +139,9 @@ def selection(tmp_path, request):
 
 
 def test_real_build_command_writes_nonpublishable_full_selection(
-    selection, tmp_path, capsys
+    selection, tmp_path, capsys, monkeypatch
 ):
+    monkeypatch.delenv("REG_META_BUILD_TIMING", raising=False)
     output, report = tmp_path / "diagnostic.db", tmp_path / "report"
     status = run(
         [
@@ -150,11 +151,14 @@ def test_real_build_command_writes_nonpublishable_full_selection(
             "--report-dir",
             str(report),
             "--diagnostic",
+            "--timing",
             "--diagnostic-db-path",
             str(output),
         ]
     )
-    result = json.loads(capsys.readouterr().out)
+    captured = capsys.readouterr()
+    assert "[timing] pipeline: total:" in captured.err
+    result = json.loads(captured.out)
     assert status == EXIT_CONFIG
     assert result["status"] == "diagnostic_complete"
     assert result["publication_ready"] is False

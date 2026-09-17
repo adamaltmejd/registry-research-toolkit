@@ -10,6 +10,7 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import time
 from collections import Counter
 from contextlib import ExitStack
 from pathlib import Path
@@ -26,6 +27,7 @@ from reg_meta_build.catalog_dependencies import (
 )
 from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
+from reg_meta_build.db import _emit_timing
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
@@ -163,6 +165,7 @@ def build_selected_catalog(
     The single event stream accounts for source records, cases and diagnostics;
     it references prepared evidence instead of copying every source projection.
     """
+    started = time.perf_counter()
     selection_path = selection_path.resolve()
     selection_bytes = selection_path.read_bytes()
     selected = PipelineSelection.model_validate_json(selection_bytes)
@@ -207,6 +210,8 @@ def build_selected_catalog(
         input_commit=selected.prepared_commit,
         expected_sha256=selected.prepared_sha256,
     )
+    _emit_timing("pipeline: open selected inputs", started)
+    phase_started = time.perf_counter()
     entries = tuple(
         e for e in prepared.manifest.inputs if e.record_usage == "occurrence"
     )
@@ -377,6 +382,8 @@ def build_selected_catalog(
             for value in support.diagnostics:
                 issue(value)
             sessions = stack.enter_context(open_value_bindings(prepared.value_sources))
+            _emit_timing("pipeline: reference metadata and support", phase_started)
+            phase_started = time.perf_counter()
             for entry in entries:
                 assert entry.revision is not None
                 source = entry.revision.dataset
@@ -386,6 +393,7 @@ def build_selected_catalog(
                     else prepared.records.iter_register_slices(source)
                 )
                 for register, originals in slices:
+                    scope_started = time.perf_counter()
                     scope_key = source, register
                     file = scope_files[scope_key]
                     payload = _member(root, file.path).read_bytes()
@@ -398,6 +406,7 @@ def build_selected_catalog(
                     )
                     if (scope.source, scope.register_key) != scope_key:
                         raise ValueError("scope file identifies another source scope")
+                    resolution_started = time.perf_counter()
                     result = resolve_source_scope(
                         originals,
                         cases=scope.cases,
@@ -418,6 +427,7 @@ def build_selected_catalog(
                         ),
                         on_diagnostic=issue,
                     )
+                    _emit_timing(f"pipeline: resolve {scope_key!r}", resolution_started)
                     for gap in scope.unapplied_curation:
                         entry_key = gap.revision.revision_id, gap.pointer
                         if entry_key in seen_unapplied:
@@ -567,6 +577,9 @@ def build_selected_catalog(
                             "records": len(originals),
                         },
                     )
+                    _emit_timing(f"pipeline: scope {scope_key!r}", scope_started)
+            _emit_timing("pipeline: all source scopes", phase_started)
+            phase_started = time.perf_counter()
             if seen_scopes != scope_files.keys():
                 raise ValueError("declared source scopes were not visited")
             if counts["physical_occurrences"] != sum(e.counts.records for e in entries):
@@ -660,6 +673,7 @@ def build_selected_catalog(
             successions = resolve_classification_successions(
                 tuple(books.values()), selected.classification_successions
             )
+            _emit_timing("pipeline: catalog dependencies", phase_started)
             result = {
                 "status": "blocked" if counts["error"] else "ready",
                 "publication_ready": not diagnostic and not counts["error"],
@@ -669,6 +683,7 @@ def build_selected_catalog(
                 "database": None,
             }
             if diagnostic or not counts["error"]:
+                phase_started = time.perf_counter()
                 write_resolved_catalog(
                     lineage.variables,
                     output,
@@ -687,6 +702,7 @@ def build_selected_catalog(
                     classification_successions=successions,
                     metadata=lineage.metadata,
                 )
+                _emit_timing("pipeline: database materialization", phase_started)
                 result.update(
                     status="diagnostic_complete" if diagnostic else "complete",
                     database=str(output),
@@ -705,4 +721,5 @@ def build_selected_catalog(
             )
             raise
     (report_dir / "summary.json").write_text(json.dumps(result, indent=2) + "\n")
+    _emit_timing("pipeline: total", started)
     return result

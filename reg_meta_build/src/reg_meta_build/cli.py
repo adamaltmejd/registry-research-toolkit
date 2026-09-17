@@ -1326,6 +1326,9 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
 
 
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    # Shared timing instrumentation covers both paths until the legacy cutover.
+    if args.timing:
+        os.environ["REG_META_BUILD_TIMING"] = "1"
     if args.selection is not None:
         from .pipeline import build_selected_catalog
 
@@ -1385,10 +1388,6 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             remediation="Supply a complete three-stage build selection.",
         )
     start = time.perf_counter()
-    # `--timing` is surfaced to the build internals (db.py `_timing_enabled`) via
-    # the env var so the deep helpers need no extra plumbing.
-    if args.timing:
-        os.environ["REG_META_BUILD_TIMING"] = "1"
     db_dir = Path(args.db) if args.db else default_db_dir()
     providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
     trace_cvids = _parse_scb_trace_cvids(args.trace_scb_cvids)
