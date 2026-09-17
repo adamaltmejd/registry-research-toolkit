@@ -50,13 +50,14 @@ class ValueBindingIssue:
 
 @dataclass(frozen=True)
 class ValueListBinding:
-    claim_id: str
+    claim_id: str | None
     record_id: str
     record_locators: tuple[RecordLocator, ...]
     value_revision_id: str
     descriptor_key: str
     association_count: int
     inactive_associations: tuple[SourceValueAssociation, ...]
+    non_membership_associations: tuple[SourceValueAssociation, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -311,8 +312,15 @@ class ValueBindingSession:
                     scope.model_dump(mode="json"),
                 ]
             )
-            members, inactive = [], []
+            members, inactive, non_membership = [], [], []
             for association in associations:
+                if (
+                    descriptor.non_membership_codes
+                    and self.session.value(association.value_key).code
+                    in descriptor.non_membership_codes
+                ):
+                    non_membership.append(association)
+                    continue
                 validity = self.session.validity_for(
                     item_id=association.item_id, locator=association.locator
                 )
@@ -343,11 +351,17 @@ class ValueBindingSession:
                         value.code, value.label, member_scope, (association,), validity
                     )
                 )
-            claims.append(
-                CodeListClaim(
-                    claim_id, scope, tuple(members), version_label=descriptor.version
+            if len(non_membership) != len(associations):
+                claims.append(
+                    CodeListClaim(
+                        claim_id,
+                        scope,
+                        tuple(members),
+                        version_label=descriptor.version,
+                    )
                 )
-            )
+            else:
+                claim_id = None
             bindings.append(
                 ValueListBinding(
                     claim_id,
@@ -357,6 +371,7 @@ class ValueBindingSession:
                     descriptor_key,
                     len(associations),
                     tuple(inactive),
+                    tuple(non_membership),
                 )
             )
         result = ValueBindingResult(

@@ -79,29 +79,16 @@ _CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (
 # machine export lacks. Both the #556 stale-seed preflight and the adapter guard
 # resolve the seed from here so the two can't drift apart.
 
-# SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
-# disjoint cases observed; build-db classifies each row using these allowlists:
-#
-# _VARDEMANGDER_SENTINELS — placeholder strings stuffed into Värdekod to mean
-# "no enumerated code list." Not real value codes; dropped silently:
-#   - "Tal"               variable is numeric
-#   - "Beskrivande text"  variable is free-form text
-#
-# _VARDEMANGDER_REAL_SHAPED — kods that *happen* to equal their version label
-# but are real single-code value sets. Kept silently:
-#   - "1"  ("Hade ingen anställning före YH-utbildningen")
-#   - "2"  ("Övriga civilstånd")
-#
-# Any other kod==version row is treated as drift (unknown placeholder) and
-# fails the build with code "vardemangder_drift" — see the drift block in
-# _import_vardemangder. Audit script: scripts/audit_vardemangder.py.
+# Exact SCB type tokens shared by source cleaning and the standalone source audit.
+# They are not enumerated codes when code == version == level. Source cleaning
+# preserves their rows as non-membership evidence (sources/scb_values.py).
 _VARDEMANGDER_SENTINELS = frozenset({"Tal", "Beskrivande text"})
 
 # value_code label-search stoplist (#352). Junk labels excluded from the
 # value_code_fts INDEX ONLY at population time — the leaf value_code / value_set
 # tables keep every row (this hides them from search, it does NOT drop data).
-# UNRELATED to `_VARDEMANGDER_SENTINELS` above (those gate value-set hashing /
-# row import). This is a whole-LABEL exclusion, not an FTS tokenizer stopword
+# Separate from the source type markers interpreted by sources/scb_values.py.
+# This is a whole-LABEL exclusion, not an FTS tokenizer stopword
 # list: a label matches iff it equals one of the exact strings OR matches one of
 # the prefix families. Initial curated dozen per #352; broader curation is out of
 # scope. The frequency head mixes junk with legitimate concepts (Småort, school

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from dataclasses import replace
@@ -433,4 +434,21 @@ def test_manifest_and_commit_pins_reject_updates(tmp_path):
     with pytest.raises(PreparedValueError, match="commit pin"):
         open_prepared_source_values(
             root, expected_sha256=manifest.sha256, input_commit=commit
+        )
+
+
+def test_old_preparation_cannot_reuse_the_previous_type_marker_interpretation(tmp_path):
+    root = tmp_path / "inputs" / "values"
+    _prepare(root)
+    path = root / "manifest.json"
+    document = json.loads(path.read_text())
+    document["schema_version"] = 2
+    payload = json.dumps(document).encode()
+    path.write_bytes(payload)
+    commit = accept_prepared(root)
+    with pytest.raises(ValueError, match="schema_version"):
+        open_prepared_source_values(
+            root,
+            expected_sha256=hashlib.sha256(payload).hexdigest(),
+            input_commit=commit,
         )

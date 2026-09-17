@@ -65,7 +65,7 @@ _DATABASE = "files/values.sqlite"
 _ASSOCIATIONS = "files/associations.bin"
 _POSTINGS = "files/member-positions.bin"
 _MEMBERS = (_DATABASE, _ASSOCIATIONS, _POSTINGS)
-_VERSION = 2
+_VERSION = 3
 _UINT32_MAX = 2**32 - 1
 _ROW = struct.Struct("<IIII")
 _POSITION = struct.Struct("<I")
@@ -136,7 +136,7 @@ class _ManifestDocument(_Model):
     format: Literal["reg-meta-prepared-source-values"] = (
         "reg-meta-prepared-source-values"
     )
-    schema_version: Literal[2] = _VERSION
+    schema_version: Literal[3] = _VERSION
     revision: SourceRevision
     join: SourceValueJoin | None = None
     validity_revision: SourceRevision | None
@@ -222,7 +222,7 @@ def _checked[T](value: T, adapter: TypeAdapter[T]) -> T:
 
 
 _DDL = """
-PRAGMA user_version=2;
+PRAGMA user_version=3;
 CREATE TABLE payload (
     id INTEGER PRIMARY KEY,
     kind TEXT NOT NULL,

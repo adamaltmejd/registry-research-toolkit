@@ -6,7 +6,11 @@ from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 
-from reg_meta_build.db import _decode_cp1252, _validated_scb_header
+from reg_meta_build.db import (
+    _VARDEMANGDER_SENTINELS,
+    _decode_cp1252,
+    _validated_scb_header,
+)
 from reg_meta_build.input_snapshot import SnapshotError
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_value_periods import value_window
@@ -28,6 +32,8 @@ if TYPE_CHECKING:
 
 _VALUE_FILE = "Vardemangder.csv"
 _VALIDITY_FILE = "VardemangderValidDates.csv"
+# These actual single-code lists happen to use the code as their version name.
+_SINGLE_CODE_VERSIONS = frozenset({"1", "2"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,6 +57,19 @@ class CleanedScbValues:
             start=2,
         ):
             cvid, item_id, descriptor_key, value_key = association
+            descriptor = self.descriptors[descriptor_key]
+            code = self.values[value_key].code
+            if (
+                code
+                and code == descriptor.version
+                and code not in _SINGLE_CODE_VERSIONS
+                and code not in descriptor.non_membership_codes
+            ):
+                raise SnapshotError(
+                    f"{_VALUE_FILE}: row {row_number} has unsupported code/version "
+                    f"shape {code!r} at level {descriptor.level!r}; "
+                    "verify the source format before preparing it"
+                )
             yield SourceValueAssociation(
                 row_number=row_number,
                 source_file=_VALUE_FILE,
@@ -77,11 +96,15 @@ def _clean_descriptor(
             f"{_VALUE_FILE} descriptor payload {payload_key} has {len(cells)} cells, expected 2"
         )
     version, level = cells
+    clean_version, clean_level = _clean_cell(version), _clean_cell(level)
     return SourceValueDescriptor(
         payload_key=payload_key,
         raw_cells=(version, level),
-        version=_clean_cell(version),
-        level=_clean_cell(level),
+        version=clean_version,
+        level=clean_level,
+        non_membership_codes=(clean_version,)
+        if clean_version in _VARDEMANGDER_SENTINELS and clean_version == clean_level
+        else (),
     )
 
 

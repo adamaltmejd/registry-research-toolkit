@@ -95,6 +95,15 @@ class SourceValueDescriptor:
     record_ids: tuple[str, ...] = ()
     locators: tuple[RecordLocator, ...] = ()
     delivered_cells: tuple[DeliveredCell, ...] = ()
+    # Some formats put type declarations in the code column. The adapter names
+    # those exact tokens within this descriptor; the original rows remain evidence.
+    non_membership_codes: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        if any(not code for code in self.non_membership_codes) or len(
+            set(self.non_membership_codes)
+        ) != len(self.non_membership_codes):
+            raise ValueError("non-membership codes must be unique nonempty tokens")
 
 
 @dataclass(frozen=True, slots=True)

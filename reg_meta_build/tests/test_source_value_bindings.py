@@ -184,6 +184,41 @@ def test_occurrence_binding_distinguishes_coding_evidence_from_metadata_support(
     assert copied.bindings[0].record_locators == record.locators
 
 
+@pytest.mark.parametrize("mixed", [False, True])
+def test_source_type_evidence_does_not_create_coding_or_require_item_validity(
+    tmp_path: Path, mixed: bool
+) -> None:
+    rows = (SourceValueAssociation(2, "list", "marker", "values", member_id="1001"),)
+    if mixed:
+        rows += (
+            SourceValueAssociation(
+                3, "list", "code", "values", member_id="1001", item_id="1"
+            ),
+        )
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(),
+        descriptors=(SourceValueDescriptor("list", non_membership_codes=("TYPE",)),),
+        values=(
+            SourceValue("marker", "TYPE", "Numeric"),
+            SourceValue("code", "01", "One"),
+        ),
+        rows=rows,
+    )
+    with open_value_bindings((source,)) as sessions:
+        result = bind_code_lists(_record(), sessions)
+    assert result.issues == ()
+    assert result.bindings[0].non_membership_associations == rows[:1]
+    assert result.bindings[0].association_count == len(rows)
+    assert result.bindings[0].inactive_associations == ()
+    if mixed:
+        assert [member.code for member in result.claims[0].members] == ["01"]
+        assert result.bindings[0].claim_id == result.claims[0].claim_id
+    else:
+        assert result.claims == ()
+        assert result.bindings[0].claim_id is None
+
+
 def test_native_join_preserves_raw_tokens_uses_one_session_and_exact_validity(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import pytest
 from _csv_fixtures import write_scb_input, write_scb_snapshot
-from reg_meta_build.input_snapshot import open_scb_snapshot
+from reg_meta_build.input_snapshot import SnapshotError, open_scb_snapshot
 from reg_meta_build.normalization import canonical_value_set_content
 from reg_meta_build.sources.scb_values import clean_scb_values
 
@@ -141,6 +142,48 @@ def test_canonical_content_compares_only_explicit_normalized_members() -> None:
         ("009", "Conflict A"),
         ("009", "Conflict B"),
     )
+
+
+def test_type_markers_are_descriptor_scoped_and_original_rows_remain(
+    tmp_path: Path,
+) -> None:
+    rows = [
+        "Tal|Tal|Tal|Numeric declaration|100|",
+        "Beskrivande text|Beskrivande text|Beskrivande text|Text declaration|100|",
+        "Other|Other|Tal|A literal code|100|1",
+        "Tal|Tal|01|A real member in a mixed list|100|2",
+        "1|Level|1|A real single-code list|100|3",
+        "2|Level|2|Another single-code list|100|4",
+    ]
+    source = write_scb_input(tmp_path / "source", vardemangder_rows=rows)
+    reader = open_scb_snapshot(write_scb_snapshot(tmp_path / "accepted", source))
+    cleaned = clean_scb_values(reader)
+    associations = list(cleaned.associations())
+    assert len(associations) == len(rows)
+    assert [
+        cleaned.descriptors[row.descriptor_key].non_membership_codes
+        for row in associations
+    ] == [("Tal",), ("Beskrivande text",), (), ("Tal",), (), ()]
+    assert [cleaned.values[row.value_key].raw_cells for row in associations[:2]] == [
+        ("Tal", "Numeric declaration"),
+        ("Beskrivande text", "Text declaration"),
+    ]
+    assert associations[0].item_id is None
+
+
+@pytest.mark.parametrize(
+    "version,level", [("Tal", "Other"), ("New marker", "New marker")]
+)
+def test_unknown_type_marker_shapes_fail_during_preparation(
+    tmp_path: Path, version: str, level: str
+) -> None:
+    source = write_scb_input(
+        tmp_path / "source",
+        vardemangder_rows=[f"{version}|{level}|{version}|Label|100|"],
+    )
+    reader = open_scb_snapshot(write_scb_snapshot(tmp_path / "accepted", source))
+    with pytest.raises(SnapshotError, match="row 2 has unsupported code/version shape"):
+        list(clean_scb_values(reader).associations())
 
 
 def test_normalized_payloads_keep_missing_distinct_from_supplied_empty(
