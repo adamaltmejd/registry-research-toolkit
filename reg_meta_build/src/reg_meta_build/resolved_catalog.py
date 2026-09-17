@@ -683,6 +683,8 @@ def write_resolved_catalog(
     *,
     manifest: dict[str, str],
     diagnostic: bool = False,
+    parent_registers: tuple[ResolvedRegister, ...] = (),
+    parent_variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...] = (),
     editions: tuple[ResolvedEdition, ...] = (),
     classifications: tuple[ResolvedClassification, ...] = (),
     classification_successions: tuple[ResolvedClassificationSuccession, ...] = (),
@@ -694,9 +696,28 @@ def write_resolved_catalog(
     The caller supplies reproducible manifest values; schema-owned keys are fixed.
     Both modes run the same contract and structural checks. Diagnostic artifacts
     are marked incomplete/nonpublishable and can never replace an existing file.
+    Independently resolved registers and (register, variant) pairs remain present
+    even when their variable states are withheld. Shared definitions must agree.
     """
     diagnostic = TypeAdapter(bool).validate_python(diagnostic, strict=True)
     variables, registers, variants = validate_resolved_variables(variables)
+    parent_registers = TypeAdapter(tuple[ResolvedRegister, ...]).validate_python(
+        parent_registers, strict=True
+    )
+    parent_variants = TypeAdapter(
+        tuple[tuple[ResolvedRegister, ResolvedVariant], ...]
+    ).validate_python(parent_variants, strict=True)
+    for register in (*parent_registers, *(r for r, _ in parent_variants)):
+        key = register.provider, register.slug
+        _provider_id_for(register.provider)
+        if key in registers and registers[key] != register:
+            raise ValueError(f"inconsistent resolved parent register: {key!r}")
+        registers[key] = register
+    for register, variant in parent_variants:
+        key = register.provider, register.slug, variant.slug
+        if key in variants and variants[key] != variant:
+            raise ValueError(f"inconsistent resolved parent variant: {key!r}")
+        variants[key] = variant
     editions = TypeAdapter(tuple[ResolvedEdition, ...]).validate_python(
         editions, strict=True
     )

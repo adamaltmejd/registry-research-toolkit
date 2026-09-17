@@ -565,6 +565,12 @@ duplicates and support-only records. The resolver has no diagnostic-mode semanti
 Complete input selection, global metadata composition, disposition reporting and
 ordinary command cutover remain required above this scope resolver.
 
+The writer accepts independently resolved registers and explicit (register, variant)
+pairs alongside variables and editions. Withholding unsafe variable states must not
+erase supported parent names or descriptions. All repeated parent definitions must agree
+before any output file is touched; the writer never fills them from a baseline database
+or invents a variable to make a parent visible.
+
 Occurrence corrections compose against the original cleaned evidence. Exact field and
 period assignments can agree or affect different facts. Conflicting assignments retain
 all claims and withhold the disputed fact; another observation cannot silently fill it

@@ -68,6 +68,68 @@ def _variable(provider: str = "scb", slug: str = "ampoltyp") -> ResolvedVariable
     )
 
 
+def test_independent_parent_metadata_survives_without_variables_or_editions(
+    tmp_path: Path,
+) -> None:
+    register = ResolvedRegister(provider="sos", slug="independent", name="Independent")
+    variant = ResolvedVariant(slug="observations", name="Observations")
+    other = ResolvedRegister(provider="sos", slug="other", name="Other")
+    output = tmp_path / "diagnostic.db"
+    write_resolved_catalog(
+        (_variable(),),
+        output,
+        manifest={},
+        diagnostic=True,
+        parent_registers=(other,),
+        parent_variants=((register, variant),),
+    )
+    with closing(open_db(output)) as conn:
+        assert {row[0] for row in conn.execute("SELECT slug FROM register")} == {
+            "example",
+            "independent",
+            "other",
+        }
+        assert (
+            conn.execute(
+                "SELECT name FROM register_variant WHERE slug='observations'"
+            ).fetchone()[0]
+            == "Observations"
+        )
+        assert conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0] == 1
+        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+
+
+@pytest.mark.parametrize("kind", ["register", "variant"])
+def test_conflicting_independent_parents_fail_before_replacing_output(
+    tmp_path: Path,
+    kind: str,
+) -> None:
+    variable = _variable()
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog((variable,), output, manifest={})
+    before = output.read_bytes()
+    with pytest.raises(ValueError, match=f"inconsistent resolved parent {kind}"):
+        write_resolved_catalog(
+            (variable,),
+            output,
+            manifest={},
+            parent_registers=(
+                variable.register_ref.model_copy(update={"name": "Conflict"}),
+            )
+            if kind == "register"
+            else (),
+            parent_variants=(
+                (
+                    variable.register_ref,
+                    variable.states[0].variant.model_copy(update={"name": "Conflict"}),
+                ),
+            )
+            if kind == "variant"
+            else (),
+        )
+    assert output.read_bytes() == before
+
+
 @pytest.mark.parametrize("provider", ["scb", "sos"])
 @pytest.mark.parametrize("variant", ["individuals", "_default"])
 def test_normal_catalog_api_search_and_structural_validation(
