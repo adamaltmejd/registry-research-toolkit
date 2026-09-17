@@ -207,6 +207,13 @@ translation rows do not change the named native coordinate; parent resolution st
 reconciles their assertions. Variable naming continues to require complete membership
 guards. Any explicitly supplied parent membership guard remains binding.
 
+Literal export schema and event metadata is resolved independently of catalog
+identities. Equal schema assertions coalesce; conflicting types or nullability withhold
+the column metadata and dependent join-key metadata. Unknown optional descriptions do
+not conflict with known text. Event tokens retain their supplied spellings, including
+leading zeros; retaining an event does not itself create a succession edge. Original
+declarations and physical locators remain in prepared evidence.
+
 Checked variant assignments preserve existing finite token-to-variant decisions in the
 common layer. One delivered row may support several explicitly named variants, while
 retaining its original physical evidence, fields and unresolved period. Assignments
