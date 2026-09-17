@@ -98,11 +98,10 @@ have distinct coverage; report what each actually establishes.
 
 ## Build approval evidence
 
-A candidate that changes how `reg_meta_build` reads, coalesces or curates the corpus
-(the SCB adapter, `resolution.py`, `edition_bounds.py`, the curation loaders, `db.py`
-materialization) is approved on a real-seed `build-db` of the candidate, not on the
-synthetic gate alone: apply the lane diff in a worktree at the candidate base and run
-the build-db skill with `--dbdiff-against` the latest release asset before
+A candidate that changes how `reg_meta_build` prepares, resolves or materializes the
+corpus is approved on a real-seed `build-db` of the candidate, not on the synthetic gate
+alone: apply the lane diff in a worktree at the candidate base, follow the build-db
+skill, and compare with the latest release asset using `dbdiff` before
 `yard lane approve`. The synthetic suite runs the full structural validator but cannot
 see corpus-only layouts. Y-113 landed green and broke the corpus build on one column
 (`coalesce_same_column_overlap`); the post-landing build caught it one lane too late.

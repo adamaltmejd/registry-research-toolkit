@@ -1065,10 +1065,8 @@ CREATE INDEX idx_concept_group_classification_group
 -- Curated cross-register THEMATIC tag layer (#311). Orthogonal to concept_group
 -- (which folds column families *structurally* within one register): a tag cuts
 -- *across* providers/registers ("income", "health", …) for discovery without
--- knowing the register. Curated from `curation/tags.toml`; derived every build
--- (regenerate-not-migrate); a presentation/discovery overlay that leaves identity
--- untouched. Missing curation files still materialize empty tables for synthetic
--- builds and wheel installs; repo builds load the reviewed seed content.
+-- knowing the register. The selected resolved metadata supplies vocabulary and
+-- memberships to the common writer; tags leave catalog identity untouched.
 --
 -- ONE global vocabulary (a tag slug is globally unique — cross-register discovery
 -- is the whole point) + ONE polymorphic membership table spanning both grains:

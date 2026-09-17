@@ -10,18 +10,11 @@ uv tool install reg-meta
 reg-meta update      # downloads package + database (~400 MB compressed)
 ```
 
-Alternatively, build from raw SCB CSV exports (maintainer flow — requires access to
-mikrometadata.scb.se and a repo checkout, since `build-db` reads
-`reg_meta_build/curation/classifications.toml`, `reg_meta_build/fqid_slugs/`, and
-`reg_meta_build/input_data/SCB/` from the working tree; none of those ship in the
-wheel):
-
-```bash
-git clone https://github.com/adamaltmejd/registry-research-toolkit
-cd registry-research-toolkit
-uv sync
-uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/
-```
+Maintainers can build from pinned prepared sources and checked curation with
+`reg_meta_build`. See its [catalog
+workflow](../reg_meta_build/README.md#catalog-workflow) for preparation, diagnostic
+builds and strict publication. A build does not read loose CSV exports or modify
+accepted inputs.
 
 ## Quick start
 

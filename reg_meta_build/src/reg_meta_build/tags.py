@@ -1,33 +1,14 @@
-"""Curated cross-register THEMATIC tag layer (#311).
+"""Load the existing cross-register thematic tag declarations.
 
-A maintainer-curated tag vocabulary (income, employment, education, health, …)
-attached across providers/registers so a researcher can find candidates without
-already knowing which register to look in. Orthogonal to `concept_groups`, which
-folds column families *structurally* within ONE register; this layer is
-*thematic* across registers. Both are catalog overlays under ``curation/`` that
-leave identity untouched — same family, two files (`curation/concept_groups.toml` /
-`curation/tags.toml`).
-
-ONE global vocabulary (a tag slug is globally unique — cross-register discovery
-is the whole point) + ONE polymorphic membership table:
-
-* **register-grain** members → coarse thematic browse;
-* **variable-grain** members → the "golden/starred" recommendations, where
-  `starred` flags a recommended variable and `note` carries the one-line
-  rationale curation can give (and popularity can't).
-
-The committed `curation/tags.toml` starts with a small SCB-heavy seed and can grow by
-reviewed entries. Wheel installs and synthetic test builds may still omit the
-file, in which case the tables materialize empty. A *structural* defect in
-`curation/tags.toml` (bad shape, duplicate member, dangling reference) fails the build
-(EXIT_CONFIG), like the other curation surfaces — curation drift must be fixed,
-not silently dropped.
+Input preparation validates this TOML surface. Converted selections carry explicit
+resolved tag metadata into the common catalog writer; there is no SQL curation
+post-pass. Register members support thematic browse, while variable members can
+carry ranked recommendations and their rationale.
 """
 
 from __future__ import annotations
 
 import functools
-import sqlite3
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -35,12 +16,9 @@ from ._curation import (
     curation_error,
     load_curation_entries,
     require_str,
-    resolve_register_id,
-    resolve_variable_id,
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
     from pathlib import Path
 
 
@@ -103,7 +81,7 @@ def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
     each `[[tag.member]]` sets EXACTLY ONE of `variable` (3-seg FQID) / `register`
     (2-seg FQID), with optional `rank` (int) / `starred` (bool) / `note` (str);
     no member appears twice within a tag. Reference RESOLUTION (do the
-    register/variable exist?) happens at materialize time against the built DB."""
+    register/variable exist?) belongs to common catalog dependency resolution."""
     entries = load_curation_entries(
         path,
         entry_key="tag",
@@ -229,80 +207,3 @@ def _parse_member(
         starred=starred,
         note=note,
     )
-
-
-def materialize_tags(
-    conn: sqlite3.Connection,
-    tags: tuple[CuratedTag, ...],
-    *,
-    providers: frozenset[str],
-    progress: Callable[[str], None] | None = None,
-) -> dict[str, int]:
-    """Insert the curated tag vocabulary + memberships into the built DB.
-
-    Runs as a curation post-pass after `populate_slugs` (so member FQIDs resolve
-    off stored slugs). `providers` gates members to the providers in this build (a
-    `--providers=sos` build skips scb members rather than failing them all
-    unresolved) — mirrors `materialize_concept_groups`. A member that does NOT
-    resolve against the built DB fails the build LOUD (EXIT_CONFIG): a tag is a
-    curated structural overlay, so a dangling reference is curation drift to fix,
-    not a row to drop. The DB's partial UNIQUE indexes enforce per-grain
-    uniqueness and the CHECK enforces exactly-one-grain; an IntegrityError surfaces
-    as a `tags_invalid` curation error.
-
-    A tag whose every member is gated out (no in-scope provider) is skipped
-    entirely (no empty vocabulary row in a provider-restricted build)."""
-    counts = {"tags": 0, "members": 0}
-    for tag in tags:
-        active = tuple(m for m in tag.members if m.provider in providers)
-        if not active:
-            continue
-        ctx = f"[[tag]] {tag.slug!r}"
-        mctx = f"{ctx} member"
-        tag_id = conn.execute(
-            "INSERT INTO tag (slug, label, description) VALUES (?, ?, ?)",
-            (tag.slug, tag.label, tag.description),
-        ).lastrowid
-        for m in active:
-            if m.variable is not None:
-                register_id: int | None = None
-                variable_id: int | None = resolve_variable_id(
-                    conn, m.provider, m.register, m.variable
-                )
-                if variable_id is None:
-                    raise curation_error(
-                        "tags_unresolved",
-                        f"{mctx}: variable {m.provider}/{m.register}/{m.variable!r} "
-                        "does not resolve.",
-                        "Fix the member FQID in reg_meta_build/curation/tags.toml.",
-                    )
-            else:
-                register_id = resolve_register_id(conn, m.provider, m.register)
-                if register_id is None:
-                    raise curation_error(
-                        "tags_unresolved",
-                        f"{mctx}: register {m.provider}/{m.register!r} does not "
-                        "resolve.",
-                        "Fix the member FQID in reg_meta_build/curation/tags.toml.",
-                    )
-                variable_id = None
-            try:
-                conn.execute(
-                    "INSERT INTO tag_member "
-                    "(tag_id, register_id, variable_id, rank, starred, note) "
-                    "VALUES (?, ?, ?, ?, ?, ?)",
-                    (tag_id, register_id, variable_id, m.rank, int(m.starred), m.note),
-                )
-            except sqlite3.IntegrityError as exc:
-                raise curation_error(
-                    "tags_invalid",
-                    f"{ctx}: member resolves to a (tag, register/variable) pair "
-                    "already in this tag.",
-                    "Each register/variable may appear at most once per tag in "
-                    "reg_meta_build/curation/tags.toml.",
-                ) from exc
-            counts["members"] += 1
-        counts["tags"] += 1
-    if progress is not None:
-        progress(f"  {counts['tags']:,} tags, {counts['members']:,} tag members")
-    return counts

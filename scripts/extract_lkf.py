@@ -317,7 +317,7 @@ def emit_toml_entry(year: int) -> str:
     #
     # No `supersedes` field: classification succession lives in
     # `classification_replaced_by`, auto-derived from the lkf<year> slug-tail
-    # chain at build time (`derive_classification_succession`). The seed declares
+    # chain during common catalog resolution. The seed declares
     # no succession.
     return f"""\
 [[classification]]

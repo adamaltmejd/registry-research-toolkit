@@ -1,10 +1,9 @@
 """Curated cross-register thematic tag layer (#311) — build-side machinery.
 
 Covers the loader (`load_tags`: shape + exactly-one-grain + dedup validation),
-the materializer (`materialize_tags`: FQID resolution, dangling-ref fails LOUD,
-per-grain uniqueness + exactly-one-grain enforced by the DDL), and the validator
-closure check. Tests use both small local fixtures and the committed seed
-`tags.toml`.
+per-grain uniqueness and exactly-one-grain enforced by the DDL, and the validator
+closure check. Common writer and dependency tests cover resolved tag materialization.
+Tests use both small local fixtures and the committed seed `tags.toml`.
 """
 
 from __future__ import annotations
@@ -12,20 +11,17 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_register, add_variable, build_slugged_db
+from _slugged_db import add_variable, build_slugged_db, seed_tags
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build._curation import repo_curation_path
 from reg_meta_build.tags import (
     CuratedTag,
     TagMember,
     load_tags,
-    materialize_tags,
 )
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-_SCB = frozenset({"scb"})
 
 
 def _write_tags_toml(tmp_path: Path, text: str) -> Path:
@@ -218,7 +214,7 @@ label = "A"
     assert exc.value.code == "tags_invalid"
 
 
-# ── materializer ───────────────────────────────────────────────────────────--
+# ── database constraints ─────────────────────────────────────────────────────
 
 
 def _tag(members: tuple[TagMember, ...], **overrides) -> CuratedTag:
@@ -232,84 +228,16 @@ def _tag(members: tuple[TagMember, ...], **overrides) -> CuratedTag:
     return CuratedTag(**kwargs)
 
 
-def test_materialize_inserts_both_grains() -> None:
-    conn = build_slugged_db(classification=None)  # scb/lisa with `kon`
-    add_variable(conn, register_id=1, var_id=90, name="Income", slug="dispink")
-    tag = _tag(
-        (
-            TagMember("scb", "lisa", "dispink", rank=0, starred=True, note="primary"),
-            TagMember("scb", "lisa", None, rank=1, starred=False, note=None),
-        )
-    )
-    counts = materialize_tags(conn, (tag,), providers=_SCB)
-    assert counts == {"tags": 1, "members": 2}
-
-    rows = conn.execute(
-        "SELECT register_id, variable_id, rank, starred, note FROM tag_member "
-        "ORDER BY rank"
-    ).fetchall()
-    # rank 0: variable-grain starred; rank 1: register-grain.
-    var_id = conn.execute(
-        "SELECT variable_id FROM variable WHERE slug='dispink'"
-    ).fetchone()[0]
-    assert rows[0]["variable_id"] == var_id and rows[0]["register_id"] is None
-    assert rows[0]["starred"] == 1 and rows[0]["note"] == "primary"
-    assert rows[1]["register_id"] == 1 and rows[1]["variable_id"] is None
-    assert rows[1]["starred"] == 0
-
-
-def test_materialize_dangling_variable_fails_loud() -> None:
-    conn = build_slugged_db(classification=None)
-    tag = _tag((TagMember("scb", "lisa", "nope", rank=0, starred=False, note=None),))
-    with pytest.raises(RegMetaError) as exc:
-        materialize_tags(conn, (tag,), providers=_SCB)
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert exc.value.code == "tags_unresolved"
-
-
-def test_materialize_dangling_register_fails_loud() -> None:
-    conn = build_slugged_db(classification=None)
-    tag = _tag((TagMember("scb", "nope", None, rank=0, starred=False, note=None),))
-    with pytest.raises(RegMetaError) as exc:
-        materialize_tags(conn, (tag,), providers=_SCB)
-    assert exc.value.code == "tags_unresolved"
-
-
-def test_materialize_inactive_provider_skipped() -> None:
-    conn = build_slugged_db(classification=None)
-    tag = _tag((TagMember("scb", "lisa", None, rank=0, starred=False, note=None),))
-    counts = materialize_tags(conn, (tag,), providers=frozenset({"sos"}))
-    assert counts == {"tags": 0, "members": 0}
-    assert conn.execute("SELECT COUNT(*) FROM tag").fetchone()[0] == 0
-
-
-def test_materialize_global_vocabulary_spans_registers() -> None:
-    # One tag, members in two different registers — the cross-register point.
-    conn = build_slugged_db(classification=None)
-    add_register(conn, register_id=2, slug="rams", name="RAMS")
-    add_variable(conn, register_id=2, var_id=50, name="Syss", slug="syss")
-    tag = _tag(
-        (
-            TagMember("scb", "lisa", None, rank=0, starred=False, note=None),
-            TagMember("scb", "rams", "syss", rank=1, starred=True, note=None),
-        )
-    )
-    counts = materialize_tags(conn, (tag,), providers=_SCB)
-    assert counts == {"tags": 1, "members": 2}
-
-
 def test_tag_member_per_grain_uniqueness() -> None:
     """A (tag, register) pair must be unique — the partial UNIQUE index is the DB
     backstop (load-time dedup is by literal FQID; a slug rename could collide two
-    distinct refs onto one id). A duplicate INSERT raises IntegrityError, which
-    `materialize_tags` surfaces as a `tags_invalid` curation error."""
+    distinct refs onto one id). A duplicate INSERT raises IntegrityError."""
     import sqlite3
 
     conn = build_slugged_db(classification=None)
-    materialize_tags(
+    seed_tags(
         conn,
         (_tag((TagMember("scb", "lisa", None, 0, False, None),)),),
-        providers=_SCB,
     )
     tag_id = conn.execute("SELECT tag_id FROM tag").fetchone()[0]
     with pytest.raises(sqlite3.IntegrityError):
@@ -328,10 +256,9 @@ def test_tag_member_variable_grain_uniqueness() -> None:
     import sqlite3
 
     conn = build_slugged_db(classification=None)  # variable `kon` exists
-    materialize_tags(
+    seed_tags(
         conn,
         (_tag((TagMember("scb", "lisa", "kon", 0, False, None),)),),
-        providers=_SCB,
     )
     tag_id, var_id = conn.execute(
         "SELECT tm.tag_id, tm.variable_id FROM tag_member tm"
@@ -344,39 +271,14 @@ def test_tag_member_variable_grain_uniqueness() -> None:
         )
 
 
-def test_materialize_wraps_duplicate_pair_as_curation_error() -> None:
-    """The slug-rename collision escape hatch (#311): two members WITHIN ONE tag
-    resolving to the same id violate the partial unique index, and
-    `materialize_tags` wraps the IntegrityError as a `tags_invalid` curation error
-    (EXIT_CONFIG) — not a raw sqlite3 error through the CLI's generic handler.
-    Built as a `CuratedTag` directly so the load-time dedup (by literal FQID)
-    doesn't catch it first — mimicking two distinct FQID refs that a slug rename
-    collapsed onto one register_id.
-
-    NB: the unique index is per-TAG (`(tag_id, register_id)`), so the collision
-    must be WITHIN one tag — two different tags may each tag the same register."""
-    conn = build_slugged_db(classification=None)
-    colliding = _tag(
-        (
-            TagMember("scb", "lisa", None, 0, False, None),
-            TagMember("scb", "lisa", None, 1, False, None),  # same register, same tag
-        )
-    )
-    with pytest.raises(RegMetaError) as exc:
-        materialize_tags(conn, (colliding,), providers=_SCB)
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert exc.value.code == "tags_invalid"
-
-
 def test_tag_member_exactly_one_grain_check() -> None:
     """The DDL CHECK rejects a row with both grains set or neither."""
     import sqlite3
 
     conn = build_slugged_db(classification=None)
-    materialize_tags(
+    seed_tags(
         conn,
         (_tag((TagMember("scb", "lisa", None, 0, False, None),)),),
-        providers=_SCB,
     )
     tag_id = conn.execute("SELECT tag_id FROM tag").fetchone()[0]
     # Both grains set.
@@ -399,7 +301,7 @@ def test_validator_closure_passes_on_materialized_tags() -> None:
 
     conn = build_slugged_db(classification=None)
     add_variable(conn, register_id=1, var_id=90, name="Income", slug="dispink")
-    materialize_tags(
+    seed_tags(
         conn,
         (
             _tag(
@@ -409,7 +311,6 @@ def test_validator_closure_passes_on_materialized_tags() -> None:
                 )
             ),
         ),
-        providers=_SCB,
     )
     tables = {
         r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")

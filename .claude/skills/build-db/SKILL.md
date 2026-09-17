@@ -1,146 +1,100 @@
 ---
 name: build-db
 description: >-
-  Run and investigate Registry Research Toolkit `reg-meta-build build-db` rebuilds. Use
-  when asked to run a real metadata DB rebuild, verify build-affecting PRs with the
-  maintainer seed, use or refresh the SCB value prestage cache, compare rebuilt DB
-  content with dbdiff, profile slow build phases, capture build logs, or perform
-  post-build SQLite/invariant checks.
+  Registry Research Toolkit build-db workflow. Use when asked to run a real
+  `reg-meta-build build-db` rebuild, verify build-affecting changes with the maintainer
+  seed, compare rebuilt DB content with dbdiff, profile slow phases, capture build logs,
+  or inspect structured issues and post-build SQLite/invariant checks.
 ---
 
-# Build DB
+# Registry Build DB
 
-Run from the repository root of the current Registry Research Toolkit checkout.
+Run from the repository root of the candidate checkout. Read `reg_meta_build/README.md`
+and its `DESIGN.md` for the maintained three-stage flow: prepare machine-readable
+sources, resolve checked curation, then write SQLite.
 
-Use the watcher script by default:
+## Select inputs
 
-```sh
-uv run --no-project python scripts/build_db_watch.py \
-  --slug <short-task-name> \
-  --input-dir /Users/adam/Code/registry-research-toolkit/reg_meta_build/input_data
-```
+Use the maintainer's exact selection JSON. It pins a prepared-source commit and manifest
+digest, scope declarations and catalog metadata. Record the code revision and selection
+digest alongside the build evidence. Never substitute a branch name, infer a newer input
+revision, or rewrite guards to make an update pass.
 
-The script:
+If a change requires new source interpretation or curation, prepare a separate candidate
+and inspect it before selection. Preparation fully validates the candidate; warm builds
+reuse it without expanding cold archives or redoing preparation validation. Builds do
+not mutate or commit accepted inputs. PDF interpretation and LLM work stay outside the
+build. Do not overlay loose files onto a pinned candidate.
 
-- writes the full timestamped build log to `/tmp/<slug>.log`;
-- builds into a scratch DB directory unless `--db-dir` is supplied;
-- copies `reg_meta_build/fqid_slugs/` to a scratch slug dir and passes it as
-  `--slug-dir`, so generated `*.auto.toml` files do not dirty the checkout;
-- passes `--timing` unless `--no-timing` is supplied;
-- emits sparse milestones plus quiet-period health every 300 seconds;
-- runs `PRAGMA integrity_check`, `PRAGMA foreign_key_check`, and key table counts after
-  a successful build;
-- optionally runs dbdiff against a baseline DB after successful build checks;
-- uses the SCB value prestage cache by default when SCB is in the provider set;
-- writes `/tmp/<slug>.summary.json`.
+## Run a diagnostic or strict build
 
-## Running unattended
-
-The build is long; launch the watcher once and let it run to completion, then read
-`/tmp/<slug>.summary.json` and the log tail — never re-launch it to "check progress".
-
-- **Claude Code:** run the watcher with `Bash` and `run_in_background: true`. The
-  command exits when the build finishes, so you get exactly one completion notification;
-  then read the summary JSON and the log tail. Do NOT wrap the watcher in a subagent — a
-  subagent that backgrounds the build returns before it finishes, and its detached
-  process is not harness-tracked, so the completion notification never fires and the
-  result is lost (you end up hand-rolling a `pgrep` wait and parsing the log yourself).
-- **Codex:** start the watcher once with `exec_command`; when it returns a running
-  session id, poll that same session with `write_stdin` and `yield_time_ms=300000` (5
-  minutes). Do not use repeated `exec_command` probes or 30-second polling loops.
-
-Only report to the user on phase changes, failures, quiet-period health, completion, or
-explicit status requests.
-
-## Inputs
-
-Use the main checkout's real seed from a worktree unless the worktree itself has the
-untracked full input corpus:
+Choose a new scratch directory outside the accepted input and curation repositories. The
+report directory must not exist. Always use an explicit scratch destination for
+verification, preserving the active catalog.
 
 ```sh
---input-dir /Users/adam/Code/registry-research-toolkit/reg_meta_build/input_data
+run_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-build.XXXXXX")"
+selection="/absolute/path/to/selection.json"
+
+# Diagnostic: complete the scan and retain unresolved discrepancies (exit 10).
+uv run reg-meta-build build-db --selection "$selection" \
+  --report-dir "$run_dir/report" --timing \
+  --diagnostic --diagnostic-db-path "$run_dir/diagnostic.db" \
+  > "$run_dir/build.log" 2>&1
 ```
 
-If the PR changes tracked `reg_meta_build/input_data/**`, do not validate directly
-against the main checkout's input tree. Build an overlay input root that presents the
-main checkout's untracked seed plus the PR-head tracked input files, including mirrored
-deletions/renames, and pass that overlay as `--input-dir`.
+Diagnostic mode retains error severity. Invalid pins, malformed contracts and
+implementation failures still abort. An exit code of 10 alone does not prove a completed
+diagnostic: require `status = diagnostic_complete` in `report/summary.json`. The
+database is marked nonpublishable; do not activate or release it.
 
-For a full global rebuild, omit `--providers` so newly onboarded global providers are
-included. Use `--providers` only for deliberately scoped investigation.
-
-Use `--no-validate` only for throwaway profiling when validation is not part of the
-question. Merge/release evidence should use default validation.
-
-## SCB Value Prestage Cache
-
-The watcher defaults to:
+Use a separate new run directory for strict verification:
 
 ```sh
---prestage-cache <tmp-dir>/regmeta-build-prestage/scb-value-prestage.sqlite
+run_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-build.XXXXXX")"
+uv run reg-meta-build --db "$run_dir/catalog" build-db \
+  --selection "$selection" --report-dir "$run_dir/report" --timing \
+  > "$run_dir/build.log" 2>&1
 ```
 
-Keep this enabled for normal full rebuilds. It caches only the stable SCB Vardemangder
-projection output: `value_code`, `value_set`, `value_set_member`, and CVID
-value-set/version/nivå assignments. It does not cache operational definitions, slug
-TOMLs, codelivery/fold/split curation, classifications, concept groups, lineage, search
-indexes, validation output, or any global cross-provider derivation.
+Strict builds preserve the previous destination on failure. Publication requires exit 0,
+a complete summary with `publication_ready = true`, and all structural and corpus
+validation. There is no validation bypass. Reports contain `summary.json` and
+`events.jsonl.gz`, with source references, applicability failures and withheld output.
 
-`build-db` validates the cache before using it. Missing, stale, or unusable cache files
-are rebuilt from raw SCB inputs automatically. Staleness is based on `Vardemangder.csv`,
-`VardemangderValidDates.csv`, a prestage format version, and the
-Registerinformation-derived CVID/register-version backbone used for year projection.
-Operational-definition text changes should not stale the cache; the final build still
-reads `Registerinformation.csv` and recomputes op defs.
+Start one build and follow its existing process/session; never relaunch to check
+progress. Read phase timing and the log tail. For tool polling, use bounded waits so
+progress updates and user steering remain responsive. Keep failed outputs for diagnosis.
 
-Force a rebuild with `--refresh-prestage-cache` when the PR changes SCB value-set
-projection logic, prestage cache schema/versioning, or when the user explicitly asks for
-cache refresh evidence. Use `--no-prestage-cache` only to measure the raw path or debug
-the cache itself.
+## Verify and compare
 
-If bypassing the watcher and running `reg-meta-build build-db` directly, pass
-`--scb-value-prestage-cache <path>` and optionally `--refresh-scb-value-prestage-cache`
-with the same rules.
+The common writer validates the database before placement. For an independent post-build
+check, open the output read-only and run `PRAGMA integrity_check` and
+`PRAGMA foreign_key_check`. Inspect the summary and source-linked ledger for the
+behavior the change is intended to affect. A diagnostic corpus failure is evidence to
+explain, not a guard to weaken.
 
-## Dbdiff Verification
-
-Use dbdiff when the rebuild is meant to prove content identity or bounded content drift:
-content-neutral code changes, refactors, performance changes, or PRs where only a known
-small DB delta is intended.
+Use dbdiff for content-neutral changes or an expected bounded delta:
 
 ```sh
-uv run --no-project python scripts/build_db_watch.py \
-  --slug <short-task-name> \
-  --input-dir /Users/adam/Code/registry-research-toolkit/reg_meta_build/input_data \
-  --dbdiff-against <baseline-reg_meta.db>
+uv run python -m reg_meta_build.dbdiff \
+  /absolute/path/to/baseline.db /absolute/path/to/candidate.db \
+  --json > "$run_dir/dbdiff.json"
 ```
 
-`--dbdiff-against` compares the built `reg_meta.db` to the baseline with
-`python -m reg_meta_build.dbdiff` after validation and SQLite checks pass. Identical
-content keeps exit 0. Any diff makes the watcher exit non-zero, keeps scratch outputs,
-and writes the full JSON report to `/tmp/<slug>.dbdiff.json` unless `--dbdiff-json` is
-set. For expected small diffs, inspect and summarize the dbdiff report; do not treat
-plain row counts as sufficient evidence.
+Dbdiff exit 0 means equivalent content under its documented ignored fields; exit 1 means
+differences. Inspect the report before accepting a claimed bounded change. Row counts
+alone are insufficient. For a broad pipeline refactor, use its agreed comparison scope
+rather than inventing an exhaustive discrepancy-by-discrepancy curation gate.
 
-## Reading Results
+For deterministic replay, run the same pinned selection in a second fresh process and
+compare database bytes and decompressed event-ledger bytes. Keep timing conditions
+explicit: overlapping builds or audits are not isolated performance benchmarks.
 
-On success, report:
+## Report
 
-- log path and summary JSON path;
-- scratch DB dir;
-- prestage cache path and whether it was applied or rebuilt;
-- total exit status;
-- `integrity_check` and `foreign_key_check`;
-- important `[timing]` lines and any long quiet intervals;
-- dbdiff status and JSON report path, if dbdiff was used;
-- any task-specific SQL probe results.
-
-On failure, keep scratch paths and quote the first actionable failing section from the
-log. Do not delete scratch outputs until after checks and any requested inspection are
-complete.
-
-## Investigation
-
-Start from the current build's observed slow phases. Add source instrumentation only
-after the watcher identifies an opaque or long interval. Do not start by searching old
-commits unless the current profile is ambiguous.
+Report the code revision, exact input selection, output/report/log paths, actual exit
+status, summary status and publication readiness, relevant validation, SQLite checks,
+timings and comparison results. Separate engineering verification from unresolved
+curation. Preserve accepted inputs, cold archives and the active catalog. Clean only
+task-owned scratch artifacts after their required evidence has been retained.

@@ -307,60 +307,35 @@ Build and upload fresh if **any** condition is true:
 
 Otherwise copy the prior release's asset forward (8d) and skip the rest of 8a.
 
-The shipped DB is the full **global catalog** — every global provider, built with
-build-db's **default** `--providers` set (currently
-`scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet,umu`, one per
-`fqid_slugs/*.toml`). **Do NOT pin `--providers scb,sos`** — that drops the global thin
-providers (FK, FOHM, Umeå, Riksarkivet, Pliktverket, Läkemedelsverket) and ships an
-incomplete catalog (what shipped before v0.16.0). Omit the flag so newly onboarded
-global providers are picked up automatically. `input_data/` **must** contain every
-global provider's seed dir (`SCB/`, `Socialstyrelsen/`, `Folkhalsomyndigheten/`,
-`Forsakringskassan/`, `Lakemedelsverket/`, `Pliktverket/`, `Riksarkivet/`, `UMU/`); a
-missing dir hard-fails the checkout-staleness preflight (#550/#556, exit 10,
-`EXIT_CONFIG`), and a curated `[variable]` pin for a non-built provider hard-fails
-`slug_variable_override_stale`. Flavor/steward providers (`fqid_slugs/swecov/*`, e.g.
-AMS/IAF/Skatteverket) are an extend-db overlay, **not** part of this build. (To rebuild
-the legacy SCB-only asset, use `--providers scb`.)
+The shipped DB is the full **global catalog**, built from the maintainer's accepted
+complete prepared-source selection. Follow the [build-db skill](../build-db/SKILL.md) to
+verify the exact source and curation pins. Do not use a scoped investigation selection
+or a diagnostic database as a release asset. Steward-private providers remain the
+separate `extend-db` overlay.
 
-Build to a temp DB dir and against a **copy** of the slug TOMLs so the repo tree stays
-pristine: `build-db` writes gitignored `*.auto.toml` into `--slug-dir`, which would
-otherwise trip `test_slug_snapshot` on the next commit. Checkpoint the WAL into the base
-file and switch the journal mode to `DELETE` before compressing, so the shipped asset is
-a self-contained single file (no `-wal`/`-shm` sidecars). `open_db` opens read-only with
-`immutable=1` (#283), so a WAL asset would still open on a read-only dir — but a
-`DELETE`-mode asset is robust for anyone opening it directly. Run the checkpoint via
-`uv run python -c` (no sqlite3 CLI is assumed on the release host).
+Build to a fresh scratch directory with strict validation. The selection is read-only;
+there are no loose CSV or mutable slug-directory build overrides. Every unresolved error
+must block publication. Check the report's `status` and `publication_ready` before
+compression. A diagnostic build retains errors and is never releasable.
 
 ```sh
 set -euo pipefail
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_db.XXXXXX")"
-slug_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_slugs.XXXXXX")"
-cp -R reg_meta_build/fqid_slugs/. "$slug_dir/"
-input_dir="reg_meta_build/input_data"
-# If the untracked seed lives in another checkout, set input_dir to an overlay
-# root that includes this checkout's tracked input_data changes.
-uv run reg-meta-build --db "$db_dir" build-db --input-dir "$input_dir" --slug-dir "$slug_dir"
-db="$db_dir/reg_meta.db"
-uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db"
+selection="/absolute/path/to/accepted-selection.json"
+uv run reg-meta-build --db "$db_dir/catalog" build-db \
+  --selection "$selection" --report-dir "$db_dir/report" --timing
+uv run python -c 'import json,sys; s=json.load(open(sys.argv[1])); assert s["status"] == "complete" and s["publication_ready"] is True' "$db_dir/report/summary.json"
+db="$db_dir/catalog/reg_meta.db"
 zstd -3 -T0 "$db" -o reg_meta.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
-rm -rf "$db_dir" "$slug_dir" reg_meta.db.zst
+rm reg_meta.db.zst
 ```
 
-`build-db` validates by default: it runs the value-set dedup + year-projection
-invariants (plus the SOS corpus-volume gate, since this is a real build) inline and
-exits 10 on failure (same checks as `scripts/validate_valueset_dedup.py`). Pass
-`--no-validate` to skip — only ever for a throwaway build where the checks are noise.
-
-If the build fails with `vardemangder_drift` (exit 10), SCB has shipped a new
-`kod==version` row whose kod is in neither `_VARDEMANGDER_SENTINELS` nor
-`_VARDEMANGDER_REAL_SHAPED` (both in `reg_meta_build/src/reg_meta_build/db.py`). Inspect
-the listed values, add each to the appropriate allowlist (sentinel placeholder vs. real
-single-code value set), then rerun. See `reg_meta_build/DESIGN.md` § "Vardemängder
-sentinel filtering".
-
-After the build, confirm it is the full catalog before shipping — `provider` should list
-all eight global providers, not just `scb`/`sos`.
+The common writer validates structural and full-corpus invariants before atomically
+placing a self-contained SQLite file. Keep the build report and selected input pins with
+the release evidence. Confirm all expected global providers and their content are
+represented before shipping. Source discrepancies require a separately reviewed input or
+curation update; do not bypass validation or modify an accepted selection in place.
 
 #### 8b. Doc DB asset (`reg_meta_docs.db.zst`)
 

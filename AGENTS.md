@@ -100,11 +100,11 @@ simplification reads as intent and a deferral can't silently rot.
 - The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
   after a coordinated bump (#682, 2026-06-22).
 - A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
-  `uv run --no-project` tooling** (`scripts/build_db_watch.py` in the `build-db` skill,
-  `scripts/gh_issue.py`) resolves the `>=3.14` floor instead of the ambient Python.
-  `--no-project` skips workspace discovery, so without this pin the `requires-python`
-  floor is bypassed for those runs and the 3.14-only PEP 758 syntax in `scripts/` would
-  `SyntaxError` on a < 3.14 interpreter.
+  `uv run --no-project` tooling** (for example, `scripts/gh_issue.py`) resolves the
+  `>=3.14` floor instead of the ambient Python. `--no-project` skips workspace
+  discovery, so without this pin the `requires-python` floor is bypassed for those runs
+  and the 3.14-only PEP 758 syntax in `scripts/` would `SyntaxError` on a < 3.14
+  interpreter.
 
 ## Stack
 
@@ -139,11 +139,11 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   Docker-requiring tests. Build/parse coverage is fully synthetic (no gitignored real
   SCB/SOS data) and runs the full structural validator
   (`validate_built_db(corpus=False)` — every invariant except the real-corpus volume
-  gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`, which
-  validates by default with `corpus=True` (opt out with `--no-validate`). Hypothesis
-  (dev-only) is used for property-based tests on invariant-heavy surfaces
-  (`test_*_properties.py` in `reg_meta` and `reg_meta_build`), additive to the
-  example/snapshot suites.
+  gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`. Strict
+  builds require `corpus=True`; diagnostic builds retain structural validation and
+  report corpus failures in a separate, nonpublishable output. Hypothesis (dev-only) is
+  used for property-based tests on invariant-heavy surfaces (`test_*_properties.py` in
+  `reg_meta` and `reg_meta_build`), additive to the example/snapshot suites.
 - **Type checking**: `uvx --from ty==0.0.79 ty check` (Astral, beta). Blocking in CI;
   pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
   checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —

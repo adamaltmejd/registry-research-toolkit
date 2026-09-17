@@ -253,13 +253,10 @@ def _rebuild_fts(src: sqlite3.Connection) -> None:
 
 def _seed_tags(src: sqlite3.Connection) -> None:
     """Seed thematic tags so catalog routes exercise the #311 consumption path."""
-    from reg_meta_build.tags import (
-        CuratedTag,
-        TagMember,
-        materialize_tags,
-    )
+    from _slugged_db import seed_tags
+    from reg_meta_build.tags import CuratedTag, TagMember
 
-    materialize_tags(
+    seed_tags(
         src,
         (
             CuratedTag(
@@ -287,7 +284,6 @@ def _seed_tags(src: sqlite3.Connection) -> None:
                 ),
             ),
         ),
-        providers=frozenset({"scb"}),
     )
 
 

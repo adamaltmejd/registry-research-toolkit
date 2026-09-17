@@ -3,7 +3,8 @@
 Thin wrapper around ``reg_meta_build.validate.validate_built_db`` — kept
 so maintainers can re-validate an existing DB without rebuilding it.
 The build-time path runs the same checks automatically (`reg-meta-build
-build-db` validates by default; opt out with `--no-validate`, issue #92).
+build-db` always validates structural integrity; strict mode also requires the
+full corpus gates). Diagnostic builds report corpus failures without publication.
 Runs with ``corpus=True`` like the real build, so it expects the full SOS
 volume — point it at a real shipped DB, not a synthetic/partial one.
 

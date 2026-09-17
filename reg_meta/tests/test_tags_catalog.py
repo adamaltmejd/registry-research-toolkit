@@ -1,23 +1,21 @@
 """Query-layer coverage for the curated tag layer (#311):
 `Catalog.list_tags` / `tags_for_variable` / `tags_for_register`.
 
-Seeds tags via `materialize_tags` (the build-side writer) over the slugged
-fixture DB so the read path is exercised against real materialized rows.
+Seeds literal tag rows over the slugged fixture DB so the read path exercises
+the catalog contract independently of the retired build-time curation pass.
 """
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from _slugged_db import add_register, add_variable, build_slugged_db
+from _slugged_db import add_register, add_variable, build_slugged_db, seed_tags
 from reg_meta.catalog import Catalog, ResolvedRegister, ResolvedVariable
 from reg_meta.fqid import Fqid
-from reg_meta_build.tags import CuratedTag, TagMember, materialize_tags
+from reg_meta_build.tags import CuratedTag, TagMember
 
 if TYPE_CHECKING:
     import sqlite3
-
-_SCB = frozenset({"scb"})
 
 
 def _seeded_conn() -> sqlite3.Connection:
@@ -28,7 +26,7 @@ def _seeded_conn() -> sqlite3.Connection:
     conn = build_slugged_db(classification=None)
     add_register(conn, register_id=2, slug="rams", name="RAMS")
     add_variable(conn, register_id=2, var_id=50, name="Sysselsättning", slug="syss")
-    materialize_tags(
+    seed_tags(
         conn,
         (
             CuratedTag(
@@ -51,7 +49,6 @@ def _seeded_conn() -> sqlite3.Connection:
                 ),
             ),
         ),
-        providers=_SCB,
     )
     return conn
 
@@ -158,7 +155,7 @@ def test_tags_for_variable_inheritance_can_scope_group_members() -> None:
 def test_concept_group_tag_note_prefers_noted_member_with_equal_rank() -> None:
     conn = build_slugged_db(classification=None)
     add_variable(conn, register_id=1, var_id=51, name="Civilstånd", slug="civilstand")
-    materialize_tags(
+    seed_tags(
         conn,
         (
             CuratedTag(
@@ -178,7 +175,6 @@ def test_concept_group_tag_note_prefers_noted_member_with_equal_rank() -> None:
                 ),
             ),
         ),
-        providers=_SCB,
     )
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
@@ -238,7 +234,7 @@ def test_tags_for_variable_orders_by_rank_then_slug() -> None:
     # `kon` belongs to TWO tags with different rank: higher-rank `aaa` (rank 5)
     # must come AFTER lower-rank `income` (rank 0).
     conn = build_slugged_db(classification=None)
-    materialize_tags(
+    seed_tags(
         conn,
         (
             _multi_membership_tag(
@@ -248,7 +244,6 @@ def test_tags_for_variable_orders_by_rank_then_slug() -> None:
                 "income", "Income", TagMember("scb", "lisa", "kon", 0, True, None)
             ),
         ),
-        providers=_SCB,
     )
     memberships = Catalog(conn).tags_for_variable(
         Fqid.binding_fqid("scb", "lisa", "kon")
@@ -259,7 +254,7 @@ def test_tags_for_variable_orders_by_rank_then_slug() -> None:
 
 def test_tags_for_register_orders_by_rank_then_slug() -> None:
     conn = build_slugged_db(classification=None)
-    materialize_tags(
+    seed_tags(
         conn,
         (
             _multi_membership_tag(
@@ -269,7 +264,6 @@ def test_tags_for_register_orders_by_rank_then_slug() -> None:
                 "income", "Income", TagMember("scb", "lisa", None, 0, False, None)
             ),
         ),
-        providers=_SCB,
     )
     memberships = Catalog(conn).tags_for_register(Fqid.register_fqid("scb", "lisa"))
     assert [m.slug for m in memberships] == ["income", "aaa"]
@@ -279,14 +273,13 @@ def test_starred_count_counts_register_grain_starred_member() -> None:
     # A tag whose ONLY member is register-grain AND starred → starred_count == 1.
     # Locks the grain-agnostic `starred` design (starred isn't variable-only).
     conn = build_slugged_db(classification=None)
-    materialize_tags(
+    seed_tags(
         conn,
         (
             _multi_membership_tag(
                 "regstar", "RegStar", TagMember("scb", "lisa", None, 0, True, None)
             ),
         ),
-        providers=_SCB,
     )
     (tag,) = Catalog(conn).list_tags()
     assert tag.member_count == 1

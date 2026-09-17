@@ -2157,12 +2157,12 @@ class TestTagChecks:
 
     @staticmethod
     def _tagged_db():
-        from _slugged_db import add_variable, build_slugged_db
-        from reg_meta_build.tags import CuratedTag, TagMember, materialize_tags
+        from _slugged_db import add_variable, build_slugged_db, seed_tags
+        from reg_meta_build.tags import CuratedTag, TagMember
 
         conn = build_slugged_db(classification=None)  # scb/lisa (register 1), `kon`
         add_variable(conn, register_id=1, var_id=90, name="Income", slug="dispink")
-        materialize_tags(
+        seed_tags(
             conn,
             (
                 CuratedTag(
@@ -2175,7 +2175,6 @@ class TestTagChecks:
                     ),
                 ),
             ),
-            providers=frozenset({"scb"}),
         )
         return conn
 

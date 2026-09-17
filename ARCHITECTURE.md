@@ -135,18 +135,18 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_bu
 
 ### Accepted source revisions and catalog generations
 
-> **Target contract; not yet shipped.** `reg_meta_build/DESIGN.md` defines the full
-> source-to-catalog reconciliation architecture and its transition from the current
-> adapters and curation passes.
+`reg_meta_build` owns three stages: provider-format cleaning into prepared source
+records, provider-neutral curation and resolution, and mechanical SQLite writing.
+Machine-readable inputs are selected by the exact commit and manifest of a host-local
+input repository. Builds reuse validated preparation; they never call LLMs or extract
+PDFs. The catalog embeds its prepared-source pins and curation-selection digest. See
+`reg_meta_build/DESIGN.md` for the contracts and update workflow.
 
-`reg_meta_build` alone owns source revisions, normalized source records, reviewed
-discrepancy cases, and their reconciliation. Accepted machine-readable inputs are
-selected by the exact commit and manifest of the host-local catalog-input repository.
-The built catalog embeds those input pins together with the builder and reviewed
-case-set identity. `reg_meta` and `reg_webapp` consume only the activated SQLite
-generation; they never read the input repository or recompute authority. When correction
-detail is exposed, it remains collapsed into the existing catalog metadata rather than
-creating a second public evidence API.
+`reg_meta` and `reg_webapp` consume only the activated SQLite generation; they never
+read the input repository or recompute authority. Diagnostic builds write a separate
+nonpublishable database with unresolved discrepancies and withheld output. They cannot
+replace the active catalog. When correction detail is exposed, it remains collapsed into
+the existing catalog metadata rather than creating a second public evidence API.
 
 The accepted input branch and active catalog are related but distinct local states. A
 candidate is reconciled, built, validated, and compared before its input commit is
@@ -157,11 +157,11 @@ embedded pins. Runtime readers must never combine those two generations implicit
 
 The document index and steward inventories retain separate authority. Indexing or
 preserving a handbook/workbook does not make it a catalog source, and a steward's
-holdings establish possession only for that steward. The planned LISA supplemental
-reader enters through `reg_meta_build`'s machine-readable source-record boundary; PDF
-extraction stays upstream. None of these inputs cross the MONA boundary, and no source
-reconciliation changes the rule that PII stays in MONA and only aggregate,
-disclosure-controlled results leave it.
+holdings establish possession only for that steward. The LISA supplemental reader enters
+through `reg_meta_build`'s machine-readable source-record boundary; PDF extraction stays
+upstream. None of these inputs cross the MONA boundary, and no source reconciliation
+changes the rule that PII stays in MONA and only aggregate, disclosure-controlled
+results leave it.
 
 ## Repo-wide invariants
 

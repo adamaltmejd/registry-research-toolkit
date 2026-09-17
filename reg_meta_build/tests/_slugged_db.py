@@ -1,19 +1,21 @@
 """Hand-curated in-memory reg_meta DB for FQID/Catalog tests.
 
-The fixture DB built by `build_db` from synthetic CSVs has slug columns
-NULL (those land in step 1c). FQID-aware code paths need a DB with
-slugs populated, but the surface area exercised by these tests is
-small — a single register/variant/version/variable/classification — so
-hand-curated INSERTs beat a full build pipeline.
+FQID-aware code paths need a DB with slugs populated. These small tests use
+explicit rows for registers, variants, variables and classifications instead
+of running the full build pipeline.
 """
 
 from __future__ import annotations
 
 import sqlite3
+from typing import TYPE_CHECKING
 
 from reg_meta.db import register_py_lower
 from reg_meta.fqid import derive_variable_slug
 from reg_meta_build.db import DDL, seed_providers
+
+if TYPE_CHECKING:
+    from reg_meta_build.tags import CuratedTag
 
 # (name, slug, register_id, provider_id)
 _DEFAULT_REGISTER = ("LISA", "lisa", 1, 1)
@@ -333,3 +335,45 @@ def add_binding(
             "VALUES (?, ?, '0001-01-01', '9999-12-31', 'int', ?)",
             (vid_row[0], register_variant_id, delivery_column_name),
         )
+
+
+def seed_tags(conn: sqlite3.Connection, tags: tuple[CuratedTag, ...]) -> None:
+    """Insert authored fixture rows; curation behavior belongs to builder tests."""
+    registers = {
+        (p, r): rid
+        for rid, p, r in conn.execute(
+            "SELECT r.register_id, p.slug, r.slug FROM register r "
+            "JOIN provider p USING(provider_id)"
+        )
+    }
+    variables = {
+        (rid, slug): vid
+        for vid, rid, slug in conn.execute(
+            "SELECT variable_id, register_id, slug FROM variable"
+        )
+    }
+    for tag in tags:
+        tag_id = conn.execute(
+            "INSERT INTO tag (slug, label, description) VALUES (?, ?, ?)",
+            (tag.slug, tag.label, tag.description),
+        ).lastrowid
+        for member in tag.members:
+            register_id = registers[member.provider, member.register]
+            variable_id = (
+                variables[register_id, member.variable]
+                if member.variable is not None
+                else None
+            )
+            conn.execute(
+                "INSERT INTO tag_member "
+                "(tag_id, register_id, variable_id, rank, starred, note) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (
+                    tag_id,
+                    register_id if variable_id is None else None,
+                    variable_id,
+                    member.rank,
+                    member.starred,
+                    member.note,
+                ),
+            )

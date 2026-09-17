@@ -349,7 +349,7 @@ def run_update(
             error_class="configuration",
             message=reason,
             remediation=(
-                "Build from CSV with `reg-meta-build build-db`, "
+                "Build from pinned prepared sources (see `reg-meta-build build-db --help`), "
                 "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
             ),
         )

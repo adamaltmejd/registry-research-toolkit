@@ -409,7 +409,7 @@ def open_db(
     error_code: str = "db_not_found",
     remediation: str = (
         "Run `reg-meta update` to fetch the pre-built DB, "
-        "or `reg-meta-build build-db --input-dir <path>` to build from CSV exports."
+        "or see `reg-meta-build build-db --help` to build from pinned prepared sources."
     ),
 ) -> sqlite3.Connection:
     if not db_path.exists():
