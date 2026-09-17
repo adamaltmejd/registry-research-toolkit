@@ -1,93 +1,23 @@
-"""Derived concept-group layer (#303).
+"""Concept-group declarations and pure grouping rules.
 
-Build-time grouping of near-identical catalog rows into PRESENTATION-ONLY
-concept groups, so browse surfaces (webapp catalog, future CLI listings) can
-collapse machine-stamped SCB column families into one row with a facet picker.
-Identity is untouched: bindings/orders/stats keep leaf FQIDs, a group is not
-FQID-addressable, and a wrong group is a cosmetic curation bug — not the
-identity corruption that killed identity-level classification folding
-(#223 part 2, 195 measured over-folds).
-
-Three dimension sources, derived in priority order (a variable/classification
-belongs to AT MOST ONE group — enforced by the member-table PKs; a later pass
-never claims an already-grouped member):
-
-0. ``edge`` — connected components of within-register
-   ``same_definition_different_column`` split-sibling pairs. Ground truth: the
-   A2.2 split machinery minted these between the delivery columns of ONE SCB
-   variable definition, so folding them back into one browse row is
-   zero-inference (e.g. ureg's sun2000inr/sun2020inr coding succession; on the
-   real corpus ~2,200 components covering ~8,200 variables, 2,191/2,193
-   sharing a single name). The pairs are read from the IN-BUILD sibling sets the
-   triage minted (``edge_siblings``); they are never persisted to any shipped
-   table. A later
-   ``curated`` ``[[variable_group]]`` takes PRECEDENCE: any FQID it claims is
-   subtracted from the edge components before they mint groups (so #488's
-   per-population curation can re-home a näringsgren variable the edge fold would
-   otherwise grab), and a component reduced below 2 survivors mints no group.
-1. ``token`` — exact curated vocabularies only (NO regex name-patterns, per
-   the standing curation rule): Swedish month slug tails (both the short and
-   full forms SCB mixes, e.g. lisa's agi1lonfinkjan…agi1lonfinkdec) for
-   variables. Guarded — a slug merely ending in "maj" must not fold: variables
-   need >= ``_MIN_MONTH_SIBLINGS`` distinct months on one stem AND label-prefix
-   agreement.
-
-   Classification VINTAGE families are detected by the SAME slug-tail rule
-   (4-digit year + name-agreement guard) but are NOT folded into a concept group
-   (#571): editions of one classification (ssyk1996→ssyk2012, lkf1980…lkf2026)
-   are a temporal SUCCESSION, not a parallel facet-picker. They materialize as
-   adjacent-edition edges in ``classification_replaced_by`` instead — see
-   ``derive_classification_succession``. The ``concept_group_classification``
-   table and the ``kind='classification'`` machinery are RETAINED (empty of
-   derived rows) for the curated umbrella groups #516 adds later.
-2. ``curated`` — maintainer TOML (``reg_meta_build/curation/concept_groups.toml``), three
-   opt-in entry kinds:
-   - ``[[variable_group]]`` — a hand-authored family with an exact member list.
-     A SINGLE-axis family (the legacy shape) declares one ``axis`` and attaches
-     whole variables under it (e.g. the LISA agi{1,2,3} rank facet, or the LOVA
-     invdatum/invland ordinal facet). A MULTI-axis family (#819) declares ordered
-     named ``axes`` and attaches members with one ``coords`` coordinate on every
-     axis; members may be whole variables or ``(variable, delivery_column)``
-     REPRESENTATIONS (the iot disposable-income group over enhet ×
-     hushållsbegrepp × kapitalvinst, where one variable can hold two coordinates
-     via two delivery columns). An AXIS-LESS variable umbrella sets ``axes = []``
-     and attaches whole variables without coords. The group's axes land in
-     ``concept_group_axis``; each member's per-axis coords in
-     ``concept_group_variable_facet``.
-   - ``[[accept]]`` (#496) — folds a candidate family from the generated,
-     machine-owned ``concept_groups.auto.toml`` BY REFERENCE, located by
-     ``(register, key)``, with optional ``label``/``axis``/``exclude`` overrides
-     (``resolve_accept`` turns it into a single-axis ``CuratedGroup`` of
-     whole-variable attachments). An auto family folds ONLY when accepted;
-     unaccepted ones never materialize.
-   - ``[[classification_group]]`` (#516) — a curated ``kind='classification'``
-     umbrella over genuinely-DISTINCT classifications (the SUN group over
-     niva/inriktning/grupp; NOT vintage editions, which are #571 succession
-     edges). AXIS-LESS — zero ``concept_group_axis`` rows (members are distinct
-     classifications, not points on a scale); each member keeps its own short
-     ``value``/``label`` inline. Catalog-scoped (classifications are global),
-     materialized by ``_apply_curated_classification_groups``.
-   All kinds fail fast on unresolvable references (EXIT_CONFIG).
-
-When the interval-native model (#271) lands its column→variable merges, the
-month groups graduate into real single variables and this layer shrinks to
-edge/rank/vintage duty.
+The common resolver applies explicit groups, checked sibling components and guarded
+month families before writing. Classification vintages form succession edges;
+curated classification umbrellas remain separate declarations. Offline conversion
+resolves accepted machine-generated candidates through ``resolve_accept``.
 """
 
 from __future__ import annotations
 
 import functools
 import re
-import sqlite3
 from dataclasses import dataclass
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
+    from collections.abc import Iterable
     from pathlib import Path
 
-from ._components import DisjointSet
 from ._curation import (
     curation_error,
     load_curation_entries,
@@ -195,7 +125,7 @@ class CuratedMember:
 
 @dataclass(frozen=True)
 class CuratedGroup:
-    """One curated family the materializer applies. `axes` is the group's ordered
+    """One curated family common resolution applies. `axes` is the group's ordered
     named facet axes as `(axis, axis_label)` pairs (ordinal = index); a single-axis
     family carries one, an axis-less umbrella carries zero, and a multi-axis
     family (the iot disposable-income group) N.
@@ -221,7 +151,7 @@ class Accept:
     fold an auto family from `concept_groups.auto.toml` BY REFERENCE. The
     `(provider, register, key)` locates the auto family; `label`/`axis` override
     the auto family's when set; `exclude` drops member slugs (a stem that picked
-    up an unrelated column). Resolved to a `CuratedGroup` at materialize time
+    up an unrelated column). Resolved to a `CuratedGroup` during offline conversion
     (`resolve_accept`) against the loaded auto families."""
 
     provider: str
@@ -533,7 +463,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     non-empty; exactly one of `axis`/`axes`; each member sets `variable`; coords
     cover every declared axis; axis-less members have no coords; `(variable,
     delivery_column)` unique within the group; keys are unique. Reference
-    RESOLUTION (register/variable/column exist) happens at materialize time against
+    RESOLUTION (register/variable/column exist) happens during common resolution over
     the built DB, not here."""
     # Shared scaffold (parse + top-level typo guard + array-of-tables +
     # per-entry table check) — see `_curation.load_curation_entries`.
@@ -692,7 +622,7 @@ def resolve_accept(
     accept: Accept, auto_by_scope: dict[tuple[str, str, str], CuratedGroup]
 ) -> CuratedGroup:
     """Resolve an `[[accept]]` against the loaded auto families → a
-    `CuratedGroup` the curated-apply pass materializes. The auto family must
+    `CuratedGroup` for offline conversion. The auto family must
     exist; `label`/`axis` fall through to the auto family's when the accept
     leaves them unset; `exclude` drops members (every excluded slug must be a
     real member, else it's a stale exclude); >= 2 members must remain. Every
@@ -767,7 +697,7 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
     present-but-blank `axis` is still rejected via `_require_opt_str`); `members`
     a non-empty array of tables, each setting non-empty `classification` (slug) /
     `value` / `label`; member slugs unique; `key` unique; >= 2 members. Slug
-    RESOLUTION (does the classification exist?) happens at materialize time
+    RESOLUTION (does the classification exist?) happens during offline conversion
     against the built DB."""
     entries = load_curation_entries(
         path,
@@ -855,7 +785,7 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
     FQID; `(code, label)` FQID tuples are unique (a duplicate pair is drift, mirroring
     the duplicate-key rejection in `load_concept_groups`). Endpoint RESOLUTION (do the
     variables exist? is the code the value-set owner? are they co-delivered?) happens
-    at materialize time against the built DB (`_append_code_label_edges`), not here."""
+    during common resolution over the built DB (`_append_code_label_edges`), not here."""
     entries = load_curation_entries(
         path,
         entry_key="pair",
@@ -873,7 +803,7 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
         label = _require_pair_fqid(entry, "label")
         # Reject a self-pair (code == label): a variable can't be both endpoints of
         # a code↔label decode. Caught here with a clear loader error rather than
-        # letting the contradictory value_set guards fire at materialize time.
+        # letting the contradictory value_set guards fire during offline conversion.
         if code == label:
             raise curation_error(
                 "code_label_pairs_invalid",
@@ -909,190 +839,6 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
 
 
 # ── derivation passes ───────────────────────────────────────────────────────
-
-
-def _insert_group(
-    conn: sqlite3.Connection,
-    *,
-    kind: str,
-    register_id: int | None,
-    group_key: str,
-    label: str,
-    source: str,
-) -> int:
-    # By-key route contract (#640): every group_key — curated / token / edge for
-    # `variable`, plus curated `classification` umbrellas — addresses its group via
-    # `/catalog/group/<provider>/<register>/<key>`. Starlette decodes `%2F` before
-    # matching `{key}` and the SPA helper splits on `/`, so a key must be a single
-    # URL-path-safe segment. Validate at this single insert seam. This is a
-    # path-safe CHARACTER check (`_is_path_safe_key`), NOT `is_slug`: the candidate
-    # generator emits valid trailing-hyphen keys (e.g. `artal-person-`) that
-    # `is_slug` would over-reject, breaking the `[[accept]]` by-reference workflow.
-    if not _is_path_safe_key(group_key):
-        raise curation_error(
-            "concept_group_key_not_path_safe",
-            f"concept_group {kind!r} key {group_key!r} (register_id "
-            f"{register_id}) is not a URL-path-safe key.",
-            "A concept-group key must use only URL-path-safe characters "
-            "(lowercase letters, digits, and `-._~`) and not be `.`/`..` — it "
-            "addresses the group via `/catalog/group/<provider>/<register>/<key>` "
-            "(Starlette decodes `%2F` before matching, the SPA splits on `/`), so "
-            "a key with `/`, `:`, spaces, uppercase, etc. is unreachable. Pick a "
-            "path-safe key.",
-        )
-    cur = conn.execute(
-        "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
-        "VALUES (?, ?, ?, ?, ?)",
-        (kind, register_id, group_key, label, source),
-    )
-    group_id = cur.lastrowid
-    assert group_id is not None
-    return group_id
-
-
-def _insert_group_axes(
-    conn: sqlite3.Connection,
-    group_id: int,
-    axes: tuple[tuple[str, str], ...],
-) -> None:
-    """Write a group's ordered named axes to `concept_group_axis` (#819): one row
-    per `(axis, axis_label)`, `ordinal` = array index. Zero axes (edge / axis-less
-    umbrella) writes nothing."""
-    conn.executemany(
-        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
-        "VALUES (?, ?, ?, ?)",
-        [
-            (group_id, axis, ordinal, axis_label)
-            for ordinal, (axis, axis_label) in enumerate(axes)
-        ],
-    )
-
-
-def _insert_member(
-    conn: sqlite3.Connection,
-    group_id: int,
-    variable_id: int,
-    delivery_column_name: str | None,
-) -> int:
-    """Insert one representation member into `concept_group_variable` and return its
-    surrogate `member_id` (#819). `delivery_column_name` NULL = a whole-variable
-    member."""
-    cur = conn.execute(
-        "INSERT INTO concept_group_variable "
-        "(group_id, variable_id, delivery_column_name) VALUES (?, ?, ?)",
-        (group_id, variable_id, delivery_column_name),
-    )
-    member_id = cur.lastrowid
-    assert member_id is not None
-    return member_id
-
-
-def _insert_member_facets(
-    conn: sqlite3.Connection,
-    member_id: int,
-    coords: tuple[tuple[str, str, str], ...],
-) -> None:
-    """Write a member's per-axis facet coordinates to
-    `concept_group_variable_facet` (#819): one row per `(axis, value, label)`. Zero
-    coords (a whole-variable member on an axis-less edge group) writes nothing."""
-    conn.executemany(
-        "INSERT INTO concept_group_variable_facet (member_id, axis, value, label) "
-        "VALUES (?, ?, ?, ?)",
-        [(member_id, axis, value, label) for axis, value, label in coords],
-    )
-
-
-def _derive_edge_groups(
-    conn: sqlite3.Connection,
-    edge_siblings: Iterable[tuple[int, int]],
-    exclude_variable_ids: set[int],
-) -> int:
-    """Dimension 0: one group per connected component of within-register
-    split-sibling pairs. `edge_siblings` is the IN-BUILD set of same-definition
-    sibling pairs the triage minted (`(variable_id, variable_id)`) — NOT a table
-    round-trip; they are never persisted to any shipped table. Since #923 it ALSO
-    carries curated code↔label decode pairs (`curation/concept_groups.toml`, appended by
-    `_append_code_label_edges`), so an `edge` group is NOT exclusively an auto
-    same-definition split — a future feature must not assume that (e.g. must not
-    auto-merge edge-group members into one variable identity).
-
-    Only a pair whose BOTH endpoints are slugged (`meta`) AND share a register is
-    unioned — mirroring the old table query's `WHERE slug IS NOT NULL` join and
-    `va.register_id = vb.register_id` guard (cross-register pairs don't fold; the
-    A2.2 split is register-local, but a future curated cross-register edge must
-    not mint an unrepresentable group).
-
-    Curated precedence (#591, unblocks #488): `exclude_variable_ids` are the
-    variable_ids the curated/accept pass has already claimed. An edge touching an
-    excluded endpoint doesn't connect survivors — it is skipped BEFORE the union,
-    so excluded vids never enter the DisjointSet. A component is therefore a
-    connected component of the same_def edges among NON-excluded variables, and
-    only one with >= 2 members mints a group (key/label/register computed from the
-    members). A component with < 2 members mints nothing — the curated
-    `[[variable_group]]` claims those FQIDs instead. Skipping excluded endpoints
-    pre-union (rather than subtracting post-union) is what keeps a BRIDGE
-    exclusion correct: if a claimed member is the only vertex joining two cliques,
-    the survivors on either side stay disconnected (no surviving same_def path
-    folds them)."""
-    # Full slugged-variable scan rather than an IN(...) over the involved ids —
-    # bounded (~50k rows on the real corpus) and immune to SQLite's host-
-    # parameter cap. Only slugged variables ever participated (the old table
-    # query joined on populated slugs), so an unslugged endpoint drops out.
-    meta = {
-        r[0]: (r[1], r[2], r[3])
-        for r in conn.execute(
-            "SELECT variable_id, register_id, slug, name FROM variable "
-            "WHERE slug IS NOT NULL"
-        )
-    }
-    ds: DisjointSet[int] = DisjointSet()
-    for a, b in edge_siblings:
-        if a not in meta or b not in meta or meta[a][0] != meta[b][0]:
-            continue
-        # Skip edges touching a curated/accepted endpoint BEFORE union: an
-        # excluded vid never enters the DisjointSet, so a bridge member's removal
-        # genuinely disconnects the survivors on either side (no folded {a, b}).
-        if a in exclude_variable_ids or b in exclude_variable_ids:
-            continue
-        ds.add(a)
-        ds.add(b)
-        ds.union(a, b)
-    components = ds.components()
-    if not components:
-        return 0
-
-    # Deterministic order: by (register_id, min member slug). Key = min member
-    # slug (components are disjoint, so it's scope-unique); label = the
-    # min-slug member's name (the shared name on 2,191/2,193 real components),
-    # falling back to the key itself. Excluded vids never entered the DisjointSet,
-    # so every component member is already a survivor; the < 2 guard stays
-    # defensive — a component should always be >= 2, but a degenerate one mints
-    # nothing.
-    prepared = []
-    for member_ids in components.values():
-        members = sorted(member_ids, key=lambda v: meta[v][1])
-        if len(members) < 2:
-            continue
-        register_id = meta[members[0]][0]
-        key = meta[members[0]][1]
-        label = meta[members[0]][2] or key
-        prepared.append((register_id, key, label, members))
-    for register_id, key, label, members in sorted(
-        prepared, key=lambda p: (p[0], p[1])
-    ):
-        group_id = _insert_group(
-            conn,
-            kind="variable",
-            register_id=register_id,
-            group_key=key,
-            label=label,
-            source="edge",
-        )
-        # Edge groups are axis-less: whole-variable members (delivery_column NULL),
-        # zero axis rows, zero facets — the member list IS the presentation.
-        for vid in members:
-            _insert_member(conn, group_id, vid, None)
-    return len(prepared)
 
 
 def _common_prefix(strings: list[str]) -> str:
@@ -1193,67 +939,6 @@ def month_group_candidates(
     return tuple(results)
 
 
-def _derive_month_groups(
-    conn: sqlite3.Connection,
-    warn: Callable[[str], None],
-    reserved_keys: frozenset[tuple[int, str]] = frozenset(),
-) -> int:
-    """Materialize the shared month derivation after the legacy edge pass."""
-    rows = conn.execute(
-        "SELECT v.variable_id, v.register_id, v.slug, v.name FROM variable v "
-        "WHERE v.slug IS NOT NULL AND NOT EXISTS "
-        "  (SELECT 1 FROM concept_group_variable m "
-        "   WHERE m.variable_id = v.variable_id) "
-        "ORDER BY v.register_id, v.slug"
-    ).fetchall()
-    variable_ids = {(str(reg), slug): vid for vid, reg, slug, _name in rows}
-    existing_keys = {
-        (str(r[0]), r[1])
-        for r in conn.execute(
-            "SELECT register_id, group_key FROM concept_group WHERE kind = 'variable'"
-        )
-    } | {(str(reg), key) for reg, key in reserved_keys}
-    candidates = month_group_candidates(
-        ((str(reg), slug, name) for _vid, reg, slug, name in rows),
-        reserved_keys=frozenset(existing_keys),
-    )
-    n_groups = 0
-    for group in sorted(candidates, key=lambda g: (int(g.register), g.key)):
-        if group.issue is not None:
-            reason = (
-                "a trailing-hyphen trim collapsed two distinct stems onto this key"
-                if group.issue == "stem_collision"
-                else "its stem collides with an existing group key"
-            )
-            warn(
-                f"  WARN concept-groups: month family {group.key!r} "
-                f"(register_id {group.register}, {len(group.members)} variables) NOT "
-                f"folded — {reason}"
-            )
-            continue
-        assert group.label is not None
-        group_id = _insert_group(
-            conn,
-            kind="variable",
-            register_id=int(group.register),
-            group_key=group.key,
-            label=group.label,
-            source="token",
-        )
-        _insert_group_axes(conn, group_id, (("month", "månad"),))
-        for month, slug in group.members:
-            member_id = _insert_member(
-                conn, group_id, variable_ids[group.register, slug], None
-            )
-            _insert_member_facets(
-                conn,
-                member_id,
-                (("month", f"{month:02d}", _MONTH_LABELS[month]),),
-            )
-        n_groups += 1
-    return n_groups
-
-
 # SUN slugs bake the vintage MID-slug to mirror the short_name (`SUN2020-NIVA`
 # → `sun2020-niva`, #747), so the general trailing-year rule below can't see the
 # vintage. This SUN-scoped override maps `sun<year>-<dim>` to its vintage family
@@ -1266,9 +951,7 @@ _SUN_MID_VINTAGE_RE = re.compile(r"^sun(\d{4})-(niva|inriktning|grupp)\Z")
 def _classification_vintage(slug: str) -> tuple[str, int] | None:
     """`(stem, year)` for a vintage EDITION slug, else `None` (a non-edition slug
     has no vintage family). Single source of truth for the vintage rule, shared by
-    `classification_slug_stem`, `derive_classification_succession`'s family
-    bucketing, AND the #494 vintage-reclaim stem guard in
-    `classifications.link_value_set_classifications`.
+    `classification_slug_stem` and common classification succession.
 
     General rule: a trailing 4-digit vintage year, stripped ONLY when the
     remaining stem does not itself end in a digit (a digit-ending stem means the
@@ -1309,46 +992,13 @@ def classification_slug_stem(slug: str | None) -> str | None:
     return v[0] if v is not None else slug
 
 
-def derive_classification_succession(conn: sqlite3.Connection) -> int:
-    """Classification EDITION succession (#571): detect 4-digit vintage-year slug
-    families (lkf1980…lkf2026, sni2002/sni2007, agarkat2000/2020, …) and emit a
-    temporal succession chain into `classification_replaced_by`, NOT a
-    presentation concept group — editions of one classification are a
-    succession, not a parallel facet-picker.
-
-    Detection is the same guarded slug-tail rule the old vintage-group fold used:
-    a 4-digit year tail on a non-digit-ending stem, >= `_MIN_VINTAGE_SIBLINGS`
-    editions per stem, every member's name contains its vintage year, and the
-    year-stripped names all agree. Past the guards, each stem's editions are
-    sorted by year and ADJACENT pairs become edges: for [y0<y1<…<yn], edges
-    (slug_y0→slug_y1), (slug_y1→slug_y2), …, with `effective_year` the
-    successor's year. Adjacent-chain (not predecessor→latest): succession is a
-    linear hand-off between consecutive vintages, so a query for "what replaced
-    ssyk1996?" must yield ssyk2012 directly, and walking the chain recovers the
-    full lineage — a star to the latest edition would lose the intermediate
-    hops.
-
-    Returns the edge count (e.g. lkf with 47 editions → 46 edges)."""
-    rows = conn.execute(
-        "SELECT slug, name FROM classification WHERE slug IS NOT NULL ORDER BY slug"
-    ).fetchall()
-    edges = classification_succession_edges(rows)
-    conn.executemany(
-        "INSERT INTO classification_replaced_by "
-        "(predecessor_slug, successor_slug, effective_year, note) "
-        "VALUES (?, ?, ?, 'derived:vintage_chain')",
-        edges,
-    )
-    return len(edges)
-
-
 def classification_succession_edges(
     rows: Iterable[tuple[str, str]],
 ) -> tuple[tuple[str, str, int], ...]:
     """Derive adjacent editions from the existing guarded vocabulary, without IO.
 
-    This is shared by the legacy materializer and common resolution. It operates
-    on the selected canonical classifications, never source-variable code labels.
+    It operates on the selected canonical classifications, never source-variable
+    code labels.
     """
     # stem → [(year, slug, name)]
     families: dict[str, list[tuple[int, str, str]]] = {}
@@ -1378,394 +1028,3 @@ def classification_succession_edges(
             continue
         edges.extend((pred[1], succ[1], succ[0]) for pred, succ in pairwise(editions))
     return tuple(edges)
-
-
-def _apply_curated_groups(
-    conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
-) -> int:
-    """Dimension 2: curated families (`[[variable_group]]`) and `[[accept]]`-resolved
-    auto families (`origin="accept"`). The group's ordered named `axes` are written
-    to `concept_group_axis`; each member is a `(variable, delivery_column)`
-    representation (`delivery_column=None` = whole-variable) carrying one facet coord
-    per axis on `concept_group_variable_facet` (#819). Every dangling reference fails
-    the build (EXIT_CONFIG) — curation drift must be fixed, not silently dropped.
-
-    A non-NULL `delivery_column` is VERIFIED against `variable_alias` (the column was
-    actually delivered for that variable) — a curation typo fails fast. Two
-    representation members of one variable coexist (the surrogate PK + COALESCE unique
-    index over `(group_id, variable_id, delivery_column)`); a variable already claimed
-    by an EARLIER group (edge/token, or a prior curated family) fails fast via an
-    explicit cross-group membership check — the surrogate PK no longer enforces
-    "one group per variable", so this guard re-creates the old behavior at the build
-    seam (the catalog-wide invariant is also re-asserted in the validator, #819).
-
-    Remediations branch on `g.origin`: a hand-authored family points the
-    maintainer at `curation/concept_groups.toml`; an accepted one points at the `[[accept]]`
-    / generated `concept_groups.auto.toml`, since its key/register/members come
-    from the catalog (the maintainer can't hand-pick a different key)."""
-    regen = (
-        "reg-meta-build --db <built-db-dir> concept-group-candidates "
-        "--output-toml reg_meta_build/curation/concept_groups.auto.toml"
-    )
-    n_groups = 0
-    for g in groups:
-        is_accept = g.origin == "accept"
-        ctx = (
-            f"[[accept]] {g.key!r} ({g.provider}/{g.register})"
-            if is_accept
-            else f"[[variable_group]] {g.key!r} ({g.provider}/{g.register})"
-        )
-        _reject_mixed_member_grain(g.members, g.key)
-        # STRICT resolution via the shared lenient helper: same join as the two
-        # pre-passes (so the reserved-key/member-id sets can't desync from what
-        # this authoritative pass inserts, #651), but a None here is a build
-        # failure, not a skip — the strict-vs-lenient distinction lives in the
-        # caller's None handling, not in the SQL.
-        register_id = _resolve_group_register(conn, g)
-        if register_id is None:
-            raise curation_error(
-                "concept_groups_unresolved",
-                f"{ctx}: register does not resolve.",
-                f"Regenerate concept_groups.auto.toml (`{regen}`) or drop the "
-                "`[[accept]]` in reg_meta_build/curation/concept_groups.toml."
-                if is_accept
-                else "Fix the `register` FQID in reg_meta_build/curation/concept_groups.toml.",
-            )
-        try:
-            group_id = _insert_group(
-                conn,
-                kind="variable",
-                register_id=register_id,
-                group_key=g.key,
-                label=g.label,
-                source="curated",
-            )
-        except sqlite3.IntegrityError as exc:
-            raise curation_error(
-                "concept_groups_unresolved",
-                f"{ctx}: key collides with a derived group in the same register."
-                if not is_accept
-                else f"{ctx}: the auto family {g.provider}/{g.register}/{g.key!r} "
-                "collides with an edge/token group claimed since "
-                "concept_groups.auto.toml was generated.",
-                f"Regenerate concept_groups.auto.toml (`{regen}`) or drop the "
-                "`[[accept]]`."
-                if is_accept
-                else "Pick a curated `key` that no edge/token group already uses.",
-            ) from exc
-        _insert_group_axes(conn, group_id, g.axes)
-        n_members = 0
-        for m in g.members:
-            var = conn.execute(
-                "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
-                (register_id, m.variable),
-            ).fetchone()
-            if var is None:
-                raise curation_error(
-                    "concept_groups_unresolved",
-                    f"{ctx}: member variable {m.variable!r} does not resolve "
-                    "in that register.",
-                    f"Regenerate concept_groups.auto.toml (`{regen}`) or drop "
-                    "the `[[accept]]`."
-                    if is_accept
-                    else "Fix the member's `variable` slug in "
-                    "reg_meta_build/curation/concept_groups.toml.",
-                )
-            variable_id = var[0]
-            # Verify a representation member's delivery column was actually
-            # delivered for this variable (`variable_alias`), matched EXACTLY (case
-            # as delivered, no normalization) — a curation typo fails fast.
-            if m.delivery_column is not None:
-                alias = conn.execute(
-                    "SELECT 1 FROM variable_alias "
-                    "WHERE variable_id = ? AND delivery_column_name = ?",
-                    (variable_id, m.delivery_column),
-                ).fetchone()
-                if alias is None:
-                    raise curation_error(
-                        "concept_groups_unresolved",
-                        f"{ctx}: member {m.variable!r} delivery column "
-                        f"{m.delivery_column!r} is not a delivered column of that "
-                        "variable.",
-                        f"Regenerate concept_groups.auto.toml (`{regen}`) or fix "
-                        "the `delivery_column`."
-                        if is_accept
-                        else "Fix the member's `delivery_column` in "
-                        "reg_meta_build/curation/concept_groups.toml (match the exact "
-                        "delivered column name).",
-                    )
-            # Cross-group membership guard: the surrogate PK no longer catches a
-            # variable already in another group, so check explicitly. (The
-            # COALESCE unique index only catches a duplicate member WITHIN this
-            # group.)
-            claimed = conn.execute(
-                "SELECT 1 FROM concept_group_variable "
-                "WHERE variable_id = ? AND group_id != ?",
-                (variable_id, group_id),
-            ).fetchone()
-            if claimed is not None:
-                raise curation_error(
-                    "concept_groups_unresolved",
-                    f"{ctx}: member variable {m.variable!r} already belongs "
-                    "to an edge/token group."
-                    if not is_accept
-                    else f"{ctx}: member variable {m.variable!r} was claimed by "
-                    "an edge/token group since concept_groups.auto.toml was "
-                    "generated.",
-                    f"Regenerate concept_groups.auto.toml (`{regen}`) or "
-                    "`exclude` this member in the `[[accept]]`."
-                    if is_accept
-                    else "`exclude` the conflicting member or pick a different "
-                    "variable in reg_meta_build/curation/concept_groups.toml.",
-                )
-            try:
-                member_id = _insert_member(
-                    conn, group_id, variable_id, m.delivery_column
-                )
-            except sqlite3.IntegrityError as exc:
-                # A duplicate (variable, delivery_column) WITHIN this group — the
-                # loader already rejects exact dups, so this is a defensive seam.
-                raise curation_error(
-                    "concept_groups_unresolved",
-                    f"{ctx}: member {m.variable!r}/{m.delivery_column!r} is a "
-                    "duplicate within this group.",
-                    "List each (variable, delivery_column) member once.",
-                ) from exc
-            _insert_member_facets(conn, member_id, m.coords)
-            n_members += 1
-        if n_members < 2:
-            raise curation_error(
-                "concept_groups_unresolved",
-                f"{ctx}: resolves to {n_members} member variable(s); a group "
-                "needs >= 2.",
-                "A single-member family is not a group — remove it or add members.",
-            )
-        n_groups += 1
-    return n_groups
-
-
-def _apply_curated_classification_groups(
-    conn: sqlite3.Connection, groups: tuple[ClassificationGroup, ...]
-) -> int:
-    """Curated classification umbrella groups (#516): the `kind='classification'`
-    dual of `_apply_curated_groups`. Each group inserts a `concept_group` row
-    (register_id NULL — classifications are catalog-global; `facet_axis` = the
-    group's axis, normally None since the umbrella is axis-less — `_insert_group`
-    stores NULL), then resolves every member's `classification` slug globally and
-    wires it as a `concept_group_classification` row carrying the member's
-    `value`/`label` (kept inline regardless of the absent group axis). Every
-    dangling slug or already-grouped
-    classification fails the build (EXIT_CONFIG) — curation drift is fixed, not
-    silently dropped. Mirrors `_apply_curated_groups`' error style."""
-    n_groups = 0
-    for g in groups:
-        ctx = f"[[classification_group]] {g.key!r}"
-        group_id = _insert_group(
-            conn,
-            kind="classification",
-            register_id=None,
-            group_key=g.key,
-            label=g.label,
-            source="curated",
-        )
-        # The umbrella's single axis DECLARATION moves to `concept_group_axis`
-        # (#819): one row when an axis is set, zero for the axis-less default. The
-        # member facets stay INLINE on `concept_group_classification` below. Legacy
-        # axis-label == axis name (the classification TOML has no separate label).
-        if g.axis is not None:
-            _insert_group_axes(conn, group_id, _single_axis(g.axis))
-        n_members = 0
-        for m in g.members:
-            row = conn.execute(
-                "SELECT id FROM classification WHERE slug = ?", (m.classification,)
-            ).fetchone()
-            if row is None:
-                raise curation_error(
-                    "concept_groups_unresolved",
-                    f"{ctx}: member classification {m.classification!r} does not "
-                    "resolve (no classification carries that slug).",
-                    "Fix the member's `classification` slug in "
-                    "reg_meta_build/curation/concept_groups.toml.",
-                )
-            try:
-                conn.execute(
-                    "INSERT INTO concept_group_classification "
-                    "(classification_id, group_id, facet_value, facet_label) "
-                    "VALUES (?, ?, ?, ?)",
-                    (row[0], group_id, m.value, m.label),
-                )
-            except sqlite3.IntegrityError as exc:
-                raise curation_error(
-                    "concept_groups_unresolved",
-                    f"{ctx}: member classification {m.classification!r} already "
-                    "belongs to a concept group.",
-                    "A classification joins at most one group — remove the "
-                    "duplicate member in reg_meta_build/curation/concept_groups.toml.",
-                ) from exc
-            n_members += 1
-        if n_members < 2:
-            raise curation_error(
-                "concept_groups_unresolved",
-                f"{ctx}: resolves to {n_members} member classification(s); a group "
-                "needs >= 2.",
-                "A single-member umbrella is not a group — add members or remove it.",
-            )
-        n_groups += 1
-    return n_groups
-
-
-def _resolve_group_register(
-    conn: sqlite3.Connection, group: CuratedGroup
-) -> int | None:
-    """Resolve a curated/accept group's `(provider, register)` slugs → its
-    `register_id`, or None when either slug doesn't resolve. The LENIENT form the
-    two pre-passes (`_resolve_curated_member_ids`, `_resolve_curated_group_keys`)
-    share so a future edit to this join can't desync the reserved-key set from the
-    member-id set — both must see the SAME registers (#651). `_apply_curated_groups`
-    deliberately does NOT use this: it is the STRICT authoritative pass that raises
-    EXIT_CONFIG on a dangling register (with origin-tailored remediation), so its
-    None branch is a raise, not a skip."""
-    reg = conn.execute(
-        "SELECT r.register_id FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ?",
-        (group.provider, group.register),
-    ).fetchone()
-    return None if reg is None else reg[0]
-
-
-def _resolve_curated_member_ids(
-    conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
-) -> set[int]:
-    """The variable_ids the curated/accept variable groups will claim — the edge
-    pass's `exclude_variable_ids` (#591 curated precedence). LENIENT: a member
-    whose register or variable slug doesn't resolve is skipped here (it carries no
-    edge FQID to exclude); the strict EXIT_CONFIG on a dangling reference still
-    fires in `_apply_curated_groups`, the authoritative pass."""
-    out: set[int] = set()
-    for g in groups:
-        register_id = _resolve_group_register(conn, g)
-        if register_id is None:
-            continue
-        for m in g.members:
-            var = conn.execute(
-                "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
-                (register_id, m.variable),
-            ).fetchone()
-            if var is not None:
-                out.add(var[0])
-    return out
-
-
-def _resolve_curated_group_keys(
-    conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
-) -> set[tuple[int, str]]:
-    """The `(register_id, key)` of every curated/accept VARIABLE group `_apply_
-    curated_groups` will insert — the month pass's `reserved_keys` (#651). These keys
-    are claimed LATER (curated/accept runs after the month pass), so reserving them
-    lets the month pass skip-and-warn a trimmed-key collision instead of inserting a
-    month group that then crashes the curated insert on `idx_concept_group_key`.
-
-    LENIENT register resolution (mirrors `_resolve_curated_member_ids`): a group whose
-    register doesn't resolve carries no key to reserve here — the strict EXIT_CONFIG on
-    a dangling reference still fires in `_apply_curated_groups`, the authoritative pass.
-    Classification umbrella groups are NOT included: they are `kind='classification'`
-    with `register_id IS NULL`, a disjoint key space from the register-scoped variable
-    month groups, so they can't collide."""
-    out: set[tuple[int, str]] = set()
-    for g in groups:
-        register_id = _resolve_group_register(conn, g)
-        if register_id is not None:
-            out.add((register_id, g.key))
-    return out
-
-
-def materialize_concept_groups(
-    conn: sqlite3.Connection,
-    curated: tuple[CuratedGroup, ...] = (),
-    *,
-    auto: tuple[CuratedGroup, ...] = (),
-    accepts: tuple[Accept, ...] = (),
-    classification_groups: tuple[ClassificationGroup, ...] = (),
-    edge_siblings: Iterable[tuple[int, int]] = (),
-    providers: frozenset[str] = frozenset(),
-    warn: Callable[[str], None] | None = None,
-) -> dict[str, int]:
-    """Derive the concept-group tables (#303). Ordering contract: runs after
-    `populate_variable_slugs` (the edge pass resolves slug-anchored siblings) and
-    after `populate_slugs` / `populate_classifications` (classification slugs +
-    rows). `providers` gates curated/accept entries to the providers in this build,
-    so a `--providers=sos` build doesn't fail on an scb family.
-
-    Dimension 0 (`edge`) folds the IN-BUILD same-definition split-sibling pairs
-    (`edge_siblings`, `(variable_id, variable_id)`), NOT a table round-trip — they
-    are never persisted to any shipped table. The CURATED
-    pass takes PRECEDENCE over the edge fold (unblocks #488): `custom` + `accepted`
-    are resolved FIRST, the variable_ids their members claim become
-    `exclude_variable_ids`, and `_derive_edge_groups` subtracts them from every
-    component before minting (a component left with < 2 survivors mints no edge
-    group). The strict dangling-reference check stays in `_apply_curated_groups`;
-    the exclusion resolution here is lenient (an unresolvable member just carries
-    no FQID to exclude).
-
-    Dimension 2 (#496) is OPT-IN over the generated `concept_groups.auto.toml`:
-    `auto` is the machine-owned candidate catalog (`load_concept_groups` of the
-    auto file), but an auto family folds ONLY when an `[[accept]]` in
-    `curation/concept_groups.toml` references it (`accepts`). Each gated accept resolves
-    against `auto` to a `CuratedGroup` (label/axis overrides + `exclude`
-    applied), then the resolved-accepted families and the custom
-    `[[variable_group]]` families share the existing `_apply_curated_groups`
-    path (accepted members are all `variable=` attachments — the candidate
-    generator guarantees they're ungrouped + non-colliding). Unaccepted auto
-    families are NEVER materialized.
-
-    Classification VINTAGE families no longer fold here (#571) — their editions
-    materialize as succession edges via `derive_classification_succession`
-    (called separately in the build, beside the other `*_replaced_by` passes).
-    `concept_group_classification` stays in the schema (empty of DERIVED rows)
-    for the curated umbrella groups (#516): `classification_groups` is the
-    maintainer's `[[classification_group]]` TOML (the SUN umbrella over its
-    distinct dimensions), materialized via `_apply_curated_classification_groups`
-    after the variable curated pass. Classifications are catalog-GLOBAL, so these
-    are NOT provider-gated (unlike the variable curated/accept entries)."""
-    auto_by_scope = {(g.provider, g.register, g.key): g for g in auto}
-    accepted = tuple(
-        resolve_accept(a, auto_by_scope) for a in accepts if a.provider in providers
-    )
-    custom = tuple(g for g in curated if g.provider in providers)
-    # Curated precedence (#591): resolve the curated/accept members BEFORE the
-    # edge fold so any FQID they claim is excluded from the edge components.
-    exclude_variable_ids = _resolve_curated_member_ids(conn, custom + accepted)
-    # The curated/accept variable-group keys land LATER (`_apply_curated_groups` runs
-    # after the month pass), so reserve them now: a month family whose trailing-hyphen-
-    # trimmed key collides with a pending curated key is skip-and-warned instead of
-    # inserted-then-crashed on `idx_concept_group_key` (#651).
-    reserved_keys = frozenset(_resolve_curated_group_keys(conn, custom + accepted))
-    _derive_edge_groups(conn, edge_siblings, exclude_variable_ids)
-    _derive_month_groups(conn, warn or (lambda _msg: None), reserved_keys)
-    _apply_curated_groups(conn, custom + accepted)
-    _apply_curated_classification_groups(conn, classification_groups)
-    # Count the authoritative shipped rows from the final table after all
-    # passes, rather than threading per-pass tallies (the curated passes return
-    # none) — one query over the materialized state is the single source of truth.
-    by_bucket = {
-        (r[0], r[1]): r[2]
-        for r in conn.execute(
-            "SELECT source, kind, COUNT(*) FROM concept_group GROUP BY source, kind"
-        )
-    }
-    counts = {
-        "edge_groups": by_bucket.get(("edge", "variable"), 0),
-        "month_groups": by_bucket.get(("token", "variable"), 0),
-        "curated_groups": by_bucket.get(("curated", "variable"), 0),
-        "classification_curated_groups": by_bucket.get(
-            ("curated", "classification"), 0
-        ),
-    }
-    counts["grouped_variables"] = conn.execute(
-        "SELECT COUNT(*) FROM concept_group_variable"
-    ).fetchone()[0]
-    counts["grouped_classifications"] = conn.execute(
-        "SELECT COUNT(*) FROM concept_group_classification"
-    ).fetchone()[0]
-    return counts

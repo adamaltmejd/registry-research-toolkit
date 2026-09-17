@@ -1,48 +1,60 @@
 # reg_meta_build
 
-Builder for the reg_meta SQLite databases (`reg_meta.db`, `reg_meta_docs.db`).
+Maintainer-only builder for `reg_meta.db` and the separate `reg_meta_docs.db` document
+index. End users install [`reg_meta`](../reg_meta/) and fetch published databases with
+`reg-meta update`.
 
-Maintainer-only. End users install [`reg_meta`](../reg_meta/) and fetch the prebuilt
-databases via `reg-meta update`.
+## Catalog workflow
 
-## Commands
-
-```sh
-reg-meta-build build-db          # build reg_meta.db from SCB source CSVs
-reg-meta-build prepare-input-bundle  # capture one exact catalog input candidate
-reg-meta-build verify-input-bundle   # exhaustively verify an accepted input bundle
-reg-meta-build inspect-source-records  # inspect pinned LISA and raw SCB records
-reg-meta-build build-docs        # build reg_meta_docs.db from reg_meta_build/docs/
-reg-meta-build seed-slugs        # seed starter slug TOMLs (1c bootstrap)
-reg-meta-build precheck-slugs    # report any IDs missing a slug entry
-reg-meta-build parse-sos         # parse Socialstyrelsen register metadata xlsx
-reg-meta-build same-as-candidates   # generate variable_same_as candidate pairs
-reg-meta-build entity-key-pins      # generate panel entity-key slug pins (all providers)
-reg-meta-build concept-group-candidates  # generate concept-group fold candidates
-reg-meta-build classification-residue    # classification-linkage residue worklist
-reg-meta-build doc-coverage              # diff doc-documented columns vs built variable_alias
-```
-
-`prepare-input-bundle` captures the LISA workbook only when all three explicit
-`--lisa-workbook`, `--lisa-revision`, and `--lisa-workbook-sha256` selections are
-present. The explicit workbook path may be separate from `--input-dir`; that selection
-authorizes only that exact file and hash, and no CLI output may overwrite it. After the
-resulting bundle is committed, inspect the full workbook or one exact column spelling
-without reading cold SCB values:
+1. Capture an exact machine-readable input bundle. Raw archives can remain compressed
+   outside Git; the local input repository tracks lossless compact data and provenance.
+2. Prepare and fully validate a new candidate with provider-format adapters. Commit the
+   candidate in the local input repository and pin its commit and manifest digest.
+3. Supply a checked selection and its per-register curation files. The selection pins
+   all prepared sources, exact decisions, naming and catalog dependencies.
+4. Run a diagnostic build to investigate discrepancies, then a strict build only when
+   the selected inputs and curation are ready for publication.
 
 ```sh
-reg-meta-build --output /tmp/lisa-source-records.json inspect-source-records \
-  --input-bundle .local/catalog-inputs/bundles/candidate \
-  --input-commit <accepted-full-commit> \
-  --input-manifest-sha256 <catalog-bundle-json-sha256> \
-  --column AmPolTyp
+reg-meta-build prepare-input-bundle --help
+reg-meta-build verify-input-bundle --help
+reg-meta-build prepare-sources --help
+
+# A diagnostic completes the selected scan but remains nonpublishable (exit 10).
+# Both paths must be new; the active catalog is untouched.
+reg-meta-build build-db --selection /path/to/selection.json \
+  --report-dir /path/to/new-report \
+  --diagnostic --diagnostic-db-path /path/to/new-diagnostic.db
+
+# Strict publication refuses unresolved errors and preserves the previous catalog.
+reg-meta-build --db /path/to/output-dir build-db \
+  --selection /path/to/selection.json --report-dir /path/to/new-strict-report
 ```
 
-The report retains source-only SCB observations plus validated worksheet context and
-footnotes separately from declaration context. It is a diagnostic source-target preview:
-each comparison identifies its finite, unresolved workbook-table/native-variant
-assumptions. It applies no correction and makes no catalog-impact, acceptance,
-validation, or publication claim.
+`pipeline.PipelineSelection` and `pipeline.ScopeDeclarations` define the
+machine-readable selection contract. Scope files are pinned by SHA-256. Selection
+preparation is an explicit maintainer action; a build never refreshes curation
+expectations, calls an LLM, extracts PDF facts, or accepts new inputs. Warm builds use
+prepared stores without expanding cold archives or repeating preparation validation.
 
-See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is tracked in
-`REFACTOR_SPEC.md` at repo root.
+Reports contain `summary.json` and a compressed structured event ledger with original
+source references, applicability failures and withheld output. Diagnostic mode retains
+error severity. Invalid pins, broken contracts and implementation failures remain fatal.
+See [DESIGN.md](DESIGN.md) for the three stage boundaries, precise curation scopes,
+source-update workflow and verification rules.
+
+## Other commands
+
+```sh
+reg-meta-build inspect-source-records --help   # pinned machine-readable evidence
+reg-meta-build classification-residue --help  # read-only review worklist
+reg-meta-build concept-group-candidates --help
+reg-meta-build same-as-candidates --help
+reg-meta-build succession-candidates --help
+reg-meta-build extend-db --help               # separate steward-private extension
+reg-meta-build build-docs --help              # separate document index
+```
+
+The input bundle can include the LISA workbook through its exact path, revision and
+SHA-256 arguments. Official PDF interpretation belongs to offline curation. The document
+index stores and searches registered documents without changing catalog facts.

@@ -6,7 +6,7 @@ same corpus, opposite temporal gate): `infer_succession_candidates` over a
 hand-built synthetic DB exercises the two candidate shapes plus every gate
 (already-edged, co-delivered, non-adjacent, an era pair across variants), and
 `render_succession_toml` is round-tripped BOTH through a plain TOML parse and
-through `relations.py`'s real loader + materializer against the same fixture DB —
+through `relations.py`'s real loader —
 the emitted worklist must be in the exact `[[edge]]` grammar
 `curation/relations.toml` accepts. A separate test proves the diagnostic never
 mutates the DB.
@@ -23,7 +23,6 @@ from typing import TYPE_CHECKING
 from _slugged_db import add_state, add_variable, add_variant, build_slugged_db
 from reg_meta_build.relations import (
     load_relations,
-    materialize_curated_replaced_by,
 )
 from reg_meta_build.succession_candidates import (
     _adjacent,
@@ -41,11 +40,6 @@ if TYPE_CHECKING:
 _REGISTER_ID = 1
 _VARIANT_ID = 10
 _OTHER_VARIANT_ID = 20
-_SCB = frozenset({"scb"})
-
-
-def _noop(_msg: str) -> None:
-    pass
 
 
 def _base_db() -> sqlite3.Connection:
@@ -74,10 +68,9 @@ def _add_era(
     variant_id: int = _VARIANT_ID,
 ) -> None:
     """Add one delivered era: the `variable` (minted on first use, sharing
-    `var_id`/provider_key with its split family), its `variable_state` window, and
-    the `variable_alias` row that makes the `(variable, column)` representation LIVE
-    — the shape `relations.py`'s materializer resolves a representation endpoint
-    against, so the emitted worklist can be round-tripped through it."""
+     `var_id`/provider_key with its split family), its `variable_state` window, and
+     the `variable_alias` row that makes the `(variable, column)` representation LIVE
+    ."""
     exists = conn.execute(
         "SELECT 1 FROM variable WHERE register_id = ? AND slug = ?",
         (_REGISTER_ID, slug),
@@ -596,7 +589,7 @@ class TestRender:
     def test_round_trips_through_the_relations_loader(self, tmp_path: Path) -> None:
         # The worklist's whole point: a confirmed candidate copies into
         # curation/relations.toml verbatim. Parse the emitted text with the REAL
-        # loader and materialize it against the same fixture DB.
+        # loader; persistence is exercised by the common metadata writer tests.
         conn = _base_db()
         _seed_corpus(conn)
         path = tmp_path / "worklist.toml"
@@ -605,32 +598,21 @@ class TestRender:
         )
         relations = load_relations(path)
         assert len(relations.replaced_by) == 2
-        out = materialize_curated_replaced_by(
-            conn,
-            relations.replaced_by,
-            set(),
-            set(),
-            providers=_SCB,
-            progress=_noop,
-        )
-        assert out["variable"] == 1
-        assert out["representation"] == 1
-        assert tuple(
-            conn.execute(
-                "SELECT predecessor_variable, successor_variable, effective_year "
-                "FROM variable_replaced_by "
-                "WHERE predecessor_variable = 'forvink-ers-aktiv'"
-            ).fetchone()
+        variable, representation = relations.replaced_by
+        assert (
+            variable.predecessor.variable,
+            variable.successor.variable,
+            variable.effective_year,
         ) == ("forvink-ers-aktiv", "forvink-ers", 2022)
-        assert tuple(
-            conn.execute(
-                "SELECT predecessor_column, successor_column, variant, effective_year "
-                "FROM representation_replaced_by"
-            ).fetchone()
+        assert (
+            representation.predecessor_column,
+            representation.successor_column,
+            representation.variant,
+            representation.effective_year,
         ) == ("PeOrgNr", "PeOrgNr_LISA", "individer-15plus", 2016)
 
     def test_emitted_candidates_are_no_longer_candidates(self, tmp_path: Path) -> None:
-        # Landing the worklist retires it: after materializing, the already-edged
+        # A catalog containing accepted edges retires the worklist: the already-edged
         # gate drops both pairs.
         conn = _base_db()
         _seed_corpus(conn)
@@ -638,13 +620,15 @@ class TestRender:
         path.write_text(
             render_succession_toml(infer_succession_candidates(conn)), encoding="utf-8"
         )
-        materialize_curated_replaced_by(
-            conn,
-            load_relations(path).replaced_by,
-            set(),
-            set(),
-            providers=_SCB,
-            progress=_noop,
+        assert len(load_relations(path).replaced_by) == 2
+        _add_variable_edge(conn, "forvink-ers-aktiv", "forvink-ers")
+        conn.execute(
+            "INSERT INTO representation_replaced_by "
+            "(predecessor_provider, predecessor_register, predecessor_variable, "
+            "predecessor_column, successor_provider, successor_register, "
+            "successor_variable, successor_column, variant, effective_year) "
+            "VALUES ('scb','lisa','person-orgnr','PeOrgNr','scb','lisa',"
+            "'person-orgnr-2','PeOrgNr_LISA','individer-15plus',2016)"
         )
         assert infer_succession_candidates(conn).total == 0
 
