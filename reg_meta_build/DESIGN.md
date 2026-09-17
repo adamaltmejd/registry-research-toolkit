@@ -151,6 +151,13 @@ diagnoses competing or incomplete members without choosing a label. The original
 remain in prepared evidence. Classification identity, variable bindings and succession
 are separate checked declarations; code similarity does not establish those links.
 
+Month families resolve before database writing using the existing finite month-token
+vocabulary, three-distinct-month threshold and shared-label guard. Existing edge members
+are excluded and curated group keys reserved. Ambiguous stem/key collisions keep the
+variables separate and produce evidence-bearing warnings; conflicting explicit group
+membership remains fatal. The legacy SQL wrapper uses the same pure rule until cutover,
+so there is no second definition of month grouping.
+
 Checked search aliases name one variable and a finite set of variants. They add no
 delivery state or availability window, and they preserve an existing bounded alias
 window. A source change invalidates their original membership guard. Unsupported

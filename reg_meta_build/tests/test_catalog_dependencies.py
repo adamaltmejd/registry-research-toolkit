@@ -9,6 +9,7 @@ from reg_meta_build.catalog_dependencies import (
     CatalogDependencyError,
     resolve_classification_successions,
     resolve_metadata_dependencies,
+    resolve_month_groups,
     resolve_panel_dependencies,
     resolve_variable_edge_groups,
 )
@@ -111,6 +112,155 @@ def _pair_evidence(variables):
         )
         for v in variables
     }
+
+
+def _month_variables(stem="ink"):
+    variant = ResolvedVariant(slug="people", name="People")
+    return tuple(
+        _variable(variant, stem + token).model_copy(
+            update={"name": f"Inkomst i {token}, totalt"}
+        )
+        for token in ("jan", "februari", "mars")
+    )
+
+
+def _month_resolution(variables, **kwargs):
+    return resolve_month_groups(
+        variables,
+        **(
+            {
+                "edge_groups": (),
+                "curated_groups": (),
+                "evidence": _pair_evidence(variables),
+            }
+            | kwargs
+        ),
+    )
+
+
+def test_month_groups_resolve_before_writing_with_ordered_facets(tmp_path):
+    variables = _month_variables("ink-")
+    result = _month_resolution(variables)
+    assert not result.diagnostics
+    (group,) = result.groups
+    assert (group.key, group.label, group.source) == ("ink", "Inkomst", "token")
+    assert [m.facets[0].value for m in group.members] == ["01", "02", "03"]
+    assert result == _month_resolution(tuple(reversed(variables)))
+    path = write_resolved_catalog(
+        variables,
+        tmp_path / "diagnostic.db",
+        manifest={},
+        diagnostic=True,
+        metadata=ResolvedMetadata(variable_groups=result.groups),
+    )
+    with closing(open_db(path)) as conn:
+        assert tuple(
+            conn.execute("SELECT group_key,label,source FROM concept_group").fetchone()
+        ) == ("ink", "Inkomst", "token")
+        assert [
+            tuple(r)
+            for r in conn.execute("SELECT axis,ordinal,label FROM concept_group_axis")
+        ] == [("month", 0, "månad")]
+        assert [
+            tuple(r)
+            for r in conn.execute(
+                "SELECT axis,value,label FROM concept_group_variable_facet ORDER BY value"
+            )
+        ] == [
+            ("month", "01", "januari"),
+            ("month", "02", "februari"),
+            ("month", "03", "mars"),
+        ]
+
+
+def test_month_group_threshold_uses_unclaimed_members_in_one_register():
+    variables = _month_variables()
+    peer = _variable(variables[0].states[0].variant, "other")
+    edge = ResolvedVariableGroup(
+        register="scb/example",
+        key="edge",
+        label="Edge",
+        source="edge",
+        members=tuple(
+            ResolvedGroupVariable(variable="scb/example/" + v.slug)
+            for v in (variables[0], peer)
+        ),
+    )
+    assert not _month_resolution((*variables, peer), edge_groups=(edge,)).groups
+    different_register = variables[-1].model_copy(
+        update={
+            "register_ref": ResolvedRegister(
+                provider="scb", slug="elsewhere", name="Elsewhere"
+            )
+        }
+    )
+    assert not _month_resolution((*variables[:2], different_register)).groups
+
+
+@pytest.mark.parametrize("collision", ["stem_collision", "reserved_key"])
+def test_month_group_collision_keeps_exact_source_evidence(collision):
+    variables = _month_variables("ink-")
+    curated = ()
+    if collision == "stem_collision":
+        variables += _month_variables()
+    else:
+        curated = (
+            ResolvedVariableGroup(
+                register="scb/example",
+                key="ink",
+                label="Reserved",
+                source="curated",
+                members=(
+                    ResolvedGroupVariable(variable="scb/example/other"),
+                    ResolvedGroupVariable(variable="scb/example/another"),
+                ),
+            ),
+        )
+    result = _month_resolution(variables, curated_groups=curated)
+    assert not result.groups
+    (issue,) = result.diagnostics
+    assert issue.code == "month_group_" + collision
+    assert issue.severity == "warning"
+    assert issue.withheld_output == ("variable_group:scb/example/ink",)
+    assert set(issue.refs) == {
+        r for refs in _pair_evidence(variables).values() for r in refs
+    }
+
+
+def test_month_group_does_not_silently_replace_curated_membership():
+    variables = _month_variables()
+    curated = ResolvedVariableGroup(
+        register="scb/example",
+        key="other",
+        label="Other",
+        source="curated",
+        members=(
+            ResolvedGroupVariable(variable="scb/example/inkjan"),
+            ResolvedGroupVariable(variable="scb/example/another"),
+        ),
+    )
+    with pytest.raises(ValueError, match="multiple resolved groups"):
+        _month_resolution(variables, curated_groups=(curated,))
+
+
+def test_month_group_requires_evidence_and_valid_input_references():
+    variables = _month_variables()
+    with pytest.raises(ValueError, match="lacks source evidence"):
+        _month_resolution(variables, evidence={})
+    with pytest.raises(ValueError, match="duplicate variable identity"):
+        _month_resolution((*variables, variables[0]))
+    missing_edge = ResolvedVariableGroup(
+        register="scb/example",
+        key="edge",
+        label="Edge",
+        source="edge",
+        members=(
+            ResolvedGroupVariable(variable="scb/example/inkjan"),
+            ResolvedGroupVariable(variable="scb/example/missing"),
+        ),
+    )
+    with pytest.raises(ValueError, match="missing variables"):
+        _month_resolution(variables, edge_groups=(missing_edge,))
 
 
 def _edition(slug, name):

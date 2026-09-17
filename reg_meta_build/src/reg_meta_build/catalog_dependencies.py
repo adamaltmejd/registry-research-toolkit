@@ -11,7 +11,11 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build._components import DisjointSet
-from reg_meta_build.concept_groups import classification_succession_edges
+from reg_meta_build.concept_groups import (
+    _MONTH_LABELS,
+    classification_succession_edges,
+    month_group_candidates,
+)
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
@@ -23,6 +27,8 @@ from reg_meta_build.resolved_catalog import (
     validate_resolved_variables,
 )
 from reg_meta_build.resolved_metadata import (
+    ResolvedGroupAxis,
+    ResolvedGroupFacet,
     ResolvedGroupVariable,
     ResolvedMetadata,
     ResolvedStateRef,
@@ -206,6 +212,99 @@ class GroupEdgeResolution:
     groups: tuple[ResolvedVariableGroup, ...]
     dispositions: tuple[GroupEdgeDisposition, ...]
     diagnostics: tuple[ResolutionDiagnostic, ...]
+
+
+@dataclass(frozen=True)
+class MonthGroupResolution:
+    groups: tuple[ResolvedVariableGroup, ...]
+    diagnostics: tuple[ResolutionDiagnostic, ...]
+
+
+def resolve_month_groups(
+    variables: tuple[ResolvedVariable, ...],
+    *,
+    edge_groups: tuple[ResolvedVariableGroup, ...],
+    curated_groups: tuple[ResolvedVariableGroup, ...],
+    evidence: Mapping[str, tuple[SourceRecordRef, ...]],
+) -> MonthGroupResolution:
+    """Derive existing month families before writing, retaining collision reports.
+
+    Already grouped edge members do not participate. Curated keys are reserved;
+    conflicting membership in a differently named curated group is still fatal,
+    as in the original rule. Missing variables are accounted for by source
+    resolution, not invented here to meet the three-month threshold.
+    """
+    by_fqid = {
+        f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}": v
+        for v in variables
+    }
+    if len(by_fqid) != len(variables):
+        raise ValueError("duplicate variable identity in month grouping")
+    claimed = {m.variable for g in edge_groups for m in g.members}
+    if missing := claimed - by_fqid.keys():
+        raise ValueError(
+            f"resolved edge groups have missing variables: {sorted(missing)}"
+        )
+    existing = (*edge_groups, *curated_groups)
+    validate_metadata_structure(ResolvedMetadata(variable_groups=existing))
+    candidates = month_group_candidates(
+        (
+            (fqid.rsplit("/", 1)[0], v.slug, v.name)
+            for fqid, v in by_fqid.items()
+            if fqid not in claimed
+        ),
+        reserved_keys=frozenset((g.register_ref, g.key) for g in existing),
+    )
+    groups, diagnostics = [], []
+    for candidate in candidates:
+        fqids = tuple(f"{candidate.register}/{slug}" for _, slug in candidate.members)
+        if any(not evidence.get(fqid) for fqid in fqids):
+            raise ValueError(f"month-group candidate lacks source evidence: {fqids!r}")
+        if candidate.issue is not None:
+            output = f"variable_group:{candidate.register}/{candidate.key}"
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="month_group_" + candidate.issue,
+                    severity="warning",
+                    subject=output,
+                    detail=(
+                        "Distinct qualifying month stems collapse to the same group key."
+                        if candidate.issue == "stem_collision"
+                        else "The month stem collides with an existing or declared group key."
+                    ),
+                    refs=tuple(
+                        sorted({r for fqid in fqids for r in evidence[fqid]}, key=repr)
+                    ),
+                    fields=("group",),
+                    withheld_output=(output,),
+                )
+            )
+            continue
+        assert candidate.label is not None
+        groups.append(
+            ResolvedVariableGroup(
+                register=candidate.register,
+                key=candidate.key,
+                label=candidate.label,
+                source="token",
+                axes=(ResolvedGroupAxis(axis="month", ordinal=0, label="månad"),),
+                members=tuple(
+                    ResolvedGroupVariable(
+                        variable=f"{candidate.register}/{slug}",
+                        facets=(
+                            ResolvedGroupFacet(
+                                axis="month",
+                                value=f"{month:02d}",
+                                label=_MONTH_LABELS[month],
+                            ),
+                        ),
+                    )
+                    for month, slug in candidate.members
+                ),
+            )
+        )
+    validate_metadata_structure(ResolvedMetadata(variable_groups=(*existing, *groups)))
+    return MonthGroupResolution(tuple(groups), tuple(diagnostics))
 
 
 def resolve_variable_edge_groups(

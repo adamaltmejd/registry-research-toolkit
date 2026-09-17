@@ -1111,33 +1111,86 @@ def _trim_label(prefix: str) -> str:
     return trimmed.strip().rstrip(",;:")
 
 
+@dataclass(frozen=True)
+class MonthGroupCandidate:
+    register: str
+    key: str
+    label: str | None
+    members: tuple[tuple[int, str], ...]
+    issue: Literal["stem_collision", "reserved_key"] | None = None
+
+
 def _evaluate_month_fold(
-    members: list[tuple[int, str, int, str | None, str]],
+    members: list[tuple[int, str, str | None, str]],
 ) -> str | None:
-    """Decide whether one raw-stem month subgroup would FOLD and, if so, return its
-    group label; otherwise `None`. Single source of truth for "would this month
-    subgroup fold", applied in TWO places so they can't drift (Codex P2 #646):
+    """One raw stem needs three distinct months and a usable shared name prefix.
 
-    1. the trim-collision check — a raw-stem subgroup counts as a competing month
-       family only when it would actually fold (not merely meet the sibling floor); and
-    2. the emit path — the winning subgroup reuses the returned label directly.
-
-    Gates, in order (the pre-emit guards `_derive_month_groups` applies):
-    - `_MIN_MONTH_SIBLINGS` DISTINCT-month floor (member tuple index 0 is the month);
-    - NULL-name skip — any NULL member name means no labels to agree on (conservative
-      non-fold);
-    - label-prefix floor — the trimmed common name prefix must be >= `_MIN_LABEL_PREFIX`
-      chars. The existing-key collision guard is a KEY check, NOT a foldability gate,
-      so it is NOT applied here (it stays on the winning fold in the caller)."""
+    Use the same predicate for collision detection and emission: a coincidental
+    peer stem with too few months or missing/disagreeing names is not a competitor.
+    """
     if len({m[0] for m in members}) < _MIN_MONTH_SIBLINGS:
         return None
-    names = [m[3] for m in members]
+    names = [m[2] for m in members]
     if any(n is None for n in names):
         return None
     label = _trim_label(_common_prefix([n for n in names if n is not None]))
-    if len(label) < _MIN_LABEL_PREFIX:
-        return None
-    return label
+    return label if len(label) >= _MIN_LABEL_PREFIX else None
+
+
+def month_group_candidates(
+    rows: Iterable[tuple[str, str, str | None]],
+    *,
+    reserved_keys: frozenset[tuple[str, str]] = frozenset(),
+) -> tuple[MonthGroupCandidate, ...]:
+    """Apply the existing month vocabulary and guards without database access.
+
+    Rows are (opaque register key, slug, name) for variables not already grouped.
+    Reserved keys include existing edge groups and pending curated groups. Return
+    qualifying groups and exact collisions, never merge different raw stems just
+    because trimming trailing hyphens gives them the same key.
+    """
+    candidates: dict[tuple[str, str], list[tuple[int, str, str | None, str]]] = {}
+    seen = set()
+    for register, slug, name in rows:
+        if (register, slug) in seen:
+            raise ValueError("duplicate variable identity in month grouping")
+        seen.add((register, slug))
+        for token, month in _MONTH_TOKENS.items():
+            if slug.endswith(token) and len(slug) > len(token):
+                raw_stem = slug[: -len(token)]
+                key_stem = raw_stem.rstrip("-")
+                if key_stem:
+                    candidates.setdefault((register, key_stem), []).append(
+                        (month, slug, name, raw_stem)
+                    )
+                break
+    results = []
+    for (register, key), bucket in sorted(candidates.items()):
+        by_raw_stem: dict[str, list[tuple[int, str, str | None, str]]] = {}
+        for member in bucket:
+            by_raw_stem.setdefault(member[3], []).append(member)
+        qualifying = [
+            (sub, label)
+            for sub in by_raw_stem.values()
+            if (label := _evaluate_month_fold(sub)) is not None
+        ]
+        if not qualifying:
+            continue
+        if len(qualifying) > 1:
+            members, label, issue = bucket, None, "stem_collision"
+        else:
+            members, label = qualifying[0]
+            issue = "reserved_key" if (register, key) in reserved_keys else None
+        results.append(
+            MonthGroupCandidate(
+                register,
+                key,
+                label,
+                tuple(sorted((m[0], m[1]) for m in members)),
+                issue,
+            )
+        )
+    return tuple(results)
 
 
 def _derive_month_groups(
@@ -1145,37 +1198,7 @@ def _derive_month_groups(
     warn: Callable[[str], None],
     reserved_keys: frozenset[tuple[int, str]] = frozenset(),
 ) -> int:
-    """Dimension 1 (variables): fold month-suffixed slug families. Candidates
-    are ungrouped slugged variables whose slug ends in a month token; a
-    (register, stem) family folds only past BOTH guards (>= 3 distinct months
-    AND a usable shared label prefix). The group's `facet_axis` is `'month'`;
-    each member carries its zero-padded month `facet_value`/`facet_label` inline.
-    A family dropped on a group-key collision is reported via `warn` (never
-    silent).
-
-    Key-collision guard spans BOTH the already-inserted variable groups (the edge
-    pass ran first) AND the PENDING curated/accepted variable-group keys
-    (`reserved_keys`, `(register_id, group_key)`) that `_apply_curated_groups` will
-    insert LATER (#651). The curated/accept pass runs AFTER this one, so without the
-    reservation a trimmed month key (`ink`) that collides with a pending curated key
-    would be inserted here and then crash the curated insert on `idx_concept_group_key`
-    — the pre-trim key `ink-` would not have collided. Reserving the pending keys turns
-    that into the same cosmetic skip-and-warn an already-inserted collision triggers.
-
-    The stem (`slug` minus its month token) doubles as the group's URL key
-    (`/catalog/group/<p>/<r>/<key>`), so a trailing hyphen left by the token strip
-    (`inkomst-jan` → `inkomst-`) is trimmed to a clean slug (#645). An empty/hyphen-
-    only stem is degenerate and skipped (no empty key). The trim can fuse two raw
-    stems into one key (`ink-jan…` raw `ink-` + `inkjan…` raw `ink` both → key
-    `ink`); the collision skip-and-warn fires only when >= 2 of the colliding raw
-    stems would INDEPENDENTLY FOLD — `_evaluate_month_fold` applies ALL the pre-emit
-    guards (sibling floor AND no NULL names AND the label-prefix floor), the same
-    predicate the emit path uses, so a peer trio with NULL/short/disagreeing labels
-    (which would never fold) does NOT count as a competing family and cannot suppress
-    a valid fold (Codex P2 #646). A coincidental singleton (`inkjan` alone, raw `ink`)
-    or a non-folding NULL-name peer sharing the key with a real family
-    (`ink-jan/feb/mars`, raw `ink-`) does NOT suppress the fold — the real family
-    folds and the noise is dropped (#645)."""
+    """Materialize the shared month derivation after the legacy edge pass."""
     rows = conn.execute(
         "SELECT v.variable_id, v.register_id, v.slug, v.name FROM variable v "
         "WHERE v.slug IS NOT NULL AND NOT EXISTS "
@@ -1183,100 +1206,45 @@ def _derive_month_groups(
         "   WHERE m.variable_id = v.variable_id) "
         "ORDER BY v.register_id, v.slug"
     ).fetchall()
-    # (register_id, key_stem) → [(month, slug, variable_id, name, raw_stem)].
-    # `key_stem` is the trailing-hyphen-trimmed URL key; `raw_stem` (untrimmed) is
-    # carried so a trim that collapses two distinct stems into one key is caught.
-    candidates: dict[tuple[int, str], list[tuple[int, str, int, str | None, str]]] = {}
-    for variable_id, register_id, slug, name in rows:
-        for token, month in _MONTH_TOKENS.items():
-            if slug.endswith(token) and len(slug) > len(token):
-                raw_stem = slug[: -len(token)]
-                key_stem = raw_stem.rstrip("-")
-                if not key_stem:
-                    break  # hyphen-only/empty stem — not a usable URL key
-                candidates.setdefault((register_id, key_stem), []).append(
-                    (month, slug, variable_id, name, raw_stem)
-                )
-                break  # no month token is a suffix of another — single match
-    # Already-inserted variable-group keys (edge pass) UNION the pending curated/
-    # accept keys the later `_apply_curated_groups` will claim (#651) — a month family
-    # whose trimmed key collides with either is skip-and-warned, never inserted then
-    # crashed on the unique index.
+    variable_ids = {(str(reg), slug): vid for vid, reg, slug, _name in rows}
     existing_keys = {
-        (r[0], r[1])
+        (str(r[0]), r[1])
         for r in conn.execute(
             "SELECT register_id, group_key FROM concept_group WHERE kind = 'variable'"
         )
-    } | set(reserved_keys)
+    } | {(str(reg), key) for reg, key in reserved_keys}
+    candidates = month_group_candidates(
+        ((str(reg), slug, name) for _vid, reg, slug, name in rows),
+        reserved_keys=frozenset(existing_keys),
+    )
     n_groups = 0
-    for (register_id, stem), bucket in sorted(candidates.items()):
-        # Trim-collision refinement (#645): a clean `stem` reached by `.rstrip("-")`
-        # can fuse pre-trim stems into one bucket (`ink-jan…` raw `ink-` +
-        # `inkjan…` raw `ink` both → key `ink`). Group by RAW stem (member tuple
-        # index 4) and ask which raw-stem subgroups would ACTUALLY FOLD —
-        # `_evaluate_month_fold` applies the FULL pre-emit gate set (month-sibling
-        # floor AND no NULL names AND the label-prefix floor), the same predicate the
-        # emit path uses. A peer trio that meets the sibling floor but would fail the
-        # NULL/label gate never folds, so it must NOT count as a competing family
-        # (Codex P2 #646): only genuinely-folding raw stems do. Only when >= 2 raw
-        # stems each fold is it a GENUINE two-family collision: skip-and-warn (never
-        # silently merge two families onto one key). When exactly ONE folds, the rest
-        # are noise (coincidental singletons, NULL/short-label peers) sharing the
-        # trimmed key — KEEP the real month fold and ignore the noise (#645). A
-        # homogeneous bucket (the common case) has one raw stem and folds with no
-        # behavior change.
-        by_raw_stem: dict[str, list[tuple[int, str, int, str | None, str]]] = {}
-        for member in bucket:
-            by_raw_stem.setdefault(member[4], []).append(member)
-        qualifying = [
-            (sub, label)
-            for sub in by_raw_stem.values()
-            if (label := _evaluate_month_fold(sub)) is not None
-        ]
-        if len(qualifying) > 1:
+    for group in sorted(candidates, key=lambda g: (int(g.register), g.key)):
+        if group.issue is not None:
+            reason = (
+                "a trailing-hyphen trim collapsed two distinct stems onto this key"
+                if group.issue == "stem_collision"
+                else "its stem collides with an existing group key"
+            )
             warn(
-                f"  WARN concept-groups: month family {stem!r} "
-                f"(register_id {register_id}, {len(bucket)} variables) NOT "
-                "folded — a trailing-hyphen trim collapsed two distinct stems "
-                "onto this key"
+                f"  WARN concept-groups: month family {group.key!r} "
+                f"(register_id {group.register}, {len(group.members)} variables) NOT "
+                f"folded — {reason}"
             )
             continue
-        if not qualifying:
-            continue
-        # The single folding raw-stem subgroup is the real month family; reuse its
-        # already-computed label rather than re-running the agreement/NULL gates. Noise
-        # under the trimmed key is dropped.
-        members, label = qualifying[0]
-        if (register_id, stem) in existing_keys:
-            # The key is already claimed — by an edge group inserted earlier (its
-            # min member slug equals the stem) OR by a pending curated/accept group
-            # `_apply_curated_groups` will insert later (`reserved_keys`, #651).
-            # Cosmetic collision on a presentation key — skip the fold rather than
-            # fail the build (an unreserved month insert would crash the later
-            # curated insert on `idx_concept_group_key`), but say so: the family then
-            # renders as ~12 flat near-identical rows (the very symptom #303 fixes)
-            # and the corpus floors only count totals, so without this line the loss
-            # is invisible to the maintainer.
-            warn(
-                f"  WARN concept-groups: month family {stem!r} "
-                f"(register_id {register_id}, {len(members)} variables) NOT "
-                "folded — its stem collides with an existing group key"
-            )
-            continue
+        assert group.label is not None
         group_id = _insert_group(
             conn,
             kind="variable",
-            register_id=register_id,
-            group_key=stem,
-            label=label,
+            register_id=int(group.register),
+            group_key=group.key,
+            label=group.label,
             source="token",
         )
-        # Single 'month' axis (label "månad"); each member is a whole-variable
-        # member (delivery_column NULL) carrying one coord on that axis.
         _insert_group_axes(conn, group_id, (("month", "månad"),))
-        ordered = sorted(members)
-        for month, _, vid, _, _ in ordered:
-            member_id = _insert_member(conn, group_id, vid, None)
+        for month, slug in group.members:
+            member_id = _insert_member(
+                conn, group_id, variable_ids[group.register, slug], None
+            )
             _insert_member_facets(
                 conn,
                 member_id,
