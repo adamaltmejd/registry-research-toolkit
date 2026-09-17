@@ -405,6 +405,111 @@ def _unique(values: Any, label: str) -> None:
         seen.add(value)
 
 
+def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
+    """Reject invalid declarations before diagnostic dependency withholding.
+
+    A missing endpoint must not hide duplicate membership or a graph cycle. These
+    checks need only declarations; exact live-reference checks remain in preparation.
+    """
+    _unique(
+        ((g.register_ref, g.key) for g in metadata.variable_groups),
+        "variable group key",
+    )
+    _unique((g.key for g in metadata.classification_groups), "classification group key")
+    owners = {}
+    for group in metadata.variable_groups:
+        for member in group.members:
+            owner = group.register_ref, group.key
+            if member.variable in owners and owners[member.variable] != owner:
+                raise ValueError("variable belongs to multiple resolved groups")
+            owners[member.variable] = owner
+    _unique(
+        (m.classification for g in metadata.classification_groups for m in g.members),
+        "classification group membership",
+    )
+    _unique((tag.slug for tag in metadata.tags), "tag slug")
+    for label, graph in (
+        ("variable same_as", [(e.a, e.b) for e in metadata.variable_same_as]),
+        (
+            "classification same_as",
+            [
+                ((e.a.provider, e.a.classification), (e.b.provider, e.b.classification))
+                for e in metadata.classification_same_as
+            ],
+        ),
+    ):
+        _unique((tuple(sorted(pair)) for pair in graph), label)
+        _reject_same_as_cycles(graph, label=f"resolved {label}")
+        _reject_oversized_components(graph, label=f"resolved {label}")
+    graphs = defaultdict(list)
+    for edge in metadata.successions:
+        graphs[parse(edge.predecessor).kind].append((edge.predecessor, edge.successor))
+    graphs["variant succession"] = [
+        (e.predecessor, e.successor) for e in metadata.variant_successions
+    ]
+    graphs["classification derivation"] = [
+        (e.derived, e.source) for e in metadata.classification_derivations
+    ]
+    graphs["state lineage"] = [
+        (state_reference_key(e.consumer), state_reference_key(e.source))
+        for e in metadata.state_lineage
+    ]
+    unscoped, scoped = [], []
+    for edge in metadata.representation_successions:
+        a, b = (
+            (e.variable, e.delivery_column_name.lower(), edge.variant or "")
+            for e in (edge.predecessor, edge.successor)
+        )
+        if edge.variant is None:
+            unscoped.append((a, b))
+        else:
+            scoped.append((a, b, edge.effective_year))
+    _unique((*unscoped, *((a, b) for a, b, _ in scoped)), "representation succession")
+    graphs["unscoped representation succession"] = unscoped
+    reject_nonmonotone_representation_cycles(scoped)
+    for label, graph in graphs.items():
+        _unique(graph, str(label))
+        reject_replaced_by_cycles(graph)
+    linked = {state_reference_key(e.consumer) for e in metadata.state_lineage}
+    for warning in metadata.lineage_warnings:
+        if (
+            warning.kind == "no_source_state"
+            and state_reference_key(warning.consumer) in linked
+        ):
+            raise ValueError("no_source_state warning contradicts explicit lineage")
+    _unique(
+        ((state_reference_key(w.consumer), w.kind) for w in metadata.lineage_warnings),
+        "lineage warning",
+    )
+    _unique(
+        (item.target for item in metadata.historical_predecessors),
+        "historical predecessor declaration",
+    )
+    unused = {h.target for h in metadata.historical_predecessors} - {
+        e.predecessor for e in metadata.successions
+    }
+    if unused:
+        raise ValueError(
+            f"unused historical predecessor declarations: {sorted(unused)}"
+        )
+    _unique(
+        ((c.table_name, c.column_name) for c in metadata.source_columns),
+        "source column",
+    )
+    _unique(
+        ((c.table_name, c.column_name) for c in metadata.source_join_keys),
+        "source join key",
+    )
+    _unique(
+        (i.native_variable_id for i in metadata.identifiers),
+        "native identifier metadata",
+    )
+
+
+def state_reference_key(ref: ResolvedStateRef) -> tuple[str, str, str, str]:
+    return ref.variable, ref.variant, ref.valid_from, ref.value_set_version_label
+
+
 _COLUMNS = {
     "concept_group": "group_id,kind,register_id,group_key,label,source",
     "concept_group_axis": "group_id,axis,ordinal,label",
@@ -438,6 +543,7 @@ def prepare_resolved_metadata(
 ) -> dict[str, list[tuple[Any, ...]]]:
     """Validate exact dependent references before any staged or live DB is touched."""
     metadata = ResolvedMetadata.model_validate(metadata)
+    validate_metadata_structure(metadata)
     rows: dict[str, list[tuple[Any, ...]]] = {name: [] for name in _COLUMNS}
     if not any(getattr(metadata, name) for name in type(metadata).model_fields):
         return rows
@@ -454,10 +560,6 @@ def prepare_resolved_metadata(
     classification_ids = {
         item.slug: _classification_id(item.slug) for item in classifications
     }
-    _unique(
-        (item.target for item in metadata.historical_predecessors),
-        "historical predecessor declaration",
-    )
     historical = {item.target: item for item in metadata.historical_predecessors}
     for target, declaration in historical.items():
         live = register_ids if declaration.kind == "register" else variable_ids
@@ -465,7 +567,6 @@ def prepare_resolved_metadata(
             raise ValueError(
                 f"obsolete historical predecessor declaration now names a live entity: {target}"
             )
-    used_historical = set()
     representations = set()
     states = {}
     for variable in variables:
@@ -531,16 +632,6 @@ def prepare_resolved_metadata(
             ref.value_set_version_label,
         )
 
-    grouped_variables: dict[str, tuple[str, str]] = {}
-    grouped_classifications = set()
-    _unique(
-        ((group.register_ref, group.key) for group in metadata.variable_groups),
-        "variable group key",
-    )
-    _unique(
-        (group.key for group in metadata.classification_groups),
-        "classification group key",
-    )
     for group in (*metadata.variable_groups, *metadata.classification_groups):
         is_variable = isinstance(group, ResolvedVariableGroup)
         scope = group.register_ref if is_variable else ""
@@ -556,13 +647,6 @@ def prepare_resolved_metadata(
         if isinstance(group, ResolvedVariableGroup):
             for member in group.members:
                 variable_id = require(variable_ids, member.variable, "group variable")
-                key = (group.register_ref, group.key)
-                if (
-                    member.variable in grouped_variables
-                    and grouped_variables[member.variable] != key
-                ):
-                    raise ValueError("variable belongs to multiple resolved groups")
-                grouped_variables[member.variable] = key
                 if member.delivery_column_name is not None:
                     require(
                         literal_representation_columns,
@@ -587,11 +671,6 @@ def prepare_resolved_metadata(
                 classification_id = require(
                     classification_ids, member.classification, "group classification"
                 )
-                if member.classification in grouped_classifications:
-                    raise ValueError(
-                        "classification belongs to multiple resolved groups"
-                    )
-                grouped_classifications.add(member.classification)
                 rows["concept_group_classification"].append(
                     (
                         classification_id,
@@ -600,7 +679,6 @@ def prepare_resolved_metadata(
                         member.facet_label,
                     )
                 )
-    _unique((tag.slug for tag in metadata.tags), "tag slug")
     for tag in metadata.tags:
         tag_id = mint("resolved-catalog", "tag", tag.slug)
         rows["tag"].append((tag_id, tag.slug, tag.label, tag.description))
@@ -620,17 +698,11 @@ def prepare_resolved_metadata(
                     member.note,
                 )
             )
-    same_as = []
     for edge in metadata.variable_same_as:
         require(variable_ids, edge.a, "same_as variable")
         require(variable_ids, edge.b, "same_as variable")
-        same_as.append((edge.a, edge.b))
         a, b = tuple(edge.a.split("/")), tuple(edge.b.split("/"))
         rows["variable_same_as"].extend(((*a, *b), (*b, *a)))
-    _unique((tuple(sorted(pair)) for pair in same_as), "same_as pair")
-    _reject_same_as_cycles(same_as, label="resolved variable same_as")
-    _reject_oversized_components(same_as, label="resolved variable same_as")
-    same_as = []
     for edge in metadata.classification_same_as:
         for endpoint in (edge.a, edge.b):
             require(
@@ -640,12 +712,7 @@ def prepare_resolved_metadata(
             (edge.a.provider, edge.a.classification),
             (edge.b.provider, edge.b.classification),
         )
-        same_as.append((a, b))
         rows["classification_same_as"].extend(((*a, *b), (*b, *a)))
-    _unique((tuple(sorted(pair)) for pair in same_as), "classification same_as pair")
-    _reject_same_as_cycles(same_as, label="resolved classification same_as")
-    _reject_oversized_components(same_as, label="resolved classification same_as")
-    succession_graphs: dict[str, list] = defaultdict(list)
     for edge in metadata.successions:
         kind = parse(edge.predecessor).kind
         targets = register_ids if kind == FqidKind.REGISTER else variable_ids
@@ -656,9 +723,7 @@ def prepare_resolved_metadata(
         )
         if edge.predecessor not in targets:
             require(historical, edge.predecessor, "succession predecessor")
-            used_historical.add(edge.predecessor)
         require(targets, edge.successor, "succession successor")
-        succession_graphs[table].append((edge.predecessor, edge.successor))
         rows[table].append(
             (
                 *edge.predecessor.split("/"),
@@ -667,10 +732,6 @@ def prepare_resolved_metadata(
                 edge.note,
                 edge.description,
             )
-        )
-    if unused := historical.keys() - used_historical:
-        raise ValueError(
-            f"unused historical predecessor declarations: {sorted(unused)}"
         )
     for edge in metadata.variant_successions:
         a, b = edge.predecessor, edge.successor
@@ -684,34 +745,15 @@ def prepare_resolved_metadata(
             (*a.register_ref.split("/"), a.variant),
             (*b.register_ref.split("/"), b.variant),
         )
-        succession_graphs["variant_replaced_by"].append((ka, kb))
         rows["variant_replaced_by"].append(
             (*ka, *kb, edge.effective_year, edge.note, edge.description)
         )
-    for label, graph in succession_graphs.items():
-        _unique(graph, label)
-        reject_replaced_by_cycles(graph)
-    unscoped, scoped = [], []
     for edge in metadata.representation_successions:
         a, b = edge.predecessor, edge.successor
         for endpoint in (a, b):
             representation(
                 endpoint.variable, endpoint.delivery_column_name, edge.variant
             )
-        ka = (
-            *a.variable.split("/"),
-            a.delivery_column_name.lower(),
-            edge.variant or "",
-        )
-        kb = (
-            *b.variable.split("/"),
-            b.delivery_column_name.lower(),
-            edge.variant or "",
-        )
-        if edge.variant is None:
-            unscoped.append((ka, kb))
-        else:
-            scoped.append((ka, kb, edge.effective_year))
         rows["representation_replaced_by"].append(
             (
                 *a.variable.split("/"),
@@ -724,43 +766,22 @@ def prepare_resolved_metadata(
                 edge.description,
             )
         )
-    _unique((*unscoped, *((a, b) for a, b, _ in scoped)), "representation succession")
-    reject_replaced_by_cycles(unscoped)
-    reject_nonmonotone_representation_cycles(scoped)
-    graph = []
     for edge in metadata.classification_derivations:
         require(classification_ids, edge.derived, "derived classification")
         require(classification_ids, edge.source, "source classification")
-        graph.append((edge.derived, edge.source))
         rows["classification_derived_from"].append(
             (edge.derived, edge.source, edge.note)
         )
-    _unique(graph, "classification derivation")
-    reject_replaced_by_cycles(graph)
-    graph = []
     for edge in metadata.state_lineage:
         consumer, source = state_id(edge.consumer), state_id(edge.source)
-        graph.append((consumer, source))
         rows["variable_state_lineage"].append(
             (consumer, source, edge.valid_from, edge.valid_to)
         )
-    _unique(graph, "state lineage pair")
-    reject_replaced_by_cycles(graph)
-    linked_consumers = {consumer for consumer, _ in graph}
     for warning in metadata.lineage_warnings:
         consumer = state_id(warning.consumer)
-        if warning.kind == "no_source_state" and consumer in linked_consumers:
-            raise ValueError("no_source_state warning contradicts explicit lineage")
         rows["variable_state_lineage_warning"].append(
             (consumer, warning.kind, warning.message)
         )
-    _unique(
-        (row[:2] for row in rows["variable_state_lineage_warning"]), "lineage warning"
-    )
-    _unique(
-        ((column.table_name, column.column_name) for column in metadata.source_columns),
-        "source column",
-    )
     source_columns = {
         (column.table_name, column.column_name) for column in metadata.source_columns
     }
@@ -768,10 +789,6 @@ def prepare_resolved_metadata(
         rows["source_column_type"].append(
             (column.table_name, column.column_name, column.sql_type, column.nullable)
         )
-    _unique(
-        ((key.table_name, key.column_name) for key in metadata.source_join_keys),
-        "source join key",
-    )
     for key in metadata.source_join_keys:
         require(
             source_columns, (key.table_name, key.column_name), "join-key source column"
@@ -779,10 +796,6 @@ def prepare_resolved_metadata(
         rows["source_join_key"].append(
             (key.table_name, key.column_name, key.description)
         )
-    _unique(
-        (item.native_variable_id for item in metadata.identifiers),
-        "native identifier metadata",
-    )
     rows["identifier_semantics"].extend(
         (item.native_variable_id, item.name, item.definition)
         for item in metadata.identifiers

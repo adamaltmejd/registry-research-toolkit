@@ -674,6 +674,21 @@ multiple axes may attach whole variables or particular delivery columns; every m
 supplies all declared facets. The same variable cannot mix whole-variable and
 representation membership within a group.
 
+Catalog dependency resolution uses exact available identities and explicit omissions
+with source diagnostics. A missing reference without such an outcome is an engineering
+error. It retains supported group and tag members, withholds groups with fewer than two
+members, and withholds relations whose endpoints are unavailable. Declaration cycles,
+duplicates and conflicting group ownership are checked before filtering, so withheld
+endpoints cannot hide an invalid contract. The writer repeats the same structural checks
+and validates every remaining reference.
+
+Panel axes require variable states in the exact named register variant. A withheld
+member makes its complete composite key unknown; it never creates a shorter key. The
+other axis, time grain and independent parent prose survive. All state, alias, edition
+and standalone-parent references share the resulting variant definition. This is common
+resolution behavior in both strict and diagnostic mode; it changes no source facts and
+does not invent variable identities or availability.
+
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across
