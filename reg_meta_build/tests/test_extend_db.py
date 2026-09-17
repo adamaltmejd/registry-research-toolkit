@@ -7,11 +7,8 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import write_scb_input
-from _shared_fixtures import _write_fixture_slug_dir
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.inventory import load_inventory as load_delivery_inventory
-from reg_meta_build.db import build_db
 from reg_meta_build.extend_db import (
     _insert_providers,
     _load_provider_ir,
@@ -20,6 +17,14 @@ from reg_meta_build.extend_db import (
     resolve_steward_providers_dir,
 )
 from reg_meta_build.id import _MINT_BIT, mint
+from reg_meta_build.resolved_catalog import (
+    ResolvedCodeSet,
+    ResolvedRegister,
+    ResolvedState,
+    ResolvedVariable,
+    ResolvedVariant,
+    write_resolved_catalog,
+)
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
@@ -142,20 +147,41 @@ def _write_slug_dir(path: Path) -> None:
 
 @pytest.fixture()
 def global_db(tmp_path: Path) -> Path:
-    input_dir = tmp_path / "input"
-    db_dir = tmp_path / "global"
-    slug_dir = tmp_path / "global-slugs"
-    for directory in (input_dir, db_dir, slug_dir):
-        directory.mkdir()
-    write_scb_input(input_dir)
-    _write_fixture_slug_dir(slug_dir)
-    build_db(
-        input_dir=input_dir,
-        db_dir=db_dir,
-        skip_classifications=True,
-        slug_dir=slug_dir,
+    output = tmp_path / "global" / "reg_meta.db"
+    write_resolved_catalog(
+        (
+            ResolvedVariable(
+                register=ResolvedRegister(
+                    provider="scb", slug="testreg", name="Test register"
+                ),
+                slug="category",
+                provider_key="44",
+                name="Category",
+                definition=None,
+                description=None,
+                operational_definition=None,
+                measurement_unit=None,
+                is_identifier=False,
+                is_sensitive=False,
+                states=(
+                    ResolvedState(
+                        variant=ResolvedVariant(slug="individuals", name="Individuals"),
+                        valid_from="2020-01-01",
+                        valid_to="2020-12-31",
+                        delivery_column_name="Category",
+                        data_type="integer",
+                        data_length="1",
+                        operational_definition=None,
+                        provenance=None,
+                        value_set=ResolvedCodeSet(members=(("1", "One"), ("2", "Two"))),
+                    ),
+                ),
+            ),
+        ),
+        output,
+        manifest={},
     )
-    return db_dir / "reg_meta.db"
+    return output
 
 
 def _run(
