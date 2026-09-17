@@ -625,6 +625,12 @@ claims for adjacent parent/prose duplicates without retaining an unbounded worki
 Identical repeated claim IDs contribute membership events once; different content under
 one claim ID is a fatal contract error. A checked corrected scope changes the claim
 identity and membership intersections, but never rewrites source validity or locators.
+Common resolution binds occurrences in member/scope order so interleaved physical
+duplicates reuse that bounded cache. Formation still consumes the original evidence.
+Binding errors with the same source record, list and reason share one diagnostic
+context; their complete ordered association locators and occurrence counts remain
+attached. This avoids expanding one unsupported period into millions of identical error
+contexts. It changes neither membership claims nor their strict severity.
 
 Accepted parallel-column families use checked identity and label assignments followed by
 a finite representation declaration. The declaration names each literal column and its

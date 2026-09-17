@@ -230,7 +230,25 @@ def resolve_source_scope(
         if key not in provider_keys:
             raise ValueError(f"missing explicit provider key mapping: {key!r}")
         claims: dict[NativeKey, list[CodeListClaim]] = defaultdict(list)
-        for occurrence in occurrences:
+        # Adjacent physical duplicates share the value session's bounded native
+        # list cache. Source row order can interleave members or corrected scopes.
+        # Only binding order changes; formation retains the original evidence.
+        for occurrence in sorted(
+            occurrences,
+            key=lambda o: (
+                repr(
+                    tuple(
+                        (r.source, r.subject.member.native_id)
+                        for r in (o.source_records or o.coding_records)
+                    )
+                ),
+                repr(
+                    o.edition_period_scope
+                    if o.edition_period_scope.kind != "not_applicable"
+                    else o.edition_scope
+                ),
+            ),
+        ):
             column = occurrence.column_key
             if column is None:
                 continue

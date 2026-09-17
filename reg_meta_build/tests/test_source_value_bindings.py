@@ -336,6 +336,47 @@ def test_missing_file_unknown_window_and_unlisted_item_are_distinct(
     assert (resolved.segments[0].code_set is None) == (expected is not None)
 
 
+def test_repeated_binding_errors_share_context_but_keep_all_original_associations(
+    tmp_path: Path,
+) -> None:
+    rows = (
+        SourceValueAssociation(
+            2, "first", "a", "values", member_id="1001", item_id="1"
+        ),
+        SourceValueAssociation(
+            3, "first", "a", "values", member_id="1001", item_id="1"
+        ),
+        SourceValueAssociation(
+            4, "second", "b", "values", member_id="1001", item_id="2"
+        ),
+    )
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(missing="unknown"),
+        descriptors=(SourceValueDescriptor("first"), SourceValueDescriptor("second")),
+        rows=rows,
+        validity_present=False,
+    )
+    first, duplicate = _record(), _record(description="other physical observation")
+    with open_value_bindings((source,)) as sessions:
+        result = bind_code_lists(first, sessions)
+        repeated = bind_code_lists(duplicate, sessions)
+    assert [(i.code, i.descriptor_key, i.occurrence_count) for i in result.issues] == [
+        ("unknown_code_validity", "first", 2),
+        ("unknown_code_validity", "second", 1),
+    ]
+    assert result.issues[0].association_locators == (rows[0].locator, rows[1].locator)
+    assert result.issues[1].association_locators == (rows[2].locator,)
+    assert sum(len(c.members) for c in result.claims) == len(rows)
+    assert sum(b.association_count for b in result.bindings) == len(rows)
+    assert all(i.record_id == first.record_id for i in result.issues)
+    assert all(i.record_id == duplicate.record_id for i in repeated.issues)
+    assert result.claims == repeated.claims
+    assert all(
+        s.code_set is None for s in resolve_code_membership(result.claims).segments
+    )
+
+
 def test_normalized_member_collision_keeps_conflicting_complete_lists(
     tmp_path: Path,
 ) -> None:

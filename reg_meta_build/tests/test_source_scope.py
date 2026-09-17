@@ -7,6 +7,7 @@ from dataclasses import replace
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _prepared_fixtures import accept_prepared
 from reg_meta_build.catalog_dependencies import (
     CatalogDependencies,
     CatalogDependencyError,
@@ -14,6 +15,10 @@ from reg_meta_build.catalog_dependencies import (
     variable_dependency_keys,
 )
 from reg_meta_build.convert_errata import capture_expectations
+from reg_meta_build.prepared_values import (
+    open_prepared_source_values,
+    prepare_source_values,
+)
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_parent_key,
@@ -39,6 +44,13 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.source_scope import resolve_source_scope
 from reg_meta_build.source_support import SourceSupportBindings
+from reg_meta_build.source_value_bindings import open_value_bindings
+from reg_meta_build.source_values import (
+    SourceValue,
+    SourceValueAssociation,
+    SourceValueDescriptor,
+    SourceValueJoin,
+)
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import SlugEntry
@@ -138,7 +150,15 @@ def guard(item: SourceRecord):
     )
 
 
-def resolve(records, *, cases=(), naming=None, provider_keys=None, on_diagnostic=None):
+def resolve(
+    records,
+    *,
+    cases=(),
+    naming=None,
+    provider_keys=None,
+    on_diagnostic=None,
+    value_sessions=(),
+):
     support = SourceSupportBindings((), ())
     for item in records:
         support.observe(item)
@@ -154,7 +174,7 @@ def resolve(records, *, cases=(), naming=None, provider_keys=None, on_diagnostic
         }
         if provider_keys is None
         else provider_keys,
-        value_sessions=(),
+        value_sessions=value_sessions,
         support=support,
         classifications={},
         classification_references={},
@@ -171,6 +191,57 @@ def test_ordinary_scope_forms_variables_with_literal_provider_keys():
     assert {v.provider_key for v in result.variables.values()} == {"5", "6"}
     assert sum(len(v.states) for v in result.variables.values()) == 2
     assert len(result.corrections.occurrences) == 2
+
+
+def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(
+    tmp_path, monkeypatch
+):
+    first, second = record(1), record(2)
+    root = tmp_path / "values"
+    manifest = prepare_source_values(
+        root,
+        revision=REVISION,
+        validity_revision=REVISION,
+        descriptors=(SourceValueDescriptor("list"),),
+        values=(SourceValue("value", "01", "One"),),
+        associations=tuple(
+            SourceValueAssociation(
+                i + 1, "list", "value", "values", member_id=str(i), item_id="1"
+            )
+            for i in (1, 2)
+        ),
+        join=SourceValueJoin(
+            record_sources=(REVISION.dataset,),
+            member_target="native_member",
+            member_format="integer",
+            validity_target="item",
+            missing_validity="unrestricted",
+            rule="Exact fixture member relation",
+            provenance=("fixture",),
+        ),
+    )
+    source = open_prepared_source_values(
+        root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
+    )
+    lookups = []
+    with open_value_bindings((source,)) as sessions:
+        session = sessions[0].session
+        original = session.lookup_native_member
+
+        def lookup(member):
+            lookups.append(member)
+            return original(member)
+
+        monkeypatch.setattr(session, "lookup_native_member", lookup)
+        result = resolve((first, second, first, second), value_sessions=sessions)
+    assert lookups == [1, 2]
+    assert not result.diagnostics
+    assert len(result.corrections.occurrences) == 4
+    variable = result.variables[native_variable_key(first)]
+    assert variable is not None
+    assert [
+        (s.valid_from, s.valid_to, s.value_set.members) for s in variable.states
+    ] == [("2020-01-01", "2020-12-31", (("01", "One"),))]
 
 
 def test_checked_naming_retains_accepted_deprecation():

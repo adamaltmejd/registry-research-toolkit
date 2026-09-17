@@ -68,6 +68,35 @@ class ValueBindingResult:
     issues: tuple[ValueBindingIssue, ...]
 
 
+def _group_binding_issues(
+    issues: list[ValueBindingIssue],
+) -> tuple[ValueBindingIssue, ...]:
+    """One issue per record/list/reason, retaining every association occurrence.
+
+    A pooled list can invalidate thousands of code associations for the same
+    reason. Emitting a full resolution diagnostic for each repeats the source
+    context and can dominate memory without adding evidence.
+    """
+    groups: dict[ValueBindingIssue, list[ValueBindingIssue]] = defaultdict(list)
+    for issue in issues:
+        groups[replace(issue, association_locators=(), occurrence_count=0)].append(
+            issue
+        )
+    return tuple(
+        replace(
+            key,
+            association_locators=tuple(
+                locator for issue in members for locator in issue.association_locators
+            ),
+            occurrence_count=sum(
+                issue.occurrence_count or len(issue.association_locators)
+                for issue in members
+            ),
+        )
+        for key, members in groups.items()
+    )
+
+
 def _unknown(reason: str) -> TemporalScope:
     return TemporalScope(kind="unknown", label=reason)
 
@@ -377,7 +406,9 @@ class ValueBindingSession:
                     tuple(inactive),
                 )
             )
-        result = ValueBindingResult(tuple(claims), tuple(bindings), tuple(issues))
+        result = ValueBindingResult(
+            tuple(claims), tuple(bindings), _group_binding_issues(issues)
+        )
         if join.member_target == "native_member":
             self._last_native_key = native_key
             self._last_native_result = result
