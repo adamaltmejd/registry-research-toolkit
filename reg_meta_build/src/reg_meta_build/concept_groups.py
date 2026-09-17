@@ -1364,6 +1364,24 @@ def derive_classification_succession(conn: sqlite3.Connection) -> int:
     rows = conn.execute(
         "SELECT slug, name FROM classification WHERE slug IS NOT NULL ORDER BY slug"
     ).fetchall()
+    edges = classification_succession_edges(rows)
+    conn.executemany(
+        "INSERT INTO classification_replaced_by "
+        "(predecessor_slug, successor_slug, effective_year, note) "
+        "VALUES (?, ?, ?, 'derived:vintage_chain')",
+        edges,
+    )
+    return len(edges)
+
+
+def classification_succession_edges(
+    rows: Iterable[tuple[str, str]],
+) -> tuple[tuple[str, str, int], ...]:
+    """Derive adjacent editions from the existing guarded vocabulary, without IO.
+
+    This is shared by the legacy materializer and common resolution. It operates
+    on the selected canonical classifications, never source-variable code labels.
+    """
     # stem → [(year, slug, name)]
     families: dict[str, list[tuple[int, str, str]]] = {}
     for slug, name in rows:
@@ -1376,7 +1394,7 @@ def derive_classification_succession(conn: sqlite3.Connection) -> int:
             continue
         stem, year = vintage
         families.setdefault(stem, []).append((year, slug, name))
-    n_edges = 0
+    edges = []
     for stem in sorted(families):
         editions = sorted(families[stem])
         if len(editions) < _MIN_VINTAGE_SIBLINGS:
@@ -1390,15 +1408,8 @@ def derive_classification_succession(conn: sqlite3.Connection) -> int:
             stripped_names.add(" ".join(name.replace(str(year), "", 1).split()))
         if not ok or len(stripped_names) != 1 or not next(iter(stripped_names)):
             continue
-        edges = [(pred[1], succ[1], succ[0]) for pred, succ in pairwise(editions)]
-        conn.executemany(
-            "INSERT INTO classification_replaced_by "
-            "(predecessor_slug, successor_slug, effective_year, note) "
-            "VALUES (?, ?, ?, 'derived:vintage_chain')",
-            edges,
-        )
-        n_edges += len(edges)
-    return n_edges
+        edges.extend((pred[1], succ[1], succ[0]) for pred, succ in pairwise(editions))
+    return tuple(edges)
 
 
 def _apply_curated_groups(

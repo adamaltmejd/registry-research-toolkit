@@ -674,12 +674,17 @@ do. Errata column conversion preserves supplied classification references withou
 copying canonical codes or widening delivery periods.
 
 Classification succession has one declaration surface: the complete directed edge graph.
-The writer validates its endpoints, duplicate pairs and cycles before creating output.
-It derives the database's single predecessor pointer from active edges using the fixed
+Common resolution retains the existing guarded edition rule: canonical classification
+slugs must identify editions in the accepted vintage vocabulary, and their names must
+agree after removing the edition year. Adjacent editions produce succession edges;
+explicit accepted edges join that same graph. The full graph is checked before writing,
+so separately valid declarations cannot hide a combined cycle or duplicate edge. The
+writer validates its endpoints, duplicate pairs and cycles before creating output. It
+derives the database's single predecessor pointer from active edges using the fixed
 catalog release year, retaining future edges without activating them. For multiple
 active predecessors, the pointer selects the first literal slug while the full graph
 preserves every relationship. Canonical codebooks do not carry a separately editable
-predecessor. No edition sequence is inferred from names or years.
+predecessor. The writer infers no edition sequence from names or years.
 
 Group membership preserves literal delivery-column spellings, including separately
 declared case variants. Each representation member must match an observed spelling

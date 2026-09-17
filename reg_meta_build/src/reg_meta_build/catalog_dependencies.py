@@ -11,12 +11,15 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build._components import DisjointSet
+from reg_meta_build.concept_groups import classification_succession_edges
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
+    ResolvedClassificationSuccession,
     ResolvedEdition,
     ResolvedRegister,
     ResolvedVariable,
     ResolvedVariant,
+    _prepare_classification_succession,
     validate_resolved_variables,
 )
 from reg_meta_build.resolved_metadata import (
@@ -36,6 +39,35 @@ if TYPE_CHECKING:
 
 
 type DependencyKey = tuple[str, ...]
+
+
+def resolve_classification_successions(
+    classifications: tuple[ResolvedClassification, ...],
+    declared: tuple[ResolvedClassificationSuccession, ...] = (),
+) -> tuple[ResolvedClassificationSuccession, ...]:
+    """Combine existing automatic edition chains and explicit accepted edges.
+
+    Check the whole graph before materialization. An explicit edge cannot hide a
+    duplicate, missing endpoint or cycle by being checked in a separate pass.
+    """
+    if len({c.slug for c in classifications}) != len(classifications):
+        raise ValueError("duplicate classification identity in succession resolution")
+    derived = tuple(
+        ResolvedClassificationSuccession(
+            predecessor=a,
+            successor=b,
+            effective_year=year,
+            note="derived:vintage_chain",
+        )
+        for a, b, year in classification_succession_edges(
+            (c.slug, c.name) for c in classifications
+        )
+    )
+    combined = tuple(
+        sorted((*derived, *declared), key=lambda e: (e.predecessor, e.successor))
+    )
+    _prepare_classification_succession(classifications, combined)
+    return combined
 
 
 def variable_dependency_keys(variable: ResolvedVariable) -> set[DependencyKey]:
