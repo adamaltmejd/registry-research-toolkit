@@ -8,9 +8,9 @@ from reg_meta.errors import RegMetaError
 from reg_meta_build.catalog_dependencies import (
     CatalogDependencyError,
     resolve_classification_successions,
-    resolve_code_label_groups,
     resolve_metadata_dependencies,
     resolve_panel_dependencies,
+    resolve_variable_edge_groups,
 )
 from reg_meta_build.concept_groups import CodeLabelPair
 from reg_meta_build.resolved_catalog import (
@@ -193,7 +193,7 @@ def test_classification_edition_rules_require_matching_names_and_unique_identity
 
 def test_code_label_pair_resolves_without_sql_and_writes_standard_group(tmp_path):
     variables = _pair_variables()
-    result = resolve_code_label_groups(
+    result = resolve_variable_edge_groups(
         (_pair(),),
         variables,
         curated_groups=(),
@@ -221,6 +221,138 @@ def test_code_label_pair_resolves_without_sql_and_writes_standard_group(tmp_path
             conn.execute("SELECT COUNT(*) FROM concept_group_variable").fetchone()[0]
             == 2
         )
+
+
+def test_checked_siblings_and_code_label_pairs_form_one_component():
+    code, label = _pair_variables()
+    sibling = _variable(ResolvedVariant(slug="earlier", name="Earlier"), "sibling")
+    variables = (code, label, sibling)
+    kwargs = {
+        "curated_groups": (),
+        "evidence": _pair_evidence(variables),
+        "withheld": {},
+        "foldable_sibling_pairs": (("scb/example/code", "scb/example/sibling"),),
+    }
+    result = resolve_variable_edge_groups((_pair(),), variables, **kwargs)
+    assert not result.diagnostics and len(result.groups) == 1
+    assert [m.variable for m in result.groups[0].members] == [
+        "scb/example/code",
+        "scb/example/label",
+        "scb/example/sibling",
+    ]
+    assert {(d.source, d.status, d.group_key) for d in result.dispositions} == {
+        ("code_label", "grouped", "code"),
+        ("same_definition", "grouped", "code"),
+    }
+    assert (
+        result.groups
+        == resolve_variable_edge_groups(
+            (_pair(),), tuple(reversed(variables)), **kwargs
+        ).groups
+    )
+
+
+def test_curated_bridge_is_removed_before_combining_sibling_and_pair_edges():
+    code, label = _pair_variables()
+    variants = ResolvedVariant(slug="people", name="People")
+    sibling, other = (_variable(variants, slug) for slug in ("sibling", "other"))
+    variables = (code, label, sibling, other)
+    curated = ResolvedVariableGroup(
+        register="scb/example",
+        key="curated",
+        label="Curated",
+        source="curated",
+        members=(
+            ResolvedGroupVariable(variable="scb/example/label"),
+            ResolvedGroupVariable(variable="scb/example/other"),
+        ),
+    )
+    result = resolve_variable_edge_groups(
+        (_pair(),),
+        variables,
+        foldable_sibling_pairs=(("scb/example/label", "scb/example/sibling"),),
+        curated_groups=(curated,),
+        evidence=_pair_evidence(variables),
+        withheld={},
+    )
+    assert not result.groups and not result.diagnostics
+    assert all(d.status == "claimed_by_curated" for d in result.dispositions)
+
+
+def test_sibling_omission_requires_evidence_and_unexplained_endpoint_stays_fatal():
+    variables = _pair_variables()
+    kwargs = {
+        "curated_groups": (),
+        "evidence": _pair_evidence(variables),
+        "withheld": {("variable", "scb/example/absent"): (_cause(),)},
+    }
+    result = resolve_variable_edge_groups(
+        (),
+        variables,
+        foldable_sibling_pairs=(("scb/example/code", "scb/example/absent"),),
+        **kwargs,
+    )
+    assert not result.groups and result.dispositions[0].status == "withheld"
+    assert result.diagnostics[0].refs == _cause().refs
+    with pytest.raises(CatalogDependencyError) as error:
+        resolve_variable_edge_groups(
+            (),
+            variables,
+            foldable_sibling_pairs=(("scb/example/absent", "scb/example/unknown"),),
+            **kwargs,
+        )
+    assert [d.key for d in error.value.missing] == [("variable", "scb/example/unknown")]
+
+
+@pytest.mark.parametrize(
+    "failure", ["self", "duplicate", "cross_register", "no_evidence"]
+)
+def test_sibling_edges_cannot_bypass_declaration_or_source_guards(failure):
+    code, label = _pair_variables()
+    if failure == "cross_register":
+        label = label.model_copy(
+            update={
+                "register_ref": ResolvedRegister(
+                    provider="scb", slug="other", name="Other"
+                )
+            }
+        )
+    variables = (code, label)
+    a, b = "scb/example/code", f"scb/{label.register_ref.slug}/label"
+    evidence = _pair_evidence(variables) if failure != "no_evidence" else {}
+    pairs = (
+        ((a, a),)
+        if failure == "self"
+        else ((a, b), (b, a))
+        if failure == "duplicate"
+        else ((a, b),)
+    )
+    if failure == "cross_register":
+        result = resolve_variable_edge_groups(
+            (),
+            variables,
+            foldable_sibling_pairs=pairs,
+            curated_groups=(),
+            evidence=evidence,
+            withheld={},
+        )
+        assert (
+            not result.groups
+            and result.diagnostics[0].code == "unresolved_same_definition_pair"
+        )
+        assert set(result.diagnostics[0].refs) == {*evidence[a], *evidence[b]}
+    else:
+        with pytest.raises(
+            ValueError, match="unique non-self pairs|lacks source evidence"
+        ):
+            resolve_variable_edge_groups(
+                (),
+                variables,
+                foldable_sibling_pairs=pairs,
+                curated_groups=(),
+                evidence=evidence,
+                withheld={},
+            )
 
 
 @pytest.mark.parametrize(
@@ -263,7 +395,7 @@ def test_code_label_pair_failed_guards_retain_evidence_and_withhold_only_group(c
         )
         pair = CodeLabelPair("scb", "example", "code", "scb", "other", "label")
     evidence = _pair_evidence((code, label))
-    result = resolve_code_label_groups(
+    result = resolve_variable_edge_groups(
         (pair,),
         (code, label),
         curated_groups=(),
@@ -279,7 +411,7 @@ def test_code_label_pair_failed_guards_retain_evidence_and_withhold_only_group(c
 
 def test_code_label_pair_known_omission_does_not_hide_unknown_reference():
     code, _ = _pair_variables()
-    result = resolve_code_label_groups(
+    result = resolve_variable_edge_groups(
         (_pair(),),
         (code,),
         curated_groups=(),
@@ -289,7 +421,7 @@ def test_code_label_pair_known_omission_does_not_hide_unknown_reference():
     assert not result.groups and result.dispositions[0].status == "withheld"
     assert result.diagnostics[0].refs == _cause().refs
     with pytest.raises(CatalogDependencyError, match="typo"):
-        resolve_code_label_groups(
+        resolve_variable_edge_groups(
             (_pair("typo"),),
             (),
             curated_groups=(),
@@ -297,7 +429,7 @@ def test_code_label_pair_known_omission_does_not_hide_unknown_reference():
             withheld={("variable", "scb/example/label"): (_cause(),)},
         )
     with pytest.raises(ValueError, match="unique non-self"):
-        resolve_code_label_groups(
+        resolve_variable_edge_groups(
             (_pair(), _pair()),
             (),
             curated_groups=(),
@@ -305,7 +437,7 @@ def test_code_label_pair_known_omission_does_not_hide_unknown_reference():
             withheld={},
         )
     with pytest.raises(ValueError, match="lacks source evidence"):
-        resolve_code_label_groups(
+        resolve_variable_edge_groups(
             (_pair(),),
             _pair_variables(),
             curated_groups=(),
@@ -338,7 +470,7 @@ def test_code_label_curated_bridge_is_excluded_before_components_form():
         _pair("a", "left"),
         _pair("b", "right"),
     )
-    result = resolve_code_label_groups(
+    result = resolve_variable_edge_groups(
         pairs,
         variables,
         curated_groups=(curated,),
@@ -355,7 +487,7 @@ def test_code_label_curated_bridge_is_excluded_before_components_form():
         [m.variable.rsplit("/", 1)[1] for m in g.members] for g in result.groups
     ] == [["a", "left"], ["b", "right"]]
     assert (
-        resolve_code_label_groups(
+        resolve_variable_edge_groups(
             pairs[::-1],
             variables[::-1],
             curated_groups=(curated,),

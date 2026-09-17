@@ -193,42 +193,46 @@ class MetadataResolution:
 
 
 @dataclass(frozen=True)
-class PairDisposition:
-    code: str
-    label: str
+class GroupEdgeDisposition:
+    source: Literal["code_label", "same_definition"]
+    a: str
+    b: str
     status: Literal["grouped", "claimed_by_curated", "withheld"]
     group_key: str | None = None
 
 
 @dataclass(frozen=True)
-class PairResolution:
+class GroupEdgeResolution:
     groups: tuple[ResolvedVariableGroup, ...]
-    dispositions: tuple[PairDisposition, ...]
+    dispositions: tuple[GroupEdgeDisposition, ...]
     diagnostics: tuple[ResolutionDiagnostic, ...]
 
 
-def resolve_code_label_groups(
+def resolve_variable_edge_groups(
     pairs: tuple[CodeLabelPair, ...],
     variables: tuple[ResolvedVariable, ...],
     *,
+    foldable_sibling_pairs: tuple[tuple[str, str], ...] = (),
     curated_groups: tuple[ResolvedVariableGroup, ...],
     evidence: Mapping[str, tuple[SourceRecordRef, ...]],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-) -> PairResolution:
-    """Resolve accepted code/label declarations before materialization.
+) -> GroupEdgeResolution:
+    """Resolve existing code/label and checked same-definition group edges.
 
-    The code owns a value set, the label owns none, and both have states in a
-    shared register variant. Unknown coding cannot pass the positive owner guard.
-    Invalid/unavailable pairs are withheld with source evidence; unexplained
-    missing references remain fatal. Exclude curated members before connecting
-    components, preserving independent survivors when a bridge is excluded.
+    Code/label pairs retain their coding and shared-variant guards. The caller
+    supplies already checked foldable sibling pairs, never slug patterns. A common
+    native definition alone does not bypass the existing code/label and type-shape
+    exclusions; those belong to the source-to-pair derivation.
+    Both edge kinds share one component pass; deriving them separately could put
+    a variable in two groups. Exclude curated members before connecting components.
+    Invalid/unavailable edges retain source evidence; unexplained refs stay fatal.
     """
     by_fqid = {
         f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}": v
         for v in variables
     }
     if len(by_fqid) != len(variables):
-        raise ValueError("duplicate variable identity in code-label resolution")
+        raise ValueError("duplicate variable identity in group-edge resolution")
     declared = tuple(
         (
             f"{p.code_provider}/{p.code_register}/{p.code_variable}",
@@ -238,14 +242,21 @@ def resolve_code_label_groups(
     )
     if len(set(declared)) != len(declared) or any(a == b for a, b in declared):
         raise ValueError("code-label declarations must be unique non-self pairs")
+    siblings = tuple(tuple(sorted(pair)) for pair in foldable_sibling_pairs)
+    if len(set(siblings)) != len(siblings) or any(a == b for a, b in siblings):
+        raise ValueError("same-definition declarations must be unique non-self pairs")
     dependencies = CatalogDependencies(
         {("variable", fqid) for fqid in by_fqid}, withheld
     )
     claimed = {m.variable for g in curated_groups for m in g.members}
     components: DisjointSet[str] = DisjointSet()
     dispositions = []
-    for code, label in declared:
-        output = f"code_label_pair:{code}:{label}"
+    edges: tuple[tuple[Literal["code_label", "same_definition"], str, str], ...] = (
+        *(("code_label", a, b) for a, b in declared),
+        *(("same_definition", a, b) for a, b in siblings),
+    )
+    for source, code, label in edges:
+        output = f"{source}_pair:{code}:{label}"
         available = [
             dependencies.require(
                 ("variable", fqid),
@@ -255,25 +266,28 @@ def resolve_code_label_groups(
             for fqid in (code, label)
         ]
         if not all(available):
-            dispositions.append(PairDisposition(code, label, "withheld"))
+            dispositions.append(GroupEdgeDisposition(source, code, label, "withheld"))
             continue
         if any(not evidence.get(fqid) for fqid in (code, label)):
-            raise ValueError(f"code-label declaration lacks source evidence: {output}")
+            raise ValueError(f"group-edge declaration lacks source evidence: {output}")
         coded, named = by_fqid[code], by_fqid[label]
         problems = []
-        if not any(s.value_set is not None for s in coded.states):
-            problems.append("the code endpoint has no supported value set")
-        if any(s.value_set is not None for s in named.states):
-            problems.append("the label endpoint owns a value set")
-        if code.rsplit("/", 1)[0] != label.rsplit("/", 1)[0] or not (
-            {s.variant.slug for s in coded.states}
-            & {s.variant.slug for s in named.states}
-        ):
-            problems.append("the endpoints have no shared register variant")
+        if source == "code_label":
+            if not any(s.value_set is not None for s in coded.states):
+                problems.append("the code endpoint has no supported value set")
+            if any(s.value_set is not None for s in named.states):
+                problems.append("the label endpoint owns a value set")
+            if not (
+                {s.variant.slug for s in coded.states}
+                & {s.variant.slug for s in named.states}
+            ):
+                problems.append("the endpoints have no shared register variant")
+        if code.rsplit("/", 1)[0] != label.rsplit("/", 1)[0]:
+            problems.append("the endpoints belong to different registers")
         if problems:
             dependencies.diagnostics.append(
                 ResolutionDiagnostic(
-                    code="unresolved_code_label_pair",
+                    code=f"unresolved_{source}_pair",
                     severity="error",
                     subject=output,
                     detail="; ".join(problems),
@@ -282,14 +296,16 @@ def resolve_code_label_groups(
                     withheld_output=(output,),
                 )
             )
-            dispositions.append(PairDisposition(code, label, "withheld"))
+            dispositions.append(GroupEdgeDisposition(source, code, label, "withheld"))
         elif code in claimed or label in claimed:
-            dispositions.append(PairDisposition(code, label, "claimed_by_curated"))
+            dispositions.append(
+                GroupEdgeDisposition(source, code, label, "claimed_by_curated")
+            )
         else:
             components.add(code)
             components.add(label)
             components.union(code, label)
-            dispositions.append(PairDisposition(code, label, "grouped"))
+            dispositions.append(GroupEdgeDisposition(source, code, label, "grouped"))
     dependencies.check()
     groups = []
     membership = {}
@@ -298,7 +314,7 @@ def resolve_code_label_groups(
         register, key = members[0].rsplit("/", 1)
         if (register, key) in reserved:
             raise ValueError(
-                f"code-label group key conflicts with curated group: {register}/{key}"
+                f"derived edge-group key conflicts with curated group: {register}/{key}"
             )
         groups.append(
             ResolvedVariableGroup(
@@ -310,10 +326,10 @@ def resolve_code_label_groups(
             )
         )
         membership.update(dict.fromkeys(members, key))
-    return PairResolution(
+    return GroupEdgeResolution(
         tuple(groups),
         tuple(
-            PairDisposition(d.code, d.label, d.status, membership[d.code])
+            GroupEdgeDisposition(d.source, d.a, d.b, d.status, membership[d.a])
             if d.status == "grouped"
             else d
             for d in dispositions
