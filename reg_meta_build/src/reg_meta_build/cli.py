@@ -28,6 +28,7 @@ from reg_meta.cli_common import (
     write_json,
 )
 from reg_meta.db import (
+    DB_FILENAME,
     SCHEMA_VERSION,
     db_path_from_args,
     default_db_dir,
@@ -232,6 +233,22 @@ def _build_parser() -> argparse.ArgumentParser:
             "--input-commit <commit> --input-manifest-sha256 <sha256>"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    build_p.add_argument(
+        "--selection",
+        help="Three-stage build selection: pinned prepared sources and common declarations.",
+    )
+    build_p.add_argument(
+        "--report-dir", help="New directory for structured build issues and accounting."
+    )
+    build_p.add_argument(
+        "--diagnostic",
+        action="store_true",
+        help="Write a separate nonpublishable catalog despite curation errors.",
+    )
+    build_p.add_argument(
+        "--diagnostic-db-path",
+        help="New explicit SQLite path required with --diagnostic.",
     )
     build_p.add_argument(
         "--input-dir",
@@ -1309,6 +1326,64 @@ def _cmd_curated_catalog(args: argparse.Namespace) -> tuple[dict[str, Any], int]
 
 
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.selection is not None:
+        from .pipeline import build_selected_catalog
+
+        if (
+            not args.report_dir
+            or args.diagnostic != bool(args.diagnostic_db_path)
+            or args.input_dir is not None
+            or args.input_bundle is not None
+            or args.input_commit is not None
+            or args.input_manifest_sha256 is not None
+            or args.slug_dir is not None
+            or args.skip_slugs
+            or args.no_validate
+            or args.trace_scb_cvids is not None
+            or args.scb_value_prestage_cache is not None
+            or args.refresh_scb_value_prestage_cache
+            or args.providers
+            != "scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet,umu"
+            or (args.diagnostic and args.db is not None)
+        ):
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_selection_options_invalid",
+                error_class="usage",
+                message="A full selection requires --report-dir and excludes legacy input overrides; diagnostic mode requires its separate explicit output path.",
+                remediation="Use --selection and --report-dir, adding both --diagnostic and --diagnostic-db-path for comparison output.",
+            )
+        output = (
+            Path(args.diagnostic_db_path)
+            if args.diagnostic
+            else Path(args.db or default_db_dir()) / DB_FILENAME
+        )
+        try:
+            result = build_selected_catalog(
+                Path(args.selection),
+                output,
+                Path(args.report_dir),
+                diagnostic=args.diagnostic,
+            )
+        except (ValueError, OSError, KeyError) as exc:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="pipeline_build_failed",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Repair the selected declarations or implementation; inspect the report directory if source resolution started.",
+            ) from exc
+        return result, EXIT_CONFIG if result[
+            "status"
+        ] == "blocked" or args.diagnostic else 0
+    if args.report_dir or args.diagnostic or args.diagnostic_db_path:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_selection_required",
+            error_class="usage",
+            message="The diagnostic pipeline and its report options require --selection.",
+            remediation="Supply a complete three-stage build selection.",
+        )
     start = time.perf_counter()
     # `--timing` is surfaced to the build internals (db.py `_timing_enabled`) via
     # the env var so the deep helpers need no extra plumbing.
@@ -2709,6 +2784,47 @@ def _confined_bundle_output_path(
     if output_path is None:
         return None
     resolved_output = Path(output_path).expanduser().resolve()
+    if args.command == "build-db" and (
+        selection_path := getattr(args, "selection", None)
+    ):
+        from .pipeline import PipelineSelection
+
+        selection_file = Path(selection_path).expanduser().resolve()
+        try:
+            selected = PipelineSelection.model_validate_json(
+                selection_file.read_bytes()
+            )
+        except ValueError, OSError:
+            # Let the handler report the precise input error, always to stdout.
+            return None
+        prepared = Path(selected.prepared_path)
+        if not prepared.is_absolute():
+            prepared = selection_file.parent / prepared
+        directories = {selection_file.parent, prepared.resolve()}
+        if args.report_dir:
+            directories.add(Path(args.report_dir).expanduser().resolve())
+        database = (
+            Path(args.diagnostic_db_path).expanduser().resolve()
+            if args.diagnostic_db_path
+            else (Path(args.db or default_db_dir()) / DB_FILENAME).resolve()
+        )
+        report_paths = {
+            resolved_output,
+            resolved_output.with_suffix(resolved_output.suffix + ".tmp"),
+        }
+        if any(
+            path.is_relative_to(directory)
+            for path in report_paths
+            for directory in directories
+        ) or _curated_paths_overlap(report_paths, _curated_database_paths(database)):
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_report_output_conflict",
+                error_class="usage",
+                message="CLI JSON --output must be separate from selected inputs, event reports and catalog files.",
+                remediation="Choose a separate summary path or use stdout.",
+            )
+        return output_path
     if (
         args.command in {"build-curated-db", "inspect-curation"}
         and resolved_output.exists()

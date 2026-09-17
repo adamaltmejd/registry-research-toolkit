@@ -349,6 +349,8 @@ def unresolved_variable_flags(variable: ResolvedVariable) -> tuple[str, ...]:
 
 def validate_resolved_variables(
     variables: tuple[ResolvedVariable, ...],
+    *,
+    allow_empty: bool = False,
 ) -> tuple[
     tuple[ResolvedVariable, ...],
     dict[tuple[str, str], ResolvedRegister],
@@ -358,7 +360,7 @@ def validate_resolved_variables(
     variables = TypeAdapter(tuple[ResolvedVariable, ...]).validate_python(
         variables, strict=True
     )
-    if not variables:
+    if not variables and not allow_empty:
         raise ValueError("refusing to publish an empty resolved catalog")
     registers: dict[tuple[str, str], ResolvedRegister] = {}
     variants: dict[tuple[str, str, str], ResolvedVariant] = {}
@@ -700,7 +702,9 @@ def write_resolved_catalog(
     even when their variable states are withheld. Shared definitions must agree.
     """
     diagnostic = TypeAdapter(bool).validate_python(diagnostic, strict=True)
-    variables, registers, variants = validate_resolved_variables(variables)
+    variables, registers, variants = validate_resolved_variables(
+        variables, allow_empty=diagnostic
+    )
     parent_registers = TypeAdapter(tuple[ResolvedRegister, ...]).validate_python(
         parent_registers, strict=True
     )

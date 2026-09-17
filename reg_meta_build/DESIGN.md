@@ -99,24 +99,33 @@ not a cleaning adapter. Preparation, curation application, and materialization n
 call an LLM. Catalog document indexing is a separate responsibility; it does not resolve
 source facts.
 
-> **Status: partial replacement.** Complete source preparation has run against all 146
-> selected inputs: 113 machine-readable sources are prepared, and the 14 curation and 19
-> naming files are separately accounted for. The prepared artifact retains 1,078,241
-> source records and 98 compact value sources. Common resolution binds source code
-> lists, reconciles parent metadata and ordinary variable families, and applies checked
-> field, period, identity, source-use and added-occurrence decisions before direct
-> writing. Existing naming and curation conversion is incomplete. A complete resolution
-> probe has scanned all 45,368 native families, including every maintained occurrence
-> source. It exposed missing conversions and an incorrect variable-level interpretation
-> of SCB's joined population prose. The latter belongs to edition metadata and is fixed
-> in cleaning; corrected preparation and the connected scan have been verified.
-> Conversion prototypes cover 1,885 omitted-column entries and 223 delivery entries;
-> their inherited assumptions are being audited against the actual declarations and
-> evidence. Prior copying of adjacent-edition metadata is not accepted curation. The
-> full replacement database and old/new comparison are still pending. Ordinary
-> `build-db` continues to use the legacy semantic pipeline below; `build-curated-db`
-> exercises an explicitly selected slice. This branch is not ready for catalog
-> activation.
+> **Status: partial replacement.**
+> `build-db --selection selection.json --report-dir DIR` connects pinned prepared
+> inputs, common source resolution, catalog dependencies and the direct writer.
+> `--diagnostic --diagnostic-db-path FILE` writes a separate, nonpublishable artifact
+> while retaining curation errors. The complete connection is fixture-tested;
+> full-corpus materialization and legacy comparison remain pending. The retained
+> curation export explicitly blocks incomplete conversion and required implementation.
+> The old input flags still select the legacy builder until cutover; the earlier
+> `build-curated-db` whole-variable-case prototype is displaced by this connection and
+> will be removed. This branch is not ready for catalog activation.
+
+The maintained call path is `pipeline.build_selected_catalog` →
+`open_prepared_catalog_sources` → `resolve_source_scope` for each complete scope →
+catalog dependency resolution → `write_resolved_catalog`. Its selection contains data,
+not executable conversion hooks. Scope declaration files load one register at a time;
+the runtime does not import the archived conversion scripts or their successive loaders.
+Classification declarations reference prepared codebook membership rather than copying
+code lists into curation data. One event stream records input dispositions, physical
+record uses, case outcomes and issues; full original evidence stays in the prepared
+store.
+
+Completion requires retiring both displaced build paths, separating one-time conversion
+from maintained runtime modules, and removing redundant naming membership guards.
+Ordinary naming needs the established native identity; only actual ownership or
+correction decisions should guard the source facts and membership they depend on. The
+current guarded naming format remains in use during this connection. No unsupported
+legacy assumption becomes an accepted correction merely to reproduce the old database.
 
 Field corrections and identity assignments can select an exact checked field alternative
 under a native source member. This matters when the same delivered key carries different

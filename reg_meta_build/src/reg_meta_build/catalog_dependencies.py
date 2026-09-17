@@ -704,7 +704,11 @@ def resolve_panel_dependencies(
     not a shorter invented key. The other axis, grain, names and prose survive.
     States, aliases, editions and standalone parents share the rewritten variant.
     """
-    variables, by_register, by_variant = validate_resolved_variables(variables)
+    # All variables may have been withheld for source errors. Independent parent
+    # facts still resolve; the writer enforces the strict publication floor.
+    variables, by_register, by_variant = validate_resolved_variables(
+        variables, allow_empty=True
+    )
 
     def register_parent(register: ResolvedRegister) -> None:
         key = register.provider, register.slug
