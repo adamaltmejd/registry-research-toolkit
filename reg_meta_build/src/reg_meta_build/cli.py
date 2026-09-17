@@ -316,6 +316,20 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
+    prepare_sources_p = sub.add_parser(
+        "prepare-sources",
+        help="Clean and validate a pinned input bundle into new prepared sources.",
+        description=(
+            "Run provider/format cleaning once and write a new source artifact. "
+            "Preserves source evidence; applies no catalog curation and never "
+            "commits or replaces accepted inputs. Warm builds reuse this artifact."
+        ),
+    )
+    prepare_sources_p.add_argument("--input-bundle", required=True)
+    prepare_sources_p.add_argument("--input-commit", required=True)
+    prepare_sources_p.add_argument("--input-manifest-sha256", required=True)
+    prepare_sources_p.add_argument("--output-dir", required=True)
+
     prepare_bundle_p = sub.add_parser(
         "prepare-input-bundle",
         help="Capture a complete catalog-input candidate (maintainer-only).",
@@ -1314,6 +1328,37 @@ def _default_slug_dir() -> Path:
             remediation="Pass --slug-dir explicitly.",
         )
     return path
+
+
+def _cmd_prepare_sources(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .prepared_catalog import prepare_catalog_sources
+
+    selection = CatalogBundleSelection(
+        path=Path(args.input_bundle),
+        input_commit=args.input_commit,
+        manifest_sha256=args.input_manifest_sha256,
+    )
+    output = Path(args.output_dir).expanduser().resolve()
+    try:
+        manifest = prepare_catalog_sources(selection, output)
+    except (ValueError, OSError) as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="source_preparation_failed",
+            error_class="configuration",
+            message=str(exc),
+            remediation="Repair the selected input or actual-format adapter, then prepare a new candidate; accepted inputs are unchanged.",
+        ) from exc
+    return {
+        "status": "prepared",
+        "prepared_path": str(output),
+        "prepared_manifest_sha256": manifest.sha256,
+        "input_commit": manifest.input_commit,
+        "input_manifest_sha256": manifest.bundle_manifest_sha256,
+        "records": sum(entry.counts.records for entry in manifest.inputs),
+        "value_sources": len(manifest.values),
+        "requires_acceptance": True,
+    }, 0
 
 
 def _cmd_prepare_input_bundle(
@@ -2416,6 +2461,7 @@ COMMAND_DISPATCH: dict[
     str, Callable[[argparse.Namespace], tuple[dict[str, Any], int]]
 ] = {
     "build-db": _cmd_build_db,
+    "prepare-sources": _cmd_prepare_sources,
     "prepare-input-bundle": _cmd_prepare_input_bundle,
     "verify-input-bundle": _cmd_verify_input_bundle,
     "inspect-source-records": _cmd_inspect_source_records,
@@ -2440,6 +2486,10 @@ COMMAND_DISPATCH: dict[
 
 
 _COMMAND_OVERVIEW: list[tuple[str, str]] = [
+    (
+        "prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir DIR",
+        "Clean and validate sources once; write a new candidate for acceptance.",
+    ),
     (
         "build-db --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256",
         "Build the metadata DB from one complete accepted input bundle.",
@@ -2547,6 +2597,20 @@ def _confined_bundle_output_path(
     if output_path is None:
         return None
     resolved_output = Path(output_path).expanduser().resolve()
+    if args.command == "prepare-sources" and any(
+        path.is_relative_to(Path(args.output_dir).expanduser().resolve())
+        for path in (
+            resolved_output,
+            resolved_output.with_suffix(resolved_output.suffix + ".tmp").resolve(),
+        )
+    ):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="source_preparation_report_conflict",
+            error_class="usage",
+            message="CLI JSON --output must be outside the prepared source artifact.",
+            remediation="Choose a separate summary path or use stdout.",
+        )
     if args.command == "build-db" and (
         selection_path := getattr(args, "selection", None)
     ):
@@ -2637,6 +2701,7 @@ def _confined_bundle_output_path(
         in {
             "build-db",
             "verify-input-bundle",
+            "prepare-sources",
             "inspect-source-records",
         }
         else None

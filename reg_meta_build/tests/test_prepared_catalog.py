@@ -18,6 +18,8 @@ from _lisa_fixtures import write_lisa_workbook
 from _prepared_fixtures import accept_prepared
 from _sos_fixtures import write_sos_input
 from openpyxl import Workbook, load_workbook
+from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
+from reg_meta_build.cli import run
 from reg_meta_build.input_snapshot import (
     CatalogBundleSelection,
     LisaWorkbookSelection,
@@ -94,6 +96,80 @@ def _selection(
         slug_dir=slugs,
         lisa_workbook=lisa,
     )
+
+
+def test_cli_prepares_new_artifact_without_accepting_or_overwriting_it(
+    tmp_path: Path, capsys
+) -> None:
+    selection = _selection(tmp_path)
+    destination = tmp_path / "prepared" / "catalog"
+    args = [
+        "prepare-sources",
+        "--input-bundle",
+        str(selection.path),
+        "--input-commit",
+        selection.input_commit,
+        "--input-manifest-sha256",
+        selection.manifest_sha256,
+        "--output-dir",
+        str(destination),
+    ]
+    assert run(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["status"] == "prepared" and report["requires_acceptance"] is True
+    assert report["records"] > 0 and report["value_sources"] > 0
+    original = (destination / "manifest.json").read_bytes()
+    assert report["prepared_manifest_sha256"] == hashlib.sha256(original).hexdigest()
+    assert not (destination.parent / ".git").exists()
+    assert run(args) == EXIT_CONFIG
+    assert (destination / "manifest.json").read_bytes() == original
+    commit = accept_prepared(destination)
+    assert (
+        len(
+            open_prepared_catalog_sources(
+                destination,
+                expected_sha256=report["prepared_manifest_sha256"],
+                input_commit=commit,
+            ).records
+        )
+        == report["records"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("target", "status"),
+    [("selected_input", EXIT_CONFIG), ("prepared_artifact", EXIT_USAGE)],
+)
+def test_preparation_cli_summary_cannot_modify_its_inputs_or_output(
+    tmp_path: Path, target: str, status: int
+) -> None:
+    selection = _selection(tmp_path)
+    destination = tmp_path / "prepared" / "catalog"
+    source_manifest = selection.path / "catalog-bundle.json"
+    original = source_manifest.read_bytes()
+    report = (
+        source_manifest if target == "selected_input" else destination / "manifest.json"
+    )
+    assert (
+        run(
+            [
+                "prepare-sources",
+                "--input-bundle",
+                str(selection.path),
+                "--input-commit",
+                selection.input_commit,
+                "--input-manifest-sha256",
+                selection.manifest_sha256,
+                "--output-dir",
+                str(destination),
+                "--output",
+                str(report),
+            ]
+        )
+        == status
+    )
+    assert not destination.exists()
+    assert source_manifest.read_bytes() == original
 
 
 def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> None:

@@ -510,6 +510,13 @@ on every target, including an explicit empty collection when no references are s
 
 ### Prepared-to-catalog path
 
+`prepare-sources --input-bundle DIR --input-commit COMMIT --input-manifest-sha256 SHA256 --output-dir NEW_DIR`
+runs the maintained cleaning and validation path once. It reports the prepared manifest
+pin and leaves a new candidate for explicit input acceptance. It never commits, replaces
+an existing artifact or applies catalog curation. Raw archives and provider files are
+needed for cold preparation or a source update; ordinary builds read only the accepted
+prepared artifact selected by the common curation declarations.
+
 `prepared_sources.py` stores ordered observations in an indexed SQLite file beside a
 small JSON manifest. Repeated metadata and original delivered cells are interned; source
 revisions, native variable coordinates, physical locators, source order and duplicate
