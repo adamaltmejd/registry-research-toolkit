@@ -33,6 +33,7 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
+from reg_meta_build.source_support import SourceSupportBindings, SourceSupportJoin
 
 from reg_meta_build import _accepted_prepared, prepared_sources
 
@@ -133,6 +134,96 @@ def _prepare(root: Path, *, records: tuple[SourceRecord, ...] | None = None):
 
 def _git(repo: Path, *args: str) -> None:
     subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True)
+
+
+@pytest.mark.parametrize(
+    "keys",
+    [
+        ("column_name",),
+        ("variable_id",),
+        ("register_name", "variant_name", "variable_name", "column_name"),
+    ],
+)
+def test_support_projection_matches_full_record_cardinalities_without_hydration(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    keys,
+) -> None:
+    revision = _revision("source-a", "a")
+
+    def occurrence(row, native, column="VALUE"):
+        original = _record(
+            revision, row=row, member="Source variable", raw_value="Source variable"
+        )
+        subject = original.subject.model_copy(
+            update={
+                "variable": SourceCoordinate(status="unknown")
+                if native is None
+                else SourceCoordinate(
+                    status="value", native_id=native, name="Variable"
+                ),
+                "variant": SourceCoordinate(status="value", name="People"),
+            }
+        )
+        arguments = {
+            field: getattr(original, field)
+            for field in SourceRecord.model_fields
+            if field
+            not in {"record_id", "source", "source_revision_id", "subject", "fields"}
+        }
+        return SourceRecord.create(
+            revision=revision,
+            subject=subject,
+            fields=SourceFields(column_name=value_field(column)),
+            **arguments,
+        )
+
+    first, second, unknown = occurrence(1, 7), occurrence(2, "7"), occurrence(3, None)
+    records = (first, first, second, unknown, occurrence(4, 8, "OTHER"))
+    root = tmp_path / "inputs" / "records"
+    manifest = prepare_source_records(
+        root, records=records, revisions=(revision,), scope="complete targets"
+    )
+    commit = accept_prepared(root)
+    reader = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=commit
+    )
+    join = SourceSupportJoin(
+        source="summary",
+        target_sources=(first.source,),
+        keys=keys,
+        fields=("identifier",),
+        unique_variable=True,
+        rule="literal fixture join",
+        provenance=("fixture",),
+    )
+    # Support and delivery collections remain distinct, even with equal coordinates.
+    support_record = first.model_copy(update={"source": "summary"})
+    full, projected = (
+        SourceSupportBindings((join,), (support_record,)),
+        SourceSupportBindings((join,), (support_record,)),
+    )
+    for item in records:
+        full.observe(item)
+    full.seal()
+
+    def no_hydration(*args):
+        raise AssertionError("support projection hydrated a physical source record")
+
+    monkeypatch.setattr(prepared_sources, "_read_record", no_hydration)
+    targets = tuple(reader.iter_support_targets((join,)))
+    assert len(targets) < len(records)
+    assert any(t.variable_key is None for t in targets)
+    for target in targets:
+        projected.observe_target(target)
+    projected.seal()
+    assert projected.accounting == full.accounting
+    assert projected.diagnostics == full.diagnostics
+    assert [projected.bind(item) for item in records] == [
+        full.bind(item) for item in records
+    ]
+    with pytest.raises(ValueError, match="already complete"):
+        projected.observe_target(targets[0])
 
 
 def test_native_family_index_groups_ids_across_variants_without_losing_other_records(

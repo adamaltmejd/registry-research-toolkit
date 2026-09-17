@@ -19,10 +19,14 @@ from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Mapping
 
     from reg_meta_build.source_coordinates import NativeKey
-    from reg_meta_build.source_records import SourceRecord
+    from reg_meta_build.source_records import (
+        SourceCoordinate,
+        SourceField,
+        SourceRecord,
+    )
 
 
 class SourceSupportJoin(BaseModel):
@@ -65,23 +69,35 @@ class SourceSupportJoin(BaseModel):
 
 
 def _key(record: SourceRecord, join: SourceSupportJoin) -> tuple[str | int, ...] | None:
+    return support_join_key(
+        join,
+        coordinates={
+            "register_name": record.subject.register_name,
+            "variant_name": record.subject.variant,
+            "variable_name": record.subject.variable,
+            "variable_id": record.subject.variable,
+        },
+        column=record.fields.column_name,
+    )
+
+
+def support_join_key(
+    join: SourceSupportJoin,
+    *,
+    coordinates: Mapping[str, SourceCoordinate],
+    column: SourceField | None,
+) -> tuple[str | int, ...] | None:
+    """Apply the same literal join contract to full records and prepared projections."""
     values = []
     for name in join.keys:
         if name == "column_name":
-            field = record.fields.column_name
             value = (
-                field.value if field is not None and field.status == "value" else None
+                column.value
+                if column is not None and column.status == "value"
+                else None
             )
         else:
-            coordinate = getattr(
-                record.subject,
-                {
-                    "register_name": "register_name",
-                    "variant_name": "variant",
-                    "variable_name": "variable",
-                    "variable_id": "variable",
-                }[name],
-            )
+            coordinate = coordinates[name]
             value = (
                 (coordinate.native_id if name == "variable_id" else coordinate.name)
                 if coordinate.status == "value"
@@ -91,6 +107,16 @@ def _key(record: SourceRecord, join: SourceSupportJoin) -> tuple[str | int, ...]
             return None
         values.append(value)
     return tuple(values)
+
+
+@dataclass(frozen=True)
+class SupportTarget:
+    """Cardinality evidence only; never a synthetic or partially decoded source row."""
+
+    support_source: str
+    record_source: str
+    variable_key: NativeKey | None
+    key: tuple[str | int, ...] | None
 
 
 @dataclass(frozen=True)
@@ -146,9 +172,30 @@ class SourceSupportBindings:
         if self._sealed:
             raise ValueError("support target collection is already complete")
         for join in self._by_target.get(record.source, ()):
-            key = _key(record, join)
-            if key is not None and (join.source, key) in self._support:
-                self._targets[join.source, key].add(native_variable_key(record))
+            self.observe_target(
+                SupportTarget(
+                    join.source,
+                    record.source,
+                    native_variable_key(record),
+                    _key(record, join),
+                )
+            )
+
+    def observe_target(self, target: SupportTarget) -> None:
+        if self._sealed:
+            raise ValueError("support target collection is already complete")
+        join = self.joins.get(target.support_source)
+        if join is None or target.record_source not in join.target_sources:
+            raise ValueError(
+                "support target does not belong to a selected relationship"
+            )
+        if target.key is not None:
+            if len(target.key) != len(join.keys) or any(
+                type(v) not in {str, int} or v == "" for v in target.key
+            ):
+                raise ValueError("support target key does not match its join contract")
+            if (join.source, target.key) in self._support:
+                self._targets[join.source, target.key].add(target.variable_key)
 
     def seal(self) -> None:
         if self._sealed:

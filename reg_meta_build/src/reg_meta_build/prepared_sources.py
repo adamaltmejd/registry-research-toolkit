@@ -48,11 +48,13 @@ from reg_meta_build.source_records import (
     SourceSubject,
     TemporalScope,
 )
+from reg_meta_build.source_support import SupportTarget, support_join_key
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Iterator
 
     from reg_meta_build.source_coordinates import NativeKey
+    from reg_meta_build.source_support import SourceSupportJoin
 
 _FORMAT = "reg-meta-prepared-source-records"
 _SCHEMA_VERSION = 6
@@ -762,6 +764,55 @@ class PreparedSourceRecords:
             "WHERE source = ?" if source is not None else "",
             (source,) if source is not None else (),
         )
+
+    def iter_support_targets(
+        self,
+        joins: tuple[SourceSupportJoin, ...],
+    ) -> Iterator[SupportTarget]:
+        """Read complete join cardinalities without hydrating physical source records.
+
+        DISTINCT removes only repetitions of the same original native identity and
+        required join fields. Unknown identities remain None candidates. This is a
+        read projection of the accepted store, not source cleaning or curation.
+        Ordinary resolution still visits every physical occurrence separately.
+        """
+        columns = {
+            "register_name": "register_payload",
+            "variant_name": "variant_payload",
+            "variable_name": "variable_payload",
+            "variable_id": "variable_payload",
+            "column_name": "fields_payload",
+        }
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            for join in joins:
+                selected = tuple(sorted({columns[name] for name in join.keys}))
+                projection = ", ".join(("family_payload", *selected))
+                for source in join.target_sources:
+                    rows = conn.execute(
+                        f"SELECT DISTINCT {projection} FROM occurrence "
+                        f"WHERE source=? ORDER BY {projection}",
+                        (source,),
+                    )
+                    for row in rows:
+                        key = support_join_key(
+                            join,
+                            coordinates={
+                                name: payload(row[columns[name]], "coordinate")
+                                for name in join.keys
+                                if name != "column_name"
+                            },
+                            column=payload(row["fields_payload"], "fields").column_name
+                            if "column_name" in join.keys
+                            else None,
+                        )
+                        yield SupportTarget(
+                            join.source,
+                            source,
+                            payload(row["family_payload"], "native_family")
+                            if row["family_payload"] is not None
+                            else None,
+                            key,
+                        )
 
     def iter_native_families(
         self,

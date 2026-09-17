@@ -510,6 +510,15 @@ revision is the trust boundary. Original large value-association streams remain 
 existing lossless compact input storage; `prepared_catalog.py` integrates them with this
 record store.
 
+Support-join cardinality checks use `iter_support_targets`: a distinct projection of the
+original native family and only the declared join fields. It shares the literal join-key
+function with ordinary record binding, retains unknown identities as ambiguous
+candidates, and never hydrates parent prose, physical locators or delivered cells.
+Physical support records and their dispositions remain complete. This projection only
+establishes target cardinality; the resolution pass still visits every original source
+occurrence. A source update therefore cannot hide a new competing target through the
+optimization.
+
 `build-curated-db --records DIR --records-sha256 SHA256 --records-commit COMMIT --cases FILE --db-path DB`
 loads that selection and a JSON array of reviewed cases. It resolves every case before
 writing anything, then passes resolved natural identities, flags, text and full-date
