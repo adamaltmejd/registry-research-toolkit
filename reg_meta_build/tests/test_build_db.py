@@ -185,7 +185,10 @@ class TestBuildDb:
         input_dir = tmp_path / "input"
         scb_dir = write_scb_input(input_dir)
         auxiliary = scb_dir / "Tabelldefinitioner.sql"
-        auxiliary.write_text("-- fixture auxiliary\n", encoding="utf-8")
+        auxiliary.write_text(
+            "CREATE TABLE [dbo].[Example]([A] [int] NULL) ON [PRIMARY]\nGO\n",
+            encoding="utf-8",
+        )
         selection = write_input_bundle(tmp_path / "accepted", input_dir)
 
         def reject_repo_fallback(*_args: object, **_kwargs: object) -> None:

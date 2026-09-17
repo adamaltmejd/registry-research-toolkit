@@ -53,6 +53,8 @@ from reg_meta_build.input_snapshot import (
     verify_input_bundle,
     verify_snapshot,
 )
+from reg_meta_build.sources.curated_records import CuratedSourceError
+from reg_meta_build.sources.scb_reference_records import ScbReferenceSourceError
 
 from reg_meta_build import input_snapshot as snapshot_module
 
@@ -410,7 +412,10 @@ def test_catalog_bundle_captures_complete_small_inventory_and_selects_quickly(
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
     auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
-    auxiliary.write_bytes(b"-- exact source fact\r\nSELECT 1;\r\n")
+    auxiliary.write_bytes(
+        b"-- exact source fact\r\n"
+        b"CREATE TABLE [dbo].[Example]([A] [int] NULL) ON [PRIMARY]\r\nGO\r\n"
+    )
     selection = write_input_bundle(tmp_path / "accepted", input_dir)
 
     def exhaustive_use(*_args: object, **_kwargs: object) -> None:
@@ -827,10 +832,16 @@ def test_catalog_bundle_manifest_changes_with_meaningful_auxiliary_input(
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
     auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
-    auxiliary.write_text("CREATE TABLE first;\n", encoding="utf-8")
+    auxiliary.write_text(
+        "CREATE TABLE [dbo].[First]([A] [int] NULL) ON [PRIMARY]\nGO\n",
+        encoding="utf-8",
+    )
     first = write_input_bundle(tmp_path / "accepted-a", input_dir)
 
-    auxiliary.write_text("CREATE TABLE second;\n", encoding="utf-8")
+    auxiliary.write_text(
+        "CREATE TABLE [dbo].[Second]([A] [int] NULL) ON [PRIMARY]\nGO\n",
+        encoding="utf-8",
+    )
     second = write_input_bundle(tmp_path / "accepted-b", input_dir)
 
     assert first.manifest_sha256 != second.manifest_sha256
@@ -1055,7 +1066,10 @@ def test_catalog_bundle_preparation_skips_exhaustive_snapshot_verification(
     write_scb_input(input_dir)
     snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
     auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
-    auxiliary.write_text("CREATE TABLE auxiliary;\n", encoding="utf-8")
+    auxiliary.write_text(
+        "CREATE TABLE [dbo].[Auxiliary]([value] [int] NULL) ON [PRIMARY]\nGO\n",
+        encoding="utf-8",
+    )
     curation = tmp_path / "curation"
     slugs = tmp_path / "slugs"
     curation.mkdir()
@@ -1206,9 +1220,55 @@ def test_catalog_bundle_rejects_unsupported_manifest_before_build(
         open_input_bundle(changed)
 
 
-def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
+def test_bundle_preparation_keeps_source_conflicts_for_common_resolution(
     tmp_path: Path,
 ) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    canonical = input_dir / "scb_canonical"
+    canonical.mkdir()
+    (canonical / "scb_canonical.toml").write_text(
+        '[[register]]\nkey = "example"\nname = "Example"\n'
+        '[[register.variable]]\nname = "Code"\ncolumn = "Code"\n'
+        'classification = "Unresolved source declaration"\nvalue_set = "codes"\n',
+        encoding="utf-8",
+    )
+    codes = canonical / "codes.csv"
+    codes.write_text("code,label\n01,First\n01,Conflicting\n", encoding="utf-8")
+
+    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+
+    assert (
+        selection.path / "catalog/scb_canonical/codes.csv"
+    ).read_bytes() == codes.read_bytes()
+    verify_input_bundle(selection)
+
+
+@pytest.mark.parametrize("name", ("../outside", "/outside", "dir\\outside"))
+def test_bundle_preparation_rejects_escaping_canonical_code_list(
+    tmp_path: Path, name: str
+) -> None:
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    canonical = input_dir / "scb_canonical"
+    canonical.mkdir()
+    (canonical / "scb_canonical.toml").write_text(
+        '[[register]]\nkey = "example"\nname = "Example"\n'
+        '[[register.variable]]\nname = "Code"\ncolumn = "Code"\n'
+        f"value_set = {json.dumps(name)}\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(SnapshotError, match="local filename"):
+        write_input_bundle(tmp_path / "accepted", input_dir)
+
+
+def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from reg_meta.errors import EXIT_CONFIG
+
+    from reg_meta_build import cli as cli_module
+
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
     provider_dir = input_dir / "Folkhalsomyndigheten"
@@ -1220,11 +1280,35 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
     curation.mkdir()
     slugs.mkdir()
 
-    with pytest.raises(RegMetaError) as exc_info:
+    with pytest.raises(CuratedSourceError, match="invalid global curated TOML"):
         prepare_input_bundle(
             input_dir, curation, slugs, snapshot, snapshot.path.parent / "bundle"
         )
-    assert exc_info.value.code == "curated_toml_invalid"
+    assert (
+        cli_module.run(
+            [
+                "prepare-input-bundle",
+                "--input-dir",
+                str(input_dir),
+                "--curation-dir",
+                str(curation),
+                "--slug-dir",
+                str(slugs),
+                "--scb-snapshot",
+                str(snapshot.path),
+                "--scb-input-commit",
+                snapshot.input_commit,
+                "--scb-manifest-sha256",
+                snapshot.manifest_sha256,
+                "--output-dir",
+                str(snapshot.path.parent / "bundle"),
+            ]
+        )
+        == EXIT_CONFIG
+    )
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert error["code"] == "catalog_input_bundle_invalid"
+    assert "invalid global curated TOML" in error["message"]
     assert not (snapshot.path.parent / "bundle").exists()
 
 
@@ -1233,7 +1317,7 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
     (
         ("curation", "lineage.toml", b"not = [valid", RegMetaError),
         ("input", "SCB/ID-kolumner.xlsx", b"not a zip", BadZipFile),
-        ("input", "SCB/Tabelldefinitioner.sql", b"\x81", UnicodeDecodeError),
+        ("input", "SCB/Tabelldefinitioner.sql", b"\x81", ScbReferenceSourceError),
     ),
 )
 def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(

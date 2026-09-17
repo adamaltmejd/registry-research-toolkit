@@ -98,6 +98,7 @@ from reg_meta_build.scb_errata import (
     scoped_state_provenance,
 )
 from reg_meta_build.sources.scb_records import _interpret_registerinformation_row
+from reg_meta_build.sources.scb_reference_records import _SQL_COL_RE, _SQL_CREATE_RE
 
 _LISA_REGISTER_NAME_PREFIX = "longitudinell integrationsdatabas"
 _RESOLUTION_GAP_PROVENANCE = "inferred:resolution-gap"
@@ -5159,15 +5160,6 @@ def _apply_cis2016_matrix(
         "aliases": len(matrix.columns),
         "slug_hints": slug_hints,
     }
-
-
-_SQL_CREATE_RE = re.compile(
-    r"CREATE\s+TABLE\s+\[dbo\]\.\[(\w+)\]\s*\((.*?)\)\s*ON\s+\[PRIMARY\]",
-    re.DOTALL | re.IGNORECASE,
-)
-_SQL_COL_RE = re.compile(
-    r"\[(\w+)\]\s+\[(\w+)\](?:\((\d+)\))?\s*(NULL|NOT\s+NULL)?",
-)
 
 
 def _import_tabelldefinitioner(conn: sqlite3.Connection, path: Path) -> int:

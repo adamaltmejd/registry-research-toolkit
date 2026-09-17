@@ -1098,7 +1098,7 @@ def _cmd_prepare_input_bundle(
                 else None
             ),
         )
-    except SnapshotError as exc:
+    except (ValueError, OSError) as exc:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
             code="catalog_input_bundle_invalid",
@@ -1242,7 +1242,7 @@ def _cmd_verify_input_bundle(
         manifest = verify_input_bundle(selection)
     except SnapshotMaterializationError as exc:
         raise _scb_snapshot_error(exc) from exc
-    except SnapshotError as exc:
+    except (ValueError, OSError) as exc:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
             code="catalog_input_bundle_invalid",

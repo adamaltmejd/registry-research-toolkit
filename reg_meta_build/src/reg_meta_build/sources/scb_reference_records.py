@@ -29,7 +29,6 @@ from reg_meta_build.source_reference_records import (
     SourceJoinKeyDeclaration,
 )
 from reg_meta_build.sources.code_lists import read_selected_bytes
-from reg_meta_build.sources.scb import _SQL_COL_RE, _SQL_CREATE_RE
 from reg_meta_build.sources.scb_records import _delivered_cells
 from reg_meta_build.sources.sos import _row_evidence
 from reg_meta_build.sources.sos_records import _delivered_cells as _workbook_cells
@@ -39,6 +38,15 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from reg_meta_build.input_snapshot import ScbSnapshotReader
+
+
+_SQL_CREATE_RE = re.compile(
+    r"CREATE\s+TABLE\s+\[dbo\]\.\[(\w+)\]\s*\((.*?)\)\s*ON\s+\[PRIMARY\]",
+    re.DOTALL | re.IGNORECASE,
+)
+_SQL_COL_RE = re.compile(
+    r"\[(\w+)\]\s+\[(\w+)\](?:\((\d+)\))?\s*(NULL|NOT\s+NULL)?",
+)
 
 
 class ScbReferenceSourceError(ValueError):

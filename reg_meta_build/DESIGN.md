@@ -9,10 +9,9 @@ Design rationale and constraints for the build pipeline. For usage, see
 `reg_meta_build` owns the build pipeline that produces the SQLite databases `reg_meta`
 queries against. Specifically:
 
-- `reg_meta.db` — main metadata DB (\~320 MB uncompressed). Routine builds select one
-  exact revision of the host-local catalog-input repository; explicit raw builds remain
-  for source preparation and synthetic tests. The result is validated by
-  `reg_meta_build/validate.py` before shipping.
+- `reg_meta.db` — main metadata DB. Routine builds select one exact prepared-input
+  revision and pinned curation declarations; source capture and cleaning run separately.
+  The result is validated by `reg_meta_build/validate.py` before shipping.
 - `reg_meta_docs.db` — FTS5 search index over the curated markdown under
   `reg_meta_build/docs/`, plus rehostable register-version related-document binaries and
   provenance.
@@ -516,6 +515,12 @@ an existing artifact or applies catalog curation. Raw archives and provider file
 needed for cold preparation or a source update; ordinary builds read only the accepted
 prepared artifact selected by the common curation declarations.
 
+Bundle capture also uses these source-format readers for authored TOMLs, code lists,
+column declarations and join-key workbooks. It does not instantiate final-catalog
+adapters or create scratch catalog tables. Conflicting code labels and unresolved
+classification declarations remain source evidence for common resolution; malformed
+layouts and references escaping their selected source directory fail preparation.
+
 `prepared_sources.py` stores ordered observations in an indexed SQLite file beside a
 small JSON manifest. Repeated metadata and original delivered cells are interned; source
 revisions, native variable coordinates, physical locators, source order and duplicate
@@ -634,6 +639,9 @@ one claim ID is a fatal contract error. A checked corrected scope changes the cl
 identity and membership intersections, but never rewrites source validity or locators.
 Common resolution binds occurrences in member/scope order so interleaved physical
 duplicates reuse that bounded cache. Formation still consumes the original evidence.
+Membership-period intersections have a separate bounded cache of 4,096 immutable
+results, keyed by every effective scope and source-validity constraint. Sharing a period
+does not share or discard its association, validity-row or physical-record evidence.
 Binding errors with the same source record, list and reason share one diagnostic
 context; their complete ordered association locators and occurrence counts remain
 attached. This avoids expanding one unsupported period into millions of identical error

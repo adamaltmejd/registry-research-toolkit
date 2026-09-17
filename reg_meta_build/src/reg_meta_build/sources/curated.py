@@ -1052,26 +1052,6 @@ class CanonicalScbAdapter(CuratedAdapter):
         for reg in self._load(toml_path):
             yield from self._emit_register(reg)
 
-    def referenced_value_sets(self, source_dir: Path) -> tuple[str, ...]:
-        """Return canonical code-list names through the adapter's own parser."""
-        self._source_dir = source_dir
-        registers = self._load(source_dir / self.SOURCE_FILE)
-        return tuple(
-            sorted(
-                {
-                    variable.value_set
-                    for register in registers
-                    for variable in register.variables
-                    if variable.value_set is not None
-                }
-            )
-        )
-
-    def validate_source_files(self, source_dir: Path) -> None:
-        """Parse the TOML and every code list it references without emitting IR."""
-        for name in self.referenced_value_sets(source_dir):
-            self._load_codes(name)
-
     def _value_set_id_for(
         self, reg: _CuratedRegister, var: _CuratedVariable
     ) -> int | None:

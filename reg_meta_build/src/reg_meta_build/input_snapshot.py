@@ -37,8 +37,9 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from .db import _CURATED_PROVIDERS, DDL, _file_sha256
+from .db import _CURATED_PROVIDERS, _file_sha256
 from .dbdiff import TableIgnore, diff_db_content, format_report
+from .source_records import SourceRevision
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Iterator, Mapping, Sequence
@@ -2711,19 +2712,17 @@ def _bundle_source_files(
 
     canonical_toml = input_dir / "scb_canonical" / "scb_canonical.toml"
     if canonical_toml.is_file():
-        from .sources.curated import CanonicalScbAdapter
+        from .sources.curated_records import read_curated_source
 
-        conn = sqlite3.connect(":memory:")
-        try:
-            adapter = CanonicalScbAdapter(
-                conn, classification_seed_path=classification_seed
-            )
-            for name in adapter.referenced_value_sets(canonical_toml.parent):
-                relative = f"catalog/scb_canonical/{name}.csv"
-                source = canonical_toml.parent / f"{name}.csv"
-                resolved[relative] = source if source.is_file() else None
-        finally:
-            conn.close()
+        source = read_curated_source(
+            canonical_toml,
+            _bundle_source_revision(canonical_toml, input_dir),
+            provider="scb",
+        )
+        for name in source.declared_value_lists:
+            csv_path = _canonical_code_list_path(canonical_toml.parent, name)
+            relative = f"catalog/scb_canonical/{csv_path.name}"
+            resolved[relative] = csv_path if csv_path.is_file() else None
 
     # Slug loading intentionally globs every top-level TOML. Include future
     # provider files automatically while retaining explicit absence for today's
@@ -2810,12 +2809,36 @@ def _verify_bundle_inventory(
             )
 
 
+def _canonical_code_list_path(directory: Path, name: str) -> Path:
+    filename = f"{name}.csv"
+    if Path(filename).name != filename or "\\" in filename:
+        raise SnapshotError(
+            f"canonical code-list reference must be a local filename: {name!r}"
+        )
+    return directory / filename
+
+
+def _bundle_source_revision(path: Path, root: Path) -> SourceRevision:
+    """Pin a small file while validating a not-yet-accepted input bundle."""
+    digest = _file_sha256(path)
+    relative = path.relative_to(root).as_posix()
+    return SourceRevision.create(
+        dataset=relative,
+        publisher="Selected input",
+        purpose="Input bundle structural validation",
+        upstream_revision=f"sha256:{digest}",
+        artifact_path=relative,
+        artifact_size=path.stat().st_size,
+        artifact_sha256=digest,
+    )
+
+
 def _validate_bundle_contract(root: Path) -> None:
-    """Run the existing small-input parsers at preparation/verification time."""
+    """Validate source formats and curation syntax without forming a catalog."""
     from .alias_windows import load_alias_windows
     from .cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
     from .classification_links import load_classification_links
-    from .classifications import load_seed, load_valid_codes
+    from .classifications import load_seed
     from .codeless_overlap import load_codeless_overlap
     from .codelivery import load_codelivery
     from .concept_groups import (
@@ -2829,8 +2852,12 @@ def _validate_bundle_contract(root: Path) -> None:
     from .period_family_merges import load_period_family_merges
     from .relations import load_relations
     from .scb_errata import load_scb_errata
-    from .sources.curated import CanonicalScbAdapter, CuratedAdapter
-    from .sources.scb import _import_id_kolumner, _import_tabelldefinitioner
+    from .sources.code_lists import read_code_list
+    from .sources.curated_records import read_curated_source
+    from .sources.scb_reference_records import (
+        read_scb_column_types,
+        read_scb_join_keys,
+    )
     from .sources.sos import parse_directory
     from .tags import load_tags
 
@@ -2845,43 +2872,39 @@ def _validate_bundle_contract(root: Path) -> None:
 
     if seed.is_file():
         for entry in load_seed(seed_path):
-            load_valid_codes(catalog / "classifications" / entry["valid_codes_file"])
+            path = catalog / "classifications" / entry["valid_codes_file"]
+            read_code_list(path, _bundle_source_revision(path, root), name=path.stem)
 
     sos = catalog / "Socialstyrelsen"
     if sos.is_dir():
         parse_directory(sos)
 
     for provider, directory in _CURATED_PROVIDERS:
-        source_dir = catalog / directory
-        if (source_dir / f"{provider}.toml").is_file():
-            list(
-                CuratedAdapter(provider, classification_seed_path=seed_path).emit(
-                    source_dir
-                )
+        path = catalog / directory / f"{provider}.toml"
+        if path.is_file():
+            read_curated_source(
+                path, _bundle_source_revision(path, root), provider=provider
             )
 
     canonical_dir = catalog / "scb_canonical"
     canonical_toml = canonical_dir / "scb_canonical.toml"
     if canonical_toml.is_file():
-        conn = sqlite3.connect(":memory:")
-        try:
-            adapter = CanonicalScbAdapter(conn, classification_seed_path=seed_path)
-            adapter.validate_source_files(canonical_dir)
-        finally:
-            conn.close()
+        source = read_curated_source(
+            canonical_toml,
+            _bundle_source_revision(canonical_toml, root),
+            provider="scb",
+        )
+        for name in source.declared_value_lists:
+            path = _canonical_code_list_path(canonical_dir, name)
+            read_code_list(path, _bundle_source_revision(path, root), name=name)
 
     scb = catalog / "SCB"
-    auxiliary_conn = sqlite3.connect(":memory:")
-    try:
-        auxiliary_conn.executescript(DDL)
-        sql_path = scb / "Tabelldefinitioner.sql"
-        if sql_path.is_file():
-            _import_tabelldefinitioner(auxiliary_conn, sql_path)
-        xlsx_path = scb / "ID-kolumner.xlsx"
-        if xlsx_path.is_file():
-            _import_id_kolumner(auxiliary_conn, xlsx_path)
-    finally:
-        auxiliary_conn.close()
+    sql_path = scb / "Tabelldefinitioner.sql"
+    if sql_path.is_file():
+        read_scb_column_types(sql_path, _bundle_source_revision(sql_path, root))
+    xlsx_path = scb / "ID-kolumner.xlsx"
+    if xlsx_path.is_file():
+        read_scb_join_keys(xlsx_path, _bundle_source_revision(xlsx_path, root))
 
     if slugs.is_dir():
         load_slug_dir(slugs)
@@ -2923,7 +2946,6 @@ def _validate_bundle_contract(root: Path) -> None:
         manifest = CatalogBundleManifest.model_validate_json(manifest_bytes)
         dataset = manifest.supplemental_datasets[0]
         if dataset.selected:
-            from .source_records import SourceRevision
             from .sources.lisa import read_lisa_source
 
             artifact = next(
