@@ -8,8 +8,9 @@ used for strict publication and diagnostic materialization.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
+from reg_meta_build._components import DisjointSet
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedEdition,
@@ -19,14 +20,19 @@ from reg_meta_build.resolved_catalog import (
     validate_resolved_variables,
 )
 from reg_meta_build.resolved_metadata import (
+    ResolvedGroupVariable,
     ResolvedMetadata,
     ResolvedStateRef,
+    ResolvedVariableGroup,
     validate_metadata_structure,
 )
 from reg_meta_build.source_curation import ResolutionDiagnostic
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping
+
+    from reg_meta_build.concept_groups import CodeLabelPair
+    from reg_meta_build.source_curation import SourceRecordRef
 
 
 type DependencyKey = tuple[str, ...]
@@ -152,6 +158,136 @@ class PanelResolution:
 class MetadataResolution:
     metadata: ResolvedMetadata
     diagnostics: tuple[ResolutionDiagnostic, ...]
+
+
+@dataclass(frozen=True)
+class PairDisposition:
+    code: str
+    label: str
+    status: Literal["grouped", "claimed_by_curated", "withheld"]
+    group_key: str | None = None
+
+
+@dataclass(frozen=True)
+class PairResolution:
+    groups: tuple[ResolvedVariableGroup, ...]
+    dispositions: tuple[PairDisposition, ...]
+    diagnostics: tuple[ResolutionDiagnostic, ...]
+
+
+def resolve_code_label_groups(
+    pairs: tuple[CodeLabelPair, ...],
+    variables: tuple[ResolvedVariable, ...],
+    *,
+    curated_groups: tuple[ResolvedVariableGroup, ...],
+    evidence: Mapping[str, tuple[SourceRecordRef, ...]],
+    withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
+) -> PairResolution:
+    """Resolve accepted code/label declarations before materialization.
+
+    The code owns a value set, the label owns none, and both have states in a
+    shared register variant. Unknown coding cannot pass the positive owner guard.
+    Invalid/unavailable pairs are withheld with source evidence; unexplained
+    missing references remain fatal. Exclude curated members before connecting
+    components, preserving independent survivors when a bridge is excluded.
+    """
+    by_fqid = {
+        f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}": v
+        for v in variables
+    }
+    if len(by_fqid) != len(variables):
+        raise ValueError("duplicate variable identity in code-label resolution")
+    declared = tuple(
+        (
+            f"{p.code_provider}/{p.code_register}/{p.code_variable}",
+            f"{p.label_provider}/{p.label_register}/{p.label_variable}",
+        )
+        for p in pairs
+    )
+    if len(set(declared)) != len(declared) or any(a == b for a, b in declared):
+        raise ValueError("code-label declarations must be unique non-self pairs")
+    dependencies = CatalogDependencies(
+        {("variable", fqid) for fqid in by_fqid}, withheld
+    )
+    claimed = {m.variable for g in curated_groups for m in g.members}
+    components: DisjointSet[str] = DisjointSet()
+    dispositions = []
+    for code, label in declared:
+        output = f"code_label_pair:{code}:{label}"
+        available = [
+            dependencies.require(
+                ("variable", fqid),
+                output=output,
+                parents=(("register", fqid.rsplit("/", 1)[0]),),
+            )
+            for fqid in (code, label)
+        ]
+        if not all(available):
+            dispositions.append(PairDisposition(code, label, "withheld"))
+            continue
+        if any(not evidence.get(fqid) for fqid in (code, label)):
+            raise ValueError(f"code-label declaration lacks source evidence: {output}")
+        coded, named = by_fqid[code], by_fqid[label]
+        problems = []
+        if not any(s.value_set is not None for s in coded.states):
+            problems.append("the code endpoint has no supported value set")
+        if any(s.value_set is not None for s in named.states):
+            problems.append("the label endpoint owns a value set")
+        if code.rsplit("/", 1)[0] != label.rsplit("/", 1)[0] or not (
+            {s.variant.slug for s in coded.states}
+            & {s.variant.slug for s in named.states}
+        ):
+            problems.append("the endpoints have no shared register variant")
+        if problems:
+            dependencies.diagnostics.append(
+                ResolutionDiagnostic(
+                    code="unresolved_code_label_pair",
+                    severity="error",
+                    subject=output,
+                    detail="; ".join(problems),
+                    refs=tuple(dict.fromkeys((*evidence[code], *evidence[label]))),
+                    fields=("coding", "identity"),
+                    withheld_output=(output,),
+                )
+            )
+            dispositions.append(PairDisposition(code, label, "withheld"))
+        elif code in claimed or label in claimed:
+            dispositions.append(PairDisposition(code, label, "claimed_by_curated"))
+        else:
+            components.add(code)
+            components.add(label)
+            components.union(code, label)
+            dispositions.append(PairDisposition(code, label, "grouped"))
+    dependencies.check()
+    groups = []
+    membership = {}
+    reserved = {(g.register_ref, g.key) for g in curated_groups}
+    for members in sorted(sorted(c) for c in components.components().values()):
+        register, key = members[0].rsplit("/", 1)
+        if (register, key) in reserved:
+            raise ValueError(
+                f"code-label group key conflicts with curated group: {register}/{key}"
+            )
+        groups.append(
+            ResolvedVariableGroup(
+                register=register,
+                key=key,
+                label=by_fqid[members[0]].name,
+                source="edge",
+                members=tuple(ResolvedGroupVariable(variable=m) for m in members),
+            )
+        )
+        membership.update(dict.fromkeys(members, key))
+    return PairResolution(
+        tuple(groups),
+        tuple(
+            PairDisposition(d.code, d.label, d.status, membership[d.code])
+            if d.status == "grouped"
+            else d
+            for d in dispositions
+        ),
+        tuple(dependencies.diagnostics),
+    )
 
 
 def resolve_metadata_dependencies(

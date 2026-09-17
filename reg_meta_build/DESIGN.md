@@ -707,6 +707,16 @@ or variant remains available. Conflict evidence excludes unrelated variants and 
 These outcomes feed dependency checks directly; missing or unconverted references still
 fail rather than receiving an inferred omission.
 
+Existing code/label pair declarations resolve through the same dependency checks before
+writing SQL. Their original guards still apply: the code endpoint owns a supported value
+set, the label endpoint owns none, and their states share a register variant. Failed
+guards produce blocking diagnostics with source references and withhold the pair; they
+do not remove either variable. Every pair gets a disposition. Explicit group membership
+takes precedence before connected components form, so an excluded bridge cannot connect
+the surviving variables. The deterministic component uses its first literal member slug
+as its key and that member's name as its label. This common resolver still needs the
+remaining group derivations and full metadata assembly connected before cutover.
+
 The earlier finite-case inspector forms non-overlapping annual occurrences and
 explicitly withholds coding. The direct writer can materialize already-resolved code
 sets independently of physical type and length. It shares identical memberships across

@@ -7,11 +7,14 @@ from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta_build.catalog_dependencies import (
     CatalogDependencyError,
+    resolve_code_label_groups,
     resolve_metadata_dependencies,
     resolve_panel_dependencies,
 )
+from reg_meta_build.concept_groups import CodeLabelPair
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
+    ResolvedCodeSet,
     ResolvedEdition,
     ResolvedRegister,
     ResolvedState,
@@ -75,6 +78,209 @@ def _variable(variant, slug="value"):
             ),
         ),
         aliases=(ResolvedAlias(variant=variant, delivery_column_name="old"),),
+    )
+
+
+def _pair(code="code", label="label"):
+    return CodeLabelPair("scb", "example", code, "scb", "example", label)
+
+
+def _pair_variables():
+    variant = ResolvedVariant(slug="people", name="People")
+    code = _variable(variant, "code")
+    code = code.model_copy(
+        update={
+            "states": (
+                code.states[0].model_copy(
+                    update={"value_set": ResolvedCodeSet(members=(("01", "Name"),))}
+                ),
+            )
+        }
+    )
+    return code, _variable(variant, "label")
+
+
+def _pair_evidence(variables):
+    return {
+        f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}": (
+            SourceRecordRef(source="fixture", semantic_record_key=(v.slug,)),
+        )
+        for v in variables
+    }
+
+
+def test_code_label_pair_resolves_without_sql_and_writes_standard_group(tmp_path):
+    variables = _pair_variables()
+    result = resolve_code_label_groups(
+        (_pair(),),
+        variables,
+        curated_groups=(),
+        evidence=_pair_evidence(variables),
+        withheld={},
+    )
+    assert not result.diagnostics
+    assert [(d.status, d.group_key) for d in result.dispositions] == [
+        ("grouped", "code")
+    ]
+    assert [m.variable for m in result.groups[0].members] == [
+        "scb/example/code",
+        "scb/example/label",
+    ]
+    path = write_resolved_catalog(
+        variables,
+        tmp_path / "diagnostic.db",
+        manifest={},
+        diagnostic=True,
+        metadata=ResolvedMetadata(variable_groups=result.groups),
+    )
+    with closing(open_db(path)) as conn:
+        assert conn.execute("SELECT source FROM concept_group").fetchone()[0] == "edge"
+        assert (
+            conn.execute("SELECT COUNT(*) FROM concept_group_variable").fetchone()[0]
+            == 2
+        )
+
+
+@pytest.mark.parametrize(
+    "change", ["uncoded", "coded_label", "other_variant", "other_register"]
+)
+def test_code_label_pair_failed_guards_retain_evidence_and_withhold_only_group(change):
+    code, label = _pair_variables()
+    pair = _pair()
+    if change == "uncoded":
+        code = code.model_copy(
+            update={"states": (code.states[0].model_copy(update={"value_set": None}),)}
+        )
+    elif change == "coded_label":
+        label = label.model_copy(
+            update={
+                "states": (
+                    label.states[0].model_copy(
+                        update={"value_set": code.states[0].value_set}
+                    ),
+                )
+            }
+        )
+    elif change == "other_variant":
+        label = label.model_copy(
+            update={
+                "states": (
+                    label.states[0].model_copy(
+                        update={"variant": ResolvedVariant(slug="other", name="Other")}
+                    ),
+                )
+            }
+        )
+    else:
+        label = label.model_copy(
+            update={
+                "register_ref": ResolvedRegister(
+                    provider="scb", slug="other", name="Other"
+                )
+            }
+        )
+        pair = CodeLabelPair("scb", "example", "code", "scb", "other", "label")
+    evidence = _pair_evidence((code, label))
+    result = resolve_code_label_groups(
+        (pair,),
+        (code, label),
+        curated_groups=(),
+        evidence=evidence,
+        withheld={},
+    )
+    assert not result.groups and result.dispositions[0].status == "withheld"
+    (issue,) = result.diagnostics
+    assert (issue.code, issue.severity) == ("unresolved_code_label_pair", "error")
+    assert issue.refs == tuple(ref for refs in evidence.values() for ref in refs)
+    assert issue.withheld_output == (issue.subject,)
+
+
+def test_code_label_pair_known_omission_does_not_hide_unknown_reference():
+    code, _ = _pair_variables()
+    result = resolve_code_label_groups(
+        (_pair(),),
+        (code,),
+        curated_groups=(),
+        evidence=_pair_evidence((code,)),
+        withheld={("variable", "scb/example/label"): (_cause(),)},
+    )
+    assert not result.groups and result.dispositions[0].status == "withheld"
+    assert result.diagnostics[0].refs == _cause().refs
+    with pytest.raises(CatalogDependencyError, match="typo"):
+        resolve_code_label_groups(
+            (_pair("typo"),),
+            (),
+            curated_groups=(),
+            evidence={},
+            withheld={("variable", "scb/example/label"): (_cause(),)},
+        )
+    with pytest.raises(ValueError, match="unique non-self"):
+        resolve_code_label_groups(
+            (_pair(), _pair()),
+            (),
+            curated_groups=(),
+            evidence={},
+            withheld={},
+        )
+    with pytest.raises(ValueError, match="lacks source evidence"):
+        resolve_code_label_groups(
+            (_pair(),),
+            _pair_variables(),
+            curated_groups=(),
+            evidence={},
+            withheld={},
+        )
+
+
+def test_code_label_curated_bridge_is_excluded_before_components_form():
+    code, label = _pair_variables()
+    variables = tuple(
+        code.model_copy(update={"slug": s, "provider_key": s}) for s in ("a", "b")
+    ) + tuple(
+        label.model_copy(update={"slug": s, "provider_key": s})
+        for s in ("bridge", "left", "right", "extra")
+    )
+    curated = ResolvedVariableGroup(
+        register="scb/example",
+        key="curated",
+        label="Curated",
+        source="curated",
+        members=tuple(
+            ResolvedGroupVariable(variable=f"scb/example/{s}")
+            for s in ("bridge", "extra")
+        ),
+    )
+    pairs = (
+        _pair("a", "bridge"),
+        _pair("b", "bridge"),
+        _pair("a", "left"),
+        _pair("b", "right"),
+    )
+    result = resolve_code_label_groups(
+        pairs,
+        variables,
+        curated_groups=(curated,),
+        evidence=_pair_evidence(variables),
+        withheld={},
+    )
+    assert [d.status for d in result.dispositions] == [
+        "claimed_by_curated",
+        "claimed_by_curated",
+        "grouped",
+        "grouped",
+    ]
+    assert [
+        [m.variable.rsplit("/", 1)[1] for m in g.members] for g in result.groups
+    ] == [["a", "left"], ["b", "right"]]
+    assert (
+        resolve_code_label_groups(
+            pairs[::-1],
+            variables[::-1],
+            curated_groups=(curated,),
+            evidence=_pair_evidence(variables),
+            withheld={},
+        ).groups
+        == result.groups
     )
 
 
