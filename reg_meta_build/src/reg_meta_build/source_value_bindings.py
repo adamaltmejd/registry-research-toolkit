@@ -66,35 +66,6 @@ class ValueBindingResult:
     issues: tuple[ValueBindingIssue, ...]
 
 
-def _group_binding_issues(
-    issues: list[ValueBindingIssue],
-) -> tuple[ValueBindingIssue, ...]:
-    """One issue per record/list/reason, retaining every association occurrence.
-
-    A pooled list can invalidate thousands of code associations for the same
-    reason. Emitting a full resolution diagnostic for each repeats the source
-    context and can dominate memory without adding evidence.
-    """
-    groups: dict[ValueBindingIssue, list[ValueBindingIssue]] = defaultdict(list)
-    for issue in issues:
-        groups[replace(issue, association_locators=(), occurrence_count=0)].append(
-            issue
-        )
-    return tuple(
-        replace(
-            key,
-            association_locators=tuple(
-                locator for issue in members for locator in issue.association_locators
-            ),
-            occurrence_count=sum(
-                issue.occurrence_count or len(issue.association_locators)
-                for issue in members
-            ),
-        )
-        for key, members in groups.items()
-    )
-
-
 def _unknown(reason: str) -> TemporalScope:
     return TemporalScope(kind="unknown", label=reason)
 
@@ -239,7 +210,9 @@ class ValueBindingSession:
             if scope.kind == "not_applicable":
                 scope = record.edition_scope
         groups: dict[str, list[SourceValueAssociation]] = defaultdict(list)
-        issues: list[ValueBindingIssue] = []
+        # Group as evidence arrives: repeated validity errors need one shared
+        # context, while every physical association locator remains ordered.
+        issues: dict[tuple[str, str], list[str]] = defaultdict(list)
         contradictory: set[str] = set()
         if join.member_target == "native_member":
             member = record.subject.member.native_id
@@ -316,26 +289,14 @@ class ValueBindingSession:
                         continue
                     if len(header_refs) > 1 or len(row_refs) > 1:
                         contradictory.add(association.locator)
-                        issues.append(
-                            ValueBindingIssue(
-                                "ambiguous_list_member_references",
-                                self.source,
-                                descriptor.payload_key,
-                                record.record_id,
-                                (association.locator,),
-                            )
-                        )
+                        issues[
+                            "ambiguous_list_member_references", descriptor.payload_key
+                        ].append(association.locator)
                     if header_refs and row_refs and not header_refs & row_refs:
                         contradictory.add(association.locator)
-                        issues.append(
-                            ValueBindingIssue(
-                                "conflicting_list_member_references",
-                                self.source,
-                                descriptor.payload_key,
-                                record.record_id,
-                                (association.locator,),
-                            )
-                        )
+                        issues[
+                            "conflicting_list_member_references", descriptor.payload_key
+                        ].append(association.locator)
                     groups[descriptor.payload_key].append(association)
         claims, bindings = [], []
         for descriptor_key, associations in sorted(groups.items()):
@@ -372,15 +333,7 @@ class ValueBindingSession:
                         "source list identifies conflicting members"
                     )
                 if issue:
-                    issues.append(
-                        ValueBindingIssue(
-                            issue,
-                            self.source,
-                            descriptor_key,
-                            record.record_id,
-                            (association.locator,),
-                        )
-                    )
+                    issues[issue, descriptor_key].append(association.locator)
                 if member_scope is None:
                     inactive.append(association)
                     continue
@@ -407,7 +360,19 @@ class ValueBindingSession:
                 )
             )
         result = ValueBindingResult(
-            tuple(claims), tuple(bindings), _group_binding_issues(issues)
+            tuple(claims),
+            tuple(bindings),
+            tuple(
+                ValueBindingIssue(
+                    code,
+                    self.source,
+                    descriptor_key,
+                    record.record_id,
+                    tuple(locators),
+                    occurrence_count=len(locators),
+                )
+                for (code, descriptor_key), locators in issues.items()
+            ),
         )
         if join.member_target == "native_member":
             self._last_native_key = native_key

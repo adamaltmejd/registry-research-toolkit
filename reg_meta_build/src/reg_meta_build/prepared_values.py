@@ -69,6 +69,10 @@ _VERSION = 2
 _UINT32_MAX = 2**32 - 1
 _ROW = struct.Struct("<IIII")
 _POSITION = struct.Struct("<I")
+# Large delivered lists exceed 8,192 items; a smaller LRU repeatedly evicts the
+# same dictionaries and missing-validity lookups on every occurrence. Keep the
+# working set bounded without loading all source dictionaries or validity rows.
+_LOOKUP_CACHE_SIZE = 65_536
 
 
 class PreparedValueError(ValueError):
@@ -686,9 +690,13 @@ class PreparedValueSession:
         postings: mmap.mmap | None,
     ) -> None:
         self.source, self.conn, self.rows, self.postings = source, conn, rows, postings
-        self._cached_dictionary = lru_cache(maxsize=8192)(self._dictionary)
-        self._cached_validity = lru_cache(maxsize=8192)(self._validity_for)
-        self._cached_item_coordinate = lru_cache(maxsize=8192)(
+        self._cached_dictionary = lru_cache(maxsize=_LOOKUP_CACHE_SIZE)(
+            self._dictionary
+        )
+        self._cached_validity = lru_cache(maxsize=_LOOKUP_CACHE_SIZE)(
+            self._validity_for
+        )
+        self._cached_item_coordinate = lru_cache(maxsize=_LOOKUP_CACHE_SIZE)(
             self._native_item_coordinate
         )
 
