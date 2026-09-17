@@ -6,10 +6,8 @@
 - `value_code.mapping_count` is the precomputed per-(code,label) variable count
   from `code_variable_map`.
 
-Fully synthetic (CLAUDE.md): augments the standard SCB fixture with one variable
-whose value set mixes stoplisted and ordinary labels, runs a real `build_db`, and
-inspects the built DB. `_no_repo_curation` (autouse in this package's conftest)
-keeps the repo TOMLs out of the synthetic build.
+The synthetic resolved variable mixes stoplisted and ordinary labels. It runs
+through the actual writer so the tests exercise membership and index population.
 """
 
 from __future__ import annotations
@@ -17,9 +15,15 @@ from __future__ import annotations
 import sqlite3
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import _var_row
-from _shared_fixtures import build_with_rows, vm_rows
 from reg_meta_build.db import DDL, _populate_fts
+from reg_meta_build.resolved_catalog import (
+    ResolvedCodeSet,
+    ResolvedRegister,
+    ResolvedState,
+    ResolvedVariable,
+    ResolvedVariant,
+    write_resolved_catalog,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -46,19 +50,34 @@ _MIXED_CODES = [
 
 
 def _build(tmp_path: Path):
-    ri = [
-        _var_row(
-            colname="SyssStat",
-            cvid=7700,
-            var_id=770,
-            varname="SyssStatVar",
-            year="2020",
-            regver_id=770,
-            data_length="2",
-        )
-    ]
-    vm = vm_rows(7700, "Sysselsattningsstatus", _MIXED_CODES)
-    return build_with_rows(tmp_path, ri, vm)
+    variable = ResolvedVariable(
+        register=ResolvedRegister(provider="scb", slug="testreg", name="TESTREG"),
+        slug="syssstat",
+        provider_key="770",
+        name="SyssStatVar",
+        definition=None,
+        description=None,
+        operational_definition=None,
+        measurement_unit=None,
+        is_identifier=False,
+        is_sensitive=False,
+        states=(
+            ResolvedState(
+                variant=ResolvedVariant(slug="individer", name="Individer"),
+                valid_from="2020-01-01",
+                valid_to="2020-12-31",
+                delivery_column_name="SyssStat",
+                data_type="text",
+                data_length="2",
+                operational_definition=None,
+                provenance=None,
+                value_set=ResolvedCodeSet(members=tuple(_MIXED_CODES)),
+            ),
+        ),
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog((variable,), output, manifest={})
+    return sqlite3.connect(output)
 
 
 def _indexed(conn, label: str) -> bool:

@@ -3779,22 +3779,80 @@ def _run_json(db_dir: Path, args: list[str]) -> tuple[dict, int]:
 
 @pytest.fixture(scope="module")
 def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    from reg_meta_build.resolved_catalog import (
+        ResolvedClassification,
+        ResolvedClassificationCode,
+        ResolvedCodeSet,
+        ResolvedRegister,
+        ResolvedState,
+        ResolvedVariable,
+        ResolvedVariant,
+        write_resolved_catalog,
+    )
+
     tmp = tmp_path_factory.mktemp("cls")
-    input_dir = _make_input_dir(tmp)
-
-    # TEST_SEED_TOML declares a valid_codes_file per entry (always-seed
-    # requirement); write the CSVs where build_db resolves valid_codes_dir.
-    cls_dir = input_dir / "classifications"
-    cls_dir.mkdir(parents=True, exist_ok=True)
-    for name, body in TEST_SEED_CSVS.items():
-        (cls_dir / name).write_text(body, encoding="utf-8")
-
-    seed = tmp / "classifications.toml"
-    seed.write_text(TEST_SEED_TOML, encoding="utf-8")
-
+    books = tuple(
+        ResolvedClassification(
+            slug=short_name.lower(),
+            short_name=short_name,
+            name=name,
+            codes=tuple(
+                ResolvedClassificationCode(code=code, label=label, level=len(code))
+                for code, label in members
+            ),
+        )
+        for short_name, name, members in (
+            (
+                "TESTKON",
+                "Test classification for gender codes",
+                (("1", "Man"), ("2", "Kvinna")),
+            ),
+            (
+                "TESTKON2",
+                "Successor",
+                (("10", "Female"), ("20", "Male"), ("30", "Other")),
+            ),
+        )
+    )
+    variables = tuple(
+        ResolvedVariable(
+            register=ResolvedRegister(
+                provider="scb", slug=register, name=register.upper()
+            ),
+            provider_key="44",
+            slug="kon",
+            name="Kön",
+            definition=None,
+            description=None,
+            operational_definition=None,
+            measurement_unit=None,
+            is_identifier=False,
+            is_sensitive=False,
+            states=tuple(
+                ResolvedState(
+                    variant=ResolvedVariant(slug="individer", name="Individer"),
+                    valid_from=f"{year}-01-01",
+                    valid_to=f"{year}-12-31",
+                    delivery_column_name="Kon",
+                    data_type="integer",
+                    data_length="2",
+                    operational_definition=None,
+                    provenance=None,
+                    classification=book.slug,
+                    value_set=ResolvedCodeSet(
+                        members=tuple((c.code, c.label) for c in book.codes)
+                    ),
+                )
+                for year, book in ((2020, books[0]), (2022, books[1]))
+                if register == "testreg" or year == 2020
+            ),
+        )
+        for register in ("testreg", "otherreg")
+    )
     db_dir = tmp / "db"
-    db_dir.mkdir()
-    build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
+    write_resolved_catalog(
+        variables, db_dir / "reg_meta.db", manifest={}, classifications=books
+    )
 
     # Query commands require a doc DB alongside.
     from reg_meta_build.doc_db import build_doc_db
