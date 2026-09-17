@@ -1,9 +1,9 @@
 """Convert accepted column-discriminated names into checked identity assignments.
 
-This is an offline bridge for the existing naming format. Its discriminators must
-identify unique literal columns, or existing declarations must supply complete
-literal ownership. A folded name does not establish that distinct spellings mean
-the same variable.
+This is an offline bridge for the existing naming format. A discriminator must
+identify one literal column, or an existing declaration must supply its complete
+literal ownership. An ambiguous sibling need not block an independent partition.
+A folded name does not establish that distinct spellings mean the same variable.
 Other rename clusters, shape splits and discriminator collisions need their existing
 decisions converted separately; no source identity is inferred from similar names.
 """
@@ -50,7 +50,7 @@ def convert_column_partitions(
     declared_columns: Mapping[str, str] | None = None,
     declaration_reference: str | None = None,
 ) -> ColumnPartitionConversion:
-    """Bind a complete native family to its already accepted naming discriminators.
+    """Check a complete family and bind independently identifiable accepted splits.
 
     ``split_ids`` must include every active split key for this native family. Blank
     source columns remain original evidence; they are not assigned to a sibling.
@@ -81,6 +81,7 @@ def convert_column_partitions(
     for column in columns:
         candidates[derive_variable_slug(column) or "x"].append(column)
     suffixes = {key[len(source_id) + 1 :] for key in split_ids}
+    diagnostics = ()
     if declared_columns is not None:
         if not declaration_reference or not declaration_reference.strip():
             raise ValueError(
@@ -102,19 +103,26 @@ def convert_column_partitions(
         }
     elif declaration_reference is not None:
         raise ValueError("a declaration reference requires explicit column ownership")
-    elif set(candidates) != suffixes or any(
-        len(items) != 1 for items in candidates.values()
-    ):
-        return ColumnPartitionConversion(
-            (),
-            None,
-            (
+    else:
+        # Unequal inventories can encode a shape split or rename cluster. Even a
+        # locally unique spelling then cannot establish its complete ownership.
+        matching_inventory = set(candidates) == suffixes
+        partition_columns = {
+            key: tuple(candidates[key[len(source_id) + 1 :]])
+            for key in split_ids
+            if matching_inventory and len(candidates[key[len(source_id) + 1 :]]) == 1
+        }
+        unresolved = set(split_ids) - partition_columns.keys()
+        if unresolved:
+            diagnostics = (
                 ResolutionDiagnostic(
                     code="split_identity_conversion_pending",
                     severity="error",
                     subject=source_id,
                     detail=(
-                        "The accepted naming discriminators do not identify a unique complete column partition. "
+                        "Some accepted naming discriminators do not identify unique literal column partitions. "
+                        f"Unresolved split keys={sorted(unresolved)!r}; "
+                        f"independently bound keys={sorted(partition_columns)!r}. "
                         f"Accepted suffixes={sorted(suffixes)!r}; source columns={dict(candidates)!r}. "
                         "Convert the existing rename/shape/identity decision; do not guess from column similarity."
                     ),
@@ -122,14 +130,11 @@ def convert_column_partitions(
                         sorted({record_ref(record) for record in records}, key=str)
                     ),
                     fields=("identity", "column_name"),
-                    withheld_output=("identity_conversion",),
+                    withheld_output=tuple(sorted(unresolved)),
                 ),
-            ),
-        )
-    else:
-        partition_columns = {
-            key: tuple(candidates[key[len(source_id) + 1 :]]) for key in split_ids
-        }
+            )
+    if not partition_columns:
+        return ColumnPartitionConversion((), None, diagnostics)
     first = records[0]
     native = native_variable_key(first)
     register = source_register_key(first)
@@ -146,7 +151,7 @@ def convert_column_partitions(
     )
     effects = {}
     bindings = []
-    for split_id in sorted(split_ids):
+    for split_id in sorted(partition_columns):
         key = (*native, "accepted-partition", split_id)
         for column in partition_columns[split_id]:
             for record in columns[column]:
@@ -188,7 +193,7 @@ def convert_column_partitions(
             reason="Preserve the exact column partitions already named by the accepted split entries.",
             provenance=(
                 "existing naming entries: "
-                + ", ".join(sorted(split_ids))
+                + ", ".join(sorted(partition_columns))
                 + (
                     "; column ownership: " + declaration_reference
                     if declaration_reference
@@ -197,4 +202,4 @@ def convert_column_partitions(
             ),
         ),
     )
-    return ColumnPartitionConversion(tuple(bindings), case, ())
+    return ColumnPartitionConversion(tuple(bindings), case, diagnostics)

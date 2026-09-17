@@ -708,6 +708,40 @@ def test_existing_shape_split_or_rename_cluster_is_not_guessed_from_discriminato
     assert converted.case is None
 
 
+def test_ambiguous_split_withholds_only_its_own_partition() -> None:
+    records = (
+        _record(column="ANSWER", year="2020"),
+        _record(cvid=21, column="Answer", year="2021"),
+        _record(cvid=22, column="OTHER", year="2021"),
+    )
+    converted = convert_column_partitions(
+        records, source_id="1.5", split_ids=("1.5.answer", "1.5.other")
+    )
+    assert converted.case is not None
+    assert tuple(b.source_id for b in converted.bindings) == ("1.5.other",)
+    assert converted.diagnostics[0].withheld_output == ("1.5.answer",)
+    result = apply_occurrence_cases(records, (converted.case,))
+    assert not result.diagnostics
+    assert (
+        result.occurrences[0].variable_key == source_occurrence(records[0]).variable_key
+    )
+    assert (
+        result.occurrences[1].variable_key == source_occurrence(records[1]).variable_key
+    )
+    assert result.occurrences[2].variable_key == converted.bindings[0].target.source_key
+    assert all(
+        o.fields == r.fields for o, r in zip(result.occurrences, records, strict=True)
+    )
+    # Every original peer is still guarded, including the ambiguous partition.
+    added = _record(cvid=23, column="Other", year="2022")
+    assert (
+        apply_occurrence_cases((*records, added), (converted.case,))
+        .accounting[0]
+        .disposition
+        == "stale"
+    )
+
+
 def test_existing_literal_ownership_converts_renames_without_changing_source_facts() -> (
     None
 ):
