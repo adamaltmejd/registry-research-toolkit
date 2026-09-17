@@ -118,7 +118,9 @@ def resolve_parents(
                         )
                     )
                 continue
-            claims[key].setdefault(parent.fields, (parent, record_ref(record)))
+            alternatives = claims[key]
+            if parent.fields not in alternatives:
+                alternatives[parent.fields] = parent, record_ref(record)
             register = _coordinate_key(parent.register_name)
             assert register is not None
             register_key = (

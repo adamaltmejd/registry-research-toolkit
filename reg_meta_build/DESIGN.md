@@ -103,12 +103,13 @@ source facts.
 > `build-db --selection selection.json --report-dir DIR` connects pinned prepared
 > inputs, common source resolution, catalog dependencies and the direct writer.
 > `--diagnostic --diagnostic-db-path FILE` writes a separate, nonpublishable artifact
-> while retaining curation errors. The complete connection is fixture-tested;
-> full-corpus materialization and legacy comparison remain pending. The retained
-> curation export explicitly blocks incomplete conversion and required implementation.
-> The old input flags still select the legacy builder until cutover; the earlier
-> `build-curated-db` whole-variable-case prototype is displaced by this connection and
-> will be removed. This branch is not ready for catalog activation.
+> while retaining curation errors. The connected path has produced a structurally valid
+> full-corpus diagnostic database. Semantic comparison and cutover remain unfinished;
+> corpus safeguards still report failures requiring explanation. Existing decisions that
+> cannot safely apply remain explicit errors in the curation export. The old input flags
+> still select the legacy builder until cutover; the earlier `build-curated-db`
+> whole-variable-case prototype is displaced by this connection and will be removed.
+> This branch is not ready for catalog activation.
 
 The maintained call path is `pipeline.build_selected_catalog` →
 `open_prepared_catalog_sources` → `resolve_source_scope` for each complete scope →
