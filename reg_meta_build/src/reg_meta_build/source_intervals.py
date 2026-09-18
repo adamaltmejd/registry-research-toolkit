@@ -140,7 +140,9 @@ def resolve_occurrence_intervals(
 
     Each physical occurrence must explicitly supply availability, a column, and a
     finite interpreted period. Unplaced occurrences stay in the result and block
-    strict publication. Competing field values become unknown on their intersection;
+    strict publication. An occurrence whose column claim is negative (a delivered
+    blank column: the member has no physical column) is omitted on purpose and
+    reported once as an `omitted_columnless_occurrence` warning. Competing field values become unknown on their intersection;
     positive versus negative availability withholds that column segment entirely.
     Unknown optional observations do not contradict a supplied concrete fact.
     """
@@ -148,6 +150,7 @@ def resolve_occurrence_intervals(
     source_records = tuple(effective_occurrence(record) for record in records)
     issues: list[OccurrenceIssue] = []
     unsupported: list[SourceRecord] = []
+    columnless: list[SourceRecord] = []
     subjects = {
         (
             record.provider,
@@ -161,6 +164,13 @@ def resolve_occurrence_intervals(
             "occurrence resolution requires one source variable and variant"
         )
     for ordinal, record in enumerate(source_records):
+        column_claim = record.fields.column_name
+        if column_claim is not None and column_claim.status == "negative":
+            # A delivered blank column states the member has no physical column:
+            # omit the occurrence on purpose, without an error. Unknown columns
+            # keep the unsupported path below.
+            columnless.extend(record.evidence)
+            continue
         column = _column(record)
         periods = occurrence_bounds(record)
         availability = record.fields.availability
@@ -187,6 +197,17 @@ def resolve_occurrence_intervals(
         assert column is not None and periods is not None
         for start, end in periods:
             by_column[column].append((start, end, ordinal))
+    if columnless:
+        issues.append(
+            OccurrenceIssue(
+                "omitted_columnless_occurrence",
+                ("column_name",),
+                tuple(columnless),
+                None,
+                None,
+                ("occurrence",),
+            )
+        )
 
     segments = []
     negative_segments = []

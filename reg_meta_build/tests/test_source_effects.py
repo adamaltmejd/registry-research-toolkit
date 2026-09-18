@@ -1234,7 +1234,9 @@ def test_disjoint_and_equal_effects_compose_against_original_evidence() -> None:
         )
         assert len(occurrence.corrections) == 3
     assert record.fields.column_name is not None
-    assert record.fields.column_name.status == "unknown"
+    # The fixture cells are all present, so the blank column is a delivered
+    # blank: an explicit negative claim the applied cases leave untouched.
+    assert record.fields.column_name.status == "negative"
     assert result == apply_occurrence_cases((record, record), tuple(reversed(cases)))
 
 

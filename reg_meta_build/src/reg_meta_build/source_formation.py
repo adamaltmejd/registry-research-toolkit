@@ -494,11 +494,18 @@ def form_native_variable(
         intervals.append(resolution)
         variant_issues = []
         for problem in resolution.issues:
+            omitted = problem.code == "omitted_columnless_occurrence"
             diagnosis = ResolutionDiagnostic(
                 code=problem.code,
-                severity="error",
+                severity="warning" if omitted else "error",
                 subject=subject,
-                detail="Source occurrence facts cannot be safely resolved for the stated fields and period.",
+                detail=(
+                    "The source states the member has no physical column; "
+                    "the occurrence is omitted on purpose."
+                    if omitted
+                    else "Source occurrence facts cannot be safely resolved "
+                    "for the stated fields and period."
+                ),
                 refs=_refs(problem.occurrences),
                 fields=problem.fields,
                 valid_from=problem.valid_from,
@@ -639,15 +646,24 @@ def form_native_variable(
         representation_facts,
     )
     if not states:
-        accepted_omission = any(
-            d.code == "curated_state_omission" for d in diagnostics
-        ) and not any(d.severity == "error" for d in diagnostics)
+        has_error = any(d.severity == "error" for d in diagnostics)
+        accepted_omission = (
+            any(d.code == "curated_state_omission" for d in diagnostics)
+            and not has_error
+        )
+        # Every occurrence omitted as columnless: the variable is not shown in
+        # the catalog, and the omission is an explained warning, not an error.
+        columnless_only = (
+            all(not resolution.segments for resolution in intervals)
+            and any(d.code == "omitted_columnless_occurrence" for d in diagnostics)
+            and not has_error
+        )
         issue(
             "no_supported_states",
             "No source occurrence establishes a safe finite delivery state.",
             ("availability", "period"),
             (subject,),
-            severity="warning" if accepted_omission else "error",
+            severity="warning" if accepted_omission or columnless_only else "error",
         )
     if not name or not states:
         return VariableFormation(

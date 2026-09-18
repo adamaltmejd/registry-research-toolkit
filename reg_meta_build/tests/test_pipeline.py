@@ -201,6 +201,7 @@ def selection(tmp_path, request):
     # native variable each row reached.
     renumbered = param == "renumbered"
     lineage_warning = param == "lineage_warning"
+    columnless = param == "columnless"
     write_scb_input(
         source,
         registerinformation_rows=[
@@ -209,7 +210,8 @@ def selection(tmp_path, request):
                 var_id=101,
                 colname="VALUE",
                 data_type="int"
-                if param in {"typed", "renumbered", "lineage_warning", *_SOS_CELLS}
+                if param
+                in {"typed", "renumbered", "lineage_warning", "columnless", *_SOS_CELLS}
                 else "",
             ),
             *(
@@ -224,6 +226,22 @@ def selection(tmp_path, request):
                     )
                 ]
                 if renumbered
+                else []
+            ),
+            *(
+                [
+                    _var_row(
+                        cvid=2001,
+                        var_id=102,
+                        # Quoted empty: a delivered blank Kolumnnamn (SCB
+                        # states the member has no physical column). An
+                        # unquoted empty field would read as undelivered.
+                        colname='""',
+                        varname="ColumnlessVar",
+                        data_type="int",
+                    )
+                ]
+                if columnless
                 else []
             ),
             *(
@@ -793,6 +811,51 @@ def test_lineage_warning_withholds_only_the_edge(
     assert issue["code"] == "unresolved_lineage_no_source_state"
     assert issue["severity"] == "warning"
     assert issue["withheld_output"] == [issue["subject"] + ":lineage"]
+
+
+@pytest.mark.parametrize("selection", ["columnless"], indirect=True)
+def test_columnless_variable_is_omitted_as_an_explained_warning(
+    selection, tmp_path, structural_validation_only
+):
+    # A delivered blank Kolumnnamn states the member has no physical column, so
+    # the variable stays out of the catalog. The omission is a warning, so the
+    # strict build still completes as publication_ready with no errors.
+    strict_db, strict_report = tmp_path / "catalog.db", tmp_path / "strict-report"
+    strict = build_selected_catalog(selection, strict_db, strict_report)
+    assert strict["status"] == "complete"
+    assert strict["publication_ready"] is True
+    strict_summary = json.loads((strict_report / "summary.json").read_text())
+    assert strict_summary["status"] == "complete"
+    assert strict_summary["counts"].get("error", 0) == 0
+    assert strict_summary["counts"]["warning"] >= 1
+    with sqlite3.connect(strict_db) as conn:
+        assert conn.execute("SELECT provider_key FROM variable").fetchall() == [
+            ("101",)
+        ]
+    diagnostic_report = tmp_path / "diagnostic-report"
+    diagnostic = build_selected_catalog(
+        selection, tmp_path / "diagnostic.db", diagnostic_report, diagnostic=True
+    )
+    assert diagnostic["status"] == "diagnostic_complete"
+    assert diagnostic["counts"].get("error", 0) == 0
+    with gzip.open(diagnostic_report / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            event
+            for event in (json.loads(line) for line in stream)
+            if event["kind"] == "issue"
+        ]
+    assert not [issue for issue in issues if issue["severity"] == "error"]
+    (omitted,) = [
+        issue for issue in issues if issue["code"] == "omitted_columnless_occurrence"
+    ]
+    assert omitted["severity"] == "warning"
+    assert omitted["fields"] == ["column_name"]
+    assert omitted["withheld_output"] == ["occurrence"]
+    assert omitted["refs"]
+    assert any(
+        issue["code"] == "no_supported_states" and issue["severity"] == "warning"
+        for issue in issues
+    )
 
 
 @pytest.mark.parametrize("selection", ["renumbered"], indirect=True)

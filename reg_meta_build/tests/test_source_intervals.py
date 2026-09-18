@@ -26,6 +26,7 @@ def _record(
     end: str = "2021-12-31",
     *,
     column: str | None = "Column",
+    column_negative: bool = False,
     data_type: str | None = "integer",
     negative: bool = False,
     scope: TemporalScope | None = None,
@@ -70,9 +71,9 @@ def _record(
             availability=SourceField(status="negative")
             if negative
             else value_field(True),
-            column_name=value_field(column)
-            if column
-            else SourceField(status="unknown"),
+            column_name=SourceField(status="negative", raw_value="")
+            if column_negative
+            else (value_field(column) if column else SourceField(status="unknown")),
             data_type=value_field(data_type)
             if data_type
             else SourceField(status="unknown"),
@@ -188,6 +189,40 @@ def test_unplaced_occurrence_does_not_erase_independently_supported_content() ->
     assert result.segments[0].occurrences == (supported,)
     assert result.unsupported_occurrences == (unnamed,)
     assert result.issues[0].fields == ("column_name",)
+
+
+def test_negative_column_omits_the_occurrence_with_a_warning() -> None:
+    supported, columnless = _record(1), _record(2, column_negative=True)
+    result = resolve_occurrence_intervals((supported, columnless))
+    assert [segment.occurrences for segment in result.segments] == [(supported,)]
+    assert result.unsupported_occurrences == ()
+    (issue,) = result.issues
+    assert issue.code == "omitted_columnless_occurrence"
+    assert issue.fields == ("column_name",)
+    assert issue.occurrences == (columnless,)
+    assert (issue.valid_from, issue.valid_to) == (None, None)
+    assert issue.withheld == ("occurrence",)
+
+
+def test_all_columnless_occurrences_form_no_state_and_no_error() -> None:
+    result = resolve_occurrence_intervals(
+        (_record(1, column_negative=True), _record(2, column_negative=True))
+    )
+    assert result.segments == ()
+    assert result.unsupported_occurrences == ()
+    (issue,) = result.issues
+    assert issue.code == "omitted_columnless_occurrence"
+    assert len(issue.occurrences) == 2
+
+
+def test_unknown_column_still_errors() -> None:
+    record = _record(1, column=None)
+    result = resolve_occurrence_intervals((record,))
+    assert result.segments == ()
+    assert result.unsupported_occurrences == (record,)
+    (issue,) = result.issues
+    assert issue.code == "unsupported_occurrence"
+    assert issue.fields == ("column_name",)
 
 
 def test_unrelated_native_subjects_cannot_enter_one_ordinary_resolution() -> None:

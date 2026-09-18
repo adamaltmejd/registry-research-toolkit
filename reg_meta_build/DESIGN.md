@@ -277,7 +277,13 @@ A literal source year 9999 is not dated evidence.
 Occurrence reconciliation forms exact nonoverlapping column intervals. Conflicting
 optional fields become unknown only over their overlap. Conflicting availability or
 population withholds the unsafe segment. Missing periods/columns remain explicit issues.
-A gap between supported periods stays a gap.
+A delivered blank column is not a missing fact: SCB states the member has no physical
+column (aggregate-statistics registers), so the reader carries it as an explicit
+negative column claim and reconciliation omits the occurrence on purpose, reporting it
+once as an `omitted_columnless_occurrence` warning. A variable whose every occurrence is
+columnless is not materialized; its `no_supported_states` outcome is a warning for this
+cause alone. An undelivered column cell stays unknown and keeps the error path. A gap
+between supported periods stays a gap.
 
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across

@@ -378,7 +378,14 @@ def clean_scb_row(
                     normalize_token(interpreted.column_name), raw=original_column
                 )
                 if interpreted.column_name
-                else SourceField(status="unknown", raw_value=original_column)
+                # A delivered blank Kolumnnamn states the member has no physical
+                # column (aggregate-statistics registers): an explicit negative
+                # claim, not a missing fact. An undelivered cell stays unknown.
+                else (
+                    SourceField(status="negative", raw_value=original_column)
+                    if cells["Kolumnnamn"][0]
+                    else SourceField(status="unknown", raw_value=original_column)
+                )
             ),
             name=_optional_text_field(interpreted.variable_name, text("Variabelnamn")),
             definition=_optional_text_field(

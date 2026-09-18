@@ -286,9 +286,11 @@ class SourceFields(_SourceModel):
             if (
                 observation is not None
                 and observation.status == "negative"
-                and field_name != "availability"
+                and field_name not in {"availability", "column_name"}
             ):
-                raise ValueError("explicit negative is supported only for availability")
+                raise ValueError(
+                    "explicit negative is supported only for availability and column_name"
+                )
         return self
 
 
