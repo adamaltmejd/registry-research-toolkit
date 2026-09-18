@@ -577,10 +577,10 @@ def _check_one_value_set_per_period(
     overlap and a binding picks the column. But a SINGLE physical column holds ONE
     coding per period; two distinct value sets on one column in one period is an
     unresolvable conflict (vintage drift, sub-annual collision) — the catalog
-    resolver would land a period on both. The coalescer's per-(variable, variant)
-    column-aware year timeline (`sources/scb.py`) eliminates these by construction;
-    a survivor is a coalescer regression or a genuine same-column co-delivery that
-    needs curation. Either way the build must FAIL rather than ship it.
+    resolver would land a period on both. The build's per-(variable, variant)
+    resolution eliminates these by construction; a survivor is a resolution
+    regression or a genuine same-column co-delivery that needs curation.
+    Either way the build must FAIL rather than ship it.
 
     NULL `value_set_id` (code-less) is exempt — only distinct code-lists conflict.
     Same value set with different `value_set_version_label`s is fine (the
@@ -593,10 +593,11 @@ def _check_one_value_set_per_period(
         return
     # Overlapping distinct-value_set state pairs on the SAME delivery column under
     # one (variable, variant). `a.state_id < b.state_id` dedups the symmetric pair;
-    # `IS` is SQLite's null-safe equality so two NULL-column states still match
-    # column-wise (rare; both code-less states are already excluded by the
-    # value_set_id guards). Overlap is the closed-interval intersection (mirrors
-    # `catalog._states_in_bounds`).
+    # columns compare folded (`py_lower`, the consumer's rule) with `IS` so the
+    # fold stays null-safe: two NULL-column states still match column-wise (rare;
+    # both code-less states are already excluded by the value_set_id guards) while
+    # NULL stays distinct from any named column. Overlap is the closed-interval
+    # intersection (mirrors `catalog._states_in_bounds`).
     rows = conn.execute(
         "SELECT v.register_id, v.slug, a.delivery_column_name, "
         "       a.valid_from, a.valid_to, a.value_set_id, "
@@ -605,7 +606,7 @@ def _check_one_value_set_per_period(
         "JOIN variable_state b "
         "  ON a.variable_id = b.variable_id "
         " AND a.register_variant_id = b.register_variant_id "
-        " AND a.delivery_column_name IS b.delivery_column_name "
+        " AND py_lower(a.delivery_column_name) IS py_lower(b.delivery_column_name) "
         " AND a.state_id < b.state_id "
         " AND a.value_set_id IS NOT NULL AND b.value_set_id IS NOT NULL "
         " AND a.value_set_id <> b.value_set_id "
@@ -648,19 +649,14 @@ def _check_no_codeless_codebearing_overlap(
 
     The build already drives these to zero BY CONSTRUCTION, so on a clean build
     this guard reports OK; it is the backstop that FAILs a future regression in
-    those resolvers. Two passes resolve the class on the real build:
-      - ``_drop_fullcover_codeless_states`` (#867): the automatic delete of a
-        code-less state fully covered by a code-bearing one on the same column.
-      - ``_resolve_curated_codeless_overlaps`` (#868): the curated
-        ``curation/codeless_overlap.toml``, which trims/splits the partial-overlap
-        survivors the automatic delete can't safely touch.
+    those resolvers.
 
     Sibling to ``_check_one_value_set_per_period``, deliberately NOT folded into
     it: that check is the code-bearing-vs-code-bearing conflict (two DISTINCT
     non-null value sets on one column-period). Here NULL is the ABSENCE of a
     value set, not a distinct one — conflating the two would blur both signals
     (a code-less overlap is a windowing bug; a two-value-set overlap is a
-    triage/coalescer bug), so they stay separate guards with separate messages.
+    resolution bug), so they stay separate guards with separate messages.
 
     ``flavored=True`` (#365 PR2) SKIPs the check. A flavored DB is an
     ``extend-db`` overlay on the *released* global DB, which is pre-#867/#868
@@ -688,7 +684,7 @@ def _check_no_codeless_codebearing_overlap(
         "JOIN variable_state b "
         "  ON a.variable_id = b.variable_id "
         " AND a.register_variant_id = b.register_variant_id "
-        " AND a.delivery_column_name IS b.delivery_column_name "
+        " AND py_lower(a.delivery_column_name) IS py_lower(b.delivery_column_name) "
         " AND a.state_id < b.state_id "
         " AND ((a.value_set_id IS NULL AND b.value_set_id IS NOT NULL) "
         "      OR (a.value_set_id IS NOT NULL AND b.value_set_id IS NULL)) "

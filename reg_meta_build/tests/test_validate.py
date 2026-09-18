@@ -865,7 +865,7 @@ class TestValidateModule:
             _check_no_codeless_codebearing_overlap,
         )
 
-        conn = sqlite3.connect(broken)
+        conn = connect_built_db(broken)
         tables = {
             r[0]
             for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
@@ -894,7 +894,7 @@ class TestValidateModule:
         # both-NULL overlap: two code-less states on one (synthetic) column-window.
         both_null = tmp_path / "both_null.db"
         both_null.write_bytes(fixture_db.read_bytes())
-        conn = sqlite3.connect(both_null)
+        conn = connect_built_db(both_null)
         vid, rvid = conn.execute(
             "SELECT variable_id, register_variant_id FROM variable_state LIMIT 1"
         ).fetchone()
@@ -922,7 +922,7 @@ class TestValidateModule:
         # per-period conflict, and certainly not a code-less overlap.
         both_set = tmp_path / "both_set.db"
         both_set.write_bytes(fixture_db.read_bytes())
-        conn = sqlite3.connect(both_set)
+        conn = connect_built_db(both_set)
         vid, rvid = conn.execute(
             "SELECT variable_id, register_variant_id FROM variable_state LIMIT 1"
         ).fetchone()
@@ -947,6 +947,319 @@ class TestValidateModule:
         _check_no_codeless_codebearing_overlap(conn, result, tables)
         conn.close()
         assert result.passed, ("both-non-NULL overlap wrongly flagged", result.failures)
+
+    def test_codeless_codebearing_overlap_folds_column_casing(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Y-131: a code-less twin spelled in a different case (``kON`` vs the
+        code-bearing ``Kon``) must still FAIL — the consumer matches columns
+        folded (``py_lower``), so the final guard must too. Full
+        ``validate_built_db`` path, proving the registered UDF covers the
+        folded predicate (same-case is the pre-existing
+        ``test_codeless_codebearing_overlap_fails``)."""
+        mixed = tmp_path / "mixed.db"
+        mixed.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(mixed)
+        vid, rvid, col, vf, vt = conn.execute(
+            "SELECT variable_id, register_variant_id, delivery_column_name, "
+            "       valid_from, valid_to "
+            "FROM variable_state "
+            "WHERE value_set_id IS NOT NULL AND delivery_column_name IS NOT NULL "
+            "LIMIT 1"
+        ).fetchone()
+        twin = col.swapcase()
+        assert twin != col and twin.lower() == col.lower()
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            " delivery_column_name, value_set_id, value_set_version_label) "
+            "VALUES (?, ?, ?, ?, ?, NULL, 'codeless-fold-inject')",
+            (vid, rvid, vf, vt, twin),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(mixed)
+        assert not result.passed
+        assert any(
+            "code-less ↔ code-bearing overlapping state pair" in f
+            for f in result.failures
+        ), result.failures
+
+    def test_codeless_codebearing_overlap_column_and_window_boundaries(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Y-131: the folded guard keeps its boundaries — a distinct column, a
+        disjoint window, another variant, and NULL-vs-named stay silent, while
+        NULL-vs-NULL still matches. One fresh DB per case so each pair under
+        test is the only candidate on its column."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_no_codeless_codebearing_overlap,
+        )
+
+        def run_case(
+            name: str,
+            column: str | None,
+            valid_from: str,
+            valid_to: str,
+            variant_id: int | None = None,
+        ) -> ValidationResult:
+            db = tmp_path / f"codeless-bound-{name}.db"
+            db.write_bytes(fixture_db.read_bytes())
+            conn = connect_built_db(db)
+            vid, rvid = conn.execute(
+                "SELECT variable_id, register_variant_id FROM variable_state "
+                "WHERE value_set_id IS NOT NULL "
+                "  AND delivery_column_name IS NOT NULL "
+                "LIMIT 1"
+            ).fetchone()
+            rvid = rvid if variant_id is None else variant_id
+            conn.execute(
+                "INSERT INTO variable_state "
+                "(variable_id, register_variant_id, valid_from, valid_to, "
+                " delivery_column_name, value_set_id, value_set_version_label) "
+                "VALUES (?, ?, ?, ?, ?, NULL, ?)",
+                (vid, rvid, valid_from, valid_to, column, f"bound-{name}"),
+            )
+            tables = {
+                r[0]
+                for r in conn.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table'"
+                )
+            }
+            conn.commit()
+            result = ValidationResult()
+            _check_no_codeless_codebearing_overlap(conn, result, tables)
+            conn.close()
+            return result
+
+        # Distinct columns overlap freely (parallel representations): a code-less
+        # state on another column never meets the code-bearing `Kon` window.
+        result = run_case(
+            "distinct-column", "AnnanKolumn", "2020-01-01", "2021-12-31"
+        )
+        assert result.passed, ("distinct column wrongly flagged", result.failures)
+        # Folded-same column (`kON`) on a disjoint window: no shared period.
+        result = run_case(
+            "disjoint-window", "kON", "2025-01-01", "2025-12-31"
+        )
+        assert result.passed, ("disjoint window wrongly flagged", result.failures)
+        # Same folded column and window but another variant: variant-bounded.
+        result = run_case("other-variant", "kON", "2020-01-01", "2021-12-31",
+                           variant_id=20)
+        assert result.passed, ("other variant wrongly flagged", result.failures)
+        # NULL code-less against the named code-bearing column: NULL is not a
+        # name, so the two never share a column.
+        result = run_case("null-vs-named", None, "2020-01-01", "2021-12-31")
+        assert result.passed, ("NULL-vs-named wrongly flagged", result.failures)
+        # NULL-to-NULL still matches: a NULL code-bearing state meeting a NULL
+        # code-less twin on one window is the same ambiguity without a header.
+        # Inlined (not via run_case, which only plants the code-less side).
+        null_db = tmp_path / "codeless-bound-null-vs-null.db"
+        null_db.write_bytes(fixture_db.read_bytes())
+        conn = connect_built_db(null_db)
+        vid, rvid = conn.execute(
+            "SELECT variable_id, register_variant_id FROM variable_state "
+            "WHERE value_set_id IS NOT NULL "
+            "  AND delivery_column_name IS NOT NULL "
+            "LIMIT 1"
+        ).fetchone()
+        vsid = conn.execute(
+            "SELECT value_set_id FROM variable_state "
+            "WHERE value_set_id IS NOT NULL LIMIT 1"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            " delivery_column_name, value_set_id, value_set_version_label) "
+            "VALUES (?, ?, '2020-01-01', '2021-12-31', NULL, ?, 'null-bound-set')",
+            (vid, rvid, vsid),
+        )
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            " delivery_column_name, value_set_id, value_set_version_label) "
+            "VALUES (?, ?, '2020-01-01', '2021-12-31', NULL, NULL, 'null-bound-less')",
+            (vid, rvid),
+        )
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        conn.commit()
+        result = ValidationResult()
+        _check_no_codeless_codebearing_overlap(conn, result, tables)
+        conn.close()
+        assert not result.passed
+        assert any(
+            "code-less ↔ code-bearing overlapping state pair" in f
+            for f in result.failures
+        ), result.failures
+
+    def test_one_value_set_per_period_folds_column_casing(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Y-131: two DISTINCT non-null value sets on a folded-same column
+        (``kON`` vs ``Kon``) overlapping in one period must FAIL — one physical
+        column holds one coding per period whatever the casing."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_one_value_set_per_period,
+        )
+
+        db = tmp_path / "fold_period.db"
+        db.write_bytes(fixture_db.read_bytes())
+        conn = connect_built_db(db)
+        vid, rvid, col, vf, vt, vsid = conn.execute(
+            "SELECT variable_id, register_variant_id, delivery_column_name, "
+            "       valid_from, valid_to, value_set_id "
+            "FROM variable_state "
+            "WHERE value_set_id IS NOT NULL AND delivery_column_name IS NOT NULL "
+            "LIMIT 1"
+        ).fetchone()
+        other_vsid = conn.execute(
+            "SELECT value_set_id FROM value_set WHERE value_set_id != ? LIMIT 1",
+            (vsid,),
+        ).fetchone()[0]
+        twin = col.swapcase()
+        assert twin != col and twin.lower() == col.lower()
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            " delivery_column_name, value_set_id, value_set_version_label) "
+            "VALUES (?, ?, ?, ?, ?, ?, 'fold-period-inject')",
+            (vid, rvid, vf, vt, twin, other_vsid),
+        )
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        conn.commit()
+        result = ValidationResult()
+        _check_one_value_set_per_period(conn, result, tables)
+        conn.close()
+        assert not result.passed
+        assert any(
+            "resolves to >1 value set" in f for f in result.failures
+        ), result.failures
+
+    def test_one_value_set_per_period_column_and_window_boundaries(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Y-131: the folded per-period guard keeps its boundaries — distinct
+        columns, disjoint windows, another variant, the same value set, and
+        NULL-vs-named stay silent, while NULL-vs-NULL with distinct value sets
+        still conflicts."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_one_value_set_per_period,
+        )
+
+        def run_case(
+            name: str,
+            column: str | None,
+            valid_from: str,
+            valid_to: str,
+            variant_id: int | None = None,
+            same_value_set: bool = False,
+        ) -> ValidationResult:
+            db = tmp_path / f"period-bound-{name}.db"
+            db.write_bytes(fixture_db.read_bytes())
+            conn = connect_built_db(db)
+            vid, rvid, vsid = conn.execute(
+                "SELECT variable_id, register_variant_id, value_set_id "
+                "FROM variable_state "
+                "WHERE value_set_id IS NOT NULL "
+                "  AND delivery_column_name IS NOT NULL "
+                "LIMIT 1"
+            ).fetchone()
+            rvid = rvid if variant_id is None else variant_id
+            if same_value_set:
+                use_vsid: int | None = vsid
+            else:
+                use_vsid = conn.execute(
+                    "SELECT value_set_id FROM value_set "
+                    "WHERE value_set_id != ? LIMIT 1",
+                    (vsid,),
+                ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO variable_state "
+                "(variable_id, register_variant_id, valid_from, valid_to, "
+                " delivery_column_name, value_set_id, value_set_version_label) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (vid, rvid, valid_from, valid_to, column, use_vsid,
+                 f"bound-{name}"),
+            )
+            tables = {
+                r[0]
+                for r in conn.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table'"
+                )
+            }
+            conn.commit()
+            result = ValidationResult()
+            _check_one_value_set_per_period(conn, result, tables)
+            conn.close()
+            return result
+
+        # Distinct columns carry parallel codings: no conflict.
+        result = run_case(
+            "distinct-column", "AnnanKolumn", "2020-01-01", "2021-12-31"
+        )
+        assert result.passed, ("distinct column wrongly flagged", result.failures)
+        # Folded-same column on a disjoint window: no shared period. (The
+        # fixture's other `Kon` state on this variable is code-less, hence
+        # exempt here.)
+        result = run_case(
+            "disjoint-window", "kON", "2025-01-01", "2025-12-31"
+        )
+        assert result.passed, ("disjoint window wrongly flagged", result.failures)
+        # Same folded column and window but another variant: variant-bounded.
+        result = run_case("other-variant", "kON", "2020-01-01", "2021-12-31",
+                           variant_id=20)
+        assert result.passed, ("other variant wrongly flagged", result.failures)
+        # Same value set under another case: one coding, no conflict.
+        result = run_case("same-value-set", "kON", "2020-01-01", "2021-12-31",
+                           same_value_set=True)
+        assert result.passed, ("same value set wrongly flagged", result.failures)
+        # NULL-vs-named never share a column, even with distinct value sets.
+        result = run_case("null-vs-named", None, "2020-01-01", "2021-12-31")
+        assert result.passed, ("NULL-vs-named wrongly flagged", result.failures)
+        # NULL-to-NULL still matches: two distinct value sets with no header on
+        # one overlapping window conflict. The injected NULL pair is the only
+        # NULL-column code-bearing group, so nothing else can pair with it.
+        null_db = tmp_path / "period-bound-null-vs-null.db"
+        null_db.write_bytes(fixture_db.read_bytes())
+        conn = connect_built_db(null_db)
+        vid, rvid = conn.execute(
+            "SELECT variable_id, register_variant_id FROM variable_state LIMIT 1"
+        ).fetchone()
+        vsids = [
+            r[0]
+            for r in conn.execute(
+                "SELECT value_set_id FROM value_set LIMIT 2"
+            ).fetchall()
+        ]
+        for i, use_vsid in enumerate(vsids):
+            conn.execute(
+                "INSERT INTO variable_state "
+                "(variable_id, register_variant_id, valid_from, valid_to, "
+                " delivery_column_name, value_set_id, value_set_version_label) "
+                "VALUES (?, ?, '2020-01-01', '2021-12-31', NULL, ?, ?)",
+                (vid, rvid, use_vsid, f"null-bound-{i}"),
+            )
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        conn.commit()
+        result = ValidationResult()
+        _check_one_value_set_per_period(conn, result, tables)
+        conn.close()
+        assert not result.passed
+        assert any(
+            "resolves to >1 value set" in f for f in result.failures
+        ), result.failures
 
     def test_var_year_codes_anchor_self_skips_on_fixture(self, fixture_db: Path):
         """A2.7: the var_id-24193 code-membership anchor self-skips cleanly when
