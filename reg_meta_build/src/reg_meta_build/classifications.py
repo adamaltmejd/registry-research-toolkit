@@ -276,12 +276,16 @@ def load_seed(path: Path) -> list[dict[str, Any]]:
         # sentinel_codes is an optional per-classification table list of exact
         # `{code, meaning}` strings. Curated bulk/missing tokens (e.g. a source's
         # "00000") that keep the binding with a warning instead of severing it.
-        # Validated here (fail fast on unknown keys, non-strings, duplicates);
-        # the parsed models replace the raw tables for downstream readers.
+        # Validated here (fail fast on unknown keys, non-strings, duplicates)
+        # and stored back as plain JSON tables — the single representation the
+        # selection boundary accepts.
         if "sentinel_codes" in entry:
-            entry["sentinel_codes"] = load_sentinel_codes(
-                entry["sentinel_codes"], classification=short
-            )
+            entry["sentinel_codes"] = [
+                model.model_dump()
+                for model in load_sentinel_codes(
+                    entry["sentinel_codes"], classification=short
+                )
+            ]
 
     return entries
 

@@ -147,14 +147,11 @@ class CodebookDeclaration(_Model):
     descriptor: str
     # These are the ResolvedClassification metadata fields, validated with the
     # resolved source codes below. Membership is never copied into curation data.
-    # `sentinel_codes` carries the curated per-classification sentinel list either
-    # as raw `{code, meaning}` tables (the JSON selection form) or as the
-    # validated `tuple[SentinelCode, ...]` a `load_seed()` entry carries; it is
-    # popped and normalized below because strict JSON-contract validation cannot
-    # coerce the JSON list into the resolved tuple form.
-    metadata: dict[
-        str, str | int | list[dict[str, str]] | tuple[SentinelCode, ...] | None
-    ]
+    # `sentinel_codes` carries the curated per-classification sentinel list as
+    # raw `{code, meaning}` tables — the same plain-JSON form `load_seed()`
+    # stores; it is popped and validated below because strict JSON-contract
+    # validation cannot coerce the JSON list into the resolved tuple form.
+    metadata: dict[str, str | int | list[dict[str, str]] | None]
 
 
 class PipelineSelection(_Model):
@@ -198,24 +195,21 @@ _SELECTION_SENTINELS = TypeAdapter(list[SentinelCode])
 
 
 def _selection_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ...]:
-    """Normalize a selection's `sentinel_codes` metadata into resolved form.
+    """Validate a selection's raw `sentinel_codes` metadata into resolved form.
 
-    Accepts the validated `tuple[SentinelCode, ...]` a `load_seed()` entry
-    carries as well as the raw JSON list of `{code, meaning}` tables, which is
-    checked here: exact-string codes, no duplicates. A malformed selection
+    The JSON list cannot coerce into the resolved tuple under the strict
+    selection contract, so it is popped from the metadata mapping and checked
+    here: `{code, meaning}` tables only, no duplicates. A malformed selection
     is a `ValueError` like every other selection-shape refusal below."""
     if raw is None:
         return ()
-    if isinstance(raw, tuple) and all(isinstance(item, SentinelCode) for item in raw):
-        sentinels = list(raw)
-    else:
-        try:
-            sentinels = _SELECTION_SENTINELS.validate_python(raw)
-        except ValidationError as exc:
-            raise ValueError(
-                f"classification {subject!r} sentinel_codes must be a list of "
-                f"{{code, meaning}} tables with exact-string codes: {exc.errors(include_url=False)[0]['msg']}."
-            ) from exc
+    try:
+        sentinels = _SELECTION_SENTINELS.validate_python(raw)
+    except ValidationError as exc:
+        raise ValueError(
+            f"classification {subject!r} sentinel_codes must be a list of "
+            f"{{code, meaning}} tables with exact-string codes: {exc.errors(include_url=False)[0]['msg']}."
+        ) from exc
     codes = [sentinel.code for sentinel in sentinels]
     if len(codes) != len(set(codes)):
         raise ValueError(

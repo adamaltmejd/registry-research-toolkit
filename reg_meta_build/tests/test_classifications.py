@@ -212,7 +212,7 @@ class TestLoadSeedSentinelCodes:
             '{code = "999", meaning = "missing"}]\n',
         )
         assert [
-            (sentinel.code, sentinel.meaning)
+            (sentinel["code"], sentinel["meaning"])
             for sentinel in entries[0]["sentinel_codes"]
         ] == [("00000", "not applicable"), ("999", "missing")]
 

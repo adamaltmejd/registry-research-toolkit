@@ -21,7 +21,6 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
-from reg_meta_build._curation import SentinelCode
 from reg_meta_build.classifications import load_seed
 from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
@@ -857,12 +856,6 @@ def test_malformed_selection_sentinels_are_refused():
     assert (
         _selection_sentinels(
             [{"code": "9", "meaning": "ej aktuellt"}], subject="insats"
-        )[0].code
-        == "9"
-    )
-    assert (
-        _selection_sentinels(
-            (SentinelCode(code="9", meaning="ej aktuellt"),), subject="insats"
         )[0].code
         == "9"
     )

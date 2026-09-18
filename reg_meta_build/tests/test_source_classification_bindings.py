@@ -321,21 +321,20 @@ def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
     )
 
 
-def test_naming_a_sentinel_stales_the_accepted_decision():
-    # The sentinel list is per-code acceptance authority pinned with the
-    # codebook: broadening it stales the existing decision for re-review
-    # instead of silently keeping a severed binding.
+def test_naming_a_sentinel_does_not_stale_the_accepted_decision():
+    # The sentinel list is conformance curation, not codebook content: naming a
+    # sentinel leaves the pinned hash unchanged, so an already-accepted
+    # decision still applies without re-review.
     setup = _setup()
     book = setup[3]["fixture"]
     assert _apply(setup).diagnostics == ()
     sentinel_book = book.model_copy(
         update={"sentinel_codes": (SentinelCode(code="99", meaning="not applicable"),)}
     )
-    assert classification_content_sha256(sentinel_book) != (
+    assert classification_content_sha256(sentinel_book) == (
         classification_content_sha256(book)
     )
-    result = _apply(setup, classifications={"fixture": sentinel_book})
-    assert [d.code for d in result.diagnostics] == ["classification_evidence_changed"]
+    assert _apply(setup, classifications={"fixture": sentinel_book}).diagnostics == ()
 
 
 def test_accepted_omission_survives_classification_application():

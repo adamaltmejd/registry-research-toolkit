@@ -171,16 +171,16 @@ def _sentinel_map(classification: ResolvedClassification) -> dict[str, str]:
 def classification_content_sha256(classification: ResolvedClassification) -> str:
     """Pin semantic codebook content, independently of member order and succession.
 
-    The curated sentinel list IS pinned: it is per-code acceptance authority,
-    so adding or changing a sentinel stales existing decisions for re-review."""
-    body = classification.model_dump(mode="json", exclude={"codes"})
+    The sentinel list is NOT pinned: the pin exists so a codebook change stales
+    conformance decisions made against the old book, and a sentinel change never
+    alters canonical membership — it can only relax a severance to a
+    kept-with-warning. Pinning it would rehash every existing classification
+    and force a full re-conversion after every sentinel curation."""
+    body = classification.model_dump(mode="json", exclude={"codes", "sentinel_codes"})
     body["codes"] = [
         code.model_dump(mode="json")
         for code in sorted(classification.codes, key=lambda c: (c.code, c.label))
     ]
-    body["sentinel_codes"] = sorted(
-        body["sentinel_codes"], key=lambda entry: (entry["code"], entry["meaning"])
-    )
     return canonical_sha256(body)
 
 

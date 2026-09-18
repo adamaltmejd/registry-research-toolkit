@@ -325,7 +325,9 @@ and its curated meaning. Codes match exactly (`"00000"` never equals `"0"`); the
 no patterns and no cross-classification lists, and unknown keys or duplicate codes fail
 the load fast. Any other noncanonical code still severs the binding with the existing
 error, which lists only the non-sentinel codes. A sentinel must not be a canonical code;
-the load refuses the overlap. Original coding issues remain visible.
+the load refuses the overlap. The sentinel list is conformance curation, not codebook
+content, so it is not pinned by the classification content hash and curating a sentinel
+does not stale accepted bindings. Original coding issues remain visible.
 
 A parallel-column decision names each literal column and its finite delivery window. It
 reconciles sibling metadata and coding before forming shared states. Conflicting facts
