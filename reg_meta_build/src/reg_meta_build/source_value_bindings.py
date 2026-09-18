@@ -315,6 +315,13 @@ class ValueBindingSession:
         claims, bindings = [], []
         for descriptor_key, associations in sorted(groups.items()):
             descriptor = self.session.descriptor(descriptor_key)
+            if descriptor.unresolved_members:
+                # The source delivered a list whose members it does not separate.
+                # Report the descriptor against this record and state no claim;
+                # its original cells remain the evidence in the prepared source.
+                assert not associations, "an unresolved list states no member"
+                issues["unresolved_member_list", descriptor_key] = []
+                continue
             claim_id = canonical_sha256(
                 [
                     self.session.source.manifest.revision.revision_id,

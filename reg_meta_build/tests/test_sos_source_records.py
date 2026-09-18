@@ -8,6 +8,12 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 import pytest
+from _sos_fixtures import (
+    BU_SPEC_LINED,
+    BU_SPEC_MEMBERS,
+    BU_SPEC_ONE_LINE,
+    BU_SPEC_WRAPPED,
+)
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
@@ -581,6 +587,64 @@ def test_source_cleaning_blocks_on_parser_failure_with_original_evidence_availab
     with pytest.raises(ValueError, match="Kodlista_HDIA: bad code layout"):
         clean_sos_source(failed, _revision(path))
     assert failed.source_sheets == parsed.source_sheets
+
+
+@pytest.mark.parametrize(
+    ("raw", "members", "unresolved"),
+    [
+        # G71: every assignment on its own line -> the complete three-member list.
+        (BU_SPEC_LINED, BU_SPEC_MEMBERS, False),
+        # G83: the last two assignments share one line behind 95 plain spaces. The
+        # delivered format establishes no member separator there, so preparation
+        # keeps the record and its cells and states the list unresolved rather than
+        # the partial `2, 3` list that buries `4 = ...` in code 3's label.
+        (BU_SPEC_WRAPPED, [], True),
+        # G99: one line throughout -> a single segment, i.e. free text under the
+        # delivered format, as before this guard.
+        (BU_SPEC_ONE_LINE, [], None),
+    ],
+)
+def test_wrapped_inline_code_list_stays_unresolved_with_its_original_cell(
+    tmp_path: Path, raw: str, members: list[tuple[str, str]], unresolved: bool | None
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["E2"] = raw
+    workbook.save(path)
+
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+    record = next(
+        record
+        for record in cleaned.records
+        if record.locators[0].physical_record == "row:2"
+        and record.subject.member.name == "HDIA"
+    )
+    descriptor_key = f"inline:{record.record_id}"
+
+    # Whatever the classifier decides, the original cell remains the evidence.
+    assert record.fields.representation is not None
+    assert record.fields.representation.raw_value == raw
+    assert (
+        next(
+            cell for cell in record.delivered_cells if cell.name == "Värdemängd"
+        ).raw_value
+        == raw
+    )
+    assert [
+        cleaned.values[association.value_key].normalized_content
+        for association in cleaned.associations
+        if association.descriptor_key == descriptor_key
+    ] == members
+    if unresolved is None:  # Free text prepares no list.
+        assert descriptor_key not in cleaned.descriptors
+    else:
+        descriptor = cleaned.descriptors[descriptor_key]
+        assert descriptor.unresolved_members is unresolved
+        # The unresolved descriptor keeps the delivered cell it could not resolve.
+        assert descriptor.delivered_cells == record.delivered_cells
 
 
 def test_formatted_code_section_heading_is_evidence_not_a_value(tmp_path: Path) -> None:

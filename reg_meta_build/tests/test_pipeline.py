@@ -13,6 +13,15 @@ from pathlib import Path
 import pytest
 from _csv_fixtures import _var_row, timeseries_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
+from _sos_fixtures import (
+    BU_SPEC_LINED,
+    BU_SPEC_MEMBERS,
+    BU_SPEC_WRAPPED,
+    _Deldat,
+    _Register,
+    _Var,
+    write_sos_input,
+)
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
@@ -33,15 +42,119 @@ from reg_meta_build.source_coordinates import (
     native_variable_key,
     source_register_key,
 )
-from reg_meta_build.source_curation import PeerGuard
+from reg_meta_build.source_curation import (
+    CheckedFieldChange,
+    CurationCase,
+    FieldExpectation,
+    OccurrenceCorrectionDecision,
+    PeerGuard,
+)
+from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import NativeCoordinates
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
+# The SOS `Värdemängd` cells the inline code-list classifier decides between: a
+# newline-delimited list resolves to its members, the wrapped one does not.
+_SOS_CELLS = {"sos_lined": BU_SPEC_LINED, "sos_wrapped": BU_SPEC_WRAPPED}
+_SCB_SLUGS = {"register": "sample", "register_variant": "people", "variable": "value"}
+_SOS_SLUGS = {"register": "kodregister", "register_variant": "vy-a", "variable": "spec"}
+
+
+def _scope(records, *, provider, slugs, revision, cases=()):
+    """One whole-source scope declaring every native target its records name.
+
+    Both providers carry their parent facts on parent-level records, so the
+    targets are collected source-wide; only the provider, the slugs and the
+    reviewed curation differ.
+    """
+    register = source_register_key(records[0])
+    variable = next(key for key in map(native_variable_key, records) if key is not None)
+    targets = {("variable", variable)}
+    for record in records:
+        for parent in record.parent_facts:
+            if parent.kind in {"register", "variant"}:
+                targets.add(
+                    (
+                        "register" if parent.kind == "register" else "register_variant",
+                        native_parent_key(record.source, provider, parent),
+                    )
+                )
+    return ScopeDeclarations(
+        source=revision.dataset,
+        register_key=None,
+        cases=cases,
+        naming=tuple(
+            NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind=kind,
+                    provider=provider,
+                    source_key=key,
+                    register_key=register if kind != "register" else None,
+                    identity_revision=revision,
+                ),
+                naming=SlugEntry(
+                    kind=kind,
+                    provider=provider,
+                    source_id=str(key[-1])
+                    if kind == "register"
+                    else f"{register[-1]}.{key[-1]}",
+                    slug=slugs[kind],
+                ),
+                contributors=(),
+            )
+            for kind, key in sorted(targets, key=repr)
+        ),
+        provider_keys=((variable, str(variable[-1])),),
+    )
+
+
+def _sos_flag_cases(records):
+    """The SOS workbook format carries no sensitivity or identifier column, so
+    the flags every variable needs arrive as reviewed curation, as in a real
+    build. Nothing here touches the delivered `Värdemängd` cell."""
+    occurrences = tuple(r for r in records if native_variable_key(r) is not None)
+    return (
+        CurationCase(
+            case_id="sos-declared-flags",
+            targets=capture_expectations(
+                occurrences, fields=("sensitivity", "identifier")
+            ),
+            decision=OccurrenceCorrectionDecision(
+                reviewed=True,
+                effects=tuple(
+                    CheckedFieldChange(
+                        ref=record_ref(record),
+                        replacement=FieldExpectation(
+                            name=name, status="value", value=False
+                        ),
+                    )
+                    for record in occurrences
+                    for name in ("sensitivity", "identifier")
+                ),
+                reason="The synthetic workbook omits both catalog flags.",
+                provenance="fixture declaration",
+            ),
+        ),
+    )
+
+
+def _scope_file(directory, name, scope):
+    """Write one scope payload and pin it exactly as the selection requires."""
+    payload = gzip.compress(scope.model_dump_json().encode(), mtime=0)
+    (directory / name).write_bytes(payload)
+    return ScopeFile(
+        source=scope.source,
+        register_key=scope.register_key,
+        path=name,
+        sha256=hashlib.sha256(payload).hexdigest(),
+    )
+
 
 @pytest.fixture
 def selection(tmp_path, request):
+    param = getattr(request, "param", None)
     source = tmp_path / "source"
     write_scb_input(
         source,
@@ -50,22 +163,55 @@ def selection(tmp_path, request):
                 cvid=1001,
                 var_id=101,
                 colname="VALUE",
-                data_type="int" if getattr(request, "param", None) == "typed" else "",
+                data_type="int" if param in {"typed", *_SOS_CELLS} else "",
             )
         ],
         timeseries_rows=[
             timeseries_row(entitet="AktuellVariabel", id1="1001", id2="404")
         ]
-        if getattr(request, "param", None) == "source_event"
+        if param == "source_event"
         else None,
         unika_rows=[
             "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
         ],
         include=("registerinformation", "unika", "identifierare", "timeseries")
-        if getattr(request, "param", True)
+        if param is not False
         else ("registerinformation",),
     )
-    if getattr(request, "param", None) == "unbound_values":
+    if param in _SOS_CELLS:
+        # One SOS register whose only variable declares an inline `Värdemängd`.
+        write_sos_input(
+            source,
+            registers=(
+                _Register(
+                    abbrev="SYU",
+                    title_sv="Syntetiskt kodregister",
+                    description_sv="Inline kodlista i Värdemängd-cellen.",
+                    deldatamangder=(
+                        _Deldat(
+                            "SYU_A",
+                            label="Vy A",
+                            description="Enda vyn",
+                            data_from=2005,
+                            data_to=2015,
+                        ),
+                    ),
+                    variables=(
+                        _Var(
+                            "SPEC",
+                            deldatamangd="SYU_A",
+                            label="Specificering",
+                            description="Insatsens specificering",
+                            data_type="Heltal",
+                            data_from=2005,
+                            data_to=2015,
+                            value_set=_SOS_CELLS[param],
+                        ),
+                    ),
+                ),
+            ),
+        )
+    if param == "unbound_values":
         write_scb_input(
             source,
             include=("vardemangder", "valid_dates"),
@@ -86,55 +232,38 @@ def selection(tmp_path, request):
         destination, input_commit=commit, expected_sha256=manifest.sha256
     )
     revision = next(
-        e.revision for e in manifest.inputs if e.record_usage == "occurrence"
+        e.revision for e in manifest.inputs if e.role == "scb_records" and e.revision
     )
     (record,) = tuple(prepared.records.iter_records(source=revision.dataset))
-    register = source_register_key(record)
-    variable = native_variable_key(record)
-    targets = {("variable", variable)}
-    for parent in record.parent_facts:
-        if parent.kind in {"register", "variant"}:
-            targets.add(
-                (
-                    "register" if parent.kind == "register" else "register_variant",
-                    native_parent_key(record.source, "scb", parent),
-                )
-            )
-    declarations = tuple(
-        NamingDeclaration(
-            target=NativeNamingTarget(
-                kind=kind,
-                provider="scb",
-                source_key=key,
-                register_key=register if kind != "register" else None,
-                identity_revision=revision,
-            ),
-            naming=SlugEntry(
-                kind=kind,
-                provider="scb",
-                source_id=str(key[-1])
-                if kind == "register"
-                else f"{register[-1]}.{key[-1]}",
-                slug={
-                    "register": "sample",
-                    "register_variant": "people",
-                    "variable": "value",
-                }[kind],
-            ),
-            contributors=(),
-        )
-        for kind, key in sorted(targets, key=repr)
-    )
     directory = tmp_path / "selection"
     directory.mkdir()
-    scope = ScopeDeclarations(
-        source=record.source,
-        register_key=None,
-        naming=declarations,
-        provider_keys=((variable, str(variable[-1])),),
-    )
-    payload = gzip.compress(scope.model_dump_json().encode(), mtime=0)
-    (directory / "scope.json.gz").write_bytes(payload)
+    scopes = [
+        _scope_file(
+            directory,
+            "scope.json.gz",
+            _scope((record,), provider="scb", slugs=_SCB_SLUGS, revision=revision),
+        )
+    ]
+    if param in _SOS_CELLS:
+        sos_revision = next(
+            e.revision
+            for e in manifest.inputs
+            if e.role == "sos_workbook" and e.revision
+        )
+        sos_records = tuple(prepared.records.iter_records(source=sos_revision.dataset))
+        scopes.append(
+            _scope_file(
+                directory,
+                "sos-scope.json.gz",
+                _scope(
+                    sos_records,
+                    provider="sos",
+                    slugs=_SOS_SLUGS,
+                    revision=sos_revision,
+                    cases=_sos_flag_cases(sos_records),
+                ),
+            )
+        )
     selected = PipelineSelection(
         prepared_path=str(destination),
         prepared_commit=commit,
@@ -149,16 +278,9 @@ def selection(tmp_path, request):
             for e in manifest.inputs
             if e.revision and e.path == "Timeseries.csv"
         )
-        if getattr(request, "param", None) == "source_event"
+        if param == "source_event"
         else (),
-        scopes=(
-            ScopeFile(
-                source=record.source,
-                register_key=None,
-                path="scope.json.gz",
-                sha256=hashlib.sha256(payload).hexdigest(),
-            ),
-        ),
+        scopes=tuple(scopes),
     )
     path = directory / "selection.json"
     path.write_text(selected.model_dump_json())
@@ -518,6 +640,72 @@ def test_unbindable_value_rows_are_reported_without_a_target_occurrence(
         and e["severity"] == "error"
         for e in events
     )
+
+
+@pytest.mark.parametrize(
+    ("selection", "resolved"),
+    [("sos_lined", True), ("sos_wrapped", False)],
+    indirect=["selection"],
+)
+def test_unresolved_inline_code_list_is_reported_and_refused_for_publication(
+    selection, tmp_path, monkeypatch, resolved
+):
+    from reg_meta_build import resolved_catalog
+
+    # A two-variable fixture cannot meet the real-corpus floors. Retain actual
+    # structural validation and publication, so the delivered `Värdemängd` cell
+    # is the only difference between the publishable and the refused build.
+    validate = resolved_catalog.validate_built_db
+    monkeypatch.setattr(
+        resolved_catalog,
+        "validate_built_db",
+        lambda path, *, corpus: validate(path, corpus=False),
+    )
+    strict_db, report = tmp_path / "catalog.db", tmp_path / "report"
+    strict = build_selected_catalog(selection, strict_db, report)
+    diagnostic_db = tmp_path / "diagnostic.db"
+    diagnostic = build_selected_catalog(
+        selection, diagnostic_db, tmp_path / "diagnostic", diagnostic=True
+    )
+    with gzip.open(tmp_path / "diagnostic" / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            event
+            for event in (json.loads(line) for line in stream)
+            if event["kind"] == "issue" and event["code"] == "unresolved_member_list"
+        ]
+    with sqlite3.connect(diagnostic_db) as conn:
+        codes = conn.execute(
+            "SELECT code, label FROM value_code ORDER BY code"
+        ).fetchall()
+        variables = conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0]
+
+    # The diagnostic scan completes either way; the wrapped cell states no
+    # membership but is reported against its own source record, so a list the
+    # format cannot separate never reads as an absent coding declaration.
+    assert diagnostic["status"] == "diagnostic_complete"
+    assert variables == 2
+    if resolved:
+        assert diagnostic["counts"].get("error", 0) == 0
+        assert strict["status"] == "complete"
+        assert strict["publication_ready"] is True
+        assert strict_db.exists()
+        assert not issues
+        assert codes == BU_SPEC_MEMBERS
+    else:
+        # The delivered cell is the fixture's only defect.
+        assert diagnostic["counts"]["error"] == 1
+        assert strict["status"] == "blocked"
+        assert strict["publication_ready"] is False
+        assert strict["database"] is None
+        assert not strict_db.exists()
+        (issue,) = issues
+        assert issue["severity"] == "error"
+        assert issue["fields"] == ["coding"]
+        assert issue["withheld_output"] == ["state.value_set"]
+        assert "SPEC" in issue["subject"]
+        assert "inline:" in issue["detail"]
+        assert issue["refs"]
+        assert codes == []
 
 
 def test_strict_curation_failure_preserves_previous_catalog(selection, tmp_path):

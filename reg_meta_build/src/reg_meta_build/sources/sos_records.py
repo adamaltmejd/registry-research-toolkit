@@ -789,18 +789,21 @@ def clean_sos_source(
         representation = record.fields.representation
         if representation is None or not isinstance(representation.value, str):
             continue
-        pairs = _classify_value_set_text(representation.value)
-        if pairs is None:
+        pairs, unresolved = _classify_value_set_text(representation.value)
+        if pairs is None and not unresolved:
             continue
         descriptor_key = f"inline:{record.record_id}"
+        # An unresolved list keeps its record and cells and states no member:
+        # binding reports it, so a malformed enumeration cannot read as absent.
         descriptors[descriptor_key] = SourceValueDescriptor(
             payload_key=descriptor_key,
             record_ids=(record.record_id,),
             locators=record.locators,
             delivered_cells=record.delivered_cells,
+            unresolved_members=unresolved,
         )
         locator = record.locators[0]
-        for code, label in pairs:
+        for code, label in pairs or ():
             key = canonical_sha256([code, label, record.record_id])
             values[key] = SourceValue(
                 key,

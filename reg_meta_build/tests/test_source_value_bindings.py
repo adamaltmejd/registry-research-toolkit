@@ -557,6 +557,39 @@ def test_normalized_member_collision_keeps_conflicting_complete_lists(
     ]
 
 
+def test_unresolved_member_list_is_reported_instead_of_a_partial_claim(
+    tmp_path: Path,
+) -> None:
+    record = _record(member="EXACT")
+    resolved = _record(member="EXACT", description="resolved")
+    source = _prepare(
+        tmp_path / "values",
+        join=_join("member_name"),
+        descriptors=(
+            SourceValueDescriptor(
+                "unresolved", record_ids=(record.record_id,), unresolved_members=True
+            ),
+            SourceValueDescriptor("resolved", record_ids=(resolved.record_id,)),
+        ),
+        rows=(SourceValueAssociation(2, "resolved", "a", "values"),),
+    )
+    with open_value_bindings((source,)) as sessions:
+        result = bind_code_lists(record, sessions)
+        other = bind_code_lists(resolved, sessions)
+
+    # A delivered list whose members the source does not separate states no code
+    # membership, and says so against its own record: silence would read as a
+    # variable with no coding declaration at all.
+    assert not result.claims
+    assert not result.bindings
+    assert [
+        (issue.code, issue.descriptor_key, issue.record_id) for issue in result.issues
+    ] == [("unresolved_member_list", "unresolved", record.record_id)]
+    # The flag is per descriptor: every other list on the source still binds.
+    assert [binding.descriptor_key for binding in other.bindings] == ["resolved"]
+    assert other.claims and not other.issues
+
+
 def test_named_and_inline_references_do_not_cross_sources_or_record_occurrences(
     tmp_path: Path,
 ) -> None:

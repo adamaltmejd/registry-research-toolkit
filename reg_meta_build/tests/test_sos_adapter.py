@@ -2,11 +2,19 @@
 
 from __future__ import annotations
 
+import hashlib
 import sqlite3
 
 import pytest
+from _sos_fixtures import (
+    BU_SPEC_LINED,
+    BU_SPEC_MEMBERS,
+    BU_SPEC_ONE_LINE,
+    BU_SPEC_WRAPPED,
+)
 from reg_meta_build.db import DDL, seed_providers
 from reg_meta_build.id import mint
+from reg_meta_build.normalization import normalize_text
 from reg_meta_build.sources.sos import (
     _classify_value_set_text,
 )
@@ -15,10 +23,26 @@ from reg_meta_build.sources.sos import (
 # (codes live in value_set_member; assert via the adapter's written value set)
 
 
+def test_bu_spec_fixture_cells_match_the_retained_source_evidence() -> None:
+    # These digests come from the retained BU source evidence, NOT from the fixture
+    # constants: the real workbook is gitignored, so this is what keeps the cells
+    # below byte-exact. A failure means a fixture drifted from the original cell —
+    # restore the cell rather than recomputing the digest.
+    assert [
+        hashlib.sha256(cell.encode()).hexdigest()
+        for cell in (BU_SPEC_LINED, BU_SPEC_WRAPPED, BU_SPEC_ONE_LINE)
+    ] == [
+        "809e5e939201350001edb0483b236a5c896d7dec6cab6d0f75c48d9e314b91bf",
+        "1b9ab9b4b525bb19b01d62fc47d83b04d177242d7d5b2ec8d8626cef652b0712",
+        "0a62d6be738d2763e128c5aac35adba216a489069a2ed7ff0d1ec54e2b1d3b07",
+    ]
+
+
 class TestClassifyValueSetText:
-    """`_classify_value_set_text` is conservative: it returns (code, label)
-    pairs ONLY for clean enumerations and ``None`` for anything ambiguous (a
-    wrong reject is a no-op — the variable stays code-less, exactly today)."""
+    """`_classify_value_set_text` is conservative: it returns `(pairs, False)`
+    ONLY for clean enumerations, `(None, True)` for a delivered list whose
+    members the format does not separate, and `(None, False)` for ordinary free
+    text (a wrong reject is a no-op — the variable stays code-less, as today)."""
 
     @pytest.mark.parametrize(
         "text",
@@ -31,62 +55,91 @@ class TestClassifyValueSetText:
         ],
     )
     def test_none_empty_or_single_segment_rejected(self, text: str | None) -> None:
-        assert _classify_value_set_text(text) is None
+        assert _classify_value_set_text(text) == (None, False)
 
     def test_kod_klartext_semicolon(self) -> None:
-        assert _classify_value_set_text("1=ja; 0=nej; 9=uppgift saknas") == [
-            ("1", "ja"),
-            ("0", "nej"),
-            ("9", "uppgift saknas"),
-        ]
+        assert _classify_value_set_text("1=ja; 0=nej; 9=uppgift saknas") == (
+            [("1", "ja"), ("0", "nej"), ("9", "uppgift saknas")],
+            False,
+        )
 
     def test_kod_klartext_newline_is_dominant_form(self) -> None:
         text = (
             "0 = Korrekt personnummer\n4 = Samordningsnummer\n8 = Ogiltigt personnummer"
         )
-        assert _classify_value_set_text(text) == [
-            ("0", "Korrekt personnummer"),
-            ("4", "Samordningsnummer"),
-            ("8", "Ogiltigt personnummer"),
-        ]
+        assert _classify_value_set_text(text) == (
+            [
+                ("0", "Korrekt personnummer"),
+                ("4", "Samordningsnummer"),
+                ("8", "Ogiltigt personnummer"),
+            ],
+            False,
+        )
 
     def test_alpha_codes_with_labels(self) -> None:
         # Letter codes (BM/LK/...) carry labels; labels may contain spaces.
-        assert _classify_value_set_text("1=Man; 2=Kvinna") == [
-            ("1", "Man"),
-            ("2", "Kvinna"),
-        ]
+        assert _classify_value_set_text("1=Man; 2=Kvinna") == (
+            [("1", "Man"), ("2", "Kvinna")],
+            False,
+        )
 
     def test_label_may_contain_comma_and_colon(self) -> None:
         # Only the CODE is charset-constrained; the label is free text.
         assert _classify_value_set_text(
             "1=riksavtal; 2=regionalt, flerregionalt: avtal"
-        ) == [("1", "riksavtal"), ("2", "regionalt, flerregionalt: avtal")]
+        ) == ([("1", "riksavtal"), ("2", "regionalt, flerregionalt: avtal")], False)
 
     def test_label_may_contain_equals(self) -> None:
-        # Partition on the FIRST `=` only; a label may itself contain `=`.
-        assert _classify_value_set_text("1=a=b; 2=c") == [("1", "a=b"), ("2", "c")]
+        # Partition on the FIRST `=` only; a label may itself contain `=`. No clean
+        # code precedes that `=`, so it cannot be a swallowed further assignment.
+        assert _classify_value_set_text("1=a=b; 2=c") == (
+            [("1", "a=b"), ("2", "c")],
+            False,
+        )
+
+    def test_label_prose_equals_after_a_non_code_token_is_kept(self) -> None:
+        # ` (n=` is whitespace-separated but `(n` is not a clean code -> prose.
+        assert _classify_value_set_text("1=grupp A (n=25); 2=grupp B") == (
+            [("1", "grupp A (n=25)"), ("2", "grupp B")],
+            False,
+        )
+        assert _classify_value_set_text("1=intervallet 2-3 = mellan; 2=annat") == (
+            [("1", "intervallet 2-3 = mellan"), ("2", "annat")],
+            False,
+        )
+
+    def test_newline_delimited_spec_cell_keeps_all_three_members(self) -> None:
+        # The BU `SPEC` cell that IS newline-delimited throughout parses in full.
+        assert _classify_value_set_text(
+            normalize_text(BU_SPEC_LINED, multiline=True)
+        ) == (BU_SPEC_MEMBERS, False)
 
     def test_swedish_char_codes_accepted(self) -> None:
         # Codes may carry Swedish letters (_clean_value_code accepts them).
-        assert _classify_value_set_text("Å=alternativ; Ö=övrigt") == [
-            ("Å", "alternativ"),
-            ("Ö", "övrigt"),
-        ]
+        assert _classify_value_set_text("Å=alternativ; Ö=övrigt") == (
+            [("Å", "alternativ"), ("Ö", "övrigt")],
+            False,
+        )
 
     def test_bare_codes_semicolon(self) -> None:
         # The LOVA styrtabell case: bare codes, no inline labels.
-        assert _classify_value_set_text("1;2;3;4;5;9") == [
-            ("1", None),
-            ("2", None),
-            ("3", None),
-            ("4", None),
-            ("5", None),
-            ("9", None),
-        ]
+        assert _classify_value_set_text("1;2;3;4;5;9") == (
+            [
+                ("1", None),
+                ("2", None),
+                ("3", None),
+                ("4", None),
+                ("5", None),
+                ("9", None),
+            ],
+            False,
+        )
 
     def test_bare_alpha_codes(self) -> None:
-        assert _classify_value_set_text("LEG;SPEC") == [("LEG", None), ("SPEC", None)]
+        assert _classify_value_set_text("LEG;SPEC") == (
+            [("LEG", None), ("SPEC", None)],
+            False,
+        )
 
     @pytest.mark.parametrize(
         "text",
@@ -98,10 +151,28 @@ class TestClassifyValueSetText:
             "1;2;1",  # duplicate code
             "01=till moder  02=till fader",  # multi-space (single segment, embedded =)
             "1= ; 2=nej",  # whitespace-only label -> rejected (empty after strip)
+            # The BU `SPEC` cell with no newline at all: one segment, so this is
+            # free text under the delivered format, exactly as before.
+            normalize_text(BU_SPEC_ONE_LINE, multiline=True),
         ],
     )
     def test_messy_cells_rejected(self, text: str) -> None:
-        assert _classify_value_set_text(text) is None
+        assert _classify_value_set_text(text) == (None, False)
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            # The wrapped BU `SPEC` cell: its last two assignments share one line,
+            # separated by spaces only. Accepting it would emit codes 2 and 3 and
+            # bury `4 = ...` in code 3's label.
+            normalize_text(BU_SPEC_WRAPPED, multiline=True),
+            "1=ja; 2=nej 3=kanske",  # same partial parse, one ordinary space
+        ],
+    )
+    def test_partial_enumeration_is_explicitly_unresolved(self, text: str) -> None:
+        # Not silent: a delivered list whose members cannot be separated states
+        # no members AND is distinguishable from free text (`(None, False)`).
+        assert _classify_value_set_text(text) == (None, True)
 
 
 def test_check_minted_id_bands_fails_on_unminted_sos() -> None:

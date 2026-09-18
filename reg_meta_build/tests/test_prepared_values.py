@@ -437,12 +437,18 @@ def test_manifest_and_commit_pins_reject_updates(tmp_path):
         )
 
 
-def test_old_preparation_cannot_reuse_the_previous_type_marker_interpretation(tmp_path):
+# Every older version carried an interpretation this one supersedes: 2 read source
+# type markers as enumerated codes, 3 read a wrapped SOS inline list as the partial
+# code list its first `=` per segment produced.
+@pytest.mark.parametrize("superseded", range(2, prepared_values._VERSION))
+def test_old_preparation_cannot_reuse_a_superseded_value_interpretation(
+    tmp_path, superseded
+):
     root = tmp_path / "inputs" / "values"
     _prepare(root)
     path = root / "manifest.json"
     document = json.loads(path.read_text())
-    document["schema_version"] = 2
+    document["schema_version"] = superseded
     payload = json.dumps(document).encode()
     path.write_bytes(payload)
     commit = accept_prepared(root)

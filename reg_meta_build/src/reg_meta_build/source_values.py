@@ -98,6 +98,10 @@ class SourceValueDescriptor:
     # Some formats put type declarations in the code column. The adapter names
     # those exact tokens within this descriptor; the original rows remain evidence.
     non_membership_codes: tuple[str, ...] = ()
+    # A delivered list whose members the source format does not separate. The
+    # descriptor states that unresolved interpretation and keeps its original
+    # cells; it carries no members, and binding reports it instead of a claim.
+    unresolved_members: bool = False
 
     def __post_init__(self) -> None:
         if any(not code for code in self.non_membership_codes) or len(

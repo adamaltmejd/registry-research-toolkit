@@ -1447,15 +1447,43 @@ def _clean_value_code(c: str) -> str | None:
     return c
 
 
-def _classify_value_set_text(text: str | None) -> list[tuple[str, str | None]] | None:
+# A further `kod=` inside a label, separated from the text before it by whitespace.
+_EMBEDDED_ASSIGNMENT = re.compile(r"\s(\S+)\s*=")
+
+
+def _hides_another_assignment(label: str) -> bool:
+    """True when a label may itself carry a further `kod=klartext` assignment.
+
+    A wrapped `Värdemängd` cell puts its last assignments on one line separated by
+    nothing but spaces (the BU `SPEC` cells), so the first-`=` partition swallows
+    the rest of the list into one label. Plain spaces are not a member separator in
+    this delivered format, so the list cannot be split there either: the cell is
+    ambiguous and the classifier rejects it whole, leaving the original cell as the
+    only interpretation. `_clean_value_code` decides what could be a further code,
+    so a label's own `=` that no clean code precedes stays accepted.
+    """
+    return any(
+        _clean_value_code(match.group(1)) is not None
+        for match in _EMBEDDED_ASSIGNMENT.finditer(label)
+    )
+
+
+def _classify_value_set_text(
+    text: str | None,
+) -> tuple[list[tuple[str, str | None]] | None, bool]:
     """Classify a raw SOS `Värdemängd` cell into (code, label) pairs, or reject.
+
+    Returns `(pairs, unresolved)`. Exactly one of the two is ever set: accepted
+    pairs, or `unresolved=True` for a cell that IS a delivered enumeration whose
+    members this format cannot separate. Plain free text is `(None, False)` —
+    ordinary non-enumerated prose stays silent, exactly as before.
 
     This is the #401 fallback that promotes a variable's INLINE enumerated code
     list to a value set when the variable has no `Kodlista_*` sheet (the #373
     deferral — styrtabell decode tables were excluded from minting, but their
     `Värdemängd` enumeration was never bound). It is deliberately CONSERVATIVE:
-    rejecting (returning ``None``) leaves the variable exactly as today (no value
-    set), so a wrong reject is a no-op while a wrong ACCEPT would mint garbage.
+    rejecting leaves the variable exactly as today (no value set), so a wrong
+    reject is a no-op while a wrong ACCEPT would mint garbage.
 
     Two accepted forms (real-corpus-verified):
       - `kod=klartext` pairs — every segment carries `=`: code with inline label
@@ -1466,14 +1494,22 @@ def _classify_value_set_text(text: str | None) -> list[tuple[str, str | None]] |
     Rejected (free-text trap): single segment (a descriptor like `Fritext`);
     MIXED `=`/no-`=` (catches trailing-prose cells like `0=…; …; strängen är
     tom`); any invalid code (range, comma, colon, whitespace); duplicate codes.
+
+    Unresolved: an accepted-shape list whose label hides a further assignment
+    (`_hides_another_assignment`), i.e. a wrapped cell whose parse would be
+    partial. The cleaner states that unresolved list rather than its members.
+    Only this branch escalates: every segment is already an accepted assignment,
+    so the cell IS a delivered enumeration and a silent reject would lose it. A
+    cell rejected for any other reason is not a demonstrable enumeration, so it
+    stays ordinary free text instead of becoming a publication blocker.
     """
     if not text or not text.strip():
-        return None
+        return None, False
     # Split on `;` AND newline simultaneously — both are clean SOS separators.
     segments = [s.strip() for s in re.split(r"[;\n]+", text) if s.strip()]
     # A single segment is a free-text descriptor, not an enumeration.
     if len(segments) < 2:
-        return None
+        return None, False
 
     with_eq = sum(1 for s in segments if "=" in s)
     if with_eq == len(segments):
@@ -1484,7 +1520,9 @@ def _classify_value_set_text(text: str | None) -> list[tuple[str, str | None]] |
             code = _clean_value_code(raw_code)
             label = raw_label.strip()
             if code is None or not label:
-                return None
+                return None, False
+            if _hides_another_assignment(label):
+                return None, True
             pairs.append((code, label))
     elif with_eq == 0:
         # bare codes: each segment IS the code, no label.
@@ -1492,12 +1530,12 @@ def _classify_value_set_text(text: str | None) -> list[tuple[str, str | None]] |
         for s in segments:
             code = _clean_value_code(s)
             if code is None:
-                return None
+                return None, False
             pairs.append((code, None))
     else:
         # MIXED `=`/no-`=` -> trailing-prose / malformed cell. Reject.
-        return None
+        return None, False
 
     if len({code for code, _ in pairs}) != len(pairs):  # duplicate codes -> reject
-        return None
-    return pairs
+        return None, False
+    return pairs, False

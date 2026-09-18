@@ -30,6 +30,25 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
+# The three `SPEC` `Värdemängd` cells of `Metadata - Variabelnivå` in
+# `Metadata_Insatser till barn och unga (BU)_webb.xlsx` (G71/G83/G99), byte for byte.
+# Only BU_SPEC_LINED delimits every assignment with a newline. The other two run
+# assignments together on one line behind a long run of plain spaces, which the
+# delivered format does not establish as a member separator.
+_SPEC_MILJO = "2 = brister i hemmilljön 2 § LVU"
+_SPEC_BETEENDE = "3 = barnets/den ungas beteende (3 § LVU)"
+_SPEC_BADA = "4 = både miljö och beteende 2-3 §§ LVU."
+BU_SPEC_LINED = f"\n {_SPEC_MILJO}\n{_SPEC_BETEENDE}\n{_SPEC_BADA}"
+BU_SPEC_WRAPPED = f"{_SPEC_MILJO}\n{_SPEC_BETEENDE}{' ' * 95}{_SPEC_BADA} "
+BU_SPEC_ONE_LINE = f"{_SPEC_MILJO}{' ' * 193}{_SPEC_BETEENDE}{' ' * 190}{_SPEC_BADA}"
+# The members a complete parse of those three assignments states.
+BU_SPEC_MEMBERS = [
+    ("2", "brister i hemmilljön 2 § LVU"),
+    ("3", "barnets/den ungas beteende (3 § LVU)"),
+    ("4", "både miljö och beteende 2-3 §§ LVU."),
+]
+
+
 @dataclass(frozen=True)
 class _Deldat:
     name: str
@@ -51,6 +70,9 @@ class _Var:
     data_type: str = "Sträng (text)"
     data_from: int | None = None
     data_to: int | None = None
+    # Raw `Värdemängd` cell: the inline `kod = klartext` enumeration the adapter
+    # classifies (`_classify_value_set_text`). None emits a blank cell.
+    value_set: str | None = None
     # Raw `Länk kodverk` free-text — the signal the classification resolver
     # parses (SosVariable.external_classification). None emits a blank cell.
     external_classification: str | None = None
@@ -223,6 +245,7 @@ def _write_register(path: Path, reg: _Register) -> None:
             "Variabelnamn",
             "Variabeletikett",
             "Variabelbeskrivning",
+            "Värdemängd",
             "Datatyp",
             "Länk kodverk",
             "Data från",
@@ -236,6 +259,7 @@ def _write_register(path: Path, reg: _Register) -> None:
                 v.name,
                 v.label,
                 v.description,
+                v.value_set,
                 v.data_type,
                 v.external_classification,
                 v.data_from,
