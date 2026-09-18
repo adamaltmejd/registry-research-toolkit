@@ -319,20 +319,18 @@ variable, variant and column. Another column, another variant and a search alias
 windows deliver nothing here. Each obligation also carries the exact delivery facts its
 member-to-window segment claims — type/length texts and member correction attributions.
 Every overlapping final state on the same coordinate, and every shared state behind an
-alias window for that coordinate, must keep the claimed type/length and contain every
-claimed attribution as an exact provenance element. A direct state carrying facts its
-own window never claimed is a backfill from another member window and fails even when
-the claim is None. A shared state behind an alias window carries its representative
-window's facts instead, so a claimed None through it is no claim and is never compared.
-A conflicting representation fact nulls the claimed fact it names. Genuine source gaps,
-negative availability and unknown or pooled scopes claim no delivery in the first place.
-A variable — or one of its variants — that the dependency ledger withholds outright,
-with source evidence, answers for its own claim through that entry, whichever stage
-recorded it, and for nothing past that exact coordinate: an exact source-linked blocker
-stays a curation blocker without covering a sibling. Anything else missing is an
-engineering defect, not a curation question: the build names the source records and the
-exact missing window and stops before any output is placed. A missing optional field or
-an unrelated diagnostic is no permission to drop the state it belongs to.
+alias window for that coordinate, must keep each claimed fact and contain every claimed
+attribution as an exact provenance element. A claimed None is no claim and is never
+compared, direct or behind an alias. A conflicting representation fact nulls the claimed
+fact it names. Genuine source gaps, negative availability and unknown or pooled scopes
+claim no delivery in the first place. A variable — or one of its variants — that the
+dependency ledger withholds outright, with source evidence, answers for its own claim
+through that entry, whichever stage recorded it, and for nothing past that exact
+coordinate: an exact source-linked blocker stays a curation blocker without covering a
+sibling. Anything else missing is an engineering defect, not a curation question: the
+build names the source records and the exact missing window and stops before any output
+is placed. A missing optional field or an unrelated diagnostic is no permission to drop
+the state it belongs to.
 
 ### Groups, relations and dependent output
 
