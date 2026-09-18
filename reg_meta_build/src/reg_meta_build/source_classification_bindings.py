@@ -161,6 +161,26 @@ def _source_bindings(
     return selected, diagnostics
 
 
+def _sentinel_map(classification: ResolvedClassification) -> dict[str, str]:
+    """Curated sentinel code-to-meaning map for one selected codebook.
+
+    A sentinel that is also canonical (typically a stale entry after a codebook
+    update) would make conformance evidence internally inconsistent, so the
+    overlap is a contract error naming the classification and the codes."""
+    overlap = sorted(
+        {sentinel.code for sentinel in classification.sentinel_codes}
+        & {code.code for code in classification.codes}
+    )
+    if overlap:
+        raise ValueError(
+            f"classification {classification.slug!r} lists curated sentinel codes "
+            f"also in the canonical code set: {overlap!r}."
+        )
+    return {
+        sentinel.code: sentinel.meaning for sentinel in classification.sentinel_codes
+    }
+
+
 def classification_content_sha256(classification: ResolvedClassification) -> str:
     """Pin semantic codebook content, independently of member order and succession.
 
@@ -244,10 +264,7 @@ def apply_classification_cases(
             canonical[classification.slug] = frozenset(
                 c.code for c in classification.codes
             )
-            sentinel_maps[classification.slug] = {
-                sentinel.code: sentinel.meaning
-                for sentinel in classification.sentinel_codes
-            }
+            sentinel_maps[classification.slug] = _sentinel_map(classification)
         for issue in evaluation.issues:
             diagnostics.append(
                 ResolutionDiagnostic(
@@ -381,10 +398,7 @@ def apply_classification_cases(
                     canonical[slug] = frozenset(
                         c.code for c in classifications[slug].codes
                     )
-                    sentinel_maps[slug] = {
-                        sentinel.code: sentinel.meaning
-                        for sentinel in classifications[slug].sentinel_codes
-                    }
+                    sentinel_maps[slug] = _sentinel_map(classifications[slug])
                 checked = resolve_classification_conformance(
                     segment.code_set,
                     classification=slug,

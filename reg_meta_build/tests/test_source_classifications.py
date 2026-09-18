@@ -271,3 +271,9 @@ def test_non_sentinel_still_severs_and_error_lists_only_non_sentinels() -> None:
     assert "'99'" in error.detail and "00000" not in error.detail
     assert error.withheld_output == ("state.classification",)
     assert warning.severity == "warning" and warning.withheld_output == ()
+
+
+def test_overlapping_sentinel_and_canonical_is_refused() -> None:
+    with pytest.raises(ValueError, match="fixture") as exc_info:
+        _conformance((("01", "Agreed"),), {"01"}, {"01": "stale entry"})
+    assert "'01'" in str(exc_info.value)
