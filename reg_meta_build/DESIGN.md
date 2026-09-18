@@ -297,7 +297,8 @@ claim hull (see Cleaning) — and occurrence resolution places it as exactly ONE
 interval over that range:
 never one state per year, never inferred annual availability inside the range. A span is
 marked pooled only where NO explicit (annual/precise) occurrence covers it: where an
-explicit occurrence overlaps, it wins and the span resolves as an ordinary state, so a
+explicit occurrence overlaps, it wins and the span resolves as an ordinary state, with
+pooled evidence excluded from field reconciliation on that span, so a
 pooled span never overlaps an explicit span on the same (variable, variant, column). A
 pooled scope that carries no range stays unresolvable (an unsupported occurrence, as
 before). The marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0,

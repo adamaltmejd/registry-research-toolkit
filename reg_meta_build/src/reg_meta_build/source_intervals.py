@@ -43,10 +43,11 @@ class SourceSegment:
     fields: SourceFields
     occurrences: tuple[SourceRecord, ...]
     effective_occurrences: tuple[EffectiveOccurrence, ...]
-    # Y-202: True when EVERY covering occurrence is pooled-scope evidence, i.e.
-    # this span is documented only by pooled multi-year editions. Any explicit
-    # (annual/precise) occurrence covering the span wins and the segment is
-    # ordinary — pooled evidence never marks, and never splits, annual coverage.
+    # Y-202: True when the surviving occurrences are all pooled-scope evidence,
+    # i.e. this span is documented only by pooled multi-year editions. An
+    # explicit (annual/precise) occurrence covering the span filters pooled
+    # evidence out before field reconciliation, so the segment is ordinary —
+    # pooled evidence never marks, splits, or disputes annual coverage.
     pooled: bool = False
 
 
@@ -123,21 +124,26 @@ def _pooled_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     return ((bounds[0], bounds[1]),)
 
 
+def _occurrence_pooled(occurrence: EffectiveOccurrence) -> bool:
+    """Whether an occurrence's effective scope is pooled (Y-202).
+
+    Mirrors `occurrence_bounds`' `not_applicable` fallback so the pooled
+    verdict follows the scope the bounds actually came from."""
+    scope = occurrence.edition_period_scope
+    if scope.kind == "not_applicable":
+        scope = occurrence.edition_scope
+    return scope.kind == "pooled"
+
+
 def _segment_pooled(effective: tuple[EffectiveOccurrence, ...]) -> bool:
     """Whether a segment's span is documented ONLY by pooled editions.
 
-    Mirrors `occurrence_bounds`' `not_applicable` fallback so the marker follows
-    the scope the bounds actually came from. A single explicit occurrence
-    covering the span makes it ordinary: pooled loses to explicit annual."""
+    Takes the surviving occurrences (explicit covering occurrences already
+    filtered pooled evidence out): a single explicit survivor makes the span
+    ordinary — pooled loses to explicit annual."""
     if not effective:
         return False
-    for occurrence in effective:
-        scope = occurrence.edition_period_scope
-        if scope.kind == "not_applicable":
-            scope = occurrence.edition_scope
-        if scope.kind != "pooled":
-            return False
-    return True
+    return all(_occurrence_pooled(occurrence) for occurrence in effective)
 
 
 def _column(record: EffectiveOccurrence) -> str | None:
@@ -190,7 +196,9 @@ def resolve_occurrence_intervals(
     Each physical occurrence must explicitly supply availability, a column, and a
     finite interpreted period. A range-carrying pooled scope supplies its whole
     pooled range as one interval (marked `pooled` on spans no explicit
-    occurrence covers); pooled scopes without a range, and unknown scopes, stay
+    occurrence covers; where an explicit occurrence covers the span, pooled
+    evidence is filtered out before field reconciliation so the explicit facts
+    win outright); pooled scopes without a range, and unknown scopes, stay
     unplaced. Unplaced occurrences stay in the result and block
     strict publication. An occurrence whose column claim is negative (a delivered
     blank column: the member has no physical column) is omitted on purpose and
@@ -282,17 +290,25 @@ def resolve_occurrence_intervals(
                 continue
             end = cuts[position + 1] - 1
             effective = tuple(source_records[ordinal] for ordinal in sorted(active))
-            occurrences = tuple(
-                record for item in effective for record in item.evidence
+            # Explicit evidence wins its span outright (Y-202): pooled
+            # occurrences covering the same span are filtered out BEFORE field
+            # reconciliation, so their facts can neither conflict with nor
+            # influence the resulting state.
+            winners = (
+                tuple(
+                    record for record in effective if not _occurrence_pooled(record)
+                )
+                or effective
             )
-            fields, conflicts = reconcile_source_fields(effective)
+            occurrences = tuple(record for item in winners for record in item.evidence)
+            fields, conflicts = reconcile_source_fields(winners)
             lower, upper = (
                 date.fromordinal(start).isoformat(),
                 date.fromordinal(end).isoformat(),
             )
             populations = {
                 record.population_key
-                for record in effective
+                for record in winners
                 if record.population_key is not None
             }
             if len(populations) > 1:
@@ -321,7 +337,7 @@ def resolve_occurrence_intervals(
                 )
             availability = fields.availability
             assert availability is not None
-            pooled = _segment_pooled(effective)
+            pooled = _segment_pooled(winners)
             if availability.status == "negative" and len(populations) <= 1:
                 negative_segments.append(
                     SourceSegment(
@@ -330,7 +346,7 @@ def resolve_occurrence_intervals(
                         column,
                         fields,
                         occurrences,
-                        effective,
+                        winners,
                         pooled=pooled,
                     )
                 )
@@ -338,7 +354,7 @@ def resolve_occurrence_intervals(
                 continue
             segments.append(
                 SourceSegment(
-                    lower, upper, column, fields, occurrences, effective, pooled=pooled
+                    lower, upper, column, fields, occurrences, winners, pooled=pooled
                 )
             )
     return OccurrenceResolution(

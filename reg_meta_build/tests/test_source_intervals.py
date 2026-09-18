@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 from reg_meta_build.source_intervals import resolve_occurrence_intervals
+from reg_meta_build.source_occurrences import effective_occurrence
 from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
@@ -351,6 +352,33 @@ def test_explicit_annual_coverage_wins_over_pooled() -> None:
         ("2013-01-01", "2013-12-31", False),
         ("2014-01-01", "2014-12-31", True),
     ]
+
+
+def test_explicit_annual_facts_override_pooled_facts_without_conflict() -> None:
+    # Y-202 P1: where an explicit occurrence covers the span, pooled evidence
+    # is filtered out BEFORE reconciliation — a differing pooled fact must not
+    # dispute the annual state.
+    pooled = _pooled_record(1, "2012 - 2014")
+    annual = _record(
+        2,
+        data_type="text",
+        scope=TemporalScope(
+            kind="intervals",
+            intervals=(ScopeInterval(start="2013-01-01", end="2013-12-31"),),
+        ),
+    )
+    result = resolve_occurrence_intervals((pooled, annual))
+
+    assert result.issues == result.unsupported_occurrences == ()
+    assert [(s.valid_from, s.valid_to, s.pooled) for s in result.segments] == [
+        ("2012-01-01", "2012-12-31", True),
+        ("2013-01-01", "2013-12-31", False),
+        ("2014-01-01", "2014-12-31", True),
+    ]
+    middle = result.segments[1]
+    assert middle.fields.data_type == SourceField(status="value", value="text")
+    assert middle.occurrences == (annual,)
+    assert middle.effective_occurrences == (effective_occurrence(annual),)
 
 
 def test_fully_annual_covered_pooled_range_forms_no_pooled_state() -> None:
