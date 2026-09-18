@@ -1,8 +1,11 @@
 """Source observations from the maintained thin-provider TOML layout.
 
 The seven selected global TOMLs share this format. Reading a declaration neither
-inherits parent bounds nor supplies a default variant, flag, coding or identity.
-The independently pinned source bytes retain comments and TOML spelling; delivered
+inherits parent bounds nor supplies a default variant, coding or identity. An
+omitted `is_identifier` or `is_sensitive` key reads as explicit false: these files
+are maintainer-authored, so omission is a deliberate claim, not a missing fact.
+Empty strings and other non-Boolean values stay errors. All other omitted fields
+stay absent (no default). The independently pinned source bytes retain comments and TOML spelling; delivered
 cells retain decoded TOML values and their types at exact table/key coordinates.
 """
 
@@ -130,8 +133,14 @@ def _text(
     return value_field(normalized, raw=raw)
 
 
-def _flag(entry: Mapping[str, Any], key: str) -> SourceField | None:
-    return value_field(entry[key], raw=entry[key]) if key in entry else None
+def _flag(entry: Mapping[str, Any], key: str) -> SourceField:
+    if key not in entry:
+        # Maintainer-authored TOMLs only: omission is a deliberate false claim.
+        return value_field(False)
+    raw = entry[key]
+    if type(raw) is not bool:
+        raise CuratedSourceError(f"flag {key!r} must be a Boolean")
+    return value_field(raw, raw=raw)
 
 
 def _cells(entry: Mapping[str, Any]) -> tuple[DeliveredCell, ...]:
@@ -238,8 +247,11 @@ def _record(
         key += (f"variable:{variable.native_id}",)
     cells = _cells(entry)
     table = "register" if kind == "register" else f"register.{kind}"
+    # Parent scopes never declare flags: synthesizing false there would add a
+    # supplied field with no evidence cell, which parent cell mappings forbid.
+    is_variable = kind == "variable"
     fields = SourceFields(
-        availability=value_field(True) if kind == "variable" else None,
+        availability=value_field(True) if is_variable else None,
         name=_text(entry, "name"),
         column_name=_text(entry, "column", token=True),
         definition=_text(entry, "definition", multiline=True),
@@ -247,8 +259,8 @@ def _record(
         purpose=_text(entry, "purpose", multiline=True),
         data_type=_text(entry, "data_type", token=True),
         measurement_unit=_text(entry, "measurement_unit"),
-        sensitivity=_flag(entry, "is_sensitive"),
-        identifier=_flag(entry, "is_identifier"),
+        sensitivity=_flag(entry, "is_sensitive") if is_variable else None,
+        identifier=_flag(entry, "is_identifier") if is_variable else None,
         classification_declared=_text(entry, "classification", token=True),
         value_set_declared=_text(entry, "value_set", token=True),
         coverage_from=_text(entry, "valid_from", token=True),

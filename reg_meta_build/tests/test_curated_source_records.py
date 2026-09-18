@@ -123,7 +123,7 @@ classification = "Unresolved declared classification"
     assert not clean.descriptors and not clean.associations
 
 
-def test_omitted_empty_and_false_declarations_are_not_defaulted(tmp_path: Path) -> None:
+def test_omitted_flag_keys_read_as_explicit_false(tmp_path: Path) -> None:
     path, revision = _source(
         tmp_path,
         _BASE
@@ -138,7 +138,9 @@ classification = "   "
     clean = read_curated_source(path, revision, provider="agency")
     assert len(clean.records) == 2  # No synthesized variant or state.
     record = clean.records[-1]
-    assert record.fields.identifier is None
+    assert (
+        record.fields.identifier is not None and record.fields.identifier.value is False
+    )
     assert (
         record.fields.sensitivity is not None
         and record.fields.sensitivity.value is False
@@ -154,6 +156,7 @@ classification = "   "
     )
     assert record.subject.variant_references == ()
     cells = {cell.name: cell for cell in record.delivered_cells}
+    # Omission still leaves no evidence cell: the false claim has no raw bytes.
     assert "is_identifier" not in cells
     assert (
         cells["is_sensitive"].raw_value == "false"
@@ -161,6 +164,12 @@ classification = "   "
     )
     assert cells["variants"].raw_value == "[]" and cells["variants"].raw_type == "list"
     assert cells["definition"].raw_value == ""
+    bare_path, bare_revision = _source(tmp_path, _BASE + _VARIABLE)
+    bare = read_curated_source(bare_path, bare_revision, provider="agency").records[-1]
+    assert bare.fields.identifier is not None and bare.fields.identifier.value is False
+    assert (
+        bare.fields.sensitivity is not None and bare.fields.sensitivity.value is False
+    )
 
 
 @pytest.mark.parametrize(
@@ -232,6 +241,8 @@ is_sensitive = true
     "addition",
     [
         'is_sensitive = "false"',
+        'is_sensitive = ""',
+        'is_identifier = ""',
         "is_identifer = true",
         "variants = [1]",
         'state = [{column = "X"}]',
