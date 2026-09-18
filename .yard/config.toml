@@ -395,6 +395,20 @@ agent = "muse"
 review = ["codex"]
 checks = ["lint", "test", "frontend"]
 
+# The pipeline workflows serve operator-admitted bounded reg_meta_build repair
+# batches (see .yard/OPERATOR.md): they select no automatic full gates. Focused
+# verification is a required operator/worker task stated precisely in each
+# admitted ticket, not a claim of a gate pass.
+[workflows.pipeline]
+agent = "implementation"
+review = ["codex"]
+checks = []
+
+[workflows.pipeline-muse]
+agent = "muse"
+review = ["codex"]
+checks = []
+
 # concurrency limits how many ready tickets run at once.
 [scheduler]
 concurrency = 2

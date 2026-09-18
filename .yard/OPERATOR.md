@@ -38,6 +38,11 @@ worker, reviewer or plan argues for broader work.
   the running version with the retest result on the issue, or declined), and delete an
   unfiled observation once it is filed or judged not worth filing. Git history keeps the
   text.
+- **Bounded builder repair batches run on `pipeline` / `pipeline-muse`.** For an
+  operator-admitted bounded `reg_meta_build` repair batch, file each repair ticket with
+  `--workflow pipeline` (or `--workflow pipeline-muse` for a Muse trial). Those
+  workflows select no automatic gates; the ticket must name the existing focused tests
+  and affected-file checks that count as its verification (see Build approval evidence).
 - **File rendered frontend changes with `--workflow ui`.** This adds the source-only
   design seat and the rendered flow gates (`project-flows`, `catalog-flows`) with
   retained screenshots alongside the code seat. No other workflow binds both. Read
@@ -98,10 +103,28 @@ have distinct coverage; report what each actually establishes.
 
 ## Build approval evidence
 
-A candidate that changes how `reg_meta_build` prepares, resolves or materializes the
-corpus is approved on a real-seed `build-db` of the candidate, not on the synthetic gate
-alone: apply the lane diff in a worktree at the candidate base, follow the build-db
-skill, and compare with the latest release asset using `dbdiff` before
+For operator-admitted bounded `reg_meta_build` repair batches, per-ticket approval uses
+focused evidence instead of the full gates. Each admitted ticket names the existing
+focused tests and affected-file checks that verify it; the worker runs them, the
+independent `codex` (Sol) review stays, and the operator reads the exact diff and
+results and runs cheap affected-source checks when useful. Such tickets run on the
+`pipeline` / `pipeline-muse` workflows, which select no automatic full gates: focused
+verification is a required operator/worker task stated precisely in each admitted
+ticket, not a claim of a gate pass. A source fix can land on that evidence. Missing or
+stale focused evidence is not waived. Do not run full preparation, full suites, frontend
+gates, or a real-seed `build-db` per such ticket. This is a maintainer-approved cost
+policy (2026-09-18), not suppression of build errors.
+
+The full verification for the current batch lives on Y-184 as the combined checkpoint:
+after source adapters settle, prepare once if invalidated; after the cohesive batch
+lands, run the full gates once, one full diagnostic build, and compare against the prior
+pipeline DB and the latest release asset using `dbdiff`. Repeat an expensive check only
+for a new regression or invalidated evidence. Final strict publication validation and
+the required deterministic proof are still required before publishing; a diagnostic DB
+is not publishable. Ordinary unrelated workflows retain their existing gates, and
+outside an admitted batch a candidate that changes how `reg_meta_build` prepares,
+resolves, or materializes the corpus is still approved on a real-seed `build-db` of the
+candidate compared with the latest release asset using `dbdiff` before
 `yard lane approve`. The synthetic suite runs the full structural validator but cannot
 see corpus-only layouts. Y-113 landed green and broke the corpus build on one column
 (`coalesce_same_column_overlap`); the post-landing build caught it one lane too late.
