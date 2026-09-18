@@ -162,20 +162,7 @@ def _source_bindings(
 
 
 def _sentinel_map(classification: ResolvedClassification) -> dict[str, str]:
-    """Curated sentinel code-to-meaning map for one selected codebook.
-
-    A sentinel that is also canonical (typically a stale entry after a codebook
-    update) would make conformance evidence internally inconsistent, so the
-    overlap is a contract error naming the classification and the codes."""
-    overlap = sorted(
-        {sentinel.code for sentinel in classification.sentinel_codes}
-        & {code.code for code in classification.codes}
-    )
-    if overlap:
-        raise ValueError(
-            f"classification {classification.slug!r} lists curated sentinel codes "
-            f"also in the canonical code set: {overlap!r}."
-        )
+    """Curated sentinel code-to-meaning map for one selected codebook."""
     return {
         sentinel.code: sentinel.meaning for sentinel in classification.sentinel_codes
     }

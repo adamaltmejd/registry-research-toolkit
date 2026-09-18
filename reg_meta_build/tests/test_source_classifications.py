@@ -235,6 +235,8 @@ def test_curated_sentinel_keeps_binding_with_a_warning() -> None:
     assert warning.refs[0].semantic_record_key == ("row", "1")
     assert (warning.valid_from, warning.valid_to) == ("2020-01-01", "2020-12-31")
     assert "'00000'" in warning.detail and "not applicable" in warning.detail
+    assert "do not sever the binding" in warning.detail
+    assert "(the binding is kept)" in warning.detail
 
 
 def test_sentinel_matching_is_exact_code_string() -> None:
@@ -271,9 +273,5 @@ def test_non_sentinel_still_severs_and_error_lists_only_non_sentinels() -> None:
     assert "'99'" in error.detail and "00000" not in error.detail
     assert error.withheld_output == ("state.classification",)
     assert warning.severity == "warning" and warning.withheld_output == ()
-
-
-def test_overlapping_sentinel_and_canonical_is_refused() -> None:
-    with pytest.raises(ValueError, match="fixture") as exc_info:
-        _conformance((("01", "Agreed"),), {"01"}, {"01": "stale entry"})
-    assert "'01'" in str(exc_info.value)
+    assert "do not sever the binding" in warning.detail
+    assert "binding is kept" not in warning.detail

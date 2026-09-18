@@ -320,17 +320,6 @@ def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
     )
 
 
-def test_overlapping_sentinel_and_canonical_is_a_contract_error():
-    setup = _setup()
-    book = setup[3]["fixture"]
-    overlapping = book.model_copy(
-        update={"sentinel_codes": (SentinelCode(code="01", meaning="stale entry"),)}
-    )
-    with pytest.raises(ValueError, match="fixture") as exc_info:
-        _apply(setup, classifications={"fixture": overlapping})
-    assert "'01'" in str(exc_info.value)
-
-
 def test_naming_a_sentinel_does_not_stale_the_accepted_decision():
     # The sentinel list is per-code acceptance authority recorded alongside the
     # binding, not pinned codebook content: curating it must clear errors on an

@@ -59,21 +59,15 @@ def resolve_classification_conformance(
     No match fraction or globally special code token can acknowledge a
     discrepancy: sentinels are per-classification curation, never a global
     waiver. A sentinel code that is also canonical (typically a stale entry
-    after a codebook update) is a curation error, refused below so the two
-    evidence sets stay disjoint. Canonical code sets are indexed once by the
-    caller, not rebuilt per state.
+    after a codebook update) is a curation error, refused at codebook validation
+    so the two evidence sets stay disjoint. Canonical code sets are indexed once
+    by the caller, not rebuilt per state.
     """
     if not canonical_codes:
         raise ValueError("classification conformance requires a nonempty codebook")
     if not refs:
         raise ValueError("classification conformance requires original source refs")
     sentinels = dict(sentinel_codes) if sentinel_codes else {}
-    overlap = sorted(set(sentinels) & set(canonical_codes))
-    if overlap:
-        raise ValueError(
-            f"classification {classification!r} lists curated sentinel codes "
-            f"also in the canonical code set: {overlap!r}."
-        )
     checked = tuple(sorted({code for code, _ in code_set.members}))
     sentinel_members = tuple(pair for pair in code_set.members if pair[0] in sentinels)
     nonconforming = tuple(
@@ -111,14 +105,16 @@ def resolve_classification_conformance(
             f"{code!r}: {sentinels[code]}"
             for code in sorted({code for code, _ in sentinel_members})
         )
+        kept_note = " (the binding is kept)" if not nonconforming else ""
         diagnostics.append(
             ResolutionDiagnostic(
                 code="sentinel_classification_codes",
                 severity="warning",
                 subject=subject,
                 detail=f"Declared classification {classification!r} contains curated "
-                f"sentinel codes ({listed}). The binding is kept and the codes "
-                "stay variable-local members of the state's value set.",
+                f"sentinel codes ({listed}). The sentinel codes do not sever the binding "
+                "and stay variable-local members of the state's value set"
+                f"{kept_note}.",
                 refs=refs,
                 fields=("coding", "classification"),
                 valid_from=valid_from,

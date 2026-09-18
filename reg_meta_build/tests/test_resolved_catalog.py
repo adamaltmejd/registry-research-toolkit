@@ -12,6 +12,7 @@ from reg_meta.db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
 from reg_meta.search import CodeSearchResult, VariableSearchResult
+from reg_meta_build._curation import SentinelCode
 from reg_meta_build.db import publish_db
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
@@ -406,6 +407,18 @@ def _classification(slug: str = "example-codes") -> ResolvedClassification:
             ResolvedClassificationCode(code="002", label="Canonical two", level=2),
         ),
     )
+
+
+def test_sentinel_overlapping_canonical_code_is_refused() -> None:
+    with pytest.raises(ValidationError, match="example-codes") as exc_info:
+        ResolvedClassification(
+            slug="example-codes",
+            short_name="example-codes",
+            name="Canonical example",
+            codes=(ResolvedClassificationCode(code="001", label="Canonical one"),),
+            sentinel_codes=(SentinelCode(code="001", meaning="stale entry"),),
+        )
+    assert "'001'" in str(exc_info.value)
 
 
 @pytest.mark.parametrize("status", ["kept", "severed"])

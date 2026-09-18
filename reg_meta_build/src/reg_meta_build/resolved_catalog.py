@@ -194,6 +194,12 @@ class ResolvedClassification(_ResolvedModel):
         sentinels = [sentinel.code for sentinel in self.sentinel_codes]
         if len(sentinels) != len(set(sentinels)):
             raise ValueError("duplicate classification sentinel code")
+        overlap = sorted(set(sentinels) & {code.code for code in self.codes})
+        if overlap:
+            raise ValueError(
+                f"classification {self.slug!r} lists curated sentinel codes "
+                f"also in the canonical code set: {overlap!r}."
+            )
         return self
 
 
