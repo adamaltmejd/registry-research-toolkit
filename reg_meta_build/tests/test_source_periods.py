@@ -10,8 +10,10 @@ from reg_meta_build.source_periods import source_scopes
     ("source", "expected"),
     (
         ("2025-12-31", "2025-12-31"),
+        ("1 jan 2010", "2010-01-01"),
         ("15 oktober 2024", "2024-10-15"),
         ("  15   OKTOBER\t2008  ", "2008-10-15"),
+        ("  1   JAN\t2010  ", "2010-01-01"),
     ),
 )
 def test_actual_snapshot_dates_keep_day_precision(source: str, expected: str) -> None:
@@ -47,6 +49,8 @@ def test_same_year_iso_range_keeps_exact_edition_period_bounds(separator: str) -
         "2025-2-01",
         "2025-13-01",
         "32 oktober 2024",
+        "32 jan 2010",
+        "1 feb 2010",
         "2025-02-01 - 2025-01-31",
         "2025-01-01 - 2025-02-29",
     ),

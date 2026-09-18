@@ -24,7 +24,7 @@ _SWEDISH_DATE_SHAPE_RE = re.compile(
     rf"(?P<day>\d{{1,2}})\s+(?P<month>\S+)\s+(?P<year>{_YEAR})\Z"
 )
 _AMBIGUOUS_NUMERIC_DATE_RE = re.compile(r"(?:(?:\d{1,4}[/\.]){2}\d{1,4}|\d{8})\Z")
-_SWEDISH_MONTHS = {"oktober": 10}
+_SWEDISH_MONTHS = {"oktober": 10, "jan": 1}
 
 
 def _exact_interval(value: str) -> tuple[tuple[str, str] | None, bool]:

@@ -470,16 +470,28 @@ def test_scb_paragraph_cleaning_retains_layout_and_real_text_differences() -> No
     assert _clean_row(data_length="1,5").fields.data_length.value == "1,5"
 
 
-def test_edition_date_does_not_replace_declared_variable_reference_period() -> None:
+@pytest.mark.parametrize(
+    ("versionname", "edition_year", "edition_day"),
+    [
+        ("2025-12-31", "2025", "2025-12-31"),
+        ("1 jan 2010", "2010", "2010-01-01"),
+    ],
+)
+def test_edition_date_does_not_replace_declared_variable_reference_period(
+    versionname: str, edition_year: str, edition_day: str
+) -> None:
     declared = " Under  föregående\u00a0kalenderår "
-    record = _clean_row(versionname="2025-12-31", reference_period=declared)
+    record = _clean_row(versionname=versionname, reference_period=declared)
 
-    assert record.edition_scope.intervals[0].start == "2025"
-    assert record.edition_period_scope.intervals[0].start == "2025-12-31"
+    assert record.edition_scope.intervals[0].start == edition_year
+    assert record.edition_period_scope.intervals[0].start == edition_day
+    assert record.original_period_text == versionname
     assert record.fields.reference_period == value_field(
         "Under föregående kalenderår", raw=declared
     )
     assert "reference_period_scope" not in record.model_dump()
+    blank = _clean_row(versionname=versionname)
+    assert blank.fields.reference_period.status == "unknown"
 
 
 def test_declared_reference_period_preserves_missing_and_empty_evidence() -> None:
