@@ -823,6 +823,20 @@ def test_stale_partition_case_withholds_unsplit_family_in_diagnostic_mode():
         resolve(stale, cases=(case,), provider_keys=provider_keys)
     with pytest.raises(ValueError, match="missing explicit provider key"):
         resolve(stale, provider_keys=provider_keys, diagnostic=True)
+    with pytest.raises(ValueError, match="missing explicit provider key"):
+        resolve(
+            stale,
+            cases=(case,),
+            provider_keys={split[0]: "5.i1"},
+            diagnostic=True,
+        )
+    with pytest.raises(ValueError, match="missing explicit provider key"):
+        resolve(
+            stale,
+            cases=(case,),
+            provider_keys={split[0]: "5.i1", (*native, "other"): "5.x"},
+            diagnostic=True,
+        )
 
 
 def test_alias_window_checks_competing_variables_in_the_whole_scope():

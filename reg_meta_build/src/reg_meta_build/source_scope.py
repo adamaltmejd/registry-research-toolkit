@@ -19,6 +19,7 @@ from reg_meta_build.source_classification_bindings import apply_classification_c
 from reg_meta_build.source_coding_choices import apply_coding_choices
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
+    CheckedIdentityChange,
     ClassificationDecision,
     CodingDecision,
     OccurrenceCorrectionDecision,
@@ -103,9 +104,9 @@ def resolve_source_scope(
     The only strict/diagnostic fork is the stale-partition withholding below.
 
     Missing mappings and unsupported decisions are implementation failures, with
-    one diagnostic exception: an unmapped key whose longer split siblings are
-    mapped and whose family has a non-applied occurrence correction case is
-    treated as an explicit None provider key (unresolved catalog identity), so
+    one diagnostic exception: an unmapped key that is the unsplit base of a
+    non-applied partition case's exact split set, with every split key mapped,
+    is treated as an explicit None provider key (unresolved catalog identity), so
     a stale partition decision withholds its family instead of aborting the
     build. Strict mode still fails fast.
 
@@ -249,7 +250,7 @@ def resolve_source_scope(
         late[key].append(case)
     variables = {}
     coverage: list[CoverageObligation] = []
-    unapplied_families: set[NativeKey] = set()
+    stale_splits: list[tuple[NativeKey, ...]] = []
     if diagnostic:
         for entry in corrected.accounting:
             if entry.disposition == "applied":
@@ -257,10 +258,13 @@ def resolve_source_scope(
             decision = entry.case.decision
             if not isinstance(decision, OccurrenceCorrectionDecision):
                 continue
-            for effect in decision.effects:
-                family = getattr(effect, "variable_key", None)
-                if family is not None:
-                    unapplied_families.add(tuple(family))
+            splits = tuple(
+                tuple(effect.variable_key)
+                for effect in decision.effects
+                if isinstance(effect, CheckedIdentityChange)
+            )
+            if splits:
+                stale_splits.append(splits)
     for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
         occurrences = tuple(items)
         refs = tuple(
@@ -270,12 +274,13 @@ def resolve_source_scope(
             if not (
                 diagnostic
                 and any(
-                    len(sibling) > len(key)
-                    and sibling[: len(key)] == key
-                    and provider_keys[sibling] is not None
-                    for sibling in provider_keys
+                    all(
+                        len(split) > len(key) and split[: len(key)] == key
+                        for split in splits
+                    )
+                    and all(provider_keys.get(split) is not None for split in splits)
+                    for splits in stale_splits
                 )
-                and any(family[: len(key)] == key for family in unapplied_families)
             ):
                 raise ValueError(f"missing explicit provider key mapping: {key!r}")
             provider_key = None
