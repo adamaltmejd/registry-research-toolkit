@@ -164,7 +164,8 @@ social-services microdata. Classification CSVs, authored code lists and the LISA
 workbook similarly supply source evidence for common resolution. The SOS register name
 is the DCAT-AP Titel; the general sheet's Datamängd cell is kept as `dataset_label`
 evidence and never competes with the name (their spellings disagree for LSS, HSL and
-SOL). A workbook without a DCAT sheet keeps Datamängd as its name.
+SOL). A workbook without a DCAT sheet keeps Datamängd as its name. The prepared
+source-records schema is 8 as of this change.
 
 ## Input storage and preparation
 
