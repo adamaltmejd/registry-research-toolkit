@@ -59,7 +59,9 @@ def _record(row: int = 2, **changes: str) -> SourceRecord:
     return clean_scb_row(header, row, cells, _REVISION).record
 
 
-def _names(record: SourceRecord) -> tuple[NamingDeclaration, ...]:
+def _names(
+    record: SourceRecord, revision: SourceRevision = _REVISION
+) -> tuple[NamingDeclaration, ...]:
     # Exact checked identities are inputs of parent resolution; applicability itself
     # is exercised by the naming and pipeline-boundary tests.
     result = []
@@ -73,16 +75,16 @@ def _names(record: SourceRecord) -> tuple[NamingDeclaration, ...]:
             NamingDeclaration(
                 target=NativeNamingTarget(
                     kind=kind,
-                    provider="scb",
+                    provider=record.subject.provider,
                     source_key=key,
                     register_key=source_register_key(record)
                     if parent.kind == "variant"
                     else None,
-                    identity_revision=_REVISION,
+                    identity_revision=revision,
                 ),
                 naming=SlugEntry(
                     kind=kind,
-                    provider="scb",
+                    provider=record.subject.provider,
                     source_id="1" if parent.kind == "register" else "1.10",
                     slug="example" if parent.kind == "register" else "people",
                 ),
@@ -196,3 +198,81 @@ def test_parent_translations_are_accounted_without_conflicting_with_requested_la
     translated = resolve_parents((swedish, english), _names(swedish), language="en")
     assert next(iter(translated.registers.values())).purpose == "English purpose"
     assert translated.other_language_refs == (record_ref(swedish),)
+
+
+def _write_sos_name_workbook(path: Path, *, dataset: str, title: str) -> None:
+    import openpyxl
+
+    workbook = openpyxl.Workbook()
+    general = workbook.active
+    general.title = "Generell information"
+    general.append(["", "Om datamängden version", None])
+    general.append(["", "Datamängd", dataset])
+    general.append(["", "Version", "2026:1"])
+    dcat = workbook.create_sheet("Metadata-Datamängd (DCAT-AP)")
+    dcat.append(["Attribut", "Definition", "Svenska", "Engelska"])
+    dcat.append(["Titel", None, title, None])
+    variables = workbook.create_sheet("Metadata - Variabelnivå")
+    variables.append(
+        [
+            "Deldatamängdsnamn",
+            "Variabelnamn",
+            "Variabeletikett",
+            "Variabelbeskrivning",
+            "Värdemängd",
+            "Datatyp",
+            "Länk kodverk",
+            "Data från",
+            "Data till",
+        ]
+    )
+    variables.append(
+        ["SOL_A", "INSATS", "Insats", None, None, "Heltal", None, 2001, 2020]
+    )
+    workbook.save(path)
+
+
+def test_sos_dataset_label_does_not_conflict_with_dcat_title(tmp_path: Path) -> None:
+    import hashlib
+
+    from reg_meta_build.sources.sos import parse_register_file
+    from reg_meta_build.sources.sos_records import clean_sos_source
+
+    dataset = "Socialtjänstinsatser till äldre och personer med funktionsnedsättning"
+    title = "Registret över socialtjänstinsatser till äldre och personer med funktionsnedsättning"
+    path = tmp_path / "Metadata SOL (SOL)_webb.xlsx"
+    _write_sos_name_workbook(path, dataset=dataset, title=title)
+    payload = path.read_bytes()
+    revision = SourceRevision.create(
+        dataset="sos-metadata",
+        publisher="Socialstyrelsen",
+        purpose="SOS name precedence fixture",
+        upstream_revision="2026:1",
+        artifact_path=path.name,
+        artifact_size=len(payload),
+        artifact_sha256=hashlib.sha256(payload).hexdigest(),
+    )
+    cleaned = clean_sos_source(parse_register_file(path), revision)
+    parents = tuple(
+        record
+        for record in cleaned.records
+        if record.parent_facts
+        and record.parent_facts[0].kind == "register"
+        and record.language in {None, "sv"}
+    )
+    assert len(parents) == 3
+    names = tuple(
+        declaration for record in parents for declaration in _names(record, revision)
+    )
+    resolved = resolve_parents(parents, names)
+    assert not [
+        diagnostic
+        for diagnostic in resolved.diagnostics
+        if diagnostic.code == "conflicting_parent_metadata"
+    ]
+    assert resolved.diagnostics == ()
+    (register,) = resolved.registers.values()
+    assert register.name == title
+    (key,) = resolved.registers.keys()
+    assert resolved.fields[key].dataset_label is not None
+    assert resolved.fields[key].dataset_label.value == dataset

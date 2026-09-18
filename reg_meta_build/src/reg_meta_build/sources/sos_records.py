@@ -418,11 +418,12 @@ def iter_sos_variable_records(
 
 
 _GENERAL_FIELDS = {
-    "dataset_name": "name",
     "dataset_version": "source_version",
     "dataset_date": "source_date",
     "contact_email": "contact",
 }
+# The general sheet's Datamängd cell maps separately; see
+# iter_sos_metadata_records.
 _DCAT_FIELDS = {
     "title": "name",
     "description": "description",
@@ -525,6 +526,19 @@ def iter_sos_metadata_records(
     register: SosRegister, revision: SourceRevision
 ) -> Iterator[SourceRecord]:
     """Keep repeated parent claims and explicitly supplied languages separate."""
+    # SOS name precedence: the DCAT-AP Titel is the register's name claim. The
+    # general sheet's Datamängd cell is kept as dataset_label evidence so it
+    # never competes with name; the two spellings disagree for LSS, HSL and
+    # SOL. A workbook without a DCAT sheet (LOVA) keeps Datamängd as its only
+    # name observation, as before.
+    general_fields = {
+        **_GENERAL_FIELDS,
+        "dataset_name": (
+            "dataset_label"
+            if any(sheet.kind == "dcat" for sheet in register.source_sheets)
+            else "name"
+        ),
+    }
     for sheet in register.source_sheets:
         if sheet.kind not in {"general", "dcat", "subsets"}:
             continue
@@ -552,7 +566,7 @@ def iter_sos_metadata_records(
                             language=cell.language,
                         )
             else:
-                mapping = _GENERAL_FIELDS if sheet.kind == "general" else _SUBSET_FIELDS
+                mapping = general_fields if sheet.kind == "general" else _SUBSET_FIELDS
                 fields = {}
                 field_cells = []
                 for source_field, field in mapping.items():

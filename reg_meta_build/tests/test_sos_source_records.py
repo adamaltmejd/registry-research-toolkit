@@ -1343,3 +1343,68 @@ def test_code_patterns_and_adjacent_legend_stay_literal_and_separate(
     assert table.rows[3].cells[2].raw_value == "1"
     assert table.rows[3].cells[3].raw_value == "A"
     assert not cleaned.declarations and not cleaned.validity
+
+
+def _register_parent_records(cleaned) -> list:
+    return [
+        record
+        for record in cleaned.records
+        if record.subject.member.status == "not_applicable"
+        and record.parent_facts[0].kind == "register"
+    ]
+
+
+def test_sos_register_name_prefers_dcat_title_over_dataset_label(
+    tmp_path: Path,
+) -> None:
+    # _write_complete_workbook delivers a general Datamängd
+    # ("Patientregistret källa") that differs from the DCAT-AP Titel rows, the
+    # LSS/HSL/SOL shape that used to raise conflicting_parent_metadata.
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_complete_workbook(path)
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+
+    registers = _register_parent_records(cleaned)
+    general = [record for record in registers if record.language is None]
+    assert general
+    # No general-sheet observation competes for the register name anymore.
+    assert all(record.parent_facts[0].fields.name is None for record in general)
+    dataset = next(
+        record
+        for record in general
+        if record.parent_facts[0].fields.dataset_label is not None
+    )
+    assert dataset.parent_facts[0].fields.dataset_label is not None
+    assert dataset.parent_facts[0].fields.dataset_label.value == (
+        "Patientregistret källa"
+    )
+    assert dataset.parent_field_locators(0, "dataset_label")[0].physical_cells == (
+        "Generell information!C2",
+    )
+    titles = {
+        record.parent_facts[0].fields.name.value
+        for record in registers
+        if record.language == "sv" and record.parent_facts[0].fields.name is not None
+    }
+    assert titles == {"Första titeln", "Andra titeln"}
+
+
+def test_sos_register_name_falls_back_to_dataset_without_dcat_sheet(
+    tmp_path: Path,
+) -> None:
+    # _write_source_workbook has no DCAT sheet (the LOVA shape): Datamängd
+    # remains the only name observation and keeps resolving as before.
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_source_workbook(path)
+    parsed = parse_register_file(path)
+    assert not any(sheet.kind == "dcat" for sheet in parsed.source_sheets)
+    cleaned = clean_sos_source(parsed, _revision(path))
+
+    registers = _register_parent_records(cleaned)
+    dataset = next(
+        record
+        for record in registers
+        if record.language is None and record.parent_facts[0].fields.name is not None
+    )
+    assert dataset.parent_facts[0].fields.name.value == "Patientregistret källa"
+    assert dataset.parent_facts[0].fields.dataset_label is None

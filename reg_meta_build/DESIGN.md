@@ -161,7 +161,10 @@ workbook variables carry the same explicit-flag contract from the delivered temp
 reads as explicit true, a delivered blank as explicit false — and every workbook
 variable is explicitly sensitive, because all SOS deliveries are health and
 social-services microdata. Classification CSVs, authored code lists and the LISA
-workbook similarly supply source evidence for common resolution.
+workbook similarly supply source evidence for common resolution. The SOS register name
+is the DCAT-AP Titel; the general sheet's Datamängd cell is kept as `dataset_label`
+evidence and never competes with the name (their spellings disagree for LSS, HSL and
+SOL). A workbook without a DCAT sheet keeps Datamängd as its name.
 
 ## Input storage and preparation
 

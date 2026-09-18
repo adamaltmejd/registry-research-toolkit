@@ -237,6 +237,7 @@ class SourceFields(_SourceModel):
     legislation: SourceField | None = None
     source_version: SourceField | None = None
     source_date: SourceField | None = None
+    dataset_label: SourceField | None = None
     measurement_information: SourceField | None = None
     documentation_status: SourceField | None = None
     first_approved_at: SourceField | None = None
