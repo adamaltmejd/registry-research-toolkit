@@ -118,6 +118,7 @@ def test_repo_classifications_and_links_parse_from_one_file() -> None:
     assert codes["14"] == "Landsting"
     assert codes["15"] == "Övriga offentliga institutioner"
     assert codes["21"] == "Aktiebolag ej offentligt ägda"
+    assert codes["22"] == "Övriga företag, ej offentligt ägda"
     assert codes["25"] == "Övriga organisationer"
     rebound = {
         (link.provider, link.register, link.variable)
