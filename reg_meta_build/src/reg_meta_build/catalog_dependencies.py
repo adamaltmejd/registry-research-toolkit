@@ -2,15 +2,19 @@
 
 Missing conversion or broken references remain fatal. Only a dependency already
 withheld with source evidence can withhold dependent metadata. The same result is
-used for strict publication and diagnostic materialization.
+used for strict publication and diagnostic materialization. The same rule guards
+delivery: supported source coverage that no explicit outcome withholds must still
+be represented by the variables about to be written.
 """
 
 from __future__ import annotations
 
+from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build._components import DisjointSet
+from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.concept_groups import (
     _MONTH_LABELS,
     classification_succession_edges,
@@ -43,7 +47,7 @@ from reg_meta_build.resolved_metadata import (
 from reg_meta_build.source_curation import ResolutionDiagnostic
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping
+    from collections.abc import Callable, Iterable, Mapping
 
     from reg_meta_build.concept_groups import CodeLabelPair
     from reg_meta_build.source_curation import SourceRecordRef
@@ -125,11 +129,14 @@ def resolve_variable_successions(
     return combined
 
 
+def _variable_fqid(variable: ResolvedVariable) -> str:
+    register = variable.register_ref
+    return f"{register.provider}/{register.slug}/{variable.slug}"
+
+
 def variable_dependency_keys(variable: ResolvedVariable) -> set[DependencyKey]:
     """Exact materialized references, shared by resolution and dependency checks."""
-    fqid = (
-        f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug}"
-    )
+    fqid = _variable_fqid(variable)
     keys: set[DependencyKey] = {("variable", fqid)}
     for item in (*variable.states, *variable.aliases):
         column = item.delivery_column_name
@@ -154,6 +161,65 @@ def variable_dependency_keys(variable: ResolvedVariable) -> set[DependencyKey]:
             )
         )
     return keys
+
+
+@dataclass(frozen=True)
+class CoverageObligation:
+    """One effective positive source claim the final catalog must still deliver.
+
+    Already reduced by the explicit outcomes that withhold part of the claim, so
+    an obligation left here has no accepted excuse for going missing.
+    """
+
+    fqid: str
+    variant: str
+    column: str
+    valid_from: str
+    valid_to: str
+    refs: tuple[SourceRecordRef, ...]
+
+
+def check_delivery_coverage(
+    variables: Iterable[ResolvedVariable],
+    obligations: Iterable[CoverageObligation],
+) -> None:
+    """Refuse silent loss of supported delivery coverage before the catalog is placed.
+
+    Delivery is established by a final state or a declared representation window
+    on the same resolved variable, variant and physical column; a search alias
+    without windows, another column or another variant delivers nothing here.
+    Periods are never widened: only the claimed window has to be represented.
+    """
+    delivered: dict[tuple[str, str, str], list[tuple[str, str]]] = defaultdict(list)
+    for variable in variables:
+        fqid = _variable_fqid(variable)
+        for state in variable.states:
+            delivered[fqid, state.variant.slug, state.delivery_column_name].append(
+                (state.valid_from, state.valid_to)
+            )
+        for alias in variable.aliases:
+            delivered[fqid, alias.variant.slug, alias.delivery_column_name].extend(
+                (window.valid_from, window.valid_to) for window in alias.windows
+            )
+    losses = []
+    for obligation in obligations:
+        key = (obligation.fqid, obligation.variant, obligation.column)
+        for start, end in remaining_windows(
+            delivered.get(key, ()), obligation.valid_from, obligation.valid_to
+        ):
+            refs = ", ".join(
+                "/".join((ref.source, *ref.semantic_record_key))
+                for ref in obligation.refs
+            )
+            losses.append(
+                f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                f"{start}..{end} claimed by {refs}"
+            )
+    if losses:
+        raise ValueError(
+            "supported delivery coverage was lost without an explicit source outcome "
+            f"({len(losses)} window(s)): " + "; ".join(losses[:10])
+        )
 
 
 @dataclass(frozen=True)

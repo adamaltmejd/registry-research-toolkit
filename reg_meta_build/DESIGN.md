@@ -302,6 +302,24 @@ for its variable and variant. Gaps or competing owners withhold the affected win
 Equal window declarations retain all provenance; conflicting decisions withhold only
 their intersection. One alias decision cannot establish another's ownership.
 
+### Delivery coverage accounting
+
+Resolution keeps what each supported occurrence actually claims: one obligation per
+finite positive effective claim, on its exact variant, physical column and period, less
+the periods a checked coding omission or an applicable representation decision
+withholds. Obligations travel with the scope result and are checked against the final
+resolved variables immediately before the database is written — in both modes, and
+whatever else the ledger already holds.
+
+Delivery is established by a final state or a declared representation window on the same
+variable, variant and column. Another column, another variant and a search alias without
+windows deliver nothing here. Genuine source gaps, negative availability, unknown and
+pooled scopes and explicit whole-variable or whole-variant withholding claim no delivery
+in the first place, so they raise nothing. Anything else missing is an engineering
+defect, not a curation question: the build names the source records and the exact
+missing window and stops before any output is placed. A missing optional field or an
+unrelated diagnostic is no permission to drop the state it belongs to.
+
 ### Groups, relations and dependent output
 
 Catalog dependencies distinguish a source-backed omission from a missing implementation.

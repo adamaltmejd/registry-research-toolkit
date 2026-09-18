@@ -148,7 +148,12 @@ def form_representations(
     variable_key: NativeKey,
     variants: Mapping[NativeKey, ResolvedVariant | None],
     subject: str,
-) -> tuple[list[ResolvedState], tuple[ResolvedAlias, ...], list[ResolutionDiagnostic]]:
+) -> tuple[
+    list[ResolvedState],
+    tuple[ResolvedAlias, ...],
+    list[ResolutionDiagnostic],
+    tuple[tuple[str, str, str, str], ...],
+]:
     """Combine agreeing metadata; never select a sibling as the source winner.
 
     Only applicable cases returned by resolve_representation_cases belong here.
@@ -158,9 +163,11 @@ def form_representations(
     Conflicting optional facts/coding withhold those aspects and retain the issues.
     The storage representative is a deterministic column label, never a metadata
     donor; precise structural windows select the actual delivered representation.
+    The fourth result names every (variant, column, period) an applicable checked
+    decision governs, whether it grouped the period or withheld it.
     """
     if not cases:
-        return states, (), []
+        return states, (), [], ()
     by_variant: dict[
         ResolvedVariant, list[tuple[CurationCase, RepresentationDecision]]
     ] = defaultdict(list)
@@ -193,6 +200,7 @@ def form_representations(
             continue
         by_variant[variant].append((case, decision))
     result = []
+    governed: list[tuple[str, str, str, str]] = []
     aliases: dict[tuple[ResolvedVariant, str], list[ResolvedAliasWindow]] = defaultdict(
         list
     )
@@ -231,6 +239,13 @@ def form_representations(
                 continue
             decisions = [d for _, d in selected_pairs]
             first = decisions[0]
+            governed.extend(
+                (variant.slug, column, start, end)
+                for column in sorted(
+                    {s.delivery_column_name for s in active}
+                    | {c.column for d in decisions for c in d.columns}
+                )
+            )
 
             def report(
                 code: str,
@@ -397,4 +412,5 @@ def form_representations(
             )
         ),
         diagnostics,
+        tuple(governed),
     )

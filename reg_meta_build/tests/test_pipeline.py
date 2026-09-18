@@ -843,6 +843,37 @@ def test_all_variables_withheld_remains_a_curation_failure(selection, tmp_path):
         )
 
 
+@pytest.mark.parametrize("diagnostic", [False, True])
+def test_lost_delivery_coverage_refuses_the_build_before_any_database(
+    selection, tmp_path, monkeypatch, diagnostic
+):
+    """The operator's witness: a defect inside formation truncates one supported
+    2020 occurrence, nothing else reports it, and the build must still refuse."""
+    from reg_meta_build import source_formation
+
+    original = source_formation._coded_states
+
+    def truncate(segment, variant, coding, subject):
+        states, diagnostics, withheld = original(segment, variant, coding, subject)
+        return (
+            [s.model_copy(update={"valid_to": "2020-06-30"}) for s in states],
+            diagnostics,
+            withheld,
+        )
+
+    monkeypatch.setattr(source_formation, "_coded_states", truncate)
+    output, report = tmp_path / "lost.db", tmp_path / "lost-report"
+    with pytest.raises(ValueError, match="delivery coverage was lost") as failure:
+        build_selected_catalog(selection, output, report, diagnostic=diagnostic)
+    missing = "2020-07-01..2020-12-31"
+    assert missing in str(failure.value)
+    assert "scb/sample/value people/VALUE" in str(failure.value)
+    assert not output.exists()
+    summary = json.loads((report / "summary.json").read_text())
+    assert summary["status"] == "engineering_failure"
+    assert missing in summary["error"]
+
+
 @pytest.mark.parametrize("failure", ["unconverted", "scope", "hash", "escape"])
 def test_engineering_failures_never_become_diagnostic_waivers(
     selection, tmp_path, failure

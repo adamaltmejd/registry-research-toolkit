@@ -21,6 +21,8 @@ from typing import TYPE_CHECKING, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from reg_meta_build.catalog_dependencies import (
+    CoverageObligation,
+    check_delivery_coverage,
     resolve_classification_successions,
     resolve_metadata_dependencies,
     resolve_month_groups,
@@ -317,6 +319,7 @@ def build_selected_catalog(
     counts: Counter[str] = Counter()
     seen_scopes, seen_cases = set(), set()
     seen_unapplied = set()
+    coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
     sibling_pairs = set()
@@ -591,6 +594,7 @@ def build_selected_catalog(
                         )
                         counts["unapplied_curation"] += 1
                     seen_scopes.add(scope_key)
+                    coverage.extend(result.coverage)
                     sibling_pairs.update(result.siblings.pairs)
                     for pair in result.siblings.decisions:
                         event(
@@ -794,6 +798,10 @@ def build_selected_catalog(
             final_metadata = resolve_variable_successions(
                 lineage.metadata, lineage.variables, successions
             )
+            # Mandatory before any output placement, in both modes and whatever
+            # else the ledger holds: losing supported delivery is our bug, and no
+            # curation error may stand in for the source outcome that never came.
+            check_delivery_coverage(lineage.variables, coverage)
             _emit_timing("pipeline: catalog dependencies", phase_started)
             build_result.update(
                 {

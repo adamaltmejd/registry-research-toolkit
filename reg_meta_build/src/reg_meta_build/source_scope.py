@@ -43,7 +43,7 @@ from reg_meta_build.source_value_bindings import (
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping
 
-    from reg_meta_build.catalog_dependencies import DependencyKey
+    from reg_meta_build.catalog_dependencies import CoverageObligation, DependencyKey
     from reg_meta_build.resolved_catalog import (
         ResolvedClassification,
         ResolvedVariable,
@@ -77,6 +77,7 @@ class ScopeResolution:
     warning_count: int
     withheld_dependencies: dict[DependencyKey, tuple[ResolutionDiagnostic, ...]]
     siblings: SiblingResolution
+    coverage: tuple[CoverageObligation, ...]
 
 
 def resolve_source_scope(
@@ -106,6 +107,8 @@ def resolve_source_scope(
     severity counts are always returned, including when the sink is used.
     Exact evidenced dependency omissions are returned independently of that sink.
     Missing references are never converted to omissions merely because absent.
+    Supported delivery the formed variables still owe the catalog is carried out
+    unchanged, for the boundary guard that runs before the database is written.
     """
     if len({c.case_id for c in cases}) != len(cases):
         raise ValueError("source scope case IDs must be unique")
@@ -235,6 +238,7 @@ def resolve_source_scope(
             )
         late[key].append(case)
     variables = {}
+    coverage: list[CoverageObligation] = []
     for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
         occurrences = tuple(items)
         refs = tuple(
@@ -385,6 +389,7 @@ def resolve_source_scope(
             if formed.variable is not None
             else None
         )
+        coverage.extend(formed.coverage)
         for issue in formed.diagnostics:
             emit(issue)
         assert fqid is not None
@@ -492,6 +497,7 @@ def resolve_source_scope(
         counts["warning"],
         withheld_dependencies,
         siblings,
+        tuple(coverage),
     )
 
 

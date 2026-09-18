@@ -215,6 +215,9 @@ def test_shared_state_keeps_metadata_period_and_query_selects_precise_column(
     assert state.delivery_column_name == "First"  # Deterministic storage label only.
     assert [a.delivery_column_name for a in variable.aliases] == ["First", "Second"]
     assert all(w.provenance is None for a in variable.aliases for w in a.windows)
+    # The checked decision governs which column delivers when, so the boundary
+    # guard has nothing left to require of these two columns.
+    assert formed.coverage == ()
     assert state.provenance is not None and "representations:" in state.provenance
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
@@ -364,11 +367,16 @@ def test_missing_formed_member_withholds_group_without_manufacturing_metadata() 
     formed, _ = _form(setup)
     assert formed.variable is not None
     state = formed.variable.states[0]
-    result, aliases, issues = form_representations(
+    result, aliases, issues, governed = form_representations(
         [state], (setup[2],), variable_key=KEY, variants=setup[3], subject="fixture"
     )
     assert result == [] and aliases == ()
     assert issues[0].code == "missing_representation_metadata"
+    # The withheld period still belongs to the checked decision, not to a bug.
+    assert {(variant, column) for variant, column, _, _ in governed} == {
+        ("people", "First"),
+        ("people", "Second"),
+    }
 
 
 def test_equal_decisions_compose_and_conflicting_representation_windows_withhold() -> (

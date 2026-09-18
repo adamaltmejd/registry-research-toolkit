@@ -8,11 +8,13 @@ column spelling, merges different source families, or chooses a conflicting fact
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
 
+from reg_meta_build._resolved_common import remaining_windows
+from reg_meta_build.catalog_dependencies import CoverageObligation
 from reg_meta_build.resolved_catalog import (
     ResolvedState,
     ResolvedVariable,
@@ -82,6 +84,9 @@ class VariableFormation:
     withheld_representations: dict[
         tuple[str, str], tuple[ResolutionDiagnostic, ...]
     ] = field(default_factory=dict)
+    # Supported delivery this variable still owes the catalog; empty whenever the
+    # whole variable is withheld, which is itself a terminal explicit outcome.
+    coverage: tuple[CoverageObligation, ...] = ()
 
 
 def _coded_states(
@@ -89,7 +94,8 @@ def _coded_states(
     variant: ResolvedVariant,
     coding: CodingResolution,
     subject: str,
-) -> tuple[list[ResolvedState], list[ResolutionDiagnostic]]:
+) -> tuple[list[ResolvedState], list[ResolutionDiagnostic], list[tuple[str, str]]]:
+    """Cut one positive segment by coding; also report the periods coding withholds."""
     lower, upper = (
         date.fromisoformat(segment.valid_from).toordinal(),
         date.fromisoformat(segment.valid_to).toordinal(),
@@ -104,6 +110,7 @@ def _coded_states(
             cuts.update((max(lower, lo), min(upper, hi) + 1))
     states = []
     diagnostics = []
+    withheld = []
     for lo, next_lo in pairwise(sorted(cuts)):
         start, end = (
             date.fromordinal(lo).isoformat(),
@@ -116,6 +123,7 @@ def _coded_states(
             raise ValueError("coding resolver returned overlapping coding segments")
         matched = matches[0] if matches else None
         if matched is not None and matched.state_disposition != "include":
+            withheld.append((start, end))
             if matched.state_disposition == "omit":
                 diagnostics.append(
                     ResolutionDiagnostic(
@@ -173,7 +181,7 @@ def _coded_states(
                 conformance=matched.conformance if matched else None,
             )
         )
-    return states, diagnostics
+    return states, diagnostics, withheld
 
 
 def _disjoint_representations(
@@ -282,6 +290,8 @@ def form_native_variable(
     Multiple unassigned column names under one native variable require a checked
     identity decision; the ordinary path does not guess whether they are renames
     or different questions. Each physical input occurrence remains in the result.
+    A formed variable also returns the delivery its supported occurrences still
+    claim after the explicit coding/representation outcomes that withhold periods.
     """
     effective = tuple(effective_occurrence(record) for record in records)
     if any(record.use != "catalog" for record in effective):
@@ -394,6 +404,10 @@ def form_native_variable(
     intervals = []
     coding_results = []
     withheld_variants = {}
+    # Every finite positive source claim, against the periods an explicit outcome
+    # withholds from it, both keyed by the exact variant and physical column.
+    claims: list[CoverageObligation] = []
+    waived: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     for key, members in sorted(by_variant.items(), key=lambda item: repr(item[0])):
         variant = variants[key]
         assert variant is not None
@@ -447,9 +461,20 @@ def form_native_variable(
                     )
                 )
             for segment in segments:
-                new_states, new_issues = _coded_states(
+                claims.append(
+                    CoverageObligation(
+                        subject,
+                        variant.slug,
+                        column,
+                        segment.valid_from,
+                        segment.valid_to,
+                        _refs(segment.occurrences),
+                    )
+                )
+                new_states, new_issues, uncoded = _coded_states(
                     segment, variant, code_result, subject
                 )
+                waived[variant.slug, column].extend(uncoded)
                 states.extend(new_states)
                 diagnostics.extend(new_issues)
                 if new_states and _text(segment.fields, "data_type") is None:
@@ -464,7 +489,7 @@ def form_native_variable(
                     )
     variable_key = effective[0].variable_key
     assert variable_key is not None
-    states, aliases, grouping_issues = form_representations(
+    states, aliases, grouping_issues, governed = form_representations(
         states,
         representations,
         variable_key=variable_key,
@@ -472,11 +497,18 @@ def form_native_variable(
         subject=subject,
     )
     diagnostics.extend(grouping_issues)
+    for variant_slug, column, start, end in governed:
+        waived[variant_slug, column].append((start, end))
     previous_variants = {state.variant.slug for state in states}
     states, representation_issues, withheld_representations = _disjoint_representations(
         states, effective, subject, variants
     )
     diagnostics.extend(representation_issues)
+    # Each cause names the exact parallel-column period it withholds.
+    for (variant_slug, column), causes in withheld_representations.items():
+        for cause in causes:
+            assert cause.valid_from is not None and cause.valid_to is not None
+            waived[variant_slug, column].append((cause.valid_from, cause.valid_to))
     for variant in sorted(previous_variants - {state.variant.slug for state in states}):
         causes = tuple(
             dict.fromkeys(
@@ -561,6 +593,19 @@ def form_native_variable(
             (subject,),
         )
         variable = None
+    # Withholding the whole variable is itself a terminal explicit outcome, so a
+    # withheld variable claims nothing; otherwise each claim keeps what is left.
+    coverage = (
+        tuple(
+            replace(claim, valid_from=start, valid_to=end)
+            for claim in claims
+            for start, end in remaining_windows(
+                waived[claim.variant, claim.column], claim.valid_from, claim.valid_to
+            )
+        )
+        if variable is not None
+        else ()
+    )
     return VariableFormation(
         variable,
         tuple(diagnostics),
@@ -569,4 +614,5 @@ def form_native_variable(
         tuple(coding_results),
         withheld_variants,
         withheld_representations,
+        coverage,
     )

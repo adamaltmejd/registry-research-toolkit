@@ -11,6 +11,7 @@ from _prepared_fixtures import accept_prepared
 from reg_meta_build.catalog_dependencies import (
     CatalogDependencies,
     CatalogDependencyError,
+    check_delivery_coverage,
     resolve_panel_dependencies,
     variable_dependency_keys,
 )
@@ -19,6 +20,7 @@ from reg_meta_build.prepared_values import (
     open_prepared_source_values,
     prepare_source_values,
 )
+from reg_meta_build.resolved_catalog import ResolvedVariant
 from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_coordinates import (
     native_column_key,
@@ -37,6 +39,7 @@ from reg_meta_build.source_curation import (
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
+    SearchAliasDecision,
     SourceEvidence,
 )
 from reg_meta_build.source_effects import copied_coding_key, record_ref
@@ -48,6 +51,7 @@ from reg_meta_build.source_naming import (
 )
 from reg_meta_build.source_records import (
     ScopeInterval,
+    SourceField,
     SourceFields,
     SourceRecord,
     SourceRevision,
@@ -80,15 +84,15 @@ REVISION = SourceRevision.create(
 )
 
 
-def record(member=1, variable=5, variant=2, column="VALUE"):
+def record(member=1, variable=5, variant=2, column="VALUE", year="2020"):
     header = REGISTERINFORMATION_HEADER.split("|")
     values = _var_row(
         cvid=member,
         var_id=variable,
         colname=column,
         register=("TEST", 1, variant),
-        regver_id=2020,
-        year="2020",
+        regver_id=int(year),
+        year=year,
     ).split("|")
     result = clean_scb_row(
         header,
@@ -987,3 +991,197 @@ def test_parallel_columns_report_exact_omissions_without_hiding_a_safe_variant()
     )
     with pytest.raises(CatalogDependencyError, match="NEVER_DOCUMENTED"):
         dependencies.check()
+    # The exact parallel-column blocker stays a curation blocker: it withholds
+    # its own window, so only the safe variant still owes delivery.
+    assert [
+        (o.variant, o.column, o.valid_from, o.valid_to) for o in result.coverage
+    ] == [("people-3", "VALUE", "2020-01-01", "2020-12-31")]
+    check_delivery_coverage((variable,), result.coverage)
+
+
+def _states(variable, shape):
+    """Damage one whole-2020 state the way an engineering defect would."""
+    (state,) = variable.states
+    if shape == "half_year":
+        return (state.model_copy(update={"valid_to": "2020-06-30"}),)
+    if shape == "exact_day":
+        return (
+            state.model_copy(update={"valid_to": "2020-03-06"}),
+            state.model_copy(update={"valid_from": "2020-03-08"}),
+        )
+    moved = state.model_copy(update={"valid_from": "2020-07-01"})
+    return (
+        state.model_copy(update={"valid_to": "2020-06-30"}),
+        moved.model_copy(
+            update={"delivery_column_name": "OTHER"}
+            if shape == "column"
+            else {"variant": ResolvedVariant(slug="people-3", name="Households")}
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    "shape,missing",
+    [
+        ("half_year", "2020-07-01..2020-12-31"),
+        ("exact_day", "2020-03-07..2020-03-07"),
+        ("column", "2020-07-01..2020-12-31"),
+        ("variant", "2020-07-01..2020-12-31"),
+    ],
+)
+def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing):
+    item = record()
+    result = resolve((item,))
+    variable = result.variables[native_variable_key(item)]
+    assert variable is not None
+    assert [
+        (o.fqid, o.variant, o.column, o.valid_from, o.valid_to, o.refs)
+        for o in result.coverage
+    ] == [
+        (
+            "scb/example/value-5",
+            "people-2",
+            "VALUE",
+            "2020-01-01",
+            "2020-12-31",
+            (record_ref(item),),
+        )
+    ]
+    check_delivery_coverage((variable,), result.coverage)
+    damaged = variable.model_copy(update={"states": _states(variable, shape)})
+    with pytest.raises(ValueError, match="delivery coverage was lost") as failure:
+        check_delivery_coverage((damaged,), result.coverage)
+    assert missing in str(failure.value)
+    assert "scb/example/value-5 people-2/VALUE" in str(failure.value)
+    assert f"claimed by {REVISION.dataset}/" in str(failure.value)
+
+
+@pytest.mark.parametrize("shape", ["gap", "negative", "unknown", "pooled"])
+def test_genuine_source_gaps_and_unresolved_scopes_claim_no_delivery(shape):
+    first, second = record(year="2019"), record(2, year="2021")
+    if shape == "negative":
+        second = second.model_copy(
+            update={
+                "fields": second.fields.model_copy(
+                    update={"availability": SourceField(status="negative")}
+                )
+            }
+        )
+    elif shape == "unknown":
+        second = second.model_copy(
+            update={
+                "edition_scope": TemporalScope(kind="unknown", label="okänd"),
+                "edition_period_scope": TemporalScope(kind="unknown", label="okänd"),
+            }
+        )
+    elif shape == "pooled":
+        pooled = TemporalScope(kind="pooled", label="2021-2022")
+        second = second.model_copy(
+            update={"edition_scope": pooled, "edition_period_scope": pooled}
+        )
+    result = resolve((first, second))
+    variable = result.variables[native_variable_key(first)]
+    assert variable is not None
+    claimed = [(o.valid_from, o.valid_to) for o in result.coverage]
+    assert claimed == (
+        [("2019-01-01", "2019-12-31"), ("2021-01-01", "2021-12-31")]
+        if shape == "gap"
+        else [("2019-01-01", "2019-12-31")]
+    )
+    # No obligation covers 2020, the withdrawn year, or any widened period.
+    check_delivery_coverage((variable,), result.coverage)
+
+
+def test_a_checked_state_omission_withdraws_only_its_own_period():
+    first, second = record(year="2019"), record(2, year="2020")
+    column_key = native_column_key(second)
+    assert column_key is not None
+    case = CurationCase(
+        case_id="accepted-omission",
+        targets=capture_expectations((second,), fields=("column_name",)),
+        peer_guards=(
+            guard(second).model_copy(
+                update={"expected_members": (record_ref(first), record_ref(second))}
+            ),
+        ),
+        decision=CodingDecision(
+            reviewed=True,
+            column_key=column_key,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            expected_codings=(),
+            selection="omit_state",
+            reason="Accepted omitted delivery state",
+            provenance="Fixture decision",
+        ),
+    )
+    result = resolve((first, second), cases=(case,))
+    variable = result.variables[native_variable_key(first)]
+    assert variable is not None
+    assert [d.code for d in result.diagnostics] == ["curated_state_omission"]
+    assert [(s.valid_from, s.valid_to) for s in variable.states] == [
+        ("2019-01-01", "2019-12-31")
+    ]
+    assert [(o.valid_from, o.valid_to) for o in result.coverage] == [
+        ("2019-01-01", "2019-12-31")
+    ]
+    check_delivery_coverage((variable,), result.coverage)
+    lost = variable.model_copy(
+        update={
+            "states": (
+                variable.states[0].model_copy(update={"valid_to": "2019-06-30"}),
+            )
+        }
+    )
+    with pytest.raises(ValueError, match=r"2019-07-01\.\.2019-12-31"):
+        check_delivery_coverage((lost,), result.coverage)
+
+
+def test_an_unrelated_field_diagnostic_is_no_permission_to_discard_its_state():
+    item = record()
+    item = item.model_copy(
+        update={"fields": item.fields.model_copy(update={"data_type": None})}
+    )
+    result = resolve((item,))
+    variable = result.variables[native_variable_key(item)]
+    assert variable is not None
+    assert [d.code for d in result.diagnostics] == ["unknown_data_type"]
+    assert [(o.valid_from, o.valid_to) for o in result.coverage] == [
+        ("2020-01-01", "2020-12-31")
+    ]
+    with pytest.raises(ValueError, match=r"2020-01-01\.\.2020-12-31"):
+        check_delivery_coverage((), result.coverage)
+
+
+def test_a_search_only_alias_establishes_no_delivery_for_the_lost_window():
+    item = record()
+    variable_key, variant_key = native_variable_key(item), native_variant_key(item)
+    assert variable_key is not None and variant_key is not None
+    case = CurationCase(
+        case_id="accepted-spelling",
+        targets=capture_expectations((item,), fields=("column_name",)),
+        peer_guards=(guard(item),),
+        decision=SearchAliasDecision(
+            reviewed=True,
+            variable_key=variable_key,
+            variant_keys=(variant_key,),
+            column="VALUE",
+            reason="Existing search spelling",
+            provenance="Fixture decision",
+        ),
+    )
+    result = resolve((item,), cases=(case,))
+    variable = result.variables[variable_key]
+    assert variable is not None
+    assert [(a.delivery_column_name, a.windows) for a in variable.aliases] == [
+        ("VALUE", ())
+    ]
+    damaged = variable.model_copy(
+        update={
+            "states": (
+                variable.states[0].model_copy(update={"valid_to": "2020-06-30"}),
+            )
+        }
+    )
+    with pytest.raises(ValueError, match=r"2020-07-01\.\.2020-12-31"):
+        check_delivery_coverage((damaged,), result.coverage)
