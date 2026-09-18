@@ -1107,7 +1107,12 @@ def test_delivery_facts_length_mismatch_is_refused():
 
 
 def test_delivery_facts_attributions_require_exact_provenance_elements():
-    obligation = _fact_obligation(data_type=None, data_length=None)
+    obligation = _fact_obligation(
+        data_type=None,
+        data_length=None,
+        data_type_excused=True,
+        data_length_excused=True,
+    )
     check_delivery_coverage(
         (_fact_variable(provenance="correction:one\n\ncomment"),),
         (obligation,),
@@ -1168,13 +1173,37 @@ def test_delivery_facts_shared_state_behind_alias_window_is_checked():
     )
 
 
-def test_delivery_facts_null_claim_and_withheld_coordinate_need_no_match():
-    obligation = _fact_obligation(data_type=None, data_length=None, attributions=())
+def test_delivery_facts_excused_claim_needs_no_match_but_absence_is_asserted():
+    excused = _fact_obligation(
+        data_type=None,
+        data_length=None,
+        attributions=(),
+        data_type_excused=True,
+        data_length_excused=True,
+    )
     check_delivery_coverage(
         (_fact_variable(data_type="text", data_length="9", provenance=None),),
-        (obligation,),
+        (excused,),
         withheld={},
     )
+    # An asserted absence is itself a claim: copying a prior window's facts
+    # into a fact-less window must fail even with no attributions to check.
+    absent = _fact_obligation(data_type=None, data_length=None, attributions=())
+    check_delivery_coverage(
+        (_fact_variable(data_type=None, data_length=None, provenance=None),),
+        (absent,),
+        withheld={},
+    )
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage(
+            (_fact_variable(data_type="integer", data_length="0", provenance=None),),
+            (absent,),
+            withheld={},
+        )
+    assert "claimed data_type=None written 'integer'" in str(failure.value)
     check_delivery_coverage(
         (_fact_variable(data_type="text"),),
         (_fact_obligation(attributions=()),),

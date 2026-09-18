@@ -183,6 +183,8 @@ class CoverageObligation:
     data_type: str | None = None
     data_length: str | None = None
     attributions: tuple[str, ...] = ()
+    data_type_excused: bool = False
+    data_length_excused: bool = False
 
 
 def check_delivery_coverage(
@@ -200,7 +202,9 @@ def check_delivery_coverage(
     Every overlapping final state on the same coordinate, and every shared state
     behind an alias window for that coordinate, must also keep the claimed
     type/length and contain every claimed attribution as an exact provenance
-    element. A conflicting representation fact nulls the claimed fact it names.
+    element. An asserted absence is itself a claimed fact: a written value where
+    the source claims none is a change. Only a conflicting representation fact
+    excuses its named claim, recorded on the obligation itself.
     A variable or one of its variants that the ledger withholds outright, with
     source evidence, owes nothing at that exact coordinate; the claim stays a
     curation blocker whichever stage recorded it, and a sibling stays checked.
@@ -244,7 +248,9 @@ def check_delivery_coverage(
         claimed_type = getattr(obligation, "data_type", None)
         claimed_length = getattr(obligation, "data_length", None)
         claimed_attributions = getattr(obligation, "attributions", ())
-        if claimed_type is None and claimed_length is None and not claimed_attributions:
+        type_excused = getattr(obligation, "data_type_excused", False)
+        length_excused = getattr(obligation, "data_length_excused", False)
+        if type_excused and length_excused and not claimed_attributions:
             continue
         refs = ", ".join(
             "/".join((ref.source, *ref.semantic_record_key)) for ref in obligation.refs
@@ -296,13 +302,13 @@ def check_delivery_coverage(
                 if token in candidates:
                     continue
                 candidates[token] = state
-                if claimed_type is not None and state.data_type != claimed_type:
+                if not type_excused and state.data_type != claimed_type:
                     fact_changes.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                         f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                         f"claimed data_type={claimed_type!r} written {state.data_type!r}"
                     )
-                if claimed_length is not None and state.data_length != claimed_length:
+                if not length_excused and state.data_length != claimed_length:
                     fact_changes.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                         f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
