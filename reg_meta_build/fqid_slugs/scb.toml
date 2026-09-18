@@ -710,7 +710,7 @@ panel_time_grain = "delivery"
 [register_variant."47.2"]
 slug = "sokande-grund-avancerad"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå"
-panel_entity_key = "personnr-motsvarande"
+panel_entity_key = "personnr-motsvarande-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -821,7 +821,7 @@ panel_time_grain = "delivery"
 [register_variant."47.1623"]
 slug = "sokande-sommarkurser"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser"
-panel_entity_key = "personnr-motsvarande"
+panel_entity_key = "personnr-motsvarande-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -832,7 +832,7 @@ display_group = "Sökande och antagna till högskoleutbildning på grundnivå oc
 [register_variant."47.1625"]
 slug = "sokande-internationella-omgangar"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar"
-panel_entity_key = "personnr-motsvarande"
+panel_entity_key = "personnr-motsvarande-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
