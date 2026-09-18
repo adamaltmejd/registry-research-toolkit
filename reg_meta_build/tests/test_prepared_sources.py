@@ -151,7 +151,7 @@ def test_support_projection_matches_full_record_cardinalities_without_hydration(
 ) -> None:
     revision = _revision("source-a", "a")
 
-    def occurrence(row, native, column="VALUE"):
+    def occurrence(row, native, column="VALUE", edition="2020"):
         original = _record(
             revision, row=row, member="Source variable", raw_value="Source variable"
         )
@@ -169,16 +169,28 @@ def test_support_projection_matches_full_record_cardinalities_without_hydration(
             field: getattr(original, field)
             for field in SourceRecord.model_fields
             if field
-            not in {"record_id", "source", "source_revision_id", "subject", "fields"}
+            not in {
+                "record_id",
+                "source",
+                "source_revision_id",
+                "subject",
+                "fields",
+                "original_period_text",
+            }
         }
         return SourceRecord.create(
             revision=revision,
             subject=subject,
             fields=SourceFields(column_name=value_field(column)),
+            original_period_text=edition,
             **arguments,
         )
 
-    first, second, unknown = occurrence(1, 7), occurrence(2, "7"), occurrence(3, None)
+    first, second, unknown = (
+        occurrence(1, 7),
+        occurrence(2, "7", edition="2021"),
+        occurrence(3, None, edition="2022"),
+    )
     records = (first, first, second, unknown, occurrence(4, 8, "OTHER"))
     root = tmp_path / "inputs" / "records"
     manifest = prepare_source_records(
@@ -194,11 +206,23 @@ def test_support_projection_matches_full_record_cardinalities_without_hydration(
         keys=keys,
         fields=("identifier",),
         unique_variable=True,
+        discriminator=("coverage_from", "coverage_to"),
         rule="literal fixture join",
         provenance=("fixture",),
     )
     # Support and delivery collections remain distinct, even with equal coordinates.
-    support_record = first.model_copy(update={"source": "summary"})
+    # The endpoints separate the two renumbered identities under the literal key.
+    support_record = first.model_copy(
+        update={
+            "source": "summary",
+            "fields": first.fields.model_copy(
+                update={
+                    "coverage_from": value_field("2020"),
+                    "coverage_to": value_field("2020"),
+                }
+            ),
+        }
+    )
     full, projected = (
         SourceSupportBindings((join,), (support_record,)),
         SourceSupportBindings((join,), (support_record,)),
@@ -214,6 +238,7 @@ def test_support_projection_matches_full_record_cardinalities_without_hydration(
     targets = tuple(reader.iter_support_targets((join,)))
     assert len(targets) < len(records)
     assert any(t.variable_key is None for t in targets)
+    assert {t.edition_name for t in targets} == {"2020", "2021", "2022"}
     for target in targets:
         projected.observe_target(target)
     projected.seal()

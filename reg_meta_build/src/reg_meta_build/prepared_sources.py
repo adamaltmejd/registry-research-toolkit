@@ -771,9 +771,10 @@ class PreparedSourceRecords:
     ) -> Iterator[SupportTarget]:
         """Read complete join cardinalities without hydrating physical source records.
 
-        DISTINCT removes only repetitions of the same original native identity and
-        required join fields. Unknown identities remain None candidates. This is a
-        read projection of the accepted store, not source cleaning or curation.
+        DISTINCT removes only repetitions of the same original native identity,
+        edition name and required join fields. Unknown identities remain None
+        candidates. This is a read projection of the accepted store, not source
+        cleaning or curation.
         Ordinary resolution still visits every physical occurrence separately.
         """
         columns = {
@@ -786,7 +787,9 @@ class PreparedSourceRecords:
         with _decoded_database(self.root, self.manifest) as (conn, payload):
             for join in joins:
                 selected = tuple(sorted({columns[name] for name in join.keys}))
-                projection = ", ".join(("family_payload", *selected))
+                projection = ", ".join(
+                    ("family_payload", "original_period_text", *selected)
+                )
                 for source in join.target_sources:
                     rows = conn.execute(
                         f"SELECT DISTINCT {projection} FROM occurrence "
@@ -812,6 +815,7 @@ class PreparedSourceRecords:
                             if row["family_payload"] is not None
                             else None,
                             key,
+                            row["original_period_text"],
                         )
 
     def iter_native_families(

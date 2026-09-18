@@ -64,8 +64,16 @@ def _scope(records, *, slugs, revision, cases=()):
     """One whole-source scope declaring every native target its records name."""
     provider = records[0].subject.provider
     register = source_register_key(records[0])
-    variable = next(key for key in map(native_variable_key, records) if key is not None)
-    targets = {("variable", variable)}
+    variables = sorted(
+        {key for key in map(native_variable_key, records) if key is not None}, key=repr
+    )
+    # A renumbered native variable is a catalog variable of its own and needs its
+    # own slug; a scope naming one variable keeps the plain fixture slug.
+    variable_slugs = {
+        key: slugs["variable"] if index == 0 else f"{slugs['variable']}-{index}"
+        for index, key in enumerate(variables)
+    }
+    targets = {("variable", key) for key in variables}
     for record in records:
         for parent in record.parent_facts:
             if parent.kind in {"register", "variant"}:
@@ -94,13 +102,13 @@ def _scope(records, *, slugs, revision, cases=()):
                     source_id=str(key[-1])
                     if kind == "register"
                     else f"{register[-1]}.{key[-1]}",
-                    slug=slugs[kind],
+                    slug=variable_slugs[key] if kind == "variable" else slugs[kind],
                 ),
                 contributors=(),
             )
             for kind, key in sorted(targets, key=repr)
         ),
-        provider_keys=((variable, str(variable[-1])),),
+        provider_keys=tuple((key, str(key[-1])) for key in variables),
     )
 
 
@@ -167,6 +175,11 @@ def _scope_file(directory, name, scope):
 def selection(tmp_path, request):
     param = getattr(request, "param", None)
     source = tmp_path / "source"
+    # SCB renumbered one delivered column: two native variables share the summary's
+    # whole literal key and separate only on their declared version endpoints. Only
+    # the later summary row declares an identifier, so the built flags say which
+    # native variable each row reached.
+    renumbered = param == "renumbered"
     write_scb_input(
         source,
         registerinformation_rows=[
@@ -174,8 +187,24 @@ def selection(tmp_path, request):
                 cvid=1001,
                 var_id=101,
                 colname="VALUE",
-                data_type="int" if param in {"typed", *_SOS_CELLS} else "",
-            )
+                data_type="int"
+                if param in {"typed", "renumbered", *_SOS_CELLS}
+                else "",
+            ),
+            *(
+                [
+                    _var_row(
+                        cvid=1002,
+                        var_id=102,
+                        colname="VALUE",
+                        data_type="int",
+                        year="2021",
+                        regver_id=111,
+                    )
+                ]
+                if renumbered
+                else []
+            ),
         ],
         timeseries_rows=[
             timeseries_row(entitet="AktuellVariabel", id1="1001", id2="404")
@@ -183,7 +212,14 @@ def selection(tmp_path, request):
         if param == "source_event"
         else None,
         unika_rows=[
-            "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
+            "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0",
+            *(
+                [
+                    "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2021|2021|0|0|1"
+                ]
+                if renumbered
+                else []
+            ),
         ],
         include=("registerinformation", "unika", "identifierare", "timeseries")
         if param is not False
@@ -214,14 +250,14 @@ def selection(tmp_path, request):
         destination, input_commit=commit, expected_sha256=manifest.sha256
     )
     revision = _input_revision(manifest, "scb_records")
-    (record,) = tuple(prepared.records.iter_records(source=revision.dataset))
+    records = tuple(prepared.records.iter_records(source=revision.dataset))
     directory = tmp_path / "selection"
     directory.mkdir()
     scopes = [
         _scope_file(
             directory,
             "scope.json.gz",
-            _scope((record,), slugs=_SCB_SLUGS, revision=revision),
+            _scope(records, slugs=_SCB_SLUGS, revision=revision),
         )
     ]
     if param in _SOS_CELLS:
@@ -670,6 +706,23 @@ def test_unresolved_inline_code_list_is_reported_and_refused_for_publication(
         assert "inline:" in issue["detail"]
         assert issue["refs"]
         assert codes == []
+
+
+@pytest.mark.parametrize("selection", ["renumbered"], indirect=True)
+def test_renumbered_variables_each_take_their_own_summary_flags(
+    selection, tmp_path, structural_validation_only
+):
+    # Both summary rows carry the same four literal names; only their declared
+    # version endpoints say which renumbered variable each one describes.
+    output = tmp_path / "catalog.db"
+    strict = build_selected_catalog(selection, output, tmp_path / "report")
+    assert strict["status"] == "complete"
+    assert strict["publication_ready"] is True
+    with sqlite3.connect(output) as conn:
+        assert conn.execute(
+            "SELECT provider_key, is_sensitive, is_identifier FROM variable "
+            "ORDER BY provider_key"
+        ).fetchall() == [("101", 0, 0), ("102", 0, 1)]
 
 
 def test_strict_curation_failure_preserves_previous_catalog(selection, tmp_path):

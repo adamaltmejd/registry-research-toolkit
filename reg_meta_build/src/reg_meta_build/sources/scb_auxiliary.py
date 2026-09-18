@@ -56,9 +56,11 @@ def scb_support_joins(sources: dict[str, str]) -> tuple[SourceSupportJoin, ...]:
                 keys=("register_name", "variant_name", "variable_name", "column_name"),
                 fields=("identifier", "sensitivity", "conditional_sensitivity"),
                 unique_variable=True,
-                rule="Literal register, variant, variable and column names identify the summary's native variable. Ambiguous matches supply no flags.",
+                discriminator=("coverage_from", "coverage_to"),
+                rule="Literal register, variant, variable and column names identify the summary's native variable. Where SCB renumbered that variable, one such key names several; a summary row then belongs to the single candidate whose own edition names include both of its declared version endpoints. Ambiguous matches supply no flags.",
                 provenance=(
                     "UnikaRegisterOchVariabler.csv: Registernamn, Registervariantnamn, Variabelnamn, Kolumnnamn",
+                    "UnikaRegisterOchVariabler.csv: VersionForsta, VersionSista -> Registerinformation.csv: Registerversionnamn",
                 ),
             )
         )

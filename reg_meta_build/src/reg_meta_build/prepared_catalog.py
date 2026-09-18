@@ -205,7 +205,7 @@ class _ManifestDocument(_Model):
     format: Literal["reg-meta-prepared-catalog-sources"] = (
         "reg-meta-prepared-catalog-sources"
     )
-    schema_version: Literal[2] = 2
+    schema_version: Literal[3] = 3
     input_commit: str
     bundle_path: str
     bundle_manifest_sha256: str

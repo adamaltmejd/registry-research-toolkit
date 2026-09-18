@@ -123,8 +123,12 @@ attached to an edition do not assign its variable occurrence to a particular pop
 Registerinformation, summary flags, identifiers, source-schema metadata and time-series
 events remain separate source evidence. The source format can declare a precise support
 join, such as native variable ID or the documented register/variant/variable/column key.
-Common binding checks the complete target cardinality. Ambiguous joins supply no flags;
-conflicting flags are not combined with Boolean OR.
+Common binding checks the complete target cardinality. A join may also declare a
+discriminator for the keys that name more than one known native variable, such as the
+summary's own version endpoints against each candidate's observed edition names: a row
+binds only where exactly one candidate carries every endpoint, and no endpoint is
+ordered, parsed as a year or read as coverage of the years between. Ambiguous joins
+supply no flags; conflicting flags are not combined with Boolean OR.
 
 SCB value preparation keeps descriptor/value dictionaries, ordered CVID/ItemId
 associations, validity declarations, disconnected identifiers and duplicates. Missing,
