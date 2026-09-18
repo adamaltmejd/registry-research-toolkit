@@ -239,7 +239,17 @@ def selection(tmp_path, request):
                         colname='""',
                         varname="ColumnlessVar",
                         data_type="int",
-                    )
+                    ),
+                    # The same variable in a second variant: resolution runs
+                    # per variant, but the omission is one warning per variable.
+                    _var_row(
+                        cvid=2002,
+                        var_id=102,
+                        colname='""',
+                        varname="ColumnlessVar",
+                        data_type="int",
+                        register=("TESTREG", 1, 11),
+                    ),
                 ]
                 if columnless
                 else []
@@ -851,7 +861,7 @@ def test_columnless_variable_is_omitted_as_an_explained_warning(
     assert omitted["severity"] == "warning"
     assert omitted["fields"] == ["column_name"]
     assert omitted["withheld_output"] == ["occurrence"]
-    assert omitted["refs"]
+    assert len(omitted["refs"]) == 2
     assert any(
         issue["code"] == "no_supported_states" and issue["severity"] == "warning"
         for issue in issues

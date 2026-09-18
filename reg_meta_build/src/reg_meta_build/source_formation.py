@@ -483,6 +483,7 @@ def form_native_variable(
     intervals = []
     coding_results = []
     withheld_variants = {}
+    columnless_records: list[SourceRecord] = []
     # Every finite positive source claim, against the periods an explicit outcome
     # withholds from it, both keyed by the exact variant and physical column.
     claims: list[CoverageObligation] = []
@@ -494,18 +495,33 @@ def form_native_variable(
         intervals.append(resolution)
         variant_issues = []
         for problem in resolution.issues:
-            omitted = problem.code == "omitted_columnless_occurrence"
+            if problem.code == "omitted_columnless_occurrence":
+                # One warning per variable is emitted below; the per-variant
+                # cause stays in the withheld bookkeeping only.
+                variant_issues.append(
+                    ResolutionDiagnostic(
+                        code=problem.code,
+                        severity="warning",
+                        subject=subject,
+                        detail=(
+                            "The source states the member has no physical column; "
+                            "the occurrence is omitted on purpose."
+                        ),
+                        refs=_refs(problem.occurrences),
+                        fields=problem.fields,
+                        valid_from=problem.valid_from,
+                        valid_to=problem.valid_to,
+                        withheld_output=problem.withheld,
+                    )
+                )
+                columnless_records.extend(problem.occurrences)
+                continue
             diagnosis = ResolutionDiagnostic(
                 code=problem.code,
-                severity="warning" if omitted else "error",
+                severity="error",
                 subject=subject,
-                detail=(
-                    "The source states the member has no physical column; "
-                    "the occurrence is omitted on purpose."
-                    if omitted
-                    else "Source occurrence facts cannot be safely resolved "
-                    "for the stated fields and period."
-                ),
+                detail="Source occurrence facts cannot be safely resolved "
+                "for the stated fields and period.",
                 refs=_refs(problem.occurrences),
                 fields=problem.fields,
                 valid_from=problem.valid_from,
@@ -584,6 +600,18 @@ def form_native_variable(
                         valid_from=segment.valid_from,
                         valid_to=segment.valid_to,
                     )
+    if columnless_records:
+        # Resolution runs per variant; the omission is one warning per
+        # variable with every columnless record as evidence.
+        issue(
+            "omitted_columnless_occurrence",
+            "The source states the member has no physical column; "
+            "the occurrence is omitted on purpose.",
+            ("column_name",),
+            ("occurrence",),
+            tuple(columnless_records),
+            severity="warning",
+        )
     variable_key = effective[0].variable_key
     assert variable_key is not None
     states, aliases, grouping_issues, representation_waivers, representation_facts = (
@@ -651,12 +679,15 @@ def form_native_variable(
             any(d.code == "curated_state_omission" for d in diagnostics)
             and not has_error
         )
-        # Every occurrence omitted as columnless: the variable is not shown in
-        # the catalog, and the omission is an explained warning, not an error.
-        columnless_only = (
-            all(not resolution.segments for resolution in intervals)
-            and any(d.code == "omitted_columnless_occurrence" for d in diagnostics)
-            and not has_error
+        # Every occurrence states it has no physical column: the variable is
+        # not shown in the catalog, and the omission is an explained warning,
+        # not an error. This is a positive fact about the records, not about
+        # which other diagnostics stayed silent.
+        columnless_only = bool(by_variant) and all(
+            record.fields.column_name is not None
+            and record.fields.column_name.status == "negative"
+            for members in by_variant.values()
+            for record in members
         )
         issue(
             "no_supported_states",

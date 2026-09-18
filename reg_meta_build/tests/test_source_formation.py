@@ -43,6 +43,7 @@ from reg_meta_build.source_records import (
     RecordLocator,
     ScopeInterval,
     SourceCoordinate,
+    SourceField,
     SourceFields,
     SourceRecord,
     SourceRevision,
@@ -671,3 +672,29 @@ def test_formation_coverage_carries_correction_attributions() -> None:
     )
     with pytest.raises(ValueError, match="claimed attributions"):
         check_delivery_coverage((stripped,), result.coverage, withheld={})
+
+
+def test_mixed_columnless_and_unresolvable_occurrence_stays_an_error() -> None:
+    base = _record(2020)
+    columnless = base.model_copy(
+        update={
+            "fields": base.fields.model_copy(
+                update={
+                    "column_name": SourceField(status="negative", raw_value=""),
+                }
+            )
+        }
+    )
+    periodless = _record(2021).model_copy(
+        update={
+            "edition_scope": TemporalScope(kind="unknown", label="okänd"),
+        }
+    )
+    formed = _form((columnless, periodless))
+    assert formed.variable is None
+    (omitted,) = [
+        d for d in formed.diagnostics if d.code == "omitted_columnless_occurrence"
+    ]
+    assert omitted.severity == "warning"
+    (terminal,) = [d for d in formed.diagnostics if d.code == "no_supported_states"]
+    assert terminal.severity == "error"

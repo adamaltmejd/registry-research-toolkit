@@ -142,7 +142,8 @@ def resolve_occurrence_intervals(
     finite interpreted period. Unplaced occurrences stay in the result and block
     strict publication. An occurrence whose column claim is negative (a delivered
     blank column: the member has no physical column) is omitted on purpose and
-    reported once as an `omitted_columnless_occurrence` warning. Competing field values become unknown on their intersection;
+    reported as an `omitted_columnless_occurrence` warning; formation aggregates
+    one warning per variable. Competing field values become unknown on their intersection;
     positive versus negative availability withholds that column segment entirely.
     Unknown optional observations do not contradict a supplied concrete fact.
     """
