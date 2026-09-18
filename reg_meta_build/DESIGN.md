@@ -320,18 +320,18 @@ windows deliver nothing here. Each obligation also carries the exact delivery fa
 member-to-window segment claims — type/length texts and member correction attributions.
 Every overlapping final state on the same coordinate, and every shared state behind an
 alias window for that coordinate, must keep the claimed type/length and contain every
-claimed attribution as an exact provenance element. An asserted absence is itself a claimed fact: a written value where
-the source claims none is a change. Only a conflicting representation fact
-excuses its named claim, recorded on the obligation itself.
-Genuine source gaps, negative availability and unknown or
-pooled scopes claim no delivery in the first place. A variable — or one of its variants
-— that the dependency ledger withholds outright, with source evidence, answers for its
-own claim through that entry, whichever stage recorded it, and for nothing past that
-exact coordinate: an exact source-linked blocker stays a curation blocker without
-covering a sibling. Anything else missing is an engineering defect, not a curation
-question: the build names the source records and the exact missing window and stops
-before any output is placed. A missing optional field or an unrelated diagnostic is no
-permission to drop the state it belongs to.
+claimed attribution as an exact provenance element. An asserted absence is itself a
+claimed fact: a written value where the source claims none is a change. Only a
+conflicting representation fact excuses its named claim, recorded on the obligation
+itself. Genuine source gaps, negative availability and unknown or pooled scopes claim no
+delivery in the first place. A variable — or one of its variants — that the dependency
+ledger withholds outright, with source evidence, answers for its own claim through that
+entry, whichever stage recorded it, and for nothing past that exact coordinate: an exact
+source-linked blocker stays a curation blocker without covering a sibling. Anything else
+missing is an engineering defect, not a curation question: the build names the source
+records and the exact missing window and stops before any output is placed. A missing
+optional field or an unrelated diagnostic is no permission to drop the state it belongs
+to.
 
 ### Groups, relations and dependent output
 

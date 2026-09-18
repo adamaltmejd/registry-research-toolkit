@@ -1044,20 +1044,35 @@ def test_dependency_failure_reports_every_missing_endpoint(surface):
     assert all(m.output for m in error.value.missing)
 
 
-def _fact_obligation(**overrides):
-    base = {
-        "fqid": "scb/example/value",
-        "variant": "people",
-        "column": "VALUE",
-        "valid_from": "2020-01-01",
-        "valid_to": "2020-12-31",
-        "refs": (SourceRecordRef(source="fixture", semantic_record_key=("key",)),),
-        "data_type": "integer",
-        "data_length": "1",
-        "attributions": ("correction:one",),
-    }
-    base.update(overrides)
-    return CoverageObligation(**base)
+def _fact_obligation(
+    *,
+    fqid: str = "scb/example/value",
+    variant: str = "people",
+    column: str = "VALUE",
+    valid_from: str = "2020-01-01",
+    valid_to: str = "2020-12-31",
+    refs: tuple[SourceRecordRef, ...] = (
+        SourceRecordRef(source="fixture", semantic_record_key=("key",)),
+    ),
+    data_type: str | None = "integer",
+    data_length: str | None = "1",
+    attributions: tuple[str, ...] = ("correction:one",),
+    data_type_excused: bool = False,
+    data_length_excused: bool = False,
+):
+    return CoverageObligation(
+        fqid=fqid,
+        variant=variant,
+        column=column,
+        valid_from=valid_from,
+        valid_to=valid_to,
+        refs=refs,
+        data_type=data_type,
+        data_length=data_length,
+        attributions=attributions,
+        data_type_excused=data_type_excused,
+        data_length_excused=data_length_excused,
+    )
 
 
 def _fact_variable(

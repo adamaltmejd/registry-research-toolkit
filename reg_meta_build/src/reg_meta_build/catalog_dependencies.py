@@ -245,11 +245,11 @@ def check_delivery_coverage(
                 f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                 f"{start}..{end} claimed by {refs}"
             )
-        claimed_type = getattr(obligation, "data_type", None)
-        claimed_length = getattr(obligation, "data_length", None)
-        claimed_attributions = getattr(obligation, "attributions", ())
-        type_excused = getattr(obligation, "data_type_excused", False)
-        length_excused = getattr(obligation, "data_length_excused", False)
+        claimed_type = obligation.data_type
+        claimed_length = obligation.data_length
+        claimed_attributions = obligation.attributions
+        type_excused = obligation.data_type_excused
+        length_excused = obligation.data_length_excused
         if type_excused and length_excused and not claimed_attributions:
             continue
         refs = ", ".join(
