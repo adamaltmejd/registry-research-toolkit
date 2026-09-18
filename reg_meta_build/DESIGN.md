@@ -155,8 +155,13 @@ without fabricated members.
 Authored thin-provider TOMLs use `sources/curated_records.py`. They are machine-readable
 source declarations with publisher and transcription provenance. Reading them does not
 apply parent defaults, invent false flags or make the old final-catalog adapter part of
-preparation. Classification CSVs, authored code lists and the LISA workbook similarly
-supply source evidence for common resolution.
+preparation. An omitted thin-provider flag is a deliberate false claim (Y-169). SOS
+workbook variables carry the same explicit-flag contract from the delivered template
+(Y-193): the Kopplingsvariabel cell is the identifier claim — a non-blank linkage marker
+reads as explicit true, a delivered blank as explicit false — and every workbook
+variable is explicitly sensitive, because all SOS deliveries are health and
+social-services microdata. Classification CSVs, authored code lists and the LISA
+workbook similarly supply source evidence for common resolution.
 
 ## Input storage and preparation
 

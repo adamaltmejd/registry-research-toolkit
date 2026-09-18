@@ -17,8 +17,14 @@ from _sos_fixtures import (
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
+    RecordLocator,
+    ScopeInterval,
     SourceCoordinate,
+    SourceFields,
+    SourceRecord,
     SourceRevision,
+    SourceSubject,
+    TemporalScope,
     value_field,
 )
 from reg_meta_build.source_reference_records import (
@@ -376,6 +382,7 @@ def _write_source_workbook(path: Path) -> None:
             "Data till",
             "Specificera källa",
             "Eget källfält",
+            "Kopplingsvariabel",
         ]
     )
     base = [
@@ -390,6 +397,7 @@ def _write_source_workbook(path: Path) -> None:
         2020,
         "Patientregistret",
         "bevaras",
+        None,
     ]
     variables.append(base)
     variables.append(base)
@@ -407,6 +415,7 @@ def _write_source_workbook(path: Path) -> None:
             None,
             "Sträng (text)",
             2010,
+            None,
             None,
             None,
             None,
@@ -431,6 +440,7 @@ def _write_source_workbook(path: Path) -> None:
             "2020",
             None,
             None,
+            None,
         ]
     )
     variables.append(
@@ -442,6 +452,7 @@ def _write_source_workbook(path: Path) -> None:
             None,
             None,
             "Datum",
+            None,
             None,
             None,
             None,
@@ -644,6 +655,131 @@ def test_source_records_keep_occurrences_conflicts_and_native_sos_coordinates(
         True,
         "",
         "",
+    )
+
+
+def test_sos_workbook_flags_claim_identifier_from_kopplingsvariabel(
+    tmp_path: Path,
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    # Column L is Kopplingsvariabel: row 2 stays a delivered blank while row 6
+    # carries a linkage marker.
+    workbook["Metadata - Variabelnivå"]["L6"] = "X"
+    workbook.save(path)
+
+    register = parse_register_file(path)
+    revision = _revision(path)
+    blank = clean_sos_variable(register, register.variables[0], revision)
+    marked = clean_sos_variable(
+        register,
+        next(
+            variable for variable in register.variables if variable.name == "PARTIELL"
+        ),
+        revision,
+    )
+    # Every SOS workbook variable is explicitly sensitive health and
+    # social-services microdata.
+    for record in (blank, marked):
+        sensitivity = record.fields.sensitivity
+        assert sensitivity is not None
+        assert sensitivity.status == "value"
+        assert sensitivity.value is True
+    # A delivered blank Kopplingsvariabel is an explicit False identifier
+    # claim; a non-blank marker is an explicit True claim.
+    assert blank.fields.identifier is not None
+    assert blank.fields.identifier.status == "value"
+    assert blank.fields.identifier.value is False
+    assert marked.fields.identifier is not None
+    assert marked.fields.identifier.status == "value"
+    assert marked.fields.identifier.value is True
+    assert marked.fields.identifier.raw_value == "X"
+    # The claimed cell stays among the delivered cells, so the claim is
+    # traceable to its workbook coordinate.
+    blank_cell = next(
+        cell for cell in blank.delivered_cells if cell.name == "Kopplingsvariabel"
+    )
+    assert (blank_cell.present, blank_cell.raw_value) == (True, "")
+    marked_cell = next(
+        cell for cell in marked.delivered_cells if cell.name == "Kopplingsvariabel"
+    )
+    assert (marked_cell.present, marked_cell.raw_value) == (True, "X")
+
+
+def test_sos_flag_claims_form_without_unresolved_flag(tmp_path: Path) -> None:
+    from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
+    from reg_meta_build.source_coding import resolve_code_membership
+    from reg_meta_build.source_coordinates import (
+        native_column_key,
+        native_variant_key,
+    )
+    from reg_meta_build.source_formation import form_native_variable
+
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_source_workbook(path)
+    register = parse_register_file(path)
+    sos_record = clean_sos_variable(register, register.variables[0], _revision(path))
+    flags = SourceFields(
+        sensitivity=sos_record.fields.sensitivity,
+        identifier=sos_record.fields.identifier,
+    )
+    occurrence = SourceRecord.create(
+        revision=_revision(path),
+        locators=(
+            RecordLocator(
+                semantic_record_key=("variable:4", "year:2020"),
+                physical_file=path.name,
+                physical_table="input",
+                physical_record="row:2020",
+                physical_cells=(),
+            ),
+        ),
+        subject=SourceSubject(
+            provider="sos",
+            register=SourceCoordinate(status="value", native_id=1, name="Example"),
+            variant=SourceCoordinate(status="value", native_id=2, name="People"),
+            population=SourceCoordinate(status="unknown"),
+            variable=SourceCoordinate(
+                status="value", native_id=4, name="Source variable"
+            ),
+            member=SourceCoordinate(status="value", native_id=2020),
+            native=NativeCoordinates(),
+        ),
+        edition_scope=TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2020", end="2020"),)
+        ),
+        edition_period_scope=TemporalScope(kind="not_applicable"),
+        fields=SourceFields(
+            availability=value_field(True),
+            name=value_field("Source variable"),
+            definition=value_field("Source definition"),
+            column_name=value_field("VALUE"),
+            data_type=value_field("integer"),
+        ),
+    )
+    variant_key = native_variant_key(occurrence)
+    assert variant_key is not None
+    column_key = native_column_key(occurrence)
+    assert column_key is not None
+    result = form_native_variable(
+        (occurrence,),
+        register=ResolvedRegister(provider="sos", slug="example", name="Example"),
+        variants={variant_key: ResolvedVariant(slug="people", name="People")},
+        slug="value",
+        provider_key="4",
+        flags=flags,
+        coding={column_key: resolve_code_membership(())},
+    )
+    assert result.variable is not None
+    assert (result.variable.is_sensitive, result.variable.is_identifier) == (
+        True,
+        False,
+    )
+    assert not any(
+        diagnostic.code == "unresolved_flag" for diagnostic in result.diagnostics
     )
 
 

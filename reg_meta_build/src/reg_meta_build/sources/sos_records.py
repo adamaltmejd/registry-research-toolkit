@@ -128,6 +128,23 @@ def _text_field(
     return value_field(normalized, raw=raw)
 
 
+def _identifier_field(evidence: SosRowEvidence) -> SourceField | None:
+    """Read the delivered Kopplingsvariabel cell as the identifier claim.
+
+    SOS provider contract (maintainer decision 2026-09-18): a non-blank
+    linkage marker is an explicit True claim, a delivered blank is an
+    explicit False claim. A missing column or formula cell carries no claim
+    and stays unknown, so the unknown-flag guard keeps withholding it.
+    """
+    cell = _cell(evidence, "is_join_variable")
+    if cell is None:
+        return None
+    raw = _raw_scalar(cell)
+    if cell.data_type == "f":
+        return SourceField(status="unknown", raw_value=raw)
+    return value_field(not _is_blank_coverage_cell(cell), raw=raw)
+
+
 def _data_type_field(evidence: SosRowEvidence) -> SourceField | None:
     cell = _cell(evidence, "data_type")
     field = _text_field(cell, token=True)
@@ -366,6 +383,12 @@ def clean_sos_variable(
                 multiline=True,
             ),
             data_type=_data_type_field(evidence),
+            # Every SOS delivery is health and social-services microdata, so
+            # each workbook variable is explicitly sensitive. This supersedes
+            # the released 0.40.1 all-False values, which were a reader
+            # default rather than a delivered claim.
+            sensitivity=value_field(True),
+            identifier=_identifier_field(evidence),
             coverage_from=_text_field(_cell(evidence, "data_from"), token=True),
             coverage_to=_text_field(_cell(evidence, "data_to"), token=True),
             representation=_text_field(
