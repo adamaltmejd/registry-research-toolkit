@@ -193,7 +193,9 @@ PAR_SPLIT_REGISTER = _Register(
 # A register whose only variable declares its code list inline in the
 # `Värdemängd` cell and has no `Kodlista_*` sheet — the #401 inline fallback the
 # classifier decides, so the delivered cell is the whole of the coding evidence.
-def inline_value_set_register(value_set: str) -> _Register:
+def inline_value_set_register(
+    value_set: str, *, external_classification: str | None = None
+) -> _Register:
     return _Register(
         abbrev="SYU",
         title_sv="Syntetiskt kodregister",
@@ -217,6 +219,7 @@ def inline_value_set_register(value_set: str) -> _Register:
                 data_from=2005,
                 data_to=2015,
                 value_set=value_set,
+                external_classification=external_classification,
             ),
         ),
     )

@@ -33,10 +33,70 @@ from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
     import sqlite3
+
+
+class SentinelCode(BaseModel):
+    """One curated per-classification sentinel code: an exact code string plus
+    the short human meaning that justifies keeping the binding when the code
+    is observed (e.g. a bulk/missing token the source emits for uncoded
+    members). Codes are literal strings — `"00000"` never equals `"0"` and
+    no pattern, prefix, or global waiver is recognized. Strict + forbid-extra
+    so a misspelled key or a non-string code fails fast at the read boundary
+    instead of silently never matching."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
+
+    code: str
+    meaning: str = Field(min_length=1)
+
+
+def load_sentinel_codes(
+    raw: object,
+    *,
+    classification: str,
+    code: str = "classification_seed_invalid",
+) -> tuple[SentinelCode, ...]:
+    """Validate a classification's raw `sentinel_codes` TOML list.
+
+    The list holds `{code, meaning}` tables only — unknown keys, non-string
+    codes, missing/empty meanings, and duplicate codes fail fast (EXIT_CONFIG)
+    under the caller's `code`. `None` (key absent) means no sentinels."""
+    if raw is None:
+        return ()
+    if not isinstance(raw, list):
+        raise curation_error(
+            code,
+            f"Classification {classification!r} `sentinel_codes` must be a list "
+            f"of `{{code, meaning}}` tables, got {raw!r}.",
+            'Write one `{code = "00000", meaning = "not applicable"}` '
+            "table per sentinel code, or drop the key.",
+        )
+    sentinels: list[SentinelCode] = []
+    for item in raw:
+        try:
+            sentinel = SentinelCode.model_validate(item)
+        except ValidationError as exc:
+            raise curation_error(
+                code,
+                f"Classification {classification!r} has an invalid "
+                f"`sentinel_codes` entry {item!r}: {exc.errors(include_url=False)[0]['msg']}.",
+                "Each entry needs exactly `code` (exact string) and `meaning` "
+                "(non-empty string); no other keys, no patterns.",
+            ) from exc
+        if any(seen.code == sentinel.code for seen in sentinels):
+            raise curation_error(
+                code,
+                f"Classification {classification!r} lists sentinel code "
+                f"{sentinel.code!r} more than once.",
+                "List each sentinel code once per classification.",
+            )
+        sentinels.append(sentinel)
+    return tuple(sentinels)
 
 
 def repo_curation_path(file_name: str) -> Path | None:

@@ -191,6 +191,81 @@ class TestLoadSeed:
         assert "provider" in ei.value.message
 
 
+class TestLoadSeedSentinelCodes:
+    _BASE = (
+        '[[classification]]\nshort_name = "A"\nname = "A"\nvalid_codes_file = "a.csv"\n'
+    )
+
+    def _seed(self, tmp_path: Path, body: str):
+        seed = tmp_path / "c.toml"
+        seed.write_text(self._BASE + body, encoding="utf-8")
+        return load_seed(seed)
+
+    def test_absent_sentinel_key_leaves_entry_untagged(self, tmp_path: Path):
+        entries = self._seed(tmp_path, 'vardemangdsversion = ["x"]\n')
+        assert "sentinel_codes" not in entries[0]
+
+    def test_valid_sentinels_parse_with_exact_strings(self, tmp_path: Path):
+        entries = self._seed(
+            tmp_path,
+            'sentinel_codes = [{code = "00000", meaning = "not applicable"}, '
+            '{code = "999", meaning = "missing"}]\n',
+        )
+        assert [
+            (sentinel.code, sentinel.meaning)
+            for sentinel in entries[0]["sentinel_codes"]
+        ] == [("00000", "not applicable"), ("999", "missing")]
+
+    def test_unknown_sentinel_key_rejected(self, tmp_path: Path):
+        seed = tmp_path / "c.toml"
+        seed.write_text(
+            self._BASE
+            + 'sentinel_codes = [{code = "00000", meaning = "x", pattern = "0*"}]\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as ei:
+            load_seed(seed)
+        assert ei.value.code == "classification_seed_invalid"
+        assert "sentinel_codes" in ei.value.message
+
+    def test_duplicate_sentinel_code_rejected(self, tmp_path: Path):
+        seed = tmp_path / "c.toml"
+        seed.write_text(
+            self._BASE + 'sentinel_codes = [{code = "00000", meaning = "x"}, '
+            '{code = "00000", meaning = "y"}]\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as ei:
+            load_seed(seed)
+        assert ei.value.code == "classification_seed_invalid"
+        assert "more than once" in ei.value.message
+
+    @pytest.mark.parametrize(
+        "entry",
+        [
+            '{code = 5, meaning = "x"}',
+            '{code = "00000"}',
+            '{code = "00000", meaning = ""}',
+            '"00000"',
+        ],
+    )
+    def test_malformed_sentinel_entries_rejected(self, tmp_path: Path, entry: str):
+        seed = tmp_path / "c.toml"
+        seed.write_text(self._BASE + f"sentinel_codes = [{entry}]\n", encoding="utf-8")
+        with pytest.raises(RegMetaError) as ei:
+            load_seed(seed)
+        assert ei.value.code == "classification_seed_invalid"
+
+    def test_non_list_sentinels_rejected(self, tmp_path: Path):
+        seed = tmp_path / "c.toml"
+        seed.write_text(
+            self._BASE + 'sentinel_codes = {code = "00000"}\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as ei:
+            load_seed(seed)
+        assert ei.value.code == "classification_seed_invalid"
+
+
 # ---------------------------------------------------------------------------
 # Valid-codes CSV loader
 # ---------------------------------------------------------------------------

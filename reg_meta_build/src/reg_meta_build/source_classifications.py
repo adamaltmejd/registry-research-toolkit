@@ -17,7 +17,7 @@ from reg_meta_build.resolved_catalog import (
 from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Set as AbstractSet
+    from collections.abc import Iterable, Mapping, Set as AbstractSet
 
     from reg_meta_build.resolved_catalog import ResolvedCodeSet
     from reg_meta_build.source_values import SourceValue
@@ -45,31 +45,44 @@ def resolve_classification_conformance(
     refs: tuple[SourceRecordRef, ...],
     valid_from: str,
     valid_to: str,
+    sentinel_codes: Mapping[str, str] | None = None,
 ) -> ClassificationConformance:
-    """Check an already-declared binding without guessing sentinel meanings.
+    """Check an already-declared binding against curated sentinel meanings.
 
     Literal code strings establish membership; labels remain the source's labels.
     A mismatching code withholds the catalog binding, not the source code list or
     the original declaration. Its exact members remain in conformance evidence.
-    No match fraction or globally special code token can acknowledge a discrepancy.
-    Canonical code sets are indexed once by the caller, not rebuilt per state.
+    A mismatching code on the declared classification's curated `sentinel_codes`
+    list (exact code string, with its curated meaning) keeps the catalog binding:
+    it stays a variable-local member of the state's value set — never a
+    `classification_code` row — and is reported once per state as a warning.
+    No match fraction or globally special code token can acknowledge a
+    discrepancy: sentinels are per-classification curation, never a global
+    waiver. Canonical code sets are indexed once by the caller, not rebuilt
+    per state.
     """
     if not canonical_codes:
         raise ValueError("classification conformance requires a nonempty codebook")
     if not refs:
         raise ValueError("classification conformance requires original source refs")
+    sentinels = dict(sentinel_codes) if sentinel_codes else {}
     checked = tuple(sorted({code for code, _ in code_set.members}))
+    sentinel_members = tuple(pair for pair in code_set.members if pair[0] in sentinels)
     nonconforming = tuple(
-        pair for pair in code_set.members if pair[0] not in canonical_codes
+        pair
+        for pair in code_set.members
+        if pair[0] not in canonical_codes and pair[0] not in sentinels
     )
     conformance = ResolvedConformance(
         declared_classification=classification,
         status="severed" if nonconforming else "kept",
         checked_codes=checked,
         nonconforming_members=nonconforming,
+        sentinel_members=sentinel_members,
     )
-    diagnostics = (
-        (
+    diagnostics: list[ResolutionDiagnostic] = []
+    if nonconforming:
+        diagnostics.append(
             ResolutionDiagnostic(
                 code="nonconforming_classification_codes",
                 severity="error",
@@ -83,12 +96,28 @@ def resolve_classification_conformance(
                 valid_from=valid_from,
                 valid_to=valid_to,
                 withheld_output=("state.classification",),
-            ),
+            )
         )
-        if nonconforming
-        else ()
-    )
-    return ClassificationConformance(conformance, diagnostics)
+    if sentinel_members:
+        listed = "; ".join(
+            f"{code!r}: {sentinels[code]}"
+            for code in sorted({code for code, _ in sentinel_members})
+        )
+        diagnostics.append(
+            ResolutionDiagnostic(
+                code="sentinel_classification_codes",
+                severity="warning",
+                subject=subject,
+                detail=f"Declared classification {classification!r} contains curated "
+                f"sentinel codes ({listed}). The binding is kept and the codes "
+                "stay variable-local members of the state's value set.",
+                refs=refs,
+                fields=("coding", "classification"),
+                valid_from=valid_from,
+                valid_to=valid_to,
+            )
+        )
+    return ClassificationConformance(conformance, tuple(diagnostics))
 
 
 def resolve_canonical_codes(

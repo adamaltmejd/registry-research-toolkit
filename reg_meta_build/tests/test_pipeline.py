@@ -25,6 +25,7 @@ from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.pipeline import (
+    CodebookDeclaration,
     PipelineSelection,
     ScopeDeclarations,
     ScopeFile,
@@ -57,6 +58,18 @@ from reg_meta_build.fqid_slugs import SlugEntry
 _SOS_CELLS = {"sos_lined": BU_SPEC_LINED, "sos_wrapped": BU_SPEC_WRAPPED}
 _SCB_SLUGS = {"register": "sample", "register_variant": "people", "variable": "value"}
 _SOS_SLUGS = {"register": "kodregister", "register_variant": "vy-a", "variable": "spec"}
+
+# The sentinel-build fixture: the classifications seed carries the canonical book
+# (codes 2/3/4) with its curated sentinel; the SOS `SPEC` variable declares that
+# book and observes one extra bulk/missing token (`9`).
+_SENTINEL_SHORT_NAME = "INSATS"
+_SENTINEL_SEED = (
+    '[[classification]]\nshort_name = "INSATS"\nname = "Insats"\n'
+    'valid_codes_file = "insats.csv"\n'
+    'sentinel_codes = [{code = "9", meaning = "ej aktuellt"}]\n'
+)
+_SENTINEL_CSV = "code,label\n2,Miljo\n3,Beteende\n4,Bada\n"
+_SENTINEL_CELL = f"{BU_SPEC_LINED}\n9 = ej aktuellt"
 
 
 def _scope(records, *, slugs, revision, cases=()):
@@ -202,6 +215,7 @@ def selection(tmp_path, request):
     renumbered = param == "renumbered"
     lineage_warning = param == "lineage_warning"
     columnless = param == "columnless"
+    sentinel = param == "sentinel"
     write_scb_input(
         source,
         registerinformation_rows=[
@@ -211,7 +225,14 @@ def selection(tmp_path, request):
                 colname="VALUE",
                 data_type="int"
                 if param
-                in {"typed", "renumbered", "lineage_warning", "columnless", *_SOS_CELLS}
+                in {
+                    "typed",
+                    "renumbered",
+                    "lineage_warning",
+                    "columnless",
+                    "sentinel",
+                    *_SOS_CELLS,
+                }
                 else "",
             ),
             *(
@@ -300,7 +321,17 @@ def selection(tmp_path, request):
             else ("registerinformation",)
         ),
     )
-    if param in _SOS_CELLS:
+    if sentinel:
+        write_sos_input(
+            source,
+            registers=(
+                inline_value_set_register(
+                    _SENTINEL_CELL,
+                    external_classification=_SENTINEL_SHORT_NAME,
+                ),
+            ),
+        )
+    elif param in _SOS_CELLS:
         write_sos_input(
             source, registers=(inline_value_set_register(_SOS_CELLS[param]),)
         )
@@ -317,6 +348,11 @@ def selection(tmp_path, request):
         '[[description]]\nregister="scb/sample"\nvariable="value"\n'
         'description="Existing description"\n'
     )
+    if sentinel:
+        class_dir = source / "classifications"
+        class_dir.mkdir()
+        (class_dir / "insats.csv").write_text(_SENTINEL_CSV, encoding="utf-8")
+        (curation / "classifications.toml").write_text(_SENTINEL_SEED, encoding="utf-8")
     bundle = write_input_bundle(tmp_path / "inputs", source, curation_dir=curation)
     destination = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(bundle, destination)
@@ -335,7 +371,7 @@ def selection(tmp_path, request):
             _scope(records, slugs=_SCB_SLUGS, revision=revision),
         )
     ]
-    if param in _SOS_CELLS:
+    if param in _SOS_CELLS or sentinel:
         sos_revision = _input_revision(manifest, "sos_workbook")
         sos_records = tuple(prepared.records.iter_records(source=sos_revision.dataset))
         scopes.append(
@@ -349,6 +385,27 @@ def selection(tmp_path, request):
                     cases=_sos_flag_cases(sos_records),
                 ),
             )
+        )
+    classifications: tuple[CodebookDeclaration, ...] = ()
+    if sentinel:
+        descriptor = next(
+            descriptor.payload_key
+            for values in prepared.value_sources
+            if values.manifest.revision is not None
+            and values.manifest.revision.dataset == "classifications/insats.csv"
+            for descriptor in values.descriptors()
+        )
+        classifications = (
+            CodebookDeclaration(
+                source="classifications/insats.csv",
+                descriptor=descriptor,
+                metadata={
+                    "slug": "insats",
+                    "short_name": _SENTINEL_SHORT_NAME,
+                    "name": "Insats",
+                    "sentinel_codes": [{"code": "9", "meaning": "ej aktuellt"}],
+                },
+            ),
         )
     selected = PipelineSelection(
         prepared_path=str(destination),
@@ -367,6 +424,7 @@ def selection(tmp_path, request):
         if param == "source_event"
         else (),
         scopes=tuple(scopes),
+        classifications=classifications,
     )
     path = directory / "selection.json"
     path.write_text(selected.model_dump_json())
@@ -781,6 +839,86 @@ def test_unresolved_inline_code_list_is_reported_and_refused_for_publication(
         assert "inline:" in issue["detail"]
         assert issue["refs"]
         assert codes == []
+
+
+def test_malformed_selection_sentinels_are_refused():
+    from reg_meta_build.pipeline import _selection_sentinels
+
+    assert _selection_sentinels(None, subject="insats") == ()
+    assert (
+        _selection_sentinels(
+            [{"code": "9", "meaning": "ej aktuellt"}], subject="insats"
+        )[0].code
+        == "9"
+    )
+    with pytest.raises(ValueError, match="more than once"):
+        _selection_sentinels(
+            [
+                {"code": "9", "meaning": "a"},
+                {"code": "9", "meaning": "b"},
+            ],
+            subject="insats",
+        )
+    with pytest.raises(ValueError, match="sentinel_codes"):
+        _selection_sentinels([{"code": 9, "meaning": "ej aktuellt"}], subject="insats")
+
+
+@pytest.mark.parametrize("selection", ["sentinel"], indirect=True)
+def test_curated_sentinel_keeps_binding_in_strict_build(
+    selection, tmp_path, structural_validation_only
+):
+    # The SOS `SPEC` variable declares the `INSATS` book and observes one extra
+    # bulk token (`9`) the selection's `sentinel_codes` names. The binding is
+    # kept with a warning, so the strict build stays publication_ready with no
+    # errors; the token stays variable-local (value set, never canonical).
+    strict_db, strict_report = tmp_path / "catalog.db", tmp_path / "strict-report"
+    strict = build_selected_catalog(selection, strict_db, strict_report)
+    assert strict["status"] == "complete"
+    assert strict["publication_ready"] is True
+    summary = json.loads((strict_report / "summary.json").read_text())
+    assert summary["counts"].get("error", 0) == 0
+    assert summary["counts"]["warning"] >= 1
+    with gzip.open(strict_report / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            event
+            for event in (json.loads(line) for line in stream)
+            if event["kind"] == "issue"
+        ]
+    assert not [issue for issue in issues if issue["severity"] == "error"]
+    (warning,) = [
+        issue for issue in issues if issue["code"] == "sentinel_classification_codes"
+    ]
+    assert warning["severity"] == "warning"
+    assert warning["withheld_output"] == []
+    assert warning["fields"] == ["coding", "classification"]
+    assert "'9'" in warning["detail"] and "ej aktuellt" in warning["detail"]
+    with sqlite3.connect(strict_db) as conn:
+        (slug,) = conn.execute(
+            "SELECT c.slug FROM variable v "
+            "JOIN variable_state vs USING(variable_id) "
+            "JOIN classification c ON vs.classification_id = c.id "
+            "WHERE v.slug = 'spec'"
+        ).fetchone()
+        assert slug == "insats"
+        members = conn.execute(
+            "SELECT vc.code FROM variable v "
+            "JOIN variable_state vs USING(variable_id) "
+            "JOIN value_set_member vsm USING(value_set_id) "
+            "JOIN value_code vc USING(code_id) "
+            "WHERE v.slug = 'spec' ORDER BY vc.code"
+        ).fetchall()
+        assert [code for (code,) in members] == ["2", "3", "4", "9"]
+        (sentinel_canonical,) = conn.execute(
+            "SELECT COUNT(*) FROM classification_code cc "
+            "JOIN classification c ON cc.classification_id = c.id "
+            "JOIN value_code vc USING(code_id) "
+            "WHERE c.slug = 'insats' AND vc.code = '9'"
+        ).fetchone()
+        assert sentinel_canonical == 0
+        assert conn.execute(
+            "SELECT status, checked_code_count, matched_code_count, "
+            "nonconforming_code_count FROM classification_conformance"
+        ).fetchall() == [("kept", 4, 4, 0)]
 
 
 @pytest.mark.parametrize("selection", ["lineage_warning"], indirect=True)

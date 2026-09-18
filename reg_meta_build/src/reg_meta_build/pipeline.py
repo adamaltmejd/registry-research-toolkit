@@ -18,8 +18,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 
+from reg_meta_build._curation import SentinelCode
 from reg_meta_build.catalog_dependencies import (
     CoverageObligation,
     check_delivery_coverage,
@@ -146,7 +147,11 @@ class CodebookDeclaration(_Model):
     descriptor: str
     # These are the ResolvedClassification metadata fields, validated with the
     # resolved source codes below. Membership is never copied into curation data.
-    metadata: dict[str, str | int | None]
+    # `sentinel_codes` carries the curated per-classification sentinel list as
+    # raw `{code, meaning}` tables; it is popped and validated below because
+    # strict JSON-contract validation cannot coerce the JSON list into the
+    # resolved tuple form.
+    metadata: dict[str, str | int | list[dict[str, str]] | None]
 
 
 class PipelineSelection(_Model):
@@ -184,6 +189,33 @@ def _unique_pairs[K, V](items: tuple[tuple[K, V], ...], description: str) -> dic
     if len(result) != len(items):
         raise ValueError(f"duplicate {description}")
     return result
+
+
+_SELECTION_SENTINELS = TypeAdapter(list[SentinelCode])
+
+
+def _selection_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ...]:
+    """Validate a selection's raw `sentinel_codes` metadata into resolved form.
+
+    The JSON list cannot coerce into the resolved tuple under the strict
+    selection contract, so it is popped from the metadata mapping and checked
+    here: `{code, meaning}` tables only, no duplicates. A malformed selection
+    is a `ValueError` like every other selection-shape refusal below."""
+    if raw is None:
+        return ()
+    try:
+        sentinels = _SELECTION_SENTINELS.validate_python(raw)
+    except ValidationError as exc:
+        raise ValueError(
+            f"classification {subject!r} sentinel_codes must be a list of "
+            f"{{code, meaning}} tables with exact-string codes: {exc.errors(include_url=False)[0]['msg']}."
+        ) from exc
+    codes = [sentinel.code for sentinel in sentinels]
+    if len(codes) != len(set(codes)):
+        raise ValueError(
+            f"classification {subject!r} lists a sentinel code more than once."
+        )
+    return tuple(sentinels)
 
 
 def build_selected_catalog(
@@ -422,8 +454,16 @@ def build_selected_catalog(
                     raise ValueError(
                         "empty canonical codebook dependency is not yet supported"
                     )
+                metadata = dict(declaration.metadata)
                 book = ResolvedClassification.model_validate(
-                    {**declaration.metadata, "codes": resolved.codes}
+                    {
+                        **metadata,
+                        "codes": resolved.codes,
+                        "sentinel_codes": _selection_sentinels(
+                            metadata.pop("sentinel_codes", None),
+                            subject=str(declaration.metadata.get("slug")),
+                        ),
+                    }
                 )
                 if book.slug in books:
                     raise ValueError("duplicate classification identity")

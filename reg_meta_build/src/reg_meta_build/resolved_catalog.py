@@ -30,6 +30,7 @@ from reg_meta.db import (
 )
 from reg_meta.fqid import Fqid, validate_slug
 
+from reg_meta_build._curation import SentinelCode  # noqa: TC001
 from reg_meta_build._resolved_common import (
     _classification_id,
     _require_trimmed,
@@ -164,6 +165,12 @@ class ResolvedClassification(_ResolvedModel):
     description: str | None = None
     url: str | None = None
     codes: tuple[ResolvedClassificationCode, ...] = Field(min_length=1)
+    # Curated per-classification sentinel codes (`{code, meaning}` exact
+    # strings from `curation/classifications.toml`). Observed codes on this
+    # list keep the binding with a warning instead of severing it. Part of the
+    # resolved codebook, but NOT of the pinned content hash: adding a sentinel
+    # clears errors on already-accepted bindings without re-review.
+    sentinel_codes: tuple[SentinelCode, ...] = ()
 
     _names = field_validator("name", "short_name")(_require_trimmed)
 
@@ -184,6 +191,9 @@ class ResolvedClassification(_ResolvedModel):
         pairs = [(code.code, code.label) for code in self.codes]
         if len(pairs) != len(set(pairs)):
             raise ValueError("duplicate canonical classification code/label pair")
+        sentinels = [sentinel.code for sentinel in self.sentinel_codes]
+        if len(sentinels) != len(set(sentinels)):
+            raise ValueError("duplicate classification sentinel code")
         return self
 
 
@@ -194,6 +204,11 @@ class ResolvedConformance(_ResolvedModel):
     status: Literal["kept", "severed"]
     checked_codes: tuple[str, ...]
     nonconforming_members: tuple[tuple[str, str], ...] = ()
+    # Observed non-canonical members whose code is on the declared
+    # classification's curated sentinel list. Kept in the state's value set as
+    # variable-local codes (never in `classification_code`); the binding is
+    # kept and one warning per state names them.
+    sentinel_members: tuple[tuple[str, str], ...] = ()
 
     @field_validator("declared_classification")
     @classmethod
@@ -207,6 +222,12 @@ class ResolvedConformance(_ResolvedModel):
             raise ValueError("duplicate conformance checked code")
         if len(self.nonconforming_members) != len(set(self.nonconforming_members)):
             raise ValueError("duplicate nonconforming member")
+        if len(self.sentinel_members) != len(set(self.sentinel_members)):
+            raise ValueError("duplicate sentinel member")
+        if {code for code, _ in self.sentinel_members} & {
+            code for code, _ in self.nonconforming_members
+        }:
+            raise ValueError("sentinel member overlaps nonconforming member")
         return self
 
 
@@ -495,18 +516,24 @@ def _validate_catalog_metadata(
             if conformance is None:
                 continue
             require_classification(conformance.declared_classification)
-            canonical = {
-                code.code for code in by_slug[conformance.declared_classification].codes
-            }
+            book = by_slug[conformance.declared_classification]
+            canonical = {code.code for code in book.codes}
+            sentinels = {sentinel.code for sentinel in book.sentinel_codes}
             assert state.value_set is not None
             checked = set(conformance.checked_codes)
-            expected = {
+            observed = {
                 pair
                 for pair in state.value_set.members
                 if pair[0] in checked and pair[0] not in canonical
             }
+            expected = {pair for pair in observed if pair[0] not in sentinels}
             if expected != set(conformance.nonconforming_members):
                 raise ValueError("conformance disagrees with canonical code membership")
+            expected_sentinels = observed - expected
+            if expected_sentinels != set(conformance.sentinel_members):
+                raise ValueError(
+                    "conformance disagrees with curated sentinel code membership"
+                )
 
 
 def _prepare_classification_succession(

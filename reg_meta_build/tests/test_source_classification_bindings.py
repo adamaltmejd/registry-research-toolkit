@@ -4,6 +4,7 @@ from dataclasses import replace
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from reg_meta_build._curation import SentinelCode
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
@@ -290,6 +291,49 @@ def test_noncanonical_codes_keep_source_members_and_declared_evidence(tmp_path):
         diagnostic=True,
         classifications=tuple(setup[3].values()),
     )
+
+
+def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
+    setup = _setup(code="99")
+    book = setup[3]["fixture"]
+    sentinel_book = book.model_copy(
+        update={"sentinel_codes": (SentinelCode(code="99", meaning="not applicable"),)}
+    )
+    result = _apply(setup, classifications={"fixture": sentinel_book})
+    assert [d.code for d in result.diagnostics] == ["sentinel_classification_codes"]
+    assert result.diagnostics[0].severity == "warning"
+    variable = _form(setup, result)
+    state = variable.states[0]
+    assert state.classification == "fixture"
+    assert state.value_set is not None and state.value_set.members == (
+        ("99", "Source label"),
+    )
+    assert state.conformance is not None
+    assert state.conformance.status == "kept"
+    assert state.conformance.nonconforming_members == ()
+    assert state.conformance.sentinel_members == (("99", "Source label"),)
+    write_resolved_catalog(
+        (variable,),
+        tmp_path / "reg_meta.db",
+        manifest={},
+        classifications=(sentinel_book,),
+    )
+
+
+def test_naming_a_sentinel_does_not_stale_the_accepted_decision():
+    # The sentinel list is per-code acceptance authority recorded alongside the
+    # binding, not pinned codebook content: curating it must clear errors on an
+    # already-accepted decision without re-review.
+    setup = _setup()
+    book = setup[3]["fixture"]
+    assert _apply(setup).diagnostics == ()
+    sentinel_book = book.model_copy(
+        update={"sentinel_codes": (SentinelCode(code="99", meaning="not applicable"),)}
+    )
+    assert classification_content_sha256(sentinel_book) == (
+        classification_content_sha256(book)
+    )
+    assert _apply(setup, classifications={"fixture": sentinel_book}).diagnostics == ()
 
 
 def test_accepted_omission_survives_classification_application():

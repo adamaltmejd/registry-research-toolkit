@@ -162,8 +162,12 @@ def _source_bindings(
 
 
 def classification_content_sha256(classification: ResolvedClassification) -> str:
-    """Pin semantic codebook content, independently of member order and succession."""
-    body = classification.model_dump(mode="json", exclude={"codes"})
+    """Pin semantic codebook content, independently of member order and succession.
+
+    The curated sentinel list is NOT pinned: it is per-code acceptance authority
+    recorded alongside the binding, so naming a sentinel clears errors on an
+    already-accepted binding without re-review."""
+    body = classification.model_dump(mode="json", exclude={"codes", "sentinel_codes"})
     body["codes"] = [
         code.model_dump(mode="json")
         for code in sorted(classification.codes, key=lambda c: (c.code, c.label))
@@ -228,6 +232,7 @@ def apply_classification_cases(
     )
     class_hashes = {}
     canonical = {}
+    sentinel_maps = {}
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
         assert isinstance(decision, ClassificationDecision)
@@ -239,6 +244,10 @@ def apply_classification_cases(
             canonical[classification.slug] = frozenset(
                 c.code for c in classification.codes
             )
+            sentinel_maps[classification.slug] = {
+                sentinel.code: sentinel.meaning
+                for sentinel in classification.sentinel_codes
+            }
         for issue in evaluation.issues:
             diagnostics.append(
                 ResolutionDiagnostic(
@@ -372,6 +381,10 @@ def apply_classification_cases(
                     canonical[slug] = frozenset(
                         c.code for c in classifications[slug].codes
                     )
+                    sentinel_maps[slug] = {
+                        sentinel.code: sentinel.meaning
+                        for sentinel in classifications[slug].sentinel_codes
+                    }
                 checked = resolve_classification_conformance(
                     segment.code_set,
                     classification=slug,
@@ -380,6 +393,7 @@ def apply_classification_cases(
                     refs=refs,
                     valid_from=start,
                     valid_to=end,
+                    sentinel_codes=sentinel_maps[slug],
                 )
                 diagnostics.extend(checked.diagnostics)
                 conformance = checked.conformance

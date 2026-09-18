@@ -315,7 +315,16 @@ name similarity cannot.
 
 Conformance compares exact code strings. Noncanonical members preserve the original list
 and declared binding as evidence, withhold the state classification link and emit an
-error. There is no global sentinel waiver. Original coding issues remain visible.
+error. There is no global sentinel waiver. A classification may instead curate its own
+exact-string sentinel list (`sentinel_codes = [{code, meaning}]` per
+`[[classification]]` in `curation/classifications.toml`) for bulk/missing tokens the
+source emits for uncoded members. An observed code on that list keeps the state binding
+(`kept`), stays a variable-local member of the state's value set — never a
+`classification_code` row — and is reported once per state as a warning naming the code
+and its curated meaning. Codes match exactly (`"00000"` never equals `"0"`); there are
+no patterns and no cross-classification lists, and unknown keys or duplicate codes fail
+the load fast. Any other noncanonical code still severs the binding with the existing
+error, which lists only the non-sentinel codes. Original coding issues remain visible.
 
 A parallel-column decision names each literal column and its finite delivery window. It
 reconciles sibling metadata and coding before forming shared states. Conflicting facts

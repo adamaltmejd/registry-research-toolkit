@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Any
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
-from ._curation import repo_curation_path
+from ._curation import load_sentinel_codes, repo_curation_path
 from .fqid_slugs import _toml_comment, _toml_str
 
 if TYPE_CHECKING:
@@ -272,6 +272,15 @@ def load_seed(path: Path) -> list[dict[str, Any]]:
                 error_class="configuration",
                 message=f"{short}: provider must be a string.",
                 remediation='Use a provider slug like provider = "sos".',
+            )
+        # sentinel_codes is an optional per-classification table list of exact
+        # `{code, meaning}` strings. Curated bulk/missing tokens (e.g. a source's
+        # "00000") that keep the binding with a warning instead of severing it.
+        # Validated here (fail fast on unknown keys, non-strings, duplicates);
+        # the parsed models replace the raw tables for downstream readers.
+        if "sentinel_codes" in entry:
+            entry["sentinel_codes"] = load_sentinel_codes(
+                entry["sentinel_codes"], classification=short
             )
 
     return entries
