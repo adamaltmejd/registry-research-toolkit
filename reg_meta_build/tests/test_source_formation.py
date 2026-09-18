@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _prepared_fixtures import accept_prepared
 from reg_meta.db import open_db
-from reg_meta_build.convert_identity import convert_column_partitions
+from reg_meta_build.convert_identity import convert_declared_partitions
 from reg_meta_build.prepared_sources import (
     open_prepared_source_records,
     prepare_source_records,
@@ -49,7 +49,7 @@ from reg_meta_build.source_records import (
     value_field,
 )
 
-from reg_meta_build.fqid_slugs import declared_column_ownership, load_provider_toml
+from reg_meta_build.fqid_slugs import load_provider_toml
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -279,7 +279,8 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
     )
     assert withheld.variable is None
     assert [d.code for d in withheld.diagnostics] == ["unresolved_native_identity"]
-    # The tracked declaration (mirrors fqid_slugs/scb.toml Y-167 entry).
+    # The tracked declaration (mirrors fqid_slugs/scb.toml Y-167 entry) feeds
+    # the production entry point, never hand-plumbed.
     declaration = tmp_path / "scb.toml"
     declaration.write_text(
         '[variable."1.830.gaturest"]\n'
@@ -289,9 +290,6 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
         '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
         encoding="utf-8",
     )
-    ownership = declared_column_ownership(
-        load_provider_toml(declaration), provider="scb", source_id="1.830"
-    )
     records = (
         *pair,
         _fdb_record(2010, column="GatuRest", variant=427),
@@ -299,12 +297,12 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
         _fdb_record(2020, column="PGaturest", variant=424),
         _fdb_record(2025, column="PGaturest", variant=427),
     )
-    converted = convert_column_partitions(
+    converted = convert_declared_partitions(
         records,
+        entries=load_provider_toml(declaration),
+        provider="scb",
         source_id="1.830",
-        split_ids=ownership.split_ids,
-        declared_columns=dict(ownership.declared_columns),
-        declaration_reference=ownership.declaration_reference,
+        split_ids=("1.830.gaturest", "1.830.pgaturest"),
     )
     assert converted.case is not None and converted.diagnostics == ()
     applied = apply_occurrence_cases(records, (converted.case,))

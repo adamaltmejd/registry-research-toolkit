@@ -6,6 +6,11 @@ literal ownership. An ambiguous sibling need not block an independent partition.
 A folded name does not establish that distinct spellings mean the same variable.
 Other rename clusters, shape splits and discriminator collisions need their existing
 decisions converted separately; no source identity is inferred from similar names.
+
+`convert_declared_partitions` is the production entry point: it loads any tracked
+literal ownership for the family from the complete slug-entry set before
+converting, so a declaration like the Y-167 FDB 1.830 map takes effect in real
+builds instead of only in hand-plumbed calls.
 """
 
 from __future__ import annotations
@@ -17,6 +22,7 @@ from typing import TYPE_CHECKING
 from reg_meta.fqid import derive_variable_slug
 
 from reg_meta_build.convert_errata import capture_expectations
+from reg_meta_build.fqid_slugs import declared_column_ownership
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
     CheckedIdentityChange,
@@ -30,8 +36,9 @@ from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_naming import LegacyNamingBinding, NativeNamingTarget
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Iterable, Mapping
 
+    from reg_meta_build.fqid_slugs import SlugEntry
     from reg_meta_build.source_records import SourceRecord
 
 
@@ -233,3 +240,39 @@ def convert_column_partitions(
         ),
     )
     return ColumnPartitionConversion(tuple(bindings), case, diagnostics)
+
+
+def convert_declared_partitions(
+    records: tuple[SourceRecord, ...],
+    *,
+    entries: Iterable[SlugEntry],
+    provider: str,
+    source_id: str,
+    split_ids: tuple[str, ...],
+) -> ColumnPartitionConversion:
+    """Convert one native family through any tracked literal column ownership.
+
+    ``entries`` is the complete loaded slug-entry set (authored plus generated),
+    ``split_ids`` the accepted split keys from naming. When the family carries a
+    tracked ``columns`` declaration, it is fed as ``declared_columns`` with its
+    ``declaration_reference``; stale or new-intersecting evidence then fails
+    instead of converting half a family. Without a declaration this is exactly
+    ``convert_column_partitions`` without ownership, so families like the
+    accepted 1.828/1.537 partitions keep their automatic behavior. A tracked
+    declaration never invents splits: ``split_ids`` stays authoritative.
+    """
+    try:
+        ownership = declared_column_ownership(
+            entries, provider=provider, source_id=source_id
+        )
+    except ValueError:
+        return convert_column_partitions(
+            records, source_id=source_id, split_ids=split_ids
+        )
+    return convert_column_partitions(
+        records,
+        source_id=source_id,
+        split_ids=split_ids,
+        declared_columns=dict(ownership.declared_columns),
+        declaration_reference=ownership.declaration_reference,
+    )
