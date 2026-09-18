@@ -323,6 +323,17 @@ def test_pooled_scope_without_a_carried_range_stays_unsupported() -> None:
     assert result.issues[0].fields == ("period",)
 
 
+def test_term_structured_pooled_label_stays_unsupported() -> None:
+    # Y-202 P1: term/school-year edges are not whole-year delivery evidence —
+    # a real pooled label with that structure resolves nothing.
+    record = _pooled_record(1, "Komvux HT 1988 - VT 2024")
+    result = resolve_occurrence_intervals((record,))
+
+    assert result.segments == ()
+    assert result.unsupported_occurrences == (record,)
+    assert result.issues[0].fields == ("period",)
+
+
 def test_explicit_annual_coverage_wins_over_pooled() -> None:
     pooled = _pooled_record(1, "2012 - 2014")
     annual = _record(

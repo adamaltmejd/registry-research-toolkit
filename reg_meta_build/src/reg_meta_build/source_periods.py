@@ -75,6 +75,17 @@ def _exact_interval(value: str) -> tuple[tuple[str, str] | None, bool]:
     return None, False
 
 
+def _whole_year_claims(claims: tuple[tuple[int, str, str], ...]) -> bool:
+    """Whether every claim spans a whole calendar year (Y-202).
+
+    The genuinely pooled shape pools whole delivery years; term/school-year
+    labels carry sub-annual claim edges (HT/VT, Läsår) and stay unresolvable."""
+    return bool(claims) and all(
+        low.endswith("-01-01") and high.endswith("-12-31")
+        for _, low, high in claims
+    )
+
+
 def source_scopes(
     version_name: str,
 ) -> tuple[TemporalScope, TemporalScope, SourcePeriodIssue | None]:
@@ -162,13 +173,21 @@ def source_scopes(
         # Multi-year claims pool to ONE state over the claim hull (Y-202): the
         # first claim's start through the last claim's end. Interior per-year
         # structure stays on the claim key set; resolution never infers annual
-        # availability inside the range.
-        scope = TemporalScope(
-            kind="pooled",
-            label=label,
-            pooled_start=min(low for _, low, _ in claims),
-            pooled_end=max(high for _, _, high in claims),
-        )
+        # availability inside the range. The hull is resolvable ONLY when every
+        # claim is a whole calendar year — the genuinely pooled shape (e.g.
+        # "2012 - 2014"). Term/school-year structure (Komvux HT/VT, Läsår
+        # edges) stays unresolvable: its sub-annual edges are not whole-year
+        # delivery evidence, so no range is carried and the scope keeps the
+        # pre-Y-202 unsupported behavior.
+        if _whole_year_claims(claims):
+            scope = TemporalScope(
+                kind="pooled",
+                label=label,
+                pooled_start=min(low for _, low, _ in claims),
+                pooled_end=max(high for _, _, high in claims),
+            )
+        else:
+            scope = TemporalScope(kind="pooled", label=label)
         return scope, scope, "pooled_period"
 
     scope = TemporalScope(kind="unknown", label=label)

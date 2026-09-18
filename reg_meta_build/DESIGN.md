@@ -118,7 +118,9 @@ never replaces the original cells:
   edition label and a variable's declared measurement/reference period are separate
   observations. A pooled scope carries its whole-range bounds (Y-202): the exact
   interval's endpoints for a multi-year exact range, else the first claim's start
-  through the last claim's end. A pooled scope without both bounds stays unresolvable
+  through the last claim's end — but only when every claim is a whole calendar
+  year. Term/school-year edges (Komvux HT/VT, Läsår) and forecast-register ranges
+  carry no range. A pooled scope without both bounds stays unresolvable
   downstream — the range is carried evidence, never re-parsed from the label.
 - Value-set content may deduplicate identical code/label pairs for storage and
   comparison. Equal codes with different labels remain distinct. Deduplication does not
@@ -290,8 +292,9 @@ literally blank, stays unknown and keeps the error path. A gap between supported
 stays a gap.
 
 Pooled multi-year editions form one marked state (Y-202). A pooled scope carries its
-whole-range bounds from cleaning — the edition's exact interval or its claim hull (see
-Cleaning) — and occurrence resolution places it as exactly ONE interval over that range:
+whole-range bounds from cleaning — the edition's exact interval or its whole-year
+claim hull (see Cleaning) — and occurrence resolution places it as exactly ONE
+interval over that range:
 never one state per year, never inferred annual availability inside the range. A span is
 marked pooled only where NO explicit (annual/precise) occurrence covers it: where an
 explicit occurrence overlaps, it wins and the span resolves as an ordinary state, so a

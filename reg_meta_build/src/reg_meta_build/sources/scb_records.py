@@ -11,6 +11,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_periods import SourcePeriodIssue, source_scopes
+from reg_meta_build.sources.scb import _PROJECTION_REGISTERS
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
@@ -314,6 +315,18 @@ def clean_scb_row(
     edition_scope, edition_period_scope, issue_kind = source_scopes(
         interpreted.edition_name
     )
+    if interpreted.register_id in _PROJECTION_REGISTERS:
+        # Forecast editions (Y-202): a projection range (e.g. "2024-2070") is
+        # a vintage convention, not pooled delivery evidence — it carries no
+        # resolvable range and keeps the pre-Y-202 unsupported behavior.
+        if edition_scope.kind == "pooled":
+            edition_scope = edition_scope.model_copy(
+                update={"pooled_start": None, "pooled_end": None}
+            )
+        if edition_period_scope.kind == "pooled":
+            edition_period_scope = edition_period_scope.model_copy(
+                update={"pooled_start": None, "pooled_end": None}
+            )
     semantic_key = (
         f"register:{interpreted.register_id}",
         f"variant:{interpreted.register_variant_id}",

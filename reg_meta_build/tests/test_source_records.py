@@ -443,9 +443,9 @@ def test_cleaning_keeps_projection_register_range_pooled() -> None:
     assert record.edition_scope == TemporalScope(
         kind="pooled",
         label="2024-2070",
-        pooled_start="2024-01-01",
-        pooled_end="2070-12-31",
     )
+    assert record.edition_scope.pooled_start is None
+    assert record.edition_scope.pooled_end is None
     assert record.edition_period_scope == record.edition_scope
     assert record.original_period_text == "2024-2070"
 
