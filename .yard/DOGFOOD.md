@@ -15,6 +15,17 @@ from the store: `ui` about 65 minutes median, `default` about 20, `light` 1–22
 
 ## Open upstream reports
 
+### 2026-09-15: a following transcript exits with an offset error at completion
+
+On 0.14.10, `lane tail --follow --current-generation` emitted normal worker completion
+and then exited 3 for Y-157/1 and a fresh Y-157/3 follower, reporting
+`transcript is shorter than byte offset 2021721` and `372041`, respectively. Y-159's
+follower exited cleanly with offset 55901. Filed as
+[#105](https://github.com/adamaltmejd/switchyard/issues/105); no data-loss or
+candidate-corruption diagnosis is established. Supported CLI evidence, report and
+trusted readback receipts are under
+`archive/reports/yard/2026-09-15-usecase-architecture/yard-tail-completion/`.
+
 ### 2026-09-15: worker TMPDIR creates mixed-ownership scratch Git repositories
 
 Y-155's Sol worker reproduced scratch Git failures under its default
@@ -26,6 +37,24 @@ pass without changing product code or Git's ownership protections. Filed as
 remains unconfirmed. Supported Yard transcript output, controls and submission receipt
 are local-only under
 `archive/reports/yard/2026-09-15-cold-value-storage/yard-tmp-ownership/`.
+
+Recurred during Y-161: the watcher path test passed alone but failed in the full file
+under the shared temp tree. Command-local `TMPDIR=/tmp` made all 19 watcher tests pass;
+no Git/path guard change was needed. The operator supplied the known workaround through
+a guarded nudge and one stop, preserving the ongoing work.
+
+Y-162 generation 7 reproduced the scratch-Git failure in four input-snapshot tests under
+`/yard/state/tmp`. The worker isolated the failure to that temp location before changing
+product code; its supported transcript records the controls. Command-local `TMPDIR=/tmp`
+passed all 127 focused tests and the full 4,223-test gate. No ownership-check bypass or
+product fix was needed.
+
+Y-163 repeated the temp-tree failure in three focused tests. A worker control with
+wildcard Git trust still left one failure and was discarded as evidence. After a guarded
+nudge and one stop delivered the known workaround, command-local `TMPDIR=/tmp` with
+ordinary Git trust passed all 140 focused tests. The worker kept product and test guards
+unchanged. Supported transcript: Y-163/2 generations 1–2; local scope evidence is under
+the same usecase-architecture archive.
 
 ### 2026-09-15: published macOS binary fails signature verification
 
@@ -77,61 +106,110 @@ were preserved. Redacted transcripts and submission text are local-only under
 One line each, with the Yard version it was observed on. Retest on the running version,
 then file it or delete it with a reason.
 
+- (0.15.3 upgrade) Moving from 0.14.10 needed a 0.15.1 bridge plus removal of job keys
+  from legacy light roles before that bridge would start. The release says to convert
+  before installation, but canonical config must first pass the old daemon through sync.
+  Kept admissions paused and used supported sync throughout; local evidence is in
+  `archive/reports/yard/v0.15.3/`.
+
+- (0.15.3) Pi `lane tail Y-185/1/e1 --current-generation` renders raw
+  `frame {"type":"message_update",...}` lines, including token deltas, instead of the
+  documented worker-text/tool-result operator view. Raw transcript remains readable
+  through `--raw`; local evidence is in the same upgrade archive.
+
+- (0.14.10) After Y-159 changed the conflict role from Claude to Codex and a daemon
+  restart confirmed the new config digest, `lane start Y-157/1/e7` still resumed its
+  captured Claude session and hit the same weekly quota. The offered retry did not
+  explain this binding; retained-candidate replay reached Codex. Evidence:
+  `archive/reports/yard/2026-09-15-usecase-architecture/y157-before-provider-replay.json`.
+
 - (0.9.1) Gates are bound per workflow at filing time, never chosen from the candidate's
   changed paths; a docs-only candidate runs every gate its workflow names.
+
 - (0.10.1) `build_artifacts` takes literal directories only; every package's
   `__pycache__` is declared by hand, and a new package re-hits the retarget exactness
   check.
+
 - (0.11) No verb runs a gate against an arbitrary tree with the daemon's own image
   (`yard check run <gate> [--tree PATH]`); 0.14.10 preflight builds the image for the
   current tree only.
+
 - (0.11) No "decision needed" proposal kind (question plus options); a worker's options
   memo arrives as `ticket.create` with a menu for a body.
+
 - (0.11) The gate image build has its own 900 s limit
   (`docker build … [timed out after 900000ms]`) that no key in `config.toml` names.
+
 - (0.11) A landed ticket left open (`blocksCompletion` on a `depends_on`) was
   re-admitted as a fresh attempt the moment its dependency landed (Y-25/2). Retest
   before filing.
+
 - (0.11) Configured models are not validated against the vendored worker CLI at config
   load or preflight; a pin that refuses a model surfaces only as a worker failure.
+
 - (0.14.10, filed as switchyard #100) Run from a git WORKTREE of the project, `yard`
   silently initializes a second, empty board (`.yard/local/` appears in the worktree;
   `yard status` prints `0 open`, `yard lane diff Y-123/1` prints
   `error: no attempt Y-123/1`) instead of resolving the project through the git common
   dir or refusing with a pointer to the main checkout.
+
 - (0.14.10, filed as switchyard #101) `yard lane diff` truncates a large candidate diff
   (~29.7k lines, marker `[yard: diff truncated]` inside the patch text) and has no
   `--full`; the operator's pre-approval real-data build needs the whole candidate.
   Workaround: `git fetch .yard/local/git/canonical.git <head>` and a detached worktree.
+
 - (0.14.10) After a provider/network outage a review execution (Y-116/1/e31) showed
   `reviewing r0/5 · seat codex 1/1 38m` with no evidence directory, no review process on
   the host, and no wake — the seat never started and nothing timed it out.
   `yard lane stop <exec>` then `yard lane start <attempt>` re-ran it (e32 started within
   a second). Retest before filing: one occurrence, right after an ENOTFOUND outage.
+
 - (0.13.3) A daemon restart to load config cancelled a running execution (Y-35/1/e1) and
   left a stopped attempt with no attention item and no printed exit. Not re-observed
   since; retest before filing.
+
 - (0.14.5) A lane at `approval-needed` prints "admissions waiting …" and nothing is
   admitted into the free slot; undocumented whether deliberate. Confirm on 0.14.10.
+
 - (0.14.5) Limit and transport stops want a daemon-taken "retry at <time>" rather than
   an operator exit read out of free text; #85 and #89 typed the exits, the wait is still
   manual, and the Y-113 outage above has the same shape.
+
+- (0.14.10) Y157/3/e1 generation 8 stopped on "Selected model is at capacity. Please try
+  a different model." A395 classified it as `provider-error`, with no provider wait and
+  only an abandon exit. Supported recovery preserved the candidate through replay as
+  Y157/4, but repeated review and every gate before repair. Check whether capacity
+  errors should expose a guarded retry; no claim that retry would have succeeded.
+
+- (0.15.3) Two `pipeline-muse` workers (Y-188/1, Y-187/1) failed with OpenRouter
+  `403 Request blocked by content filter: Content filter redaction would produce invalid tool call arguments`
+  during ordinary source/test editing, classified `provider-error` with only an abandon
+  exit. Both tickets were re-routed to `pipeline` (Opus) and completed there. Not yet
+  reported upstream; unclear whether Yard can do more than surface the provider's
+  rejection.
+
 - (0.14.5, 0.14.8) `yard lane replay` refuses with "lane capacity is full" instead of
   queueing (may already be inside #86's body).
+
 - (0.14.8) Config edits (a new workflow, a retired key) need a lane: no
   `yard workflow add` or `yard config migrate`, and a new client refuses the old daemon,
   so the binary cannot be staged on PATH before the config lands.
+
 - (0.14.8) No per-lane cost ceiling and no "cost so far" on the wake line; Y-92/2
   reached $17.87 for +233/−8 lines before anyone looked. Y-113/1 (0.14.10, opus xhigh)
   reached $51.95 across five generations, most of it a resumed session re-reading 37M
   cached input tokens; the approval item showed no cost either.
+
 - (0.14.8) `yard proposal accept` has no `--title`; a convention retitle costs a
   `ticket edit --expect-revision` round-trip (check whether #91 covers it).
+
 - (0.14.8) `yard proposal promote` takes one finding; an umbrella ticket for several
   same-surface advisories is one promote plus a body rewrite.
+
 - (0.14.10) `daemon.log` has no timestamps and is never rotated: 315 stale
   `… is a conflict execution` lines and 4 `startup reconciliation failed` lines from
   earlier daemon lives. Observed on the running version; file it.
+
 - (0.14.10) Yard has no notion of an open manual-integration or release window:
   `yard status` shows `relation equal`, and a second operator learns of the window only
   from this file.
@@ -168,6 +246,26 @@ once it has moved.
   `tokens.css` (autoreview refuses it as a sensitive filename).
 - Workers have no Yard CLI: verify any Yard-documentation claim on the host. A repo
   skill the worker's `Skill` tool does not list is read by path.
+- Y157/3's Codex repair generations 7 and 8 each re-read all three operator skills and
+  OPERATOR.md before repairing code, despite having no board decision to make. This
+  repeats roughly 676 lines of operator-only context. Clarify the worker/operator
+  distinction in the owning instructions; observed prompt overhead, not a CLI defect.
+  Y162/2 generation 1 claimed to delegate to Sol, then its retained raw transcript
+  showed waits with empty receiver IDs and no preceding spawn call. A guarded nudge plus
+  stop resumed generation 2, which found partial implementation files despite the absent
+  visible delegation evidence. This contradicts the initial inference that no child
+  existed; a second guarded continuation asks the worker to check its live agent
+  inventory before editing the shared tree. Its plan had already been accepted on the
+  host. Treat this as unresolved observability/provider behavior. Generation 3 reported
+  only the current worker in its inventory and retained the partial implementation; its
+  first focused inspection test run passed. Y165/2 repeated this role confusion and
+  tried the absent host CLI before reading lane_context. It then recovered
+  independently. The operator issued a queued clarification and one stop before noticing
+  that recovery in the command response; that continuation was unnecessary. Read fresh
+  lane progress before interrupting. The implementation ticket now says its
+  planning/review are already complete. Keep operator/planner model instructions out of
+  implementation-ticket prose once that handoff is complete. Local-only evidence:
+  `archive/reports/yard/2026-09-15-usecase-architecture/y162-raw-transcript.jsonl`.
 - Host re-render of a candidate: worktree at base plus `git apply` of the lane diff,
   `reg-meta update` into a scratch dir (the XDG DB may be stale),
   `bunx playwright install chromium`, then `dev.sh shot --all <routes>`,
@@ -188,3 +286,13 @@ once it has moved.
 - Filing lessons: a fixture named under Proof is a behavior statement; a
   "byte-identical" clause names its paths; an accepted proposal body needs a Proof
   section before unpark; recheck old briefs before admitting a batch.
+
+### 2026-09-18: watch fails when replaying a completed lane abandonment
+
+On Yard 0.15.3 (`19903129`), after supported abandonment of Y-188/1 with no committed
+candidate, `yard status --watch --notes --since 146431` repeatedly exited 1:
+`lane.abandoned on Y-188/1 records no terminal outcome`. Abandonment and cleanup
+completed. A fresh status cursor (146445) restored watching. Filed as
+[#108](https://github.com/adamaltmejd/switchyard/issues/108); no root cause is
+established. Raw receipts and the report are local-only under
+`archive/reports/yard/2026-09-18-abandoned-watch/`.
