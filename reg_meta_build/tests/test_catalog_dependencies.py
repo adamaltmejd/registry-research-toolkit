@@ -1118,7 +1118,7 @@ def test_delivery_facts_length_mismatch_is_refused():
 
 
 def test_delivery_facts_attributions_require_exact_provenance_elements():
-    obligation = _fact_obligation(data_type=None, data_length=None)
+    obligation = _fact_obligation(data_type="integer", data_length="1")
     check_delivery_coverage(
         (_fact_variable(provenance="correction:one\n\ncomment"),),
         (obligation,),
@@ -1179,13 +1179,54 @@ def test_delivery_facts_shared_state_behind_alias_window_is_checked():
     )
 
 
-def test_delivery_facts_nulled_claim_needs_no_match():
-    nulled = _fact_obligation(data_type=None, data_length=None, attributions=())
+def test_delivery_facts_absent_claim_compared_on_direct_states():
+    absent = _fact_obligation(data_type=None, data_length=None, attributions=())
+    # Legitimate lack of a claim: an honestly fact-less direct state passes.
     check_delivery_coverage(
-        (_fact_variable(data_type="text", data_length="9", provenance=None),),
-        (nulled,),
+        (_fact_variable(data_type=None, data_length=None, provenance=None),),
+        (absent,),
         withheld={},
     )
+    # Backfill from another member window: a direct state carrying facts its
+    # own window never claimed fails even though the claim itself is None.
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage(
+            (_fact_variable(data_type="integer", data_length="0", provenance=None),),
+            (absent,),
+            withheld={},
+        )
+    assert "claimed data_type=None written 'integer'" in str(failure.value)
+    # The same fact-less claim through an alias window is never compared: the
+    # shared state carries its representative window's facts instead.
+    variant = ResolvedVariant(slug="people", name="People")
+    shared = (
+        _fact_variable(data_type="text", data_length="9", provenance=None)
+        .states[0]
+        .model_copy(update={"delivery_column_name": "First"})
+    )
+    aliased = _fact_variable(
+        data_type=None, data_length=None, provenance=None
+    ).model_copy(
+        update={
+            "states": (shared,),
+            "aliases": (
+                ResolvedAlias(
+                    variant=variant,
+                    delivery_column_name="VALUE",
+                    windows=(
+                        ResolvedAliasWindow(
+                            valid_from="2020-01-01",
+                            valid_to="2020-12-31",
+                        ),
+                    ),
+                ),
+            ),
+        }
+    )
+    check_delivery_coverage((aliased,), (absent,), withheld={})
     check_delivery_coverage(
         (_fact_variable(data_type="text"),),
         (_fact_obligation(attributions=()),),
@@ -1193,17 +1234,13 @@ def test_delivery_facts_nulled_claim_needs_no_match():
     )
 
 
-def test_delivery_facts_absent_2021_length_not_compared_while_2020_claim_is():
+def test_delivery_facts_backfilled_from_another_member_window_is_refused():
     base = _fact_variable(data_type="integer", data_length="0", provenance=None)
     first = base.states[0]
-    second = first.model_copy(
-        update={
-            "valid_from": "2021-01-01",
-            "valid_to": "2021-12-31",
-            "data_length": "9",
-        }
+    leaked = first.model_copy(
+        update={"valid_from": "2021-01-01", "valid_to": "2021-12-31"}
     )
-    variable = base.model_copy(update={"states": (first, second)})
+    variable = base.model_copy(update={"states": (first, leaked)})
     obligations = (
         _fact_obligation(
             valid_from="2020-01-01",
@@ -1220,12 +1257,21 @@ def test_delivery_facts_absent_2021_length_not_compared_while_2020_claim_is():
             attributions=(),
         ),
     )
-    # Backfilling a length into the fact-less 2021 window is no change: its
-    # None claim is never compared.
-    check_delivery_coverage((variable,), obligations, withheld={})
-    # The 2020 int/0 claim still is: rewriting its written length fails.
-    damaged = variable.model_copy(
-        update={"states": (first.model_copy(update={"data_length": "1"}), second)}
+    # Honest fact-less 2021 output passes: nothing was claimed, nothing written.
+    honest = variable.model_copy(
+        update={
+            "states": (
+                first,
+                leaked.model_copy(update={"data_type": None, "data_length": None}),
+            )
+        }
     )
-    with pytest.raises(ValueError, match="claimed data_length='0' written '1'"):
-        check_delivery_coverage((damaged,), obligations, withheld={})
+    check_delivery_coverage((honest,), obligations, withheld={})
+    # The 2020 facts copied into the 2021 state are refused.
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((variable,), obligations, withheld={})
+    assert "people/VALUE 2021-01-01..2021-12-31" in str(failure.value)
+    assert "claimed data_type=None written 'integer'" in str(failure.value)

@@ -199,10 +199,14 @@ def check_delivery_coverage(
     on the same resolved variable, variant and physical column; a search alias
     without windows, another column or another variant delivers nothing here.
     Periods are never widened: only the claimed window has to be represented.
-    Every overlapping final state on the same coordinate, and every shared state
-    behind an alias window for that coordinate, must also keep the claimed
+    Every overlapping final state on the same coordinate must also keep the claimed
     type/length and contain every claimed attribution as an exact provenance
-    element. A conflicting representation fact nulls the claimed fact it names.
+    element; a direct state carrying facts its own window never claimed is a
+    backfill from another member window and fails even when the claim is None.
+    A shared state behind an alias window carries its representative window's
+    facts instead, so it is only checked against facts the obligation actually
+    claims: a claimed None is no claim there and is never compared. A
+    conflicting representation fact nulls the claimed fact it names.
     A variable or one of its variants that the ledger withholds outright, with
     source evidence, owes nothing at that exact coordinate; the claim stays a
     curation blocker whichever stage recorded it, and a sibling stays checked.
@@ -246,12 +250,10 @@ def check_delivery_coverage(
         claimed_type = obligation.data_type
         claimed_length = obligation.data_length
         claimed_attributions = obligation.attributions
-        if claimed_type is None and claimed_length is None and not claimed_attributions:
-            continue
         refs = ", ".join(
             "/".join((ref.source, *ref.semantic_record_key)) for ref in obligation.refs
         )
-        candidates: dict[tuple[str, str, str, str], ResolvedState] = {}
+        candidates: dict[tuple[str, str, str, str], tuple[ResolvedState, bool]] = {}
         for variable in by_fqid.get(obligation.fqid, ()):
             for state in variable.states:
                 if state.variant.slug != obligation.variant:
@@ -296,35 +298,41 @@ def check_delivery_coverage(
                     state.valid_to,
                 )
                 if token in candidates:
+                    if direct:
+                        candidates[token] = (candidates[token][0], True)
                     continue
-                candidates[token] = state
-                if claimed_type is not None and state.data_type != claimed_type:
+                candidates[token] = (state, direct)
+                continue
+        for state, is_direct in candidates.values():
+            if is_direct or claimed_type is not None:
+                if state.data_type != claimed_type:
                     fact_changes.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                         f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                         f"claimed data_type={claimed_type!r} written {state.data_type!r}"
                     )
-                if claimed_length is not None and state.data_length != claimed_length:
+            if is_direct or claimed_length is not None:
+                if state.data_length != claimed_length:
                     fact_changes.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                         f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                         f"claimed data_length={claimed_length!r} written {state.data_length!r}"
                     )
-                if claimed_attributions:
-                    elements = (
-                        set(state.provenance.split("\n\n"))
-                        if state.provenance
-                        else set()
+            if claimed_attributions:
+                elements = (
+                    set(state.provenance.split("\n\n"))
+                    if state.provenance
+                    else set()
+                )
+                missing = [
+                    item for item in claimed_attributions if item not in elements
+                ]
+                if missing:
+                    fact_changes.append(
+                        f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                        f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
+                        f"claimed attributions={tuple(missing)!r} written provenance={state.provenance!r}"
                     )
-                    missing = [
-                        item for item in claimed_attributions if item not in elements
-                    ]
-                    if missing:
-                        fact_changes.append(
-                            f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                            f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
-                            f"claimed attributions={tuple(missing)!r} written provenance={state.provenance!r}"
-                        )
     if fact_changes:
         raise ValueError(
             "supported delivery facts changed without an explicit source outcome "
