@@ -196,21 +196,28 @@ grep -Fx "pre-commit pwd=$work GIT_DIR=$linked_git_dir GIT_WORK_TREE=$linked_roo
 	fail=1
 }
 # Foreign-repository regression: a hook that creates and configures a temporary
-# Git repository must change only that fixture; outer configuration, HEAD and
-# refs stay unchanged.
+# Git repository must change only that fixture; outer configuration, index,
+# HEAD and refs stay unchanged.
 git -C "$repo" config user.name "outer-user"
 git -C "$repo" config user.email "outer@example.test"
+printf 'outer-staged\n' >"$repo/outer-staged.txt"
+git -C "$repo" add outer-staged.txt
 git -C "$repo" config --local --list | sort >"$work/outer-config-before"
+git -C "$repo" ls-files --stage >"$work/outer-index-before"
+cksum "$repo/.git/index" >"$work/outer-index-cksum-before"
 git -C "$repo" rev-parse HEAD >"$work/outer-head-before"
 git -C "$repo" show-ref >"$work/outer-refs-before"
 cat >"$work/bin/pre-commit" <<EOF
 #!/usr/bin/env bash
 echo "pre-commit pwd=\$PWD GIT_DIR=\${GIT_DIR-} GIT_WORK_TREE=\${GIT_WORK_TREE-} GIT_COMMON_DIR=\${GIT_COMMON_DIR-} GIT_INDEX_FILE=\${GIT_INDEX_FILE-}" >>"$calls"
-fixture=\$(mktemp -d)
+fixture=$(mktemp -d "$work/fixture.XXXXXX")
 git init -q "\$fixture"
 git -C "\$fixture" config user.name "fixture-user"
 git -C "\$fixture" config user.email "fixture@example.test"
-git -C "\$fixture" config core.worktree "/tmp/evil-worktree"
+mkdir -p "\$fixture/work"
+git -C "\$fixture" config core.worktree "\$fixture/work"
+printf 'fixture-data\n' >"\$fixture/work/data.txt"
+git -C "\$fixture" add data.txt
 echo "fixture \$fixture" >>"$calls"
 EOF
 chmod +x "$work/bin/pre-commit"
@@ -221,6 +228,8 @@ grep -Fx "pre-commit pwd=$linked_root GIT_DIR= GIT_WORK_TREE= GIT_COMMON_DIR= GI
 	fail=1
 }
 git -C "$repo" config --local --list | sort >"$work/outer-config-after"
+git -C "$repo" ls-files --stage >"$work/outer-index-after"
+cksum "$repo/.git/index" >"$work/outer-index-cksum-after"
 git -C "$repo" rev-parse HEAD >"$work/outer-head-after"
 git -C "$repo" show-ref >"$work/outer-refs-after"
 cmp -s "$work/outer-config-before" "$work/outer-config-after" || {
@@ -233,6 +242,14 @@ cmp -s "$work/outer-head-before" "$work/outer-head-after" || {
 }
 cmp -s "$work/outer-refs-before" "$work/outer-refs-after" || {
 	note "FAIL[0]: fixture repository changed the outer refs"
+	fail=1
+}
+cmp -s "$work/outer-index-before" "$work/outer-index-after" || {
+	note "FAIL[0]: fixture repository changed the outer index"
+	fail=1
+}
+cmp -s "$work/outer-index-cksum-before" "$work/outer-index-cksum-after" || {
+	note "FAIL[0]: fixture repository changed the outer index bytes"
 	fail=1
 }
 fixture=$(sed -n 's/^fixture //p' "$calls" | tail -n 1)
