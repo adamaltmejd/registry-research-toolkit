@@ -17,9 +17,7 @@ from _sos_fixtures import (
     BU_SPEC_LINED,
     BU_SPEC_MEMBERS,
     BU_SPEC_WRAPPED,
-    _Deldat,
-    _Register,
-    _Var,
+    inline_value_set_register,
     write_sos_input,
 )
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
@@ -62,13 +60,9 @@ _SCB_SLUGS = {"register": "sample", "register_variant": "people", "variable": "v
 _SOS_SLUGS = {"register": "kodregister", "register_variant": "vy-a", "variable": "spec"}
 
 
-def _scope(records, *, provider, slugs, revision, cases=()):
-    """One whole-source scope declaring every native target its records name.
-
-    Both providers carry their parent facts on parent-level records, so the
-    targets are collected source-wide; only the provider, the slugs and the
-    reviewed curation differ.
-    """
+def _scope(records, *, slugs, revision, cases=()):
+    """One whole-source scope declaring every native target its records name."""
+    provider = records[0].subject.provider
     register = source_register_key(records[0])
     variable = next(key for key in map(native_variable_key, records) if key is not None)
     targets = {("variable", variable)}
@@ -111,16 +105,14 @@ def _scope(records, *, provider, slugs, revision, cases=()):
 
 
 def _sos_flag_cases(records):
-    """The SOS workbook format carries no sensitivity or identifier column, so
-    the flags every variable needs arrive as reviewed curation, as in a real
-    build. Nothing here touches the delivered `Värdemängd` cell."""
+    """The flags the SOS format has no column for, as the reviewed curation a
+    real build carries. Nothing here touches the delivered `Värdemängd` cell."""
+    fields = ("sensitivity", "identifier")
     occurrences = tuple(r for r in records if native_variable_key(r) is not None)
     return (
         CurationCase(
             case_id="sos-declared-flags",
-            targets=capture_expectations(
-                occurrences, fields=("sensitivity", "identifier")
-            ),
+            targets=capture_expectations(occurrences, fields=fields),
             decision=OccurrenceCorrectionDecision(
                 reviewed=True,
                 effects=tuple(
@@ -131,13 +123,32 @@ def _sos_flag_cases(records):
                         ),
                     )
                     for record in occurrences
-                    for name in ("sensitivity", "identifier")
+                    for name in fields
                 ),
                 reason="The synthetic workbook omits both catalog flags.",
                 provenance="fixture declaration",
             ),
         ),
     )
+
+
+@pytest.fixture
+def structural_validation_only(monkeypatch):
+    """Retain real structural validation and publication, minus the real-corpus
+    floors no fixture this small can meet."""
+    from reg_meta_build import resolved_catalog
+
+    validate = resolved_catalog.validate_built_db
+    monkeypatch.setattr(
+        resolved_catalog,
+        "validate_built_db",
+        lambda path, *, corpus: validate(path, corpus=False),
+    )
+
+
+def _input_revision(manifest, role):
+    """The revision of the one prepared input filling this role."""
+    return next(e.revision for e in manifest.inputs if e.role == role and e.revision)
 
 
 def _scope_file(directory, name, scope):
@@ -179,37 +190,8 @@ def selection(tmp_path, request):
         else ("registerinformation",),
     )
     if param in _SOS_CELLS:
-        # One SOS register whose only variable declares an inline `Värdemängd`.
         write_sos_input(
-            source,
-            registers=(
-                _Register(
-                    abbrev="SYU",
-                    title_sv="Syntetiskt kodregister",
-                    description_sv="Inline kodlista i Värdemängd-cellen.",
-                    deldatamangder=(
-                        _Deldat(
-                            "SYU_A",
-                            label="Vy A",
-                            description="Enda vyn",
-                            data_from=2005,
-                            data_to=2015,
-                        ),
-                    ),
-                    variables=(
-                        _Var(
-                            "SPEC",
-                            deldatamangd="SYU_A",
-                            label="Specificering",
-                            description="Insatsens specificering",
-                            data_type="Heltal",
-                            data_from=2005,
-                            data_to=2015,
-                            value_set=_SOS_CELLS[param],
-                        ),
-                    ),
-                ),
-            ),
+            source, registers=(inline_value_set_register(_SOS_CELLS[param]),)
         )
     if param == "unbound_values":
         write_scb_input(
@@ -231,9 +213,7 @@ def selection(tmp_path, request):
     prepared = open_prepared_catalog_sources(
         destination, input_commit=commit, expected_sha256=manifest.sha256
     )
-    revision = next(
-        e.revision for e in manifest.inputs if e.role == "scb_records" and e.revision
-    )
+    revision = _input_revision(manifest, "scb_records")
     (record,) = tuple(prepared.records.iter_records(source=revision.dataset))
     directory = tmp_path / "selection"
     directory.mkdir()
@@ -241,15 +221,11 @@ def selection(tmp_path, request):
         _scope_file(
             directory,
             "scope.json.gz",
-            _scope((record,), provider="scb", slugs=_SCB_SLUGS, revision=revision),
+            _scope((record,), slugs=_SCB_SLUGS, revision=revision),
         )
     ]
     if param in _SOS_CELLS:
-        sos_revision = next(
-            e.revision
-            for e in manifest.inputs
-            if e.role == "sos_workbook" and e.revision
-        )
+        sos_revision = _input_revision(manifest, "sos_workbook")
         sos_records = tuple(prepared.records.iter_records(source=sos_revision.dataset))
         scopes.append(
             _scope_file(
@@ -257,7 +233,6 @@ def selection(tmp_path, request):
                 "sos-scope.json.gz",
                 _scope(
                     sos_records,
-                    provider="sos",
                     slugs=_SOS_SLUGS,
                     revision=sos_revision,
                     cases=_sos_flag_cases(sos_records),
@@ -542,18 +517,16 @@ def test_pipeline_artifact_dates_its_pinned_preparation_and_boots_backend(
 @pytest.mark.parametrize("diagnostic", [False, True])
 @pytest.mark.parametrize("failure", ["summary", "events", "summary_and_cli"])
 def test_internal_report_failure_retains_completed_artifact_receipt(
-    selection, tmp_path, monkeypatch, capsys, diagnostic, failure
+    selection,
+    tmp_path,
+    monkeypatch,
+    capsys,
+    diagnostic,
+    failure,
+    structural_validation_only,
 ):
-    from reg_meta_build import cli, pipeline, resolved_catalog
+    from reg_meta_build import cli, pipeline
 
-    # A one-variable fixture cannot meet the real-corpus floors. Retain actual
-    # structural validation and publication while exercising report finalization.
-    validate = resolved_catalog.validate_built_db
-    monkeypatch.setattr(
-        resolved_catalog,
-        "validate_built_db",
-        lambda path, *, corpus: validate(path, corpus=False),
-    )
     output, report = tmp_path / "artifact" / "reg_meta.db", tmp_path / "report"
     if not diagnostic:
         output.parent.mkdir()
@@ -648,26 +621,17 @@ def test_unbindable_value_rows_are_reported_without_a_target_occurrence(
     indirect=["selection"],
 )
 def test_unresolved_inline_code_list_is_reported_and_refused_for_publication(
-    selection, tmp_path, monkeypatch, resolved
+    selection, tmp_path, resolved, structural_validation_only
 ):
-    from reg_meta_build import resolved_catalog
-
-    # A two-variable fixture cannot meet the real-corpus floors. Retain actual
-    # structural validation and publication, so the delivered `Värdemängd` cell
-    # is the only difference between the publishable and the refused build.
-    validate = resolved_catalog.validate_built_db
-    monkeypatch.setattr(
-        resolved_catalog,
-        "validate_built_db",
-        lambda path, *, corpus: validate(path, corpus=False),
-    )
-    strict_db, report = tmp_path / "catalog.db", tmp_path / "report"
-    strict = build_selected_catalog(selection, strict_db, report)
-    diagnostic_db = tmp_path / "diagnostic.db"
+    # The delivered `Värdemängd` cell is the only difference between the
+    # publishable build and the refused one.
+    strict_db = tmp_path / "catalog.db"
+    strict = build_selected_catalog(selection, strict_db, tmp_path / "report")
+    diagnostic_db, diagnostic_report = tmp_path / "diagnostic.db", tmp_path / "diag"
     diagnostic = build_selected_catalog(
-        selection, diagnostic_db, tmp_path / "diagnostic", diagnostic=True
+        selection, diagnostic_db, diagnostic_report, diagnostic=True
     )
-    with gzip.open(tmp_path / "diagnostic" / "events.jsonl.gz", "rt") as stream:
+    with gzip.open(diagnostic_report / "events.jsonl.gz", "rt") as stream:
         issues = [
             event
             for event in (json.loads(line) for line in stream)
@@ -767,23 +731,13 @@ def test_unapplied_existing_curation_is_an_error_and_cannot_hide_a_resolved_targ
     )
 
     def save(gap):
-        payload = gzip.compress(
-            scope.model_copy(update={"unapplied_curation": (gap,)})
-            .model_dump_json()
-            .encode(),
-            mtime=0,
+        written = _scope_file(
+            selection.parent,
+            file.path,
+            scope.model_copy(update={"unapplied_curation": (gap,)}),
         )
-        (selection.parent / file.path).write_bytes(payload)
         selection.write_text(
-            selected.model_copy(
-                update={
-                    "scopes": (
-                        file.model_copy(
-                            update={"sha256": hashlib.sha256(payload).hexdigest()}
-                        ),
-                    )
-                }
-            ).model_dump_json()
+            selected.model_copy(update={"scopes": (written,)}).model_dump_json()
         )
 
     save(gap)

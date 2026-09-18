@@ -190,6 +190,38 @@ PAR_SPLIT_REGISTER = _Register(
 )
 
 
+# A register whose only variable declares its code list inline in the
+# `Värdemängd` cell and has no `Kodlista_*` sheet — the #401 inline fallback the
+# classifier decides, so the delivered cell is the whole of the coding evidence.
+def inline_value_set_register(value_set: str) -> _Register:
+    return _Register(
+        abbrev="SYU",
+        title_sv="Syntetiskt kodregister",
+        description_sv="Inline kodlista i Värdemängd-cellen.",
+        deldatamangder=(
+            _Deldat(
+                "SYU_A",
+                label="Vy A",
+                description="Enda vyn",
+                data_from=2005,
+                data_to=2015,
+            ),
+        ),
+        variables=(
+            _Var(
+                "SPEC",
+                deldatamangd="SYU_A",
+                label="Specificering",
+                description="Insatsens specificering",
+                data_type="Heltal",
+                data_from=2005,
+                data_to=2015,
+                value_set=value_set,
+            ),
+        ),
+    )
+
+
 def _write_register(path: Path, reg: _Register) -> None:
     import openpyxl
 

@@ -1447,18 +1447,21 @@ def _clean_value_code(c: str) -> str | None:
     return c
 
 
-# A further `kod=` inside a label, behind the alignment gap a wrapped cell leaves.
-_EMBEDDED_ASSIGNMENT = re.compile(r" {2,}(\S+) *=")
+# A further `kod=` inside a label, behind the two run-together separators the
+# delivered cells evidence: a wrap alignment gap, or a comma standing in for `;`.
+_EMBEDDED_ASSIGNMENT = re.compile(r"(?: {2,}|, )(\S+) *=")
 
 
 def _hides_another_assignment(label: str) -> bool:
-    """True when a label carries a further `kod=klartext` behind an alignment gap.
+    """True when a label carries a further `kod=klartext` run together with it.
 
-    The gap a wrapped cell leaves IS the evidence (95 spaces in the BU `SPEC`
-    cell), so only a run of two or more spaces counts: one space is ordinary prose
-    spacing, and `1=sample n = 25` is a label. `_clean_value_code` decides what
-    could be a further code, so a label's own `=` that no clean code precedes is
-    a label too.
+    Only the two separators the delivered cells evidence count: the alignment gap
+    a wrapped cell leaves (BU `SPEC`, 42-480 spaces across the audited workbooks),
+    and a comma standing in for `;` (SOL `POMVTRYGG`). Everything else is label
+    text — one space is prose spacing, and a colon quoting a retired code is a
+    historical note whose own row follows separately (THR `TRANSTYP`).
+    `_clean_value_code` decides what could be a further code, so a gap before
+    something that is not one is a label too.
     """
     return any(
         _clean_value_code(match.group(1)) is not None
@@ -1493,9 +1496,10 @@ def _classify_value_set_text(
     MIXED `=`/no-`=` (catches trailing-prose cells like `0=…; …; strängen är
     tom`); any invalid code (range, comma, colon, whitespace); duplicate codes.
 
-    Unresolved: an OTHERWISE COMPLETE list whose label hides a further assignment
-    (`_hides_another_assignment`), i.e. a wrapped cell whose parse would be
-    partial. The cleaner states that unresolved list rather than its members.
+    Unresolved: an OTHERWISE COMPLETE list whose label runs together with a
+    further assignment (`_hides_another_assignment`), i.e. a cell whose accepted
+    parse would be partial. The cleaner states that unresolved list rather than
+    its members.
     Every code, label and the duplicate check decide first: only a cell that
     would otherwise have been accepted whole is a delivered enumeration worth
     reporting, so anything rejected above stays ordinary free text instead of
@@ -1535,5 +1539,5 @@ def _classify_value_set_text(
     if len({code for code, _ in pairs}) != len(pairs):  # duplicate codes -> reject
         return None, False
     if any(_hides_another_assignment(label) for _, label in pairs if label):
-        return None, True  # wrapped cell: the accepted parse would be partial
+        return None, True  # run-together members: this parse would be partial
     return pairs, False

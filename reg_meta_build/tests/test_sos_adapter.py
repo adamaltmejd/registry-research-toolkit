@@ -108,6 +108,31 @@ class TestClassifyValueSetText:
             False,
         )
 
+    def test_historical_parenthetical_quoting_a_code_stays_label_text(self) -> None:
+        # THR `TRANSTYP`: a retired period quotes another code's assignment inside
+        # a date parenthetical, behind `: `. That is prose, not a run-together
+        # member — `ZCON` has its own row — so all the members survive.
+        assert _classify_value_set_text(
+            "ZRFR = BTB Avtal  (1/7 2008-31/12 2012: ZCON=BTB Avtal);"
+            " ZCFR = BTB Avtal fritt; ZCON = BTB Avtal"
+        ) == (
+            [
+                ("ZRFR", "BTB Avtal  (1/7 2008-31/12 2012: ZCON=BTB Avtal)"),
+                ("ZCFR", "BTB Avtal fritt"),
+                ("ZCON", "BTB Avtal"),
+            ],
+            False,
+        )
+
+    def test_a_gap_before_something_that_is_not_a_code_stays_label_text(self) -> None:
+        # `_clean_value_code` decides what could be a further code: behind the
+        # same wide gap, a parenthesised range annotation is not one, so the list
+        # stays whole rather than becoming a false unresolved.
+        assert _classify_value_set_text("1=ja; 2=nej  (0-744=intervall)") == (
+            [("1", "ja"), ("2", "nej  (0-744=intervall)")],
+            False,
+        )
+
     def test_newline_delimited_spec_cell_keeps_all_three_members(self) -> None:
         # The BU `SPEC` cell that IS newline-delimited throughout parses in full.
         assert _classify_value_set_text(
@@ -199,6 +224,9 @@ class TestClassifyValueSetText:
             # would emit codes 2 and 3 and bury `4 = ...` in code 3's label.
             normalize_text(BU_SPEC_WRAPPED, multiline=True),
             "1=ja; 2=nej  3=kanske",  # the narrowest gap that is still one
+            # SOL `POMVTRYGG`: this cell separates its members with `;`, but its
+            # first segment carries a second complete assignment behind a comma.
+            "0=(ogitligt), 1=enbart trygghetslarm; 2=trygghetslarm som delinsats",
         ],
     )
     def test_partial_enumeration_is_explicitly_unresolved(self, text: str) -> None:
