@@ -184,6 +184,82 @@ def test_blank_end_open_rule_never_widens_start_or_end(tmp_path: Path) -> None:
     assert _partial_record(path).edition_scope.kind == "unknown"
 
 
+def test_trailing_dash_start_reads_explicit_open_end(tmp_path: Path) -> None:
+    import openpyxl
+
+    # No open register period and no Deldatamängder sheet: the dash alone
+    # carries the open end.
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["H2"] = "1999-"
+    workbook["Metadata - Variabelnivå"]["I2"] = None
+    workbook.save(path)
+    register = parse_register_file(path)
+    record = clean_sos_variable(register, register.variables[0], _revision(path))
+    assert record.edition_scope.kind == "intervals"
+    assert tuple((i.start, i.end) for i in record.edition_scope.intervals) == (
+        ("1999", None),
+    )
+
+
+def test_trailing_dash_subset_start_reads_open(tmp_path: Path) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_period_context_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Deldatamängder"]["C2"] = "2007-"
+    workbook["Deldatamängder"]["D2"] = None
+    workbook.save(path)
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+    subset = next(
+        record
+        for record in cleaned.records
+        if record.subject.member.status == "not_applicable"
+        and record.subject.variant.name == "PAR_OV"
+    )
+    assert subset.edition_scope.kind == "intervals"
+    assert tuple((i.start, i.end) for i in subset.edition_scope.intervals) == (
+        ("2007", None),
+    )
+    # The undashed Y-168 conjunction still sees the dashed subset as open.
+    partial = next(
+        record for record in cleaned.records if record.subject.member.name == "PARTIELL"
+    )
+    assert partial.edition_scope.kind == "intervals"
+    assert tuple((i.start, i.end) for i in partial.edition_scope.intervals) == (
+        ("2010", None),
+    )
+
+
+@pytest.mark.parametrize(
+    ("start", "end"),
+    [
+        # A supplied Data till together with a dashed start is a conflict.
+        ("1999-", 2020),
+        # Compound and free-text ranges stay unknown, dash or not.
+        ("1999-2003 samt 2007-", None),
+        ("Senaste tre år", None),
+        ("2011 och 2013", None),
+    ],
+)
+def test_trailing_dash_widens_nothing_else(
+    tmp_path: Path, start: object, end: object
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["H2"] = start
+    workbook["Metadata - Variabelnivå"]["I2"] = end
+    workbook.save(path)
+    register = parse_register_file(path)
+    record = clean_sos_variable(register, register.variables[0], _revision(path))
+    assert record.edition_scope.kind == "unknown"
+
+
 @pytest.mark.parametrize(
     ("header", "field"),
     [

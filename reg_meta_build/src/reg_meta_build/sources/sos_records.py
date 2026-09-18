@@ -234,6 +234,33 @@ def _coverage_scope(
 
     start = boundary(from_cell)
     end = boundary(to_cell)
+    # A trailing dash in a supplied Data från is an explicit open end of that
+    # row's own coverage: strip the dash to obtain the start and require the
+    # delivered Data till to be blank. A supplied Data till together with a
+    # dashed start is a conflict and stays unknown. This reading applies to
+    # variable rows and Deldatamängder rows alike (both are read through this
+    # function), so a dashed subset start keeps its own open scope while the
+    # Y-168 conjunction below is unchanged for undashed starts.
+    if (
+        start is not None
+        and start.endswith("-")
+        and end is None
+        and _is_blank_coverage_cell(to_cell)
+    ):
+        stripped = start.removesuffix("-")
+        if stripped:
+            window = value_window(stripped, None, compact_dates=True)
+            if window.status == "known" and window.start is not None:
+                years_only = re.fullmatch(r"[0-9]{4}", stripped) is not None
+                return TemporalScope(
+                    kind="intervals",
+                    intervals=(
+                        ScopeInterval(
+                            start=stripped if years_only else window.start,
+                            end=None,
+                        ),
+                    ),
+                )
     # A blank Data till reads as an explicit open end only under a documented
     # open context: a supplied Data från, an open register-level Tidsperiod
     # (trailing dash) and a blank enclosing Deldatamängder Data till. The
