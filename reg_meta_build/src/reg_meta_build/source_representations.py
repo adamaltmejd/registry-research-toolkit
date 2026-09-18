@@ -13,6 +13,7 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
 
+from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
@@ -163,8 +164,9 @@ def form_representations(
     Conflicting optional facts/coding withhold those aspects and retain the issues.
     The storage representative is a deterministic column label, never a metadata
     donor; precise structural windows select the actual delivered representation.
-    The fourth result names every (variant, column, period) an applicable checked
-    decision governs, whether it grouped the period or withheld it.
+    The fourth result names every (variant, column, period) a checked decision
+    withholds delivery for: a period it reports as unresolved, and the periods it
+    assigns to a sibling column. What it does deliver stays a checked obligation.
     """
     if not cases:
         return states, (), [], ()
@@ -200,7 +202,7 @@ def form_representations(
             continue
         by_variant[variant].append((case, decision))
     result = []
-    governed: list[tuple[str, str, str, str]] = []
+    withheld_windows: list[tuple[str, str, str, str]] = []
     aliases: dict[tuple[ResolvedVariant, str], list[ResolvedAliasWindow]] = defaultdict(
         list
     )
@@ -239,7 +241,9 @@ def form_representations(
                 continue
             decisions = [d for _, d in selected_pairs]
             first = decisions[0]
-            governed.extend(
+            # Reporting the slice unresolved withholds the state for every column
+            # this decision speaks for, the parallel ones it never delivered too.
+            unresolved = tuple(
                 (variant.slug, column, start, end)
                 for column in sorted(
                     {s.delivery_column_name for s in active}
@@ -255,7 +259,10 @@ def form_representations(
                 selected: list[CurationCase] = selected,
                 start: str = start,
                 end: str = end,
+                unresolved: tuple[tuple[str, str, str, str], ...] = unresolved,
             ) -> None:
+                if "state" in withheld:
+                    withheld_windows.extend(unresolved)
                 diagnostics.append(
                     ResolutionDiagnostic(
                         code=code,
@@ -401,6 +408,14 @@ def form_representations(
                             provenance=None,
                         )
                     )
+                # Outside its declared window a sibling delivers this slice instead,
+                # so only the declared part stays this column's delivery obligation.
+                withheld_windows.extend(
+                    (variant.slug, column.column, lost_from, lost_to)
+                    for lost_from, lost_to in remaining_windows(
+                        ((column.valid_from, column.valid_to),), start, end
+                    )
+                )
     return (
         result,
         tuple(
@@ -412,5 +427,5 @@ def form_representations(
             )
         ),
         diagnostics,
-        tuple(governed),
+        tuple(withheld_windows),
     )

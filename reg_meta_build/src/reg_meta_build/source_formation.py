@@ -84,8 +84,8 @@ class VariableFormation:
     withheld_representations: dict[
         tuple[str, str], tuple[ResolutionDiagnostic, ...]
     ] = field(default_factory=dict)
-    # Supported delivery this variable still owes the catalog; empty whenever the
-    # whole variable is withheld, which is itself a terminal explicit outcome.
+    # Supported delivery this family still claims, less every period an explicit
+    # coding or representation outcome withholds.
     coverage: tuple[CoverageObligation, ...] = ()
 
 
@@ -489,7 +489,7 @@ def form_native_variable(
                     )
     variable_key = effective[0].variable_key
     assert variable_key is not None
-    states, aliases, grouping_issues, governed = form_representations(
+    states, aliases, grouping_issues, representation_waivers = form_representations(
         states,
         representations,
         variable_key=variable_key,
@@ -497,7 +497,7 @@ def form_native_variable(
         subject=subject,
     )
     diagnostics.extend(grouping_issues)
-    for variant_slug, column, start, end in governed:
+    for variant_slug, column, start, end in representation_waivers:
         waived[variant_slug, column].append((start, end))
     previous_variants = {state.variant.slug for state in states}
     states, representation_issues, withheld_representations = _disjoint_representations(
@@ -531,6 +531,16 @@ def form_native_variable(
         for key, causes in withheld_representations.items()
         if key not in present_representations
     }
+    # What the supported occurrences still claim once every explicit outcome has
+    # taken its own period back. Withholding the whole variable is one more such
+    # outcome, recorded in the dependency ledger and honoured at the boundary.
+    coverage = tuple(
+        replace(claim, valid_from=start, valid_to=end)
+        for claim in claims
+        for start, end in remaining_windows(
+            waived[claim.variant, claim.column], claim.valid_from, claim.valid_to
+        )
+    )
     if not states:
         accepted_omission = any(
             d.code == "curated_state_omission" for d in diagnostics
@@ -551,6 +561,7 @@ def form_native_variable(
             tuple(coding_results),
             withheld_variants,
             withheld_representations,
+            coverage,
         )
     flag_values = {}
     for source_name, output_name in (
@@ -593,19 +604,6 @@ def form_native_variable(
             (subject,),
         )
         variable = None
-    # Withholding the whole variable is itself a terminal explicit outcome, so a
-    # withheld variable claims nothing; otherwise each claim keeps what is left.
-    coverage = (
-        tuple(
-            replace(claim, valid_from=start, valid_to=end)
-            for claim in claims
-            for start, end in remaining_windows(
-                waived[claim.variant, claim.column], claim.valid_from, claim.valid_to
-            )
-        )
-        if variable is not None
-        else ()
-    )
     return VariableFormation(
         variable,
         tuple(diagnostics),

@@ -801,7 +801,7 @@ def build_selected_catalog(
             # Mandatory before any output placement, in both modes and whatever
             # else the ledger holds: losing supported delivery is our bug, and no
             # curation error may stand in for the source outcome that never came.
-            check_delivery_coverage(lineage.variables, coverage)
+            check_delivery_coverage(lineage.variables, coverage, withheld=withheld)
             _emit_timing("pipeline: catalog dependencies", phase_started)
             build_result.update(
                 {

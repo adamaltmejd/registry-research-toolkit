@@ -306,19 +306,24 @@ their intersection. One alias decision cannot establish another's ownership.
 
 Resolution keeps what each supported occurrence actually claims: one obligation per
 finite positive effective claim, on its exact variant, physical column and period, less
-the periods a checked coding omission or an applicable representation decision
-withholds. Obligations travel with the scope result and are checked against the final
-resolved variables immediately before the database is written — in both modes, and
-whatever else the ledger already holds.
+the periods an explicit outcome takes back. A checked coding omission takes back its own
+slice. A representation decision takes back the periods it reports unresolved and the
+periods it assigns to a sibling column — what it does deliver stays a claim, so the
+shared state and the alias windows it promises are themselves checked. Obligations
+travel with the scope result and are checked against the final resolved variables
+immediately before the database is written — in both modes, and whatever else the ledger
+already holds.
 
 Delivery is established by a final state or a declared representation window on the same
 variable, variant and column. Another column, another variant and a search alias without
-windows deliver nothing here. Genuine source gaps, negative availability, unknown and
-pooled scopes and explicit whole-variable or whole-variant withholding claim no delivery
-in the first place, so they raise nothing. Anything else missing is an engineering
-defect, not a curation question: the build names the source records and the exact
-missing window and stops before any output is placed. A missing optional field or an
-unrelated diagnostic is no permission to drop the state it belongs to.
+windows deliver nothing here. Genuine source gaps, negative availability and unknown or
+pooled scopes claim no delivery in the first place. A variable the dependency ledger
+withholds outright, with source evidence, answers for its own claim through that entry,
+whichever stage recorded it, so an exact source-linked blocker stays a curation blocker.
+Anything else missing is an engineering defect, not a curation question: the build names
+the source records and the exact missing window and stops before any output is placed. A
+missing optional field or an unrelated diagnostic is no permission to drop the state it
+belongs to.
 
 ### Groups, relations and dependent output
 

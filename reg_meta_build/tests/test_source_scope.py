@@ -996,7 +996,9 @@ def test_parallel_columns_report_exact_omissions_without_hiding_a_safe_variant()
     assert [
         (o.variant, o.column, o.valid_from, o.valid_to) for o in result.coverage
     ] == [("people-3", "VALUE", "2020-01-01", "2020-12-31")]
-    check_delivery_coverage((variable,), result.coverage)
+    check_delivery_coverage(
+        (variable,), result.coverage, withheld=result.withheld_dependencies
+    )
 
 
 def _states(variable, shape):
@@ -1047,10 +1049,14 @@ def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing)
             (record_ref(item),),
         )
     ]
-    check_delivery_coverage((variable,), result.coverage)
+    check_delivery_coverage(
+        (variable,), result.coverage, withheld=result.withheld_dependencies
+    )
     damaged = variable.model_copy(update={"states": _states(variable, shape)})
     with pytest.raises(ValueError, match="delivery coverage was lost") as failure:
-        check_delivery_coverage((damaged,), result.coverage)
+        check_delivery_coverage(
+            (damaged,), result.coverage, withheld=result.withheld_dependencies
+        )
     assert missing in str(failure.value)
     assert "scb/example/value-5 people-2/VALUE" in str(failure.value)
     assert f"claimed by {REVISION.dataset}/" in str(failure.value)
@@ -1089,7 +1095,9 @@ def test_genuine_source_gaps_and_unresolved_scopes_claim_no_delivery(shape):
         else [("2019-01-01", "2019-12-31")]
     )
     # No obligation covers 2020, the withdrawn year, or any widened period.
-    check_delivery_coverage((variable,), result.coverage)
+    check_delivery_coverage(
+        (variable,), result.coverage, withheld=result.withheld_dependencies
+    )
 
 
 def test_a_checked_state_omission_withdraws_only_its_own_period():
@@ -1125,7 +1133,9 @@ def test_a_checked_state_omission_withdraws_only_its_own_period():
     assert [(o.valid_from, o.valid_to) for o in result.coverage] == [
         ("2019-01-01", "2019-12-31")
     ]
-    check_delivery_coverage((variable,), result.coverage)
+    check_delivery_coverage(
+        (variable,), result.coverage, withheld=result.withheld_dependencies
+    )
     lost = variable.model_copy(
         update={
             "states": (
@@ -1134,7 +1144,9 @@ def test_a_checked_state_omission_withdraws_only_its_own_period():
         }
     )
     with pytest.raises(ValueError, match=r"2019-07-01\.\.2019-12-31"):
-        check_delivery_coverage((lost,), result.coverage)
+        check_delivery_coverage(
+            (lost,), result.coverage, withheld=result.withheld_dependencies
+        )
 
 
 def test_an_unrelated_field_diagnostic_is_no_permission_to_discard_its_state():
@@ -1150,7 +1162,36 @@ def test_an_unrelated_field_diagnostic_is_no_permission_to_discard_its_state():
         ("2020-01-01", "2020-12-31")
     ]
     with pytest.raises(ValueError, match=r"2020-01-01\.\.2020-12-31"):
-        check_delivery_coverage((), result.coverage)
+        check_delivery_coverage(
+            (), result.coverage, withheld=result.withheld_dependencies
+        )
+
+
+def test_an_evidenced_whole_variable_withholding_answers_for_its_own_claim():
+    item = record()
+    result = resolve(
+        (
+            item.model_copy(
+                update={
+                    "fields": item.fields.model_copy(
+                        update={"sensitivity": SourceField(status="unknown")}
+                    )
+                }
+            ),
+        )
+    )
+    assert result.variables == {native_variable_key(item): None}
+    assert [d.code for d in result.diagnostics] == ["unresolved_flag"]
+    # The occurrence still claims 2020. The evidenced whole-variable withholding is
+    # what answers for it, so the loss stays a curation blocker, not an our-bug
+    # failure — and nothing but that ledger entry excuses it.
+    assert [(o.valid_from, o.valid_to) for o in result.coverage] == [
+        ("2020-01-01", "2020-12-31")
+    ]
+    assert ("variable", "scb/example/value-5") in result.withheld_dependencies
+    check_delivery_coverage((), result.coverage, withheld=result.withheld_dependencies)
+    with pytest.raises(ValueError, match=r"2020-01-01\.\.2020-12-31"):
+        check_delivery_coverage((), result.coverage, withheld={})
 
 
 def test_a_search_only_alias_establishes_no_delivery_for_the_lost_window():
@@ -1184,4 +1225,6 @@ def test_a_search_only_alias_establishes_no_delivery_for_the_lost_window():
         }
     )
     with pytest.raises(ValueError, match=r"2020-07-01\.\.2020-12-31"):
-        check_delivery_coverage((damaged,), result.coverage)
+        check_delivery_coverage(
+            (damaged,), result.coverage, withheld=result.withheld_dependencies
+        )

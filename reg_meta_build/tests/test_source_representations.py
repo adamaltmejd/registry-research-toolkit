@@ -10,6 +10,7 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
 from reg_meta.catalog import Catalog
 from reg_meta.db import open_db
+from reg_meta_build.catalog_dependencies import check_delivery_coverage
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
@@ -215,9 +216,18 @@ def test_shared_state_keeps_metadata_period_and_query_selects_precise_column(
     assert state.delivery_column_name == "First"  # Deterministic storage label only.
     assert [a.delivery_column_name for a in variable.aliases] == ["First", "Second"]
     assert all(w.provenance is None for a in variable.aliases for w in a.windows)
-    # The checked decision governs which column delivers when, so the boundary
-    # guard has nothing left to require of these two columns.
-    assert formed.coverage == ()
+    # The decision reassigns each half-year to one column, and that narrowed claim
+    # stays checked: the shared state and the alias windows have to deliver it.
+    assert [
+        (o.variant, o.column, o.valid_from, o.valid_to) for o in formed.coverage
+    ] == [
+        ("people", "First", "2020-01-01", "2020-06-30"),
+        ("people", "Second", "2020-07-01", "2020-12-31"),
+    ]
+    check_delivery_coverage((variable,), formed.coverage, withheld={})
+    dropped = variable.model_copy(update={"aliases": variable.aliases[:1]})
+    with pytest.raises(ValueError, match=r"Second 2020-07-01\.\.2020-12-31"):
+        check_delivery_coverage((dropped,), formed.coverage, withheld={})
     assert state.provenance is not None and "representations:" in state.provenance
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
@@ -367,13 +377,13 @@ def test_missing_formed_member_withholds_group_without_manufacturing_metadata() 
     formed, _ = _form(setup)
     assert formed.variable is not None
     state = formed.variable.states[0]
-    result, aliases, issues, governed = form_representations(
+    result, aliases, issues, waivers = form_representations(
         [state], (setup[2],), variable_key=KEY, variants=setup[3], subject="fixture"
     )
     assert result == [] and aliases == ()
     assert issues[0].code == "missing_representation_metadata"
     # The withheld period still belongs to the checked decision, not to a bug.
-    assert {(variant, column) for variant, column, _, _ in governed} == {
+    assert {(variant, column) for variant, column, _, _ in waivers} == {
         ("people", "First"),
         ("people", "Second"),
     }
