@@ -51,7 +51,7 @@ _CLASSIFICATION_URL = "https://example.test/classifications/ssyk"
         ("202002", "2020", ("2020-02-01", "2020-12-31")),
         ("2020", "20200203", ("2020-01-01", "2020-02-03")),
         ("2020", "2020", ("2020", "2020")),
-        ("20140203", None, None),
+        ("20140203", None, ("2014-02-03", None)),
         ("20140230", "20150405", None),
         ("20150405", "20140203", None),
         ("=2001", "2020", None),
@@ -118,13 +118,14 @@ def _partial_record(path: Path):
     return clean_sos_variable(register, variable, _revision(path))
 
 
-def test_blank_end_reads_open_only_under_open_register_and_blank_subset(
+def test_blank_end_reads_open_without_register_or_subset_context(
     tmp_path: Path,
 ) -> None:
     from reg_meta_build.source_intervals import scope_bounds
 
-    # Documented open context: supplied Data från, open register Tidsperiod
-    # (trailing dash) and a blank enclosing subset Data till.
+    # A supplied Data från with a delivered blank Data till reads as an open
+    # end on its own: no register-level Tidsperiod and no Deldatamängder row
+    # are required.
     path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
     _write_period_context_workbook(path)
     record = _partial_record(path)
@@ -140,20 +141,57 @@ def test_blank_end_reads_open_only_under_open_register_and_blank_subset(
         == ""
     )
 
-    # A closed register period keeps today's unknown scope.
+    # A closed register period still reads the row's own open end.
     closed = tmp_path / "closed.xlsx"
     _write_period_context_workbook(closed, register_period="2005-07-01-2024-12-31")
-    assert _partial_record(closed).edition_scope.kind == "unknown"
+    assert tuple(
+        (i.start, i.end) for i in _partial_record(closed).edition_scope.intervals
+    ) == (("2010", None),)
 
-    # An absent register period keeps today's unknown scope.
+    # An absent register period still reads the row's own open end.
     absent = tmp_path / "absent.xlsx"
     _write_period_context_workbook(absent, register_period=None)
-    assert _partial_record(absent).edition_scope.kind == "unknown"
+    assert tuple(
+        (i.start, i.end) for i in _partial_record(absent).edition_scope.intervals
+    ) == (("2010", None),)
 
-    # A closed enclosing subset keeps today's unknown scope.
+    # A closed enclosing subset still reads the variable row's own open end.
     shut_subset = tmp_path / "shut.xlsx"
     _write_period_context_workbook(shut_subset, subset_end=2020)
-    assert _partial_record(shut_subset).edition_scope.kind == "unknown"
+    assert tuple(
+        (i.start, i.end) for i in _partial_record(shut_subset).edition_scope.intervals
+    ) == (("2010", None),)
+
+
+def test_blank_end_open_without_any_period_context(tmp_path: Path) -> None:
+    import openpyxl
+
+    # Year-only start with a blank end and no register/subset context.
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_source_workbook(path)
+    record = _partial_record(path)
+    assert record.edition_scope.kind == "intervals"
+    assert tuple((i.start, i.end) for i in record.edition_scope.intervals) == (
+        ("2010", None),
+    )
+
+    # Compact-date start with a blank end reads the parsed ISO start.
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["H6"] = "20050701"
+    workbook["Metadata - Variabelnivå"]["I6"] = None
+    workbook.save(path)
+    compact = _partial_record(path)
+    assert compact.edition_scope.kind == "intervals"
+    assert tuple((i.start, i.end) for i in compact.edition_scope.intervals) == (
+        ("2005-07-01", None),
+    )
+
+    # A supplied Data till that does not parse stays unknown.
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["H6"] = 2010
+    workbook["Metadata - Variabelnivå"]["I6"] = "2017 (Malmö)"
+    workbook.save(path)
+    assert _partial_record(path).edition_scope.kind == "unknown"
 
 
 def test_blank_end_open_rule_never_widens_start_or_end(tmp_path: Path) -> None:
@@ -223,7 +261,7 @@ def test_trailing_dash_subset_start_reads_open(tmp_path: Path) -> None:
     assert tuple((i.start, i.end) for i in subset.edition_scope.intervals) == (
         ("2007", None),
     )
-    # The undashed Y-168 conjunction still sees the dashed subset as open.
+    # The undashed open-end reading sees the dashed subset as open too.
     partial = next(
         record for record in cleaned.records if record.subject.member.name == "PARTIELL"
     )
@@ -573,8 +611,10 @@ def test_source_records_keep_occurrences_conflicts_and_native_sos_coordinates(
     assert first.edition_scope.intervals[0].end == "2020"
     assert first.edition_period_scope.kind == "not_applicable"
 
-    assert partial.edition_scope.kind == "unknown"
-    assert partial.edition_scope.label == "Data från=2010; Data till=<blank>"
+    assert partial.edition_scope.kind == "intervals"
+    assert tuple((i.start, i.end) for i in partial.edition_scope.intervals) == (
+        ("2010", None),
+    )
     partial_link = next(
         cell for cell in partial.delivered_cells if cell.name == "Länk kodverk"
     )
@@ -695,7 +735,10 @@ def test_common_parent_metadata_preserves_languages_conflicts_and_raw_context(
     partial = next(
         record for record in cleaned.records if record.subject.member.name == "PARTIELL"
     )
-    assert partial.edition_scope.kind == "unknown"
+    assert partial.edition_scope.kind == "intervals"
+    assert tuple((i.start, i.end) for i in partial.edition_scope.intervals) == (
+        ("2010", None),
+    )
     assert partial.fields.coverage_from is not None
     assert partial.fields.coverage_to is not None
     assert partial.fields.coverage_from.value == "2010"
