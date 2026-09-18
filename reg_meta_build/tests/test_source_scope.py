@@ -11,6 +11,7 @@ from _prepared_fixtures import accept_prepared
 from reg_meta_build.catalog_dependencies import (
     CatalogDependencies,
     CatalogDependencyError,
+    CoverageObligation,
     check_delivery_coverage,
     resolve_panel_dependencies,
     variable_dependency_keys,
@@ -999,6 +1000,25 @@ def test_parallel_columns_report_exact_omissions_without_hiding_a_safe_variant()
     check_delivery_coverage(
         (variable,), result.coverage, withheld=result.withheld_dependencies
     )
+    # Withholding every state of one variant is evidenced and exact: it answers for
+    # that variant's own claim, and leaves the safe sibling's claim checked.
+    claim = CoverageObligation(
+        "scb/example/value-5",
+        "people-2",
+        "OTHER",
+        "2020-01-01",
+        "2020-12-31",
+        (record_ref(second),),
+    )
+    check_delivery_coverage(
+        (variable,), (claim,), withheld=result.withheld_dependencies
+    )
+    with pytest.raises(ValueError, match=r"people-3/OTHER 2020-01-01\.\.2020-12-31"):
+        check_delivery_coverage(
+            (variable,),
+            (replace(claim, variant="people-3"),),
+            withheld=result.withheld_dependencies,
+        )
 
 
 def _states(variable, shape):

@@ -191,8 +191,9 @@ def check_delivery_coverage(
     on the same resolved variable, variant and physical column; a search alias
     without windows, another column or another variant delivers nothing here.
     Periods are never widened: only the claimed window has to be represented.
-    A variable the ledger withholds outright, with source evidence, owes nothing;
-    that stays a curation blocker whichever stage recorded it.
+    A variable or one of its variants that the ledger withholds outright, with
+    source evidence, owes nothing at that exact coordinate; the claim stays a
+    curation blocker whichever stage recorded it, and a sibling stays checked.
     """
     delivered: dict[tuple[str, str, str], list[tuple[str, str]]] = defaultdict(list)
     for variable in variables:
@@ -207,7 +208,13 @@ def check_delivery_coverage(
             )
     losses = []
     for obligation in obligations:
-        if ("variable", obligation.fqid) in withheld:
+        if any(
+            key in withheld
+            for key in (
+                ("variable", obligation.fqid),
+                ("variant_states", obligation.fqid, obligation.variant),
+            )
+        ):
             continue
         key = (obligation.fqid, obligation.variant, obligation.column)
         for start, end in remaining_windows(
