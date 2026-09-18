@@ -20,7 +20,7 @@ from reg_meta.fqid import FqidKind
 from reg_meta_build._curation import repo_curation_path
 from reg_meta_build.alias_windows import load_alias_windows
 from reg_meta_build.classification_links import load_classification_links
-from reg_meta_build.classifications import load_seed
+from reg_meta_build.classifications import load_seed, load_valid_codes
 from reg_meta_build.codeless_overlap import load_codeless_overlap
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
@@ -81,8 +81,62 @@ def test_catalog_overlays_share_one_directory() -> None:
 
 def test_repo_classifications_and_links_parse_from_one_file() -> None:
     path = _CURATION / "classifications.toml"
-    assert load_seed(path)
-    assert load_classification_links(path)
+    seed = load_seed(path)
+    links = load_classification_links(path)
+    assert links
+    by_short = {entry["short_name"]: entry for entry in seed}
+    # Y-170: SEKTOR2000 stays INSEKT 2000 — the display label "Sektor 2000"
+    # moved to the separate RAMS/LISA ownership-sector book SEKTORKOD.
+    assert by_short["SEKTOR2000"]["vardemangdsversion"] == [
+        "Standard för institutionell sektorindelning 2000",
+    ]
+    sektorkod = by_short["SEKTORKOD"]
+    assert sektorkod["name"] == "Sektorkod (RAMS/LISA)"
+    assert sektorkod["publisher"] == "SCB"
+    assert sektorkod["valid_from"] == 1993
+    assert sektorkod["vardemangdsversion"] == [
+        "Sektor 2000",
+        "RAMS SektorKod fr.o.m. 1993",
+    ]
+    assert sektorkod["valid_codes_file"] == "sektorkod.csv"
+    codes = load_valid_codes(_ROOT / "input_data" / "classifications" / "sektorkod.csv")
+    assert sorted(codes) == [
+        "00",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+    ]
+    assert codes["00"] == "Uppgift saknas"
+    assert codes["13"] == "Kommunal förvaltning"
+    assert codes["14"] == "Landsting"
+    assert codes["15"] == "Övriga offentliga institutioner"
+    assert codes["21"] == "Aktiebolag ej offentligt ägda"
+    assert codes["25"] == "Övriga organisationer"
+    rebound = {
+        (link.provider, link.register, link.variable)
+        for link in links
+        if link.classification == "SEKTORKOD"
+    }
+    assert rebound == {
+        ("scb", "arbetskraftsbarometern", "sektorkod"),
+        ("scb", "fortroendevalda", "sektor"),
+        ("scb", "kommunalekonomisk-utjamning", "sektor"),
+        ("scb", "lisa", "ast-sektorkod"),
+        ("scb", "lisa", "org-sektorkod"),
+        ("scb", "lisa", "sektorkod"),
+        ("scb", "rams", "institutionell-sektorkod"),
+        ("scb", "yrkesreg", "sektor-ku1"),
+        ("scb", "yrkesreg", "sektorkod"),
+        ("scb", "yrkesreg", "sektorkod-2"),
+        ("scb", "yrkesreg", "sektorkod-storsta-forvarvskalla"),
+    }
 
 
 def test_repo_lineage_parses_from_overlay() -> None:

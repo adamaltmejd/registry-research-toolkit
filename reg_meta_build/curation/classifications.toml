@@ -965,8 +965,12 @@ vardemangdsversion = [
 ]
 
 # ---------------------------------------------------------------------------
-# Institutional sector — Sektor 2000
+# Institutional sector — Sektor 2000 (INSEKT 2000)
 # ---------------------------------------------------------------------------
+# SCB gave two different value sets the display name "Sektor 2000" (Y-170).
+# THIS entry is INSEKT 2000 only: the canonical 73-code Sektor/Undersektor/
+# Delsektor standard. The register-local RAMS/LISA ownership-sector code that
+# shared the display label lives under SEKTORKOD below.
 
 [[classification]]
 short_name = "SEKTOR2000"
@@ -976,10 +980,40 @@ publisher = "SCB"
 valid_from = 2000
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-institutionell-sektorindelning-insekt/"
 vardemangdsversion = [
-  "Sektor 2000",
   "Standard för institutionell sektorindelning 2000",
 ]
 valid_codes_file = "sektor2000.csv"
+
+# ---------------------------------------------------------------------------
+# Ownership sector — Sektorkod (RAMS/LISA)
+# ---------------------------------------------------------------------------
+# Y-170: the SCB value set displayed as "Sektor 2000 / Sektorkod" (431 CVIDs:
+# codes 00, 11–15, 21–25) and "RAMS SektorKod fr.o.m. 1993" is NOT INSEKT — it
+# is the LISA/RAMS ownership-sector code, bound to SEKTOR2000 by label
+# collision. Codes 1993– per SCB's LISA library
+# (reg_meta_build/docs/lisa/SektorKod.md: 11 = Statlig förvaltning,
+# 12 = Statliga affärsverk, 13 = Kommunal förvaltning [export label; the LISA
+# background text writes "Primärkommunal förvaltning"], 14 = Landsting,
+# 15 = Övriga offentliga institutioner, 21 = Aktiebolag ej offentligt ägda
+# [export label, no comma], 22 = Övriga företag, ej offentligt ägda,
+# 23 = Statligt ägda företag och organisationer,
+# 24 = Kommunalt ägda företag och organisationer, 25 = Övriga organisationer;
+# 00 = Uppgift saknas observed in the export), corroborated by SSD RAMS/YrkesReg
+# "arbetsställets sektortillhörighet" value texts. Scope is exactly this set:
+# LISA SektorKod pre-2000 extra codes (19, 20, 29, 30, 40, 60, 99) are NOT
+# waived, and codes 0/000/'' on INSEKT-bound columns stay unresolved.
+
+[[classification]]
+short_name = "SEKTORKOD"
+name = "Sektorkod (RAMS/LISA)"
+name_en = "Ownership sector code (RAMS/LISA)"
+publisher = "SCB"
+valid_from = 1993
+vardemangdsversion = [
+  "Sektor 2000",
+  "RAMS SektorKod fr.o.m. 1993",
+]
+valid_codes_file = "sektorkod.csv"
 
 # ---------------------------------------------------------------------------
 # Legal form — Juridisk form
@@ -1236,63 +1270,66 @@ valid_codes_file = "sos/mdc.csv"
 # candidate) is NOT single-short_name-curatable and stays for the deferred
 # follow-up.
 
-# Institutional sector (SEKTOR2000) — codes 12/13/14/21/… ("Statliga affärsverk",
-# "Kommunal förvaltning", "Landsting"/"Region", "Aktiebolag …") coincide numerically
-# with SNI/SSYK/LKF division codes, but the labels are unambiguously sector.
+# Ownership sector — Sektorkod (RAMS/LISA), Y-170. The #494 residue entries
+# below carry the LISA/RAMS ownership-sector code ("Sektor 2000 / Sektorkod":
+# 00, 11–15, 21–25), not INSEKT: an early label-collision bound them to
+# SEKTOR2000, whose book has no code 15. Each column's observed set was checked
+# against the Y-170 cohort before retargeting; pre-2000 extras and 0/000/''
+# stay nonconforming under the new book exactly as before.
 [[link]]
 variable       = "scb/arbetskraftsbarometern/sektorkod"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes (coincide cross-family by digits)"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/fortroendevalda/sektor"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/kommunalekonomisk-utjamning/sektor"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/lisa/ast-sektorkod"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/lisa/org-sektorkod"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/lisa/sektorkod"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/rams/institutionell-sektorkod"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/yrkesreg/sektor-ku1"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/yrkesreg/sektorkod"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/yrkesreg/sektorkod-2"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[link]]
 variable       = "scb/yrkesreg/sektorkod-storsta-forvarvskalla"
-classification = "SEKTOR2000"
-note           = "curated:#494 label-unambiguous sector codes"
+classification = "SEKTORKOD"
+note           = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 # Education (ISCED) — the variable slug itself names the classification; the codes
 # coincide with other numeric families but the labels are the ISCED level / field

@@ -198,6 +198,29 @@ def test_original_coding_or_canonical_book_change_invalidates_binding():
     assert result.diagnostics[0].code == "classification_evidence_changed"
 
 
+def test_book_losing_the_observed_code_refuses_the_old_acceptance():
+    # Y-170 shape: a decision accepted while the selected book contained the
+    # observed code must not replay once the book is corrected to exclude it.
+    # The stale case is refused outright (no severed-conformance substitute —
+    # the declaration was never re-reviewed), the original coding is untouched,
+    # and the formed state carries no classification.
+    setup = _setup(code="02")
+    assert _apply(setup).diagnostics == ()
+    book = setup[3]["fixture"]
+    shrunk = book.model_copy(
+        update={"codes": tuple(c for c in book.codes if c.code != "02")}
+    )
+    result = _apply(setup, classifications={"fixture": shrunk})
+    assert result.coding == setup[2]
+    assert result.diagnostics[0].code == "classification_evidence_changed"
+    state = _form(setup, result).states[0]
+    assert state.classification is None
+    assert state.conformance is None
+    assert state.value_set is not None and state.value_set.members == (
+        ("02", "Source label"),
+    )
+
+
 def test_conflicting_bindings_withhold_only_overlap_and_preserve_inline_coding():
     setup = _setup()
     case = setup[1]

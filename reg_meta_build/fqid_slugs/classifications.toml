@@ -230,6 +230,9 @@ slug = "niva-oldv1"
 [classification."SEKTOR2000"]
 slug = "sektor2000"
 
+[classification."SEKTORKOD"]
+slug = "sektorkod"
+
 [classification."SNI2002"]
 slug = "sni2002"
 

@@ -451,7 +451,8 @@ class TestCuratedClassificationLinks:
     def test_repo_toml_loads_clean(self) -> None:
         """The shipped maintainer artifact parses and carries the #494 part-2
         curated residue (13 entries). Asserting the exact set so future TOML
-        drift is caught here.
+        drift is caught here. The 11 sector entries point at SEKTORKOD since
+        Y-170 (RAMS/LISA ownership-sector code, split off SEKTOR2000/INSEKT).
 
         Loads the shipped file directly, independently of synthetic catalog
         fixtures."""
@@ -466,17 +467,17 @@ class TestCuratedClassificationLinks:
         expected = {
             ("scb", "ureg", "isced2011niva"): "ISCED2011",
             ("scb", "ureg", "isced-f-2013"): "ISCED-F2013",
-            ("scb", "arbetskraftsbarometern", "sektorkod"): "SEKTOR2000",
-            ("scb", "fortroendevalda", "sektor"): "SEKTOR2000",
-            ("scb", "kommunalekonomisk-utjamning", "sektor"): "SEKTOR2000",
-            ("scb", "lisa", "ast-sektorkod"): "SEKTOR2000",
-            ("scb", "lisa", "org-sektorkod"): "SEKTOR2000",
-            ("scb", "lisa", "sektorkod"): "SEKTOR2000",
-            ("scb", "rams", "institutionell-sektorkod"): "SEKTOR2000",
-            ("scb", "yrkesreg", "sektor-ku1"): "SEKTOR2000",
-            ("scb", "yrkesreg", "sektorkod"): "SEKTOR2000",
-            ("scb", "yrkesreg", "sektorkod-2"): "SEKTOR2000",
-            ("scb", "yrkesreg", "sektorkod-storsta-forvarvskalla"): "SEKTOR2000",
+            ("scb", "arbetskraftsbarometern", "sektorkod"): "SEKTORKOD",
+            ("scb", "fortroendevalda", "sektor"): "SEKTORKOD",
+            ("scb", "kommunalekonomisk-utjamning", "sektor"): "SEKTORKOD",
+            ("scb", "lisa", "ast-sektorkod"): "SEKTORKOD",
+            ("scb", "lisa", "org-sektorkod"): "SEKTORKOD",
+            ("scb", "lisa", "sektorkod"): "SEKTORKOD",
+            ("scb", "rams", "institutionell-sektorkod"): "SEKTORKOD",
+            ("scb", "yrkesreg", "sektor-ku1"): "SEKTORKOD",
+            ("scb", "yrkesreg", "sektorkod"): "SEKTORKOD",
+            ("scb", "yrkesreg", "sektorkod-2"): "SEKTORKOD",
+            ("scb", "yrkesreg", "sektorkod-storsta-forvarvskalla"): "SEKTORKOD",
         }
         links = load_classification_links(path)
         assert {

@@ -146,6 +146,52 @@ def test_high_overlap_does_not_waive_one_unexplained_code() -> None:
     assert result == _conformance(tuple(reversed(pairs)), {str(i) for i in range(99)})
 
 
+def test_sektorkod_cohort_conforms_exactly_and_extras_stay_severed() -> None:
+    """Y-170 scope: the RAMS/LISA ownership-sector book admits exactly its
+    demonstrated members. Pre-2000 extras and sentinel spellings keep their
+    source members in severed evidence — no overlap fraction waives them — and
+    the same observed set against the wrong (INSEKT) book stays severed, so a
+    stale book selection cannot pass on overlap alone."""
+    sektorkod = {"00", "11", "12", "13", "14", "15", "21", "22", "23", "24", "25"}
+    insket = {"1", "2", "3", "4", "5", "6", "7", "8"}
+    observed = tuple((code, f"Source {code}") for code in sorted(sektorkod))
+    kept = _conformance(observed, sektorkod)
+    assert kept.conformance.status == "kept"
+    assert kept.conformance.nonconforming_members == ()
+    assert kept.diagnostics == ()
+    # The demonstrated cohort against the wrong book: every member is
+    # nonconforming, including code 15 — an accepted binding alone cannot make
+    # it canonical.
+    misbound = _conformance(observed, insket)
+    assert misbound.conformance.status == "severed"
+    assert [code for code, _ in misbound.conformance.nonconforming_members] == sorted(
+        sektorkod
+    )
+    assert misbound.conformance.declared_classification == "fixture"
+    # Extras beyond the book (pre-2000 codes, sentinel spellings) are listed
+    # member-by-member; the conforming remainder does not absorb them.
+    extras = observed + (
+        ("19", "Source 19"),
+        ("99", "Source 99"),
+        ("0", "Source 0"),
+        ("000", "Source 000"),
+        ("", "Source empty"),
+    )
+    severed = _conformance(extras, sektorkod)
+    assert severed.conformance.status == "severed"
+    assert severed.conformance.checked_codes == tuple(
+        sorted(sektorkod | {"19", "99", "0", "000", ""})
+    )
+    assert severed.conformance.nonconforming_members == (
+        ("", "Source empty"),
+        ("0", "Source 0"),
+        ("000", "Source 000"),
+        ("19", "Source 19"),
+        ("99", "Source 99"),
+    )
+    assert severed.diagnostics[0].code == "nonconforming_classification_codes"
+
+
 def test_missing_canonical_conversion_is_fatal_not_a_curation_issue() -> None:
     with pytest.raises(ValueError, match="nonempty codebook"):
         _conformance((("01", "Label"),), set())
