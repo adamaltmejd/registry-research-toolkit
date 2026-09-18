@@ -146,11 +146,11 @@ format versions cannot be reused.
 Socialstyrelsen workbook cleaning retains register/subset/variable assertions, language,
 headers, annotations, preambles, code-list sections and unparsed rows. Excel cell types,
 number formats and hyperlinks remain evidence; displayed code spelling is distinct from
-stored cell value. A blank Data till on a row with a supplied Data från reads as
-an open end; other missing dates remain unknown. Cleaning does not inherit dates,
-synthesize a subset, group variables by name, bind code lists or mint catalog
-identities. Known workbook layouts have focused tests; unknown list shapes preserve
-their original rows without fabricated members.
+stored cell value. A blank Data till on a row with a supplied Data från reads as an open
+end; other missing dates remain unknown. Cleaning does not inherit dates, synthesize a
+subset, group variables by name, bind code lists or mint catalog identities. Known
+workbook layouts have focused tests; unknown list shapes preserve their original rows
+without fabricated members.
 
 Authored thin-provider TOMLs use `sources/curated_records.py`. They are machine-readable
 source declarations with publisher and transcription provenance. Reading them does not
