@@ -517,6 +517,5 @@ def test_conflicting_parallel_fact_nulls_only_that_claimed_fact() -> None:
     nulled = {o.column: o for o in formed.coverage}
     assert set(nulled) == {"First", "Second"}
     assert all(o.data_type is None for o in nulled.values())
-    assert all(o.data_type_excused for o in nulled.values())
-    # The window is still owed; only the disputed fact is excused.
+    # The window is still owed; only the disputed fact is nulled.
     check_delivery_coverage((formed.variable,), formed.coverage, withheld={})

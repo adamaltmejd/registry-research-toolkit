@@ -274,14 +274,13 @@ def _null_conflicting_facts(
     obligations: tuple[CoverageObligation, ...],
     conflicts: tuple[tuple[str, str, str, str, str], ...],
 ) -> tuple[CoverageObligation, ...]:
-    """Keep the window but excuse the exact fact an accepted representation disputes.
+    """Keep the window but drop the exact fact an accepted representation disputes.
 
     Only data_type/data_length travel on the obligation; other conflicting facts
     need no claim change. Partial overlaps split the obligation so the safe slice
     stays fully checked, the same period rule waived delivery already uses.
-    An excused slice keeps its window with the fact marker set, so the boundary
-    guard skips that fact; an asserted absence keeps the marker unset, so a
-    written value where the source claims none still fails."""
+    A nulled fact is simply None, which the boundary guard never compares.
+    """
     type_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     length_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     for variant, column, fact_field, start, end in conflicts:
@@ -334,8 +333,6 @@ def _null_conflicting_facts(
                     valid_to=piece_to,
                     data_type=None if null_type else claim.data_type,
                     data_length=None if null_length else claim.data_length,
-                    data_type_excused=claim.data_type_excused or null_type,
-                    data_length_excused=claim.data_length_excused or null_length,
                 )
             )
     return tuple(result)

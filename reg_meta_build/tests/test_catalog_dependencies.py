@@ -1057,8 +1057,6 @@ def _fact_obligation(
     data_type: str | None = "integer",
     data_length: str | None = "1",
     attributions: tuple[str, ...] = ("correction:one",),
-    data_type_excused: bool = False,
-    data_length_excused: bool = False,
 ):
     return CoverageObligation(
         fqid=fqid,
@@ -1070,8 +1068,6 @@ def _fact_obligation(
         data_type=data_type,
         data_length=data_length,
         attributions=attributions,
-        data_type_excused=data_type_excused,
-        data_length_excused=data_length_excused,
     )
 
 
@@ -1122,12 +1118,7 @@ def test_delivery_facts_length_mismatch_is_refused():
 
 
 def test_delivery_facts_attributions_require_exact_provenance_elements():
-    obligation = _fact_obligation(
-        data_type=None,
-        data_length=None,
-        data_type_excused=True,
-        data_length_excused=True,
-    )
+    obligation = _fact_obligation(data_type=None, data_length=None)
     check_delivery_coverage(
         (_fact_variable(provenance="correction:one\n\ncomment"),),
         (obligation,),
@@ -1188,39 +1179,53 @@ def test_delivery_facts_shared_state_behind_alias_window_is_checked():
     )
 
 
-def test_delivery_facts_excused_claim_needs_no_match_but_absence_is_asserted():
-    excused = _fact_obligation(
-        data_type=None,
-        data_length=None,
-        attributions=(),
-        data_type_excused=True,
-        data_length_excused=True,
-    )
+def test_delivery_facts_nulled_claim_needs_no_match():
+    nulled = _fact_obligation(data_type=None, data_length=None, attributions=())
     check_delivery_coverage(
         (_fact_variable(data_type="text", data_length="9", provenance=None),),
-        (excused,),
+        (nulled,),
         withheld={},
     )
-    # An asserted absence is itself a claim: copying a prior window's facts
-    # into a fact-less window must fail even with no attributions to check.
-    absent = _fact_obligation(data_type=None, data_length=None, attributions=())
-    check_delivery_coverage(
-        (_fact_variable(data_type=None, data_length=None, provenance=None),),
-        (absent,),
-        withheld={},
-    )
-    with pytest.raises(
-        ValueError,
-        match="supported delivery facts changed without an explicit source outcome",
-    ) as failure:
-        check_delivery_coverage(
-            (_fact_variable(data_type="integer", data_length="0", provenance=None),),
-            (absent,),
-            withheld={},
-        )
-    assert "claimed data_type=None written 'integer'" in str(failure.value)
     check_delivery_coverage(
         (_fact_variable(data_type="text"),),
         (_fact_obligation(attributions=()),),
         withheld={("variable", "scb/example/value"): (_cause(),)},
     )
+
+
+def test_delivery_facts_absent_2021_length_not_compared_while_2020_claim_is():
+    base = _fact_variable(data_type="integer", data_length="0", provenance=None)
+    first = base.states[0]
+    second = first.model_copy(
+        update={
+            "valid_from": "2021-01-01",
+            "valid_to": "2021-12-31",
+            "data_length": "9",
+        }
+    )
+    variable = base.model_copy(update={"states": (first, second)})
+    obligations = (
+        _fact_obligation(
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            data_type="integer",
+            data_length="0",
+            attributions=(),
+        ),
+        _fact_obligation(
+            valid_from="2021-01-01",
+            valid_to="2021-12-31",
+            data_type=None,
+            data_length=None,
+            attributions=(),
+        ),
+    )
+    # Backfilling a length into the fact-less 2021 window is no change: its
+    # None claim is never compared.
+    check_delivery_coverage((variable,), obligations, withheld={})
+    # The 2020 int/0 claim still is: rewriting its written length fails.
+    damaged = variable.model_copy(
+        update={"states": (first.model_copy(update={"data_length": "1"}), second)}
+    )
+    with pytest.raises(ValueError, match="claimed data_length='0' written '1'"):
+        check_delivery_coverage((damaged,), obligations, withheld={})
