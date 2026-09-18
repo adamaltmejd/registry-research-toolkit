@@ -1256,7 +1256,10 @@ def test_supported_window_facts_reach_the_written_state():
     variable = result.variables[native_variable_key(item)]
     assert variable is not None
     (obligation,) = result.coverage
-    assert (obligation.data_type, obligation.data_length) == ("integer", "1")
+    assert (obligation.data_type_claim, obligation.data_length_claim) == (
+        ("value", "integer"),
+        ("value", "1"),
+    )
     assert obligation.attributions == ()
     state = variable.states[0]
     assert (state.data_type, state.data_length) == ("integer", "1")
@@ -1291,9 +1294,9 @@ def test_copied_window_length_is_refused_as_a_changed_fact():
     result = resolve((first, second))
     variable = result.variables[native_variable_key(first)]
     assert variable is not None
-    assert [(o.valid_from, o.data_length) for o in result.coverage] == [
-        ("2019-01-01", "1"),
-        ("2021-01-01", "2"),
+    assert [(o.valid_from, o.data_length_claim) for o in result.coverage] == [
+        ("2019-01-01", ("value", "1")),
+        ("2021-01-01", ("value", "2")),
     ]
     check_delivery_coverage(
         (variable,), result.coverage, withheld=result.withheld_dependencies

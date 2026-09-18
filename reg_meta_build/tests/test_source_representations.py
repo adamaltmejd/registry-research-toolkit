@@ -493,7 +493,7 @@ def test_shared_state_facts_reach_both_columns_behind_alias_windows() -> None:
         ("First", "2020-01-01", "2020-06-30"),
         ("Second", "2020-07-01", "2020-12-31"),
     ]
-    assert {o.data_type for o in formed.coverage} == {"integer"}
+    assert {o.data_type_claim for o in formed.coverage} == {("value", "integer")}
     check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
     state = formed.variable.states[0]
     damaged = formed.variable.model_copy(
@@ -516,6 +516,6 @@ def test_conflicting_parallel_fact_nulls_only_that_claimed_fact() -> None:
     assert formed.variable.states[0].data_type is None
     nulled = {o.column: o for o in formed.coverage}
     assert set(nulled) == {"First", "Second"}
-    assert all(o.data_type is None for o in nulled.values())
+    assert all(o.data_type_claim is None for o in nulled.values())
     # The window is still owed; only the disputed fact is nulled.
     check_delivery_coverage((formed.variable,), formed.coverage, withheld={})

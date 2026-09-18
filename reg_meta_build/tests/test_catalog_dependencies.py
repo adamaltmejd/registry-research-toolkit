@@ -1054,8 +1054,8 @@ def _fact_obligation(
     refs: tuple[SourceRecordRef, ...] = (
         SourceRecordRef(source="fixture", semantic_record_key=("key",)),
     ),
-    data_type: str | None = "integer",
-    data_length: str | None = "1",
+    data_type_claim: tuple[str, str | None] | None = ("value", "integer"),
+    data_length_claim: tuple[str, str | None] | None = ("value", "1"),
     attributions: tuple[str, ...] = ("correction:one",),
 ):
     return CoverageObligation(
@@ -1065,8 +1065,8 @@ def _fact_obligation(
         valid_from=valid_from,
         valid_to=valid_to,
         refs=refs,
-        data_type=data_type,
-        data_length=data_length,
+        data_type_claim=data_type_claim,
+        data_length_claim=data_length_claim,
         attributions=attributions,
     )
 
@@ -1118,7 +1118,7 @@ def test_delivery_facts_length_mismatch_is_refused():
 
 
 def test_delivery_facts_attributions_require_exact_provenance_elements():
-    obligation = _fact_obligation(data_type="integer", data_length="1")
+    obligation = _fact_obligation()
     check_delivery_coverage(
         (_fact_variable(provenance="correction:one\n\ncomment"),),
         (obligation,),
@@ -1179,12 +1179,15 @@ def test_delivery_facts_shared_state_behind_alias_window_is_checked():
     )
 
 
-def test_delivery_facts_absent_claim_is_never_compared():
-    absent = _fact_obligation(data_type=None, data_length=None, attributions=())
-    # A None claim is no claim: any written facts pass on a direct state...
+def test_delivery_facts_unknown_claim_is_never_compared():
+    unknown = _fact_obligation(
+        data_type_claim=None, data_length_claim=None, attributions=()
+    )
+    # An unknown source fact is no claim: any written facts pass on a direct
+    # state...
     check_delivery_coverage(
         (_fact_variable(data_type="integer", data_length="0", provenance=None),),
-        (absent,),
+        (unknown,),
         withheld={},
     )
     variant = ResolvedVariant(slug="people", name="People")
@@ -1212,17 +1215,141 @@ def test_delivery_facts_absent_claim_is_never_compared():
             ),
         }
     )
-    check_delivery_coverage((aliased,), (absent,), withheld={})
+    check_delivery_coverage((aliased,), (unknown,), withheld={})
     check_delivery_coverage(
         (_fact_variable(data_type="text"),),
         (_fact_obligation(attributions=()),),
         withheld={("variable", "scb/example/value"): (_cause(),)},
     )
     # ... while a present claim on another window is still enforced.
-    present = _fact_obligation(data_type="integer", data_length="0", attributions=())
+    present = _fact_obligation(
+        data_type_claim=("value", "integer"),
+        data_length_claim=("value", "0"),
+        attributions=(),
+    )
     with pytest.raises(ValueError, match="claimed data_length='0' written '1'"):
         check_delivery_coverage(
             (_fact_variable(data_length="1", provenance=None),),
             (present,),
             withheld={},
         )
+
+
+def test_delivery_facts_negative_claim_requires_absent_written_facts():
+    negative = _fact_obligation(
+        data_type_claim=("negative", None),
+        data_length_claim=("negative", None),
+        attributions=(),
+    )
+    check_delivery_coverage(
+        (_fact_variable(data_type=None, data_length=None, provenance=None),),
+        (negative,),
+        withheld={},
+    )
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage(
+            (_fact_variable(data_type="integer", data_length="0", provenance=None),),
+            (negative,),
+            withheld={},
+        )
+    assert "negative source claim" in str(failure.value)
+
+
+def test_delivery_facts_backfilled_absent_length_is_refused():
+    base = _fact_variable(data_type="integer", data_length="0", provenance=None)
+    first = base.states[0]
+    leaked = first.model_copy(
+        update={"valid_from": "2021-01-01", "valid_to": "2021-12-31"}
+    )
+    variable = base.model_copy(update={"states": (first, leaked)})
+    obligations = (
+        _fact_obligation(
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            data_type_claim=("value", "integer"),
+            data_length_claim=("value", "0"),
+            attributions=(),
+        ),
+        _fact_obligation(
+            valid_from="2021-01-01",
+            valid_to="2021-12-31",
+            data_type_claim=("negative", None),
+            data_length_claim=("negative", None),
+            attributions=(),
+        ),
+    )
+    honest = variable.model_copy(
+        update={
+            "states": (
+                first,
+                leaked.model_copy(update={"data_type": None, "data_length": None}),
+            )
+        }
+    )
+    check_delivery_coverage((honest,), obligations, withheld={})
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((variable,), obligations, withheld={})
+    assert "people/VALUE 2021-01-01..2021-12-31" in str(failure.value)
+    assert "negative source claim" in str(failure.value)
+
+
+def test_deleted_or_truncated_shared_state_behind_alias_window_is_refused():
+    variant = ResolvedVariant(slug="people", name="People")
+    shared = (
+        _fact_variable().states[0].model_copy(update={"delivery_column_name": "First"})
+    )
+    variable = _fact_variable().model_copy(
+        update={
+            "states": (shared,),
+            "aliases": (
+                ResolvedAlias(
+                    variant=variant,
+                    delivery_column_name="Second",
+                    windows=(
+                        ResolvedAliasWindow(
+                            valid_from="2020-07-01",
+                            valid_to="2020-12-31",
+                        ),
+                    ),
+                ),
+            ),
+        }
+    )
+    obligations = (
+        _fact_obligation(
+            column="First",
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            attributions=(),
+        ),
+        _fact_obligation(column="Second", valid_from="2020-07-01", attributions=()),
+    )
+    check_delivery_coverage((variable,), obligations, withheld={})
+    deleted = variable.model_copy(update={"states": ()})
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((deleted,), obligations, withheld={})
+    assert (
+        "no written state carries the claimed facts for 2020-07-01..2020-12-31"
+        in str(failure.value)
+    )
+    truncated = variable.model_copy(
+        update={"states": (shared.model_copy(update={"valid_to": "2020-09-30"}),)}
+    )
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((truncated,), obligations, withheld={})
+    assert (
+        "no written state carries the claimed facts for 2020-10-01..2020-12-31"
+        in str(failure.value)
+    )

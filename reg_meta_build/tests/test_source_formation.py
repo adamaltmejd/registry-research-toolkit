@@ -627,7 +627,7 @@ def test_formation_coverage_carries_type_and_refuses_silent_retype() -> None:
         "2020-01-01",
         "2020-12-31",
     )
-    assert obligation.data_type == "integer"
+    assert obligation.data_type_claim == ("value", "integer")
     assert obligation.attributions == ()
     check_delivery_coverage((result.variable,), result.coverage, withheld={})
     damaged = result.variable.model_copy(

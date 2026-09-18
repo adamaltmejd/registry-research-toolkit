@@ -170,10 +170,11 @@ class CoverageObligation:
 
     Already reduced by the explicit outcomes that withhold part of the claim, so
     an obligation left here has no accepted excuse for going missing. The claimed
-    delivery facts travel with the window: exact type/length texts and the member
-    correction attributions the written state must still contain. A claimed None
-    is no claim: reconciled unknown, unknown data type and conflicting
-    occurrence facts are never compared.
+    delivery facts travel with the window: exact type/length claims and the member
+    correction attributions the written state must still contain. Each fact claim
+    is tri-state: ('value', text) the written state must equal, ('negative',
+    None) asserting the source leaves the fact absent so the written state must
+    be None, or None for no claim, which is never compared.
     """
 
     fqid: str
@@ -182,9 +183,29 @@ class CoverageObligation:
     valid_from: str
     valid_to: str
     refs: tuple[SourceRecordRef, ...]
-    data_type: str | None = None
-    data_length: str | None = None
+    data_type_claim: tuple[str, str | None] | None = None
+    data_length_claim: tuple[str, str | None] | None = None
     attributions: tuple[str, ...] = ()
+
+
+def _alias_overlap(
+    variables: Iterable[ResolvedVariable], obligation: CoverageObligation
+) -> list[tuple[str, str]]:
+    """The obligation window slices an alias window on its coordinate delivers."""
+    cover = []
+    for variable in variables:
+        for alias in variable.aliases:
+            if (
+                alias.variant.slug != obligation.variant
+                or alias.delivery_column_name != obligation.column
+            ):
+                continue
+            for window in alias.windows:
+                lower = max(window.valid_from, obligation.valid_from)
+                upper = min(window.valid_to, obligation.valid_to)
+                if lower <= upper:
+                    cover.append((lower, upper))
+    return list(dict.fromkeys(cover))
 
 
 def check_delivery_coverage(
@@ -201,9 +222,10 @@ def check_delivery_coverage(
     Periods are never widened: only the claimed window has to be represented.
     Every overlapping final state on the same coordinate, and every shared state
     behind an alias window for that coordinate, must also keep each claimed fact
-    and contain every claimed attribution as an exact provenance element. A
-    claimed None is no claim and is never compared, direct or behind an alias.
-    A conflicting representation fact nulls the claimed fact it names.
+    and contain every claimed attribution as an exact provenance element. Each
+    fact travels as tri-state: a value claim the written state must equal, a
+    negative claim the written state must leave absent, or no claim, which is
+    never compared. A conflicting representation fact clears the claim to none.
     A variable or one of its variants that the ledger withholds outright, with
     source evidence, owes nothing at that exact coordinate; the claim stays a
     curation blocker whichever stage recorded it, and a sibling stays checked.
@@ -233,23 +255,72 @@ def check_delivery_coverage(
         ):
             continue
         key = (obligation.fqid, obligation.variant, obligation.column)
+        refs = ", ".join(
+            "/".join((ref.source, *ref.semantic_record_key)) for ref in obligation.refs
+        )
         for start, end in remaining_windows(
             delivered.get(key, ()), obligation.valid_from, obligation.valid_to
         ):
-            refs = ", ".join(
-                "/".join((ref.source, *ref.semantic_record_key))
-                for ref in obligation.refs
-            )
             losses.append(
                 f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                 f"{start}..{end} claimed by {refs}"
             )
-        claimed_type = obligation.data_type
-        claimed_length = obligation.data_length
+        claimed_type = obligation.data_type_claim
+        claimed_length = obligation.data_length_claim
         claimed_attributions = obligation.attributions
-        refs = ", ".join(
-            "/".join((ref.source, *ref.semantic_record_key)) for ref in obligation.refs
-        )
+        check_type = claimed_type is not None
+        expected_type: str | None = None
+        type_claim_label = "None"
+        if claimed_type is not None:
+            if claimed_type[0] == "value":
+                expected_type = claimed_type[1]
+                type_claim_label = repr(claimed_type[1])
+            else:
+                type_claim_label = "None (negative source claim)"
+        check_length = claimed_length is not None
+        expected_length: str | None = None
+        length_claim_label = "None"
+        if claimed_length is not None:
+            if claimed_length[0] == "value":
+                expected_length = claimed_length[1]
+                length_claim_label = repr(claimed_length[1])
+            else:
+                length_claim_label = "None (negative source claim)"
+        alias_cover = _alias_overlap(by_fqid.get(obligation.fqid, ()), obligation)
+        if alias_cover:
+            backing: list[tuple[str, str]] = []
+            for variable in by_fqid.get(obligation.fqid, ()):
+                for state in variable.states:
+                    if state.variant.slug != obligation.variant:
+                        continue
+                    for start, end in alias_cover:
+                        lower = max(state.valid_from, start)
+                        upper = min(state.valid_to, end)
+                        if lower <= upper:
+                            backing.append((lower, upper))
+            for start, end in alias_cover:
+                gaps = remaining_windows(
+                    [
+                        interval
+                        for interval in backing
+                        if interval[0] <= end and interval[1] >= start
+                    ],
+                    start,
+                    end,
+                )
+                for gap_start, gap_end in gaps:
+                    fact_changes.append(
+                        f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                        f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
+                        f"no written state carries the claimed facts for {gap_start}..{gap_end}"
+                    )
+        if (
+            not check_type
+            and not check_length
+            and not claimed_attributions
+            and not alias_cover
+        ):
+            continue
         candidates: dict[tuple[str, str, str, str], ResolvedState] = {}
         for variable in by_fqid.get(obligation.fqid, ()):
             for state in variable.states:
@@ -298,17 +369,17 @@ def check_delivery_coverage(
                     continue
                 candidates[token] = state
         for state in candidates.values():
-            if claimed_type is not None and state.data_type != claimed_type:
+            if check_type and state.data_type != expected_type:
                 fact_changes.append(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                     f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
-                    f"claimed data_type={claimed_type!r} written {state.data_type!r}"
+                    f"claimed data_type={type_claim_label} written {state.data_type!r}"
                 )
-            if claimed_length is not None and state.data_length != claimed_length:
+            if check_length and state.data_length != expected_length:
                 fact_changes.append(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                     f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
-                    f"claimed data_length={claimed_length!r} written {state.data_length!r}"
+                    f"claimed data_length={length_claim_label} written {state.data_length!r}"
                 )
             if claimed_attributions:
                 elements = (

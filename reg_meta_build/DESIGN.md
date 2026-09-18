@@ -320,9 +320,12 @@ windows deliver nothing here. Each obligation also carries the exact delivery fa
 member-to-window segment claims — type/length texts and member correction attributions.
 Every overlapping final state on the same coordinate, and every shared state behind an
 alias window for that coordinate, must keep each claimed fact and contain every claimed
-attribution as an exact provenance element. A claimed None is no claim and is never
-compared, direct or behind an alias. A conflicting representation fact nulls the claimed
-fact it names. Genuine source gaps, negative availability and unknown or pooled scopes
+attribution as an exact provenance element. Each fact travels as tri-state: a value
+claim the written state must equal, a negative claim the written state must leave
+absent, or no claim, which is never compared. When an alias window delivers an
+obligation's window, the shared states behind the alias must cover that overlap; a slice
+with no written state behind it is refused. A conflicting representation fact clears the
+claim to none. Genuine source gaps, negative availability and unknown or pooled scopes
 claim no delivery in the first place. A variable — or one of its variants — that the
 dependency ledger withholds outright, with source evidence, answers for its own claim
 through that entry, whichever stage recorded it, and for nothing past that exact

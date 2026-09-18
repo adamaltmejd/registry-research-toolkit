@@ -39,6 +39,7 @@ if TYPE_CHECKING:
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_curation import CurationCase
     from reg_meta_build.source_records import (
+        SourceField,
         SourceFields,
         SourceRecord,
     )
@@ -69,6 +70,16 @@ def _text(fields: SourceFields, name: str) -> str | None:
         assert isinstance(value.value, str)
         return value.value
     return None
+
+
+def _fact_claim(field: SourceField | None) -> tuple[str, str | None] | None:
+    """Carry the occurrence fact as tri-state: value, negative, or no claim."""
+    if field is None or field.status == "unknown":
+        return None
+    if field.status == "negative":
+        return ("negative", None)
+    assert isinstance(field.value, str)
+    return ("value", field.value)
 
 
 @dataclass(frozen=True)
@@ -331,8 +342,8 @@ def _null_conflicting_facts(
                     claim,
                     valid_from=piece_from,
                     valid_to=piece_to,
-                    data_type=None if null_type else claim.data_type,
-                    data_length=None if null_length else claim.data_length,
+                    data_type_claim=None if null_type else claim.data_type_claim,
+                    data_length_claim=None if null_length else claim.data_length_claim,
                 )
             )
     return tuple(result)
@@ -537,8 +548,8 @@ def form_native_variable(
                         segment.valid_from,
                         segment.valid_to,
                         _refs(segment.occurrences),
-                        data_type=_text(segment.fields, "data_type"),
-                        data_length=_text(segment.fields, "data_length"),
+                        data_type_claim=_fact_claim(segment.fields.data_type),
+                        data_length_claim=_fact_claim(segment.fields.data_length),
                         attributions=tuple(
                             sorted(
                                 {
