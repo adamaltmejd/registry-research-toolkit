@@ -141,7 +141,78 @@ def _data_type_field(evidence: SosRowEvidence) -> SourceField | None:
     )
 
 
-def _coverage_scope(evidence: SosRowEvidence) -> TemporalScope:
+def _is_blank_coverage_cell(cell: SosCellEvidence | None) -> bool:
+    """A delivered empty cell, distinct from malformed supplied text."""
+    if cell is None or cell.data_type == "f":
+        return False
+    raw = cell.raw_value
+    display = cell.display_value
+    raw_blank = raw is None or (isinstance(raw, str) and not raw.strip())
+    display_blank = display is None or not display.strip()
+    return raw_blank and display_blank
+
+
+def _register_period_open(register: SosRegister | None) -> bool:
+    """Register-level Tidsperiod ends with a trailing dash (e.g. 2005-07-01-)."""
+    if register is None:
+        return False
+    for raw in (
+        register.dcat_ap.temporal_coverage_sv,
+        register.dcat_ap.temporal_coverage_en,
+    ):
+        if raw is not None and raw.strip().endswith("-"):
+            return True
+    return False
+
+
+def _subset_end_blank(register: SosRegister | None, deldatamangd: str | None) -> bool:
+    """Enclosing Deldatamängder row carries a blank Data till."""
+    if register is None or not deldatamangd:
+        return False
+    want = normalize_token(deldatamangd)
+    if not want:
+        return False
+    matched_structured = [
+        subset
+        for subset in register.deldatamangder
+        if subset.name and normalize_token(subset.name) == want
+    ]
+    if not matched_structured:
+        return False
+    if any(subset.data_to is not None for subset in matched_structured):
+        return False
+    evidence_rows = [
+        row.source_evidence
+        for sheet in register.source_sheets
+        if sheet.kind == "subsets"
+        for row in sheet.rows
+        if row.role == "subset"
+    ]
+    matched_evidence = [
+        evidence
+        for evidence in evidence_rows
+        if (
+            (cell := _cell(evidence, "name")) is not None
+            and cell.display_value
+            and normalize_token(cell.display_value) == want
+        )
+    ]
+    if not matched_evidence:
+        # No original subset row to inherit from: stay unknown rather than
+        # assume the structured blank.
+        return False
+    return all(
+        _is_blank_coverage_cell(_cell(evidence, "data_to"))
+        for evidence in matched_evidence
+    )
+
+
+def _coverage_scope(
+    evidence: SosRowEvidence,
+    *,
+    register: SosRegister | None = None,
+    deldatamangd: str | None = None,
+) -> TemporalScope:
     from_cell = _cell(evidence, "data_from")
     to_cell = _cell(evidence, "data_to")
     if from_cell is None and to_cell is None:
@@ -163,6 +234,30 @@ def _coverage_scope(evidence: SosRowEvidence) -> TemporalScope:
 
     start = boundary(from_cell)
     end = boundary(to_cell)
+    # A blank Data till reads as an explicit open end only under a documented
+    # open context: a supplied Data från, an open register-level Tidsperiod
+    # (trailing dash) and a blank enclosing Deldatamängder Data till. The
+    # workbook closes ended variables explicitly, so only this conjunction
+    # inherits the open bound; the variable's own start is never widened.
+    if (
+        start is not None
+        and end is None
+        and _is_blank_coverage_cell(to_cell)
+        and _register_period_open(register)
+        and _subset_end_blank(register, deldatamangd)
+    ):
+        window = value_window(start, None, compact_dates=True)
+        if window.status == "known" and window.start is not None:
+            years_only = re.fullmatch(r"[0-9]{4}", start) is not None
+            return TemporalScope(
+                kind="intervals",
+                intervals=(
+                    ScopeInterval(
+                        start=start if years_only else window.start,
+                        end=None,
+                    ),
+                ),
+            )
     # Unlike code validity, blank variable coverage has no established open-bound
     # meaning. Interpret only two supplied bounds using the actual date formats.
     if start is not None and end is not None:
@@ -297,7 +392,9 @@ def clean_sos_variable(
             member=SourceCoordinate(status="value", name=member_name),
             native=NativeCoordinates(),
         ),
-        edition_scope=_coverage_scope(evidence),
+        edition_scope=_coverage_scope(
+            evidence, register=register, deldatamangd=variable.deldatamangd
+        ),
         edition_period_scope=TemporalScope(kind="not_applicable"),
         fields=SourceFields(
             availability=value_field(True),

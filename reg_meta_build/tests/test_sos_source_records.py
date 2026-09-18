@@ -86,6 +86,104 @@ def test_variable_coverage_preserves_explicit_date_bounds(
     ).raw_value == (str(end) if end is not None else "")
 
 
+def _write_period_context_workbook(
+    path: Path,
+    *,
+    register_period: str | None = "2005-07-01-",
+    subset_end: object = None,
+) -> None:
+    import openpyxl
+
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    if register_period is not None:
+        dcat = workbook.create_sheet("Metadata-Datamängd (DCAT-AP)")
+        dcat.append(["Attribut", "Definition", "Svenska", "Engelska"])
+        dcat.append(
+            ["Tidsperiod", "Tidsmässig täckning", register_period, register_period]
+        )
+    subsets = workbook.create_sheet("Deldatamängder")
+    subsets.append(
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"]
+    )
+    subsets.append(["PAR_OV", "Öppenvård", 2005, subset_end])
+    workbook.save(path)
+
+
+def _partial_record(path: Path):
+    register = parse_register_file(path)
+    variable = next(
+        variable for variable in register.variables if variable.name == "PARTIELL"
+    )
+    return clean_sos_variable(register, variable, _revision(path))
+
+
+def test_blank_end_reads_open_only_under_open_register_and_blank_subset(
+    tmp_path: Path,
+) -> None:
+    from reg_meta_build.source_intervals import scope_bounds
+
+    # Documented open context: supplied Data från, open register Tidsperiod
+    # (trailing dash) and a blank enclosing subset Data till.
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_period_context_workbook(path)
+    record = _partial_record(path)
+    assert record.edition_scope.kind == "intervals"
+    assert tuple((i.start, i.end) for i in record.edition_scope.intervals) == (
+        ("2010", None),
+    )
+    assert scope_bounds(record.edition_scope) is not None
+    assert (
+        next(
+            cell for cell in record.delivered_cells if cell.name == "Data till"
+        ).raw_value
+        == ""
+    )
+
+    # A closed register period keeps today's unknown scope.
+    closed = tmp_path / "closed.xlsx"
+    _write_period_context_workbook(closed, register_period="2005-07-01-2024-12-31")
+    assert _partial_record(closed).edition_scope.kind == "unknown"
+
+    # An absent register period keeps today's unknown scope.
+    absent = tmp_path / "absent.xlsx"
+    _write_period_context_workbook(absent, register_period=None)
+    assert _partial_record(absent).edition_scope.kind == "unknown"
+
+    # A closed enclosing subset keeps today's unknown scope.
+    shut_subset = tmp_path / "shut.xlsx"
+    _write_period_context_workbook(shut_subset, subset_end=2020)
+    assert _partial_record(shut_subset).edition_scope.kind == "unknown"
+
+
+def test_blank_end_open_rule_never_widens_start_or_end(tmp_path: Path) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Patientregistret (PAR)_webb.xlsx"
+    _write_period_context_workbook(path)
+    register = parse_register_file(path)
+    revision = _revision(path)
+
+    # An explicit end is unchanged under the open context.
+    explicit = clean_sos_variable(register, register.variables[0], revision)
+    assert tuple((i.start, i.end) for i in explicit.edition_scope.intervals) == (
+        ("2001", "2020"),
+    )
+
+    # A blank start is not backfilled from the open context.
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["H6"] = None
+    workbook.save(path)
+    assert _partial_record(path).edition_scope.kind == "unknown"
+
+    # A malformed end is not read as an open bound.
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["H6"] = 2010
+    workbook["Metadata - Variabelnivå"]["I6"] = "+2001"
+    workbook.save(path)
+    assert _partial_record(path).edition_scope.kind == "unknown"
+
+
 @pytest.mark.parametrize(
     ("header", "field"),
     [
