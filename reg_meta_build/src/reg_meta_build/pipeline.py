@@ -152,7 +152,9 @@ class CodebookDeclaration(_Model):
     # validated `tuple[SentinelCode, ...]` a `load_seed()` entry carries; it is
     # popped and normalized below because strict JSON-contract validation cannot
     # coerce the JSON list into the resolved tuple form.
-    metadata: dict[str, str | int | list[dict[str, str]] | tuple[SentinelCode, ...] | None]
+    metadata: dict[
+        str, str | int | list[dict[str, str]] | tuple[SentinelCode, ...] | None
+    ]
 
 
 class PipelineSelection(_Model):
@@ -204,9 +206,7 @@ def _selection_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ..
     is a `ValueError` like every other selection-shape refusal below."""
     if raw is None:
         return ()
-    if isinstance(raw, tuple) and all(
-        isinstance(item, SentinelCode) for item in raw
-    ):
+    if isinstance(raw, tuple) and all(isinstance(item, SentinelCode) for item in raw):
         sentinels = list(raw)
     else:
         try:

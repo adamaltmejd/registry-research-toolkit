@@ -22,8 +22,8 @@ from _sos_fixtures import (
 )
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build._curation import SentinelCode
-from reg_meta_build.cli import run
 from reg_meta_build.classifications import load_seed
+from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.pipeline import (
