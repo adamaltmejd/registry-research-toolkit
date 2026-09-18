@@ -254,6 +254,13 @@ optional fields become unknown only over their overlap. Conflicting availability
 population withholds the unsafe segment. Missing periods/columns remain explicit issues.
 A gap between supported periods stays a gap.
 
+Operational definitions and source references are state-grain. Separate resolved periods
+and variants each keep their own exact text and provenance, so differing texts across
+one native family are not a variable-level conflict. Their variable-grain summaries stay
+populated only when ordinary reconciliation yields one stable value. Contradictory texts
+on one overlapping column period remain occurrence conflicts with their exact evidence
+and window.
+
 Code-list bindings identify the exact source members and their period constraints before
 membership resolution. Concurrent complete lists must agree; neither the largest list,
 latest row, descriptor label nor union of competing members chooses a winner. Empty

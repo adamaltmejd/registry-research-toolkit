@@ -28,6 +28,7 @@ from reg_meta_build.source_coordinates import (
     native_variable_key,
     native_variant_key,
 )
+from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import (
     EffectiveOccurrence,
@@ -61,7 +62,12 @@ _REVISION = SourceRevision.create(
     artifact_sha256="a" * 64,
 )
 _REGISTER = ResolvedRegister(provider="scb", slug="example", name="Example")
-_VARIANT = ResolvedVariant(slug="people", name="People")
+# Keyed by the fixture's native variant id, the last native variant key element.
+_VARIANTS: dict[str | int, ResolvedVariant] = {
+    2: ResolvedVariant(slug="people", name="People"),
+    3: ResolvedVariant(slug="households", name="Households"),
+}
+_VARIANT = _VARIANTS[2]
 _FLAGS = SourceFields(sensitivity=value_field(False), identifier=value_field(False))
 
 
@@ -72,15 +78,18 @@ def _record(
     native_id: int | str = 4,
     definition: str = "Source definition",
     variant: int = 2,
+    operational_definition: str | None = None,
+    source_attribution: str | None = None,
+    row: str = "",
 ) -> SourceRecord:
     return SourceRecord.create(
         revision=_REVISION,
         locators=(
             RecordLocator(
-                semantic_record_key=("variable:4", f"year:{year}"),
+                semantic_record_key=("variable:4", f"year:{year}{row}"),
                 physical_file="input.csv",
                 physical_table="input.csv",
-                physical_record=f"row:{year}",
+                physical_record=f"row:{year}{row}",
                 physical_cells=(),
             ),
         ),
@@ -103,6 +112,12 @@ def _record(
             availability=value_field(True),
             name=value_field("Source variable"),
             definition=value_field(definition),
+            operational_definition=value_field(operational_definition)
+            if operational_definition
+            else None,
+            source_attribution=value_field(source_attribution)
+            if source_attribution
+            else None,
             column_name=value_field(column),
             data_type=value_field("integer"),
         ),
@@ -120,7 +135,7 @@ def _form(
     for record in records:
         occurrence = effective_occurrence(record)
         if (key := occurrence.variant_key) is not None:
-            variants[key] = _VARIANT
+            variants[key] = _VARIANTS[key[-1]]
         if (key := occurrence.column_key) is not None:
             coding[key] = resolve_code_membership(claims)
     return form_native_variable(
@@ -234,6 +249,129 @@ def test_canonical_text_conflict_preserves_states_and_withholds_only_that_fact()
     assert [(d.code, d.fields, d.withheld_output) for d in result.diagnostics] == [
         ("conflicting_variable_fact", ("definition",), ("variable.definition",))
     ]
+
+
+def test_state_grain_texts_vary_by_period_without_a_variable_fact_conflict(
+    tmp_path: Path,
+) -> None:
+    records = (
+        _record(
+            2020,
+            operational_definition="Introductory question text",
+            source_attribution="Fr171",
+        ),
+        _record(
+            2021,
+            operational_definition="Derived-variable definition",
+            source_attribution="Fr128e",
+        ),
+    )
+    result = _form(records)
+    assert result.variable is not None
+    assert result.diagnostics == ()
+    assert result.variable.operational_definition is None
+    assert result.variable.source_register_text is None
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog((result.variable,), output, manifest={})
+    with closing(open_db(output)) as conn:
+        assert tuple(
+            conn.execute(
+                "SELECT operational_definition, source_register_text FROM variable"
+            ).fetchone()
+        ) == (None, None)
+        assert [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT valid_from, operational_definition, source_register_text "
+                "FROM variable_state ORDER BY valid_from"
+            )
+        ] == [
+            ("2020-01-01", "Introductory question text", "Fr171"),
+            ("2021-01-01", "Derived-variable definition", "Fr128e"),
+        ]
+
+
+def test_state_grain_texts_vary_by_variant_without_a_variable_fact_conflict() -> None:
+    result = _form(
+        (
+            _record(
+                2020,
+                variant=2,
+                operational_definition="Person wording",
+                source_attribution="Fr171",
+            ),
+            _record(
+                2020,
+                variant=3,
+                operational_definition="Household wording",
+                source_attribution="Fr128e",
+            ),
+        )
+    )
+    assert result.variable is not None
+    assert result.diagnostics == ()
+    assert result.variable.operational_definition is None
+    assert result.variable.source_register_text is None
+    assert sorted(
+        (state.variant.slug, state.operational_definition, state.source_register_text)
+        for state in result.variable.states
+    ) == [
+        ("households", "Household wording", "Fr128e"),
+        ("people", "Person wording", "Fr171"),
+    ]
+
+
+def test_stable_state_grain_texts_still_summarize_the_variable() -> None:
+    result = _form(
+        tuple(
+            _record(
+                year,
+                operational_definition="One definition",
+                source_attribution="Fr171",
+            )
+            for year in (2020, 2021)
+        )
+    )
+    assert result.variable is not None
+    assert result.diagnostics == ()
+    assert result.variable.operational_definition == "One definition"
+    assert result.variable.source_register_text == "Fr171"
+    assert {
+        (state.operational_definition, state.source_register_text)
+        for state in result.variable.states
+    } == {("One definition", "Fr171")}
+
+
+@pytest.mark.parametrize("field", ["operational_definition", "source_attribution"])
+def test_competing_same_period_texts_still_withhold_that_occurrence_fact(
+    field: str,
+) -> None:
+    def competing(text: str, row: str) -> SourceRecord:
+        return _record(
+            2020,
+            row=row,
+            operational_definition=text if field == "operational_definition" else None,
+            source_attribution=text if field == "source_attribution" else None,
+        )
+
+    first, second = competing("First text", ""), competing("Second text", "b")
+    result = _form((first, second))
+    assert result.variable is not None
+    assert [
+        (d.code, d.fields, d.valid_from, d.valid_to, d.refs) for d in result.diagnostics
+    ] == [
+        (
+            "conflicting_occurrence_facts",
+            (field,),
+            "2020-01-01",
+            "2020-12-31",
+            (record_ref(first), record_ref(second)),
+        )
+    ]
+    assert [
+        (state.operational_definition, state.source_register_text)
+        for state in result.variable.states
+    ] == [(None, None)]
 
 
 def test_checked_identity_does_not_choose_a_parallel_column_representation() -> None:

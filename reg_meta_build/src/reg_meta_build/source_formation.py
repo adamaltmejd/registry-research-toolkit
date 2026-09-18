@@ -341,13 +341,15 @@ def form_native_variable(
         )
         return VariableFormation(None, tuple(diagnostics), records, (), ())
     canonical, conflicts = reconcile_source_fields(effective)
+    # operational_definition and source_attribution are state-grain, so varying
+    # texts are no variable-level conflict; their summary below stays populated
+    # only while reconciliation yields one stable value, and contradictions on
+    # one overlapping column period remain conflicting_occurrence_facts.
     canonical_fields = {
         "name",
         "definition",
         "description",
-        "operational_definition",
         "measurement_unit",
-        "source_attribution",
     }
     for field_name in sorted(canonical_fields & set(conflicts)):
         issue(
