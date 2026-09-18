@@ -1248,3 +1248,105 @@ def test_a_search_only_alias_establishes_no_delivery_for_the_lost_window():
         check_delivery_coverage(
             (damaged,), result.coverage, withheld=result.withheld_dependencies
         )
+
+
+def test_supported_window_facts_reach_the_written_state():
+    item = record()
+    result = resolve((item,))
+    variable = result.variables[native_variable_key(item)]
+    assert variable is not None
+    (obligation,) = result.coverage
+    assert (obligation.data_type, obligation.data_length) == ("integer", "1")
+    assert obligation.attributions == ()
+    state = variable.states[0]
+    assert (state.data_type, state.data_length) == ("integer", "1")
+    check_delivery_coverage(
+        (variable,), result.coverage, withheld=result.withheld_dependencies
+    )
+    for field, written in (("data_type", "text"), ("data_length", "0")):
+        damaged = variable.model_copy(
+            update={"states": (state.model_copy(update={field: written}),)}
+        )
+        with pytest.raises(
+            ValueError,
+            match="supported delivery facts changed without an explicit source outcome",
+        ) as failure:
+            check_delivery_coverage(
+                (damaged,), result.coverage, withheld=result.withheld_dependencies
+            )
+        assert f"claimed {field}=" in str(failure.value)
+        assert "scb/example/value-5 people-2/VALUE 2020-01-01..2020-12-31" in str(
+            failure.value
+        )
+
+
+def test_copied_window_length_is_refused_as_a_changed_fact():
+    first = record(year="2019")
+    second = record(2, year="2021")
+    second = second.model_copy(
+        update={
+            "fields": second.fields.model_copy(update={"data_length": value_field("2")})
+        }
+    )
+    result = resolve((first, second))
+    variable = result.variables[native_variable_key(first)]
+    assert variable is not None
+    assert [(o.valid_from, o.data_length) for o in result.coverage] == [
+        ("2019-01-01", "1"),
+        ("2021-01-01", "2"),
+    ]
+    check_delivery_coverage(
+        (variable,), result.coverage, withheld=result.withheld_dependencies
+    )
+    copied = tuple(
+        s.model_copy(update={"data_length": "1"}) if s.valid_from >= "2021" else s
+        for s in variable.states
+    )
+    damaged = variable.model_copy(update={"states": copied})
+    with pytest.raises(
+        ValueError, match="claimed data_length='2' written '1'"
+    ) as failure:
+        check_delivery_coverage(
+            (damaged,), result.coverage, withheld=result.withheld_dependencies
+        )
+    assert "supported delivery facts changed without an explicit source outcome" in str(
+        failure.value
+    )
+
+
+def test_member_correction_attributions_reach_the_written_state():
+    item = record()
+    case = CurationCase(
+        case_id="fix-opdef",
+        targets=capture_expectations((item,), fields=("operational_definition",)),
+        peer_guards=(guard(item),),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            reason="Checked attribution fix",
+            provenance="fixture:attr",
+            effects=(
+                CheckedFieldChange(
+                    ref=record_ref(item),
+                    replacement=FieldExpectation(
+                        name="operational_definition", status="value", value="Fixed"
+                    ),
+                ),
+            ),
+        ),
+    )
+    result = resolve((item,), cases=(case,))
+    variable = result.variables[native_variable_key(item)]
+    assert variable is not None
+    (obligation,) = result.coverage
+    assert obligation.attributions == ("fixture:attr",)
+    assert variable.states[0].provenance == "fixture:attr"
+    check_delivery_coverage(
+        (variable,), result.coverage, withheld=result.withheld_dependencies
+    )
+    stripped = variable.model_copy(
+        update={"states": (variable.states[0].model_copy(update={"provenance": None}),)}
+    )
+    with pytest.raises(ValueError, match="claimed attributions"):
+        check_delivery_coverage(
+            (stripped,), result.coverage, withheld=result.withheld_dependencies
+        )

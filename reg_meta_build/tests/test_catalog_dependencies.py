@@ -7,6 +7,8 @@ from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta_build.catalog_dependencies import (
     CatalogDependencyError,
+    CoverageObligation,
+    check_delivery_coverage,
     resolve_classification_successions,
     resolve_metadata_dependencies,
     resolve_month_groups,
@@ -16,6 +18,7 @@ from reg_meta_build.catalog_dependencies import (
 from reg_meta_build.concept_groups import CodeLabelPair
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
+    ResolvedAliasWindow,
     ResolvedClassification,
     ResolvedClassificationCode,
     ResolvedClassificationSuccession,
@@ -1039,3 +1042,141 @@ def test_dependency_failure_reports_every_missing_endpoint(surface):
         "scb/example/absent",
     )
     assert all(m.output for m in error.value.missing)
+
+
+def _fact_obligation(**overrides):
+    base = {
+        "fqid": "scb/example/value",
+        "variant": "people",
+        "column": "VALUE",
+        "valid_from": "2020-01-01",
+        "valid_to": "2020-12-31",
+        "refs": (SourceRecordRef(source="fixture", semantic_record_key=("key",)),),
+        "data_type": "integer",
+        "data_length": "1",
+        "attributions": ("correction:one",),
+    }
+    base.update(overrides)
+    return CoverageObligation(**base)
+
+
+def _fact_variable(
+    *, data_type="integer", data_length="1", provenance="correction:one"
+):
+    variant = ResolvedVariant(slug="people", name="People")
+    variable = _variable(variant, "value")
+    state = variable.states[0].model_copy(
+        update={
+            "delivery_column_name": "VALUE",
+            "valid_from": "2020-01-01",
+            "valid_to": "2020-12-31",
+            "data_type": data_type,
+            "data_length": data_length,
+            "provenance": provenance,
+        }
+    )
+    return variable.model_copy(update={"states": (state,), "aliases": ()})
+
+
+def test_delivery_facts_retype_is_refused_with_claimed_and_written():
+    obligation = _fact_obligation(attributions=())
+    check_delivery_coverage((_fact_variable(),), (obligation,), withheld={})
+    damaged = _fact_variable(data_type="text")
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((damaged,), (obligation,), withheld={})
+    message = str(failure.value)
+    assert "scb/example/value people/VALUE 2020-01-01..2020-12-31" in message
+    assert "claimed data_type='integer' written 'text'" in message
+    assert "fixture/key" in message
+
+
+def test_delivery_facts_length_mismatch_is_refused():
+    obligation = _fact_obligation(attributions=())
+    with pytest.raises(
+        ValueError, match="claimed data_length='1' written '0'"
+    ) as failure:
+        check_delivery_coverage(
+            (_fact_variable(data_length="0"),), (obligation,), withheld={}
+        )
+    assert "supported delivery facts changed without an explicit source outcome" in str(
+        failure.value
+    )
+
+
+def test_delivery_facts_attributions_require_exact_provenance_elements():
+    obligation = _fact_obligation(data_type=None, data_length=None)
+    check_delivery_coverage(
+        (_fact_variable(provenance="correction:one\n\ncomment"),),
+        (obligation,),
+        withheld={},
+    )
+    # Substring overlap is not enough; the exact correction element must remain.
+    with pytest.raises(ValueError, match="claimed attributions") as failure:
+        check_delivery_coverage(
+            (_fact_variable(provenance="correction:one-extended"),),
+            (obligation,),
+            withheld={},
+        )
+    assert "supported delivery facts changed without an explicit source outcome" in str(
+        failure.value
+    )
+    with pytest.raises(ValueError, match="claimed attributions"):
+        check_delivery_coverage(
+            (_fact_variable(provenance=None),), (obligation,), withheld={}
+        )
+
+
+def test_delivery_facts_shared_state_behind_alias_window_is_checked():
+    variant = ResolvedVariant(slug="people", name="People")
+    shared = (
+        _fact_variable().states[0].model_copy(update={"delivery_column_name": "First"})
+    )
+    variable = _fact_variable().model_copy(
+        update={
+            "states": (shared,),
+            "aliases": (
+                ResolvedAlias(
+                    variant=variant,
+                    delivery_column_name="Second",
+                    windows=(
+                        ResolvedAliasWindow(
+                            valid_from="2020-07-01",
+                            valid_to="2020-12-31",
+                        ),
+                    ),
+                ),
+            ),
+        }
+    )
+    obligation = _fact_obligation(column="Second", valid_from="2020-07-01")
+    check_delivery_coverage((variable,), (obligation,), withheld={})
+    damaged = variable.model_copy(
+        update={
+            "states": (shared.model_copy(update={"data_type": "text"}),),
+        }
+    )
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((damaged,), (obligation,), withheld={})
+    assert "scb/example/value people/Second 2020-07-01..2020-12-31" in str(
+        failure.value
+    )
+
+
+def test_delivery_facts_null_claim_and_withheld_coordinate_need_no_match():
+    obligation = _fact_obligation(data_type=None, data_length=None, attributions=())
+    check_delivery_coverage(
+        (_fact_variable(data_type="text", data_length="9", provenance=None),),
+        (obligation,),
+        withheld={},
+    )
+    check_delivery_coverage(
+        (_fact_variable(data_type="text"),),
+        (_fact_obligation(attributions=()),),
+        withheld={("variable", "scb/example/value"): (_cause(),)},
+    )

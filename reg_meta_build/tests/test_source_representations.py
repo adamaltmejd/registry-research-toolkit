@@ -377,7 +377,7 @@ def test_missing_formed_member_withholds_group_without_manufacturing_metadata() 
     formed, _ = _form(setup)
     assert formed.variable is not None
     state = formed.variable.states[0]
-    result, aliases, issues, waivers = form_representations(
+    result, aliases, issues, waivers, _facts = form_representations(
         [state], (setup[2],), variable_key=KEY, variants=setup[3], subject="fixture"
     )
     assert result == [] and aliases == ()
@@ -484,3 +484,38 @@ def test_representation_contract_requires_exact_finite_cover(defect: str) -> Non
         decision["valid_to"] = "9999-12-31"
     with pytest.raises(ValidationError):
         RepresentationDecision.model_validate(decision)
+
+
+def test_shared_state_facts_reach_both_columns_behind_alias_windows() -> None:
+    formed, _ = _form(_setup())
+    assert formed.variable is not None
+    assert [(o.column, o.valid_from, o.valid_to) for o in formed.coverage] == [
+        ("First", "2020-01-01", "2020-06-30"),
+        ("Second", "2020-07-01", "2020-12-31"),
+    ]
+    assert {o.data_type for o in formed.coverage} == {"integer"}
+    check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
+    state = formed.variable.states[0]
+    damaged = formed.variable.model_copy(
+        update={"states": (state.model_copy(update={"data_type": "text"}),)}
+    )
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((damaged,), formed.coverage, withheld={})
+    assert "claimed data_type='integer' written 'text'" in str(failure.value)
+
+
+def test_conflicting_parallel_fact_nulls_only_that_claimed_fact() -> None:
+    formed, _ = _form(_setup(_records(data_type="text")))
+    assert formed.variable is not None
+    assert ("conflicting_representation_fact", ("data_type",)) in {
+        (d.code, d.fields) for d in formed.diagnostics
+    }
+    assert formed.variable.states[0].data_type is None
+    nulled = {o.column: o for o in formed.coverage}
+    assert set(nulled) == {"First", "Second"}
+    assert all(o.data_type is None for o in nulled.values())
+    # The window is still owed; only the disputed fact is excused.
+    check_delivery_coverage((formed.variable,), formed.coverage, withheld={})

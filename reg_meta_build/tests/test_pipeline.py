@@ -874,6 +874,41 @@ def test_lost_delivery_coverage_refuses_the_build_before_any_database(
     assert missing in summary["error"]
 
 
+@pytest.mark.parametrize("selection", ["typed"], indirect=True)
+@pytest.mark.parametrize("diagnostic", [False, True])
+def test_changed_delivery_facts_refuse_the_build_before_any_database(
+    selection, tmp_path, monkeypatch, diagnostic
+):
+    """The operator's witness: a defect inside formation retypes one supported
+    2020 state, nothing else reports it, and the build must still refuse."""
+    from reg_meta_build import source_formation
+
+    original = source_formation._coded_states
+
+    def retype(segment, variant, coding, subject):
+        states, diagnostics, withheld = original(segment, variant, coding, subject)
+        return (
+            [s.model_copy(update={"data_type": "text"}) for s in states],
+            diagnostics,
+            withheld,
+        )
+
+    monkeypatch.setattr(source_formation, "_coded_states", retype)
+    output, report = tmp_path / "changed.db", tmp_path / "changed-report"
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        build_selected_catalog(selection, output, report, diagnostic=diagnostic)
+    assert "scb/sample/value people/VALUE" in str(failure.value)
+    assert "claimed data_type=" in str(failure.value)
+    assert "written 'text'" in str(failure.value)
+    assert not output.exists()
+    summary = json.loads((report / "summary.json").read_text())
+    assert summary["status"] == "engineering_failure"
+    assert "supported delivery facts changed" in summary["error"]
+
+
 @pytest.mark.parametrize("failure", ["unconverted", "scope", "hash", "escape"])
 def test_engineering_failures_never_become_diagnostic_waivers(
     selection, tmp_path, failure

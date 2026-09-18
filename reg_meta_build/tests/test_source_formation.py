@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _prepared_fixtures import accept_prepared
 from reg_meta.db import open_db
+from reg_meta_build.catalog_dependencies import check_delivery_coverage
 from reg_meta_build.convert_identity import convert_declared_partitions
 from reg_meta_build.prepared_sources import (
     open_prepared_source_records,
@@ -32,6 +33,7 @@ from reg_meta_build.source_coordinates import (
 from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import (
+    AppliedCorrection,
     EffectiveOccurrence,
     effective_occurrence,
     source_occurrence,
@@ -614,3 +616,58 @@ def test_missing_implementation_mapping_is_fatal_not_curation_backlog(
             if missing == "coding"
             else {column_key: resolve_code_membership(())},
         )
+
+
+def test_formation_coverage_carries_type_and_refuses_silent_retype() -> None:
+    result = _form((_record(2020),))
+    assert result.variable is not None
+    (obligation,) = result.coverage
+    assert (obligation.variant, obligation.column) == ("people", "VALUE")
+    assert (obligation.valid_from, obligation.valid_to) == (
+        "2020-01-01",
+        "2020-12-31",
+    )
+    assert obligation.data_type == "integer"
+    assert obligation.attributions == ()
+    check_delivery_coverage((result.variable,), result.coverage, withheld={})
+    damaged = result.variable.model_copy(
+        update={
+            "states": (
+                result.variable.states[0].model_copy(update={"data_type": "text"}),
+            )
+        }
+    )
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((damaged,), result.coverage, withheld={})
+    assert "claimed data_type='integer' written 'text'" in str(failure.value)
+
+
+def test_formation_coverage_carries_correction_attributions() -> None:
+    from dataclasses import replace as _replace
+
+    occurrence = _replace(
+        source_occurrence(_record(2020)),
+        corrections=(
+            AppliedCorrection(
+                case_id="fix-one", effect_index=0, provenance="fixture:fix-one"
+            ),
+        ),
+    )
+    result = _form((occurrence,))
+    assert result.variable is not None
+    (obligation,) = result.coverage
+    assert obligation.attributions == ("fixture:fix-one",)
+    assert result.variable.states[0].provenance == "fixture:fix-one"
+    check_delivery_coverage((result.variable,), result.coverage, withheld={})
+    stripped = result.variable.model_copy(
+        update={
+            "states": (
+                result.variable.states[0].model_copy(update={"provenance": None}),
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="claimed attributions"):
+        check_delivery_coverage((stripped,), result.coverage, withheld={})

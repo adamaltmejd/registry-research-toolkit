@@ -270,6 +270,73 @@ def _disjoint_representations(
     return result, diagnostics, {key: tuple(causes) for key, causes in withheld.items()}
 
 
+def _null_conflicting_facts(
+    obligations: tuple[CoverageObligation, ...],
+    conflicts: tuple[tuple[str, str, str, str, str], ...],
+) -> tuple[CoverageObligation, ...]:
+    """Keep the window but drop the exact fact an accepted representation disputes.
+
+    Only data_type/data_length travel on the obligation; other conflicting facts
+    need no claim change. Partial overlaps split the obligation so the safe slice
+    stays fully checked, the same period rule waived delivery already uses.
+    """
+    type_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
+    length_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
+    for variant, column, fact_field, start, end in conflicts:
+        if fact_field == "data_type":
+            type_windows[variant, column].append((start, end))
+        elif fact_field == "data_length":
+            length_windows[variant, column].append((start, end))
+    if not type_windows and not length_windows:
+        return obligations
+    result: list[CoverageObligation] = []
+    for claim in obligations:
+        key = (claim.variant, claim.column)
+        claimed_types = [
+            window
+            for window in type_windows.get(key, ())
+            if window[0] <= claim.valid_to and window[1] >= claim.valid_from
+        ]
+        claimed_lengths = [
+            window
+            for window in length_windows.get(key, ())
+            if window[0] <= claim.valid_to and window[1] >= claim.valid_from
+        ]
+        if not claimed_types and not claimed_lengths:
+            result.append(claim)
+            continue
+        cuts = {
+            date.fromisoformat(claim.valid_from).toordinal(),
+            date.fromisoformat(claim.valid_to).toordinal() + 1,
+        }
+        for start, end in (*claimed_types, *claimed_lengths):
+            lower = max(start, claim.valid_from)
+            upper = min(end, claim.valid_to)
+            cuts.add(date.fromisoformat(lower).toordinal())
+            cuts.add(date.fromisoformat(upper).toordinal() + 1)
+        ordered = sorted(cuts)
+        for lo, hi in pairwise(ordered):
+            piece_from = date.fromordinal(lo).isoformat()
+            piece_to = date.fromordinal(hi - 1).isoformat()
+            null_type = any(
+                start <= piece_from and end >= piece_to for start, end in claimed_types
+            )
+            null_length = any(
+                start <= piece_from and end >= piece_to
+                for start, end in claimed_lengths
+            )
+            result.append(
+                replace(
+                    claim,
+                    valid_from=piece_from,
+                    valid_to=piece_to,
+                    data_type=None if null_type else claim.data_type,
+                    data_length=None if null_length else claim.data_length,
+                )
+            )
+    return tuple(result)
+
+
 def form_native_variable(
     records: tuple[SourceRecord | EffectiveOccurrence, ...],
     *,
@@ -469,6 +536,17 @@ def form_native_variable(
                         segment.valid_from,
                         segment.valid_to,
                         _refs(segment.occurrences),
+                        data_type=_text(segment.fields, "data_type"),
+                        data_length=_text(segment.fields, "data_length"),
+                        attributions=tuple(
+                            sorted(
+                                {
+                                    correction.provenance
+                                    for occurrence in segment.effective_occurrences
+                                    for correction in occurrence.corrections
+                                }
+                            )
+                        ),
                     )
                 )
                 new_states, new_issues, uncoded = _coded_states(
@@ -489,12 +567,14 @@ def form_native_variable(
                     )
     variable_key = effective[0].variable_key
     assert variable_key is not None
-    states, aliases, grouping_issues, representation_waivers = form_representations(
-        states,
-        representations,
-        variable_key=variable_key,
-        variants=variants,
-        subject=subject,
+    states, aliases, grouping_issues, representation_waivers, representation_facts = (
+        form_representations(
+            states,
+            representations,
+            variable_key=variable_key,
+            variants=variants,
+            subject=subject,
+        )
     )
     diagnostics.extend(grouping_issues)
     for variant_slug, column, start, end in representation_waivers:
@@ -534,12 +614,17 @@ def form_native_variable(
     # What the supported occurrences still claim once every explicit outcome has
     # taken its own period back. Withholding the whole variable is one more such
     # outcome, recorded in the dependency ledger and honoured at the boundary.
-    coverage = tuple(
-        replace(claim, valid_from=start, valid_to=end)
-        for claim in claims
-        for start, end in remaining_windows(
-            waived[claim.variant, claim.column], claim.valid_from, claim.valid_to
-        )
+    # A conflicting representation fact keeps its window but drops that exact
+    # claimed fact, like a waived delivery slice.
+    coverage = _null_conflicting_facts(
+        tuple(
+            replace(claim, valid_from=start, valid_to=end)
+            for claim in claims
+            for start, end in remaining_windows(
+                waived[claim.variant, claim.column], claim.valid_from, claim.valid_to
+            )
+        ),
+        representation_facts,
     )
     if not states:
         accepted_omission = any(

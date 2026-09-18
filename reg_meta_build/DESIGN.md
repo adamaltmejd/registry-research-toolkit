@@ -316,7 +316,13 @@ already holds.
 
 Delivery is established by a final state or a declared representation window on the same
 variable, variant and column. Another column, another variant and a search alias without
-windows deliver nothing here. Genuine source gaps, negative availability and unknown or
+windows deliver nothing here. Each obligation also carries the exact delivery facts its
+member-to-window segment claims — type/length texts and member correction attributions.
+Every overlapping final state on the same coordinate, and every shared state behind an
+alias window for that coordinate, must keep the claimed type/length and contain every
+claimed attribution as an exact provenance element. A conflicting representation fact
+keeps its window but drops that exact claimed fact, like a waived delivery slice.
+Genuine source gaps, negative availability and unknown or
 pooled scopes claim no delivery in the first place. A variable — or one of its variants
 — that the dependency ledger withholds outright, with source evidence, answers for its
 own claim through that entry, whichever stage recorded it, and for nothing past that

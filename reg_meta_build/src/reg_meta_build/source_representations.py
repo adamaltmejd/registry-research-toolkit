@@ -154,6 +154,7 @@ def form_representations(
     tuple[ResolvedAlias, ...],
     list[ResolutionDiagnostic],
     tuple[tuple[str, str, str, str], ...],
+    tuple[tuple[str, str, str, str, str], ...],
 ]:
     """Combine agreeing metadata; never select a sibling as the source winner.
 
@@ -167,9 +168,12 @@ def form_representations(
     The fourth result names every (variant, column, period) a checked decision
     withholds delivery for: a period it reports as unresolved, and the periods it
     assigns to a sibling column. What it does deliver stays a checked obligation.
+    The fifth result names every (variant, column, field, period) where accepted
+    parallel columns disagree on one fact, so the obligation keeps its window
+    but drops that exact claimed fact like a waived delivery slice.
     """
     if not cases:
-        return states, (), [], ()
+        return states, (), [], (), ()
     by_variant: dict[
         ResolvedVariant, list[tuple[CurationCase, RepresentationDecision]]
     ] = defaultdict(list)
@@ -203,6 +207,7 @@ def form_representations(
         by_variant[variant].append((case, decision))
     result = []
     withheld_windows: list[tuple[str, str, str, str]] = []
+    fact_conflicts: list[tuple[str, str, str, str, str]] = []
     aliases: dict[tuple[ResolvedVariant, str], list[ResolvedAliasWindow]] = defaultdict(
         list
     )
@@ -338,6 +343,10 @@ def form_representations(
                         (f"state.{field}",),
                         "Parallel representations disagree; no sibling's fact was selected.",
                     )
+                    fact_conflicts.extend(
+                        (variant.slug, column, field, start, end)
+                        for column in sorted(columns)
+                    )
             code_values = {
                 (
                     s.value_set,
@@ -428,4 +437,5 @@ def form_representations(
         ),
         diagnostics,
         tuple(withheld_windows),
+        tuple(fact_conflicts),
     )
