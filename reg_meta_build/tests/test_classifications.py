@@ -246,6 +246,7 @@ class TestLoadSeedSentinelCodes:
             '{code = 5, meaning = "x"}',
             '{code = "00000"}',
             '{code = "00000", meaning = ""}',
+            '{code = "00000", meaning = "   "}',
             '"00000"',
         ],
     )

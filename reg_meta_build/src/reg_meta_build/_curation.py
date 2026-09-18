@@ -33,8 +33,10 @@ from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, ValidationError, field_validator
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+
+from reg_meta_build._resolved_common import _require_trimmed
 
 if TYPE_CHECKING:
     import sqlite3
@@ -52,7 +54,9 @@ class SentinelCode(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
 
     code: str
-    meaning: str = Field(min_length=1)
+    meaning: str
+
+    _meaning = field_validator("meaning")(_require_trimmed)
 
 
 def load_sentinel_codes(
