@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+from datetime import date
+from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build._components import DisjointSet
@@ -208,6 +210,40 @@ def _alias_overlap(
     return list(dict.fromkeys(cover))
 
 
+def _ambiguous_backing_slices(
+    clipped: list[tuple[str, str]],
+) -> list[tuple[str, str, int]]:
+    """Maximal slices where more than one backing window overlaps, with the count."""
+    cuts = sorted(
+        {
+            point
+            for start, end in clipped
+            for point in (
+                date.fromisoformat(start).toordinal(),
+                date.fromisoformat(end).toordinal() + 1,
+            )
+        }
+    )
+    runs: list[tuple[int, int, int]] = []
+    for low, high in pairwise(cuts):
+        count = sum(
+            1
+            for start, end in clipped
+            if date.fromisoformat(start).toordinal() <= low
+            and date.fromisoformat(end).toordinal() >= high - 1
+        )
+        if count < 2:
+            continue
+        if runs and runs[-1][1] + 1 == low and runs[-1][2] == count:
+            runs[-1] = (runs[-1][0], high - 1, count)
+        else:
+            runs.append((low, high - 1, count))
+    return [
+        (date.fromordinal(first).isoformat(), date.fromordinal(last).isoformat(), n)
+        for first, last, n in runs
+    ]
+
+
 def check_delivery_coverage(
     variables: Iterable[ResolvedVariable],
     obligations: Iterable[CoverageObligation],
@@ -288,31 +324,39 @@ def check_delivery_coverage(
                 length_claim_label = "None (negative source claim)"
         alias_cover = _alias_overlap(by_fqid.get(obligation.fqid, ()), obligation)
         if alias_cover:
-            backing: list[tuple[str, str]] = []
+            backing: dict[tuple[str, str, str, str], ResolvedState] = {}
             for variable in by_fqid.get(obligation.fqid, ()):
                 for state in variable.states:
                     if state.variant.slug != obligation.variant:
                         continue
-                    for start, end in alias_cover:
-                        lower = max(state.valid_from, start)
-                        upper = min(state.valid_to, end)
-                        if lower <= upper:
-                            backing.append((lower, upper))
+                    if any(
+                        state.valid_from <= end and state.valid_to >= start
+                        for start, end in alias_cover
+                    ):
+                        backing[
+                            state.variant.slug,
+                            state.delivery_column_name,
+                            state.valid_from,
+                            state.valid_to,
+                        ] = state
             for start, end in alias_cover:
-                gaps = remaining_windows(
-                    [
-                        interval
-                        for interval in backing
-                        if interval[0] <= end and interval[1] >= start
-                    ],
-                    start,
-                    end,
+                clipped = sorted(
+                    (max(state.valid_from, start), min(state.valid_to, end))
+                    for state in backing.values()
+                    if state.valid_from <= end and state.valid_to >= start
                 )
-                for gap_start, gap_end in gaps:
+                for gap_start, gap_end in remaining_windows(clipped, start, end):
                     fact_changes.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                         f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                         f"no written state carries the claimed facts for {gap_start}..{gap_end}"
+                    )
+                for first, last, count in _ambiguous_backing_slices(clipped):
+                    fact_changes.append(
+                        f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                        f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
+                        f"alias backing is ambiguous: {count} states of variant "
+                        f"{obligation.variant} overlap {first}..{last}"
                     )
         if (
             not check_type
@@ -383,9 +427,7 @@ def check_delivery_coverage(
                 )
             if claimed_attributions:
                 elements = (
-                    set(state.provenance.split("\n\n"))
-                    if state.provenance
-                    else set()
+                    set(state.provenance.split("\n\n")) if state.provenance else set()
                 )
                 missing = [
                     item for item in claimed_attributions if item not in elements

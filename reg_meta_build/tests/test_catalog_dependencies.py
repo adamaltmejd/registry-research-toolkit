@@ -1353,3 +1353,47 @@ def test_deleted_or_truncated_shared_state_behind_alias_window_is_refused():
         "no written state carries the claimed facts for 2020-10-01..2020-12-31"
         in str(failure.value)
     )
+
+
+def test_overlapping_backing_states_behind_alias_window_are_refused():
+    variant = ResolvedVariant(slug="people", name="People")
+    first = (
+        _fact_variable().states[0].model_copy(update={"delivery_column_name": "First"})
+    )
+    second = (
+        _fact_variable().states[0].model_copy(update={"delivery_column_name": "Extra"})
+    )
+    variable = _fact_variable().model_copy(
+        update={
+            "states": (first, second),
+            "aliases": (
+                ResolvedAlias(
+                    variant=variant,
+                    delivery_column_name="Second",
+                    windows=(
+                        ResolvedAliasWindow(
+                            valid_from="2020-07-01",
+                            valid_to="2020-12-31",
+                        ),
+                    ),
+                ),
+            ),
+        }
+    )
+    obligation = _fact_obligation(
+        column="Second", valid_from="2020-07-01", attributions=()
+    )
+    check_delivery_coverage(
+        (variable.model_copy(update={"states": (first,)}),),
+        (obligation,),
+        withheld={},
+    )
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((variable,), (obligation,), withheld={})
+    assert (
+        "alias backing is ambiguous: 2 states of variant people "
+        "overlap 2020-07-01..2020-12-31" in str(failure.value)
+    )
