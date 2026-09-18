@@ -42,7 +42,7 @@ from reg_meta_build.source_records import (
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 
-def _setup(*, code="01", inline=True):
+def _setup(*, code="01", inline=True, sentinels=()):
     revision = SourceRevision.create(
         dataset="fixture",
         publisher="SCB",
@@ -77,6 +77,7 @@ def _setup(*, code="01", inline=True):
             ResolvedClassificationCode(code="01", label="Canonical label"),
             ResolvedClassificationCode(code="02", label="Second label"),
         ),
+        sentinel_codes=sentinels,
     )
     claims = (
         (
@@ -294,12 +295,12 @@ def test_noncanonical_codes_keep_source_members_and_declared_evidence(tmp_path):
 
 
 def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
-    setup = _setup(code="99")
-    book = setup[3]["fixture"]
-    sentinel_book = book.model_copy(
-        update={"sentinel_codes": (SentinelCode(code="99", meaning="not applicable"),)}
+    setup = _setup(
+        code="99",
+        sentinels=(SentinelCode(code="99", meaning="not applicable"),),
     )
-    result = _apply(setup, classifications={"fixture": sentinel_book})
+    sentinel_book = setup[3]["fixture"]
+    result = _apply(setup)
     assert [d.code for d in result.diagnostics] == ["sentinel_classification_codes"]
     assert result.diagnostics[0].severity == "warning"
     variable = _form(setup, result)
@@ -320,20 +321,21 @@ def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
     )
 
 
-def test_naming_a_sentinel_does_not_stale_the_accepted_decision():
-    # The sentinel list is per-code acceptance authority recorded alongside the
-    # binding, not pinned codebook content: curating it must clear errors on an
-    # already-accepted decision without re-review.
+def test_naming_a_sentinel_stales_the_accepted_decision():
+    # The sentinel list is per-code acceptance authority pinned with the
+    # codebook: broadening it stales the existing decision for re-review
+    # instead of silently keeping a severed binding.
     setup = _setup()
     book = setup[3]["fixture"]
     assert _apply(setup).diagnostics == ()
     sentinel_book = book.model_copy(
         update={"sentinel_codes": (SentinelCode(code="99", meaning="not applicable"),)}
     )
-    assert classification_content_sha256(sentinel_book) == (
+    assert classification_content_sha256(sentinel_book) != (
         classification_content_sha256(book)
     )
-    assert _apply(setup, classifications={"fixture": sentinel_book}).diagnostics == ()
+    result = _apply(setup, classifications={"fixture": sentinel_book})
+    assert [d.code for d in result.diagnostics] == ["classification_evidence_changed"]
 
 
 def test_accepted_omission_survives_classification_application():

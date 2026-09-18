@@ -168,8 +168,7 @@ class ResolvedClassification(_ResolvedModel):
     # Curated per-classification sentinel codes (`{code, meaning}` exact
     # strings from `curation/classifications.toml`). Observed codes on this
     # list keep the binding with a warning instead of severing it. Part of the
-    # resolved codebook, but NOT of the pinned content hash: adding a sentinel
-    # clears errors on already-accepted bindings without re-review.
+    # pinned content hash: changing the list stales accepted decisions.
     sentinel_codes: tuple[SentinelCode, ...] = ()
 
     _names = field_validator("name", "short_name")(_require_trimmed)

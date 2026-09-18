@@ -21,7 +21,9 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
+from reg_meta_build._curation import SentinelCode
 from reg_meta_build.cli import run
+from reg_meta_build.classifications import load_seed
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.pipeline import (
@@ -395,6 +397,13 @@ def selection(tmp_path, request):
             and values.manifest.revision.dataset == "classifications/insats.csv"
             for descriptor in values.descriptors()
         )
+        # Pass the validated `load_seed()` entry through: the declaration must
+        # accept the curated tuple form, not just rebuilt raw tables.
+        seed_entry = next(
+            entry
+            for entry in load_seed(curation / "classifications.toml")
+            if entry["short_name"] == _SENTINEL_SHORT_NAME
+        )
         classifications = (
             CodebookDeclaration(
                 source="classifications/insats.csv",
@@ -403,7 +412,7 @@ def selection(tmp_path, request):
                     "slug": "insats",
                     "short_name": _SENTINEL_SHORT_NAME,
                     "name": "Insats",
-                    "sentinel_codes": [{"code": "9", "meaning": "ej aktuellt"}],
+                    "sentinel_codes": seed_entry["sentinel_codes"],
                 },
             ),
         )
@@ -848,6 +857,12 @@ def test_malformed_selection_sentinels_are_refused():
     assert (
         _selection_sentinels(
             [{"code": "9", "meaning": "ej aktuellt"}], subject="insats"
+        )[0].code
+        == "9"
+    )
+    assert (
+        _selection_sentinels(
+            (SentinelCode(code="9", meaning="ej aktuellt"),), subject="insats"
         )[0].code
         == "9"
     )
