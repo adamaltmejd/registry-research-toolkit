@@ -574,6 +574,45 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       .not.toBeInTheDocument();
   });
 
+  it("multi-state usage badges exactly the pooled rows (Y-202)", async () => {
+    // Pooled/annual/pooled states of one variant and value set: the annual
+    // middle must not fuse its pooled neighbours, and exactly the two pooled
+    // window rows carry the badge.
+    const base = {
+      variant: "v",
+      value_set_id: 100,
+      classification_slug: null,
+    };
+    await render(ValueSetView, {
+      states: [
+        state({
+          ...base,
+          state_id: 1,
+          valid_from: "2012-01-01",
+          valid_to: "2012-12-31",
+          pooled: true,
+        }),
+        state({
+          ...base,
+          state_id: 2,
+          valid_from: "2013-01-01",
+          valid_to: "2013-12-31",
+          pooled: false,
+        }),
+        state({
+          ...base,
+          state_id: 3,
+          valid_from: "2014-01-01",
+          valid_to: "2014-12-31",
+          pooled: true,
+        }),
+      ],
+      narrowed: false,
+    });
+    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
+    expect(document.querySelectorAll(".pooled-badge")).toHaveLength(2);
+  });
+
   it("collapses several value_set_ids that share one classification_slug into ONE row (M13)", async () => {
     // The duplicate-LKF-row bug: SCB ships ≥2 distinct value_set_ids per LKF
     // edition. Two such states for lkf2007 must render ONE "= LKF 2007" row, not

@@ -4235,7 +4235,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         valueSetId: 100,
         versionLabel: "",
         variants: ["doda"],
-        spans: [{ from: "1980-01-01", to: "1980-12-31" }],
+        spans: [{ from: "1980-01-01", to: "1980-12-31", pooled: false }],
       },
       {
         verdict: warningConformance,
@@ -4243,7 +4243,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         valueSetId: 101,
         versionLabel: "LKF 1980 rev A",
         variants: ["fodda"],
-        spans: [{ from: "1981-01-01", to: "1981-12-31" }],
+        spans: [{ from: "1981-01-01", to: "1981-12-31", pooled: false }],
       },
       {
         verdict: laterWarningConformance,
@@ -4251,7 +4251,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         valueSetId: 102,
         versionLabel: "LKF 1980 rev B",
         variants: ["flytt"],
-        spans: [{ from: "1982-01-01", to: "1982-12-31" }],
+        spans: [{ from: "1982-01-01", to: "1982-12-31", pooled: false }],
       },
     ]);
     // BOTH warning lists stay reachable — X's and Y's are DISTINCT reads, and
@@ -4312,7 +4312,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         valueSetId: 902,
         versionLabel: "Församling 2006",
         variants: ["doda", "fodda"],
-        spans: [{ from: "2006-01-01", to: "2019-12-31" }],
+        spans: [{ from: "2006-01-01", to: "2019-12-31", pooled: false }],
       },
     ]);
   });
@@ -4416,8 +4416,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs.map((v) => v.overallSpan)).toEqual([
-      { from: "1968-01-01", to: "1970-12-31" },
-      { from: "1971-01-01", to: "1973-12-31" },
+      { from: "1968-01-01", to: "1970-12-31", pooled: false },
+      { from: "1971-01-01", to: "1973-12-31", pooled: false },
     ]);
   });
 
@@ -4468,7 +4468,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     );
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "1983-01-01", to: "1990-12-31" },
+      { from: "1983-01-01", to: "1990-12-31", pooled: false },
     ]);
   });
 
@@ -4498,6 +4498,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       {
         from: "2010-01-01",
         to: "2011-12-31",
+        pooled: false,
         changes: [
           {
             at: "2011-01-01",
@@ -4549,7 +4550,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
           .filter((s) => s.valid_from === "2018-01-01")
           .map((s) => s.delivery_column_name),
       ).toEqual(["A", "B"]);
-      expect(usage.spans).toEqual([{ from: "2017-01-01", to: "2018-12-31" }]);
+      expect(usage.spans).toEqual([{ from: "2017-01-01", to: "2018-12-31", pooled: false }]);
     },
   );
 
@@ -4574,7 +4575,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "2020-01-01", to: "2020-02-29" },
+      { from: "2020-01-01", to: "2020-02-29", pooled: false },
     ]);
   });
 
@@ -4597,7 +4598,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "2020-01-01", to: "2021-12-31" },
+      { from: "2020-01-01", to: "2021-12-31", pooled: false },
     ]);
   });
 
@@ -4636,6 +4637,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       {
         from: "2020-01-01",
         to: "2022-12-31",
+        pooled: false,
         changes: [
           {
             at: "2022-01-01",
@@ -4675,7 +4677,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "2020-01-01", to: "2021-12-31" },
+      { from: "2020-01-01", to: "2021-12-31", pooled: false },
     ]);
   });
 
@@ -4697,8 +4699,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "2000-01-01", to: "2000-12-31" },
-      { from: "2002-01-01", to: "2002-12-31" },
+      { from: "2000-01-01", to: "2000-12-31", pooled: false },
+      { from: "2002-01-01", to: "2002-12-31", pooled: false },
     ]);
   });
 
@@ -4720,8 +4722,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     const vs = distinctValueSets(states);
     const doda = vs[0].usages.find((u) => u.variant === "doda");
     const fodda = vs[0].usages.find((u) => u.variant === "fodda");
-    expect(doda?.spans).toEqual([{ from: "2000-01-01", to: "2000-12-31" }]);
-    expect(fodda?.spans).toEqual([{ from: "2001-01-01", to: "2001-12-31" }]);
+    expect(doda?.spans).toEqual([{ from: "2000-01-01", to: "2000-12-31", pooled: false }]);
+    expect(fodda?.spans).toEqual([{ from: "2001-01-01", to: "2001-12-31", pooled: false }]);
   });
 
   it("keeps the open-ended ceiling on a still-delivered span", () => {
@@ -4735,7 +4737,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "2016-01-01", to: "9999-12-31" },
+      { from: "2016-01-01", to: "9999-12-31", pooled: false },
     ]);
   });
 
@@ -4764,7 +4766,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     expect(vs).toHaveLength(1);
     expect(vs[0].usages).toHaveLength(1);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "1980-01-01", to: "1981-12-31" },
+      { from: "1980-01-01", to: "1981-12-31", pooled: false },
     ]);
   });
 
@@ -4787,7 +4789,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "2000-01-01", to: "2005-12-31" },
+      { from: "2000-01-01", to: "2005-12-31", pooled: false },
     ]);
   });
 
@@ -4810,8 +4812,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "2000-01-01", to: "2000-06-30" },
-      { from: "2000-08-01", to: "2000-12-31" },
+      { from: "2000-01-01", to: "2000-06-30", pooled: false },
+      { from: "2000-08-01", to: "2000-12-31", pooled: false },
     ]);
   });
 
@@ -4838,7 +4840,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "2016-01-01", to: "9999-12-31" },
+      { from: "2016-01-01", to: "9999-12-31", pooled: false },
     ]);
   });
 });

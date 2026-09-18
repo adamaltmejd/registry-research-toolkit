@@ -2609,6 +2609,10 @@ export function representationInWindow(
 export interface ValueSetSpan {
   from: string;
   to: string;
+  /** Whether the span's states are pooled-edition coverage (Y-202). Spans
+   * never fuse across pooled/annual evidence, so the view can badge exactly
+   * the pooled windows. */
+  pooled: boolean;
   changes?: ValueSetTechnicalChange[];
 }
 
@@ -2719,7 +2723,10 @@ function appendTechnicalChanges(
  * variant) — NOT by delivery column (a merged monthly-family value set fuses
  * across its 12 month columns by design) — so this tests ONLY time-adjacency; the
  * #743 technical-field transitions are attached as notes instead of splitting the
- * value-set row. */
+ * value-set row. Pooled-edition states NEVER fuse with annual states (Y-202):
+ * the merge (and the open-ended swallow below) requires the same `pooled` flag,
+ * so each span is uniformly pooled or annual and the view can badge exactly
+ * the pooled windows. */
 function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
   const ordered = [...states].sort(
     (a, b) =>
@@ -2743,7 +2750,7 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
     // explicitly because `dayAfter("9999-12-31")` would overflow into year 10000
     // (`Date.toISOString()`'s `±YYYYYY` expanded form sorts BELOW real dates),
     // which would wrongly split a second still-delivered state into its own span.
-    if (open && open.to === OPEN_ENDED_VALID_TO) {
+    if (open && open.to === OPEN_ENDED_VALID_TO && s.pooled === open.pooled) {
       if (previous && !previousAmbiguous && !successorBoundaryAmbiguous) {
         appendTechnicalChanges(open, previous, s);
       }
@@ -2752,7 +2759,7 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
     // Contiguous (or overlapping) with the open span → extend it. The day-after
     // test fuses back-to-back annual windows (`2019-12-31` then `2020-01-01`)
     // without merging across a skipped year (`2019-12-31` then `2021-01-01`).
-    if (open && s.valid_from <= dayAfter(open.to)) {
+    if (open && s.pooled === open.pooled && s.valid_from <= dayAfter(open.to)) {
       if (previous && !previousAmbiguous && !successorBoundaryAmbiguous) {
         appendTechnicalChanges(open, previous, s);
       }
@@ -2766,7 +2773,7 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
         previousAmbiguous = true;
       }
     } else {
-      spans.push({ from: s.valid_from, to: s.valid_to });
+      spans.push({ from: s.valid_from, to: s.valid_to, pooled: s.pooled });
       previous = s;
       previousAmbiguous = false;
     }
@@ -2925,6 +2932,9 @@ export function distinctValueSets(
         (m, s) => (s.valid_to > m ? s.valid_to : m),
         rep.valid_to,
       ),
+      // The outer window is pooled coverage only when every state in it is;
+      // it feeds the disambiguation label, never a badge.
+      pooled: group.every((s) => s.pooled),
     };
     return {
       key,

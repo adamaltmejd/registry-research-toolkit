@@ -291,10 +291,11 @@ function overlapPercent(overlap: number): string {
 
 function usageWindowLabels(
   spans: DistinctValueSet["usages"][number]["spans"],
-): string[] {
-  return spans
-    .map((sp) => formatWindow(sp.from, sp.to))
-    .filter((label): label is string => label !== null);
+): { label: string; pooled: boolean }[] {
+  return spans.flatMap((sp) => {
+    const label = formatWindow(sp.from, sp.to);
+    return label === null ? [] : [{ label, pooled: sp.pooled }];
+  });
 }
 
 function usageVariantLabel(variant: string): string | null {
@@ -375,7 +376,9 @@ function trackDisclosure(key: string, event: Event): void {
         <!-- The years the verdict was RECORDED over — the states that carry it, which
              is often narrower than the coding's own usage window two lines above. Said
              in words so the two windows cannot be read as the same claim. -->
-        {@const period = usageWindowLabels(source.spans).join(", ")}
+        {@const period = usageWindowLabels(source.spans)
+          .map((w) => w.label)
+          .join(", ")}
         {@const variants = conformanceVariants(source)}
         {#if scope.coding || period || variants.length > 0}
           <p class="conformance-scope">
@@ -427,7 +430,15 @@ function trackDisclosure(key: string, event: Event): void {
           <code class="vs-usage-variant">{variantLabel}</code>
         {/if}
         {#if usageSpans.length > 0}
-          <span class="muted vs-usage-spans">{usageSpans.join(", ")}</span>
+          <span class="muted vs-usage-spans">
+            {#each usageSpans as w, i (`${w.label}|${i}`)}
+              {#if i > 0}, {/if}{w.label}{#if w.pooled}<span
+                  class="pooled-badge"
+                  title="Pooled source edition: this state covers the whole pooled range; annual availability inside it is not inferred."
+                  >pooled</span
+                >{/if}
+            {/each}
+          </span>
         {/if}
         {#if changes.length > 0}
           <span class="vs-change-list">
@@ -446,6 +457,11 @@ function trackDisclosure(key: string, event: Event): void {
                   {:else}
                     {stateDefinitionLabel(s, repeatedLabels)}
                   {/if}
+                  {#if s.pooled}<span
+                      class="pooled-badge"
+                      title="Pooled source edition: this state covers the whole pooled range; annual availability inside it is not inferred."
+                      >pooled</span
+                    >{/if}
                 </dt>
                 <dd>{s.operational_definition}</dd>
               </div>
@@ -600,7 +616,7 @@ function trackDisclosure(key: string, event: Event): void {
           valueSetId: s.value_set_id,
           versionLabel: s.value_set_version_label,
           variants: [s.variant],
-          spans: [{ from: s.valid_from, to: s.valid_to }],
+          spans: [{ from: s.valid_from, to: s.valid_to, pooled: s.pooled }],
         },
         null,
       )}
