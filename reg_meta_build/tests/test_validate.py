@@ -1035,18 +1035,15 @@ class TestValidateModule:
 
         # Distinct columns overlap freely (parallel representations): a code-less
         # state on another column never meets the code-bearing `Kon` window.
-        result = run_case(
-            "distinct-column", "AnnanKolumn", "2020-01-01", "2021-12-31"
-        )
+        result = run_case("distinct-column", "AnnanKolumn", "2020-01-01", "2021-12-31")
         assert result.passed, ("distinct column wrongly flagged", result.failures)
         # Folded-same column (`kON`) on a disjoint window: no shared period.
-        result = run_case(
-            "disjoint-window", "kON", "2025-01-01", "2025-12-31"
-        )
+        result = run_case("disjoint-window", "kON", "2025-01-01", "2025-12-31")
         assert result.passed, ("disjoint window wrongly flagged", result.failures)
         # Same folded column and window but another variant: variant-bounded.
-        result = run_case("other-variant", "kON", "2020-01-01", "2021-12-31",
-                           variant_id=20)
+        result = run_case(
+            "other-variant", "kON", "2020-01-01", "2021-12-31", variant_id=20
+        )
         assert result.passed, ("other variant wrongly flagged", result.failures)
         # NULL code-less against the named code-bearing column: NULL is not a
         # name, so the two never share a column.
@@ -1139,9 +1136,9 @@ class TestValidateModule:
         _check_one_value_set_per_period(conn, result, tables)
         conn.close()
         assert not result.passed
-        assert any(
-            "resolves to >1 value set" in f for f in result.failures
-        ), result.failures
+        assert any("resolves to >1 value set" in f for f in result.failures), (
+            result.failures
+        )
 
     def test_one_value_set_per_period_column_and_window_boundaries(
         self, fixture_db: Path, tmp_path: Path
@@ -1187,8 +1184,7 @@ class TestValidateModule:
                 "(variable_id, register_variant_id, valid_from, valid_to, "
                 " delivery_column_name, value_set_id, value_set_version_label) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (vid, rvid, valid_from, valid_to, column, use_vsid,
-                 f"bound-{name}"),
+                (vid, rvid, valid_from, valid_to, column, use_vsid, f"bound-{name}"),
             )
             tables = {
                 r[0]
@@ -1203,24 +1199,22 @@ class TestValidateModule:
             return result
 
         # Distinct columns carry parallel codings: no conflict.
-        result = run_case(
-            "distinct-column", "AnnanKolumn", "2020-01-01", "2021-12-31"
-        )
+        result = run_case("distinct-column", "AnnanKolumn", "2020-01-01", "2021-12-31")
         assert result.passed, ("distinct column wrongly flagged", result.failures)
         # Folded-same column on a disjoint window: no shared period. (The
         # fixture's other `Kon` state on this variable is code-less, hence
         # exempt here.)
-        result = run_case(
-            "disjoint-window", "kON", "2025-01-01", "2025-12-31"
-        )
+        result = run_case("disjoint-window", "kON", "2025-01-01", "2025-12-31")
         assert result.passed, ("disjoint window wrongly flagged", result.failures)
         # Same folded column and window but another variant: variant-bounded.
-        result = run_case("other-variant", "kON", "2020-01-01", "2021-12-31",
-                           variant_id=20)
+        result = run_case(
+            "other-variant", "kON", "2020-01-01", "2021-12-31", variant_id=20
+        )
         assert result.passed, ("other variant wrongly flagged", result.failures)
         # Same value set under another case: one coding, no conflict.
-        result = run_case("same-value-set", "kON", "2020-01-01", "2021-12-31",
-                           same_value_set=True)
+        result = run_case(
+            "same-value-set", "kON", "2020-01-01", "2021-12-31", same_value_set=True
+        )
         assert result.passed, ("same value set wrongly flagged", result.failures)
         # NULL-vs-named never share a column, even with distinct value sets.
         result = run_case("null-vs-named", None, "2020-01-01", "2021-12-31")
@@ -1257,9 +1251,9 @@ class TestValidateModule:
         _check_one_value_set_per_period(conn, result, tables)
         conn.close()
         assert not result.passed
-        assert any(
-            "resolves to >1 value set" in f for f in result.failures
-        ), result.failures
+        assert any("resolves to >1 value set" in f for f in result.failures), (
+            result.failures
+        )
 
     def test_var_year_codes_anchor_self_skips_on_fixture(self, fixture_db: Path):
         """A2.7: the var_id-24193 code-membership anchor self-skips cleanly when
