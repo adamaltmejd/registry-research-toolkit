@@ -304,7 +304,12 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   source-derived representation and project correction provenance onto only the
 #   alias. A 6.8.0 DB cannot distinguish a curated representation interval from a
 #   source-derived alias window and is rejected by the minor-version gate.
-SCHEMA_VERSION = "6.9.0"
+# - 6.10.0 (Y-202): additive `variable_state.pooled` column (INTEGER NOT NULL
+#   DEFAULT 0, CHECK IN (0, 1)). Genuinely pooled multi-year SCB editions form
+#   ONE state over the whole pooled range with `pooled = 1`; every other state
+#   writes 0. A 6.9.0 DB cannot mark pooled coverage and is rejected via the
+#   minor-version gate.
+SCHEMA_VERSION = "6.10.0"
 DB_FILENAME = "reg_meta.db"
 
 

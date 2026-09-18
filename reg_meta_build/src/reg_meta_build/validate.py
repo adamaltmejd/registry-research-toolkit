@@ -257,6 +257,7 @@ def validate_built_db(
         _check_var_year_codes_anchor(conn, result, has_projection)
         _check_one_value_set_per_period(conn, result, tables)
         _check_no_codeless_codebearing_overlap(conn, result, tables, flavored=flavored)
+        _check_pooled_state_overlap(conn, result, tables, flavored=flavored)
         _check_open_ended_sentinel(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_delivery_column_hygiene(conn, result, tables)
@@ -354,6 +355,12 @@ def _check_schema_shape(
         result.ok("variable_state.value_set_id present")
     else:
         result.fail("variable_state.value_set_id missing")
+
+    # Y-202: pooled multi-year-edition marker — INTEGER NOT NULL DEFAULT 0.
+    if "pooled" in cols:
+        result.ok("variable_state.pooled present")
+    else:
+        result.fail("variable_state.pooled missing")
 
     # #352: code/value search additions — value_code.mapping_count column +
     # value_code_fts index.
@@ -704,6 +711,79 @@ def _check_no_codeless_codebearing_overlap(
         f"{len(rows)} code-less ↔ code-bearing overlapping state pair(s) on one "
         f"column across {len(affected)} (variable, column) — a code-less window "
         f"overlaps a code-bearing window: {sample}"
+    )
+
+
+def _check_pooled_state_overlap(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    flavored: bool = False,
+) -> None:
+    """The pooled-overlap backstop (Y-202): no pooled-marked (``pooled = 1``)
+    ``variable_state`` window may overlap an unmarked (``pooled = 0``) window
+    for the same ``(variable_id, register_variant_id, delivery_column_name)``.
+
+    A pooled state spans a multi-year edition range with no explicit annual
+    coverage; where explicit annual delivery exists the annual states win and
+    the pooled span is trimmed to the uncovered remainder (or vanishes). A
+    pooled↔explicit overlap on one column would land a period on both an
+    imprecise pooled window and a precise annual window — the annual inference
+    the marker exists to forbid.
+
+    The build already drives these to zero BY CONSTRUCTION (occurrence
+    resolution marks a span pooled only when no explicit occurrence covers it),
+    so on a clean build this guard reports OK; it is the backstop that FAILs a
+    future regression in those resolvers.
+
+    ``flavored=True`` SKIPs the check, mirroring
+    ``_check_no_codeless_codebearing_overlap``: a flavored DB is an
+    ``extend-db`` overlay on the released global DB, validated at global build;
+    re-asserting it would only re-flag base debt the steward can't fix. A
+    missing ``pooled`` column (a pre-Y-202 base) also skips — the schema-shape
+    check above already fails that build, so this guard must not crash on it.
+    """
+    result.section("[invariant: no pooled ↔ explicit window overlap]")
+    if flavored:
+        result.ok(
+            "flavored build — pooled↔explicit guard skipped "
+            "(base validated at global build)"
+        )
+        return
+    if "variable_state" not in tables:
+        result.ok("variable_state absent — invariant skipped")
+        return
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(variable_state)")}
+    if "pooled" not in cols:
+        result.ok("variable_state.pooled absent — invariant skipped")
+        return
+    rows = conn.execute(
+        "SELECT v.register_id, v.slug, a.delivery_column_name, "
+        "       a.valid_from, a.valid_to, b.valid_from, b.valid_to "
+        "FROM variable_state a "
+        "JOIN variable_state b "
+        "  ON a.variable_id = b.variable_id "
+        " AND a.register_variant_id = b.register_variant_id "
+        " AND py_lower(a.delivery_column_name) IS py_lower(b.delivery_column_name) "
+        " AND a.state_id < b.state_id "
+        " AND a.pooled <> b.pooled "
+        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        "JOIN variable v ON v.variable_id = a.variable_id "
+        "ORDER BY v.register_id, v.slug"
+    ).fetchall()
+    if not rows:
+        result.ok("no pooled state overlaps an explicit state on one column")
+        return
+    affected = {(r[1], r[2]) for r in rows}
+    sample = "; ".join(
+        f"{r[1]}/{r[2]} [{r[3][:4]}-{r[4][:4]}] ∩ [{r[5][:4]}-{r[6][:4]}]"
+        for r in rows[:5]
+    )
+    result.fail(
+        f"{len(rows)} pooled ↔ explicit overlapping state pair(s) on one "
+        f"column across {len(affected)} (variable, column) — a pooled window "
+        f"overlaps an explicit window: {sample}"
     )
 
 

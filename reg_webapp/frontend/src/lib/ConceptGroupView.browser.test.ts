@@ -130,6 +130,7 @@ function vstate(over: Partial<VariableStateModel>): VariableStateModel {
     delivery_column_name: null,
     source_register_text: null,
     provenance: null,
+    pooled: false,
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,

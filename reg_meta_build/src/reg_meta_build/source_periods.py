@@ -102,7 +102,14 @@ def source_scopes(
         )
         return edition_scope, edition_period_scope, None
     if exact_interval is not None:
-        scope = TemporalScope(kind="pooled", label=label)
+        # A multi-year exact range pools to ONE state over the whole range
+        # (Y-202): the range is carried on the scope, never re-parsed downstream.
+        scope = TemporalScope(
+            kind="pooled",
+            label=label,
+            pooled_start=exact_interval[0],
+            pooled_end=exact_interval[1],
+        )
         return scope, scope, "pooled_period"
     if date_shaped:
         scope = TemporalScope(kind="unknown", label=label)
@@ -152,7 +159,16 @@ def source_scopes(
             None,
         )
     if claims:
-        scope = TemporalScope(kind="pooled", label=label)
+        # Multi-year claims pool to ONE state over the claim hull (Y-202): the
+        # first claim's start through the last claim's end. Interior per-year
+        # structure stays on the claim key set; resolution never infers annual
+        # availability inside the range.
+        scope = TemporalScope(
+            kind="pooled",
+            label=label,
+            pooled_start=min(low for _, low, _ in claims),
+            pooled_end=max(high for _, _, high in claims),
+        )
         return scope, scope, "pooled_period"
 
     scope = TemporalScope(kind="unknown", label=label)

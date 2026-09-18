@@ -38,6 +38,7 @@ from reg_meta_build.source_occurrences import (
     effective_occurrence,
     source_occurrence,
 )
+from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
@@ -219,6 +220,31 @@ def test_prepared_native_family_forms_and_writes_without_handwritten_cases(
             ("2020-01-01", "2020-12-31", "VALUE", None),
             ("2022-01-01", "2022-12-31", "VALUE", None),
         ]
+
+
+def test_pooled_only_edition_forms_one_marked_state(tmp_path: Path) -> None:
+    """Y-202: a genuinely pooled multi-year edition forms ONE marked state.
+
+    The whole pooled range lands in the DB with `pooled = 1` — no annual
+    inference inside the range, no unsupported-occurrence error."""
+    edition, period, issue = source_scopes("2012 - 2014")
+    assert issue == "pooled_period"
+    record = _record(2012, row="-pooled").model_copy(
+        update={"edition_scope": edition, "edition_period_scope": period}
+    )
+    result = _form((record,))
+    assert result.variable is not None and result.diagnostics == ()
+    (state,) = result.variable.states
+    assert (state.valid_from, state.valid_to) == ("2012-01-01", "2014-12-31")
+    assert state.pooled is True
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog((result.variable,), output, manifest={})
+    with closing(open_db(output)) as conn:
+        assert tuple(
+            conn.execute(
+                "SELECT valid_from, valid_to, pooled FROM variable_state"
+            ).fetchone()
+        ) == ("2012-01-01", "2014-12-31", 1)
 
 
 def test_native_identity_is_scoped_and_preserves_native_primitive_type() -> None:

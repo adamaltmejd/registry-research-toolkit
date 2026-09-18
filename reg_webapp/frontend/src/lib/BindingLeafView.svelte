@@ -488,6 +488,11 @@ const inferredGaps = $derived(
     (state) => state.provenance === "inferred:resolution-gap",
   ),
 );
+// Y-202: states spanning a pooled multi-year edition — one marked state over
+// the whole pooled range, with no inferred annual availability inside it.
+const pooledStates = $derived(
+  (valueSetStates ?? []).filter((state) => state.pooled),
+);
 const curatedMatrixAnswers = $derived.by(() =>
   ((isNarrowed ? valueSetScope : valueSetStates) ?? []).flatMap((state) => {
     const answer = curatedMatrixAnswerFromState(state);
@@ -1015,6 +1020,36 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
               <li>
                 <div title={windowTitle(state.valid_from, state.valid_to)}>
                   <KeyValue rows={gapFacts} />
+                </div>
+              </li>
+            {/each}
+          </ul>
+        </dd>
+      {/if}
+      {#if pooledStates.length > 0}
+        <dt class="micro-label">Pooled intervals</dt>
+        <dd>
+          <ul class="correction-list">
+            {#each pooledStates as state}
+              {@const pooledFacts = [
+                {
+                  label: "Variant",
+                  value: state.variant_label ?? state.variant,
+                },
+                {
+                  label: "Interval",
+                  value: windowTitle(state.valid_from, state.valid_to),
+                  mono: true,
+                },
+                {
+                  label: "Attribution",
+                  value:
+                    "Pooled source edition; annual availability inside the interval is not inferred",
+                },
+              ] satisfies KeyValueRow[]}
+              <li>
+                <div title={windowTitle(state.valid_from, state.valid_to)}>
+                  <KeyValue rows={pooledFacts} />
                 </div>
               </li>
             {/each}

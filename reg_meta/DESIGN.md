@@ -268,17 +268,19 @@ see "Classifications"), while the human-readable source attribution lives on
 `variable.source_label` (cross-era constant). `variable_state` carries `state_id`,
 `variable_id`, `register_variant_id`, `valid_from`/`valid_to`, `data_type`,
 `data_length`, `delivery_column_name`, `value_set_id`, `value_set_version_label`, and
-`classification_id`. It also carries nullable `provenance`: NULL for an ordinary
-provider-documented interval, `errata:<class>\n<evidence>` for an SCB correction, and
-optionally `steward:<label>` for steward-only rows. When an SCB correction overlaps a
-provider-documented claim, `errata:scoped-attributions\n<JSON array>` records pair each
-correction class and evidence value with its exact `source_editions`. This preserves
-multiple attributions without confusing disjoint editions or relabeling the enclosing
-documented window. Correction-only overlaps use the same records under
-`errata:overlapping-attributions`. A source-less span retained by the existing coalescer
-carries `inferred:resolution-gap`, which attributes it to neither provider nor curator.
-Keeping this at state grain prevents one corrected edition from relabeling a neighboring
-documented window.
+`classification_id`. It also carries `pooled` (Y-202: 1 when the state spans a pooled
+multi-year edition range with no explicit annual coverage — one marked state over the
+whole range, never inferred annual availability inside it; 0 otherwise). It also carries
+nullable `provenance`: NULL for an ordinary provider-documented interval,
+`errata:<class>\n<evidence>` for an SCB correction, and optionally `steward:<label>` for
+steward-only rows. When an SCB correction overlaps a provider-documented claim,
+`errata:scoped-attributions\n<JSON array>` records pair each correction class and
+evidence value with its exact `source_editions`. This preserves multiple attributions
+without confusing disjoint editions or relabeling the enclosing documented window.
+Correction-only overlaps use the same records under `errata:overlapping-attributions`. A
+source-less span retained by the existing coalescer carries `inferred:resolution-gap`,
+which attributes it to neither provider nor curator. Keeping this at state grain
+prevents one corrected edition from relabeling a neighboring documented window.
 
 **Variant-less registers (`_default`).** Socialstyrelsen LSS, BU, SOL ship variables
 without a deldatamängd sheet. Adapters synthesise a single `_default` variant row at
@@ -668,18 +670,21 @@ when ungrouped; #616).
 varies by state), `provenance` (NULL for an ordinary provider-export interval;
 correction class and evidence for an errata-backed interval, plus exact source-edition
 scope as paired JSON attribution records when corrections overlap a documented claim),
-`value_set_version_label` (NOT NULL, `''` = no discriminator), `value_set_id`,
-`value_set` (hydrated `(code, label)` tuple, None when the state has no value set),
-`is_identifier` (variable-grain flag denormalized onto every state via a JOIN — constant
-across all of a variable's states — so consumers holding only a `VariableState` (e.g.
-the `resolve_at` / `/states` paths) can read the authoritative identifier flag without
-needing the enclosing `ResolvedVariable`), and `classification_slug` (the classification
-family slug (see DESIGN.md → Classifications) for this state's value set, e.g.
-`lkf2007`; resolved per-state from `variable_state.classification_id` — varies across a
-variable's states; None for code-less / unclassified states). The full delivery-column
-history — multiple aliases per state from cross-edition spelling drift — lives in the
-`variable_alias` table; `delivery_column_name` is its denormalized latest, and
-`reg-meta get datacolumns` surfaces the complete list.
+`pooled` (Y-202: True when the state spans a pooled multi-year edition range with no
+explicit annual coverage — consumers must not infer annual availability inside the
+window; False otherwise), `value_set_version_label` (NOT NULL, `''` = no discriminator),
+`value_set_id`, `value_set` (hydrated `(code, label)` tuple, None when the state has no
+value set), `is_identifier` (variable-grain flag denormalized onto every state via a
+JOIN — constant across all of a variable's states — so consumers holding only a
+`VariableState` (e.g. the `resolve_at` / `/states` paths) can read the authoritative
+identifier flag without needing the enclosing `ResolvedVariable`), and
+`classification_slug` (the classification family slug (see DESIGN.md → Classifications)
+for this state's value set, e.g. `lkf2007`; resolved per-state from
+`variable_state.classification_id` — varies across a variable's states; None for
+code-less / unclassified states). The full delivery-column history — multiple aliases
+per state from cross-edition spelling drift — lives in the `variable_alias` table;
+`delivery_column_name` is its denormalized latest, and `reg-meta get datacolumns`
+surfaces the complete list.
 
 **Edge semantics (reader-facing).** All relationship edges are **variable grain** — the
 variant is a delivery coordinate, not an identity level, so there is nothing below the

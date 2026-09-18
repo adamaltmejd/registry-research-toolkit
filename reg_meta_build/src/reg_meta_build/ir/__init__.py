@@ -157,6 +157,9 @@ class IRVariableState(_IRBase):
     # `inferred:resolution-gap` marks source-less coverage retained by resolution.
     # Steward-only IR may name its steward.
     provenance: str | None = None
+    # Y-202: True when the state spans a pooled multi-year edition range with no
+    # explicit annual coverage. Steward/curated IR leaves the default False.
+    pooled: bool = False
 
 
 class IRVariableAlias(_IRBase):

@@ -76,6 +76,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     delivery_column_name: null,
     source_register_text: null,
     provenance: null,
+    pooled: false,
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,
@@ -552,6 +553,25 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       "Integer values 0-20 (21 values)",
     );
     await expect.element(page.getByText("0 år")).not.toBeInTheDocument();
+  });
+
+  it("single-state detail badges a pooled edition window (Y-202)", async () => {
+    // A pooled-marked state shows the "pooled" badge beside its window; an
+    // ordinary state shows none.
+    const { rerender } = await render(ValueSetView, {
+      states: [state({ pooled: true })],
+      narrowed: false,
+    });
+    await expect
+      .element(page.getByText("pooled", { exact: true }))
+      .toBeVisible();
+    await rerender({
+      states: [state({ pooled: false })],
+      narrowed: false,
+    });
+    await expect
+      .element(page.getByText("pooled", { exact: true }))
+      .not.toBeInTheDocument();
   });
 
   it("collapses several value_set_ids that share one classification_slug into ONE row (M13)", async () => {

@@ -43,6 +43,7 @@ function state(
     delivery_column_name: column,
     source_register_text: null,
     provenance: null,
+    pooled: false,
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,

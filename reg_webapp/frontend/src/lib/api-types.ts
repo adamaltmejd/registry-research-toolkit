@@ -3155,6 +3155,11 @@ export interface components {
             /** Period Token */
             period_token?: string | null;
             /**
+             * Pooled
+             * @default false
+             */
+            pooled: boolean;
+            /**
              * Provenance
              * @description NULL for an ordinary provider-documented interval. SCB corrections use `errata:<class>\n<evidence>`; when a corrected source edition overlaps a provider-documented interval, `errata:scoped-attributions\n<JSON array>` pairs each correction's class and evidence with its exact `source_editions` without replacing the documented attribution. Correction-only overlaps use the same records under `errata:overlapping-attributions`. `inferred:resolution-gap` marks a source-less interval retained by catalog resolution; it attributes the interval to neither provider nor curator.
              */

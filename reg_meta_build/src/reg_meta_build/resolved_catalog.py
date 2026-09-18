@@ -257,6 +257,10 @@ class ResolvedState(_ResolvedWindow):
     operational_definition: str | None
     provenance: str | None
     source_register_text: str | None = None
+    # Y-202: True when the state spans a pooled multi-year edition range with no
+    # explicit annual coverage — one marked state over the whole pooled range,
+    # never inferred annual availability. False for every other state.
+    pooled: bool = False
     value_set: ResolvedCodeSet | None = None
     value_set_version_label: str = ""
     classification: str | None = None
@@ -922,9 +926,9 @@ def write_resolved_catalog(
                     conn.execute(
                         "INSERT INTO variable_state (state_id, variable_id, "
                         "register_variant_id, valid_from, valid_to, delivery_column_name, "
-                        "data_type, data_length, operational_definition, provenance, "
+                        "data_type, data_length, operational_definition, provenance, pooled, "
                         "value_set_id, value_set_version_label, source_register_text, classification_id) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             state_id,
                             variable_id,
@@ -936,6 +940,7 @@ def write_resolved_catalog(
                             state.data_length,
                             state.operational_definition,
                             state.provenance,
+                            int(state.pooled),
                             value_set_ids[state.value_set]
                             if state.value_set is not None
                             else None,

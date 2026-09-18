@@ -116,7 +116,10 @@ never replaces the original cells:
   second; a `Deklarationsår YYYY (beskattningsår ZZZZ)` with ZZZZ one below YYYY is the
   income year 1 January to 31 December. Other multi-year periods remain pooled. The
   edition label and a variable's declared measurement/reference period are separate
-  observations.
+  observations. A pooled scope carries its whole-range bounds (Y-202): the exact
+  interval's endpoints for a multi-year exact range, else the first claim's start
+  through the last claim's end. A pooled scope without both bounds stays unresolvable
+  downstream — the range is carried evidence, never re-parsed from the label.
 - Value-set content may deduplicate identical code/label pairs for storage and
   comparison. Equal codes with different labels remain distinct. Deduplication does not
   infer list identity, membership, variable identity or authority.
@@ -286,6 +289,19 @@ warning for this cause alone. An undelivered cell, or a delivered cell that is n
 literally blank, stays unknown and keeps the error path. A gap between supported periods
 stays a gap.
 
+Pooled multi-year editions form one marked state (Y-202). A pooled scope carries its
+whole-range bounds from cleaning — the edition's exact interval or its claim hull (see
+Cleaning) — and occurrence resolution places it as exactly ONE interval over that range:
+never one state per year, never inferred annual availability inside the range. A span is
+marked pooled only where NO explicit (annual/precise) occurrence covers it: where an
+explicit occurrence overlaps, it wins and the span resolves as an ordinary state, so a
+pooled span never overlaps an explicit span on the same (variable, variant, column). A
+pooled scope that carries no range stays unresolvable (an unsupported occurrence, as
+before). The marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0,
+schema 6.10.0) through `ResolvedState`/`IRVariableState` into the DB, and
+`validate_built_db` fails a build whose pooled-marked window overlaps an unmarked window
+on one column.
+
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across
 one native family are not a variable-level conflict. Their variable-grain summaries stay
@@ -365,15 +381,16 @@ claim the written state must equal, a negative claim the written state must leav
 absent, or no claim, which is never compared. When an alias window delivers an
 obligation's window, the shared states behind the alias must cover that overlap; a slice
 with no written state behind it is refused. A conflicting representation fact clears the
-claim to none. Genuine source gaps, negative availability and unknown or pooled scopes
-claim no delivery in the first place. A variable — or one of its variants — that the
-dependency ledger withholds outright, with source evidence, answers for its own claim
-through that entry, whichever stage recorded it, and for nothing past that exact
-coordinate: an exact source-linked blocker stays a curation blocker without covering a
-sibling. Anything else missing is an engineering defect, not a curation question: the
-build names the source records and the exact missing window and stops before any output
-is placed. A missing optional field or an unrelated diagnostic is no permission to drop
-the state it belongs to.
+claim to none. Genuine source gaps, negative availability, unknown scopes, and pooled
+scopes without a carried range claim no delivery in the first place. A range-carrying
+pooled scope claims its whole range as one obligation, discharged by its one marked
+state. A variable — or one of its variants — that the dependency ledger withholds
+outright, with source evidence, answers for its own claim through that entry, whichever
+stage recorded it, and for nothing past that exact coordinate: an exact source-linked
+blocker stays a curation blocker without covering a sibling. Anything else missing is an
+engineering defect, not a curation question: the build names the source records and the
+exact missing window and stops before any output is placed. A missing optional field or
+an unrelated diagnostic is no permission to drop the state it belongs to.
 
 ### Groups, relations and dependent output
 

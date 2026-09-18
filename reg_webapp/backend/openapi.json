@@ -5057,6 +5057,11 @@
             ],
             "title": "Period Token"
           },
+          "pooled": {
+            "default": false,
+            "title": "Pooled",
+            "type": "boolean"
+          },
           "provenance": {
             "anyOf": [
               {

@@ -607,7 +607,12 @@ def test_raw_scb_reader_preserves_native_instances_fields_and_period_limits(
     assert _field_text(blank, "data_type") == "text"
     assert _field_text(blank, "data_length") == "3"
     pooled = next(record for record in records if record.subject.native.member_id == 3)
-    assert pooled.edition_scope == TemporalScope(kind="pooled", label="2018-2019")
+    assert pooled.edition_scope == TemporalScope(
+        kind="pooled",
+        label="2018-2019",
+        pooled_start="2018-01-01",
+        pooled_end="2019-12-31",
+    )
     unknown = next(record for record in records if record.subject.native.member_id == 4)
     assert unknown.edition_scope.kind == "unknown"
     assert [(issue.kind, issue.record_id) for issue in issues] == [

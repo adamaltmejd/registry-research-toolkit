@@ -147,22 +147,39 @@ def test_bare_slash_year_pair_without_lasaret_stays_pooled() -> None:
     assert issue == "pooled_period"
     assert edition.kind == edition_period.kind == "pooled"
     assert edition.label == edition_period.label == "2014/2015"
+    # The carried range feeds the one pooled state (Y-202); school-year
+    # precision follows the existing claim semantics.
+    assert (
+        (edition.pooled_start, edition.pooled_end)
+        == (
+            edition_period.pooled_start,
+            edition_period.pooled_end,
+        )
+        == ("2014-07-01", "2015-06-30")
+    )
 
 
 @pytest.mark.parametrize(
-    "source",
+    ("source", "pooled_range"),
     (
-        "Komvux HT 1988 - VT 2024",
-        "Läsåren 1977/1978 - 1992/1993",
-        "1961-01-01 –– 2025-12-31",
+        ("Komvux HT 1988 - VT 2024", ("1988-07-01", "2024-06-30")),
+        ("Läsåren 1977/1978 - 1992/1993", ("1977-07-01", "1993-06-30")),
+        ("1961-01-01 –– 2025-12-31", ("1961-01-01", "2025-12-31")),
     ),
 )
-def test_multi_year_claims_stay_pooled(source: str) -> None:
+def test_multi_year_claims_stay_pooled(
+    source: str, pooled_range: tuple[str, str]
+) -> None:
     edition, edition_period, issue = source_scopes(source)
 
     assert issue == "pooled_period"
     assert edition.kind == edition_period.kind == "pooled"
     assert edition.label == edition_period.label == source
+    # Y-202: the pooled scope carries its whole-range bounds — the first
+    # claim's start through the last claim's end — so resolution can form one
+    # marked state without inferring annual availability inside the range.
+    assert (edition.pooled_start, edition.pooled_end) == pooled_range
+    assert (edition_period.pooled_start, edition_period.pooled_end) == pooled_range
 
 
 @pytest.mark.parametrize(

@@ -1093,6 +1093,87 @@ class TestValidateModule:
             for f in result.failures
         ), result.failures
 
+    def test_pooled_column_present_on_fixture(self, fixture_db: Path):
+        """Y-202: the schema-shape gate sees the pooled marker column."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        assert "[OK] variable_state.pooled present" in result.format_report()
+
+    def test_pooled_explicit_overlap_passes_on_fixture(self, fixture_db: Path):
+        """Y-202: clean build — no pooled state overlaps an explicit state on
+        one (variable, variant, column), so the guard reports OK."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "[invariant: no pooled ↔ explicit window overlap]" in report, report
+        assert "no pooled state overlaps an explicit state on one column" in report
+
+    @staticmethod
+    def _inject_pooled_overlap(src: Path, dst: Path) -> None:
+        """Clone ``src`` and add a pooled (``pooled = 1``) state on the SAME
+        window, (variable, variant, column) — and the SAME value set — as an
+        existing explicit state: the exact pooled-loses-to-annual regression
+        the backstop guards. Same value set keeps the one-value-set and
+        code-less guards silent, so only the pooled guard fires."""
+        dst.write_bytes(src.read_bytes())
+        conn = connect_built_db(dst)
+        vid, rvid, col, vf, vt, vsid, dt, dl = conn.execute(
+            "SELECT variable_id, register_variant_id, delivery_column_name, "
+            "       valid_from, valid_to, value_set_id, data_type, data_length "
+            "FROM variable_state "
+            "WHERE delivery_column_name IS NOT NULL "
+            "LIMIT 1"
+        ).fetchone()
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            " delivery_column_name, data_type, data_length, value_set_id, "
+            " value_set_version_label, pooled) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pooled-inject', 1)",
+            (vid, rvid, vf, vt, col, dt, dl, vsid),
+        )
+        conn.commit()
+        conn.close()
+
+    def test_pooled_explicit_overlap_fails(self, fixture_db: Path, tmp_path: Path):
+        """Y-202: a pooled state overlapping an explicit state on one
+        (variable, variant, column) must FAIL the build."""
+        broken = tmp_path / "broken-pooled.db"
+        self._inject_pooled_overlap(fixture_db, broken)
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "pooled ↔ explicit overlapping state pair" in f for f in result.failures
+        ), result.failures
+
+    def test_pooled_explicit_overlap_skipped_when_flavored(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Y-202: flavored gating — with the SAME injected overlap,
+        ``flavored=True`` SKIPs the guard, mirroring the code-less backstop: a
+        flavored DB extends the released global base, so any such overlap is
+        base debt the global build's guard owns."""
+        broken = tmp_path / "broken-pooled-flavored.db"
+        self._inject_pooled_overlap(fixture_db, broken)
+        # Sanity: the non-flavored path DOES fail on this DB.
+        assert not validate_built_db(broken).passed
+
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_pooled_state_overlap,
+        )
+
+        conn = connect_built_db(broken)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_pooled_state_overlap(conn, result, tables, flavored=True)
+        conn.close()
+        assert result.passed, result.failures
+        assert "flavored build" in result.format_report(), result.format_report()
+
     def test_one_value_set_per_period_folds_column_casing(
         self, fixture_db: Path, tmp_path: Path
     ):

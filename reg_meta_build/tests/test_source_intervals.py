@@ -295,3 +295,71 @@ def test_unknown_population_does_not_contradict_one_concrete_population() -> Non
     assert result.issues == result.unsupported_occurrences == ()
     assert len(result.segments) == 1
     assert result.segments[0].occurrences == (known, unknown)
+
+
+def _pooled_record(row: int, label: str) -> SourceRecord:
+    """A record whose scopes come from a real pooled edition label (Y-202)."""
+    edition, period, issue = source_scopes(label)
+    assert issue == "pooled_period"
+    return _record(row, scope=period).model_copy(update={"edition_scope": edition})
+
+
+def test_pooled_scope_forms_one_marked_state_over_the_whole_range() -> None:
+    result = resolve_occurrence_intervals((_pooled_record(1, "2012 - 2014"),))
+
+    assert result.issues == result.unsupported_occurrences == ()
+    assert [(s.valid_from, s.valid_to, s.pooled) for s in result.segments] == [
+        ("2012-01-01", "2014-12-31", True)
+    ]
+
+
+def test_pooled_scope_without_a_carried_range_stays_unsupported() -> None:
+    scope = TemporalScope.model_validate({"kind": "pooled", "label": "2012 - 2014"})
+    record = _record(1, scope=scope)
+    result = resolve_occurrence_intervals((record,))
+
+    assert result.segments == ()
+    assert result.unsupported_occurrences == (record,)
+    assert result.issues[0].fields == ("period",)
+
+
+def test_explicit_annual_coverage_wins_over_pooled() -> None:
+    pooled = _pooled_record(1, "2012 - 2014")
+    annual = _record(
+        2,
+        scope=TemporalScope(
+            kind="intervals",
+            intervals=(ScopeInterval(start="2013-01-01", end="2013-12-31"),),
+        ),
+    )
+    result = resolve_occurrence_intervals((pooled, annual))
+
+    assert result.issues == result.unsupported_occurrences == ()
+    assert [(s.valid_from, s.valid_to, s.pooled) for s in result.segments] == [
+        ("2012-01-01", "2012-12-31", True),
+        ("2013-01-01", "2013-12-31", False),
+        ("2014-01-01", "2014-12-31", True),
+    ]
+
+
+def test_fully_annual_covered_pooled_range_forms_no_pooled_state() -> None:
+    pooled = _pooled_record(1, "2012 - 2014")
+    annuals = tuple(
+        _record(
+            row,
+            scope=TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start=f"{year}-01-01", end=f"{year}-12-31"),),
+            ),
+        )
+        for row, year in ((2, 2012), (3, 2013), (4, 2014))
+    )
+    result = resolve_occurrence_intervals((pooled, *annuals))
+
+    assert result.issues == result.unsupported_occurrences == ()
+    assert [(s.valid_from, s.valid_to) for s in result.segments] == [
+        ("2012-01-01", "2012-12-31"),
+        ("2013-01-01", "2013-12-31"),
+        ("2014-01-01", "2014-12-31"),
+    ]
+    assert all(not segment.pooled for segment in result.segments)

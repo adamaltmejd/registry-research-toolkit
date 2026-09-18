@@ -806,6 +806,7 @@ function leafState(over: Partial<VariableStateModel>): VariableStateModel {
     delivery_column_name: "Kon",
     source_register_text: null,
     provenance: null,
+    pooled: false,
     value_set_version_label: "",
     value_set_id: 7,
     value_set: null,

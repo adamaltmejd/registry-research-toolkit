@@ -43,6 +43,11 @@ class SourceSegment:
     fields: SourceFields
     occurrences: tuple[SourceRecord, ...]
     effective_occurrences: tuple[EffectiveOccurrence, ...]
+    # Y-202: True when EVERY covering occurrence is pooled-scope evidence, i.e.
+    # this span is documented only by pooled multi-year editions. Any explicit
+    # (annual/precise) occurrence covering the span wins and the segment is
+    # ordinary — pooled evidence never marks, and never splits, annual coverage.
+    pooled: bool = False
 
 
 @dataclass(frozen=True)
@@ -84,11 +89,55 @@ def scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
 def occurrence_bounds(
     record: EffectiveOccurrence,
 ) -> tuple[tuple[int, int], ...] | None:
-    """Known effective coverage, retaining pooled and unknown scopes as unresolved."""
+    """Known effective coverage: one interval over the whole pooled range.
+
+    A pooled scope carrying its range (see `source_periods.source_scopes`)
+    resolves to exactly ONE interval — the hull start through the hull end — so
+    formation emits one marked state and never infers annual availability
+    inside the range. A pooled scope WITHOUT a range, and unknown scopes, stay
+    unresolved (an unsupported occurrence, as before).
+    """
     scope = record.edition_period_scope
     if scope.kind == "not_applicable":
         scope = record.edition_scope
+    if scope.kind == "pooled":
+        return _pooled_bounds(scope)
     return scope_bounds(scope)
+
+
+def _pooled_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
+    """The single whole-range interval for a range-carrying pooled scope."""
+    if scope.pooled_start is None or scope.pooled_end is None:
+        return None
+    bounds = []
+    for value in (scope.pooled_start, scope.pooled_end):
+        try:
+            parsed = date.fromisoformat(value)
+        except ValueError:
+            return None
+        if parsed.isoformat() != value or parsed.year == 9999:
+            return None
+        bounds.append(parsed.toordinal())
+    if bounds[1] < bounds[0]:
+        return None
+    return ((bounds[0], bounds[1]),)
+
+
+def _segment_pooled(effective: tuple[EffectiveOccurrence, ...]) -> bool:
+    """Whether a segment's span is documented ONLY by pooled editions.
+
+    Mirrors `occurrence_bounds`' `not_applicable` fallback so the marker follows
+    the scope the bounds actually came from. A single explicit occurrence
+    covering the span makes it ordinary: pooled loses to explicit annual."""
+    if not effective:
+        return False
+    for occurrence in effective:
+        scope = occurrence.edition_period_scope
+        if scope.kind == "not_applicable":
+            scope = occurrence.edition_scope
+        if scope.kind != "pooled":
+            return False
+    return True
 
 
 def _column(record: EffectiveOccurrence) -> str | None:
@@ -139,7 +188,10 @@ def resolve_occurrence_intervals(
     """Keep independently supported facts on exact, non-overlapping column periods.
 
     Each physical occurrence must explicitly supply availability, a column, and a
-    finite interpreted period. Unplaced occurrences stay in the result and block
+    finite interpreted period. A range-carrying pooled scope supplies its whole
+    pooled range as one interval (marked `pooled` on spans no explicit
+    occurrence covers); pooled scopes without a range, and unknown scopes, stay
+    unplaced. Unplaced occurrences stay in the result and block
     strict publication. An occurrence whose column claim is negative (a delivered
     blank column: the member has no physical column) is omitted on purpose and
     reported as an `omitted_columnless_occurrence` warning; formation aggregates
@@ -269,14 +321,25 @@ def resolve_occurrence_intervals(
                 )
             availability = fields.availability
             assert availability is not None
+            pooled = _segment_pooled(effective)
             if availability.status == "negative" and len(populations) <= 1:
                 negative_segments.append(
-                    SourceSegment(lower, upper, column, fields, occurrences, effective)
+                    SourceSegment(
+                        lower,
+                        upper,
+                        column,
+                        fields,
+                        occurrences,
+                        effective,
+                        pooled=pooled,
+                    )
                 )
             if availability.status != "value" or len(populations) > 1:
                 continue
             segments.append(
-                SourceSegment(lower, upper, column, fields, occurrences, effective)
+                SourceSegment(
+                    lower, upper, column, fields, occurrences, effective, pooled=pooled
+                )
             )
     return OccurrenceResolution(
         tuple(segments), tuple(negative_segments), tuple(issues), tuple(unsupported)

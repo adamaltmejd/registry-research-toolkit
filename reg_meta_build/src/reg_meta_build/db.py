@@ -514,6 +514,13 @@ CREATE TABLE variable_state (
     -- NULL. Steward-only states may carry their `steward:<label>` origin. Kept at
     -- state grain so corrected, inferred, and documented spans cannot conflate.
     provenance TEXT,
+    -- Y-202: 1 when the state spans a pooled multi-year edition range with no
+    -- explicit annual coverage — one marked state over the whole pooled range,
+    -- never inferred annual availability inside it. 0 for every other state.
+    -- A pooled-marked span never overlaps an unmarked span on the same
+    -- (variable, variant, column): pooled loses to explicit annual, enforced by
+    -- construction and guarded by validate_built_db.
+    pooled INTEGER NOT NULL DEFAULT 0 CHECK (pooled IN (0, 1)),
     value_set_id INTEGER REFERENCES value_set(value_set_id),
     -- Overlap discriminator (multi-vintage / grain / coding). NOT NULL
     -- DEFAULT '' so the uniqueness index below bites in the common
@@ -1960,12 +1967,12 @@ def _insert_core_graph_from_ir(
         "INSERT INTO variable_state "
         "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
         " data_type, data_length, delivery_column_name, source_register_text, "
-        " operational_definition, provenance, value_set_id, "
+        " operational_definition, provenance, pooled, value_set_id, "
         " value_set_version_label, classification_id) "
         "VALUES (:state_id, :variable_id, :register_variant_id, :valid_from, "
         " :valid_to, :data_type, :data_length, :delivery_column_name, "
-        " :source_register_text, :operational_definition, :provenance, :value_set_id, "
-        " :value_set_version_label, NULL)",
+        " :source_register_text, :operational_definition, :provenance, :pooled, "
+        " :value_set_id, :value_set_version_label, NULL)",
         [
             {
                 "state_id": s.state_id,
@@ -1983,6 +1990,7 @@ def _insert_core_graph_from_ir(
                 "source_register_text": s.source_register_text,
                 "operational_definition": s.operational_definition,
                 "provenance": s.provenance,
+                "pooled": int(s.pooled),
                 "value_set_id": s.value_set_id,
                 "value_set_version_label": s.value_set_version_label or "",
             }

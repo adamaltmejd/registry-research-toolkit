@@ -165,19 +165,46 @@ class TemporalScope(_SourceModel):
     ]
     intervals: tuple[ScopeInterval, ...] = ()
     label: str | None = None
+    # Whole-range bounds for a resolvable pooled scope (Y-202): inclusive full
+    # ISO dates set by `source_scopes` from the edition's exact interval or its
+    # claim hull. A pooled scope WITHOUT both stays unresolvable (an unsupported
+    # occurrence) — the range is carried evidence, never re-parsed from the
+    # label downstream, so hand-built or legacy scopes keep the old behavior.
+    pooled_start: str | None = None
+    pooled_end: str | None = None
 
     @model_validator(mode="after")
     def _valid_scope(self) -> Self:
         if self.kind == "intervals":
             if not self.intervals or self.label is not None:
                 raise ValueError("interval scope requires intervals and no label")
+            if self.pooled_start is not None or self.pooled_end is not None:
+                raise ValueError("interval scope cannot carry a pooled range")
             for previous, current in zip(self.intervals, self.intervals[1:]):
                 if previous.end is None or current.start <= previous.end:
                     raise ValueError("scope intervals must be ordered and disjoint")
         elif self.kind in {"unknown", "pooled"}:
             if self.intervals or not self.label:
                 raise ValueError(f"{self.kind} scope requires a label")
-        elif self.intervals or self.label is not None:
+            if self.kind == "pooled":
+                if (self.pooled_start is None) != (self.pooled_end is None):
+                    raise ValueError(
+                        "pooled scope requires both range bounds or neither"
+                    )
+                if (
+                    self.pooled_start is not None
+                    and self.pooled_end is not None
+                    and self.pooled_end < self.pooled_start
+                ):
+                    raise ValueError("pooled scope range must have ordered bounds")
+            elif self.pooled_start is not None or self.pooled_end is not None:
+                raise ValueError(f"{self.kind} scope cannot carry a pooled range")
+        elif (
+            self.intervals
+            or self.label is not None
+            or self.pooled_start is not None
+            or self.pooled_end is not None
+        ):
             raise ValueError(f"{self.kind} scope cannot carry intervals or a label")
         return self
 

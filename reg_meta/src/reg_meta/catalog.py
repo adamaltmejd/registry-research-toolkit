@@ -764,6 +764,10 @@ class VariableState(_CatalogModel):
         "catalog resolution; it attributes the interval to neither provider "
         "nor curator."
     )
+    # Y-202: True when the state spans a pooled multi-year edition range with no
+    # explicit annual coverage — one marked state over the whole pooled range.
+    # Consumers must not infer annual availability inside the window.
+    pooled: bool = False
     # Overlap discriminator (see reg_meta_build/DESIGN.md → Build-time triage (SCB); multi-vintage / grain / coding). NOT NULL
     # DEFAULT '' in the DDL, so '' means "no discriminator", not absent.
     value_set_version_label: str
@@ -2783,7 +2787,7 @@ class Catalog:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.operational_definition, vs.provenance, vs.value_set_id, "
+                "vs.operational_definition, vs.provenance, vs.pooled, vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
@@ -2809,7 +2813,7 @@ class Catalog:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.operational_definition, vs.provenance, vs.value_set_id, "
+                "vs.operational_definition, vs.provenance, vs.pooled, vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
@@ -2991,6 +2995,7 @@ class Catalog:
             source_register_text=row["source_register_text"],
             operational_definition=row["operational_definition"],
             provenance=row["provenance"],
+            pooled=bool(row["pooled"]),
             value_set_version_label=row["value_set_version_label"],
             value_set_id=row["value_set_id"],
             value_set=(

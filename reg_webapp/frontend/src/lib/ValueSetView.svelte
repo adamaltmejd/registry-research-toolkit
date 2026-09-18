@@ -569,7 +569,18 @@ function trackDisclosure(key: string, event: Event): void {
            "VT2009"); the raw ISO window stays on the tooltip. -->
       {#if validWindow}
         <dt class="micro-label">Valid</dt>
-        <dd title={windowTitle(s.valid_from, s.valid_to)}>{validWindow}</dd>
+        <dd title={windowTitle(s.valid_from, s.valid_to)}>
+          {validWindow}
+          {#if s.pooled}
+            <!-- Y-202: the window spans a pooled multi-year edition — annual
+                 availability inside it is not inferred. -->
+            <span
+              class="pooled-badge"
+              title="Pooled source edition: this state covers the whole pooled range; annual availability inside it is not inferred."
+              >pooled</span
+            >
+          {/if}
+        </dd>
       {/if}
       {#if s.value_set_version_label}
         <dt class="micro-label">Value-set version</dt>
@@ -793,6 +804,16 @@ function trackDisclosure(key: string, event: Event): void {
   .vs-usage-variant {
     font-family: var(--font-mono);
     font-size: var(--text-mono);
+  }
+  /* Y-202: the pooled-edition marker on a single-state detail window. */
+  .pooled-badge {
+    display: inline-block;
+    margin-left: var(--space-2);
+    padding: 0.05rem 0.5rem;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    font-size: var(--text-micro);
+    color: var(--accent);
   }
   .vs-change-list {
     flex-basis: 100%;

@@ -175,6 +175,7 @@ def _coded_states(
                 data_length=_text(segment.fields, "data_length"),
                 operational_definition=_text(segment.fields, "operational_definition"),
                 source_register_text=_text(segment.fields, "source_attribution"),
+                pooled=segment.pooled,
                 provenance="\n\n".join(
                     sorted(
                         {

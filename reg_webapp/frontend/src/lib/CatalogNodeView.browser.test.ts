@@ -1427,6 +1427,7 @@ function columnState(
     delivery_column_name: column,
     source_register_text: null,
     provenance: null,
+    pooled: false,
     value_set_version_label: "",
     value_set_id: 7,
     value_set: null,
