@@ -522,23 +522,29 @@ def test_flag_declarations_reject_nonboolean_values(
         SourceFields.model_validate({field: value_field(value)})
 
 
-def _clean_column_row(*, present: bool) -> SourceRecord:
+def _clean_column_row(*, cell: tuple[bool, str | None, str]) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
     row = _var_row(colname="", cvid=1001, var_id=101).split("|")
     cells = {
         name: (True, value, value) for name, value in zip(header, row, strict=True)
     }
-    cells["Kolumnnamn"] = (present, "" if present else None, "")
+    cells["Kolumnnamn"] = cell
     return clean_scb_row(header, 2, cells, _revision()).record
 
 
 def test_scb_delivered_blank_column_is_a_negative_claim() -> None:
-    delivered = _clean_column_row(present=True)
+    delivered = _clean_column_row(cell=(True, "", ""))
 
     assert delivered.fields.column_name == SourceField(status="negative", raw_value="")
 
 
 def test_scb_undelivered_column_stays_unknown() -> None:
-    missing = _clean_column_row(present=False)
+    missing = _clean_column_row(cell=(False, None, ""))
 
     assert missing.fields.column_name == SourceField(status="unknown", raw_value="")
+
+
+def test_scb_nonblank_uninterpretable_column_stays_unknown() -> None:
+    delivered = _clean_column_row(cell=(True, " ", " "))
+
+    assert delivered.fields.column_name == SourceField(status="unknown", raw_value=" ")
