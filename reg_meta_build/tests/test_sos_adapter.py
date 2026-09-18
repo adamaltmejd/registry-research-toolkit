@@ -162,11 +162,43 @@ class TestClassifyValueSetText:
     @pytest.mark.parametrize(
         "text",
         [
+            "1=a  2=b; invalid code=x",  # a code this format cannot read
+            "1=a  2=b; 1=duplicate",  # the same code twice
+        ],
+    )
+    def test_malformed_list_is_rejected_before_it_can_be_unresolved(
+        self, text: str
+    ) -> None:
+        # The gap in the first segment is real, but the cell is not an otherwise
+        # complete enumeration, so it stays free text: only a list that would
+        # have been accepted whole is worth reporting as unresolved.
+        assert _classify_value_set_text(text) == (None, False)
+
+    @pytest.mark.parametrize(
+        ("text", "pairs"),
+        [
+            # Prose `n = 25`, not a further code: the label keeps it whole.
+            ("1=sample n = 25; 2=other", [("1", "sample n = 25"), ("2", "other")]),
+            # One space gives no boundary either, so this cell keeps the
+            # interpretation it has always had.
+            ("1=ja; 2=nej 3=kanske", [("1", "ja"), ("2", "nej 3=kanske")]),
+        ],
+    )
+    def test_single_space_is_prose_spacing_not_an_alignment_gap(
+        self, text: str, pairs: list[tuple[str, str]]
+    ) -> None:
+        # Only the wrap alignment gap (>= 2 spaces) is evidence of a swallowed
+        # assignment; one space cannot be told from ordinary prose.
+        assert _classify_value_set_text(text) == (pairs, False)
+
+    @pytest.mark.parametrize(
+        "text",
+        [
             # The wrapped BU `SPEC` cell: its last two assignments share one line,
-            # separated by spaces only. Accepting it would emit codes 2 and 3 and
-            # bury `4 = ...` in code 3's label.
+            # separated by nothing but a long run of plain spaces. Accepting it
+            # would emit codes 2 and 3 and bury `4 = ...` in code 3's label.
             normalize_text(BU_SPEC_WRAPPED, multiline=True),
-            "1=ja; 2=nej 3=kanske",  # same partial parse, one ordinary space
+            "1=ja; 2=nej  3=kanske",  # the narrowest gap that is still one
         ],
     )
     def test_partial_enumeration_is_explicitly_unresolved(self, text: str) -> None:

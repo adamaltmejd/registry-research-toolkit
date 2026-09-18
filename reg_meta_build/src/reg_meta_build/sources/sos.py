@@ -1447,20 +1447,18 @@ def _clean_value_code(c: str) -> str | None:
     return c
 
 
-# A further `kod=` inside a label, separated from the text before it by whitespace.
-_EMBEDDED_ASSIGNMENT = re.compile(r"\s(\S+)\s*=")
+# A further `kod=` inside a label, behind the alignment gap a wrapped cell leaves.
+_EMBEDDED_ASSIGNMENT = re.compile(r" {2,}(\S+) *=")
 
 
 def _hides_another_assignment(label: str) -> bool:
-    """True when a label may itself carry a further `kod=klartext` assignment.
+    """True when a label carries a further `kod=klartext` behind an alignment gap.
 
-    A wrapped `Värdemängd` cell puts its last assignments on one line separated by
-    nothing but spaces (the BU `SPEC` cells), so the first-`=` partition swallows
-    the rest of the list into one label. Plain spaces are not a member separator in
-    this delivered format, so the list cannot be split there either: the cell is
-    ambiguous and the classifier rejects it whole, leaving the original cell as the
-    only interpretation. `_clean_value_code` decides what could be a further code,
-    so a label's own `=` that no clean code precedes stays accepted.
+    The gap a wrapped cell leaves IS the evidence (95 spaces in the BU `SPEC`
+    cell), so only a run of two or more spaces counts: one space is ordinary prose
+    spacing, and `1=sample n = 25` is a label. `_clean_value_code` decides what
+    could be a further code, so a label's own `=` that no clean code precedes is
+    a label too.
     """
     return any(
         _clean_value_code(match.group(1)) is not None
@@ -1495,13 +1493,13 @@ def _classify_value_set_text(
     MIXED `=`/no-`=` (catches trailing-prose cells like `0=…; …; strängen är
     tom`); any invalid code (range, comma, colon, whitespace); duplicate codes.
 
-    Unresolved: an accepted-shape list whose label hides a further assignment
+    Unresolved: an OTHERWISE COMPLETE list whose label hides a further assignment
     (`_hides_another_assignment`), i.e. a wrapped cell whose parse would be
     partial. The cleaner states that unresolved list rather than its members.
-    Only this branch escalates: every segment is already an accepted assignment,
-    so the cell IS a delivered enumeration and a silent reject would lose it. A
-    cell rejected for any other reason is not a demonstrable enumeration, so it
-    stays ordinary free text instead of becoming a publication blocker.
+    Every code, label and the duplicate check decide first: only a cell that
+    would otherwise have been accepted whole is a delivered enumeration worth
+    reporting, so anything rejected above stays ordinary free text instead of
+    becoming a publication blocker.
     """
     if not text or not text.strip():
         return None, False
@@ -1521,8 +1519,6 @@ def _classify_value_set_text(
             label = raw_label.strip()
             if code is None or not label:
                 return None, False
-            if _hides_another_assignment(label):
-                return None, True
             pairs.append((code, label))
     elif with_eq == 0:
         # bare codes: each segment IS the code, no label.
@@ -1538,4 +1534,6 @@ def _classify_value_set_text(
 
     if len({code for code, _ in pairs}) != len(pairs):  # duplicate codes -> reject
         return None, False
+    if any(_hides_another_assignment(label) for _, label in pairs if label):
+        return None, True  # wrapped cell: the accepted parse would be partial
     return pairs, False
