@@ -39,7 +39,12 @@ from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
 from reg_meta_build.scb_errata import load_scb_errata
 
-from reg_meta_build.fqid_slugs import load_lineage_config, repo_slug_dir
+from reg_meta_build.fqid_slugs import (
+    declared_column_ownership,
+    load_lineage_config,
+    load_slug_dir,
+    repo_slug_dir,
+)
 
 # reg_meta_build/ package root (tests/ sits beside the curation/ directory).
 _ROOT = Path(__file__).resolve().parent.parent
@@ -502,6 +507,33 @@ def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
     spanning = {c.column for c in docs if sum(d.column == c.column for d in docs) > 1}
     assert spanning == {"FastBet", "MedbLandNamn"}
     assert len({c.key for c in docs if c.column in spanning}) == 2
+
+
+def test_repo_fdb_gaturest_declares_two_spelling_ownership() -> None:
+    # Y-167: the tracked 1.830 literal column ownership — {GatuRest, Gaturest}
+    # on gaturest, {PGaturest} on pgaturest — must load family-complete against
+    # the pinned auto slugs, with the counter-evidence in its reference.
+    slug_dir = repo_slug_dir()
+    assert slug_dir is not None
+    entries = load_slug_dir(slug_dir)
+    ownership = declared_column_ownership(entries, provider="scb", source_id="1.830")
+    assert ownership.split_ids == ("1.830.gaturest", "1.830.pgaturest")
+    assert dict(ownership.declared_columns) == {
+        "GatuRest": "1.830.gaturest",
+        "Gaturest": "1.830.gaturest",
+        "PGaturest": "1.830.pgaturest",
+    }
+    assert "31477" in ownership.declaration_reference
+    assert "12814" in ownership.declaration_reference
+    assert "6139" in ownership.declaration_reference
+    assert "383" in ownership.declaration_reference
+    slugs = {
+        (e.provider, e.source_id): e.slug
+        for e in entries
+        if e.kind == "variable" and e.slug is not None
+    }
+    assert slugs[("scb", "1.830.gaturest")] == "gaturest"
+    assert slugs[("scb", "1.830.pgaturest")] == "pgaturest"
 
 
 def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> None:

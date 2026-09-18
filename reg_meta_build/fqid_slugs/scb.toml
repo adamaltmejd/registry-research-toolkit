@@ -63,6 +63,21 @@ panel_entity_key = "venr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# Y-167 (maintainer decision 2026-09-18): FDB VarId 830 literal column ownership.
+# Native VarId 830 delivers three literal spellings across FDB variants
+# Arbetsställeenheter (424) and Juridiska enheter (427), 1999–2025: GatuRest and
+# Gaturest share one identity (slug gaturest), PGaturest keeps its own (slug
+# pgaturest) — mirroring the accepted 1.828 Gata/PGata and 1.537 PostNr/PPostNr
+# partitions. The auto file keeps both slugs; this authored entry only adds the
+# tracked ownership map the converter reads (no slug pin). Register 383
+# (Utförarregistret) rows are out of scope. Counter-evidence retained, not
+# resolved away: AE variable-dict row 31477 documents GatuRest→PGaturest as one
+# variable, and JE GatuRest also carries row 12814 whose text matches
+# PGaturest's row 6139.
+[variable."1.830.gaturest"]
+columns = { GatuRest = "1.830.gaturest", Gaturest = "1.830.gaturest", PGaturest = "1.830.pgaturest" }
+columns_ref = "Y-167 2026-09-18: FDB 1.830 keeps {GatuRest, Gaturest} on gaturest and {PGaturest} on pgaturest (variants 424/427, 1999-2025); counter-evidence retained: AE variable-dict row 31477 reads GatuRest as PGaturest, JE GatuRest row 12814 matches PGaturest row 6139; register 383 out of scope"
+
 # Registret över totalbefolkningen (RTB)
 [register."2"]
 slug = "rtb"

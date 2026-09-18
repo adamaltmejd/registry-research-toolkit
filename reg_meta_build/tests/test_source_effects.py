@@ -62,6 +62,8 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
 
+from reg_meta_build.fqid_slugs import declared_column_ownership, load_provider_toml
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -965,6 +967,177 @@ def test_naming_pin_does_not_establish_identity_for_distinct_column_spellings(
     )
     assert converted.case is None
     assert converted.diagnostics[0].code == "split_identity_conversion_pending"
+
+
+# Y-167: FDB VarId 830 literal column ownership. GatuRest/Gaturest share one
+# identity, PGaturest keeps its own, on both FDB variants (424/427). The
+# tracked declaration feeds the converter; nothing is folded or inferred.
+_FDB_DECLARATION = (
+    '[variable."1.830.gaturest"]\n'
+    'columns = { GatuRest = "1.830.gaturest", Gaturest = "1.830.gaturest", '
+    'PGaturest = "1.830.pgaturest" }\n'
+    'columns_ref = "Y-167 fixture reference"\n'
+    '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n'
+)
+
+
+def _fdb_record(
+    column: str, *, row: int = 1, cvid: int = 20, year: str = "2020", variant: int = 424
+) -> SourceRecord:
+    values = _var_row(
+        cvid=cvid,
+        var_id=830,
+        colname=column,
+        register=("FDB", 1, variant),
+        regver_id=int(year),
+        year=year,
+    ).split("|")
+    header = REGISTERINFORMATION_HEADER.split("|")
+    cells: dict[str, tuple[bool, str | None, str]] = {
+        name: (True, value, value) for name, value in zip(header, values, strict=True)
+    }
+    return clean_scb_row(header, row, cells, _REVISION).record
+
+
+def _fdb_family() -> tuple[SourceRecord, ...]:
+    return (
+        _fdb_record("GatuRest", row=1, cvid=20, year="1999", variant=424),
+        _fdb_record("Gaturest", row=2, cvid=21, year="2005", variant=424),
+        _fdb_record("GatuRest", row=3, cvid=22, year="2010", variant=427),
+        _fdb_record("Gaturest", row=4, cvid=23, year="2015", variant=427),
+        _fdb_record("PGaturest", row=5, cvid=24, year="2020", variant=424),
+        _fdb_record("PGaturest", row=6, cvid=25, year="2025", variant=427),
+    )
+
+
+def _fdb_ownership(tmp_path: Path):
+    declaration = tmp_path / "scb.toml"
+    declaration.write_text(_FDB_DECLARATION, encoding="utf-8")
+    return declared_column_ownership(
+        load_provider_toml(declaration), provider="scb", source_id="1.830"
+    )
+
+
+def _fdb_convert(records: tuple[SourceRecord, ...], tmp_path: Path):
+    ownership = _fdb_ownership(tmp_path)
+    return convert_column_partitions(
+        records,
+        source_id="1.830",
+        split_ids=ownership.split_ids,
+        declared_columns=dict(ownership.declared_columns),
+        declaration_reference=ownership.declaration_reference,
+    )
+
+
+def test_fdb_two_spelling_ownership_converts_both_partitions(
+    tmp_path: Path,
+) -> None:
+    records = _fdb_family()
+    converted = _fdb_convert(records, tmp_path)
+    assert converted.case is not None and converted.diagnostics == ()
+    assert [b.source_id for b in converted.bindings] == [
+        "1.830.gaturest",
+        "1.830.pgaturest",
+    ]
+    keys = {b.source_id: b.target.source_key for b in converted.bindings}
+    assert "Y-167 fixture reference" in converted.case.decision.provenance
+    assert {item.ref for item in converted.case.targets} == {
+        record_ref(record) for record in records
+    }
+    assert converted.case.support == ()
+    (guard,) = converted.case.peer_guards
+    assert set(guard.expected_members) == {record_ref(record) for record in records}
+    result = apply_occurrence_cases(records, (converted.case,))
+    assert result.diagnostics == ()
+    assert all(
+        o.fields == r.fields for o, r in zip(result.occurrences, records, strict=True)
+    )
+    # The two spellings share one identity; PGaturest keeps its own.
+    assert result.occurrences[0].variable_key == keys["1.830.gaturest"]
+    assert result.occurrences[1].variable_key == keys["1.830.gaturest"]
+    assert result.occurrences[2].variable_key == keys["1.830.gaturest"]
+    assert result.occurrences[3].variable_key == keys["1.830.gaturest"]
+    assert result.occurrences[4].variable_key == keys["1.830.pgaturest"]
+    assert result.occurrences[5].variable_key == keys["1.830.pgaturest"]
+    assert keys["1.830.gaturest"] != keys["1.830.pgaturest"]
+
+
+def test_fdb_two_spellings_stay_unresolved_without_a_declaration() -> None:
+    # Both spellings fold to one discriminator, so no literal partition is
+    # unique: the accepted PGaturest partition survives while gaturest is
+    # withheld — the observed diagnostic-build failure. A declaration (above),
+    # not a case-folding rule, resolves it.
+    from reg_meta.fqid import derive_variable_slug
+
+    assert derive_variable_slug("GatuRest") == derive_variable_slug("Gaturest")
+    records = _fdb_family()
+    converted = convert_column_partitions(
+        records,
+        source_id="1.830",
+        split_ids=("1.830.gaturest", "1.830.pgaturest"),
+    )
+    assert [b.source_id for b in converted.bindings] == ["1.830.pgaturest"]
+    assert converted.diagnostics[0].code == "split_identity_conversion_pending"
+    assert converted.diagnostics[0].withheld_output == ("1.830.gaturest",)
+
+
+def test_fdb_fourth_spelling_rejects_new_intersecting_evidence(
+    tmp_path: Path,
+) -> None:
+    records = _fdb_family()
+    ownership = _fdb_ownership(tmp_path)
+    renamed = _fdb_record("GATU-REST", row=7, cvid=26, year="2025", variant=427)
+    with pytest.raises(ValueError, match="complete columns and split keys"):
+        convert_column_partitions(
+            (*records, renamed),
+            source_id="1.830",
+            split_ids=ownership.split_ids,
+            declared_columns=dict(ownership.declared_columns),
+            declaration_reference=ownership.declaration_reference,
+        )
+    # The converted case is source-guarded too: a new peer makes it stale.
+    converted = _fdb_convert(records, tmp_path)
+    assert converted.case is not None
+    assert (
+        apply_occurrence_cases((*records, renamed), (converted.case,))
+        .accounting[0]
+        .disposition
+        == "stale"
+    )
+
+
+def test_fdb_unassigned_spelling_diagnoses_without_blocking_owned_identity() -> None:
+    # Diagnostic vs strict: an explicitly unassigned spelling keeps its native
+    # unresolved identity and raises an error diagnostic, while the declared
+    # two-spelling ownership still converts.
+    records = (
+        _fdb_record("GatuRest", row=1, cvid=20, year="2020"),
+        _fdb_record("Gaturest", row=2, cvid=21, year="2021"),
+        _fdb_record("GATU-REST", row=3, cvid=22, year="2021"),
+    )
+    converted = convert_column_partitions(
+        records,
+        source_id="1.830",
+        split_ids=("1.830.gaturest",),
+        declared_columns={
+            "GatuRest": "1.830.gaturest",
+            "Gaturest": "1.830.gaturest",
+            "GATU-REST": None,
+        },
+        declaration_reference="Y-167 fixture reference",
+    )
+    assert converted.case is not None and len(converted.bindings) == 1
+    assert [(d.code, d.severity) for d in converted.diagnostics] == [
+        ("unassigned_original_columns", "error")
+    ]
+    result = apply_occurrence_cases(records, (converted.case,))
+    assert not result.diagnostics
+    assert (
+        result.occurrences[0].variable_key
+        == result.occurrences[1].variable_key
+        == converted.bindings[0].target.source_key
+    )
+    assert result.occurrences[2] == source_occurrence(records[2])
 
 
 def test_checked_lookup_role_keeps_evidence_and_does_not_materialize_parents() -> None:

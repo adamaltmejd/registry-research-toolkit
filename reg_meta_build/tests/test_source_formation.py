@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _prepared_fixtures import accept_prepared
 from reg_meta.db import open_db
+from reg_meta_build.convert_identity import convert_column_partitions
 from reg_meta_build.prepared_sources import (
     open_prepared_source_records,
     prepare_source_records,
@@ -28,7 +29,7 @@ from reg_meta_build.source_coordinates import (
     native_variable_key,
     native_variant_key,
 )
-from reg_meta_build.source_effects import record_ref
+from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import (
     EffectiveOccurrence,
@@ -47,6 +48,8 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
+
+from reg_meta_build.fqid_slugs import declared_column_ownership, load_provider_toml
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -237,6 +240,120 @@ def test_source_native_multiple_columns_require_explicit_partition_or_alias_deci
     assert [d.code for d in result.diagnostics] == ["unresolved_native_identity"]
     assert result.occurrences == records
     assert len(result.diagnostics[0].refs) == 2
+
+
+def _fdb_record(year: int, *, column: str, variant: int) -> SourceRecord:
+    return _record(year, column=column, native_id=830, variant=variant)
+
+
+def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> None:
+    """Y-167: the tracked 1.830 ownership lets both partitions form.
+
+    Without the declaration the two spellings withhold as one unresolved native
+    identity (strict behavior); with it, each partition forms with its exact
+    literal delivery columns (diagnostic cleared by curation, not by folding).
+    """
+    pair = (
+        _fdb_record(1999, column="GatuRest", variant=424),
+        _fdb_record(2005, column="Gaturest", variant=424),
+    )
+    pair_variant = native_variant_key(pair[0])
+    assert pair_variant is not None
+    variants = {
+        pair_variant: ResolvedVariant(
+            slug="arbetsstalleenheter", name="Arbetsställeenheter"
+        )
+    }
+    pair_columns = [native_column_key(record) for record in pair]
+    assert len(pair_columns) == 2 and None not in pair_columns
+    withheld = form_native_variable(
+        pair,
+        register=_REGISTER,
+        variants=variants,
+        slug="gaturest",
+        provider_key="830.gaturest",
+        flags=_FLAGS,
+        coding={
+            key: resolve_code_membership(()) for key in pair_columns if key is not None
+        },
+    )
+    assert withheld.variable is None
+    assert [d.code for d in withheld.diagnostics] == ["unresolved_native_identity"]
+    # The tracked declaration (mirrors fqid_slugs/scb.toml Y-167 entry).
+    declaration = tmp_path / "scb.toml"
+    declaration.write_text(
+        '[variable."1.830.gaturest"]\n'
+        'columns = { GatuRest = "1.830.gaturest", Gaturest = "1.830.gaturest", '
+        'PGaturest = "1.830.pgaturest" }\n'
+        'columns_ref = "Y-167 fixture reference"\n'
+        '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
+        encoding="utf-8",
+    )
+    ownership = declared_column_ownership(
+        load_provider_toml(declaration), provider="scb", source_id="1.830"
+    )
+    records = (
+        *pair,
+        _fdb_record(2010, column="GatuRest", variant=427),
+        _fdb_record(2015, column="Gaturest", variant=427),
+        _fdb_record(2020, column="PGaturest", variant=424),
+        _fdb_record(2025, column="PGaturest", variant=427),
+    )
+    converted = convert_column_partitions(
+        records,
+        source_id="1.830",
+        split_ids=ownership.split_ids,
+        declared_columns=dict(ownership.declared_columns),
+        declaration_reference=ownership.declaration_reference,
+    )
+    assert converted.case is not None and converted.diagnostics == ()
+    applied = apply_occurrence_cases(records, (converted.case,))
+    assert applied.diagnostics == ()
+    slugs = {"1.830.gaturest": "gaturest", "1.830.pgaturest": "pgaturest"}
+    formed = {}
+    for binding in converted.bindings:
+        members = tuple(
+            o
+            for o in applied.occurrences
+            if o.variable_key == binding.target.source_key
+        )
+        assert members
+        group_variants = {}
+        coding = {}
+        for occurrence in members:
+            assert occurrence.variant_key is not None
+            last = occurrence.variant_key[-1]
+            group_variants[occurrence.variant_key] = ResolvedVariant(
+                slug="arbetsstalleenheter" if last == 424 else "juridiska-enheter",
+                name="Arbetsställeenheter" if last == 424 else "Juridiska enheter",
+            )
+            assert occurrence.column_key is not None
+            coding[occurrence.column_key] = resolve_code_membership(())
+        result = form_native_variable(
+            members,
+            register=_REGISTER,
+            variants=group_variants,
+            slug=slugs[binding.source_id],
+            provider_key=binding.source_id,
+            flags=_FLAGS,
+            coding=coding,
+        )
+        assert result.variable is not None and result.diagnostics == ()
+        formed[binding.source_id] = result.variable
+    assert {
+        state.delivery_column_name for state in formed["1.830.gaturest"].states
+    } == {"GatuRest", "Gaturest"}
+    assert {
+        state.delivery_column_name for state in formed["1.830.pgaturest"].states
+    } == {"PGaturest"}
+    assert sorted(
+        (state.valid_from, state.valid_to) for state in formed["1.830.gaturest"].states
+    ) == [
+        ("1999-01-01", "1999-12-31"),
+        ("2005-01-01", "2005-12-31"),
+        ("2010-01-01", "2010-12-31"),
+        ("2015-01-01", "2015-12-31"),
+    ]
 
 
 def test_canonical_text_conflict_preserves_states_and_withholds_only_that_fact() -> (
