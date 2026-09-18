@@ -317,15 +317,14 @@ already holds.
 Delivery is established by a final state or a declared representation window on the same
 variable, variant and column. Another column, another variant and a search alias without
 windows deliver nothing here. Genuine source gaps, negative availability and unknown or
-pooled scopes claim no delivery in the first place. A variable — or one of its variants —
-that the dependency ledger withholds outright, with source evidence, answers for its own
-claim through that entry, whichever stage recorded it, and for nothing past that exact
-coordinate: an exact source-linked blocker stays a curation blocker without covering a
-sibling.
-Anything else missing is an engineering defect, not a curation question: the build names
-the source records and the exact missing window and stops before any output is placed. A
-missing optional field or an unrelated diagnostic is no permission to drop the state it
-belongs to.
+pooled scopes claim no delivery in the first place. A variable — or one of its variants
+— that the dependency ledger withholds outright, with source evidence, answers for its
+own claim through that entry, whichever stage recorded it, and for nothing past that
+exact coordinate: an exact source-linked blocker stays a curation blocker without
+covering a sibling. Anything else missing is an engineering defect, not a curation
+question: the build names the source records and the exact missing window and stops
+before any output is placed. A missing optional field or an unrelated diagnostic is no
+permission to drop the state it belongs to.
 
 ### Groups, relations and dependent output
 
