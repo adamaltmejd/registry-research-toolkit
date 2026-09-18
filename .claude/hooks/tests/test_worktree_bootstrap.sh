@@ -15,8 +15,10 @@
 #   5. Dependency drift (lockfile changed -> marker stale) re-provisions.
 #   6. SessionStart is NON-BLOCKING: it emits a well-formed JSON advisory (only
 #      that branch writes stdout, so the advisory IS proof of the non-blocking path).
-#   7. Generated pre-commit launchers get a linked-worktree GIT_WORK_TREE shim,
-#      exactly once, before they invoke pre-commit.
+#   7. Generated launchers get a linked-worktree GIT_WORK_TREE shim, exactly
+#      once, before they invoke pre-commit; the pre-push launcher additionally
+#      enters the resolved checkout and unsets repository-routing state so a
+#      hook that creates a fixture repository cannot mutate the outer checkout.
 set -uo pipefail
 
 HOOK="$(cd "$(dirname "$0")/.." && pwd)/worktree_bootstrap.sh"
@@ -35,7 +37,7 @@ calls="$work/calls.log"
 repo="$work/repo"
 
 mkdir -p "$repo/reg_webapp/frontend" "$work/bin"
-(cd "$repo" && git init -q && git commit -q --allow-empty -m init 2>/dev/null) || {
+(cd "$repo" && git init -q && git -c user.name=test -c user.email=test@example.test commit -q --allow-empty -m init 2>/dev/null) || {
 	echo "could not init sandbox git repo" >&2
 	exit 2
 }
@@ -57,13 +59,14 @@ mkdir -p node_modules
 EOF
 cat >"$work/bin/pre-commit" <<EOF
 #!/usr/bin/env bash
-echo "pre-commit GIT_WORK_TREE=\${GIT_WORK_TREE-}" >>"$calls"
+echo "pre-commit pwd=\$PWD GIT_DIR=\${GIT_DIR-} GIT_WORK_TREE=\${GIT_WORK_TREE-} GIT_COMMON_DIR=\${GIT_COMMON_DIR-} GIT_INDEX_FILE=\${GIT_INDEX_FILE-}" >>"$calls"
 EOF
 chmod +x "$work/bin/uv" "$work/bin/bun" "$work/bin/pre-commit"
 
 VENV_MARKER="$repo/.venv/.wt-provisioned"
 NODE_MARKER="$repo/reg_webapp/frontend/node_modules/.wt-provisioned"
 HOOK_SHIM_MARKER="registry-research-toolkit linked-worktree GIT_WORK_TREE shim"
+ISOLATION_SENTINEL="unset GIT_DIR GIT_WORK_TREE GIT_COMMON_DIR GIT_INDEX_FILE"
 
 mark_provisioned() { # stamp markers with the CURRENT fingerprints
 	mkdir -p "$repo/.venv/bin" "$repo/reg_webapp/frontend/node_modules"
@@ -110,9 +113,20 @@ write_generated_hooks() {
 shim_count() {
 	grep -c "$HOOK_SHIM_MARKER" "$repo/.git/hooks/pre-push" 2>/dev/null || true
 }
+isolation_count() {
+	grep -c "$ISOLATION_SENTINEL" "$repo/.git/hooks/pre-push" 2>/dev/null || true
+}
+strip_isolation() { # $1 = pre-push launcher; drop the 4-line isolation block to simulate the old shim
+	local path=$1 n
+	n=$(grep -n 'cd "${GIT_WORK_TREE}" || exit 1' "$path" | head -n 1 | cut -d: -f1) || true
+	[[ -n "$n" ]] || return 1
+	sed "$((n - 1)),$((n + 2))d" "$path" >"${path}.strip.$$" && mv "${path}.strip.$$" "$path"
+}
 
-# --- Case 0: generated hooks are repaired idempotently, and the repaired
-#     launcher derives GIT_WORK_TREE from a linked-worktree private gitdir. ---
+# --- Case 0: generated hooks are repaired idempotently; the repaired pre-push
+#     launcher enters the resolved checkout and strips repository-routing state
+#     before invoking pre-commit, so fixture repositories cannot leak into the
+#     outer checkout. pre-commit keeps its GIT_WORK_TREE derivation. ---
 write_generated_hooks
 mark_provisioned
 : >"$calls"
@@ -121,22 +135,119 @@ mark_provisioned
 	note "FAIL[0]: expected exactly one hook shim after --provision repair; got $(shim_count)"
 	fail=1
 }
+[[ "$(isolation_count)" == "1" ]] || {
+	note "FAIL[0]: expected exactly one pre-push isolation after --provision repair; got $(isolation_count)"
+	fail=1
+}
 run_event "" >/dev/null
 [[ "$(shim_count)" == "1" ]] || {
 	note "FAIL[0]: hook shim should be idempotent; got $(shim_count)"
 	fail=1
 }
+[[ "$(isolation_count)" == "1" ]] || {
+	note "FAIL[0]: pre-push isolation should be idempotent; got $(isolation_count)"
+	fail=1
+}
+# A launcher carrying the old (non-isolating) shim converges to the same bytes
+# as a fresh repair.
+cp "$repo/.git/hooks/pre-push" "$work/pre-push-fresh"
+strip_isolation "$repo/.git/hooks/pre-push"
+(cd "$repo" && PATH="$work/bin:$PATH" "$HOOK" --provision "$repo")
+cmp -s "$work/pre-push-fresh" "$repo/.git/hooks/pre-push" || {
+	note "FAIL[0]: upgrading an old-shim pre-push launcher should converge to the fresh repair"
+	fail=1
+}
+# pre-commit and post-checkout keep the derivation shim without the pre-push
+# isolation (pre-commit needs its partial-index semantics).
+for other in pre-commit post-checkout; do
+	grep -q "$HOOK_SHIM_MARKER" "$repo/.git/hooks/$other" 2>/dev/null || {
+		note "FAIL[0]: $other launcher should carry the derivation shim"
+		fail=1
+	}
+	grep -q "$ISOLATION_SENTINEL" "$repo/.git/hooks/$other" 2>/dev/null && {
+		note "FAIL[0]: $other launcher must not carry the pre-push isolation"
+		fail=1
+	}
+done
 linked_root="$work/linked-worktree"
 linked_git_dir="$repo/.git/worktrees/linked"
 mkdir -p "$linked_root" "$linked_git_dir"
 printf '%s/.git\n' "$linked_root" >"$linked_git_dir/gitdir"
+# Linked-worktree push: pre-commit runs in the resolved checkout with no
+# repository-routing state, even when the pusher exports it.
 : >"$calls"
-(cd "$work" && PATH="$work/bin:$PATH" GIT_DIR="$linked_git_dir" "$repo/.git/hooks/pre-push" origin example </dev/null)
-grep -Fx "pre-commit GIT_WORK_TREE=$linked_root" "$calls" >/dev/null || {
-	note "FAIL[0]: patched launcher should export linked worktree; calls: $(tr '\n' ';' <"$calls")"
+(cd "$work" && PATH="$work/bin:$PATH" GIT_DIR="$linked_git_dir" GIT_COMMON_DIR="$linked_git_dir" GIT_INDEX_FILE="$repo/.git/index" "$repo/.git/hooks/pre-push" origin example </dev/null)
+grep -Fx "pre-commit pwd=$linked_root GIT_DIR= GIT_WORK_TREE= GIT_COMMON_DIR= GIT_INDEX_FILE=" "$calls" >/dev/null || {
+	note "FAIL[0]: linked pre-push should run pre-commit in the checkout without routing state; calls: $(tr '\n' ';' <"$calls")"
 	fail=1
 }
-
+# Main-checkout push: pre-commit runs in the checkout with no routing state.
+: >"$calls"
+(cd "$repo" && PATH="$work/bin:$PATH" GIT_DIR="$repo/.git" GIT_COMMON_DIR="$repo/.git" GIT_INDEX_FILE="$repo/.git/index" "$repo/.git/hooks/pre-push" origin example </dev/null)
+grep -Fx "pre-commit pwd=$repo GIT_DIR= GIT_WORK_TREE= GIT_COMMON_DIR= GIT_INDEX_FILE=" "$calls" >/dev/null || {
+	note "FAIL[0]: main pre-push should run pre-commit in the checkout without routing state; calls: $(tr '\n' ';' <"$calls")"
+	fail=1
+}
+# pre-commit keeps deriving GIT_WORK_TREE for linked worktrees.
+: >"$calls"
+(cd "$work" && PATH="$work/bin:$PATH" GIT_DIR="$linked_git_dir" "$repo/.git/hooks/pre-commit" </dev/null)
+grep -Fx "pre-commit pwd=$work GIT_DIR=$linked_git_dir GIT_WORK_TREE=$linked_root GIT_COMMON_DIR= GIT_INDEX_FILE=" "$calls" >/dev/null || {
+	note "FAIL[0]: pre-commit should still derive the linked worktree; calls: $(tr '\n' ';' <"$calls")"
+	fail=1
+}
+# Foreign-repository regression: a hook that creates and configures a temporary
+# Git repository must change only that fixture; outer configuration, HEAD and
+# refs stay unchanged.
+git -C "$repo" config user.name "outer-user"
+git -C "$repo" config user.email "outer@example.test"
+git -C "$repo" config --local --list | sort >"$work/outer-config-before"
+git -C "$repo" rev-parse HEAD >"$work/outer-head-before"
+git -C "$repo" show-ref >"$work/outer-refs-before"
+cat >"$work/bin/pre-commit" <<EOF
+#!/usr/bin/env bash
+echo "pre-commit pwd=\$PWD GIT_DIR=\${GIT_DIR-} GIT_WORK_TREE=\${GIT_WORK_TREE-} GIT_COMMON_DIR=\${GIT_COMMON_DIR-} GIT_INDEX_FILE=\${GIT_INDEX_FILE-}" >>"$calls"
+fixture=\$(mktemp -d)
+git init -q "\$fixture"
+git -C "\$fixture" config user.name "fixture-user"
+git -C "\$fixture" config user.email "fixture@example.test"
+git -C "\$fixture" config core.worktree "/tmp/evil-worktree"
+echo "fixture \$fixture" >>"$calls"
+EOF
+chmod +x "$work/bin/pre-commit"
+: >"$calls"
+(cd "$work" && PATH="$work/bin:$PATH" GIT_DIR="$linked_git_dir" GIT_COMMON_DIR="$linked_git_dir" GIT_INDEX_FILE="$repo/.git/index" "$repo/.git/hooks/pre-push" origin example </dev/null)
+grep -Fx "pre-commit pwd=$linked_root GIT_DIR= GIT_WORK_TREE= GIT_COMMON_DIR= GIT_INDEX_FILE=" "$calls" >/dev/null || {
+	note "FAIL[0]: fixture push should run pre-commit isolated; calls: $(tr '\n' ';' <"$calls")"
+	fail=1
+}
+git -C "$repo" config --local --list | sort >"$work/outer-config-after"
+git -C "$repo" rev-parse HEAD >"$work/outer-head-after"
+git -C "$repo" show-ref >"$work/outer-refs-after"
+cmp -s "$work/outer-config-before" "$work/outer-config-after" || {
+	note "FAIL[0]: fixture repository changed the outer git config"
+	fail=1
+}
+cmp -s "$work/outer-head-before" "$work/outer-head-after" || {
+	note "FAIL[0]: fixture repository changed the outer HEAD"
+	fail=1
+}
+cmp -s "$work/outer-refs-before" "$work/outer-refs-after" || {
+	note "FAIL[0]: fixture repository changed the outer refs"
+	fail=1
+}
+fixture=$(sed -n 's/^fixture //p' "$calls" | tail -n 1)
+[[ -n "$fixture" && -d "$fixture" ]] || {
+	note "FAIL[0]: hook should have created a fixture repository; calls: $(tr '\n' ';' <"$calls")"
+	fail=1
+}
+[[ "$(git -C "$fixture" config user.name)" == "fixture-user" ]] || {
+	note "FAIL[0]: fixture repository should carry its own identity"
+	fail=1
+}
+[[ "$(git -C "$repo" config user.name)" == "outer-user" ]] || {
+	note "FAIL[0]: outer user.name should be unchanged"
+	fail=1
+}
 # --- Case 1: provisioned + in sync -> fast no-op ---
 mark_provisioned
 : >"$calls"
