@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, Literal
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
+from reg_meta_build.convert_identity import convert_declared_partitions
 from reg_meta_build.id import mint, mint_canonical_scb
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
@@ -251,6 +252,111 @@ def test_missing_split_bridge_remains_engineering_conversion_gap() -> None:
     )
     assert converted.complete
     assert converted.declarations[0].naming.source_id == "1.101.sibling"
+
+
+_Y167_REF = "Y-167 fixture reference"
+_Y167_COLUMNS = {
+    "GatuRest": "1.830.gaturest",
+    "Gaturest": "1.830.gaturest",
+    "PGaturest": "1.830.pgaturest",
+}
+_Y167_SPLITS = ("1.830.gaturest", "1.830.pgaturest")
+
+
+def _declaration_selection(tmp_path: Path) -> NamingSelection:
+    """A naming selection carrying the tracked 1.830 column ownership."""
+    (tmp_path / "scb.toml").write_text(
+        '[variable."1.830.gaturest"]\n'
+        'columns = { GatuRest = "1.830.gaturest", Gaturest = "1.830.gaturest", '
+        'PGaturest = "1.830.pgaturest" }\n'
+        f'columns_ref = "{_Y167_REF}"\n'
+        '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
+        encoding="utf-8",
+    )
+    (tmp_path / "scb.auto.toml").write_text(
+        '[variable."1.830.gaturest"]\nslug = "gaturest"\n'
+        '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
+        encoding="utf-8",
+    )
+    (tmp_path / "freeze.toml").write_text('scb = "curating"\n', encoding="utf-8")
+    pins = tuple(_revision(path) for path in sorted(tmp_path.iterdir()))
+    return read_naming_selection(tmp_path, pins)
+
+
+def test_tracked_column_ownership_survives_naming_conversion(
+    tmp_path: Path,
+) -> None:
+    # The authored ownership map merges with the generated slug into the
+    # effective scope naming entry, byte-pinned like every other field.
+    selection = _declaration_selection(tmp_path)
+    authored = next(
+        entry
+        for entry in selection.entries
+        if entry.origin == "authored" and entry.entry.source_id == "1.830.gaturest"
+    )
+    assert authored.supplied_fields == ("columns", "columns_ref")
+    assert authored.content_sha256 == canonical_sha256(
+        {"columns": _Y167_COLUMNS, "columns_ref": _Y167_REF}
+    )
+    result = convert_naming(
+        selection,
+        [
+            LegacyNamingBinding(
+                kind="variable",
+                provider="scb",
+                source_id=source_id,
+                target=_target((source_id, "native")),
+            )
+            for source_id in _Y167_SPLITS
+        ],
+    )
+    assert not result.diagnostics
+    by_disposition = {row.entry_id: row.status for row in result.dispositions}
+    # The authored ownership map is metadata, not a slug override: neither
+    # gaturest contributor is shadowed. (The authored pgaturest slug pin
+    # shadows its generated row, the existing override rule.)
+    assert by_disposition["fqid_slugs/scb.toml#variable/1.830.gaturest"] == "bound"
+    assert by_disposition["fqid_slugs/scb.auto.toml#variable/1.830.gaturest"] == "bound"
+    by_id = {item.naming.source_id: item for item in result.declarations}
+    gaturest = by_id["1.830.gaturest"]
+    assert gaturest.naming.slug == "gaturest"
+    assert dict(gaturest.naming.columns or ()) == _Y167_COLUMNS
+    assert gaturest.naming.columns_ref == _Y167_REF
+    assert {entry.origin for entry in gaturest.contributors} == {
+        "authored",
+        "generated",
+    }
+    assert by_id["1.830.pgaturest"].naming.columns is None
+
+
+def test_naming_selection_entries_feed_declared_partition_conversion(
+    tmp_path: Path,
+) -> None:
+    # The same selection entries are the complete entry set the declared
+    # partition converter consumes: the operator's scope transcription needs
+    # no hand-plumbed map.
+    selection = _declaration_selection(tmp_path)
+    header = REGISTERINFORMATION_HEADER.split("|")
+
+    def record(column: str, cvid: int) -> SourceRecord:
+        row = _var_row(colname=column, cvid=cvid, var_id=830).split("|")
+        cells: dict[str, tuple[bool, str | None, str]] = {
+            name: (True, value, value) for name, value in zip(header, row, strict=True)
+        }
+        return clean_scb_row(header, cvid, cells, _revision()).record
+
+    records = (record("GatuRest", 20), record("Gaturest", 21), record("PGaturest", 22))
+    converted = convert_declared_partitions(
+        records,
+        entries=[entry.entry for entry in selection.entries],
+        provider="scb",
+        source_id="1.830",
+        split_ids=_Y167_SPLITS,
+    )
+    assert converted.case is not None and converted.diagnostics == ()
+    assert [binding.source_id for binding in converted.bindings] == list(_Y167_SPLITS)
+    assert converted.case.decision.kind == "correct_occurrences"
+    assert _Y167_REF in converted.case.decision.provenance
 
 
 def test_nonidentical_duplicate_bindings_block_and_identical_duplicates_coalesce() -> (
