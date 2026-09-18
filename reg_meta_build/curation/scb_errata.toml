@@ -2180,7 +2180,8 @@ noted = "2026-09-12"
 #    catalog data_type where one exists.
 #  * classification linked ONLY where an existing catalog short_name matches the
 #    column's code system (verified present in the built catalog): Ssyk3/4_J16 ->
-#    SSYK96; AstSNI2002(B/G)J -> SNI2002; SektorKodJ -> SEKTOR2000. InstKod7J's
+#    SSYK96; AstSNI2002(B/G)J -> SNI2002; SektorKodJ -> SEKTORKOD (Y-170: same
+#    RAMS/LISA ownership-sector family as scb/lisa/sektorkod). InstKod7J's
 #    10-position institutional sector code has no catalog classification (omitted);
 #    YSEG_J16/MedbLandNamn have no matching catalog classification (omitted).
 #  * is_identifier = true ONLY where the column's catalog sibling carries it (so an
@@ -2325,7 +2326,7 @@ column = "SektorKodJ"
 name = "Sektorstillhörighet (företag) enligt justerad metod"
 definition = "Sektorstillhörighet enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
 data_type = "text"
-classification = "SEKTOR2000"
+classification = "SEKTORKOD"
 versions = ["2003"]
 source = "scb-docs"
 evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SektorKodJ for 2003–2003 — see reg_meta_build/docs/lisa/SektorKodJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."

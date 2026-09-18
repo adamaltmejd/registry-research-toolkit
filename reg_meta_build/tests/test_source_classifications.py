@@ -1,8 +1,10 @@
 """Selected canonical codebooks retain literal codes and competing evidence."""
 
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
+from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_classifications import (
     resolve_canonical_codes,
@@ -147,27 +149,43 @@ def test_high_overlap_does_not_waive_one_unexplained_code() -> None:
 
 
 def test_sektorkod_cohort_conforms_exactly_and_extras_stay_severed() -> None:
-    """Y-170 scope: the RAMS/LISA ownership-sector book admits exactly its
-    demonstrated members. Pre-2000 extras and sentinel spellings keep their
-    source members in severed evidence — no overlap fraction waives them — and
-    the same observed set against the wrong (INSEKT) book stays severed, so a
-    stale book selection cannot pass on overlap alone."""
-    sektorkod = {"00", "11", "12", "13", "14", "15", "21", "22", "23", "24", "25"}
-    insket = {"1", "2", "3", "4", "5", "6", "7", "8"}
+    """Y-170 scope against the SHIPPED books: the observed 11-code cohort is
+    kept under SEKTORKOD, severed against SEKTOR2000 (code 15 absent there is
+    the invariant — an accepted binding alone cannot make it canonical), and
+    pre-2000 extras plus sentinel spellings stay severed under SEKTORKOD.
+    Adding 15 to sektor2000.csv turns this test red."""
+    books = Path(__file__).resolve().parent.parent / "input_data" / "classifications"
+    sektorkod = set(load_valid_codes(books / "sektorkod.csv"))
+    insekt = set(load_valid_codes(books / "sektor2000.csv"))
+    assert sektorkod == {
+        "00",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+    }
+    # The invariant: INSEKT's Undersektor level literally reuses 11-14/21-25
+    # with different meanings, but 15 and 00 are absent — so the cohort severs.
+    assert "15" not in insekt
+    assert "00" not in insekt
     observed = tuple((code, f"Source {code}") for code in sorted(sektorkod))
     kept = _conformance(observed, sektorkod)
     assert kept.conformance.status == "kept"
     assert kept.conformance.nonconforming_members == ()
     assert kept.diagnostics == ()
-    # The demonstrated cohort against the wrong book: every member is
-    # nonconforming, including code 15 — an accepted binding alone cannot make
-    # it canonical.
-    misbound = _conformance(observed, insket)
+    misbound = _conformance(observed, insekt)
     assert misbound.conformance.status == "severed"
-    assert [code for code, _ in misbound.conformance.nonconforming_members] == sorted(
-        sektorkod
-    )
     assert misbound.conformance.declared_classification == "fixture"
+    assert [code for code, _ in misbound.conformance.nonconforming_members] == [
+        "00",
+        "15",
+    ]
     # Extras beyond the book (pre-2000 codes, sentinel spellings) are listed
     # member-by-member; the conforming remainder does not absorb them.
     extras = observed + (
