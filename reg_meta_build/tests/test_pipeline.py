@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import json
 import sqlite3
+from collections import Counter
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
@@ -21,6 +22,7 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
+from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
@@ -50,6 +52,7 @@ from reg_meta_build.source_curation import (
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import NativeCoordinates
+from test_catalog_lineage import fixture as lineage_fixture
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
@@ -706,6 +709,23 @@ def test_unresolved_inline_code_list_is_reported_and_refused_for_publication(
         assert "inline:" in issue["detail"]
         assert issue["refs"]
         assert codes == []
+
+
+def test_lineage_warning_does_not_count_as_error():
+    # A no-source-state lineage diagnostic is a warning, so the pipeline's
+    # severity-keyed summary counts (pipeline.issue: counts[value.severity] += 1)
+    # keep counts["error"] at zero and the publication_ready gate
+    # (not counts["error"]) stays green.
+    variables, options = lineage_fixture(same_as=False)
+    result = resolve_catalog_lineage(variables, **options)
+    (diagnostic,) = result.diagnostics
+    assert diagnostic.code == "unresolved_lineage_no_source_state"
+    assert diagnostic.severity == "warning"
+    counts: Counter[str] = Counter()
+    counts[diagnostic.severity] += 1
+    assert counts["warning"] == 1
+    assert counts["error"] == 0
+    assert not counts["error"]
 
 
 @pytest.mark.parametrize("selection", ["renumbered"], indirect=True)

@@ -79,6 +79,8 @@ def test_matching_slugs_are_not_identity_evidence():
     result = resolve_catalog_lineage(variables, **options)
     assert not result.metadata.state_lineage
     assert result.diagnostics[0].code == "unresolved_lineage_no_source_state"
+    assert result.diagnostics[0].severity == "warning"
+    assert result.diagnostics[0].withheld_output == ("scb/example/value:lineage",)
     assert result.metadata.lineage_warnings[0].kind == "no_source_state"
 
 
@@ -88,6 +90,7 @@ def test_ambiguous_register_label_does_not_pick_input_order():
     assert result.variables[0].source_register is None
     assert not result.metadata.state_lineage
     assert result.diagnostics[0].code == "ambiguous_source_register"
+    assert result.diagnostics[0].severity == "error"
 
 
 def test_variant_default_resolves_ambiguity_and_unused_dangling_pin_fails():
@@ -95,6 +98,7 @@ def test_variant_default_resolves_ambiguity_and_unused_dangling_pin_fails():
     result = resolve_catalog_lineage(variables, **options)
     assert not result.metadata.state_lineage
     assert result.diagnostics[0].code == "unresolved_lineage_ambiguous_source_variant"
+    assert result.diagnostics[0].severity == "error"
     options["defaults"] = {"scb/origin": "people"}
     resolved = resolve_catalog_lineage(variables, **options)
     assert len(resolved.metadata.state_lineage) == 1 and not resolved.diagnostics

@@ -383,7 +383,8 @@ Ambiguous matches are errors; unmatched external labels stay text. State lineage
 requires an accepted `same_as` path into that source register and exact endpoint period
 intersections. Equal slugs are insufficient. Explicit source-variant defaults resolve
 genuinely multiple variants and are checked even when unused. Missing evidence produces
-retained lineage warnings and blocking diagnostics.
+retained lineage warnings and blocking diagnostics: no supported source state withholds
+the edge as a warning; ambiguity is an error.
 
 Panel keys require supported states in the exact variant. Losing one composite-key
 member makes that entire key unknown; it never manufactures a shorter key. Other axes,

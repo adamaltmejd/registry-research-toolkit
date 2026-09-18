@@ -52,6 +52,8 @@ def resolve_catalog_lineage(
     accepted same-as graph supplies that identity. A single observed source
     variant needs no choice; multiple variants require an explicit default.
     Unknown external source labels remain literal labels, not guessed registers.
+    An attributed source with no supported source state withholds the edge as a
+    warning; ambiguity is an error.
     """
     if metadata.state_lineage or metadata.lineage_warnings:
         raise ValueError("lineage must be resolved once from current catalog states")
@@ -188,7 +190,7 @@ def resolve_catalog_lineage(
                 diagnostics.append(
                     ResolutionDiagnostic(
                         code="unresolved_lineage_" + kind,
-                        severity="error",
+                        severity="warning" if kind == "no_source_state" else "error",
                         subject=fqid,
                         detail=detail,
                         refs=evidence[fqid],
