@@ -243,6 +243,14 @@ source identity. These are error attributions, not new identities or waivers. Th
 still match the original family and actual unresolved result. Missing conversion
 mappings or stale attribution bridges are implementation failures.
 
+Parent metadata reconciles every observation of one native parent with no positional
+selection: conflicting fields stay unknown, and a conflict on the name withholds the
+parent and its dependents. When an applicable checked naming declaration for that
+register or register_variant pins exactly one of the observed names, the declared name
+establishes the parent while the conflict diagnostic withholds only the remaining
+fields. No declaration, several pinned names, a pinned name outside the observations, or
+a stale declaration leaves the parent withheld exactly as without it.
+
 An added delivery names an existing identity, variant, edition and supplied period with
 checked evidence. It is a declaration, not a fabricated physical source row. Supplying
 column presence does not copy type, flags or coding from another edition. Any donor

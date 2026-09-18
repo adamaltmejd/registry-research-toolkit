@@ -9,6 +9,7 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.db import open_db
 from reg_meta_build.catalog_resolution import resolve_parents
+from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.resolved_catalog import write_resolved_catalog
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import (
@@ -18,7 +19,11 @@ from reg_meta_build.source_coordinates import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_formation import form_native_variable
-from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
+from reg_meta_build.source_naming import (
+    NamingDeclaration,
+    NativeNamingTarget,
+    check_naming_target,
+)
 from reg_meta_build.source_records import SourceFields, SourceRevision, value_field
 from reg_meta_build.sources.scb_records import clean_scb_row
 
@@ -276,3 +281,145 @@ def test_sos_dataset_label_does_not_conflict_with_dcat_title(tmp_path: Path) -> 
     (key,) = resolved.registers.keys()
     assert resolved.fields[key].dataset_label is not None
     assert resolved.fields[key].dataset_label.value == dataset
+
+
+def _variant_key(record: SourceRecord) -> tuple[str | int, ...]:
+    parent = next(item for item in record.parent_facts if item.kind == "variant")
+    key = native_parent_key(record.source, record.subject.provider, parent)
+    assert key is not None
+    return key
+
+
+def _register_declaration(record: SourceRecord) -> NamingDeclaration:
+    return next(
+        declaration
+        for declaration in _names(record)
+        if declaration.target.kind == "register"
+    )
+
+
+def _checked_variant_declaration(pinned: SourceRecord) -> NamingDeclaration:
+    # A checked parent naming declaration pins its endorsed observation exactly;
+    # the second physical row keeps its own semantic member, so the pin stays
+    # applicable instead of going stale on the added alternative.
+    key = _variant_key(pinned)
+    register_key = source_register_key(pinned)
+    assert register_key is not None
+    return NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="register_variant",
+            provider=pinned.subject.provider,
+            source_key=key,
+            register_key=register_key,
+            expectations=capture_expectations(
+                (pinned,), fields=("column_name",), parents=True
+            ),
+        ),
+        naming=SlugEntry(
+            kind="register_variant",
+            provider=pinned.subject.provider,
+            source_id="1.10",
+            slug="people",
+        ),
+        contributors=(),
+    )
+
+
+def _conflicting_variant_pair() -> tuple[SourceRecord, SourceRecord]:
+    first = _record()
+    second = _record(
+        3,
+        CVID="6",
+        VarId="7",
+        Registervariantnamn="Huvudtabell",
+        Registervariantbeskrivning="Annan beskrivning",
+    )
+    assert _variant_key(first) == _variant_key(second)
+    assert record_ref(first) != record_ref(second)
+    return first, second
+
+
+def _other_variant_record() -> SourceRecord:
+    return _record(
+        4,
+        CVID="8",
+        VarId="9",
+        Registervariantnamn="Inaktuell etikett",
+        Registervariantbeskrivning="Inaktuell beskrivning",
+    )
+
+
+def test_checked_naming_declaration_resolves_conflicting_parent_name() -> None:
+    first, second = _conflicting_variant_pair()
+    key = _variant_key(first)
+    declaration = _checked_variant_declaration(second)
+    naming = (_register_declaration(first), declaration)
+    assert check_naming_target(declaration.target, (first, second)) == ()
+    parents = resolve_parents((first, second), naming)
+    assert parents.variants[key].name == "Huvudtabell"
+    assert parents.variants[key].description is None
+    assert len(parents.editions) == 1
+    name = parents.fields[key].name
+    assert name is not None and name.value == "Huvudtabell"
+    (conflict,) = [
+        diagnostic
+        for diagnostic in parents.diagnostics
+        if diagnostic.code == "conflicting_parent_metadata"
+    ]
+    assert conflict.fields == ("description",)
+    assert conflict.withheld_output == ("variant.description",)
+    assert not [
+        diagnostic
+        for diagnostic in parents.diagnostics
+        if diagnostic.code == "unknown_parent_name"
+    ]
+
+
+def test_conflicting_parent_name_without_declaration_still_withholds() -> None:
+    first, second = _conflicting_variant_pair()
+    key = _variant_key(first)
+    parents = resolve_parents((first, second), (_register_declaration(first),))
+    assert key not in parents.variants
+    assert {diagnostic.code for diagnostic in parents.diagnostics} == {
+        "conflicting_parent_metadata",
+        "unknown_parent_name",
+    }
+    unknown = next(
+        diagnostic
+        for diagnostic in parents.diagnostics
+        if diagnostic.code == "unknown_parent_name"
+    )
+    assert unknown.withheld_output == ("variant",)
+
+
+def test_stale_naming_declaration_still_withholds_conflicting_parent_name() -> None:
+    first, second = _conflicting_variant_pair()
+    key = _variant_key(first)
+    stale = _other_variant_record()
+    declaration = _checked_variant_declaration(stale)
+    assert check_naming_target(declaration.target, (first, second)) != ()
+    parents = resolve_parents(
+        (first, second),
+        (_register_declaration(first), declaration),
+        withheld_naming=frozenset({key}),
+    )
+    assert key not in parents.variants
+    assert {diagnostic.code for diagnostic in parents.diagnostics} == {
+        "conflicting_parent_metadata",
+        "unknown_parent_name",
+    }
+
+
+def test_naming_declaration_for_unobserved_name_never_invents_parent_name() -> None:
+    first, second = _conflicting_variant_pair()
+    key = _variant_key(first)
+    other = _other_variant_record()
+    declaration = _checked_variant_declaration(other)
+    parents = resolve_parents(
+        (first, second), (_register_declaration(first), declaration)
+    )
+    assert key not in parents.variants
+    assert {diagnostic.code for diagnostic in parents.diagnostics} == {
+        "conflicting_parent_metadata",
+        "unknown_parent_name",
+    }

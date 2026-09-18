@@ -22,11 +22,12 @@ from reg_meta_build.source_curation import ResolutionDiagnostic
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_occurrences import EffectiveOccurrence
+from reg_meta_build.source_records import SourceField
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from reg_meta_build.source_curation import SourceRecordRef
+    from reg_meta_build.source_curation import ParentFactProjection, SourceRecordRef
     from reg_meta_build.source_naming import NamingDeclaration
     from reg_meta_build.source_records import (
         SourceFields,
@@ -53,6 +54,53 @@ def _text(fields: SourceFields, name: str) -> str | None:
             raise TypeError(f"parent metadata field {name} must be text")
         return claim.value or None
     return None
+
+
+def _parent_projection_key(
+    source: str, provider: str | None, fact: ParentFactProjection
+) -> NativeKey | None:
+    """Rebuild the native parent key for one expected parent fact, if pinned."""
+    if provider is None:
+        return None
+    register = _coordinate_key(fact.register_name)
+    if register is None:
+        return None
+    key: NativeKey = (source, provider, "register", *register)
+    if fact.kind == "register":
+        return key
+    variant = _coordinate_key(fact.variant) if fact.variant is not None else None
+    if fact.kind != "variant" or variant is None:
+        return None
+    return (*key, "variant", *variant)
+
+
+def _declared_parent_name(declaration: NamingDeclaration, key: NativeKey) -> str | None:
+    """The single checked name a parent naming declaration pins for this parent.
+
+    The checked name lives in the target's record expectations' parent facts.
+    Identity-revision targets pin no name, and several distinct pinned names
+    cannot resolve a conflict without a positional selection rule, so neither
+    yields a declared name.
+    """
+    provider = declaration.target.provider
+    pinned: set[str] = set()
+    for expectation in declaration.target.expectations:
+        for projection in expectation.alternatives:
+            for fact in projection.parent_facts or ():
+                if (
+                    _parent_projection_key(expectation.ref.source, provider, fact)
+                    != key
+                ):
+                    continue
+                pinned.update(
+                    field.value
+                    for field in fact.fields
+                    if field.name == "name"
+                    and field.status == "value"
+                    and isinstance(field.value, str)
+                    and field.value
+                )
+    return next(iter(pinned)) if len(pinned) == 1 else None
 
 
 def resolve_parents(
@@ -160,6 +208,29 @@ def resolve_parents(
     for key, alternatives in claims.items():
         observations = tuple(item[0] for item in alternatives.values())
         fields, conflicts = reconcile_source_fields(observations)
+        if (
+            "name" in conflicts
+            and ownership[key][0] in {"register", "variant"}
+            and key in names
+            and key not in withheld_naming
+        ):
+            # A checked naming declaration endorses one observed parent name. The
+            # declaration only resolves the name it pins; every other conflict
+            # stays unresolved exactly as without it, and no positional rule
+            # picks between several pinned names or overrides a stale declaration.
+            declared = _declared_parent_name(names[key], key)
+            observed = {
+                field.value
+                for observation in observations
+                if (field := observation.fields.name) is not None
+                and field.status == "value"
+                and isinstance(field.value, str)
+            }
+            if declared is not None and declared in observed:
+                fields = fields.model_copy(
+                    update={"name": SourceField(status="value", value=declared)}
+                )
+                conflicts = tuple(name for name in conflicts if name != "name")
         resolved_fields[key] = fields
         if conflicts:
             diagnostics.append(
