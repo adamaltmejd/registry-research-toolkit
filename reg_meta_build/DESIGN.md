@@ -111,9 +111,12 @@ never replaces the original cells:
 - Known SQL integer/text aliases normalize mechanically. The original declaration and
   width remain evidence. A text-to-integer change requires curation. SCB nonnegative
   integer length spellings normalize to decimal spelling; other length forms remain.
-- Exact supplied dates and recognized same-year ranges retain their endpoints. Pooled
-  multi-year periods remain pooled. The edition label and a variable's declared
-  measurement/reference period are separate observations.
+- Exact supplied dates and recognized same-year ranges retain their endpoints. A school
+  year `Läsåret YYYY/YYYY+1` is one period 1 July of the first year to 30 June of the
+  second; a `Deklarationsår YYYY (beskattningsår ZZZZ)` with ZZZZ one below YYYY is the
+  income year 1 January to 31 December. Other multi-year periods remain pooled. The
+  edition label and a variable's declared measurement/reference period are separate
+  observations.
 - Value-set content may deduplicate identical code/label pairs for storage and
   comparison. Equal codes with different labels remain distinct. Deduplication does not
   infer list identity, membership, variable identity or authority.

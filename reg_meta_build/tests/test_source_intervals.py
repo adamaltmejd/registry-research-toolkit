@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 from reg_meta_build.source_intervals import resolve_occurrence_intervals
+from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
@@ -167,6 +168,18 @@ def test_invalid_or_unbounded_dates_are_not_materialized(start: str, end: str) -
     result = resolve_occurrence_intervals((record,))
     assert result.segments == ()
     assert result.unsupported_occurrences == (record,)
+
+
+def test_lasaret_occurrence_forms_a_state_on_the_school_year_interval() -> None:
+    _, period_scope, issue = source_scopes("Läsåret 2014/2015")
+
+    assert issue is None
+    result = resolve_occurrence_intervals((_record(1, scope=period_scope),))
+
+    assert result.unsupported_occurrences == result.issues == ()
+    assert [(s.valid_from, s.valid_to) for s in result.segments] == [
+        ("2014-07-01", "2015-06-30")
+    ]
 
 
 def test_unplaced_occurrence_does_not_erase_independently_supported_content() -> None:

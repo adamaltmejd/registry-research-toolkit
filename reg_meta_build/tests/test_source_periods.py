@@ -96,10 +96,63 @@ def test_single_claim_fallback_keeps_existing_edition_and_edition_period_meaning
 
 
 @pytest.mark.parametrize(
+    ("source", "edition_period_bounds"),
+    (
+        ("Läsåret 2014/2015", ("2014-07-01", "2015-06-30")),
+        ("läsåret 2014/2015", ("2014-07-01", "2015-06-30")),
+        ("LÄSÅRET 2014/2015", ("2014-07-01", "2015-06-30")),
+        ("Läsåret2014/2015", ("2014-07-01", "2015-06-30")),
+        ("Läsåret  2014 / 2015", ("2014-07-01", "2015-06-30")),
+        (
+            "Deklarationsår 2020 (beskattningsår 2019)",
+            ("2019-01-01", "2019-12-31"),
+        ),
+    ),
+)
+def test_school_year_and_income_year_labels_form_one_exact_period(
+    source: str, edition_period_bounds: tuple[str, str]
+) -> None:
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue is None
+    assert edition.kind == edition_period.kind == "intervals"
+    assert [(interval.start, interval.end) for interval in edition.intervals] == [
+        edition_period_bounds
+    ]
+    assert [
+        (interval.start, interval.end) for interval in edition_period.intervals
+    ] == [edition_period_bounds]
+
+
+@pytest.mark.parametrize(
+    "source",
+    (
+        "Läsåret 2014/2016",
+        "Deklarationsår 2020",
+        "Deklarationsår 2020 (beskattningsår 2020)",
+        "Deklarationsår 2020 (beskattningsår 2018)",
+    ),
+)
+def test_school_year_and_income_year_guards_stay_unknown(source: str) -> None:
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue == "unparseable_period"
+    assert edition.kind == edition_period.kind == "unknown"
+    assert edition.label == edition_period.label == source
+
+
+def test_bare_slash_year_pair_without_lasaret_stays_pooled() -> None:
+    edition, edition_period, issue = source_scopes("2014/2015")
+
+    assert issue == "pooled_period"
+    assert edition.kind == edition_period.kind == "pooled"
+    assert edition.label == edition_period.label == "2014/2015"
+
+
+@pytest.mark.parametrize(
     "source",
     (
         "Komvux HT 1988 - VT 2024",
-        "Läsåret 2024/2025",
         "Läsåren 1977/1978 - 1992/1993",
         "1961-01-01 –– 2025-12-31",
     ),
@@ -131,9 +184,15 @@ def test_ambiguous_or_unsupported_numeric_text_is_not_guessed(source: str) -> No
 
 
 def test_labels_use_canonical_whitespace_without_losing_source_label_text() -> None:
-    source = "  Läsåret\u00a02024/2025\n"
+    source = "  Läsåret\u00a02014/2015\n"
 
     edition, edition_period, issue = source_scopes(source)
 
-    assert issue == "pooled_period"
-    assert edition.label == edition_period.label == "Läsåret 2024/2025"
+    assert issue is None
+    assert edition.label is None and edition_period.label is None
+    assert [(interval.start, interval.end) for interval in edition.intervals] == [
+        ("2014-07-01", "2015-06-30")
+    ]
+    assert [
+        (interval.start, interval.end) for interval in edition_period.intervals
+    ] == [("2014-07-01", "2015-06-30")]

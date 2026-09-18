@@ -26,6 +26,14 @@ _SWEDISH_DATE_SHAPE_RE = re.compile(
 _AMBIGUOUS_NUMERIC_DATE_RE = re.compile(r"(?:(?:\d{1,4}[/\.]){2}\d{1,4}|\d{8})\Z")
 _SWEDISH_MONTHS = {"oktober": 10, "jan": 1}
 
+# A school year is one period, 1 July of the first year to 30 June of the
+# second. A Deklarationsår denotes the beskattningsår named in parentheses.
+_LÄSÅRET_RE = re.compile(rf"läsåret\s*({_YEAR})\s*/\s*({_YEAR})", re.IGNORECASE)
+_DEKLARATIONSÅR_RE = re.compile(
+    rf"deklarationsår\s*({_YEAR})\s*\(\s*beskattningsår\s*({_YEAR})\s*\)",
+    re.IGNORECASE,
+)
+
 
 def _exact_interval(value: str) -> tuple[tuple[str, str] | None, bool]:
     """Return an observed exact interval and whether text claimed that format.
@@ -74,7 +82,9 @@ def source_scopes(
 
     Dates in edition labels keep day precision; they do not establish variable
     reference time. Existing edition-claim parsing supplies annual and subannual
-    intervals. Multi-year claims remain pooled because
+    intervals. A `Läsåret YYYY/YYYY+1` school year and a `Deklarationsår YYYY
+    (beskattningsår YYYY-1)` naming its income year are each one period.
+    Remaining multi-year claims stay pooled because
     the stage-one record cannot safely assert independent annual availability.
     """
     label = normalize_text(version_name) or "<blank Registerversionnamn>"
@@ -98,6 +108,28 @@ def source_scopes(
         scope = TemporalScope(kind="unknown", label=label)
         return scope, scope, "unparseable_period"
     if _AMBIGUOUS_NUMERIC_DATE_RE.fullmatch(label):
+        scope = TemporalScope(kind="unknown", label=label)
+        return scope, scope, "unparseable_period"
+
+    if match := _LÄSÅRET_RE.fullmatch(label):
+        first, second = int(match.group(1)), int(match.group(2))
+        if second == first + 1:
+            interval = ScopeInterval(start=f"{first}-07-01", end=f"{second}-06-30")
+            scope = TemporalScope(kind="intervals", intervals=(interval,))
+            return scope, scope, None
+        scope = TemporalScope(kind="unknown", label=label)
+        return scope, scope, "unparseable_period"
+
+    deklaration = _DEKLARATIONSÅR_RE.fullmatch(label)
+    if (
+        deklaration is not None
+        and int(deklaration.group(2)) == int(deklaration.group(1)) - 1
+    ):
+        year = int(deklaration.group(2))
+        interval = ScopeInterval(start=f"{year}-01-01", end=f"{year}-12-31")
+        scope = TemporalScope(kind="intervals", intervals=(interval,))
+        return scope, scope, None
+    if "deklarationsår" in label.casefold():
         scope = TemporalScope(kind="unknown", label=label)
         return scope, scope, "unparseable_period"
 
