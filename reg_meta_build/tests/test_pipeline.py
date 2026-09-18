@@ -6,7 +6,6 @@ import gzip
 import hashlib
 import json
 import sqlite3
-from collections import Counter
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
@@ -22,7 +21,6 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
-from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
@@ -40,7 +38,6 @@ from reg_meta_build.prepared_catalog import (
 from reg_meta_build.source_coordinates import (
     native_parent_key,
     native_variable_key,
-    source_register_key,
 )
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
@@ -52,7 +49,6 @@ from reg_meta_build.source_curation import (
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import NativeCoordinates
-from test_catalog_lineage import fixture as lineage_fixture
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
@@ -66,7 +62,6 @@ _SOS_SLUGS = {"register": "kodregister", "register_variant": "vy-a", "variable":
 def _scope(records, *, slugs, revision, cases=()):
     """One whole-source scope declaring every native target its records name."""
     provider = records[0].subject.provider
-    register = source_register_key(records[0])
     variables = sorted(
         {key for key in map(native_variable_key, records) if key is not None}, key=repr
     )
@@ -86,6 +81,28 @@ def _scope(records, *, slugs, revision, cases=()):
                         native_parent_key(record.source, provider, parent),
                     )
                 )
+    # A scope may name several registers; each parent kind keeps the plain
+    # fixture slug for its first target and takes a suffixed slug after that,
+    # exactly like renumbered variables do above.
+    parent_slugs = {
+        (kind, key): slugs[kind] if index == 0 else f"{slugs[kind]}-{index}"
+        for kind in ("register", "register_variant")
+        for index, key in enumerate(
+            sorted({key for k, key in targets if k == kind}, key=repr)
+        )
+    }
+
+    def _target_register(kind, key):
+        if kind == "register":
+            return None
+        marker = "variable" if kind == "variable" else "variant"
+        return key[: key.index(marker)]
+
+    def _source_id(kind, key):
+        if kind == "register":
+            return str(key[-1])
+        return f"{_target_register(kind, key)[-1]}.{key[-1]}"
+
     return ScopeDeclarations(
         source=revision.dataset,
         register_key=None,
@@ -96,16 +113,16 @@ def _scope(records, *, slugs, revision, cases=()):
                     kind=kind,
                     provider=provider,
                     source_key=key,
-                    register_key=register if kind != "register" else None,
+                    register_key=_target_register(kind, key),
                     identity_revision=revision,
                 ),
                 naming=SlugEntry(
                     kind=kind,
                     provider=provider,
-                    source_id=str(key[-1])
-                    if kind == "register"
-                    else f"{register[-1]}.{key[-1]}",
-                    slug=variable_slugs[key] if kind == "variable" else slugs[kind],
+                    source_id=_source_id(kind, key),
+                    slug=variable_slugs[key]
+                    if kind == "variable"
+                    else parent_slugs[(kind, key)],
                 ),
                 contributors=(),
             )
@@ -183,6 +200,7 @@ def selection(tmp_path, request):
     # the later summary row declares an identifier, so the built flags say which
     # native variable each row reached.
     renumbered = param == "renumbered"
+    lineage_warning = param == "lineage_warning"
     write_scb_input(
         source,
         registerinformation_rows=[
@@ -191,7 +209,7 @@ def selection(tmp_path, request):
                 var_id=101,
                 colname="VALUE",
                 data_type="int"
-                if param in {"typed", "renumbered", *_SOS_CELLS}
+                if param in {"typed", "renumbered", "lineage_warning", *_SOS_CELLS}
                 else "",
             ),
             *(
@@ -206,6 +224,21 @@ def selection(tmp_path, request):
                     )
                 ]
                 if renumbered
+                else []
+            ),
+            *(
+                [
+                    _var_row(
+                        cvid=2001,
+                        var_id=201,
+                        colname="OTHCOL",
+                        varname="OtherVar",
+                        varsource="TESTREG",
+                        data_type="int",
+                        register=("OTHERREG", 2, 20),
+                    )
+                ]
+                if lineage_warning
                 else []
             ),
         ],
@@ -223,10 +256,21 @@ def selection(tmp_path, request):
                 if renumbered
                 else []
             ),
+            *(
+                [
+                    "OTHERREG|Testregistret|Individer|Individer|OtherVar|OTHCOL|2020|2020|0|0|0"
+                ]
+                if lineage_warning
+                else []
+            ),
         ],
-        include=("registerinformation", "unika", "identifierare", "timeseries")
-        if param is not False
-        else ("registerinformation",),
+        include=("registerinformation", "unika", "timeseries")
+        if lineage_warning
+        else (
+            ("registerinformation", "unika", "identifierare", "timeseries")
+            if param is not False
+            else ("registerinformation",)
+        ),
     )
     if param in _SOS_CELLS:
         write_sos_input(
@@ -711,21 +755,44 @@ def test_unresolved_inline_code_list_is_reported_and_refused_for_publication(
         assert codes == []
 
 
-def test_lineage_warning_does_not_count_as_error():
-    # A no-source-state lineage diagnostic is a warning, so the pipeline's
-    # severity-keyed summary counts (pipeline.issue: counts[value.severity] += 1)
-    # keep counts["error"] at zero and the publication_ready gate
-    # (not counts["error"]) stays green.
-    variables, options = lineage_fixture(same_as=False)
-    result = resolve_catalog_lineage(variables, **options)
-    (diagnostic,) = result.diagnostics
-    assert diagnostic.code == "unresolved_lineage_no_source_state"
-    assert diagnostic.severity == "warning"
-    counts: Counter[str] = Counter()
-    counts[diagnostic.severity] += 1
-    assert counts["warning"] == 1
-    assert counts["error"] == 0
-    assert not counts["error"]
+@pytest.mark.parametrize("selection", ["lineage_warning"], indirect=True)
+def test_lineage_warning_withholds_only_the_edge(
+    selection, tmp_path, structural_validation_only
+):
+    # One consumer state names a second fixture register with no accepted
+    # same_as edge, so the only diagnostic is unresolved_lineage_no_source_state.
+    # As a warning it must not count toward counts["error"] and must leave
+    # the strict build complete and publishable.
+    strict_db, strict_report = tmp_path / "catalog.db", tmp_path / "strict-report"
+    strict = build_selected_catalog(selection, strict_db, strict_report)
+    assert strict["status"] == "complete"
+    assert strict["publication_ready"] is True
+    strict_summary = json.loads((strict_report / "summary.json").read_text())
+    assert strict_summary["status"] == "complete"
+    assert strict_summary["publication_ready"] is True
+    assert strict_summary["counts"].get("error", 0) == 0
+    assert strict_summary["counts"]["warning"] >= 1
+    diagnostic_db, diagnostic_report = (
+        tmp_path / "diagnostic.db",
+        tmp_path / "diagnostic-report",
+    )
+    diagnostic = build_selected_catalog(
+        selection, diagnostic_db, diagnostic_report, diagnostic=True
+    )
+    assert diagnostic["status"] == "diagnostic_complete"
+    diagnostic_summary = json.loads((diagnostic_report / "summary.json").read_text())
+    assert diagnostic_summary["counts"]["warning"] >= 1
+    assert diagnostic_summary["counts"].get("error", 0) == 0
+    with gzip.open(diagnostic_report / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            event
+            for event in (json.loads(line) for line in stream)
+            if event["kind"] == "issue"
+        ]
+    (issue,) = issues
+    assert issue["code"] == "unresolved_lineage_no_source_state"
+    assert issue["severity"] == "warning"
+    assert issue["withheld_output"] == [issue["subject"] + ":lineage"]
 
 
 @pytest.mark.parametrize("selection", ["renumbered"], indirect=True)
