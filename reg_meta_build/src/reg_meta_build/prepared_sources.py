@@ -57,7 +57,9 @@ if TYPE_CHECKING:
     from reg_meta_build.source_support import SourceSupportJoin
 
 _FORMAT = "reg-meta-prepared-source-records"
-_SCHEMA_VERSION = 9
+# Y-202: TemporalScope gains pooled_start/pooled_end, so schema-9 artifacts
+# retaining the old rangeless pooled scopes are rejected and must be re-prepared.
+_SCHEMA_VERSION = 10
 _MANIFEST = "manifest.json"
 _DATABASE = "files/records.sqlite"
 _HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
@@ -74,7 +76,7 @@ class _PreparedModel(BaseModel):
 
 class _ManifestDocument(_PreparedModel):
     format: Literal["reg-meta-prepared-source-records"] = _FORMAT
-    schema_version: Literal[9] = _SCHEMA_VERSION
+    schema_version: Literal[10] = _SCHEMA_VERSION
     scope: str
     partial: Literal[True] = True
     record_count: int
@@ -150,7 +152,7 @@ def _manifest(payload: bytes) -> PreparedSourceManifest:
 
 
 _DDL = """
-PRAGMA user_version=9;
+PRAGMA user_version=10;
 CREATE TABLE payload (
     id INTEGER PRIMARY KEY,
     kind TEXT NOT NULL,

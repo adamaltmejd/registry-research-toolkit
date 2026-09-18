@@ -81,8 +81,7 @@ def _whole_year_claims(claims: tuple[tuple[int, str, str], ...]) -> bool:
     The genuinely pooled shape pools whole delivery years; term/school-year
     labels carry sub-annual claim edges (HT/VT, Läsår) and stay unresolvable."""
     return bool(claims) and all(
-        low.endswith("-01-01") and high.endswith("-12-31")
-        for _, low, high in claims
+        low.endswith("-01-01") and high.endswith("-12-31") for _, low, high in claims
     )
 
 

@@ -295,9 +295,7 @@ def resolve_occurrence_intervals(
             # reconciliation, so their facts can neither conflict with nor
             # influence the resulting state.
             winners = (
-                tuple(
-                    record for record in effective if not _occurrence_pooled(record)
-                )
+                tuple(record for record in effective if not _occurrence_pooled(record))
                 or effective
             )
             occurrences = tuple(record for item in winners for record in item.evidence)

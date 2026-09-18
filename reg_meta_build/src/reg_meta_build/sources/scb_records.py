@@ -11,7 +11,6 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_periods import SourcePeriodIssue, source_scopes
-from reg_meta_build.sources.scb import _PROJECTION_REGISTERS
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
@@ -26,6 +25,7 @@ from reg_meta_build.source_records import (
     SourceSubject,
     value_field,
 )
+from reg_meta_build.sources.scb import _PROJECTION_REGISTERS
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator, Mapping, Sequence
