@@ -91,7 +91,7 @@ systems). All currently declared in `curation/classifications.toml` ship with a
   | `ISCED2011`          | ✓      |         53 |     66 | full UNESCO spec via SSB Klass 3426                                         |
   | `ISCED-F2013`        | ✓      |        164 |    218 | full UNESCO spec via SSB Klass 3428 (+ 2 missing UNESCO codes)              |
   | `SEKTOR2000`         | ✓      |         53 |     73 | INSEKT 2000 from metadata.scb.se klassdb (Sektor + Undersektor + Delsektor) |
-  | `SEKTORKOD`          | ✓      |         11 |     11 | RAMS/LISA ownership-sector code (Y-170): LISA library SektorKod.md 1993– scheme + observed 00 |
+  | `SEKTORKOD`          | ✓      |         11 |     11 | RAMS/LISA ownership-sector code (Y-170), see Edge cases                     |
   | `JURFORM2000`        | ✓      |         45 |     36 | scraped from metadata.scb.se klassdb                                        |
   | `JURFORM2020`        | ✓      |         39 |     36 | scraped from metadata.scb.se klassdb                                        |
   | `AGARKAT2000`        | ✓      |         19 |     11 | scraped from metadata.scb.se klassdb (Nivå 1 + Nivå 2)                      |
@@ -345,12 +345,11 @@ Edge cases:
   `Standard för institutionell sektorindelning 2000` (53 observed 3-digit codes — match
   Delsektor). The canonical CSV serves the standard one.
 - `SEKTORKOD` (Y-170) owns the register-local labels `Sektor 2000` and
-  `RAMS SektorKod fr.o.m. 1993`: the LISA/RAMS ownership-sector code
-  (00, 11–15, 21–25 per the observed `Sektor 2000 / Sektorkod` value set;
-  pre-2000 extras 19/20/29/30/40/60/99 and 0/000/'' stay nonconforming).
-  Labels from SCB's LISA library (`docs/lisa/SektorKod.md`, Kod 1993–) with the
-  export spellings for 00/13/14/15/21/25, corroborated by SSD RAMS/YrkesReg
-  "arbetsställets sektortillhörighet" value texts.
+  `RAMS SektorKod fr.o.m. 1993`: the LISA/RAMS ownership-sector code (00, 11–15, 21–25
+  per the observed `Sektor 2000 / Sektorkod` value set; pre-2000 extras
+  19/20/29/30/40/60/99 and 0/000/'' stay nonconforming). Labels from SCB's LISA library
+  (`docs/lisa/SektorKod.md`, Kod 1993–) with the export spellings for 00/13/14/15/21/25,
+  corroborated by SSD RAMS/YrkesReg "arbetsställets sektortillhörighet" value texts.
 - `JURFORM 2020` is identical to `JURFORM 2000` except code `84` changed from
   "Landsting" to "Regioner".
 - `AGARKAT` 2000 and 2020 differ only in code `30/3` Region(kontrollerade) rename.
