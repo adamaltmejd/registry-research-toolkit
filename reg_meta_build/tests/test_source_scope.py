@@ -178,6 +178,7 @@ def resolve(
     provider_keys=None,
     on_diagnostic=None,
     value_sessions=(),
+    diagnostic=False,
 ):
     support = SourceSupportBindings((), ())
     for item in records:
@@ -201,6 +202,7 @@ def resolve(
         classification_references={},
         revisions=(REVISION,),
         on_diagnostic=on_diagnostic,
+        diagnostic=diagnostic,
     )
 
 
@@ -773,6 +775,54 @@ def test_coding_is_checked_despite_unresolved_catalog_identity():
     ]
     assert result.variables == {native_variable_key(item): None}
     assert [d.code for d in result.diagnostics] == ["unresolved_catalog_identity"]
+
+
+def test_stale_partition_case_withholds_unsplit_family_in_diagnostic_mode():
+    first, second = record(column="VALUE"), record(2, column="OTHER")
+    native = native_variable_key(first)
+    assert native is not None and native_variable_key(second) == native
+    split = ((*native, "accepted-partition-i1"), (*native, "accepted-partition-i2"))
+    case = CurationCase(
+        case_id="accepted-column-partitions",
+        targets=capture_expectations((first, second), fields=("column_name",)),
+        peer_guards=(
+            guard(first).model_copy(
+                update={"expected_members": (record_ref(first), record_ref(second))}
+            ),
+        ),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            reason="Accepted column partitions.",
+            provenance="fixture",
+            effects=(
+                CheckedIdentityChange(ref=record_ref(first), variable_key=split[0]),
+                CheckedIdentityChange(ref=record_ref(second), variable_key=split[1]),
+            ),
+        ),
+    )
+    stale = tuple(
+        item.model_copy(
+            update={
+                "fields": item.fields.model_copy(
+                    update={"column_name": value_field(f"STALE-{index}")}
+                )
+            }
+        )
+        for index, item in enumerate((first, second))
+    )
+    provider_keys = {split[0]: "5.i1", split[1]: "5.i2"}
+    result = resolve(stale, cases=(case,), provider_keys=provider_keys, diagnostic=True)
+    assert [e.status for e in result.evaluations] == ["stale"]
+    assert {d.code for d in result.diagnostics} == {
+        "target_projection_changed",
+        "unresolved_catalog_identity",
+    }
+    assert result.variables == {native: None}
+    assert set(result.withheld_dependencies) == {("variable", "scb/example/value-5")}
+    with pytest.raises(ValueError, match="missing explicit provider key"):
+        resolve(stale, cases=(case,), provider_keys=provider_keys)
+    with pytest.raises(ValueError, match="missing explicit provider key"):
+        resolve(stale, provider_keys=provider_keys, diagnostic=True)
 
 
 def test_alias_window_checks_competing_variables_in_the_whole_scope():

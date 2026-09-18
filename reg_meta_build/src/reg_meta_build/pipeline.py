@@ -543,6 +543,7 @@ def build_selected_catalog(
                             e.revision for e in prepared.manifest.inputs if e.revision
                         ),
                         on_diagnostic=issue,
+                        diagnostic=diagnostic,
                     )
                     _emit_timing(f"pipeline: resolve {scope_key!r}", resolution_started)
                     for gap in scope.unapplied_curation:

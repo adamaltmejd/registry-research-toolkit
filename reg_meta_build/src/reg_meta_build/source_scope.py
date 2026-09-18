@@ -21,6 +21,7 @@ from reg_meta_build.source_coordinates import native_variable_key, source_regist
 from reg_meta_build.source_curation import (
     ClassificationDecision,
     CodingDecision,
+    OccurrenceCorrectionDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
     SourceEvidence,
@@ -95,11 +96,20 @@ def resolve_source_scope(
     revisions: tuple[SourceRevision, ...] = (),
     on_binding: Callable[[NativeKey, ValueBindingResult], None] | None = None,
     on_diagnostic: Callable[[ResolutionDiagnostic], None] | None = None,
+    diagnostic: bool = False,
 ) -> ScopeResolution:
-    """Resolve one complete scope without IO policy or a strict/diagnostic fork.
+    """Resolve one complete scope without IO policy.
 
-    Missing mappings and unsupported decisions are implementation failures. An
-    explicit None provider key records an unresolved catalog identity; coding and
+    The only strict/diagnostic fork is the stale-partition withholding below.
+
+    Missing mappings and unsupported decisions are implementation failures, with
+    one diagnostic exception: an unmapped key whose longer split siblings are
+    mapped and whose family has a non-applied occurrence correction case is
+    treated as an explicit None provider key (unresolved catalog identity), so
+    a stale partition decision withholds its family instead of aborting the
+    build. Strict mode still fails fast.
+
+    An explicit None provider key records an unresolved catalog identity; coding and
     other source decisions still run. Checked naming and parent facts determine
     which dependencies may be materialized. No source key is parsed as a catalog
     identity, and a withheld variant does not discard safe sibling states.
@@ -239,13 +249,38 @@ def resolve_source_scope(
         late[key].append(case)
     variables = {}
     coverage: list[CoverageObligation] = []
+    unapplied_families: set[NativeKey] = set()
+    if diagnostic:
+        for entry in corrected.accounting:
+            if entry.disposition == "applied":
+                continue
+            decision = entry.case.decision
+            if not isinstance(decision, OccurrenceCorrectionDecision):
+                continue
+            for effect in decision.effects:
+                family = getattr(effect, "variable_key", None)
+                if family is not None:
+                    unapplied_families.add(tuple(family))
     for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
         occurrences = tuple(items)
         refs = tuple(
             sorted({record_ref(r) for o in occurrences for r in o.evidence}, key=repr)
         )
         if key not in provider_keys:
-            raise ValueError(f"missing explicit provider key mapping: {key!r}")
+            if not (
+                diagnostic
+                and any(
+                    len(sibling) > len(key)
+                    and sibling[: len(key)] == key
+                    and provider_keys[sibling] is not None
+                    for sibling in provider_keys
+                )
+                and any(family[: len(key)] == key for family in unapplied_families)
+            ):
+                raise ValueError(f"missing explicit provider key mapping: {key!r}")
+            provider_key = None
+        else:
+            provider_key = provider_keys[key]
         claims: dict[NativeKey, list[CodeListClaim]] = defaultdict(list)
         # Adjacent physical duplicates share the value session's bounded native
         # list cache. Source row order can interleave members or corrected scopes.
@@ -319,7 +354,6 @@ def resolve_source_scope(
             if register_fqid and declaration and declaration.naming.slug
             else None
         )
-        provider_key = provider_keys[key]
         if provider_key is not None and (
             declaration is None or declaration.naming.slug is None
         ):
