@@ -298,6 +298,50 @@ def test_source_native_multiple_columns_require_explicit_partition_or_alias_deci
     assert len(result.diagnostics[0].refs) == 2
 
 
+def test_case_only_column_twins_fold_to_one_variable() -> None:
+    """Y-210: SRU `v0115`/`V0115` is one physical column needing no curation."""
+    records = (
+        _record(2004, column="v0115"),
+        _record(2005, column="V0115"),
+        _record(2006, column="V0115"),
+    )
+    result = _form(records)
+    assert result.variable is not None
+    assert not any(d.severity == "error" for d in result.diagnostics)
+    assert [(s.valid_from, s.delivery_column_name) for s in result.variable.states] == [
+        ("2004-01-01", "V0115"),
+        ("2005-01-01", "V0115"),
+        ("2006-01-01", "V0115"),
+    ]
+    (warning,) = [d for d in result.diagnostics if d.code == "column_spelling_folded"]
+    assert warning.severity == "warning"
+    assert (
+        "v0115" in warning.detail and "most recent spelling (V0115)" in warning.detail
+    )
+    assert {r.fields.column_name.value for r in result.occurrences} == {
+        "v0115",
+        "V0115",
+    }
+
+
+def test_diacritic_column_twins_fold_to_one_variable() -> None:
+    """Y-210: `Kön`/`Kon` fold by the shared column-identity key."""
+    result = _form((_record(2020, column="Kön"), _record(2021, column="Kon")))
+    assert result.variable is not None
+    assert not any(d.severity == "error" for d in result.diagnostics)
+    assert {s.delivery_column_name for s in result.variable.states} == {"Kon"}
+    (warning,) = [d for d in result.diagnostics if d.code == "column_spelling_folded"]
+    assert "Kön" in warning.detail and "most recent spelling (Kon)" in warning.detail
+
+
+def test_unfolded_columns_still_require_partition_or_alias() -> None:
+    """Y-210: distinct folds keep the error; no separator rule is added."""
+    for old, new in (("BLK", "BLKFTG"), ("H56", "H5_6")):
+        result = _form((_record(2020, column=old), _record(2021, column=new)))
+        assert result.variable is None
+        assert [d.code for d in result.diagnostics] == ["unresolved_native_identity"]
+
+
 def _fdb_record(year: int, *, column: str, variant: int) -> SourceRecord:
     return _record(year, column=column, native_id=830, variant=variant)
 
@@ -305,9 +349,9 @@ def _fdb_record(year: int, *, column: str, variant: int) -> SourceRecord:
 def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> None:
     """Y-167: the tracked 1.830 ownership lets both partitions form.
 
-    Without the declaration the two spellings withhold as one unresolved native
-    identity (strict behavior); with it, each partition forms with its exact
-    literal delivery columns (diagnostic cleared by curation, not by folding).
+    Y-210: without the declaration the case-only twins fold to one column and
+    form with the most recent spelling (diagnostic by folding, not by curation);
+    with it, each partition forms with its exact literal delivery columns.
     """
     pair = (
         _fdb_record(1999, column="GatuRest", variant=424),
@@ -322,7 +366,7 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
     }
     pair_columns = [native_column_key(record) for record in pair]
     assert len(pair_columns) == 2 and None not in pair_columns
-    withheld = form_native_variable(
+    folded = form_native_variable(
         pair,
         register=_REGISTER,
         variants=variants,
@@ -333,8 +377,15 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
             key: resolve_code_membership(()) for key in pair_columns if key is not None
         },
     )
-    assert withheld.variable is None
-    assert [d.code for d in withheld.diagnostics] == ["unresolved_native_identity"]
+    assert folded.variable is not None
+    assert [(s.valid_from, s.delivery_column_name) for s in folded.variable.states] == [
+        ("1999-01-01", "Gaturest"),
+        ("2005-01-01", "Gaturest"),
+    ]
+    (warning,) = [d for d in folded.diagnostics if d.code == "column_spelling_folded"]
+    assert warning.severity == "warning"
+    assert "GatuRest" in warning.detail and "Gaturest" in warning.detail
+    assert not any(d.severity == "error" for d in folded.diagnostics)
     # The tracked declaration (mirrors fqid_slugs/scb.toml Y-167 entry) feeds
     # the production entry point, never hand-plumbed.
     declaration = tmp_path / "scb.toml"

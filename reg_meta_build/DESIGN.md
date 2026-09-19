@@ -245,10 +245,12 @@ correction's output as its supporting source. Application order cannot choose a 
 
 Ordinary variables form from an established native identity. Their names bind that exact
 source coordinate; additional deliveries do not require handwritten whole-variable
-cases. An accepted name alone cannot establish a partition across ambiguous column
-spellings. A partition, rename or parallel-column family requires checked ownership and
-complete relevant membership. Related but different variables remain connected through
-groups; a shared stem or suffix is not evidence that they are one variable.
+cases. Column spellings that differ only by case or diacritics fold to one column by the
+shared column-identity key and need no partition or alias decision. An accepted name
+alone cannot establish a partition across ambiguous column spellings. A partition,
+rename or parallel-column family requires checked ownership and complete relevant
+membership. Related but different variables remain connected through groups; a shared
+stem or suffix is not evidence that they are one variable.
 
 Audited naming ambiguities can connect an existing catalog name to an exact unresolved
 source identity. These are error attributions, not new identities or waivers. They must

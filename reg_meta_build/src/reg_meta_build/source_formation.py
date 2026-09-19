@@ -13,6 +13,7 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
 
+from reg_meta_build._curation import fold_column
 from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.catalog_dependencies import CoverageObligation
 from reg_meta_build.resolved_catalog import (
@@ -368,8 +369,10 @@ def form_native_variable(
     implementation/contract, not a curation issue. Flags are already reconciled
     source facts. Unknown flags cannot be represented by the current DB contract.
     Multiple unassigned column names under one native variable require a checked
-    identity decision; the ordinary path does not guess whether they are renames
-    or different questions. Each physical input occurrence remains in the result.
+    identity decision, unless they fold to one column-identity key
+    (case/diacritic twins share one physical column); the ordinary path does
+    not guess whether remaining spellings are renames or different questions.
+    Each physical input occurrence remains in the result.
     A formed variable also returns the delivery its supported occurrences still
     claim after the explicit coding/representation outcomes that withhold periods.
     """
@@ -415,14 +418,14 @@ def form_native_variable(
             )
         )
 
-    columns = {
-        record.fields.column_name.value
-        for record in effective
-        if not record.identity_checked
-        and record.fields.column_name is not None
-        and record.fields.column_name.status == "value"
-    }
-    if len(columns) > 1:
+    columns: set[str] = set()
+    for record in effective:
+        field = record.fields.column_name
+        if record.identity_checked or field is None or field.status != "value":
+            continue
+        assert isinstance(field.value, str)
+        columns.add(field.value)
+    if len({fold_column(column) for column in columns}) > 1:
         issue(
             "unresolved_native_identity",
             "The source-native variable has multiple column spellings; an exact partition or alias decision is required.",
@@ -430,6 +433,35 @@ def form_native_variable(
             (subject,),
         )
         return VariableFormation(None, tuple(diagnostics), records, (), ())
+    chosen_spelling: str | None = None
+    if len(columns) > 1:
+        # Case/diacritic twins are one physical column by the shared
+        # column-identity key: formation proceeds on the most recent spelling
+        # while the raw spellings stay visible on the occurrence evidence.
+        spellings = sorted(columns)
+        starts: dict[str, int] = {}
+        for record in effective:
+            field = record.fields.column_name
+            if record.identity_checked or field is None or field.status != "value":
+                continue
+            assert isinstance(field.value, str)
+            bounds = occurrence_bounds(record)
+            start = min(start for start, _ in bounds) if bounds else -1
+            starts[field.value] = max(starts.get(field.value, -1), start)
+        chosen_spelling = max(
+            spellings, key=lambda spelling: (starts.get(spelling, -1), spelling)
+        )
+        issue(
+            "column_spelling_folded",
+            "The source deliveries spell one column several ways ("
+            + ", ".join(spellings)
+            + "); states use the most recent spelling ("
+            + chosen_spelling
+            + ").",
+            ("column_name",),
+            (),
+            severity="warning",
+        )
     canonical, conflicts = reconcile_source_fields(effective)
     # operational_definition and source_attribution are state-grain, so varying
     # texts are no variable-level conflict; their summary below stays populated
@@ -659,6 +691,26 @@ def form_native_variable(
         for key, causes in withheld_representations.items()
         if key not in present_representations
     }
+    if chosen_spelling is not None:
+        # One folded column carries one delivery name downstream, where the
+        # coverage gate matches claims to states by exact string. Only the
+        # twin spellings unify; any checked-exact column keeps its literal.
+        states = [
+            state.model_copy(update={"delivery_column_name": chosen_spelling})
+            if state.delivery_column_name in columns
+            else state
+            for state in states
+        ]
+        aliases = tuple(
+            alias.model_copy(update={"delivery_column_name": chosen_spelling})
+            if alias.delivery_column_name in columns
+            else alias
+            for alias in aliases
+        )
+        claims = [
+            replace(claim, column=chosen_spelling) if claim.column in columns else claim
+            for claim in claims
+        ]
     # What the supported occurrences still claim once every explicit outcome has
     # taken its own period back. Withholding the whole variable is one more such
     # outcome, recorded in the dependency ledger and honoured at the boundary.
