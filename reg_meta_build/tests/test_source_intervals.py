@@ -298,11 +298,13 @@ def test_unknown_population_does_not_contradict_one_concrete_population() -> Non
     assert result.segments[0].occurrences == (known, unknown)
 
 
-def _pooled_record(row: int, label: str) -> SourceRecord:
+def _pooled_record(row: int, label: str, **kwargs) -> SourceRecord:
     """A record whose scopes come from a real pooled edition label (Y-202)."""
     edition, period, issue = source_scopes(label)
     assert issue == "pooled_period"
-    return _record(row, scope=period).model_copy(update={"edition_scope": edition})
+    return _record(row, scope=period, **kwargs).model_copy(
+        update={"edition_scope": edition}
+    )
 
 
 def test_pooled_scope_forms_one_marked_state_over_the_whole_range() -> None:
@@ -402,3 +404,67 @@ def test_fully_annual_covered_pooled_range_forms_no_pooled_state() -> None:
         ("2014-01-01", "2014-12-31"),
     ]
     assert all(not segment.pooled for segment in result.segments)
+
+
+def test_overlapping_pooled_editions_with_identical_fields_merge_into_one_state() -> (
+    None
+):
+    # Y-209: overlapping pooled ranges cut at their boundaries into adjacent
+    # pooled cuts; identical facts re-join into one state over the hull, with
+    # each contributing edition's evidence exactly once.
+    first = _pooled_record(1, "2016 - 2018")
+    second = _pooled_record(2, "2018 - 2020")
+    result = resolve_occurrence_intervals((first, second))
+
+    assert result.issues == result.unsupported_occurrences == ()
+    assert [(s.valid_from, s.valid_to, s.pooled) for s in result.segments] == [
+        ("2016-01-01", "2020-12-31", True)
+    ]
+    (segment,) = result.segments
+    assert segment.occurrences == (first, second)
+    assert [item.source_records for item in segment.effective_occurrences] == [
+        (first,),
+        (second,),
+    ]
+
+
+def test_overlapping_pooled_editions_with_differing_facts_stay_split() -> None:
+    # Y-209: differing reconciled facts never merge — the three cuts stay
+    # three pooled states, as before.
+    result = resolve_occurrence_intervals(
+        (
+            _pooled_record(1, "2016 - 2018"),
+            _pooled_record(2, "2018 - 2020", data_type="text"),
+        )
+    )
+
+    assert [(s.valid_from, s.valid_to, s.pooled) for s in result.segments] == [
+        ("2016-01-01", "2017-12-31", True),
+        ("2018-01-01", "2018-12-31", True),
+        ("2019-01-01", "2020-12-31", True),
+    ]
+    assert [s.fields.data_type.value for s in result.segments] == [
+        "integer",
+        None,
+        "text",
+    ]
+
+
+def test_pooled_segment_adjacent_to_explicit_does_not_merge() -> None:
+    # Y-209: a pooled segment never merges with an explicit neighbor, even
+    # where the windows are adjacent.
+    pooled = _pooled_record(1, "2012 - 2014")
+    annual = _record(
+        2,
+        scope=TemporalScope(
+            kind="intervals",
+            intervals=(ScopeInterval(start="2015-01-01", end="2015-12-31"),),
+        ),
+    )
+    result = resolve_occurrence_intervals((pooled, annual))
+
+    assert result.issues == result.unsupported_occurrences == ()
+    assert [(s.valid_from, s.valid_to, s.pooled) for s in result.segments] == [
+        ("2012-01-01", "2014-12-31", True),
+        ("2015-01-01", "2015-12-31", False),
+    ]

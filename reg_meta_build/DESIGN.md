@@ -303,7 +303,9 @@ scope that carries no range stays unresolvable (an unsupported occurrence, as be
 Coding membership on a pooled edition is bound over the whole pooled range (Y-207). The
 marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0)
 through `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a
-build whose pooled-marked window overlaps an unmarked window on one column.
+build whose pooled-marked window overlaps an unmarked window on one column. Adjacent
+pooled segments on one column whose reconciled state-grain facts, population, and coding
+evidence agree merge into one pooled state over their combined window (Y-209).
 
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across
