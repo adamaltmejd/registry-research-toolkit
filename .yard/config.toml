@@ -1,7 +1,24 @@
 # Yard project configuration. Unknown keys are errors.
 
+# max_lanes limits how many ready tickets run at once.
+max_lanes = 2
+
+# approve says whether a clean candidate needs an operator to enqueue it.
+# "manual" (the default) raises approval-needed for every clean candidate;
+# "auto" enqueues one as soon as it is verified. This project approves every
+# candidate by hand: UI work is judged on rendered evidence and builder work on
+# focused diffs, neither of which a clean review establishes on its own.
+approve = "manual"
+
+# max_batch (top-level, default 8) caps how many approved candidates one merge
+# queue batch verifies together; the default stands.
+
 [target]
 ref = "main"
+# protected_paths names the paths that always take an operator's own decision,
+# whatever approve says; .yard/ is protected regardless. Empty because approve
+# is "manual" — every path already takes one.
+protected_paths = []
 
 [isolation]
 dockerfile = ".yard/Dockerfile"
@@ -50,10 +67,13 @@ model = "meta/muse-spark-1.3-contributor"
 effort = "high"
 tools = { subagents = false }
 
-# Every workflow inherits these job settings. Light agents and Pi do their
-# simplification pass themselves; light-ui leaves rendered evidence to gates.
-[implementation]
-agent = "implementation"
+# [workflows.default] is what a ticket naming no workflow runs, and it carries
+# the implementation job settings every other workflow inherits where it leaves
+# them unset. Light agents and Pi do their simplification pass themselves;
+# light-ui leaves rendered evidence to gates.
+[workflows.default]
+implementer = "implementation"
+review = ["codex"]
 access = "writable"
 inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
@@ -69,9 +89,15 @@ access = "writable"
 inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
 
-# Each [checks.<name>] section defines a gate, and each workflow's checks key
-# (see [workflows.*] below) selects which gates its candidates must pass — a
-# gate no workflow lists runs nowhere.
+# Each [gates.<name>] section defines a gate. Every gate a project declares
+# runs on the merge queue, against the ref that batches approved candidates
+# ahead of canonical — that batch run is what green means. A gate that also
+# declares stage = "candidate" runs on a candidate head as well, before any
+# review, so a failure is caught while the lane is still warm.
+# A workflow names no gates: since v0.16.0 the gate set is project-wide, so
+# lint/test/frontend are staged at the candidate (cheap, decide most failures)
+# and the three rendered flow gates are left to the batch. See the flow-gate
+# comment below and .yard/OPERATOR.md for what that costs the UI evidence.
 # command runs the gate and timeout_minutes limits one run. environment is
 # "container" or "host": container gates have no credentials and no network,
 # and a host gate must also name the platform and architecture it needs.
@@ -104,7 +130,8 @@ total_work_timeout_minutes = 360
 # Each command is wrapped in an explicit `sh -c` so its head word is a real
 # executable preflight can resolve (a head of `export`/`cd` reports as
 # undecided gate-resolution).
-[checks.lint]
+[gates.lint]
+stage = "candidate"
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
 uv sync --frozen --offline --no-install-workspace
@@ -118,7 +145,8 @@ bash scripts/check_versions.sh
 ' '''
 timeout_minutes = 20
 
-[checks.test]
+[gates.test]
+stage = "candidate"
 # junit evidence: zero tests or any skip is missing evidence, so the optional
 # marker-gated suites are deselected rather than skipped — a deselected test
 # never enters the report, a conftest-skipped one does.
@@ -131,7 +159,8 @@ uv run python -m pytest -q -n auto -m "not integration and not release" --junitx
 timeout_minutes = 40
 test_report = "junit"
 
-[checks.frontend]
+[gates.frontend]
+stage = "candidate"
 command = '''sh -ec '
 export PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
 cd reg_webapp/frontend
@@ -170,7 +199,7 @@ timeout_minutes = 30
 # a missing or oversize one is a gate error, so the case list and this list are
 # one contract. Retained paths are on `yard lane show` — open the PNGs, they are
 # the evidence this gate exists to produce.
-[checks.project-flows]
+[gates.project-flows]
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
 uv sync --frozen --offline --no-install-workspace
@@ -218,7 +247,7 @@ artifacts = [
 # authored away from /project survives and that no pick authors an invalid source,
 # and the driver asserts the behavior behind them (including what the browser's own
 # IndexedDB holds across the reloads, and what it does NOT hold after a refusal).
-[checks.catalog-flows]
+[gates.catalog-flows]
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
 uv sync --frozen --offline --no-install-workspace
@@ -263,7 +292,7 @@ artifacts = [
 # confirm. Its own gate for the same reason `catalog-flows` is: `artifacts` holds
 # at most 16 filenames. The shots are the operator's evidence for the one modal
 # surface this app has; the driver asserts the behavior behind them.
-[checks.replace-flows]
+[gates.replace-flows]
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
 uv sync --frozen --offline --no-install-workspace
@@ -293,34 +322,45 @@ artifacts = [
 
 # Review runs on every candidate, gates before it. A confirmed gate failure
 # returns to the implementer like a blocking review finding, and max_rounds
-# bounds every automatic round the candidate spends, gate-bought or review-
-# bought alike; timeout_minutes limits one review run. blocking sets the
-# repair threshold and max_priority the least severe reported finding (P0
-# most severe through P3); codex_speed is a fast service tier for the codex
-# seats only (Y-493): a queue, not an identity — model/effort stay what the
-# review is recorded against. panel lists the seats the default workflow runs.
-[checks.review]
+
+# Review runs on a candidate head whose candidate-stage gates have all passed,
+# and gates before it. A confirmed gate failure returns to the implementer like
+# a blocking review finding; max_rounds counts autoreview rounds only, and a
+# gate-bought repair round is paid for by the attempt's total-work window
+# instead. timeout_minutes limits one review run; blocking sets the repair
+# threshold and max_priority the least severe reported finding (P0 most severe
+# through P3). Both are keys of [review]: one truth per project.
+[review]
 max_rounds = 5
 timeout_minutes = 30
 blocking = "P1"
 max_priority = "P3"
-codex_speed = "fast"
-panel = ["codex"]
 
-# A seat is one reviewer under a name (v0.12.0, Y-526): engine:model:effort,
-# with optional instructions and context. A workflow selects a list of seats.
-# A reviewer from a different engine family than the implementer is
-# recommended.
-[checks.review.reviewers.codex]
-reviewer = "codex:gpt-5.6-sol:high"
+# A seat is one reviewer under a name: engine, model and effort, with optional
+# instructions and context. A workflow selects a list of seats. A reviewer from
+# a different engine family than the implementer is recommended.
+# speed is a fast service tier for codex seats only (Y-493, was codex_speed):
+# a queue, not an identity — model/effort stay what the review is recorded
+# against, and it is a load error on any other engine.
+# No seat declares a `when` scope: that asks a pinned judgment per candidate and
+# needs TYPESAFE_API_KEY in operator.env, which this machine does not carry. A
+# daemon without the key runs the whole panel, which is what an unanswered
+# question always selects.
+[review.reviewers.codex]
+engine = "codex"
+model = "gpt-5.6-sol"
+effort = "high"
+speed = "fast"
 
 # The design seat judges source against the supplied design contracts. Rendered
 # checks belong to workers and gates; the operator judges their visual evidence.
 # Context is the reviewer skill plus the frontend design language
 # (reg_webapp/frontend/DESIGN.md, ~15 KB), not the 178 KB engineering doc, and
 # never src/tokens.css — autoreview rejects that filename as sensitive.
-[checks.review.reviewers.design]
-reviewer = "claude:claude-opus-5:high"
+[review.reviewers.design]
+engine = "claude"
+model = "claude-opus-5"
+effort = "high"
 context = [
   ".claude/skills/reg-webapp-design-reviewer/SKILL.md",
   "reg_webapp/frontend/DESIGN.md",
@@ -328,104 +368,59 @@ context = [
 instructions = "Review this reg_webapp frontend candidate using only the diff and supplied context files. Judge markup, styles, copy, component states, keyboard focus and interaction semantics against the source-visible checklist, design-system contract and semantic tokens. Check accessibility, component reuse, responsive rules and error-state affordances where the supplied source supports a conclusion. The supplied skill's rendering, self-check and rendered-evidence reporting procedures belong to the implementation worker and operator; they do not apply to this seat. Do not claim rendered verification or raise findings merely because this seat has no rendered evidence. Report concrete defects supported by the supplied source, with file and line, severity, user impact and the smallest correction; distinguish established defects from behavior the available context cannot establish."
 
 # A workflow is a named binding of the knobs above, never a step language. It
-# states three: agent names the implementer its lanes run as, review is a list
-# of the seat names above -- or "none" for no review at all -- and checks is
-# either "all" or a list of the gate names such a lane must pass. A ticket
-# selects one with yard ticket new --workflow NAME, and a ticket that names none
-# runs "default", so what unspecified tickets run is moved by editing the table
-# below rather than by touching the backlog. yard workflow list shows what every
-# workflow this project declares binds.
-[workflows.default]
-agent = "implementation"
-review = ["codex"]
-# The three CI-mirroring gates, listed rather than "all": a gate is added for
-# the workflow that needs it (project-flows below), and an unrelated candidate
-# must not acquire a rendered browser gate just by existing.
-checks = ["lint", "test", "frontend"]
+# states what an implementation lane running it is: implementer names the agent
+# its worker runs as, review is a list of the seat names above -- or "none" for
+# no review at all -- plus the four worker-binding keys (instructions, access,
+# and the two timeouts). A workflow names no gates: every gate runs on the batch
+# in full, and each gate's own stage says whether it also runs on a candidate
+# head. A ticket selects a workflow with yard ticket new --workflow NAME, and a
+# ticket that names none runs "default" above, so what unspecified tickets run
+# is moved by editing that table rather than by touching the backlog. Every
+# workflow below states only the keys it differs from "default" in and inherits
+# the rest. yard workflow list shows what every workflow this project declares
+# binds.
 
-# The ui workflow adds source-level design review to the default code seat AND
-# the three rendered flow gates. Select it for rendered frontend changes; the
-# operator owns visual judgment, and project-flows / catalog-flows /
-# replace-flows are what hand them pictures — one gate per artifact list, not
-# per concern.
+# The ui workflow adds the source-level design seat to the default code seat.
+# Select it for rendered frontend changes. Note that since v0.16.0 it no longer
+# carries the rendered flow gates -- those are project-wide batch gates now, so
+# their screenshots arrive on the landing batch rather than on the candidate the
+# operator approves. Until per-workflow gates return upstream, a ui candidate is
+# approved on the worker's own render; see .yard/OPERATOR.md "UI approval
+# evidence".
 [workflows.ui]
-agent = "implementation"
 review = ["codex", "design"]
-checks = ["lint", "test", "frontend", "project-flows", "catalog-flows", "replace-flows"]
 
 # The light workflow is the everyday lane for simple work, selected one ticket
-# at a time: the agent above, the CI gates, and no review. Skipping the review
-# panel is its one economy, and it is the right one for a rename, a message, or
-# a small fix -- work where a panel would cost more than it catches. The gates
-# are not part of that economy: a light candidate you might land has passed the
-# same CI as any other, because a candidate no gate has seen is not light, it is
-# unverified.
+# at a time: a cheaper agent and no review. Skipping the review panel is its one
+# economy, and it is the right one for a rename, a message, or a small fix --
+# work where a panel would cost more than it catches. The gates are not part of
+# that economy: gates are project-wide, so a light candidate takes the same
+# staged CI gates as any other and lands behind the same batch.
 # A review of "none" means no review execution is ever started for such a lane
-# -- its checks still run, its candidate is still yours to approve, and it is
-# never eligible for automatic merging, which requires a clean current review.
-# A light candidate is therefore unreviewed by policy, and it lands the way any
-# other one does: because you read it and approved it. Send a ticket whose
-# difficulty you cannot judge in advance down "default" instead -- an unreviewed
-# candidate that needed a reviewer spends the difference again on repair rounds
-# you drive yourself.
+# -- its gates still run and its candidate is still yours to approve. A light
+# candidate is therefore unreviewed by policy, and it lands the way any other
+# one does: because you read it and approved it. Send a ticket whose difficulty
+# you cannot judge in advance down "default" instead -- an unreviewed candidate
+# that needed a reviewer spends the difference again on repair rounds you drive
+# yourself.
 [workflows.light]
-agent = "light"
+implementer = "light"
 review = "none"
-checks = ["lint", "test", "frontend"]
 
-# The light-ui workflow is light's economy applied to a rendered change: the
-# worker is light's model at full effort (Sonnet at xhigh -- more reasoning per
-# turn than light's medium), and what it drops
-# is the in-session review machinery -- no /simplify subagent round, no
-# reg-webapp-design-reviewer seat. What it keeps is the rendered flow gates, so
-# the operator still gets pictures: project-flows, catalog-flows and
-# replace-flows retain screenshots the same way they do for ui. Select it for a
-# small rendered change whose surface those gate scenarios already render -- a
-# copy change, a gate flip, a label source. A change on a route the scenarios
-# do not render still needs the operator's own render, or the ui workflow.
+# light-ui is light's economy applied to a rendered change: the same model at
+# full effort (Sonnet at xhigh -- more reasoning per turn than light's medium),
+# dropping the in-session review machinery (no /simplify subagent round, no
+# reg-webapp-design-reviewer seat). Select it for a small rendered change whose
+# surface the flow-gate scenarios already render -- a copy change, a gate flip,
+# a label source.
 [workflows.light-ui]
-agent = "light-ui"
+implementer = "light-ui"
 review = "none"
-checks = ["lint", "test", "frontend", "project-flows", "catalog-flows", "replace-flows"]
 
-# Bounded non-UI trials retain the default code review and all three CI gates.
-# Rendered frontend changes still use ui/light-ui and their visual evidence.
+# Bounded non-UI trials on the Pi/Muse agent, retaining the default code review.
+# Rendered frontend changes still use ui/light-ui.
 [workflows.muse]
-agent = "muse"
-review = ["codex"]
-checks = ["lint", "test", "frontend"]
-
-# The pipeline workflows serve operator-admitted bounded reg_meta_build repair
-# batches (see .yard/OPERATOR.md): they select no automatic full gates. Focused
-# verification is a required operator/worker task stated precisely in each
-# admitted ticket, not a claim of a gate pass.
-[workflows.pipeline]
-agent = "implementation"
-review = ["codex"]
-checks = []
-
-[workflows.pipeline-muse]
-agent = "muse"
-review = ["codex"]
-checks = []
-
-# concurrency limits how many ready tickets run at once.
-[scheduler]
-concurrency = 2
-
-# The merge policy governs automatic merging only. Operator approval is never
-# limited by it.
-# enabled turns automatic merging on. Every changed path must match
-# allow_paths, so an empty list qualifies nothing, and no changed path may
-# match protected_paths. allow_non_hermetic_gates names the host gates that
-# may still count toward an automatic merge. autoreview_pin holds the one
-# reviewer-tool commit automatic merging accepts.
-[merge]
-enabled = false
-allow_paths = []
-protected_paths = []
-allow_non_hermetic_gates = []
-# autoreview_pin = "fe588b1fe588b1fe588b1fe588b1fe588b1fe588"
+implementer = "muse"
 
 # build_artifacts names the directories ordinary build activity fills with
 # output your .gitignore already covers -- target, node_modules, dist, and
