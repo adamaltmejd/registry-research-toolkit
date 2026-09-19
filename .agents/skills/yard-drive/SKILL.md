@@ -2,7 +2,7 @@
 name: yard-drive
 description: Drive a Yard board — hold the wake-driven loop across every decision, answer a stopped lane through the exits its attention item names, read a candidate before approving it, dispose of advisory findings, and retire a ticket in the order that sticks. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard board, or when you are about to answer a `yard status` attention item.
 ---
-<!-- yard-scaffold: yard 0.15.3 (commit 19903129db8a14c99b77abd501cde1fbca6b0e87) -->
+<!-- yard-scaffold: yard 0.16.0 (commit c8737cdf0375fb83779a5b327a5fe20f2e297063) -->
 
 # /yard-drive
 
@@ -14,10 +14,10 @@ do when a decision here produces a ticket.
 
 ## 1. The loop is wake-driven, and you re-arm it after every decision
 
-`yard status --watch` blocks until the next wake and prints it as one JSON line.
-That is the entire loop: attach, take the line, act on it, attach again. Reading
-the board on a timer instead is how you find out late. (A script that cannot
-block on a stream is a different situation, and will say so.)
+`yard status --watch --sync --since SEQ` blocks until the next wake and prints
+it as one JSON line. That is the entire loop: attach, take the line, act on it,
+attach again. Reading the board on a timer instead is how you find out late. (A
+script that cannot block on a stream is a different situation, and will say so.)
 
 Attach with a cursor so nothing falls between two watches. `yard status --json`
 carries the `cursor` the board was read at, and every event line carries the
@@ -26,6 +26,27 @@ carries the `cursor` the board was read at, and every event line carries the
 and no `seq` — those are current truth rather than events), so starting cold is
 fine; just take your next cursor from `yard status --json` rather than from a
 catch-up line, which has none to give.
+
+**`--sync` is why the code you read is current.** Landing never moves your
+checkout underneath you, so between two landings this checkout is one behind
+unless something consumes them. With `--sync` the watch does it for you: before
+it writes the line, it fast-forwards the checkout from canonical whenever
+canonical is ahead and the tree is clean. Every line then carries `sync`, and
+it is about *your working tree*, not about the lane:
+
+- `{"moved":true,"from":...,"to":...}` — the checkout just consumed a landing.
+  Everything you read from here is the new head; anything you read before that
+  line was the old one.
+- `{"moved":false,"reason":"current"}` — it already held what canonical does.
+- `{"moved":false,"reason":"dirty"}` — **uncommitted work of your own is in the
+  way and the checkout is behind.** Nothing is fast-forwarded over it, so what
+  you read next is stale. Commit what is yours, or run `yard sync` by hand once
+  the tree is clean, before you read anything that landed — and before you file
+  a ticket against code you have not caught up with.
+- `ahead`, `diverged`, `detached`, `unknown` — the checkout is not simply behind
+  canonical, and this watch leaves it exactly as it is. `yard sync` is the verb
+  that imports your own commits or reports the divergence; a watch never moves
+  canonical.
 
 **Re-arm after every decision, without exception.** Approve, reject, nudge,
 accept residual findings, decide a proposal, unpark, abandon, retire — the

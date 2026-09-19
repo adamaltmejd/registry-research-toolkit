@@ -2,7 +2,7 @@
 name: yard-operator
 description: Operate a Yard project — the entry to the whole routine, which is two skills: `yard-file` for filing and admitting work, `yard-drive` for answering the board. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard project and do not already know which half of the routine you need.
 ---
-<!-- yard-scaffold: yard 0.14.8 (commit 4be7bdf402007dac2285bd377fc4974cbd4418ef) -->
+<!-- yard-scaffold: yard 0.16.0 (commit c8737cdf0375fb83779a5b327a5fe20f2e297063) -->
 
 # /yard-operator
 
@@ -39,4 +39,5 @@ starting a ticket that has no attempt underway, nudging a worker, rejecting a
 candidate, abandoning an attempt: each one starts, resumes or restarts a model
 session inside a container — and the decision you just took is usually what
 produces the next wake, so the command after any of them is the next
-`yard status --watch`.
+`yard status --watch --sync`, which is also what keeps the checkout you read
+current from one wake to the next.

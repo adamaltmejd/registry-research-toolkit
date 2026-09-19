@@ -296,3 +296,59 @@ completed. A fresh status cursor (146445) restored watching. Filed as
 [#108](https://github.com/adamaltmejd/switchyard/issues/108); no root cause is
 established. Raw receipts and the report are local-only under
 `archive/reports/yard/2026-09-18-abandoned-watch/`.
+
+### 2026-09-18: pipeline-muse lanes reach the operator with lint failures
+
+**Lint half resolved by Yard 0.16.0 (2026-09-19).** Gates are now project-wide and
+`lint` carries `stage = "candidate"`, so no lane can reach approval-needed with a plain
+`ruff`/`panache` failure any more; the `pipeline-muse` workflow that ran `checks:none`
+is deleted. Kept here for the two parts 0.16.0 does not address:
+
+Y-203/1 showed the reviewer reversing itself between rounds (round 5 demanded the
+sentinel list be pinned in the content hash, round 6 blocked because that changed every
+hash); the lane hit the automatic review maximum and needed an operator nudge with a
+design decision. Y-202/1 g1 ended "worker stopped with uncommitted or in-progress Git
+work" after 30 min and was recovered by the automatic unclean-clone cleanup; no operator
+action was needed, but the 30 min were spent.
+
+### 2026-09-19: the 0.15 -> 0.16 upgrade path is deadlocked, with no supported way across
+
+Upgrading this project from 0.15.3 to 0.16.0 cannot be completed with supported
+commands. The daemon validates `.yard/config.toml` **at canonical's target head**, not
+in the working tree, and the only command that moves canonical is `yard sync`, which
+autostarts a daemon:
+
+- the 0.16.0 daemon refuses to start while canonical holds the v0.15 config shape
+  (`workflows.default.implementer: expected string, received undefined`), so `yard sync`
+  cannot run to import the converted file;
+- the 0.15.3 daemon refuses to import the converted file into canonical
+  (`max_lanes, approve, gates, review: Unrecognized keys`), because invalid candidate
+  configuration cannot become authoritative.
+
+No config satisfies both loaders: each treats unknown keys as errors and they share no
+valid key set (`agent`/`checks` vs `implementer`/`gates`/`review`), so a transitional
+commit is impossible. Neither the release notes' "convert the file, install the
+executable, restart the daemon" nor the README's "Upgrading an existing store" mentions
+that the committed config at canonical is what gets validated.
+
+Worked around by fast-forwarding `refs/heads/main` in `.yard/local/git/canonical.git`
+directly, which bypasses the deliberately disabled canonical push remote. Filed
+upstream; the fix wanted is a supported way to move canonical to a converted config — a
+`yard sync --config-only`, a documented bootstrap, or accepting a forward-shape config
+during upgrade.
+
+### 2026-09-19: a workflow can no longer select its gates
+
+0.16.0 retired per-workflow `checks`, so the gate set is project-wide and every declared
+gate runs on every landing batch. This project used the removed feature in both
+directions: `ui`/`light-ui` selected three rendered Playwright flow gates that other
+lanes did not pay for, and `pipeline`/`pipeline-muse` selected none at all for
+operator-admitted bounded `reg_meta_build` repair batches. Neither is expressible now.
+
+The three flow gates are declared without `stage`, which keeps them off candidate heads
+but also moves their retained PNGs to the landing batch — so `yard lane show` no longer
+prints rendered evidence for the candidate the operator is approving, which is what
+`.yard/OPERATOR.md` "UI approval evidence" was built on. Staging them instead would put
+three browser gates on every `reg_meta_build` repair. Filed upstream as a request for
+differential gates by workflow; monorepos need the cheap gates everywhere and the
+expensive ones only where they decide something.

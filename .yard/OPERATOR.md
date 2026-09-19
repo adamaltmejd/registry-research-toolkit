@@ -38,19 +38,21 @@ worker, reviewer or plan argues for broader work.
   the running version with the retest result on the issue, or declined), and delete an
   unfiled observation once it is filed or judged not worth filing. Git history keeps the
   text.
-- **Bounded builder repair batches run on `pipeline` / `pipeline-muse`.** For an
-  operator-admitted bounded `reg_meta_build` repair batch, file each repair ticket with
-  `--workflow pipeline` (or `--workflow pipeline-muse` for a Muse trial). Those
-  workflows select no automatic gates; the ticket must name the existing focused tests
-  and affected-file checks that count as its verification (see Build approval evidence).
+- **Bounded builder repair batches run on `default` / `muse`.** For an operator-admitted
+  bounded `reg_meta_build` repair batch, file each repair ticket with
+  `--workflow default` (or `--workflow muse` for a Muse trial). The `pipeline` and
+  `pipeline-muse` workflows were deleted at the Yard 0.16.0 upgrade: their only
+  distinguishing key was `checks = []`, and a workflow can no longer select gates. The
+  ticket must still name the existing focused tests and affected-file checks that count
+  as its own verification (see Build approval evidence), but that focused evidence is
+  now *in addition to* the project gates, not instead of them.
 - **File rendered frontend changes with `--workflow ui`.** This adds the source-only
-  design seat and the rendered flow gates (`project-flows`, `catalog-flows`) with
-  retained screenshots alongside the code seat. No other workflow binds both. Read
-  `yard workflow list` or `.yard/config.toml` for the actual checks; do not assume all
-  workflows run all gates. Other work uses `default` or `light` as appropriate. A small
-  rendered change whose surface the flow-gate scenarios already render — a copy change,
-  a gate flip, a label source — goes on `light-ui` instead; approve it on the retained
-  PNGs the same way.
+  design seat alongside the code seat. Since Yard 0.16.0 a workflow no longer selects
+  gates: the gate set is project-wide, so `ui` no longer carries the rendered flow gates
+  and every workflow runs the same ones. `yard workflow list` reports `checks:all` for
+  all of them. Other work uses `default` or `light` as appropriate. A small rendered
+  change whose surface the flow-gate scenarios already render — a copy change, a gate
+  flip, a label source — goes on `light-ui` instead.
 
 ## Manual integration
 
@@ -88,11 +90,24 @@ between packages. Worktree preparation alone needs no admission pause.
 
 ## UI approval evidence
 
-A candidate that changes rendered UI is approved on pictures you opened. On the `ui`
-workflow, `yard lane show` prints the retained PNGs of both flow gates — `project-flows`
-(the /project error and retry states) and `catalog-flows` (the catalog-authored draft).
-Open them and match the `candidate HEAD` in those executions' logs to the full head you
-will pass to `--expect-head`.
+A candidate that changes rendered UI is approved on pictures you opened.
+
+**Yard 0.16.0 changed where those pictures come from.** A workflow no longer selects
+gates, and the three flow gates (`project-flows`, `catalog-flows`, `replace-flows`) are
+declared without `stage`, which makes them *batch* gates: they run once on the merge
+queue against the ref that batches approved candidates, not on the candidate head. Their
+PNGs therefore arrive **after** approval, on the batch execution, and `yard lane show`
+no longer prints rendered evidence for the candidate you are deciding on.
+
+Until per-workflow gates return upstream (reported as a Yard issue; see Reporting Yard
+problems), a rendered candidate is approved on evidence you obtain yourself:
+
+1. Read the worker's own rendered self-check in the candidate's history.
+2. Render the changed surface from the candidate yourself before approving —
+   `REG_META_DB=<dir> bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows <dir>`
+   against the candidate's clone, or `dev.sh shot` for a single route.
+3. The batch gate remains the backstop: canonical never advances on a broken rendered
+   flow, because a red batch returns the lane to repair rather than landing it.
 
 Judge the pictures and their route, state and viewport coverage under the [design review
 skill](../.claude/skills/reg-webapp-design-reviewer/SKILL.md). The gate renders the
@@ -104,14 +119,18 @@ have distinct coverage; report what each actually establishes.
 ## Build approval evidence
 
 For operator-admitted bounded `reg_meta_build` repair batches, per-ticket approval uses
-focused evidence instead of the full gates. Each admitted ticket names the existing
-focused tests and affected-file checks that verify it; the worker runs them, the
-independent `codex` (Sol) review stays, and the operator reads the exact diff and
-results and runs cheap affected-source checks when useful. Such tickets run on the
-`pipeline` / `pipeline-muse` workflows, which select no automatic full gates: focused
-verification is a required operator/worker task stated precisely in each admitted
-ticket, not a claim of a gate pass. A source fix can land on that evidence. Missing or
-stale focused evidence is not waived. Do not run full preparation, full suites, frontend
+focused evidence to read the candidate. Each admitted ticket names the existing focused
+tests and affected-file checks that verify it; the worker runs them, the independent
+`codex` (Sol) review stays, and the operator reads the exact diff and results and runs
+cheap affected-source checks when useful. A source fix can land on that evidence.
+
+**Yard 0.16.0 narrowed this economy.** Such tickets used to run on `pipeline` /
+`pipeline-muse`, which selected no automatic gates at all. Gates are now project-wide,
+so every repair candidate takes the staged `lint` / `test` / `frontend` gates at its
+head and the full set again on the landing batch. What the focused evidence still
+replaces is the operator's *reading* cost — a full preparation, a full suite run by
+hand, or a real-seed `build-db` per ticket — not the gates themselves. Missing or stale
+focused evidence is not waived. Do not run full preparation, full suites, frontend
 gates, or a real-seed `build-db` per such ticket. This is a maintainer-approved cost
 policy (2026-09-18), not suppression of build errors.
 
@@ -164,23 +183,30 @@ Keep raw logs, verification reports and submission receipts in the already ignor
 `archive/reports/yard/`. Commit concise outcomes in DOGFOOD.md; label references to
 local archived evidence as local-only paths.
 
-## Temporary corrections for Yard 0.14.5
+## Temporary corrections for Yard 0.16.0
 
 These qualify wording in the shipped routine. Recheck them at each Yard upgrade and
-remove each correction once upstream covers it accurately.
+remove each correction once upstream covers it accurately. Rechecked against 0.16.0 on
+2026-09-19; the acceptance-`--parked` and replay corrections were dropped because
+`yard proposal accept --help` and `yard lane replay --help` now state both accurately.
 
 - **Spending depends on the state and command.** Abandoning starts no model by itself;
   the resulting admission of an unparked ready ticket can start a fresh attempt.
   Unparking or accepting a proposal need not admit work if it remains blocked. Nudges
   and rejections can buy additional rounds. Use the guarded exit and read the command's
   reported effect rather than treating every decision as a fresh model session.
-- **Acceptance runs the proposal's recorded command.** It may create a ticket or edit
-  one. `--parked` applies only to ticket creation and refuses commands creating none.
 - **Skip parking an already parked ticket during retirement.** The command refuses
   redundant parking; proceed to the applicable stop, abandon and done steps.
-- **Replay is not limited to infrastructure incidents.** Eligible retained work can
-  replay on the same ticket when it still fits. Read `yard lane replay --help` for the
-  current guards; an unchanged premise is not a separate command requirement.
+- **Approval enqueues, it does not land.** Under the 0.16.0 merge queue,
+  `yard lane approve` puts the candidate in the queue; gates then run once against the
+  merged ref and canonical advances only on green. A red batch returns the lane to
+  repair and a batch of several candidates is bisected in halves, so a lane can go back
+  to work *after* you approved it. Read the queue section of `yard status` before
+  concluding a candidate landed, and keep the lane's window in mind: it stays warm until
+  its landing is green.
+- **This project approves every candidate by hand.** `approve = "manual"` in
+  `.yard/config.toml`. Nothing is enqueued without an operator decision, so the
+  `protected_paths` list is empty — every path already takes one.
 
 ## Updating the upstream routine
 

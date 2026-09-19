@@ -2,7 +2,7 @@
 name: yard-file
 description: File work into a Yard project — decide a proposal by the admission rule, size a ticket to one lane's worth, park it before anything spends on it, write a body a worker can converge on, and report a Yard defect upstream instead of ticketing it here. Load this whenever you are about to create a Yard ticket, decide or accept a proposal, write or edit a ticket body, or read an outside report — an issue, a bug report, a finding somebody handed you — that might become one.
 ---
-<!-- yard-scaffold: yard 0.15.3 (commit 19903129db8a14c99b77abd501cde1fbca6b0e87) -->
+<!-- yard-scaffold: yard 0.16.0 (commit c8737cdf0375fb83779a5b327a5fe20f2e297063) -->
 
 # /yard-file
 
@@ -139,6 +139,17 @@ for both, and it carries five things:
 Nothing else is required. A body that also carries the evidence you traced it
 from is worth its length; a body that carries an implementation the worker is
 to type is a design done in the wrong place.
+
+**A ticket that changes how `.yard/config.toml` is read never rewrites the
+project's own `.yard/config.toml`.** The daemon serving the project resolves a
+candidate's verification contract from the config file that candidate carries,
+with the loader it is running — the one from before the change. A candidate
+that also carries the new shape therefore cannot be verified at all: it stops at
+`candidate-config` with no exit but reverting the file, after the worker has
+spent its whole run. Put the opposite in the out-of-scope list — "this
+repository's `.yard/config.toml` stays as the base carries it" — and convert
+the file yourself after the landing, when the daemon that reads it has been
+restarted on the code that understands it.
 
 ## 4. When Yard itself misbehaves, report it upstream
 
