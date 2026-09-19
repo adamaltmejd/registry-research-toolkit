@@ -332,10 +332,12 @@ executable, restart the daemon" nor the README's "Upgrading an existing store" m
 that the committed config at canonical is what gets validated.
 
 Worked around by fast-forwarding `refs/heads/main` in `.yard/local/git/canonical.git`
-directly, which bypasses the deliberately disabled canonical push remote. Filed
-upstream; the fix wanted is a supported way to move canonical to a converted config — a
-`yard sync --config-only`, a documented bootstrap, or accepting a forward-shape config
-during upgrade.
+directly, which bypasses the deliberately disabled canonical push remote. Filed as
+[#109](https://github.com/adamaltmejd/switchyard/issues/109); the fix wanted is a
+supported way to move canonical to a converted config — a `yard sync --config-only`, a
+documented bootstrap, or accepting a forward-shape config during upgrade. Raw receipts
+and the six report bodies are local-only under
+`archive/reports/yard/2026-09-19-0.16.0-upgrade/`.
 
 ### 2026-09-19: a workflow can no longer select its gates
 
@@ -349,6 +351,17 @@ The three flow gates are declared without `stage`, which keeps them off candidat
 but also moves their retained PNGs to the landing batch — so `yard lane show` no longer
 prints rendered evidence for the candidate the operator is approving, which is what
 `.yard/OPERATOR.md` "UI approval evidence" was built on. Staging them instead would put
-three browser gates on every `reg_meta_build` repair. Filed upstream as a request for
+three browser gates on every `reg_meta_build` repair. Filed as
+[#110](https://github.com/adamaltmejd/switchyard/issues/110) as a request for
 differential gates by workflow; monorepos need the cheap gates everywhere and the
 expensive ones only where they decide something.
+
+Four smaller 0.16.0 findings from the same session, all filed and awaiting the builder's
+disposition: `yard daemon preflight` naming retired `checks.<gate>.<key>` keys
+([#111](https://github.com/adamaltmejd/switchyard/issues/111)); DESIGN.md omitting
+`[workspace]` while the shipped config keeps the retired `[merge]` comment
+([#112](https://github.com/adamaltmejd/switchyard/issues/112)); removing a workflow
+orphaning the tickets that name it, which stranded Y-199/Y-205/Y-206 here
+([#113](https://github.com/adamaltmejd/switchyard/issues/113)); and `yard init`'s update
+patch not being pipeable to `git apply`
+([#114](https://github.com/adamaltmejd/switchyard/issues/114)).
