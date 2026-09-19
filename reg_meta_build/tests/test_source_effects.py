@@ -482,7 +482,7 @@ def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
         column="MISSING",
         name="Authored name",
         definition="Authored description",
-        data_type=None,
+        data_type="text",
         classification=None,
         is_identifier=False,
         is_sensitive=False,
@@ -512,12 +512,17 @@ def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
     assert isinstance(effect, CuratedOccurrenceAddition)
     assert effect.occurrence_key == "column-1:holdings"
     assert effect.edition_key is None
-    assert effect.edition_scope == effect.edition_period_scope == TemporalScope(
-        kind="pooled",
-        label="2002-2020",
-        pooled_start="2002-01-01",
-        pooled_end="2020-12-31",
+    assert (
+        effect.edition_scope
+        == effect.edition_period_scope
+        == TemporalScope(
+            kind="pooled",
+            label="2002-2020",
+            pooled_start="2002-01-01",
+            pooled_end="2020-12-31",
+        )
     )
+    assert effect.fields.data_type == value_field("text")
     result = apply_occurrence_cases((record,), (converted.case,))
     assert result.diagnostics == ()
     (addition,) = tuple(item for item in result.occurrences if item.occurrence_key)
@@ -530,9 +535,7 @@ def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
     formed = form_native_variable(
         (addition,),
         register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
-        variants={
-            addition.variant_key: ResolvedVariant(slug="people", name="People")
-        },
+        variants={addition.variant_key: ResolvedVariant(slug="people", name="People")},
         slug="missing",
         provider_key="2.missing",
         flags=SourceFields(

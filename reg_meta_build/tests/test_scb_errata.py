@@ -250,9 +250,7 @@ class TestColumnEntry:
     def test_holdings_period_with_versions_fails(
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
-        err = _refused(
-            tmp_path, slug_dir, _toml(holdings_period='"2002-2020"')
-        )
+        err = _refused(tmp_path, slug_dir, _toml(holdings_period='"2002-2020"'))
         assert "exactly one" in err.message
 
     def test_holdings_period_with_all_versions_fails(
@@ -261,9 +259,19 @@ class TestColumnEntry:
         err = _refused(
             tmp_path,
             slug_dir,
-            _toml(
-                versions=None, all_versions="true", holdings_period='"2002-2020"'
-            ),
+            _toml(versions=None, all_versions="true", holdings_period='"2002-2020"'),
+        )
+        assert "exactly one" in err.message
+
+    def test_holdings_period_with_false_all_versions_fails(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        # Key presence decides: a second placement key fails fast even when its
+        # value claims nothing.
+        err = _refused(
+            tmp_path,
+            slug_dir,
+            _toml(versions=None, all_versions="false", holdings_period='"2002-2020"'),
         )
         assert "exactly one" in err.message
 

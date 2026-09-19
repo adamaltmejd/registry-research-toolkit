@@ -573,8 +573,7 @@ def holdings_period_bounds(raw: str) -> tuple[str, str]:
             raise curation_error(
                 _CODE,
                 f"scb_errata holdings_period {raw!r} ends before it starts.",
-                "Give the range oldest-first, e.g. "
-                '`holdings_period = "2002-2020"`.',
+                'Give the range oldest-first, e.g. `holdings_period = "2002-2020"`.',
             )
         return f"{start_year}-01-01", f"{end_year}-12-31"
     match = _DATE_RANGE.match(raw)
@@ -616,12 +615,8 @@ def _column_placement(
     all_versions = _require_bool(entry, "all_versions", ctx)
     forms = [
         name
-        for name, present in (
-            ("versions", "versions" in entry),
-            ("all_versions", all_versions),
-            ("holdings_period", "holdings_period" in entry),
-        )
-        if present
+        for name in ("versions", "all_versions", "holdings_period")
+        if name in entry
     ]
     if len(forms) != 1:
         raise curation_error(
@@ -637,7 +632,14 @@ def _column_placement(
         raw = _require_str(entry, "holdings_period", ctx)
         holdings_period_bounds(raw)  # fail fast: refuse the bad range here
         return None, raw
-    if all_versions:
+    if "all_versions" in entry:
+        if not all_versions:
+            raise curation_error(
+                _CODE,
+                f"scb_errata {ctx}: `all_versions` must be `true` when present.",
+                "Remove the key or set `all_versions = true` — an undated holding "
+                "covers every edition of the variant.",
+            )
         return None, None
     return _named_versions(entry, ctx), None
 
