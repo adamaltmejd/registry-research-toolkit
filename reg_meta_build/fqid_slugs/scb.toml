@@ -29853,6 +29853,35 @@ slug = "igov2preu-upphandling-ovriga-eu"
 [variable."258.779.h7-1"]
 slug = "utbildningsniva-1-position"
 
+# Y-211 (maintainer decision 2026-09-19): IT-anvandning sequential column
+# renames as tracked literal ownership (diagnostic v17 rename-worklist-258,
+# `sequential` rows only). Each chain below is non-overlapping delivery years
+# on one native variable, so every spelling is owned by a single split whose
+# key discriminator reuses the family slug string unchanged (the family slug
+# row itself is untouched; split entries carry no slug pin — the 1.830/Y-167
+# precedent). Overlapping rows (e.g. 258.26891, 258.29967, 258.29988) need a
+# partition decision and case-only twins belong to Y-210: neither is decided
+# here. Partial coverage: only the ticket-named chains are curated; the
+# remaining sequential rows land with the worklist evidence in a follow-up.
+[variable."258.16815.max-hastighet-internet"]
+columns = { ISPD = "258.16815.max-hastighet-internet", ISPDF = "258.16815.max-hastighet-internet" }
+columns_ref = "Y-211 2026-09-19: 258.16815 'Maximal hastighet för internetanslutning' sequential rename {ISPD 2013-2013, ISPDF 2014-2025} owned by max-hastighet-internet (diagnostic v17 rename-worklist-258)"
+[variable."258.17579.it-sakerhet-styrandedokument"]
+columns = { SECPOL1 = "258.17579.it-sakerhet-styrandedokument", SECPOL2 = "258.17579.it-sakerhet-styrandedokument" }
+columns_ref = "Y-211 2026-09-19: 258.17579 'Har företaget styrandedokument för åtgärder eller rutiner för IT-säker' sequential rename {SECPOL1 2015-2015, SECPOL2 2019-2024} owned by it-sakerhet-styrandedokument (diagnostic v17 rename-worklist-258)"
+[variable."258.17641.andel-arsverken-programvaruutv-extern"]
+columns = { UTVEGANV2 = "258.17641.andel-arsverken-programvaruutv-extern", UTVEXF = "258.17641.andel-arsverken-programvaruutv-extern" }
+columns_ref = "Y-211 2026-09-19: 258.17641 'Andel av antalet årsverken som arbetar med programvaruutveckling för e' sequential rename {UTVEXF 2013-2015, UTVEGANV2 2017-2017} owned by andel-arsverken-programvaruutv-extern (diagnostic v17 rename-worklist-258)"
+[variable."258.17642.arsverken-programvaruutv-ovriga"]
+columns = { UTVEXF2 = "258.17642.arsverken-programvaruutv-ovriga", UTVSUP = "258.17642.arsverken-programvaruutv-ovriga", UTVSUP2 = "258.17642.arsverken-programvaruutv-ovriga" }
+columns_ref = "Y-211 2026-09-19: 258.17642 'Ange hur stor andel av antalet årsverken som arbetar med programvaruut' sequential rename {UTVSUP 2013-2015, UTVEXF2 2017-2017, UTVSUP2 2018-2018} owned by arsverken-programvaruutv-ovriga (diagnostic v17 rename-worklist-258)"
+[variable."258.19119.awshm"]
+columns = { AWSEU = "258.19119.awshm", AWSHM = "258.19119.awshm" }
+columns_ref = "Y-211 2026-09-19: 258.19119 'Tog emot beställningar via en webbplats eller app från kunder i övriga' sequential rename {AWSHM 2013-2013, AWSEU 2017-2024} owned by awshm (diagnostic v17 rename-worklist-258)"
+[variable."258.19120.ehandel-bestallningar-webb-varlden"]
+columns = { AWSEU = "258.19120.ehandel-bestallningar-webb-varlden", AWSWW = "258.19120.ehandel-bestallningar-webb-varlden" }
+columns_ref = "Y-211 2026-09-19: 258.19120 'Tog emot beställningar via webbplats eller app från kunder i resten av' sequential rename {AWSEU 2013-2013, AWSWW 2017-2024} owned by ehandel-bestallningar-webb-varlden (diagnostic v17 rename-worklist-258)"
+
 # register 26 (rams)
 [variable."26.19053.ast2sni07"]
 slug = "naringsgren-huvud-fad-sni2007"
