@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import fold_column
 from reg_meta_build.normalization import normalize_text
+from reg_meta_build.scb_errata import holdings_period_bounds
 from reg_meta_build.source_coordinates import native_variant_key, source_register_key
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
@@ -313,6 +314,9 @@ def convert_column_entry(
 
     The old ``all_versions`` interpretation of undated holdings supplies no annual
     evidence. Retain one undated occurrence, not a claim for each existing edition.
+    A ``holdings_period`` instead dates the holding at dataset grain: retain one
+    pooled-range occurrence over the whole range — the delivery list says the
+    column is held somewhere inside it, never that it exists in every wave.
     ``declared_flags`` names the keys actually present in the original TOML, since
     the legacy loader has already replaced omitted flags with false.
     Classification references remain declarations for common binding; canonical
@@ -397,7 +401,7 @@ def convert_column_entry(
         )
         for edition in selected
     )
-    if entry.versions is None:
+    if entry.versions is None and entry.holdings_period is None:
         effects = (
             CuratedOccurrenceAddition(
                 occurrence_key=f"{case_id}:undated",
@@ -411,6 +415,27 @@ def convert_column_entry(
                     label="Undated holdings; legacy all_versions is not annual evidence",
                 ),
                 edition_period_scope=TemporalScope(kind="not_applicable"),
+                evidence=tuple(sorted(references, key=str)),
+            ),
+        )
+    elif entry.holdings_period is not None:
+        start, end = holdings_period_bounds(entry.holdings_period)
+        pooled = TemporalScope(
+            kind="pooled",
+            label=entry.holdings_period,
+            pooled_start=start,
+            pooled_end=end,
+        )
+        effects = (
+            CuratedOccurrenceAddition(
+                occurrence_key=f"{case_id}:holdings",
+                provider="scb",
+                variable_key=variable,
+                variant_key=variant,
+                edition_key=None,
+                fields=fields,
+                edition_scope=pooled,
+                edition_period_scope=pooled,
                 evidence=tuple(sorted(references, key=str)),
             ),
         )

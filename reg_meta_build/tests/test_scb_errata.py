@@ -212,6 +212,61 @@ class TestColumnEntry:
         ).columns
         assert entry.versions is None
 
+    def test_holdings_period_parses_as_raw_range(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        (entry,) = _load(
+            tmp_path, slug_dir, _toml(versions=None, holdings_period='"2002-2020"')
+        ).columns
+        assert entry.versions is None
+        assert entry.holdings_period == "2002-2020"
+
+    def test_holdings_period_full_dates_parse(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        (entry,) = _load(
+            tmp_path,
+            slug_dir,
+            _toml(versions=None, holdings_period='"2002-03-01/2020-11-30"'),
+        ).columns
+        assert entry.holdings_period == "2002-03-01/2020-11-30"
+
+    def test_holdings_period_reversed_fails(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        err = _refused(
+            tmp_path, slug_dir, _toml(versions=None, holdings_period='"2020-2002"')
+        )
+        assert "before it starts" in err.message
+
+    def test_holdings_period_bad_shape_fails(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        err = _refused(
+            tmp_path, slug_dir, _toml(versions=None, holdings_period='"2002"')
+        )
+        assert "YYYY-YYYY" in err.message
+
+    def test_holdings_period_with_versions_fails(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        err = _refused(
+            tmp_path, slug_dir, _toml(holdings_period='"2002-2020"')
+        )
+        assert "exactly one" in err.message
+
+    def test_holdings_period_with_all_versions_fails(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        err = _refused(
+            tmp_path,
+            slug_dir,
+            _toml(
+                versions=None, all_versions="true", holdings_period='"2002-2020"'
+            ),
+        )
+        assert "exactly one" in err.message
+
     def test_optional_identity_parses(self, tmp_path: Path, slug_dir: Path) -> None:
         (entry,) = _load(
             tmp_path,
@@ -247,13 +302,13 @@ class TestColumnEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         err = _refused(tmp_path, slug_dir, _toml(all_versions="true"))
-        assert "both" in err.message
+        assert "exactly one" in err.message
 
     def test_neither_versions_nor_all_versions_fails(
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         err = _refused(tmp_path, slug_dir, _toml(versions=None))
-        assert "neither" in err.message
+        assert "exactly one" in err.message
 
     def test_repeated_version_fails(self, tmp_path: Path, slug_dir: Path) -> None:
         err = _refused(tmp_path, slug_dir, _toml(versions='["2010", "2010"]'))

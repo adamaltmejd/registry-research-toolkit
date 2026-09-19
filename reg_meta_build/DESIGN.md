@@ -271,6 +271,12 @@ column presence does not copy type, flags or coding from another edition. Any do
 metadata or membership must be explicitly selected and guarded. Undated `all_versions`
 holdings preserve unknown coverage; pooled editions cannot create annual states.
 
+A steward holding dated at dataset grain (`holdings_period`) converts to exactly one
+pooled-range occurrence over that range (Y-212): the delivery list says the column is
+held somewhere inside the range, never that it exists in every wave, so the entry is
+never expanded into per-edition claims. The legacy undated `all_versions` form keeps
+its unknown scope until the curation rewrites those entries with their ranges.
+
 Copied coding pins the original bound donor evidence at the declared occurrence scope
 with explicit `expected_codings`. Missing fingerprints are a contract error; changed
 membership or validity makes the entire occurrence case stale before effects run.

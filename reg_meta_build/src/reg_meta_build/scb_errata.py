@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import functools
 import json
+import re
 from dataclasses import dataclass, fields
+from datetime import date
 from typing import TYPE_CHECKING
 
 from ._curation import (
@@ -63,6 +65,7 @@ _COLUMN_FIELDS = frozenset(
         "is_sensitive",
         "versions",
         "all_versions",
+        "holdings_period",
         "source",
         "evidence",
         "noted",
@@ -122,7 +125,14 @@ class ErrataDelivered:
 # The `[[column]]` fields that say WHERE the variable is delivered rather
 # than what it is; everything else is `ErrataColumn.identity`.
 _PER_VARIANT_FIELDS = frozenset(
-    {"register_id", "register_variant_id", "versions", "source", "provenance"}
+    {
+        "register_id",
+        "register_variant_id",
+        "versions",
+        "holdings_period",
+        "source",
+        "provenance",
+    }
 )
 
 
@@ -131,10 +141,12 @@ class ErrataColumn:
     """One `[[column]]`, resolved to SCB source ids: a column SCB documents
     nowhere on the variant, with the variable identity to mint for it.
 
-    `versions` are `Registerversionnamn` tokens verbatim, or None for
-    `all_versions = true` (every edition the variant has — the faithful reading
+    `versions` are `Registerversionnamn` tokens verbatim, `all_versions = true`
+    leaves them None (every edition the variant has — the legacy undated reading
     of a steward holdings list, which states that the column is in the delivery
-    without dating it). `definition` becomes the variable's `description`, as the
+    without dating it), and `holdings_period` leaves them None while carrying the
+    raw dataset-grain range (e.g. `"2002-2020"`) the column is held somewhere
+    inside — never a claim it exists in every wave. `definition` becomes the variable's `description`, as the
     curated prose always has; `variable.definition` stays SCB's own export field
     and is left NULL.
     """
@@ -149,6 +161,7 @@ class ErrataColumn:
     is_identifier: bool
     is_sensitive: bool
     versions: tuple[str, ...] | None
+    holdings_period: str | None
     source: str
     provenance: str
 
@@ -243,7 +256,7 @@ _KINDS: dict[str, str] = {
     "version": "register / variant / name / evidence / noted",
     "delivered": "register / variant / column / versions / evidence / noted",
     "column": "register / variant / column / name / definition / "
-    "versions or all_versions / source / evidence / noted",
+    "versions or all_versions or holdings_period / source / evidence / noted",
 }
 
 
@@ -375,8 +388,10 @@ def load_scb_errata(
     `[[delivered]]` / `[[column]]` top-level; no unknown key inside an entry;
     `register` a 2-segment SCB FQID and `register`/`variant` curated; `evidence`
     and `noted` (canonical `YYYY-MM-DD`) present; a `[[version]]` name carrying
-    a parseable claimed year; `versions` a non-empty list of non-empty strings
-    naming each version at most once; and no duplicate
+    a parseable claimed year; a `[[column]]` carrying exactly one of `versions`
+    (a non-empty list of non-empty strings naming each version at most once),
+    `all_versions = true`, or `holdings_period` (an ordered `YYYY-YYYY` year
+    range, or `YYYY-MM-DD/YYYY-MM-DD` dates); and no duplicate
     `(variant, name)` / `(variant, column)` entry — two entries for one column
     must be ONE entry listing both versions, or the log stops being readable as
     the record of what SCB missed. `[[delivered]]` and `[[column]]` share that
@@ -466,6 +481,7 @@ def load_scb_errata(
         ctx = f"[[column]] {context}/{column}"
         source = _column_source(entry, ctx)
         evidence = _require_evidence(entry, ctx)
+        placement = _column_placement(entry, ctx)
         loaded = ErrataColumn(
             register_id=register_id,
             register_variant_id=variant_id,
@@ -476,7 +492,8 @@ def load_scb_errata(
             classification=_column_classification(entry, ctx),
             is_identifier=_require_bool(entry, "is_identifier", ctx),
             is_sensitive=_require_bool(entry, "is_sensitive", ctx),
-            versions=_column_versions(entry, ctx),
+            versions=placement[0],
+            holdings_period=placement[1],
             source=source,
             provenance=_state_provenance(source, evidence),
         )
@@ -538,24 +555,91 @@ def _named_versions(entry: dict, ctx: str) -> tuple[str, ...]:
     return named
 
 
-def _column_versions(entry: dict, ctx: str) -> tuple[str, ...] | None:
-    """A `[[column]]`'s placement: the named versions, or None for
-    `all_versions = true`.
+_YEAR_RANGE = re.compile(r"^(\d{4})-(\d{4})$")
+_DATE_RANGE = re.compile(r"^(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})$")
 
-    Exactly one of the two. `all_versions` is what a steward holdings list
-    actually says — the column is in the delivery, undated — and naming every
-    edition instead would make the entry rot the next time SCB ships one."""
+
+def holdings_period_bounds(raw: str) -> tuple[str, str]:
+    """A `holdings_period`'s inclusive `(pooled_start, pooled_end)` ISO dates.
+
+    Either whole years (`"2002-2020"` → `"2002-01-01"` .. `"2020-12-31"`) or
+    exact dates (`"2002-01-01/2020-12-31"`, verbatim). Anything else — and a
+    range ending before it starts — is a load-time refusal, where the maintainer
+    gets a remediation instead of an unresolvable occurrence."""
+    match = _YEAR_RANGE.match(raw)
+    if match is not None:
+        start_year, end_year = match.groups()
+        if end_year < start_year:
+            raise curation_error(
+                _CODE,
+                f"scb_errata holdings_period {raw!r} ends before it starts.",
+                "Give the range oldest-first, e.g. "
+                '`holdings_period = "2002-2020"`.',
+            )
+        return f"{start_year}-01-01", f"{end_year}-12-31"
+    match = _DATE_RANGE.match(raw)
+    if match is not None:
+        start, end = match.groups()
+        try:
+            ordered = date.fromisoformat(start) <= date.fromisoformat(end)
+        except ValueError:
+            ordered = False
+        if not ordered:
+            raise curation_error(
+                _CODE,
+                f"scb_errata holdings_period {raw!r} is not an ordered "
+                "`YYYY-MM-DD/YYYY-MM-DD` range.",
+                "Give the range oldest-first, e.g. "
+                '`holdings_period = "2002-01-01/2020-12-31"`.',
+            )
+        return start, end
+    raise curation_error(
+        _CODE,
+        f"scb_errata holdings_period {raw!r} is not a `YYYY-YYYY` year range "
+        "or a `YYYY-MM-DD/YYYY-MM-DD` date range.",
+        'Give e.g. `holdings_period = "2002-2020"` — the dataset-grain years '
+        "the steward holds the column somewhere inside.",
+    )
+
+
+def _column_placement(
+    entry: dict, ctx: str
+) -> tuple[tuple[str, ...] | None, str | None]:
+    """A `[[column]]`'s placement: `(named versions, holdings raw)`.
+
+    Exactly one of `versions`, `all_versions = true`, `holdings_period`.
+    `all_versions` is the undated holdings claim — the column is in the delivery,
+    undated — and naming every edition instead would make the entry rot the next
+    time SCB ships one. `holdings_period` dates that same claim at dataset grain:
+    the column is held somewhere inside the range, never in every wave, so
+    conversion keeps it as one pooled range instead of per-edition claims."""
     all_versions = _require_bool(entry, "all_versions", ctx)
-    if all_versions == ("versions" in entry):
+    forms = [
+        name
+        for name, present in (
+            ("versions", "versions" in entry),
+            ("all_versions", all_versions),
+            ("holdings_period", "holdings_period" in entry),
+        )
+        if present
+    ]
+    if len(forms) != 1:
         raise curation_error(
             _CODE,
-            f"scb_errata {ctx} needs EITHER `versions` or `all_versions = true`, "
-            f"not {'both' if all_versions else 'neither'}.",
-            'Name the editions the column was delivered in (`versions = ["2010"]`) '
-            "or declare it delivered in every edition of the variant "
-            "(`all_versions = true`).",
+            f"scb_errata {ctx} needs exactly one of `versions`, "
+            f"`all_versions = true`, `holdings_period`, not {forms}.",
+            'Name the editions the column was delivered in (`versions = ["2010"]`), '
+            "declare it delivered in every edition of the variant "
+            "(`all_versions = true`), or date the steward holding at dataset grain "
+            '(`holdings_period = "2002-2020"`).',
         )
-    return None if all_versions else _named_versions(entry, ctx)
+    if "holdings_period" in entry:
+        raw = _require_str(entry, "holdings_period", ctx)
+        holdings_period_bounds(raw)  # fail fast: refuse the bad range here
+        return None, raw
+    if all_versions:
+        return None, None
+    return _named_versions(entry, ctx), None
 
 
 def _column_source(entry: dict, ctx: str) -> str:

@@ -407,6 +407,7 @@ def test_column_declaration_preserves_only_supplied_flags_and_periods(
         is_identifier=False,
         is_sensitive=True,
         versions=versions,
+        holdings_period=None,
         source="steward",
         provenance="Existing accepted column declaration",
     )
@@ -466,6 +467,91 @@ def test_column_declaration_preserves_only_supplied_flags_and_periods(
         declared_flags=frozenset({"is_sensitive"}),
     )
     assert blocked.case is None and blocked.blockers == ("column_now_documented",)
+
+
+def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
+    """Y-212: a dataset-grain steward holding is ONE pooled range, never
+    per-edition claims — one `:holdings` addition resolving to one pooled
+    segment that forms one `pooled = 1` state."""
+    record = _record(column="OTHER")
+    original = source_occurrence(record)
+    assert original.edition_key is not None
+    entry = ErrataColumn(
+        register_id=1,
+        register_variant_id=2,
+        column="MISSING",
+        name="Authored name",
+        definition="Authored description",
+        data_type=None,
+        classification=None,
+        is_identifier=False,
+        is_sensitive=False,
+        versions=None,
+        holdings_period="2002-2020",
+        source="steward-holdings",
+        provenance="errata:steward-holdings\nThe steward holds it.",
+    )
+    binding = ErrataEditionBinding(
+        key=original.edition_key,
+        name="2020",
+        edition_scope=record.edition_scope,
+        edition_period_scope=record.edition_period_scope,
+        support=(record_ref(record),),
+        native_id=2020,
+    )
+    converted = convert_column_entry(
+        entry,
+        case_id="column-1",
+        records=(record,),
+        editions=(binding,),
+        declared_flags=frozenset(),
+    )
+    assert converted.case is not None and converted.blockers == ()
+    assert isinstance(converted.case.decision, OccurrenceCorrectionDecision)
+    (effect,) = converted.case.decision.effects
+    assert isinstance(effect, CuratedOccurrenceAddition)
+    assert effect.occurrence_key == "column-1:holdings"
+    assert effect.edition_key is None
+    assert effect.edition_scope == effect.edition_period_scope == TemporalScope(
+        kind="pooled",
+        label="2002-2020",
+        pooled_start="2002-01-01",
+        pooled_end="2020-12-31",
+    )
+    result = apply_occurrence_cases((record,), (converted.case,))
+    assert result.diagnostics == ()
+    (addition,) = tuple(item for item in result.occurrences if item.occurrence_key)
+    resolved = resolve_occurrence_intervals((addition,))
+    assert resolved.issues == ()
+    (segment,) = resolved.segments
+    assert (segment.valid_from, segment.valid_to) == ("2002-01-01", "2020-12-31")
+    assert segment.pooled is True
+    assert addition.variant_key is not None and addition.column_key is not None
+    formed = form_native_variable(
+        (addition,),
+        register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
+        variants={
+            addition.variant_key: ResolvedVariant(slug="people", name="People")
+        },
+        slug="missing",
+        provider_key="2.missing",
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+        coding={addition.column_key: resolve_code_membership(())},
+    )
+    assert formed.variable is not None and formed.diagnostics == ()
+    (state,) = formed.variable.states
+    assert (state.valid_from, state.valid_to) == ("2002-01-01", "2020-12-31")
+    assert state.pooled is True
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog((formed.variable,), output, manifest={})
+    with closing(open_db(output)) as conn:
+        assert tuple(
+            conn.execute(
+                "SELECT valid_from, valid_to, pooled FROM variable_state"
+            ).fetchone()
+        ) == ("2002-01-01", "2020-12-31", 1)
 
 
 def test_checked_variant_routing_retains_unknown_scope_and_physical_evidence() -> None:
