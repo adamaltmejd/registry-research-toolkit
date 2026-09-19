@@ -342,6 +342,34 @@ def test_unfolded_columns_still_require_partition_or_alias() -> None:
         assert [d.code for d in result.diagnostics] == ["unresolved_native_identity"]
 
 
+def test_checked_column_keeps_its_literal_when_twins_fold() -> None:
+    """Y-210 a1: folding never rewrites an explicit partition/alias decision.
+
+    The checked 2002 `V0115` state keeps its literal while the unchecked twins
+    take the most recent spelling (`v0115` from 2005); coverage follows each
+    output's own origin. Origin is tracked explicitly, never by literal."""
+    checked = replace(
+        effective_occurrence(_record(2002, column="V0115")), identity_checked=True
+    )
+    result = _form(
+        (checked, _record(2004, column="V0115"), _record(2005, column="v0115"))
+    )
+    assert result.variable is not None
+    assert not any(d.severity == "error" for d in result.diagnostics)
+    assert [(s.valid_from, s.delivery_column_name) for s in result.variable.states] == [
+        ("2002-01-01", "V0115"),
+        ("2004-01-01", "v0115"),
+        ("2005-01-01", "v0115"),
+    ]
+    (warning,) = [d for d in result.diagnostics if d.code == "column_spelling_folded"]
+    assert "most recent spelling (v0115)" in warning.detail
+    assert sorted((c.valid_from, c.column) for c in result.coverage) == [
+        ("2002-01-01", "V0115"),
+        ("2004-01-01", "v0115"),
+        ("2005-01-01", "v0115"),
+    ]
+
+
 def _fdb_record(year: int, *, column: str, variant: int) -> SourceRecord:
     return _record(year, column=column, native_id=830, variant=variant)
 

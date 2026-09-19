@@ -520,6 +520,13 @@ def form_native_variable(
     # Every finite positive source claim, against the periods an explicit outcome
     # withholds from it, both keyed by the exact variant and physical column.
     claims: list[CoverageObligation] = []
+    # Origin of every formed state and claim: True when every contributing
+    # occurrence is unchecked, i.e. the output is rooted in the folded twins
+    # rather than in an explicit partition/alias decision. Keyed by id();
+    # created_states keeps every state alive so the keys stay sound.
+    folded_state: dict[int, bool] = {}
+    folded_claim: dict[int, bool] = {}
+    created_states: list[ResolvedState] = []
     waived: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     for key, members in sorted(by_variant.items(), key=lambda item: repr(item[0])):
         variant = variants[key]
@@ -596,31 +603,38 @@ def form_native_variable(
                     )
                 )
             for segment in segments:
-                claims.append(
-                    CoverageObligation(
-                        subject,
-                        variant.slug,
-                        column,
-                        segment.valid_from,
-                        segment.valid_to,
-                        _refs(segment.occurrences),
-                        data_type_claim=_fact_claim(segment.fields.data_type),
-                        data_length_claim=_fact_claim(segment.fields.data_length),
-                        attributions=tuple(
-                            sorted(
-                                {
-                                    correction.provenance
-                                    for occurrence in segment.effective_occurrences
-                                    for correction in occurrence.corrections
-                                }
-                            )
-                        ),
-                    )
+                folded = all(
+                    not occurrence.identity_checked
+                    for occurrence in segment.effective_occurrences
                 )
+                new_claim = CoverageObligation(
+                    subject,
+                    variant.slug,
+                    column,
+                    segment.valid_from,
+                    segment.valid_to,
+                    _refs(segment.occurrences),
+                    data_type_claim=_fact_claim(segment.fields.data_type),
+                    data_length_claim=_fact_claim(segment.fields.data_length),
+                    attributions=tuple(
+                        sorted(
+                            {
+                                correction.provenance
+                                for occurrence in segment.effective_occurrences
+                                for correction in occurrence.corrections
+                            }
+                        )
+                    ),
+                )
+                claims.append(new_claim)
+                folded_claim[id(new_claim)] = folded
                 new_states, new_issues, uncoded = _coded_states(
                     segment, variant, code_result, subject
                 )
                 waived[variant.slug, column].extend(uncoded)
+                created_states.extend(new_states)
+                for state in new_states:
+                    folded_state[id(state)] = folded
                 states.extend(new_states)
                 diagnostics.extend(new_issues)
                 if new_states and _text(segment.fields, "data_type") is None:
@@ -693,22 +707,23 @@ def form_native_variable(
     }
     if chosen_spelling is not None:
         # One folded column carries one delivery name downstream, where the
-        # coverage gate matches claims to states by exact string. Only the
-        # twin spellings unify; any checked-exact column keeps its literal.
+        # coverage gate matches claims to states by exact string. Only outputs
+        # rooted in the unchecked folded occurrences unify, by recorded origin
+        # — never by literal: a checked-exact column keeps its literal even
+        # when it collides with a twin spelling. Representation and disjoint
+        # handling above still see raw names, so overlapping twins keep their
+        # graceful parallel-column error. Aliases stay exact: they exist only
+        # via checked representation decisions naming exact columns.
         states = [
             state.model_copy(update={"delivery_column_name": chosen_spelling})
-            if state.delivery_column_name in columns
+            if folded_state.get(id(state), False)
             else state
             for state in states
         ]
-        aliases = tuple(
-            alias.model_copy(update={"delivery_column_name": chosen_spelling})
-            if alias.delivery_column_name in columns
-            else alias
-            for alias in aliases
-        )
         claims = [
-            replace(claim, column=chosen_spelling) if claim.column in columns else claim
+            replace(claim, column=chosen_spelling)
+            if folded_claim.get(id(claim), False)
+            else claim
             for claim in claims
         ]
     # What the supported occurrences still claim once every explicit outcome has
