@@ -24,7 +24,7 @@ from reg_meta_build.source_curation import (
     SourceRecordRef,
 )
 from reg_meta_build.source_effects import copied_coding_key
-from reg_meta_build.source_intervals import scope_bounds
+from reg_meta_build.source_intervals import coding_scope_bounds
 from reg_meta_build.source_records import (
     ScopeInterval,
     SourceFields,
@@ -105,7 +105,7 @@ def _member_scope(
         ), "unknown_code_validity"
     if not constraints and not alternatives:
         return TemporalScope(kind="year_independent"), None
-    bounds = scope_bounds(occurrence)
+    bounds = coding_scope_bounds(occurrence)
     if bounds is None:
         return _unknown(
             "code membership requires a finite occurrence scope"

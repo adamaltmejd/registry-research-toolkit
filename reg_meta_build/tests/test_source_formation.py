@@ -247,6 +247,33 @@ def test_pooled_only_edition_forms_one_marked_state(tmp_path: Path) -> None:
         ) == ("2012-01-01", "2014-12-31", 1)
 
 
+def test_pooled_edition_state_carries_its_value_set() -> None:
+    """Y-207: a pooled variable's one marked state carries its bound codes.
+
+    The coding resolves over the whole pooled range, so formation finds the
+    membership for the occurrence period — no `missing_coding_period`."""
+    edition, period, issue = source_scopes("2020 - 2022")
+    assert issue == "pooled_period"
+    record = _record(2020, row="-pooled").model_copy(
+        update={"edition_scope": edition, "edition_period_scope": period}
+    )
+    claim = CodeListClaim(
+        claim_id="pooled-list",
+        scope=period,
+        members=(
+            CodeMembershipClaim("01", "One", TemporalScope(kind="year_independent")),
+        ),
+    )
+    result = _form((record,), claims=(claim,))
+    assert result.variable is not None
+    assert result.diagnostics == ()
+    (state,) = result.variable.states
+    assert (state.valid_from, state.valid_to) == ("2020-01-01", "2022-12-31")
+    assert state.pooled is True
+    assert state.value_set is not None
+    assert state.value_set.members == (("01", "One"),)
+
+
 def test_native_identity_is_scoped_and_preserves_native_primitive_type() -> None:
     integer, string, distinct = (
         _record(2020),

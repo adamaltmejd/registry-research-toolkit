@@ -102,11 +102,24 @@ def occurrence_bounds(
     if scope.kind == "not_applicable":
         scope = record.edition_scope
     if scope.kind == "pooled":
-        return _pooled_bounds(scope)
+        return pooled_bounds(scope)
     return scope_bounds(scope)
 
 
-def _pooled_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
+def coding_scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
+    """Occurrence-window bounds for coding membership, pooled-aware (Y-207).
+
+    A range-carrying pooled scope yields exactly one interval over the whole
+    pooled range — the membership window is clamped to that range, never split
+    into annual membership inside it. A pooled scope without a range, and any
+    other non-interval scope, stay unresolved as before.
+    """
+    if scope.kind == "pooled":
+        return pooled_bounds(scope)
+    return scope_bounds(scope)
+
+
+def pooled_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     """The single whole-range interval for a range-carrying pooled scope."""
     if scope.pooled_start is None or scope.pooled_end is None:
         return None

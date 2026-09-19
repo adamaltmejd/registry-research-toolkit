@@ -31,7 +31,7 @@ from reg_meta_build.source_curation import (
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
-from reg_meta_build.source_intervals import scope_bounds
+from reg_meta_build.source_intervals import coding_scope_bounds
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
 
 if TYPE_CHECKING:
@@ -63,15 +63,17 @@ def coding_for_period(
 ) -> tuple[CodeListClaim, ...]:
     """Project only independently dated claims onto an already established window.
 
-    Unknown or pooled source scopes stay in original accounting and diagnostics;
-    they cannot acquire annual meaning through a coding choice.
+    Unknown scopes and pooled scopes without a range stay in original accounting
+    and diagnostics; they cannot acquire annual meaning through a coding choice.
+    A range-carrying pooled scope projects over its whole pooled range, clamped
+    to the window — never as annual membership inside the range.
     """
     lower, upper = date.fromisoformat(valid_from), date.fromisoformat(valid_to)
     if lower > upper:
         raise ValueError("coding projection bounds are reversed")
     result = []
     for claim in claims:
-        periods = scope_bounds(claim.scope)
+        periods = coding_scope_bounds(claim.scope)
         if periods is None:
             continue
         intervals = tuple(

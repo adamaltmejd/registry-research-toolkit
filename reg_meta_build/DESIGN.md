@@ -300,9 +300,10 @@ it: where an explicit occurrence overlaps, it wins and the span resolves as an o
 state, with pooled evidence excluded from field reconciliation on that span, so a pooled
 span never overlaps an explicit span on the same (variable, variant, column). A pooled
 scope that carries no range stays unresolvable (an unsupported occurrence, as before).
-The marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema
-6.10.0) through `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db`
-fails a build whose pooled-marked window overlaps an unmarked window on one column.
+Coding membership on a pooled edition is bound over the whole pooled range (Y-207). The
+marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0)
+through `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a
+build whose pooled-marked window overlaps an unmarked window on one column.
 
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across

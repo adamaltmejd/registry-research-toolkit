@@ -3,7 +3,7 @@
 The caller establishes which source lists describe the same delivery occurrence.
 Names, source order, list size, and recency never establish that binding here.
 Validity scopes arrive interpreted by their source format or checked curation;
-unknown and pooled scopes cannot become annual membership. Original claim objects
+unknown scopes and pooled scopes without a range cannot become annual membership. Original claim objects
 remain in the result so duplicate source associations are not lost in accounting.
 """
 
@@ -16,7 +16,7 @@ from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
-from reg_meta_build.source_intervals import scope_bounds
+from reg_meta_build.source_intervals import coding_scope_bounds
 from reg_meta_build.source_records import canonical_sha256
 
 if TYPE_CHECKING:
@@ -108,7 +108,7 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
     # Duplicate physical record bindings may share one source-native list. Keep
     # every input claim in accounting; process its membership events only once.
     for claim in sorted(claim_by_id.values(), key=lambda c: c.claim_id):
-        periods = scope_bounds(claim.scope)
+        periods = coding_scope_bounds(claim.scope)
         if periods is None:
             issues.append(
                 CodingIssue("unsupported_coding_scope", (claim.claim_id,), None, None)
@@ -121,7 +121,7 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
             if member.scope.kind in {"not_applicable", "year_independent"}:
                 member_periods = periods
             else:
-                member_periods = scope_bounds(member.scope)
+                member_periods = coding_scope_bounds(member.scope)
             if member.code is None or member.label is None or member_periods is None:
                 invalid_members.add((claim.claim_id, position))
             if member_periods is None:
@@ -279,7 +279,7 @@ def coding_observation_sha256(claim: CodeListClaim) -> str:
     complete = coding_content_sha256(claim)
     if complete is not None:
         return complete
-    periods = scope_bounds(claim.scope)
+    periods = coding_scope_bounds(claim.scope)
     if periods is None:
         members = set()
         for member in claim.members:
@@ -306,7 +306,7 @@ def coding_observation_sha256(claim: CodeListClaim) -> str:
         bounds = (
             periods
             if member.scope.kind in {"not_applicable", "year_independent"}
-            else scope_bounds(member.scope)
+            else coding_scope_bounds(member.scope)
         )
         if bounds is None:
             scope = member.scope.model_dump(mode="json")
@@ -345,9 +345,9 @@ def copied_coding_fingerprints(claims: Iterable[CodeListClaim]) -> tuple[str, ..
                 )
                 for member in claim.members
                 if member.scope.kind not in {"not_applicable", "year_independent"}
-                and scope_bounds(member.scope) is None
+                and coding_scope_bounds(member.scope) is None
             }
-            if scope_bounds(claim.scope) is not None
+            if coding_scope_bounds(claim.scope) is not None
             else set()
         )
         fingerprints.add(

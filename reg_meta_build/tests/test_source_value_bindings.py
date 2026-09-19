@@ -17,6 +17,7 @@ from reg_meta_build.source_coding import (
     resolve_code_membership,
 )
 from reg_meta_build.source_occurrences import source_occurrence
+from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
@@ -710,3 +711,78 @@ def test_absent_validity_cannot_be_mislabeled_unrestricted(tmp_path: Path) -> No
     with pytest.raises(ValueError, match="absent item-validity"):
         _prepare(tmp_path / "values", join=_join(), validity_present=False)
     assert not (tmp_path / "values").exists()
+
+
+def test_pooled_edition_binds_coding_over_the_whole_pooled_range(
+    tmp_path: Path,
+) -> None:
+    """Y-207: a Vardemangder membership on a pooled edition binds its range.
+
+    The pooled occurrence "2020 - 2022" carries 2020-01-01..2022-12-31; the
+    membership window is clamped to exactly that range — never annual slices.
+    """
+    edition, period, issue = source_scopes("2020 - 2022")
+    assert issue == "pooled_period"
+    record = _record().model_copy(
+        update={"edition_scope": edition, "edition_period_scope": period}
+    )
+    # Validity wider than the pooled range: binding clamps it to the range,
+    # exactly as it clamps to an annual occurrence today.
+    window = value_window("2019-01-01", "2023-12-31")
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(),
+        validity=(
+            SourceValueValidity(
+                2, "1", "2019-01-01", "2023-12-31", "validity", window=window
+            ),
+        ),
+    )
+    with open_value_bindings((source,)) as sessions:
+        result = bind_code_lists(record, sessions)
+    assert result.issues == ()
+    assert len(result.claims) == 1
+    assert result.claims[0].scope == period
+    (member,) = result.claims[0].members
+    assert (member.code, member.label) == ("01", "One")
+    assert member.scope == TemporalScope(
+        kind="intervals",
+        intervals=(ScopeInterval(start="2020-01-01", end="2022-12-31"),),
+    )
+    resolved = resolve_code_membership(result.claims)
+    assert resolved.issues == ()
+    assert [(s.valid_from, s.valid_to) for s in resolved.segments] == [
+        ("2020-01-01", "2022-12-31")
+    ]
+    assert resolved.segments[0].code_set is not None
+    assert resolved.segments[0].code_set.members == (("01", "One"),)
+
+
+@pytest.mark.parametrize("kind", ("pooled", "unknown"))
+def test_rangeless_pooled_and_unknown_scopes_stay_unsupported(
+    tmp_path: Path, kind
+) -> None:
+    """Y-207: a pooled scope without a range, and an unknown scope, still
+    yield `unsupported_coding_scope` — the range is carried evidence only."""
+    scope = TemporalScope(kind=kind, label="Original unresolved coverage")
+    record = _record().model_copy(
+        update={"edition_scope": scope, "edition_period_scope": scope}
+    )
+    # Validity is present so binding reaches the occurrence-window check
+    # instead of the year-independent shortcut.
+    window = value_window("2019-01-01", "2023-12-31")
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(),
+        validity=(
+            SourceValueValidity(
+                2, "1", "2019-01-01", "2023-12-31", "validity", window=window
+            ),
+        ),
+    )
+    with open_value_bindings((source,)) as sessions:
+        result = bind_code_lists(record, sessions)
+    assert [issue.code for issue in result.issues] == ["unsupported_coding_scope"]
+    resolved = resolve_code_membership(result.claims)
+    assert resolved.segments == ()
+    assert [issue.code for issue in resolved.issues] == ["unsupported_coding_scope"]
