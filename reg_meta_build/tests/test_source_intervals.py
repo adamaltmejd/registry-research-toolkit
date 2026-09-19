@@ -326,6 +326,19 @@ def test_pooled_scope_without_a_carried_range_stays_unsupported() -> None:
     assert result.issues[0].fields == ("period",)
 
 
+def test_lasaren_school_year_hull_forms_one_marked_pooled_state() -> None:
+    # Y-208: a Läsåren hull over whole school years resolves exactly like a
+    # whole-year pooled range — one marked state, no inferred annual states.
+    result = resolve_occurrence_intervals(
+        (_pooled_record(1, "Läsåren 1977/1978 - 2024/2025"),)
+    )
+
+    assert result.issues == result.unsupported_occurrences == ()
+    assert [(s.valid_from, s.valid_to, s.pooled) for s in result.segments] == [
+        ("1977-07-01", "2025-06-30", True)
+    ]
+
+
 def test_term_structured_pooled_label_stays_unsupported() -> None:
     # Y-202 P1: term/school-year edges are not whole-year delivery evidence —
     # a real pooled label with that structure resolves nothing.

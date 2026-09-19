@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import calendar
 import re
 from datetime import date
 from typing import Literal
@@ -16,8 +17,12 @@ SourcePeriodIssue = Literal["pooled_period", "unparseable_period"]
 
 _YEAR_TOKEN_RE = re.compile(rf"(?<!\d)({_YEAR})(?!\d)")
 _ISO_DATE_SHAPE_RE = re.compile(rf"(?P<date>{_YEAR}-\d{{1,2}}-\d{{1,2}})\Z")
+# The dash class every range reader shares: ASCII hyphen plus the Unicode
+# dashes SCB types, one to three of them, with surrounding spacing handled at
+# each use site.
+_RANGE_DASH = r"[-‐‑‒–—―−]{1,3}"
 _ISO_DATE_RANGE_SHAPE_RE = re.compile(
-    rf"(?P<start>{_YEAR}-\d{{1,2}}-\d{{1,2}})\s*[-‐‑‒–—―−]{{1,3}}\s*"
+    rf"(?P<start>{_YEAR}-\d{{1,2}}-\d{{1,2}})\s*{_RANGE_DASH}\s*"
     rf"(?P<end>{_YEAR}-\d{{1,2}}-\d{{1,2}})\Z"
 )
 _SWEDISH_DATE_SHAPE_RE = re.compile(
@@ -28,7 +33,26 @@ _SWEDISH_MONTHS = {"oktober": 10, "jan": 1}
 
 # A school year is one period, 1 July of the first year to 30 June of the
 # second. A Deklarationsår denotes the beskattningsår named in parentheses.
+# A bare `YYYY/YYYY+1` pair reads exactly like `Läsåret YYYY/YYYY+1` (Y-208).
 _LÄSÅRET_RE = re.compile(rf"läsåret\s*({_YEAR})\s*/\s*({_YEAR})", re.IGNORECASE)
+_SPLIT_YEAR_RE = re.compile(rf"({_YEAR})\s*/\s*({_YEAR})")
+# Fiscal-year month ranges `YYYY-MM - YYYY-MM` (Y-208), sharing the range dash.
+_MONTH_RANGE_RE = re.compile(
+    rf"({_YEAR})-(\d{{1,2}})\s*{_RANGE_DASH}\s*({_YEAR})-(\d{{1,2}})"
+)
+# A full school year named by its terms (Y-208): only Höstterminen into next
+# year's Vårterminen; any other term pairing is not a school year.
+_TERM_RANGE_RE = re.compile(
+    rf"höstterminen\s*({_YEAR})\s*{_RANGE_DASH}\s*vårterminen\s*({_YEAR})",
+    re.IGNORECASE,
+)
+# A pooled school-year hull `Läsåren A/A+1 - C/C+1` (Y-208): whole school
+# years, so the hull is resolvable delivery evidence unlike term edges.
+_LÄSÅREN_RANGE_RE = re.compile(
+    rf"läsåren\s*({_YEAR})\s*/\s*({_YEAR})\s*{_RANGE_DASH}\s*"
+    rf"({_YEAR})\s*/\s*({_YEAR})",
+    re.IGNORECASE,
+)
 _DEKLARATIONSÅR_RE = re.compile(
     rf"deklarationsår\s*({_YEAR})\s*\(\s*beskattningsår\s*({_YEAR})\s*\)",
     re.IGNORECASE,
@@ -75,6 +99,13 @@ def _exact_interval(value: str) -> tuple[tuple[str, str] | None, bool]:
     return None, False
 
 
+def _school_year_scope(first: int, second: int) -> TemporalScope:
+    """The one school-year period, 1 July of the first year to 30 June of the
+    second, carried on both scopes like the `Läsåret` branch."""
+    interval = ScopeInterval(start=f"{first}-07-01", end=f"{second}-06-30")
+    return TemporalScope(kind="intervals", intervals=(interval,))
+
+
 def _whole_year_claims(claims: tuple[tuple[int, str, str], ...]) -> bool:
     """Whether every claim spans a whole calendar year (Y-202).
 
@@ -92,9 +123,12 @@ def source_scopes(
 
     Dates in edition labels keep day precision; they do not establish variable
     reference time. Existing edition-claim parsing supplies annual and subannual
-    intervals. A `Läsåret YYYY/YYYY+1` school year and a `Deklarationsår YYYY
-    (beskattningsår YYYY-1)` naming its income year are each one period.
-    Remaining multi-year claims stay pooled because
+    intervals. A `Läsåret YYYY/YYYY+1` school year — with or without the prefix —
+    a `Höstterminen YYYY - Vårterminen YYYY+1` term range, and a `YYYY-MM -
+    YYYY-MM` month range are each one period; a `Läsåren A/A+1 - C/C+1` hull is
+    one pooled range over 1 July of the first year to 30 June of the last. A
+    `Deklarationsår YYYY (beskattningsår YYYY-1)` naming its income year is the
+    income year's one period. Remaining multi-year claims stay pooled because
     the stage-one record cannot safely assert independent annual availability.
     """
     label = normalize_text(version_name) or "<blank Registerversionnamn>"
@@ -128,14 +162,49 @@ def source_scopes(
         scope = TemporalScope(kind="unknown", label=label)
         return scope, scope, "unparseable_period"
 
-    if match := _LÄSÅRET_RE.fullmatch(label):
+    if match := _LÄSÅRET_RE.fullmatch(label) or _SPLIT_YEAR_RE.fullmatch(label):
         first, second = int(match.group(1)), int(match.group(2))
         if second == first + 1:
-            interval = ScopeInterval(start=f"{first}-07-01", end=f"{second}-06-30")
-            scope = TemporalScope(kind="intervals", intervals=(interval,))
+            scope = _school_year_scope(first, second)
             return scope, scope, None
         scope = TemporalScope(kind="unknown", label=label)
         return scope, scope, "unparseable_period"
+
+    if match := _MONTH_RANGE_RE.fullmatch(label):
+        start_year, start_month, end_year, end_month = map(int, match.groups())
+        if 1 <= start_month <= 12 and 1 <= end_month <= 12:
+            start = date(start_year, start_month, 1)
+            end = date(end_year, end_month, calendar.monthrange(end_year, end_month)[1])
+            if end >= start:
+                interval = ScopeInterval(start=start.isoformat(), end=end.isoformat())
+                scope = TemporalScope(kind="intervals", intervals=(interval,))
+                return scope, scope, None
+        scope = TemporalScope(kind="unknown", label=label)
+        return scope, scope, "unparseable_period"
+
+    if match := _TERM_RANGE_RE.fullmatch(label):
+        first, second = int(match.group(1)), int(match.group(2))
+        if second == first + 1:
+            scope = _school_year_scope(first, second)
+            return scope, scope, None
+        scope = TemporalScope(kind="unknown", label=label)
+        return scope, scope, "unparseable_period"
+
+    if match := _LÄSÅREN_RANGE_RE.fullmatch(label):
+        first_start, first_end, last_start, last_end = map(int, match.groups())
+        if (
+            first_end == first_start + 1
+            and last_end == last_start + 1
+            and (last_start, last_end) > (first_start, first_end)
+        ):
+            scope = TemporalScope(
+                kind="pooled",
+                label=label,
+                pooled_start=f"{first_start}-07-01",
+                pooled_end=f"{last_end}-06-30",
+            )
+            return scope, scope, "pooled_period"
+        # Not whole school years: fall through, keeping no bounds.
 
     deklaration = _DEKLARATIONSÅR_RE.fullmatch(label)
     if (

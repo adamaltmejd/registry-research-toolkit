@@ -141,16 +141,130 @@ def test_school_year_and_income_year_guards_stay_unknown(source: str) -> None:
     assert edition.label == edition_period.label == source
 
 
-def test_bare_slash_year_pair_without_lasaret_stays_pooled() -> None:
-    edition, edition_period, issue = source_scopes("2014/2015")
+@pytest.mark.parametrize(
+    ("source", "edition_period_bounds"),
+    (
+        ("1997/1998", ("1997-07-01", "1998-06-30")),
+        ("1997 / 1998", ("1997-07-01", "1998-06-30")),
+    ),
+)
+def test_bare_split_year_reads_like_lasaret(
+    source: str, edition_period_bounds: tuple[str, str]
+) -> None:
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue is None
+    assert edition.kind == edition_period.kind == "intervals"
+    assert [(interval.start, interval.end) for interval in edition.intervals] == [
+        edition_period_bounds
+    ]
+    assert [
+        (interval.start, interval.end) for interval in edition_period.intervals
+    ] == [edition_period_bounds]
+
+
+def test_non_consecutive_bare_split_year_stays_unknown() -> None:
+    edition, edition_period, issue = source_scopes("1997/1999")
+
+    assert issue == "unparseable_period"
+    assert edition.kind == edition_period.kind == "unknown"
+    assert edition.label == edition_period.label == "1997/1999"
+
+
+@pytest.mark.parametrize(
+    ("source", "edition_period_bounds"),
+    (
+        ("2011-04 - 2012-03", ("2011-04-01", "2012-03-31")),
+        ("2011-04–2012-03", ("2011-04-01", "2012-03-31")),
+        ("2012-02 - 2012-02", ("2012-02-01", "2012-02-29")),
+    ),
+)
+def test_month_range_forms_one_precise_period(
+    source: str, edition_period_bounds: tuple[str, str]
+) -> None:
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue is None
+    assert edition.kind == edition_period.kind == "intervals"
+    assert [(interval.start, interval.end) for interval in edition.intervals] == [
+        edition_period_bounds
+    ]
+    assert [
+        (interval.start, interval.end) for interval in edition_period.intervals
+    ] == [edition_period_bounds]
+
+
+def test_reversed_month_range_stays_unknown() -> None:
+    edition, edition_period, issue = source_scopes("2012-03 - 2011-04")
+
+    assert issue == "unparseable_period"
+    assert edition.kind == edition_period.kind == "unknown"
+    assert edition.label == edition_period.label == "2012-03 - 2011-04"
+
+
+@pytest.mark.parametrize(
+    ("source", "edition_period_bounds"),
+    (
+        (
+            "Höstterminen 2020 - Vårterminen 2021",
+            ("2020-07-01", "2021-06-30"),
+        ),
+        (
+            "höstterminen 2020–vårterminen 2021",
+            ("2020-07-01", "2021-06-30"),
+        ),
+    ),
+)
+def test_term_range_reads_like_lasaret(
+    source: str, edition_period_bounds: tuple[str, str]
+) -> None:
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue is None
+    assert edition.kind == edition_period.kind == "intervals"
+    assert [(interval.start, interval.end) for interval in edition.intervals] == [
+        edition_period_bounds
+    ]
+    assert [
+        (interval.start, interval.end) for interval in edition_period.intervals
+    ] == [edition_period_bounds]
+
+
+def test_non_consecutive_term_range_stays_unknown() -> None:
+    source = "Höstterminen 2020 - Vårterminen 2022"
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue == "unparseable_period"
+    assert edition.kind == edition_period.kind == "unknown"
+    assert edition.label == edition_period.label == source
+
+
+def test_lasaren_school_year_hull_pools_over_the_hull() -> None:
+    source = "Läsåren 1977/1978 - 2024/2025"
+    edition, edition_period, issue = source_scopes(source)
 
     assert issue == "pooled_period"
     assert edition.kind == edition_period.kind == "pooled"
-    assert edition.label == edition_period.label == "2014/2015"
-    # Y-202: school-year edges are not whole-year delivery evidence, so the
-    # scope carries no resolvable range and keeps the unsupported behavior.
-    assert edition.pooled_start == edition.pooled_end is None
-    assert edition_period.pooled_start == edition_period.pooled_end is None
+    assert edition.label == edition_period.label == source
+    # Y-208: whole school years hull like whole calendar years — one marked
+    # pooled state over 1 July of the first year to 30 June of the last.
+    assert (edition.pooled_start, edition.pooled_end) == (
+        "1977-07-01",
+        "2025-06-30",
+    )
+    assert (edition_period.pooled_start, edition_period.pooled_end) == (
+        "1977-07-01",
+        "2025-06-30",
+    )
+
+
+def test_lasaren_hull_without_consecutive_pairs_keeps_no_bounds() -> None:
+    source = "Läsåren 1977/1979 - 2024/2025"
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue == "unparseable_period"
+    assert edition.kind == edition_period.kind == "unknown"
+    assert edition.label == edition_period.label == source
 
 
 @pytest.mark.parametrize(
@@ -177,14 +291,8 @@ def test_multi_year_claims_stay_pooled(
     assert (edition_period.pooled_start, edition_period.pooled_end) == pooled_range
 
 
-@pytest.mark.parametrize(
-    "source",
-    (
-        "Komvux HT 1988 - VT 2024",
-        "Läsåren 1977/1978 - 1992/1993",
-    ),
-)
-def test_term_structured_pooled_labels_carry_no_resolvable_range(source: str) -> None:
+def test_term_structured_pooled_labels_carry_no_resolvable_range() -> None:
+    source = "Komvux HT 1988 - VT 2024"
     edition, edition_period, issue = source_scopes(source)
 
     assert issue == "pooled_period"

@@ -112,16 +112,20 @@ never replaces the original cells:
   width remain evidence. A text-to-integer change requires curation. SCB nonnegative
   integer length spellings normalize to decimal spelling; other length forms remain.
 - Exact supplied dates and recognized same-year ranges retain their endpoints. A school
-  year `Läsåret YYYY/YYYY+1` is one period 1 July of the first year to 30 June of the
-  second; a `Deklarationsår YYYY (beskattningsår ZZZZ)` with ZZZZ one below YYYY is the
-  income year 1 January to 31 December. Other multi-year periods remain pooled. The
-  edition label and a variable's declared measurement/reference period are separate
-  observations. A pooled scope carries its whole-range bounds (Y-202): the exact
-  interval's endpoints for a multi-year exact range, else the first claim's start
+  year `Läsåret YYYY/YYYY+1` — with or without the `Läsåret` prefix — is one period 1
+  July of the first year to 30 June of the second, as is a
+  `Höstterminen YYYY - Vårterminen YYYY+1` term range; a `YYYY-MM - YYYY-MM` month range
+  is one period from the first day of the first month to the last day of the second. A
+  `Läsåren A/A+1 - C/C+1` school-year hull pools over 1 July of the first year to 30
+  June of the last. A `Deklarationsår YYYY (beskattningsår ZZZZ)` with ZZZZ one below
+  YYYY is the income year 1 January to 31 December. Other multi-year periods remain
+  pooled. The edition label and a variable's declared measurement/reference period are
+  separate observations. A pooled scope carries its whole-range bounds (Y-202): the
+  exact interval's endpoints for a multi-year exact range, else the first claim's start
   through the last claim's end — but only when every claim is a whole calendar year.
-  Term/school-year edges (Komvux HT/VT, Läsår) and forecast-register ranges carry no
-  range. A pooled scope without both bounds stays unresolvable downstream — the range is
-  carried evidence, never re-parsed from the label.
+  Other term edges (Komvux HT/VT) and forecast-register ranges carry no range. A pooled
+  scope without both bounds stays unresolvable downstream — the range is carried
+  evidence, never re-parsed from the label.
 - Value-set content may deduplicate identical code/label pairs for storage and
   comparison. Equal codes with different labels remain distinct. Deduplication does not
   infer list identity, membership, variable identity or authority.
