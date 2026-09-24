@@ -377,8 +377,7 @@ def load_scb_errata(
         if not _edition_years(name):
             raise curation_error(
                 "scb_errata_version_year_unknown",
-                f"{context}/{name} has no parseable "
-                "claimed year.",
+                f"{context}/{name} has no parseable claimed year.",
                 "Use SCB's exact version name containing a four-digit year so "
                 "the coalescer can place the edition chronologically.",
             )

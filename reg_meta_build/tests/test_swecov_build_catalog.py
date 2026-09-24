@@ -899,7 +899,9 @@ def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
     assert [entry["name"] for entry in worklist["errata"]["version"]] == ["2021"]
     assert "delivered" not in worklist
     assert "column-missing: the omitted column rows themselves, 0" in text
-    assert "errata-created columns: 2 group(s); no [[errata.delivered]] candidate" in text
+    assert (
+        "errata-created columns: 2 group(s); no [[errata.delivered]] candidate" in text
+    )
     assert "scb/bestallda-prover/_default T_kolumn: held 2020..2021" in text
     assert "scb/bestallda-prover/_default Errata_utan_variant: held 2020" in text
     assert "target-variant [[errata.column]] entry and inventory" in text
@@ -1145,8 +1147,8 @@ def test_an_scb_documented_column_is_the_same_entry_under_the_other_source(
     )
 
     assert {
-            entry["column"]: entry["source"]
-            for entry in tomllib.loads(text)["errata"]["column"]
+        entry["column"]: entry["source"]
+        for entry in tomllib.loads(text)["errata"]["column"]
     } == {"Ssyk4_J16": "scb-docs", "FastBet": "steward-holdings"}
     # Sectioned by source, each section saying what still has to be curated in it.
     assert "# ── source = scb-docs: 1 column(s)" in text

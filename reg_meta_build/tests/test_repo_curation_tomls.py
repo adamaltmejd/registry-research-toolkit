@@ -153,12 +153,7 @@ def test_repo_concept_groups_parses() -> None:
         if (g.provider, g.register, g.key) in accepted_keys
     }
     assert set(accepted_groups) == accepted_keys
-    assert (
-        sum(
-            len(group.members) for group in accepted_groups.values()
-        )
-        == 273
-    )
+    assert sum(len(group.members) for group in accepted_groups.values()) == 273
 
     lisa_groups = {
         g.key: g for g in groups if (g.provider, g.register) == ("scb", "lisa")

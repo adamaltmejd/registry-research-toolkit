@@ -97,7 +97,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         body = (
-            '[[errata.delivered]]\n'
+            "[[errata.delivered]]\n"
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             'noted = "2026-09-12"\n'
@@ -111,7 +111,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         body = (
-            '[[errata.delivered]]\n'
+            "[[errata.delivered]]\n"
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "SCB left the name blank."\n'
             'noted = "2026-09-12"\nupstream = "blank-column-name-in-version"\n'
@@ -128,7 +128,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path, reserved: str
     ) -> None:
         body = (
-            '[[errata.delivered]]\n'
+            "[[errata.delivered]]\n"
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             f'noted = "2026-09-12"\nupstream = "{reserved}"\n'
@@ -140,7 +140,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         body = (
-            '[[errata.delivered]]\n'
+            "[[errata.delivered]]\n"
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             'noted = "2026-09-12"\nupstream = """specific\ncorrection"""\n'
@@ -152,7 +152,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         body = (
-            '[[errata.delivered]]\n'
+            "[[errata.delivered]]\n"
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = """First paragraph.\n\n'
             'Second paragraph."""\nnoted = "2026-09-12"\n'

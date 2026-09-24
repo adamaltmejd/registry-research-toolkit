@@ -3097,8 +3097,7 @@ class TestInventoryWindowCoverage:
         assert "2020 not documented at all — a [[errata.version]] each" in failure
         block = self._block(result)
         assert (
-            '[[errata.version]]\nvariant = "individer-15plus"\n'
-            'name = "2020"\n'
+            '[[errata.version]]\nvariant = "individer-15plus"\nname = "2020"\n'
         ) in block
         assert 'versions = ["2020"]' in block
         assert block.index("[[errata.version]]") < block.index("[[errata.delivered]]")

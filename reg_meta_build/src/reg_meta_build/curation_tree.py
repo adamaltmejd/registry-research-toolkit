@@ -336,7 +336,9 @@ class IdentityPartitionEntry(_CurationModel):
             try:
                 validate_slug(parts[2], "variable")
             except ValueError as exc:
-                raise ValueError(f"owner {owner!r} has a non-canonical split key") from exc
+                raise ValueError(
+                    f"owner {owner!r} has a non-canonical split key"
+                ) from exc
         overlap = sorted(set(self.columns) & set(self.unassigned_columns))
         if overlap:
             raise ValueError(f"columns and unassigned_columns overlap: {overlap}")
@@ -375,7 +377,9 @@ class IdentityColumnOwnerEntry(_CurationModel):
         try:
             validate_slug(owner_parts[2], "variable")
         except ValueError as exc:
-            raise ValueError("owner must be a canonical split key in variable family") from exc
+            raise ValueError(
+                "owner must be a canonical split key in variable family"
+            ) from exc
         return self
 
 

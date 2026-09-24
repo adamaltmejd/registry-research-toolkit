@@ -1181,7 +1181,9 @@ def declared_column_ownership(
     root = curation_dir or repo_curation_dir()
     if register_files is None:
         if root is None:
-            raise ValueError("register curation is unavailable outside the repo checkout")
+            raise ValueError(
+                "register curation is unavailable outside the repo checkout"
+            )
         loaded = _register_files_for_curation_dir(str(root.resolve()))
     else:
         loaded = tuple(register_files)

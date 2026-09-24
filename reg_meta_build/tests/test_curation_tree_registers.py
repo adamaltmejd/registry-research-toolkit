@@ -112,7 +112,8 @@ def _write_register(
     path = root / "registers" / provider / f"{slug}.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        f'[register]\nprovider = "{provider}"\nslug = "{slug}"\nnative_id = "1"\n\n' + body,
+        f'[register]\nprovider = "{provider}"\nslug = "{slug}"\nnative_id = "1"\n\n'
+        + body,
         encoding="utf-8",
     )
     return path
@@ -259,8 +260,7 @@ def test_duplicate_table_entry_fails_with_file_and_index(tmp_path: Path) -> None
             "canonical split key in family",
         ),
         (
-            '[[identity.partition]]\nvariable = "1.2"\n'
-            'columns = { C = "1.2.c" }\n',
+            '[[identity.partition]]\nvariable = "1.2"\ncolumns = { C = "1.2.c" }\n',
             "columns_ref",
         ),
     ),

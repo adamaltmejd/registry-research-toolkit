@@ -62,9 +62,7 @@ def load_period_family_merges(path: Path | None) -> tuple[PeriodFamily, ...]:
                 f"[[representation.period_family]] entry {index}"
             )
             raw = entry.model_dump()
-            family_stem = _require_str(
-                raw, "family_stem", context
-            )
+            family_stem = _require_str(raw, "family_stem", context)
             label = _require_str(raw, "label", context)
             scope_key = (provider, register, family_stem)
             if scope_key in seen:
