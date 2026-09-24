@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "bostadsbestand"
+native_id = "282"
+
+[[code_label_pair]]
+code = "scb/bostadsbestand/distriktskod"
+label = "scb/bostadsbestand/distriktsnamn"

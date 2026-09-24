@@ -4,7 +4,7 @@
 Mirrors `test_variable_same_as.py::TestGenerator`: `infer_concept_group_candidates`
 over a synthetic DB exercises the foldable/battery split, the sibling floor, the
 proposed-axis classifier, and the already-grouped exclusion;
-`render_candidates_toml` round-trips through `concept_groups.load_concept_groups`.
+`render_candidates_toml` round-trips through the worklist candidate parser.
 
 Fully synthetic (CLAUDE.md): builds its own DBs (in-memory `_slugged_db` helpers)
 and never reads the shipped `concept_groups.toml` or a real built DB."""
@@ -20,7 +20,7 @@ from reg_meta_build.concept_group_candidates import (
     infer_concept_group_candidates,
     render_candidates_toml,
 )
-from reg_meta_build.concept_groups import load_concept_groups
+from reg_meta_build.concept_groups import load_worklist_concept_groups
 
 if TYPE_CHECKING:
     import sqlite3
@@ -474,7 +474,7 @@ class TestGenerator:
         # A family name carrying an embedded newline (and quotes/backslash) must not
         # break the generated `label = "..."` line or the provenance comment: the
         # shared _toml_str escapes control chars and _toml_comment collapses newlines,
-        # so the worklist still re-parses through load_concept_groups.
+        # so the worklist still re-parses through load_worklist_concept_groups.
         conn = _base_db()
         _add_family(
             conn,
@@ -500,7 +500,7 @@ class TestGenerator:
 
         path = tmp_path / "candidates.toml"
         path.write_text(toml, encoding="utf-8")
-        groups = load_concept_groups(path)
+        groups = load_worklist_concept_groups(path)
         assert {g.key for g in groups} == {"diag"}
 
     def test_accepted_family_reemitted_when_scope_passed(self) -> None:
@@ -838,7 +838,7 @@ class TestGenerator:
         path = tmp_path / "candidates.toml"
         path.write_text(toml, encoding="utf-8")
 
-        groups = load_concept_groups(path)
+        groups = load_worklist_concept_groups(path)
         # Every emitted candidate re-parses as a curated group, same key/register.
         emitted = {(c.register_fqid, c.key) for c in result.candidates}
         parsed = {(f"{g.provider}/{g.register}", g.key) for g in groups}

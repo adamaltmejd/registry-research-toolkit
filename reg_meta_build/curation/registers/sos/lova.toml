@@ -1,0 +1,139 @@
+[register]
+provider = "sos"
+slug = "lova"
+native_id = "7847722537922273761"
+name = "Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)"
+
+[[group]]
+register = "sos/lova"
+key = "invandringsdatum"
+label = "Invandringsdatum (per invandringstillfälle)"
+axis = "ordinal"
+members = [{ variable = "invandringsdatum-1", value = "1", label = "1:a" }, { variable = "invandringsdatum-2", value = "2", label = "2:a" }, { variable = "invandringsdatum-3", value = "3", label = "3:e" }, { variable = "invandringsdatum-4", value = "4", label = "4:e" }, { variable = "invandringsdatum-5", value = "5", label = "5:e" }, { variable = "invandringsdatum-6", value = "6", label = "6:e" }, { variable = "invandringsdatum-7", value = "7", label = "7:e" }, { variable = "invandringsdatum-8", value = "8", label = "8:e" }, { variable = "invandringsdatum-9", value = "9", label = "9:e" }]
+
+[[group]]
+register = "sos/lova"
+key = "invandringsland"
+label = "Invandringsland (per invandringstillfälle)"
+axis = "ordinal"
+members = [{ variable = "invandringsland-1", value = "1", label = "1:a" }, { variable = "invandringsland-2", value = "2", label = "2:a" }, { variable = "invandringsland-3", value = "3", label = "3:e" }, { variable = "invandringsland-4", value = "4", label = "4:e" }, { variable = "invandringsland-5", value = "5", label = "5:e" }, { variable = "invandringsland-6", value = "6", label = "6:e" }, { variable = "invandringsland-7", value = "7", label = "7:e" }, { variable = "invandringsland-8", value = "8", label = "8:e" }, { variable = "invandringsland-9", value = "9", label = "9:e" }]
+
+[[group]]
+register = "sos/lova"
+key = "utvandringsdatum"
+label = "Utvandringsdatum (per utvandringstillfälle)"
+axis = "ordinal"
+members = [{ variable = "utvandringsdatum-1", value = "1", label = "1:a" }, { variable = "utvandringsdatum-2", value = "2", label = "2:a" }, { variable = "utvandringsdatum-3", value = "3", label = "3:e" }, { variable = "utvandringsdatum-4", value = "4", label = "4:e" }, { variable = "utvandringsdatum-5", value = "5", label = "5:e" }, { variable = "utvandringsdatum-6", value = "6", label = "6:e" }, { variable = "utvandringsdatum-7", value = "7", label = "7:e" }, { variable = "utvandringsdatum-8", value = "8", label = "8:e" }, { variable = "utvandringsdatum-9", value = "9", label = "9:e" }]
+
+[[group]]
+register = "sos/lova"
+key = "utvandringsland"
+label = "Utvandringsland (per utvandringstillfälle)"
+axis = "ordinal"
+members = [{ variable = "utvandringsland-1", value = "1", label = "1:a" }, { variable = "utvandringsland-2", value = "2", label = "2:a" }, { variable = "utvandringsland-3", value = "3", label = "3:e" }, { variable = "utvandringsland-4", value = "4", label = "4:e" }, { variable = "utvandringsland-5", value = "5", label = "5:e" }, { variable = "utvandringsland-6", value = "6", label = "6:e" }, { variable = "utvandringsland-7", value = "7", label = "7:e" }, { variable = "utvandringsland-8", value = "8", label = "8:e" }, { variable = "utvandringsland-9", value = "9", label = "9:e" }]
+
+[[group]]
+register = "sos/lova"
+key = "invarn"
+label = "Invandringsdatum, numerisk (per invandringstillfälle)"
+axis = "ordinal"
+members = [{ variable = "invandringsdatum-1-numerisk", value = "1", label = "1:a" }, { variable = "invandringsdatum-2-numerisk", value = "2", label = "2:a" }, { variable = "invandringsdatum-3-numerisk", value = "3", label = "3:e" }, { variable = "invandringsdatum-4-numerisk", value = "4", label = "4:e" }, { variable = "invandringsdatum-5-numerisk", value = "5", label = "5:e" }, { variable = "invandringsdatum-6-numerisk", value = "6", label = "6:e" }, { variable = "invandringsdatum-7-numerisk", value = "7", label = "7:e" }, { variable = "invandringsdatum-8-numerisk", value = "8", label = "8:e" }, { variable = "invandringsdatum-9-numerisk", value = "9", label = "9:e" }]
+
+[[group]]
+register = "sos/lova"
+key = "utvarn"
+label = "Utvandringsdatum, numerisk (per utvandringstillfälle)"
+axis = "ordinal"
+members = [{ variable = "utvandringsdatum-1-numerisk", value = "1", label = "1:a" }, { variable = "utvandringsdatum-2-numerisk", value = "2", label = "2:a" }, { variable = "utvandringsdatum-3-numerisk", value = "3", label = "3:e" }, { variable = "utvandringsdatum-4-numerisk", value = "4", label = "4:e" }, { variable = "utvandringsdatum-5-numerisk", value = "5", label = "5:e" }, { variable = "utvandringsdatum-6-numerisk", value = "6", label = "6:e" }, { variable = "utvandringsdatum-7-numerisk", value = "7", label = "7:e" }, { variable = "utvandringsdatum-8-numerisk", value = "8", label = "8:e" }, { variable = "utvandringsdatum-9-numerisk", value = "9", label = "9:e" }]
+
+# DRAFT reg_meta_build/curation/registers/sos/lova.toml (pin-free).
+# Source of every literal: reg_meta_build/src/reg_meta_build/sources/sos.py at
+# 43599863^ (== fb10b1d5), deleted by 43599863. Verified against
+# pipeline-curation-v18 scope scopes/2ff9167af2c7cc617bed.json.gz.
+
+# Variable-sheet Deldatamängd token -> Deldatamängder-sheet row name(s).
+# sos.py DELDATAMANGD_TOKEN_MAP (L1562-1591, #211). Tokens never equal a sheet
+# name, so without this bridge the rows have no variant.
+# v18: accepted-sos-routes:lova:* = 135 cases, 175 variant effects.
+
+[[identity.route]]
+deldatamangd = "A_LOVA"
+variants = ["LOVA"] # v18: 43 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_LISA"
+variants = ["LOVA"] # v18: 30 rows; the workbook's second 'LOVA' row (LISA-derived ekonomi subset)
+
+[[identity.route]]
+deldatamangd = "A_LOVA_EXAMEN"
+variants = ["LOVA EXAMEN"] # v18: 13 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_HOSP"
+variants = ["LOVA HOSP"] # v18: 25 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_PERSON"
+variants = ["LOVA PERSON"] # v18: 64 rows
+
+# Styrtabell bridges. The target Deldatamängder rows are lookup tables (label
+# starts 'Styrtabell' AND Aggregeringsnivå 'Ej relevant', sos.py _is_styrtabell
+# L1518). Rows routed only into lookup tables become support-only, not research
+# variables. v18: existing-source-use:<LOVA workbook> = 1 case, 50 source_use
+# effects (40 variable rows below + the 10 lookup Deldatamängder rows).
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_AGARKAT"
+variants = ["LOVA AGARKAT"] # v18: 2 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_ARB_MARK_STATUS"
+variants = ["LOVA ARB_MARK_STAT"] # v18: 2 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_EXAMENSKODER"
+variants = ["LOVA EXAMENSKODER"] # v18: 8 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_HOSP_KODER"
+variants = ["LOVA HOSPKODER"] # v18: 5 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_LANDSKOD"
+variants = ["LOVA LANDSKOD"] # v18: 5 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_LEG_SPEC_EXAM_KOD"
+variants = ["LOVA LEG_SPEC_EXAM"] # v18: 9 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_REGION"
+variants = ["LOVA REGION"] # v18: 3 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_SEKTORKOD"
+variants = ["LOVA SEKTORKOD"] # v18: 2 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_SYSSSTAT"
+variants = ["LOVA SYSSSTAT"] # v18: 2 rows
+
+[[identity.route]]
+deldatamangd = "A_LOVA_STYR_YRKSTALLN"
+variants = ["LOVA YRKSTALLN"] # v18: 2 rows
+
+# Upstream typo: the 9th immigration date ships as a second INVARN8 in
+# A_LOVA_PERSON; only the etikett (the record's `name`) tells them apart.
+# sos.py VARIABLE_NAME_CORRECTIONS (L1505-1507, #362).
+# v18: accepted-sos-identity:lova:INVARN8 = 1 case, 1 field effect
+# (column_name -> INVARN9) + 1 identity effect (-> accepted-name INVARN9), both
+# conditioned on name == the etikett below. Naming: 7847722537922273761.INVARN9
+# -> slug invandringsdatum-9-numerisk (already tracked, fqid_slugs/sos.toml).
+[[identity.rename]]
+deldatamangd = "A_LOVA_PERSON"
+variable = "INVARN8"
+name = "Invandringsdatum 9 numerisk"
+column = "INVARN9"
+
+# Not carried: sos.py KNOWN_MERGE_ALLOWLIST {("lova", "EXAMAR")} (L1489) only
+# silenced a same-name data_type warning; the merge was the default. No v18 case.

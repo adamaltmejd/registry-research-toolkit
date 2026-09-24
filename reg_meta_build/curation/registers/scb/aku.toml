@@ -1,0 +1,425 @@
+[register]
+provider = "scb"
+slug = "aku"
+native_id = "122"
+
+[[errata.delivered]]
+variant = "aku-april-2005-dec-2020"
+column = "IVECK"
+versions = ["2020"]
+evidence = "SWECOV_variables_full_2026-06-15.csv row208 AKU_2020 contains exact IVECK; raw SCB VarId6631 documents Veckonummer för intervju under året / Kalendervecka through2019."
+noted = "2026-09-13"
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "HsArbHemmaAntV"
+name = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan, frekvens"
+definition = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan, frekvens"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "HsArbhemmaV"
+name = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan"
+definition = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "Hu12a"
+name = "När upphör din tidsbegränsade anställning?"
+definition = "När upphör din tidsbegränsade anställning?"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "ak1"
+description = "Jobbade du någonting den veckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "ampp1"
+description = "Inskriven på arbetsförmedlingen, de senaste 4 veckorna"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "ampp5b"
+description = "Ersättning från försäkringskassan"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "antal-personer-stratum-urval"
+description = "Antal personer i populationen i ett visst stratum vid ett visst urvalstillfälle"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "arbete-hemifran-bostaden-huvud"
+description = "Arbetar du någonting hemifrån den egna bostaden? (Huvudsysslan.)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "arverks3"
+description = "Drevs det företaget av någon i ditt hushåll?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "bi-anstalld-foretagare"
+description = "Är du anställd, egen företagare eller oavlönad medhjälpare (i bisysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "bi6"
+description = "Drivs det företaget av någon i ditt hushåll?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "bisnitttim"
+description = "Hur många timmar arbetar du i genomsnitt per vecka i bisysslan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "gradk"
+description = "Vilken typ av anställning har du nu?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hel-deltid-huvud-aku2008"
+description = "Arbetar du heltid eller deltid (i huvudsysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hsarbhemma"
+description = "Arbete hemifrån egna bostaden i huvudsysslan, senaste månaden"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hu4a"
+description = "Är du anställd, egen företagare eller oavlönad medhjälpare (i huvudsysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hu4b"
+description = "Drivs det företaget/jordbruket av någon i ditt hushåll?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huanst"
+description = "Har du någon anställd? (Huvudsysslan.)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huarbhemmaant"
+description = "Arbetar du hemifrån bostaden minst hälften av dina arbetsdagar? (Huvudsysslan.)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huarbled"
+description = "Ingår det i dina arbetsuppgifter (i huvudsysslan) att leda och ha tillsyn över andra anställdas arbete?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huat13a"
+description = "Hur många timmar arbetade du just den veckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huat1a"
+description = "Var du frånvarande något under referensveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huat2b"
+description = "Vilken anledning var den huvudsakliga? (Frågan ställs endast om två anledningar angivits på fråga At2a)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huat4"
+description = "Hur många veckor i rad har du varit helt frånvarande från arbetet?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huat4b"
+description = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufastbott"
+description = "Har du en fast anställning i botten i huvudsysslan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufat3a"
+description = "Hur många timmar arbetade du just den veckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufat6b"
+description = "Vilken anledning var den huvudsakliga? (Frågan ställs endast om två anledningar angivits på fråga FAt6a)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufat7"
+description = "Hur många veckor har du varit frånvarande från arbetet?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufat7b"
+description = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufrandelvtimanst"
+description = "Hur många timmar var du frånvarande (i huvudsysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufrandelvtimfo"
+description = "Antal frånvarotimmar i huvudsysslan, frånvarande del av veckan, företagare/medhjälpare. Variabeln beräknas som skillnaden mellan faktisk och genomsnittlig arbetstid referensveckan."
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufranhelvtimanst"
+description = "Antal frånvarotimmar i huvudsysslan, frånvarande hela veckan, anställda"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufranhelvtimfo"
+description = "Antal frånvarotimmar i huvudsysslan, frånvarande hela veckan, företagare/medhjälpare"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hufranlon"
+description = "Har du under frånvarotiden fått minst 50% av lönen från din arbetsgivare, eller annan ersättning som uppgår till minst 50% av lönen?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huhelbott"
+description = "Har du en heltidsanställning i botten (i huvudsysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huotejerstim"
+description = "Hur många övertid-/mertidstimmar (i huvudsysslan) som du ej får ersättning för?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "husnitttim"
+description = "Hur många timmar arbetar du i genomsnitt per vecka?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hutafa"
+description = "Är det en tidsbegränsad eller en fast anställning?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "hutafaonsk"
+description = "Vilket föredrar du: fast eller tidsbegränsad anställning?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "huyrke"
+description = "Till vilket yrke vill du räkna ditt arbete?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "iveck"
+description = "Kalendervecka"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "kbihu14a"
+description = "Är ... fortfarande ditt yrke?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "kfam2"
+description = "Du hade förra gången ... antal barn som bodde hemma. Är det fortfarande så?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "kfam4"
+description = "Antalet barn som bor hemma är alltså ...?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "khu14a"
+description = "Är ... fortfarande ditt yrke?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "khu16a"
+description = "Arbetar du fortfarande heltid?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "khu16b"
+description = "Arbetar du fortfarande deltid?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "khu17"
+description = "Är din deltid fortfarande ... procent?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "khu30"
+description = "Är din överenskomna arbetstid fortfarande ... timmar per vecka?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "khu31"
+description = "Arbetar du fortfarande ... timmar i genomsnitt per vecka?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "khu8"
+description = "Har du fortfarande samma typ av tidsbegränsad anställning som vid förra intervjun?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "land-for-arbetet-for-ett-ar-sedan"
+description = "I vilket land arbetade du (för ett år sedan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "mer-an-ett-arbete-franvaro"
+description = "Hade du mer än ett arbete som du var frånvarande från?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "omb10b"
+description = "Du sa att du vill och kan öka din arbetstid. Hur många veckor i rad har det varit så?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "overtid-med-ersattning"
+description = "Hade du någon övertid (i huvudsysslan) som du får ersättning för i tid eller pengar?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "overtid-totalt"
+description = "Hade du någon övertid/mertid med eller utan ersättning?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "overtid-utan-ersattning"
+description = "Hade du någon övertid (i huvudsysslan) som du inte får ersättning för i tid eller pengar?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "sysejarbmerskal"
+description = "Vilken var den främsta anledningen till att du inte kunde arbeta fler timmar under referensveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "sysokaminska"
+description = "Skulle du vilja öka eller minska din arbetstid (totalt i både huvud- och bisyssla)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "sysonsktim"
+description = "Hur många timmar per vecka skulle du vilja arbeta?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "syssokskal"
+description = "Vilken är den främsta anledningen till att du söker annat arbete?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "syssokt3"
+description = "Ej sökt annat arbete"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "uarbonsktim"
+description = "Hur många timmar per vecka skulle du vilja arbeta?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "uarbtarb5"
+description = "Drevs det företaget av någon i ditt hushåll?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "uarbvillarb"
+description = "Skulle du velat ha arbete referensveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[enrichment.description]]
+register = "scb/aku"
+variable = "verks1"
+description = "Vad betraktar du dig huvudsakligen som?"
+provenance = "P1105_Variabellista 2022.xlsx"

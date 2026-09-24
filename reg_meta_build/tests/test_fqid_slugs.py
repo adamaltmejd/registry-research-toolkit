@@ -549,260 +549,140 @@ class TestProviderToml:
         assert exc.value.code == "slug_toml_invalid"
         assert "within register '34'" in exc.value.message
 
-    # Y-219: a `columns`-carrying split may reuse its own base family's slug.
+    # A register-file partition is the only basis for reusing a split/base slug.
     _BASE = '[variable."34.4"]\nslug = "kon"\n'
-    _OWNED_SPLIT = (
-        '[variable."34.4.kon"]\nslug = "kon"\n'
-        'columns = { Kon = "34.4.kon" }\ncolumns_ref = "ref"\n'
-    )
+    _SPLIT = '[variable."34.4.kon"]\nslug = "kon"\n'
 
-    @pytest.mark.parametrize("split_first", [False, True])
-    def test_split_with_columns_reuses_own_base_slug(
-        self, tmp_path: Path, split_first: bool
-    ):
-        pair = [self._BASE, self._OWNED_SPLIT]
-        body = "".join(reversed(pair) if split_first else pair)
-        entries = load_provider_toml(_write(tmp_path / "scb.toml", body))
+    def _write_partition(self, tmp_path: Path, body: str) -> tuple[Path, Path]:
+        slug_dir = tmp_path / "fqid_slugs"
+        slug_dir.mkdir(exist_ok=True)
+        slug_path = _write(
+            slug_dir / "scb.toml",
+            '[register."34"]\nslug = "lisa"\n' + self._BASE + self._SPLIT,
+        )
+        curation = tmp_path / "curation"
+        register_path = curation / "registers" / "scb" / "lisa.toml"
+        register_path.parent.mkdir(parents=True, exist_ok=True)
+        register_path.write_text(
+            '[register]\nprovider = "scb"\nslug = "lisa"\n'
+            'native_id = "34"\n\n' + body,
+            encoding="utf-8",
+        )
+        return slug_path, curation
+
+    def test_split_with_partition_reuses_own_base_slug(self, tmp_path: Path):
+        body = (
+            '[[identity.partition]]\nvariable = "34.4"\n'
+            'columns = { Kon = "34.4.kon" }\n'
+        )
+        slug_path, _curation = self._write_partition(tmp_path, body)
+        entries = load_provider_toml(slug_path)
         assert {e.source_id: e.slug for e in entries} == {
+            "34": "lisa",
             "34.4": "kon",
             "34.4.kon": "kon",
         }
 
-    @pytest.mark.parametrize(
-        "body",
-        [
-            '[variable."34.5"]\nslug = "kon"\n' + _OWNED_SPLIT,
-            _BASE + '[variable."34.4.kon"]\nslug = "kon"\n',
-            _BASE + _OWNED_SPLIT + '[variable."34.4.kon2"]\nslug = "kon"\n'
-            'columns = { Kon2 = "34.4.kon2" }\ncolumns_ref = "ref"\n',
-        ],
-        ids=["another-family-base", "split-without-columns", "second-owning-split"],
-    )
-    def test_split_reusing_more_than_own_base_slug_rejected(
-        self, tmp_path: Path, body: str
-    ):
+    def test_split_without_partition_cannot_reuse_base_slug(self, tmp_path: Path):
+        slug_dir = tmp_path / "fqid_slugs"
+        slug_dir.mkdir()
+        slug_path = _write(
+            slug_dir / "scb.toml",
+            '[register."34"]\nslug = "lisa"\n' + self._BASE + self._SPLIT,
+        )
         with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(_write(tmp_path / "scb.toml", body))
+            load_provider_toml(slug_path)
         assert exc.value.code == "slug_toml_invalid"
-        assert "within register '34'" in exc.value.message
 
-    def test_replaced_by_chain_acyclic(self, tmp_path: Path):
-        # Slug typo gets a `replaced_by` link to the new row; both rows stay
-        # in the TOML and a one-hop chain resolves cleanly.
+    @pytest.mark.parametrize(
+        "field",
+        ['columns = { Kon = "34.4.kon" }\n', 'columns_ref = "reference"\n'],
+    )
+    def test_slug_entries_reject_removed_ownership_fields(
+        self, tmp_path: Path, field: str
+    ) -> None:
         path = _write(
             tmp_path / "scb.toml",
-            '[register."40"]\nslug = "rams-typo"\nreplaced_by = "41"\n'
-            '[register."41"]\nslug = "rams"\n',
-        )
-        entries = load_provider_toml(path)
-        assert {e.source_id for e in entries} == {"40", "41"}
-
-    def test_replaced_by_dangling_rejected(self, tmp_path: Path):
-        path = _write(
-            tmp_path / "scb.toml",
-            '[register."40"]\nslug = "rams"\nreplaced_by = "40b"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert "not declared" in exc.value.message
-
-    def test_replaced_by_cycle_rejected(self, tmp_path: Path):
-        path = _write(
-            tmp_path / "scb.toml",
-            '[register."40"]\nslug = "a"\nreplaced_by = "40"\n'
-            '[register."41"]\nslug = "b"\nreplaced_by = "40"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert "cycle" in exc.value.message
-
-
-class TestSplitColumnOwnership:
-    """Y-167: tracked literal column ownership on variable split entries."""
-
-    _REF = "Y-167 test reference"
-
-    def _family(self, extra: str = "") -> str:
-        return (
-            '[variable."1.830.gaturest"]\n'
-            'columns = { GatuRest = "1.830.gaturest", '
-            'Gaturest = "1.830.gaturest", PGaturest = "1.830.pgaturest" }\n'
-            f'columns_ref = "{self._REF}"\n'
-            '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n' + extra
-        )
-
-    def test_valid_map_parses_to_sorted_pairs_and_ref(self, tmp_path: Path) -> None:
-        path = _write(tmp_path / "scb.toml", self._family())
-        entries = load_provider_toml(path)
-        declarer = next(e for e in entries if e.source_id == "1.830.gaturest")
-        assert declarer.slug is None
-        assert declarer.columns == (
-            ("GatuRest", "1.830.gaturest"),
-            ("Gaturest", "1.830.gaturest"),
-            ("PGaturest", "1.830.pgaturest"),
-        )
-        assert declarer.columns_ref == self._REF
-
-    def test_columns_rejected_on_non_variable_kind(self, tmp_path: Path) -> None:
-        path = _write(
-            tmp_path / "scb.toml",
-            '[register."1"]\nslug = "fdb"\ncolumns = { A = "1.830.gaturest" }\n',
+            '[variable."34.4.kon"]\nslug = "kon"\n' + field,
         )
         with pytest.raises(RegMetaError) as exc:
             load_provider_toml(path)
         assert exc.value.code == "slug_toml_invalid"
         assert "columns" in exc.value.message
 
-    @pytest.mark.parametrize("body", ["columns = {}\n", 'columns = "x"\n'])
-    def test_columns_must_be_a_nonempty_table(self, tmp_path: Path, body: str) -> None:
-        path = _write(
-            tmp_path / "scb.toml",
-            f'[variable."1.830.gaturest"]\n{body}columns_ref = "{self._REF}"\n',
+    def test_register_file_partition_loads_as_naming_ownership(self, tmp_path: Path):
+        body = (
+            '[[identity.partition]]\nvariable = "34.4"\n'
+            'columns = { Kon = "34.4.kon" }\n'
+            'columns_ref = "curation evidence"\n'
         )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-
-    @pytest.mark.parametrize("literal", ["", " GatuRest", "GatuRest "])
-    def test_blank_or_padded_literal_rejected(
-        self, tmp_path: Path, literal: str
-    ) -> None:
-        path = _write(
-            tmp_path / "scb.toml",
-            '[variable."1.830.gaturest"]\n'
-            f'columns = {{ "{literal}" = "1.830.gaturest" }}\n'
-            f'columns_ref = "{self._REF}"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-        assert "literal" in exc.value.message
-
-    @pytest.mark.parametrize(
-        "owner",
-        ["1.830", "1.831.gaturest", "bogus", ""],
-    )
-    def test_owner_must_be_a_split_sibling_of_the_same_family(
-        self, tmp_path: Path, owner: str
-    ) -> None:
-        path = _write(
-            tmp_path / "scb.toml",
-            '[variable."1.830.gaturest"]\n'
-            f'columns = {{ GatuRest = "{owner}" }}\n'
-            f'columns_ref = "{self._REF}"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-
-    def test_columns_requires_a_tracked_reference(self, tmp_path: Path) -> None:
-        path = _write(
-            tmp_path / "scb.toml",
-            '[variable."1.830.gaturest"]\ncolumns = { GatuRest = "1.830.gaturest" }\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-        assert "columns_ref" in exc.value.message
-
-    def test_reference_without_columns_rejected(self, tmp_path: Path) -> None:
-        path = _write(
-            tmp_path / "scb.toml",
-            f'[variable."1.830.gaturest"]\ncolumns_ref = "{self._REF}"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-
-    def test_blank_reference_rejected(self, tmp_path: Path) -> None:
-        path = _write(
-            tmp_path / "scb.toml",
-            '[variable."1.830.gaturest"]\n'
-            'columns = { GatuRest = "1.830.gaturest" }\ncolumns_ref = "  "\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-
-    def test_helper_collects_the_converter_feed(self, tmp_path: Path) -> None:
-        entries = load_provider_toml(_write(tmp_path / "scb.toml", self._family()))
+        slug_path, curation = self._write_partition(tmp_path, body)
         ownership = declared_column_ownership(
-            entries, provider="scb", source_id="1.830"
+            load_provider_toml(slug_path),
+            provider="scb",
+            source_id="34.4",
+            curation_dir=curation,
         )
-        assert ownership.split_ids == ("1.830.gaturest", "1.830.pgaturest")
-        assert dict(ownership.declared_columns) == {
-            "GatuRest": "1.830.gaturest",
-            "Gaturest": "1.830.gaturest",
-            "PGaturest": "1.830.pgaturest",
-        }
-        assert ownership.declaration_reference == self._REF
+        assert ownership.split_ids == ("34.4.kon",)
+        assert dict(ownership.declared_columns) == {"Kon": "34.4.kon"}
+        assert ownership.declaration_reference == "curation evidence"
 
-    def test_helper_without_declaration_is_unresolved_not_invalid(
-        self, tmp_path: Path
-    ) -> None:
-        path = _write(
-            tmp_path / "scb.toml",
-            '[variable."1.830.gaturest"]\nslug = "gaturest"\n',
+    def test_columns_ref_is_optional(self, tmp_path: Path):
+        body = (
+            '[[identity.partition]]\nvariable = "34.4"\n'
+            'columns = { Kon = "34.4.kon" }\n'
+        )
+        slug_path, curation = self._write_partition(tmp_path, body)
+        ownership = declared_column_ownership(
+            load_provider_toml(slug_path),
+            provider="scb",
+            source_id="34.4",
+            curation_dir=curation,
+        )
+        assert ownership.declaration_reference == (
+            "curation/registers/scb/lisa.toml#/identity/partition/1"
+        )
+
+    def test_partition_without_slug_siblings_is_unresolved(self, tmp_path: Path):
+        slug_dir = tmp_path / "fqid_slugs"
+        slug_dir.mkdir()
+        slug_path = _write(
+            slug_dir / "scb.toml",
+            '[register."34"]\nslug = "lisa"\n'
+            '[variable."34.4.kon"]\nslug = "kon"\n',
+        )
+        curation = tmp_path / "curation"
+        register_path = curation / "registers" / "scb" / "lisa.toml"
+        register_path.parent.mkdir(parents=True, exist_ok=True)
+        register_path.write_text(
+            '[register]\nprovider = "scb"\nslug = "lisa"\n'
+            'native_id = "34"\n',
+            encoding="utf-8",
         )
         with pytest.raises(ValueError, match="no declared literal column ownership"):
             declared_column_ownership(
-                load_provider_toml(path), provider="scb", source_id="1.830"
+                load_provider_toml(slug_path),
+                provider="scb",
+                source_id="34.4",
+                curation_dir=curation,
             )
 
-    def test_helper_rejects_a_split_key_family(self, tmp_path: Path) -> None:
-        entries = load_provider_toml(_write(tmp_path / "scb.toml", self._family()))
-        with pytest.raises(ValueError, match="per native family"):
+    def test_duplicate_partition_fails(self, tmp_path: Path):
+        body = (
+            '[[identity.partition]]\nvariable = "34.4"\n'
+            'columns = { Kon = "34.4.kon" }\n\n'
+            '[[identity.partition]]\nvariable = "34.4"\n'
+            'columns = { Kon2 = "34.4.kon" }\n'
+        )
+        slug_path, curation = self._write_partition(tmp_path, body)
+        with pytest.raises(RegMetaError) as exc:
             declared_column_ownership(
-                entries, provider="scb", source_id="1.830.gaturest"
+                load_provider_toml(slug_path),
+                provider="scb",
+                source_id="34.4",
+                curation_dir=curation,
             )
-
-    def test_helper_rejects_conflicting_maps(self, tmp_path: Path) -> None:
-        body = self._family().replace(
-            '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
-            '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n'
-            'columns = { GatuRest = "1.830.pgaturest" }\n'
-            f'columns_ref = "{self._REF}"\n',
-        )
-        entries = load_provider_toml(_write(tmp_path / "scb.toml", body))
-        with pytest.raises(RegMetaError) as exc:
-            declared_column_ownership(entries, provider="scb", source_id="1.830")
-        assert exc.value.code == "slug_toml_invalid"
-        assert "conflicting" in exc.value.message
-
-    def test_helper_rejects_conflicting_references(self, tmp_path: Path) -> None:
-        body = self._family().replace(
-            '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
-            '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n'
-            'columns = { PGaturest = "1.830.pgaturest" }\n'
-            'columns_ref = "another reference"\n',
-        )
-        entries = load_provider_toml(_write(tmp_path / "scb.toml", body))
-        with pytest.raises(RegMetaError) as exc:
-            declared_column_ownership(entries, provider="scb", source_id="1.830")
-        assert exc.value.code == "slug_toml_invalid"
-        assert "references" in exc.value.message
-
-    def test_helper_rejects_an_owner_without_a_tracked_split(
-        self, tmp_path: Path
-    ) -> None:
-        body = self._family().replace(
-            'PGaturest = "1.830.pgaturest"', 'PGaturest = "1.830.xgaturest"'
-        )
-        entries = load_provider_toml(_write(tmp_path / "scb.toml", body))
-        with pytest.raises(RegMetaError) as exc:
-            declared_column_ownership(entries, provider="scb", source_id="1.830")
-        assert exc.value.code == "slug_toml_invalid"
-        assert "1.830.xgaturest" in exc.value.message
-
-    def test_helper_rejects_a_tracked_split_without_an_owner(
-        self, tmp_path: Path
-    ) -> None:
-        body = self._family('[variable."1.830.xgaturest"]\nslug = "xgaturest"\n')
-        entries = load_provider_toml(_write(tmp_path / "scb.toml", body))
-        with pytest.raises(RegMetaError) as exc:
-            declared_column_ownership(entries, provider="scb", source_id="1.830")
-        assert exc.value.code == "slug_toml_invalid"
-        assert "1.830.xgaturest" in exc.value.message
+        assert "duplicate [[identity.partition]]" in exc.value.message
 
 
 class TestLoadSlugDir:

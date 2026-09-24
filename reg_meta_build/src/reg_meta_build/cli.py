@@ -45,7 +45,7 @@ from reg_meta.errors import (
 # window-coverage gate.
 from reg_meta.inventory import load_inventory as load_delivery_inventory
 
-from ._curation import repo_curation_path
+from ._curation import repo_curation_path, repo_worklist_path
 from .classifications import (
     dump_classification_residue,
     render_residue_toml,
@@ -666,10 +666,10 @@ def _build_parser() -> argparse.ArgumentParser:
             "Scan a BUILT DB (the `--db` global) for ungrouped digit-suffixed slug\n"
             "families (morsak1/2/3, the fasit yearly series) and\n"
             "regenerate the committed, machine-owned candidate catalog\n"
-            "reg_meta_build/curation/concept_groups.auto.toml. NOTHING is materialized;\n"
+            "reg_meta_build/worklists/concept_groups.auto.toml. NOTHING is materialized;\n"
             "concept groups are presentation-only and folding is OPT-IN: a maintainer\n"
-            "reviews each family and folds the confirmed ones by adding an\n"
-            "`[[accept]]` (register + key) in reg_meta_build/curation/concept_groups.toml.\n"
+            "reviews each family and materializes confirmed members into its\n"
+            "reg_meta_build/curation/registers/<provider>/<slug>.toml file.\n"
             "Reads a built DB; never mutates it, and never hand-edit the generated\n"
             "output.\n\n"
             "Without --output-toml the catalog is NOT written — only the JSON counts\n"
@@ -687,7 +687,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  # Regenerate the committed catalog (the canonical invocation):\n"
             "  reg-meta-build --db <built-db-dir> concept-group-candidates \\\n"
-            "    --output-toml reg_meta_build/curation/concept_groups.auto.toml\n"
+            "    --output-toml reg_meta_build/worklists/concept_groups.auto.toml\n"
             "  # Preview counts only (writes nothing):\n"
             "  reg-meta-build --db <built-db-dir> concept-group-candidates\n"
             "  reg-meta-build --db <built-db-dir> concept-group-candidates "
@@ -701,7 +701,7 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Write the candidate catalog TOML to this path — point it at "
-            "reg_meta_build/curation/concept_groups.auto.toml to regenerate the committed "
+            "reg_meta_build/worklists/concept_groups.auto.toml to regenerate the committed "
             "file. Without it the JSON counts summary still prints; the TOML is "
             "included in the payload."
         ),
@@ -800,7 +800,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "-o/--output-toml writes a comment-rich worklist (one `[[pair]]` per\n"
             "suspect, grouped by family, high-value-first) with a `disposition`\n"
             'placeholder for the maintainer to set to "fold" or "distinct". NOTHING\n'
-            "loads it — the fold lands via curation/concept_groups.toml; a sever is a no-op.\n\n"
+            "loads it — the fold lands via curation/registers/<provider>/<slug>.toml; a sever is a no-op.\n\n"
             "Examples:\n"
             "  reg-meta-build --db <built-db> split-sibling-suspects -o /tmp/split.toml\n"
             "  reg-meta-build --db <built-db> split-sibling-suspects  # counts only"
@@ -1927,7 +1927,9 @@ def _cmd_concept_group_candidates(
     # currently-accepted scopes so those families re-emit (idempotent catalog).
     # The shared resolver returns None outside a checkout → no accepts → empty
     # scopes (the empty path is byte-identical to the unaware scan).
-    accepts = load_concept_group_accepts(repo_curation_path("concept_groups.toml"))
+    accepts = load_concept_group_accepts(
+        repo_worklist_path("concept_groups.accepted.toml")
+    )
     accepted_scopes = frozenset((a.provider, a.register, a.key) for a in accepts)
     try:
         result = infer_concept_group_candidates(

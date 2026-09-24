@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "anpassad-gymnasieskola"
+native_id = "353"
+
+[[code_label_pair]]
+code = "scb/anpassad-gymnasieskola/gymnasieforbund-id"
+label = "scb/anpassad-gymnasieskola/gymnasieforbundets-namn"
+
+[[code_label_pair]]
+code = "scb/anpassad-gymnasieskola/huvudman"
+label = "scb/anpassad-gymnasieskola/huvudman-namn"
+
+[[code_label_pair]]
+code = "scb/anpassad-gymnasieskola/skolenhetskod"
+label = "scb/anpassad-gymnasieskola/skolenhetens-namn"

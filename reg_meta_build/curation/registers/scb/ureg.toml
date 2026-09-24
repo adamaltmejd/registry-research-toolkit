@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "ureg"
+native_id = "24"
+
+[[enrichment.description]]
+register = "scb/ureg"
+variable = "kallkod"
+description = "Källa för uppgift om högsta utbildning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

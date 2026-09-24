@@ -1,0 +1,60 @@
+[register]
+provider = "scb"
+slug = "gymnasieskola-elever"
+native_id = "233"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-elever"
+variable = "arskurs"
+description = "Årskurs"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-elever"
+variable = "hkom"
+description = "Hemkommun"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-elever"
+variable = "inriktninggy"
+description = "Typ av fristående gymnasieskola"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-elever"
+variable = "klassbeteckning"
+description = "Klassbeteckning. Ogranskad variabel som saknar egentlig defintionn. Denna brukar vi inte lämna ut."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-elever"
+variable = "kommun"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-elever"
+variable = "meritvarde-m2-ak9"
+description = "Meritvärde med betyg i moderna språk som språkval tillsammans med de 16 bästa betygen i övrigt."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-elever"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-elever"
+variable = "skolkommun"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[code_label_pair]]
+code = "scb/gymnasieskola-elever/gymnasieforbund-id"
+label = "scb/gymnasieskola-elever/gymnasieforbundets-namn"
+
+[[code_label_pair]]
+code = "scb/gymnasieskola-elever/skolenhetskod"
+label = "scb/gymnasieskola-elever/skolenhetens-namn"

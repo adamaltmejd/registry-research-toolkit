@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "specialskola"
+native_id = "344"
+
+[[code_label_pair]]
+code = "scb/specialskola/huvudman"
+label = "scb/specialskola/huvudman-namn"
+
+[[code_label_pair]]
+code = "scb/specialskola/skolenhetskod"
+label = "scb/specialskola/skolenhetens-namn"
+
+[[code_label_pair]]
+code = "scb/specialskola/skolkod"
+label = "scb/specialskola/skolans-namn"

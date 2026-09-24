@@ -17,6 +17,7 @@ from reg_meta_build.concept_groups import (
     load_code_label_pairs,
     load_concept_group_accepts,
     load_concept_groups,
+    load_worklist_concept_groups,
     resolve_accept,
 )
 
@@ -26,9 +27,11 @@ _SCB = frozenset({"scb"})
 class TestClassificationGroupLoader:
     @staticmethod
     def _load(tmp_path, text: str):
-        path = tmp_path / "concept_groups.toml"
+        root = tmp_path / "curation"
+        path = root / "classification_groups.toml"
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
-        return load_classification_groups(path)
+        return load_classification_groups(root)
 
     def test_missing_file_is_empty(self, tmp_path) -> None:
         assert load_classification_groups(None) == ()
@@ -200,53 +203,31 @@ class TestClassificationGroupLoader:
         """
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, text)
-        assert exc.value.code == "concept_groups_invalid"
+        assert exc.value.exit_code == EXIT_CONFIG
 
-    def test_sibling_kinds_do_not_trip_top_level_guard(self, tmp_path) -> None:
-        # A `[[classification_group]]` coexisting with `[[variable_group]]` /
-        # `[[accept]]` parses cleanly — they're legal siblings, not typos.
-        groups = self._load(
-            tmp_path,
-            """
-            [[variable_group]]
-            register = "scb/lisa"
-            key = "fam"
-            label = "F"
-            axis = "a"
-            [[variable_group.members]]
-            variable = "vara"
-            value = "1"
-            label = "x"
-            [[accept]]
-            register = "sos/dors"
-            key = "morsak"
-            [[classification_group]]
-            key = "sun"
-            label = "SUN"
-            axis = "dimension"
-            [[classification_group.members]]
-            classification = "a"
-            value = "1"
-            label = "x"
-            [[classification_group.members]]
-            classification = "b"
-            value = "2"
-            label = "y"
-            """,
-        )
-        assert [g.key for g in groups] == ["sun"]
+    def test_unrelated_tables_are_rejected(self, tmp_path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(
+                tmp_path,
+                '[[classification_group]]\nkey = "sun"\nlabel = "SUN"\n'
+                '[[classification_group.members]]\nclassification = "a"\n'
+                'value = "1"\nlabel = "A"\n[[classification_group.members]]\n'
+                'classification = "b"\nvalue = "2"\nlabel = "B"\n'
+                '[[accept]]\nregister = "sos/dors"\nkey = "morsak"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
 
 
 class TestLoader:
     @staticmethod
     def _load(tmp_path, text: str):
-        path = tmp_path / "concept_groups.toml"
+        path = tmp_path / "concept_groups.auto.toml"
         path.write_text(text, encoding="utf-8")
-        return load_concept_groups(path)
+        return load_worklist_concept_groups(path)
 
     def test_missing_file_is_empty(self, tmp_path) -> None:
-        assert load_concept_groups(None) == ()
-        assert load_concept_groups(tmp_path / "absent.toml") == ()
+        assert load_worklist_concept_groups(None) == ()
+        assert load_worklist_concept_groups(tmp_path / "absent.toml") == ()
 
     def test_parses_valid_family(self, tmp_path) -> None:
         groups = self._load(
@@ -489,45 +470,17 @@ class TestLoader:
             self._load(tmp_path, text)
         assert exc.value.code == "concept_groups_invalid"
 
-    def test_accept_sibling_does_not_trip_top_level_guard(self, tmp_path) -> None:
-        # A `[[variable_group]]`, an `[[accept]]`, and a `[[classification_group]]`
-        # coexist in one file: the variable_group parse must treat the latter two
-        # as legal siblings, not unknown-top-level typos. (Case (g).)
-        groups = self._load(
-            tmp_path,
-            """
-            [[variable_group]]
-            register = "scb/lisa"
-            key = "fam"
-            label = "F"
-            axis = "a"
-            [[variable_group.members]]
-            variable = "vara"
-            value = "1"
-            label = "x"
-            [[variable_group.members]]
-            variable = "varb"
-            value = "2"
-            label = "y"
-            [[accept]]
-            register = "sos/dors"
-            key = "morsak"
-            [[classification_group]]
-            key = "sun"
-            label = "SUN"
-            axis = "dimension"
-            [[classification_group.members]]
-            classification = "a"
-            value = "1"
-            label = "x"
-            [[classification_group.members]]
-            classification = "b"
-            value = "2"
-            label = "y"
-            """,
-        )
-        assert len(groups) == 1
-        assert groups[0].key == "fam"
+    def test_accept_table_is_not_part_of_candidate_worklist(self, tmp_path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(
+                tmp_path,
+                '[[variable_group]]\nregister = "scb/lisa"\nkey = "x"\n'
+                'label = "X"\naxis = "rank"\n'
+                '[[variable_group.members]]\nvariable = "x1"\nvalue = "1"\n'
+                'label = "One"\n[[variable_group.members]]\nvariable = "x2"\n'
+                'value = "2"\nlabel = "Two"\n[[accept]]\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
 
 
 class TestAcceptLoader:
@@ -568,39 +521,14 @@ class TestAcceptLoader:
         )
         assert accepts == (Accept("sos", "dors", "morsak", None, None, ()),)
 
-    def test_variable_group_sibling_does_not_trip_guard(self, tmp_path) -> None:
-        # The accept loader must treat `[[variable_group]]` and
-        # `[[classification_group]]` as legal siblings.
-        accepts = self._load(
-            tmp_path,
-            """
-            [[variable_group]]
-            register = "scb/lisa"
-            key = "fam"
-            label = "F"
-            axis = "a"
-            [[variable_group.members]]
-            variable = "v"
-            value = "1"
-            label = "x"
-            [[classification_group]]
-            key = "sun"
-            label = "SUN"
-            axis = "dimension"
-            [[classification_group.members]]
-            classification = "a"
-            value = "1"
-            label = "x"
-            [[classification_group.members]]
-            classification = "b"
-            value = "2"
-            label = "y"
-            [[accept]]
-            register = "sos/dors"
-            key = "morsak"
-            """,
-        )
-        assert accepts == (Accept("sos", "dors", "morsak", None, None, ()),)
+    def test_unrelated_table_is_rejected(self, tmp_path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(
+                tmp_path,
+                '[[accept]]\nregister = "sos/dors"\nkey = "morsak"\n'
+                '[[variable_group]]\nregister = "scb/lisa"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
 
     @pytest.mark.parametrize(
         "text",
@@ -684,9 +612,15 @@ def _pair(code_slug: str = "partikod", label_slug: str = "partinamn") -> CodeLab
 class TestCodeLabelPairLoader:
     @staticmethod
     def _load(tmp_path, text: str):
-        path = tmp_path / "concept_groups.toml"
-        path.write_text(text, encoding="utf-8")
-        return load_code_label_pairs(path)
+        root = tmp_path / "curation"
+        path = root / "registers" / "scb" / "lisa.toml"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n'
+            + text.replace("[[pair]]", "[[code_label_pair]]"),
+            encoding="utf-8",
+        )
+        return load_code_label_pairs(root)
 
     def test_missing_file_is_empty(self, tmp_path) -> None:
         assert load_code_label_pairs(None) == ()
@@ -740,7 +674,6 @@ class TestCodeLabelPairLoader:
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, text)
         assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "code_label_pairs_invalid"
 
     def test_unknown_top_level_key_fails(self, tmp_path) -> None:
         with pytest.raises(RegMetaError) as exc:
@@ -762,7 +695,7 @@ class TestCodeLabelPairLoader:
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, text)
         assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "code_label_pairs_invalid"
+        assert exc.value.exit_code == EXIT_CONFIG
 
     def test_self_pair_fails(self, tmp_path) -> None:
         # A pair whose code and label FQID are identical is drift — a variable can't

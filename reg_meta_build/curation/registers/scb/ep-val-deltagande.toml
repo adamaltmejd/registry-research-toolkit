@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "ep-val-deltagande"
+native_id = "245"
+
+[[code_label_pair]]
+code = "scb/ep-val-deltagande/fodelseland-varldsdel-2"
+label = "scb/ep-val-deltagande/fodelselandvdnamn"
+
+[[code_label_pair]]
+code = "scb/ep-val-deltagande/kommun"
+label = "scb/ep-val-deltagande/kommunnamn"
+
+[[code_label_pair]]
+code = "scb/ep-val-deltagande/medborgarland-varldsdel-2"
+label = "scb/ep-val-deltagande/medborgarland-varldsdel-namn"

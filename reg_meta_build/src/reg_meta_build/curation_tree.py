@@ -3,17 +3,21 @@
 ``classifications/<short_name>.toml`` holds one classification: its metadata and
 sentinels in ``[classification]``, and in ``[binding]`` the value-set labels behind
 the label binding rule plus the curated ``[[binding.variable]]`` bindings.
+``registers/<provider>/<slug>.toml`` (or one family directory below the provider)
+owns register-scoped declarations. ``classification_groups.toml``,
 ``relations.toml``, ``tags.toml`` and ``lineage.toml`` stay at the root as global
 files. The reader returns typed, validated entries and never touches prepared
-data. Files enumerate in sorted path order, and every error names its file.
+data. Files enumerate in sorted path order, and every error names its file and
+entry index.
 """
 
 from __future__ import annotations
 
+import json
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING, Annotated
+from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import (
     BaseModel,
@@ -22,6 +26,7 @@ from pydantic import (
     ValidationError,
     ValidationInfo,
     field_validator,
+    model_validator,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import validate_slug
@@ -134,11 +139,249 @@ class CuratedClassification(_CurationModel):
     binding: ClassificationBinding = ClassificationBinding()
 
 
+class RegisterIdentity(_CurationModel):
+    """The coordinate asserted by a register file's path."""
+
+    provider: str
+    slug: str
+    native_id: str | None = None
+    name: str | None = None
+
+    _provider = field_validator("provider")(_require_trimmed)
+    _slug = field_validator("slug")(_require_trimmed)
+    _native_id = field_validator("native_id")(_require_trimmed)
+    _name = field_validator("name")(_require_trimmed)
+
+    @field_validator("slug")
+    @classmethod
+    def _valid_slug(cls, value: str) -> str:
+        validate_slug(value, "register")
+        return value
+
+
+class ErrataVersionEntry(_CurationModel):
+    variant: str
+    name: str
+    evidence: str
+    noted: str
+
+
+class ErrataDeliveredEntry(_CurationModel):
+    variant: str
+    column: str
+    versions: list[str]
+    evidence: str
+    noted: str
+    upstream: str | None = None
+
+
+class ErrataColumnEntry(_CurationModel):
+    variant: str
+    column: str
+    name: str
+    definition: str
+    data_type: str | None = None
+    classification: str | None = None
+    is_identifier: bool | None = None
+    is_sensitive: bool | None = None
+    versions: list[str] | None = None
+    all_versions: bool | None = None
+    holdings_period: str | None = None
+    source: str
+    evidence: str
+    noted: str
+
+
+class ErrataCuration(_CurationModel):
+    delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
+    column: list[ErrataColumnEntry] = Field(default_factory=list)
+    version: list[ErrataVersionEntry] = Field(default_factory=list)
+
+
+class EnrichmentDescriptionEntry(_CurationModel):
+    register_fqid: str = Field(validation_alias="register")
+    variable: str
+    description: str
+    provenance: str = ""
+
+
+class EnrichmentAliasEntry(_CurationModel):
+    register_fqid: str = Field(validation_alias="register")
+    variable: str
+    delivery_column: str
+    provenance: str = ""
+
+
+class EnrichmentCuration(_CurationModel):
+    description: list[EnrichmentDescriptionEntry] = Field(default_factory=list)
+    alias: list[EnrichmentAliasEntry] = Field(default_factory=list)
+
+
+class GroupAxis(_CurationModel):
+    axis: str
+    label: str
+
+
+class GroupCoordinate(_CurationModel):
+    axis: str
+    value: str
+    label: str
+
+
+class GroupMember(_CurationModel):
+    variable: str
+    delivery_column: str | None = None
+    value: str | None = None
+    label: str | None = None
+    coords: list[GroupCoordinate] | None = None
+
+
+class RegisterGroupEntry(_CurationModel):
+    register_fqid: str = Field(validation_alias="register")
+    key: str
+    label: str
+    axis: str | None = None
+    axes: list[GroupAxis] | None = None
+    members: list[GroupMember]
+
+
+class CodeLabelPairEntry(_CurationModel):
+    code: str
+    label: str
+
+
+class PeriodFamilyEntry(_CurationModel):
+    register_fqid: str = Field(validation_alias="register")
+    family_stem: str
+    label: str
+    slug: str | None = None
+
+
+class AliasWindowEntry(_CurationModel):
+    variable: str
+    variant: str
+    column: str
+    source_editions: list[str]
+    evidence: str
+    noted: str
+
+
+class IdentityPartitionEntry(_CurationModel):
+    variable: str
+    columns: dict[str, str]
+    unassigned_columns: list[str] = Field(default_factory=list)
+    columns_ref: str | None = None
+
+    @model_validator(mode="after")
+    def _disjoint_columns(self) -> "IdentityPartitionEntry":
+        overlap = sorted(set(self.columns) & set(self.unassigned_columns))
+        if overlap:
+            raise ValueError(f"columns and unassigned_columns overlap: {overlap}")
+        if len(set(self.unassigned_columns)) != len(self.unassigned_columns):
+            raise ValueError("unassigned_columns contains duplicate literals")
+        return self
+
+
+class IdentityColumnOwnerEntry(_CurationModel):
+    variable: str
+    variant: str
+    column: str
+    owner: str
+    ref: str
+
+
+class IdentityRouteEntry(_CurationModel):
+    deldatamangd: str
+    variants: list[str]
+
+
+class IdentitySplitPart(_CurationModel):
+    data_type: str
+    owner: str
+
+
+class IdentitySplitEntry(_CurationModel):
+    variable: str
+    by: Literal["data_type"]
+    parts: list[IdentitySplitPart]
+
+
+class IdentityRenameEntry(_CurationModel):
+    deldatamangd: str
+    variable: str
+    name: str
+    column: str
+
+
+class IdentityCuration(_CurationModel):
+    partition: list[IdentityPartitionEntry] = Field(default_factory=list)
+    column_owner: list[IdentityColumnOwnerEntry] = Field(default_factory=list)
+    route: list[IdentityRouteEntry] = Field(default_factory=list)
+    split: list[IdentitySplitEntry] = Field(default_factory=list)
+    rename: list[IdentityRenameEntry] = Field(default_factory=list)
+
+
+class RepresentationCuration(_CurationModel):
+    period_family: list[PeriodFamilyEntry] = Field(default_factory=list)
+    alias_window: list[AliasWindowEntry] = Field(default_factory=list)
+
+
+class AcknowledgeEntry(_CurationModel):
+    code: str
+    subject: str
+    refs: list[str]
+    reason: str
+    evidence: str
+
+
+class RegisterCuration(_CurationModel):
+    """One register file with a closed, typed table set."""
+
+    register_info: RegisterIdentity = Field(validation_alias="register")
+    errata: ErrataCuration = Field(default_factory=ErrataCuration)
+    enrichment: EnrichmentCuration = Field(default_factory=EnrichmentCuration)
+    group: list[RegisterGroupEntry] = Field(default_factory=list)
+    code_label_pair: list[CodeLabelPairEntry] = Field(default_factory=list)
+    representation: RepresentationCuration = Field(default_factory=RepresentationCuration)
+    identity: IdentityCuration = Field(default_factory=IdentityCuration)
+    acknowledge: list[AcknowledgeEntry] = Field(default_factory=list)
+
+
+class ClassificationGroupMemberEntry(_CurationModel):
+    classification: str
+    value: str
+    label: str
+
+    _member_fields = field_validator("classification", "value", "label")(
+        _require_trimmed
+    )
+
+
+class ClassificationGroupEntry(_CurationModel):
+    key: str
+    label: str
+    axis: str | None = None
+    members: list[ClassificationGroupMemberEntry]
+
+    _names = field_validator("key", "label")(_require_trimmed)
+
+    @field_validator("axis")
+    @classmethod
+    def _axis(cls, value: str | None) -> str | None:
+        return None if value is None else _require_trimmed(value)
+
+
+class ClassificationGroups(_CurationModel):
+    classification_group: list[ClassificationGroupEntry] = Field(default_factory=list)
+
+
 @dataclass(frozen=True)
 class CurationTree:
-    """The classification files and the global curation files."""
+    """The classification, register, and global curation files."""
 
     classifications: tuple[CuratedClassification, ...]
+    registers: tuple[RegisterCuration, ...]
+    classification_groups: ClassificationGroups
     relations: CuratedRelations
     tags: tuple[CuratedTag, ...]
     lineage: LineageConfig
@@ -226,6 +469,259 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
     return tuple(entries)
 
 
+def _register_arrays(
+    entry: RegisterCuration,
+) -> tuple[tuple[str, list[BaseModel]], ...]:
+    return (
+        ("errata.delivered", entry.errata.delivered),
+        ("errata.column", entry.errata.column),
+        ("errata.version", entry.errata.version),
+        ("enrichment.description", entry.enrichment.description),
+        ("enrichment.alias", entry.enrichment.alias),
+        ("group", entry.group),
+        ("code_label_pair", entry.code_label_pair),
+        ("representation.period_family", entry.representation.period_family),
+        ("representation.alias_window", entry.representation.alias_window),
+        ("identity.partition", entry.identity.partition),
+        ("identity.column_owner", entry.identity.column_owner),
+        ("identity.route", entry.identity.route),
+        ("identity.split", entry.identity.split),
+        ("identity.rename", entry.identity.rename),
+        ("acknowledge", entry.acknowledge),
+    )
+
+
+def _register_path(directory: Path, path: Path) -> tuple[str, str]:
+    relative = path.relative_to(directory).with_suffix("")
+    parts = relative.parts
+    if len(parts) not in (2, 3):
+        raise curation_error(
+            _CODE,
+            f"curation/registers/{relative.as_posix()}.toml: expected "
+            "<provider>/<slug>.toml or <provider>/<family>/<slug>.toml.",
+            "Keep register files at one or two directories below registers/.",
+        )
+    return parts[0], parts[-1]
+
+
+def _check_register_ref(
+    value: str, *, expected: str, file: str, table: str, index: int
+) -> None:
+    parts = value.split("/")
+    if len(parts) != 2 or not all(parts):
+        raise curation_error(
+            _CODE,
+            f"{file} [[{table}]] entry {index}: register {value!r} must be "
+            "a provider/register coordinate.",
+            "Use the register file's [register] provider and slug.",
+        )
+    if value != expected:
+        raise curation_error(
+            _CODE,
+            f"{file} [[{table}]] entry {index}: register {value!r} does not "
+            f"match {expected!r}.",
+            "Move the entry to its register file or correct its register field.",
+        )
+
+
+def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
+    identity = entry.register_info
+    expected = f"{identity.provider}/{identity.slug}"
+    if identity.provider in {"scb", "sos"}:
+        if identity.native_id is None or not identity.native_id.isdecimal():
+            raise curation_error(
+                _CODE,
+                f"{file} [register]: native_id must be a decimal string for "
+                f"{identity.provider!r}, got {identity.native_id!r}.",
+                "Copy the source native id from fqid_slugs/<provider>.toml.",
+            )
+
+    for table, rows in _register_arrays(entry):
+        for index, row in enumerate(rows, start=1):
+            register_refs: list[str] = []
+            if isinstance(row, (EnrichmentDescriptionEntry, EnrichmentAliasEntry)):
+                register_refs.append(row.register_fqid)
+            elif isinstance(row, (RegisterGroupEntry, PeriodFamilyEntry)):
+                register_refs.append(row.register_fqid)
+            elif isinstance(row, CodeLabelPairEntry):
+                register_refs.extend(
+                    (row.code.rsplit("/", 1)[0], row.label.rsplit("/", 1)[0])
+                )
+            elif isinstance(row, AliasWindowEntry):
+                register_refs.append(row.variable.rsplit("/", 1)[0])
+            for value in register_refs:
+                _check_register_ref(
+                    value, expected=expected, file=file, table=table, index=index
+                )
+            if isinstance(row, (IdentityPartitionEntry, IdentityColumnOwnerEntry)):
+                native_id = identity.native_id
+                if native_id is not None and not row.variable.startswith(native_id + "."):
+                    raise curation_error(
+                        _CODE,
+                        f"{file} [[{table}]] entry {index}: variable "
+                        f"{row.variable!r} does not belong to native_id {native_id!r}.",
+                        "Move the entry to the register file owning that native family.",
+                    )
+
+
+def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
+    relative = path.relative_to(directory.parent).as_posix()
+    file = f"curation/{relative}"
+    try:
+        raw = tomllib.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+        raise curation_error(
+            _CODE, f"Could not parse {file}: {exc}", "Fix the register TOML syntax."
+        ) from exc
+    try:
+        entry = RegisterCuration.model_validate(raw)
+    except ValidationError as exc:
+        error = exc.errors(include_url=False)[0]
+        parts = error["loc"]
+        table = ".".join(str(part) for part in parts if not isinstance(part, int))
+        index = next((part + 1 for part in parts if isinstance(part, int)), None)
+        where = f"[[{table}]] entry {index}" if index is not None else table
+        raise curation_error(
+            _CODE,
+            f"{file} {where}: {error['msg']}.",
+            "Use only the documented strict register tables and fields.",
+        ) from exc
+
+    provider, slug = _register_path(directory, path)
+    if (entry.register_info.provider, entry.register_info.slug) != (provider, slug):
+        raise curation_error(
+            _CODE,
+            f"{file} [register] ({entry.register_info.provider}/"
+            f"{entry.register_info.slug}) does not match its path ({provider}/{slug}).",
+            "Match [register].provider and [register].slug to the file path.",
+        )
+    _validate_register_scope(entry, file)
+    for table, rows in _register_arrays(entry):
+        seen: set[str] = set()
+        for index, row in enumerate(rows, start=1):
+            key = json.dumps(
+                row.model_dump(mode="json"), ensure_ascii=False, sort_keys=True
+            )
+            if key in seen:
+                raise curation_error(
+                    _CODE,
+                    f"{file} [[{table}]] entry {index}: duplicate entry.",
+                    "Keep one declaration for each entry.",
+                )
+            seen.add(key)
+    return entry
+
+
+def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
+    """Read register TOMLs by sorted path and reject duplicate register IDs."""
+    directory = root / "registers"
+    if not directory.is_dir():
+        return ()
+    entries: list[RegisterCuration] = []
+    owners: dict[tuple[str, str], str] = {}
+    native_ids: dict[tuple[str, str], str] = {}
+    for path in sorted(directory.rglob("*.toml")):
+        if not path.is_file():
+            raise curation_error(
+                _CODE,
+                f"curation/{path.relative_to(root).as_posix()} is not a file.",
+                "Keep only register TOML files under curation/registers/.",
+            )
+        entry = _load_register_file(path, directory)
+        rel = path.relative_to(root).as_posix()
+        identity = entry.register_info
+        key = (identity.provider, identity.slug)
+        if key in owners:
+            raise curation_error(
+                _CODE,
+                f"curation/{rel} [register]: duplicate register {key[0]}/{key[1]} "
+                f"also declared in curation/{owners[key]}.",
+                "Keep one file per provider/register.",
+            )
+        owners[key] = rel
+        if identity.native_id is not None:
+            native_key = (identity.provider, identity.native_id)
+            if native_key in native_ids:
+                raise curation_error(
+                    _CODE,
+                    f"curation/{rel} [register]: duplicate native_id "
+                    f"{identity.native_id!r} also declared in "
+                    f"curation/{native_ids[native_key]}.",
+                    "Keep each provider/native_id in one register file.",
+                )
+            native_ids[native_key] = rel
+        entries.append(entry)
+    slug_dir = root.parent / "fqid_slugs"
+    if slug_dir.is_dir():
+        source_ids: dict[tuple[str, str], list[str]] = {}
+        for path in sorted(slug_dir.glob("*.toml")):
+            if path.name.endswith(".auto.toml"):
+                continue
+            provider = path.stem
+            try:
+                provider_data = tomllib.loads(path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+                raise curation_error(
+                    _CODE,
+                    f"Could not resolve register native ids from {path}: {exc}.",
+                    "Fix the provider slug TOML before validating register files.",
+                ) from exc
+            for native_id, record in provider_data.get("register", {}).items():
+                if isinstance(record, dict) and isinstance(record.get("slug"), str):
+                    source_ids.setdefault((provider, record["slug"]), []).append(native_id)
+        for entry in entries:
+            identity = entry.register_info
+            if identity.provider not in {"scb", "sos"}:
+                continue
+            file = (
+                f"curation/registers/{identity.provider}/{identity.slug}.toml"
+            )
+            matching = source_ids.get((identity.provider, identity.slug), [])
+            if len(matching) != 1 or matching[0] != identity.native_id:
+                raise curation_error(
+                    _CODE,
+                    f"{file} [register]: native_id {identity.native_id!r} does not "
+                    f"match fqid_slugs/{identity.provider}.toml for "
+                    f"{identity.provider}/{identity.slug} ({matching}).",
+                    "Copy the register's source id from its [register] slug entry.",
+                )
+    return tuple(entries)
+
+
+def load_classification_groups(root: Path) -> ClassificationGroups:
+    """Read ``classification_groups.toml`` with a closed strict model."""
+    path = root / "classification_groups.toml"
+    if not path.is_file():
+        return ClassificationGroups()
+    file = "curation/classification_groups.toml"
+    try:
+        raw = tomllib.loads(path.read_text(encoding="utf-8"))
+        groups = ClassificationGroups.model_validate(raw)
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+        raise curation_error(_CODE, f"Could not parse {file}: {exc}", "Fix the TOML syntax.") from exc
+    except ValidationError as exc:
+        error = exc.errors(include_url=False)[0]
+        location = error["loc"]
+        index = next((part + 1 for part in location if isinstance(part, int)), None)
+        table = ".".join(str(part) for part in location if not isinstance(part, int))
+        where = f"[[{table}]] entry {index}" if index is not None else f"[[{table}]]"
+        raise curation_error(
+            _CODE,
+            f"{file} {where}: {error['msg']}.",
+            "Use only the documented classification-group tables and fields.",
+        ) from exc
+    seen: set[str] = set()
+    for index, group in enumerate(groups.classification_group, start=1):
+        if group.key in seen:
+            raise curation_error(
+                _CODE,
+                f"{file} [[classification_group]] entry {index}: duplicate key {group.key!r}.",
+                "Keep each classification-group key once.",
+            )
+        seen.add(group.key)
+    return groups
+
+
 def load_curation_tree(root: Path) -> CurationTree:
     """Read the classification files and the global files under ``root``."""
     lineage = load_lineage_config(root / "lineage.toml")
@@ -237,6 +733,8 @@ def load_curation_tree(root: Path) -> CurationTree:
         )
     return CurationTree(
         classifications=load_classifications(root),
+        registers=load_register_files(root),
+        classification_groups=load_classification_groups(root),
         relations=load_relations(root / "relations.toml"),
         tags=load_tags(root / "tags.toml"),
         lineage=lineage,

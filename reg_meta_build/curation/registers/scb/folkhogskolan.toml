@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "folkhogskolan"
+native_id = "105"
+
+[[code_label_pair]]
+code = "scb/folkhogskolan/kommunalforbund-id"
+label = "scb/folkhogskolan/kommunalforbund-namn"

@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "allmanna-val-valdeltagande"
+native_id = "242"
+
+[[code_label_pair]]
+code = "scb/allmanna-val-valdeltagande/fodelseland-varldsdel-2"
+label = "scb/allmanna-val-valdeltagande/fodelselandvdnamn"
+
+[[code_label_pair]]
+code = "scb/allmanna-val-valdeltagande/kommun"
+label = "scb/allmanna-val-valdeltagande/kommunnamn"
+
+[[code_label_pair]]
+code = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-2"
+label = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-namn"

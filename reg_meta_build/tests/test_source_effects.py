@@ -1069,11 +1069,10 @@ def test_naming_pin_does_not_establish_identity_for_distinct_column_spellings(
 # identity, PGaturest keeps its own, on both FDB variants (424/427). The
 # tracked declaration feeds the converter; nothing is folded or inferred.
 _FDB_DECLARATION = (
-    '[variable."1.830.gaturest"]\n'
+    '[[identity.partition]]\nvariable = "1.830"\n'
     'columns = { GatuRest = "1.830.gaturest", Gaturest = "1.830.gaturest", '
     'PGaturest = "1.830.pgaturest" }\n'
     'columns_ref = "Y-167 fixture reference"\n'
-    '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n'
 )
 
 
@@ -1107,15 +1106,26 @@ def _fdb_family() -> tuple[SourceRecord, ...]:
 
 
 def _fdb_entries(tmp_path: Path, body: str = _FDB_DECLARATION):
-    declaration = tmp_path / "scb.toml"
-    declaration.write_text(body, encoding="utf-8")
+    slug_dir = tmp_path / "fqid_slugs"
+    slug_dir.mkdir(exist_ok=True)
+    declaration = slug_dir / "scb.toml"
+    declaration.write_text(
+        '[register."1"]\nslug = "fdb"\n'
+        '[variable."1.830.gaturest"]\nslug = "gaturest"\n'
+        '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
+        encoding="utf-8",
+    )
+    register_file = tmp_path / "curation" / "registers" / "scb" / "fdb.toml"
+    register_file.parent.mkdir(parents=True, exist_ok=True)
+    register_file.write_text(
+        '[register]\nprovider = "scb"\nslug = "fdb"\nnative_id = "1"\n\n'
+        + body,
+        encoding="utf-8",
+    )
     return load_provider_toml(declaration)
 
 
-_FDB_SLUGS_ONLY = (
-    '[variable."1.830.gaturest"]\nslug = "gaturest"\n'
-    '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n'
-)
+_FDB_SLUGS_ONLY = ""
 
 
 def _fdb_convert(
@@ -1133,6 +1143,7 @@ def _fdb_convert(
         provider="scb",
         source_id="1.830",
         split_ids=split_ids,
+        curation_dir=tmp_path / "curation",
     )
 
 

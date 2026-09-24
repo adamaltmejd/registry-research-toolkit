@@ -1,4 +1,4 @@
-"""Accepted period-family declaration loader validation."""
+"""Register-scoped representation-period loader validation."""
 
 from __future__ import annotations
 
@@ -12,47 +12,72 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def test_load_period_family_merges_parses(tmp_path: Path) -> None:
-    path = tmp_path / "period_family_merges.toml"
+def _write_register(tmp_path: Path, body: str) -> Path:
+    root = tmp_path / "curation"
+    path = root / "registers" / "scb" / "lisa.toml"
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        '[[period_family]]\nregister = "scb/lisa"\n'
-        'family_stem = "lonfink"\nlabel = "Lön"\n',
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n'
+        + body,
         encoding="utf-8",
     )
-    families = load_period_family_merges(path)
-    assert len(families) == 1
-    assert families[0] == PeriodFamily("scb", "lisa", "lonfink", "Lön")
+    return root
 
 
-def test_load_period_family_merges_empty_when_no_file() -> None:
-    assert load_period_family_merges(None) == ()
+def test_load_period_family_parses_explicit_slug(tmp_path: Path) -> None:
+    root = _write_register(
+        tmp_path,
+        '[[representation.period_family]]\nregister = "scb/lisa"\n'
+        'family_stem = "lonfink"\nlabel = "Lön per månad"\n'
+        'slug = "lone-eller-foretagarinkomst-manad"\n',
+    )
+    assert load_period_family_merges(root) == (
+        PeriodFamily(
+            "scb",
+            "lisa",
+            "lonfink",
+            "Lön per månad",
+            "lone-eller-foretagarinkomst-manad",
+        ),
+    )
 
 
-@pytest.mark.parametrize(
-    "body",
-    [
-        'register = "lisa"\nfamily_stem = "x"\nlabel = "L"',  # 1-seg register
-        'register = "scb/lisa/x"\nfamily_stem = "x"\nlabel = "L"',  # 3-seg register
-        'register = "scb/lisa"\nlabel = "L"',  # missing family_stem
-        'register = "scb/lisa"\nfamily_stem = "x"',  # missing label
-    ],
-)
-def test_load_period_family_merges_rejects_malformed(tmp_path: Path, body: str) -> None:
-    path = tmp_path / "period_family_merges.toml"
-    path.write_text(f"[[period_family]]\n{body}\n", encoding="utf-8")
+def test_load_period_family_rejects_unknown_key(tmp_path: Path) -> None:
+    root = _write_register(
+        tmp_path,
+        '[[representation.period_family]]\nregister = "scb/lisa"\n'
+        'family_stem = "lonfink"\nlabel = "Lön"\nunknown = "x"\n',
+    )
     with pytest.raises(RegMetaError) as exc:
-        load_period_family_merges(path)
+        load_period_family_merges(root)
     assert exc.value.exit_code == EXIT_CONFIG
-    assert exc.value.code == "period_family_merges_invalid"
+    assert "entry 1" in exc.value.message
 
 
-def test_load_period_family_merges_rejects_duplicate(tmp_path: Path) -> None:
-    path = tmp_path / "period_family_merges.toml"
-    path.write_text(
-        '[[period_family]]\nregister = "scb/lisa"\nfamily_stem = "x"\nlabel = "A"\n'
-        '[[period_family]]\nregister = "scb/lisa"\nfamily_stem = "x"\nlabel = "B"\n',
-        encoding="utf-8",
+def test_load_period_family_rejects_wrong_register(tmp_path: Path) -> None:
+    root = _write_register(
+        tmp_path,
+        '[[representation.period_family]]\nregister = "scb/rams"\n'
+        'family_stem = "lonfink"\nlabel = "Lön"\n',
     )
     with pytest.raises(RegMetaError) as exc:
-        load_period_family_merges(path)
+        load_period_family_merges(root)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "does not match" in exc.value.message
+
+
+def test_load_period_family_rejects_duplicate_stem(tmp_path: Path) -> None:
+    root = _write_register(
+        tmp_path,
+        '[[representation.period_family]]\nregister = "scb/lisa"\n'
+        'family_stem = "x"\nlabel = "A"\n\n'
+        '[[representation.period_family]]\nregister = "scb/lisa"\n'
+        'family_stem = "x"\nlabel = "B"\n',
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_period_family_merges(root)
     assert exc.value.code == "period_family_merges_invalid"
+
+
+def test_load_period_family_empty_when_no_tree() -> None:
+    assert load_period_family_merges(None) == ()

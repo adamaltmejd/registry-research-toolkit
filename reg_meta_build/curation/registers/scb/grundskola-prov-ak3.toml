@@ -1,0 +1,66 @@
+[register]
+provider = "scb"
+slug = "grundskola-prov-ak3"
+native_id = "305"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "ma-f-pr"
+description = "Elevens delprovsresultat i matematik, delprov F"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "ma-f2-pr"
+description = "Elevens delprovsresultat i matematik, delprov F2"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "ma-g-pr"
+description = "Elevens delprovsresultat i matematik, delprov G"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "ma-g2-pr"
+description = "Elevens delprovsresultat i matematik, delprov G2"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "skolenhetskod"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "skolkod"
+description = "Skolkod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "skolkommun"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-prov-ak3"
+variable = "sv-eller-sva"
+description = "Anger vilken kursplan i svenska eleven följer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[code_label_pair]]
+code = "scb/grundskola-prov-ak3/skolenhetskod"
+label = "scb/grundskola-prov-ak3/skolenhetens-namn"
+
+[[code_label_pair]]
+code = "scb/grundskola-prov-ak3/skolkod"
+label = "scb/grundskola-prov-ak3/skolans-namn"

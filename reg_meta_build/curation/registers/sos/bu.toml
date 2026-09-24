@@ -1,0 +1,24 @@
+[register]
+provider = "sos"
+slug = "bu"
+native_id = "7550156225339591583"
+name = "Registret över insatser till barn och unga"
+
+# DRAFT reg_meta_build/curation/registers/sos/bu.toml (pin-free).
+# BU has no Deldatamängder sheet: every row goes to the synthesized default
+# variant (slug `_default`, already tracked in fqid_slugs/sos.toml). That rule is
+# mechanical (v18: 54 route cases, 150 effects) and needs no entry here.
+
+# Two distinct variables share the name FOD_DATUMN; the normalized data_type is
+# the seam. sos.py KNOWN_SPLIT_ALLOWLIST (L1477-1479, #362).
+# v18: accepted-sos-identity:bu:FOD_DATUMN = 1 case, 2 identity effects,
+# conditioned on data_type. Owner keys are the tracked fqid_slugs/sos.toml
+# entries (the old reader ordered siblings by minted id; the literal pairing
+# below is what v18 holds).
+[[identity.split]]
+variable = "FOD_DATUMN"
+by = "data_type"
+parts = [
+  { data_type = "date", owner = "7550156225339591583.FOD_DATUMN.fod-datumn" },      # bu_plac; slug barn-fodelsedatum
+  { data_type = "integer", owner = "7550156225339591583.FOD_DATUMN.fod-datumn-1" }, # bu_insats; slug fodelsedatum
+]

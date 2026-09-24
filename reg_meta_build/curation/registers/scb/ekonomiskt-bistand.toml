@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "ekonomiskt-bistand"
+native_id = "22"
+
+[[representation.period_family]]
+register = "scb/ekonomiskt-bistand"
+family_stem = "ibel"
+label = "Introduktionsersättning per månad"
+
+[[representation.period_family]]
+register = "scb/ekonomiskt-bistand"
+family_stem = "sbel"
+label = "Socialbidrag per månad"

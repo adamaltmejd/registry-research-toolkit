@@ -1,0 +1,144 @@
+[register]
+provider = "scb"
+slug = "grundskola-ak9"
+native_id = "189"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "beh-est"
+description = "Gy-behörighet till estetiska programmet"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "beh-impro"
+description = "Programinriktat individuellt val"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "beh-nt"
+description = "Gy-behörighet till naturvetenskapsprogrammet och teknikprogrammet"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "beh-yrk"
+description = "Gy-behörighet till yrkesprogram"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-bild"
+description = "Betyg i ämnet bild"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-religion"
+description = "Betyg i ämnet religion"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-samhallskunskap"
+description = "Betyg i ämnet samhällskunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-slojd"
+description = "Betyg i ämnet slöjd"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-svenska"
+description = "Betyg i ämnet svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-teckensprak"
+description = "Betyg i ämnet teckenspråk"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-teknik"
+description = "Betyg i ämnet teknik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "bi"
+description = "Betyg i ämnet biologi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "fy"
+description = "Betyg i ämnet fysik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "ge"
+description = "Betyg i ämnet geografi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "hi"
+description = "Betyg i ämnet historia"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "hkk"
+description = "Betyg i ämnet hem- och konsumentkunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "idh"
+description = "Betyg i ämnet idrott och hälsa"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "ke"
+description = "Betyg i ämnet kemi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "meritvarde-m2"
+description = "Meritvarde med betyg i moderna språk som språkval tillsammans med de 16 bästa betygen i övrigt"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "moderna-sprak-elevens-val-sprak"
+description = "Moderna språk inom ramen för elevens val (språk)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "moderna-sprak-sprakval"
+description = "Moderna språk inom ramen för språkval (språk)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-ak9"
+variable = "mu"
+description = "Betyg i ämnet musik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[code_label_pair]]
+code = "scb/grundskola-ak9/huvudman"
+label = "scb/grundskola-ak9/hmannamn"
+
+[[code_label_pair]]
+code = "scb/grundskola-ak9/skolkod"
+label = "scb/grundskola-ak9/skolans-namn"

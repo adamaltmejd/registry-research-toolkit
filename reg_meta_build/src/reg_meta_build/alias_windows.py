@@ -13,16 +13,16 @@ from typing import TYPE_CHECKING
 from ._curation import (
     curation_error,
     fold_column,
-    load_curation_entries,
     require_evidence,
     require_fqid,
     require_str,
 )
+from .curation_tree import load_register_files
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-_FILE_NAME = "curation/alias_windows.toml"
+_FILE_NAME = "curation/registers/<provider>/<slug>.toml"
 _CODE = "alias_windows_invalid"
 _FIELDS = frozenset(
     {"variable", "variant", "column", "source_editions", "evidence", "noted"}
@@ -95,66 +95,57 @@ def load_alias_windows(path: Path | None) -> tuple[CuratedAliasWindow, ...]:
     These accepted declarations use SCB source editions. Offline conversion
     checks source ownership and binds the decisions to exact prepared records.
     """
-    entries = load_curation_entries(
-        path,
-        entry_key="alias",
-        label="alias-window",
-        prefix="alias_windows",
-        code_base="alias_windows",
-        file_name=_FILE_NAME,
-        entry_fields=(
-            "variable / variant / column / source_editions / evidence / noted"
-        ),
-    )
     out: list[CuratedAliasWindow] = []
     seen: set[tuple[str, str, str, str, str]] = set()
-    for entry in entries:
-        unknown = sorted(set(entry) - _FIELDS)
-        if unknown:
-            raise curation_error(
-                _CODE,
-                f"alias_windows [[alias]] entry has unknown key(s): {unknown}.",
-                f"An [[alias]] entry takes only {sorted(_FIELDS)} — fix the typo "
-                f"in reg_meta_build/{_FILE_NAME}.",
+    for register_file in load_register_files(path) if path is not None else ():
+        provider = register_file.register_info.provider
+        register = register_file.register_info.slug
+        for row in register_file.representation.alias_window:
+            entry = row.model_dump(mode="python")
+            fqid = row.variable
+            if provider != "scb":
+                raise curation_error(
+                    "alias_windows_unknown_provider",
+                    f"alias_windows {fqid} names provider {provider!r}; exact "
+                    "source-edition alias windows currently support 'scb' only.",
+                    "Move the declaration to that provider's own source-edition "
+                    "curation, or fix the variable FQID.",
+                )
+            variable_provider, variable_register, variable = require_fqid(
+                entry,
+                "variable",
+                code=_CODE,
+                prefix="alias_windows",
+                entry_table="[[representation.alias_window]]",
+                file_name=_FILE_NAME,
             )
-        provider, register, variable = require_fqid(
-            entry,
-            "variable",
-            code=_CODE,
-            prefix="alias_windows",
-            entry_table="[[alias]]",
-            file_name=_FILE_NAME,
-        )
-        fqid = f"{provider}/{register}/{variable}"
-        if provider != "scb":
-            raise curation_error(
-                "alias_windows_unknown_provider",
-                f"alias_windows {fqid} names provider {provider!r}; exact "
-                "source-edition alias windows currently support 'scb' only.",
-                "Move the declaration to that provider's own source-edition "
-                "curation, or fix the variable FQID.",
+            variant = _require_str(entry, "variant", f"[[alias_window]] {fqid}")
+            column = _require_str(entry, "column", f"[[alias_window]] {fqid}/{variant}")
+            context = f"[[alias_window]] {fqid}/{variant}/{column}"
+            key = (
+                variable_provider,
+                variable_register,
+                variable,
+                variant,
+                fold_column(column),
             )
-        variant = _require_str(entry, "variant", f"[[alias]] {fqid}")
-        column = _require_str(entry, "column", f"[[alias]] {fqid}/{variant}")
-        context = f"[[alias]] {fqid}/{variant}/{column}"
-        key = (provider, register, variable, variant, fold_column(column))
-        if key in seen:
-            raise curation_error(
-                _CODE,
-                f"alias_windows has duplicate declarations for {context}.",
-                "Give one [[alias]] per (variable, variant, column), listing all "
-                "of its exact source editions together.",
+            if key in seen:
+                raise curation_error(
+                    _CODE,
+                    f"alias_windows has duplicate declarations for {context}.",
+                    "Give one alias_window per (variable, variant, column), listing all "
+                    "of its exact source editions together.",
+                )
+            seen.add(key)
+            out.append(
+                CuratedAliasWindow(
+                    provider=provider,
+                    register=register,
+                    variable=variable,
+                    variant=variant,
+                    column=column,
+                    source_editions=_source_editions(entry, context),
+                    evidence=_require_evidence(entry, context),
+                )
             )
-        seen.add(key)
-        out.append(
-            CuratedAliasWindow(
-                provider=provider,
-                register=register,
-                variable=variable,
-                variant=variant,
-                column=column,
-                source_editions=_source_editions(entry, context),
-                evidence=_require_evidence(entry, context),
-            )
-        )
     return tuple(out)

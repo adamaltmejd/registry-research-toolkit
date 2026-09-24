@@ -1,0 +1,14 @@
+[[classification_group]]
+key = "sun"
+label = "Svensk utbildningsnomenklatur (SUN)"
+members = [{ classification = "sun2020-niva", value = "niva", label = "Utbildningsnivå" }, { classification = "sun2020-inriktning", value = "inriktning", label = "Utbildningsinriktning" }, { classification = "sun2020-grupp", value = "grupp", label = "Utbildningsgrupper" }, { classification = "niva-oldv1", value = "niva-old", label = "Nivå – aggregat, 7 nivåer" }, { classification = "niva-grovv1", value = "niva-grov", label = "Nivå – aggregat, 5 nivåer" }]
+
+[[classification_group]]
+key = "isced"
+label = "International Standard Classification of Education (ISCED)"
+members = [{ classification = "isced2011", value = "niva", label = "Nivå (ISCED 2011)" }, { classification = "isced-f2013", value = "inriktning", label = "Inriktning (ISCED-F 2013)" }]
+
+[[classification_group]]
+key = "norddrg"
+label = "NordDRG"
+members = [{ classification = "drg", value = "grupp", label = "Diagnosrelaterade grupper (DRG)" }, { classification = "mdc", value = "aggregat", label = "Större diagnosgrupper (MDC)" }]

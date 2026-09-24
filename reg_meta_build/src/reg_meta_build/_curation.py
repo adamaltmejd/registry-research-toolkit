@@ -121,6 +121,12 @@ def repo_curation_path(file_name: str) -> Path | None:
     return candidate if candidate.is_file() else None
 
 
+def repo_worklist_path(file_name: str) -> Path | None:
+    """Return one maintained generator worklist file from the package root."""
+    candidate = _REPO_CURATION.parent / "worklists" / file_name
+    return candidate if candidate.is_file() else None
+
+
 @functools.cache
 def fold_column(s: str) -> str:
     """Canonical column-identity key: NFKD-decompose, strip non-ASCII, lowercase
@@ -274,7 +280,7 @@ def load_curation_entries(
     validation stays in each loader (their schemas differ).
 
     ``sibling_keys`` lists OTHER legal top-level keys in the same file (a file
-    that carries more than one entry type, e.g. ``curation/delivery_enrichment.generated.toml``'s
+    that carries more than one entry type, e.g. ``curation/registers/<provider>/<slug>.toml``'s
     ``[[description]]`` + ``[[alias]]``): they are not flagged as unknown, and
     each is loaded by its own call. ``[]`` when ``path`` is None/missing
     (synthetic test builds, wheel installs). Errors carry

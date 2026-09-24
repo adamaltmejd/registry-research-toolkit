@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "prisindex"
+native_id = "296"
+
+[[code_label_pair]]
+code = "scb/prisindex/produktgrupp-sju-tpi"
+label = "scb/prisindex/prodnamn"

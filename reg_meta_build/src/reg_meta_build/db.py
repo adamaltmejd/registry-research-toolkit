@@ -951,7 +951,7 @@ CREATE INDEX idx_classification_derived_from_source
 --               never persisted to any shipped table; a curated
 --               `[[variable_group]]` claiming a member excludes it from the
 --               component (curated precedence). Since #923, curated code↔label
---               decode pairs (`curation/concept_groups.toml`) are ALSO appended to
+--               decode pairs (`curation/registers/<provider>/<slug>.toml`) are ALSO appended to
 --               `edge_siblings`, so an `edge` group is NOT exclusively an auto
 --               same-definition split — a future feature must not assume that
 --               (e.g. must not auto-merge edge-group members into one variable
@@ -959,7 +959,7 @@ CREATE INDEX idx_classification_derived_from_source
 --   'token'   — exact curated vocabularies only (no regex name-patterns):
 --               Swedish month slug tails for variables; 4-digit vintage-year
 --               slug tails for classifications (lkf1980…, sni2007).
---   'curated' — maintainer TOML (`reg_meta_build/curation/concept_groups.toml`), e.g.
+--   'curated' — maintainer TOML (`reg_meta_build/curation/registers/<provider>/<slug>.toml`), e.g.
 --               the LISA agi{1,2,3} rank facet over the month groups.
 -- A variable/classification belongs to AT MOST ONE group. For classifications
 -- the single-column member PK enforces it; for variables the surrogate-keyed

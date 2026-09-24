@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "tatorter"
+native_id = "159"
+
+[[code_label_pair]]
+code = "scb/tatorter/kommun"
+label = "scb/tatorter/kommunnamn"
+
+[[code_label_pair]]
+code = "scb/tatorter/lan"
+label = "scb/tatorter/lannamn"

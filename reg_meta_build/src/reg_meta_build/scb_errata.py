@@ -17,12 +17,12 @@ from typing import TYPE_CHECKING
 from ._curation import (
     curation_error,
     fold_column,
-    load_curation_entries,
     require_bool,
     require_evidence,
     require_str,
 )
 from .curation_tree import declared_short_names
+from .curation_tree import load_register_files
 from .edition_bounds import edition_claims
 from .fqid_slugs import (
     PROVIDER_FILE_SUFFIX,
@@ -34,7 +34,7 @@ from .fqid_slugs import (
 if TYPE_CHECKING:
     from pathlib import Path
 
-_FILE_NAME = "curation/scb_errata.toml"
+_FILE_NAME = "curation/registers/scb/<slug>.toml"
 _CODE = "scb_errata_invalid"
 # The provider whose export this surface corrects. `register` FQIDs are
 # 2-segment and must name it: another provider's slug cannot resolve to an
@@ -260,18 +260,20 @@ _KINDS: dict[str, str] = {
 }
 
 
-def _entries(path: Path | None, kind: str) -> list[dict]:
-    """One entry kind's raw tables, under this file's shared error vocabulary."""
-    return load_curation_entries(
-        path,
-        entry_key=kind,
-        label="SCB-errata",
-        prefix="scb_errata",
-        code_base="scb_errata",
-        file_name=_FILE_NAME,
-        entry_fields=_KINDS[kind],
-        sibling_keys=frozenset(_KINDS) - {kind},
-    )
+def _entries(path: Path | None, kind: str, registers=None) -> list[dict]:
+    """One entry kind flattened from the sorted register files."""
+    if path is None:
+        return []
+    entries: list[dict] = []
+    for register in registers if registers is not None else load_register_files(path):
+        register_fqid = (
+            f"{register.register_info.provider}/{register.register_info.slug}"
+        )
+        for entry in getattr(register.errata, kind):
+            raw = entry.model_dump(mode="python", exclude_none=True)
+            raw["register"] = register_fqid
+            entries.append(raw)
+    return entries
 
 
 def _state_provenance(class_name: str, evidence: str) -> str:
@@ -373,8 +375,9 @@ def load_scb_errata(
     path: Path | None,
     slug_dir: Path | None,
 ) -> ScbErrata:
-    """Parse the errata TOML, resolving each entry's `register`/`variant` slugs
-    against the curated `scb.toml` in `slug_dir`. Empty when no file (synthetic
+    """Parse register-scoped errata, resolving each entry's `variant` slug
+    against the curated `scb.toml` in `slug_dir`. ``path`` is the curation root.
+    Empty when no curation tree (synthetic
     builds, wheel installs).
 
     This checkout's `curation/classifications/` is consulted only when some
@@ -394,9 +397,10 @@ def load_scb_errata(
     the record of what SCB missed. `[[delivered]]` and `[[column]]` share that
     column key: a column is one kind of omission or the other, never both.
     """
-    version_entries = _entries(path, "version")
-    delivered_entries = _entries(path, "delivered")
-    column_entries = _entries(path, "column")
+    registers_curation = load_register_files(path) if path is not None else ()
+    version_entries = _entries(path, "version", registers_curation)
+    delivered_entries = _entries(path, "delivered", registers_curation)
+    column_entries = _entries(path, "column", registers_curation)
     if not version_entries and not delivered_entries and not column_entries:
         # Before touching the slug dir: resolving FQIDs parses the whole
         # curated scb.toml (~20k entries), and the common case — no file, or a

@@ -1,0 +1,58 @@
+[register]
+provider = "scb"
+slug = "moms"
+native_id = "13"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "agarkontroll"
+description = "Ägarkategori enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "aktuellt-antal-anstallda"
+description = "Antal anställda på företaget enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "imputerad"
+description = "Anger om deklarationen är modellberäknad (imputerad) eller rättad."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "institutionell-sektor"
+description = "Sektorkod enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "juridisk-form"
+description = "Juridisk form enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "ng1"
+description = "Bransch i FDB enligt SNI2007"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "redovisningsgrupp-moms"
+description = "Redovisningsgrupp för moms"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "sni"
+description = "Bransch i FDB enligt SNI2002"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/moms"
+variable = "stkl"
+description = "Storleksgrupp på företaget efter antal anställda enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

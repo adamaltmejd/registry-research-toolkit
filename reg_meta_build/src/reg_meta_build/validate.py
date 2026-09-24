@@ -107,7 +107,7 @@ class ValidationLine:
             return f"  [FAIL] {self.text}"
         if self.kind == "block":
             # Verbatim, unprefixed: a block is text the maintainer COPIES out of
-            # the report (Y-115's curation/scb_errata.toml stanzas), so a `  · ` in front
+            # the report (Y-115's curation/registers/scb/<slug>.toml stanzas), so a `  · ` in front
             # of every line would stop it parsing where it is pasted.
             return self.text
         return f"  · {self.text}"
@@ -1374,7 +1374,7 @@ def _check_minted_id_bands(
 def _check_errata_column_band(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
-    """Y-116: every `source_label='scb-errata'` variable (a `curation/scb_errata.toml`
+    """Y-116: every `source_label='scb-errata'` variable (a `curation/registers/scb/<slug>.toml`
     `[[column]]`) holds a `variable_id` in the reserved canonical-SCB sub-band
     `[2^61, 2^62)`.
 
@@ -1536,7 +1536,7 @@ def _check_variable_alias_window(
     bootstrap: bool = False,
 ) -> None:
     """Alias-window structural closure (corpus-independent). EMPTY without
-    `curation/period_family_merges.toml` or SCB multi-alias cvids, so no volume
+    `curation/registers/<provider>/<slug>.toml` or SCB multi-alias cvids, so no volume
     floor on synthetic builds.
 
     Asserts: every window's (variable_id, register_variant_id) resolves to a live
@@ -1831,16 +1831,16 @@ def _scb_in_build(conn: sqlite3.Connection) -> bool:
 
 
 def _curated_source_in_build(conn: sqlite3.Connection) -> bool:
-    """True iff a provider whose registers `curation/concept_groups.toml` curates is built.
+    """True iff a provider whose registers `curation/registers/<provider>/<slug>.toml` curates is built.
 
     The curated concept-group floor below (`n_curated >= 1`) asserts the curated
-    `curation/concept_groups.toml` was applied. That file curates only `scb/*` and `sos/*`
+    `curation/registers/<provider>/<slug>.toml` was applied. That file curates only `scb/*` and `sos/*`
     register families, so a `--providers` subset including NEITHER legitimately has
     zero curated groups and must SKIP (not false-fail) the floor (#600; surfaced once
     #597 let non-SCB builds reach validation). Concept groups are register-scoped (a
     curated group belongs to one register/provider, not shared), so keying on
     scb/sos register presence is accurate — update this gate if a future provider
-    gains curated `curation/concept_groups.toml` families. Independent of `n_curated`, so a
+    gains curated `curation/registers/<provider>/<slug>.toml` families. Independent of `n_curated`, so a
     real "TOML not applied" regression on a build that DOES include scb/sos still
     fails the floor.
     """
@@ -2088,7 +2088,7 @@ def _check_concept_groups(
             result.ok(f"{n_curated} curated group(s) (>= 1)")
         else:
             result.fail(
-                "no curated concept groups (curation/concept_groups.toml not applied?)"
+                "no curated concept groups (curation/registers/<provider>/<slug>.toml not applied?)"
             )
     # Derived (`source='token'`) classification vintage families no longer fold
     # here (#571) — they materialize as succession edges, asserted-empty
@@ -2674,14 +2674,14 @@ def _check_inventory_window_coverage(
     if curated:
         result.info(
             f"{len(curated):,} group(s) are NOT on the `scb` provider and are NOT "
-            "errata: curation/scb_errata.toml corrects SCB's own export and its loader "
+            "errata: curation/registers/scb/<slug>.toml corrects SCB's own export and its loader "
             "refuses another provider, so each of those lines names the curated "
             "surface its window comes from — widen it there and rebuild."
         )
     stanzas = errata_stanzas(shown)
     if stanzas:
         result.info(
-            "curate the scb omissions into reg_meta_build/curation/scb_errata.toml — the "
+            "curate the scb omissions into reg_meta_build/curation/registers/scb/<slug>.toml — the "
             "stanzas below are complete and paste as they stand, but `evidence` and "
             "`noted` are TODO placeholders only the maintainer can fill (the loader "
             "refuses a placeholder `noted`, so an uncurated paste cannot ship)."

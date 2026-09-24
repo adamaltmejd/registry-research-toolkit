@@ -1,0 +1,28 @@
+[register]
+provider = "scb"
+slug = "vaxtskyddsmedel"
+native_id = "235"
+
+[[code_label_pair]]
+code = "scb/vaxtskyddsmedel/glyfosat-id"
+label = "scb/vaxtskyddsmedel/glyfosat-namn"
+
+[[code_label_pair]]
+code = "scb/vaxtskyddsmedel/glyfosat-id-2006"
+label = "scb/vaxtskyddsmedel/glyfosat-namn"
+
+[[code_label_pair]]
+code = "scb/vaxtskyddsmedel/grodid"
+label = "scb/vaxtskyddsmedel/grodnamn"
+
+[[code_label_pair]]
+code = "scb/vaxtskyddsmedel/vaxtskyddsmedel-id"
+label = "scb/vaxtskyddsmedel/vaxtskyddsmedel-namn"
+
+[[code_label_pair]]
+code = "scb/vaxtskyddsmedel/vaxtskyddsmedel-id"
+label = "scb/vaxtskyddsmedel/vaxtskyddsmedelsnamn"
+
+[[code_label_pair]]
+code = "scb/vaxtskyddsmedel/vsid"
+label = "scb/vaxtskyddsmedel/vsnamn"

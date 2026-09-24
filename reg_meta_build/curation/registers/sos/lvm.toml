@@ -1,0 +1,23 @@
+[register]
+provider = "sos"
+slug = "lvm"
+native_id = "6293204766641962219"
+name = "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+
+# DRAFT reg_meta_build/curation/registers/sos/lvm.toml (pin-free).
+# sos.py DELDATAMANGD_TOKEN_MAP at 43599863^ (L1562-1591, #211): the variable
+# sheet uses the lowercase technical label of each Deldatamängder row.
+# v18: accepted-sos-routes:lvm:* = 40 cases, 65 variant effects
+# (scopes/a0563466f216232b468e.json.gz).
+
+[[identity.route]]
+deldatamangd = "lvm_ansok"
+variants = ["Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"] # v18: 17 rows
+
+[[identity.route]]
+deldatamangd = "lvm_omhtg"
+variants = ["Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"] # v18: 18 rows
+
+[[identity.route]]
+deldatamangd = "lvm_utskr"
+variants = ["Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"] # v18: 30 rows

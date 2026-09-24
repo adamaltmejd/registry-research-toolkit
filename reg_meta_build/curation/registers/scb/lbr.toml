@@ -1,0 +1,24 @@
+[register]
+provider = "scb"
+slug = "lbr"
+native_id = "10"
+
+[[code_label_pair]]
+code = "scb/lbr/distriktskod"
+label = "scb/lbr/distriktsnamn"
+
+[[code_label_pair]]
+code = "scb/lbr/djurid"
+label = "scb/lbr/djur"
+
+[[code_label_pair]]
+code = "scb/lbr/grodans-id-nummer"
+label = "scb/lbr/grodans-namn"
+
+[[code_label_pair]]
+code = "scb/lbr/grodid"
+label = "scb/lbr/grodnamn"
+
+[[code_label_pair]]
+code = "scb/lbr/kommunkod"
+label = "scb/lbr/kommunnamn"

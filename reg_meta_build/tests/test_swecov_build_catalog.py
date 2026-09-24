@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
+from _curation_fixtures import write_lisa_errata
 from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.inventory import edition_bounds, load_inventory as load_delivery_inventory
@@ -1226,18 +1227,17 @@ def test_the_emitted_candidates_load_as_scb_errata(
         _lisa_holding("Ssyk4_J16", "FastBet"),
         doc_columns=("Ssyk4_J16",),
     )
-    path = tmp_path / "scb_errata.toml"
-    path.write_text(text, encoding="utf-8")
+    root = write_lisa_errata(tmp_path / "curation", text)
 
     with pytest.raises(RegMetaError) as exc:
-        load_scb_errata(path, repo_slug_dir())
+        load_scb_errata(root, repo_slug_dir())
     assert "`noted`" in exc.value.message
 
-    path.write_text(
+    root = write_lisa_errata(
+        root,
         text.replace('noted = "TODO: YYYY-MM-DD"', 'noted = "2026-09-12"'),
-        encoding="utf-8",
     )
-    errata = load_scb_errata(path, repo_slug_dir())
+    errata = load_scb_errata(root, repo_slug_dir())
     assert {(column.column, column.source) for column in errata.columns} == {
         ("Ssyk4_J16", "scb-docs"),
         ("FastBet", "steward-holdings"),

@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "komvux"
+native_id = "249"
+
+[[code_label_pair]]
+code = "scb/komvux/gymnasieforbund-id"
+label = "scb/komvux/gymnasieforbundets-namn"
+
+[[code_label_pair]]
+code = "scb/komvux/kommunalforbund-id"
+label = "scb/komvux/kommunalforbund-namn"
+
+[[code_label_pair]]
+code = "scb/komvux/kommunalforbund-id-2"
+label = "scb/komvux/kommunalforbund-namn-2"

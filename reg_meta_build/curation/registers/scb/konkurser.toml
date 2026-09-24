@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "konkurser"
+native_id = "167"
+
+[[errata.column]]
+variant = "konkurser-offentliga-ackord"
+column = "tidning"
+name = "Nummer på postgumman (från och med 1997)"
+definition = "Nummer på postgumman (från och med 1997)"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"

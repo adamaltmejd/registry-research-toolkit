@@ -12,9 +12,9 @@ from typing import TYPE_CHECKING
 
 from ._curation import (
     curation_error,
-    load_curation_entries,
     require_str,
 )
+from .curation_tree import load_register_files
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -30,63 +30,53 @@ class PeriodFamily:
     register: str
     family_stem: str
     label: str
+    slug: str | None = None
 
 
 _require_str = functools.partial(
     require_str,
     code="period_family_merges_invalid",
     prefix="period_family_merges",
-    file_name="curation/period_family_merges.toml",
+    file_name="curation/registers/<provider>/<slug>.toml",
 )
 
 
 def load_period_family_merges(path: Path | None) -> tuple[PeriodFamily, ...]:
-    """Parse the period-family-merge TOML. Empty when no file (synthetic test
-    builds, wheel installs).
+    """Parse ``representation.period_family`` from register files. ``path`` is
+    the curation root. Empty when no tree (synthetic test builds, wheel installs).
 
     Load-time validation (all EXIT_CONFIG, actionable): only `[[period_family]]`
     top-level; `register` is a 2-segment `provider/register` FQID; `family_stem` /
     `label` non-empty strings; each (register, family_stem) unique. Member
     resolution and coding checks belong to the common resolver, not this loader."""
-    entries = load_curation_entries(
-        path,
-        entry_key="period_family",
-        label="period-family-merge",
-        prefix="period_family_merges",
-        code_base="period_family_merges",
-        file_name="curation/period_family_merges.toml",
-        entry_fields="register / family_stem / label",
-    )
     out: list[PeriodFamily] = []
     seen: set[tuple[str, str, str]] = set()
-    for entry in entries:
-        register_fqid = _require_str(entry, "register", "[[period_family]]")
-        parts = register_fqid.split("/")
-        if len(parts) != 2 or not all(parts):
-            raise curation_error(
-                "period_family_merges_invalid",
-                f"period_family_merges register {register_fqid!r} must be a "
-                "2-segment `provider/register` FQID.",
-                'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
+    for register_file in load_register_files(path) if path is not None else ():
+        provider = register_file.register_info.provider
+        register = register_file.register_info.slug
+        for entry in register_file.representation.period_family:
+            family_stem = _require_str(
+                entry.model_dump(), "family_stem", "[[representation.period_family]]"
             )
-        family_stem = _require_str(entry, "family_stem", "[[period_family]]")
-        label = _require_str(entry, "label", "[[period_family]]")
-        scope_key = (parts[0], parts[1], family_stem)
-        if scope_key in seen:
-            raise curation_error(
-                "period_family_merges_invalid",
-                f"period_family_merges duplicate family_stem {family_stem!r} under "
-                f"{register_fqid}.",
-                "Each (register, family_stem) may appear once in "
-                "reg_meta_build/curation/period_family_merges.toml.",
+            label = _require_str(
+                entry.model_dump(), "label", "[[representation.period_family]]"
             )
-        seen.add(scope_key)
-        out.append(
-            PeriodFamily(
-                provider=parts[0],
-                register=parts[1],
-                family_stem=family_stem,
-                label=label,
+            scope_key = (provider, register, family_stem)
+            if scope_key in seen:
+                raise curation_error(
+                    "period_family_merges_invalid",
+                    f"period_family_merges duplicate family_stem {family_stem!r} under "
+                    f"{provider}/{register}.",
+                    "Each (register, family_stem) may appear once.",
+                )
+            seen.add(scope_key)
+            out.append(
+                PeriodFamily(
+                    provider=provider,
+                    register=register,
+                    family_stem=family_stem,
+                    label=label,
+                    slug=entry.slug,
+                )
             )
-        )
     return tuple(out)

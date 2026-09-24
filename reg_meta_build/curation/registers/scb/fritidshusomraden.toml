@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "fritidshusomraden"
+native_id = "216"
+
+[[code_label_pair]]
+code = "scb/fritidshusomraden/kommun"
+label = "scb/fritidshusomraden/kommunnamn"
+
+[[code_label_pair]]
+code = "scb/fritidshusomraden/lan"
+label = "scb/fritidshusomraden/lannamn"

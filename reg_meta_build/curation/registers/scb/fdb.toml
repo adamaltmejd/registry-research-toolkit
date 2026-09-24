@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "fdb"
+native_id = "1"
+
+[[errata.column]]
+variant = "arbetsstalleenheter"
+column = "avregdatktid"
+name = "Avregistreringsår"
+definition = "Avregistreringsår"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[enrichment.description]]
+register = "scb/fdb"
+variable = "aststat"
+description = "AST-status"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[identity.partition]]
+variable = "1.830"
+columns = { GatuRest = "1.830.gaturest", Gaturest = "1.830.gaturest", PGaturest = "1.830.pgaturest" }
+columns_ref = "Y-167 2026-09-18: FDB 1.830 keeps {GatuRest, Gaturest} on gaturest and {PGaturest} on pgaturest (variants 424/427, 1999-2025); counter-evidence retained: AE variable-dict row 31477 reads GatuRest as PGaturest, JE GatuRest row 12814 matches PGaturest row 6139; register 383 out of scope"

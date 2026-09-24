@@ -1,0 +1,146 @@
+[register]
+provider = "scb"
+slug = "grundskola-elever"
+native_id = "193"
+
+[[errata.column]]
+variant = "individregister"
+column = "Ar"
+name = "År"
+definition = "År"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "individregister"
+column = "FTH"
+name = "Anger om eleven är inskriven i fritidshem"
+definition = "Anger om eleven är inskriven i fritidshem"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "individregister"
+column = "GRREKTFTH"
+name = "Gemensam rektor med fritidshem"
+definition = "Gemensam rektor med fritidshem"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "individregister"
+column = "HMANFTH"
+name = "Huvudman fritidshem"
+definition = "Huvudman fritidshem"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "individregister"
+column = "MSPR1_SPRAK"
+name = "Moderna språk inom ramen för elevens val (språk)"
+definition = "Moderna språk inom ramen för elevens val (språk)"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "individregister"
+column = "MSPR2_SPRAK"
+name = "Moderna språk inom ramen för språkval (språk)"
+definition = "Moderna språk inom ramen för språkval (språk)"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "individregister"
+column = "OBTIDFTH"
+name = "Eleven är inskriven på fritidshem under obekväma tider."
+definition = "Eleven är inskriven på fritidshem under obekväma tider."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "anpassad-studigang"
+description = "Anpassad studiegång"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "deltagit-sva"
+description = "Elever deltar i SVA (Svenska som andrasspråk)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "inriktning"
+description = "Typ av grundskola (Inriktning). From 2017 kan även kommunala skolor ha inriktning=14, tidigare var det bara fristående skolor som hade inriktningar."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "m2-spr-alt"
+description = "Alternativ till språkval"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "skolenhetskod"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "skolkod"
+description = "Skolkod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "skolkommun"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "skom"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-elever"
+variable = "stud-handl-ml"
+description = "Studiehandlening på modersmål"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[code_label_pair]]
+code = "scb/grundskola-elever/huvudman"
+label = "scb/grundskola-elever/huvudman-namn"
+
+[[code_label_pair]]
+code = "scb/grundskola-elever/skolenhetskod"
+label = "scb/grundskola-elever/skolenhetens-namn"
+
+[[code_label_pair]]
+code = "scb/grundskola-elever/skolkod"
+label = "scb/grundskola-elever/skolans-namn"

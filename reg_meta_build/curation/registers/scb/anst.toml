@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "anst"
+native_id = "408"
+
+[[enrichment.description]]
+register = "scb/anst"
+variable = "ersdagar"
+description = "Antal ersättningsdagar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/anst"
+variable = "imp-ind-anst"
+description = "Anger om antal anställningar är imputerat eller inte."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/anst"
+variable = "person-orgnr-3"
+description = "Organisationsnummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

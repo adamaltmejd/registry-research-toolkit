@@ -5,27 +5,22 @@ into PRESENTATION-ONLY browse rows, but its automatic layer is patchy: the `edge
 pass only fires on A2.2 sibling edges, and the `token` pass only recognises the
 exact curated month/vintage vocabularies. Everything else (digit-suffixed families
 like `morsak1/2/3`, the `fasit` yearly series) sits unfolded
-unless a maintainer opts it in via `curation/concept_groups.toml`.
+unless a maintainer materializes the group in its register TOML.
 
 This module is the GENERATOR half of the generate-then-accept split that
 `variable_same_as` (#417) established: it scans a BUILT DB for ungrouped
 digit-suffixed slug families, scores each for label agreement, and emits the
-committed, machine-owned `concept_groups.auto.toml` — the ranked candidate
+committed, machine-owned `worklists/concept_groups.auto.toml` — the ranked candidate
 catalog. It materializes NOTHING and never mutates the DB; it only writes the
 auto file (the maintainer never hand-edits that file).
 
-Candidates fold OPT-IN: a family in `concept_groups.auto.toml` folds only when an
-`[[accept]]` entry in `curation/concept_groups.toml` references it by `(register, key)`
-(see `concept_groups.load_concept_group_accepts` / `resolve_accept`) — there is no
-copy-across; the accept is a thin by-reference pointer (with optional
-`label`/`axis`/`exclude` overrides).
+Candidates fold OPT-IN: accepted groups are materialized as literal `[[group]]`
+members in the register file; the accept list and auto candidates are generator
+worklists, not build inputs.
 
-Regeneration is IDEMPOTENT: an accepted family is materialized as a `curated`
-concept group during the build, which would otherwise drop it from the next scan
-(grouped members, self-colliding key). So the generator READS the accept-list
-(`curation/concept_groups.toml`) and treats accepted families as still-candidate-eligible —
-they re-emit into the catalog instead of vanishing, keeping the accepts resolvable.
-A custom `[[variable_group]]` family and the edge/token/vintage passes are NOT
+Regeneration is IDEMPOTENT: the generator reads the accepted worklist and treats
+accepted families as still-candidate-eligible, so they re-emit instead of vanishing.
+A custom register `[[group]]` family and the edge/token/vintage passes are NOT
 candidates and stay excluded.
 
 Concept groups are cosmetic (a wrong group is a curation bug, not the identity
@@ -36,7 +31,7 @@ from batteries on label agreement and reports the excluded-battery count so the
 cutoff is never a silent truncation (CLAUDE.md).
 
 The candidate schema (`register`/`key`/`label`/`axis` + `[[variable_group.members]]`)
-is exactly `concept_groups.load_concept_groups`' input schema. The generator also
+is exactly `concept_groups.load_worklist_concept_groups`' input schema. The generator also
 SKIPS a family whose `(register, stem)` already names an edge/token group: an
 `[[accept]]` resolves against a FRESH build at materialize time, so accepting such
 a candidate would collide on the `idx_concept_group_key` unique index. The family is
@@ -404,7 +399,7 @@ def infer_concept_group_candidates(
 
     PRESERVES accepted families (idempotent regeneration): `accepted_scopes` is the
     set of `(provider, register, key)` of the auto families currently `[[accept]]`-ed
-    in `curation/concept_groups.toml`. Each such family is MATERIALIZED as a `curated` concept
+    in `curation/registers/<provider>/<slug>.toml`. Each such family is MATERIALIZED as a `curated` concept
     group at build time — its members are grouped and its `(register, key)` names a
     group — so a naive regeneration against a normal built DB would DROP every
     accepted family (excluded as grouped, skipped as a self-collision) and the next
@@ -636,7 +631,7 @@ def render_candidates_toml(
     min_label_prefix: int,
     min_agreement: float,
 ) -> str:
-    """Render the committed, machine-owned `concept_groups.auto.toml` candidate
+    """Render the committed, machine-owned `worklists/concept_groups.auto.toml` candidate
     catalog as a `[[variable_group]]` TOML string a maintainer folds from by
     `[[accept]]` reference. Built by hand (not `tomli_w`) so the per-candidate
     `# axis=… agreement=… members=…` provenance comments survive — `tomli_w` drops
@@ -645,7 +640,7 @@ def render_candidates_toml(
     `skipped_existing_key` count, and the `skipped_trim_collision` count (so no
     cutoff is ever silent).
 
-    The output MUST re-parse cleanly through `concept_groups.load_concept_groups`:
+    The output MUST re-parse cleanly through `concept_groups.load_worklist_concept_groups`:
     `register` is a 2-segment FQID, each member sets exactly `variable` +
     `value`/`label`. Every string value is emitted through the shared `_toml_str`
     (full escape set incl. control chars, returns the quotes) so a label or name
@@ -657,24 +652,21 @@ def render_candidates_toml(
         "# GENERATED concept-group fold candidates — "
         "reg-meta-build concept-group-candidates.",
         "#",
-        "# THIS FILE IS MACHINE-OWNED. It IS reg_meta_build/curation/concept_groups.auto.toml,",
+        "# THIS FILE IS MACHINE-OWNED. It IS reg_meta_build/worklists/concept_groups.auto.toml,",
         "# the committed candidate catalog. Regenerate it with:",
         "#   reg-meta-build --db <built-db-dir> concept-group-candidates \\",
-        "#     --output-toml reg_meta_build/curation/concept_groups.auto.toml",
+        "#     --output-toml reg_meta_build/worklists/concept_groups.auto.toml",
         "# (`--db` points at a built reg_meta DB to scan; `--output-toml` targets",
         "# this committed file). NEVER hand-edit it (edits are overwritten).",
         "#",
         "# These are INFERRED foldable column families, NOT folded by default.",
-        "# Folding is OPT-IN: to fold a family, add an `[[accept]]` entry in",
-        "# reg_meta_build/curation/concept_groups.toml referencing its `register` + `key`",
-        '# (optional `label` / `axis` overrides, optional `exclude = ["<slug>", …]`).',
+        "# Folding is OPT-IN: accepted families are materialized as literal groups in",
+        "# reg_meta_build/curation/registers/<provider>/<slug>.toml.",
         "# An unaccepted family stays unfolded. Concept groups are presentation-only,",
         "# so review each family before accepting it.",
         "#",
-        "# Regeneration is IDEMPOTENT: the generator reads curation/concept_groups.toml's",
-        "# accept-list and PRESERVES already-accepted families here (an accept",
-        "# materializes its family as a group, which a naive rescan would drop), so",
-        "# regenerating against a normal built DB keeps every accept resolvable.",
+        "# Regeneration is IDEMPOTENT: the generator reads worklists/concept_groups.accepted.toml",
+        "# and PRESERVES already-accepted families here, so they remain reviewable.",
         "#",
         f"# thresholds: min-siblings={min_siblings} "
         f"min-label-prefix={min_label_prefix} min-agreement={min_agreement}",

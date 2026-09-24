@@ -1,0 +1,41 @@
+[register]
+provider = "sos"
+slug = "par"
+native_id = "5891427617861710725"
+name = "Patientregistret"
+
+[[group]]
+register = "sos/par"
+key = "atgardsdatum"
+label = "Åtgärdsdatum"
+axis = "ordinal"
+members = [{ variable = "atgardsdatum-1", value = "01", label = "1" }, { variable = "atgardsdatum-2", value = "02", label = "2" }, { variable = "atgardsdatum-3", value = "03", label = "3" }, { variable = "atgardsdatum-4", value = "04", label = "4" }, { variable = "atgardsdatum-5", value = "05", label = "5" }, { variable = "atgardsdatum-6", value = "06", label = "6" }, { variable = "atgardsdatum-7", value = "07", label = "7" }, { variable = "atgardsdatum-8", value = "08", label = "8" }, { variable = "atgardsdatum-9", value = "09", label = "9" }, { variable = "atgardsdatum-10", value = "10", label = "10" }, { variable = "atgardsdatum-11", value = "11", label = "11" }, { variable = "atgardsdatum-12", value = "12", label = "12" }, { variable = "atgardsdatum-13", value = "13", label = "13" }, { variable = "atgardsdatum-14", value = "14", label = "14" }, { variable = "atgardsdatum-15", value = "15", label = "15" }, { variable = "atgardsdatum-16", value = "16", label = "16" }, { variable = "atgardsdatum-17", value = "17", label = "17" }, { variable = "atgardsdatum-18", value = "18", label = "18" }, { variable = "atgardsdatum-19", value = "19", label = "19" }, { variable = "atgardsdatum-20", value = "20", label = "20" }, { variable = "atgardsdatum-21", value = "21", label = "21" }, { variable = "atgardsdatum-22", value = "22", label = "22" }, { variable = "atgardsdatum-23", value = "23", label = "23" }, { variable = "atgardsdatum-24", value = "24", label = "24" }, { variable = "atgardsdatum-25", value = "25", label = "25" }, { variable = "atgardsdatum-26", value = "26", label = "26" }, { variable = "atgardsdatum-27", value = "27", label = "27" }, { variable = "atgardsdatum-28", value = "28", label = "28" }, { variable = "atgardsdatum-29", value = "29", label = "29" }, { variable = "atgardsdatum-30", value = "30", label = "30" }]
+
+[[group]]
+register = "sos/par"
+key = "yttre-orsakskod"
+label = "Yttre orsakskod"
+axis = "ordinal"
+members = [{ variable = "yttre-orsakskod-1", value = "1", label = "1" }, { variable = "yttre-orsakskod-2", value = "2", label = "2" }, { variable = "yttre-orsakskod-3", value = "3", label = "3" }, { variable = "yttre-orsakskod-4", value = "4", label = "4" }, { variable = "yttre-orsakskod-5", value = "5", label = "5" }, { variable = "yttre-orsakskod-6", value = "6", label = "6" }, { variable = "yttre-orsakskod-7", value = "7", label = "7" }]
+
+[[group]]
+register = "sos/par"
+key = "anestesikod"
+label = "Anestesikod"
+axis = "ordinal"
+members = [{ variable = "anestesikod-1", value = "1", label = "1" }, { variable = "anestesikod-2", value = "2", label = "2" }]
+
+# DRAFT reg_meta_build/curation/registers/sos/par.toml (pin-free).
+# ATC ships twice in PAR_OV and PAR_SV: a text ATC code and an integer flag
+# "Tillhörande DIA- eller YO-kod är en ATC-kod". sos.py KNOWN_SPLIT_ALLOWLIST
+# (L1477-1479, #362).
+# v18: accepted-sos-identity:par:ATC = 1 case, 4 identity effects (2 subsets x
+# 2 types), conditioned on data_type (scopes/2c2b7f487010017c6218.json.gz).
+
+[[identity.split]]
+variable = "ATC"
+by = "data_type"
+parts = [
+  { data_type = "integer", owner = "5891427617861710725.ATC.atc" },  # slug dia-yo-kod-ar-atc-kod
+  { data_type = "text", owner = "5891427617861710725.ATC.atc-1" },   # slug atc-komplement-diagnos
+]

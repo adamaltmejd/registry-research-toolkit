@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "ep-val-resultat"
+native_id = "240"
+
+[[code_label_pair]]
+code = "scb/ep-val-resultat/partikod"
+label = "scb/ep-val-resultat/partinamn"

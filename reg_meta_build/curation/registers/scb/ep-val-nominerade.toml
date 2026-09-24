@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "ep-val-nominerade"
+native_id = "286"
+
+[[code_label_pair]]
+code = "scb/ep-val-nominerade/partikod"
+label = "scb/ep-val-nominerade/partinamn"

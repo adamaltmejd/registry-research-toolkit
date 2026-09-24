@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "allmanna-val-valresultat"
+native_id = "243"
+
+[[code_label_pair]]
+code = "scb/allmanna-val-valresultat/partikod"
+label = "scb/allmanna-val-valresultat/partinamn"
+
+[[code_label_pair]]
+code = "scb/allmanna-val-valresultat/riksdagsvalkrets-kod"
+label = "scb/allmanna-val-valresultat/riksdagsvalkrets-namn"

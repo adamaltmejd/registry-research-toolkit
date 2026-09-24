@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "smaorter"
+native_id = "157"
+
+[[code_label_pair]]
+code = "scb/smaorter/kommun"
+label = "scb/smaorter/kommunnamn"
+
+[[code_label_pair]]
+code = "scb/smaorter/lan"
+label = "scb/smaorter/lannamn"

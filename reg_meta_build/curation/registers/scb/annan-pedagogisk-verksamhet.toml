@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "annan-pedagogisk-verksamhet"
+native_id = "379"
+
+[[code_label_pair]]
+code = "scb/annan-pedagogisk-verksamhet/huvudman"
+label = "scb/annan-pedagogisk-verksamhet/huvudman-namn"

@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "komvux-anpassad"
+native_id = "250"
+
+[[code_label_pair]]
+code = "scb/komvux-anpassad/gymnasieforbund-id"
+label = "scb/komvux-anpassad/gymnasieforbundets-namn"

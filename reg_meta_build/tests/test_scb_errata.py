@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from _curation_fixtures import write_lisa_errata
 from reg_meta_build.scb_errata import (
     load_scb_errata,
     scoped_state_provenance,
@@ -68,9 +69,8 @@ def slug_dir(tmp_path: Path) -> Path:
 
 
 def _load(tmp_path: Path, slug_dir: Path, body: str):
-    path = tmp_path / "scb_errata.toml"
-    path.write_text(body, encoding="utf-8")
-    return load_scb_errata(path, slug_dir)
+    root = write_lisa_errata(tmp_path / "curation", body)
+    return load_scb_errata(root, slug_dir)
 
 
 def _refused(tmp_path: Path, slug_dir: Path, body: str):
@@ -276,7 +276,6 @@ class TestColumnEntry:
     @pytest.mark.parametrize(
         "key",
         [
-            "register",
             "variant",
             "column",
             "name",
@@ -319,9 +318,10 @@ class TestColumnEntry:
         err = _refused(tmp_path, slug_dir, _toml(data_type='"txt"'))
         assert "txt" in err.message
 
-    def test_non_scb_register_fails(self, tmp_path: Path, slug_dir: Path) -> None:
+    def test_entry_cannot_override_its_register_file(self, tmp_path: Path, slug_dir: Path) -> None:
         err = _refused(tmp_path, slug_dir, _toml(register='"sos/lisa"'))
-        assert err.code == "scb_errata_unknown_variant"
+        assert err.exit_code == EXIT_CONFIG
+        assert "register" in err.message
 
     def test_uncurated_variant_fails(self, tmp_path: Path, slug_dir: Path) -> None:
         err = _refused(tmp_path, slug_dir, _toml(variant='"foretag"'))

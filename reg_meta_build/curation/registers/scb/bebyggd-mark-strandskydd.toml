@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "bebyggd-mark-strandskydd"
+native_id = "217"
+
+[[code_label_pair]]
+code = "scb/bebyggd-mark-strandskydd/kommun"
+label = "scb/bebyggd-mark-strandskydd/kommunnamn"
+
+[[code_label_pair]]
+code = "scb/bebyggd-mark-strandskydd/lan"
+label = "scb/bebyggd-mark-strandskydd/lannamn"

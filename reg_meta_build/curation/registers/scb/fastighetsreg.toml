@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "fastighetsreg"
+native_id = "276"
+
+[[code_label_pair]]
+code = "scb/fastighetsreg/distriktskod"
+label = "scb/fastighetsreg/distriktsnamn"

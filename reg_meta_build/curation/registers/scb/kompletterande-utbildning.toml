@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "kompletterande-utbildning"
+native_id = "326"
+
+[[code_label_pair]]
+code = "scb/kompletterande-utbildning/kategorikod"
+label = "scb/kompletterande-utbildning/kategorinamn"
+
+[[code_label_pair]]
+code = "scb/kompletterande-utbildning/studievag"
+label = "scb/kompletterande-utbildning/studievag-namn"

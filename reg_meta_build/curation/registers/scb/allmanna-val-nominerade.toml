@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "allmanna-val-nominerade"
+native_id = "239"
+
+[[code_label_pair]]
+code = "scb/allmanna-val-nominerade/partikod"
+label = "scb/allmanna-val-nominerade/partinamn"

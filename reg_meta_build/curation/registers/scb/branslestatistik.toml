@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "branslestatistik"
+native_id = "139"
+
+[[code_label_pair]]
+code = "scb/branslestatistik/land-for-import-export"
+label = "scb/branslestatistik/lnamn"

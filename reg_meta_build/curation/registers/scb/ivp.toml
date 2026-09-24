@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "ivp"
+native_id = "135"
+
+[[errata.column]]
+variant = "industrins-varuproduktion"
+column = "KvantText"
+name = "Anger vilken kvantitetsenhet som gäller för levererad och totalt producerad kvantitet."
+definition = "Anger vilken kvantitetsenhet som gäller för levererad och totalt producerad kvantitet."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[enrichment.description]]
+register = "scb/ivp"
+variable = "total-kvantitet"
+description = "Kvantitet på varor som har tillverkats under året (behöver inte ha levererats/sålts). Uppgiften samlas endast in för en mindre del av varunumren och ingår inte alltid i mikrodatauppdrag."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

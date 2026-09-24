@@ -1,0 +1,1135 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "DispInkKE"
+versions = ["2010", "2011", "2012"]
+upstream = "omitted-column-in-version"
+evidence = "SCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See reg_meta_build/docs/lisa/DispInkKE.md."
+noted = "2026-09-11"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "DispInkKE04"
+versions = ["2010", "2011", "2012"]
+upstream = "omitted-column-in-version"
+evidence = "The 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See reg_meta_build/docs/lisa/DispInkKE.md for the family's delivery span."
+noted = "2026-09-11"
+
+[[errata.delivered]]
+variant = "arbetsstallen"
+column = "Ast_SektorKod"
+versions = ["2022"]
+evidence = "SWECOV holds Ast_SektorKod in Arbst_2022; SCB documents it 1990..2021 and 2023 with no row in 2022 — a one-year documentation hole in a continuing column."
+noted = "2026-09-12"
+
+[[errata.delivered]]
+variant = "foretag"
+column = "Org_SektorKod"
+versions = ["2022"]
+evidence = "SWECOV holds Org_SektorKod in Ftg_2022; SCB documents it 2003..2021 and 2023 with no row in 2022 — a one-year documentation hole in a continuing column."
+noted = "2026-09-12"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "AmPol"
+versions = ["2016"]
+evidence = "SWECOV holds AmPol in Individ_2016 (LISA individer-15plus); SCB's Registerinformation export documents the column in every LISA version 2010..2015 and 2017..2023 but carries no row for it in 2016 — a one-year documentation hole in a continuing column."
+noted = "2026-09-12"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "AmPolTyp"
+versions = ["2011", "2012", "2013", "2014", "2015", "2016", "2017"]
+upstream = "blank-column-name-in-version"
+evidence = "SCB LISA bakgrundsfakta 1990–2017, Bilaga 9 printed page 470 (PDF page 471), marks AmPolTyp for each year 1990–2017; the AmPolTyp narrative describes occurrence of compensation for labour-market-policy measures. PDF sha256 76dc7ef8f1cbdfae05f40ff8628c3fc698f8b54478793e3125410686a5ee0ddc. Registerinformation.csv RegisterId 34, RegVarID 153, VarId 31619 has one unnamed original CVID in each edition 2011–2017, with name, definition and operational definition identical to the same-variant named AmPolTyp source. Name those original targets while retaining their own metadata and coding; this evidence does not authorize 2018–2019."
+noted = "2026-09-14"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "BAS"
+versions = ["2020", "2021"]
+evidence = "SWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
+noted = "2026-09-12"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "TPENSAU"
+versions = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
+evidence = "SCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+noted = "2026-09-13"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "TTJLONU"
+versions = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
+evidence = "SCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TTJLONU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TTJLONU."
+noted = "2026-09-13"
+
+[[errata.column]]
+variant = "individer-15plus"
+column = "Ssyk3_J16"
+name = "Yrke enligt SSYK 96, 3-siffernivå, inkl. härledda yrken för företagare"
+definition = "Yrke enligt SSYK 96 på 3-siffernivå, inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för Yrke enligt SSYK 96 sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn. De härledda yrkena identifieras via SSYKStatus_J16."
+data_type = "text"
+classification = "SSYK96"
+versions = ["2010", "2011", "2012", "2013"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk3_J16 for 2010–2013 — see reg_meta_build/docs/lisa/Ssyk3_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-15plus"
+column = "Ssyk4_J16"
+name = "Yrke enligt SSYK 96, 4-siffernivå, inkl. härledda yrken för företagare"
+definition = "Yrke enligt SSYK 96 på 4-siffernivå, inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för Yrke enligt SSYK 96 sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn. De härledda yrkena identifieras via SSYKStatus_J16."
+data_type = "text"
+classification = "SSYK96"
+versions = ["2010", "2011", "2012", "2013"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk4_J16 for 2010–2013 — see reg_meta_build/docs/lisa/Ssyk4_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-15plus"
+column = "YSEG_J16"
+name = "Yrkesbaserad socioekonomisk gruppering, inkl. härledda yrken för företagare"
+definition = "Yrkesbaserad socioekonomisk gruppering (YSEG), inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för YSEG sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn."
+data_type = "text"
+versions = ["2010", "2011", "2012", "2013"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YSEG_J16 for 2010–2013 — see reg_meta_build/docs/lisa/YSEG_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "Nyk"
+name = "Yrke enligt Folk- och bostadsräkningen"
+definition = "Yrkeskod enligt Nordisk yrkesklassificering, FoB-85:s schema (NYK-kod). Yrkeskodningen bygger på den förvärvsarbetande befolkningens yrkesuppgift till Folk- och Bostadsräkningen 1990 (FoB 90) och avser i princip november månad 1990. Likartade yrken sammanförs utan hänsyn till utbildning, yrkesställning, tjänsteställning eller branschtillhörighet. I FoB 1990 kunde 8–9 procent av samtliga förvärvsarbetande inte kodas enligt NYK då yrkesuppgift saknas eller inte går att klassificera."
+data_type = "text"
+versions = ["1990"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Nyk for 1990–1990 — see reg_meta_build/docs/lisa/Nyk.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "YrkStallnJ"
+name = "Yrkesställning enligt justerad metod"
+definition = "Yrkesställning enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YrkStallnJ for 2003–2003 — see reg_meta_build/docs/lisa/YrkStallnJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "AstKommunJ"
+name = "Arbetsställekommun enligt justerad metod"
+definition = "Arbetsställekommun enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstKommunJ for 2003–2003 — see reg_meta_build/docs/lisa/AstKommunJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "AstLanJ"
+name = "Arbetsställelän enligt justerad metod"
+definition = "Arbetsställelän enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstLanJ for 2003–2003 — see reg_meta_build/docs/lisa/AstLanJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "AstSNI2002J"
+name = "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justerad metod"
+definition = "Arbetsställets näringsgren enligt SNI2002, enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+classification = "SNI2002"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002J for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "AstSNI2002BJ"
+name = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper), enligt justerad metod"
+definition = "Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2002 (begränsad nivå, 42 grupper), enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
+data_type = "text"
+classification = "SNI2002"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002BJ for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002BJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "AstSNI2002GJ"
+name = "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justerad metod, grov nivå"
+definition = "Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2002 (grov nivå, 10 grupper), enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
+data_type = "text"
+classification = "SNI2002"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002GJ for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002GJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "SektorKodJ"
+name = "Sektorstillhörighet (företag) enligt justerad metod"
+definition = "Sektorstillhörighet enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+classification = "SEKTORKOD"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SektorKodJ for 2003–2003 — see reg_meta_build/docs/lisa/SektorKodJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "InstKod7J"
+name = "Institutionell sektorkod (företag) enligt justerad metod"
+definition = "Institutionell sektorkod enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Koden bildas utifrån företagets samhällssektor, ägare och juridiska form (tio positioner) och hämtas ur Företagsdatabasen (FDB)."
+data_type = "text"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents InstKod7J for 2003–2003 — see reg_meta_build/docs/lisa/InstKod7J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "CfarNrSregJ"
+name = "Arbetsställe (november) enligt justerad metod"
+definition = "Det huvudsakliga arbetsstället (CFAR-nummer) bestämt utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Vid utlämnande av data från LISA ersätts CFAR-numret av ett nytt löpnummer."
+data_type = "text"
+is_identifier = true
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents CfarNrSregJ for 2003–2003 — see reg_meta_build/docs/lisa/CfarNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "PeOrgNrSregJ"
+name = "Företagets organisationsnummer, enligt justerad metod"
+definition = "Företagets person-/organisationsnummer enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
+data_type = "text"
+is_identifier = true
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents PeOrgNrSregJ for 2003–2003 — see reg_meta_build/docs/lisa/PeOrgNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "ArbstIdJ"
+name = "Kopplingsvariabel till arbetsställetabell (endast förvärvsarbetande vid faktiska arbetsställen), enligt justerad metod"
+definition = "Kopplingsvariabel (identifierare) till arbetsställetabellen för endast förvärvsarbetande vid faktiska arbetsställen, enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004."
+data_type = "text"
+is_identifier = true
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbstIdJ for 2003–2003 — see reg_meta_build/docs/lisa/ArbstIdJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "LoneInkJ"
+name = "Kontant bruttolön enligt justerad metod"
+definition = "Kontant bruttolön utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Beloppet anges i hundratals kronor."
+data_type = "decimal"
+versions = ["2003"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents LoneInkJ for 2003–2003 — see reg_meta_build/docs/lisa/LoneInkJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "FortPens_Bdag_MiDAS"
+name = "Förtidspension, antal bruttodagar"
+definition = "Antal utbetalda bruttodagar under året med förtidspension. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning."
+data_type = "integer"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Bdag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "FortPens_Ndag_MiDAS"
+name = "Förtidspension, antal nettodagar"
+definition = "Antal utbetalda nettodagar under året med förtidspension. Förtidspension kan betalas ut som hel (100 %), tre fjärdedels (75 %), halv (50 %) eller en fjärdedels (25 %); antal nettodagar är bruttodagar gånger omfattningen under året."
+data_type = "integer"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Ndag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "FortPens_Belopp_MiDAS"
+name = "Förtidspension, ersättningsbelopp"
+definition = "Utbetalt belopp under året för förtidspension, i relation till utbetalda dagar med förtidspension. Beloppet avser ersättningsperioden och anges i hundratal kronor."
+data_type = "decimal"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Belopp_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "SjukBidr_Bdag_MiDAS"
+name = "Sjukbidrag, antal bruttodagar"
+definition = "Antal utbetalda bruttodagar under året med sjukbidrag. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning."
+data_type = "integer"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Bdag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "SjukBidr_Ndag_MiDAS"
+name = "Sjukbidrag, antal nettodagar"
+definition = "Antal utbetalda nettodagar under året med sjukbidrag. Sjukbidrag kan betalas ut som hel (100 %), tre fjärdedels (75 %), halv (50 %) eller en fjärdedels (25 %); antal nettodagar är bruttodagar gånger omfattningen under året."
+data_type = "integer"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Ndag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "SjukBidr_Belopp_MiDAS"
+name = "Sjukbidrag, ersättningsbelopp"
+definition = "Utbetalt belopp under året för sjukbidrag, i relation till utbetalda dagar med sjukbidrag. Beloppet avser ersättningsperioden och anges i hundratal kronor."
+data_type = "decimal"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Belopp_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "ATPFam"
+name = "ATP-kod för efterlevandeförmån"
+definition = "ATP-kod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension."
+data_type = "text"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ATPFam for 1990–2002 — see reg_meta_build/docs/lisa/ATPFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "FolkFam"
+name = "Folkpensionskod för efterlevandeförmån"
+definition = "Folkpensionskod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension."
+data_type = "text"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FolkFam for 1990–2002 — see reg_meta_build/docs/lisa/FolkFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "ALUAMK"
+name = "Arbetslivsutvecklingsbidrag (från AMK)"
+definition = "Arbetslivsutvecklingsbidrag från statlig arbetsmarknadskassa (AMK). Beloppet anges i hundratal kronor."
+data_type = "decimal"
+versions = ["1994", "1995", "1996"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ALUAMK for 1994–1996 — see reg_meta_build/docs/lisa/ALUAMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "AMK"
+name = "Ersättning från statlig arbetsmarknadskassa"
+definition = "Inkomstrelaterad dagpenning från statlig arbetsmarknadskassa till arbetslösa som inte tillhör en arbetslöshetskassa, införd 1/7 1994 och avskaffad 1/1 1995 med övergångsbestämmelser t.o.m. 30 juni 1996. Ersättningsnivån var 80 procent av tidigare inkomst. Beloppet anges i hundratals kronor."
+data_type = "decimal"
+versions = ["1994", "1995", "1996", "1997"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AMK for 1994–1997 — see reg_meta_build/docs/lisa/AMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "OTA"
+name = "Offentligt Tillfälligt Arbete (OTA)"
+definition = "Ersättning i samband med Offentligt Tillfälligt Arbete (OTA), infört 1/11 1996 för arbetslösa som fyllt 55 år och varit anmälda som arbetssökande minst 24 månader. Endast de som fått sin OTA-ersättning utbetald från Försäkringskassan redovisas här; de som ersätts av arbetslöshetskassa redovisas under ALUKU (t.o.m. 1999) respektive AKassa-AmPol (fr.o.m. 2000). Beloppet anges i hundratal kronor."
+data_type = "decimal"
+versions = ["1997"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents OTA for 1997–1997 — see reg_meta_build/docs/lisa/OTA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "SjukPA"
+name = "Sjukpenning, skattepliktig (arbetsgivarinträde)"
+definition = "Skattepliktig sjukpenning vid arbetsgivarinträde: arbetsgivaren lämnar sjuklön och får sedan, från Försäkringskassan, den sjukpenning/arbetsskadesjukpenning som den anställde har rätt till. Arbetsgivarinträdet upphörde 1/7 1992. Sjukpenningen avser utbetalningsåret oavsett ersättningsperiod. Beloppet anges i hundratals kronor."
+data_type = "decimal"
+versions = ["1990", "1991", "1992", "1993"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukPA for 1990–1993 — see reg_meta_build/docs/lisa/SjukPA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "TAE"
+name = "Tillfällig avgångsersättning"
+definition = "Tillfällig avgångsersättning."
+data_type = "decimal"
+versions = ["1997"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents TAE for 1997–1997 — see reg_meta_build/docs/lisa/TAE.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "ArbTid"
+name = "Arbetad tid"
+definition = "Överenskommen eller normal veckoarbetstid under oktober 1990 (vid tillfällig frånvaro avses senaste arbetade veckan); för personer med mer än ett förvärvsarbete redovisas den sammanlagda arbetstiden. Kodad i intervall: 1 = 0 tim, 2 = 1–15 tim, 3 = 16–19 tim, 4 = 20–34 tim, 5 = 35– tim, 9 = Uppgift saknas. Kodningen bygger på Folk- och Bostadsräkningen 1990 (FoB 90)."
+data_type = "text"
+versions = ["1990"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbTid for 1990–1990 — see reg_meta_build/docs/lisa/ArbTid.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "FastBet"
+name = "Fastighetsbeteckning"
+definition = "Officiell fastighetsbeteckning som fastighetsidentitet, införd 1998 när SCB skapade det nya systemet för Registret över totalbefolkningen (RTB). Personer redovisas där de är folkbokförda. Av sekretesskäl kan varken fastighetens löpnummer eller fastighetsbeteckning lämnas ut, men uppgifterna kan användas för härledningar (t.ex. för att skapa områden)."
+data_type = "text"
+versions = ["1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see reg_meta_build/docs/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-15plus"
+column = "FastBet"
+name = "Fastighetsbeteckning"
+definition = "Officiell fastighetsbeteckning som fastighetsidentitet, införd 1998 när SCB skapade det nya systemet för Registret över totalbefolkningen (RTB). Personer redovisas där de är folkbokförda. Av sekretesskäl kan varken fastighetens löpnummer eller fastighetsbeteckning lämnas ut, men uppgifterna kan användas för härledningar (t.ex. för att skapa områden)."
+data_type = "text"
+versions = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see reg_meta_build/docs/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-16plus"
+column = "MedbLandNamn"
+name = "Medborgarskap"
+definition = "Medborgarskap (medborgarskapsland)."
+data_type = "text"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see reg_meta_build/docs/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[errata.column]]
+variant = "individer-15plus"
+column = "MedbLandNamn"
+name = "Medborgarskap"
+definition = "Medborgarskap (medborgarskapsland)."
+data_type = "text"
+versions = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
+source = "scb-docs"
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see reg_meta_build/docs/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+noted = "2026-06-25"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "andel-grad-aktivitetsersattning-vilande"
+description = "Andel/grad för aktivitetsersättning (vilande) 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "andel-grad-sjukersattning-garanti"
+description = "Andel/grad för sjukersättning (garantiersättning) 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "andel-grad-sjukersattning-vilande"
+description = "Andel/grad för sjukersättning (vilande) 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "anlaggningstillgangar"
+description = "Anläggningstillgångar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "antal-personer-vid-arbetsstallet"
+description = "Antal personer med KU under året"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-arbetsstalle-sni2002b"
+description = "Näringsgren, SNI2002, begränsad nivå (42 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-arbetsstalle-sni2002g"
+description = "Näringsgren, SNI2002, grov nivå (10 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-arbetsstalle-sni2007g"
+description = "Näringsgren, SNI2007, grov nivå (15 grupper)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-arbetsstalle-sni2007u"
+description = "Näringsgren, SNI2007, utökad nivå (51 grupper)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-arbetsstalle-sni92b"
+description = "Näringsgren, SNI92, begränsad nivå (42 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-arbetsstalle-sni92g"
+description = "Näringsgren, SNI92, grov nivå (10 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "avsattningar"
+description = "Avsättningar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "bostadstillagg-sarskilt-familj"
+description = "Bostadstillägg för familj"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "bostbidrfam"
+description = "Bostadsbidrag för familj"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "bostbidru"
+description = "Bostadsbidrag (uppdelat på huvudsökande och medsökande)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "bruttoinvesteringar-byggnader-mark"
+description = "Bruttoinvestering i byggnader och mark"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "bruttoinvesteringar-maskiner-inventarier"
+description = "Bruttoinvestering i maskiner och inventarier"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "cfar-nummer-2"
+description = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "civilstand"
+description = "Civilstånd"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "disponibel-inkomst-familj"
+description = "Disponibel inkomst för familj"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ersattning-for-karens"
+description = "Ersättning för karens 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ersattning-riskgrupper"
+description = "Ersättning för riskgrupp 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "familjestallning"
+description = "Familjeställning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "foradlingsvarde"
+description = "Förädlingsvärde"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-g11"
+description = "Rörelsekapital/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-g8"
+description = "Personalkostnader/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t11"
+description = "Immateriella anläggningstillgångar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t12"
+description = "Materiella anläggningstillgångar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t13"
+description = "Maskiner o inventarier/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t14"
+description = "Finansiella anläggningstillgångar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t15"
+description = "Lager o pågående arbeten/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t16"
+description = "Kundfordringar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t17"
+description = "Övriga kortfristiga fordringar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t18"
+description = "Kassa, bank o kortfristiga placeringar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t19"
+description = "Kortfristiga skulder/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t20"
+description = "Eget kapital/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t21"
+description = "Obeskattade reserver/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t22"
+description = "Avsättningar o långfristiga skulder/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t7"
+description = "Personalkostnader/förädlingsvärde"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ftg-t9"
+description = "Avskrivningar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "garantipension"
+description = "Garantipension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "garpensand"
+description = "Andel/grad för garantipension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "inkomst-av-kapital"
+description = "Inkomst av kapital"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "inkomst-foranledd-sjukdom-2"
+description = "Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "inkomst-foranledd-studier-2"
+description = "Summa inkomst föranledd av studier"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "inkomstpensionstillagg"
+description = "Inkomstpensionstillägg"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "kostnader-loner-ersattningar"
+description = "Lönekostnader och andra ersättningar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ku1peorgnr"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ku1ssykar"
+description = "Årtal för yrkesuppgift, för yrkesverksamma"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ku2peorgnr"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ku3astnr"
+description = "Arbetsställenummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ku3cfarnr"
+description = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ku3peorgnr"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "loneinkomst"
+description = "Deklarerad löneinkomst"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "nettoinvesteringar-byggnader-mark"
+description = "Nettoinvestering i byggnader och mark"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "nettoinvesteringar-maskiner-inventarier"
+description = "Nettoinvestering i maskiner och inventarier"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "nettoomsattning-justerad-merchanting"
+description = "Nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "org-belkommun"
+description = "Belägenhetskommun för största arbetsstället"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "org-sektorkod"
+description = "Företagets sektorkod"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-foretag-sni2002b"
+description = "Näringsgren, SNI2002, begränsad nivå (42 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-foretag-sni2002g"
+description = "Näringsgren, SNI2002, grov nivå (10 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-foretag-sni2007g"
+description = "Näringsgren, SNI2007, grov nivå (15 grupper)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-foretag-sni2007u"
+description = "Näringsgren, SNI2007, utökad nivå (51 grupper)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-foretag-sni92b"
+description = "Näringsgren, SNI92, begränsad nivå (42 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "naringsgren-huvud-foretag-sni92g"
+description = "Näringsgren, SNI92, grov nivå (10 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "org-typ"
+description = "Företagstyp (ett- eller flerarbetsställeföretag)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "org-typbas"
+description = "Typ av företag (ett- eller flerarbetsställeföretag, finns inte i Företagsdatabasen, uppgift saknas)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ovriga-rorelseintakter"
+description = "Övriga rörelseintäkter"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "person-orgnr-2"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "premiepension"
+description = "Premiepension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "redovisat-resultat"
+description = "Årets resultat"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "resultat-efter-finansiella-poster"
+description = "Resultat efter finansiella poster"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "rorelseresultat"
+description = "Rörelseresultat"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "sarskilt-pensionstillagg"
+description = "Särskilt pensionstillägg"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "sateskommun"
+description = "Säteskommunen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "senaste-invandringsar"
+description = "Senaste invandringsår"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "skattekostnader"
+description = "Skatt på årets resultat"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "sociala-kostnader-personalkostnader"
+description = "Sociala kostnader och andra avgifter"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ssyk-overensstammelse"
+description = "Yrkets överensstämmelse med största förvärvskälla"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ssyk3-2012-j16"
+description = "Yrke enligt SSYK2012, 3-siffernivå, inkl. härledda yrken för företagare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ssyk4-2012-j16"
+description = "Yrke enligt SSYK2012, 4-siffernivå, inkl. härledda yrken för företagare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ssykar-j16"
+description = "Årtal för yrkesuppgift, inkl. härledda yrken för företagare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "ssykstatus-j16"
+description = "Yrkets överensstämmelse med novemberjobbet, inkl. härledda yrken för företagare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "studiemedel-studiehjalp-lan-och-bidrag"
+description = "Studiemedel och studiehjälp"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "summa-bruttoinvesteringar"
+description = "Summa bruttoinvesteringar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "summa-kortfristiga-skulder"
+description = "Kortfristiga skulder"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "summa-langfristiga-skulder"
+description = "Långfristiga skulder"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "summa-nettoinvesteringar"
+description = "Summa nettoinvesteringar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "summa-obeskattade-reserver"
+description = "Obeskattade reserver"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "summa-omsattningstillgangar"
+description = "Omsättningstillgångar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "summerad-inkomst-ast"
+description = "Arbetsställets utbetalda lönesumma under året"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "syssstat19"
+description = "Sysselsättningsstatus enligt justerad metod 2019"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "tillaggspension"
+description = "Tilläggspension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "tillpensand"
+description = "Andel/grad för tilläggspension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[group]]
+register = "scb/lisa"
+key = "agilonfink"
+label = "Löne- eller företagarinkomst per månad (AGI)"
+axis = "rank"
+members = [{ variable = "agi1lonfink", value = "1", label = "största förvärvskällan" }, { variable = "agi2lonfink", value = "2", label = "näst största förvärvskällan" }, { variable = "agi3lonfink", value = "3", label = "tredje största förvärvskällan" }]
+
+[[group]]
+register = "scb/lisa"
+key = "agijobbyrk"
+label = "Jobbets yrkesställning (AGI)"
+axes = [{ axis = "rank", label = "Förvärvskälla" }]
+members = [{ variable = "agi1jobbyrk", value = "1", label = "största förvärvskällan" }, { variable = "agi2jobbyrk", value = "2", label = "näst största förvärvskällan" }, { variable = "agi3jobbyrk", value = "3", label = "tredje största förvärvskällan" }]
+
+[[group]]
+register = "scb/lisa"
+key = "agilongarant"
+label = "Markering av erhållen lönegaranti (AGI)"
+axes = [{ axis = "rank", label = "Förvärvskälla" }]
+members = [{ variable = "agi1longarant", value = "1", label = "största förvärvskällan" }, { variable = "agi2longarant", value = "2", label = "näst största förvärvskällan" }, { variable = "agi3longarant", value = "3", label = "tredje största förvärvskällan" }]
+
+[[group]]
+register = "scb/lisa"
+key = "agisektorgrp"
+label = "Institutionell sektor (AGI)"
+axes = [{ axis = "rank", label = "Förvärvskälla" }]
+members = [{ variable = "agi1sektorgrp", value = "1", label = "största förvärvskällan" }, { variable = "agi2sektorgrp", value = "2", label = "näst största förvärvskällan" }, { variable = "agi3sektorgrp", value = "3", label = "tredje största förvärvskällan" }]
+
+[[group]]
+register = "scb/lisa"
+key = "faman"
+label = "Förekomst av delägarskap i fåmansaktiebolag"
+axes = [{ axis = "kalla", label = "Källa" }, { axis = "rank", label = "Förvärvskälla" }]
+members = [{ variable = "agi1faman", delivery_column = "AGI1FAman", coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "1", label = "största förvärvskällan" }] }, { variable = "agi2faman", delivery_column = "AGI2FAman", coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "2", label = "näst största förvärvskällan" }] }, { variable = "agi3faman", delivery_column = "AGI3FAman", coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "3", label = "tredje största förvärvskällan" }] }, { variable = "ku1faman", delivery_column = "KU1FAman", coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "1", label = "största förvärvskällan" }] }, { variable = "ku2faman", delivery_column = "KU2FAman", coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "2", label = "näst största förvärvskällan" }] }, { variable = "ku3faman", delivery_column = "KU3FAman", coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "3", label = "tredje största förvärvskällan" }] }]
+
+[[group]]
+register = "scb/lisa"
+key = "antal-barn"
+label = "Antal hemmavarande barn per ålder"
+axes = [{ axis = "alder", label = "Barnets ålder" }]
+members = [{ variable = "antal-barn-0-ar", value = "00", label = "0 år" }, { variable = "antal-barn-1-ar", value = "01", label = "1 år" }, { variable = "antal-barn-2-ar", value = "02", label = "2 år" }, { variable = "antal-barn-3-ar", value = "03", label = "3 år" }, { variable = "antal-barn-4-ar", value = "04", label = "4 år" }, { variable = "antal-barn-5-ar", value = "05", label = "5 år" }, { variable = "antal-barn-6-ar", value = "06", label = "6 år" }, { variable = "antal-barn-7-ar", value = "07", label = "7 år" }, { variable = "antal-barn-8-ar", value = "08", label = "8 år" }, { variable = "antal-barn-9-ar", value = "09", label = "9 år" }, { variable = "antal-barn-10-ar", value = "10", label = "10 år" }, { variable = "antal-barn-11-ar", value = "11", label = "11 år" }, { variable = "antal-barn-12-ar", value = "12", label = "12 år" }, { variable = "antal-barn-13-ar", value = "13", label = "13 år" }, { variable = "antal-barn-14-ar", value = "14", label = "14 år" }, { variable = "antal-barn-15-ar", value = "15", label = "15 år" }, { variable = "antal-barn-16-ar", value = "16", label = "16 år" }, { variable = "antal-barn-17-ar", value = "17", label = "17 år" }, { variable = "antal-barn-18-ar", value = "18", label = "18 år" }, { variable = "antal-barn-19-ar", value = "19", label = "19 år" }, { variable = "antal-barn-20-ar", value = "20", label = "20 år" }, { variable = "antal-barn-21-ar", value = "21", label = "21 år" }, { variable = "barn0-3", value = "00-03", label = "0-3 år" }, { variable = "barn4-6", value = "04-06", label = "4-6 år" }, { variable = "barn7-10", value = "07-10", label = "7-10 år" }, { variable = "barn11-15", value = "11-15", label = "11-15 år" }, { variable = "barn-16-17-ar", value = "16-17", label = "16-17 år" }, { variable = "barn-18-19-ar", value = "18-19", label = "18-19 år" }, { variable = "barn18plus", value = "18-plus", label = "18 år och äldre" }, { variable = "barn20plus", value = "20-plus", label = "20 år och äldre" }]
+
+[[group]]
+register = "scb/lisa"
+key = "naringsgren"
+label = "Näringsgren"
+axes = [{ axis = "kalla", label = "Källa" }, { axis = "population", label = "Population" }, { axis = "level", label = "Level" }, { axis = "metod", label = "Metod" }]
+members = [{ variable = "naringsgren-huvud-individ", delivery_column = "AstSNI69", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ", delivery_column = "AstSNI92", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ", delivery_column = "AstSNI2002", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ", delivery_column = "AstSNI2007", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni92b", delivery_column = "AstSNI92B", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni92g", delivery_column = "AstSNI92G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni2002b", delivery_column = "Astsni2002B", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni2002b", delivery_column = "AstSNI2002B", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni2002g", delivery_column = "Astsni2002G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni2002g", delivery_column = "AstSNI2002G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni2007g", delivery_column = "AstSni2007G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni2007g", delivery_column = "AstSNI2007G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni2007u", delivery_column = "AstSni2007U", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-individ-sni2007u", delivery_column = "AstSNI2007U", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-arbetsstalle", delivery_column = "Ast_Sni92", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-arbetsstalle", delivery_column = "Ast_Sni2002", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-arbetsstalle", delivery_column = "Ast_Sni2007", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "astsni-justerad", delivery_column = "AstSNI2002J", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "justerad", label = "Justerad" }] }, { variable = "naringsgren-huvud-arbetsstalle-sni92b", delivery_column = "Ast_Sni92B", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-arbetsstalle-sni92g", delivery_column = "Ast_Sni92G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-arbetsstalle-sni2002b", delivery_column = "Ast_Sni2002B", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "astsni2002b-justerad", delivery_column = "AstSNI2002BJ", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "justerad", label = "Justerad" }] }, { variable = "naringsgren-huvud-arbetsstalle-sni2002g", delivery_column = "Ast_Sni2002G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "astsni2002g-justerad", delivery_column = "AstSNI2002GJ", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "justerad", label = "Justerad" }] }, { variable = "naringsgren-huvud-arbetsstalle-sni2007g", delivery_column = "Ast_Sni2007G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-arbetsstalle-sni2007u", delivery_column = "Ast_Sni2007U", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag", delivery_column = "Org_Sni92", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag", delivery_column = "Org_Sni2002", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag", delivery_column = "Org_Sni2007", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag-sni92b", delivery_column = "Org_Sni92B", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag-sni92g", delivery_column = "Org_Sni92G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag-sni2002b", delivery_column = "Org_Sni2002B", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag-sni2002g", delivery_column = "Org_Sni2002G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag-sni2007g", delivery_column = "Org_Sni2007G", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-huvud-foretag-sni2007u", delivery_column = "Org_Sni2007U", coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni69", delivery_column = "KU1AstSNI69", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku", delivery_column = "KU1AstSNI92", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku", delivery_column = "KU1AstSNI2002", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku", delivery_column = "KU1AstSNI2007", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni92b", delivery_column = "KU1AstSNI92B", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni92g", delivery_column = "KU1AstSNI92G", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni2002b", delivery_column = "KU1Astsni2002B", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni2002b", delivery_column = "KU1AstSNI2002B", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni2002g", delivery_column = "KU1Astsni2002G", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni2002g", delivery_column = "KU1AstSNI2002G", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni2007g", delivery_column = "KU1AstSni2007G", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni2007g", delivery_column = "KU1AstSNI2007G", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni2007u", delivery_column = "KU1AstSni2007U", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-ku-sni2007u", delivery_column = "KU1AstSNI2007U", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-agi-sni2007", delivery_column = "AGI1AstSNI2007", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-agi-sni2007g", delivery_column = "AGI1AstSNI2007G", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-storsta-agi-sni2007u", delivery_column = "AGI1AstSNI2007U", coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni69", delivery_column = "KU2AstSNI69", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku", delivery_column = "KU2AstSNI92", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku", delivery_column = "KU2AstSNI2002", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku", delivery_column = "KU2AstSNI2007", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni92b", delivery_column = "KU2AstSNI92B", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni92g", delivery_column = "KU2AstSNI92G", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni2002b", delivery_column = "KU2AstSNI2002B", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni2002g", delivery_column = "KU2AstSNI2002G", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni2007g", delivery_column = "KU2AstSni2007G", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni2007g", delivery_column = "KU2AstSNI2007G", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni2007u", delivery_column = "KU2AstSni2007U", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-ku-sni2007u", delivery_column = "KU2AstSNI2007U", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-agi-sni2007", delivery_column = "AGI2AstSNI2007", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-agi-sni2007g", delivery_column = "AGI2AstSNI2007G", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-nast-storsta-agi-sni2007u", delivery_column = "AGI2AstSNI2007U", coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni69", delivery_column = "KU3AstSNI69", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku", delivery_column = "KU3AstSNI92", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku", delivery_column = "KU3AstSNI2002", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku", delivery_column = "KU3AstSNI2007", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni92b", delivery_column = "KU3AstSNI92B", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni92g", delivery_column = "KU3AstSNI92G", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni2002b", delivery_column = "KU3AstSNI2002B", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni2002g", delivery_column = "KU3AstSNI2002G", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni2007g", delivery_column = "KU3AstSni2007G", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni2007g", delivery_column = "KU3AstSNI2007G", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni2007u", delivery_column = "KU3AstSni2007U", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-ku-sni2007u", delivery_column = "KU3AstSNI2007U", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-agi-sni2007", delivery_column = "AGI3AstSNI2007", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-agi-sni2007g", delivery_column = "AGI3AstSNI2007G", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }] }, { variable = "naringsgren-tredje-storsta-agi-sni2007u", delivery_column = "AGI3AstSNI2007U", coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }] }]
+
+[[representation.period_family]]
+register = "scb/lisa"
+family_stem = "lonfink"
+label = "Löne- eller företagarinkomst per månad"
+slug = "lone-eller-foretagarinkomst-manad"
+
+[[representation.period_family]]
+register = "scb/lisa"
+family_stem = "agi1lonfink"
+label = "Löne- eller företagarinkomst per månad (största förvärvskällan)"
+
+[[representation.period_family]]
+register = "scb/lisa"
+family_stem = "agi2lonfink"
+label = "Löne- eller företagarinkomst per månad (näst största förvärvskällan)"
+
+[[representation.period_family]]
+register = "scb/lisa"
+family_stem = "agi3lonfink"
+label = "Löne- eller företagarinkomst per månad (tredje största förvärvskällan)"
+
+# DRAFT reg_meta_build/curation/registers/scb/lisa.toml (pin-free).
+# Expressible TODAY with no schema change: put `columns`/`columns_ref` on
+# [variable."34.63.syssstat"] in fqid_slugs/scb.toml (SlugEntry.columns, Y-167).
+# Source: archive/.../2026-09-16-goal-run/convert_relation_owned_partitions.py:33.
+# v18: accepted-column-partitions:scb-registerinformation:34.63 = 35 identity
+# effects (SyssStat 11, SyssStat11 8, SyssStat19 3, SyssStatG 4, SyssStatJ 9),
+# 0 unassigned (scopes/35dae9b7eb6f77d0a1f7.json.gz).
+
+[[identity.partition]]
+variable = "34.63"
+columns = { SyssStat = "34.63.syssstat", SyssStat11 = "34.63.syssstat", SyssStat19 = "34.63.syssstat19", SyssStatG = "34.63.syssstatg", SyssStatJ = "34.63.syssstatj" }
+# SyssStat11 occurs only in variant 34.153 (individer-15plus); the script asserted
+# it and v18 has all 8 SyssStat11 rows there. `columns` is not variant-scoped, so
+# a SyssStat11 delivery in another variant would be absorbed silently.
+columns_ref = "curation/relations.toml replaced_by edge scb/lisa/sysselsattningsstatus-november -> scb/lisa/syssstat19 (from_column SyssStat11, to_column SyssStat19, variant individer-15plus, 2019): SyssStat11 belongs to the SyssStat split; other splits by exact literal discriminator."
+
+# v18 accepted-column-partitions:scb-registerinformation:34.19054: 343 identity effects, 0 unassigned.
+# Derived by GR/convert_declared_column_ownership.py from concept_groups.toml members
+# (delivery_column_name) of group scb/lisa/naringsgren; stated literally here.
+[[identity.partition]]
+variable = "34.19054"
+columns = { "AstSNI2002" = "34.19054.astsni69", "AstSNI2002B" = "34.19054.astsni2002b", "AstSNI2002G" = "34.19054.astsni2002g", "AstSNI2007" = "34.19054.astsni69", "AstSNI2007G" = "34.19054.astsni2007g", "AstSNI2007U" = "34.19054.astsni2007u", "AstSNI69" = "34.19054.astsni69", "AstSNI92" = "34.19054.astsni69", "AstSNI92B" = "34.19054.astsni92b", "AstSNI92G" = "34.19054.astsni92g", "AstSni2007G" = "34.19054.astsni2007g", "AstSni2007U" = "34.19054.astsni2007u", "Ast_Sni2002" = "34.19054.ast-sni92", "Ast_Sni2002B" = "34.19054.ast-sni2002b", "Ast_Sni2002G" = "34.19054.ast-sni2002g", "Ast_Sni2007" = "34.19054.ast-sni92", "Ast_Sni2007G" = "34.19054.ast-sni2007g", "Ast_Sni2007U" = "34.19054.ast-sni2007u", "Ast_Sni92" = "34.19054.ast-sni92", "Ast_Sni92B" = "34.19054.ast-sni92b", "Ast_Sni92G" = "34.19054.ast-sni92g", "Astsni2002B" = "34.19054.astsni2002b", "Astsni2002G" = "34.19054.astsni2002g", "Org_Sni2002" = "34.19054.org-sni92", "Org_Sni2002B" = "34.19054.org-sni2002b", "Org_Sni2002G" = "34.19054.org-sni2002g", "Org_Sni2007" = "34.19054.org-sni92", "Org_Sni2007G" = "34.19054.org-sni2007g", "Org_Sni2007U" = "34.19054.org-sni2007u", "Org_Sni92" = "34.19054.org-sni92", "Org_Sni92B" = "34.19054.org-sni92b", "Org_Sni92G" = "34.19054.org-sni92g" }
+columns_ref = "curation/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+# v18 accepted-column-partitions:scb-registerinformation:34.31165: 108 identity effects, 0 unassigned.
+# Derived by GR/convert_declared_column_ownership.py from concept_groups.toml members
+# (delivery_column_name) of group scb/lisa/naringsgren; stated literally here.
+[[identity.partition]]
+variable = "34.31165"
+columns = { "AGI2AstSNI2007" = "34.31165.agi2astsni2007", "AGI2AstSNI2007G" = "34.31165.agi2astsni2007g", "AGI2AstSNI2007U" = "34.31165.agi2astsni2007u", "KU2AstSNI2002" = "34.31165.ku2astsni92", "KU2AstSNI2002B" = "34.31165.ku2astsni2002b", "KU2AstSNI2002G" = "34.31165.ku2astsni2002g", "KU2AstSNI2007" = "34.31165.ku2astsni92", "KU2AstSNI2007G" = "34.31165.ku2astsni2007g", "KU2AstSNI2007U" = "34.31165.ku2astsni2007u", "KU2AstSNI69" = "34.31165.ku2astsni69", "KU2AstSNI92" = "34.31165.ku2astsni92", "KU2AstSNI92B" = "34.31165.ku2astsni92b", "KU2AstSNI92G" = "34.31165.ku2astsni92g", "KU2AstSni2007G" = "34.31165.ku2astsni2007g", "KU2AstSni2007U" = "34.31165.ku2astsni2007u" }
+columns_ref = "curation/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+# v18 accepted-column-partitions:scb-registerinformation:34.31300: 108 identity effects, 0 unassigned.
+# Derived by GR/convert_declared_column_ownership.py from concept_groups.toml members
+# (delivery_column_name) of group scb/lisa/naringsgren; stated literally here.
+[[identity.partition]]
+variable = "34.31300"
+columns = { "AGI3AstSNI2007" = "34.31300.agi3astsni2007", "AGI3AstSNI2007G" = "34.31300.agi3astsni2007g", "AGI3AstSNI2007U" = "34.31300.agi3astsni2007u", "KU3AstSNI2002" = "34.31300.ku3astsni92", "KU3AstSNI2002B" = "34.31300.ku3astsni2002b", "KU3AstSNI2002G" = "34.31300.ku3astsni2002g", "KU3AstSNI2007" = "34.31300.ku3astsni92", "KU3AstSNI2007G" = "34.31300.ku3astsni2007g", "KU3AstSNI2007U" = "34.31300.ku3astsni2007u", "KU3AstSNI69" = "34.31300.ku3astsni69", "KU3AstSNI92" = "34.31300.ku3astsni92", "KU3AstSNI92B" = "34.31300.ku3astsni92b", "KU3AstSNI92G" = "34.31300.ku3astsni92g", "KU3AstSni2007G" = "34.31300.ku3astsni2007g", "KU3AstSni2007U" = "34.31300.ku3astsni2007u" }
+columns_ref = "curation/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+# v18 accepted-column-partitions:scb-registerinformation:34.16221: 108 identity effects, 0 unassigned.
+# Derived by GR/convert_declared_column_ownership.py from concept_groups.toml members
+# (delivery_column_name) of group scb/lisa/naringsgren; stated literally here.
+[[identity.partition]]
+variable = "34.16221"
+columns = { "AGI1AstSNI2007" = "34.16221.agi1astsni2007", "AGI1AstSNI2007G" = "34.16221.agi1astsni2007g", "AGI1AstSNI2007U" = "34.16221.agi1astsni2007u", "KU1AstSNI2002" = "34.16221.ku1astsni92", "KU1AstSNI2002B" = "34.16221.ku1astsni2002b", "KU1AstSNI2002G" = "34.16221.ku1astsni2002g", "KU1AstSNI2007" = "34.16221.ku1astsni92", "KU1AstSNI2007G" = "34.16221.ku1astsni2007g", "KU1AstSNI2007U" = "34.16221.ku1astsni2007u", "KU1AstSNI69" = "34.16221.ku1astsni69", "KU1AstSNI92" = "34.16221.ku1astsni92", "KU1AstSNI92B" = "34.16221.ku1astsni92b", "KU1AstSNI92G" = "34.16221.ku1astsni92g", "KU1AstSni2007G" = "34.16221.ku1astsni2007g", "KU1AstSni2007U" = "34.16221.ku1astsni2007u", "KU1Astsni2002B" = "34.16221.ku1astsni2002b", "KU1Astsni2002G" = "34.16221.ku1astsni2002g" }
+columns_ref = "curation/concept_groups.toml group scb/lisa/naringsgren member delivery columns"

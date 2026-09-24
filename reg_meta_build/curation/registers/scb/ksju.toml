@@ -1,0 +1,101 @@
+[register]
+provider = "scb"
+slug = "ksju"
+native_id = "195"
+
+[[errata.column]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "ersdag1"
+name = "Antal ersättningsdagar, oviktade"
+definition = "Antal ersättningsdagar, oviktade"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "Felaktig"
+name = "Är alltid 0 (eller NULL)"
+definition = "Är alltid 0 (eller NULL)"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "one_sni"
+name = "1 eller NULL (1 om det bara finns ett arbetsställe)"
+definition = "1 eller NULL (1 om det bara finns ett arbetsställe)"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "pnra"
+name = "? - (inehåller värde 0 eller 1)"
+definition = "? - (inehåller värde 0 eller 1)"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "tillagg"
+name = "Alltid tom för de godkända, men kod för de med statuskod 18"
+definition = "Alltid tom för de godkända, men kod för de med statuskod 18"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[enrichment.description]]
+register = "scb/ksju"
+variable = "glappantdag"
+description = "Dagar mellan sjukdagar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/ksju"
+variable = "helantdagar"
+description = "Dagar med sjuklön hela dagar (insamlad variabel)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/ksju"
+variable = "person-orgnr"
+description = "Organisationsnummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/ksju"
+variable = "stratam"
+description = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[group]]
+register = "scb/ksju"
+key = "naringsgren"
+label = "Näringsgren"
+axes = [{ axis = "nivo", label = "Detaljnivå" }]
+members = [{ variable = "naringsgren", delivery_column = "NGS1", coords = [{ axis = "nivo", value = "5-siffer", label = "5-siffrig SNI (FDB)" }] }, { variable = "naringsgren-rams", delivery_column = "Ksjusni", coords = [{ axis = "nivo", value = "5-siffer", label = "5-siffrig SNI (RAMS)" }] }, { variable = "naringsgren", delivery_column = "NgGr1", coords = [{ axis = "nivo", value = "grupperad", label = "Grupperad SNI" }] }, { variable = "naringsgren-grupperad-2009", delivery_column = "lgrp", coords = [{ axis = "nivo", value = "grupperad", label = "Grupperad SNI (2009)" }] }, { variable = "naringsgren-2siffer", delivery_column = "bransch", coords = [{ axis = "nivo", value = "2-siffer", label = "2-siffrig SNI" }] }]
+
+# DRAFT reg_meta_build/curation/registers/scb/ksju.toml (pin-free).
+# Five owned literals come from concept_groups.toml group scb/ksju/naringsgren
+# members 0..4 (tracked); NG1_2007 -> ng1-2007 was read from the fqid_slugs/scb.toml
+# comment "NG1_2007/NgGr1/NGS1" and is script-only:
+# archive/.../2026-09-16-goal-run/convert_partial_owned_partition.py:35,39.
+# v18: accepted-column-partitions:scb-registerinformation:195.4027 = 31 identity
+# effects (Ksjusni 13, NGS1 10, NgGr1 5, NG1_2007 1, bransch 1, lgrp 1); the 19
+# columns below keep their native identity (scopes/8944ed66f8e31afa3c25.json.gz).
+# NOT expressible today (needs `unassigned_columns`, see rtb.toml).
+
+[[identity.partition]]
+variable = "195.4027"
+columns = { Ksjusni = "195.4027.ksjusni", NG1_2007 = "195.4027.ng1-2007", NGS1 = "195.4027.ng1-2007", NgGr1 = "195.4027.ng1-2007", bransch = "195.4027.bransch", lgrp = "195.4027.lgrp" }
+unassigned_columns = ["NG1", "NgGr1_2002", "NgGr2", "NgS1", "NgS1_2002", "Sni1", "Sni2", "SniA", "bgr98", "bgr98n", "bgr98t", "bgr98u", "bgr98x", "ng1", "nggr2_2002", "ngs1", "ngs1_2002", "sni2", "snigrupp"]
+columns_ref = "curation/concept_groups.toml group scb/ksju/naringsgren members 0..4; fqid_slugs/scb.toml comment on 195.4027.ng1-2007 names the NG1_2007/NgGr1/NGS1 alias chain. Other columns have no ownership declaration."

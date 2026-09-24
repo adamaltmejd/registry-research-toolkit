@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "bas"
+native_id = "404"
+
+[[representation.period_family]]
+register = "scb/bas"
+family_stem = "jobbink"
+label = "Löne- eller företagarinkomst per månad"
+slug = "lone-eller-foretagarinkomst-manad"

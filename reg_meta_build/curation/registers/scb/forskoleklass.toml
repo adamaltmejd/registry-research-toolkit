@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "forskoleklass"
+native_id = "378"
+
+[[code_label_pair]]
+code = "scb/forskoleklass/huvudman"
+label = "scb/forskoleklass/huvudman-namn"
+
+[[code_label_pair]]
+code = "scb/forskoleklass/skolenhetskod"
+label = "scb/forskoleklass/skolenhetens-namn"
+
+[[code_label_pair]]
+code = "scb/forskoleklass/skolkod"
+label = "scb/forskoleklass/skolans-namn"

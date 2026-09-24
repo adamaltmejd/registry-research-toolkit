@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "grundskola-prov-ak5"
+native_id = "356"
+
+[[code_label_pair]]
+code = "scb/grundskola-prov-ak5/skolkod"
+label = "scb/grundskola-prov-ak5/skolans-namn"

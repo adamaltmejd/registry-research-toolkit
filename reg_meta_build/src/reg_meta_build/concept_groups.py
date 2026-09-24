@@ -25,6 +25,16 @@ from ._curation import (
     require_str,
 )
 
+
+def _register_files(path: Path | None):
+    if path is None:
+        return ()
+    # Local import avoids a cycle: curation_tree validates classification refs
+    # through resolved_metadata, which uses this module's group-key predicate.
+    from .curation_tree import load_register_files
+
+    return load_register_files(path)
+
 # A concept-group key is one URL path segment in
 # `/catalog/group/<provider>/<register>/<key>` (#640). Path-safe = the RFC 3986
 # *unreserved* set, lowercased (every current materialized key and auto candidate
@@ -131,7 +141,7 @@ class CuratedGroup:
     family (the iot disposable-income group) N.
     `origin` records how it was authored so `_apply_curated_groups` can tailor its
     EXIT_CONFIG remediations: a hand-authored `[[variable_group]]` (the default)
-    points the maintainer at `curation/concept_groups.toml`; an `[[accept]]`-resolved family
+    points the maintainer at `curation/registers/<provider>/<slug>.toml`; an `[[accept]]`-resolved family
     (`resolve_accept` sets `origin="accept"`) points at the `[[accept]]` /
     `concept_groups.auto.toml` instead, since its key/register/members come from the
     generated catalog, not a hand-picked curated key."""
@@ -147,8 +157,8 @@ class CuratedGroup:
 
 @dataclass(frozen=True)
 class Accept:
-    """One `[[accept]]` entry from `curation/concept_groups.toml` (#496): an OPT-IN to
-    fold an auto family from `concept_groups.auto.toml` BY REFERENCE. The
+    """One `[[accept]]` entry from the generator worklist (#496): an OPT-IN to
+    fold an auto family from `worklists/concept_groups.auto.toml` BY REFERENCE. The
     `(provider, register, key)` locates the auto family; `label`/`axis` override
     the auto family's when set; `exclude` drops member slugs (a stem that picked
     up an unrelated column). Resolved to a `CuratedGroup` during offline conversion
@@ -222,7 +232,7 @@ _require_str = functools.partial(
     require_str,
     code="concept_groups_invalid",
     prefix="concept_groups",
-    file_name="curation/concept_groups.toml",
+    file_name="worklists/concept_groups.auto.toml",
 )
 
 _require_pair_fqid = functools.partial(
@@ -230,7 +240,7 @@ _require_pair_fqid = functools.partial(
     code="code_label_pairs_invalid",
     prefix="code_label_pairs",
     entry_table="[[pair]]",
-    file_name="curation/concept_groups.toml",
+    file_name="curation/registers/<provider>/<slug>.toml",
 )
 
 
@@ -444,7 +454,7 @@ def _reject_mixed_member_grain(members: tuple[CuratedMember, ...], key: str) -> 
         )
 
 
-def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
+def load_worklist_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     """Parse the curated-family TOML. Empty when no file (synthetic test
     builds, wheel installs).
 
@@ -473,14 +483,9 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
         label="concept-group",
         prefix="concept_groups",
         code_base="concept_groups",
-        file_name="curation/concept_groups.toml",
+        file_name="worklists/concept_groups.auto.toml",
         entry_fields="register / key / label / axis|axes / members",
-        # `curation/concept_groups.toml` carries two other entry kinds — `[[accept]]`
-        # (folds an auto family by reference, `load_concept_group_accepts`) and
-        # `[[classification_group]]` (curated umbrella, `load_classification_groups`)
-        # — so both are legal siblings here, not unknown-top-level typos. Harmless
-        # for `concept_groups.auto.toml`, which carries neither.
-        sibling_keys=frozenset({"accept", "classification_group", "pair"}),
+        sibling_keys=frozenset(),
     )
     out: list[CuratedGroup] = []
     seen_keys: set[tuple[str, str, str]] = set()
@@ -541,6 +546,64 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     return tuple(out)
 
 
+def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
+    """Load literal ``[[group]]`` entries from the per-register curation tree.
+
+    ``path`` is the curation root. The auto candidate parser is kept separate as
+    ``load_worklist_concept_groups`` for the candidate worklist tool.
+    """
+    out: list[CuratedGroup] = []
+    seen_keys: set[tuple[str, str, str]] = set()
+    for register_file in _register_files(path):
+        provider = register_file.register_info.provider
+        register = register_file.register_info.slug
+        for entry in register_file.group:
+            raw = entry.model_dump(mode="python", exclude_none=True)
+            key = raw["key"]
+            axes, axis_names = _parse_group_axes(raw, key)
+            scope_key = (provider, register, key)
+            if scope_key in seen_keys:
+                raise curation_error(
+                    "concept_groups_invalid",
+                    f"concept_groups duplicate key {key!r} under {provider}/{register}.",
+                    "Group keys must be unique per register.",
+                )
+            seen_keys.add(scope_key)
+            raw_members = raw.get("members", [])
+            if not raw_members:
+                raise curation_error(
+                    "concept_groups_invalid",
+                    f"concept_groups group {key!r} needs non-empty members.",
+                    "List the family's members as [[group.members]] tables.",
+                )
+            members: list[CuratedMember] = []
+            seen_refs: set[tuple[str, str | None]] = set()
+            for raw_member in raw_members:
+                member = _parse_member(raw_member, key, axes, axis_names)
+                member_key = (member.variable, member.delivery_column)
+                if member_key in seen_refs:
+                    raise curation_error(
+                        "concept_groups_invalid",
+                        f"concept_groups group {key!r} references "
+                        f"{member_key[0]!r}/{member_key[1]!r} twice.",
+                        "List each (variable, delivery_column) member once.",
+                    )
+                seen_refs.add(member_key)
+                members.append(member)
+            _reject_mixed_member_grain(tuple(members), key)
+            out.append(
+                CuratedGroup(
+                    provider=provider,
+                    register=register,
+                    key=key,
+                    label=raw["label"],
+                    axes=axes,
+                    members=tuple(members),
+                )
+            )
+    return tuple(out)
+
+
 def _require_opt_str(entry: dict, field: str, context: str) -> str | None:
     """Optional non-empty string: None when absent, else `require_str`'s
     stripped value (a present-but-blank `label`/`axis` is curation drift, not a
@@ -551,8 +614,8 @@ def _require_opt_str(entry: dict, field: str, context: str) -> str | None:
 
 
 def load_concept_group_accepts(path: Path | None) -> tuple[Accept, ...]:
-    """Parse the `[[accept]]` entries from `curation/concept_groups.toml` (#496): the
-    opt-in accept-list that folds auto families from `concept_groups.auto.toml`
+    """Parse generator-worklist `[[accept]]` entries (#496), which fold auto families
+    from `worklists/concept_groups.auto.toml`
     by reference. Empty when no file (synthetic builds, wheel installs) or no
     `[[accept]]` tables.
 
@@ -568,9 +631,9 @@ def load_concept_group_accepts(path: Path | None) -> tuple[Accept, ...]:
         label="concept-group",
         prefix="concept_groups",
         code_base="concept_groups",
-        file_name="curation/concept_groups.toml",
+        file_name="worklists/concept_groups.accepted.toml",
         entry_fields="register / key (+ optional label / axis / exclude)",
-        sibling_keys=frozenset({"variable_group", "classification_group", "pair"}),
+        sibling_keys=frozenset(),
     )
     out: list[Accept] = []
     seen_keys: set[tuple[str, str, str]] = set()
@@ -635,8 +698,8 @@ def resolve_accept(
             "concept_groups_unresolved",
             f"concept_groups accept {accept.key!r} ({accept.provider}/"
             f"{accept.register}) references an auto family not in "
-            "concept_groups.auto.toml.",
-            "Regenerate concept_groups.auto.toml with `reg-meta-build "
+            "worklists/concept_groups.auto.toml.",
+            "Regenerate worklists/concept_groups.auto.toml with `reg-meta-build "
             "concept-group-candidates`, or fix the accept's register/key.",
         )
     if accept.exclude:
@@ -648,7 +711,7 @@ def resolve_accept(
                 f"concept_groups accept {accept.key!r} excludes slug(s) {stale} "
                 "that are not members of the auto family.",
                 "Drop the stale `exclude` slug(s) or regenerate "
-                "concept_groups.auto.toml.",
+                "worklists/concept_groups.auto.toml.",
             )
     members = tuple(m for m in auto.members if m.variable not in accept.exclude)
     if len(members) < 2:
@@ -687,34 +750,18 @@ def resolve_accept(
 
 
 def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, ...]:
-    """Parse the curated `[[classification_group]]` umbrella tables (#516): an
-    AXIS-LESS fold over genuinely-distinct classifications (the SUN group over
-    niva/inriktning/grupp). Empty when no file (synthetic builds, wheel installs)
-    or no `[[classification_group]]` tables.
+    """Load global classification umbrellas from ``classification_groups.toml``."""
+    if path is None:
+        return ()
+    from .curation_tree import load_classification_groups as load_register_classification_groups
 
-    Load-time validation (all EXIT_CONFIG, actionable): `key`/`label` non-empty
-    strings; `axis` OPTIONAL (None when absent — the umbrella is axis-less; a
-    present-but-blank `axis` is still rejected via `_require_opt_str`); `members`
-    a non-empty array of tables, each setting non-empty `classification` (slug) /
-    `value` / `label`; member slugs unique; `key` unique; >= 2 members. Slug
-    RESOLUTION (does the classification exist?) happens during offline conversion
-    against the built DB."""
-    entries = load_curation_entries(
-        path,
-        entry_key="classification_group",
-        label="classification-group",
-        prefix="concept_groups",
-        code_base="concept_groups",
-        file_name="curation/concept_groups.toml",
-        entry_fields="key / label / members (+ optional axis)",
-        sibling_keys=frozenset({"variable_group", "accept", "pair"}),
-    )
+    declarations = load_register_classification_groups(path).classification_group
     out: list[ClassificationGroup] = []
     seen_keys: set[str] = set()
-    for entry in entries:
-        key = _require_str(entry, "key", "[[classification_group]]")
-        label = _require_str(entry, "label", "[[classification_group]]")
-        axis = _require_opt_str(entry, "axis", "[[classification_group]]")
+    for entry in declarations:
+        key = entry.key
+        label = entry.label
+        axis = entry.axis
         if key in seen_keys:
             raise curation_error(
                 "concept_groups_invalid",
@@ -722,8 +769,7 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
                 "Classification-group keys must be unique.",
             )
         seen_keys.add(key)
-        raw_members = entry.get("members", [])
-        if not isinstance(raw_members, list) or not raw_members:
+        if not entry.members:
             raise curation_error(
                 "concept_groups_invalid",
                 f"concept_groups classification_group {key!r} needs a non-empty "
@@ -733,17 +779,8 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
             )
         members: list[ClassificationGroupMember] = []
         seen_slugs: set[str] = set()
-        for raw in raw_members:
-            if not isinstance(raw, dict):
-                raise curation_error(
-                    "concept_groups_invalid",
-                    f"concept_groups classification_group {key!r} member {raw!r} "
-                    "must be a table.",
-                    "Each member is a `[[classification_group.members]]` table.",
-                )
-            classification = _require_str(
-                raw, "classification", f"classification_group {key!r} member"
-            )
+        for raw in entry.members:
+            classification = raw.classification
             if classification in seen_slugs:
                 raise curation_error(
                     "concept_groups_invalid",
@@ -755,12 +792,8 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
             members.append(
                 ClassificationGroupMember(
                     classification=classification,
-                    value=_require_str(
-                        raw, "value", f"classification_group {key!r} member"
-                    ),
-                    label=_require_str(
-                        raw, "label", f"classification_group {key!r} member"
-                    ),
+                    value=raw.value,
+                    label=raw.label,
                 )
             )
         if len(members) < 2:
@@ -777,7 +810,7 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
 
 
 def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
-    """Parse the curated code↔label pair TOML (`reg_meta_build/curation/concept_groups.toml`,
+    """Parse the curated code↔label pair TOML (`reg_meta_build/curation/registers/<provider>/<slug>.toml`,
     #923). Empty when no file (synthetic test builds, wheel installs).
 
     Load-time validation (all EXIT_CONFIG, actionable): only `[[pair]]` top-level;
@@ -786,55 +819,47 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
     the duplicate-key rejection in `load_concept_groups`). Endpoint RESOLUTION (do the
     variables exist? is the code the value-set owner? are they co-delivered?) happens
     during common resolution over the built DB (`_append_code_label_edges`), not here."""
-    entries = load_curation_entries(
-        path,
-        entry_key="pair",
-        label="code-label-pair",
-        prefix="code_label_pairs",
-        code_base="code_label_pairs",
-        file_name="curation/concept_groups.toml",
-        entry_fields="code / label (both 3-segment FQIDs)",
-        sibling_keys=frozenset({"variable_group", "accept", "classification_group"}),
-    )
     out: list[CodeLabelPair] = []
     seen_pairs: set[tuple[tuple[str, str, str], tuple[str, str, str]]] = set()
-    for entry in entries:
-        code = _require_pair_fqid(entry, "code")
-        label = _require_pair_fqid(entry, "label")
-        # Reject a self-pair (code == label): a variable can't be both endpoints of
-        # a code↔label decode. Caught here with a clear loader error rather than
-        # letting the contradictory value_set guards fire during offline conversion.
-        if code == label:
-            raise curation_error(
-                "code_label_pairs_invalid",
-                f"code_label_pairs pair has identical `code` and `label` FQID "
-                f"{'/'.join(code)!r}.",
-                "A code↔label pair needs two distinct variables. Fix or drop the "
-                "pair in reg_meta_build/curation/concept_groups.toml.",
+    for register_file in _register_files(path):
+        for declaration in register_file.code_label_pair:
+            entry = declaration.model_dump(mode="python")
+            code = _require_pair_fqid(entry, "code")
+            label = _require_pair_fqid(entry, "label")
+            # Reject a self-pair (code == label): a variable can't be both endpoints of
+            # a code↔label decode. Caught here with a clear loader error rather than
+            # letting the contradictory value_set guards fire during offline conversion.
+            if code == label:
+                raise curation_error(
+                    "code_label_pairs_invalid",
+                    f"code_label_pairs pair has identical `code` and `label` FQID "
+                    f"{'/'.join(code)!r}.",
+                    "A code↔label pair needs two distinct variables. Fix or drop the "
+                    "pair in reg_meta_build/curation/registers/<provider>/<slug>.toml.",
+                )
+            # Reject duplicate (code, label) FQID tuples (mirrors `load_concept_groups`
+            # rejecting duplicate keys in the same file). The committed TOML is
+            # deduplicated, so this is a drift guard; the full FQID keys the set since
+            # two registers can share a variable slug.
+            if (code, label) in seen_pairs:
+                raise curation_error(
+                    "code_label_pairs_invalid",
+                    f"code_label_pairs duplicate pair {'/'.join(code)!r} <-> "
+                    f"{'/'.join(label)!r}.",
+                    "List each (code, label) pair once in "
+                    "reg_meta_build/curation/registers/<provider>/<slug>.toml.",
+                )
+            seen_pairs.add((code, label))
+            out.append(
+                CodeLabelPair(
+                    code_provider=code[0],
+                    code_register=code[1],
+                    code_variable=code[2],
+                    label_provider=label[0],
+                    label_register=label[1],
+                    label_variable=label[2],
+                )
             )
-        # Reject duplicate (code, label) FQID tuples (mirrors `load_concept_groups`
-        # rejecting duplicate keys in the same file). The committed TOML is
-        # deduplicated, so this is a drift guard; the full FQID keys the set since
-        # two registers can share a variable slug.
-        if (code, label) in seen_pairs:
-            raise curation_error(
-                "code_label_pairs_invalid",
-                f"code_label_pairs duplicate pair {'/'.join(code)!r} <-> "
-                f"{'/'.join(label)!r}.",
-                "List each (code, label) pair once in "
-                "reg_meta_build/curation/concept_groups.toml.",
-            )
-        seen_pairs.add((code, label))
-        out.append(
-            CodeLabelPair(
-                code_provider=code[0],
-                code_register=code[1],
-                code_variable=code[2],
-                label_provider=label[0],
-                label_register=label[1],
-                label_variable=label[2],
-            )
-        )
     return tuple(out)
 
 

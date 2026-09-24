@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "klk"
+native_id = "89"
+
+[[code_label_pair]]
+code = "scb/klk/kommun"
+label = "scb/klk/kommunnamn"

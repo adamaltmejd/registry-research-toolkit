@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "tidsanvandning"
+native_id = "367"
+
+[[code_label_pair]]
+code = "scb/tidsanvandning/kommun"
+label = "scb/tidsanvandning/kommunnamn"
+
+[[code_label_pair]]
+code = "scb/tidsanvandning/lan"
+label = "scb/tidsanvandning/lansnamn"

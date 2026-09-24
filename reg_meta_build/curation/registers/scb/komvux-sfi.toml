@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "komvux-sfi"
+native_id = "248"
+
+[[code_label_pair]]
+code = "scb/komvux-sfi/kommunalforbund-id"
+label = "scb/komvux-sfi/kommunalforbund-namn"
+
+[[code_label_pair]]
+code = "scb/komvux-sfi/kommunalforbund-id-2"
+label = "scb/komvux-sfi/kommunalforbund-namn-2"

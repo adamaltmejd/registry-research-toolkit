@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "anpassad-grundskola"
+native_id = "231"
+
+[[code_label_pair]]
+code = "scb/anpassad-grundskola/huvudman"
+label = "scb/anpassad-grundskola/huvudman-namn"
+
+[[code_label_pair]]
+code = "scb/anpassad-grundskola/skolenhetskod"
+label = "scb/anpassad-grundskola/skolenhetens-namn"

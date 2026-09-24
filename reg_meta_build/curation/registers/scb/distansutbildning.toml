@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "distansutbildning"
+native_id = "322"
+
+[[code_label_pair]]
+code = "scb/distansutbildning/hogskolekod"
+label = "scb/distansutbildning/hogskolenamn"

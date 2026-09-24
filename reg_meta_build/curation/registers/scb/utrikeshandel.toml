@@ -1,0 +1,26 @@
+[register]
+provider = "scb"
+slug = "utrikeshandel"
+native_id = "188"
+
+[[errata.column]]
+variant = "varu-landfordelat-intrastat"
+column = "KN8"
+name = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)"
+definition = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[enrichment.description]]
+register = "scb/utrikeshandel"
+variable = "manad"
+description = "Månad (månadsdata finns från 2000)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/utrikeshandel"
+variable = "vikt-kg"
+description = "Statistiskt värde i Kilo"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

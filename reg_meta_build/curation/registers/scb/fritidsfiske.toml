@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "fritidsfiske"
+native_id = "390"
+
+[[code_label_pair]]
+code = "scb/fritidsfiske/folkbokforingslan"
+label = "scb/fritidsfiske/lansnamn"
+
+[[code_label_pair]]
+code = "scb/fritidsfiske/kommunkod"
+label = "scb/fritidsfiske/kommunnamn"

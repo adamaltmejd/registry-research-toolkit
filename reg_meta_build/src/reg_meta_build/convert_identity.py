@@ -38,6 +38,7 @@ from reg_meta_build.source_naming import LegacyNamingBinding, NativeNamingTarget
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
+    from pathlib import Path
 
     from reg_meta_build.fqid_slugs import SlugEntry
     from reg_meta_build.source_records import SourceRecord
@@ -250,12 +251,13 @@ def convert_declared_partitions(
     provider: str,
     source_id: str,
     split_ids: tuple[str, ...],
+    curation_dir: Path | None = None,
 ) -> ColumnPartitionConversion:
     """Convert one native family through its tracked literal column ownership.
 
     ``entries`` is the complete loaded slug-entry set (authored plus generated),
     ``split_ids`` the accepted split keys from naming. The family's tracked
-    ``columns`` declaration is fed as ``declared_columns`` with its
+    ``identity.partition`` declaration is fed as ``declared_columns`` with its
     ``declaration_reference``; stale or new-intersecting evidence then fails
     instead of converting half a family. A family with no tracked declaration
     raises ``ValueError`` — a declared partition was asked for and none exists.
@@ -264,7 +266,7 @@ def convert_declared_partitions(
     ``split_ids`` stays authoritative.
     """
     ownership = declared_column_ownership(
-        entries, provider=provider, source_id=source_id
+        entries, provider=provider, source_id=source_id, curation_dir=curation_dir
     )
     return convert_column_partitions(
         records,

@@ -1,0 +1,401 @@
+[register]
+provider = "scb"
+slug = "fek"
+native_id = "168"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "AretsResultat"
+name = "Årets resultat"
+definition = "Årets resultat"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "ImputeradeForetag"
+name = "Imputerade företag"
+definition = "Imputerade företag"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "KassaOchBank"
+name = "Kassa och bank"
+definition = "Kassa och bank"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "Leverantorsskulder"
+name = "Leverantörsskulder"
+definition = "Leverantörsskulder"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "MaskinerOchInventarier"
+name = "Maskiner och inventarier"
+definition = "Maskiner och inventarier"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "RedovisatResultat"
+name = "Redovisat årsresultat"
+definition = "Redovisat årsresultat"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "ResultatEfterFinansiellaPoster"
+name = "Resultat efter finansiella poster"
+definition = "Resultat efter finansiella poster"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "Skattekostnader"
+name = "Skatt"
+definition = "Skatt"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "Stg"
+name = "Storleksgrupp anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1 eller ej"
+definition = "Storleksgrupp anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1 eller ej"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaAnlTillg"
+name = "Summa anläggningstillgångar"
+definition = "Summa anläggningstillgångar"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaEgetKapitalOchSkulder"
+name = "Summa eget kapital och skulder"
+definition = "Summa eget kapital och skulder"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaFinansiellaTillg"
+name = "Summa finansiella anläggningstillgångar"
+definition = "Summa finansiella anläggningstillgångar"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaKortfristigaFordringar"
+name = "Summa kortfristiga fordringar"
+definition = "Summa kortfristiga fordringar"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaKortfristigaPlaceringar"
+name = "Summa kortfristiga placeringar"
+definition = "Summa kortfristiga placeringar"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaKortfristigaSkulder"
+name = "Summa kortfristiga skulder"
+definition = "Summa kortfristiga skulder"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaLangfristigaSkulder"
+name = "Summa långfristiga skulder"
+definition = "Summa långfristiga skulder"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaMateriellaAnlaggningstillgangar"
+name = "Summa materiella anläggningstillgångar"
+definition = "Summa materiella anläggningstillgångar"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaObeskattadeReserver"
+name = "Summa obeskattade reserver"
+definition = "Summa obeskattade reserver"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaOmsattningstillgangar"
+name = "Summa omsättningstillgångar"
+definition = "Summa omsättningstillgångar"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaPersonalkostnader"
+name = "Summa personalkostnader"
+definition = "Summa personalkostnader"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SummaTillgangar"
+name = "Summa tillgångar"
+definition = "Summa tillgångar"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "UppstallnForm"
+name = "Anger om företaget har kostnadsslagsindelat eller funktionsindelat bokslut."
+definition = "Anger om företaget har kostnadsslagsindelat eller funktionsindelat bokslut."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[enrichment.description]]
+register = "scb/fek"
+variable = "agarkontroll"
+description = "Ägarkontroll"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/fek"
+variable = "antal-manader-bokslut"
+description = "Antal månader som omfattas av företagets bokslut."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/fek"
+variable = "bokslutsman"
+description = "Bokslutsmånad"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/fek"
+variable = "fenr"
+description = "Företagsenhetens löpnummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/fek"
+variable = "juridisk-form"
+description = "Juridisk form"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/fek"
+variable = "person-orgnr"
+description = "Företagets löpnummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/fek"
+variable = "sektortillhorighet"
+description = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "aktier-och-andelar"
+delivery_column = "AktierOchAndelar"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "bidrag-for-verksamheten"
+delivery_column = "BidragForVerksamheten"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "byggnader"
+delivery_column = "Byggnader"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "foradlingsvarde"
+delivery_column = "Foradlingsvarde"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "forandring-lager-pagaende-arbete"
+delivery_column = "ForandringAvLagerOchPagaendeArbete"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "forbrukningsvarde"
+delivery_column = "Forbrukningsvarde"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "kostnader-loner-ersattningar"
+delivery_column = "KostnaderForLonerOchAndraErsattningar"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "kostnader-ovriga-sociala-avgifter"
+delivery_column = "KostnaderForOvrigaSocialaAvgifter"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "kundfordringar"
+delivery_column = "Kundfordringar"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "mark"
+delivery_column = "Mark"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "medelantal-anstallda"
+delivery_column = "MedelantalAnstallda"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "nettoomsattning"
+delivery_column = "Nettoomsattning"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "nettoomsattning-justerad-merchanting"
+delivery_column = "NettoomsattningJusteradForMerchanting"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "ovriga-personalkostnader"
+delivery_column = "OvrigaPersonalkostnader"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "ovriga-kortfristiga-placeringar"
+delivery_column = "OvrigaKortfristigaPlaceringar"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "pensionskostnader"
+delivery_column = "Pensionskostnader"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "produktionsvarde"
+delivery_column = "Produktionsvarde"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "rorelseresultat"
+delivery_column = "Rorelseresultat"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "rorelseresultat-fore-avskrivningar"
+delivery_column = "RorelseresultatForeAvskrivningar"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "skatteskulder"
+delivery_column = "Skatteskulder"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "sociala-kostnader-personalkostnader"
+delivery_column = "SocialaKostnaderOchAndraPersonalkostnader"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "summa-bruttoinvesteringar"
+delivery_column = "SummaBruttoinvesteringar"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "summa-eget-kapital"
+delivery_column = "SummaEgetKapital"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "summa-kostnader-ravaror-handelsvaror"
+delivery_column = "SummaKostnaderForRavarorOchHandelsvaror"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "summa-nettoinvesteringar"
+delivery_column = "SummaNettoinvesteringar"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "utdelning"
+delivery_column = "Utdelning"
+
+[[enrichment.alias]]
+register = "scb/fek"
+variable = "varulager"
+delivery_column = "Varulager"

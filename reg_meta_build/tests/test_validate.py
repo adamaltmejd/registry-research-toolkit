@@ -15,6 +15,7 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
+from _curation_fixtures import write_lisa_errata
 from _csv_fixtures import write_input_bundle, write_scb_input
 from _shared_fixtures import connect_built_db
 from reg_meta.db import DB_FILENAME
@@ -3067,17 +3068,16 @@ class TestInventoryWindowCoverage:
             }
         ]
 
-        path = tmp_path / "scb_errata.toml"
-        path.write_text(block, encoding="utf-8")
+        root = write_lisa_errata(tmp_path / "curation", block)
         with pytest.raises(RegMetaError) as exc:
-            load_scb_errata(path, repo_slug_dir())
+            load_scb_errata(root, repo_slug_dir())
         assert "`noted`" in exc.value.message
 
-        path.write_text(
+        root = write_lisa_errata(
+            root,
             block.replace('noted = "TODO: YYYY-MM-DD"', 'noted = "2026-09-12"'),
-            encoding="utf-8",
         )
-        errata = load_scb_errata(path, repo_slug_dir())
+        errata = load_scb_errata(root, repo_slug_dir())
         assert [version.name for version in errata.versions] == ["2021"]
         (delivered,) = errata.delivered
         assert delivered.column == "DispInkKE"

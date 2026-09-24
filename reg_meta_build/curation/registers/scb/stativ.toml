@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "stativ"
+native_id = "273"
+
+[[enrichment.description]]
+register = "scb/stativ"
+variable = "afkassgrp"
+description = "Kassagrupp"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/stativ"
+variable = "afsokyrkerf"
+description = "Erfarenhet i sökt yrke"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/stativ"
+variable = "afsokyrkutb"
+description = "Utbildning i sökt yrke"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

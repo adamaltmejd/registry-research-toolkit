@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "kommunalskatter"
+native_id = "115"
+
+[[code_label_pair]]
+code = "scb/kommunalskatter/kommun"
+label = "scb/kommunalskatter/kommun-eller-lansnamn"

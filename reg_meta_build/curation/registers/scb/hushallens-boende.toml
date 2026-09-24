@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "hushallens-boende"
+native_id = "346"
+
+[[enrichment.description]]
+register = "scb/hushallens-boende"
+variable = "boarea"
+description = "Bostadsarea"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hushallens-boende"
+variable = "scb-upplatform"
+description = "Bostadens upplåtelseform"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

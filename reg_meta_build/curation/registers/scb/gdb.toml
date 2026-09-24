@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "gdb"
+native_id = "70"
+
+[[errata.delivered]]
+variant = "adresser-fastigheter"
+column = "Kommun"
+versions = ["2024-01-01"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Kommun in GDB_Skolor2024 for edition 2024; SCB documents Kommun (VarId 36) in every adresser-fastigheter version 2018-01-01..2023-01-01 and none after."
+noted = "2026-09-12"
+
+[[errata.version]]
+variant = "adresser-fastigheter"
+name = "2024-01-01"
+evidence = "SWECOV holds GDB_Skolor2024 (columns DeSO_2018, DeSO_2025, Kommun, P1105_Lopnr_skolenhetskod, Skolform) and GDB_Ind2024 for edition 2024; SCB's Registerinformation export documents adresser-fastigheter through 2023-01-01 only. Named in the variant's own YYYY-01-01 token convention."
+noted = "2026-09-12"

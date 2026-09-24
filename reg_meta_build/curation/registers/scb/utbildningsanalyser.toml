@@ -1,0 +1,28 @@
+[register]
+provider = "scb"
+slug = "utbildningsanalyser"
+native_id = "366"
+
+[[enrichment.description]]
+register = "scb/utbildningsanalyser"
+variable = "distansla2021-intervall"
+description = "Perioder av undervisning på distans under läsåret 2020/21 - intervall"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/utbildningsanalyser"
+variable = "distansvt21-intervall"
+description = "Perioder av undervisning på distans under VT 2021 - intervall"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/utbildningsanalyser"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/utbildningsanalyser"
+variable = "vt-veckor-termin"
+description = "Terminens längd"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

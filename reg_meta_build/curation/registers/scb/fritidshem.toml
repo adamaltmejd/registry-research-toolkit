@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "fritidshem"
+native_id = "304"
+
+[[code_label_pair]]
+code = "scb/fritidshem/huvudman"
+label = "scb/fritidshem/huvudman-namn"

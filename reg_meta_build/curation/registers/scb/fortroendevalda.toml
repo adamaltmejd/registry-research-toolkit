@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "fortroendevalda"
+native_id = "270"
+
+[[code_label_pair]]
+code = "scb/fortroendevalda/parti"
+label = "scb/fortroendevalda/partinamn"
+
+[[code_label_pair]]
+code = "scb/fortroendevalda/skl-grupp"
+label = "scb/fortroendevalda/skl-gruppnamn"

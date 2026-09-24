@@ -1,0 +1,146 @@
+[register]
+provider = "scb"
+slug = "grundskola-betyg-ak6"
+native_id = "340"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "antal-amnen-ej-natt"
+description = "Antal ämnen som eleven har ej godkänt betyg (A-E)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "betyg-bild"
+description = "Betyg i ämnet bild"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "betyg-religion"
+description = "Betyg i ämnet religion"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "betyg-samhallskunskap"
+description = "Betyg i ämnet samhällskunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "betyg-slojd"
+description = "Betyg i ämnet slöjd"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "betyg-svenska"
+description = "Betyg i ämnet svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "betyg-teckensprak"
+description = "Betyg i ämnet teckenspråk"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "betyg-teknik"
+description = "Betyg i ämnet teknik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "bi"
+description = "Betyg i ämnet biologi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "blockbetyg-no-amnen"
+description = "Betyg i naturorienterade ämnen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "blockbetyg-so-amnen"
+description = "Betyg i samhällsorienterade ämnen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "en"
+description = "Betyg i ämnet engelska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "fy"
+description = "Betyg i ämnet fysik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "ge"
+description = "Betyg i ämnet geografi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "hi"
+description = "Betyg i ämnet historia"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "hkk"
+description = "Betyg i ämnet hem- och konsumentkunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "idh"
+description = "Betyg i ämnet idrott och hälsa"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "ke"
+description = "Betyg i ämnet kemi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "ma"
+description = "Betyg i matematik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "mu"
+description = "Betyg i ämnet musik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "skolenhetskod"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "skolkod"
+description = "Skolkod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[code_label_pair]]
+code = "scb/grundskola-betyg-ak6/huvudman"
+label = "scb/grundskola-betyg-ak6/hmannamn"

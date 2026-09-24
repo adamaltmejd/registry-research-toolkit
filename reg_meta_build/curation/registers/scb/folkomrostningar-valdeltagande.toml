@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "folkomrostningar-valdeltagande"
+native_id = "241"
+
+[[code_label_pair]]
+code = "scb/folkomrostningar-valdeltagande/fodelseland-varldsdel"
+label = "scb/folkomrostningar-valdeltagande/fodelselandvdnamn"
+
+[[code_label_pair]]
+code = "scb/folkomrostningar-valdeltagande/medborgarland-varldsdel"
+label = "scb/folkomrostningar-valdeltagande/medborgarland-varldsdel-namn"

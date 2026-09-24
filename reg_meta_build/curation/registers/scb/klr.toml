@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "klr"
+native_id = "90"
+
+[[code_label_pair]]
+code = "scb/klr/landsting"
+label = "scb/klr/landstingets-namn"
+
+[[code_label_pair]]
+code = "scb/klr/landstingskod"
+label = "scb/klr/landstingets-namn"

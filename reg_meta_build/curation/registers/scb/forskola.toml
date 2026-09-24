@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "forskola"
+native_id = "307"
+
+[[code_label_pair]]
+code = "scb/forskola/huvudman"
+label = "scb/forskola/huvudman-namn"

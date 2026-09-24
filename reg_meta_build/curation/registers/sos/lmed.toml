@@ -1,0 +1,22 @@
+[register]
+provider = "sos"
+slug = "lmed"
+native_id = "7661979173609203267"
+name = "Läkemedelsregistret"
+
+[[group]]
+register = "sos/lmed"
+key = "specialistutbildningskod"
+label = "Specialistutbildningskod"
+axis = "ordinal"
+members = [{ variable = "specialistutbildningskod-1", value = "1", label = "1" }, { variable = "specialistutbildningskod-2", value = "2", label = "2" }, { variable = "specialistutbildningskod-3", value = "3", label = "3" }]
+
+# DRAFT reg_meta_build/curation/registers/sos/lmed.toml (pin-free).
+# sos.py DELDATAMANGD_TOKEN_MAP at 43599863^ (L1562-1591, #211): FDDD ships in
+# both variants under one combined token; the row belongs to each.
+# v18: accepted-sos-routes:lmed:FDDD = 1 case, 1 effect with 2 variant keys
+# (scopes/67b44b59563b830b0a6a.json.gz).
+
+[[identity.route]]
+deldatamangd = "LMED VARA/LMED"
+variants = ["LMED", "LMED VARA"] # v18: 1 row (FDDD)

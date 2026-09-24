@@ -115,17 +115,6 @@ class SlugEntry:
     # dead-predecessor succession surface is `curation/relations.toml`'s
     # `type = "replaced_by"` edges (#522, `relations.py`), a different relation.
     replaced_by: str | None = None
-    # Tracked literal column ownership (variable split-sibling entries only,
-    # Y-167). A complete `{literal column: owning split source_id}` map for the
-    # native family, fed to `convert_identity.convert_column_partitions` as
-    # `declared_columns` via `declared_column_ownership`. Sorted
-    # literal/owner pairs; None when the entry declares no ownership. Exact
-    # literals only — no case folding, no prefix inference.
-    columns: tuple[tuple[str, str], ...] | None = None
-    # The tracked declaration reference for `columns` — the evidence (and any
-    # counter-evidence) behind the ownership claim. Required exactly when
-    # `columns` is present; fed as `declaration_reference`.
-    columns_ref: str | None = None
 
 
 def repo_slug_dir() -> Path | None:
@@ -267,10 +256,7 @@ def _allowed_fields(kind: EntityKind) -> frozenset[str]:
     # unknown field, the same as a top-level `[[replaced_by]]` in a slug TOML.
     base = {"slug", "deprecated", "replaced_by"}
     if kind == "variable":
-        # Y-167: split-sibling entries may carry a tracked literal column
-        # ownership map (`columns`) with its declaration reference
-        # (`columns_ref`); see `_validate_split_columns`.
-        return frozenset(base | {"columns", "columns_ref"})
+        return frozenset(base)
     if kind == "register_variant":
         return frozenset(
             base
@@ -314,108 +300,6 @@ def _validate_entry_slug(
             f"{kind}.{source_id!r}: {exc}",
             "Adjust the slug to satisfy the slug rules (grammar and reserved tokens).",
         ) from exc
-
-
-def _validate_split_columns(
-    kind: EntityKind, source_id: str, raw: Any
-) -> tuple[tuple[str, str], ...] | None:
-    """Validate a tracked literal column ownership map (Y-167).
-
-    Only variable entries may declare it (other kinds fail earlier as an
-    unknown field). The map is `{exact literal column: owning split source_id}`
-    for the declaring entry's native family (`<register>.<var>` — the first two
-    segments of a split key, or the key itself for a two-part family key). Every
-    owner must be a well-formed three-part split-sibling key inside that same
-    family: ownership never crosses families, registers, or providers, and no
-    case folding or prefix inference is applied — literals match exactly what
-    the converter observes. Returns the pairs sorted by literal (deterministic).
-    """
-    if raw is None:
-        return None
-    if kind != "variable":  # Unreachable — the unknown-field guard rejects it.
-        raise _err(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `columns` is only valid on variable entries.",
-            "Move the literal column ownership to a variable split entry.",
-        )
-    if not isinstance(raw, dict) or not raw:
-        raise _err(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `columns` must be a non-empty TOML table "
-            f"mapping exact literal columns to owning split source IDs, got "
-            f"{type(raw).__name__ if not isinstance(raw, dict) else 'an empty table'}.",
-            'Use an inline table: columns = { Literal = "1.830.split" }.',
-        )
-    family = ".".join(source_id.split(".")[:2])
-    pairs: list[tuple[str, str]] = []
-    for literal, owner in raw.items():
-        if not isinstance(literal, str) or not literal or literal != literal.strip():
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: `columns` keys must be exact non-blank "
-                f"literal column spellings, got {literal!r}.",
-                "Use the literal delivery column spelling with no surrounding whitespace.",
-            )
-        if not isinstance(owner, str) or not owner:
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: `columns` owner of {literal!r} must be "
-                f"a non-empty split source ID, got {owner!r}.",
-                'Point it at the owning split entry, e.g. "1.830.gaturest".',
-            )
-        # Canonical shape (no leading zeros); raises `slug_toml_invalid` itself.
-        _parse_variable_id(owner)
-        parts = owner.split(".")
-        if len(parts) != 3 or ".".join(parts[:2]) != family:
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: `columns` owner {owner!r} is not a "
-                f"split sibling of family {family!r}.",
-                "Own literal columns only within the declaring entry's own native family.",
-            )
-        pairs.append((literal, owner))
-    return tuple(sorted(pairs))
-
-
-def _validate_columns_ref(
-    kind: EntityKind, source_id: str, raw: Any, *, has_columns: bool
-) -> str | None:
-    """Validate the tracked declaration reference for `columns` (Y-167).
-
-    Required exactly when `columns` is present — the converter needs the
-    original declaration reference, and the reference carries the evidence
-    (including counter-evidence) behind the ownership claim. A reference
-    without ownership is a dangling pointer and fails too.
-    """
-    if raw is None:
-        if has_columns:
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: `columns` needs its tracked declaration "
-                "reference (`columns_ref`).",
-                "Record the evidence and counter-evidence in `columns_ref`.",
-            )
-        return None
-    if kind != "variable":  # Unreachable — the unknown-field guard rejects it.
-        raise _err(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `columns_ref` is only valid on variable entries.",
-            "Move the declaration reference to a variable split entry.",
-        )
-    if not isinstance(raw, str) or not raw.strip():
-        raise _err(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `columns_ref` must be a non-blank string, "
-            f"got {raw!r}.",
-            "Cite the triage/evidence behind the ownership decision.",
-        )
-    if not has_columns:
-        raise _err(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `columns_ref` without `columns` declares nothing.",
-            "Add the `columns` ownership map, or remove the reference.",
-        )
-    return raw
 
 
 def _validate_entry(
@@ -493,10 +377,6 @@ def _validate_entry(
         kind, source_id, entry.get("panel_time_grain")
     )
     _validate_panel_time_consistency(kind, source_id, panel_time_key, panel_time_grain)
-    split_columns = _validate_split_columns(kind, source_id, entry.get("columns"))
-    columns_ref = _validate_columns_ref(
-        kind, source_id, entry.get("columns_ref"), has_columns=split_columns is not None
-    )
     return SlugEntry(
         kind=kind,
         source_id=source_id,
@@ -508,8 +388,6 @@ def _validate_entry(
         panel_time_grain=panel_time_grain,
         deprecated=deprecated_raw,
         replaced_by=replaced_by,
-        columns=split_columns,
-        columns_ref=columns_ref,
     )
 
 
@@ -715,14 +593,34 @@ def _provider_from_path(path: Path) -> str:
     return path.stem
 
 
-def _is_split_base_pair(a: SlugEntry, b: SlugEntry) -> bool:
-    """Whether ``a``/``b`` (either order) are a ``columns``-carrying split
-    ``<reg>.<var>.<split>`` and its own base family ``<reg>.<var>``."""
+def _register_partition_families(path: Path) -> set[tuple[str, str, str]]:
+    """Load partition coordinates once for duplicate-slug collision checks."""
+    curation_dir = path.parent.parent / "curation"
+    if not curation_dir.is_dir():
+        return set()
+    from .curation_tree import load_register_files
+
+    return {
+        (register.register_info.provider, register.register_info.native_id, partition.variable)
+        for register in load_register_files(curation_dir)
+        for partition in register.identity.partition
+        if register.register_info.native_id is not None
+    }
+
+
+def _is_split_base_pair(
+    a: SlugEntry,
+    b: SlugEntry,
+    *,
+    partition_families: set[tuple[str, str, str]],
+) -> bool:
+    """Whether ``a``/``b`` are a split/base pair with a register-file partition."""
     split, base = (a, b) if len(a.source_id.split(".")) == 3 else (b, a)
-    return (
-        split.columns is not None
-        and split.source_id.rpartition(".")[0] == base.source_id
-    )
+    family = split.source_id.rpartition(".")[0]
+    if len(split.source_id.split(".")) != 3 or family != base.source_id:
+        return False
+    register_id = family.split(".", 1)[0]
+    return (split.provider, register_id, family) in partition_families
 
 
 def load_provider_toml(path: Path) -> list[SlugEntry]:
@@ -757,6 +655,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
     #   `<provider>/<register>/<variant>...` already disambiguates them).
     # Source IDs are dotted: variant/variable `<reg>.<sub>`.
     seen_slugs: dict[tuple[str, ...], list[SlugEntry]] = {}
+    partition_families: set[tuple[str, str, str]] | None = None
     for kind in ("register", "register_variant", "variable"):
         if kind not in data:
             continue
@@ -784,17 +683,22 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                     slug_key = (kind, entry.slug)
                     scope_desc = f"within provider {provider!r}"
                 holders = seen_slugs.setdefault(slug_key, [])
-                # Y-219: the one allowed reuse is a `columns`-carrying split and
-                # its own base family entry. Such a family converts to
+                # Y-219: the one allowed reuse is a register-file-partitioned
+                # split and its own base family entry. Such a family converts to
                 # accepted-column-partitions, whose scope never carries a
                 # base-family naming declaration (the base provider key is dropped,
                 # or None when negative members stay), so only the split
                 # materializes. If both ever do, `convert_naming`'s
                 # `naming_slug_collision` and `idx_variable_slug(register_id,
                 # slug)` refuse it.
-                if holders and (
-                    len(holders) > 1 or not _is_split_base_pair(holders[0], entry)
-                ):
+                split_base_pair = False
+                if holders and len(holders) == 1:
+                    if partition_families is None:
+                        partition_families = _register_partition_families(path)
+                    split_base_pair = _is_split_base_pair(
+                        holders[0], entry, partition_families=partition_families
+                    )
+                if holders and (len(holders) > 1 or not split_base_pair):
                     raise _err(
                         "slug_toml_invalid",
                         f"{path.name}: slug {entry.slug!r} reused by "
@@ -1234,91 +1138,124 @@ def iter_curated_provider_entries(slug_dir: Path) -> list[SlugEntry]:
 
 @dataclass(frozen=True)
 class DeclaredColumnOwnership:
-    """One native family's tracked literal column ownership (Y-167).
-
-    The exact feed for `convert_identity.convert_column_partitions`: `split_ids`
-    and `declared_columns` (as a dict) plus the tracked `declaration_reference`.
-    `declared_columns` is stored as pairs sorted by literal (deterministic).
-    """
+    """Literal ownership for one native family, read from its register TOML."""
 
     provider: str
     source_id: str
     split_ids: tuple[str, ...]
-    declared_columns: tuple[tuple[str, str], ...]
+    declared_columns: tuple[tuple[str, str | None], ...]
     declaration_reference: str
 
 
 def declared_column_ownership(
-    entries: Iterable[SlugEntry], *, provider: str, source_id: str
+    entries: Iterable[SlugEntry],
+    *,
+    provider: str,
+    source_id: str,
+    curation_dir: Path | None = None,
 ) -> DeclaredColumnOwnership:
-    """Collect one native family's tracked literal column ownership (Y-167).
+    """Read one family partition from ``curation/registers`` and validate its keys.
 
-    `source_id` is the two-part native family key (e.g. `"1.830"`). Pass the
-    COMPLETE loaded entry set — authored `<provider>.toml` plus generated
-    `<provider>.auto.toml` — so every tracked split sibling of the family is
-    known: an owner naming an untracked split, or a tracked split with no
-    declared owner, is stale/new-intersecting-evidence and fails here rather
-    than converting half a family. Multiple declaring entries must agree on
-    both the map and the reference. A family with no declaration raises
-    `ValueError` (unresolved ownership, not invalid curation).
+    Slug entries still define the named split siblings; only their register-file
+    partition maps define which delivered spelling belongs to each sibling.
+    ``unassigned_columns`` remain explicit None owners so unresolved identity is
+    preserved instead of silently absorbed.
     """
-    _parse_variable_id(source_id)  # Canonical shape; raises `slug_toml_invalid`.
+    _parse_variable_id(source_id)
     if len(source_id.split(".")) != 2:
         raise ValueError(
             f"column ownership is declared per native family, got split key {source_id!r}"
         )
+    slug_entries = tuple(entries)
     family = [
-        e
-        for e in entries
-        if e.kind == "variable"
-        and e.provider == provider
-        and (e.source_id == source_id or e.source_id.startswith(source_id + "."))
+        entry
+        for entry in slug_entries
+        if entry.kind == "variable"
+        and entry.provider == provider
+        and (entry.source_id == source_id or entry.source_id.startswith(source_id + "."))
     ]
     if not family:
         raise ValueError(f"no tracked slug entries for family {provider}:{source_id!r}")
-    declarers = [e for e in family if e.columns is not None]
-    if not declarers:
+    native_register = source_id.split(".", 1)[0]
+    register_slugs = {
+        entry.slug
+        for entry in slug_entries
+        if entry.kind == "register"
+        and entry.provider == provider
+        and entry.source_id == native_register
+        and entry.slug is not None
+    }
+    if len(register_slugs) != 1:
         raise ValueError(
-            f"no declared literal column ownership for family {provider}:{source_id!r}"
+            f"expected one register slug for {provider}:{native_register}, "
+            f"found {sorted(register_slugs)}"
         )
-    merged: dict[str, str] = {}
-    for entry in declarers:
-        assert entry.columns is not None  # Filtered above; the type needs it.
-        for literal, owner in entry.columns:
-            prev = merged.setdefault(literal, owner)
-            if prev != owner:
-                raise _err(
-                    "slug_toml_invalid",
-                    f"variable.{source_id!r}: conflicting tracked ownership of "
-                    f"literal {literal!r}: {prev!r} vs {owner!r}.",
-                    "Give one owner per literal column across the family's declarations.",
-                )
-    references = {entry.columns_ref for entry in declarers}
-    assert None not in references  # `_validate_columns_ref` requires it.
-    if len(references) != 1:
+    register_slug = next(iter(register_slugs))
+    root = curation_dir or (Path(__file__).resolve().parent.parent.parent / "curation")
+    from .curation_tree import load_register_files
+
+    register_entry = next(
+        (
+            entry
+            for entry in load_register_files(root)
+            if entry.register_info.provider == provider
+            and entry.register_info.slug == register_slug
+        ),
+        None,
+    )
+    paths = sorted((root / "registers" / provider).rglob(f"{register_slug}.toml"))
+    if len(paths) != 1:
+        raise ValueError(
+            f"expected one register curation file for {provider}/{register_slug}, "
+            f"found {len(paths)}"
+        )
+    file = f"curation/{paths[0].relative_to(root).as_posix()}"
+    if register_entry is None:
+        raise ValueError(f"no register curation file {file} for {provider}:{source_id}")
+    partitions = [
+        (index, partition)
+        for index, partition in enumerate(register_entry.identity.partition, start=1)
+        if partition.variable == source_id
+    ]
+    if not partitions:
+        raise ValueError(
+            f"no declared literal column ownership in {file} for {source_id!r}"
+        )
+    if len(partitions) != 1:
         raise _err(
             "slug_toml_invalid",
-            f"variable.{source_id!r}: conflicting tracked declaration references.",
-            "Give one shared `columns_ref` across the family's declarations.",
+            f"{file}: duplicate [[identity.partition]] for {source_id!r}.",
+            "Keep one ownership map per native family.",
         )
-    known = {e.source_id for e in family if len(e.source_id.split(".")) == 3}
-    owners = set(merged.values())
+    index, partition = partitions[0]
+    merged: dict[str, str | None] = dict(partition.columns)
+    for literal in partition.unassigned_columns:
+        if literal in merged:
+            raise _err(
+                "slug_toml_invalid",
+                f"{file} [[identity.partition]] entry {index}: literal {literal!r} "
+                "is both assigned and unassigned.",
+                "List each exact delivery spelling in one ownership field.",
+            )
+        merged[literal] = None
+    known = {
+        entry.source_id
+        for entry in family
+        if len(entry.source_id.split(".")) == 3
+    }
+    owners = {owner for owner in merged.values() if owner is not None}
     if owners != known:
         unknown = sorted(owners - known)
         missing = sorted(known - owners)
         raise _err(
             "slug_toml_invalid",
-            f"variable.{source_id!r}: tracked ownership is not family-complete: "
-            + (f"owners without a tracked split entry: {unknown}. " if unknown else "")
-            + (
-                f"tracked splits without a declared owner: {missing}."
-                if missing
-                else ""
-            ),
-            "Cover every tracked split sibling of the family exactly once.",
+            f"{file} [[identity.partition]] entry {index}: ownership is not "
+            "family-complete. "
+            + (f"Owners without slug entries: {unknown}. " if unknown else "")
+            + (f"Slug splits without owners: {missing}." if missing else ""),
+            "Cover every tracked split sibling and no other split.",
         )
-    (reference,) = references
-    assert reference is not None
+    reference = partition.columns_ref or f"{file}#/identity/partition/{index}"
     return DeclaredColumnOwnership(
         provider=provider,
         source_id=source_id,

@@ -1,0 +1,86 @@
+[register]
+provider = "scb"
+slug = "lararreg"
+native_id = "232"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "forstelarare"
+description = "Läraren innehar karriärtjänsten Förstelärare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "impgm"
+description = "Läraren undervisar i IM (Introduktionsprogram) i Gymnasieskolan"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "ivpgm"
+description = "Anger om läraren undervisar på IV-program i gymnasiesärskola"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "jurform"
+description = "Juridisk form, kod"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "juridiskform"
+description = "Juridisk form, klartext"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "lektor"
+description = "Läraren innehar karriärtjänsten Lektor"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "sfityp"
+description = "Typ av anordnare i SFI. 1 = Kommun, 2 = Studieförbund, 3 = Folkhögskola, 4 = Landsting, 5 = Övriga"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "skolenhetskod"
+description = "Skolenhetskod, ersätts med löpnummer vid leverans"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "skolkod"
+description = "Löpnummer för skolorna"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "specialundervisning"
+description = "J = läraren har undervisning och har rapporterat undervisningsämnen. N = Läraren har inte ämnesundervisning, t.ex. speciallärare eller lärare som bara arbetar med mentorskap."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "tjledig"
+description = "J = Personen är helt tjänstledig från aktuell tjänst"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "traningssar"
+description = "Läraren undervisar i träningsskolan (Skolform Grundsärskolan)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/lararreg"
+variable = "utbildningsanordnare"
+description = "Typ av anordnare i Komvux. 1 = Kommun, 2 = Studieförbund, 3 = Folkhögskola, 4 = Landsting, 5 = Övriga"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[code_label_pair]]
+code = "scb/lararreg/huvudman"
+label = "scb/lararreg/huvudman-namn"

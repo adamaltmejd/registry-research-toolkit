@@ -15,6 +15,7 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+from _curation_fixtures import write_lisa_errata
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
 from reg_meta_build._curation import repo_curation_path
@@ -26,6 +27,7 @@ from reg_meta_build.concept_groups import (
     load_code_label_pairs,
     load_concept_group_accepts,
     load_concept_groups,
+    load_worklist_concept_groups,
 )
 from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
@@ -52,16 +54,11 @@ _CURATION = _ROOT / "curation"
 
 def test_catalog_overlays_share_one_directory() -> None:
     names = {
-        "alias_windows.toml",
         "codeless_overlap.toml",
         "codelivery.toml",
-        "concept_groups.auto.toml",
-        "concept_groups.toml",
-        "delivery_enrichment.generated.toml",
+        "classification_groups.toml",
         "lineage.toml",
-        "period_family_merges.toml",
         "relations.toml",
-        "scb_errata.toml",
         "tags.toml",
     }
     assert {path.name for path in _CURATION.glob("*.toml")} == names
@@ -123,11 +120,23 @@ def test_repo_codeless_overlap_parses() -> None:
 
 
 def test_repo_concept_groups_parses() -> None:
-    groups = load_concept_groups(_CURATION / "concept_groups.toml")
+    groups = load_concept_groups(_CURATION)
     assert groups  # the LISA agi rank family ships with the repo
+    assert len(groups) == 37
     # Build-time resolution (register/group/variable exist) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.
     assert all(len(g.members) >= 2 for g in groups)
+    accepted = load_concept_group_accepts(
+        _ROOT / "worklists" / "concept_groups.accepted.toml"
+    )
+    accepted_groups = {
+        (g.provider, g.register, g.key): g for g in groups
+    }
+    assert len(accepted) == 20
+    assert sum(
+        len(accepted_groups[(a.provider, a.register, a.key)].members)
+        for a in accepted
+    ) == 273
 
     lisa_groups = {
         g.key: g for g in groups if (g.provider, g.register) == ("scb", "lisa")
@@ -216,13 +225,9 @@ def test_repo_concept_groups_parses() -> None:
 
 
 def test_repo_concept_groups_auto_parses() -> None:
-    # `concept_groups.auto.toml` (#496) is the GENERATED, build-critical candidate
-    # catalog — an `[[accept]]` resolves against it at materialize time, so a
-    # parse-incompatible regeneration would break a real build. This catches that
-    # without a full build-db. Direct path keeps this a parser-only assertion
-    # matches the other repo-TOML tests; the loader re-validates the shape.
-    groups = load_concept_groups(_CURATION / "concept_groups.auto.toml")
-    assert groups  # the generator emits >0 foldable families
+    # The auto candidates are now generator worklist input, not build curation.
+    groups = load_worklist_concept_groups(_ROOT / "worklists" / "concept_groups.auto.toml")
+    assert groups
     assert all(len(g.members) >= 2 for g in groups)
 
 
@@ -231,8 +236,9 @@ def test_repo_code_label_pairs_parses() -> None:
     # concept-group fold. Load-time shape (every entry sets `code`/`label` as
     # 3-segment FQIDs) is this gate; endpoint resolution + the structural guards
     # (value-set ownership, co-delivery) are maintainer-build territory.
-    pairs = load_code_label_pairs(_CURATION / "concept_groups.toml")
+    pairs = load_code_label_pairs(_CURATION)
     assert pairs  # the curated SCB pairs ship with the repo
+    assert len(pairs) == 90
     assert all(p.code_provider and p.code_register and p.code_variable for p in pairs)
     assert all(
         p.label_provider and p.label_register and p.label_variable for p in pairs
@@ -255,13 +261,10 @@ def test_repo_code_label_pairs_parses() -> None:
 
 
 def test_repo_concept_group_accepts_parses() -> None:
-    # The `[[accept]]` opt-in list lives in `concept_groups.toml` (the same file
-    # as `[[variable_group]]`). Its load-time shape is build-critical too; resolution
-    # against the auto catalog is maintainer-build territory. The gate is that it
-    # PARSES with a valid load-time shape; the count grows as curation batches land
-    # (the #496 batch-1 SOS families ship now), so assert presence + shape, not an
-    # exact count.
-    accepts = load_concept_group_accepts(_CURATION / "concept_groups.toml")
+    # Accepts stay only as generator worklist input; the build uses materialized groups.
+    accepts = load_concept_group_accepts(
+        _ROOT / "worklists" / "concept_groups.accepted.toml"
+    )
     assert accepts
     assert all(a.provider and a.register and a.key for a in accepts)
 
@@ -273,7 +276,7 @@ def test_repo_classification_groups_parses() -> None:
     # load-time shape (>= 2 members, unique keys/slugs). The umbrellas are now
     # AXIS-LESS (axis is None — members are distinct classifications, not points
     # on a scale), so this no longer asserts a truthy axis.
-    groups = load_classification_groups(_CURATION / "concept_groups.toml")
+    groups = load_classification_groups(_CURATION)
     assert groups
     assert {g.key for g in groups} >= {"sun"}
     assert all(len(g.members) >= 2 for g in groups)
@@ -281,22 +284,18 @@ def test_repo_classification_groups_parses() -> None:
 
 
 def test_repo_delivery_enrichment_parses() -> None:
-    path = _CURATION / "delivery_enrichment.generated.toml"
-    assert "GENERATED" in path.read_text(encoding="utf-8").splitlines()[2]
-    enr = load_delivery_enrichment(path)
+    enr = load_delivery_enrichment(_CURATION)
+    assert (len(enr.descriptions), len(enr.aliases)) == (362, 45)
     # the #365 global description backfills + delivery-column aliases ship together
     assert enr.descriptions
     assert enr.aliases
-    # Slug RESOLUTION is strict + maintainer-build territory; load-time shape
-    # (2-segment FQID, unique keys) is this gate.
+    # Slug resolution is maintainer-build territory; load-time shape is this gate.
     assert all(d.provider and d.register and d.variable for d in enr.descriptions)
     assert all(a.provider and a.register and a.delivery_column for a in enr.aliases)
 
 
 def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
-    aliases = load_delivery_enrichment(
-        _CURATION / "delivery_enrichment.generated.toml"
-    ).aliases
+    aliases = load_delivery_enrichment(_CURATION).aliases
     triples = {
         (f"{a.provider}/{a.register}", a.variable, a.delivery_column) for a in aliases
     }
@@ -318,7 +317,8 @@ def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
 
 
 def test_repo_alias_windows_parse_and_start_with_verified_it_case() -> None:
-    aliases = load_alias_windows(_CURATION / "alias_windows.toml")
+    aliases = load_alias_windows(_CURATION)
+    assert len(aliases) == 4
 
     assert (
         aliases[0].fqid,
@@ -334,7 +334,7 @@ def test_repo_alias_windows_parse_and_start_with_verified_it_case() -> None:
 
 
 def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
-    enr = load_delivery_enrichment(_CURATION / "delivery_enrichment.generated.toml")
+    enr = load_delivery_enrichment(_CURATION)
     lisa_variables = {
         d.variable
         for d in enr.descriptions
@@ -375,8 +375,10 @@ def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
 
 
 def test_repo_period_family_merges_parses() -> None:
-    families = load_period_family_merges(_CURATION / "period_family_merges.toml")
+    families = load_period_family_merges(_CURATION)
     assert families  # the #319 LISA monthly families ship with the repo
+    assert len(families) == 8
+    assert sum(family.slug is not None for family in families) == 3
     # Member RESOLUTION (12 month columns exist for the stem) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.
     assert all(
@@ -460,10 +462,15 @@ def test_repo_scb_errata_parses() -> None:
     # maintainer-build surprise. The remaining half (the version is documented, the
     # column has / has not a real row) needs the real export and stays build-only.
     errata = load_scb_errata(
-        _CURATION / "scb_errata.toml",
+        _CURATION,
         repo_slug_dir(),
     )
     assert errata  # the verified LISA DispInkKE case ships with the repo
+    assert (len(errata.delivered), len(errata.columns), len(errata.versions)) == (
+        223,
+        1885,
+        4,
+    )
     # scb/lisa "Individer, 15 år och äldre"; pin the complete coordinates of
     # these named records without assuming the multi-register file contains
     # only LISA entries.
@@ -488,7 +495,7 @@ def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
     # they came out. A regeneration that re-proposes them is proposing entries
     # the real corpus rejects.
     errata = load_scb_errata(
-        _CURATION / "scb_errata.toml",
+        _CURATION,
         repo_slug_dir(),
     )
     by_source = Counter(c.source for c in errata.columns)
@@ -550,44 +557,55 @@ def test_repo_fdb_gaturest_declares_two_spelling_ownership() -> None:
 
 
 def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
-    # Y-219: a split entry carrying `columns` needs a slug — pinned in its
-    # provider TOML or present in the `.auto.toml` — or naming converts it to None.
+    # Register-file ownership is complete against the split slugs and each named
+    # owner has an actual naming slug.
     slug_dir = repo_slug_dir()
     assert slug_dir is not None
     entries = load_slug_dir(slug_dir)
+    tree = load_curation_tree(_CURATION)
+    partitions = [
+        partition
+        for register in tree.registers
+        for partition in register.identity.partition
+    ]
+    assert len(partitions) == 356
+    assert len(tree.registers) == 84
+    assert (
+        sum(len(register.identity.route) for register in tree.registers),
+        sum(len(register.identity.split) for register in tree.registers),
+        sum(len(register.identity.rename) for register in tree.registers),
+        sum(len(register.identity.column_owner) for register in tree.registers),
+    ) == (20, 2, 1, 1)
     slugged = {
         (e.provider, e.source_id)
         for e in entries
         if e.kind == "variable" and e.slug is not None
     }
-    unslugged = sorted(
-        f"{e.provider}:{e.source_id}"
-        for e in entries
-        if e.kind == "variable"
-        and e.columns is not None
-        and len(e.source_id.split(".")) == 3
-        and (e.provider, e.source_id) not in slugged
-    )
-    assert unslugged == []
+    absent_owners = {
+        owner
+        for partition in partitions
+        for owner in partition.columns.values()
+        if ("scb", owner) not in slugged
+    }
+    assert absent_owners == set()
 
 
 def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> None:
     # A version named twice in one `versions` list would mint the same synthetic
     # row twice and die on the id collision mid-insert. Catch it at load, where
     # the maintainer gets a remediation instead of a primary-key error.
-    path = tmp_path / "scb_errata.toml"
-    path.write_text(
+    body = (
         "[[delivered]]\n"
         'register = "scb/lisa"\n'
         'variant = "individer-15plus"\n'
         'column = "DispInkKE"\n'
         'versions = ["2010", "2011", "2010"]\n'
         'evidence = "SWECOV holds the column in those years"\n'
-        'noted = "2026-09-11"\n',
-        encoding="utf-8",
+        'noted = "2026-09-11"\n'
     )
+    root = write_lisa_errata(tmp_path / "curation", body)
     with pytest.raises(RegMetaError) as exc:
-        load_scb_errata(path, repo_slug_dir())
+        load_scb_errata(root, repo_slug_dir())
     assert exc.value.code == "scb_errata_invalid"
     assert exc.value.exit_code == EXIT_CONFIG
     assert "2010" in exc.value.message

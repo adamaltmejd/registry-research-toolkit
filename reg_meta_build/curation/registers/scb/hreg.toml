@@ -1,0 +1,356 @@
+[register]
+provider = "scb"
+slug = "hreg"
+native_id = "47"
+
+[[errata.delivered]]
+variant = "sokande-grund-avancerad"
+column = "Kurskod"
+versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+noted = "2026-09-12"
+
+[[errata.delivered]]
+variant = "sokande-grund-avancerad"
+column = "LInr"
+versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+noted = "2026-09-12"
+
+[[errata.delivered]]
+variant = "sokande-grund-avancerad"
+column = "LProg"
+versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+noted = "2026-09-12"
+
+[[errata.delivered]]
+variant = "sokande-grund-avancerad"
+column = "Omgang"
+versions = ["Vårterminen 2015", "Höstterminen 2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds Omgang in Hreg_Sok_2015_2022 (edition 2015..2021); SCB's Registerinformation export documents the Vårterminen 2015 and Höstterminen 2015 versions of sokande-grund-avancerad without a Omgang column and carries it from Vårterminen 2016 onwards."
+noted = "2026-09-12"
+
+[[errata.delivered]]
+variant = "sokande-grund-avancerad"
+column = "PersonNr"
+versions = ["Vårterminen 2015", "Höstterminen 2015"]
+upstream = "omitted-column-in-version"
+evidence = "SWECOV holds PersonNr in Hreg_Sok_2015_2022 (edition 2015..2021); SCB's Registerinformation export documents the Vårterminen 2015 and Höstterminen 2015 versions of sokande-grund-avancerad without a PersonNr column and carries it from Vårterminen 2016 onwards."
+noted = "2026-09-12"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "FFG_hskod"
+name = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare."
+definition = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "FFG_lprog"
+name = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)"
+definition = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "FFG_Stud"
+name = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare."
+definition = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "FFG_Yprog"
+name = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare."
+definition = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "FFGArTermin_Stud"
+name = "År+Termin för första registrering på svenskt lärosäte"
+definition = "År+Termin för första registrering på svenskt lärosäte"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "TermNrKurs"
+name = "Kursens terminsnummer"
+definition = "Kursens terminsnummer"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "THPoang"
+name = "Kursregistreringens högskolepoäng inom terminen"
+definition = "Kursregistreringens högskolepoäng inom terminen"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "benamning"
+name = "Benämning till namnare. Lärosätets detaljerade examensbenämning."
+definition = "Benämning till namnare. Lärosätets detaljerade examensbenämning."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "grp1niv1"
+name = "Examensinriktningsgrupp, detaljerad nivå"
+definition = "Examensinriktningsgrupp, detaljerad nivå"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "grp1niv1namn"
+name = "Examensinriktningsgrupp, detaljerad nivå. Benämning."
+definition = "Examensinriktningsgrupp, detaljerad nivå. Benämning."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "grp1niv2"
+name = "Examensinriktningsgrupp, mellannivå"
+definition = "Examensinriktningsgrupp, mellannivå"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "grp1niv2namn"
+name = "Examensinriktningsgrupp, mellannivå. Benämning."
+definition = "Examensinriktningsgrupp, mellannivå. Benämning."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "grp1niv3"
+name = "Examensinriktningsgrupp, grov nivå"
+definition = "Examensinriktningsgrupp, grov nivå"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "grp1niv3namn"
+name = "Examensinriktningsgrupp, grov nivå. Benämning."
+definition = "Examensinriktningsgrupp, grov nivå. Benämning."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "sun2000inr"
+name = "SUN-inriktning, 2000-års nomenklatur"
+definition = "SUN-inriktning, 2000-års nomenklatur"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "sun2000niva"
+name = "SUN-nivå, 2000-års nomenklatur"
+definition = "SUN-nivå, 2000-års nomenklatur"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "SUN2020Inr"
+name = "SUN-inriktning, 2020-års nomenklatur"
+definition = "SUN-inriktning, 2020-års nomenklatur"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "SUN2020Niva"
+name = "SUN-nivå, 2020-års nomenklatur"
+definition = "SUN-nivå, 2020-års nomenklatur"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "sokande-grund-avancerad"
+column = "SUN2000Inr_lprog"
+name = "Programmets suninriktning på 3-siffernivå (SUN2000)"
+definition = "Programmets suninriktning på 3-siffernivå (SUN2000)"
+holdings_period = "2007-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[errata.column]]
+variant = "sokande-grund-avancerad"
+column = "SUN2020Niva3_lprog"
+name = "Programmets sunnivå på 3-siffernivå (SUN2020)"
+definition = "Programmets sunnivå på 3-siffernivå (SUN2020)"
+holdings_period = "2007-2024"
+source = "steward-holdings"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+noted = "2026-06-14"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "amnegrupp"
+description = "Ämnesgrupp för kursansökningar (ämnesgrupp på kursen)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "ar-for-registreringen"
+description = "År"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "forkunskapsniva-kurs"
+description = "Förkunskapsnivå, högskolekurs"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "hogskolekod"
+description = "Lärosäte, kod (klartext i hjälptabell)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "hogskolenamn"
+description = "Lärosäte, klartext"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "kurskod"
+description = "Kurskod"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "kurskodben"
+description = "Kursenbs benämning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "kurslan"
+description = "Kurslän"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "kursort"
+description = "Studieort, kurs"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "kurstakt"
+description = "Studietakt"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "linr"
+description = "Högskolans interna programinriktning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "lprog"
+description = "Lärosätets kod på programmet"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "lprogben"
+description = "Programmets benämning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "progort"
+description = "Studieort, program"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "programinriktning"
+description = "Programmets inriktning i klartext. Alla program har inte inriiktning. (Endast för ansökningar till program)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "termnr"
+description = "Terminsnummer för programstudier"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "uprog"
+description = "Utbytesprogram"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/hreg"
+variable = "utbildningsomrade"
+description = "Utbildningsområde (klartext i hjälptabell)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[code_label_pair]]
+code = "scb/hreg/anknytande-hogskola"
+label = "scb/hreg/hogskolenamn"

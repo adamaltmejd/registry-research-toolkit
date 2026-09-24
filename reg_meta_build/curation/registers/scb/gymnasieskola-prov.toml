@@ -1,0 +1,38 @@
+[register]
+provider = "scb"
+slug = "gymnasieskola-prov"
+native_id = "342"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-prov"
+variable = "gymnasieprogram"
+description = "Variabel som visar vilket program/utbidning eleven läser, klartext i hjälptabell"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-prov"
+variable = "kurs"
+description = "Kurskod för vilken kurs det gäller"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-prov"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-prov"
+variable = "skolenhetskod"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[enrichment.description]]
+register = "scb/gymnasieskola-prov"
+variable = "studievag-gymnasieskolan"
+description = "Studieväg"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[code_label_pair]]
+code = "scb/gymnasieskola-prov/skolenhetskod"
+label = "scb/gymnasieskola-prov/skolenhetens-namn"

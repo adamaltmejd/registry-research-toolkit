@@ -1,0 +1,64 @@
+[register]
+provider = "scb"
+slug = "rams"
+native_id = "26"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "anstalld-fran-manad"
+description = "Anställd från och med månad"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "anstalld-till-manad"
+description = "Anställd till och med månad"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "belagenhetsadress-gata"
+description = "Arbetsställets belägenhetsgata"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "besokspostort"
+description = "Arbetsställets belägenhetsort"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "bgatunr"
+description = "Arbetsställets belägenhetsgatunummer"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "cfar-nummer"
+description = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "institutionell-sektor"
+description = "Sektor"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "person-orgnr"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[enrichment.description]]
+register = "scb/rams"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[representation.period_family]]
+register = "scb/rams"
+family_stem = "lonfink"
+label = "Löne- eller företagarinkomst per månad"
+slug = "lone-eller-foretagarinkomst-manad"

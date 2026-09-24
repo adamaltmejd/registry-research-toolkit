@@ -1,0 +1,11 @@
+[register]
+provider = "scb"
+slug = "flergenreg"
+native_id = "349"
+
+[[group]]
+register = "scb/flergenreg"
+key = "personnrf"
+label = "Personnummer förälder"
+axis = "ordinal"
+members = [{ variable = "personnrf1", value = "1", label = "1" }, { variable = "personnrf2", value = "2", label = "2" }]
