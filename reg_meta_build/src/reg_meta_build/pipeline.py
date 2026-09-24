@@ -276,9 +276,9 @@ def build_selected_catalog(
     The single event stream accounts for source records, cases and diagnostics;
     it references prepared evidence instead of copying every source projection.
     `registers` forms only the named scopes, with shared inputs still complete,
-    defers references into registers that exist but were not selected and skips
-    curation wholly among them. Its output is never publishable and its corpus
-    volume guards do not apply.
+    skips curation touching none of them and defers references into registers
+    that exist but were not selected. Its output is never publishable and its
+    corpus volume guards do not apply.
     """
     started = time.perf_counter()
     publishable = not diagnostic and not registers
@@ -821,11 +821,17 @@ def build_selected_catalog(
                 raise ValueError(
                     f"{'selected' if registers else 'full'} source occurrence count differs from preparation"
                 )
-            # A scoped build defers only a reference to what exists but was not
-            # selected: the unselected scope files declare those registers,
-            # variants and variables, and the prepared store holds their observed
-            # register names and native IDs. Anything else stays the complete
-            # build's error.
+            # A scoped build skips curation whose every register reference lies
+            # outside the selected registers. Elsewhere it defers only a
+            # reference to what exists but was not selected: the unselected scope
+            # files declare those registers, variants and variables, and the
+            # prepared store holds their observed register names and native IDs.
+            # Anything else stays the complete build's error.
+            slice_registers = (
+                {key[1] for key in slice_keys if key[0] == "register"}
+                if registers
+                else None
+            )
             unselected: set[tuple[str, ...]] = set()
             unselected_names: dict[str, set[str]] = {}
             if registers:
@@ -891,6 +897,7 @@ def build_selected_catalog(
                 evidence=refs,
                 withheld=withheld,
                 unselected=unselected,
+                slice_registers=slice_registers,
             )
             months = resolve_month_groups(
                 panel.variables,
@@ -929,6 +936,7 @@ def build_selected_catalog(
                 classifications=tuple(books.values()),
                 withheld=withheld,
                 unselected=unselected,
+                slice_registers=slice_registers,
             )
             for value in resolved_metadata.diagnostics:
                 issue(value)
@@ -942,6 +950,7 @@ def build_selected_catalog(
                 withheld=withheld,
                 unselected=unselected,
                 unselected_names=unselected_names,
+                slice_registers=slice_registers,
             )
             for value in lineage.diagnostics:
                 issue(value)

@@ -526,14 +526,25 @@ class CatalogDependencyError(ValueError):
         )
 
 
+# Shared inputs: keys of these kinds lie in no register.
+_SHARED_KINDS = frozenset({"classification", "source_column"})
+
+
+def _dependency_register(key: DependencyKey) -> str | None:
+    """The register FQID a key lives in; shared inputs belong to no register."""
+    kind, fqid = key[0], key[1]
+    if kind in _SHARED_KINDS:
+        return None
+    return fqid if kind in {"register", "variant"} else fqid.rsplit("/", 1)[0]
+
+
 def _declared_entities(key: DependencyKey) -> tuple[DependencyKey, ...]:
     """The declared registers, variants and variables a key names. A representation
-    or state is proven only this far; shared classifications and source columns
-    name none."""
+    or state is proven only this far; shared inputs name none."""
     kind = key[0]
     if kind in {"register", "variant", "variable"}:
         return (key,)
-    if kind in {"classification", "source_column"}:
+    if kind in _SHARED_KINDS:
         return ()
     variable = ("variable", key[1])
     if kind in {"state", "variant_states"}:
@@ -551,10 +562,11 @@ class CatalogDependencies:
     A key starts with its kind, followed by its complete catalog coordinates.
     Callers build the withheld map from resolution accounting, not the baseline DB.
     Descendant lookup may inherit a known withheld parent supplied by the caller.
-    A register-scoped build names the `unselected` registers, variants and
-    variables that their scope files declare but were not formed: a missing key
-    naming only those is deferred to the complete build as a warning, and a
-    curation entry with every reference among them is skipped. Any other missing
+    A register-scoped build names its `slice_registers` and the `unselected`
+    registers, variants and variables that other scope files declare but were not
+    formed. A curation entry whose every register reference lies outside the
+    slice is skipped. In any other entry a missing key naming only unselected
+    entities is deferred to the complete build as a warning; any other missing
     key, such as one no scope declares, stays missing, exactly as in the complete
     build.
     """
@@ -564,6 +576,7 @@ class CatalogDependencies:
         available: set[DependencyKey],
         withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
         unselected: Collection[DependencyKey] = (),
+        slice_registers: Collection[str] | None = None,
     ) -> None:
         if overlap := available & withheld.keys():
             raise ValueError(
@@ -575,10 +588,11 @@ class CatalogDependencies:
         self.available = available
         self.withheld = withheld
         self.unselected = unselected
+        self.slice_registers = slice_registers
         self.diagnostics: list[ResolutionDiagnostic] = []
         self.missing: list[MissingCatalogDependency] = []
         self.skipped = 0
-        self._in_slice = False
+        self._registers: set[str] = set()
 
     def check(self) -> None:
         if self.missing:
@@ -586,12 +600,20 @@ class CatalogDependencies:
 
     @contextmanager
     def entry(self) -> Iterator[int]:
-        """Evaluate one curation entry; one whose every reference is deferred
-        emits nothing and counts as skipped."""
-        start, self._in_slice = len(self.diagnostics), False
+        """Evaluate one curation entry. In a register-scoped build, one whose every
+        register reference lies outside the slice is skipped: what its references
+        resolved to is discarded, it emits nothing and counts as skipped. One with
+        no register reference is evaluated as in the complete build."""
+        start, missing = len(self.diagnostics), len(self.missing)
+        self._registers = set()
         yield start
-        if not self._in_slice and len(self.diagnostics) > start:
+        if (
+            self.slice_registers is not None
+            and self._registers
+            and self._registers.isdisjoint(self.slice_registers)
+        ):
             del self.diagnostics[start:]
+            del self.missing[missing:]
             self.skipped += 1
 
     def require(
@@ -601,8 +623,12 @@ class CatalogDependencies:
         output: str,
         parents: tuple[DependencyKey, ...] = (),
     ) -> bool:
+        if (
+            self.slice_registers is not None
+            and (register := _dependency_register(key)) is not None
+        ):
+            self._registers.add(register)
         if key in self.available:
-            self._in_slice = True
             return True
         causes = next(
             (self.withheld[k] for k in (key, *parents) if k in self.withheld),
@@ -624,7 +650,6 @@ class CatalogDependencies:
                 )
             )
             return False
-        self._in_slice = True
         if causes is None:
             self.missing.append(MissingCatalogDependency(key, output))
             return False
@@ -777,6 +802,7 @@ def resolve_variable_edge_groups(
     evidence: Mapping[str, tuple[SourceRecordRef, ...]],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
     unselected: Collection[DependencyKey] = (),
+    slice_registers: Collection[str] | None = None,
 ) -> GroupEdgeResolution:
     """Resolve existing code/label and checked same-definition group edges.
 
@@ -807,7 +833,7 @@ def resolve_variable_edge_groups(
     if len(set(siblings)) != len(siblings) or any(a == b for a, b in siblings):
         raise ValueError("same-definition declarations must be unique non-self pairs")
     dependencies = CatalogDependencies(
-        {("variable", fqid) for fqid in by_fqid}, withheld, unselected
+        {("variable", fqid) for fqid in by_fqid}, withheld, unselected, slice_registers
     )
     claimed = {m.variable for g in curated_groups for m in g.members}
     components: DisjointSet[str] = DisjointSet()
@@ -910,6 +936,7 @@ def resolve_metadata_dependencies(
     classifications: tuple[ResolvedClassification, ...],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
     unselected: Collection[DependencyKey] = (),
+    slice_registers: Collection[str] | None = None,
 ) -> MetadataResolution:
     """Withhold only declared metadata depending on evidenced unresolved facts.
 
@@ -929,7 +956,7 @@ def resolve_metadata_dependencies(
     )
     for variable in variables:
         available.update(variable_dependency_keys(variable))
-    dependencies = CatalogDependencies(available, withheld, unselected)
+    dependencies = CatalogDependencies(available, withheld, unselected, slice_registers)
 
     def entity(fqid: str, output: str) -> bool:
         kind = "register" if fqid.count("/") == 1 else "variable"
@@ -1042,9 +1069,9 @@ def resolve_metadata_dependencies(
                 for member in tag.members
                 if entity(member.target, f"tag:{tag.slug}:member:{member.target}")
             )
-        if not members and dependencies.skipped > skipped_before:
-            # Every member deferred to the complete build: omit the tag
-            # entirely rather than materializing it with an empty member list.
+        if dependencies.skipped > skipped_before:
+            # Every member lies outside the slice: omit the tag entirely
+            # rather than materializing it with an empty member list.
             continue
         tags.append(tag.model_copy(update={"members": members}))
 
