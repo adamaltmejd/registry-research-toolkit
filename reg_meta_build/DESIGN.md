@@ -281,10 +281,10 @@ Copied coding pins the original bound donor evidence at the declared occurrence 
 with explicit `expected_codings`. Missing fingerprints are a contract error; changed
 membership or validity makes the entire occurrence case stale before effects run.
 Unknown and pooled scopes retain their original validity constraints in the fingerprint
-without acquiring dates. Scope fingerprints hash semantic content only — the
-(kind, label, intervals, pooled_start, pooled_end) tuple, with the pooled bounds kept
-when set — never the model dump, so a new optional scope field left as None leaves
-every existing fingerprint unchanged. Fingerprints are captured during offline conversion, never
+without acquiring dates. Scope fingerprints hash semantic content only — the (kind,
+label, intervals, pooled_start, pooled_end) tuple, with the pooled bounds kept when set
+— never the model dump, so a new optional scope field left as None leaves every existing
+fingerprint unchanged. Fingerprints are captured during offline conversion, never
 generated or refreshed by a build. Checked value-list field corrections bind using the
 effective declaration while retaining the original source record as evidence.
 
