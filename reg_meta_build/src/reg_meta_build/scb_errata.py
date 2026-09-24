@@ -430,7 +430,7 @@ def load_scb_errata(
     # will BE one (`ErrataColumn.key`), and a disagreement would silently ship
     # whichever entry the materializer wrote first.
     identities: dict[tuple[int, str], tuple] = {}
-    declared_classifications: set[str] | None = None
+    declared_classifications: frozenset[str] | None = None
     for entry in column_entries:
         register_id, variant_id, context = _resolve_variant(
             entry, "column", registers, variants
