@@ -4,6 +4,19 @@ slug = "lova"
 native_id = "7847722537922273761"
 name = "Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)"
 
+# LOVA repeated-event ordinal families (#374; spun out of #362.4). LOVA records
+# up to nine immigration/emigration events per person, each as a numbered series.
+# The Nth occurrence is a DISTINCT variable — correctly NOT merged (each holds a
+# different event) — but the flat 1..9 rows surface as N near-identical browse
+# rows. These fold the human-readable date and country series into one
+# presentation group each, under an `ordinal` facet. Members are an exact
+# hand-listed vocabulary (the standing curation rule forbids regex name-patterns),
+# attached as plain `variable =` members because the series carries no month/edge
+# token group. Slugs are SOS column names (INVDATUM/INVLAND/UTVDATUM/UTVLAND).
+# The parallel NUMERIC date representation (columns INVARN/UTVARN → slugs
+# invarn*/utvarn*, "… N numerisk") is folded the same way below, in its own
+# invarn/utvarn families (#420).
+
 [[group]]
 register = "sos/lova"
 key = "invandringsdatum"
@@ -46,7 +59,6 @@ label = "Utvandringsdatum, numerisk (per utvandringstillfälle)"
 axis = "ordinal"
 members = [{ variable = "utvandringsdatum-1-numerisk", value = "1", label = "1:a" }, { variable = "utvandringsdatum-2-numerisk", value = "2", label = "2:a" }, { variable = "utvandringsdatum-3-numerisk", value = "3", label = "3:e" }, { variable = "utvandringsdatum-4-numerisk", value = "4", label = "4:e" }, { variable = "utvandringsdatum-5-numerisk", value = "5", label = "5:e" }, { variable = "utvandringsdatum-6-numerisk", value = "6", label = "6:e" }, { variable = "utvandringsdatum-7-numerisk", value = "7", label = "7:e" }, { variable = "utvandringsdatum-8-numerisk", value = "8", label = "8:e" }, { variable = "utvandringsdatum-9-numerisk", value = "9", label = "9:e" }]
 
-# DRAFT reg_meta_build/curation/registers/sos/lova.toml (pin-free).
 # Source of every literal: reg_meta_build/src/reg_meta_build/sources/sos.py at
 # 43599863^ (== fb10b1d5), deleted by 43599863. Verified against
 # pipeline-curation-v18 scope scopes/2ff9167af2c7cc617bed.json.gz.

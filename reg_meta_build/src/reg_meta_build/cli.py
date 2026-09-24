@@ -45,7 +45,7 @@ from reg_meta.errors import (
 # window-coverage gate.
 from reg_meta.inventory import load_inventory as load_delivery_inventory
 
-from ._curation import repo_worklist_path
+from ._curation import repo_curation_dir, repo_worklist_path
 from .classifications import (
     dump_classification_residue,
     render_residue_toml,
@@ -54,9 +54,7 @@ from .concept_group_candidates import (
     infer_concept_group_candidates,
     render_candidates_toml as render_concept_candidates_toml,
 )
-from .concept_groups import (
-    load_concept_group_accepts,
-)
+from .concept_groups import load_concept_groups
 from .db import (
     _paths_overlap,
     _reject_input_repository_destination,
@@ -683,7 +681,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "silently dropped.\n\n"
             "The proposed `axis` (vintage / ordinal / numeric) and each member's\n"
             "facet `label` are EVIDENCE — the maintainer overrides them in the\n"
-            "`[[accept]]` entry.\n\n"
+            "register file's literal `[[group]]` entry.\n\n"
             "Examples:\n"
             "  # Regenerate the committed catalog (the canonical invocation):\n"
             "  reg-meta-build --db <built-db-dir> concept-group-candidates \\\n"
@@ -1922,15 +1920,10 @@ def _cmd_concept_group_candidates(
     # (variable.slug, concept_group_variable), so a stale DB should fail fast with
     # the standard actionable schema-mismatch error, not crash deep in a query.
     conn = open_db(db)
-    # Accept-aware regeneration: an `[[accept]]`-ed auto family is materialized as a
-    # `curated` group at build time, which a naive rescan would drop. Feed the
-    # currently-accepted scopes so those families re-emit (idempotent catalog).
-    # The shared resolver returns None outside a checkout → no accepts → empty
-    # scopes (the empty path is byte-identical to the unaware scan).
-    accepts = load_concept_group_accepts(
-        repo_worklist_path("concept_groups.accepted.toml")
-    )
-    accepted_scopes = frozenset((a.provider, a.register, a.key) for a in accepts)
+    # Literal register groups are the record of accepted families. Their scopes
+    # tell the candidate scan to preserve matching materialized members.
+    groups = load_concept_groups(repo_curation_dir())
+    accepted_scopes = frozenset((g.provider, g.register, g.key) for g in groups)
     try:
         result = infer_concept_group_candidates(
             conn,

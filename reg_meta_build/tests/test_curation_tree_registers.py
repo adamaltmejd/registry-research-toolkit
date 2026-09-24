@@ -70,7 +70,8 @@ _TABLES = (
     ),
     (
         "identity.partition",
-        '[[identity.partition]]\nvariable = "1.2"\ncolumns = { C = "1.2.c" }\n',
+        '[[identity.partition]]\nvariable = "1.2"\ncolumns = { C = "1.2.c" }\n'
+        'columns_ref = "source"\n',
         ('variable = "1.2"', 'variable = "2.2"'),
     ),
     (
@@ -82,34 +83,36 @@ _TABLES = (
     (
         "identity.route",
         '[[identity.route]]\ndeldatamangd = "TOKEN"\nvariants = ["Variant"]\n',
-        None,
+        ("__provider__", "scb"),
     ),
     (
         "identity.split",
         '[[identity.split]]\nvariable = "NAME"\nby = "data_type"\n'
         'parts = [{ data_type = "text", owner = "1.NAME.text" }]\n',
-        None,
+        ('owner = "1.NAME.text"', 'owner = "2.NAME.text"'),
     ),
     (
         "identity.rename",
         '[[identity.rename]]\ndeldatamangd = "TOKEN"\nvariable = "OLD"\n'
         'name = "Name"\ncolumn = "NEW"\n',
-        None,
+        ("__provider__", "scb"),
     ),
     (
         "acknowledge",
-        '[[acknowledge]]\ncode = "code"\nsubject = "subject"\n'
+        '[[acknowledge]]\ncode = "code"\nsubject = "scb/test/subject"\n'
         'refs = ["source"]\nreason = "reason"\nevidence = "evidence"\n',
-        None,
+        ('subject = "scb/test/subject"', 'subject = "scb/other/subject"'),
     ),
 )
 
 
-def _write_register(root: Path, body: str, *, slug: str = "test") -> Path:
-    path = root / "registers" / "scb" / f"{slug}.toml"
+def _write_register(
+    root: Path, body: str, *, slug: str = "test", provider: str = "scb"
+) -> Path:
+    path = root / "registers" / provider / f"{slug}.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        f'[register]\nprovider = "scb"\nslug = "{slug}"\nnative_id = "1"\n\n' + body,
+        f'[register]\nprovider = "{provider}"\nslug = "{slug}"\nnative_id = "1"\n\n' + body,
         encoding="utf-8",
     )
     return path
@@ -120,7 +123,8 @@ def test_each_register_table_loads(
     tmp_path: Path, table: str, body: str, wrong_register: tuple[str, str] | None
 ) -> None:
     root = tmp_path / "curation"
-    _write_register(root, body)
+    provider = "sos" if table in {"identity.route", "identity.rename"} else "scb"
+    _write_register(root, body, provider=provider)
     (entry,) = load_register_files(root)
     assert entry.register_info.slug == "test"
     assert table
@@ -131,11 +135,12 @@ def test_each_register_table_rejects_unknown_keys(
     tmp_path: Path, table: str, body: str, wrong_register: tuple[str, str] | None
 ) -> None:
     root = tmp_path / "curation"
-    _write_register(root, body + 'unknown_key = "typo"\n')
+    provider = "sos" if table in {"identity.route", "identity.rename"} else "scb"
+    _write_register(root, body + 'unknown_key = "typo"\n', provider=provider)
     with pytest.raises(RegMetaError) as exc:
         load_register_files(root)
     assert exc.value.exit_code == EXIT_CONFIG
-    assert "registers/scb/test.toml" in exc.value.message
+    assert f"registers/{provider}/test.toml" in exc.value.message
     assert "entry 1" in exc.value.message
 
 
@@ -150,14 +155,28 @@ def test_register_scoped_entries_reject_wrong_register(
     wrong_register: tuple[str, str],
 ) -> None:
     root = tmp_path / "curation"
-    _write_register(root, body.replace(*wrong_register))
+    if wrong_register[0] == "__provider__":
+        provider = "scb"
+    else:
+        provider = "sos" if table in {"identity.route", "identity.rename"} else "scb"
+        body = body.replace(*wrong_register)
+        if table == "identity.partition":
+            body = body.replace('"1.2.c"', '"2.2.c"')
+        if table == "identity.column_owner":
+            body = body.replace('owner = "1.2.c"', 'owner = "2.2.c"')
+    _write_register(root, body, provider=provider)
     with pytest.raises(RegMetaError) as exc:
         load_register_files(root)
     assert exc.value.exit_code == EXIT_CONFIG
     assert table in exc.value.message
-    assert (
-        "does not match" in exc.value.message or "does not belong" in exc.value.message
-    )
+    assert "entry 1" in exc.value.message
+    if table in {"identity.route", "identity.rename"}:
+        assert "SOS registers" in exc.value.message
+    else:
+        assert (
+            "does not match" in exc.value.message
+            or "does not belong" in exc.value.message
+        )
 
 
 def test_register_path_mismatch_fails(tmp_path: Path) -> None:
@@ -209,7 +228,9 @@ def test_duplicate_table_entry_fails_with_file_and_index(tmp_path: Path) -> None
     root = tmp_path / "curation"
     body = (
         '[[identity.partition]]\nvariable = "1.2"\ncolumns = { C = "1.2.c" }\n'
+        'columns_ref = "source"\n'
         '[[identity.partition]]\nvariable = "1.2"\ncolumns = { C = "1.2.c" }\n'
+        'columns_ref = "source"\n'
     )
     _write_register(root, body)
     with pytest.raises(RegMetaError) as exc:
@@ -217,3 +238,41 @@ def test_duplicate_table_entry_fails_with_file_and_index(tmp_path: Path) -> None
     assert "registers/scb/test.toml" in exc.value.message
     assert "identity.partition" in exc.value.message
     assert "entry 2" in exc.value.message
+
+
+@pytest.mark.parametrize(
+    ("body", "expected"),
+    (
+        (
+            '[[identity.partition]]\nvariable = "1.2"\ncolumns = {}\n'
+            'columns_ref = "source"\n',
+            "at least one owned literal",
+        ),
+        (
+            '[[identity.partition]]\nvariable = "1.2"\n'
+            'columns = { " C" = "1.2.c" }\ncolumns_ref = "source"\n',
+            "must be non-empty and trimmed",
+        ),
+        (
+            '[[identity.partition]]\nvariable = "1.2"\n'
+            'columns = { C = "1.3.c" }\ncolumns_ref = "source"\n',
+            "canonical split key in family",
+        ),
+        (
+            '[[identity.partition]]\nvariable = "1.2"\n'
+            'columns = { C = "1.2.c" }\n',
+            "columns_ref",
+        ),
+    ),
+)
+def test_identity_partition_requires_literal_map_and_reference(
+    tmp_path: Path, body: str, expected: str
+) -> None:
+    root = tmp_path / "curation"
+    _write_register(root, body)
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert "registers/scb/test.toml" in exc.value.message
+    assert "identity.partition" in exc.value.message
+    assert "entry 1" in exc.value.message
+    assert expected in exc.value.message

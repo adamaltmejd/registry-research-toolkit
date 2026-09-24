@@ -55,6 +55,8 @@ variable = "medborgarskapsland"
 description = "Medborgarskapsland, enskilda länder"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
+# Batch 2 (#496): these guardian and other-person identifier pairs name ordinal
+# roles for one person concept; their source variables remain distinct.
 [[group]]
 register = "scb/rtb"
 key = "personnrvard"
@@ -62,6 +64,7 @@ label = "Personnummer vårdnadshavare"
 axis = "ordinal"
 members = [{ variable = "personnrvard1", value = "1", label = "1" }, { variable = "personnrvard2", value = "2", label = "2" }]
 
+# This paired identifier family uses the same ordinal role axis.
 [[group]]
 register = "scb/rtb"
 key = "personnrap"
@@ -69,16 +72,11 @@ label = "Personnummer annan person"
 axis = "ordinal"
 members = [{ variable = "personnrap1", value = "1", label = "1" }, { variable = "personnrap2", value = "2", label = "2" }]
 
-# DRAFT reg_meta_build/curation/registers/scb/rtb.toml (pin-free).
 # Source: archive/.../2026-09-16-goal-run/convert_relation_owned_partitions.py:34.
 # v18: accepted-column-partitions:scb-registerinformation:2.57 = 616 identity
 # effects (PersonNr 487, PersonNrSamh 93, PersonNrAnkn 10, PersonNrMor 10,
 # PNR 8, PersonNrsamh 8); Personnr (9 rows, all variant 2.66) stays unassigned
 # (scopes/026034a273c136a8b30d.json.gz).
-# NOT expressible today: SlugEntry.columns requires a non-empty owner string per
-# literal (fqid_slugs.py _validate_split_columns), and convert_column_partitions
-# requires every delivered spelling to be listed. `unassigned_columns` is a new
-# field (the converter already accepts owner None).
 
 [[identity.partition]]
 variable = "2.57"

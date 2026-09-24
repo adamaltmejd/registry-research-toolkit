@@ -323,6 +323,23 @@ upstream = "omitted-column-in-version"
 evidence = "SWECOV holds VISSA_AVDRAG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
+# ══ SWECOV steward holdings (Y-116, was variable_grafts.toml) ═══════════════════
+# Columns a SWECOV delivery holds on an existing (register, variant) that SCB's
+# machine metadata never documents. GENERATED from maintainer-local review
+# artifacts under input_data/swecov/derived/ — `build_catalog.py grafts` for the
+# original #405 set, plus the #856 survey-wave residue in steward_coverage.json
+# (FOU/CIS/IT) — so regenerate rather than hand-edit.
+#
+# Scope follows what the fact is about: these are global SCB survey columns, not
+# steward-local flavor rows. Columns already carrying a delivery alias in
+# Register-file `[[enrichment.alias]]` declarations are excluded upstream, so a delivered column resolves to
+# ONE catalog variable. `holdings_period` throughout (Y-213): each entry dates the
+# holdings list at dataset grain as one pooled range, since naming every edition
+# would rot the next time SCB ships one. A holdings list names no type, so these
+# carry no `data_type`; the survey delivery lists document most residual wave items
+# by code only, so `name`/`definition` repeat the orderable code until richer public
+# labels exist. `noted` is the date variable_grafts.toml recorded the omission.
+
 [[errata.column]]
 variant = "individuppgifter-agi"
 column = "DIST_HU_SAKNAS"
@@ -452,6 +469,21 @@ holdings_period = "1990-2024"
 source = "steward-holdings"
 evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
+
+# Y-113..Y-120 version-gap investigation: SWECOV holdings on scb/agi, scb/gdb,
+# scb/ureg and scb/hreg. Each entry's `evidence` records the holdings fact
+# established from reg_webapp/stewards/swecov/inventory.toml and SCB's
+# Registerinformation.csv (2026-03-09 export). Coalescer-defect misses (HREG
+# sokande KursOrt/ProgOrt/YProg) are excluded; see report.md.
+
+# ── scb/agi — SCB documents AGI as two annual stream versions per year
+# ("<year>, löne- och förmånsutbetalningar" / "<year>, sociala ersättningar")
+# and stops at 2020; SWECOV holds the monthly Arb_/Soc_ tables through 2023-12.
+# Three annual löne-stream versions cover every held month edition (the
+# coalescer reads "2021, …" as the whole of 2021). All 40 columns are present in
+# the clone source "2020, löne- och förmånsutb" (regver 17967), which is the
+# nearest documented edition for every one of them. The register-file grammar
+# is `[[errata.version]]` plus `[[errata.delivered]]` below.
 
 [[errata.version]]
 variant = "individuppgifter-agi"
@@ -584,6 +616,17 @@ register = "scb/agi"
 variable = "underlag-skattereduktion-rot-forman"
 description = "Underlag för skattereduktion för rotarbete"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+# ── Delivery-column aliases (#365 PR1c) ───────────────────────────────────────
+# Record SWECOV's delivery column name as an additional variable_alias for an
+# EXISTING variable (its delivered header DIFFERS from the SCB metadata header).
+# GENERATED from build_catalog.py `globals` alias_candidates (normalized name ==
+# existing column/slug; human-confirmed), grounded against a fresh reg_meta.db:
+# an alias whose delivery_column already equals one of the variable's own
+# variable_state columns is dropped (redundant no-op, not an alternate name).
+# The apply pass attaches each to every register_variant where the variable has
+# a state; INSERT OR IGNORE so an already-known column is a no-op.
+# 45 aliases across 5 registers.
 
 [[enrichment.alias]]
 register = "scb/agi"

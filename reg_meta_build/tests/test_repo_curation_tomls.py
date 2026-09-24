@@ -25,7 +25,6 @@ from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
     load_classification_groups,
     load_code_label_pairs,
-    load_concept_group_accepts,
     load_concept_groups,
     load_worklist_concept_groups,
 )
@@ -126,15 +125,37 @@ def test_repo_concept_groups_parses() -> None:
     # Build-time resolution (register/group/variable exist) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.
     assert all(len(g.members) >= 2 for g in groups)
-    accepted = load_concept_group_accepts(
-        _ROOT / "worklists" / "concept_groups.accepted.toml"
-    )
-    accepted_groups = {(g.provider, g.register, g.key): g for g in groups}
-    assert len(accepted) == 20
+    accepted_keys = {
+        ("sos", "dors", "dodsorsak"),
+        ("sos", "dors", "substans"),
+        ("sos", "dors", "dodsorsak-position"),
+        ("sos", "par", "atgardsdatum"),
+        ("sos", "par", "yttre-orsakskod"),
+        ("sos", "par", "anestesikod"),
+        ("sos", "mfr", "barnets-diagnoskod-bk"),
+        ("sos", "mfr", "diagnoskod-barnet"),
+        ("sos", "mfr", "atgardskod-barnet"),
+        ("sos", "mfr", "atgardskod-forlosta"),
+        ("sos", "mfr", "diagnoskod-forlosta"),
+        ("sos", "mfr", "diagnoskod-graviditet"),
+        ("sos", "hsl", "yrkesbeteckning"),
+        ("sos", "lmed", "specialistutbildningskod"),
+        ("scb", "rtb", "personnrvard"),
+        ("scb", "rtb", "personnrap"),
+        ("scb", "breg", "personnrvard"),
+        ("scb", "breg", "personnrap"),
+        ("scb", "flergenreg", "personnrf"),
+        ("scb", "energianvandning-fiske", "signal"),
+    }
+    accepted_groups = {
+        (g.provider, g.register, g.key): g
+        for g in groups
+        if (g.provider, g.register, g.key) in accepted_keys
+    }
+    assert set(accepted_groups) == accepted_keys
     assert (
         sum(
-            len(accepted_groups[(a.provider, a.register, a.key)].members)
-            for a in accepted
+            len(group.members) for group in accepted_groups.values()
         )
         == 273
     )
@@ -261,15 +282,6 @@ def test_repo_code_label_pairs_parses() -> None:
         for p in pairs
     ]
     assert len(pair_tuples) == len(set(pair_tuples))
-
-
-def test_repo_concept_group_accepts_parses() -> None:
-    # Accepts stay only as generator worklist input; the build uses materialized groups.
-    accepts = load_concept_group_accepts(
-        _ROOT / "worklists" / "concept_groups.accepted.toml"
-    )
-    assert accepts
-    assert all(a.provider and a.register and a.key for a in accepts)
 
 
 def test_repo_classification_groups_parses() -> None:
@@ -459,7 +471,7 @@ def test_repo_relations_parses() -> None:
 
 
 def test_repo_scb_errata_parses() -> None:
-    # `scb_errata.toml` (Y-114/Y-116) is the upstream-error log; every entry
+    # Register-file `[[errata.*]]` tables (Y-114/Y-116) are the upstream-error log; every entry
     # resolves its `register`/`variant` slugs against the curated fqid_slugs/scb.toml
     # the build reads, so a stale slug is a load-time failure here rather than a
     # maintainer-build surprise. The remaining half (the version is documented, the
@@ -598,8 +610,7 @@ def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> No
     # row twice and die on the id collision mid-insert. Catch it at load, where
     # the maintainer gets a remediation instead of a primary-key error.
     body = (
-        "[[delivered]]\n"
-        'register = "scb/lisa"\n'
+        "[[errata.delivered]]\n"
         'variant = "individer-15plus"\n'
         'column = "DispInkKE"\n'
         'versions = ["2010", "2011", "2010"]\n'

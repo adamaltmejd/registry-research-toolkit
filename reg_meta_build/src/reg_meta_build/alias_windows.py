@@ -10,6 +10,8 @@ import functools
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_meta.errors import RegMetaError
+
 from ._curation import (
     curation_error,
     fold_column,
@@ -24,9 +26,6 @@ if TYPE_CHECKING:
 
 _FILE_NAME = "curation/registers/<provider>/<slug>.toml"
 _CODE = "alias_windows_invalid"
-_FIELDS = frozenset(
-    {"variable", "variant", "column", "source_editions", "evidence", "noted"}
-)
 
 _require_str = functools.partial(
     require_str,
@@ -100,28 +99,37 @@ def load_alias_windows(path: Path | None) -> tuple[CuratedAliasWindow, ...]:
     for register_file in load_register_files(path) if path is not None else ():
         provider = register_file.register_info.provider
         register = register_file.register_info.slug
-        for row in register_file.representation.alias_window:
+        for index, row in enumerate(register_file.representation.alias_window, start=1):
+            context = (
+                f"{register_file.source_file} "
+                f"[[representation.alias_window]] entry {index}"
+            )
             entry = row.model_dump(mode="python")
             fqid = row.variable
             if provider != "scb":
                 raise curation_error(
                     "alias_windows_unknown_provider",
-                    f"alias_windows {fqid} names provider {provider!r}; exact "
+                    f"{context}: {fqid} names provider {provider!r}; exact "
                     "source-edition alias windows currently support 'scb' only.",
                     "Move the declaration to that provider's own source-edition "
                     "curation, or fix the variable FQID.",
                 )
-            variable_provider, variable_register, variable = require_fqid(
-                entry,
-                "variable",
-                code=_CODE,
-                prefix="alias_windows",
-                entry_table="[[representation.alias_window]]",
-                file_name=_FILE_NAME,
-            )
-            variant = _require_str(entry, "variant", f"[[alias_window]] {fqid}")
-            column = _require_str(entry, "column", f"[[alias_window]] {fqid}/{variant}")
-            context = f"[[alias_window]] {fqid}/{variant}/{column}"
+            try:
+                variable_provider, variable_register, variable = require_fqid(
+                    entry,
+                    "variable",
+                    code=_CODE,
+                    prefix="alias_windows",
+                    entry_table=f"{context}",
+                    file_name=register_file.source_file,
+                )
+            except RegMetaError as exc:
+                raise curation_error(
+                    exc.code, f"{context}: {exc.message}", exc.remediation
+                ) from exc
+            variant = _require_str(entry, "variant", context)
+            column = _require_str(entry, "column", context)
+            context = f"{context} ({fqid}/{variant}/{column})"
             key = (
                 variable_provider,
                 variable_register,
@@ -132,7 +140,7 @@ def load_alias_windows(path: Path | None) -> tuple[CuratedAliasWindow, ...]:
             if key in seen:
                 raise curation_error(
                     _CODE,
-                    f"alias_windows has duplicate declarations for {context}.",
+                    f"{context}: duplicate alias-window declaration.",
                     "Give one alias_window per (variable, variant, column), listing all "
                     "of its exact source editions together.",
                 )

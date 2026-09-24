@@ -3,6 +3,40 @@ provider = "scb"
 slug = "lisa"
 native_id = "34"
 
+# ══ LISA doc coverage (Y-116, was input_data/scb_canonical/lisa_canonical.toml) ══
+# Columns documented in SCB's own doc library (lisa-bakgrundsfakta-1990-2017) but
+# absent from the machine-export catalog. Each entry mirrors one column's doc at
+# reg_meta_build/docs/lisa/<Column>.md — name, definition, documented coverage and
+# (for categorical columns) the EXISTING catalog classification it links. A
+# doc-coverage diagnostic, not a value-set source: no codes are minted here.
+#
+# Curation notes:
+#  * variant follows the DOCUMENTED YEARS, not the column's closest sibling: LISA's
+#    individual frame is `individer-16plus` through 2009 and `individer-15plus` from
+#    2010 (curation/relations.toml), so `versions` on the wrong one names editions
+#    the variant does not have. FastBet and MedbLandNamn span the change and are
+#    therefore one entry per variant — still one variable, keyed (register, column).
+#  * data_type uses the canonical vocabulary text|decimal|integer|date
+#    (codes/identifiers -> text; *_Belopp_*/lön/ersättning -> decimal;
+#    *_Bdag_*/*_Ndag_* day-counts -> integer), cross-checked against the sibling's
+#    catalog data_type where one exists.
+#  * classification linked ONLY where an existing catalog short_name matches the
+#    column's code system (verified present in the built catalog): Ssyk3/4_J16 ->
+#    SSYK96; AstSNI2002(B/G)J -> SNI2002; SektorKodJ -> SEKTORKOD (Y-170: same
+#    RAMS/LISA ownership-sector family as scb/lisa/sektorkod). InstKod7J's
+#    10-position institutional sector code has no catalog classification (omitted);
+#    YSEG_J16/MedbLandNamn have no matching catalog classification (omitted).
+#  * is_identifier = true ONLY where the column's catalog sibling carries it (so an
+#    identifier column is NOT published as ordinary text, weakening the PII guard):
+#    CfarNrSregJ (sibling CFARNrSreg), PeOrgNrSregJ (sibling PeOrgNrSreg), ArbstIdJ
+#    (linkage id; sibling ArbstId). None of the 32 has a sensitive sibling, so
+#    is_sensitive is left at its default throughout.
+#  * "justerad metod" (J) columns are SCB's single backcast year 2003, produced to
+#    bridge the 2004 RAMS method change.
+#  * `noted` is the date lisa_canonical.toml recorded the omission; git carries the
+#    per-entry history from there.
+
+
 [[errata.delivered]]
 variant = "individer-15plus"
 column = "DispInkKE"
@@ -18,6 +52,10 @@ versions = ["2010", "2011", "2012"]
 upstream = "omitted-column-in-version"
 evidence = "The 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See reg_meta_build/docs/lisa/DispInkKE.md for the family's delivery span."
 noted = "2026-09-11"
+
+# ── Steward-holdings gate content, 2026-09-12 (post-Y-123 build; worklist derived/errata_worklist.toml) ──
+
+# LISA documentation holes (2026-09-12): continuing columns SCB's export drops for one or two years, and one column its own P1105 delivery list dates earlier than the export.
 
 [[errata.delivered]]
 variant = "arbetsstallen"
@@ -1016,12 +1054,27 @@ variable = "tillpensand"
 description = "Andel/grad för tilläggspension"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
+# LISA's AGI monthly-income family: one concept ("Löne- eller
+# företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
+# största / tredje största förvärvskälla). #319 merged each rank's 12 month
+# columns into ONE variable (slug agi1lonfink / agi2lonfink / agi3lonfink — the
+# family stem), so the per-rank month-token groups no longer derive. The members
+# are now plain `variable =` attachments carrying only the rank facet; the
+# per-month dimension lives in `variable_alias_window` (read-time via resolve_at),
+# not a concept group. The family merge runs BEFORE concept groups, so these
+# merged-variable slugs resolve.
+
 [[group]]
 register = "scb/lisa"
 key = "agilonfink"
 label = "Löne- eller företagarinkomst per månad (AGI)"
 axis = "rank"
 members = [{ variable = "agi1lonfink", value = "1", label = "största förvärvskällan" }, { variable = "agi2lonfink", value = "2", label = "näst största förvärvskällan" }, { variable = "agi3lonfink", value = "3", label = "tredje största förvärvskällan" }]
+
+# LISA ranked income-source families (#958). The AGI1/2/3 rows below are the same
+# concept observed at the largest / second-largest / third-largest income source;
+# the rank lives in source labels and operational definitions, so curate it as a
+# real facet instead of leaving three loose browse rows.
 
 [[group]]
 register = "scb/lisa"
@@ -1044,6 +1097,11 @@ label = "Institutionell sektor (AGI)"
 axes = [{ axis = "rank", label = "Förvärvskälla" }]
 members = [{ variable = "agi1sektorgrp", value = "1", label = "största förvärvskällan" }, { variable = "agi2sektorgrp", value = "2", label = "näst största förvärvskällan" }, { variable = "agi3sektorgrp", value = "3", label = "tredje största förvärvskällan" }]
 
+# AGI/KU FÅMANS rows share one concept and three rank levels. KU→AGI is a
+# temporal source succession (see curation/relations.toml #1122); source coords
+# remain on members so the folded history labels the KU/AGI handoff and each
+# member has a unique coordinate.
+
 [[group]]
 register = "scb/lisa"
 key = "faman"
@@ -1051,12 +1109,26 @@ label = "Förekomst av delägarskap i fåmansaktiebolag"
 axes = [{ axis = "kalla", label = "Källa" }, { axis = "rank", label = "Förvärvskälla" }]
 members = [{ variable = "agi1faman", delivery_column = "AGI1FAman", coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "1", label = "största förvärvskällan" }] }, { variable = "agi2faman", delivery_column = "AGI2FAman", coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "2", label = "näst största förvärvskällan" }] }, { variable = "agi3faman", delivery_column = "AGI3FAman", coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "3", label = "tredje största förvärvskällan" }] }, { variable = "ku1faman", delivery_column = "KU1FAman", coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "1", label = "största förvärvskällan" }] }, { variable = "ku2faman", delivery_column = "KU2FAman", coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "2", label = "näst största förvärvskällan" }] }, { variable = "ku3faman", delivery_column = "KU3FAman", coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "3", label = "tredje största förvärvskällan" }] }]
 
+# LISA `Antal barn` is a count by the child's age bucket, not an ordinal slot
+# battery. The checked-in auto worklist still shows the old `barn0`...`barn21`
+# slugs; the curated group pins the current variable slugs, plus the legacy
+# interval/open-ended buckets from older deliveries, and names the axis semantically.
+
 [[group]]
 register = "scb/lisa"
 key = "antal-barn"
 label = "Antal hemmavarande barn per ålder"
 axes = [{ axis = "alder", label = "Barnets ålder" }]
 members = [{ variable = "antal-barn-0-ar", value = "00", label = "0 år" }, { variable = "antal-barn-1-ar", value = "01", label = "1 år" }, { variable = "antal-barn-2-ar", value = "02", label = "2 år" }, { variable = "antal-barn-3-ar", value = "03", label = "3 år" }, { variable = "antal-barn-4-ar", value = "04", label = "4 år" }, { variable = "antal-barn-5-ar", value = "05", label = "5 år" }, { variable = "antal-barn-6-ar", value = "06", label = "6 år" }, { variable = "antal-barn-7-ar", value = "07", label = "7 år" }, { variable = "antal-barn-8-ar", value = "08", label = "8 år" }, { variable = "antal-barn-9-ar", value = "09", label = "9 år" }, { variable = "antal-barn-10-ar", value = "10", label = "10 år" }, { variable = "antal-barn-11-ar", value = "11", label = "11 år" }, { variable = "antal-barn-12-ar", value = "12", label = "12 år" }, { variable = "antal-barn-13-ar", value = "13", label = "13 år" }, { variable = "antal-barn-14-ar", value = "14", label = "14 år" }, { variable = "antal-barn-15-ar", value = "15", label = "15 år" }, { variable = "antal-barn-16-ar", value = "16", label = "16 år" }, { variable = "antal-barn-17-ar", value = "17", label = "17 år" }, { variable = "antal-barn-18-ar", value = "18", label = "18 år" }, { variable = "antal-barn-19-ar", value = "19", label = "19 år" }, { variable = "antal-barn-20-ar", value = "20", label = "20 år" }, { variable = "antal-barn-21-ar", value = "21", label = "21 år" }, { variable = "barn0-3", value = "00-03", label = "0-3 år" }, { variable = "barn4-6", value = "04-06", label = "4-6 år" }, { variable = "barn7-10", value = "07-10", label = "7-10 år" }, { variable = "barn11-15", value = "11-15", label = "11-15 år" }, { variable = "barn-16-17-ar", value = "16-17", label = "16-17 år" }, { variable = "barn-18-19-ar", value = "18-19", label = "18-19 år" }, { variable = "barn18plus", value = "18-plus", label = "18 år och äldre" }, { variable = "barn20plus", value = "20-plus", label = "20 år och äldre" }]
+
+# LISA näringsgren (#488/#931): one register-local concept group. Population is a
+# facet (individ / arbetsställe / företag), not a group split; the ranked
+# förvärvskälla variables share the same group under the `Källa` axis. SNI edition
+# changes are temporal succession edges in curation/relations.toml, not a picker
+# facet. `Metod` separates the adjusted 2003 workplace variables from their standard
+# SNI2002 counterparts without overloading population/source/level. Multi-axis
+# groups are representation-grained, so multi-column variables list one member per
+# delivered column while keeping SNI out of the facet coordinates.
 
 [[group]]
 register = "scb/lisa"
@@ -1086,20 +1158,17 @@ register = "scb/lisa"
 family_stem = "agi3lonfink"
 label = "Löne- eller företagarinkomst per månad (tredje största förvärvskällan)"
 
-# DRAFT reg_meta_build/curation/registers/scb/lisa.toml (pin-free).
-# Expressible TODAY with no schema change: put `columns`/`columns_ref` on
-# [variable."34.63.syssstat"] in fqid_slugs/scb.toml (SlugEntry.columns, Y-167).
 # Source: archive/.../2026-09-16-goal-run/convert_relation_owned_partitions.py:33.
 # v18: accepted-column-partitions:scb-registerinformation:34.63 = 35 identity
 # effects (SyssStat 11, SyssStat11 8, SyssStat19 3, SyssStatG 4, SyssStatJ 9),
 # 0 unassigned (scopes/35dae9b7eb6f77d0a1f7.json.gz).
+# SyssStat11 occurs only in variant 34.153 (individer-15plus); the script asserted
+# it and v18 has all 8 SyssStat11 rows there. `columns` is not variant-scoped, so
+# a SyssStat11 delivery in another variant would be absorbed silently.
 
 [[identity.partition]]
 variable = "34.63"
 columns = { SyssStat = "34.63.syssstat", SyssStat11 = "34.63.syssstat", SyssStat19 = "34.63.syssstat19", SyssStatG = "34.63.syssstatg", SyssStatJ = "34.63.syssstatj" }
-# SyssStat11 occurs only in variant 34.153 (individer-15plus); the script asserted
-# it and v18 has all 8 SyssStat11 rows there. `columns` is not variant-scoped, so
-# a SyssStat11 delivery in another variant would be absorbed silently.
 columns_ref = "curation/relations.toml replaced_by edge scb/lisa/sysselsattningsstatus-november -> scb/lisa/syssstat19 (from_column SyssStat11, to_column SyssStat19, variant individer-15plus, 2019): SyssStat11 belongs to the SyssStat split; other splits by exact literal discriminator."
 
 # v18 accepted-column-partitions:scb-registerinformation:34.19054: 343 identity effects, 0 unassigned.

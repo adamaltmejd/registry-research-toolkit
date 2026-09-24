@@ -254,15 +254,15 @@ never forces a re-prepare. Curation compiles in-process on every build; there is
 stored selection. The build summary records a hash of the curation tree. An optional
 decision dump serves inspection.
 
-Transitional: the input bundle no longer carries curation, but the build does not read
-the tree yet. Offline conversion (`convert_*.py`) turned curation pinned in an earlier
-bundle into a stored `PipelineSelection` with per-register scope files, which
-`build-db --selection` reads, and the catalog embeds that selection's digest
-(`curation_selection_sha256`). `prepared_catalog` still recognizes the legacy
-`curation/` and `fqid_slugs/` bundle paths so the accepted prepared v13 manifest opens.
-The selection contains data, never executable conversion hooks; scope files load one
-register at a time. The runtime does not import one-time conversion scripts or use the
-legacy database as evidence.
+Transitional: the tracked curation tree is the source for strict register-file readers
+and the next in-process compiler, but `build-db` still consumes a stored
+`PipelineSelection` compiled from curation pinned in an earlier input bundle.
+`convert_*.py` remains the one-off bridge; `build-db --selection` reads its per-register
+scope files and embeds the selection digest (`curation_selection_sha256`).
+`prepared_catalog` still recognizes legacy `curation/` and `fqid_slugs/` bundle paths so
+the accepted prepared v13 manifest opens. The selection contains data, never executable
+conversion hooks; scope files load one register at a time. The runtime does not import
+one-time conversion scripts or use the legacy database as evidence.
 
 The target layout:
 
@@ -273,14 +273,75 @@ The target layout:
   sentinels, the label list behind the binding rule, and overrides.
 - Global files keep the cross-register curation: relations and `same_as`, tags, lineage,
   successions spanning registers, and slug freeze state.
-- Files generated from a built DB (`concept_groups.auto.toml`,
-  `delivery_enrichment.generated.toml`) are worklist output, not curation.
+- Files generated from a built DB (`worklists/concept_groups.auto.toml`,
+  `worklists/delivery_enrichment.generated.toml`) are worklist output, not curation. The
+  concept-group generator reads the built DB and treats a matching literal register
+  `[[group]]` as an already accepted family; accepted families have one record, in their
+  register file.
 - SWECOV steward holdings belong to the steward layer, not to global SCB errata.
 
-Transitional: classifications and the global files are in their target places, read by
-`curation_tree.py`; the remaining curation files are one per category
-(`curation/*.toml`, `fqid_slugs/<provider>.toml`), and the SWECOV holdings sit in
-`curation/scb_errata.toml`.
+The register tree is loaded once as strict Pydantic models. A register's provider, slug,
+and native id agree with both its path and the tracked slug file. Unknown tables,
+unknown fields, duplicate declarations, and entries scoped to a different register fail
+with the source file and entry index.
+
+SCB errata records only claims about rows omitted from SCB's own export. The register
+file implies the register; each entry names a variant and literal SCB column/version
+coordinates. `[[errata.version]]` carries `variant`, `name`, `evidence`, and `noted`; it
+adds an undocumented register edition and requires a year-bearing SCB version name.
+Version era order follows the maximum year the edition claims, so adding a historical
+edition cannot replace a newer documented edition's latest spelling or type.
+`[[errata.delivered]]` carries `variant`, literal `column`, existing `versions`,
+`evidence`, `noted`, and optional `upstream`; it adds omitted rows for a column
+documented elsewhere on the variant and names edition tokens verbatim.
+`[[errata.column]]` carries the variable identity (`name` and `definition`), a source
+and evidence, plus either named versions, bounded `holdings_period`, or the legacy
+undated `all_versions = true`; it mints a variable for a column SCB documents nowhere on
+that variant. Its identity is `(register, column)`, so two variants of one register use
+the same variable identity. `source` records the evidence class; it does not change the
+materialized rows.
+
+`[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
+document this column anywhere on this variant? One column/variant omission is exactly
+one kind. Delivered entries clone a real row and therefore cannot describe a column with
+no row; column entries mint a row and therefore cannot describe a column that already
+has one. If SCB ships an omitted row, the build fails with `scb_errata_now_present`.
+Retire only the fixed edition from `versions`, or delete the entry when that was its
+last edition; do not edit it to keep a failing build green. Git history preserves the
+upstream-error record.
+
+`is_identifier` and `is_sensitive` are strict booleans. Set `is_identifier` only when a
+sibling row for the same variable already carries that flag; this is a PII guard, not a
+way to infer identifiers from a label. HSL was checked for monthly delivery families and
+has none; it intentionally has no period-family declaration.
+
+Register `[[group]]` entries are literal, opt-in presentation folds; member selection
+uses no name patterns. They include materialized families that formerly referenced
+auto-generated candidates; the candidate generator treats a family whose matching group
+is already in the register tree as accepted, so accepted families have one record.
+Candidate output is worklist data and is never build curation. A group lists exact
+variables or delivery-column members. One-axis groups may use a flat value/label
+coordinate; multiple axes name their labels and each member's coordinates; axis-less
+groups are explicit umbrellas. They alter presentation, not identity or bindings.
+`[[code_label_pair]]` is also register-local: both FQIDs belong to the same register,
+and the pair only folds matching code and label concepts.
+
+Delivery descriptions are enrichment, not source facts: they fill an empty description
+only when an exact delivery-column match grounds the text. The worklist generator drops
+generic helper codes, version-axis variables handled by the vintage fold, overloaded
+grade/participation columns, and conflicting descriptions across vintages. It normalizes
+whitespace and removes trailing footnote markers. Alias enrichment is separately limited
+to an exact variable/column pair.
+
+A period family folds period-named columns into one annual variable with a state for
+each delivery year and a matching representation window for each period column. It runs
+before slug assignment and names parallel period columns, not non-overlapping era
+renames; those are represented by succession edges. The tracked families are the four
+LISA monthly families plus SCB `bas/jobbink`, `ekonomiskt-bistand/ibel`,
+`ekonomiskt-bistand/sbel`, and `rams/lonfink`, the other bounded twelve-month families
+present in the corpus. HSL was checked and has no monthly family. Alias-window
+declarations name exact source editions for a representation the identity already owns;
+they add no variable, state, alias identity, or coverage in a neighboring edition.
 
 ### Entries and pins
 

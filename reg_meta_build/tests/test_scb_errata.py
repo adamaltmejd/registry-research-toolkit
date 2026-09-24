@@ -21,7 +21,6 @@ if TYPE_CHECKING:
 
 
 _ENTRY = {
-    "register": '"scb/lisa"',
     "variant": '"individer-15plus"',
     "column": '"Ssyk4_J16"',
     "name": '"Yrke enligt SSYK 96"',
@@ -34,18 +33,17 @@ _ENTRY = {
 
 
 def _toml(**overrides: str | None) -> str:
-    """The canonical `[[column]]` entry with `overrides` applied; a None value
+    """The canonical `[[errata.column]]` entry with `overrides` applied; a None value
     DROPS the key (so a required-key case is one call)."""
     fields = {**_ENTRY, **overrides}
-    return "[[column]]\n" + "".join(
+    return "[[errata.column]]\n" + "".join(
         f"{k} = {v}\n" for k, v in fields.items() if v is not None
     )
 
 
 def _version(name: str) -> str:
     return (
-        "[[version]]\n"
-        'register = "scb/lisa"\n'
+        "[[errata.version]]\n"
         'variant = "individer-15plus"\n'
         f'name = "{name}"\n'
         'evidence = "the steward holds this edition"\n'
@@ -99,7 +97,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         body = (
-            '[[delivered]]\nregister = "scb/lisa"\n'
+            '[[errata.delivered]]\n'
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             'noted = "2026-09-12"\n'
@@ -113,7 +111,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         body = (
-            '[[delivered]]\nregister = "scb/lisa"\n'
+            '[[errata.delivered]]\n'
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "SCB left the name blank."\n'
             'noted = "2026-09-12"\nupstream = "blank-column-name-in-version"\n'
@@ -130,7 +128,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path, reserved: str
     ) -> None:
         body = (
-            '[[delivered]]\nregister = "scb/lisa"\n'
+            '[[errata.delivered]]\n'
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             f'noted = "2026-09-12"\nupstream = "{reserved}"\n'
@@ -142,7 +140,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         body = (
-            '[[delivered]]\nregister = "scb/lisa"\n'
+            '[[errata.delivered]]\n'
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             'noted = "2026-09-12"\nupstream = """specific\ncorrection"""\n'
@@ -154,7 +152,7 @@ class TestDeliveredEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         body = (
-            '[[delivered]]\nregister = "scb/lisa"\n'
+            '[[errata.delivered]]\n'
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = """First paragraph.\n\n'
             'Second paragraph."""\nnoted = "2026-09-12"\n'
@@ -345,6 +343,8 @@ class TestColumnEntry:
         # error, so a typo would ship an untagged state.
         err = _refused(tmp_path, slug_dir, _toml(classification='"SSYK69"'))
         assert "SSYK69" in err.message
+        assert "registers/scb/lisa.toml" in err.message
+        assert "errata.column" in err.message and "entry 1" in err.message
 
     def test_duplicate_column_on_one_variant_fails(
         self, tmp_path: Path, slug_dir: Path
@@ -356,12 +356,12 @@ class TestColumnEntry:
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
         delivered = (
-            '[[delivered]]\nregister = "scb/lisa"\nvariant = "individer-15plus"\n'
+            '[[errata.delivered]]\nvariant = "individer-15plus"\n'
             'column = "Ssyk4_J16"\nversions = ["2010"]\n'
             'evidence = "holdings"\nnoted = "2026-09-12"\n'
         )
         err = _refused(tmp_path, slug_dir, delivered + "\n" + _toml())
-        assert "[[delivered]]" in err.remediation
+        assert "[[errata.delivered]]" in err.remediation
 
     def test_same_column_on_two_variants_is_one_variable(
         self, tmp_path: Path, slug_dir: Path

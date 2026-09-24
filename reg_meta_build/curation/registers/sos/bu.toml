@@ -4,7 +4,6 @@ slug = "bu"
 native_id = "7550156225339591583"
 name = "Registret över insatser till barn och unga"
 
-# DRAFT reg_meta_build/curation/registers/sos/bu.toml (pin-free).
 # BU has no Deldatamängder sheet: every row goes to the synthesized default
 # variant (slug `_default`, already tracked in fqid_slugs/sos.toml). That rule is
 # mechanical (v18: 54 route cases, 150 effects) and needs no entry here.

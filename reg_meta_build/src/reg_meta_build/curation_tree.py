@@ -23,6 +23,7 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    PrivateAttr,
     ValidationError,
     ValidationInfo,
     field_validator,
@@ -38,7 +39,11 @@ from ._curation import (
     repo_curation_dir,
 )
 from ._resolved_common import _require_trimmed
-from .fqid_slugs import load_lineage_config
+from .fqid_slugs import (
+    _is_split_base_pair,
+    iter_curated_provider_entries,
+    load_lineage_config,
+)
 from .normalization import normalize_text
 from .relations import load_relations
 from .resolved_metadata import _variable
@@ -246,6 +251,8 @@ class RegisterGroupEntry(_CurationModel):
     axes: list[GroupAxis] | None = None
     members: list[GroupMember]
 
+    _names = field_validator("key", "label")(_require_trimmed)
+
 
 class CodeLabelPairEntry(_CurationModel):
     code: str
@@ -272,10 +279,64 @@ class IdentityPartitionEntry(_CurationModel):
     variable: str
     columns: dict[str, str]
     unassigned_columns: list[str] = Field(default_factory=list)
-    columns_ref: str | None = None
+    columns_ref: str
+
+    @field_validator("variable")
+    @classmethod
+    def _family_variable(cls, value: str) -> str:
+        from .fqid_slugs import _parse_variable_id
+
+        try:
+            _parse_variable_id(value)
+        except RegMetaError as exc:
+            raise ValueError(exc.message) from exc
+        if len(value.split(".")) != 2:
+            raise ValueError("must be a canonical two-part native variable key")
+        return value
+
+    @field_validator("columns")
+    @classmethod
+    def _columns(cls, value: dict[str, str]) -> dict[str, str]:
+        if not value:
+            raise ValueError("must contain at least one owned literal")
+        for literal, owner in value.items():
+            if not literal or literal != literal.strip():
+                raise ValueError(f"literal {literal!r} must be non-empty and trimmed")
+            if not owner or owner != owner.strip():
+                raise ValueError(f"owner {owner!r} must be non-empty and trimmed")
+        return value
+
+    _columns_ref = field_validator("columns_ref")(_require_trimmed)
+
+    @field_validator("unassigned_columns")
+    @classmethod
+    def _unassigned_columns(cls, value: list[str]) -> list[str]:
+        for literal in value:
+            if not literal or literal != literal.strip():
+                raise ValueError(
+                    f"unassigned literal {literal!r} must be non-empty and trimmed"
+                )
+        return value
 
     @model_validator(mode="after")
     def _disjoint_columns(self) -> IdentityPartitionEntry:
+        from .fqid_slugs import _parse_variable_id
+
+        family = self.variable
+        for literal, owner in self.columns.items():
+            try:
+                _parse_variable_id(owner)
+            except RegMetaError as exc:
+                raise ValueError(exc.message) from exc
+            parts = owner.split(".")
+            if len(parts) != 3 or ".".join(parts[:2]) != family:
+                raise ValueError(
+                    f"owner {owner!r} must be a canonical split key in family {family!r}"
+                )
+            try:
+                validate_slug(parts[2], "variable")
+            except ValueError as exc:
+                raise ValueError(f"owner {owner!r} has a non-canonical split key") from exc
         overlap = sorted(set(self.columns) & set(self.unassigned_columns))
         if overlap:
             raise ValueError(f"columns and unassigned_columns overlap: {overlap}")
@@ -291,15 +352,67 @@ class IdentityColumnOwnerEntry(_CurationModel):
     owner: str
     ref: str
 
+    _trimmed = field_validator("variable", "variant", "column", "owner", "ref")(
+        _require_trimmed
+    )
+
+    @model_validator(mode="after")
+    def _same_family(self) -> IdentityColumnOwnerEntry:
+        from .fqid_slugs import _parse_variable_id
+
+        try:
+            _parse_variable_id(self.variable)
+            _parse_variable_id(self.owner)
+        except RegMetaError as exc:
+            raise ValueError(exc.message) from exc
+        owner_parts = self.owner.split(".")
+        if (
+            len(self.variable.split(".")) != 2
+            or len(owner_parts) != 3
+            or ".".join(owner_parts[:2]) != self.variable
+        ):
+            raise ValueError("owner must be a canonical split key in variable family")
+        try:
+            validate_slug(owner_parts[2], "variable")
+        except ValueError as exc:
+            raise ValueError("owner must be a canonical split key in variable family") from exc
+        return self
+
 
 class IdentityRouteEntry(_CurationModel):
     deldatamangd: str
     variants: list[str]
 
+    _trimmed = field_validator("deldatamangd")(_require_trimmed)
+
+    @field_validator("variants")
+    @classmethod
+    def _variants(cls, value: list[str]) -> list[str]:
+        return [_require_trimmed(item) for item in value]
+
 
 class IdentitySplitPart(_CurationModel):
     data_type: str
     owner: str
+
+    _trimmed = field_validator("data_type")(_require_trimmed)
+
+    @field_validator("owner")
+    @classmethod
+    def _owner(cls, value: str) -> str:
+        from .fqid_slugs import _parse_variable_id
+
+        try:
+            _parse_variable_id(value)
+        except RegMetaError as exc:
+            raise ValueError(exc.message) from exc
+        if len(value.split(".")) != 3:
+            raise ValueError("must be a canonical three-part split key")
+        try:
+            validate_slug(value.split(".")[2], "variable")
+        except ValueError as exc:
+            raise ValueError("must be a canonical three-part split key") from exc
+        return value
 
 
 class IdentitySplitEntry(_CurationModel):
@@ -307,12 +420,18 @@ class IdentitySplitEntry(_CurationModel):
     by: Literal["data_type"]
     parts: list[IdentitySplitPart]
 
+    _variable = field_validator("variable")(_require_trimmed)
+
 
 class IdentityRenameEntry(_CurationModel):
     deldatamangd: str
     variable: str
     name: str
     column: str
+
+    _trimmed = field_validator("deldatamangd", "variable", "name", "column")(
+        _require_trimmed
+    )
 
 
 class IdentityCuration(_CurationModel):
@@ -335,6 +454,15 @@ class AcknowledgeEntry(_CurationModel):
     reason: str
     evidence: str
 
+    _trimmed = field_validator("code", "subject", "reason", "evidence")(
+        _require_trimmed
+    )
+
+    @field_validator("refs")
+    @classmethod
+    def _refs(cls, value: list[str]) -> list[str]:
+        return [_require_trimmed(item) for item in value]
+
 
 class RegisterCuration(_CurationModel):
     """One register file with a closed, typed table set."""
@@ -349,6 +477,12 @@ class RegisterCuration(_CurationModel):
     )
     identity: IdentityCuration = Field(default_factory=IdentityCuration)
     acknowledge: list[AcknowledgeEntry] = Field(default_factory=list)
+
+    _source_file: str = PrivateAttr(default="")
+
+    @property
+    def source_file(self) -> str:
+        return self._source_file
 
 
 class ClassificationGroupMemberEntry(_CurationModel):
@@ -575,6 +709,35 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                         f"{row.variable!r} does not belong to native_id {native_id!r}.",
                         "Move the entry to the register file owning that native family.",
                     )
+            if isinstance(row, IdentitySplitEntry):
+                native_id = identity.native_id
+                if native_id is not None:
+                    for part in row.parts:
+                        if not part.owner.startswith(native_id + "."):
+                            raise curation_error(
+                                _CODE,
+                                f"{file} [[{table}]] entry {index}: split owner "
+                                f"{part.owner!r} does not belong to native_id "
+                                f"{native_id!r}.",
+                                "Move the split to the register file owning its native family.",
+                            )
+            if isinstance(row, (IdentityRouteEntry, IdentityRenameEntry)):
+                if identity.provider != "sos":
+                    raise curation_error(
+                        _CODE,
+                        f"{file} [[{table}]] entry {index}: identity routing and "
+                        f"renaming applies to SOS registers, not {identity.provider!r}.",
+                        "Move the entry to the SOS register file it describes.",
+                    )
+            if isinstance(row, AcknowledgeEntry):
+                subject = row.subject.split("/")
+                if len(subject) < 3 or "/".join(subject[:2]) != expected:
+                    raise curation_error(
+                        _CODE,
+                        f"{file} [[{table}]] entry {index}: acknowledge subject "
+                        f"{row.subject!r} does not belong to {expected!r}.",
+                        "Scope the acknowledgement subject to this register FQID.",
+                    )
 
 
 def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
@@ -608,6 +771,7 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
             f"{entry.register_info.slug}) does not match its path ({provider}/{slug}).",
             "Match [register].provider and [register].slug to the file path.",
         )
+    entry._source_file = file
     _validate_register_scope(entry, file)
     for table, rows in _register_arrays(entry):
         seen: set[str] = set()
@@ -667,28 +831,21 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
     slug_dir = root.parent / "fqid_slugs"
     if slug_dir.is_dir():
         source_ids: dict[tuple[str, str], list[str]] = {}
-        for path in sorted(slug_dir.glob("*.toml")):
-            if path.name.endswith(".auto.toml"):
+        slug_entries_by_provider: dict[str, list] = {}
+        for slug_entry in iter_curated_provider_entries(slug_dir):
+            provider = slug_entry.provider
+            if provider is None:
                 continue
-            provider = path.stem
-            try:
-                provider_data = tomllib.loads(path.read_text(encoding="utf-8"))
-            except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
-                raise curation_error(
-                    _CODE,
-                    f"Could not resolve register native ids from {path}: {exc}.",
-                    "Fix the provider slug TOML before validating register files.",
-                ) from exc
-            for native_id, record in provider_data.get("register", {}).items():
-                if isinstance(record, dict) and isinstance(record.get("slug"), str):
-                    source_ids.setdefault((provider, record["slug"]), []).append(
-                        native_id
-                    )
+            slug_entries_by_provider.setdefault(provider, []).append(slug_entry)
+            if slug_entry.kind == "register" and slug_entry.slug is not None:
+                source_ids.setdefault((provider, slug_entry.slug), []).append(
+                    slug_entry.source_id
+                )
         for entry in entries:
             identity = entry.register_info
             if identity.provider not in {"scb", "sos"}:
                 continue
-            file = f"curation/registers/{identity.provider}/{identity.slug}.toml"
+            file = entry.source_file
             matching = source_ids.get((identity.provider, identity.slug), [])
             if len(matching) != 1 or matching[0] != identity.native_id:
                 raise curation_error(
@@ -697,6 +854,47 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
                     f"match fqid_slugs/{identity.provider}.toml for "
                     f"{identity.provider}/{identity.slug} ({matching}).",
                     "Copy the register's source id from its [register] slug entry.",
+                )
+        register_by_native_id = {
+            (item.register_info.provider, item.register_info.native_id): item
+            for item in entries
+            if item.register_info.native_id is not None
+        }
+        for provider, slug_entries in sorted(slug_entries_by_provider.items()):
+            slug_holders: dict[tuple[str, str], list] = {}
+            for slug_entry in slug_entries:
+                if slug_entry.kind != "variable" or slug_entry.slug is None:
+                    continue
+                native_id = slug_entry.source_id.split(".", 1)[0]
+                slug_holders.setdefault((native_id, slug_entry.slug), []).append(
+                    slug_entry
+                )
+            for (native_id, slug), holders in slug_holders.items():
+                if len(holders) < 2:
+                    continue
+                pair = len(holders) == 2 and _is_split_base_pair(*holders)
+                register = register_by_native_id.get((provider, native_id))
+                family = next(
+                    (item for item in holders if len(item.source_id.split(".")) == 2),
+                    None,
+                )
+                if (
+                    pair
+                    and family is not None
+                    and register is not None
+                    and any(
+                        partition.variable == family.source_id
+                        for partition in register.identity.partition
+                    )
+                ):
+                    continue
+                raise curation_error(
+                    "slug_toml_invalid",
+                    f"fqid_slugs/{provider}.toml: slug {slug!r} reused by "
+                    f"split/base entries in register {native_id!r} without a "
+                    f"matching [[identity.partition]] in "
+                    f"{register.source_file if register is not None else f'curation/registers/{provider}/{slug}.toml'}.",
+                    "Keep split/base slug reuse only when the register file declares ownership for that native family.",
                 )
     return tuple(entries)
 

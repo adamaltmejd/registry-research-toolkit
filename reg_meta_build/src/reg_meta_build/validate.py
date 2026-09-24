@@ -1375,7 +1375,7 @@ def _check_errata_column_band(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
     """Y-116: every `source_label='scb-errata'` variable (a `curation/registers/scb/<slug>.toml`
-    `[[column]]`) holds a `variable_id` in the reserved canonical-SCB sub-band
+    `[[errata.column]]`) holds a `variable_id` in the reserved canonical-SCB sub-band
     `[2^61, 2^62)`.
 
     The canonical analog of `_check_minted_id_bands`' minted-band guard: the
@@ -2609,11 +2609,11 @@ def _check_inventory_window_coverage(
     EXISTS, so the contradiction survives every other gate and surfaces as the
     RESEARCHER's ``period_outside_state_validity`` on data the steward has. The
     repair for an SCB-export variable is upstream-grained — SCB omitted the row
-    from its own export — so the report includes a ``[[delivered]]`` naming the
-    omitted ``Registerversionnamn``. A variable minted from ``[[column]]`` has no
+    from its own export — so the report includes a ``[[errata.delivered]]`` naming the
+    omitted ``Registerversionnamn``. A variable minted from ``[[errata.column]]`` has no
     real row to clone, so its fail line directs the curator back to that entry and
     mapping instead. Independently missing editions still contribute a preceding
-    ``[[version]]``. A miss on ANY OTHER provider stays out of the stanza block —
+    ``[[errata.version]]``. A miss on ANY OTHER provider stays out of the stanza block —
     that file corrects SCB's export only and its loader refuses another provider —
     and its fail line names the curated surface its window is widened on instead.
     See `inventory_coverage` for the reading rules.
@@ -2681,8 +2681,8 @@ def _check_inventory_window_coverage(
     stanzas = errata_stanzas(shown)
     if stanzas:
         result.info(
-            "curate the scb omissions into reg_meta_build/curation/registers/scb/<slug>.toml — the "
-            "stanzas below are complete and paste as they stand, but `evidence` and "
+            "curate each SCB omission in its named reg_meta_build/curation/registers/scb/<slug>.toml "
+            "file — the grouped `[[errata.*]]` candidates below include their target file, but `evidence` and "
             "`noted` are TODO placeholders only the maintainer can fill (the loader "
             "refuses a placeholder `noted`, so an uncurated paste cannot ship)."
         )

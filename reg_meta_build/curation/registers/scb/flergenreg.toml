@@ -3,6 +3,8 @@ provider = "scb"
 slug = "flergenreg"
 native_id = "349"
 
+# Batch 2 (#496): the numbered person identifiers are repeated roles for one
+# person concept, presented by ordinal position.
 [[group]]
 register = "scb/flergenreg"
 key = "personnrf"

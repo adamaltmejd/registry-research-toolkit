@@ -47,30 +47,6 @@ _require_evidence = functools.partial(
     file_name=_FILE_NAME,
 )
 
-_VERSION_FIELDS = frozenset({"register", "variant", "name", "evidence", "noted"})
-_DELIVERED_FIELDS = frozenset(
-    {"register", "variant", "column", "versions", "evidence", "noted", "upstream"}
-)
-_COLUMN_FIELDS = frozenset(
-    {
-        "register",
-        "variant",
-        "column",
-        "name",
-        "definition",
-        "data_type",
-        "classification",
-        "is_identifier",
-        "is_sensitive",
-        "versions",
-        "all_versions",
-        "holdings_period",
-        "source",
-        "evidence",
-        "noted",
-    }
-)
-
 # Where a `[[column]]`'s evidence comes from. Documentary only — the build mints
 # the same rows either way — but it is the first thing whoever retires an entry
 # needs, so it is a closed vocabulary rather than free text.
@@ -236,29 +212,6 @@ def _scb_slug_ids(slug_dir: Path | None) -> tuple[dict[str, int], dict[str, int]
     return registers, variants
 
 
-def _unknown_keys(entry: dict, allowed: frozenset[str], table: str) -> None:
-    unknown = sorted(set(entry) - allowed)
-    if unknown:
-        raise curation_error(
-            _CODE,
-            f"scb_errata [[{table}]] entry has unknown key(s): {unknown}.",
-            f"A [[{table}]] entry takes only {sorted(allowed)} — "
-            f"fix the typo in reg_meta_build/{_FILE_NAME}.",
-        )
-
-
-# The three entry kinds this file carries. Each is loaded by its own call, and
-# names the other two as legal siblings — derived here so a fourth kind cannot
-# be added to one list and forgotten in another, which would report a legitimate
-# table as an unknown top-level key.
-_KINDS: dict[str, str] = {
-    "version": "register / variant / name / evidence / noted",
-    "delivered": "register / variant / column / versions / evidence / noted",
-    "column": "register / variant / column / name / definition / "
-    "versions or all_versions or holdings_period / source / evidence / noted",
-}
-
-
 def _entries(path: Path | None, kind: str, registers=None) -> list[dict]:
     """One entry kind flattened from the sorted register files."""
     if path is None:
@@ -268,9 +221,11 @@ def _entries(path: Path | None, kind: str, registers=None) -> list[dict]:
         register_fqid = (
             f"{register.register_info.provider}/{register.register_info.slug}"
         )
-        for entry in getattr(register.errata, kind):
+        for index, entry in enumerate(getattr(register.errata, kind), start=1):
             raw = entry.model_dump(mode="python", exclude_none=True)
-            raw["register"] = register_fqid
+            raw["_curation_register"] = register_fqid
+            raw["_curation_file"] = register.source_file
+            raw["_curation_index"] = index
             entries.append(raw)
     return entries
 
@@ -336,19 +291,23 @@ def _resolve_variant(
     variants: dict[str, int],
 ) -> tuple[int, int, str]:
     """`(register_id, register_variant_id, "<register_fqid>/<variant>")` for an
-    entry's `register` / `variant` pair."""
-    register_fqid = _require_str(entry, "register", f"[[{table}]]")
+    entry's register-file coordinate and `variant`."""
+    register_fqid = entry["_curation_register"]
+    file = entry["_curation_file"]
+    index = entry["_curation_index"]
     parts = register_fqid.split("/")
     if len(parts) != 2 or not all(parts):
         raise curation_error(
             _CODE,
-            f"scb_errata register {register_fqid!r} must be a 2-segment "
+            f"{file} [[errata.{table}]] entry {index}: register "
+            f"{register_fqid!r} must be a 2-segment "
             "`provider/register` FQID.",
             'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
         )
     provider, register = parts
-    variant = _require_str(entry, "variant", f"[[{table}]]")
-    context = f"{register_fqid}/{variant}"
+    context = f"{file} [[errata.{table}]] entry {index} ({register_fqid})"
+    variant = _require_str(entry, "variant", context)
+    context = f"{context}/{variant}"
     if provider != _PROVIDER:
         raise curation_error(
             "scb_errata_unknown_variant",
@@ -383,9 +342,10 @@ def load_scb_errata(
     `[[column]]` names a `classification` — an undeclared short_name is a typo that
     would otherwise be dropped silently by the candidate feed.
 
-    Strict load, all EXIT_CONFIG with a remediation: only `[[version]]` /
-    `[[delivered]]` / `[[column]]` top-level; no unknown key inside an entry;
-    `register` a 2-segment SCB FQID and `register`/`variant` curated; `evidence`
+    Strict load, all EXIT_CONFIG with a remediation: only `[[errata.version]]` /
+    `[[errata.delivered]]` / `[[errata.column]]` register-file tables; no unknown
+    key inside an entry; the register is implied by its file and its `variant`
+    must be curated; `evidence`
     and `noted` (canonical `YYYY-MM-DD`) present; a `[[version]]` name carrying
     a parseable claimed year; a `[[column]]` carrying exactly one of `versions`
     (a non-empty list of non-empty strings naming each version at most once),
@@ -410,14 +370,14 @@ def load_scb_errata(
     versions: list[ErrataVersion] = []
     seen_versions: set[tuple[int, str]] = set()
     for entry in version_entries:
-        _unknown_keys(entry, _VERSION_FIELDS, "version")
+        context = f"{entry['_curation_file']} [[errata.version]] entry {entry['_curation_index']}"
         _, variant_id, context = _resolve_variant(entry, "version", registers, variants)
-        name = _require_str(entry, "name", f"[[version]] {context}")
-        _require_evidence(entry, f"[[version]] {context}/{name}")
+        name = _require_str(entry, "name", context)
+        _require_evidence(entry, f"{context}/{name}")
         if not _edition_years(name):
             raise curation_error(
                 "scb_errata_version_year_unknown",
-                f"scb_errata [[version]] {context}/{name} has no parseable "
+                f"{context}/{name} has no parseable "
                 "claimed year.",
                 "Use SCB's exact version name containing a four-digit year so "
                 "the coalescer can place the edition chronologically.",
@@ -425,7 +385,7 @@ def load_scb_errata(
         if (variant_id, name) in seen_versions:
             raise curation_error(
                 _CODE,
-                f"scb_errata duplicate [[version]] {context}/{name}.",
+                f"{context}: duplicate version {name!r}.",
                 "Each (register, variant, name) may appear once.",
             )
         seen_versions.add((variant_id, name))
@@ -434,12 +394,11 @@ def load_scb_errata(
     delivered: list[ErrataDelivered] = []
     seen_columns: set[tuple[int, str]] = set()
     for entry in delivered_entries:
-        _unknown_keys(entry, _DELIVERED_FIELDS, "delivered")
         register_id, variant_id, context = _resolve_variant(
             entry, "delivered", registers, variants
         )
-        column = _require_str(entry, "column", f"[[delivered]] {context}")
-        ctx = f"[[delivered]] {context}/{column}"
+        column = _require_str(entry, "column", context)
+        ctx = f"{context}/{column}"
         evidence = _require_evidence(entry, ctx)
         named = _named_versions(entry, ctx)
         upstream = (
@@ -451,7 +410,7 @@ def load_scb_errata(
         if key in seen_columns:
             raise curation_error(
                 _CODE,
-                f"scb_errata duplicate [[delivered]] {context}/{column}.",
+                f"{context}: duplicate delivered column {column!r}.",
                 "Each (register, variant, column) may appear once — list every "
                 "omitted version in that entry's `versions`.",
             )
@@ -472,16 +431,28 @@ def load_scb_errata(
     # will BE one (`ErrataColumn.key`), and a disagreement would silently ship
     # whichever entry the materializer wrote first.
     identities: dict[tuple[int, str], tuple] = {}
+    declared_classifications: set[str] | None = None
     for entry in column_entries:
-        _unknown_keys(entry, _COLUMN_FIELDS, "column")
         register_id, variant_id, context = _resolve_variant(
             entry, "column", registers, variants
         )
-        column = _require_str(entry, "column", f"[[column]] {context}")
-        ctx = f"[[column]] {context}/{column}"
+        column = _require_str(entry, "column", context)
+        ctx = f"{context}/{column}"
         source = _column_source(entry, ctx)
         evidence = _require_evidence(entry, ctx)
         placement = _column_placement(entry, ctx)
+        classification = _column_classification(entry, ctx)
+        if classification is not None:
+            if declared_classifications is None:
+                declared_classifications = declared_short_names()
+            if classification not in declared_classifications:
+                raise curation_error(
+                    _CODE,
+                    f"scb_errata {ctx} names undeclared classification "
+                    f"{classification!r}.",
+                    "Use an existing classification short_name (e.g. 'SSYK96') "
+                    "or declare it in reg_meta_build/curation/classifications/.",
+                )
         loaded = ErrataColumn(
             register_id=register_id,
             register_variant_id=variant_id,
@@ -489,7 +460,7 @@ def load_scb_errata(
             name=_require_str(entry, "name", ctx),
             definition=_require_str(entry, "definition", ctx),
             data_type=_column_data_type(entry, ctx),
-            classification=_column_classification(entry, ctx),
+            classification=classification,
             is_identifier=_require_bool(entry, "is_identifier", ctx),
             is_sensitive=_require_bool(entry, "is_sensitive", ctx),
             versions=placement[0],
@@ -501,10 +472,10 @@ def load_scb_errata(
         if key in seen_columns:
             raise curation_error(
                 _CODE,
-                f"scb_errata duplicate entry for {context}/{column}.",
+                f"{context}: duplicate column entry for {column!r}.",
                 "Each (register, variant, column) may appear once, in ONE of "
-                "[[delivered]] (SCB documents the column elsewhere on the "
-                "variant) or [[column]] (it documents it nowhere).",
+                "[[errata.delivered]] (SCB documents the column elsewhere on the "
+                "variant) or [[errata.column]] (it documents it nowhere).",
             )
         seen_columns.add(key)
         if identities.setdefault(loaded.key, loaded.identity) != loaded.identity:
@@ -519,8 +490,6 @@ def load_scb_errata(
                 "rename one of the columns.",
             )
         columns.append(loaded)
-
-    _check_declared_classifications(columns)
 
     return ScbErrata(tuple(versions), tuple(delivered), tuple(columns))
 
@@ -677,23 +646,6 @@ def _column_classification(entry: dict, ctx: str) -> str | None:
     if "classification" not in entry:
         return None
     return _require_str(entry, "classification", ctx)
-
-
-def _check_declared_classifications(columns: list[ErrataColumn]) -> None:
-    """Every `[[column]]` `classification` must name a DECLARED classification
-    short_name. The candidate feed drops an unknown one with no row and no error,
-    so a typo would silently ship an untagged state."""
-    named = {c.classification for c in columns if c.classification is not None}
-    if not named:
-        return
-    unknown = sorted(named - declared_short_names())
-    if unknown:
-        raise curation_error(
-            _CODE,
-            f"scb_errata [[column]] names undeclared classification(s) {unknown}.",
-            "Use an existing classification short_name (e.g. 'SSYK96') or declare "
-            "it in reg_meta_build/curation/classifications/.",
-        )
 
 
 # Columns cloned from a real source row onto the synthetic one. `cvid` /

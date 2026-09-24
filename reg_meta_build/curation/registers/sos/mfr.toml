@@ -3,12 +3,19 @@ provider = "sos"
 slug = "mfr"
 native_id = "6052270801387609014"
 
+# Batch 1 (#496): the BK diagnosis slots are repeated instances of one child
+# diagnosis concept, represented by an ordinal facet.
+
 [[group]]
 register = "sos/mfr"
 key = "barnets-diagnoskod-bk"
 label = "Barnets diagnoskod BK"
 axis = "ordinal"
 members = [{ variable = "barnets-diagnoskod-bk-1", value = "1", label = "1" }, { variable = "barnets-diagnoskod-bk-2", value = "2", label = "2" }, { variable = "barnets-diagnoskod-bk-3", value = "3", label = "3" }, { variable = "barnets-diagnoskod-bk-4", value = "4", label = "4" }, { variable = "barnets-diagnoskod-bk-5", value = "5", label = "5" }, { variable = "barnets-diagnoskod-bk-6", value = "6", label = "6" }, { variable = "barnets-diagnoskod-bk-7", value = "7", label = "7" }, { variable = "barnets-diagnoskod-bk-8", value = "8", label = "8" }]
+
+# Batch 2 (#496): MFR's numbered diagnosis-code slots (`bdiag1..20`) are a
+# separate child diagnosis family from batch 1's `bdiag-bk`; each slot is one
+# occurrence of the same concept.
 
 [[group]]
 register = "sos/mfr"
@@ -17,12 +24,26 @@ label = "Diagnoskod, barnet"
 axis = "ordinal"
 members = [{ variable = "diagnoskod-barnet-1", value = "01", label = "1" }, { variable = "diagnoskod-barnet-2", value = "02", label = "2" }, { variable = "diagnoskod-barnet-3", value = "03", label = "3" }, { variable = "diagnoskod-barnet-4", value = "04", label = "4" }, { variable = "diagnoskod-barnet-5", value = "05", label = "5" }, { variable = "diagnoskod-barnet-6", value = "06", label = "6" }, { variable = "diagnoskod-barnet-7", value = "07", label = "7" }, { variable = "diagnoskod-barnet-8", value = "08", label = "8" }, { variable = "diagnoskod-barnet-9", value = "09", label = "9" }, { variable = "diagnoskod-barnet-10", value = "10", label = "10" }, { variable = "diagnoskod-barnet-11", value = "11", label = "11" }, { variable = "diagnoskod-barnet-12", value = "12", label = "12" }, { variable = "diagnoskod-barnet-13", value = "13", label = "13" }, { variable = "diagnoskod-barnet-14", value = "14", label = "14" }, { variable = "diagnoskod-barnet-15", value = "15", label = "15" }, { variable = "diagnoskod-barnet-16", value = "16", label = "16" }, { variable = "diagnoskod-barnet-17", value = "17", label = "17" }, { variable = "diagnoskod-barnet-18", value = "18", label = "18" }, { variable = "diagnoskod-barnet-19", value = "19", label = "19" }, { variable = "diagnoskod-barnet-20", value = "20", label = "20" }]
 
+# Batch 3 (#496): the child's numbered procedure-code slots (`bflop1..12`) repeat
+# the same procedure concept by ordinal position, parallel to the accepted child
+# diagnosis families. Mother and pregnancy code families (`flop`/`mdiag`/`gdiag`)
+# remain separate pending generator candidates; its label-agreement metric
+# undercounts a slot number in the middle of a label such as "Åtgärdskod 12, den
+# förlösta". A number-invariant metric could surface them in a later batch.
+
 [[group]]
 register = "sos/mfr"
 key = "atgardskod-barnet"
 label = "Åtgärdskod, barnet"
 axis = "ordinal"
 members = [{ variable = "atgardskod-barnet-1", value = "01", label = "1" }, { variable = "atgardskod-barnet-2", value = "02", label = "2" }, { variable = "atgardskod-barnet-3", value = "03", label = "3" }, { variable = "atgardskod-barnet-4", value = "04", label = "4" }, { variable = "atgardskod-barnet-5", value = "05", label = "5" }, { variable = "atgardskod-barnet-6", value = "06", label = "6" }, { variable = "atgardskod-barnet-7", value = "07", label = "7" }, { variable = "atgardskod-barnet-8", value = "08", label = "8" }, { variable = "atgardskod-barnet-9", value = "09", label = "9" }, { variable = "atgardskod-barnet-10", value = "10", label = "10" }, { variable = "atgardskod-barnet-11", value = "11", label = "11" }, { variable = "atgardskod-barnet-12", value = "12", label = "12" }]
+
+# Batch 4 (#496): the MOTHER + PREGNANCY diagnosis/procedure-code families in mfr,
+# parallel to the accepted child families (bdiag/bdiag-bk/bflop). These surfaced
+# once the generator's agreement metric became number-invariant (#561) — their
+# slot number sits mid-label ("Diagnoskod N, den förlösta"), so the old metric
+# mis-scored them as batteries. (mfr `apgar` 1/5/10 min is a TIMEPOINT fold, a
+# different facet — left for a later, separate consideration.)
 
 [[group]]
 register = "sos/mfr"

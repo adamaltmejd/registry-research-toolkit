@@ -4,6 +4,10 @@ slug = "par"
 native_id = "5891427617861710725"
 name = "Patientregistret"
 
+# Batch 1 (#496): these numbered diagnosis and treatment slots are repeated
+# occurrences of one medical concept. The groups expose ordinal position while
+# keeping each source variable distinct.
+
 [[group]]
 register = "sos/par"
 key = "atgardsdatum"
@@ -25,7 +29,6 @@ label = "Anestesikod"
 axis = "ordinal"
 members = [{ variable = "anestesikod-1", value = "1", label = "1" }, { variable = "anestesikod-2", value = "2", label = "2" }]
 
-# DRAFT reg_meta_build/curation/registers/sos/par.toml (pin-free).
 # ATC ships twice in PAR_OV and PAR_SV: a text ATC code and an integer flag
 # "Tillhörande DIA- eller YO-kod är en ATC-kod". sos.py KNOWN_SPLIT_ALLOWLIST
 # (L1477-1479, #362).

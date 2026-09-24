@@ -3,6 +3,8 @@ provider = "scb"
 slug = "breg"
 native_id = "333"
 
+# Batch 2 (#496): these guardian and other-person identifier pairs name ordinal
+# roles for one person concept; their source variables remain distinct.
 [[group]]
 register = "scb/breg"
 key = "personnrvard"
@@ -10,6 +12,7 @@ label = "Personnummer vårdnadshavare"
 axis = "ordinal"
 members = [{ variable = "personnrvard1", value = "1", label = "1" }, { variable = "personnrvard2", value = "2", label = "2" }]
 
+# This paired identifier family uses the same ordinal role axis.
 [[group]]
 register = "scb/breg"
 key = "personnrap"

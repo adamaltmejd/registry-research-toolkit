@@ -3,6 +3,8 @@ provider = "scb"
 slug = "energianvandning-fiske"
 native_id = "196"
 
+# Batch 3 (#496): the four `signal` columns identify one fishing enterprise by
+# vessel number; the ordinal facet exposes each vessel's position.
 [[group]]
 register = "scb/energianvandning-fiske"
 key = "signal"

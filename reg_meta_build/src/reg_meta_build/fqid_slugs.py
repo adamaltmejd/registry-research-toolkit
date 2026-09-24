@@ -22,6 +22,7 @@ import tomllib
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from functools import lru_cache
 from itertools import combinations, groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
@@ -34,6 +35,7 @@ from reg_meta.fqid import (
 )
 
 from .id import is_canonical_scb
+from ._curation import repo_curation_dir
 
 if TYPE_CHECKING:
     import sqlite3
@@ -593,38 +595,21 @@ def _provider_from_path(path: Path) -> str:
     return path.stem
 
 
-def _register_partition_families(path: Path) -> set[tuple[str, str, str]]:
-    """Load partition coordinates once for duplicate-slug collision checks."""
-    curation_dir = path.parent.parent / "curation"
-    if not curation_dir.is_dir():
-        return set()
-    from .curation_tree import load_register_files
-
-    return {
-        (
-            register.register_info.provider,
-            register.register_info.native_id,
-            partition.variable,
-        )
-        for register in load_register_files(curation_dir)
-        for partition in register.identity.partition
-        if register.register_info.native_id is not None
-    }
-
-
-def _is_split_base_pair(
-    a: SlugEntry,
-    b: SlugEntry,
-    *,
-    partition_families: set[tuple[str, str, str]],
-) -> bool:
-    """Whether ``a``/``b`` are a split/base pair with a register-file partition."""
+def _is_split_base_pair(a: SlugEntry, b: SlugEntry) -> bool:
+    """Whether two slug entries are a split sibling and its native family base."""
     split, base = (a, b) if len(a.source_id.split(".")) == 3 else (b, a)
     family = split.source_id.rpartition(".")[0]
     if len(split.source_id.split(".")) != 3 or family != base.source_id:
         return False
-    register_id = family.split(".", 1)[0]
-    return (split.provider, register_id, family) in partition_families
+    return True
+
+
+@lru_cache(maxsize=8)
+def _register_files_for_curation_dir(path: str):
+    """Read the immutable register tree once per resolved curation directory."""
+    from .curation_tree import load_register_files
+
+    return load_register_files(Path(path))
 
 
 def load_provider_toml(path: Path) -> list[SlugEntry]:
@@ -659,7 +644,6 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
     #   `<provider>/<register>/<variant>...` already disambiguates them).
     # Source IDs are dotted: variant/variable `<reg>.<sub>`.
     seen_slugs: dict[tuple[str, ...], list[SlugEntry]] = {}
-    partition_families: set[tuple[str, str, str]] | None = None
     for kind in ("register", "register_variant", "variable"):
         if kind not in data:
             continue
@@ -687,8 +671,10 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                     slug_key = (kind, entry.slug)
                     scope_desc = f"within provider {provider!r}"
                 holders = seen_slugs.setdefault(slug_key, [])
-                # Y-219: the one allowed reuse is a register-file-partitioned
-                # split and its own base family entry. Such a family converts to
+                # Y-219: the only structurally allowed reuse is a split sibling
+                # and its own base family entry. The curation-tree reader checks
+                # that the register file declares its required ownership. Such a
+                # family converts to
                 # accepted-column-partitions, whose scope never carries a
                 # base-family naming declaration (the base provider key is dropped,
                 # or None when negative members stay), so only the split
@@ -697,11 +683,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                 # slug)` refuse it.
                 split_base_pair = False
                 if holders and len(holders) == 1:
-                    if partition_families is None:
-                        partition_families = _register_partition_families(path)
-                    split_base_pair = _is_split_base_pair(
-                        holders[0], entry, partition_families=partition_families
-                    )
+                    split_base_pair = _is_split_base_pair(holders[0], entry)
                 if holders and (len(holders) > 1 or not split_base_pair):
                     raise _err(
                         "slug_toml_invalid",
@@ -1157,6 +1139,7 @@ def declared_column_ownership(
     provider: str,
     source_id: str,
     curation_dir: Path | None = None,
+    register_files=None,
 ) -> DeclaredColumnOwnership:
     """Read one family partition from ``curation/registers`` and validate its keys.
 
@@ -1197,27 +1180,27 @@ def declared_column_ownership(
             f"found {sorted(register_slugs)}"
         )
     register_slug = next(iter(register_slugs))
-    root = curation_dir or (Path(__file__).resolve().parent.parent.parent / "curation")
-    from .curation_tree import load_register_files
-
+    root = curation_dir or repo_curation_dir()
+    if register_files is None:
+        if root is None:
+            raise ValueError("register curation is unavailable outside the repo checkout")
+        loaded = _register_files_for_curation_dir(str(root.resolve()))
+    else:
+        loaded = tuple(register_files)
     register_entry = next(
         (
             entry
-            for entry in load_register_files(root)
+            for entry in loaded
             if entry.register_info.provider == provider
             and entry.register_info.slug == register_slug
         ),
         None,
     )
-    paths = sorted((root / "registers" / provider).rglob(f"{register_slug}.toml"))
-    if len(paths) != 1:
-        raise ValueError(
-            f"expected one register curation file for {provider}/{register_slug}, "
-            f"found {len(paths)}"
-        )
-    file = f"curation/{paths[0].relative_to(root).as_posix()}"
     if register_entry is None:
-        raise ValueError(f"no register curation file {file} for {provider}:{source_id}")
+        raise ValueError(
+            f"no register curation file for {provider}/{register_slug} ({source_id})"
+        )
+    file = register_entry.source_file
     partitions = [
         (index, partition)
         for index, partition in enumerate(register_entry.identity.partition, start=1)
@@ -1259,13 +1242,12 @@ def declared_column_ownership(
             + (f"Slug splits without owners: {missing}." if missing else ""),
             "Cover every tracked split sibling and no other split.",
         )
-    reference = partition.columns_ref or f"{file}#/identity/partition/{index}"
     return DeclaredColumnOwnership(
         provider=provider,
         source_id=source_id,
         split_ids=tuple(sorted(owners)),
         declared_columns=tuple(sorted(merged.items())),
-        declaration_reference=reference,
+        declaration_reference=partition.columns_ref,
     )
 
 

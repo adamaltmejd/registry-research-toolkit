@@ -54,18 +54,23 @@ def load_period_family_merges(path: Path | None) -> tuple[PeriodFamily, ...]:
     for register_file in load_register_files(path) if path is not None else ():
         provider = register_file.register_info.provider
         register = register_file.register_info.slug
-        for entry in register_file.representation.period_family:
+        for index, entry in enumerate(
+            register_file.representation.period_family, start=1
+        ):
+            context = (
+                f"{register_file.source_file} "
+                f"[[representation.period_family]] entry {index}"
+            )
+            raw = entry.model_dump()
             family_stem = _require_str(
-                entry.model_dump(), "family_stem", "[[representation.period_family]]"
+                raw, "family_stem", context
             )
-            label = _require_str(
-                entry.model_dump(), "label", "[[representation.period_family]]"
-            )
+            label = _require_str(raw, "label", context)
             scope_key = (provider, register, family_stem)
             if scope_key in seen:
                 raise curation_error(
                     "period_family_merges_invalid",
-                    f"period_family_merges duplicate family_stem {family_stem!r} under "
+                    f"{context}: duplicate family_stem {family_stem!r} under "
                     f"{provider}/{register}.",
                     "Each (register, family_stem) may appear once.",
                 )

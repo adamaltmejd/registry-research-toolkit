@@ -702,7 +702,7 @@ def test_an_unknown_school_year_anchor_is_refused(
         )
 
 
-# --- cmd_errata: the scb_errata.toml candidate worklist -----------------------
+# --- cmd_errata: the register-file errata candidate worklist -----------------
 
 _VARIABLE_OF = {
     "Covid-19 antikroppar": "covid-19-antikroppar",
@@ -789,11 +789,11 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     register version (2020), a 2020 holding of `T_kolumn` is column-missing — the
     omitted row names that version verbatim — and a 2021 holding is version-missing
     too, since the catalog knows no version covering it. So the worklist carries one
-    `[[version]]` (2021) and ONE `[[delivered]]` naming both editions (two entries
+    `[[errata.version]]` (2021) and ONE `[[errata.delivered]]` naming both editions (two entries
     for one column would be the duplicate `scb_errata` refuses).
 
     The register moves to the `scb` provider on the copy, because stanzas are what
-    `scb_errata.toml` accepts and it accepts nothing else: a miss on the fixture's
+    SCB register files accept these tables and no other provider: a miss on the fixture's
     own flavor provider is the curated-window case below, not this one.
     """
     db = tmp_path / "narrowed.db"
@@ -827,17 +827,15 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
         "evidence": "TODO: the evidence that SCB delivered this row",
         "noted": "TODO: YYYY-MM-DD",
     }
-    assert worklist["version"] == [
+    assert worklist["errata"]["version"] == [
         {
-            "register": "scb/bestallda-prover",
             "variant": "_default",
             "name": "2021",
             **todo,
         }
     ]
-    assert worklist["delivered"] == [
+    assert worklist["errata"]["delivered"] == [
         {
-            "register": "scb/bestallda-prover",
             "variant": "_default",
             "column": "T_kolumn",
             "versions": ["2020", "2021"],
@@ -898,13 +896,13 @@ def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
     )
 
     worklist = tomllib.loads(text)
-    assert [entry["name"] for entry in worklist["version"]] == ["2021"]
+    assert [entry["name"] for entry in worklist["errata"]["version"]] == ["2021"]
     assert "delivered" not in worklist
     assert "column-missing: the omitted column rows themselves, 0" in text
-    assert "errata-created columns: 2 group(s); no [[delivered]] candidate" in text
+    assert "errata-created columns: 2 group(s); no [[errata.delivered]] candidate" in text
     assert "scb/bestallda-prover/_default T_kolumn: held 2020..2021" in text
     assert "scb/bestallda-prover/_default Errata_utan_variant: held 2020" in text
-    assert "target-variant [[column]] entry and inventory" in text
+    assert "target-variant [[errata.column]] entry and inventory" in text
     assert "does not reveal `all_versions` versus explicit `versions`" in text
     assert "only when its matching" in text
     assert "uses `all_versions = true`" in text
@@ -916,8 +914,8 @@ def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
     stdout = capsys.readouterr().out
     assert "held column × edition pairs: 3 assessed, 3 with no catalog window" in stdout
     assert "1 multi-period table(s) not assessed" in stdout
-    assert "version-missing: 1 [[version]] candidate(s)" in stdout
-    assert "column-missing: 0 [[delivered]] candidate(s)" in stdout
+    assert "version-missing: 1 [[errata.version]] candidate(s)" in stdout
+    assert "column-missing: 0 [[errata.delivered]] candidate(s)" in stdout
     assert "errata-column: 2 miss(es) to inspect" in stdout
 
 
@@ -947,9 +945,9 @@ def test_school_year_version_candidate_round_trips_through_scb_claims(
     )
     worklist = tomllib.loads(text)
 
-    assert [entry["name"] for entry in worklist["version"]] == ["2020/2021"]
-    assert worklist["delivered"][0]["versions"] == ["2020/2021"]
-    claims = register_edition_claims(901, worklist["version"][0]["name"])
+    assert [entry["name"] for entry in worklist["errata"]["version"]] == ["2020/2021"]
+    assert worklist["errata"]["delivered"][0]["versions"] == ["2020/2021"]
+    claims = register_edition_claims(901, worklist["errata"]["version"][0]["name"])
     assert claims == (
         (2020, "2020-07-01", "2020-12-31"),
         (2021, "2021-01-01", "2021-06-30"),
@@ -965,11 +963,11 @@ def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
     tmp_path: Path, flavored_db: Path
 ) -> None:
     """`Beställda prover` sits on the steward's own `inera` provider, and
-    `scb_errata.toml` accepts entries on `scb` alone — so the same narrowed holding
+    errata entries belong in the SCB register files alone — so the same narrowed holding
     yields NO stanza at all. It rides in the third section as a comment naming the
     held editions, the catalog's window and the surface that carries it: for a
     flavor provider, the curated-provider TOML `extend-db` overlaid. A
-    `[[delivered]]` here would send the maintainer to a file
+    `[[errata.delivered]]` here would send the maintainer to a file
     whose loader refuses the entry."""
     db = tmp_path / "narrowed.db"
     db.write_bytes(flavored_db.read_bytes())
@@ -1035,13 +1033,13 @@ def test_errata_worklist_excludes_every_multi_period_suggestion(
     stdout = capsys.readouterr().out
     assert "held column × edition pairs: 0 assessed, 0 with no catalog window" in stdout
     assert "3 multi-period table(s) not assessed" in stdout
-    assert "version-missing: 0 [[version]] candidate(s)" in stdout
-    assert "column-missing: 0 [[delivered]] candidate(s)" in stdout
+    assert "version-missing: 0 [[errata.version]] candidate(s)" in stdout
+    assert "column-missing: 0 [[errata.delivered]] candidate(s)" in stdout
     assert "errata-column: 0 miss(es) to inspect" in stdout
     assert "curated-window: 0 non-scb miss(es)" in stdout
 
 
-# --- cmd_grafts: the scb_errata.toml [[column]] candidates --------------------
+# --- cmd_grafts: the register-file [[errata.column]] candidates ---------------
 
 
 def _grafts_text(
@@ -1112,9 +1110,8 @@ def test_a_placed_gapfill_column_is_a_complete_column_entry(
         _lisa_holding("FastBet"),
     )
 
-    assert tomllib.loads(text)["column"] == [
+    assert tomllib.loads(text)["errata"]["column"] == [
         {
-            "register": "scb/lisa",
             "variant": "individer-15plus",
             "column": "FastBet",
             "name": "FastBet enligt SCB",
@@ -1148,7 +1145,8 @@ def test_an_scb_documented_column_is_the_same_entry_under_the_other_source(
     )
 
     assert {
-        entry["column"]: entry["source"] for entry in tomllib.loads(text)["column"]
+            entry["column"]: entry["source"]
+            for entry in tomllib.loads(text)["errata"]["column"]
     } == {"Ssyk4_J16": "scb-docs", "FastBet": "steward-holdings"}
     # Sectioned by source, each section saying what still has to be curated in it.
     assert "# ── source = scb-docs: 1 column(s)" in text
@@ -1207,7 +1205,7 @@ def test_a_column_the_scan_cannot_place_is_a_comment_not_an_entry(
 def test_the_emitted_candidates_load_as_scb_errata(
     tmp_path: Path, flavored_db: Path
 ) -> None:
-    """The file IS the repair, so it has to be valid `scb_errata.toml`: it parses,
+    """The output IS the repair candidate, so its `[[errata.column]]` table parses,
     and `load_scb_errata` accepts its shape against the repo's curated SCB slugs.
 
     `noted` is the one field a placeholder cannot satisfy — the loader demands a

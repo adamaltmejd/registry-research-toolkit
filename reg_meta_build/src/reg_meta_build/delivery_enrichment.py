@@ -55,31 +55,18 @@ _require_str = functools.partial(
 )
 
 
-def _parse_register_variable(entry: dict, kind: str) -> tuple[str, str, str]:
-    """Validate + split the shared ``register`` (2-segment ``provider/register``
-    FQID) and ``variable`` (single register-local slug) fields. Returns
-    ``(provider, register, variable)``. A multi-segment ``variable`` (``foo/bar``)
-    is a maintainer typo and fails the strict load rather than surfacing later
-    as an unresolved target."""
-    register_fqid = _require_str(entry, "register", kind)
-    parts = register_fqid.split("/")
-    if len(parts) != 2 or not all(parts):
-        raise curation_error(
-            "delivery_enrichment_invalid",
-            f"delivery_enrichment register {register_fqid!r} must be a "
-            "2-segment `provider/register` FQID.",
-            'Give `register = "scb/agi"`-style 2-segment FQIDs.',
-        )
-    variable = _require_str(entry, "variable", kind)
+def _register_local_variable(variable: str, context: str) -> str:
+    """Validate that an enrichment variable is one local slug segment."""
+    variable = _require_str({"variable": variable}, "variable", context)
     if "/" in variable:
         raise curation_error(
             "delivery_enrichment_invalid",
-            f"delivery_enrichment {kind} {register_fqid} variable {variable!r} "
-            "must be a single slug segment, not a path.",
+            f"delivery_enrichment {context} variable {variable!r} must be a "
+            "single slug segment, not a path.",
             'Give just the variable slug (`variable = "avdr-prel-skatt"`), '
             "not a `provider/register/variable` FQID.",
         )
-    return parts[0], parts[1], variable
+    return variable
 
 
 def load_delivery_enrichment(path: Path | None) -> DeliveryEnrichment:
@@ -94,28 +81,25 @@ def load_delivery_enrichment(path: Path | None) -> DeliveryEnrichment:
     out: list[DescriptionBackfill] = []
     seen: set[tuple[str, str, str]] = set()
     for register_file in load_register_files(path) if path is not None else ():
-        register_fqid = (
-            f"{register_file.register_info.provider}/{register_file.register_info.slug}"
-        )
-        for row in register_file.enrichment.description:
-            entry = row.model_dump(mode="python")
-            entry["register"] = register_fqid
-            provider, register, variable = _parse_register_variable(
-                entry, "[[description]]"
+        provider = register_file.register_info.provider
+        register = register_file.register_info.slug
+        for index, row in enumerate(register_file.enrichment.description, start=1):
+            context = (
+                f"{register_file.source_file} [[enrichment.description]] entry {index}"
             )
-            description = _require_str(entry, "description", "[[description]]")
-            provenance = _opt_provenance(
-                entry, f"[[description]] {provider}/{register}/{variable}"
+            variable = _register_local_variable(row.variable, context)
+            description = _require_str(
+                {"description": row.description}, "description", context
             )
+            provenance = _opt_provenance({"provenance": row.provenance}, context)
             scope_key = (provider, register, variable)
             if scope_key in seen:
                 raise curation_error(
                     "delivery_enrichment_invalid",
-                    f"delivery_enrichment duplicate description for "
+                    f"{context}: duplicate description for "
                     f"{provider}/{register}/{variable}.",
                     "Each (register, variable) may have at most one [[description]] "
-                    "— resolve the conflicting rows in "
-                    "reg_meta_build/curation/registers/<provider>/<slug>.toml.",
+                    "— keep one declaration in the register file.",
                 )
             seen.add(scope_key)
             out.append(
@@ -147,22 +131,20 @@ def _load_aliases(path: Path | None) -> tuple[CuratedAlias, ...]:
     out: list[CuratedAlias] = []
     seen: set[tuple[str, str, str]] = set()
     for register_file in load_register_files(path) if path is not None else ():
-        register_fqid = (
-            f"{register_file.register_info.provider}/{register_file.register_info.slug}"
-        )
-        for row in register_file.enrichment.alias:
-            entry = row.model_dump(mode="python")
-            entry["register"] = register_fqid
-            provider, register, variable = _parse_register_variable(entry, "[[alias]]")
-            delivery_column = _require_str(entry, "delivery_column", "[[alias]]")
-            provenance = _opt_provenance(
-                entry, f"[[alias]] {provider}/{register}/{variable}"
+        provider = register_file.register_info.provider
+        register = register_file.register_info.slug
+        for index, row in enumerate(register_file.enrichment.alias, start=1):
+            context = f"{register_file.source_file} [[enrichment.alias]] entry {index}"
+            variable = _register_local_variable(row.variable, context)
+            delivery_column = _require_str(
+                {"delivery_column": row.delivery_column}, "delivery_column", context
             )
+            provenance = _opt_provenance({"provenance": row.provenance}, context)
             key = (provider, register, variable + "\x00" + delivery_column.lower())
             if key in seen:
                 raise curation_error(
                     "delivery_enrichment_invalid",
-                    f"delivery_enrichment duplicate alias {delivery_column!r} for "
+                    f"{context}: duplicate alias {delivery_column!r} for "
                     f"{provider}/{register}/{variable}.",
                     "Each (register, variable, delivery_column) may appear once.",
                 )

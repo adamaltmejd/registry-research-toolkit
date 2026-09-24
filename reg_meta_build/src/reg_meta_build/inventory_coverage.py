@@ -14,12 +14,12 @@ the steward holds in an edition reg_meta has no `variable_state` /
 This module is that comparison, with two consumers that must not disagree about
 the rule: the flavored validation gate (`validate._check_inventory_window_coverage`)
 and the steward generator's `build_catalog.py errata` worklist. A miss on the `scb`
-provider renders as a VALID, COMPLETE `[[delivered]]` stanza only when the
+provider renders as a VALID, COMPLETE `[[errata.delivered]]` stanza only when the
 variable came from SCB's export. A variable whose `source_label` is `scb-errata`
-came from a `[[column]]` entry instead, so it has no documented row for the
+came from a `[[errata.column]]` entry instead, so it has no documented row for the
 delivered loader to clone. Those misses render as comments directing the curator
-back to the matching target-variant `[[column]]` entry and mapping. Independently
-justified `[[version]]` candidates remain pasteable as they stand but for
+back to the matching target-variant `[[errata.column]]` entry and mapping. Independently
+justified `[[errata.version]]` candidates remain pasteable as they stand but for
 `evidence` and `noted`, which ride as TODO placeholders.
 
 A miss on ANY OTHER provider is never rendered in that grammar. `curation/registers/scb/<slug>.toml`
@@ -63,9 +63,9 @@ Reading rules, each deliberate:
 * An omitted row names the `Registerversionnamn` the catalog carries VERBATIM
   (`register_version`, matched to a held edition through `edition_claims` — the
   coalescer's own parse of an SCB edition name), because that is the coordinate
-  `curation/registers/scb/<slug>.toml` is authored in. A held edition no documented version covers
-  needs a `[[version]]` minted first, named with its period token; the
-  `[[delivered]]` then lists that token beside the real names. At this suggestion
+`curation/registers/scb/<slug>.toml` is authored in. A held edition no documented version covers
+  needs a `[[errata.version]]` minted first, named with its period token; the
+  `[[errata.delivered]]` then lists that token beside the real names. At this suggestion
   boundary only, an undocumented `LA2020` is spelled in SCB's native form
   `2020/2021`, whose edition claims have the same school-year bounds.
 * A coordinate whose slugs do not resolve at all is SKIPPED and counted, never
@@ -126,7 +126,7 @@ _Coord = tuple[str, str]
 # an uncurated one, cannot reach a build.
 _TODO_EVIDENCE = "TODO: the evidence that SCB delivered this row"
 _TODO_NOTED = "TODO: YYYY-MM-DD"
-# A `[[column]]`'s evidence is the other half of the same fact: what says the
+# An `[[errata.column]]`'s evidence is the other half of the same fact: what says the
 # column exists, plus the export saying nothing about it. The first clause is the
 # only part that differs by `source`.
 _TODO_COLUMN_EVIDENCE = (
@@ -145,15 +145,15 @@ class CoverageMiss:
     catalog has no window for, grouped as one curation decision.
 
     `register` is the 2-segment `provider/register` FQID and `variant` the variant
-    slug, the pair `[[delivered]]` is keyed on. `column` is the CANONICAL delivery
+    slug, the pair `[[errata.delivered]]` is keyed on. `column` is the CANONICAL delivery
     column (the mapping's `representation`, SCB's own spelling), falling back to
     the held spelling for a mapping that pins none. `versions` are the
     `Registerversionnamn` the omitted rows must name, and `mint` the subset of
-    those the catalog does not know at all (each needs its own `[[version]]`).
+    those the catalog does not know at all (each needs its own `[[errata.version]]`).
     `editions` are the uncovered edition intervals and `windows` what the catalog
     does carry for the column here. `errata_column` records that at least one
-    grouped mapping resolves to a variable minted by a `[[column]]` entry; such a
-    group must never become a `[[delivered]]` candidate because no source row
+    grouped mapping resolves to a variable minted by a `[[errata.column]]` entry; such a
+    group must never become a `[[errata.delivered]]` candidate because no source row
     exists to clone.
     """
 
@@ -177,7 +177,7 @@ class CoverageMiss:
 
     @property
     def scb(self) -> bool:
-        """Is this miss on the one provider `curation/registers/scb/<slug>.toml` accepts?"""
+        """Is this miss on the one provider the SCB register files accept?"""
         return self.provider == _PROVIDER
 
     @property
@@ -202,17 +202,17 @@ class CoverageReport:
 
     @property
     def scb_misses(self) -> tuple[CoverageMiss, ...]:
-        """Every miss on the provider `curation/registers/scb/<slug>.toml` accepts."""
+        """Every miss on the provider the SCB register files accept."""
         return tuple(miss for miss in self.misses if miss.scb)
 
     @property
     def delivered_misses(self) -> tuple[CoverageMiss, ...]:
-        """SCB misses with a real source row `[[delivered]]` can clone."""
+        """SCB misses with a real source row `[[errata.delivered]]` can clone."""
         return tuple(miss for miss in self.misses if miss.delivered_candidate)
 
     @property
     def errata_column_misses(self) -> tuple[CoverageMiss, ...]:
-        """SCB misses on variables minted from `[[column]]` entries."""
+        """SCB misses on variables minted from `[[errata.column]]` entries."""
         return tuple(miss for miss in self.misses if miss.scb and miss.errata_column)
 
     @property
@@ -327,11 +327,11 @@ def miss_line(miss: CoverageMiss) -> str:
         return (
             f"{miss.coordinate} {miss.column}: {_held_vs_windows(miss)} — "
             "`source_label = 'scb-errata'`; inspect the matching target-variant "
-            "[[column]] entry and inventory mapping; a new version covers the "
+            "[[errata.column]] entry and inventory mapping; a new version covers the "
             "column only if that entry uses `all_versions = true`"
         )
     mint = (
-        f" ({', '.join(miss.mint)} not documented at all — a [[version]] each)"
+        f" ({', '.join(miss.mint)} not documented at all — a [[errata.version]] each)"
         if miss.mint
         else ""
     )
@@ -344,7 +344,7 @@ def miss_line(miss: CoverageMiss) -> str:
 def version_candidates(
     misses: Sequence[CoverageMiss],
 ) -> tuple[tuple[str, str, str], ...]:
-    """The `[[version]]` entries the `scb` misses in `misses` need: one `(register,
+    """The `[[errata.version]]` entries the `scb` misses in `misses` need: one `(register,
     variant, Registerversionnamn)` per version the catalog does not know at all,
     deduped and ordered. Two columns omitted from the same undocumented edition need
     the version minted ONCE — `load_scb_errata` refuses a duplicate `(variant,
@@ -363,8 +363,8 @@ def version_candidates(
 
 
 def errata_stanzas(misses: Sequence[CoverageMiss]) -> str:
-    """The loadable candidates in `misses` as an `curation/registers/scb/<slug>.toml` fragment:
-    every independently missing `[[version]]`, then one `[[delivered]]` for each
+    """The loadable candidates grouped by register file:
+    every independently missing `[[errata.version]]`, then one `[[errata.delivered]]` for each
     SCB-export variable with a source row the loader can clone.
 
     Valid, complete TOML — it parses, and `load_scb_errata` accepts its shape but
@@ -373,23 +373,31 @@ def errata_stanzas(misses: Sequence[CoverageMiss]) -> str:
     record rather than a window override, and the date it was found.
 
     Another provider contributes no stanza, and an errata-created variable never
-    contributes a `[[delivered]]`: its `[[column]]` entry has no real row to clone.
+    contributes a `[[errata.delivered]]`: its `[[errata.column]]` entry has no real row to clone.
     The one renderer of this grammar therefore guarantees that every emitted entry
     is one the corresponding loader can consume (`miss_line` reports the rest).
     """
     scb = [miss for miss in misses if miss.scb]
     delivered = [miss for miss in scb if miss.delivered_candidate]
-    stanzas = _version_stanzas(scb) + [_delivered_stanza(miss) for miss in delivered]
-    return "\n\n".join(stanzas) + "\n" if stanzas else ""
+    candidates: dict[str, list[str]] = {}
+    for register, stanza in _version_stanzas(scb):
+        candidates.setdefault(register, []).append(stanza)
+    for miss in delivered:
+        candidates.setdefault(miss.register, []).append(_delivered_stanza(miss))
+    blocks = [
+        "\n\n".join(
+            (f"# curation/registers/scb/{register.split('/', 1)[1]}.toml", *rows)
+        )
+        for register, rows in sorted(candidates.items())
+    ]
+    return "\n\n".join(blocks) + "\n" if blocks else ""
 
 
-def column_stanza(
-    register: str, variant: str, column: str, label: str, source: str
-) -> str:
-    """One `[[column]]` candidate: a column SCB's export documents on NO version
+def column_stanza(variant: str, column: str, label: str, source: str) -> str:
+    """One `[[errata.column]]` candidate: a column SCB's export documents on NO version
     of the variant, so there is no row to re-add and the entry mints the variable.
 
-    Rendered HERE, beside the `[[version]]` / `[[delivered]]` stanzas, though its
+    Rendered HERE, beside the `[[errata.version]]` / `[[errata.delivered]]` stanzas, though its
     producer is the SWECOV generator rather than this gate — one renderer of the
     errata grammar is the one place that can keep a candidate loadable when the
     grammar gains a key. `label` is the only description either evidence source
@@ -402,9 +410,8 @@ def column_stanza(
     years are on its doc page, for the curator to narrow to a `versions` list.
     """
     return _stanza(
-        "column",
+        "errata.column",
         (
-            ("register", _toml_str(register)),
             ("variant", _toml_str(variant)),
             ("column", _toml_str(column)),
             ("name", _toml_str(label)),
@@ -417,17 +424,23 @@ def column_stanza(
 
 
 def errata_worklist(report: CoverageReport) -> str:
-    """`report` as a candidate `curation/registers/scb/<slug>.toml` worklist for a maintainer.
+    """`report` as candidate register-file tables for a maintainer.
 
-    Loadable `[[version]]` and `[[delivered]]` candidates come first. SCB misses
-    on `[[column]]`-minted variables and all non-SCB misses are comments because
+    Loadable `[[errata.version]]` and `[[errata.delivered]]` candidates come first.
+    SCB misses on `[[errata.column]]`-minted variables and all non-SCB misses are comments because
     neither can be repaired by cloning a documented SCB row.
     """
     scb = report.scb_misses
     delivered = report.delivered_misses
     errata_columns = report.errata_column_misses
     curated = report.curated_misses
-    versions = _version_stanzas(scb)
+    versions_by_register: dict[str, list[str]] = {}
+    for register, stanza in _version_stanzas(scb):
+        versions_by_register.setdefault(register, []).append(stanza)
+    delivered_by_register: dict[str, list[CoverageMiss]] = {}
+    for miss in delivered:
+        delivered_by_register.setdefault(miss.register, []).append(miss)
+    version_count = sum(len(rows) for rows in versions_by_register.values())
     lines = [
         "# GENERATED by input_data/swecov/build_catalog.py errata — candidate",
         "# reg_meta_build/curation/registers/scb/<slug>.toml entries for the columns the steward holds",
@@ -437,7 +450,7 @@ def errata_worklist(report: CoverageReport) -> str:
         "# placeholders, and the loader refuses a placeholder `noted`, so nothing",
         "# here reaches a build until a maintainer has established that SCB really",
         "# delivered the row and dated the finding. A variable already minted by a",
-        "# [[column]] entry has no real SCB row for [[delivered]] to clone; its miss",
+        "# [[errata.column]] entry has no real SCB row for [[errata.delivered]] to clone; its miss",
         "# is reported below for inspection, never emitted as a delivered stanza.",
         "#",
         "# Only loadable SCB correction candidates below are stanzas. This file",
@@ -448,25 +461,27 @@ def errata_worklist(report: CoverageReport) -> str:
         f"{len(report.misses)} group(s), out of {report.pairs} assessed.",
         f"# {skipped_tables_line(report.skipped_tables)}.",
         "",
-        f"# ── version-missing: {len(versions)} held `scb` edition(s) the catalog "
+        f"# ── version-missing: {version_count} held `scb` edition(s) the catalog "
         "documents no register version for; mint them when evidenced ──",
         "# A version candidate covers an errata-created column only when its matching",
-        "# target-variant [[column]] entry uses `all_versions = true`.",
+        "# target-variant [[errata.column]] entry uses `all_versions = true`.",
     ]
-    for stanza in versions:
-        lines += ["", stanza]
     lines += [
         "",
         f"# ── column-missing: the omitted column rows themselves, "
-        f"{len(delivered)} [[delivered]] candidate(s) ──",
+        f"{len(delivered)} [[errata.delivered]] candidate(s) ──",
     ]
-    for miss in delivered:
-        lines += ["", f"# {_held_vs_windows(miss)}", _delivered_stanza(miss)]
+    for register in sorted(set(versions_by_register) | set(delivered_by_register)):
+        lines += ["", f"# curation/registers/scb/{register.split('/', 1)[1]}.toml"]
+        for stanza in versions_by_register.get(register, ()):
+            lines += ["", stanza]
+        for miss in delivered_by_register.get(register, ()):
+            lines += ["", f"# {_held_vs_windows(miss)}", _delivered_stanza(miss)]
     lines += [
         "",
         f"# ── errata-created columns: {len(errata_columns)} group(s); no "
-        "[[delivered]] candidate ──",
-        "# Inspect each matching target-variant [[column]] entry and inventory",
+        "[[errata.delivered]] candidate ──",
+        "# Inspect each matching target-variant [[errata.column]] entry and inventory",
         "# mapping. The DB does not reveal `all_versions` versus explicit `versions`.",
         "# Add a held edition to explicit `versions` only when that entry exists,",
         "# omits it, and evidence supports the addition. A missing entry or a",
@@ -579,7 +594,7 @@ def _load_versions(conn: sqlite3.Connection, variants: set[int]) -> _Versions:
 
     A name with no parseable year claims nothing (`edition_claims` is empty) and
     is dropped: it can neither document a held edition nor be the token a
-    `[[version]]` mints.
+    `[[errata.version]]` mints.
     """
     claimed: dict[int, dict[str, list[_Interval]]] = {}
     for variant_id, name in conn.execute(
@@ -770,14 +785,16 @@ def _held_vs_windows(miss: CoverageMiss) -> str:
     )
 
 
-def _version_stanzas(misses: Sequence[CoverageMiss]) -> list[str]:
+def _version_stanzas(misses: Sequence[CoverageMiss]) -> list[tuple[str, str]]:
     return [
-        _stanza(
-            "version",
-            (
-                ("register", _toml_str(register)),
-                ("variant", _toml_str(variant)),
-                ("name", _toml_str(name)),
+        (
+            register,
+            _stanza(
+                "errata.version",
+                (
+                    ("variant", _toml_str(variant)),
+                    ("name", _toml_str(name)),
+                ),
             ),
         )
         for register, variant, name in version_candidates(misses)
@@ -787,9 +804,8 @@ def _version_stanzas(misses: Sequence[CoverageMiss]) -> list[str]:
 def _delivered_stanza(miss: CoverageMiss) -> str:
     versions = ", ".join(_toml_str(name) for name in miss.versions)
     return _stanza(
-        "delivered",
+        "errata.delivered",
         (
-            ("register", _toml_str(miss.register)),
             ("variant", _toml_str(miss.variant)),
             ("column", _toml_str(miss.column)),
             ("versions", f"[{versions}]"),

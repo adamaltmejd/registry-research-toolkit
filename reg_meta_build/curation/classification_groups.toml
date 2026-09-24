@@ -1,12 +1,45 @@
+# ── Curated classification umbrella groups (#516) ───────────────────────────
+# A [[classification_group]] folds genuinely-DISTINCT classifications under one
+# browse umbrella — NOT vintage editions (those are #571 succession edges in
+# classification_replaced_by). These umbrellas are AXIS-LESS: the members are
+# distinct classifications, not points on a shared scale, so the group carries
+# NO `axis` (facet_axis is NULL) and the webapp renders the member-noun as
+# "members". Each member still carries its own curated short `value`/`label`
+# (the picker label), kept inline regardless of the absent group axis. Members
+# are exact `classification = "<slug>"` references (the standing curation rule
+# forbids name patterns). Catalog-scoped (classifications are global), resolved
+# by slug at materialize time — a dangling slug or an already-grouped
+# classification FAILS the build.
+
+# SUN — Svensk utbildningsnomenklatur. Its three CURRENT (2020) editions are the
+# genuinely-distinct dimensions of one education classification (level /
+# orientation / grouping); alongside them ride the two nivå AGGREGATES
+# (niva-old / niva-grov — coarsenings of the level dimension). All five are
+# distinct classifications under the SUN umbrella, each with its own short label
+# — there is NO shared axis (the umbrella is axis-less). The older sun1996 +
+# 2000 editions are LEFT OUT — each is a temporal succession of its dimension
+# (reached via the leaf edition-chain panel), not a parallel dimension.
+
 [[classification_group]]
 key = "sun"
 label = "Svensk utbildningsnomenklatur (SUN)"
 members = [{ classification = "sun2020-niva", value = "niva", label = "Utbildningsnivå" }, { classification = "sun2020-inriktning", value = "inriktning", label = "Utbildningsinriktning" }, { classification = "sun2020-grupp", value = "grupp", label = "Utbildningsgrupper" }, { classification = "niva-oldv1", value = "niva-old", label = "Nivå – aggregat, 7 nivåer" }, { classification = "niva-grovv1", value = "niva-grov", label = "Nivå – aggregat, 5 nivåer" }]
 
+# ISCED — International Standard Classification of Education. Two ORTHOGONAL
+# dimensions of one international education classification (the parallel to SUN's
+# nivå/inriktning split), NOT vintages: isced2011 is the Level dimension,
+# isced-f2013 the Fields-of-Education-and-Training dimension. Distinct
+# classifications under one axis-less umbrella, each with its own short label.
+
 [[classification_group]]
 key = "isced"
 label = "International Standard Classification of Education (ISCED)"
 members = [{ classification = "isced2011", value = "niva", label = "Nivå (ISCED 2011)" }, { classification = "isced-f2013", value = "inriktning", label = "Inriktning (ISCED-F 2013)" }]
+
+# NordDRG — diagnosis-related groups. `mdc` (Major Diagnostic Categories) is the
+# COARSE partition above `drg` — an aggregate fold of the same concept, the same
+# posture as SUN's nivå aggregates. Both are distinct classifications under one
+# axis-less umbrella, each with its own short label.
 
 [[classification_group]]
 key = "norddrg"

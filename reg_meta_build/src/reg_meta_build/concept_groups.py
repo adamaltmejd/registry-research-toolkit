@@ -1,9 +1,9 @@
 """Concept-group declarations and pure grouping rules.
 
-The common resolver applies explicit groups, checked sibling components and guarded
-month families before writing. Classification vintages form succession edges;
-curated classification umbrellas remain separate declarations. Offline conversion
-resolves accepted machine-generated candidates through ``resolve_accept``.
+The build consumes literal register groups, checked sibling components and guarded
+month families. Classification vintages form succession edges; curated classification
+umbrellas remain separate declarations. Candidate and accept resolvers are worklist
+utilities only; accepted build curation is already materialized as literal groups.
 """
 
 from __future__ import annotations
@@ -13,6 +13,8 @@ import re
 from dataclasses import dataclass
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
+
+from reg_meta.errors import RegMetaError
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -143,9 +145,8 @@ class CuratedGroup:
     `origin` records how it was authored so `_apply_curated_groups` can tailor its
     EXIT_CONFIG remediations: a hand-authored `[[variable_group]]` (the default)
     points the maintainer at `curation/registers/<provider>/<slug>.toml`; an `[[accept]]`-resolved family
-    (`resolve_accept` sets `origin="accept"`) points at the `[[accept]]` /
-    `concept_groups.auto.toml` instead, since its key/register/members come from the
-    generated catalog, not a hand-picked curated key."""
+    (`resolve_accept` sets `origin="accept"`) identifies a family resolved by the
+    worklist utility from its generated candidate, rather than a hand-picked key."""
 
     provider: str
     register: str
@@ -158,7 +159,7 @@ class CuratedGroup:
 
 @dataclass(frozen=True)
 class Accept:
-    """One `[[accept]]` entry from the generator worklist (#496): an OPT-IN to
+    """One `[[accept]]` entry for the worklist utility (#496): an OPT-IN to
     fold an auto family from `worklists/concept_groups.auto.toml` BY REFERENCE. The
     `(provider, register, key)` locates the auto family; `label`/`axis` override
     the auto family's when set; `exclude` drops member slugs (a stem that picked
@@ -455,6 +456,44 @@ def _reject_mixed_member_grain(members: tuple[CuratedMember, ...], key: str) -> 
         )
 
 
+def _parse_group_contents(
+    raw: dict,
+    key: str,
+    *,
+    context: str,
+) -> tuple[tuple[tuple[str, str], ...], tuple[CuratedMember, ...]]:
+    """Validate shared group axes and members for curated and worklist rows."""
+    try:
+        axes, axis_names = _parse_group_axes(raw, key)
+        raw_members = raw.get("members", [])
+        if not isinstance(raw_members, list) or not raw_members:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups group {key!r} needs a non-empty member array.",
+                "List the family's members as `[[group.members]]` tables.",
+            )
+        members: list[CuratedMember] = []
+        seen_refs: set[tuple[str, str | None]] = set()
+        for raw_member in raw_members:
+            member = _parse_member(raw_member, key, axes, axis_names)
+            ref = (member.variable, member.delivery_column)
+            if ref in seen_refs:
+                raise curation_error(
+                    "concept_groups_invalid",
+                    f"concept_groups group {key!r} references "
+                    f"{ref[0]!r}/{ref[1]!r} twice.",
+                    "List each (variable, delivery_column) member once.",
+                )
+            seen_refs.add(ref)
+            members.append(member)
+        _reject_mixed_member_grain(tuple(members), key)
+    except RegMetaError as exc:
+        raise curation_error(
+            exc.code, f"{context}: {exc.message}", exc.remediation
+        ) from exc
+    return axes, tuple(members)
+
+
 def load_worklist_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     """Parse the curated-family TOML. Empty when no file (synthetic test
     builds, wheel installs).
@@ -490,50 +529,28 @@ def load_worklist_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     )
     out: list[CuratedGroup] = []
     seen_keys: set[tuple[str, str, str]] = set()
-    for entry in entries:
-        register_fqid = _require_str(entry, "register", "[[variable_group]]")
+    for index, entry in enumerate(entries, start=1):
+        context = f"{path or 'worklists/concept_groups.auto.toml'} [[variable_group]] entry {index}"
+        register_fqid = _require_str(entry, "register", context)
         parts = register_fqid.split("/")
         if len(parts) != 2 or not all(parts):
             raise curation_error(
                 "concept_groups_invalid",
-                f"concept_groups register {register_fqid!r} must be a 2-segment "
+                f"{context}: register {register_fqid!r} must be a 2-segment "
                 "`provider/register` FQID.",
                 'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
             )
-        key = _require_str(entry, "key", "[[variable_group]]")
-        label = _require_str(entry, "label", "[[variable_group]]")
-        axes, axis_names = _parse_group_axes(entry, key)
+        key = _require_str(entry, "key", context)
+        label = _require_str(entry, "label", context)
         scope_key = (parts[0], parts[1], key)
         if scope_key in seen_keys:
             raise curation_error(
                 "concept_groups_invalid",
-                f"concept_groups duplicate key {key!r} under {register_fqid}.",
+                f"{context}: duplicate key {key!r} under {register_fqid}.",
                 "Group keys must be unique per register.",
             )
         seen_keys.add(scope_key)
-        raw_members = entry.get("members", [])
-        if not isinstance(raw_members, list) or not raw_members:
-            raise curation_error(
-                "concept_groups_invalid",
-                f"concept_groups group {key!r} needs a non-empty "
-                "`[[variable_group.members]]` array.",
-                "List the family's members as `[[variable_group.members]]` tables.",
-            )
-        members: list[CuratedMember] = []
-        seen_refs: set[tuple[str, str | None]] = set()
-        for raw in raw_members:
-            member = _parse_member(raw, key, axes, axis_names)
-            ref = (member.variable, member.delivery_column)
-            if ref in seen_refs:
-                raise curation_error(
-                    "concept_groups_invalid",
-                    f"concept_groups group {key!r} references "
-                    f"{ref[0]!r}/{ref[1]!r} twice.",
-                    "List each (variable, delivery_column) member once.",
-                )
-            seen_refs.add(ref)
-            members.append(member)
-        _reject_mixed_member_grain(tuple(members), key)
+        axes, members = _parse_group_contents(entry, key, context=context)
         out.append(
             CuratedGroup(
                 provider=parts[0],
@@ -541,7 +558,7 @@ def load_worklist_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
                 key=key,
                 label=label,
                 axes=axes,
-                members=tuple(members),
+                members=members,
             )
         )
     return tuple(out)
@@ -558,40 +575,19 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     for register_file in _register_files(path):
         provider = register_file.register_info.provider
         register = register_file.register_info.slug
-        for entry in register_file.group:
+        for index, entry in enumerate(register_file.group, start=1):
             raw = entry.model_dump(mode="python", exclude_none=True)
             key = raw["key"]
-            axes, axis_names = _parse_group_axes(raw, key)
+            context = f"{register_file.source_file} [[group]] entry {index}"
             scope_key = (provider, register, key)
             if scope_key in seen_keys:
                 raise curation_error(
                     "concept_groups_invalid",
-                    f"concept_groups duplicate key {key!r} under {provider}/{register}.",
+                    f"{context}: duplicate key {key!r} under {provider}/{register}.",
                     "Group keys must be unique per register.",
                 )
             seen_keys.add(scope_key)
-            raw_members = raw.get("members", [])
-            if not raw_members:
-                raise curation_error(
-                    "concept_groups_invalid",
-                    f"concept_groups group {key!r} needs non-empty members.",
-                    "List the family's members as [[group.members]] tables.",
-                )
-            members: list[CuratedMember] = []
-            seen_refs: set[tuple[str, str | None]] = set()
-            for raw_member in raw_members:
-                member = _parse_member(raw_member, key, axes, axis_names)
-                member_key = (member.variable, member.delivery_column)
-                if member_key in seen_refs:
-                    raise curation_error(
-                        "concept_groups_invalid",
-                        f"concept_groups group {key!r} references "
-                        f"{member_key[0]!r}/{member_key[1]!r} twice.",
-                        "List each (variable, delivery_column) member once.",
-                    )
-                seen_refs.add(member_key)
-                members.append(member)
-            _reject_mixed_member_grain(tuple(members), key)
+            axes, members = _parse_group_contents(raw, key, context=context)
             out.append(
                 CuratedGroup(
                     provider=provider,
@@ -599,7 +595,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
                     key=key,
                     label=raw["label"],
                     axes=axes,
-                    members=tuple(members),
+                    members=members,
                 )
             )
     return tuple(out)
@@ -615,24 +611,24 @@ def _require_opt_str(entry: dict, field: str, context: str) -> str | None:
 
 
 def load_concept_group_accepts(path: Path | None) -> tuple[Accept, ...]:
-    """Parse generator-worklist `[[accept]]` entries (#496), which fold auto families
-    from `worklists/concept_groups.auto.toml`
-    by reference. Empty when no file (synthetic builds, wheel installs) or no
-    `[[accept]]` tables.
+    """Parse worklist-tool `[[accept]]` entries (#496), which fold auto families
+    from `worklists/concept_groups.auto.toml` by reference. The normal build does
+    not read accepts; it consumes the materialized register `[[group]]` entries.
+    Empty when no file or no `[[accept]]` tables.
 
     Load-time validation (all EXIT_CONFIG, actionable): `register` is a
     2-segment `provider/register` FQID; `key` non-empty; `label`/`axis` optional
     but non-empty strings if present; `exclude` optional list of non-empty
     strings; `(provider, register, key)` unique (a duplicate accept is drift).
-    Resolution against the auto families (does the family exist?) happens at
-    materialize time (`resolve_accept`)."""
+    Resolution against the auto families (does the family exist?) is a worklist
+    operation (`resolve_accept`)."""
     entries = load_curation_entries(
         path,
         entry_key="accept",
         label="concept-group",
         prefix="concept_groups",
         code_base="concept_groups",
-        file_name="worklists/concept_groups.accepted.toml",
+        file_name=str(path) if path is not None else "concept-group worklist TOML",
         entry_fields="register / key (+ optional label / axis / exclude)",
         sibling_keys=frozenset(),
     )
@@ -686,7 +682,7 @@ def resolve_accept(
     accept: Accept, auto_by_scope: dict[tuple[str, str, str], CuratedGroup]
 ) -> CuratedGroup:
     """Resolve an `[[accept]]` against the loaded auto families → a
-    `CuratedGroup` for offline conversion. The auto family must
+    `CuratedGroup` for the worklist tool. The auto family must
     exist; `label`/`axis` fall through to the auto family's when the accept
     leaves them unset; `exclude` drops members (every excluded slug must be a
     real member, else it's a stale exclude); >= 2 members must remain. Every

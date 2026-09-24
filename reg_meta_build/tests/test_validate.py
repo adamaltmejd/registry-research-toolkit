@@ -2761,7 +2761,7 @@ class TestInventoryWindowCoverage:
     A tiny flavored DB (scb/lisa, one variant) plus a hand-written inventory: the
     gate must fail exactly on the columns the steward holds in an edition with no
     covering `variable_state` / `variable_alias_window`, and end in a block of
-    valid `scb_errata.toml` stanzas that repair them."""
+    valid `[[errata.*]]` register-file stanzas that repair them."""
 
     @staticmethod
     def _db() -> sqlite3.Connection:
@@ -2858,7 +2858,7 @@ class TestInventoryWindowCoverage:
         """The 2019 table holds both columns; only `DispInkKE` (delivered
         1998-2009) has no window over it, and only it is reported — grouped by
         (register, variant, column), with the held editions and the coordinate's
-        known windows, and repaired by one pasteable `[[delivered]]`."""
+        known windows, and repaired by one pasteable `[[errata.delivered]]`."""
         result = self._check(
             self._db(),
             tmp_path,
@@ -2871,7 +2871,9 @@ class TestInventoryWindowCoverage:
         assert failure.startswith("scb/lisa/individer-15plus DispInkKE: held 2019, ")
         assert "catalog windows 1998..2009" in failure
         block = self._block(result)
-        assert block.startswith('[[delivered]]\nregister = "scb/lisa"\n')
+        assert block.startswith(
+            "# curation/registers/scb/lisa.toml\n\n[[errata.delivered]]\n"
+        )
         assert 'variant = "individer-15plus"' in block
         assert 'column = "DispInkKE"' in block
         # SCB's own spelling of the edition, verbatim — not the `2019` token the
@@ -2879,7 +2881,7 @@ class TestInventoryWindowCoverage:
         assert 'versions = ["LISA 2019"]' in block
         # The documented-edition arm: the catalog knows a register version covering
         # 2019, so only the column row is missing.
-        assert "[[version]]" not in block
+        assert "[[errata.version]]" not in block
 
     def test_alias_window_coverage_counts(self, tmp_path: Path):
         """A `variable_alias_window` row is a delivery of its column too: the gate
@@ -2928,8 +2930,8 @@ class TestInventoryWindowCoverage:
         assert "1 held column × edition pair(s)" in report
         assert "out of 1 assessed" in report
         block = self._block(result)
-        assert block.count("[[version]]") == 1
-        assert block.count("[[delivered]]") == 1
+        assert block.count("[[errata.version]]") == 1
+        assert block.count("[[errata.delivered]]") == 1
         assert 'name = "2020"' in block
 
     def test_la_token_still_requires_full_period_containment(self, tmp_path: Path):
@@ -3019,7 +3021,7 @@ class TestInventoryWindowCoverage:
         assert "all 3 held column × edition pair(s)" in result.format_report()
 
     def test_reported_stanzas_load_as_scb_errata(self, tmp_path: Path):
-        """The block IS the repair, so it has to be valid `scb_errata.toml`: it
+        """The block IS the repair, so it has to be valid register-file curation: it
         parses with `tomllib`, and `load_scb_errata` accepts its shape against the
         repo's curated SCB slugs.
 
@@ -3047,19 +3049,17 @@ class TestInventoryWindowCoverage:
 
         parsed = tomllib.loads(block)
         # 2010-2012 are documented (named verbatim); 2021 is not, so it is minted
-        # as a [[version]] and named in the same [[delivered]].
-        assert parsed["version"] == [
+        # as a [[errata.version]] and named in the same [[errata.delivered]].
+        assert parsed["errata"]["version"] == [
             {
-                "register": "scb/lisa",
                 "variant": "individer-15plus",
                 "name": "2021",
                 "evidence": todo_evidence,
                 "noted": "TODO: YYYY-MM-DD",
             }
         ]
-        assert parsed["delivered"] == [
+        assert parsed["errata"]["delivered"] == [
             {
-                "register": "scb/lisa",
                 "variant": "individer-15plus",
                 "column": "DispInkKE",
                 "versions": ["2010", "2011", "2012", "2021"],
@@ -3088,20 +3088,20 @@ class TestInventoryWindowCoverage:
     ):
         """The catalog carries no `register_version` covering 2020, so there is no
         `Registerversionnamn` for an omitted row to name: the repair mints the
-        version under its period token FIRST, then hangs the `[[delivered]]` on
+        version under its period token FIRST, then hangs the `[[errata.delivered]]` on
         it."""
         result = self._check(
             self._db(), tmp_path, self._table(2020, ("Kon", "kon", "Kon"))
         )
         (failure,) = result.failures
-        assert "2020 not documented at all — a [[version]] each" in failure
+        assert "2020 not documented at all — a [[errata.version]] each" in failure
         block = self._block(result)
         assert (
-            '[[version]]\nregister = "scb/lisa"\nvariant = "individer-15plus"\n'
+            '[[errata.version]]\nvariant = "individer-15plus"\n'
             'name = "2020"\n'
         ) in block
         assert 'versions = ["2020"]' in block
-        assert block.index("[[version]]") < block.index("[[delivered]]")
+        assert block.index("[[errata.version]]") < block.index("[[errata.delivered]]")
 
     def test_held_editions_merge_into_ranges_in_one_group(self, tmp_path: Path):
         """Three annual tables holding one column are ONE curation decision: one
@@ -3123,7 +3123,7 @@ class TestInventoryWindowCoverage:
     def test_a_non_scb_miss_is_a_curated_window_line_not_an_errata_stanza(
         self, tmp_path: Path
     ):
-        """`scb_errata.toml` corrects SCB's OWN export — its loader refuses an entry
+        """Register-file errata corrects SCB's OWN export — its loader refuses an entry
         on another provider — so a miss on `fk` cannot be repaired by a stanza, and
         rendering one aims the maintainer at a file that cannot hold it (what the
         2026-09-12 flavored run did with its 26 `fk` groups). Both misses fail the
@@ -3177,11 +3177,11 @@ class TestInventoryWindowCoverage:
         assert "valid_from" in fk_line
         # No stanza grammar on the line, and no stanza in the block: the fk miss is
         # not an errata entry at any grain.
-        assert "[[delivered]]" not in fk_line
-        assert "[[version]]" not in fk_line
+        assert "[[errata.delivered]]" not in fk_line
+        assert "[[errata.version]]" not in fk_line
         block = self._block(result)
-        assert block.count("[[delivered]]") == 1
-        assert '"scb/lisa"' in block
+        assert block.count("[[errata.delivered]]") == 1
+        assert "# curation/registers/scb/lisa.toml" in block
         assert "fk/sjukfall" not in block
         assert "NOT on the `scb` provider" in result.format_report()
 

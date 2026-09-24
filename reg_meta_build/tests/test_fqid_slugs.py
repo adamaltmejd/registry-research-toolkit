@@ -16,6 +16,7 @@ from _slugged_db import (
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import derive_variable_slug
+from reg_meta_build.curation_tree import load_register_files
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,
@@ -573,6 +574,7 @@ class TestProviderToml:
         body = (
             '[[identity.partition]]\nvariable = "34.4"\n'
             'columns = { Kon = "34.4.kon" }\n'
+            'columns_ref = "curation evidence"\n'
         )
         slug_path, _curation = self._write_partition(tmp_path, body)
         entries = load_provider_toml(slug_path)
@@ -583,14 +585,10 @@ class TestProviderToml:
         }
 
     def test_split_without_partition_cannot_reuse_base_slug(self, tmp_path: Path):
-        slug_dir = tmp_path / "fqid_slugs"
-        slug_dir.mkdir()
-        slug_path = _write(
-            slug_dir / "scb.toml",
-            '[register."34"]\nslug = "lisa"\n' + self._BASE + self._SPLIT,
-        )
+        slug_path, curation = self._write_partition(tmp_path, "")
+        assert load_provider_toml(slug_path)
         with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(slug_path)
+            load_register_files(curation)
         assert exc.value.code == "slug_toml_invalid"
 
     @pytest.mark.parametrize(
@@ -626,21 +624,15 @@ class TestProviderToml:
         assert dict(ownership.declared_columns) == {"Kon": "34.4.kon"}
         assert ownership.declaration_reference == "curation evidence"
 
-    def test_columns_ref_is_optional(self, tmp_path: Path):
+    def test_columns_ref_is_required(self, tmp_path: Path):
         body = (
             '[[identity.partition]]\nvariable = "34.4"\n'
             'columns = { Kon = "34.4.kon" }\n'
         )
         slug_path, curation = self._write_partition(tmp_path, body)
-        ownership = declared_column_ownership(
-            load_provider_toml(slug_path),
-            provider="scb",
-            source_id="34.4",
-            curation_dir=curation,
-        )
-        assert ownership.declaration_reference == (
-            "curation/registers/scb/lisa.toml#/identity/partition/1"
-        )
+        with pytest.raises(RegMetaError) as exc:
+            load_register_files(curation)
+        assert "columns_ref" in exc.value.message
 
     def test_partition_without_slug_siblings_is_unresolved(self, tmp_path: Path):
         slug_dir = tmp_path / "fqid_slugs"
@@ -668,8 +660,10 @@ class TestProviderToml:
         body = (
             '[[identity.partition]]\nvariable = "34.4"\n'
             'columns = { Kon = "34.4.kon" }\n\n'
+            'columns_ref = "first"\n\n'
             '[[identity.partition]]\nvariable = "34.4"\n'
             'columns = { Kon2 = "34.4.kon" }\n'
+            'columns_ref = "second"\n'
         )
         slug_path, curation = self._write_partition(tmp_path, body)
         with pytest.raises(RegMetaError) as exc:

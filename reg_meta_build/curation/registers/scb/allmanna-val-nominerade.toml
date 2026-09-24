@@ -3,6 +3,13 @@ provider = "scb"
 slug = "allmanna-val-nominerade"
 native_id = "239"
 
+# Curated code<->label decode pairs (#923) -- see reg_meta_build/concept_groups.py
+# (load_code_label_pairs) and the build wiring in db.py (_append_code_label_edges).
+#
+# A coded variable (owns a value_set: codes + their labels) is co-delivered with a
+# denormalized LABEL column that re-states those labels as free text (e.g. `partikod`
+# + `partinamn`, `kommun` + `kommunnamn`). They are ONE concept. Each
+
 [[code_label_pair]]
 code = "scb/allmanna-val-nominerade/partikod"
 label = "scb/allmanna-val-nominerade/partinamn"

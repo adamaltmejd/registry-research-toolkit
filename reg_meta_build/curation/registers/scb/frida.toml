@@ -3,7 +3,6 @@ provider = "scb"
 slug = "frida"
 native_id = "121"
 
-# DRAFT reg_meta_build/curation/registers/scb/frida.toml (pin-free).
 # Source: archive/.../2026-09-16-goal-run/convert_frida_scoped_ownership.py:32-36.
 # v18: accepted-column-partitions:scb-registerinformation:121.56 adds 13 identity
 # effects, borgnr in variant 121.930 only (scopes/3c9b05bd3c86c3a705f2.json.gz).
@@ -11,7 +10,6 @@ native_id = "121"
 # borgnr_bolag -> 121.56.borgnr-bolag (24, variant 953) are mechanical literal
 # discriminators, not listed here. borgnr in 16 other variants, BORGNR, Borgnr,
 # bpnr and BPNR stay unassigned; the tracked split 121.56.bpnr has no v18 owner.
-# NOT expressible today: SlugEntry.columns is family-wide, not variant-scoped.
 
 [[identity.column_owner]]
 variable = "121.56"

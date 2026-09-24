@@ -161,11 +161,10 @@ def vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
 
 
 def errata_version(name: str) -> str:
-    """A `[[version]]` entry for `scb_errata.toml` (Y-114) naming an edition of
+    """A `[[errata.version]]` entry in a register file (Y-114) naming an edition of
     the fixture's TESTREG/individer variant."""
     return (
-        "[[version]]\n"
-        'register = "scb/testreg"\n'
+        "[[errata.version]]\n"
         'variant = "individer"\n'
         f'name = "{name}"\n'
         f'evidence = "the steward holds the {name} delivery"\n'
@@ -174,12 +173,11 @@ def errata_version(name: str) -> str:
 
 
 def errata_column(column: str, *versions: str, **fields: object) -> str:
-    """A `[[column]]` entry for `scb_errata.toml` (Y-116): `column` is delivered
+    """A `[[errata.column]]` entry in a register file (Y-116): `column` is delivered
     on TESTREG/individer but SCB's export documents it NOWHERE, so the entry
     mints the variable. With no `versions`, it claims every edition
     (`all_versions = true`); `fields` overrides or adds any key."""
     entry: dict[str, object] = {
-        "register": "scb/testreg",
         "variant": "individer",
         "column": column,
         "name": f"{column} name",
@@ -190,18 +188,17 @@ def errata_column(column: str, *versions: str, **fields: object) -> str:
         "noted": "2026-09-12",
         **fields,
     }
-    return "[[column]]\n" + "".join(
+    return "[[errata.column]]\n" + "".join(
         f"{k} = {json.dumps(v, ensure_ascii=False)}\n" for k, v in entry.items()
     )
 
 
 def errata_delivered(column: str, *versions: str) -> str:
-    """A `[[delivered]]` entry for `scb_errata.toml` (Y-114): `column` was
+    """A `[[errata.delivered]]` entry in a register file (Y-114): `column` was
     delivered in `versions` of TESTREG/individer but SCB's export omits the row."""
     listed = ", ".join(f'"{v}"' for v in versions)
     return (
-        "[[delivered]]\n"
-        'register = "scb/testreg"\n'
+        "[[errata.delivered]]\n"
         'variant = "individer"\n'
         f'column = "{column}"\n'
         f"versions = [{listed}]\n"

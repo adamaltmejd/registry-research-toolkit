@@ -3,6 +3,19 @@ provider = "scb"
 slug = "hreg"
 native_id = "47"
 
+# ── scb/ureg — personens-hogsta-utbildning-16-74 is documented 1997..2007 and
+# carries the SUN2000 columns only from the 2000 version; SWECOV's UREG1997,
+# UREG1998 and UREG1999 tables hold them (with the [[assign]] in
+# proposed_overlay.toml routing UREG1997..UREG2007 to this variant). Clone
+# source: 2000 (regver 1213), one row per column.
+
+# ── scb/hreg — sokande-grund-avancerad. SCB's export documents Kurskod, LInr
+# and LProg ONLY in the four Höstterminen 2005..2008 versions (no Vårterminen
+# version at all, nothing from 2009); SWECOV holds KursKod, LInr and LProg in
+# Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (2022..2024).
+# Clone source: Höstterminen 2008 (regver 1550), char. The version list is the
+# 20 term versions the held editions span (the worklist's set).
+
 [[errata.delivered]]
 variant = "sokande-grund-avancerad"
 column = "Kurskod"
@@ -26,6 +39,15 @@ versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Hö
 upstream = "omitted-column-in-version"
 evidence = "SWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
 noted = "2026-09-12"
+
+# Omgang (three variables, VarId 39310/39311/39312, one column) and PersonNr
+# (VarId 1346) first appear in SCB's export in Vårterminen 2016; Hreg_Sok_2015_2022
+# holds both from edition 2015. In the 2015 versions SCB carries VarId 1346 with a
+# BLANK Kolumnnamn (CVIDs 352072 VT2015, 390073 HT2015), which is why the build
+# split it into `personnr-motsvarande` (no column) and `personnr-motsvarande-2`
+# (PersonNr, 2016+). Clone source for both columns: Höstterminen 2016 (regver
+# 9855). If the maintainer confirms Hreg_Sok_2015_2022 starts in autumn 2015 (see
+# the commented [[edition]] in proposed_overlay.toml), drop "Vårterminen 2015".
 
 [[errata.delivered]]
 variant = "sokande-grund-avancerad"

@@ -3,6 +3,9 @@ provider = "sos"
 slug = "hsl"
 native_id = "6512206290021964828"
 
+# Batch 1 (#496): the numbered occupation fields are repeated instances of one
+# occupation concept, presented by ordinal position.
+
 [[group]]
 register = "sos/hsl"
 key = "yrkesbeteckning"

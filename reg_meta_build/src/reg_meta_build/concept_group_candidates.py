@@ -7,21 +7,19 @@ exact curated month/vintage vocabularies. Everything else (digit-suffixed famili
 like `morsak1/2/3`, the `fasit` yearly series) sits unfolded
 unless a maintainer materializes the group in its register TOML.
 
-This module is the GENERATOR half of the generate-then-accept split that
-`variable_same_as` (#417) established: it scans a BUILT DB for ungrouped
+This module generates a worklist from a BUILT DB for ungrouped
 digit-suffixed slug families, scores each for label agreement, and emits the
 committed, machine-owned `worklists/concept_groups.auto.toml` — the ranked candidate
 catalog. It materializes NOTHING and never mutates the DB; it only writes the
 auto file (the maintainer never hand-edits that file).
 
 Candidates fold OPT-IN: accepted groups are materialized as literal `[[group]]`
-members in the register file; the accept list and auto candidates are generator
-worklists, not build inputs.
+entries in the register file. The generated candidate catalog is worklist output,
+not build input.
 
-Regeneration is IDEMPOTENT: the generator reads the accepted worklist and treats
-accepted families as still-candidate-eligible, so they re-emit instead of vanishing.
-A custom register `[[group]]` family and the edge/token/vintage passes are NOT
-candidates and stay excluded.
+Regeneration is IDEMPOTENT: a materialized register-group scope is treated as
+accepted, so a matching automatic family re-emits instead of vanishing. Other
+custom groups and edge/token/vintage passes are NOT candidates and stay excluded.
 
 Concept groups are cosmetic (a wrong group is a curation bug, not the identity
 corruption that `same_as` risks), so the gate is lighter than same_as's tiers —
@@ -31,12 +29,10 @@ from batteries on label agreement and reports the excluded-battery count so the
 cutoff is never a silent truncation (CLAUDE.md).
 
 The candidate schema (`register`/`key`/`label`/`axis` + `[[variable_group.members]]`)
-is exactly `concept_groups.load_worklist_concept_groups`' input schema. The generator also
-SKIPS a family whose `(register, stem)` already names an edge/token group: an
-`[[accept]]` resolves against a FRESH build at materialize time, so accepting such
-a candidate would collide on the `idx_concept_group_key` unique index. The family is
-dropped from the catalog so the catalog stays accept-safe, and the dropped count is
-reported (never a silent truncation).
+is exactly `concept_groups.load_worklist_concept_groups`' input schema. The generator
+also skips a family whose `(register, stem)` already names an edge/token group: a
+candidate would collide on the `idx_concept_group_key` unique index. The family is
+dropped from the catalog and the dropped count is reported (never a silent truncation).
 """
 
 from __future__ import annotations
@@ -195,7 +191,7 @@ def _load_ungrouped_variables(
     drops edge/month/curated members (the digit families those passes already
     folded); on a synthetic DB with no groups every slugged variable is ungrouped.
 
-    Accept-awareness (idempotent regeneration): an `[[accept]]` materializes its
+    Group-aware regeneration: a literal register `[[group]]` materializes the
     auto family as a `curated` concept group at build time, which would otherwise
     drop that family from the next regeneration (its members are now grouped). So a
     variable whose ONLY group is an accepted family — `(provider, register,
@@ -252,9 +248,9 @@ def _load_existing_group_keys(
     `_derive_month_groups`).
 
     An accepted family's own `(provider, register, group_key)` is dropped from the
-    set (it's in `accepted_scopes`): without this the materialized accept would look
-    like a self-collision and the generator would skip re-emitting the very family
-    the accept references — breaking idempotent regeneration. With an empty
+    set (it's in `accepted_scopes`): without this the materialized group would look
+    like a self-collision and the generator would skip re-emitting that family,
+    breaking idempotent regeneration. With an empty
     `accepted_scopes` this returns every variable group, byte-identical to before."""
     return {
         (row["register_id"], row["group_key"])
@@ -278,16 +274,14 @@ def _load_accepted_group_members(
     group, keyed by `(register_id, group_key)`. Used only by the trim-collision
     accepted-preserve path (Codex P2 #646): when a clean key is accepted AND two raw
     stems independently fold under it, this pins down WHICH folding subgroup is the
-    accepted family — the one whose members include the materialized accept's members
+    accepted family — the one whose members include the materialized group members
     (the accept emitted a single raw-stem candidate, so it lands in exactly one
     subgroup). The remaining (non-accepted) folding peer is the colliding one and is
     dropped.
 
-    The materialized member set can be a SUBSET of the auto family (an `[[accept]]`
-    may `exclude` members), so the match is membership-containment, not equality:
-    the regenerated subgroup is the FULL auto family and contains every materialized
-    member. Empty when no accepts (then the trim-collision path is never accepted-
-    exempt and the function isn't consulted)."""
+    The materialized member set is compared by containment, not equality, so the
+    regenerated subgroup preserves the already-curated family. Empty when there are
+    no accepted register groups."""
     accepted_members: dict[tuple[int, str], frozenset[int]] = {}
     for row in conn.execute(
         "SELECT g.register_id, g.group_key, p.slug AS provider_slug, "
@@ -398,16 +392,13 @@ def infer_concept_group_candidates(
     than a battery.
 
     PRESERVES accepted families (idempotent regeneration): `accepted_scopes` is the
-    set of `(provider, register, key)` of the auto families currently `[[accept]]`-ed
-    in `curation/registers/<provider>/<slug>.toml`. Each such family is MATERIALIZED as a `curated` concept
-    group at build time — its members are grouped and its `(register, key)` names a
-    group — so a naive regeneration against a normal built DB would DROP every
-    accepted family (excluded as grouped, skipped as a self-collision) and the next
-    build's `resolve_accept` would fail on the now-missing candidate. Passing the
-    accepted scopes re-includes those members and exempts their own key from the
-    collision guard, so accepted families re-emit and the catalog is STABLE under
-    regeneration. With an empty `accepted_scopes` (no accepts) behavior is
-    byte-identical to a plain scan.
+    set of `(provider, register, key)` of auto families materialized as register
+    `[[group]]` entries. Each such family is materialized as a `curated` concept
+    group at build time, so a naive regeneration against a normal built DB would
+    drop it as grouped and skip its key as a self-collision. Passing those scopes
+    re-includes its members and exempts its key from that collision guard. With an
+    empty `accepted_scopes` (no matching groups), behavior is byte-identical to a
+    plain scan.
 
     NEVER mutates the DB — this is a read-only worklist generator; only the curated
     file's confirmed entries ever load. Foldable candidates are ranked
@@ -444,23 +435,20 @@ def infer_concept_group_candidates(
 
         # Accepted-key handling FIRST (#646/#651), governing REGARDLESS of how many
         # raw stems fold — it subsumes the old `len(fold_qual) > 1` accepted-preserve.
-        # A clean key that is currently `[[accept]]`-ed is MATERIALIZED, so the winner
+        # A clean key that has a materialized register `[[group]]` is ACCEPTED, so the winner
         # for that key MUST be the accepted family (preserve-or-fail, never retarget):
-        # identify it by member-containment against the materialized accept's members
-        # (the accept emitted a single raw-stem candidate, so it lands in exactly one
-        # raw-stem subgroup; containment, not equality, tolerates an `exclude` that
-        # trimmed the materialized set). Two failure modes the `> 1`-only preserve
+        # identify it by member-containment against the materialized group's members.
+        # It lands in one raw-stem subgroup; containment rather than equality also
+        # supports a separately curated subset. Two failure modes the `> 1`-only preserve
         # missed (#651):
         #   - the accepted raw-stem subgroup NO LONGER folds (labels degraded to
         #     NULL/weak after corpus drift) AND a DIFFERENT raw stem DOES fold → only
         #     one stem folds, so the old `> 1` block was skipped and the non-accepted
-        #     peer was selected, emitting under the accepted scope (the `[[accept]]`
-        #     then silently resolves to the WRONG variables);
+        #     peer was selected, emitting under the accepted scope with the WRONG variables;
         #   - the genuine two-folder collision the `> 1` block already handled.
         # In both, force the winner to the accepted subgroup: if it still folds it
         # re-emits (idempotent); if it has DEGRADED the normal emit path naturally
-        # drops it (NULL→continue / battery→excluded), which is the "fail" arm —
-        # `resolve_accept` fails LOUDLY at the next build, the correct outcome. A
+        # drops it (NULL→continue / battery→excluded), so no peer can take its scope. A
         # non-accepted peer is NEVER selected for an accepted key. The non-accepted
         # peer is NOT counted into `skipped_trim_collision` (a peer colliding with an
         # accepted scope is not a symmetric two-family drop). The `> 1`
@@ -478,8 +466,7 @@ def infer_concept_group_candidates(
             # The accepted members are materialized as a group, so on a normal built
             # DB exactly one raw-stem subgroup supersets them. If none does (the
             # accepted family has genuinely vanished from the catalog), emit nothing
-            # for this key — `resolve_accept` will fail loudly next build (the "fail"
-            # arm). Never let a peer win the accepted key.
+            # for this key — the accepted family is absent, so no peer can claim its scope. Never let a peer win the accepted key.
             if accepted_sub is None:
                 continue
             members = accepted_sub
@@ -633,7 +620,7 @@ def render_candidates_toml(
 ) -> str:
     """Render the committed, machine-owned `worklists/concept_groups.auto.toml` candidate
     catalog as a `[[variable_group]]` TOML string a maintainer folds from by
-    `[[accept]]` reference. Built by hand (not `tomli_w`) so the per-candidate
+    copying its register-scoped `[[group]]` curation. Built by hand (not `tomli_w`) so the per-candidate
     `# axis=… agreement=… members=…` provenance comments survive — `tomli_w` drops
     comments. The header records the executable regenerate command, the active
     thresholds, the foldable count, the `excluded_batteries` count, the
@@ -665,8 +652,8 @@ def render_candidates_toml(
         "# An unaccepted family stays unfolded. Concept groups are presentation-only,",
         "# so review each family before accepting it.",
         "#",
-        "# Regeneration is IDEMPOTENT: the generator reads worklists/concept_groups.accepted.toml",
-        "# and PRESERVES already-accepted families here, so they remain reviewable.",
+        "# Regeneration is IDEMPOTENT: literal register [[group]] scopes count as accepted,",
+        "# so matching families remain reviewable in this candidate catalog.",
         "#",
         f"# thresholds: min-siblings={min_siblings} "
         f"min-label-prefix={min_label_prefix} min-agreement={min_agreement}",
