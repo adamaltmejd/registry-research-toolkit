@@ -619,28 +619,27 @@ only) is evaluated as in the complete build. An entry that touches the selected
 registers never hides a reference error the complete build would report, since a typo
 there would silently drop a real edge. It defers a reference only when the other end
 provably exists but was not selected, known without forming it: the unselected scope
-files' naming declares those registers, variants and variables (a naming-ambiguity
-name is a declared variable whose ownership is unresolved, which the complete build
-withholds with a cause), and the prepared store holds their observed register
-names and native IDs. A representation or state is proven as far as its declared
-variable and variant; the complete build checks its column and period. Such a reference
-(a `same_as` or succession edge, a group or tag member, a code/label pair, a source
-event or a source label) is withheld as one warning code,
-`deferred_out_of_slice_reference`; `deferred_references` counts distinct references. A
-target no scope declares, including an undeclared variable in an existing unselected
-register, stays the complete build's error, and a source label matching no known
-register stays a literal label. Succession-event endpoints observed only in unselected
-registers, and source labels naming exactly one unselected register, are likewise
-deferred, and a source event with every endpoint there is skipped as `skipped_curation`;
-native IDs occurring in both scopes, and unselected occurrences with no supported
-target, need the complete occurrence census and are resolved only by the full build. A
-scoped pass is therefore necessary but not sufficient: it may pass where the complete
-build fails on curation outside the slice, and the complete build stays the check on
-everything, including every skipped entry and deferred reference. Shared-input
-diagnostics are still reported corpus-wide. The scoped output is create-only and marked
-incomplete and nonpublishable in both modes. The summary records the register list,
-`publication_ready` false and `corpus_validation` `not_applicable`; structural
-validation still runs.
+files' naming declares those registers, variants and variables (a naming-ambiguity name
+is a declared variable whose ownership is unresolved, which the complete build withholds
+with a cause), and the prepared store holds their observed register names and native
+IDs. A representation or state is proven as far as its declared variable and variant;
+the complete build checks its column and period. Such a reference (a `same_as` or
+succession edge, a group or tag member, a code/label pair, a source event or a source
+label) is withheld as one warning code, `deferred_out_of_slice_reference`;
+`deferred_references` counts distinct references. A target no scope declares, including
+an undeclared variable in an existing unselected register, stays the complete build's
+error, and a source label matching no known register stays a literal label.
+Succession-event endpoints observed only in unselected registers, and source labels
+naming exactly one unselected register, are likewise deferred, and a source event with
+every endpoint there is skipped as `skipped_curation`; native IDs occurring in both
+scopes, and unselected occurrences with no supported target, need the complete
+occurrence census and are resolved only by the full build. A scoped pass is therefore
+necessary but not sufficient: it may pass where the complete build fails on curation
+outside the slice, and the complete build stays the check on everything, including every
+skipped entry and deferred reference. Shared-input diagnostics are still reported
+corpus-wide. The scoped output is create-only and marked incomplete and nonpublishable
+in both modes. The summary records the register list, `publication_ready` false and
+`corpus_validation` `not_applicable`; structural validation still runs.
 
 Publication uses staged output and atomic replacement, with the previous generation
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call
