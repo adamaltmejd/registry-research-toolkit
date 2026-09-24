@@ -68,7 +68,7 @@ context_limit_tokens = 300000
 compaction_threshold_share = 0.7
 
 # GPT-6 Luna on the codex harness, on trial as a cheaper implementer
-# (2026-09-24). Its workflow is reviewed by the Muse seat so review and
+# (2026-09-24). The trial workflow has it reviewed by the Muse seat so review and
 # implementation never share a provider.
 [agents.luna]
 harness = "codex"
@@ -372,7 +372,7 @@ model = "gpt-6-sol"
 effort = "high"
 speed = "fast"
 
-# A Muse seat reviews the luna trial workflow, so its implementer (OpenAI) and
+# A Muse seat reviews the trial workflow, so its implementer (OpenAI) and
 # reviewer (Meta) come from different providers.
 [review.reviewers.muse]
 engine = "pi"
@@ -453,8 +453,10 @@ implementer = "muse"
 [workflows.heavy]
 implementer = "heavy"
 
-# luna: trial of GPT-6 Luna as implementer (2026-09-24), reviewed by Muse.
-[workflows.luna]
+# trial: evaluates a candidate replacement for the default implementer
+# (2026-09-24: GPT-6 Luna, reviewed by Muse). If the trial holds, its agent and
+# review move into [workflows.default] and this workflow is deleted.
+[workflows.trial]
 implementer = "luna"
 review = ["muse"]
 
