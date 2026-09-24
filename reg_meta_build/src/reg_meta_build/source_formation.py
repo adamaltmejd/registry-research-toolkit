@@ -435,6 +435,39 @@ def form_native_variable(
         return VariableFormation(None, tuple(diagnostics), records, (), ())
     chosen_spelling: str | None = None
     if len(columns) > 1:
+        # Two spellings delivered side by side in one edition are two
+        # columns, not one column spelled two ways: refuse the fold when a
+        # single edition of one variant co-delivers two spellings of one
+        # fold key, exactly as without the fold. Occurrences without edition
+        # evidence cannot prove co-delivery, so they keep folding.
+        by_edition: dict[tuple[NativeKey | None, NativeKey], dict[str, set[str]]] = (
+            defaultdict(lambda: defaultdict(set))
+        )
+        for record in effective:
+            field = record.fields.column_name
+            if (
+                record.identity_checked
+                or field is None
+                or field.status != "value"
+                or record.edition_key is None
+            ):
+                continue
+            assert isinstance(field.value, str)
+            by_edition[(record.variant_key, record.edition_key)][
+                fold_column(field.value)
+            ].add(field.value)
+        if any(
+            len(spellings) > 1
+            for folds in by_edition.values()
+            for spellings in folds.values()
+        ):
+            issue(
+                "unresolved_native_identity",
+                "The source-native variable has multiple column spellings; an exact partition or alias decision is required.",
+                ("identity", "column_name"),
+                (subject,),
+            )
+            return VariableFormation(None, tuple(diagnostics), records, (), ())
         # Case/diacritic twins are one physical column by the shared
         # column-identity key: formation proceeds on the most recent spelling
         # while the raw spellings stay visible on the occurrence evidence.
