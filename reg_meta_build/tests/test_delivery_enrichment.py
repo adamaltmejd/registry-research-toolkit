@@ -17,8 +17,7 @@ def _write_register(tmp_path: Path, body: str) -> Path:
     path = root / "registers" / "scb" / "agi.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        '[register]\nprovider = "scb"\nslug = "agi"\nnative_id = "1"\n\n'
-        + body,
+        '[register]\nprovider = "scb"\nslug = "agi"\nnative_id = "1"\n\n' + body,
         encoding="utf-8",
     )
     return root
@@ -33,10 +32,13 @@ def test_valid_description_and_alias_parse(tmp_path: Path) -> None:
         'delivery_column = "KON"\n',
     )
     enrichment = load_delivery_enrichment(root)
-    assert [(d.provider, d.register, d.variable, d.description) for d in enrichment.descriptions] == [
-        ("scb", "agi", "kon", "Kön")
+    assert [
+        (d.provider, d.register, d.variable, d.description)
+        for d in enrichment.descriptions
+    ] == [("scb", "agi", "kon", "Kön")]
+    assert [(a.variable, a.delivery_column) for a in enrichment.aliases] == [
+        ("kon", "KON")
     ]
-    assert [(a.variable, a.delivery_column) for a in enrichment.aliases] == [("kon", "KON")]
 
 
 def test_unknown_key_is_rejected_with_file_and_entry(tmp_path: Path) -> None:

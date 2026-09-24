@@ -17,8 +17,7 @@ def _write_register(tmp_path: Path, body: str) -> Path:
     path = root / "registers" / "scb" / "lisa.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n'
-        + body,
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n' + body,
         encoding="utf-8",
     )
     return root

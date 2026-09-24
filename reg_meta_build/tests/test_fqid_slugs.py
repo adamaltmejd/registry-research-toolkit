@@ -564,8 +564,7 @@ class TestProviderToml:
         register_path = curation / "registers" / "scb" / "lisa.toml"
         register_path.parent.mkdir(parents=True, exist_ok=True)
         register_path.write_text(
-            '[register]\nprovider = "scb"\nslug = "lisa"\n'
-            'native_id = "34"\n\n' + body,
+            '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n' + body,
             encoding="utf-8",
         )
         return slug_path, curation
@@ -648,15 +647,13 @@ class TestProviderToml:
         slug_dir.mkdir()
         slug_path = _write(
             slug_dir / "scb.toml",
-            '[register."34"]\nslug = "lisa"\n'
-            '[variable."34.4.kon"]\nslug = "kon"\n',
+            '[register."34"]\nslug = "lisa"\n[variable."34.4.kon"]\nslug = "kon"\n',
         )
         curation = tmp_path / "curation"
         register_path = curation / "registers" / "scb" / "lisa.toml"
         register_path.parent.mkdir(parents=True, exist_ok=True)
         register_path.write_text(
-            '[register]\nprovider = "scb"\nslug = "lisa"\n'
-            'native_id = "34"\n',
+            '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n',
             encoding="utf-8",
         )
         with pytest.raises(ValueError, match="no declared literal column ownership"):

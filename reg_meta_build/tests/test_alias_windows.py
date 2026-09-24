@@ -17,8 +17,7 @@ def _write_register(tmp_path: Path, entry: str) -> Path:
     path = root / "registers" / "scb" / "testreg.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        '[register]\nprovider = "scb"\nslug = "testreg"\nnative_id = "1"\n\n'
-        + entry,
+        '[register]\nprovider = "scb"\nslug = "testreg"\nnative_id = "1"\n\n' + entry,
         encoding="utf-8",
     )
     return root
@@ -30,8 +29,7 @@ def _entry(variable: str = "scb/testreg/test-variable", extra: str = "") -> str:
         f'variable = "{variable}"\n'
         'variant = "test-variant"\ncolumn = "AEBUY"\n'
         'source_editions = ["2018"]\nevidence = "held"\n'
-        'noted = "2026-09-13"\n'
-        + extra
+        'noted = "2026-09-13"\n' + extra
     )
 
 

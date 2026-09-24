@@ -318,7 +318,9 @@ class TestColumnEntry:
         err = _refused(tmp_path, slug_dir, _toml(data_type='"txt"'))
         assert "txt" in err.message
 
-    def test_entry_cannot_override_its_register_file(self, tmp_path: Path, slug_dir: Path) -> None:
+    def test_entry_cannot_override_its_register_file(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
         err = _refused(tmp_path, slug_dir, _toml(register='"sos/lisa"'))
         assert err.exit_code == EXIT_CONFIG
         assert "register" in err.message

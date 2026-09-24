@@ -129,14 +129,15 @@ def test_repo_concept_groups_parses() -> None:
     accepted = load_concept_group_accepts(
         _ROOT / "worklists" / "concept_groups.accepted.toml"
     )
-    accepted_groups = {
-        (g.provider, g.register, g.key): g for g in groups
-    }
+    accepted_groups = {(g.provider, g.register, g.key): g for g in groups}
     assert len(accepted) == 20
-    assert sum(
-        len(accepted_groups[(a.provider, a.register, a.key)].members)
-        for a in accepted
-    ) == 273
+    assert (
+        sum(
+            len(accepted_groups[(a.provider, a.register, a.key)].members)
+            for a in accepted
+        )
+        == 273
+    )
 
     lisa_groups = {
         g.key: g for g in groups if (g.provider, g.register) == ("scb", "lisa")
@@ -226,7 +227,9 @@ def test_repo_concept_groups_parses() -> None:
 
 def test_repo_concept_groups_auto_parses() -> None:
     # The auto candidates are now generator worklist input, not build curation.
-    groups = load_worklist_concept_groups(_ROOT / "worklists" / "concept_groups.auto.toml")
+    groups = load_worklist_concept_groups(
+        _ROOT / "worklists" / "concept_groups.auto.toml"
+    )
     assert groups
     assert all(len(g.members) >= 2 for g in groups)
 

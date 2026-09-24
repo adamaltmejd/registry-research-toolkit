@@ -1118,8 +1118,7 @@ def _fdb_entries(tmp_path: Path, body: str = _FDB_DECLARATION):
     register_file = tmp_path / "curation" / "registers" / "scb" / "fdb.toml"
     register_file.parent.mkdir(parents=True, exist_ok=True)
     register_file.write_text(
-        '[register]\nprovider = "scb"\nslug = "fdb"\nnative_id = "1"\n\n'
-        + body,
+        '[register]\nprovider = "scb"\nslug = "fdb"\nnative_id = "1"\n\n' + body,
         encoding="utf-8",
     )
     return load_provider_toml(declaration)
