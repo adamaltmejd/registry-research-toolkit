@@ -139,6 +139,29 @@ def lan_names_for(year: int) -> dict[str, str]:
     }
 
 
+# Kommuner SCB's per-year LKF files omit because the kommun has no parish code of
+# its own. Since 2021-01-01 the Forshaga-Munkfors parish (covering both whole
+# kommuner) uses only 176301 under 1763 Forshaga, so the LKF files go straight
+# from 1761 to 1763 even though 1762 Munkfors still exists. Sources: SCB "Län och
+# kommuner i kodnummerordning"
+# (https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/lan-och-kommuner-i-kodnummerordning/),
+# SCB "kommunlankod_2024.pdf", and SCB's split-parish table "Församlingar som delas
+# av kommungräns 2026-01-01" (mistab7.pdf,
+# https://www.scb.se/contentassets/13ec5841d80045498d960d456e87ea78/2025-12-05/mistab7.pdf;
+# e.g. https://www.scb.se/contentassets/13ec5841d80045498d960d456e87ea78/lkf2024.xls).
+# Exact codes only — no inference, no pattern: a row is added only when the
+# extracted year lacks it.
+PARISHLESS_KOMMUNER: dict[str, str] = {"1762": "Munkfors"}
+PARISHLESS_KOMMUNER_SINCE = 2021
+
+
+def apply_parishless_kommuner(year: int, codes: dict[str, str]) -> None:
+    """Add parish-less kommuner missing from SCB's LKF file for `year`."""
+    if year >= PARISHLESS_KOMMUNER_SINCE:
+        for code, label in PARISHLESS_KOMMUNER.items():
+            codes.setdefault(code, label)
+
+
 # PDFs available at the standard URL pattern. 2015 is PDF-only; 2016–2021 also
 # have PDFs (kept for cross-checking against XLS extraction).
 PDF_YEARS = list(range(2015, 2022))
@@ -399,6 +422,7 @@ def main() -> int:
             if year in YEARS_AVAILABLE:
                 src = download(year, args.cache)
                 codes = extract(year, src)
+                apply_parishless_kommuner(year, codes)
                 source_note = src.name
             else:
                 assert knkod_src is not None
