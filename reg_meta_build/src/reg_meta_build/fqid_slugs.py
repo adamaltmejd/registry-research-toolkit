@@ -34,8 +34,8 @@ from reg_meta.fqid import (
     validate_slug,
 )
 
-from .id import is_canonical_scb
 from ._curation import repo_curation_dir
+from .id import is_canonical_scb
 
 if TYPE_CHECKING:
     import sqlite3
@@ -599,9 +599,7 @@ def _is_split_base_pair(a: SlugEntry, b: SlugEntry) -> bool:
     """Whether two slug entries are a split sibling and its native family base."""
     split, base = (a, b) if len(a.source_id.split(".")) == 3 else (b, a)
     family = split.source_id.rpartition(".")[0]
-    if len(split.source_id.split(".")) != 3 or family != base.source_id:
-        return False
-    return True
+    return len(split.source_id.split(".")) == 3 and family == base.source_id
 
 
 @lru_cache(maxsize=8)

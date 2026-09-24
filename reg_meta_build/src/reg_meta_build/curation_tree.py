@@ -323,7 +323,7 @@ class IdentityPartitionEntry(_CurationModel):
         from .fqid_slugs import _parse_variable_id
 
         family = self.variable
-        for literal, owner in self.columns.items():
+        for owner in self.columns.values():
             try:
                 _parse_variable_id(owner)
             except RegMetaError as exc:
@@ -721,14 +721,16 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                                 f"{native_id!r}.",
                                 "Move the split to the register file owning its native family.",
                             )
-            if isinstance(row, (IdentityRouteEntry, IdentityRenameEntry)):
-                if identity.provider != "sos":
-                    raise curation_error(
-                        _CODE,
-                        f"{file} [[{table}]] entry {index}: identity routing and "
-                        f"renaming applies to SOS registers, not {identity.provider!r}.",
-                        "Move the entry to the SOS register file it describes.",
-                    )
+            if (
+                isinstance(row, (IdentityRouteEntry, IdentityRenameEntry))
+                and identity.provider != "sos"
+            ):
+                raise curation_error(
+                    _CODE,
+                    f"{file} [[{table}]] entry {index}: identity routing and "
+                    f"renaming applies to SOS registers, not {identity.provider!r}.",
+                    "Move the entry to the SOS register file it describes.",
+                )
             if isinstance(row, AcknowledgeEntry):
                 subject = row.subject.split("/")
                 if len(subject) < 3 or "/".join(subject[:2]) != expected:

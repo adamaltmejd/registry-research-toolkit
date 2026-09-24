@@ -629,7 +629,7 @@ class TestProviderToml:
             '[[identity.partition]]\nvariable = "34.4"\n'
             'columns = { Kon = "34.4.kon" }\n'
         )
-        slug_path, curation = self._write_partition(tmp_path, body)
+        _slug_path, curation = self._write_partition(tmp_path, body)
         with pytest.raises(RegMetaError) as exc:
             load_register_files(curation)
         assert "columns_ref" in exc.value.message
