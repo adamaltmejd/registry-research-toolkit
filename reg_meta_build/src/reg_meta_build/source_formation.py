@@ -440,9 +440,9 @@ def form_native_variable(
         # single edition of one variant co-delivers two spellings of one
         # fold key, exactly as without the fold. Occurrences without edition
         # evidence cannot prove co-delivery, so they keep folding.
-        by_edition: dict[
-            tuple[NativeKey | None, NativeKey], dict[str, set[str]]
-        ] = defaultdict(lambda: defaultdict(set))
+        by_edition: dict[tuple[NativeKey | None, NativeKey], dict[str, set[str]]] = (
+            defaultdict(lambda: defaultdict(set))
+        )
         for record in effective:
             field = record.fields.column_name
             if (
