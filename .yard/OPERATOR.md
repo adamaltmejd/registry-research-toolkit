@@ -134,19 +134,31 @@ focused evidence is not waived. Do not run full preparation, full suites, fronte
 gates, or a real-seed `build-db` per such ticket. This is a maintainer-approved cost
 policy (2026-09-18), not suppression of build errors.
 
-The full verification for the current batch lives on Y-184 as the combined checkpoint:
-after source adapters settle, prepare once if invalidated; after the cohesive batch
-lands, run the full gates once, one full diagnostic build, and compare against the prior
-pipeline DB and the latest release asset using `dbdiff`. Repeat an expensive check only
-for a new regression or invalidated evidence. Final strict publication validation and
-the required deterministic proof are still required before publishing; a diagnostic DB
-is not publishable. Ordinary unrelated workflows retain their existing gates, and
-outside an admitted batch a candidate that changes how `reg_meta_build` prepares,
-resolves, or materializes the corpus is still approved on a real-seed `build-db` of the
-candidate compared with the latest release asset using `dbdiff` before
-`yard lane approve`. The synthetic suite runs the full structural validator but cannot
-see corpus-only layouts. Y-113 landed green and broke the corpus build on one column
-(`coalesce_same_column_overlap`); the post-landing build caught it one lane too late.
+**The curation reorg lands on a slice proof (2026-09-24).** No candidate in the Y-226
+sequence is approved until the operator has built it on the host as a register-scoped
+diagnostic build over the slice (`--registers` from
+`archive/reports/curation-reorg-2026-09-24/baseline/slice.txt`, about six minutes) and
+compared it with B0 there: `dbdiff` for content and the report for the issue delta.
+Lanes cannot read the prepared store, so the worker's handoff states the differences and
+issue delta it expects, and the operator checks the build against them. An unexplained
+difference blocks approval. A ticket that touches coding decisions compares against B0c
+(the slice plus FoU and FASIT) instead. The baseline's README records B0, B0c and the
+rerun identity.
+
+The full verification for the Y-184 batch (frozen 2026-09-24) lived on Y-184 as the
+combined checkpoint: after source adapters settle, prepare once if invalidated; after
+the cohesive batch lands, run the full gates once, one full diagnostic build, and
+compare against the prior pipeline DB and the latest release asset using `dbdiff`.
+Repeat an expensive check only for a new regression or invalidated evidence. Final
+strict publication validation and the required deterministic proof are still required
+before publishing; a diagnostic DB is not publishable. Ordinary unrelated workflows
+retain their existing gates, and outside an admitted batch a candidate that changes how
+`reg_meta_build` prepares, resolves, or materializes the corpus is still approved on a
+real-seed `build-db` of the candidate compared with the latest release asset using
+`dbdiff` before `yard lane approve`. The synthetic suite runs the full structural
+validator but cannot see corpus-only layouts. Y-113 landed green and broke the corpus
+build on one column (`coalesce_same_column_overlap`); the post-landing build caught it
+one lane too late.
 
 ## Amend or replace
 
