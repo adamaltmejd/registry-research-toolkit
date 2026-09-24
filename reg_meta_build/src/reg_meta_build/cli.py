@@ -207,9 +207,10 @@ def _build_parser() -> argparse.ArgumentParser:
             "Form only these selection scopes. SPEC is a register id (258), "
             "SOURCE:ID when that id names registers in several sources "
             "(scb-registerinformation:258), or a whole-source scope such as an SOS "
-            "workbook by its source dataset. Shared inputs stay complete; references "
-            "to registers, variants and variables that unselected scopes declare are "
-            "deferred warnings, and curation wholly among them is skipped."
+            "workbook by its source dataset. Shared inputs stay complete; curation "
+            "touching no selected register is skipped, and references to registers, "
+            "variants and variables that unselected scopes declare are deferred "
+            "warnings."
         ),
     )
     build_p.add_argument(

@@ -176,6 +176,36 @@ def test_a_scoped_build_defers_only_what_unselected_scopes_declare():
     assert [m.key for m in dependencies.missing] == missing
 
 
+def test_a_scoped_build_skips_only_curation_wholly_outside_the_slice():
+    variables = _pair_variables()
+
+    def resolve(code, label):
+        return resolve_variable_edge_groups(
+            (CodeLabelPair(*code.split("/"), *label.split("/")),),
+            variables,
+            curated_groups=(),
+            evidence=_pair_evidence(variables),
+            withheld={},
+            unselected={("register", "scb/other"), ("variable", "scb/other/label")},
+            slice_registers={"scb/example"},
+        )
+
+    # Ends in an unselected register or one no scope declares, one of them
+    # undeclared: not the slice's to prove, so skipped without a diagnostic.
+    for code in ("scb/other/label", "scb/nosuch/code"):
+        outside = resolve(code, "scb/other/no-such")
+        assert (outside.skipped, outside.diagnostics) == (1, ())
+        assert [d.status for d in outside.dispositions] == ["withheld"]
+    # Beside the slice, a declared out-of-slice end is deferred ...
+    deferred = resolve("scb/example/code", "scb/other/label")
+    assert deferred.skipped == 0
+    assert [d.code for d in deferred.diagnostics] == [DEFERRED_REFERENCE]
+    # ... and an undeclared one stays fatal.
+    with pytest.raises(CatalogDependencyError) as error:
+        resolve("scb/example/code", "scb/other/no-such")
+    assert [m.key for m in error.value.missing] == [("variable", "scb/other/no-such")]
+
+
 def test_a_tag_whose_members_all_lie_outside_the_slice_is_omitted():
     variant = ResolvedVariant(slug="people", name="People")
     variable = _variable(variant, "one")
@@ -197,7 +227,7 @@ def test_a_tag_whose_members_all_lie_outside_the_slice_is_omitted():
         variants=((variable.register_ref, variant),),
         classifications=(),
         withheld={},
-        unselected={("variable", "scb/other/key")},
+        slice_registers={"scb/example"},
     )
     assert result.metadata.tags == ()
     assert result.skipped == 1

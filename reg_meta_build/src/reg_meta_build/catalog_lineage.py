@@ -48,6 +48,7 @@ def resolve_catalog_lineage(
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
     unselected: Collection[DependencyKey] = (),
     unselected_names: Mapping[str, Collection[str]] | None = None,
+    slice_registers: Collection[str] | None = None,
 ) -> LineageResolution:
     """Match literal source names and follow accepted variable identity edges.
 
@@ -56,10 +57,11 @@ def resolve_catalog_lineage(
     variant needs no choice; multiple variants require an explicit default.
     Unknown external source labels remain literal labels, not guessed registers.
     An attributed source with no supported source state withholds the edge as a
-    warning; ambiguity is an error. A register-scoped build defers what its
-    `unselected` scopes declare and matches their registers' observed names
-    (`unselected_names`): a label naming exactly one of them is deferred, and
-    one naming several known registers stays ambiguous.
+    warning; ambiguity is an error. A register-scoped build skips a lineage
+    default outside its `slice_registers`, defers what its `unselected` scopes
+    declare and matches their registers' observed names (`unselected_names`): a
+    label naming exactly one of them is deferred, and one naming several known
+    registers stays ambiguous.
     """
     if metadata.state_lineage or metadata.lineage_warnings:
         raise ValueError("lineage must be resolved once from current catalog states")
@@ -77,7 +79,7 @@ def resolve_catalog_lineage(
                 abbreviations[provider, match[1].strip().casefold()].add(fqid)
     available: set[DependencyKey] = {("register", fqid) for fqid in by_register}
     available.update(("variant", f"{r.provider}/{r.slug}", v.slug) for r, v in variants)
-    dependencies = CatalogDependencies(available, withheld, unselected)
+    dependencies = CatalogDependencies(available, withheld, unselected, slice_registers)
     usable_defaults = {}
     for register, variant in sorted(defaults.items()):
         with dependencies.entry():
