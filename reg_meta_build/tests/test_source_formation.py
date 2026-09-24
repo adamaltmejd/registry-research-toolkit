@@ -7,6 +7,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
+from _curation_fixtures import write_fdb_partition_curation
 from _prepared_fixtures import accept_prepared
 from reg_meta.db import open_db
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
@@ -449,17 +450,15 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
     assert warning.severity == "warning"
     assert "GatuRest" in warning.detail and "Gaturest" in warning.detail
     assert not any(d.severity == "error" for d in folded.diagnostics)
-    # The tracked declaration (mirrors fqid_slugs/scb.toml Y-167 entry) feeds
-    # the production entry point, never hand-plumbed.
+    # The register-scoped declaration feeds the production entry point.
     declaration = tmp_path / "scb.toml"
     declaration.write_text(
-        '[variable."1.830.gaturest"]\n'
-        'columns = { GatuRest = "1.830.gaturest", Gaturest = "1.830.gaturest", '
-        'PGaturest = "1.830.pgaturest" }\n'
-        'columns_ref = "Y-167 fixture reference"\n'
+        '[register."1"]\nslug = "fdb"\n'
+        '[variable."1.830.gaturest"]\nslug = "gaturest"\n'
         '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
         encoding="utf-8",
     )
+    curation_dir = write_fdb_partition_curation(tmp_path / "curation")
     records = (
         *pair,
         _fdb_record(2010, column="GatuRest", variant=427),
@@ -473,8 +472,12 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
         provider="scb",
         source_id="1.830",
         split_ids=("1.830.gaturest", "1.830.pgaturest"),
+        curation_dir=curation_dir,
     )
     assert converted.case is not None and converted.diagnostics == ()
+    assert converted.case.decision.provenance.endswith(
+        "column ownership: Y-167 fixture reference"
+    )
     applied = apply_occurrence_cases(records, (converted.case,))
     assert applied.diagnostics == ()
     slugs = {"1.830.gaturest": "gaturest", "1.830.pgaturest": "pgaturest"}
