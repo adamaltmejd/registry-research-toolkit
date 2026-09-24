@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import json
 import tomllib
-from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Annotated, Literal
@@ -46,6 +45,8 @@ from .resolved_metadata import _variable
 from .tags import load_tags
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from .fqid_slugs import LineageConfig
     from .relations import CuratedRelations
     from .tags import CuratedTag
