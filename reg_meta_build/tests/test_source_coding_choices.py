@@ -517,6 +517,61 @@ def test_incomplete_expectations_ignore_order_duplicates_and_inactive_members() 
     )
 
 
+def test_unresolved_scope_fingerprint_ignores_new_unset_optional_field() -> None:
+    from reg_meta_build.source_coding import coding_observation_sha256
+
+    class _ExtendedScope(TemporalScope):
+        extra_note: str | None = None
+
+    base = CodeListClaim(
+        "unknown",
+        TemporalScope(kind="unknown", label="unclear"),
+        (
+            CodeMembershipClaim(
+                "01", None, TemporalScope(kind="unknown", label="unclear")
+            ),
+        ),
+        version_label="unknown",
+    )
+    extended = CodeListClaim(
+        "unknown",
+        _ExtendedScope(kind="unknown", label="unclear", extra_note=None),
+        (
+            CodeMembershipClaim(
+                "01", None, _ExtendedScope(kind="unknown", label="unclear")
+            ),
+        ),
+        version_label="unknown",
+    )
+    assert base.scope.model_dump(mode="json") != extended.scope.model_dump(mode="json")
+    assert coding_observation_sha256(base) == coding_observation_sha256(extended)
+
+
+def test_unresolved_scope_fingerprint_keeps_pooled_bounds() -> None:
+    from reg_meta_build.source_coding import coding_observation_sha256
+
+    def _pooled(start: str) -> CodeListClaim:
+        return CodeListClaim(
+            "pooled",
+            TemporalScope(
+                kind="pooled",
+                label="2010-2020",
+                pooled_start=start,
+                pooled_end="2020-12-31",
+            ),
+            (
+                CodeMembershipClaim(
+                    "01", "Label", TemporalScope(kind="year_independent")
+                ),
+            ),
+            version_label="pooled",
+        )
+
+    assert coding_observation_sha256(
+        _pooled("2010-01-01")
+    ) != coding_observation_sha256(_pooled("2011-01-01"))
+
+
 def test_omission_retains_evidence_and_withholds_conflicting_overlap() -> None:
     record = _record()
     claims = (_claim("coding", "01"),)

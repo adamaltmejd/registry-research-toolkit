@@ -269,6 +269,25 @@ def _member_validity_evidence(
     return tuple(sorted(constraints)), tuple(sorted(validity))
 
 
+def _scope_evidence(
+    scope: TemporalScope,
+) -> tuple[str, str | None, tuple[tuple[str, str | None], ...], str | None, str | None]:
+    """Canonical scope content for coding fingerprints.
+
+    The fixed tuple pins semantic evidence only — kind, label, interval
+    bounds, and the pooled whole-range bounds when set — so a new optional
+    scope field left as None cannot churn existing fingerprints. A new
+    evidence-carrying field must be added here explicitly to enter the hash.
+    """
+    return (
+        scope.kind,
+        scope.label,
+        tuple((interval.start, interval.end) for interval in scope.intervals),
+        scope.pooled_start,
+        scope.pooled_end,
+    )
+
+
 def coding_observation_sha256(claim: CodeListClaim) -> str:
     """Fingerprint known or incomplete evidence without making unknowns equal.
 
@@ -288,7 +307,7 @@ def coding_observation_sha256(claim: CodeListClaim) -> str:
                     (
                         member.code,
                         member.label,
-                        member.scope.model_dump(mode="json"),
+                        _scope_evidence(member.scope),
                         *_member_validity_evidence(member),
                     )
                 )
@@ -296,7 +315,7 @@ def coding_observation_sha256(claim: CodeListClaim) -> str:
         return canonical_sha256(
             (
                 "unresolved_scope",
-                claim.scope.model_dump(mode="json"),
+                _scope_evidence(claim.scope),
                 claim.version_label,
                 sorted(members),
             )
@@ -309,7 +328,7 @@ def coding_observation_sha256(claim: CodeListClaim) -> str:
             else coding_scope_bounds(member.scope)
         )
         if bounds is None:
-            scope = member.scope.model_dump(mode="json")
+            scope = _scope_evidence(member.scope)
         else:
             clipped = sorted(
                 {
