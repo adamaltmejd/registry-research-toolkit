@@ -382,8 +382,8 @@ CSVs come from `scripts/extract_lkf.py`:
   reg_meta data has no instances for those years so no seed entries exist for them. The
   2015 PDF can be OCR'd to recover that year's parishes.
 - **2021 onward supplement**: the script adds `1762 Munkfors`, which SCB's per-year LKF
-  files omit because the kommun has no parish code of its own since the Forshaga-Munkfors
-  parish merged under 1763 Forshaga.
+  files omit because the kommun has no parish code of its own since the
+  Forshaga-Munkfors parish merged under 1763 Forshaga.
 
 Re-run extraction:
 
