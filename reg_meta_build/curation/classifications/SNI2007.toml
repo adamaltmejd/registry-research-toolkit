@@ -1,0 +1,47 @@
+[classification]
+short_name = "SNI2007"
+slug = "sni2007"
+name = "Svensk standard för näringsgrensindelning 2007"
+name_en = "Swedish Standard Industrial Classification 2007"
+publisher = "SCB"
+valid_from = 2008
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+codes_file = "sni2007.csv"
+sentinel_codes = [
+  { code = "00000", meaning = "Okänd näringsgren" },
+  { code = "G99", meaning = "Okänd bransch" },
+  { code = "U99", meaning = "Okänd bransch" },
+  { code = "00", meaning = "Okänt" },
+  { code = "XX", meaning = "Partiellt bortfall" },
+  { code = "0000", meaning = "Okänd" },
+  { code = "XXXX", meaning = "Partiellt bortfall" },
+  { code = "XXXXX", meaning = "Partiellt bortfall" },
+  { code = "xxx", meaning = "Partiellt bortfall" },
+  { code = "NULL", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Okänd" },
+  { code = "000", meaning = "Uppgift saknas" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "000000", meaning = "Okänd" },
+]
+
+[binding]
+value_set_labels = [
+  "SNI 2007, Aktiviteter, alternativ",
+  "SNI 2007, Branscher, alternativ",
+  "SNI 2007, Branscher Huvudgrupp, alternativ",
+  "Standard för svensk näringsgrensindelning 2007, Aktiviteter",
+  "Standard för svensk näringsgrensindelning 2007, Branscher",
+  "SNI 2007, grov nivå - \"populärversion\"",
+  "SNI 2007, utökad nivå - \"populärversion\"",
+  "SNI 2007, grov redovisningsnivå",
+  "SNI 2007, utökad redovisningsnivå",
+  "SNI 2007, konjunkturstatistik, variant",
+  "SNI 2007 MIR",
+  "Näringsgrupp SNI2007",
+  "Två-siffrig kod på grov avdelningsnivå, SNI2007",
+  "Branschgruppering enligt SNI2007, som används för redovsning",
+  "BlTyp SNI2007",
+  "NR:s näringsgrensindelning SNI 2007",
+  "NR:s näringsgrensindelning SNI2007",
+  "NR:s näringsgrensindelning SNI 2007, IVP2008",
+]

@@ -11,7 +11,7 @@ table at row 12+:
 Each data row contributes three LKF codes — the 2-digit län, the 4-digit
 kommun, and the 6-digit församling — all of which appear together in
 register data. The output is one canonical CSV per year, ready to wire
-into ``curation/classifications.toml`` as ``valid_codes_file = "lkf{YEAR}.csv"``.
+into ``curation/classifications/LKF{YEAR}.toml`` as ``codes_file = "lkf{YEAR}.csv"``.
 
 Coverage (as of probing in 2026-04):
 
@@ -32,13 +32,14 @@ Run:
         --out reg_meta_build/input_data/classifications/
 
 Add --download-pdfs to also fetch the PDF editions for 2015–2021.
-Add --emit-toml to print starter [[classification]] entries on stdout.
+Add --emit-toml to print starter classification files on stdout.
 
 Usage:
     uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
         --out reg_meta_build/input_data/classifications/
 
-Add --emit-toml to print seed entries for curation/classifications.toml on stderr.
+Add --emit-toml to print starter curation/classifications/LKF{YEAR}.toml files on
+stdout.
 """
 
 from __future__ import annotations
@@ -332,31 +333,32 @@ def write_csv(year: int, codes: dict[str, str], out_dir: Path) -> Path:
 
 
 def emit_toml_entry(year: int) -> str:
-    """Emit a [[classification]] block for LKF{year}."""
-    # The vardemangdsversion strings are inconsistent across years — see
-    # the existing LKF entry in curation/classifications.toml for the variants.
-    # The script prints a starter; reconcile against actual observed
-    # strings before committing.
+    """Emit a starter curation/classifications/LKF{year}.toml."""
+    # The value-set labels are inconsistent across years — see the existing
+    # curation/classifications/LKF*.toml files for the variants. The script
+    # prints a starter; reconcile against actual observed labels before
+    # committing.
     #
     # No `supersedes` field: classification succession lives in
     # `classification_replaced_by`, auto-derived from the lkf<year> slug-tail
-    # chain during common catalog resolution. The seed declares
+    # chain during common catalog resolution. The file declares
     # no succession.
     return f"""\
-[[classification]]
+[classification]
 short_name = "LKF{year}"
+slug = "lkf{year}"
 name = "Län, kommuner och församlingar {year}"
 name_en = "Counties, municipalities and parishes {year}"
 publisher = "SCB"
-version = "{year}"
 valid_from = {year}
 valid_to = {year}
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
-valid_codes_file = "lkf{year}.csv"
-vardemangdsversion = [
-  # TODO: add the year's vardemangdsversion variants here. Sample patterns:
+codes_file = "lkf{year}.csv"
+
+[binding]
+value_set_labels = [
+  # TODO: add the year's normalized value-set labels here. Sample patterns:
   #   "LKF {year}-01-01/ Län, kommuner och församlingar"
-  #   "LKF {year}-01-01/ Län, kommuner och församlingar "  (trailing space)
   #   "{year}-01-01/ Län, kommuner och församlingar"       (no LKF prefix, 2018+)
   #   "{year}-01-01 /Län, kommuner och församlingar"       (space before /, 2023+)
 ]
@@ -391,7 +393,7 @@ def main() -> int:
     p.add_argument(
         "--emit-toml",
         action="store_true",
-        help="Print starter curation/classifications.toml entries on stderr.",
+        help="Print starter curation/classifications/LKF{YEAR}.toml files on stdout.",
     )
     p.add_argument(
         "--download-pdfs",

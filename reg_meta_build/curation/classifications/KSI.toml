@@ -1,0 +1,11 @@
+[classification]
+short_name = "KSI"
+slug = "ksi"
+name = "Klassifikation av socialtjänstens insatser och aktiviteter (KSI)"
+name_en = "Classification of Social Services Interventions and Activities (KSI)"
+publisher = "Socialstyrelsen"
+url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/ksi.tsv?version=1&modificationDate=1779622712923&api=v2"
+codes_file = "sos/ksi.csv"
+
+[binding]
+label_source = "sos"

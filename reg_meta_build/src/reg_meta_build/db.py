@@ -664,9 +664,9 @@ SELECT
 FROM variable v;
 
 -- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
--- Populated at build time from a maintainer-curated seed (curation/classifications.toml)
+-- Populated at build time from maintainer-curated TOML (curation/classifications/)
 -- that maps raw variable_instance.vardemangdsversion labels to normalized
--- classification rows. See DESIGN.md → Classification seed.
+-- classification rows. See CLASSIFICATIONS.md → Classification files.
 CREATE TABLE classification (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     short_name       TEXT NOT NULL UNIQUE,

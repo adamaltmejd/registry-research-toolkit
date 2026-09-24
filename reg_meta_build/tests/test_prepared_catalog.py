@@ -52,12 +52,6 @@ def _selection(
             *(("vardemangder", "valid_dates") if validity else ()),
         ),
     )
-    curation = tmp_path / "curation"
-    curation.mkdir()
-    (curation / "tags.toml").write_text("")
-    slugs = tmp_path / "slugs"
-    slugs.mkdir()
-    (slugs / "scb.toml").write_text("")
     lisa = None
     if all_roles:
         write_sos_input(source)
@@ -89,13 +83,7 @@ def _selection(
         sheet.append(["Example", "A", "Declared identifier"])
         identifiers.save(source / "SCB/ID-kolumner.xlsx")
         identifiers.close()
-    return write_input_bundle(
-        tmp_path / "accepted",
-        source,
-        curation_dir=curation,
-        slug_dir=slugs,
-        lisa_workbook=lisa,
-    )
+    return write_input_bundle(tmp_path / "accepted", source, lisa_workbook=lisa)
 
 
 def test_cli_prepares_new_artifact_without_accepting_or_overwriting_it(
@@ -200,12 +188,6 @@ def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> Non
         "thin_provider",
         "code_list",
     }
-    assert (
-        accounting[("bundle", "curation/tags.toml")].disposition == "excluded_curation"
-    )
-    assert (
-        accounting[("bundle", "fqid_slugs/scb.toml")].disposition == "excluded_naming"
-    )
     assert (
         accounting[("bundle", "catalog/Forsakringskassan/fk.toml")].disposition
         == "absent"
@@ -640,9 +622,7 @@ def test_source_change_during_preparation_does_not_publish(
 
     def change_source(*args, **kwargs):
         result = original(*args, **kwargs)
-        (selection.path / "curation/tags.toml").write_text(
-            "# changed after selection\n"
-        )
+        (selection.path / "catalog-bundle.json").write_text("{}\n")
         return result
 
     monkeypatch.setattr(prepared_catalog, "read_scb_events", change_source)
@@ -668,13 +648,11 @@ def test_source_index_flags_cannot_hide_changes_during_preparation(
                 str(selection.path),
                 "update-index",
                 flag,
-                "curation/tags.toml",
+                "catalog-bundle.json",
             ],
             check=True,
         )
-        (selection.path / "curation/tags.toml").write_text(
-            "# changed but hidden from status\n"
-        )
+        (selection.path / "catalog-bundle.json").write_text("{}\n")
         return result
 
     monkeypatch.setattr(prepared_catalog, "read_scb_events", hide_source_change)

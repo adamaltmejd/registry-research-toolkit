@@ -19,7 +19,6 @@ from pydantic import BaseModel, ConfigDict, model_validator
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,
-    CLASSIFICATIONS_FILE,
     FREEZE_STATE_FILE,
     SNAPSHOT_FILENAME,
     EntityKind,
@@ -28,7 +27,6 @@ from reg_meta_build.fqid_slugs import (
     _parse_register_id,
     _parse_variable_id,
     _parse_variant_id,
-    load_classifications_toml,
     load_freeze_states,
     load_provider_toml,
 )
@@ -400,11 +398,7 @@ def read_naming_selection(
             continue
         if path.suffix != ".toml":
             raise NamingConversionError(f"unsupported naming input: {path.name}")
-        loaded = (
-            load_classifications_toml(path)
-            if path.name == CLASSIFICATIONS_FILE
-            else load_provider_toml(path)
-        )
+        loaded = load_provider_toml(path)
         raw = tomllib.loads(payload.decode("utf-8"))
         origin = "generated" if path.name.endswith(AUTO_FILE_SUFFIX) else "authored"
         for entry in loaded:

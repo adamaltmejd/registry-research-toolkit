@@ -1,0 +1,23 @@
+[classification]
+short_name = "LKF2025"
+slug = "lkf2025"
+name = "Län, kommuner och församlingar 2025"
+name_en = "Counties, municipalities and parishes 2025"
+publisher = "SCB"
+valid_from = 2025
+valid_to = 2025
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf2025.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Okänd" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "00", meaning = "Okänd" },
+  { code = "", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 2025-01-01 /Län, kommuner och församlingar",
+]

@@ -1,0 +1,16 @@
+[classification]
+short_name = "AGARKAT2020"
+slug = "agarkat2020"
+name = "Standard för indelning efter ägarkategori 2020"
+name_en = "Swedish Standard Classification by Owner Category 2020"
+publisher = "SCB"
+valid_from = 2020
+codes_file = "agarkat2020.csv"
+sentinel_codes = [
+  { code = "00", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "Standard för indelning efter ägarkategori 2020",
+]

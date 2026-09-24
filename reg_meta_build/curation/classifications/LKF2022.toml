@@ -1,0 +1,30 @@
+[classification]
+short_name = "LKF2022"
+slug = "lkf2022"
+name = "Län, kommuner och församlingar 2022"
+name_en = "Counties, municipalities and parishes 2022"
+publisher = "SCB"
+valid_from = 2022
+valid_to = 2022
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf2022.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Kommunkod saknas" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Okänt" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "88", meaning = "Okänt län" },
+  { code = "98", meaning = "Okänt län" },
+]
+
+[binding]
+value_set_labels = [
+  "2022-01-01/ Län, kommuner och församlingar",
+]

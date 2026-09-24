@@ -1,0 +1,19 @@
+[classification]
+short_name = "JURFORM2000"
+slug = "jurform2000"
+name = "Standard för indelning efter juridisk form 2000"
+name_en = "Swedish Standard Classification by Legal Form 2000"
+publisher = "SCB"
+valid_from = 2000
+valid_to = 2019
+codes_file = "jurform2000.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Uppgift saknas" },
+  { code = "0", meaning = "Okänt värde" },
+]
+
+[binding]
+value_set_labels = [
+  "Standard för indelning efter juridisk form 2000",
+]

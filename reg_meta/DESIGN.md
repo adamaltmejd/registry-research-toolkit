@@ -1198,11 +1198,12 @@ level keeps each code system distinct (SUN 2000 codes never bleed into SUN 2020)
 isolates split siblings (each sibling's states classify independently), and lets
 variable-level helpers aggregate when needed.
 
-The `classification_id` column is populated at build time from a maintainer-curated TOML
-seed at `reg_meta_build/curation/classifications.toml` (exact match against
-`value_set_version_label`, no fuzzy inference). The seed schema, build-time invariants,
-and validation rules live in [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)
-§ "Classification seed".
+The `classification_id` column is populated at build time from maintainer-curated TOML,
+one file per classification under `reg_meta_build/curation/classifications/` (exact
+match against `value_set_version_label`, no fuzzy inference). The file layout and loader
+rules live in
+[../reg_meta_build/CLASSIFICATIONS.md](../reg_meta_build/CLASSIFICATIONS.md) §
+"Classification files".
 
 ### Canonical codes and state conformance
 

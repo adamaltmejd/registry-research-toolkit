@@ -1,0 +1,13 @@
+[classification]
+short_name = "KS87-P"
+slug = "ks87-p"
+name = "Klassifikation av sjukdomar 1987, primärvård (KS87-P)"
+name_en = "Swedish Classification of Diseases 1987, primary care (KS87-P)"
+publisher = "Socialstyrelsen"
+valid_from = 1987
+valid_to = 1996
+url = "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/klassifikation-av-sjukdomar-1987-primarvard-ks87-p-excel.xls"
+codes_file = "sos/ks87-p.csv"
+
+[binding]
+label_source = "sos"

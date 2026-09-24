@@ -1834,7 +1834,6 @@ class TestValidateModule:
         d = tmp_path / "egk_slugs"
         d.mkdir()
         (d / "scb.toml").write_text(scb_body, encoding="utf-8")
-        (d / "classifications.toml").write_text("", encoding="utf-8")
         return d
 
     def test_entity_key_gate_skipped_without_slug_dir(self, fixture_db: Path):
@@ -2220,10 +2219,6 @@ class TestBundleCommandOutputProtection:
         published = db_dir / DB_FILENAME
         published_bytes = b"EXISTING-CATALOG"
         published.write_bytes(published_bytes)
-        curation_dir = tmp_path / "curation"
-        slug_dir = tmp_path / "slugs"
-        curation_dir.mkdir()
-        slug_dir.mkdir()
         missing_selection = tmp_path / "missing-selection"
         candidate = repository / "candidate"
 
@@ -2232,10 +2227,6 @@ class TestBundleCommandOutputProtection:
                 command,
                 "--input-dir",
                 str(input_dir),
-                "--curation-dir",
-                str(curation_dir),
-                "--slug-dir",
-                str(slug_dir),
                 "--scb-snapshot",
                 str(missing_selection),
                 "--scb-input-commit",

@@ -1,0 +1,19 @@
+[classification]
+short_name = "SUN2020-GRUPP"
+slug = "sun2020-grupp"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsgrupper"
+name_en = "Swedish Standard Classification of Education 2020 — Education Groups"
+publisher = "SCB"
+valid_from = 2020
+description = "Standardized education groups, including the more detailed 'Gruppering - Detaljerad' variant."
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+codes_file = "sun2020-grupp.csv"
+sentinel_codes = [
+  { code = "99Z", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "SUN 2020 - Gruppering",
+  "SUN 2020 - Gruppering - Detaljerad",
+]

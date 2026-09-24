@@ -1,0 +1,19 @@
+[classification]
+short_name = "SUN2000-GRUPP"
+slug = "sun2000-grupp"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsgrupper"
+name_en = "Swedish Standard Classification of Education 2000 — Education Groups"
+publisher = "SCB"
+valid_from = 2000
+valid_to = 2019
+description = "Standardized education groups (3-character alphanumeric codes like 01Z, 15B, 35J)."
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+codes_file = "sun2000-grupp.csv"
+sentinel_codes = [
+  { code = "***", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "SUN 2000 - Gruppering",
+]

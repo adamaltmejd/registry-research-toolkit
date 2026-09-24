@@ -1,14 +1,49 @@
 # Adding canonical code CSVs
 
-Maintainer guide for populating `valid_codes_file` for each classification. Background:
-see `DESIGN.md` § "Classifications" → "Canonical codes and state conformance".
+Maintainer guide for populating `codes_file` for each classification. Background: see
+`DESIGN.md` § "Classifications" → "Canonical codes and state conformance".
+
+## Classification files
+
+Each classification is one file,
+`reg_meta_build/curation/classifications/<short_name>.toml`:
+
+```toml
+[classification]
+short_name = "ISCED2011"
+slug = "isced2011"            # the FQID is class/<slug>
+name = "International Standard Classification of Education 2011 — Level"
+name_en = "International Standard Classification of Education 2011 — Level"
+publisher = "UNESCO"          # optional, like name_en, valid_to, description and url
+valid_from = 2011
+codes_file = "isced2011.csv"  # under input_data/classifications/; SOS books under sos/
+sentinel_codes = [            # optional
+  { code = "-1", meaning = "Uppgift saknas" },
+]
+
+[binding]                     # optional
+# label_source = "sos"        # provider whose value-set labels carry it; absent = SCB
+value_set_labels = [          # exact value-set version labels the binding rule matches
+  "ISCED 2011 - Nivå",
+]
+
+[[binding.variable]]          # optional: a variable whose inline codes use this book
+variable = "scb/ureg/isced2011niva"
+note = "curated:#494 ISCED 2011 education-level labels"
+```
+
+The loader (`curation_tree.py`) rejects unknown keys, a file whose name is not its
+`short_name`, and a label that is not in normalized form (NFC, single spaces, no leading
+or trailing space). A slug, a value-set label or a bound variable is declared once, in
+one file. Succession between classifications is not declared here: it lives in
+`curation/relations.toml` (`type = "replaced_by"`) plus the automatic year-tail chains.
 
 ## How it works
 
-Each `[[classification]]` in `reg_meta_build/curation/classifications.toml` may declare
-a `valid_codes_file = "<filename>.csv"`. The CSV lives under
-`reg_meta_build/input_data/classifications/` (tracked in git; SCB-sourced CSVs live at
-the top level, SOS CSVs under `sos/`). At build time:
+Every CSV under `reg_meta_build/input_data/classifications/` (tracked in git;
+SCB-sourced CSVs live at the top level, SOS CSVs under `sos/`) is prepared as a
+classification book; each classification file names its book in `codes_file`. At build
+time:
 
 1. Every code in the CSV is ensured to exist in `value_code` (codes that never appeared
    in any register get inserted as canonical-but-unobserved).
@@ -52,8 +87,8 @@ A01,Tyfoidfeber,Typhoid fever,A00-A09
    classification's documentation page).
 2. Save as `reg_meta_build/input_data/classifications/<short_name>.csv` with the header
    above and commit it.
-3. Add `valid_codes_file = "<short_name>.csv"` to the matching seed entry in
-   `reg_meta_build/curation/classifications.toml`.
+3. Set `codes_file = "<short_name>.csv"` in the matching
+   `reg_meta_build/curation/classifications/<short_name>.toml`.
 4. Run `reg-meta-build build-db --input-dir reg_meta_build/input_data/`. Build output
    reports per-classification canonical coverage and persisted per-state conformance
    evidence for observed non-canonical codes.
@@ -64,8 +99,7 @@ A01,Tyfoidfeber,Typhoid fever,A00-A09
 ## Status overview
 
 82 classifications (47 per-year LKF entries + 24 SCB-sourced others + 11 SOS code
-systems). All currently declared in `curation/classifications.toml` ship with a
-`valid_codes_file`.
+systems). Every file in `curation/classifications/` names its CSV in `codes_file`.
 
 ### SCB-sourced classifications
 
@@ -103,12 +137,11 @@ label variant becomes its own `value_code` row, all marked `is_valid=1`).
 
 ### SOS code systems
 
-These are provider-seeded entries (`provider = "sos"`): they seed canonical codes via
-`valid_codes_file`. PR2 wired SOS→classification linkage via the
-`external_classification` resolver, so SOS variable_states can now carry a
-`classification_id` — the entries are no longer canonical-only. CSVs live under
-`input_data/classifications/sos/`; `manifest.json` there records the per-system source
-URL, sha256, and counts.
+These are provider-seeded entries (`label_source = "sos"`): they seed canonical codes
+via `codes_file`. PR2 wired SOS→classification linkage via the `external_classification`
+resolver, so SOS variable_states can now carry a `classification_id` — the entries are
+no longer canonical-only. CSVs live under `input_data/classifications/sos/`;
+`manifest.json` there records the per-system source URL, sha256, and counts.
 
   | short_name   | canonical codes | publisher                               | notes                                                    |
   | ------------ | --------------: | --------------------------------------- | -------------------------------------------------------- |
@@ -400,11 +433,8 @@ The current toml entries were generated by `--emit-toml` then spliced in. If SCB
 new yearly snapshot, add an `LKF{year}` block manually (or re-run --emit-toml and
 merge).
 
-Then add `LKF{year}` seed entries (`--emit-toml` prints starters; the year-string
-variants need to be reconciled against the existing LKF entry in
-`curation/classifications.toml`). The current single `LKF` entry should then be removed,
-with each year's `value_set_version_label` strings moved to the appropriate `LKF{year}`
-entry.
+Then add `curation/classifications/LKF{year}.toml` (`--emit-toml` prints starters; the
+year-string label variants need to be reconciled against the existing LKF files).
 
 ### Education — ISCED 2011
 

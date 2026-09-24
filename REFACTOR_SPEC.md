@@ -466,15 +466,13 @@ pinned. Steward dirs (e.g. `swecov/`) remain churning. The remaining advance is 
 per-provider `frozen` seal (#472).
 
 At the v1 release: curation (#471) and the churning→curating advance (#759) have
-shipped. What remains is to seal each provider and the reserved `classifications` zone — (1)
-verify no identity-churn issues are open for it (the #418 pre-seal re-verify), and (2)
-set its zone to `frozen` in `freeze.toml`, which arms the rename-refusal gate. The
-`classifications` zone covers the hand-curated `classifications.toml` slugs (79 entries
-in `.snapshot.json`); it has no `freeze.toml` entry today, so classification slugs stay
-mutable until it too is advanced. (#759 was scoped to the 8 providers; the
-`classifications` seal is part of #472.) There is no single global step to arm the gate
-— the seal is per-provider and per-zone. See #470 (machinery), #471 (curation), #472
-(seal).
+shipped. What remains is to seal each provider — (1) verify no identity-churn issues are
+open for it (the #418 pre-seal re-verify), and (2) set its zone to `frozen` in
+`freeze.toml`, which arms the rename-refusal gate. Classification slugs moved to
+`curation/classifications/<short>.toml` (Y-228) and left the slug snapshot and its
+freeze zones; their rename guard is a follow-up to #472. There is no single global step
+to arm the gate — the seal is per-provider and per-zone. See #470 (machinery), #471
+(curation), #472 (seal).
 
 **Preconditions — the hard identity-churn blockers are resolved.** #196 (curated
 column-merge primitive + auto case-fold + panel-key re-curation) and #197 (the FRIDA

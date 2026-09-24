@@ -168,7 +168,7 @@ class ResolvedClassification(_ResolvedModel):
     url: str | None = None
     codes: tuple[ResolvedClassificationCode, ...] = Field(min_length=1)
     # Curated per-classification sentinel codes (`{code, meaning}` exact
-    # strings from `curation/classifications.toml`). Observed codes on this
+    # strings from `curation/classifications/`). Observed codes on this
     # list keep the binding with a warning instead of severing it. Conformance
     # curation, not codebook content: not part of the pinned content hash.
     sentinel_codes: tuple[SentinelCode, ...] = ()

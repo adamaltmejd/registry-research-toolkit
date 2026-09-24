@@ -1,0 +1,26 @@
+[classification]
+short_name = "ISCED2011"
+slug = "isced2011"
+name = "International Standard Classification of Education 2011 — Level"
+name_en = "International Standard Classification of Education 2011 — Level"
+publisher = "UNESCO"
+valid_from = 2011
+url = "https://uis.unesco.org/en/topic/international-standard-classification-education-isced"
+codes_file = "isced2011.csv"
+sentinel_codes = [
+  { code = "-1", meaning = "Uppgift saknas" },
+  { code = "-2", meaning = "Inte tillämpligt" },
+]
+
+[binding]
+value_set_labels = [
+  "ISCED 2011 - Nivå",
+  "ISCED 2011 AES",
+]
+
+# Education (ISCED) — the variable slug itself names the classification; the codes
+# coincide with other numeric families but the labels are the ISCED level / field
+# names verbatim.
+[[binding.variable]]
+variable = "scb/ureg/isced2011niva"
+note = "curated:#494 ISCED 2011 education-level labels"

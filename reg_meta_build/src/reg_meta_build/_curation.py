@@ -7,12 +7,12 @@ The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 serve the `[[entry]]` curation-TOML loaders —
 `codelivery.py`, `concept_groups.py`, `tags.py`,
 `period_family_merges.py`, `delivery_enrichment.py`, `scb_errata.py`,
-`alias_windows.py`, `classification_links.py`, and `relations.py` (the single
+`alias_windows.py`, and `relations.py` (the single
 typed `[[edge]]` surface for the curated pairwise relations — same_as /
 replaced_by, #522). Each loader threads its own `code` / `prefix` / `file_name`
 through (typically via a module-level `functools.partial`) so its established error
 codes (and near-identical messages) are preserved.
-The exceptions are `classifications.py` / `fqid_slugs.py` / `extend_db.py`, whose
+The exceptions are `curation_tree.py` / `fqid_slugs.py` / `extend_db.py`, whose
 data shapes differ enough that they don't share this scaffold.
 
 Two single-definition invariants the helpers enforce: id keys MUST canonicalize
@@ -63,7 +63,7 @@ def load_sentinel_codes(
     raw: object,
     *,
     classification: str,
-    code: str = "classification_seed_invalid",
+    code: str,
 ) -> tuple[SentinelCode, ...]:
     """Validate a classification's raw `sentinel_codes` TOML list.
 
@@ -103,13 +103,21 @@ def load_sentinel_codes(
     return tuple(sentinels)
 
 
+_REPO_CURATION = Path(__file__).resolve().parent.parent.parent / "curation"
+
+
+def repo_curation_dir() -> Path | None:
+    """The checkout's ``curation/`` tree; wheels do not ship curation."""
+    return _REPO_CURATION if _REPO_CURATION.is_dir() else None
+
+
 def repo_curation_path(file_name: str) -> Path | None:
     """Return one catalog-overlay file from the repo's ``curation/`` directory.
 
     Wheels do not ship maintainer curation, so a missing file resolves to
     ``None`` just like the loaders' explicit missing-path convention.
     """
-    candidate = Path(__file__).resolve().parent.parent.parent / "curation" / file_name
+    candidate = _REPO_CURATION / file_name
     return candidate if candidate.is_file() else None
 
 

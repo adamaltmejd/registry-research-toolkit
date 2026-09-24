@@ -141,11 +141,9 @@ def test_pinned_reader_accounts_authored_generated_control_and_comparison(
 ) -> None:
     (tmp_path / "scb.toml").write_text(
         '[variable."1.101"]\nslug = "authored"\ndeprecated = true\n'
+        '[register."1"]\nslug = "unbound"\n'
     )
     (tmp_path / "scb.auto.toml").write_text('[variable."1.101"]\nslug = "generated"\n')
-    (tmp_path / "classifications.toml").write_text(
-        '[classification.SUN2020]\nslug="sun2020"\n'
-    )
     (tmp_path / "freeze.toml").write_text('scb = "curating"\n')
     (tmp_path / ".snapshot.json").write_text(
         '{"variable": {"scb/1.101": "obsolete-baseline"}}'
@@ -164,6 +162,7 @@ def test_pinned_reader_accounts_authored_generated_control_and_comparison(
         entry
         for entry in selection.entries
         if entry.revision.artifact_path.endswith("/scb.toml")
+        and entry.entry.kind == "variable"
     )
     assert authored.content_sha256 == canonical_sha256(
         {"slug": "authored", "deprecated": True}

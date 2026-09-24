@@ -60,7 +60,6 @@ PROVIDER_FILE_SUFFIX = ".toml"
 # hand-curated file wins on key clash. The auto file is build-generated
 # (`write_auto_toml`) and committed; it must never be hand-edited.
 AUTO_FILE_SUFFIX = ".auto.toml"
-CLASSIFICATIONS_FILE = "classifications.toml"
 SNAPSHOT_FILENAME = ".snapshot.json"
 
 # Top-level keys accepted in a provider TOML; anything else is a typo
@@ -78,7 +77,6 @@ _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
         "variable",
     }
 )
-_CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
 
 
 @dataclass(frozen=True)
@@ -425,7 +423,7 @@ def _validate_entry(
     source_id: str,
     entry: dict[str, Any],
     *,
-    provider: str | None,
+    provider: str,
 ) -> SlugEntry:
     allowed = _allowed_fields(kind)
     unknown = set(entry) - allowed
@@ -469,11 +467,6 @@ def _validate_entry(
             f"{kind}.{source_id!r}: `replaced_by` must be a non-empty string.",
             "Point it at the TOML key of the replacement row.",
         )
-    # A2.6.1: classifications no longer carry a `version` field — the vintage
-    # is baked into the slug (`class/<slug>`, e.g. `sun2020`). A stray `version`
-    # on any entry is rejected by the unknown-field guard above (it's no longer
-    # in `_allowed_fields`); the baked slug is validated by `_validate_entry`'s
-    # normal slug-grammar check, same as every other slug.
     display_group = entry.get("display_group")
     if display_group is not None and not isinstance(display_group, str):
         raise _err(
@@ -815,51 +808,6 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
     return entries
 
 
-def load_classifications_toml(path: Path) -> list[SlugEntry]:
-    """Parse the provider-independent classification slug TOML."""
-    data = _parse_toml(path)
-    unknown_top = set(data) - _CLASSIFICATIONS_TOPLEVEL_KEYS
-    if unknown_top:
-        raise _err(
-            "slug_toml_invalid",
-            f"{path.name}: unknown top-level table(s): {sorted(unknown_top)}.",
-            f"Allowed: {sorted(_CLASSIFICATIONS_TOPLEVEL_KEYS)}. Check for "
-            'typos like `[classifications."..."]`.',
-        )
-    table = data.get("classification") or {}
-    if not isinstance(table, dict):
-        raise _err(
-            "slug_toml_invalid",
-            f"{path.name}: `classification` must be a table-of-tables.",
-            'Use [classification."<short_name>"] entries.',
-        )
-    entries: list[SlugEntry] = []
-    seen_slugs: dict[str, str] = {}
-    for source_id, raw in table.items():
-        if not isinstance(raw, dict):
-            raise _err(
-                "slug_toml_invalid",
-                f"{path.name}: classification.{source_id!r} must be a TOML table.",
-                'Use [classification."<short_name>"] = { slug = ... }.',
-            )
-        entry = _validate_entry("classification", source_id, raw, provider=None)
-        # A2.6.1: the classification FQID is the 2-segment `class/<slug>`, so
-        # the slug alone must be unique (the vintage is baked in).
-        slug_key = entry.slug or ""
-        prev = seen_slugs.get(slug_key)
-        if prev is not None:
-            raise _err(
-                "slug_toml_invalid",
-                f"{path.name}: slug {entry.slug!r} reused by {prev!r} and "
-                f"{source_id!r}.",
-                "Classification FQIDs are slugs — keep them unique.",
-            )
-        seen_slugs[slug_key] = source_id
-        entries.append(entry)
-    _resolve_replaced_by(entries, scope=path.name)
-    return entries
-
-
 # Per-provider slug-freeze model (#470). A zone advances deliberately through
 # three states; `frozen` is a one-way seal (see DESIGN.md → Slug immutability):
 #   - "churning" (DEFAULT): auto slugs regenerate every build; renames flow freely.
@@ -870,32 +818,18 @@ def load_classifications_toml(path: Path) -> list[SlugEntry]:
 # absent file OR an unlisted zone ⇒ "churning" (today's UNFROZEN-present behavior).
 SlugFreezeState = Literal["churning", "curating", "frozen"]
 FREEZE_STATE_FILE = "freeze.toml"
-# Reserved zone for the provider-independent classifications.toml — its entries
-# key on a bare `source_id` (short_name), so they have no provider zone.
-CLASSIFICATIONS_ZONE = "classifications"
 _FREEZE_STATES: frozenset[str] = frozenset(get_args(SlugFreezeState))
-
-# Reserved TOMLs under a slug dir that are NOT per-provider curation files:
-# the provider-independent classifications.toml and the #470 freeze.toml state
-# map. Every provider-TOML glob site must skip these. (`<provider>.auto.toml` is
-# handled separately — `load_slug_dir` LOADS it, others exclude it.)
-_RESERVED_NON_PROVIDER_TOMLS: frozenset[str] = frozenset(
-    {CLASSIFICATIONS_FILE, FREEZE_STATE_FILE}
-)
 
 
 def _known_provider_stems(slug_dir: Path) -> frozenset[str]:
     """Provider zones in ``slug_dir`` — the ``<provider>.toml`` filename stems.
 
-    Excludes ``classifications.toml`` (the reserved CLASSIFICATIONS_ZONE keys on
-    bare short_name), ``freeze.toml`` itself, and the build-generated
-    ``*.auto.toml`` (its provider is already covered by the curated companion).
+    Excludes ``freeze.toml`` itself and the build-generated ``*.auto.toml`` (its
+    provider is already covered by the curated companion).
     """
     stems: set[str] = set()
     for path in slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"):
-        if path.name in _RESERVED_NON_PROVIDER_TOMLS or path.name.endswith(
-            AUTO_FILE_SUFFIX
-        ):
+        if path.name == FREEZE_STATE_FILE or path.name.endswith(AUTO_FILE_SUFFIX):
             continue
         stems.add(path.stem)
     return frozenset(stems)
@@ -906,15 +840,15 @@ def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
 
     An absent file → ``{}`` (every zone defaults to "churning"). Fails fast
     (``EXIT_CONFIG``) on an unknown state value, a non-string value, or an
-    unknown zone key — a zone must be a known provider stem in this dir or the
-    reserved CLASSIFICATIONS_ZONE, so a typo (a dropped/renamed provider TOML)
-    is caught rather than silently treated as churning.
+    unknown zone key — a zone must be a known provider stem in this dir, so a
+    typo (a dropped/renamed provider TOML) is caught rather than silently treated
+    as churning.
     """
     path = slug_dir / FREEZE_STATE_FILE
     if not path.is_file():
         return {}
     data = _parse_toml(path)
-    known_zones = _known_provider_stems(slug_dir) | {CLASSIFICATIONS_ZONE}
+    known_zones = _known_provider_stems(slug_dir)
     states: dict[str, SlugFreezeState] = {}
     for zone, state in data.items():
         if not isinstance(state, str):
@@ -934,8 +868,7 @@ def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
             raise _err(
                 "slug_freeze_zone_unknown",
                 f"{FREEZE_STATE_FILE}: unknown zone {zone!r}.",
-                f"A zone is a provider stem ({sorted(known_zones - {CLASSIFICATIONS_ZONE})}) "
-                f"or {CLASSIFICATIONS_ZONE!r}.",
+                f"A zone is a provider stem ({sorted(known_zones)}).",
             )
         states[zone] = cast("SlugFreezeState", state)  # membership-checked above
     return states
@@ -953,11 +886,8 @@ def frozen_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
 
 def pinned_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
     """Provider zones pinned to a committed ``<provider>.auto.toml`` (curating or
-    frozen). Excludes the reserved CLASSIFICATIONS_ZONE — classifications carry no
-    per-provider auto file."""
-    return frozenset(
-        z for z, s in states.items() if s != "churning" and z != CLASSIFICATIONS_ZONE
-    )
+    frozen)."""
+    return frozenset(z for z, s in states.items() if s != "churning")
 
 
 def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
@@ -971,8 +901,8 @@ def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
     ``test_snapshot_covers_committed_additions`` (the recurring ``git clean -fdX``
     footgun). A pinned (curating/frozen) zone's committed ``<provider>.auto.toml``
     IS the baseline and still loads. Mirrors the freeze gate in
-    ``populate_variable_slugs``. Non-auto provider TOMLs and ``classifications.toml``
-    are state-independent and always load.
+    ``populate_variable_slugs``. Non-auto provider TOMLs are state-independent and
+    always load.
     """
     if not slug_dir.is_dir():
         raise _err(
@@ -985,9 +915,7 @@ def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
     for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
         if path.name == FREEZE_STATE_FILE:
             continue  # #470 state map, not a curation TOML
-        if path.name == CLASSIFICATIONS_FILE:
-            entries.extend(load_classifications_toml(path))
-        elif path.name.endswith(AUTO_FILE_SUFFIX):
+        if path.name.endswith(AUTO_FILE_SUFFIX):
             if freeze_state(states, _provider_from_path(path)) != "churning":
                 entries.extend(load_provider_toml(path))
         else:
@@ -1127,20 +1055,15 @@ def populate_slugs(
     *,
     strict: bool = True,
 ) -> dict[str, int]:
-    """Read ``slug_dir`` and write slug columns on register / register_variant /
-    classification. (A2.6: register_version has no slug — version left the FQID
-    grammar.)
+    """Read ``slug_dir`` and write slug columns on register / register_variant.
+    (A2.6: register_version has no slug — version left the FQID grammar.
+    Classification slugs live in curation/classifications/.)
 
     ``strict=True`` (the default for real builds) refuses if any live source
     ID has no slug entry. Tests pass ``strict=False`` to populate whatever's
     available without enforcing coverage.
 
-    Every classification is seeded by ``populate_classifications`` (shared
-    standards with git-tracked CSVs), so a classification slug entry with no DB
-    row is always a genuine typo and raises (subject to the ``deprecated``
-    short-circuit).
-
-    Returns ``{"register": n, "register_variant": n, "classification": n}``.
+    Returns ``{"register": n, "register_variant": n}``.
     """
     # Function-level import — `db` imports `populate_slugs` at module top, so
     # importing `db` at our module top would close a cycle. Lazy resolution
@@ -1148,26 +1071,19 @@ def populate_slugs(
     from .db import _progress
 
     entries = load_slug_dir(slug_dir)
-    counts = {
-        "register": 0,
-        "register_variant": 0,
-        "classification": 0,
-    }
+    counts = {"register": 0, "register_variant": 0}
 
     # A2.1.5: `[variable]` slug overrides are now wired — they write the stored
     # `variable.slug` column via `populate_variable_slugs` (called separately
     # from `build_db`, after this function). `populate_slugs` itself only
-    # handles register / variant / classification and intentionally
+    # handles register / variant and intentionally
     # skips variable rows here; the override gate that previously rejected
     # `[variable] slug = ...` is lifted. A2.6: register_version has no slug
     # column or curation anymore — version is not an FQID segment.
 
     by_provider: dict[str, list[SlugEntry]] = {}
-    classification_entries: list[SlugEntry] = []
     for entry in entries:
-        if entry.kind == "classification":
-            classification_entries.append(entry)
-        elif entry.provider is not None:
+        if entry.provider is not None:
             by_provider.setdefault(entry.provider, []).append(entry)
 
     # Enumerate live providers so strict mode catches absent TOMLs too.
@@ -1263,52 +1179,9 @@ def populate_slugs(
                 add_hint='[register_variant."<RegisterId>.<RegVarID>"]',
             )
 
-    for entry in classification_entries:
-        if entry.slug is None:
-            continue
-        # A2.6.1: the slug is matched to its DB row by short_name (the TOML
-        # key). There's no `version` column left to cross-check — the vintage
-        # lives in the slug, which `class.slug UNIQUE` keeps globally distinct.
-        row = conn.execute(
-            "SELECT 1 FROM classification WHERE short_name = ?",
-            (entry.source_id,),
-        ).fetchone()
-        if row is None:
-            if entry.deprecated:
-                continue
-            # Every classification is seeded, so a missing DB row (not flagged
-            # deprecated) is a genuine typo in the slug TOML.
-            raise _err(
-                "slug_unknown_source_id",
-                f"{CLASSIFICATIONS_FILE}: classification.{entry.source_id!r} "
-                f"has no row in this build.",
-                "Add the short_name to curation/classifications.toml (the seed) or drop "
-                "the slug entry.",
-            )
-        conn.execute(
-            "UPDATE classification SET slug = ? WHERE short_name = ?",
-            (entry.slug, entry.source_id),
-        )
-        counts["classification"] += 1
-
-    if strict:
-        missing = conn.execute(
-            "SELECT short_name FROM classification WHERE slug IS NULL "
-            "ORDER BY short_name"
-        ).fetchall()
-        if missing:
-            sample = ", ".join(m[0] for m in missing[:5])
-            raise _err(
-                "slug_missing_for_source_id",
-                f"{len(missing)} classification(s) have no slug in "
-                f"{CLASSIFICATIONS_FILE}. First: {sample}.",
-                'Add a `[classification."<short_name>"]` entry with a slug.',
-            )
-
     _progress(
         f"  Slugged {counts['register']:,} registers, "
-        f"{counts['register_variant']:,} variants, "
-        f"{counts['classification']:,} classifications"
+        f"{counts['register_variant']:,} variants"
     )
     return counts
 
@@ -1354,8 +1227,7 @@ def iter_curated_provider_entries(slug_dir: Path) -> list[SlugEntry]:
     return [
         e
         for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
-        if path.name not in _RESERVED_NON_PROVIDER_TOMLS
-        and not path.name.endswith(AUTO_FILE_SUFFIX)
+        if path.name != FREEZE_STATE_FILE and not path.name.endswith(AUTO_FILE_SUFFIX)
         for e in load_provider_toml(path)
     ]
 
@@ -3318,41 +3190,10 @@ def seed_provider_toml(
     return "\n".join(lines)
 
 
-def seed_classifications_toml(conn: sqlite3.Connection) -> str:
-    """Emit a starter TOML for classifications. The maintainer edits the
-    auto-derived slug — classification short_names like ``SUN2020-NIVA``
-    don't fold to a great default.
-
-    A2.6.1: the FQID is the 2-segment ``class/<slug>`` with the vintage baked
-    into the slug, so there's no separate ``version`` field. The candidate is
-    folded from the short_name (which usually carries the year); the maintainer
-    refines it to the canonical baked form, mirroring the short_name component
-    order (e.g. ``SUN2020-NIVA`` → ``sun2020-niva``)."""
-    lines: list[str] = [
-        "# Starter classification slug TOML.",
-        "# Generated by `reg-meta-build seed-slugs`. Hand-review the slug",
-        "# (auto-derived from short_name, often needs shortening; the vintage",
-        "# bakes into the slug — `class/<slug>`, e.g. `sun2020`).",
-        "",
-    ]
-    rows = conn.execute(
-        "SELECT short_name FROM classification ORDER BY short_name"
-    ).fetchall()
-    if not rows:
-        lines.append("# (no classifications populated yet)\n")
-        return "\n".join(lines)
-    for (short,) in rows:
-        candidate = derive_variable_slug(short) or "TODO"
-        lines.append(f"[classification.{_toml_str(short)}]")
-        lines.append(f"slug = {_toml_str(candidate)}")
-        lines.append("")
-    return "\n".join(lines)
-
-
 def seed_all(
     conn: sqlite3.Connection, out_dir: Path, *, propose_panel: bool = False
 ) -> dict[str, Path]:
-    """Write a starter TOML for every distinct provider plus classifications.
+    """Write a starter TOML for every distinct provider.
 
     ``propose_panel`` (A4.4c-ii) threads through to ``seed_provider_toml`` so
     each register_variant gains proposed panel-shape starter lines.
@@ -3366,9 +3207,6 @@ def seed_all(
             encoding="utf-8",
         )
         written[path.name] = path
-    cls_path = out_dir / CLASSIFICATIONS_FILE
-    cls_path.write_text(seed_classifications_toml(conn), encoding="utf-8")
-    written[cls_path.name] = cls_path
     return written
 
 
@@ -3383,7 +3221,6 @@ class PrecheckResult:
     # colliding version checks; version slugs are neither curated nor persisted.
     missing_registers: tuple[tuple[str, str, str], ...]  # (provider, id, name)
     missing_variants: tuple[tuple[str, str, str], ...]
-    missing_classifications: tuple[str, ...]
     parse_errors: tuple[str, ...]
     # Reverse direction: TOML source IDs that don't (or no longer) exist in
     # the DB and would fail `populate_slugs(strict=True)` at build time.
@@ -3392,7 +3229,6 @@ class PrecheckResult:
     # them before a build attempt.
     stale_registers: tuple[tuple[str, str], ...] = ()  # (provider, source_id)
     stale_variants: tuple[tuple[str, str], ...] = ()
-    stale_classifications: tuple[str, ...] = ()
     entries: tuple[SlugEntry, ...] = ()
     # Advisory (#143): variables whose delivery column drifts across
     # editions, auto-slugged from a stable basis (name / earliest column). A
@@ -3417,11 +3253,9 @@ class PrecheckResult:
         return not (
             self.missing_registers
             or self.missing_variants
-            or self.missing_classifications
             or self.parse_errors
             or self.stale_registers
             or self.stale_variants
-            or self.stale_classifications
         )
 
 
@@ -3438,11 +3272,8 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         parse_errors.append(exc.message)
 
     by_provider_kind: dict[tuple[str, str], set[str]] = {}
-    classification_ids: set[str] = set()
     for entry in entries:
-        if entry.kind == "classification":
-            classification_ids.add(entry.source_id)
-        elif entry.provider is not None and entry.slug is not None:
+        if entry.provider is not None and entry.slug is not None:
             by_provider_kind.setdefault((entry.provider, entry.kind), set()).add(
                 entry.source_id
             )
@@ -3488,30 +3319,18 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             if key not in slugged_variants:
                 missing_variants.append((provider_slug, key, name or ""))
 
-    db_classifications: set[str] = set()
-    missing_classifications: list[str] = []
-    for (short,) in conn.execute(
-        "SELECT short_name FROM classification ORDER BY short_name"
-    ).fetchall():
-        db_classifications.add(short)
-        if short not in classification_ids:
-            missing_classifications.append(short)
-
-    stale_regs, stale_vars, stale_cls = _stale_toml_entries(
+    stale_regs, stale_vars = _stale_toml_entries(
         entries,
         live_regs_by_provider=live_regs_by_provider,
         live_vars_by_provider=live_vars_by_provider,
-        db_classifications=db_classifications,
     )
 
     return PrecheckResult(
         missing_registers=tuple(missing_regs),
         missing_variants=tuple(missing_variants),
-        missing_classifications=tuple(missing_classifications),
         parse_errors=tuple(parse_errors),
         stale_registers=tuple(stale_regs),
         stale_variants=tuple(stale_vars),
-        stale_classifications=tuple(stale_cls),
         entries=tuple(entries),
         drifting_variables=_drifting_variables(conn),
         name_fallback_variables=_name_fallback_variables(conn, slug_dir),
@@ -3666,12 +3485,7 @@ def _stale_toml_entries(
     *,
     live_regs_by_provider: dict[str, set[int]],
     live_vars_by_provider: dict[str, set[tuple[int, int]]],
-    db_classifications: set[str],
-) -> tuple[
-    list[tuple[str, str]],
-    list[tuple[str, str]],
-    list[str],
-]:
+) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
     """Find TOML entries whose source IDs don't exist in the DB.
 
     Mirrors the `slug_unknown_source_id` check inside `populate_slugs`, but
@@ -3690,7 +3504,6 @@ def _stale_toml_entries(
     """
     stale_regs: list[tuple[str, str]] = []
     stale_vars: list[tuple[str, str]] = []
-    stale_cls: list[str] = []
 
     for entry in entries:
         if entry.deprecated:
@@ -3703,11 +3516,8 @@ def _stale_toml_entries(
             live = live_vars_by_provider.get(entry.provider, set())
             if _parse_variant_id(entry.source_id) not in live:
                 stale_vars.append((entry.provider, entry.source_id))
-        elif entry.kind == "classification":
-            if entry.source_id not in db_classifications:
-                stale_cls.append(entry.source_id)
 
-    return stale_regs, stale_vars, stale_cls
+    return stale_regs, stale_vars
 
 
 # ---------------------------------------------------------------------------
@@ -3726,8 +3536,6 @@ def snapshot_payload(entries: list[SlugEntry]) -> dict[str, dict[str, str]]:
     for entry in entries:
         if entry.slug is None:
             continue
-        # A2.6.1: classifications key on source_id alone (short_name, globally
-        # UNIQUE) — the former `|version` suffix is gone with the version field.
         if entry.provider is not None:
             key = f"{entry.provider}/{entry.source_id}"
         else:
@@ -3757,14 +3565,9 @@ def write_snapshot(snapshot_path: Path, payload: dict[str, dict[str, str]]) -> N
     )
 
 
-def _zone_of(kind: str, key: str) -> str:
-    """The freeze zone a snapshot entry belongs to (#470).
-
-    Classification keys are bare ``source_id`` (no provider) → the reserved
-    CLASSIFICATIONS_ZONE. Every other key is ``<provider>/<source_id>``, so the
-    leading segment is the provider zone.
-    """
-    return CLASSIFICATIONS_ZONE if kind == "classification" else key.split("/", 1)[0]
+def _zone_of(key: str) -> str:
+    """The freeze zone of a ``<provider>/<source_id>`` snapshot key (#470)."""
+    return key.split("/", 1)[0]
 
 
 def diff_snapshot(
@@ -3794,13 +3597,13 @@ def diff_snapshot(
             if key not in cur:
                 msg = f"{kind}/{key} (was {slug!r})"
                 removed.append(msg)
-                if _zone_of(kind, key) in frozen_zones:
+                if _zone_of(key) in frozen_zones:
                     blocked.append(msg)
                 continue
             if cur[key] != slug:
                 msg = f"{kind}/{key}: {slug!r} -> {cur[key]!r}"
                 renamed.append(msg)
-                if _zone_of(kind, key) in frozen_zones:
+                if _zone_of(key) in frozen_zones:
                     blocked.append(msg)
         for key, slug in cur.items():
             if key not in prev:
@@ -3815,8 +3618,6 @@ def diff_snapshot(
 
 __all__ = (
     "AUTO_FILE_SUFFIX",
-    "CLASSIFICATIONS_FILE",
-    "CLASSIFICATIONS_ZONE",
     "ENTITY_KINDS",
     "FREEZE_STATE_FILE",
     "SNAPSHOT_FILENAME",
@@ -3839,7 +3640,6 @@ __all__ = (
     "iter_curated_provider_entries",
     "iter_default_slug_candidates",
     "iter_entity_key_variables",
-    "load_classifications_toml",
     "load_freeze_states",
     "load_provider_toml",
     "load_slug_dir",
@@ -3852,7 +3652,6 @@ __all__ = (
     "render_entity_key_pins_toml",
     "repo_slug_dir",
     "seed_all",
-    "seed_classifications_toml",
     "seed_provider_toml",
     "snapshot_payload",
     "write_auto_toml",

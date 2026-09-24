@@ -1,0 +1,11 @@
+[classification]
+short_name = "DRG"
+slug = "drg"
+name = "NordDRG — diagnosrelaterade grupper"
+name_en = "NordDRG — diagnosis-related groups"
+publisher = "Socialstyrelsen / Nordic Casemix Centre"
+url = "https://norddrg-explorer.socialstyrelsen.se/api/Defdata/DownloadDefdata"
+codes_file = "sos/drg.csv"
+
+[binding]
+label_source = "sos"

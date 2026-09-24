@@ -1,0 +1,32 @@
+# Cross-register aggregations of SUN education-level codes. SCB defines two
+# canonical coarsenings used across many registers, with code spaces that are
+# stable across SUN versions (2000 and 2020) and disjoint from the canonical
+# numeric NIVA codes. They carry NO succession edge (version-independent — they
+# don't supersede or get superseded by any SUN edition). NIVA-OLD / NIVA-GROV
+# (`niva-oldv1` / `niva-grovv1`) ARE folded under the SUN umbrella group
+# (curation/concept_groups.toml) as flat granularity aggregates of the nivå dimension.
+# The faithful model is a granularity axis (dimension × granularity), but
+# multi-axis concept groups were removed in #585, so they ride the single
+# `dimension` axis for now; the proper granularity surface is deferred to the
+# value-set viewer (#609). Single-register aggregations like
+# "SUN 2000 NivåDet"/"SUN 2020 NivåDet" (mostly UREG only) and
+# "SUN 2000 NivåGymnasial" stay unmapped: queryable via raw vardemangdsversion.
+
+[classification]
+short_name = "NIVA-GROV"
+slug = "niva-grovv1"
+name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
+name_en = "Education level — coarse 5-level aggregation"
+publisher = "SCB"
+valid_from = 2000
+description = "Single-letter coarse grouping of education level: F=Förgymnasial, G=Gymnasial, K=Eftergymnasial <3 år, L=Eftergymnasial ≥3 år, U=Okänd. Used across SCB survey/election registers (PSU, ULF, valdeltagande, ...). Stable across SUN 2000 and SUN 2020."
+codes_file = "niva-grov.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "SUN 2000 NivåGrov",
+  "SUN 2020 NivåGrov",
+]

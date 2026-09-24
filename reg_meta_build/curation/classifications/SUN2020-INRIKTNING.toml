@@ -1,0 +1,19 @@
+[classification]
+short_name = "SUN2020-INRIKTNING"
+slug = "sun2020-inriktning"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsinriktning"
+name_en = "Swedish Standard Classification of Education 2020 — Field of Study"
+publisher = "SCB"
+valid_from = 2020
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+codes_file = "sun2020-inriktning.csv"
+sentinel_codes = [
+  { code = "*", meaning = "Okänd" },
+  { code = "NULL", meaning = "Ej träff i källan" },
+  { code = "000", meaning = "Ej aktuellt" },
+]
+
+[binding]
+value_set_labels = [
+  "SUN 2020 - Utbildningsinriktning",
+]

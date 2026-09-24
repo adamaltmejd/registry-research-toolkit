@@ -89,10 +89,6 @@ def _write_fixture_slug_dir(slug_dir: Path) -> None:
     slugs for the two test registers. Version slugs auto-derive at build
     time from the `YYYY` registerversionnamn values, so no
     `[register_version]` entries are needed.
-
-    `skip_classifications=True` in the fixture means the classification
-    table stays empty, so the empty `classifications.toml` clears
-    `populate_slugs`'s strict coverage check (no rows = no NULL slugs).
     """
     (slug_dir / "scb.toml").write_text(
         '[register."1"]\nslug = "testreg"\n'
@@ -101,7 +97,6 @@ def _write_fixture_slug_dir(slug_dir: Path) -> None:
         '[register_variant."2.20"]\nslug = "foretag"\n',
         encoding="utf-8",
     )
-    (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
 
 
 def _build_stub_doc_db(db_dir: Path, tmp_path_factory: pytest.TempPathFactory) -> None:

@@ -1,0 +1,11 @@
+[classification]
+short_name = "MDC"
+slug = "mdc"
+name = "Större diagnosgrupper (MDC, NordDRG)"
+name_en = "Major Diagnostic Categories (MDC, NordDRG)"
+publisher = "Socialstyrelsen / Nordic Casemix Centre"
+url = "https://norddrg-explorer.socialstyrelsen.se/api/Defdata/DownloadDefdata"
+codes_file = "sos/mdc.csv"
+
+[binding]
+label_source = "sos"

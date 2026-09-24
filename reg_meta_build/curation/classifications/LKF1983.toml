@@ -1,0 +1,15 @@
+[classification]
+short_name = "LKF1983"
+slug = "lkf1983"
+name = "Län, kommuner och församlingar 1983"
+name_en = "Counties, municipalities and parishes 1983"
+publisher = "SCB"
+valid_from = 1983
+valid_to = 1983
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf1983.csv"
+
+[binding]
+value_set_labels = [
+  "LKF 1983-01-01/ Län, kommuner och församlingar",
+]

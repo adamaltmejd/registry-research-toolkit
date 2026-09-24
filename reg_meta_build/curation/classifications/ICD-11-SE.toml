@@ -1,0 +1,12 @@
+[classification]
+short_name = "ICD-11-SE"
+slug = "icd-11-se"
+name = "ICD-11 för statistik över dödlighet och sjuklighet, svensk version"
+name_en = "ICD-11 for Mortality and Morbidity Statistics, Swedish version"
+publisher = "WHO"
+valid_from = 2027
+url = "https://icdcdn.who.int/static/releasefiles/2026-01/SimpleTabulation-ICD-11-MMS-sv.zip"
+codes_file = "sos/icd-11-se.csv"
+
+[binding]
+label_source = "sos"

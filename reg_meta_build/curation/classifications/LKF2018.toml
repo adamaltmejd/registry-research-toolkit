@@ -1,0 +1,29 @@
+[classification]
+short_name = "LKF2018"
+slug = "lkf2018"
+name = "Län, kommuner och församlingar 2018"
+name_en = "Counties, municipalities and parishes 2018"
+publisher = "SCB"
+valid_from = 2018
+valid_to = 2018
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf2018.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9999", meaning = "Okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "NULL", meaning = "Ej träff i källan" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "0", meaning = "Okänt" },
+]
+
+[binding]
+value_set_labels = [
+  "2018-01-01/ Län, kommuner och församlingar",
+]

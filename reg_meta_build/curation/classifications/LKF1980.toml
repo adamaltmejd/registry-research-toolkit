@@ -1,0 +1,19 @@
+[classification]
+short_name = "LKF1980"
+slug = "lkf1980"
+name = "Län, kommuner och församlingar 1980"
+name_en = "Counties, municipalities and parishes 1980"
+publisher = "SCB"
+valid_from = 1980
+valid_to = 1980
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf1980.csv"
+sentinel_codes = [
+  { code = "058313", meaning = "Okänd församling i Motala kommun" },
+  { code = "999999", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 1980-01-01/ Län, kommuner och församlingar",
+]
