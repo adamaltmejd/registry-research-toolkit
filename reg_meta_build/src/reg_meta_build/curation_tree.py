@@ -273,7 +273,7 @@ class IdentityPartitionEntry(_CurationModel):
     columns_ref: str | None = None
 
     @model_validator(mode="after")
-    def _disjoint_columns(self) -> "IdentityPartitionEntry":
+    def _disjoint_columns(self) -> IdentityPartitionEntry:
         overlap = sorted(set(self.columns) & set(self.unassigned_columns))
         if overlap:
             raise ValueError(f"columns and unassigned_columns overlap: {overlap}")
@@ -527,21 +527,28 @@ def _check_register_ref(
 def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
     identity = entry.register_info
     expected = f"{identity.provider}/{identity.slug}"
-    if identity.provider in {"scb", "sos"}:
-        if identity.native_id is None or not identity.native_id.isdecimal():
-            raise curation_error(
-                _CODE,
-                f"{file} [register]: native_id must be a decimal string for "
-                f"{identity.provider!r}, got {identity.native_id!r}.",
-                "Copy the source native id from fqid_slugs/<provider>.toml.",
-            )
+    if identity.provider in {"scb", "sos"} and (
+        identity.native_id is None or not identity.native_id.isdecimal()
+    ):
+        raise curation_error(
+            _CODE,
+            f"{file} [register]: native_id must be a decimal string for "
+            f"{identity.provider!r}, got {identity.native_id!r}.",
+            "Copy the source native id from fqid_slugs/<provider>.toml.",
+        )
 
     for table, rows in _register_arrays(entry):
         for index, row in enumerate(rows, start=1):
             register_refs: list[str] = []
-            if isinstance(row, (EnrichmentDescriptionEntry, EnrichmentAliasEntry)):
-                register_refs.append(row.register_fqid)
-            elif isinstance(row, (RegisterGroupEntry, PeriodFamilyEntry)):
+            if isinstance(
+                row,
+                (
+                    EnrichmentDescriptionEntry,
+                    EnrichmentAliasEntry,
+                    RegisterGroupEntry,
+                    PeriodFamilyEntry,
+                ),
+            ):
                 register_refs.append(row.register_fqid)
             elif isinstance(row, CodeLabelPairEntry):
                 register_refs.extend(

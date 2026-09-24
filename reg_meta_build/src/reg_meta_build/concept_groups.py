@@ -753,7 +753,9 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
     """Load global classification umbrellas from ``classification_groups.toml``."""
     if path is None:
         return ()
-    from .curation_tree import load_classification_groups as load_register_classification_groups
+    from .curation_tree import (
+        load_classification_groups as load_register_classification_groups,
+    )
 
     declarations = load_register_classification_groups(path).classification_group
     out: list[ClassificationGroup] = []

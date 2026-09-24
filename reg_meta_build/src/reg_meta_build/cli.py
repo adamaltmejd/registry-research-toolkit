@@ -45,7 +45,7 @@ from reg_meta.errors import (
 # window-coverage gate.
 from reg_meta.inventory import load_inventory as load_delivery_inventory
 
-from ._curation import repo_curation_path, repo_worklist_path
+from ._curation import repo_worklist_path
 from .classifications import (
     dump_classification_residue,
     render_residue_toml,

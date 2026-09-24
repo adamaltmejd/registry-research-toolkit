@@ -1,6 +1,11 @@
 """Small writers for register-file-shaped loader fixtures."""
 
-from pathlib import Path
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def write_lisa_errata(root: Path, body: str) -> Path:

@@ -21,8 +21,7 @@ from ._curation import (
     require_evidence,
     require_str,
 )
-from .curation_tree import declared_short_names
-from .curation_tree import load_register_files
+from .curation_tree import declared_short_names, load_register_files
 from .edition_bounds import edition_claims
 from .fqid_slugs import (
     PROVIDER_FILE_SUFFIX,
