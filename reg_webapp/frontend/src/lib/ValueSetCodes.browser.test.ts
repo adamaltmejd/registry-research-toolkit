@@ -180,10 +180,17 @@ describe("ValueSetCodes — the bounded code read", () => {
     await render(ValueSetCodes, { valueSetId: 7, codeCount: 40 });
     await expect.element(page.getByText("Kommun 39")).toBeVisible();
 
+    // Fake the clock around the burst so the debounce timer only fires when
+    // WE advance it — under real timers, gate load can space the three fills
+    // more than FILTER_DEBOUNCE_MS apart and turn this into three requests
+    // instead of one (Y-241).
+    vi.useFakeTimers();
     const box = page.getByRole("textbox", { name: "Filter codes" });
     await box.fill("K");
     await box.fill("Ko");
     await box.fill("Kommun 3");
+    await vi.advanceTimersByTimeAsync(200); // FILTER_DEBOUNCE_MS
+    vi.useRealTimers();
     await expect.element(page.getByText("11 of 40")).toBeVisible();
     // Each query re-reads the WHOLE set server-side, so a request per keystroke
     // is what this debounce exists to prevent.
