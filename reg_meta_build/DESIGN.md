@@ -409,7 +409,10 @@ outright, with source evidence, answers for its own claim through that entry, wh
 stage recorded it, and for nothing past that exact coordinate: an exact source-linked
 blocker stays a curation blocker without covering a sibling. Anything else missing is an
 engineering defect, not a curation question: the build names the source records and the
-exact missing window and stops before any output is placed. A missing optional field or
+exact missing window. The strict build stops before any output is placed; the diagnostic
+build records each unexplained fact change and each lost window as an error diagnostic
+on its obligation and continues, leaving the artifact nonpublishable. A missing optional
+field or
 an unrelated diagnostic is no permission to drop the state it belongs to.
 
 ### Groups, relations and dependent output

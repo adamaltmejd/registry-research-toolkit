@@ -1397,3 +1397,88 @@ def test_overlapping_backing_states_behind_alias_window_are_refused():
         "alias backing is ambiguous: 2 states of variant people "
         "overlap 2020-07-01..2020-12-31" in str(failure.value)
     )
+
+
+def test_delivery_fact_change_in_diagnostic_mode_returns_an_error_diagnostic():
+    obligation = _fact_obligation(attributions=())
+    assert (
+        check_delivery_coverage(
+            (_fact_variable(),), (obligation,), withheld={}, diagnostic=True
+        )
+        == ()
+    )
+    damaged = _fact_variable(data_type="text")
+    with pytest.raises(
+        ValueError,
+        match="supported delivery facts changed without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((damaged,), (obligation,), withheld={})
+    assert "claimed data_type='integer' written 'text'" in str(failure.value)
+    (found,) = check_delivery_coverage(
+        (damaged,), (obligation,), withheld={}, diagnostic=True
+    )
+    assert found.code == "unexplained_delivery_fact_change"
+    assert found.severity == "error"
+    assert found.refs == obligation.refs
+    assert (
+        "supported delivery facts changed without an explicit source outcome"
+        in found.detail
+    )
+    assert "claimed data_type='integer' written 'text'" in found.detail
+    assert "scb/example/value people/VALUE 2020-01-01..2020-12-31" in found.detail
+    assert "fixture/key" in found.detail
+    assert str(failure.value) == found.detail
+
+
+def test_delivery_coverage_loss_in_diagnostic_mode_returns_an_error_diagnostic():
+    obligation = _fact_obligation(attributions=())
+    state = _fact_variable().states[0].model_copy(update={"valid_to": "2020-06-30"})
+    truncated = _fact_variable().model_copy(update={"states": (state,)})
+    with pytest.raises(
+        ValueError,
+        match="supported delivery coverage was lost without an explicit source outcome",
+    ) as failure:
+        check_delivery_coverage((truncated,), (obligation,), withheld={})
+    assert "2020-07-01..2020-12-31" in str(failure.value)
+    (found,) = check_delivery_coverage(
+        (truncated,), (obligation,), withheld={}, diagnostic=True
+    )
+    assert found.code == "unexplained_delivery_coverage_loss"
+    assert found.severity == "error"
+    assert found.refs == obligation.refs
+    assert (
+        "supported delivery coverage was lost without an explicit source outcome"
+        in found.detail
+    )
+    assert "2020-07-01..2020-12-31" in found.detail
+    assert "fixture/key" in found.detail
+    assert str(failure.value) == found.detail
+    # A claim-free obligation still owes its window: the fact-claim gate must
+    # not drop the loss on either path.
+    bare = CoverageObligation(
+        fqid=obligation.fqid,
+        variant=obligation.variant,
+        column=obligation.column,
+        valid_from=obligation.valid_from,
+        valid_to=obligation.valid_to,
+        refs=obligation.refs,
+    )
+    with pytest.raises(
+        ValueError,
+        match="supported delivery coverage was lost without an explicit source outcome",
+    ):
+        check_delivery_coverage((truncated,), (bare,), withheld={})
+    (bare_found,) = check_delivery_coverage(
+        (truncated,), (bare,), withheld={}, diagnostic=True
+    )
+    assert bare_found.code == "unexplained_delivery_coverage_loss"
+    assert "2020-07-01..2020-12-31" in bare_found.detail
+    assert (
+        check_delivery_coverage(
+            (truncated,),
+            (obligation,),
+            withheld={("variable", "scb/example/value"): (_cause(),)},
+            diagnostic=True,
+        )
+        == ()
+    )
