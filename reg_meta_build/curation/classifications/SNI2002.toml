@@ -1,0 +1,33 @@
+[classification]
+short_name = "SNI2002"
+slug = "sni2002"
+name = "Svensk standard för näringsgrensindelning 2002"
+name_en = "Swedish Standard Industrial Classification 2002"
+publisher = "SCB"
+valid_from = 2002
+valid_to = 2007
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+codes_file = "sni2002.csv"
+sentinel_codes = [
+  { code = "00", meaning = "Ej specificerad verksamhet" },
+  { code = "00000", meaning = "Okänd" },
+  { code = "", meaning = "Okänd" },
+  { code = "XX", meaning = "Partiellt bortfall" },
+  { code = "XXXX", meaning = "Partiellt bortfall" },
+  { code = "XXXXX", meaning = "Partiellt bortfall" },
+  { code = "xxx", meaning = "Partiellt bortfall" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "X", meaning = "Partiellt bortfall" },
+  { code = ".", meaning = "Uppgift saknas" },
+  { code = "000", meaning = "Okänt" },
+  { code = "0000", meaning = "Okänt" },
+]
+
+[binding]
+value_set_labels = [
+  "Standard för svensk näringsgrensindelning, 2002 Branscher",
+  "Standard för svensk näringsgrensindelning, 2002, Aktiviteter",
+  "SNI 2002, grov nivå",
+  "SNI 2002, Aktiviteter, alternativ",
+  "SNI 2002, begränsad nivå",
+]

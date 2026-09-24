@@ -22,9 +22,9 @@ from _sos_fixtures import (
 )
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.catalog_dependencies import CatalogDependencyError
-from reg_meta_build.classifications import load_seed
 from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
+from reg_meta_build.curation_tree import load_classifications
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.pipeline import (
     CodebookDeclaration,
@@ -74,9 +74,9 @@ _SOS_SLUGS = {"register": "kodregister", "register_variant": "vy-a", "variable":
 # (codes 2/3/4) with its curated sentinel; the SOS `SPEC` variable declares that
 # book and observes one extra bulk/missing token (`9`).
 _SENTINEL_SHORT_NAME = "INSATS"
-_SENTINEL_SEED = (
-    '[[classification]]\nshort_name = "INSATS"\nname = "Insats"\n'
-    'valid_codes_file = "insats.csv"\n'
+_SENTINEL_BOOK = (
+    '[classification]\nshort_name = "INSATS"\nslug = "insats"\nname = "Insats"\n'
+    'codes_file = "insats.csv"\n'
     'sentinel_codes = [{code = "9", meaning = "ej aktuellt"}]\n'
 )
 _SENTINEL_CSV = "code,label\n2,Miljo\n3,Beteende\n4,Bada\n"
@@ -372,18 +372,11 @@ def selection(tmp_path, request):
             vardemangder_rows=["List|1|1|One|broken|5001"],
             valid_dates_rows=["5001|2020-01-01|2020-12-31"],
         )
-    curation = tmp_path / "curation"
-    curation.mkdir()
-    (curation / "delivery_enrichment.generated.toml").write_text(
-        '[[description]]\nregister="scb/sample"\nvariable="value"\n'
-        'description="Existing description"\n'
-    )
     if sentinel:
         class_dir = source / "classifications"
         class_dir.mkdir()
         (class_dir / "insats.csv").write_text(_SENTINEL_CSV, encoding="utf-8")
-        (curation / "classifications.toml").write_text(_SENTINEL_SEED, encoding="utf-8")
-    bundle = write_input_bundle(tmp_path / "inputs", source, curation_dir=curation)
+    bundle = write_input_bundle(tmp_path / "inputs", source)
     destination = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(bundle, destination)
     commit = accept_prepared(destination)
@@ -448,22 +441,26 @@ def selection(tmp_path, request):
             and values.manifest.revision.dataset == "classifications/insats.csv"
             for descriptor in values.descriptors()
         )
-        # Pass the validated `load_seed()` entry through: the declaration must
-        # accept the curated tuple form, not just rebuilt raw tables.
-        seed_entry = next(
-            entry
-            for entry in load_seed(curation / "classifications.toml")
-            if entry["short_name"] == _SENTINEL_SHORT_NAME
+        # Pass the curation reader's validated sentinels through as the plain
+        # `{code, meaning}` tables a selection carries.
+        curation = tmp_path / "curation" / "classifications"
+        curation.mkdir(parents=True)
+        (curation / f"{_SENTINEL_SHORT_NAME}.toml").write_text(
+            _SENTINEL_BOOK, encoding="utf-8"
         )
+        (entry,) = load_classifications(curation.parent)
+        book = entry.classification
         classifications = (
             CodebookDeclaration(
                 source="classifications/insats.csv",
                 descriptor=descriptor,
                 metadata={
-                    "slug": "insats",
-                    "short_name": _SENTINEL_SHORT_NAME,
-                    "name": "Insats",
-                    "sentinel_codes": seed_entry["sentinel_codes"],
+                    "slug": book.slug,
+                    "short_name": book.short_name,
+                    "name": book.name,
+                    "sentinel_codes": [
+                        sentinel.model_dump() for sentinel in book.sentinel_codes
+                    ],
                 },
             ),
         )
@@ -1216,11 +1213,13 @@ def test_unapplied_existing_curation_is_an_error_and_cannot_hide_a_resolved_targ
     )
     records = tuple(prepared.records.iter_records(source=scope.source))
     expected = capture_expectations(records, fields=("column_name",))
+    # Transitional stand-in: bundles no longer carry curation files, so the gap
+    # anchors on a selected source revision until it can name the curation tree's.
     gap = UnappliedCuration(
         revision=next(
             e.revision
             for e in prepared.manifest.inputs
-            if e.role == "curation" and e.revision is not None
+            if e.revision is not None and e.revision.dataset == scope.source
         ),
         pointer="/description/0",
         reason="Existing input decision has unresolved target evidence.",

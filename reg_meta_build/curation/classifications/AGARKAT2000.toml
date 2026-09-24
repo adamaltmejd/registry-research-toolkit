@@ -1,0 +1,19 @@
+[classification]
+short_name = "AGARKAT2000"
+slug = "agarkat2000"
+name = "Standard för indelning efter ägarkategori 2000"
+name_en = "Swedish Standard Classification by Owner Category 2000"
+publisher = "SCB"
+valid_from = 2000
+valid_to = 2019
+codes_file = "agarkat2000.csv"
+sentinel_codes = [
+  { code = "NULL", meaning = "Okänt värde" },
+  { code = "00", meaning = "Okänt värde" },
+  { code = "9", meaning = "Okänt" },
+]
+
+[binding]
+value_set_labels = [
+  "Standard för indelning efter ägarkategori 2000",
+]

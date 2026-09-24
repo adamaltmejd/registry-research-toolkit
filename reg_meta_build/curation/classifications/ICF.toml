@@ -1,0 +1,11 @@
+[classification]
+short_name = "ICF"
+slug = "icf"
+name = "Internationell klassifikation av funktionstillstånd, funktionshinder och hälsa (ICF)"
+name_en = "International Classification of Functioning, Disability and Health (ICF)"
+publisher = "Socialstyrelsen"
+url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icf.tsv?version=1&modificationDate=1779622373643&api=v2"
+codes_file = "sos/icf.csv"
+
+[binding]
+label_source = "sos"

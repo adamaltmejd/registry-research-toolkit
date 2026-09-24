@@ -1,0 +1,22 @@
+# SCB gave two different value sets the display name "Sektor 2000" (Y-170).
+# THIS entry is INSEKT 2000 only: the canonical 73-code Sektor/Undersektor/
+# Delsektor standard. The register-local RAMS/LISA ownership-sector code that
+# shared the display label lives in SEKTORKOD.toml.
+
+[classification]
+short_name = "SEKTOR2000"
+slug = "sektor2000"
+name = "Institutionell sektorindelning 2000"
+name_en = "Standard for Institutional Sector Classification 2000"
+publisher = "SCB"
+valid_from = 2000
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-institutionell-sektorindelning-insekt/"
+codes_file = "sektor2000.csv"
+sentinel_codes = [
+  { code = "000", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "Standard för institutionell sektorindelning 2000",
+]

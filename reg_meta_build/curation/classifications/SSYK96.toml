@@ -1,0 +1,55 @@
+[classification]
+short_name = "SSYK96"
+slug = "ssyk1996"
+name = "Standard för svensk yrkesklassificering 1996"
+name_en = "Swedish Standard Classification of Occupations 1996"
+publisher = "SCB"
+valid_from = 1996
+valid_to = 2013
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+codes_file = "ssyk96.csv"
+sentinel_codes = [
+  { code = "9999", meaning = "Partiellt bortfall" },
+  { code = "999", meaning = "Partiellt bortfall" },
+  { code = "99", meaning = "Uppgift saknas" },
+  { code = "****", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "XXXX", meaning = "Partiellt bortfall" },
+  { code = "XX", meaning = "Partiellt bortfall" },
+  { code = "***", meaning = "Uppgift saknas" },
+  { code = "xxx", meaning = "Partiellt bortfall" },
+  { code = "0000", meaning = "Okänt" },
+  { code = "5220", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8888", meaning = "Vet ej" },
+  { code = "88", meaning = "Vet ej" },
+  { code = "888", meaning = "Vet ej" },
+  { code = "7210", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "2410", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "2420", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8120", meaning = "Bortfall på fyrsiffernivå" },
+  { code = ".", meaning = "Uppgift saknas" },
+  { code = "2140", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "3110", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8260", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "000", meaning = "Ej förvärvsarbetande" },
+  { code = "041", meaning = "Bortfall på tresiffernivå" },
+  { code = "0413", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "2490", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "7230", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8280", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "[BLANK]", meaning = "Uppgift saknas" },
+  { code = "4210", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "7340", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8140", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8250", meaning = "Bortfall på fyrsiffernivå" },
+]
+
+[binding]
+value_set_labels = [
+  "Standard för svensk yrkesklassificering 1996",
+  "SSYK 96, alternativ",
+  "SSYK 96, AKU Yrkesgrupp",
+  "SSYK 96, AKU Undergrupp",
+  "Yrke (SSYK 1996) 4-siffrig",
+  "SSYK-koder i LINDA",
+]

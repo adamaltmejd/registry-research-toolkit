@@ -1,0 +1,13 @@
+[classification]
+short_name = "ICD-9-KS87"
+slug = "icd-9-ks87"
+name = "Klassifikation av sjukdomar 1987 (ICD-9 / KS87)"
+name_en = "Swedish Classification of Diseases 1987 (ICD-9 / KS87)"
+publisher = "Socialstyrelsen"
+valid_from = 1987
+valid_to = 1996
+url = "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/icd-9-klassifikation-av-sjukdomar-1987-ks87.xls"
+codes_file = "sos/icd-9-ks87.csv"
+
+[binding]
+label_source = "sos"

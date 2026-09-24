@@ -1,0 +1,20 @@
+[classification]
+short_name = "LKF1981"
+slug = "lkf1981"
+name = "Län, kommuner och församlingar 1981"
+name_en = "Counties, municipalities and parishes 1981"
+publisher = "SCB"
+valid_from = 1981
+valid_to = 1981
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf1981.csv"
+sentinel_codes = [
+  { code = "", meaning = "Ej förvärvsarbetande" },
+  { code = "99", meaning = "Arbetsplats i utlandet eller på havet, växlande eller okänd" },
+  { code = "9999", meaning = "Arbetsplats i utlandet eller på havet, växlande eller okänd" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 1981-01-01/ Län, kommuner och församlingar",
+]

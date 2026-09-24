@@ -1,0 +1,24 @@
+[classification]
+short_name = "LKF1998"
+slug = "lkf1998"
+name = "Län, kommuner och församlingar 1998"
+name_en = "Counties, municipalities and parishes 1998"
+publisher = "SCB"
+valid_from = 1998
+valid_to = 1998
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf1998.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "******", meaning = "Okänd" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "999999", meaning = "Utlandet" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 1998-01-01/ Län, kommuner och församlingar",
+]

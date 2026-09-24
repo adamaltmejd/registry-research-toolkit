@@ -8,22 +8,17 @@ from __future__ import annotations
 
 import csv
 import sys
-import tomllib
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
-from ._curation import load_sentinel_codes, repo_curation_path
 from .fqid_slugs import _toml_comment, _toml_str
 
 if TYPE_CHECKING:
     import sqlite3
     from pathlib import Path
 
-# vardemangdsversion is OPTIONAL: a provider-seeded entry may carry canonical
-# codes (via valid_codes_file) with no observed instance-label linkage.
-_REQUIRED_FIELDS = ("short_name", "name")
 # Accepted first-two-column headers for a valid-codes CSV. SCB CSVs use the
 # native `vardekod,vardebenamning`; the universal `code,label` shape is what
 # the SOS classification CSVs ship (with extra trailing columns we drop).
@@ -39,30 +34,6 @@ _LEVEL_EXPR = (
 _MIN_CONTAINMENT = 0.90
 _MIN_CODES = 8
 _SAFE_LABEL_AGREE = 0.90
-
-
-def declared_short_names(seed_path: Path | None = None) -> frozenset[str]:
-    """Declared names for validation of references in maintainer input files.
-
-    Pass the selected seed when converting external inputs. The default supports
-    the checked-in declaration loaders and offline inspection tools.
-    """
-    path = seed_path or repo_curation_path("classifications.toml")
-    if path is None:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="classification_seed_unreadable",
-            error_class="configuration",
-            message=(
-                "curation/classifications.toml seed not found; cannot validate "
-                "classification references."
-            ),
-            remediation=(
-                "Run build-db from the maintainer repo checkout where "
-                "curation/classifications.toml is present."
-            ),
-        )
-    return frozenset(entry["short_name"] for entry in load_seed(path))
 
 
 def load_valid_codes(path: Path) -> dict[str, str]:
@@ -144,207 +115,9 @@ def load_valid_codes(path: Path) -> dict[str, str]:
         ) from exc
 
 
-def load_seed(path: Path) -> list[dict[str, Any]]:
-    """Parse and validate the classification seed file.
-
-    Raises ``RegMetaError`` on structural issues (missing required fields,
-    duplicate short_names, duplicate vardemangdsversion strings across
-    classifications). Does not touch the DB.
-    """
-    try:
-        data = tomllib.loads(path.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError) as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="classification_seed_unreadable",
-            error_class="configuration",
-            message=f"Could not parse classification seed {path}: {exc}",
-            remediation="Ensure the file is valid TOML.",
-        ) from exc
-
-    entries = data.get("classification") or []
-    if not entries:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="classification_seed_empty",
-            error_class="configuration",
-            message=f"Classification seed {path} has no [[classification]] entries.",
-            remediation="Add at least one classification entry.",
-        )
-
-    seen_short_names: set[str] = set()
-    seen_versions: dict[str, str] = {}
-    for entry in entries:
-        for field in _REQUIRED_FIELDS:
-            if not entry.get(field):
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="classification_seed_invalid",
-                    error_class="configuration",
-                    message=(
-                        f"Classification entry is missing required field "
-                        f"{field!r}: {entry!r}"
-                    ),
-                    remediation=f"Add {field} to every [[classification]] entry.",
-                )
-        short = entry["short_name"]
-        if short in seen_short_names:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_seed_invalid",
-                error_class="configuration",
-                message=f"Duplicate classification short_name: {short!r}",
-                remediation="Each short_name must be unique in the seed.",
-            )
-        seen_short_names.add(short)
-
-        # vardemangdsversion is optional: a missing key or an empty list means
-        # the entry tags no instances (provider-seeded canonical codes only).
-        # When present it must be a list of strings.
-        versions = entry.get("vardemangdsversion")
-        if versions is not None:
-            if not isinstance(versions, list) or not all(
-                isinstance(v, str) for v in versions
-            ):
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="classification_seed_invalid",
-                    error_class="configuration",
-                    message=(f"{short}: vardemangdsversion must be a list of strings."),
-                    remediation="Use a TOML array of quoted strings.",
-                )
-            for v in versions:
-                if v in seen_versions:
-                    raise RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="classification_seed_invalid",
-                        error_class="configuration",
-                        message=(
-                            f"vardemangdsversion {v!r} is claimed by both "
-                            f"{seen_versions[v]!r} and {short!r}."
-                        ),
-                        remediation=(
-                            "A vardemangdsversion string belongs to exactly one "
-                            "classification. Remove the duplicate."
-                        ),
-                    )
-                seen_versions[v] = short
-
-        # Every classification carries a git-tracked canonical-codes CSV. This
-        # is what makes seeding provider-agnostic safe: a thin --providers build
-        # seeds every classification regardless of which provider is built, and
-        # the CSV always supplies codes so the `classification_empty` guard never
-        # trips. An entry without `valid_codes_file` would silently break that
-        # guarantee, so require it (fail-fast) rather than discover it on a build.
-        vcf = entry.get("valid_codes_file")
-        if not vcf:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_seed_invalid",
-                error_class="configuration",
-                message=(
-                    f"{short}: every classification must declare a "
-                    "valid_codes_file (canonical codes are always seeded)."
-                ),
-                remediation=(
-                    "Add valid_codes_file = '<name>.csv' and place the CSV under "
-                    "<input_dir>/classifications/."
-                ),
-            )
-        if not isinstance(vcf, str):
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_seed_invalid",
-                error_class="configuration",
-                message=f"{short}: valid_codes_file must be a string.",
-                remediation="Use a relative filename like 'sun2000-niva.csv'.",
-            )
-
-        # provider is an optional LABEL-SOURCE tag (not a DB column): which
-        # provider's instance value-set-version-label strings carry it. It no
-        # longer gates seeding (classifications are always seeded) — its sole
-        # role is scoping the #597 seed-drift demotion.
-        prov = entry.get("provider")
-        if prov is not None and not isinstance(prov, str):
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_seed_invalid",
-                error_class="configuration",
-                message=f"{short}: provider must be a string.",
-                remediation='Use a provider slug like provider = "sos".',
-            )
-        # sentinel_codes is an optional per-classification table list of exact
-        # `{code, meaning}` strings. Curated bulk/missing tokens (e.g. a source's
-        # "00000") that keep the binding with a warning instead of severing it.
-        # Validated here (fail fast on unknown keys, non-strings, duplicates)
-        # and stored back as plain JSON tables — the single representation the
-        # selection boundary accepts.
-        if "sentinel_codes" in entry:
-            entry["sentinel_codes"] = [
-                model.model_dump()
-                for model in load_sentinel_codes(
-                    entry["sentinel_codes"], classification=short
-                )
-            ]
-
-    return entries
-
-
 def _progress(msg: str) -> None:
     sys.stderr.write(msg + "\n")
     sys.stderr.flush()
-
-
-def _resolve_valid_codes_paths(
-    entries: list[dict[str, Any]], valid_codes_dir: Path | None
-) -> dict[str, Path]:
-    """Return ``{short_name: resolved_path}`` for each entry's canonical CSV.
-
-    A seed entry with ``valid_codes_file`` set but no ``valid_codes_dir``
-    available, or a missing/non-file path, is a build-stop error.
-    """
-    resolved: dict[str, Path] = {}
-    for entry in entries:
-        rel = entry["valid_codes_file"]
-        if valid_codes_dir is None:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_csv_dir_missing",
-                error_class="configuration",
-                message=(
-                    f"{entry['short_name']}: valid_codes_file is set but no "
-                    "valid_codes_dir is configured for the build."
-                ),
-                remediation=(
-                    "Place the canonical CSV under <input_dir>/classifications/."
-                ),
-            )
-        base = valid_codes_dir.resolve()
-        path = (base / rel).resolve()
-        if not path.is_relative_to(base):
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_csv_invalid",
-                error_class="configuration",
-                message=(
-                    f"{entry['short_name']}: valid_codes_file {rel!r} escapes "
-                    f"{base} (resolved to {path})."
-                ),
-                remediation="Use a plain filename, not a path with '..' segments.",
-            )
-        if not path.is_file():
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_csv_not_found",
-                error_class="configuration",
-                message=(
-                    f"{entry['short_name']}: valid_codes_file {rel!r} "
-                    f"resolved to {path}, which does not exist."
-                ),
-                remediation="Create the CSV at that path or fix the seed entry.",
-            )
-        resolved[entry["short_name"]] = path
-    return resolved
 
 
 def _build_containment_temp_tables(conn: sqlite3.Connection) -> None:
@@ -550,15 +323,15 @@ class ResidueResult:
     (total residue value sets, the safe-subset size). Read-only — nothing is
     materialized.
 
-    `mixed_state_variable_ids` is the P2 copyability gate: a curated `[[link]]` is
-    VARIABLE-grain — an existing variable-wide declaration covers EVERY value-set state, not just
+    `mixed_state_variable_ids` is the P2 copyability gate: a curated
+    `[[binding.variable]]` is VARIABLE-grain — an existing variable-wide declaration covers EVERY value-set state, not just
     the safe one. Offline conversion must capture exact state-level guards. So a variable that has a safe value set but
     ALSO another state that would be wrongly reclassified variable-wide (a state on
     an ambiguous/non-safe value set, or one already classified to a DIFFERENT
     classification) must NOT be emitted as a bare copyable link. This set holds the
     variable_ids of exactly those non-conflict safe variables whose variable-wide
     link is NOT provably safe; the renderer routes them to the comment-only section
-    flagged `# MIXED-STATE` instead of emitting a copyable `[[link]]`. Conflict
+    flagged `# MIXED-STATE` instead of emitting a copyable binding. Conflict
     variables (safe value sets resolving to different classifications) are handled
     separately by the renderer and are NOT included here."""
 
@@ -799,9 +572,9 @@ def _mixed_state_variable_ids(
     value_sets: list[ResidueValueSet],
     safe_target_cls_id_by_vs: dict[int, int],
 ) -> frozenset[int]:
-    """P2: the variable_ids whose safe `[[link]]` is NOT provably safe variable-wide.
+    """P2: the variable_ids whose safe binding is NOT provably safe variable-wide.
 
-    A curated `[[link]]` is VARIABLE-grain: a variable-wide declaration
+    A curated `[[binding.variable]]` is VARIABLE-grain: a variable-wide declaration
     applies the chosen classification to EVERY non-NULL value-set state of the
     variable (DELETE-then-INSERT per state key). So a copyable link is only correct
     when applying it variable-wide reclassifies nothing wrongly. We gather, per
@@ -859,30 +632,30 @@ def _mixed_state_variable_ids(
 
 
 def render_residue_toml(result: ResidueResult) -> str:
-    """Render the residue worklist as a `[[link]]` TOML string a maintainer curates
-    from — the exact shape `curation/classifications.toml` accepts, so a CONFIRMED
-    candidate copies across verbatim. Built by hand (not `tomli_w`) so the
+    """Render the residue worklist as `[[binding.variable]]` TOML a maintainer curates
+    from — the exact shape a `curation/classifications/<short_name>.toml` file
+    accepts, so a CONFIRMED candidate copies into the named file verbatim. Built by hand (not `tomli_w`) so the
     per-value-set evidence `#` comments survive (`tomli_w` drops comments); every
-    emitted string value (`variable`, `classification`, `note`) and every value
+    emitted string value (`variable`, `note`) and every value
     interpolated into a `#` comment goes through the shared `_toml_str` /
     `_toml_comment` leaves (`fqid_slugs.py`) for round-trip safety, the same as
     `concept_group_candidates.render_candidates_toml`.
 
     The SAFE subset (single label-unambiguous standalone candidate) is emitted FIRST
     and clearly marked — that's the curatable tier (#494 part 2). It is emitted as
-    one `[[link]]` per DISTINCT variable FQID (NOT per state): the curated loader
-    `load_classification_links` rejects a duplicate `variable`, and one variable can
+    one binding per DISTINCT variable FQID (NOT per state): the curation loader
+    rejects a variable bound twice, and one variable can
     surface as an unclassified state on several safe value sets, so a per-state emit
     would produce duplicate `variable` blocks that fail to load verbatim. When a
     variable's safe value sets all resolve to the SAME classification it gets ONE
     block; when they resolve to DIFFERENT classifications that is a genuine conflict —
     it is NOT emitted as a copyable link but routed to the ambiguous section as a
-    comment-flagged conflict for human resolution. Each `[[link]]` carries the
-    standalone candidate's `classification` and a `note = "residue:safe"` provenance
-    marker; the preceding `#` comment shows n_codes and every candidate's containment
+    comment-flagged conflict for human resolution. Each binding names its target
+    file in a `#` comment and carries a `note = "residue:safe"` provenance marker;
+    the preceding `#` comment shows n_codes and every candidate's containment
     / label_agree / standalone so a reviewer sees the full evidence.
 
-    A copyable `[[link]]` is VARIABLE-grain (it reclassifies EVERY value-set state of
+    A copyable binding is VARIABLE-grain (it reclassifies EVERY value-set state of
     the variable), so it is held back to comment-only — never uncommented — in two
     further cases, since copying it verbatim would either mis-tag other states or fail
     to load:
@@ -892,7 +665,7 @@ def render_residue_toml(result: ResidueResult) -> str:
       already classified to a different class). `result.mixed_state_variable_ids` flags
       these; curate the scoping by hand.
     - UNSLUGGED (P3): a NULL slug segment (a `--skip-slugs` / partial build) makes the
-      FQID carry an empty segment (e.g. `scb//var`), which `load_classification_links`
+      FQID carry an empty segment (e.g. `scb//var`), which the curation loader
       rejects — so the advertised copyable worklist would not load.
 
     The AMBIGUOUS residue (no single safe standalone, plus the safe-but-conflicting /
@@ -903,7 +676,7 @@ def render_residue_toml(result: ResidueResult) -> str:
     ambiguous = [vs for vs in result.value_sets if not vs.safe]
 
     # Group the safe states by variable FQID so each FQID emits at most one
-    # `[[link]]` — `load_classification_links` rejects a duplicate `variable`, and a
+    # binding — the curation loader rejects a variable bound twice, and a
     # variable can be an unclassified state on several safe value sets. Carry the
     # variable name (first seen) for the evidence comment, and the variable_ids behind
     # each FQID (for the P2 mixed-state gate). A variable whose safe value sets resolve
@@ -924,7 +697,7 @@ def render_residue_toml(result: ResidueResult) -> str:
 
     def _unslugged(fqid: str) -> bool:
         # A NULL slug segment renders as an empty piece (e.g. `scb//var`); such an
-        # FQID is rejected by `load_classification_links`, so it can't be copyable.
+        # FQID is rejected by the curation loader, so it can't be copyable.
         return any(seg == "" for seg in fqid.split("/"))
 
     def _mixed(fqid: str) -> bool:
@@ -960,7 +733,8 @@ def render_residue_toml(result: ResidueResult) -> str:
         "# sets with >= 1 still-unclassified (classification_id IS NULL) state. These",
         "# are INFERRED candidates, NOT confirmed links. NOTHING here loads into a",
         "# build — review each and copy ONLY confirmed links into",
-        "# reg_meta_build/curation/classifications.toml (drop/replace the residue note).",
+        "# reg_meta_build/curation/classifications/<short_name>.toml (drop/replace",
+        "# the residue note).",
         "#",
         f"# {result.total} residual value set(s); "
         f"{result.safe_count} safe-subset (single label-unambiguous standalone).",
@@ -993,22 +767,26 @@ def render_residue_toml(result: ResidueResult) -> str:
         return out
 
     lines.append("")
-    lines.append("# === SAFE subset (curatable: copy the [[link]] blocks below) ===")
+    lines.append(
+        "# === SAFE subset (curatable: copy each [[binding.variable]] block below) ==="
+    )
     for vs in safe:
         lines.extend(_evidence_comment(vs))
     if not safe_links:
         lines.append("")
         lines.append("# (no copyable links)")
-    # One [[link]] per distinct variable FQID (deduped above) so the block loads
+    # One binding per distinct variable FQID (deduped above) so the block loads
     # verbatim. Sorted for deterministic output.
     for fqid in sorted(safe_links):
         name = safe_name_by_fqid.get(fqid)
         lines.append("")
         if name:
             lines.append(f"# {_toml_comment(name)}")
-        lines.append("[[link]]")
+        lines.append(
+            f"# -> curation/classifications/{_toml_comment(safe_links[fqid])}.toml"
+        )
+        lines.append("[[binding.variable]]")
         lines.append(f"variable = {_toml_str(fqid)}")
-        lines.append(f"classification = {_toml_str(safe_links[fqid])}")
         lines.append(f"note = {_toml_str('residue:safe')}")
 
     lines.append("")

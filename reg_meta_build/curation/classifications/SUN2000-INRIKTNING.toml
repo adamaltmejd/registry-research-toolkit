@@ -1,0 +1,28 @@
+[classification]
+short_name = "SUN2000-INRIKTNING"
+slug = "sun2000-inriktning"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsinriktning"
+name_en = "Swedish Standard Classification of Education 2000 — Field of Study"
+publisher = "SCB"
+valid_from = 2000
+valid_to = 2019
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+codes_file = "sun2000-inriktning.csv"
+sentinel_codes = [
+  { code = "*", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9", meaning = "Okänd" },
+  { code = "[BLANK]", meaning = "Uppgift saknas" },
+  { code = "****", meaning = "Uppgift saknas" },
+  { code = "988", meaning = "Okänt" },
+  { code = "977", meaning = "Okänt" },
+  { code = "977z", meaning = "Okänt" },
+  { code = "988z", meaning = "Okänt" },
+  { code = "998z", meaning = "Okänt" },
+]
+
+[binding]
+value_set_labels = [
+  "SUN 2000 - Utbildningsinriktning",
+  "SUN2000Inriktning",
+]

@@ -1,271 +1,23 @@
-"""Tests for classification seed loading, build-time population, and CLI."""
+"""Tests for classification codes, the residue worklist, and the CLI."""
 
 from __future__ import annotations
 
 import csv
 import hashlib
 import json
+import re
 import sqlite3
 import subprocess
 import sys
+import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import PIPE
 from reg_meta.errors import RegMetaError
-from reg_meta_build.classifications import load_seed, load_valid_codes
+from reg_meta_build.classifications import load_valid_codes
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-# CVID 1004 has vardemangdsversion = "Kon-2" (a fake successor) so we can
-# exercise the supersedes chain end to end. CVID 9999 ("Unknown") still
-# falls outside the backbone and never makes it into value_set_member.
-EXTENDED_VARDEMANGDER_ROWS = [
-    PIPE.join(["Kön", "1", "1", "Man", "1001", "5001"]),
-    PIPE.join(["Kön", "1", "2", "Kvinna", "1001", "5002"]),
-    PIPE.join(["Kön", "1", "1", "Man", "1003", "5001"]),
-    PIPE.join(["Kön", "1", "2", "Kvinna", "1003", "5002"]),
-    PIPE.join(["Kön", "1", "1", "Man", "2001", "5001"]),
-    PIPE.join(["Kön", "1", "2", "Kvinna", "2001", "5002"]),
-    # CVID 1004 (Kön version 2022) gets the successor classification.
-    PIPE.join(["Kon-2", "1", "10", "Female", "1004", ""]),
-    PIPE.join(["Kon-2", "1", "20", "Male", "1004", ""]),
-    PIPE.join(["Kon-2", "1", "30", "Other", "1004", ""]),
-    PIPE.join(["Unknown", "1", "99", "Phantom", "9999", "5099"]),
-]
-
-
-# Two classifications: TESTKON tags CVIDs 1001/1003/2001 (vardemangdsversion
-# "Kön"); TESTKON2 tags CVID 1004 (vardemangdsversion "Kon-2"). With both
-# pointing at real strings the build invariants pass. Succession is no longer
-# seed-declared (it lives in `classification_replaced_by`); `derive_supersedes_
-# from_edges` is unit-tested directly below.
-TEST_SEED_TOML = """\
-[[classification]]
-short_name = "TESTKON"
-name = "Test classification for gender codes"
-name_en = "Test"
-publisher = "TEST"
-version = "1"
-valid_from = 2000
-url = "https://example.com/"
-valid_codes_file = "testkon.csv"
-vardemangdsversion = ["Kön"]
-
-[[classification]]
-short_name = "TESTKON2"
-name = "Successor"
-publisher = "TEST"
-version = "2"
-valid_from = 2022
-valid_codes_file = "testkon2.csv"
-vardemangdsversion = ["Kon-2"]
-"""
-
-# CSVs for TEST_SEED_TOML, written alongside the seed by `_build_with_seed`.
-# Codes mirror EXACTLY the observed codes so no canonical-but-unobserved rows
-# are inserted (keeps `code_count` assertions stable while satisfying the
-# always-seed `valid_codes_file` requirement).
-TEST_SEED_CSVS = {
-    "testkon.csv": "vardekod,vardebenamning\n1,Man\n2,Kvinna\n",
-    "testkon2.csv": "vardekod,vardebenamning\n10,Female\n20,Male\n30,Other\n",
-}
-
-
-# ---------------------------------------------------------------------------
-# Seed file loading and validation
-# ---------------------------------------------------------------------------
-
-
-class TestLoadSeed:
-    def test_valid_seed(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'valid_codes_file = "a.csv"\n'
-            'vardemangdsversion = ["x"]\n',
-            encoding="utf-8",
-        )
-        entries = load_seed(seed)
-        assert len(entries) == 1
-        assert entries[0]["short_name"] == "A"
-
-    def test_missing_valid_codes_file_rejected(self, tmp_path: Path):
-        # Every classification must carry a valid_codes_file — it is what makes
-        # always-seed safe on a thin --providers build (the CSV supplies codes
-        # so the empty guard never trips). Omitting it fails fast.
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n', encoding="utf-8"
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "valid_codes_file" in ei.value.message
-        assert "A" in ei.value.message
-
-    def test_empty_seed_rejected(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text("", encoding="utf-8")
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_empty"
-
-    def test_missing_required_field(self, tmp_path: Path):
-        # short_name + name are required; vardemangdsversion is optional, so
-        # omit `name` to trigger the missing-required-field path.
-        seed = tmp_path / "c.toml"
-        seed.write_text('[[classification]]\nshort_name = "A"\n', encoding="utf-8")
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-
-    def test_vardemangdsversion_optional(self, tmp_path: Path):
-        # An entry with no vardemangdsversion is valid (canonical-codes-only
-        # classification — tags no instances). valid_codes_file is still
-        # required.
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'valid_codes_file = "a.csv"\n',
-            encoding="utf-8",
-        )
-        entries = load_seed(seed)
-        assert len(entries) == 1
-        assert "vardemangdsversion" not in entries[0]
-
-    def test_duplicate_short_name(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'valid_codes_file = "a.csv"\nvardemangdsversion = ["x"]\n'
-            '[[classification]]\nshort_name = "A"\nname = "Other"\n'
-            'valid_codes_file = "a2.csv"\nvardemangdsversion = ["y"]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "Duplicate" in ei.value.message
-
-    def test_duplicate_vardemangdsversion(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'valid_codes_file = "a.csv"\nvardemangdsversion = ["x"]\n'
-            '[[classification]]\nshort_name = "B"\nname = "B"\n'
-            'valid_codes_file = "b.csv"\nvardemangdsversion = ["x"]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "belongs to exactly one" in ei.value.remediation
-
-    def test_valid_codes_file_must_be_string(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            "valid_codes_file = 123\n"
-            'vardemangdsversion = ["x"]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "valid_codes_file" in ei.value.message
-
-    def test_provider_must_be_string(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'valid_codes_file = "a.csv"\n'
-            "provider = 99\n"
-            'vardemangdsversion = ["x"]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "provider" in ei.value.message
-
-
-class TestLoadSeedSentinelCodes:
-    _BASE = (
-        '[[classification]]\nshort_name = "A"\nname = "A"\nvalid_codes_file = "a.csv"\n'
-    )
-
-    def _seed(self, tmp_path: Path, body: str):
-        seed = tmp_path / "c.toml"
-        seed.write_text(self._BASE + body, encoding="utf-8")
-        return load_seed(seed)
-
-    def test_absent_sentinel_key_leaves_entry_untagged(self, tmp_path: Path):
-        entries = self._seed(tmp_path, 'vardemangdsversion = ["x"]\n')
-        assert "sentinel_codes" not in entries[0]
-
-    def test_valid_sentinels_parse_with_exact_strings(self, tmp_path: Path):
-        entries = self._seed(
-            tmp_path,
-            'sentinel_codes = [{code = "00000", meaning = "not applicable"}, '
-            '{code = "999", meaning = "missing"}]\n',
-        )
-        assert [
-            (sentinel["code"], sentinel["meaning"])
-            for sentinel in entries[0]["sentinel_codes"]
-        ] == [("00000", "not applicable"), ("999", "missing")]
-
-    def test_unknown_sentinel_key_rejected(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            self._BASE
-            + 'sentinel_codes = [{code = "00000", meaning = "x", pattern = "0*"}]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "sentinel_codes" in ei.value.message
-
-    def test_duplicate_sentinel_code_rejected(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            self._BASE + 'sentinel_codes = [{code = "00000", meaning = "x"}, '
-            '{code = "00000", meaning = "y"}]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "more than once" in ei.value.message
-
-    @pytest.mark.parametrize(
-        "entry",
-        [
-            '{code = 5, meaning = "x"}',
-            '{code = "00000"}',
-            '{code = "00000", meaning = ""}',
-            '{code = "00000", meaning = "   "}',
-            '"00000"',
-        ],
-    )
-    def test_malformed_sentinel_entries_rejected(self, tmp_path: Path, entry: str):
-        seed = tmp_path / "c.toml"
-        seed.write_text(self._BASE + f"sentinel_codes = [{entry}]\n", encoding="utf-8")
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-
-    def test_non_list_sentinels_rejected(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            self._BASE + 'sentinel_codes = {code = "00000"}\n', encoding="utf-8"
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-
 
 # ---------------------------------------------------------------------------
 # Valid-codes CSV loader
@@ -327,7 +79,7 @@ class TestLoadValidCodes:
 
 
 # ---------------------------------------------------------------------------
-# #416: code-set-containment detector + curated link loader
+# #416: code-set-containment detector
 # ---------------------------------------------------------------------------
 
 
@@ -478,87 +230,24 @@ def _numeric_codes(prefix: str, n: int, width: int) -> list[tuple[str, str]]:
     return [(str(i).zfill(width), f"{prefix} {i}") for i in range(1, n + 1)]
 
 
-class TestCuratedClassificationLinks:
-    """Structural validation of accepted classification-link declarations."""
+def _copyable_bindings(toml: str) -> list[tuple[str, str]]:
+    """The worklist's copyable blocks as (variable, target short name) pairs.
 
-    def test_load_bad_fqid_fails(self, tmp_path: Path) -> None:
-        from reg_meta_build.classification_links import load_classification_links
+    The blocks validate as curation `[[binding.variable]]` entries, and each names
+    its target file in a `# -> curation/classifications/<short_name>.toml` comment.
+    """
+    from reg_meta_build.curation_tree import ClassificationBinding
 
-        path = tmp_path / "classifications.toml"
-        path.write_text(
-            '[[link]]\nvariable = "scb/ulf"\nclassification = "ICD-10-SE"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_classification_links(path)
-        assert ei.value.code == "classification_links_invalid"
-
-    def test_load_missing_classification_fails(self, tmp_path: Path) -> None:
-        from reg_meta_build.classification_links import load_classification_links
-
-        path = tmp_path / "classifications.toml"
-        path.write_text('[[link]]\nvariable = "scb/ulf/ha0611m"\n', encoding="utf-8")
-        with pytest.raises(RegMetaError) as ei:
-            load_classification_links(path)
-        assert ei.value.code == "classification_links_invalid"
-
-    def test_load_duplicate_variable_fails(self, tmp_path: Path) -> None:
-        from reg_meta_build.classification_links import load_classification_links
-
-        path = tmp_path / "classifications.toml"
-        path.write_text(
-            '[[link]]\nvariable = "scb/ulf/ha0611m"\nclassification = "ICD-10-SE"\n'
-            '[[link]]\nvariable = "scb/ulf/ha0611m"\nclassification = "OTHER"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_classification_links(path)
-        assert ei.value.code == "classification_links_invalid"
-
-    def test_load_empty_or_missing_is_clean(self, tmp_path: Path) -> None:
-        from reg_meta_build.classification_links import load_classification_links
-
-        assert load_classification_links(None) == ()
-        assert load_classification_links(tmp_path / "absent.toml") == ()
-        empty = tmp_path / "classifications.toml"
-        empty.write_text("# only comments\n", encoding="utf-8")
-        assert load_classification_links(empty) == ()
-
-    def test_repo_toml_loads_clean(self) -> None:
-        """The shipped maintainer artifact parses and carries the #494 part-2
-        curated residue (13 entries). Asserting the exact set so future TOML
-        drift is caught here. The 11 sector entries point at SEKTORKOD since
-        Y-170 (RAMS/LISA ownership-sector code, split off SEKTOR2000/INSEKT).
-
-        Loads the shipped file directly, independently of synthetic catalog
-        fixtures."""
-        from pathlib import Path
-
-        from reg_meta_build.classification_links import load_classification_links
-
-        path = (
-            Path(__file__).resolve().parent.parent / "curation" / "classifications.toml"
-        )
-        assert path.is_file(), "curation/classifications.toml must ship in the repo"
-        expected = {
-            ("scb", "ureg", "isced2011niva"): "ISCED2011",
-            ("scb", "ureg", "isced-f-2013"): "ISCED-F2013",
-            ("scb", "arbetskraftsbarometern", "sektorkod"): "SEKTORKOD",
-            ("scb", "fortroendevalda", "sektor"): "SEKTORKOD",
-            ("scb", "kommunalekonomisk-utjamning", "sektor"): "SEKTORKOD",
-            ("scb", "lisa", "ast-sektorkod"): "SEKTORKOD",
-            ("scb", "lisa", "org-sektorkod"): "SEKTORKOD",
-            ("scb", "lisa", "sektorkod"): "SEKTORKOD",
-            ("scb", "rams", "institutionell-sektorkod"): "SEKTORKOD",
-            ("scb", "yrkesreg", "sektor-ku1"): "SEKTORKOD",
-            ("scb", "yrkesreg", "sektorkod"): "SEKTORKOD",
-            ("scb", "yrkesreg", "sektorkod-2"): "SEKTORKOD",
-            ("scb", "yrkesreg", "sektorkod-storsta-forvarvskalla"): "SEKTORKOD",
-        }
-        links = load_classification_links(path)
-        assert {
-            (e.provider, e.register, e.variable): e.classification for e in links
-        } == expected
+    binding = ClassificationBinding.model_validate(
+        tomllib.loads(toml).get("binding", {})
+    )
+    targets = re.findall(
+        r"^# -> curation/classifications/(.+)\.toml$", toml, flags=re.MULTILINE
+    )
+    return [
+        (bound.variable, target)
+        for bound, target in zip(binding.variable, targets, strict=True)
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -622,7 +311,7 @@ class TestDumpClassificationResidue:
         label_agree ≥ 0.90 and the OTHER is below it. FAM_A keeps matching labels
         (label_agree 1.0); FAM_B is RELABELED on the shared codes (label_agree 0)
         — both ≥0.90-CONTAINED (codes match) so still multi-family, but only FAM_A
-        is label-unambiguous → safe, and FAM_A is the [[link]] target."""
+        is label-unambiguous → safe, and FAM_A is the binding target."""
         from reg_meta_build.classifications import (
             dump_classification_residue,
             render_residue_toml,
@@ -647,12 +336,10 @@ class TestDumpClassificationResidue:
         assert by_name["FAM_A"].label_agree == pytest.approx(1.0)
         assert by_name["FAM_B"].label_agree == pytest.approx(0.0)
 
-        # The worklist emits the safe candidate as a copyable [[link]] block.
+        # The worklist emits the safe candidate as a copyable binding block.
         toml = render_residue_toml(result)
         assert "=== SAFE subset" in toml
-        assert "[[link]]" in toml
-        assert 'variable = "scb/ulf/famvar"' in toml
-        assert 'classification = "FAM_A"' in toml
+        assert _copyable_bindings(toml) == [("scb/ulf/famvar", "FAM_A")]
 
     def test_standalone_on_chain_is_not_standalone(self) -> None:
         """A candidate on a `supersedes_id` vintage chain is NOT standalone (neither
@@ -782,16 +469,12 @@ class TestDumpClassificationResidue:
         assert again.total == 1
         assert g.candidates() == before
 
-    def test_variable_on_two_safe_value_sets_emits_one_link(
-        self, tmp_path: Path
-    ) -> None:
+    def test_variable_on_two_safe_value_sets_emits_one_link(self) -> None:
         """A variable that is an unclassified state on TWO safe value sets — both
-        resolving to the SAME standalone classification — must emit ONE `[[link]]`,
-        not one per state: `load_classification_links` rejects a duplicate `variable`.
-        Asserts the worklist round-trips through the loader WITHOUT a duplicate-
-        `variable` error. (Fails against a per-state renderer: it emits two identical
+        resolving to the SAME standalone classification — must emit ONE binding,
+        not one per state: the curation loader rejects a variable bound twice.
+        (Fails against a per-state renderer: it emits two identical
         `variable = "scb/ulf/dualvar"` blocks.)"""
-        from reg_meta_build.classification_links import load_classification_links
         from reg_meta_build.classifications import (
             dump_classification_residue,
             render_residue_toml,
@@ -818,24 +501,17 @@ class TestDumpClassificationResidue:
         assert result.safe_count == 2  # both value sets safe
 
         toml = render_residue_toml(result)
-        # Exactly one [[link]] for the variable — not one per state.
+        # Exactly one binding for the variable — not one per state.
         assert toml.count('variable = "scb/ulf/dualvar"') == 1
-        # Round-trips through the curated loader without a duplicate-variable raise.
-        path = tmp_path / "residue.toml"
-        path.write_text(toml, encoding="utf-8")
-        links = load_classification_links(path)
-        assert [
-            (e.provider, e.register, e.variable, e.classification) for e in links
-        ] == [("scb", "ulf", "dualvar", "FAM_A")]
+        assert _copyable_bindings(toml) == [("scb/ulf/dualvar", "FAM_A")]
 
     def test_variable_safe_on_two_value_sets_conflicting_class_is_flagged(
-        self, tmp_path: Path
+        self,
     ) -> None:
         """When a variable's two safe value sets resolve to DIFFERENT standalone
         classifications, that is a genuine conflict: it is NOT emitted as a copyable
-        `[[link]]` (which would mislead a verbatim copy) but routed to the ambiguous
+        binding (which would mislead a verbatim copy) but routed to the ambiguous
         section as a comment-flagged conflict. The worklist still round-trips."""
-        from reg_meta_build.classification_links import load_classification_links
         from reg_meta_build.classifications import (
             dump_classification_residue,
             render_residue_toml,
@@ -858,19 +534,17 @@ class TestDumpClassificationResidue:
         assert result.safe_count == 2
 
         toml = render_residue_toml(result)
-        # No copyable [[link]] for the conflicting variable, and it is flagged.
+        # No copyable binding for the conflicting variable, and it is flagged.
         assert 'variable = "scb/ulf/conflvar"' not in toml
         assert "CONFLICT" in toml
         assert "conflvar" in toml
-        # Whatever links DID emit still load (here: none).
-        path = tmp_path / "residue.toml"
-        path.write_text(toml, encoding="utf-8")
-        assert load_classification_links(path) == ()
+        # Whatever bindings DID emit still load (here: none).
+        assert _copyable_bindings(toml) == []
 
     def test_mixed_state_variable_is_not_copyable_safe_only_variable_is(
-        self, tmp_path: Path
+        self,
     ) -> None:
-        """P2: a curated `[[link]]` is VARIABLE-grain —
+        """P2: a curated `[[binding.variable]]` is VARIABLE-grain —
         `materialize_classification_links` applies the chosen classification to EVERY
         value-set state of the variable. So a variable with a safe value set but ALSO
         another (ambiguous) state must NOT be emitted as a copyable link (a
@@ -879,9 +553,8 @@ class TestDumpClassificationResidue:
         emitted worklist round-trips through the loader, applying ONLY the safe-only
         variable's link.
 
-        (Fails against the pre-P2 renderer: it emits a copyable `[[link]]` for the
+        (Fails against the pre-P2 renderer: it emits a copyable binding for the
         mixed-state variable too, over-applying the classification variable-wide.)"""
-        from reg_meta_build.classification_links import load_classification_links
         from reg_meta_build.classifications import (
             dump_classification_residue,
             render_residue_toml,
@@ -916,21 +589,15 @@ class TestDumpClassificationResidue:
 
         toml = render_residue_toml(result)
         # The mixed-state variable is comment-only and flagged; the safe-only one is
-        # a copyable [[link]].
+        # a copyable binding into FAM_A's file.
         assert 'variable = "scb/ulf/mixedvar"' not in toml
         assert "MIXED-STATE" in toml
         assert "mixedvar" in toml
         assert 'variable = "scb/ulf/safevar"' in toml
-        assert 'classification = "FAM_A"' in toml
 
-        # The worklist round-trips: ONLY the safe-only variable's link loads (the
+        # The worklist round-trips: ONLY the safe-only variable's binding loads (the
         # mixed-state variable was never emitted as a copyable block).
-        path = tmp_path / "residue.toml"
-        path.write_text(toml, encoding="utf-8")
-        links = load_classification_links(path)
-        assert [
-            (e.provider, e.register, e.variable, e.classification) for e in links
-        ] == [("scb", "ulf", "safevar", "FAM_A")]
+        assert _copyable_bindings(toml) == [("scb/ulf/safevar", "FAM_A")]
 
     def test_mixed_state_other_state_classified_to_different_class(self) -> None:
         """P2 variant: a variable with a safe value set whose OTHER state is already
@@ -960,16 +627,15 @@ class TestDumpClassificationResidue:
         assert result.safe_count == 1
         assert 970 in result.mixed_state_variable_ids
 
-    def test_unslugged_safe_variable_is_not_copyable(self, tmp_path: Path) -> None:
+    def test_unslugged_safe_variable_is_not_copyable(self) -> None:
         """P3: a NULL slug segment (a `--skip-slugs` / partial build) makes the FQID
-        carry an empty segment (e.g. `scb/ulf/`), which `load_classification_links`
+        carry an empty segment (e.g. `scb/ulf/`), which the curation loader
         rejects. The SAFE renderer must NOT emit such a variable as a copyable
-        `[[link]]` — it is comment-flagged UNSLUGGED — so the advertised copyable
+        binding — it is comment-flagged UNSLUGGED — so the advertised copyable
         worklist always loads.
 
         (Fails against the pre-P3 renderer: it emits `variable = "scb/ulf/"`, which
         the loader then refuses.)"""
-        from reg_meta_build.classification_links import load_classification_links
         from reg_meta_build.classifications import (
             dump_classification_residue,
             render_residue_toml,
@@ -991,19 +657,17 @@ class TestDumpClassificationResidue:
         assert rvs.states[0].fqid == "scb/ulf/"
 
         toml = render_residue_toml(result)
-        # No copyable [[link]] block emitted (the header comment mentions "[[link]]";
-        # an EMITTED block is a standalone `[[link]]` line); it is flagged UNSLUGGED.
-        assert "[[link]]" not in toml.splitlines()
+        # No copyable block emitted (the header comment mentions the table; an
+        # EMITTED block is a standalone line); it is flagged UNSLUGGED.
+        assert "[[binding.variable]]" not in toml.splitlines()
         assert "UNSLUGGED" in toml
         # The advertised worklist still loads (nothing copyable to over-apply).
-        path = tmp_path / "residue.toml"
-        path.write_text(toml, encoding="utf-8")
-        assert load_classification_links(path) == ()
+        assert _copyable_bindings(toml) == []
 
 
 class TestClassificationResidueCli:
     """The `classification-residue` CLI subcommand: a built DB in, a JSON counts
-    summary out, and a `[[link]]`-shaped worklist `classification_links.py`'s loader
+    summary out, and a worklist of `[[binding.variable]]` blocks the curation loader
     accepts (so a confirmed safe candidate copies in verbatim)."""
 
     def _residue_db(self, tmp_path: Path) -> Path:
@@ -1041,7 +705,6 @@ class TestClassificationResidueCli:
     def test_cli_emits_summary_and_loadable_worklist(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ) -> None:
-        from reg_meta_build.classification_links import load_classification_links
         from reg_meta_build.cli import run
 
         db_dir = self._residue_db(tmp_path)
@@ -1057,12 +720,10 @@ class TestClassificationResidueCli:
         assert summary["ambiguous_count"] == 0
         assert summary["output_toml"] == str(out_toml.resolve())
 
-        # The emitted worklist's [[link]] block re-parses through the curated loader
-        # — a confirmed safe candidate copies into curation/classifications.toml.
-        links = load_classification_links(out_toml)
-        assert [
-            (e.provider, e.register, e.variable, e.classification) for e in links
-        ] == [("scb", "ulf", "famvar", "FAM_A")]
+        # The emitted block validates as a curation binding — a confirmed safe
+        # candidate copies into curation/classifications/FAM_A.toml.
+        toml = out_toml.read_text(encoding="utf-8")
+        assert _copyable_bindings(toml) == [("scb/ulf/famvar", "FAM_A")]
 
     def test_cli_carries_toml_in_payload_without_output_flag(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
@@ -1077,27 +738,37 @@ class TestClassificationResidueCli:
         summary = json.loads(capsys.readouterr().out)
         assert summary["total"] == 1
         assert "toml" in summary
-        assert "[[link]]" in summary["toml"]
+        assert "[[binding.variable]]" in summary["toml"]
         assert "output_toml" not in summary
 
 
 # ---------------------------------------------------------------------------
-# Repo CSV snapshots round-trip through the seed loader
+# Repo CSV snapshots round-trip through the curation tree
 # ---------------------------------------------------------------------------
 
 
+def _repo_classifications_dir() -> Path:
+    from pathlib import Path
+
+    return Path(__file__).resolve().parents[1] / "input_data" / "classifications"
+
+
 class TestRepoClassificationCsvSnapshots:
-    def test_icd11_and_sni2025_csvs_load_from_repo_seed(self):
-        from reg_meta_build._curation import repo_curation_path
+    def test_icd11_and_sni2025_csvs_load_from_repo_curation(self):
+        from reg_meta_build._curation import repo_curation_dir
+        from reg_meta_build.curation_tree import load_classifications
 
-        seed_path = repo_curation_path("classifications.toml")
-        assert seed_path is not None
-        entries = {entry["short_name"]: entry for entry in load_seed(seed_path)}
-        cls_dir = seed_path.parent.parent / "input_data" / "classifications"
+        root = repo_curation_dir()
+        assert root is not None
+        entries = {
+            entry.classification.short_name: entry.classification
+            for entry in load_classifications(root)
+        }
+        cls_dir = _repo_classifications_dir()
 
-        assert entries["ICD-11-SE"]["valid_codes_file"] == "sos/icd-11-se.csv"
-        assert entries["ICD-11-SE"]["valid_from"] == 2027
-        assert "valid_to" not in entries["ICD-10-SE"]
+        assert entries["ICD-11-SE"].codes_file == "sos/icd-11-se.csv"
+        assert entries["ICD-11-SE"].valid_from == 2027
+        assert entries["ICD-10-SE"].valid_to is None
         icd11 = load_valid_codes(cls_dir / "sos" / "icd-11-se.csv")
         assert icd11["1A00"] == "Kolera"
         assert all(icd11.values())
@@ -1105,9 +776,9 @@ class TestRepoClassificationCsvSnapshots:
             rows = list(csv.DictReader(f))
         assert sum(1 for row in rows if row["parent_code"]) > 0
 
-        assert entries["SNI2025"]["valid_codes_file"] == "sni2025.csv"
-        assert "valid_from" not in entries["SNI2025"]
-        assert "valid_to" not in entries["SNI2007"]
+        assert entries["SNI2025"].codes_file == "sni2025.csv"
+        assert entries["SNI2025"].valid_from is None
+        assert entries["SNI2007"].valid_to is None
         sni2025 = load_valid_codes(cls_dir / "sni2025.csv")
         assert sni2025["A"] == "Jordbruk, skogsbruk och fiske"
         assert sni2025["01110"] == (
@@ -1118,30 +789,20 @@ class TestRepoClassificationCsvSnapshots:
         """The real merged `sos/kva.csv` (KMÅ ∪ KKÅ, deduped on the 50 shared
         chapter headers) loads into ONE `KVA` classification with codes and
         WITHOUT a duplicate-code `RegMetaError` — proving the merge deduped."""
-        from reg_meta_build._curation import repo_curation_path
         from reg_meta_build.resolved_catalog import (
             ResolvedClassification,
             ResolvedClassificationCode,
             write_resolved_catalog,
         )
 
-        seed_path = repo_curation_path("classifications.toml")
-        assert seed_path is not None
-        cls_dir = seed_path.parent.parent / "input_data" / "classifications"
-        assert (cls_dir / "sos" / "kva.csv").is_file(), "merged kva.csv must exist"
+        kva_csv = _repo_classifications_dir() / "sos" / "kva.csv"
+        assert kva_csv.is_file(), "merged kva.csv must exist"
 
-        seed = tmp_path / "classifications.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "KVA"\nname = "KVÅ"\n'
-            'provider = "sos"\nvalid_codes_file = "sos/kva.csv"\n',
-            encoding="utf-8",
-        )
-        (entry,) = load_seed(seed)
-        codes = load_valid_codes(cls_dir / entry["valid_codes_file"])
+        codes = load_valid_codes(kva_csv)
         book = ResolvedClassification(
             slug="kva",
-            short_name=entry["short_name"],
-            name=entry["name"],
+            short_name="KVA",
+            name="KVÅ",
             codes=tuple(
                 ResolvedClassificationCode(code=code, label=label)
                 for code, label in codes.items()

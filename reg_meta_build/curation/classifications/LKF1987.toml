@@ -1,0 +1,23 @@
+[classification]
+short_name = "LKF1987"
+slug = "lkf1987"
+name = "Län, kommuner och församlingar 1987"
+name_en = "Counties, municipalities and parishes 1987"
+publisher = "SCB"
+valid_from = 1987
+valid_to = 1987
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf1987.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Okänt värde" },
+  { code = "1111", meaning = "Okänt" },
+  { code = "99", meaning = "Svensk skola i utlandet" },
+  { code = "999999", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 1987-01-01/ Län, kommuner och församlingar",
+]

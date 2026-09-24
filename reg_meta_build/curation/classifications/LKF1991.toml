@@ -1,0 +1,22 @@
+[classification]
+short_name = "LKF1991"
+slug = "lkf1991"
+name = "Län, kommuner och församlingar 1991"
+name_en = "Counties, municipalities and parishes 1991"
+publisher = "SCB"
+valid_from = 1991
+valid_to = 1991
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf1991.csv"
+sentinel_codes = [
+  { code = "", meaning = "Ej förvärvsarbetande eller uppgift om sysselsättning saknas" },
+  { code = "9999", meaning = "Arbetsstället beläget i utlandet" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Uppgift saknas" },
+  { code = "999999", meaning = "Okänd" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 1991-01-01/ Län, kommuner och församlingar",
+]

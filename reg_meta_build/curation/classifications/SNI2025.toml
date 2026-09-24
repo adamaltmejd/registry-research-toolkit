@@ -1,0 +1,8 @@
+[classification]
+short_name = "SNI2025"
+slug = "sni2025"
+name = "Svensk standard för näringsgrensindelning 2025"
+name_en = "Swedish Standard Industrial Classification 2025"
+publisher = "SCB"
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+codes_file = "sni2025.csv"

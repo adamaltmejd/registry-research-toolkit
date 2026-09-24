@@ -1,0 +1,16 @@
+[classification]
+short_name = "JURFORM2020"
+slug = "jurform2020"
+name = "Standard för indelning efter juridisk form 2020"
+name_en = "Swedish Standard Classification by Legal Form 2020"
+publisher = "SCB"
+valid_from = 2020
+codes_file = "jurform2020.csv"
+sentinel_codes = [
+  { code = "00", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "Standard för indelning efter juridisk form 2020",
+]

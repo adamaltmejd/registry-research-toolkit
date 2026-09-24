@@ -19,7 +19,6 @@ from reg_meta.fqid import derive_variable_slug
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,
-    CLASSIFICATIONS_ZONE,
     FREEZE_STATE_FILE,
     SNAPSHOT_FILENAME,
     SlugEntry,
@@ -31,7 +30,6 @@ from reg_meta_build.fqid_slugs import (
     freeze_state,
     frozen_zones,
     iter_default_slug_candidates,
-    load_classifications_toml,
     load_freeze_states,
     load_provider_toml,
     load_slug_dir,
@@ -43,7 +41,6 @@ from reg_meta_build.fqid_slugs import (
     read_auto_derivations,
     read_snapshot,
     seed_all,
-    seed_classifications_toml,
     seed_provider_toml,
     snapshot_payload,
     write_snapshot,
@@ -808,79 +805,6 @@ class TestSplitColumnOwnership:
         assert "1.830.xgaturest" in exc.value.message
 
 
-class TestClassificationsToml:
-    def test_minimal(self, tmp_path: Path):
-        # A2.6.1: the vintage is baked into the slug (`class/<slug>`), so the
-        # entry is just a slug — no `version` field.
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
-        entries = load_classifications_toml(path)
-        assert entries == [
-            SlugEntry(
-                kind="classification",
-                source_id="SUN2020",
-                slug="sun2020",
-            )
-        ]
-
-    def test_version_field_rejected(self, tmp_path: Path):
-        # A2.6.1: `version` is no longer an allowed classification field —
-        # it's caught by the unknown-field guard.
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\nversion = "2020"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_classifications_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-
-    def test_period_shaped_slug_rejected(self, tmp_path: Path):
-        # The baked slug is a normal slug — period-shaped values (bare years)
-        # are rejected, same as every other slug slot.
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "2020"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_classifications_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-
-    def test_duplicate_slug_rejected(self, tmp_path: Path):
-        # Slug alone is the uniqueness key now (vintage baked in).
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classification."SUN2020A"]\nslug = "sun2020"\n'
-            '[classification."SUN2020B"]\nslug = "sun2020"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_classifications_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-
-    def test_reserved_http_suffix_slug_rejected(self, tmp_path: Path):
-        # A binding-suffix token would shadow `/catalog/{fqid:path}/lineage`
-        # if minted as a classification slug (`class/lineage`).
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classification."LINEAGE"]\nslug = "lineage"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_classifications_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-        assert "reserved" in exc.value.message
-
-    def test_variants_slug_allowed(self, tmp_path: Path):
-        # `variants` collides only with the 3-seg variable leaf; a classification
-        # (`class/variants`) is a clean 2-seg path, so it must be accepted.
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classification."VARIANTS"]\nslug = "variants"\n',
-        )
-        entries = load_classifications_toml(path)
-        assert entries[0].slug == "variants"
-
-
 class TestLoadSlugDir:
     def test_empty_dir(self, tmp_path: Path):
         d = tmp_path / "slugs"
@@ -892,17 +816,12 @@ class TestLoadSlugDir:
             load_slug_dir(tmp_path / "missing")
         assert exc.value.code == "slug_dir_not_found"
 
-    def test_loads_provider_and_classifications(self, tmp_path: Path):
+    def test_loads_provider_toml(self, tmp_path: Path):
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", '[register."34"]\nslug = "lisa"\n')
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         entries = load_slug_dir(d)
-        kinds = sorted({e.kind for e in entries})
-        assert kinds == ["classification", "register"]
+        assert [e.kind for e in entries] == ["register"]
 
 
 # ---------------------------------------------------------------------------
@@ -917,7 +836,6 @@ class TestPopulateSlugs:
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
         conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.execute("UPDATE classification SET slug = NULL")
         conn.commit()
         return conn
 
@@ -930,17 +848,9 @@ class TestPopulateSlugs:
             '[register_variant."1.10"]\nslug = "individer-15plus"\n'
             'display_group = "Individer"\n',
         )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
-        assert counts == {
-            "register": 1,
-            "register_variant": 1,
-            "classification": 1,
-        }
+        assert counts == {"register": 1, "register_variant": 1}
         assert (
             conn.execute("SELECT slug FROM register WHERE register_id = 1").fetchone()[
                 0
@@ -951,12 +861,6 @@ class TestPopulateSlugs:
             "SELECT slug, display_group FROM register_variant WHERE register_variant_id = 10"
         ).fetchone()
         assert (row["slug"], row["display_group"]) == ("individer-15plus", "Individer")
-        assert (
-            conn.execute(
-                "SELECT slug FROM classification WHERE short_name = 'SUN2020'"
-            ).fetchone()[0]
-            == "sun2020"
-        )
 
     def test_populates_panel_columns(self, tmp_path: Path):
         # A4.4c: a curated panel round-trips through populate_slugs. The composite
@@ -971,10 +875,6 @@ class TestPopulateSlugs:
             'panel_entity_key = ["foretag", "arbetsstalle"]\n'
             'panel_time_key = "period"\n'
             'panel_time_grain = "delivery"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = self._make_db()
         populate_slugs(conn, d, strict=True)
@@ -1002,10 +902,6 @@ class TestPopulateSlugs:
             'panel_time_key = ["ar", "kvartal"]\n'
             'panel_time_grain = "row"\n',
         )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
         populate_slugs(conn, d, strict=True)
         row = conn.execute(
@@ -1025,10 +921,6 @@ class TestPopulateSlugs:
             '[register."1"]\nslug = "lisa"\n'
             '[register_variant."1.10"]\nslug = "individer-15plus"\n',
         )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
         populate_slugs(conn, d, strict=True)
         row = conn.execute(
@@ -1041,10 +933,6 @@ class TestPopulateSlugs:
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", "")
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
         with pytest.raises(RegMetaError) as exc:
             populate_slugs(conn, d, strict=True)
@@ -1054,10 +942,6 @@ class TestPopulateSlugs:
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", '[register."1"]\nslug = "lisa"\n')
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
         # Variant `1.10` has no slug entry; strict would fail, non-strict
         # populates whatever is available.
@@ -1074,10 +958,6 @@ class TestPopulateSlugs:
             '[register."999"]\nslug = "retired"\ndeprecated = true\n'
             '[register_variant."1.10"]\nslug = "v"\n',
         )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
         assert counts["register"] == 1  # 999 is deprecated, skipped
@@ -1091,32 +971,7 @@ class TestPopulateSlugs:
             '[register."999"]\nslug = "ghost"\n'
             '[register_variant."1.10"]\nslug = "v"\n',
         )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
-        with pytest.raises(RegMetaError) as exc:
-            populate_slugs(conn, d, strict=True)
-        assert exc.value.code == "slug_unknown_source_id"
-
-    def test_unknown_classification_slug_fails(self, tmp_path: Path):
-        # Every classification is seeded, so a classification slug entry with no
-        # DB row (not flagged deprecated) is a genuine typo and must raise.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n[register_variant."1.10"]\nslug = "v"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."GHOST"]\nslug = "ghost"\n',
-        )
-        conn = build_slugged_db(classification=None)
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.commit()
         with pytest.raises(RegMetaError) as exc:
             populate_slugs(conn, d, strict=True)
         assert exc.value.code == "slug_unknown_source_id"
@@ -1139,21 +994,16 @@ class TestPopulateSlugs:
 
 
 class TestSeedSlugs:
-    def test_writes_provider_and_classifications(self, tmp_path: Path):
+    def test_writes_provider_files_only(self, tmp_path: Path):
         conn = build_slugged_db()
         out = tmp_path / "out"
         written = seed_all(conn, out)
         assert "scb.toml" in written
-        assert "classifications.toml" in written
+        assert "classifications.toml" not in written
         scb_body = (out / "scb.toml").read_text()
         assert '[register."1"]' in scb_body
         assert 'slug = "lisa"' in scb_body
         assert '[register_variant."1.10"]' in scb_body
-        cls_body = (out / "classifications.toml").read_text()
-        assert '[classification."SUN2020"]' in cls_body
-        # A2.6.1: the seed emits a slug (folded from short_name), no `version`.
-        assert "version = " not in cls_body
-        assert "slug = " in cls_body
 
     def test_omits_register_version_from_seed(self):
         # A2.6: register_version is not seeded at all (version left the FQID
@@ -1285,14 +1135,9 @@ class TestPrecheckSlugs:
             '[register."1"]\nslug = "lisa"\n'
             '[register_variant."1.10"]\nslug = "individer"\n',
         )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
         conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.execute("UPDATE classification SET slug = NULL")
         result = precheck_slugs(conn, d)
         assert result.ok
 
@@ -1300,21 +1145,17 @@ class TestPrecheckSlugs:
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", "")
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
         conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.execute("UPDATE classification SET slug = NULL")
         result = precheck_slugs(conn, d)
         assert not result.ok
         assert any(r[1] == "1" for r in result.missing_registers)
-        assert any(c == "SUN2020" for c in result.missing_classifications)
 
     def test_parse_error_surfaces(self, tmp_path: Path):
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", '[register."1"]\nslug = "Bad_Slug"\n')
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db()
         result = precheck_slugs(conn, d)
         assert result.parse_errors
@@ -1326,7 +1167,6 @@ class TestPrecheckSlugs:
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", "")
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db()  # var 44, constant column "Kon" → not a drifter
         vid = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) "
@@ -1368,7 +1208,6 @@ class TestPrecheckSlugs:
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", "")
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db()  # var 44, constant column "Kon" → not a drifter
         wobble = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) "
@@ -1413,7 +1252,6 @@ class TestPrecheckSlugs:
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", "")
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db()
         vid = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) "
@@ -1443,7 +1281,6 @@ class TestPrecheckSlugs:
             d / "scb.toml",
             '[register."1"]\nslug = "lisa"\n[register."999"]\nslug = "ghost"\n',
         )
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
         conn.execute("UPDATE register_variant SET slug = NULL")
@@ -1461,25 +1298,12 @@ class TestPrecheckSlugs:
             '[register_variant."1.10"]\nslug = "individer"\n'
             '[register_variant."1.999"]\nslug = "ghost"\n',
         )
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
         conn.execute("UPDATE register_variant SET slug = NULL")
         result = precheck_slugs(conn, d)
         assert ("scb", "1.999") in result.stale_variants
         assert ("scb", "1.10") not in result.stale_variants
-
-    def test_stale_classification_reported(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(d / "scb.toml", "")
-        _write(
-            d / "classifications.toml",
-            '[classification."GHOST"]\nslug = "ghost"\n',
-        )
-        conn = build_slugged_db()
-        result = precheck_slugs(conn, d)
-        assert "GHOST" in result.stale_classifications
 
     def test_deprecated_entries_excluded_from_stale(self, tmp_path: Path):
         # Deprecated rows are allowed to outlive their DB row — that's the
@@ -1491,7 +1315,6 @@ class TestPrecheckSlugs:
             '[register."1"]\nslug = "lisa"\n'
             '[register."999"]\nslug = "old-lisa"\ndeprecated = true\n',
         )
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
         conn.execute("UPDATE register_variant SET slug = NULL")
@@ -1622,7 +1445,6 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
         conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.execute("UPDATE classification SET slug = NULL")
         conn.commit()
         return conn
 
@@ -1637,17 +1459,9 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
             '[register_variant."1.10"]\nslug = "v"\n'
             '[variable."1.44"]\nslug = "kon"\n',
         )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
-        assert counts == {
-            "register": 1,
-            "register_variant": 1,
-            "classification": 1,
-        }
+        assert counts == {"register": 1, "register_variant": 1}
 
     def test_variable_metadata_only_is_accepted(self, tmp_path: Path):
         # No slug — just deprecation / replaced_by / same_as metadata. Parsed
@@ -1660,17 +1474,9 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
             '[register_variant."1.10"]\nslug = "v"\n'
             '[variable."1.44"]\ndeprecated = true\n',
         )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
-        assert counts == {
-            "register": 1,
-            "register_variant": 1,
-            "classification": 1,
-        }
+        assert counts == {"register": 1, "register_variant": 1}
 
 
 class TestPopulateVariableSlugs:
@@ -2106,8 +1912,6 @@ class TestPopulateVariableSlugs:
         # `scb` (the `.auto` suffix must not break provider-slug grammar).
         conn = self._db(kol="Kon")
         d = self._slug_dir(tmp_path)
-        # classifications.toml stub so load_slug_dir is happy.
-        (d / "classifications.toml").write_text("", encoding="utf-8")
         populate_variable_slugs(conn, d)
         # load_slug_dir skips a churning zone's auto.toml (#775); pin scb AFTER
         # the build (not via scb_freeze=, which would trip the #471
@@ -2127,7 +1931,6 @@ class TestPopulateVariableSlugs:
         # load_slug_dir — #775 — so pin scb after the build.)
         conn = self._db(kol="Kon")
         d = self._slug_dir(tmp_path)
-        (d / "classifications.toml").write_text("", encoding="utf-8")
         populate_variable_slugs(conn, d)
         (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
         payload = snapshot_payload(load_slug_dir(d))
@@ -2636,7 +2439,6 @@ class TestAutoDerivationMarker:
         d = tmp_path / "slugs"
         d.mkdir()
         (d / "scb.toml").write_text(scb_body, encoding="utf-8")
-        (d / "classifications.toml").write_text("", encoding="utf-8")
         # #470: default churning. A rebuild test that needs the prior auto.toml
         # markers carried forward pins the `scb` zone via `scb_freeze=`.
         if scb_freeze:
@@ -2804,9 +2606,6 @@ class TestAutoDerivationMarker:
             tmp_path,
             '[register."1"]\nslug = "lisa"\n'
             '[register_variant."1.10"]\nslug = "individer-15plus"\n',
-        )
-        (d / "classifications.toml").write_text(
-            '[classification."SUN2020"]\nslug = "sun2020"\n', encoding="utf-8"
         )
         populate_variable_slugs(conn, d)
         result = precheck_slugs(conn, d)
@@ -3013,21 +2812,6 @@ class TestSeedEmitsValidToml:
         assert "register" in parsed
         assert "1" in parsed["register"]
 
-    def test_classifications_round_trip_with_unicode(self, tmp_path: Path):
-        # A2.6.1: classification is (short_name, name, slug) — no version.
-        conn = build_slugged_db(
-            classification=(
-                'KÅL "2020"',
-                "Svensk utbildning",
-                "sun2020",
-            ),
-        )
-        body = seed_classifications_toml(conn)
-        import tomllib
-
-        parsed = tomllib.loads(body)
-        assert 'KÅL "2020"' in parsed["classification"]
-
 
 class TestEntryParseIds:
     """`_parse_register_id` / `_parse_variant_id` are hit by populate when the
@@ -3043,7 +2827,6 @@ class TestEntryParseIds:
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", '[register."abc"]\nslug = "lisa"\n')
-        _write(d / "classifications.toml", "")
         with pytest.raises(RegMetaError) as exc:
             populate_slugs(self._db(), d, strict=False)
         assert exc.value.code == "slug_toml_invalid"
@@ -3056,7 +2839,6 @@ class TestEntryParseIds:
             d / "scb.toml",
             '[register."1"]\nslug = "lisa"\n[register_variant."1"]\nslug = "v"\n',
         )
-        _write(d / "classifications.toml", "")
         with pytest.raises(RegMetaError) as exc:
             populate_slugs(self._db(), d, strict=False)
         assert exc.value.code == "slug_toml_invalid"
@@ -3069,7 +2851,6 @@ class TestEntryParseIds:
             d / "scb.toml",
             '[register."1"]\nslug = "lisa"\n[register_variant."1.x"]\nslug = "v"\n',
         )
-        _write(d / "classifications.toml", "")
         with pytest.raises(RegMetaError) as exc:
             populate_slugs(self._db(), d, strict=False)
         assert exc.value.code == "slug_toml_invalid"
@@ -3101,34 +2882,20 @@ class TestSeedPopulateRoundTrip:
         seed_all(seeded, out_dir)
         seeded.close()
 
-        # 2) Drop NULL placeholder for classification version since the seed
-        # writes "TODO" when version is missing — our fixture sets version.
-        # Replay into a cleared DB.
+        # 2) Replay into a cleared DB.
         target = build_slugged_db()
         target.execute("UPDATE register SET slug = NULL")
         target.execute("UPDATE register_variant SET slug = NULL")
-        target.execute("UPDATE classification SET slug = NULL")
         target.commit()
 
         counts = populate_slugs(target, out_dir, strict=True)
-        assert counts == {
-            "register": 1,
-            "register_variant": 1,
-            "classification": 1,
-        }
+        assert counts == {"register": 1, "register_variant": 1}
         assert (
             target.execute(
                 "SELECT slug FROM register WHERE register_id = 1"
             ).fetchone()[0]
             == "lisa"
         )
-        # Auto-derived slugs differ from the curated "sun" — the seed is a
-        # starter, not a faithful round-trip of existing slugs. Just assert
-        # populate_slugs filled the column with whatever the seed proposed.
-        cls_slug = target.execute(
-            "SELECT slug FROM classification WHERE short_name = 'SUN2020'"
-        ).fetchone()[0]
-        assert cls_slug and cls_slug != "TODO"
 
 
 class TestCuratedDefaultVariantRoundTrip:
@@ -3149,7 +2916,6 @@ class TestCuratedDefaultVariantRoundTrip:
             '[register."5"]\nslug = "lss"\n'
             '[register_variant."5.50"]\nslug = "_default"\n',
         )
-        _write(d / "classifications.toml", "")
         conn = build_slugged_db(
             register=("LSS", None, 5, 2),
             variant=("LSS", None, 50),
@@ -3223,17 +2989,13 @@ class TestPrecheckCli:
             '[register."1"]\nslug = "lisa"\n'
             '[register_variant."1.10"]\nslug = "individer-15plus"\n',
         )
-        _write(
-            slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
-        )
         return db_dir, slug_dir
 
     def test_added_entries_exit_non_zero(self, tmp_path: Path):
         from reg_meta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
-        # Snapshot is empty — the three entries above show as `added`.
+        # Snapshot is empty — the two entries above show as `added`.
         write_snapshot(
             slug_dir / SNAPSHOT_FILENAME,
             {
@@ -3323,7 +3085,7 @@ class TestPrecheckCli:
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
-            '{"classification":{"SUN2020":"sun2020"},'
+            '{"classification":{},'
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -3367,17 +3129,6 @@ class TestGraphSemanticsRejectedInSlugToml:
         assert exc.value.code == "slug_toml_invalid"
         assert "same_as" in exc.value.message
 
-    def test_inline_same_as_on_classification_rejected(self, tmp_path: Path):
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n'
-            'same_as = [{ provider = "scb", classification_slug = "sun2000" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_classifications_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-        assert "same_as" in exc.value.message
-
     def test_toplevel_replaced_by_array_rejected(self, tmp_path: Path):
         # The succession `[[replaced_by]]` array (note: the per-entry scalar
         # `replaced_by` rename pointer survives — a different relation).
@@ -3400,7 +3151,6 @@ class TestCanonicalIntegerKeys:
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
         conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.execute("UPDATE classification SET slug = NULL")
         conn.commit()
         return conn
 
@@ -3408,7 +3158,6 @@ class TestCanonicalIntegerKeys:
         d = tmp_path / "slugs"
         d.mkdir()
         _write(d / "scb.toml", '[register."01"]\nslug = "lisa"\n')
-        _write(d / "classifications.toml", "")
         with pytest.raises(RegMetaError) as exc:
             populate_slugs(self._db_with_register_1_10(), d, strict=False)
         assert exc.value.code == "slug_toml_invalid"
@@ -3421,7 +3170,6 @@ class TestCanonicalIntegerKeys:
             d / "scb.toml",
             '[register."1"]\nslug = "lisa"\n[register_variant."1.010"]\nslug = "v"\n',
         )
-        _write(d / "classifications.toml", "")
         with pytest.raises(RegMetaError) as exc:
             populate_slugs(self._db_with_register_1_10(), d, strict=False)
         assert exc.value.code == "slug_toml_invalid"
@@ -3455,16 +3203,6 @@ class TestSeedEmptyDb:
         )
         body = seed_provider_toml(conn, "scb")
         assert "no registers found" in body
-
-    def test_classifications_table_empty(self, tmp_path: Path):
-        from reg_meta_build.db import DDL, seed_providers
-
-        conn = sqlite3.connect(":memory:")
-        conn.row_factory = sqlite3.Row
-        conn.executescript(DDL)
-        seed_providers(conn)
-        body = seed_classifications_toml(conn)
-        assert "no classifications" in body
 
 
 class TestSnapshotCorrupt:
@@ -3536,16 +3274,6 @@ class TestUnknownTopLevelTables:
         assert exc.value.code == "slug_toml_invalid"
         assert "lineage_defaults" in exc.value.message
 
-    def test_classifications_unknown_top_level(self, tmp_path: Path):
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classifications."SUN2020"]\nslug = "sun2020"\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_classifications_toml(path)
-        assert exc.value.code == "slug_toml_invalid"
-        assert "classifications" in exc.value.message
-
 
 # A2.6.1: TestClassificationVersionMismatch (the slug-TOML-vs-DB version
 # cross-check) is gone — there's no `version` column left to disagree with.
@@ -3598,7 +3326,7 @@ class TestPrecheckCliGrowOnly:
         (slug_dir / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
         # Baseline has `lisa`; the new TOML renames it to `lisa-individuals`.
         snapshot_before = (
-            '{"classification":{"SUN2020":"sun2020"},'
+            '{"classification":{},'
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -3619,10 +3347,6 @@ class TestPrecheckCliGrowOnly:
             slug_dir / "scb.toml",
             '[register."1"]\nslug = "lisa-individuals"\n'
             '[register_variant."1.10"]\nslug = "individer-15plus"\n',
-        )
-        _write(
-            slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
 
         exit_code = run(
@@ -3649,7 +3373,7 @@ class TestPrecheckCliGrowOnly:
         # The `scb` zone is sealed → dropping its variant row is blocked.
         (slug_dir / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
         snapshot_before = (
-            '{"classification":{"SUN2020":"sun2020"},'
+            '{"classification":{},'
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -3658,10 +3382,6 @@ class TestPrecheckCliGrowOnly:
         _write(
             slug_dir / "scb.toml",
             '[register."1"]\nslug = "lisa"\n',
-        )
-        _write(
-            slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
 
         exit_code = run(
@@ -3688,7 +3408,7 @@ class TestPrecheckCliGrowOnly:
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
-            '{"classification":{"SUN2020":"sun2020"},'
+            '{"classification":{},'
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -3708,10 +3428,6 @@ class TestPrecheckCliGrowOnly:
             slug_dir / "scb.toml",
             '[register."1"]\nslug = "lisa-individuals"\n'
             '[register_variant."1.10"]\nslug = "individer-15plus"\n',
-        )
-        _write(
-            slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
 
         exit_code = run(
@@ -3735,7 +3451,7 @@ class TestPrecheckCliGrowOnly:
         from reg_meta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
-        # Empty baseline; the three live entries are pure additions.
+        # Empty baseline; the two live entries are pure additions.
         (slug_dir / SNAPSHOT_FILENAME).write_text(
             '{"classification":{},"register":{},"register_variant":{},"variable":{}}\n',
             encoding="utf-8",
@@ -3744,10 +3460,6 @@ class TestPrecheckCliGrowOnly:
             slug_dir / "scb.toml",
             '[register."1"]\nslug = "lisa"\n'
             '[register_variant."1.10"]\nslug = "individer-15plus"\n',
-        )
-        _write(
-            slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
 
         exit_code = run(
@@ -3765,64 +3477,6 @@ class TestPrecheckCliGrowOnly:
         contents = (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8")
         assert "lisa" in contents
         assert "individer-15plus" in contents
-
-    def test_classifications_zone_frozen_refuses_rename(self, tmp_path: Path):
-        """#470: the reserved `classifications` zone gates the classification
-        slug independently. A frozen `classifications` zone refuses a rename
-        while a churning `scb` zone writes its rename through (per-zone scope).
-        """
-        import sqlite3 as _sql
-
-        from reg_meta_build.cli import run
-
-        db_dir, slug_dir = self._seed_layout(tmp_path)
-        # `classifications` sealed, `scb` left churning (unlisted).
-        (slug_dir / FREEZE_STATE_FILE).write_text(
-            f'{CLASSIFICATIONS_ZONE} = "frozen"\n', encoding="utf-8"
-        )
-        snapshot_before = (
-            '{"classification":{"SUN2020":"sun2020"},'
-            '"register":{"scb/1":"lisa"},'
-            '"register_variant":{"scb/1.10":"individer-15plus"},'
-            '"variable":{}}'
-        )
-        (slug_dir / SNAPSHOT_FILENAME).write_text(snapshot_before, encoding="utf-8")
-        # Rename BOTH a frozen-zone (classification) AND a churning-zone (scb)
-        # slug; keep the DB rows matching so the only divergence is vs snapshot.
-        conn = _sql.connect(db_dir / "reg_meta.db")
-        conn.execute("UPDATE register SET slug = 'lisa-2' WHERE register_id = 1")
-        conn.execute(
-            "UPDATE classification SET slug = 'sun2020-v2' WHERE short_name = 'SUN2020'"
-        )
-        conn.commit()
-        conn.close()
-        _write(
-            slug_dir / "scb.toml",
-            '[register."1"]\nslug = "lisa-2"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
-        )
-        _write(
-            slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020-v2"\n',
-        )
-
-        exit_code = run(
-            [
-                "--db",
-                str(db_dir),
-                "precheck-slugs",
-                "--slug-dir",
-                str(slug_dir),
-                "--update-snapshot",
-            ]
-        )
-        # The classification rename is in a frozen zone → refuse, snapshot
-        # untouched (the churning scb rename can't write through either, since
-        # the whole update is refused as a unit).
-        assert exit_code != 0
-        assert (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8") == (
-            snapshot_before
-        )
 
 
 # ---------------------------------------------------------------------------
@@ -3864,23 +3518,6 @@ class TestLoadFreezeStates:
         # `pinned_zones` is the auto.toml-OWES set: both frozen AND curating are
         # pinned (the non-obvious "frozen treated same as curating" branch).
         assert pinned_zones(states) == frozenset({"scb", "sos"})
-
-    def test_classifications_zone_allowed(self, tmp_path: Path) -> None:
-        # The reserved CLASSIFICATIONS_ZONE is a valid key even though there's
-        # no `classifications` provider TOML.
-        d = self._dir(tmp_path, freeze_body=f'{CLASSIFICATIONS_ZONE} = "frozen"\n')
-        states = load_freeze_states(d)
-        assert states == {CLASSIFICATIONS_ZONE: "frozen"}
-        assert frozen_zones(states) == frozenset({CLASSIFICATIONS_ZONE})
-
-    def test_classifications_zone_not_pinned(self, tmp_path: Path) -> None:
-        # The CLASSIFICATIONS_ZONE is grow-only-frozen like any zone, but it
-        # carries no per-provider `<provider>.auto.toml`, so `pinned_zones`
-        # excludes it even when sealed `frozen` (the exclusion branch).
-        d = self._dir(tmp_path, freeze_body=f'{CLASSIFICATIONS_ZONE} = "frozen"\n')
-        states = load_freeze_states(d)
-        assert frozen_zones(states) == frozenset({CLASSIFICATIONS_ZONE})
-        assert pinned_zones(states) == frozenset()
 
     def test_unknown_state_value_rejected(self, tmp_path: Path) -> None:
         d = self._dir(tmp_path, freeze_body='scb = "thawing"\n')
@@ -3957,18 +3594,6 @@ class TestDiffSnapshotFrozenZones:
         assert diff["blocked"] == ["register/scb/1: 'lisa' -> 'lisa-renamed'"]
         assert "register/sos/9 (was 'deaths')" in diff["removed"]
         assert "classification/SUN2020 (was 'sun2020')" in diff["removed"]
-
-    def test_classifications_zone_blocks(self) -> None:
-        cur = {
-            "register": {"scb/1": "lisa", "sos/9": "deaths"},
-            "register_variant": {},
-            "variable": {},
-            "classification": {"SUN2020": "sun2020-v2"},  # renamed
-        }
-        diff = diff_snapshot(
-            self._PREV, cur, frozen_zones=frozenset({CLASSIFICATIONS_ZONE})
-        )
-        assert diff["blocked"] == ["classification/SUN2020: 'sun2020' -> 'sun2020-v2'"]
 
 
 class TestFreezeStateAutoRegenerate:
@@ -4449,8 +4074,9 @@ class TestSeedSlugsCli:
         cli._cmd_seed_slugs(
             _ns(out_dir=str(out_loud), force=True, all_hints=True, quiet=False, db=None)
         )
-        for name in ("scb.toml", "classifications.toml"):
-            assert (out_quiet / name).read_bytes() == (out_loud / name).read_bytes()
+        assert (out_quiet / "scb.toml").read_bytes() == (
+            out_loud / "scb.toml"
+        ).read_bytes()
 
 
 def _make_seedable_db() -> sqlite3.Connection:

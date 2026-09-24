@@ -71,7 +71,6 @@ from .extend_db import (
     resolve_steward_slug_dir,
 )
 from .fqid_slugs import (
-    CLASSIFICATIONS_FILE,
     SNAPSHOT_FILENAME,
     diff_snapshot,
     format_default_slug_hints,
@@ -242,16 +241,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     prepare_bundle_p.add_argument("--input-dir", required=True)
-    prepare_bundle_p.add_argument(
-        "--curation-dir",
-        default=None,
-        help="Catalog curation directory (default: this checkout's curation/).",
-    )
-    prepare_bundle_p.add_argument(
-        "--slug-dir",
-        default=None,
-        help="Global slug directory (default: this checkout's fqid_slugs/).",
-    )
     prepare_bundle_p.add_argument("--scb-snapshot", required=True)
     prepare_bundle_p.add_argument("--scb-input-commit", required=True)
     prepare_bundle_p.add_argument("--scb-manifest-sha256", required=True)
@@ -417,10 +406,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "seed-slugs",
         help="Emit starter slug TOMLs from the current DB (maintainer-only).",
         description=(
-            "Generate hand-review starter TOMLs at <out-dir>/<provider>.toml\n"
-            "and <out-dir>/classifications.toml, mirroring DESIGN.md → Slug curation.\n"
-            "Slugs are auto-derived from register.name / register_variant.name / short_name\n"
-            "and need maintainer review before commit.\n\n"
+            "Generate hand-review starter TOMLs at <out-dir>/<provider>.toml,\n"
+            "mirroring DESIGN.md → Slug curation. Slugs are auto-derived from\n"
+            "register.name / register_variant.name and need maintainer review before\n"
+            "commit.\n\n"
             "Examples:\n"
             "  reg-meta-build seed-slugs\n"
             "  reg-meta-build seed-slugs --out-dir /tmp/slugs/"
@@ -467,7 +456,7 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Verify the slug TOMLs match the current DB. Reports:\n"
             "  - TOML parse / validation errors\n"
-            "  - register / register_variant / classification rows with no slug\n"
+            "  - register / register_variant rows with no slug\n"
             "  - non-additive changes vs. the committed snapshot (see DESIGN.md → Slug immutability)\n\n"
             "Exits 10 if any check fails (cleaner failure mode than a build).\n\n"
             "Examples:\n"
@@ -589,7 +578,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "REQUIRES an explicit --slug-dir pointing at the steward dir\n"
             "(fqid_slugs/<steward>/) that curates the overlay's registers — NOT the\n"
             "global fqid_slugs/ root (rejected when --slug-dir equals the repo's\n"
-            "fqid_slugs/ OR carries classifications.toml, the global-root marker that\n"
+            "fqid_slugs/ OR nests steward dirs, the global-root marker that\n"
             "also catches an installed-package / cross-checkout root), and not a dir\n"
             "without [register] entries. Each would scope the generator to the\n"
             "wrong/empty register set and emit zero steward pins (all usage errors).\n"
@@ -661,7 +650,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "explicit --slug-dir = the steward dir (fqid_slugs/<steward>/) that "
             "curates the overlay's registers — NOT the global fqid_slugs/ root "
             "(rejected by path-equality with the repo's fqid_slugs/ OR by the "
-            "classifications.toml global-root marker, which also catches an "
+            "nested-steward-dir global-root marker, which also catches an "
             "installed-package / cross-checkout root) and not a dir without "
             "[register] entries (each scopes to the wrong/empty register set and "
             "emits zero pins, all usage errors). Scopes to the steward registers it "
@@ -753,7 +742,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "that still have >= 1 unclassified (variable_state.classification_id IS\n"
             "NULL) state after the detector's confident tier + #494 vintage reclaim.\n"
             "Productizes the #494 throwaway recompute so a maintainer can curate\n"
-            "reg_meta_build/curation/classifications.toml from it. Reads a built DB; NEVER\n"
+            "reg_meta_build/curation/classifications/ from it. Reads a built DB; NEVER\n"
             "mutates it and NOTHING is materialized.\n\n"
             "For each residual value set it reports n_codes, the unclassified states\n"
             "(variable FQID + name), and the candidate classifications — per candidate\n"
@@ -765,9 +754,10 @@ def _build_parser() -> argparse.ArgumentParser:
             "#494-part-2 label-unambiguous shape); it is emitted FIRST and clearly\n"
             "marked. The JSON summary reports the total residue and the safe-subset\n"
             "count.\n\n"
-            "-o/--output-toml writes a `[[link]]`-shaped worklist (the exact shape\n"
-            "curation/classifications.toml accepts) so a CONFIRMED safe candidate copies\n"
-            "across verbatim; the ambiguous residue is comment-only evidence.\n\n"
+            "-o/--output-toml writes a `[[binding.variable]]` worklist (the exact shape\n"
+            "a curation/classifications/<short_name>.toml file accepts) so a CONFIRMED\n"
+            "safe candidate copies into its named file verbatim; the ambiguous residue\n"
+            "is comment-only evidence.\n\n"
             "Examples:\n"
             "  reg-meta-build --db <built-db> classification-residue -o /tmp/residue.toml\n"
             "  reg-meta-build --db <built-db> classification-residue  # counts only"
@@ -1005,32 +995,6 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ] == "blocked" or args.diagnostic else 0
 
 
-def _default_curation_dir() -> Path:
-    path = repo_curation_path("classifications.toml")
-    if path is None:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="curation_dir_not_found",
-            error_class="configuration",
-            message="Catalog curation directory not found in this checkout.",
-            remediation="Pass --curation-dir explicitly.",
-        )
-    return path.parent
-
-
-def _default_slug_dir() -> Path:
-    path = repo_slug_dir()
-    if path is None:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="slug_dir_not_found",
-            error_class="configuration",
-            message="Global slug directory not found in this checkout.",
-            remediation="Pass --slug-dir explicitly.",
-        )
-    return path
-
-
 def _cmd_prepare_sources(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .prepared_catalog import prepare_catalog_sources
 
@@ -1088,8 +1052,6 @@ def _cmd_prepare_input_bundle(
     try:
         stats = prepare_input_bundle(
             Path(args.input_dir),
-            Path(args.curation_dir) if args.curation_dir else _default_curation_dir(),
-            Path(args.slug_dir) if args.slug_dir else _default_slug_dir(),
             ScbSnapshotSelection(
                 path=Path(args.scb_snapshot),
                 input_commit=args.scb_input_commit,
@@ -1591,7 +1553,6 @@ def _cmd_precheck_slugs(
             ],
             # A2.6: register_version left the FQID grammar — no version slug
             # missing/stale/collision arrays in the precheck payload.
-            "missing_classifications": list(result.missing_classifications),
             "parse_errors": list(result.parse_errors),
             "stale_registers": [
                 {"provider": p, "source_id": sid} for (p, sid) in result.stale_registers
@@ -1599,7 +1560,6 @@ def _cmd_precheck_slugs(
             "stale_variants": [
                 {"provider": p, "source_id": sid} for (p, sid) in result.stale_variants
             ],
-            "stale_classifications": list(result.stale_classifications),
             # Advisory only (#143) — never affects `ok`/exit. Variables
             # whose delivery column drifts across editions, auto-slugged from a
             # stable basis; a curator scans this for the pre-v1 slug freeze.
@@ -1846,25 +1806,24 @@ def _cmd_entity_key_pins(
     # prevent. The gate (validate._check_entity_key_vars_curated) does NOT mirror
     # these guards: an empty steward scope is a VALID gate no-op (an overlay with
     # no steward registers has nothing to curate), but for the GENERATOR it is a
-    # misconfig. Cheap path-compare (Fix C) first, then the classifications.toml
-    # content marker (covers the installed-package / cross-checkout global root
-    # that path-equality misses), then the [register] entry scan (Fix B).
+    # misconfig. Cheap path-compare (Fix C) first, then the nested-steward-dir
+    # marker (covers the installed-package / cross-checkout global root that
+    # path-equality misses), then the [register] entry scan (Fix B).
     if args.flavored:
         repo_root = repo_slug_dir()
         # repo_slug_dir() is None outside a checkout; --slug-dir was given
         # explicitly here, so a None root just means there's no global root to
         # collide with — skip the equality check.
-        # The content marker (classifications.toml) is what catches the cases
-        # path-equality MISSES: an installed-package run (repo_slug_dir() is
-        # None, so the equality check can't fire) or --slug-dir pointing at a
-        # DIFFERENT checkout's global root (not equal to this checkout's
-        # repo_root). That provider-independent classifications.toml lives ONLY
-        # at the global slug-dir root — steward dirs never carry it — so its
-        # presence positively identifies the global root, which also has
-        # [register] entries and so slips past the empty-scope guard below.
+        # The content marker is what catches the cases path-equality MISSES: an
+        # installed-package run (repo_slug_dir() is None, so the equality check
+        # can't fire) or --slug-dir pointing at a DIFFERENT checkout's global root
+        # (not equal to this checkout's repo_root). Steward dirs nest ONLY under
+        # the global root and never nest further, so a subdirectory positively
+        # identifies the global root, which also has [register] entries and so
+        # slips past the empty-scope guard below.
         is_global_root = (
             repo_root is not None and slug_dir == repo_root.resolve()
-        ) or (slug_dir / CLASSIFICATIONS_FILE).exists()
+        ) or any(child.is_dir() for child in slug_dir.iterdir())
         if is_global_root:
             raise RegMetaError(
                 exit_code=EXIT_USAGE,
@@ -1873,8 +1832,8 @@ def _cmd_entity_key_pins(
                 message=(
                     "--flavored --slug-dir must be a steward dir "
                     "(fqid_slugs/<steward>/), not the global root (it equals the "
-                    "repo's fqid_slugs/ or carries classifications.toml, the "
-                    "global-root marker)."
+                    "repo's fqid_slugs/ or nests steward dirs, the global-root "
+                    "marker)."
                 ),
                 remediation=(
                     "Pass --slug-dir pointing at the nested steward dir "

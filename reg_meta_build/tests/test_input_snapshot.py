@@ -17,7 +17,6 @@ from _csv_fixtures import (
     hydrate_scb_values,
     omit_scb_snapshot_file,
     repin_input_bundle,
-    repin_scb_snapshot,
     scb_interpretation_rows,
     scb_values_role,
     sparsify_scb_values,
@@ -27,7 +26,6 @@ from _csv_fixtures import (
     write_scb_snapshot,
 )
 from _lisa_fixtures import write_lisa_workbook
-from reg_meta.errors import RegMetaError
 from reg_meta_build.db import _open_scb_csv, _open_scb_csv_prepared, _open_scb_csv_raw
 from reg_meta_build.input_snapshot import (
     LISA_BUNDLE_PATH,
@@ -996,17 +994,11 @@ def test_catalog_bundle_rejects_missing_wrong_or_invalid_selected_lisa(
         selected_hash = hashlib.sha256(workbook.read_bytes()).hexdigest()
         expected = "cannot open selected LISA workbook"
     snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
-    curation = tmp_path / "curation"
-    slugs = tmp_path / "slugs"
-    curation.mkdir()
-    slugs.mkdir()
     output = snapshot.path.parent / "bundle"
 
     with pytest.raises(SnapshotError, match=expected):
         prepare_input_bundle(
             input_dir,
-            curation,
-            slugs,
             snapshot,
             output,
             lisa_workbook=LisaWorkbookSelection(
@@ -1027,10 +1019,6 @@ def test_lisa_bundle_preparation_uses_small_source_validation_with_sparse_values
     workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
     snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
     sparsify_scb_values(snapshot)
-    curation = tmp_path / "curation"
-    slugs = tmp_path / "slugs"
-    curation.mkdir()
-    slugs.mkdir()
 
     def reject_exhaustive(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("LISA capture must not exhaustively verify the snapshot")
@@ -1045,8 +1033,6 @@ def test_lisa_bundle_preparation_uses_small_source_validation_with_sparse_values
     output = snapshot.path.parent / "bundle"
     prepare_input_bundle(
         input_dir,
-        curation,
-        slugs,
         snapshot,
         output,
         lisa_workbook=LisaWorkbookSelection(
@@ -1057,6 +1043,51 @@ def test_lisa_bundle_preparation_uses_small_source_validation_with_sparse_values
     )
 
     assert (output / LISA_BUNDLE_PATH).read_bytes() == workbook.read_bytes()
+
+
+def test_catalog_bundle_carries_classification_books_but_no_curation_or_naming(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from reg_meta_build.cli import run
+
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    books = input_dir / "classifications"
+    (books / "sos").mkdir(parents=True)
+    (books / "kon.csv").write_text("code,label\n1,Man\n2,Kvinna\n", encoding="utf-8")
+    (books / "sos" / "kva.csv").write_text("code,label\nA,Alfa\n", encoding="utf-8")
+    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
+    output = snapshot.path.parent / "bundle"
+
+    exit_code = run(
+        [
+            "prepare-input-bundle",
+            "--input-dir",
+            str(input_dir),
+            "--scb-snapshot",
+            str(snapshot.path),
+            "--scb-input-commit",
+            snapshot.input_commit,
+            "--scb-manifest-sha256",
+            snapshot.manifest_sha256,
+            "--output-dir",
+            str(output),
+        ]
+    )
+    assert exit_code == 0, capsys.readouterr().out
+
+    written = {
+        path.relative_to(output).as_posix()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+    assert {
+        "catalog/classifications/kon.csv",
+        "catalog/classifications/sos/kva.csv",
+    } <= written
+    assert not {
+        path for path in written if path.startswith(("curation/", "fqid_slugs/"))
+    }
 
 
 def test_catalog_bundle_preparation_skips_exhaustive_snapshot_verification(
@@ -1070,10 +1101,6 @@ def test_catalog_bundle_preparation_skips_exhaustive_snapshot_verification(
         "CREATE TABLE [dbo].[Auxiliary]([value] [int] NULL) ON [PRIMARY]\nGO\n",
         encoding="utf-8",
     )
-    curation = tmp_path / "curation"
-    slugs = tmp_path / "slugs"
-    curation.mkdir()
-    slugs.mkdir()
 
     def exhaustive_use(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("auxiliary-only preparation must reuse the accepted proof")
@@ -1081,47 +1108,11 @@ def test_catalog_bundle_preparation_skips_exhaustive_snapshot_verification(
     monkeypatch.setattr(snapshot_module, "verify_snapshot", exhaustive_use)
     sparsify_scb_values(snapshot)
     output = snapshot.path.parent / "bundle"
-    prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
+    prepare_input_bundle(input_dir, snapshot, output)
 
     assert (
         output / "catalog" / "SCB" / "Tabelldefinitioner.sql"
     ).read_bytes() == auxiliary.read_bytes()
-
-
-def test_catalog_bundle_preparation_rejects_escaping_classification_before_copy(
-    tmp_path: Path,
-) -> None:
-    input_dir = tmp_path / "authoring" / "source"
-    write_scb_input(input_dir)
-    escaped_source = tmp_path / "guard.csv"
-    escaped_source.write_text("source bytes\n", encoding="utf-8")
-    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
-    accepted_guard = snapshot.path.parent / "guard.csv"
-    accepted_guard.write_text("accepted bytes\n", encoding="utf-8")
-    snapshot = repin_scb_snapshot(snapshot, "accepted guard")
-    accepted_bytes = accepted_guard.read_bytes()
-
-    curation = tmp_path / "curation"
-    curation.mkdir()
-    (curation / "classifications.toml").write_text(
-        '[[classification]]\nshort_name = "TEST"\nname = "Test"\n'
-        'valid_codes_file = "../../../guard.csv"\n',
-        encoding="utf-8",
-    )
-    slugs = tmp_path / "slugs"
-    slugs.mkdir()
-    output = snapshot.path.parent / "bundle"
-
-    with pytest.raises(RegMetaError) as exc_info:
-        prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
-
-    assert exc_info.value.code == "classification_csv_invalid"
-    assert accepted_guard.read_bytes() == accepted_bytes
-    assert _git(snapshot.path.parent, "rev-parse", "HEAD") == snapshot.input_commit
-    assert not _git(
-        snapshot.path.parent, "status", "--porcelain=v1", "--untracked-files=all"
-    )
-    assert not output.exists()
 
 
 @pytest.mark.parametrize(
@@ -1136,10 +1127,6 @@ def test_catalog_bundle_preparation_rejects_new_source_membership(
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
     snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
-    curation = tmp_path / "curation"
-    slugs = tmp_path / "slugs"
-    curation.mkdir()
-    slugs.mkdir()
     output = snapshot.path.parent / "bundle"
     validate_contract = snapshot_module._validate_bundle_contract
 
@@ -1151,7 +1138,7 @@ def test_catalog_bundle_preparation_rejects_new_source_membership(
 
     monkeypatch.setattr(snapshot_module, "_validate_bundle_contract", introduce_source)
     with pytest.raises(SnapshotError, match="changed during bundle preparation"):
-        prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
+        prepare_input_bundle(input_dir, snapshot, output)
 
     assert not output.exists()
     assert not _git(
@@ -1193,8 +1180,6 @@ def test_catalog_bundle_requires_exact_clean_selection_and_never_overwrites(
     with pytest.raises(SnapshotError, match="will not be overwritten"):
         prepare_input_bundle(
             input_dir,
-            tmp_path / "empty-curation",
-            tmp_path / "empty-slugs",
             snapshot,
             existing,
         )
@@ -1275,25 +1260,15 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
     provider_dir.mkdir()
     (provider_dir / "fohm.toml").write_text("not = [valid", encoding="utf-8")
     snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
-    curation = tmp_path / "curation"
-    slugs = tmp_path / "slugs"
-    curation.mkdir()
-    slugs.mkdir()
 
     with pytest.raises(CuratedSourceError, match="invalid global curated TOML"):
-        prepare_input_bundle(
-            input_dir, curation, slugs, snapshot, snapshot.path.parent / "bundle"
-        )
+        prepare_input_bundle(input_dir, snapshot, snapshot.path.parent / "bundle")
     assert (
         cli_module.run(
             [
                 "prepare-input-bundle",
                 "--input-dir",
                 str(input_dir),
-                "--curation-dir",
-                str(curation),
-                "--slug-dir",
-                str(slugs),
                 "--scb-snapshot",
                 str(snapshot.path),
                 "--scb-input-commit",
@@ -1313,29 +1288,22 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
 
 
 @pytest.mark.parametrize(
-    ("source_root", "relative", "payload", "expected_exception"),
+    ("relative", "payload", "expected_exception"),
     (
-        ("curation", "lineage.toml", b"not = [valid", RegMetaError),
-        ("input", "SCB/ID-kolumner.xlsx", b"not a zip", BadZipFile),
-        ("input", "SCB/Tabelldefinitioner.sql", b"\x81", ScbReferenceSourceError),
+        ("SCB/ID-kolumner.xlsx", b"not a zip", BadZipFile),
+        ("SCB/Tabelldefinitioner.sql", b"\x81", ScbReferenceSourceError),
     ),
 )
 def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
-    source_root: str,
     relative: str,
     payload: bytes,
     expected_exception: type[Exception],
 ) -> None:
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
-    curation = tmp_path / "curation"
-    slugs = tmp_path / "slugs"
-    curation.mkdir()
-    slugs.mkdir()
-    root = curation if source_root == "curation" else input_dir
-    malformed = root / relative
+    malformed = input_dir / relative
     malformed.parent.mkdir(parents=True, exist_ok=True)
     malformed.write_bytes(payload)
 
@@ -1344,7 +1312,7 @@ def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(
     snapshot_manifest = (snapshot.path / "manifest.json").read_bytes()
     output = repository / "bundle"
     with pytest.raises(expected_exception):
-        prepare_input_bundle(input_dir, curation, slugs, snapshot, output)
+        prepare_input_bundle(input_dir, snapshot, output)
 
     assert not output.exists()
     assert (snapshot.path / "manifest.json").read_bytes() == snapshot_manifest
@@ -1355,12 +1323,7 @@ def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(
     # explicit verifier is independently required to exercise the same consumer.
     with monkeypatch.context() as bypass:
         bypass.setattr(snapshot_module, "_validate_bundle_contract", lambda _root: None)
-        selection = write_input_bundle_from_snapshot(
-            input_dir,
-            snapshot,
-            curation_dir=curation,
-            slug_dir=slugs,
-        )
+        selection = write_input_bundle_from_snapshot(input_dir, snapshot)
     bundle_manifest = (selection.path / "catalog-bundle.json").read_bytes()
 
     with pytest.raises(expected_exception):

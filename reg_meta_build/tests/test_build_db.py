@@ -1102,7 +1102,6 @@ class TestSameAsBuildIntegration:
             '[variable."1.100"]\nslug = "legacy-kon"\n',
             encoding="utf-8",
         )
-        (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
 
     @staticmethod
     def _write_relations(tmp_path: Path) -> Path:

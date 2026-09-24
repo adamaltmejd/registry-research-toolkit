@@ -1,0 +1,27 @@
+[classification]
+short_name = "LKF2002"
+slug = "lkf2002"
+name = "Län, kommuner och församlingar 2002"
+name_en = "Counties, municipalities and parishes 2002"
+publisher = "SCB"
+valid_from = 2002
+valid_to = 2002
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf2002.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "9999", meaning = "Okänt" },
+  { code = "0", meaning = "Okänt" },
+  { code = "9800", meaning = "Okänd kommun" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "99", meaning = "Utländsk adress" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 2002-01-01/ Län, kommuner och församlingar",
+]

@@ -1,0 +1,85 @@
+# Y-170: the SCB value set displayed as "Sektor 2000 / Sektorkod" (431 CVIDs:
+# codes 00, 11–15, 21–25) and "RAMS SektorKod fr.o.m. 1993" is NOT INSEKT — it
+# is the LISA/RAMS ownership-sector code, bound to SEKTOR2000 by label
+# collision. Codes 1993– per SCB's LISA library
+# (reg_meta_build/docs/lisa/SektorKod.md: 11 = Statlig förvaltning,
+# 12 = Statliga affärsverk, 13 = Kommunal förvaltning [export label; the LISA
+# background text writes "Primärkommunal förvaltning"], 14 = Landsting,
+# 15 = Övriga offentliga institutioner, 21 = Aktiebolag ej offentligt ägda
+# [export label, no comma], 22 = Övriga företag, ej offentligt ägda,
+# 23 = Statligt ägda företag och organisationer,
+# 24 = Kommunalt ägda företag och organisationer, 25 = Övriga organisationer;
+# 00 = Uppgift saknas observed in the export), corroborated by SSD RAMS/YrkesReg
+# "arbetsställets sektortillhörighet" value texts. Scope is exactly this set:
+# LISA SektorKod pre-2000 extra codes (19, 20, 29, 30, 40, 60, 99) are NOT
+# waived, and codes 0/000/'' on INSEKT-bound columns stay unresolved.
+
+[classification]
+short_name = "SEKTORKOD"
+slug = "sektorkod"
+name = "Sektorkod (RAMS/LISA)"
+name_en = "Ownership sector code (RAMS/LISA)"
+publisher = "SCB"
+valid_from = 1993
+codes_file = "sektorkod.csv"
+sentinel_codes = [
+  { code = "0", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "99", meaning = "Sektorkod okänd" },
+]
+
+[binding]
+value_set_labels = [
+  "Sektor 2000",
+  "RAMS SektorKod fr.o.m. 1993",
+]
+
+# Ownership sector — Sektorkod (RAMS/LISA), Y-170. The #494 residue entries
+# below carry the LISA/RAMS ownership-sector code ("Sektor 2000 / Sektorkod":
+# 00, 11–15, 21–25), not INSEKT: an early label-collision bound them to
+# SEKTOR2000, whose book has no code 15. Each column's observed set was checked
+# against the Y-170 cohort before retargeting; pre-2000 extras and 0/000/''
+# stay nonconforming under the new book exactly as before.
+[[binding.variable]]
+variable = "scb/arbetskraftsbarometern/sektorkod"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/fortroendevalda/sektor"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/kommunalekonomisk-utjamning/sektor"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/lisa/ast-sektorkod"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/lisa/org-sektorkod"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/lisa/sektorkod"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/rams/institutionell-sektorkod"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/yrkesreg/sektor-ku1"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/yrkesreg/sektorkod"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/yrkesreg/sektorkod-2"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+
+[[binding.variable]]
+variable = "scb/yrkesreg/sektorkod-storsta-forvarvskalla"
+note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"

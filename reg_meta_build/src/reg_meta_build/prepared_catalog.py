@@ -1,7 +1,8 @@
 """Prepare all selected machine sources once; reopen their accepted proofs cheaply.
 
-The bundle remains the inventory authority. Curation and naming files are pinned
-but deliberately excluded from cleaning. No catalog identities are formed here.
+The bundle remains the inventory authority. It carries no curation or naming
+files; older prepared manifests list them as excluded inputs. No catalog identities
+are formed here.
 """
 
 from __future__ import annotations
@@ -22,7 +23,6 @@ from reg_meta_build._accepted_prepared import (
 )
 from reg_meta_build.db import _CURATED_PROVIDERS, _file_sha256
 from reg_meta_build.input_snapshot import (
-    CATALOG_CURATION_FILES,
     LISA_BUNDLE_PATH,
     SCB_CSV_FILES,
     CatalogBundleReader,
@@ -393,7 +393,10 @@ def _role(path: str, *, origin: str) -> InputRole:
         or Path(path).is_relative_to("catalog/classifications")
     ) and Path(path).suffix == ".csv":
         return "code_list"
-    elif path in {f"curation/{name}" for name in CATALOG_CURATION_FILES}:
+    # Transitional: bundles no longer carry curation or naming files. These two
+    # branches only let the accepted prepared v13 manifest, which lists them, still
+    # open; delete them with that manifest.
+    elif Path(path).parent.as_posix() == "curation":
         return "curation"
     elif Path(path).parent.as_posix() == "fqid_slugs" and (
         path.endswith(".toml") or path == "fqid_slugs/.snapshot.json"

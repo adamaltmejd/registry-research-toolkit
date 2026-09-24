@@ -1,0 +1,27 @@
+[classification]
+short_name = "SNI92"
+slug = "sni1992"
+name = "Svensk standard för näringsgrensindelning 1992"
+name_en = "Swedish Standard Industrial Classification 1992"
+publisher = "SCB"
+valid_from = 1992
+valid_to = 2001
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+codes_file = "sni92.csv"
+sentinel_codes = [
+  { code = "00000", meaning = "Okänt" },
+  { code = "00", meaning = "Ej specificerad verksamhet" },
+  { code = "", meaning = "Okänt" },
+  { code = "000", meaning = "Okänt" },
+  { code = "0000", meaning = "Okänt" },
+  { code = "NULL", meaning = "Ej relevant" },
+]
+
+[binding]
+value_set_labels = [
+  "Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter",
+  "Svensk standard för näringsgrensindelning, brancher SNI 92",
+  "SNI 92, begränsad nivå",
+  "SNI 92, grov nivå",
+  "SNI, 92, detaljgrupp",
+]

@@ -22,7 +22,7 @@ from ._curation import (
     require_evidence,
     require_str,
 )
-from .classifications import declared_short_names
+from .curation_tree import declared_short_names
 from .edition_bounds import edition_claims
 from .fqid_slugs import (
     PROVIDER_FILE_SUFFIX,
@@ -372,17 +372,14 @@ def _resolve_variant(
 def load_scb_errata(
     path: Path | None,
     slug_dir: Path | None,
-    *,
-    classification_seed_path: Path | None = None,
 ) -> ScbErrata:
     """Parse the errata TOML, resolving each entry's `register`/`variant` slugs
     against the curated `scb.toml` in `slug_dir`. Empty when no file (synthetic
     builds, wheel installs).
 
-    `classification_seed_path` is the build's own `curation/classifications.toml` (the one
-    `populate_classifications` seeds from), consulted only when some `[[column]]`
-    names a `classification` — an undeclared short_name is a typo that would
-    otherwise be dropped silently by the candidate feed.
+    This checkout's `curation/classifications/` is consulted only when some
+    `[[column]]` names a `classification` — an undeclared short_name is a typo that
+    would otherwise be dropped silently by the candidate feed.
 
     Strict load, all EXIT_CONFIG with a remediation: only `[[version]]` /
     `[[delivered]]` / `[[column]]` top-level; no unknown key inside an entry;
@@ -520,7 +517,7 @@ def load_scb_errata(
             )
         columns.append(loaded)
 
-    _check_declared_classifications(columns, classification_seed_path)
+    _check_declared_classifications(columns)
 
     return ScbErrata(tuple(versions), tuple(delivered), tuple(columns))
 
@@ -679,23 +676,20 @@ def _column_classification(entry: dict, ctx: str) -> str | None:
     return _require_str(entry, "classification", ctx)
 
 
-def _check_declared_classifications(
-    columns: list[ErrataColumn], seed_path: Path | None
-) -> None:
+def _check_declared_classifications(columns: list[ErrataColumn]) -> None:
     """Every `[[column]]` `classification` must name a DECLARED classification
     short_name. The candidate feed drops an unknown one with no row and no error,
     so a typo would silently ship an untagged state."""
     named = {c.classification for c in columns if c.classification is not None}
     if not named:
         return
-    declared = declared_short_names(seed_path)
-    unknown = sorted(named - declared)
+    unknown = sorted(named - declared_short_names())
     if unknown:
         raise curation_error(
             _CODE,
             f"scb_errata [[column]] names undeclared classification(s) {unknown}.",
             "Use an existing classification short_name (e.g. 'SSYK96') or declare "
-            "it in reg_meta_build/curation/classifications.toml.",
+            "it in reg_meta_build/curation/classifications/.",
         )
 
 

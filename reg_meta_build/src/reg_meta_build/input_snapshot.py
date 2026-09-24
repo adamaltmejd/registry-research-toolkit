@@ -62,28 +62,7 @@ LISA_PURPOSE = (
 LISA_READER = "lisa-variable-workbook-v1"
 LISA_LAYOUT = "lisa-variable-list-2024-2025-v1"
 
-CATALOG_CURATION_FILES = (
-    "alias_windows.toml",
-    "cis2014-matrix-meaning-evidence.json",
-    "cis2016-matrix-meaning-evidence.json",
-    "classifications.toml",
-    "codeless_overlap.toml",
-    "codelivery.toml",
-    "concept_groups.auto.toml",
-    "concept_groups.toml",
-    "delivery_enrichment.generated.toml",
-    "lineage.toml",
-    "period_family_merges.toml",
-    "relations.toml",
-    "scb_errata.toml",
-    "tags.toml",
-)
-CATALOG_SLUG_PROVIDERS = (
-    "scb",
-    "sos",
-    *(provider for provider, _directory in _CURATED_PROVIDERS),
-)
-_BUNDLE_INVENTORY_ROOTS = ("catalog", "curation", "fqid_slugs", "supplemental")
+_BUNDLE_INVENTORY_ROOTS = ("catalog", "supplemental")
 
 _GIT_PACK_SETTINGS = (
     ("core.compression", "9"),
@@ -505,8 +484,7 @@ class BundleFile(_Model):
             or path.parts[0] not in _BUNDLE_INVENTORY_ROOTS
         ):
             raise ValueError(
-                "bundle file path must stay under catalog/, curation/, fqid_slugs/, "
-                "or supplemental/"
+                "bundle file path must stay under catalog/ or supplemental/"
             )
         return path.as_posix()
 
@@ -674,14 +652,6 @@ class CatalogBundleReader:
     @property
     def input_dir(self) -> Path:
         return self.root / "catalog"
-
-    @property
-    def curation_dir(self) -> Path:
-        return self.root / "curation"
-
-    @property
-    def slug_dir(self) -> Path:
-        return self.root / "fqid_slugs"
 
     def require_supplemental_dataset(
         self, dataset_id: str
@@ -2617,58 +2587,34 @@ def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
     )
 
 
-def _fixed_bundle_paths() -> tuple[str, ...]:
-    source_paths = (
-        "catalog/SCB/Tabelldefinitioner.sql",
-        "catalog/SCB/ID-kolumner.xlsx",
-        "catalog/scb_canonical/scb_canonical.toml",
-        *(
-            f"catalog/{directory}/{provider}.toml"
-            for provider, directory in _CURATED_PROVIDERS
-        ),
+def _classification_csvs(catalog: Path) -> list[Path]:
+    """Every classification book, including subdirectories such as `sos/`."""
+    return sorted(
+        path for path in (catalog / "classifications").rglob("*.csv") if path.is_file()
     )
-    curation_paths = (f"curation/{name}" for name in CATALOG_CURATION_FILES)
-    slug_paths = (
-        "fqid_slugs/classifications.toml",
-        "fqid_slugs/freeze.toml",
-        "fqid_slugs/.snapshot.json",
-        *(
-            path
-            for provider in CATALOG_SLUG_PROVIDERS
-            for path in (
-                f"fqid_slugs/{provider}.toml",
-                f"fqid_slugs/{provider}.auto.toml",
-            )
-        ),
-    )
-    return (*source_paths, *curation_paths, *slug_paths)
+
+
+# Relative to the input directory; each lands under `catalog/` in the bundle.
+_FIXED_CATALOG_SOURCES = (
+    "SCB/Tabelldefinitioner.sql",
+    "SCB/ID-kolumner.xlsx",
+    "scb_canonical/scb_canonical.toml",
+    *(f"{directory}/{provider}.toml" for provider, directory in _CURATED_PROVIDERS),
+)
 
 
 def _bundle_source_files(
     input_dir: Path,
-    curation_dir: Path,
-    slug_dir: Path,
     lisa_workbook: LisaWorkbookSelection | None = None,
 ) -> dict[str, Path | None]:
     """Resolve exactly the files an ordinary catalog build can read."""
-    roots = {
-        "input directory": input_dir,
-        "curation directory": curation_dir,
-        "slug directory": slug_dir,
-    }
-    for label, root in roots.items():
-        if not root.is_dir():
-            raise SnapshotError(f"{label} not found: {root}")
+    if not input_dir.is_dir():
+        raise SnapshotError(f"input directory not found: {input_dir}")
 
     resolved: dict[str, Path | None] = {}
-    for relative in _fixed_bundle_paths():
-        if relative.startswith("catalog/"):
-            source = input_dir / Path(relative).relative_to("catalog")
-        elif relative.startswith("curation/"):
-            source = curation_dir / Path(relative).relative_to("curation")
-        else:
-            source = slug_dir / Path(relative).relative_to("fqid_slugs")
-        resolved[relative] = source if source.is_file() else None
+    for relative in _FIXED_CATALOG_SOURCES:
+        source = input_dir / relative
+        resolved[f"catalog/{relative}"] = source if source.is_file() else None
 
     if lisa_workbook is None:
         resolved[LISA_BUNDLE_PATH] = None
@@ -2698,17 +2644,9 @@ def _bundle_source_files(
             ):
                 resolved[f"catalog/Socialstyrelsen/{source.name}"] = source
 
-    classification_seed = curation_dir / "classifications.toml"
-    if classification_seed.is_file():
-        from .classifications import _resolve_valid_codes_paths, load_seed
-
-        entries = load_seed(classification_seed)
-        classification_dir = input_dir / "classifications"
-        classification_paths = _resolve_valid_codes_paths(entries, classification_dir)
-        for entry in entries:
-            name = entry["valid_codes_file"]
-            relative = f"catalog/classifications/{name}"
-            resolved[relative] = classification_paths[entry["short_name"]]
+    # Every classification book is prepared; curation chooses among them later.
+    for source in _classification_csvs(input_dir):
+        resolved[f"catalog/{source.relative_to(input_dir).as_posix()}"] = source
 
     canonical_toml = input_dir / "scb_canonical" / "scb_canonical.toml"
     if canonical_toml.is_file():
@@ -2724,17 +2662,7 @@ def _bundle_source_files(
             relative = f"catalog/scb_canonical/{csv_path.name}"
             resolved[relative] = csv_path if csv_path.is_file() else None
 
-    # Slug loading intentionally globs every top-level TOML. Include future
-    # provider files automatically while retaining explicit absence for today's
-    # fixed seed/freeze/auto paths above.
-    for source in sorted(slug_dir.glob("*.toml")):
-        resolved[f"fqid_slugs/{source.name}"] = source
-
-    source_roots = {
-        "catalog": input_dir.resolve(),
-        "curation": curation_dir.resolve(),
-        "fqid_slugs": slug_dir.resolve(),
-    }
+    catalog_root = input_dir.resolve()
     validated: dict[str, Path | None] = {}
     for relative, source in sorted(resolved.items()):
         try:
@@ -2749,8 +2677,7 @@ def _bundle_source_files(
             )
         if source is not None:
             source = source.resolve()
-            role = Path(relative).parts[0]
-            if role == "supplemental":
+            if Path(relative).parts[0] == "supplemental":
                 if lisa_workbook is None:
                     raise SnapshotError(
                         "supplemental bundle source has no explicit LISA selection"
@@ -2761,7 +2688,7 @@ def _bundle_source_files(
                         "LISA bundle source differs from its explicit selection: "
                         f"{source}"
                     )
-            elif not source.is_relative_to(source_roots[role]):
+            elif not source.is_relative_to(catalog_root):
                 raise SnapshotError(
                     f"catalog bundle source escapes its selected root: {source}"
                 )
@@ -2834,24 +2761,7 @@ def _bundle_source_revision(path: Path, root: Path) -> SourceRevision:
 
 
 def _validate_bundle_contract(root: Path) -> None:
-    """Validate source formats and curation syntax without forming a catalog."""
-    from .alias_windows import load_alias_windows
-    from .cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
-    from .classification_links import load_classification_links
-    from .classifications import load_seed
-    from .codeless_overlap import load_codeless_overlap
-    from .codelivery import load_codelivery
-    from .concept_groups import (
-        load_classification_groups,
-        load_code_label_pairs,
-        load_concept_group_accepts,
-        load_concept_groups,
-    )
-    from .delivery_enrichment import load_delivery_enrichment
-    from .fqid_slugs import load_lineage_config, load_slug_dir, read_snapshot
-    from .period_family_merges import load_period_family_merges
-    from .relations import load_relations
-    from .scb_errata import load_scb_errata
+    """Validate source formats without forming a catalog."""
     from .sources.code_lists import read_code_list
     from .sources.curated_records import read_curated_source
     from .sources.scb_reference_records import (
@@ -2859,21 +2769,10 @@ def _validate_bundle_contract(root: Path) -> None:
         read_scb_join_keys,
     )
     from .sources.sos import parse_directory
-    from .tags import load_tags
 
     catalog = root / "catalog"
-    curation = root / "curation"
-    slugs = root / "fqid_slugs"
-    seed = curation / "classifications.toml"
-    # Keep the explicit bundle path even when absent: loaders that encounter a
-    # classification reference must fail on that recorded absence, never fall
-    # back to the builder checkout's curation.
-    seed_path = seed
-
-    if seed.is_file():
-        for entry in load_seed(seed_path):
-            path = catalog / "classifications" / entry["valid_codes_file"]
-            read_code_list(path, _bundle_source_revision(path, root), name=path.stem)
+    for path in _classification_csvs(catalog):
+        read_code_list(path, _bundle_source_revision(path, root), name=path.stem)
 
     sos = catalog / "Socialstyrelsen"
     if sos.is_dir():
@@ -2906,40 +2805,6 @@ def _validate_bundle_contract(root: Path) -> None:
     if xlsx_path.is_file():
         read_scb_join_keys(xlsx_path, _bundle_source_revision(xlsx_path, root))
 
-    if slugs.is_dir():
-        load_slug_dir(slugs)
-        snapshot_path = slugs / ".snapshot.json"
-        if snapshot_path.is_file():
-            read_snapshot(snapshot_path)
-
-    def curation_path(name: str) -> Path | None:
-        path = curation / name
-        return path if path.is_file() else None
-
-    classifications = curation_path("classifications.toml")
-    load_alias_windows(curation_path("alias_windows.toml"))
-    load_classification_links(classifications)
-    load_cis2014_matrix(curation_path("cis2014-matrix-meaning-evidence.json"), slugs)
-    load_cis2016_matrix(curation_path("cis2016-matrix-meaning-evidence.json"), slugs)
-    load_codeless_overlap(curation_path("codeless_overlap.toml"))
-    load_codelivery(curation_path("codelivery.toml"))
-    concept_groups = curation_path("concept_groups.toml")
-    load_concept_groups(concept_groups)
-    load_concept_group_accepts(concept_groups)
-    load_classification_groups(concept_groups)
-    load_code_label_pairs(concept_groups)
-    load_concept_groups(curation_path("concept_groups.auto.toml"))
-    load_delivery_enrichment(curation_path("delivery_enrichment.generated.toml"))
-    load_lineage_config(curation_path("lineage.toml"))
-    load_period_family_merges(curation_path("period_family_merges.toml"))
-    load_relations(curation_path("relations.toml"))
-    load_scb_errata(
-        curation_path("scb_errata.toml"),
-        slugs,
-        classification_seed_path=seed_path,
-    )
-    load_tags(curation_path("tags.toml"))
-
     manifest_path = root / BUNDLE_MANIFEST_NAME
     if manifest_path.is_file():
         manifest_bytes = manifest_path.read_bytes()
@@ -2970,8 +2835,6 @@ def _validate_bundle_contract(root: Path) -> None:
 
 def prepare_input_bundle(
     input_dir: Path,
-    curation_dir: Path,
-    slug_dir: Path,
     scb_snapshot: ScbSnapshotSelection,
     output: Path,
     *,
@@ -2979,8 +2842,6 @@ def prepare_input_bundle(
 ) -> CatalogBundleStats:
     """Capture a new byte-preserved catalog-input candidate beside an accepted snapshot."""
     input_dir = input_dir.expanduser().resolve()
-    curation_dir = curation_dir.expanduser().resolve()
-    slug_dir = slug_dir.expanduser().resolve()
     output = output.expanduser().resolve()
     if output.exists():
         raise SnapshotError(
@@ -3001,20 +2862,17 @@ def prepare_input_bundle(
         raise SnapshotError(
             "catalog bundle candidate must stay outside the SCB snapshot"
         )
-    sources = _bundle_source_files(
-        input_dir, curation_dir, slug_dir, lisa_workbook=lisa_workbook
-    )
+    sources = _bundle_source_files(input_dir, lisa_workbook=lisa_workbook)
     missing_references = sorted(
         path for path, source in sources.items() if source is None
     )
-    # Fixed optional paths intentionally remain absent. Dynamic classification and
-    # canonical code references, however, were introduced only by a manifest that
-    # requires them and therefore must exist.
-    required_prefixes = ("catalog/classifications/", "catalog/scb_canonical/")
+    # Fixed optional paths intentionally remain absent. Canonical code references,
+    # however, were introduced only by a manifest that requires them and therefore
+    # must exist.
     required_missing = [
         path
         for path in missing_references
-        if path.startswith(required_prefixes)
+        if path.startswith("catalog/scb_canonical/")
         and path != "catalog/scb_canonical/scb_canonical.toml"
     ]
     if required_missing:
@@ -3086,9 +2944,7 @@ def prepare_input_bundle(
         (staging / BUNDLE_MANIFEST_NAME).write_bytes(manifest_bytes)
         _verify_bundle_inventory(staging, manifest, hashes=True)
         _validate_bundle_contract(staging)
-        current_sources = _bundle_source_files(
-            input_dir, curation_dir, slug_dir, lisa_workbook=lisa_workbook
-        )
+        current_sources = _bundle_source_files(input_dir, lisa_workbook=lisa_workbook)
         current_state = {
             path: None if source is None else (source, _file_identity(source.stat()))
             for path, source in current_sources.items()
@@ -3258,47 +3114,6 @@ def verify_input_bundle(
     if verified_snapshot != bundle.snapshot.manifest:
         raise SnapshotError("verified SCB snapshot differs from the selected manifest")
     return bundle.manifest
-
-
-def create_slug_workspace(bundle: CatalogBundleReader, parent: Path) -> Path:
-    """Copy only mutable slug TOMLs outside the accepted input repository."""
-    parent = parent.resolve()
-    workspace = Path(tempfile.mkdtemp(prefix="regmeta-slugs-", dir=parent))
-    for item in bundle.manifest.files:
-        if not item.present or not item.path.startswith("fqid_slugs/"):
-            continue
-        source = bundle.root / item.path
-        if source.suffix != ".toml":
-            continue
-        shutil.copy2(source, workspace / source.name)
-    return workspace
-
-
-def slug_workspace_changes(
-    bundle: CatalogBundleReader, workspace: Path
-) -> dict[str, list[str]]:
-    """Describe generated slug changes without mutating accepted inputs."""
-    accepted = {
-        Path(item.path).name: item.sha256
-        for item in bundle.manifest.files
-        if item.present
-        and item.path.startswith("fqid_slugs/")
-        and item.path.endswith(".toml")
-    }
-    actual = {
-        path.name: _file_sha256(path)
-        for path in workspace.glob("*.toml")
-        if path.is_file()
-    }
-    return {
-        "added": sorted(actual.keys() - accepted.keys()),
-        "changed": sorted(
-            name
-            for name in actual.keys() & accepted.keys()
-            if actual[name] != accepted[name]
-        ),
-        "removed": sorted(accepted.keys() - actual.keys()),
-    }
 
 
 def create_build_lock(
@@ -3600,7 +3415,6 @@ __all__ = [
     "clean_git_commit",
     "converter_source_commit",
     "create_build_lock",
-    "create_slug_workspace",
     "input_bundle_repository",
     "load_inventory",
     "load_manifest",
@@ -3612,7 +3426,6 @@ __all__ = [
     "prepare_input_bundle",
     "prepare_snapshot",
     "restore_snapshot",
-    "slug_workspace_changes",
     "verify_build_lock",
     "verify_input_bundle",
     "verify_snapshot",

@@ -1,0 +1,23 @@
+[classification]
+short_name = "SUN2020-NIVA"
+slug = "sun2020-niva"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsnivå"
+name_en = "Swedish Standard Classification of Education 2020 — Level"
+publisher = "SCB"
+valid_from = 2020
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+codes_file = "sun2020-niva.csv"
+sentinel_codes = [
+  { code = "999", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "88", meaning = "Vet ej" },
+  { code = "97", meaning = "Okänd" },
+  { code = "99", meaning = "Vill ej svara" },
+  { code = "400", meaning = "Uppgift okänd" },
+  { code = "405", meaning = "Uppgift okänd" },
+]
+
+[binding]
+value_set_labels = [
+  "SUN 2020 - Utbildningsnivå",
+]

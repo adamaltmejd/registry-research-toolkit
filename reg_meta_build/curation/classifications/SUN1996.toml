@@ -1,0 +1,22 @@
+[classification]
+short_name = "SUN1996"
+slug = "sun1996"
+name = "Svensk utbildningsnomenklatur 1996"
+name_en = "Swedish Standard Classification of Education 1996"
+publisher = "SCB"
+valid_from = 1996
+valid_to = 1999
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+codes_file = "sun1996.csv"
+sentinel_codes = [
+  { code = "*****", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00000", meaning = "Uppgift saknas" },
+  { code = "***", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "SUN 1996",
+  "SUN 1996, 5 positioner, brutto",
+]

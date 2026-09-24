@@ -591,15 +591,15 @@ class TestGenerator:
         assert exc.value.code == "entity_key_pins_flavored_global_slug_dir"
         assert exc.value.exit_code == 2  # EXIT_USAGE
 
-    def test_cmd_flavored_slug_dir_global_root_by_classifications_marker(
+    def test_cmd_flavored_slug_dir_global_root_by_nested_steward_marker(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
         """#559 Fix 2: a global-root --slug-dir is rejected by its CONTENTS, not
         just path-equality. From an installed package `repo_slug_dir()` is None (the
         path-equality check can't fire) yet an explicit global fqid_slugs/ root —
-        which carries classifications.toml AND [register] entries — would fall
+        which nests steward dirs AND carries [register] entries — would fall
         through to GLOBAL register scope and silently emit `count: 0`. The
-        classifications.toml marker (it lives ONLY at the global root, never in a
+        nested-steward-dir marker (only the global root has subdirectories, never a
         steward dir) makes the handler refuse BEFORE opening the DB with the SAME
         `entity_key_pins_flavored_global_slug_dir` usage error. The dir also carries
         a `[register]` entry so reaching that error proves the content marker (not
@@ -611,14 +611,12 @@ class TestGenerator:
         global_root = tmp_path / "fqid_slugs"
         global_root.mkdir()
         # The global-root content markers: a provider TOML with a [register] entry
-        # (so the empty-scope guard would PASS) AND classifications.toml (the marker
+        # (so the empty-scope guard would PASS) AND a nested steward dir (the marker
         # only the global root carries).
         (global_root / "sos.toml").write_text(
             '[register."500"]\nslug = "dors"\n', encoding="utf-8"
         )
-        (global_root / "classifications.toml").write_text(
-            '[classification."icd10se"]\nslug = "icd10se"\n', encoding="utf-8"
-        )
+        (global_root / "swecov").mkdir()
         # Installed-package case: repo_slug_dir() is None, so path-equality can't
         # catch this — only the content marker can.
         monkeypatch.setattr(cli, "repo_slug_dir", lambda: None)

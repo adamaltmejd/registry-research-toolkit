@@ -1,0 +1,12 @@
+[classification]
+short_name = "ICD-10-SE"
+slug = "icd-10-se"
+name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version (ICD-10-SE)"
+name_en = "International Statistical Classification of Diseases, Swedish version (ICD-10-SE)"
+publisher = "Socialstyrelsen"
+valid_from = 1997
+url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icd-10-se.tsv?version=1&modificationDate=1779615619577&api=v2"
+codes_file = "sos/icd-10-se.csv"
+
+[binding]
+label_source = "sos"

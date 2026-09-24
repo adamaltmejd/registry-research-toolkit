@@ -1,0 +1,13 @@
+[classification]
+short_name = "ICD-8-KS68"
+slug = "icd-8-ks68"
+name = "Klassifikation av sjukdomar 1968 (ICD-8 / KS68)"
+name_en = "Swedish Classification of Diseases 1968 (ICD-8 / KS68)"
+publisher = "Socialstyrelsen"
+valid_from = 1969
+valid_to = 1986
+url = "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/icd-8-klassifikation-av-sjukdomar-mm-1968.xls"
+codes_file = "sos/icd-8.csv"
+
+[binding]
+label_source = "sos"

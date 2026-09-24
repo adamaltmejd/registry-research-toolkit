@@ -153,9 +153,10 @@ class CodebookDeclaration(_Model):
     # These are the ResolvedClassification metadata fields, validated with the
     # resolved source codes below. Membership is never copied into curation data.
     # `sentinel_codes` carries the curated per-classification sentinel list as
-    # raw `{code, meaning}` tables — the same plain-JSON form `load_seed()`
-    # stores; it is popped and validated below because strict JSON-contract
-    # validation cannot coerce the JSON list into the resolved tuple form.
+    # raw `{code, meaning}` tables — the same plain-JSON form the curated
+    # `[classification]` table holds; it is popped and validated below because
+    # strict JSON-contract validation cannot coerce the JSON list into the
+    # resolved tuple form.
     metadata: dict[str, str | int | list[dict[str, str]] | None]
 
 

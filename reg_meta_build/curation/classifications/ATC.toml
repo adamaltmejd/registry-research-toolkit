@@ -1,0 +1,11 @@
+[classification]
+short_name = "ATC"
+slug = "atc"
+name = "Anatomisk Terapeutisk Kemisk klassifikation (ATC)"
+name_en = "Anatomical Therapeutic Chemical classification (ATC)"
+publisher = "Läkemedelsverket"
+url = "https://nsl.mpa.se/sensl-v2.0.zip"
+codes_file = "sos/atc.csv"
+
+[binding]
+label_source = "sos"

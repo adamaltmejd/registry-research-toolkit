@@ -67,26 +67,15 @@ def slug_dir(tmp_path: Path) -> Path:
     return d
 
 
-@pytest.fixture
-def seed(tmp_path: Path) -> Path:
-    path = tmp_path / "classifications.toml"
-    path.write_text(
-        '[[classification]]\nshort_name = "SSYK96"\nname = "SSYK 96"\n'
-        'valid_codes_file = "ssyk96.csv"\nversions = []\n',
-        encoding="utf-8",
-    )
-    return path
-
-
-def _load(tmp_path: Path, slug_dir: Path, body: str, seed: Path | None = None):
+def _load(tmp_path: Path, slug_dir: Path, body: str):
     path = tmp_path / "scb_errata.toml"
     path.write_text(body, encoding="utf-8")
-    return load_scb_errata(path, slug_dir, classification_seed_path=seed)
+    return load_scb_errata(path, slug_dir)
 
 
-def _refused(tmp_path: Path, slug_dir: Path, body: str, seed: Path | None = None):
+def _refused(tmp_path: Path, slug_dir: Path, body: str):
     with pytest.raises(RegMetaError) as exc:
-        _load(tmp_path, slug_dir, body, seed)
+        _load(tmp_path, slug_dir, body)
     assert exc.value.exit_code == EXIT_CONFIG
     assert exc.value.remediation
     return exc.value
@@ -342,19 +331,17 @@ class TestColumnEntry:
         assert _refused(tmp_path, slug_dir, _toml(is_identifier='"yes"')).code
 
     def test_declared_classification_passes(
-        self, tmp_path: Path, slug_dir: Path, seed: Path
+        self, tmp_path: Path, slug_dir: Path
     ) -> None:
-        (entry,) = _load(
-            tmp_path, slug_dir, _toml(classification='"SSYK96"'), seed
-        ).columns
+        (entry,) = _load(tmp_path, slug_dir, _toml(classification='"SSYK96"')).columns
         assert entry.classification == "SSYK96"
 
     def test_undeclared_classification_fails(
-        self, tmp_path: Path, slug_dir: Path, seed: Path
+        self, tmp_path: Path, slug_dir: Path
     ) -> None:
         # The candidate feed drops an unknown short_name with no row and no
         # error, so a typo would ship an untagged state.
-        err = _refused(tmp_path, slug_dir, _toml(classification='"SSYK69"'), seed)
+        err = _refused(tmp_path, slug_dir, _toml(classification='"SSYK69"'))
         assert "SSYK69" in err.message
 
     def test_duplicate_column_on_one_variant_fails(

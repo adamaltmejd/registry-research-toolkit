@@ -1,0 +1,33 @@
+[classification]
+short_name = "LKF2016"
+slug = "lkf2016"
+name = "Län, kommuner och församlingar 2016"
+name_en = "Counties, municipalities and parishes 2016"
+publisher = "SCB"
+valid_from = 2016
+valid_to = 2016
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf2016.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "000.", meaning = "Okänt" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "000", meaning = "Okänt" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "9999", meaning = "Arbetsstället beläget i utlandet" },
+  { code = "0", meaning = "Okänt" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "[BLANK]", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 2016-01-01/ Län, kommuner och församlingar",
+]

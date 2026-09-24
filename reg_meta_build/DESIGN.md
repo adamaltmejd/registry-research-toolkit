@@ -254,14 +254,15 @@ never forces a re-prepare. Curation compiles in-process on every build; there is
 stored selection. The build summary records a hash of the curation tree. An optional
 decision dump serves inspection.
 
-Transitional: `prepare-input-bundle` copies `curation/` and `fqid_slugs/`
-(`--curation-dir`, `--slug-dir`) into the input bundle and the bundle contract validates
-them, so every curation edit forces a full re-prepare. Offline conversion
-(`convert_*.py`) turns curation into a stored `PipelineSelection` with per-register
-scope files, which `build-db --selection` reads, and the catalog embeds that selection's
-digest (`curation_selection_sha256`). The selection contains data, never executable
-conversion hooks; scope files load one register at a time. The runtime does not import
-one-time conversion scripts or use the legacy database as evidence.
+Transitional: the input bundle no longer carries curation, but the build does not read
+the tree yet. Offline conversion (`convert_*.py`) turned curation pinned in an earlier
+bundle into a stored `PipelineSelection` with per-register scope files, which
+`build-db --selection` reads, and the catalog embeds that selection's digest
+(`curation_selection_sha256`). `prepared_catalog` still recognizes the legacy
+`curation/` and `fqid_slugs/` bundle paths so the accepted prepared v13 manifest opens.
+The selection contains data, never executable conversion hooks; scope files load one
+register at a time. The runtime does not import one-time conversion scripts or use the
+legacy database as evidence.
 
 The target layout:
 
@@ -276,8 +277,9 @@ The target layout:
   `delivery_enrichment.generated.toml`) are worklist output, not curation.
 - SWECOV steward holdings belong to the steward layer, not to global SCB errata.
 
-Transitional: curation files are one per category (`curation/*.toml`,
-`fqid_slugs/<provider>.toml`), and the SWECOV holdings sit in
+Transitional: classifications and the global files are in their target places, read by
+`curation_tree.py`; the remaining curation files are one per category
+(`curation/*.toml`, `fqid_slugs/<provider>.toml`), and the SWECOV holdings sit in
 `curation/scb_errata.toml`.
 
 ### Entries and pins
@@ -423,18 +425,17 @@ pinned by `expected_classification`, the codebook content hash.
 Conformance compares exact code strings. Noncanonical members preserve the original list
 and declared binding as evidence, withhold the state classification link and emit an
 error. There is no global sentinel waiver. A classification may instead curate its own
-exact-string sentinel list (`sentinel_codes = [{code, meaning}]` per
-`[[classification]]` in `curation/classifications.toml`) for bulk/missing tokens the
-source emits for uncoded members. An observed code on that list keeps the state binding
-(`kept`), stays a variable-local member of the state's value set — never a
-`classification_code` row — and is reported once per state as a warning naming the code
-and its curated meaning. Codes match exactly (`"00000"` never equals `"0"`); there are
-no patterns and no cross-classification lists, and unknown keys or duplicate codes fail
-the load fast. Any other noncanonical code still severs the binding with the existing
-error, which lists only the non-sentinel codes. A sentinel must not be a canonical code;
-the load refuses the overlap. The sentinel list is conformance curation, not codebook
-content, so curating a sentinel never stales a binding. Original coding issues remain
-visible.
+exact-string sentinel list (`sentinel_codes = [{code, meaning}]` per `[classification]`
+in `curation/classifications/<short>.toml`) for bulk/missing tokens the source emits for
+uncoded members. An observed code on that list keeps the state binding (`kept`), stays a
+variable-local member of the state's value set — never a `classification_code` row — and
+is reported once per state as a warning naming the code and its curated meaning. Codes
+match exactly (`"00000"` never equals `"0"`); there are no patterns and no
+cross-classification lists, and unknown keys or duplicate codes fail the load fast. Any
+other noncanonical code still severs the binding with the existing error, which lists
+only the non-sentinel codes. A sentinel must not be a canonical code; the load refuses
+the overlap. The sentinel list is conformance curation, not codebook content, so
+curating a sentinel never stales a binding. Original coding issues remain visible.
 
 A parallel-column decision names each literal column and its finite delivery window. It
 reconciles sibling metadata and coding before forming shared states. Conflicting facts
@@ -694,9 +695,8 @@ classification, group, succession, same-as, split-sibling and document-coverage 
 commands produce review material; they do not approve or apply new curation during a
 build.
 
-Transitional: `build-db --selection` and
-`prepare-input-bundle --curation-dir`/`--slug-dir` remain until curation compiles at
-build time (see Curation source and layout).
+Transitional: `build-db --selection` remains until curation compiles at build time (see
+Curation source and layout).
 
 ## Steward extension
 

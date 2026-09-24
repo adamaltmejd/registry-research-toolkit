@@ -19,8 +19,6 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
 from reg_meta_build._curation import repo_curation_path
 from reg_meta_build.alias_windows import load_alias_windows
-from reg_meta_build.classification_links import load_classification_links
-from reg_meta_build.classifications import load_seed, load_valid_codes
 from reg_meta_build.codeless_overlap import load_codeless_overlap
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
@@ -29,6 +27,7 @@ from reg_meta_build.concept_groups import (
     load_concept_group_accepts,
     load_concept_groups,
 )
+from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.doc_db import (
     _require_doc_source_str,
@@ -54,7 +53,6 @@ _CURATION = _ROOT / "curation"
 def test_catalog_overlays_share_one_directory() -> None:
     names = {
         "alias_windows.toml",
-        "classifications.toml",
         "codeless_overlap.toml",
         "codelivery.toml",
         "concept_groups.auto.toml",
@@ -79,65 +77,27 @@ def test_catalog_overlays_share_one_directory() -> None:
     )
 
 
-def test_repo_classifications_and_links_parse_from_one_file() -> None:
-    path = _CURATION / "classifications.toml"
-    seed = load_seed(path)
-    links = load_classification_links(path)
-    assert links
-    by_short = {entry["short_name"]: entry for entry in seed}
-    # Y-170: SEKTOR2000 stays INSEKT 2000 — the display label "Sektor 2000"
-    # moved to the separate RAMS/LISA ownership-sector book SEKTORKOD.
-    assert by_short["SEKTOR2000"]["vardemangdsversion"] == [
-        "Standard för institutionell sektorindelning 2000",
+def test_repo_classification_files_count_and_stay_unique() -> None:
+    tree = load_curation_tree(_CURATION)
+    books = [entry.classification for entry in tree.classifications]
+    labels = [
+        label
+        for entry in tree.classifications
+        for label in entry.binding.value_set_labels
     ]
-    sektorkod = by_short["SEKTORKOD"]
-    assert sektorkod["name"] == "Sektorkod (RAMS/LISA)"
-    assert sektorkod["publisher"] == "SCB"
-    assert sektorkod["valid_from"] == 1993
-    assert sektorkod["vardemangdsversion"] == [
-        "Sektor 2000",
-        "RAMS SektorKod fr.o.m. 1993",
+    bound = [
+        binding.variable
+        for entry in tree.classifications
+        for binding in entry.binding.variable
     ]
-    assert sektorkod["valid_codes_file"] == "sektorkod.csv"
-    codes = load_valid_codes(_ROOT / "input_data" / "classifications" / "sektorkod.csv")
-    assert sorted(codes) == [
-        "00",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-    ]
-    assert codes["00"] == "Uppgift saknas"
-    assert codes["13"] == "Kommunal förvaltning"
-    assert codes["14"] == "Landsting"
-    assert codes["15"] == "Övriga offentliga institutioner"
-    assert codes["21"] == "Aktiebolag ej offentligt ägda"
-    assert codes["22"] == "Övriga företag, ej offentligt ägda"
-    assert codes["25"] == "Övriga organisationer"
-    rebound = {
-        (link.provider, link.register, link.variable)
-        for link in links
-        if link.classification == "SEKTORKOD"
-    }
-    assert rebound == {
-        ("scb", "arbetskraftsbarometern", "sektorkod"),
-        ("scb", "fortroendevalda", "sektor"),
-        ("scb", "kommunalekonomisk-utjamning", "sektor"),
-        ("scb", "lisa", "ast-sektorkod"),
-        ("scb", "lisa", "org-sektorkod"),
-        ("scb", "lisa", "sektorkod"),
-        ("scb", "rams", "institutionell-sektorkod"),
-        ("scb", "yrkesreg", "sektor-ku1"),
-        ("scb", "yrkesreg", "sektorkod"),
-        ("scb", "yrkesreg", "sektorkod-2"),
-        ("scb", "yrkesreg", "sektorkod-storsta-forvarvskalla"),
-    }
+    assert len(list((_CURATION / "classifications").iterdir())) == len(books) == 82
+    assert len({book.slug for book in books}) == 82
+    assert len(labels) == len(set(labels)) == 118
+    assert sum(len(book.sentinel_codes) for book in books) == 533
+    assert sum(1 for book in books if book.sentinel_codes) == 65
+    assert len(bound) == len(set(bound)) == 13
+    books_dir = _ROOT / "input_data" / "classifications"
+    assert all((books_dir / book.codes_file).is_file() for book in books)
 
 
 def test_repo_lineage_parses_from_overlay() -> None:
@@ -502,7 +462,6 @@ def test_repo_scb_errata_parses() -> None:
     errata = load_scb_errata(
         _CURATION / "scb_errata.toml",
         repo_slug_dir(),
-        classification_seed_path=_CURATION / "classifications.toml",
     )
     assert errata  # the verified LISA DispInkKE case ships with the repo
     # scb/lisa "Individer, 15 år och äldre"; pin the complete coordinates of
@@ -531,7 +490,6 @@ def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
     errata = load_scb_errata(
         _CURATION / "scb_errata.toml",
         repo_slug_dir(),
-        classification_seed_path=_CURATION / "classifications.toml",
     )
     by_source = Counter(c.source for c in errata.columns)
     assert by_source == {"steward-holdings": 1851, "scb-docs": 34}

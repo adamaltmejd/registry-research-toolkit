@@ -1,0 +1,49 @@
+# SUN2000 has three orthogonal dimensions, each with its own code space:
+#   - Utbildningsnivå       → 3-digit numeric education level
+#   - Utbildningsinriktning → 3-digit numeric field of study
+#   - Utbildningsgrupper    → 3-character alphanumeric standardized groups
+# A code like "520" appears in both Nivå ("Övrig eftergymnasial utbildning,
+# 2 år") and Inriktning ("Teknik och teknisk industri, allmän utbildning"),
+# so they must be separate classifications.
+#
+# SUN1996 (a single combined 5-digit level+direction system) is succeeded by ALL
+# THREE 2000 dimensions — a 1→many cross-stem split the auto same-stem year-tail
+# rule can't produce. Those edges are CURATED in `curation/relations.toml`
+# (`class/sun1996 → class/sun2000-niva / sun2000-inriktning / sun2000-grupp`),
+# land in `classification_replaced_by`, and the derived `supersedes_id` then
+# points every 2000 dimension back at sun1996. Succession is NOT declared here.
+
+[classification]
+short_name = "SUN2000-NIVA"
+slug = "sun2000-niva"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsnivå"
+name_en = "Swedish Standard Classification of Education 2000 — Level"
+publisher = "SCB"
+valid_from = 2000
+valid_to = 2019
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+codes_file = "sun2000-niva.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9", meaning = "Uppgift saknas" },
+  { code = "NULL", meaning = "Uppgift om föräldern saknas" },
+  { code = "*", meaning = "Uppgift saknas" },
+  { code = "[BLANK]", meaning = "Uppgift saknas" },
+  { code = "M", meaning = "Uppgift saknas" },
+  { code = "99", meaning = "Uppgift saknas" },
+  { code = "88", meaning = "Vet ej" },
+  { code = "97", meaning = "Okänd" },
+  { code = "888", meaning = "Vet ej" },
+  { code = "977", meaning = "Okänt" },
+  { code = "988", meaning = "Vet ej" },
+  { code = "***", meaning = "Uppgift saknas" },
+  { code = "400", meaning = "Uppgift okänd" },
+  { code = "405", meaning = "Uppgift okänd" },
+]
+
+[binding]
+value_set_labels = [
+  "SUN 2000 - Utbildningsnivå",
+  "Utbildningsnivå (SUN 2000)",
+  "SUN2000Niva",
+]

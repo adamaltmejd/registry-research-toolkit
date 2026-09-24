@@ -1,0 +1,18 @@
+[classification]
+short_name = "LKF1985"
+slug = "lkf1985"
+name = "Län, kommuner och församlingar 1985"
+name_en = "Counties, municipalities and parishes 1985"
+publisher = "SCB"
+valid_from = 1985
+valid_to = 1985
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf1985.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+]
+
+[binding]
+value_set_labels = [
+  "LKF 1985-01-01/ Län, kommuner och församlingar",
+]

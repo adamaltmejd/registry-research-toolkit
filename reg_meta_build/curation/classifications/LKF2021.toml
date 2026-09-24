@@ -1,0 +1,27 @@
+[classification]
+short_name = "LKF2021"
+slug = "lkf2021"
+name = "Län, kommuner och församlingar 2021"
+name_en = "Counties, municipalities and parishes 2021"
+publisher = "SCB"
+valid_from = 2021
+valid_to = 2021
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+codes_file = "lkf2021.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "00", meaning = "Okänt" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "0199", meaning = "Ej svensk kommun" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "9900", meaning = "Utländsk adress" },
+]
+
+[binding]
+value_set_labels = [
+  "2021-01-01/ Län, kommuner och församlingar",
+]
