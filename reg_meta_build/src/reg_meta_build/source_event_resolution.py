@@ -18,11 +18,11 @@ from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_reference_resolution import ReferenceMetadataResolution
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Mapping, Sequence
+    from collections.abc import Iterable, Iterator, Mapping, Sequence
 
     from reg_meta_build.catalog_dependencies import DependencyKey
     from reg_meta_build.resolved_metadata import ResolvedMetadata
-    from reg_meta_build.source_records import SourceRecord
+    from reg_meta_build.source_records import NativeCoordinates, SourceRecord
     from reg_meta_build.source_reference_records import SourceEventDeclaration
     from reg_meta_build.source_scope import ScopeResolution
 
@@ -54,6 +54,7 @@ class SourceEventBindings:
         self.sources = dict(target_sources)
         self.targets: dict[NativeEventKey, set[DependencyKey | None]] = {}
         self.refs: dict[NativeEventKey, set[SourceRecordRef]] = {}
+        self.unselected: set[NativeEventKey] = set()
         for event in self.events:
             if event.revision.dataset not in self.sources:
                 raise ValueError(
@@ -72,6 +73,18 @@ class SourceEventBindings:
     def _key(self, event: SourceEventDeclaration, token: str) -> NativeEventKey:
         return self.sources[event.revision.dataset], event.entity_kind, token.strip()
 
+    def _endpoints(
+        self, source: str, native: NativeCoordinates
+    ) -> Iterator[tuple[str, NativeEventKey]]:
+        """The event endpoints one set of native IDs matches, by entity kind."""
+        for kind, field in _NATIVE_FIELD.items():
+            value = getattr(native, field)
+            if (
+                value is not None
+                and (key := (source, kind, str(value))) in self.targets
+            ):
+                yield kind, key
+
     def observe_scope(
         self,
         originals: tuple[SourceRecord, ...],
@@ -82,13 +95,7 @@ class SourceEventBindings:
         if not originals or originals[0].source not in self.sources.values():
             return
         for record in originals:
-            for kind, field in _NATIVE_FIELD.items():
-                native = getattr(record.subject.native, field)
-                if native is None:
-                    continue
-                key = record.source, kind, str(native)
-                if key not in self.targets:
-                    continue
+            for kind, key in self._endpoints(record.source, record.subject.native):
                 self.refs[key].add(record_ref(record))
                 targets = self.targets[key]
                 if kind in {"variable", "member"}:
@@ -111,17 +118,34 @@ class SourceEventBindings:
                     variant = result.parents.variants.get(native_variant_key(record))
                     targets.add(("variant", fqid, variant.slug) if variant else None)
 
-    def resolve(
-        self, metadata: ResolvedMetadata, *, scoped: bool = False
-    ) -> ReferenceMetadataResolution:
+    def observe_unselected(
+        self, source: str, natives: Iterable[NativeCoordinates]
+    ) -> None:
+        """After every selected scope: note endpoints no selected scope observed
+        but an unselected register does. A register-scoped build defers them."""
+        remaining = {
+            key
+            for key, targets in self.targets.items()
+            if key[0] == source and not targets
+        }
+        for native in natives if remaining else ():
+            for _kind, key in self._endpoints(source, native):
+                if key in remaining:
+                    remaining.remove(key)
+                    self.unselected.add(key)
+            if not remaining:
+                break
+
+    def resolve(self, metadata: ResolvedMetadata) -> ReferenceMetadataResolution:
         """Keep independent edges; never choose an ambiguous native-ID binding.
 
-        A register-scoped build defers an event whose unresolved endpoints were
-        simply never observed: they may lie in an unselected register.
+        In a register-scoped build an endpoint observed only in an unselected
+        register is deferred; an event with every endpoint there is skipped.
         """
         diagnostics = []
         withheld = set()
         grouped = defaultdict(list)
+        skipped = 0
         for event in self.events:
             event_ref = SourceRecordRef(
                 source=event.revision.dataset,
@@ -142,10 +166,14 @@ class SourceEventBindings:
                 if len(self.targets[key]) != 1 or None in self.targets[key]
             ]
             if unresolved:
+                outside = [k for k in unresolved if k in self.unselected]
+                if len(outside) == len(keys):
+                    skipped += 1
+                    continue
                 withheld.add(event_ref)
-                if scoped and not any(self.targets[k] for k in unresolved):
+                if len(outside) == len(unresolved):
                     code, severity = DEFERRED_REFERENCE, "warning"
-                    detail = f"Succession endpoints {tuple(unresolved)!r} are not observed in the selected registers; the complete build resolves them."
+                    detail = f"Succession endpoints {tuple(outside)!r} lie in unselected registers; the complete build resolves them."
                 else:
                     code, severity = "unresolved_source_event_endpoint", "error"
                     detail = (
@@ -237,5 +265,5 @@ class SourceEventBindings:
         )
         validate_metadata_structure(combined)
         return ReferenceMetadataResolution(
-            combined, tuple(diagnostics), tuple(sorted(withheld, key=repr))
+            combined, tuple(diagnostics), tuple(sorted(withheld, key=repr)), skipped
         )

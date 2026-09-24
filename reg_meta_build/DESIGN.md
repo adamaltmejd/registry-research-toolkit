@@ -608,15 +608,21 @@ happened.
 verification. It forms only the named scopes and decodes only their records; shared
 inputs (classifications, successions, support, identifier and event sources, metadata)
 stay complete. Occurrence accounting compares against the selected scopes' prepared
-counts. Strict mode still reports the selected registers' errors. A reference whose
-other end lies in an unselected register (a `same_as` or succession edge, a group or tag
-member, a code/label pair, a lineage default, a source event or a source label) is
-withheld as one warning code, `deferred_out_of_slice_reference`, counted as
-`deferred_references`. A scoped build cannot tell an external source label from an
-unselected register, so it defers every label that matches no selected register. Its
-output is create-only and marked incomplete and nonpublishable in both modes. The
-summary records the register list, `publication_ready` false and `corpus_validation`
-`not_applicable`; structural validation still runs.
+counts. Strict mode still reports the selected registers' errors, and a scoped build
+never hides a reference error the complete build would report. It defers a reference
+only when the other end provably lies in a register that exists but was not selected,
+known without forming it: the unselected scope files name those registers, and the
+prepared store holds their observed register names and native IDs. Such a reference (a
+`same_as` or succession edge, a group or tag member, a code/label pair, a source event
+or a source label) is withheld as one warning code, `deferred_out_of_slice_reference`;
+`deferred_references` counts distinct references. A target in no known register stays
+the complete build's error, and a source label matching no known register stays a
+literal label. Curation lying wholly among unselected registers is not evaluated, emits
+nothing and is counted once per entry as `skipped_curation`. Shared-input diagnostics
+are still reported corpus-wide. The scoped output is create-only and marked incomplete
+and nonpublishable in both modes. The summary records the register list,
+`publication_ready` false and `corpus_validation` `not_applicable`; structural
+validation still runs.
 
 Publication uses staged output and atomic replacement, with the previous generation
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call
@@ -671,11 +677,13 @@ reg-meta-build build-docs ...
 `--db DIR` and other global output flags precede the subcommand. Per-command `--help`
 describes paths and pins. A `--registers` SPEC names a scope by the key the selection
 already carries: an SCB register by its register id (`258`), a whole-source scope such
-as an SOS workbook or thin provider by its source dataset. It also combines with
-`--diagnostic --diagnostic-db-path NEW.db`. A strict subset needs an explicit new `--db`
-directory: it never replaces the active catalog. Naming, classification, group,
-succession, same-as, split-sibling and document-coverage worklist commands produce
-review material; they do not approve or apply new curation during a build.
+as an SOS workbook or thin provider by its source dataset. A register id naming scopes
+in more than one source is refused; `SOURCE:ID` (`scb-registerinformation:258`) picks
+one. It also combines with `--diagnostic --diagnostic-db-path NEW.db`. A strict subset
+needs an explicit new `--db` directory: it never replaces the active catalog. Naming,
+classification, group, succession, same-as, split-sibling and document-coverage worklist
+commands produce review material; they do not approve or apply new curation during a
+build.
 
 Transitional: `build-db --selection` and
 `prepare-input-bundle --curation-dir`/`--slug-dir` remain until curation compiles at

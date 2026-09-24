@@ -10,6 +10,7 @@ be represented by the variables about to be written.
 from __future__ import annotations
 
 from collections import defaultdict
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date
 from itertools import pairwise
@@ -50,7 +51,7 @@ from reg_meta_build.resolved_metadata import (
 from reg_meta_build.source_curation import ResolutionDiagnostic
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Mapping
+    from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 
     from reg_meta_build.concept_groups import CodeLabelPair
     from reg_meta_build.source_curation import SourceRecordRef
@@ -540,15 +541,17 @@ class CatalogDependencies:
     A key starts with its kind, followed by its complete catalog coordinates.
     Callers build the withheld map from resolution accounting, not the baseline DB.
     Descendant lookup may inherit a known withheld parent supplied by the caller.
-    A register-scoped build names its `selected_registers`; a missing key in any
-    other register is deferred to the complete build as a warning.
+    A register-scoped build names the `unselected` registers that exist but were
+    not formed: a missing key in one of them is deferred to the complete build as
+    a warning, and a curation entry with every reference among them is skipped.
+    A key in no known register stays missing, exactly as in the complete build.
     """
 
     def __init__(
         self,
         available: set[DependencyKey],
         withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-        selected_registers: frozenset[str] | None = None,
+        unselected: Collection[str] = (),
     ) -> None:
         if overlap := available & withheld.keys():
             raise ValueError(
@@ -559,13 +562,25 @@ class CatalogDependencies:
                 raise ValueError(f"withheld dependency lacks source evidence: {key!r}")
         self.available = available
         self.withheld = withheld
-        self.selected_registers = selected_registers
+        self.unselected = unselected
         self.diagnostics: list[ResolutionDiagnostic] = []
         self.missing: list[MissingCatalogDependency] = []
+        self.skipped = 0
+        self._in_slice = False
 
     def check(self) -> None:
         if self.missing:
             raise CatalogDependencyError(tuple(self.missing))
+
+    @contextmanager
+    def entry(self) -> Iterator[int]:
+        """Evaluate one curation entry; one wholly among unselected registers
+        emits nothing and counts as skipped."""
+        start, self._in_slice = len(self.diagnostics), False
+        yield start
+        if not self._in_slice and len(self.diagnostics) > start:
+            del self.diagnostics[start:]
+            self.skipped += 1
 
     def require(
         self,
@@ -575,29 +590,27 @@ class CatalogDependencies:
         parents: tuple[DependencyKey, ...] = (),
     ) -> bool:
         if key in self.available:
+            self._in_slice = True
             return True
         causes = next(
             (self.withheld[k] for k in (key, *parents) if k in self.withheld),
             None,
         )
-        if causes is None:
-            register = _dependency_register(key)
-            if (
-                self.selected_registers is not None
-                and register is not None
-                and register not in self.selected_registers
-            ):
-                self.diagnostics.append(
-                    ResolutionDiagnostic(
-                        code=DEFERRED_REFERENCE,
-                        severity="warning",
-                        subject=output,
-                        detail=f"Dependency {key!r} lies in {register}, outside the selected registers; the complete build resolves it.",
-                        withheld_output=(output,),
-                    )
+        register = _dependency_register(key)
+        if causes is None and register in self.unselected:
+            self.diagnostics.append(
+                ResolutionDiagnostic(
+                    code=DEFERRED_REFERENCE,
+                    severity="warning",
+                    subject=output,
+                    detail=f"Dependency {key!r} lies in the unselected register {register}; the complete build resolves it.",
+                    withheld_output=(output,),
                 )
-            else:
-                self.missing.append(MissingCatalogDependency(key, output))
+            )
+            return False
+        self._in_slice = True
+        if causes is None:
+            self.missing.append(MissingCatalogDependency(key, output))
             return False
         for cause in causes:
             self.diagnostics.append(
@@ -626,6 +639,7 @@ class PanelResolution:
 class MetadataResolution:
     metadata: ResolvedMetadata
     diagnostics: tuple[ResolutionDiagnostic, ...]
+    skipped: int
 
 
 @dataclass(frozen=True)
@@ -642,6 +656,7 @@ class GroupEdgeResolution:
     groups: tuple[ResolvedVariableGroup, ...]
     dispositions: tuple[GroupEdgeDisposition, ...]
     diagnostics: tuple[ResolutionDiagnostic, ...]
+    skipped: int
 
 
 @dataclass(frozen=True)
@@ -745,7 +760,7 @@ def resolve_variable_edge_groups(
     curated_groups: tuple[ResolvedVariableGroup, ...],
     evidence: Mapping[str, tuple[SourceRecordRef, ...]],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-    selected_registers: frozenset[str] | None = None,
+    unselected: Collection[str] = (),
 ) -> GroupEdgeResolution:
     """Resolve existing code/label and checked same-definition group edges.
 
@@ -776,7 +791,7 @@ def resolve_variable_edge_groups(
     if len(set(siblings)) != len(siblings) or any(a == b for a, b in siblings):
         raise ValueError("same-definition declarations must be unique non-self pairs")
     dependencies = CatalogDependencies(
-        {("variable", fqid) for fqid in by_fqid}, withheld, selected_registers
+        {("variable", fqid) for fqid in by_fqid}, withheld, unselected
     )
     claimed = {m.variable for g in curated_groups for m in g.members}
     components: DisjointSet[str] = DisjointSet()
@@ -787,14 +802,15 @@ def resolve_variable_edge_groups(
     )
     for source, code, label in edges:
         output = f"{source}_pair:{code}:{label}"
-        available = [
-            dependencies.require(
-                ("variable", fqid),
-                output=output,
-                parents=(("register", fqid.rsplit("/", 1)[0]),),
-            )
-            for fqid in (code, label)
-        ]
+        with dependencies.entry():
+            available = [
+                dependencies.require(
+                    ("variable", fqid),
+                    output=output,
+                    parents=(("register", fqid.rsplit("/", 1)[0]),),
+                )
+                for fqid in (code, label)
+            ]
         if not all(available):
             dispositions.append(GroupEdgeDisposition(source, code, label, "withheld"))
             continue
@@ -865,6 +881,7 @@ def resolve_variable_edge_groups(
             for d in dispositions
         ),
         tuple(dependencies.diagnostics),
+        dependencies.skipped,
     )
 
 
@@ -876,7 +893,7 @@ def resolve_metadata_dependencies(
     variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...],
     classifications: tuple[ResolvedClassification, ...],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-    selected_registers: frozenset[str] | None = None,
+    unselected: Collection[str] = (),
 ) -> MetadataResolution:
     """Withhold only declared metadata depending on evidenced unresolved facts.
 
@@ -896,7 +913,7 @@ def resolve_metadata_dependencies(
     )
     for variable in variables:
         available.update(variable_dependency_keys(variable))
-    dependencies = CatalogDependencies(available, withheld, selected_registers)
+    dependencies = CatalogDependencies(available, withheld, unselected)
 
     def entity(fqid: str, output: str) -> bool:
         kind = "register" if fqid.count("/") == 1 else "variable"
@@ -945,10 +962,9 @@ def resolve_metadata_dependencies(
 
     def withheld_group(output: str, start: int) -> None:
         causes = dependencies.diagnostics[start:]
-        deferred = bool(causes) and all(c.code == DEFERRED_REFERENCE for c in causes)
         dependencies.diagnostics.append(
             ResolutionDiagnostic(
-                code=DEFERRED_REFERENCE if deferred else "withheld_catalog_dependency",
+                code="withheld_catalog_dependency",
                 severity="error"
                 if any(c.severity == "error" for c in causes)
                 else "warning",
@@ -964,29 +980,27 @@ def resolve_metadata_dependencies(
     groups = []
     for group in metadata.variable_groups:
         output = f"variable_group:{group.register_ref}/{group.key}"
-        start = len(dependencies.diagnostics)
-        parent = entity(group.register_ref, output)
-        members = []
-        for member in group.members:
-            member_output = (
-                f"{output}:member:{member.variable}:{member.delivery_column_name or ''}"
-            )
-            supported = (
-                entity(member.variable, member_output)
-                if member.delivery_column_name is None
-                else representation(
-                    member.variable,
-                    member.delivery_column_name,
-                    member_output,
-                    literal=True,
+        with dependencies.entry() as start:
+            parent = entity(group.register_ref, output)
+            members = []
+            for member in group.members:
+                member_output = f"{output}:member:{member.variable}:{member.delivery_column_name or ''}"
+                supported = (
+                    entity(member.variable, member_output)
+                    if member.delivery_column_name is None
+                    else representation(
+                        member.variable,
+                        member.delivery_column_name,
+                        member_output,
+                        literal=True,
+                    )
                 )
-            )
-            if supported:
-                members.append(member)
-        if parent and len(members) >= 2:
-            groups.append(group.model_copy(update={"members": tuple(members)}))
-        else:
-            withheld_group(output, start)
+                if supported:
+                    members.append(member)
+            if parent and len(members) >= 2:
+                groups.append(group.model_copy(update={"members": tuple(members)}))
+            else:
+                withheld_group(output, start)
     classification_groups = []
     for group in metadata.classification_groups:
         output = f"classification_group:{group.key}"
@@ -1003,25 +1017,23 @@ def resolve_metadata_dependencies(
             classification_groups.append(group.model_copy(update={"members": members}))
         else:
             withheld_group(output, start)
-    tags = tuple(
-        tag.model_copy(
-            update={
-                "members": tuple(
-                    member
-                    for member in tag.members
-                    if entity(member.target, f"tag:{tag.slug}:member:{member.target}")
-                )
-            }
-        )
-        for tag in metadata.tags
-    )
+    tags = []
+    for tag in metadata.tags:
+        with dependencies.entry():
+            members = tuple(
+                member
+                for member in tag.members
+                if entity(member.target, f"tag:{tag.slug}:member:{member.target}")
+            )
+        tags.append(tag.model_copy(update={"members": members}))
 
     def selected[T](
         items: tuple[T, ...], field: str, references: Callable[[T, str], list[bool]]
     ) -> tuple[T, ...]:
         result = []
         for index, item in enumerate(items):
-            checks = references(item, f"{field}:{index}")
+            with dependencies.entry():
+                checks = references(item, f"{field}:{index}")
             if all(checks):
                 result.append(item)
         return tuple(result)
@@ -1047,7 +1059,7 @@ def resolve_metadata_dependencies(
     updates = {
         "variable_groups": tuple(groups),
         "classification_groups": tuple(classification_groups),
-        "tags": tags,
+        "tags": tuple(tags),
         "variable_same_as": selected(
             metadata.variable_same_as,
             "variable_same_as",
@@ -1119,7 +1131,9 @@ def resolve_metadata_dependencies(
     }
     dependencies.check()
     return MetadataResolution(
-        metadata.model_copy(update=updates), tuple(dependencies.diagnostics)
+        metadata.model_copy(update=updates),
+        tuple(dependencies.diagnostics),
+        dependencies.skipped,
     )
 
 

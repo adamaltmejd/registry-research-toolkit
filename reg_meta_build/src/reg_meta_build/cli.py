@@ -204,10 +204,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "--registers",
         metavar="SPEC[,SPEC...]",
         help=(
-            "Form only these selection scopes: an SCB register by its register id "
-            "(258), a whole-source scope such as an SOS workbook by its source "
-            "dataset. Shared inputs stay complete; references into other registers "
-            "are deferred warnings."
+            "Form only these selection scopes. SPEC is a register id (258), "
+            "SOURCE:ID when that id names registers in several sources "
+            "(scb-registerinformation:258), or a whole-source scope such as an SOS "
+            "workbook by its source dataset. Shared inputs stay complete; references "
+            "into registers that exist but are not selected are deferred warnings, "
+            "and curation wholly among them is skipped."
         ),
     )
     build_p.add_argument(

@@ -45,7 +45,7 @@ from reg_meta_build.source_value_bindings import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping
+    from collections.abc import Callable, Iterable, Mapping
 
     from reg_meta_build.catalog_dependencies import CoverageObligation, DependencyKey
     from reg_meta_build.resolved_catalog import (
@@ -83,7 +83,19 @@ class ScopeResolution:
     siblings: SiblingResolution
     coverage: tuple[CoverageObligation, ...]
     acknowledged: dict[str, int]
-    register_fqids: dict[NativeKey, str]
+
+
+def declared_register_fqids(
+    naming: Iterable[NamingDeclaration],
+) -> dict[NativeKey, str]:
+    """Each named register's catalog FQID by its native register key."""
+    return {
+        declaration.target.source_key: (
+            f"{declaration.naming.provider}/{declaration.naming.slug}"
+        )
+        for declaration in naming
+        if declaration.target.kind == "register" and declaration.naming.slug is not None
+    }
 
 
 def resolve_source_scope(
@@ -193,11 +205,7 @@ def resolve_source_scope(
     )
     for issue in parents.diagnostics:
         emit(issue)
-    register_fqids = {
-        key: f"{declaration.naming.provider}/{declaration.naming.slug}"
-        for (kind, key), declaration in names.items()
-        if kind == "register" and declaration.naming.slug is not None
-    }
+    register_fqids = declared_register_fqids(names.values())
     withheld = defaultdict(list)
     parent_causes = defaultdict(list)
     for issue in parents.diagnostics:
@@ -585,7 +593,6 @@ def resolve_source_scope(
         siblings,
         tuple(coverage),
         dict(Counter(issue.code for issue in acknowledged)),
-        register_fqids,
     )
 
 

@@ -15,7 +15,6 @@ import re
 import shutil
 import sqlite3
 import tempfile
-from collections import Counter
 from contextlib import closing, contextmanager
 from dataclasses import dataclass
 from functools import lru_cache
@@ -895,24 +894,43 @@ class PreparedSourceRecords:
                     tuple(_read_record(conn, payload, row) for row in members),
                 )
 
-    def register_record_counts(self, source: str) -> Counter[NativeKey | None]:
-        """Count physical occurrences per register, keyed as `iter_register_slices`
-        yields them, without decoding a record."""
+    def register_coordinates(
+        self, source: str
+    ) -> tuple[tuple[NativeKey | None, SourceCoordinate, int], ...]:
+        """Each distinct register coordinate with its physical occurrence count,
+        keyed as `iter_register_slices` yields it, without decoding a record."""
         with _decoded_database(self.root, self.manifest) as (conn, payload):
-            counts: Counter[NativeKey | None] = Counter()
+            result = []
             for row in conn.execute(
                 "SELECT provider, register_payload, COUNT(*) AS records "
                 "FROM occurrence WHERE source=? GROUP BY provider, register_payload",
                 (source,),
             ):
-                counts[
+                coordinate = payload(row["register_payload"], "coordinate")
+                register = native_register_key(source, row["provider"], coordinate)
+                result.append((register, coordinate, row["records"]))
+            return tuple(result)
+
+    def iter_native_ids(
+        self, source: str, registers: Collection[NativeKey | None] | None
+    ) -> Iterator[NativeCoordinates]:
+        """Each distinct set of native IDs, only in `registers` unless None,
+        without decoding a record."""
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            for row in conn.execute(
+                "SELECT DISTINCT provider, register_payload, native_payload "
+                "FROM occurrence WHERE source=?",
+                (source,),
+            ):
+                if registers is None or (
                     native_register_key(
                         source,
                         row["provider"],
                         payload(row["register_payload"], "coordinate"),
                     )
-                ] += row["records"]
-            return counts
+                    in registers
+                ):
+                    yield payload(row["native_payload"], "native")
 
     def iter_without_native_family(self, source: str) -> Iterator[SourceRecord]:
         """Retain declarations and incomplete identities outside ordinary families."""

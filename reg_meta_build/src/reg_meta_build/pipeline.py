@@ -11,7 +11,7 @@ import gzip
 import hashlib
 import json
 import time
-from collections import Counter
+from collections import Counter, defaultdict
 from contextlib import ExitStack, contextmanager
 from dataclasses import asdict
 from datetime import UTC, datetime
@@ -72,13 +72,13 @@ from reg_meta_build.source_reference_resolution import (
     resolve_export_metadata,
     resolve_identifier_metadata,
 )
-from reg_meta_build.source_scope import resolve_source_scope
+from reg_meta_build.source_scope import declared_register_fqids, resolve_source_scope
 from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_bindings import open_value_bindings
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Iterable, Iterator
 
 
 class CompletedArtifactError(Exception):
@@ -219,11 +219,42 @@ def _selection_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ..
     return tuple(sentinels)
 
 
-def _scope_name(key: tuple[str, NativeKey | None]) -> str:
-    """Name a scope for `registers`: a register scope by its native register
-    coordinate (the SCB register id), a whole-source scope by its source."""
-    source, register = key
-    return source if register is None else str(register[-1])
+def _selected_scopes(
+    keys: Iterable[tuple[str, NativeKey | None]], specs: tuple[str, ...]
+) -> set[tuple[str, NativeKey | None]]:
+    """The scopes `--registers` names. A register scope answers to its native
+    register coordinate (the SCB register id) and to SOURCE:ID, a whole-source
+    scope to its source; a name matching scopes in several sources is refused."""
+    names = defaultdict(set)
+    for source, register in keys:
+        if register is None:
+            names[source].add((source, register))
+        else:
+            names[str(register[-1])].add((source, register))
+            names[f"{source}:{register[-1]}"].add((source, register))
+    if unknown := set(specs) - names.keys():
+        raise ValueError(f"--registers names no selected scope: {sorted(unknown)}")
+    if ambiguous := sorted(
+        spec for spec in set(specs) if len({source for source, _ in names[spec]}) > 1
+    ):
+        raise ValueError(
+            f"--registers names scopes in several sources, qualify as SOURCE:ID: {ambiguous}"
+        )
+    return {key for spec in specs for key in names[spec]}
+
+
+def _read_scope(
+    root: Path, key: tuple[str, NativeKey | None], file: ScopeFile
+) -> ScopeDeclarations:
+    payload = _member(root, file.path).read_bytes()
+    if hashlib.sha256(payload).hexdigest() != file.sha256:
+        raise ValueError(f"curation file changed: {file.path}")
+    scope = ScopeDeclarations.model_validate_json(
+        gzip.decompress(payload) if file.path.endswith(".gz") else payload
+    )
+    if (scope.source, scope.register_key) != key:
+        raise ValueError("scope file identifies another source scope")
+    return scope
 
 
 def build_selected_catalog(
@@ -241,8 +272,9 @@ def build_selected_catalog(
     The single event stream accounts for source records, cases and diagnostics;
     it references prepared evidence instead of copying every source projection.
     `registers` forms only the named scopes, with shared inputs still complete,
-    and defers references into other registers. Its output is never publishable
-    and its corpus volume guards do not apply.
+    defers references into registers that exist but were not selected and skips
+    curation wholly among them. Its output is never publishable and its corpus
+    volume guards do not apply.
     """
     started = time.perf_counter()
     publishable = not diagnostic and not registers
@@ -285,11 +317,7 @@ def build_selected_catalog(
         for source, register in scope_files
     ):
         raise ValueError("a source cannot select both whole-source and register scopes")
-    if unknown := set(registers) - {_scope_name(key) for key in scope_files}:
-        raise ValueError(f"--registers names no selected scope: {sorted(unknown)}")
-    visit = {
-        key for key in scope_files if not registers or _scope_name(key) in registers
-    }
+    visit = _selected_scopes(scope_files, registers) if registers else set(scope_files)
     prepared = open_prepared_catalog_sources(
         prepared_path,
         input_commit=selected.prepared_commit,
@@ -567,6 +595,16 @@ def build_selected_catalog(
                     )
             _emit_timing("pipeline: reference metadata and support", phase_started)
             phase_started = time.perf_counter()
+            # A scoped build reads register coordinates, never records, to count
+            # its selected scopes and to recognize the registers it leaves out.
+            coordinates = (
+                {
+                    source: prepared.records.register_coordinates(source)
+                    for source in {s for s, _ in scope_files if (s, None) not in visit}
+                }
+                if registers
+                else {}
+            )
             expected = 0
             for entry in entries:
                 assert entry.revision is not None
@@ -575,8 +613,11 @@ def build_selected_catalog(
                 if not keys:
                     continue
                 if registers and source not in whole_sources:
-                    records = prepared.records.register_record_counts(source)
-                    expected += sum(records[register] for register in keys)
+                    expected += sum(
+                        count
+                        for register, _, count in coordinates[source]
+                        if register in keys
+                    )
                 else:
                     expected += entry.counts.records
                 slices = (
@@ -589,17 +630,7 @@ def build_selected_catalog(
                 for register, originals in slices:
                     scope_started = time.perf_counter()
                     scope_key = source, register
-                    file = scope_files[scope_key]
-                    payload = _member(root, file.path).read_bytes()
-                    if hashlib.sha256(payload).hexdigest() != file.sha256:
-                        raise ValueError(f"curation file changed: {file.path}")
-                    scope = ScopeDeclarations.model_validate_json(
-                        gzip.decompress(payload)
-                        if file.path.endswith(".gz")
-                        else payload
-                    )
-                    if (scope.source, scope.register_key) != scope_key:
-                        raise ValueError("scope file identifies another source scope")
+                    scope = _read_scope(root, scope_key, scope_files[scope_key])
                     resolution_started = time.perf_counter()
                     result = resolve_source_scope(
                         originals,
@@ -687,7 +718,10 @@ def build_selected_catalog(
                                 "refs": [r.model_dump(mode="json") for r in pair.refs],
                             },
                         )
-                    slice_registers.update(result.register_fqids.values())
+                    if registers:
+                        slice_registers.update(
+                            declared_register_fqids(scope.naming).values()
+                        )
                     for declaration in scope.naming:
                         if declaration.target.kind == "register_variant":
                             key = declaration.target.source_key
@@ -785,7 +819,34 @@ def build_selected_catalog(
                 raise ValueError(
                     f"{'selected' if registers else 'full'} source occurrence count differs from preparation"
                 )
-            selected_registers = frozenset(slice_registers) if registers else None
+            # A scoped build defers only a reference it can place in a register
+            # that exists but was not selected: the unselected scope files name
+            # those registers, and the prepared store holds their observed names
+            # and native IDs. Anything else stays the complete build's error.
+            unselected: dict[str, set[str]] = {}
+            if registers:
+                unvisited = scope_files.keys() - visit
+                names = defaultdict(set)
+                for source, rows in coordinates.items():
+                    for register, coordinate, _ in rows:
+                        key = source, None if source in whole_sources else register
+                        if key in unvisited and coordinate.name:
+                            names[register].add(coordinate.name)
+                for key in sorted(unvisited, key=repr):
+                    naming = _read_scope(root, key, scope_files[key]).naming
+                    for register, fqid in declared_register_fqids(naming).items():
+                        unselected.setdefault(fqid, set()).update(names[register])
+                for fqid in slice_registers:
+                    unselected.pop(fqid, None)
+                for source in sorted(set(event_sources.values())):
+                    outside = {r for s, r in unvisited if s == source}
+                    if outside:
+                        event_bindings.observe_unselected(
+                            source,
+                            prepared.records.iter_native_ids(
+                                source, None if source in whole_sources else outside
+                            ),
+                        )
             refs = {
                 fqid: tuple(
                     SourceRecordRef(source=s, semantic_record_key=k)
@@ -822,7 +883,7 @@ def build_selected_catalog(
                 curated_groups=selected.metadata.variable_groups,
                 evidence=refs,
                 withheld=withheld,
-                selected_registers=selected_registers,
+                unselected=unselected,
             )
             months = resolve_month_groups(
                 panel.variables,
@@ -850,7 +911,7 @@ def build_selected_catalog(
                     ),
                 }
             )
-            source_events = event_bindings.resolve(metadata, scoped=bool(registers))
+            source_events = event_bindings.resolve(metadata)
             for value in source_events.diagnostics:
                 issue(value)
             resolved_metadata = resolve_metadata_dependencies(
@@ -860,7 +921,7 @@ def build_selected_catalog(
                 variants=panel.variants,
                 classifications=tuple(books.values()),
                 withheld=withheld,
-                selected_registers=selected_registers,
+                unselected=unselected,
             )
             for value in resolved_metadata.diagnostics:
                 issue(value)
@@ -872,10 +933,15 @@ def build_selected_catalog(
                 metadata=resolved_metadata.metadata,
                 evidence=refs,
                 withheld=withheld,
-                selected_registers=selected_registers,
+                unselected=unselected,
             )
             for value in lineage.diagnostics:
                 issue(value)
+            if registers:
+                counts["skipped_curation"] = sum(
+                    part.skipped
+                    for part in (edges, source_events, resolved_metadata, lineage)
+                )
             successions = resolve_classification_successions(
                 tuple(books.values()), selected.classification_successions
             )

@@ -36,6 +36,7 @@ class ReferenceMetadataResolution:
     metadata: ResolvedMetadata
     diagnostics: tuple[ResolutionDiagnostic, ...]
     withheld: tuple[SourceRecordRef, ...]
+    skipped: int = 0
 
 
 def resolve_identifier_metadata(

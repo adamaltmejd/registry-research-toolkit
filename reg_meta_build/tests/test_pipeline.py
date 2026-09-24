@@ -21,6 +21,7 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
+from reg_meta_build.catalog_dependencies import CatalogDependencyError
 from reg_meta_build.classifications import load_seed
 from reg_meta_build.cli import run
 from reg_meta_build.convert_errata import capture_expectations
@@ -38,7 +39,12 @@ from reg_meta_build.prepared_catalog import (
     prepare_catalog_sources,
 )
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
-from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedVariableSameAs
+from reg_meta_build.resolved_metadata import (
+    ResolvedMetadata,
+    ResolvedTag,
+    ResolvedTagMember,
+    ResolvedVariableSameAs,
+)
 from reg_meta_build.source_coordinates import (
     native_parent_key,
     native_variable_key,
@@ -221,8 +227,11 @@ def selection(tmp_path, request):
     renumbered = param == "renumbered"
     # Two registers, one scope file each, referring to each other: OTHERREG's
     # source label and a replacement event name TESTREG, and curation declares
-    # the two variables the same.
-    register_scoped = param == "register_scoped"
+    # the two variables the same. A tag lies wholly inside the second register.
+    # The dangling variant also refers to what no register holds: a replacement
+    # into native ID 404 and an external source label.
+    dangling = param == "register_dangling"
+    register_scoped = param == "register_scoped" or dangling
     lineage_warning = param == "lineage_warning" or register_scoped
     columnless = param == "columnless"
     sentinel = param == "sentinel"
@@ -240,6 +249,7 @@ def selection(tmp_path, request):
                     "renumbered",
                     "lineage_warning",
                     "register_scoped",
+                    "register_dangling",
                     "columnless",
                     "sentinel",
                     *_SOS_CELLS,
@@ -293,7 +303,7 @@ def selection(tmp_path, request):
                         var_id=201,
                         colname="OTHCOL",
                         varname="OtherVar",
-                        varsource="TESTREG",
+                        varsource="NOSUCH" if dangling else "TESTREG",
                         data_type="int",
                         register=("OTHERREG", 2, 20),
                     )
@@ -306,7 +316,14 @@ def selection(tmp_path, request):
             timeseries_row(entitet="AktuellVariabel", id1="1001", id2="404")
         ]
         if param == "source_event"
-        else [timeseries_row(entitet="AktuellVariabel", id1="1001", id2="2001")]
+        else [
+            timeseries_row(entitet="AktuellVariabel", id1="1001", id2="2001"),
+            *(
+                [timeseries_row(entitet="AktuellVariabel", id1="2001", id2="404")]
+                if dangling
+                else []
+            ),
+        ]
         if register_scoped
         else None,
         unika_rows=[
@@ -464,14 +481,25 @@ def selection(tmp_path, request):
             for e in manifest.inputs
             if e.revision and e.path == "Timeseries.csv"
         )
-        if param in {"source_event", "register_scoped"}
+        if param == "source_event" or register_scoped
         else (),
         scopes=tuple(scopes),
         classifications=classifications,
         metadata=ResolvedMetadata(
             variable_same_as=(
                 ResolvedVariableSameAs(a="scb/sample/value", b="scb/sample-1/value-1"),
-            )
+            ),
+            tags=(
+                ResolvedTag(
+                    slug="other",
+                    label="Other",
+                    members=(
+                        ResolvedTagMember(
+                            target="scb/sample-1/value-1", rank=1, starred=False
+                        ),
+                    ),
+                ),
+            ),
         )
         if register_scoped
         else ResolvedMetadata(),
@@ -1578,11 +1606,13 @@ def test_references_into_unselected_registers_are_deferred_warnings(
     result = build_selected_catalog(selection, full, tmp_path / "full-report")
     assert result["publication_ready"] is True
     assert "deferred_references" not in result["counts"]
+    assert "skipped_curation" not in result["counts"]
     with sqlite3.connect(full) as conn:
         for table in tables:
             assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() != (0,)
-    for register, deferred in (
-        ("1", ["catalog_succession", "variable_same_as:0"]),
+    # Selecting register 1 leaves the tag wholly outside: skipped, not deferred.
+    for register, deferred, skipped in (
+        ("1", ["catalog_succession", "variable_same_as:0"], 1),
         (
             "2",
             [
@@ -1590,6 +1620,7 @@ def test_references_into_unselected_registers_are_deferred_warnings(
                 "scb/sample-1/value-1:source_register",
                 "variable_same_as:0",
             ],
+            0,
         ),
     ):
         output, report = tmp_path / f"{register}.db", tmp_path / f"report-{register}"
@@ -1605,10 +1636,88 @@ def test_references_into_unselected_registers_are_deferred_warnings(
             ("deferred_out_of_slice_reference", "warning")
         }
         assert result["counts"]["deferred_references"] == len(deferred)
+        assert result["counts"]["skipped_curation"] == skipped
         assert sorted(o for i in issues for o in i["withheld_output"]) == deferred
         with sqlite3.connect(output) as conn:
             for table in tables:
                 assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() == (0,)
+
+
+@pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
+def test_a_reference_into_no_known_register_stays_fatal_when_scoped(
+    selection, tmp_path
+):
+    raw = json.loads(selection.read_bytes())
+    raw["metadata"]["variable_same_as"][0]["b"] = "scb/nosuch/value-1"
+    selection.write_text(json.dumps(raw))
+    for name, registers in (("full", ()), ("scoped", ("1",))):
+        with pytest.raises(CatalogDependencyError, match="scb/nosuch/value-1"):
+            build_selected_catalog(
+                selection,
+                tmp_path / f"{name}.db",
+                tmp_path / name,
+                diagnostic=True,
+                registers=registers,
+            )
+
+
+@pytest.mark.parametrize("selection", ["register_dangling"], indirect=True)
+def test_a_scoped_build_reports_targets_no_register_holds_as_the_full_build(
+    selection, tmp_path
+):
+    # Native ID 404 and the label NOSUCH lie in no register. Neither register
+    # alone may defer them: the endpoint stays an error, the label a literal.
+    for registers in ((), ("1",), ("2",)):
+        name = "-".join(registers) or "full"
+        report = tmp_path / f"report-{name}"
+        result = build_selected_catalog(
+            selection,
+            tmp_path / f"{name}.db",
+            report,
+            diagnostic=True,
+            registers=registers,
+        )
+        issues = _issues(report)
+        errors = [i for i in issues if i["severity"] == "error"]
+        assert [i["code"] for i in errors] == ["unresolved_source_event_endpoint"]
+        assert "404" in errors[0]["detail"]
+        assert result["counts"]["error"] == 1
+        assert not any(
+            output.endswith(":source_register")
+            for i in issues
+            for output in i["withheld_output"]
+        )
+
+
+@pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
+def test_a_register_id_in_several_sources_must_name_its_source(selection, tmp_path):
+    raw = json.loads(selection.read_bytes())
+    first = raw["scopes"][0]
+    result = build_selected_catalog(
+        selection,
+        tmp_path / "q.db",
+        tmp_path / "q",
+        registers=(f"{first['source']}:1",),
+    )
+    assert result["status"] == "complete"
+    assert result["counts"]["physical_occurrences"] == 1
+    raw["scopes"].append(
+        {
+            **first,
+            "source": "other",
+            "register_key": ["other", *first["register_key"][1:]],
+        }
+    )
+    selection.write_text(json.dumps(raw))
+    with pytest.raises(ValueError, match="several sources"):
+        build_selected_catalog(
+            selection, tmp_path / "a.db", tmp_path / "a", registers=("1",)
+        )
+    # The qualified form picks the one scope; this one names no prepared source.
+    with pytest.raises(ValueError, match="source outside the prepared"):
+        build_selected_catalog(
+            selection, tmp_path / "o.db", tmp_path / "o", registers=("other:1",)
+        )
 
 
 @pytest.mark.parametrize("selection", ["sos_lined"], indirect=True)
