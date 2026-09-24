@@ -1644,14 +1644,24 @@ def test_references_into_unselected_registers_are_deferred_warnings(
 
 
 @pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
-def test_a_reference_into_no_known_register_stays_fatal_when_scoped(
-    selection, tmp_path
+@pytest.mark.parametrize(
+    "path", [("variable_same_as", 0, "b"), ("tags", 0, "members", 0, "target")]
+)
+# The unselected register 2 (scb/sample-1) exists but declares no `no-such`: it
+# neither defers the reference nor lets the wholly unselected tag skip it.
+@pytest.mark.parametrize("target", ["scb/nosuch/value-1", "scb/sample-1/no-such"])
+def test_a_reference_to_what_no_scope_declares_stays_fatal_when_scoped(
+    selection, tmp_path, path, target
 ):
     raw = json.loads(selection.read_bytes())
-    raw["metadata"]["variable_same_as"][0]["b"] = "scb/nosuch/value-1"
+    *parents, field = path
+    node = raw["metadata"]
+    for step in parents:
+        node = node[step]
+    node[field] = target
     selection.write_text(json.dumps(raw))
     for name, registers in (("full", ()), ("scoped", ("1",))):
-        with pytest.raises(CatalogDependencyError, match="scb/nosuch/value-1"):
+        with pytest.raises(CatalogDependencyError, match=target):
             build_selected_catalog(
                 selection,
                 tmp_path / f"{name}.db",

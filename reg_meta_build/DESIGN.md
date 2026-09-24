@@ -610,19 +610,21 @@ inputs (classifications, successions, support, identifier and event sources, met
 stay complete. Occurrence accounting compares against the selected scopes' prepared
 counts. Strict mode still reports the selected registers' errors, and a scoped build
 never hides a reference error the complete build would report. It defers a reference
-only when the other end provably lies in a register that exists but was not selected,
-known without forming it: the unselected scope files name those registers, and the
-prepared store holds their observed register names and native IDs. Such a reference (a
-`same_as` or succession edge, a group or tag member, a code/label pair, a source event
-or a source label) is withheld as one warning code, `deferred_out_of_slice_reference`;
-`deferred_references` counts distinct references. A target in no known register stays
-the complete build's error, and a source label matching no known register stays a
-literal label. Curation lying wholly among unselected registers is not evaluated, emits
-nothing and is counted once per entry as `skipped_curation`. Shared-input diagnostics
-are still reported corpus-wide. The scoped output is create-only and marked incomplete
-and nonpublishable in both modes. The summary records the register list,
-`publication_ready` false and `corpus_validation` `not_applicable`; structural
-validation still runs.
+only when the other end provably exists but was not selected, known without forming it:
+the unselected scope files declare those registers, variants and variables, and the
+prepared store holds their observed register names and native IDs. A representation or
+state is proven as far as its declared variable and variant; the complete build checks
+its column and period. Such a reference (a `same_as` or succession edge, a group or tag
+member, a code/label pair, a source event or a source label) is withheld as one warning
+code, `deferred_out_of_slice_reference`; `deferred_references` counts distinct
+references. A target no scope declares, including an undeclared variable in an existing
+unselected register, stays the complete build's error, and a source label matching no
+known register stays a literal label. Curation whose every reference is deferred is not
+evaluated, emits nothing and is counted once per entry as `skipped_curation`.
+Shared-input diagnostics are still reported corpus-wide. The scoped output is
+create-only and marked incomplete and nonpublishable in both modes. The summary records
+the register list, `publication_ready` false and `corpus_validation` `not_applicable`;
+structural validation still runs.
 
 Publication uses staged output and atomic replacement, with the previous generation
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call

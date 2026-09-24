@@ -46,7 +46,8 @@ def resolve_catalog_lineage(
     metadata: ResolvedMetadata,
     evidence: Mapping[str, tuple[SourceRecordRef, ...]],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-    unselected: Mapping[str, Collection[str]] | None = None,
+    unselected: Collection[DependencyKey] = (),
+    unselected_names: Mapping[str, Collection[str]] | None = None,
 ) -> LineageResolution:
     """Match literal source names and follow accepted variable identity edges.
 
@@ -55,17 +56,18 @@ def resolve_catalog_lineage(
     variant needs no choice; multiple variants require an explicit default.
     Unknown external source labels remain literal labels, not guessed registers.
     An attributed source with no supported source state withholds the edge as a
-    warning; ambiguity is an error. A register-scoped build also matches the
-    observed names of its `unselected` registers: a label naming exactly one of
-    them is deferred, and one naming several known registers stays ambiguous.
+    warning; ambiguity is an error. A register-scoped build defers what its
+    `unselected` scopes declare and matches their registers' observed names
+    (`unselected_names`): a label naming exactly one of them is deferred, and
+    one naming several known registers stays ambiguous.
     """
     if metadata.state_lineage or metadata.lineage_warnings:
         raise ValueError("lineage must be resolved once from current catalog states")
-    unselected = unselected or {}
+    unselected_names = unselected_names or {}
     by_register = {f"{r.provider}/{r.slug}": r for r in registers}
     names, abbreviations = defaultdict(set), defaultdict(set)
     for fqid, labels in {
-        **unselected,
+        **unselected_names,
         **{fqid: (r.name,) for fqid, r in by_register.items()},
     }.items():
         provider = fqid.split("/", 1)[0]
@@ -143,7 +145,7 @@ def resolve_catalog_lineage(
                 candidates.update(names.get((provider, token), ()))
             only = next(iter(candidates)) if len(candidates) == 1 else None
             matches[text] = by_register.get(only) if only else None
-            if only in unselected:
+            if ("register", only) in unselected:
                 diagnostics.append(
                     ResolutionDiagnostic(
                         code=DEFERRED_REFERENCE,

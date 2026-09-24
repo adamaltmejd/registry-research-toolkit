@@ -6,6 +6,8 @@ import pytest
 from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta_build.catalog_dependencies import (
+    DEFERRED_REFERENCE,
+    CatalogDependencies,
     CatalogDependencyError,
     CoverageObligation,
     check_delivery_coverage,
@@ -139,6 +141,39 @@ def _month_resolution(variables, **kwargs):
             | kwargs
         ),
     )
+
+
+def test_a_scoped_build_defers_only_what_unselected_scopes_declare():
+    dependencies = CatalogDependencies(
+        set(),
+        {},
+        {
+            ("register", "scb/r"),
+            ("variant", "scb/r", "v"),
+            ("variable", "scb/r/x"),
+        },
+    )
+    deferred = [
+        ("variable", "scb/r/x"),
+        ("representation", "scb/r/x", "COL"),
+        ("succession_representation", "scb/r/x", "col", "v"),
+        ("variant_states", "scb/r/x", "v"),
+        ("state", "scb/r/x", "v", "2020-01-01", "2020-12-31", "COL", None),
+    ]
+    # An existing unselected register vouches for no undeclared variable or
+    # variant, and shared inputs lie in no register.
+    missing = [
+        ("variable", "scb/r/no-such"),
+        ("variant_states", "scb/r/x", "no-such"),
+        ("representation", "scb/other/x", "COL"),
+        ("classification", "no-such"),
+    ]
+    for key in (*deferred, *missing):
+        assert not dependencies.require(key, output=repr(key))
+    assert [d.code for d in dependencies.diagnostics] == [DEFERRED_REFERENCE] * len(
+        deferred
+    )
+    assert [m.key for m in dependencies.missing] == missing
 
 
 def test_month_groups_resolve_before_writing_with_ordered_facets(tmp_path):

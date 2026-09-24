@@ -59,8 +59,8 @@ if TYPE_CHECKING:
 
 type DependencyKey = tuple[str, ...]
 
-# A register-scoped build's one warning for a reference whose other end lies in
-# an unselected register. Only the complete build can resolve or refuse it.
+# A register-scoped build's one warning for a reference whose other end is
+# declared only by unselected scopes. Only the complete build can resolve it.
 DEFERRED_REFERENCE = "deferred_out_of_slice_reference"
 
 
@@ -526,13 +526,23 @@ class CatalogDependencyError(ValueError):
         )
 
 
-def _dependency_register(key: DependencyKey) -> str | None:
-    """The register FQID a key lives in; shared classifications and source columns
-    belong to no register."""
-    kind, fqid = key[0], key[1]
+def _declared_entities(key: DependencyKey) -> tuple[DependencyKey, ...]:
+    """The declared registers, variants and variables a key names. A representation
+    or state is proven only this far; shared classifications and source columns
+    name none."""
+    kind = key[0]
+    if kind in {"register", "variant", "variable"}:
+        return (key,)
     if kind in {"classification", "source_column"}:
-        return None
-    return fqid if kind in {"register", "variant"} else fqid.rsplit("/", 1)[0]
+        return ()
+    variable = ("variable", key[1])
+    if kind in {"state", "variant_states"}:
+        variant = key[2]
+    else:  # a representation, optionally of one variant
+        variant = key[3] if len(key) == 4 else None
+    if variant is None:
+        return (variable,)
+    return variable, ("variant", key[1].rsplit("/", 1)[0], variant)
 
 
 class CatalogDependencies:
@@ -541,17 +551,19 @@ class CatalogDependencies:
     A key starts with its kind, followed by its complete catalog coordinates.
     Callers build the withheld map from resolution accounting, not the baseline DB.
     Descendant lookup may inherit a known withheld parent supplied by the caller.
-    A register-scoped build names the `unselected` registers that exist but were
-    not formed: a missing key in one of them is deferred to the complete build as
-    a warning, and a curation entry with every reference among them is skipped.
-    A key in no known register stays missing, exactly as in the complete build.
+    A register-scoped build names the `unselected` registers, variants and
+    variables that their scope files declare but were not formed: a missing key
+    naming only those is deferred to the complete build as a warning, and a
+    curation entry with every reference among them is skipped. Any other missing
+    key, such as one no scope declares, stays missing, exactly as in the complete
+    build.
     """
 
     def __init__(
         self,
         available: set[DependencyKey],
         withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-        unselected: Collection[str] = (),
+        unselected: Collection[DependencyKey] = (),
     ) -> None:
         if overlap := available & withheld.keys():
             raise ValueError(
@@ -574,7 +586,7 @@ class CatalogDependencies:
 
     @contextmanager
     def entry(self) -> Iterator[int]:
-        """Evaluate one curation entry; one wholly among unselected registers
+        """Evaluate one curation entry; one whose every reference is deferred
         emits nothing and counts as skipped."""
         start, self._in_slice = len(self.diagnostics), False
         yield start
@@ -596,14 +608,18 @@ class CatalogDependencies:
             (self.withheld[k] for k in (key, *parents) if k in self.withheld),
             None,
         )
-        register = _dependency_register(key)
-        if causes is None and register in self.unselected:
+        if (
+            causes is None
+            and self.unselected
+            and (declared := _declared_entities(key))
+            and all(entity in self.unselected for entity in declared)
+        ):
             self.diagnostics.append(
                 ResolutionDiagnostic(
                     code=DEFERRED_REFERENCE,
                     severity="warning",
                     subject=output,
-                    detail=f"Dependency {key!r} lies in the unselected register {register}; the complete build resolves it.",
+                    detail=f"Dependency {key!r} names {declared!r}, declared only by unselected scopes; the complete build resolves it.",
                     withheld_output=(output,),
                 )
             )
@@ -760,7 +776,7 @@ def resolve_variable_edge_groups(
     curated_groups: tuple[ResolvedVariableGroup, ...],
     evidence: Mapping[str, tuple[SourceRecordRef, ...]],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-    unselected: Collection[str] = (),
+    unselected: Collection[DependencyKey] = (),
 ) -> GroupEdgeResolution:
     """Resolve existing code/label and checked same-definition group edges.
 
@@ -893,7 +909,7 @@ def resolve_metadata_dependencies(
     variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...],
     classifications: tuple[ResolvedClassification, ...],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-    unselected: Collection[str] = (),
+    unselected: Collection[DependencyKey] = (),
 ) -> MetadataResolution:
     """Withhold only declared metadata depending on evidenced unresolved facts.
 

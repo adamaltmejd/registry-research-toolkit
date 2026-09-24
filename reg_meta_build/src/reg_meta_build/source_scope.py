@@ -98,6 +98,25 @@ def declared_register_fqids(
     }
 
 
+def declared_dependency_keys(
+    naming: tuple[NamingDeclaration, ...],
+) -> set[DependencyKey]:
+    """The registers, variants and variables a scope's naming declares, keyed as
+    formation would make them available."""
+    registers = declared_register_fqids(naming)
+    keys: set[DependencyKey] = {("register", fqid) for fqid in registers.values()}
+    for declaration in naming:
+        register = registers.get(declaration.target.register_key)
+        slug = declaration.naming.slug
+        if register is None or slug is None:
+            continue
+        if declaration.target.kind == "register_variant":
+            keys.add(("variant", register, slug))
+        elif declaration.target.kind == "variable":
+            keys.add(("variable", f"{register}/{slug}"))
+    return keys
+
+
 def resolve_source_scope(
     originals: tuple[SourceRecord, ...],
     *,

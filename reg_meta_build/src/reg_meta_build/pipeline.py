@@ -72,7 +72,11 @@ from reg_meta_build.source_reference_resolution import (
     resolve_export_metadata,
     resolve_identifier_metadata,
 )
-from reg_meta_build.source_scope import declared_register_fqids, resolve_source_scope
+from reg_meta_build.source_scope import (
+    declared_dependency_keys,
+    declared_register_fqids,
+    resolve_source_scope,
+)
 from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_bindings import open_value_bindings
 from reg_meta_build.validate import validate_built_db
@@ -406,7 +410,7 @@ def build_selected_catalog(
     coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
-    sibling_pairs, slice_registers = set(), set()
+    sibling_pairs, slice_keys = set(), set()
     build_result: dict[str, object] = {}
     with _retain_completed_artifact(build_result, report_dir), ExitStack() as stack:
         events = stack.enter_context(
@@ -719,9 +723,7 @@ def build_selected_catalog(
                             },
                         )
                     if registers:
-                        slice_registers.update(
-                            declared_register_fqids(scope.naming).values()
-                        )
+                        slice_keys.update(declared_dependency_keys(scope.naming))
                     for declaration in scope.naming:
                         if declaration.target.kind == "register_variant":
                             key = declaration.target.source_key
@@ -819,11 +821,13 @@ def build_selected_catalog(
                 raise ValueError(
                     f"{'selected' if registers else 'full'} source occurrence count differs from preparation"
                 )
-            # A scoped build defers only a reference it can place in a register
-            # that exists but was not selected: the unselected scope files name
-            # those registers, and the prepared store holds their observed names
-            # and native IDs. Anything else stays the complete build's error.
-            unselected: dict[str, set[str]] = {}
+            # A scoped build defers only a reference to what exists but was not
+            # selected: the unselected scope files declare those registers,
+            # variants and variables, and the prepared store holds their observed
+            # register names and native IDs. Anything else stays the complete
+            # build's error.
+            unselected: set[tuple[str, ...]] = set()
+            unselected_names: dict[str, set[str]] = {}
             if registers:
                 unvisited = scope_files.keys() - visit
                 names = defaultdict(set)
@@ -834,10 +838,13 @@ def build_selected_catalog(
                             names[register].add(coordinate.name)
                 for key in sorted(unvisited, key=repr):
                     naming = _read_scope(root, key, scope_files[key]).naming
+                    declared = declared_dependency_keys(naming) - slice_keys
+                    unselected |= declared
                     for register, fqid in declared_register_fqids(naming).items():
-                        unselected.setdefault(fqid, set()).update(names[register])
-                for fqid in slice_registers:
-                    unselected.pop(fqid, None)
+                        if ("register", fqid) in declared:
+                            unselected_names.setdefault(fqid, set()).update(
+                                names[register]
+                            )
                 for source in sorted(set(event_sources.values())):
                     outside = {r for s, r in unvisited if s == source}
                     if outside:
@@ -934,6 +941,7 @@ def build_selected_catalog(
                 evidence=refs,
                 withheld=withheld,
                 unselected=unselected,
+                unselected_names=unselected_names,
             )
             for value in lineage.diagnostics:
                 issue(value)
