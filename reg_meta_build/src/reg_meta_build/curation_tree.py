@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import tomllib
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Annotated, Literal
@@ -473,7 +474,7 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
 
 def _register_arrays(
     entry: RegisterCuration,
-) -> tuple[tuple[str, list[BaseModel]], ...]:
+) -> tuple[tuple[str, Sequence[BaseModel]], ...]:
     return (
         ("errata.delivered", entry.errata.delivered),
         ("errata.column", entry.errata.column),
