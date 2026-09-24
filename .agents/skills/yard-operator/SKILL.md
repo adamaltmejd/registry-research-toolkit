@@ -1,8 +1,8 @@
 ---
 name: yard-operator
-description: Operate a Yard project — the entry to the whole routine, which is two skills: `yard-file` for filing and admitting work, `yard-drive` for answering the board. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard project and do not already know which half of the routine you need.
+description: "Operate a Yard project — the entry to the whole routine, which is two skills: `yard-file` for filing and admitting work, `yard-drive` for answering the board. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard project and do not already know which half of the routine you need."
 ---
-<!-- yard-scaffold: yard 0.16.0 (commit c8737cdf0375fb83779a5b327a5fe20f2e297063) -->
+<!-- yard-scaffold: yard 0.17.5 (commit 484c794000c6dabc44f049978c5baac44b0945a3) -->
 
 # /yard-operator
 

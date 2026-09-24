@@ -183,12 +183,13 @@ Keep raw logs, verification reports and submission receipts in the already ignor
 `archive/reports/yard/`. Commit concise outcomes in DOGFOOD.md; label references to
 local archived evidence as local-only paths.
 
-## Temporary corrections for Yard 0.16.0
+## Temporary corrections for Yard 0.17.5
 
 These qualify wording in the shipped routine. Recheck them at each Yard upgrade and
-remove each correction once upstream covers it accurately. Rechecked against 0.16.0 on
-2026-09-19; the acceptance-`--parked` and replay corrections were dropped because
-`yard proposal accept --help` and `yard lane replay --help` now state both accurately.
+remove each correction once upstream covers it accurately. Rechecked against 0.17.5 on
+2026-09-24: `yard lane approve --help` still says the candidate "proceeds to land",
+`yard ticket park --help` still does not mention refusing a redundant park, and no help
+text states the spending rules below.
 
 - **Spending depends on the state and command.** Abandoning starts no model by itself;
   the resulting admission of an unparked ready ticket can start a fresh attempt.
@@ -197,7 +198,7 @@ remove each correction once upstream covers it accurately. Rechecked against 0.1
   reported effect rather than treating every decision as a fresh model session.
 - **Skip parking an already parked ticket during retirement.** The command refuses
   redundant parking; proceed to the applicable stop, abandon and done steps.
-- **Approval enqueues, it does not land.** Under the 0.16.0 merge queue,
+- **Approval enqueues, it does not land.** Under the merge queue (since 0.16.0),
   `yard lane approve` puts the candidate in the queue; gates then run once against the
   merged ref and canonical advances only on green. A red batch returns the lane to
   repair and a batch of several candidates is bisected in halves, so a lane can go back

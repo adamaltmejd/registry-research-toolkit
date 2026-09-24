@@ -10,96 +10,39 @@ once it is filed or judged not worth filing. The full text of everything deleted
 git; the last unpruned revision is 4423fe7d (pruned 2026-09-12). Raw evidence stays
 under the ignored `archive/reports/yard/`.
 
-Running: yard 0.14.10 (b0c58aac) since 2026-09-11. Lane durations measured on 0.14.5
-from the store: `ui` about 65 minutes median, `default` about 20, `light` 1–22.
+Running: yard 0.17.5 (484c7940) since 2026-09-24. Lane durations measured on 0.14.5 from
+the store: `ui` about 65 minutes median, `default` about 20, `light` 1–22.
 
 ## Open upstream reports
 
-### 2026-09-15: a following transcript exits with an offset error at completion
+None open. These were closed upstream as completed but have not been retested here,
+because none of their triggers recurred on 0.17.5 yet. Delete each line once its trigger
+is exercised on a fixed Yard and the retest is on the issue; the full entries are in git
+before 2026-09-24.
 
-On 0.14.10, `lane tail --follow --current-generation` emitted normal worker completion
-and then exited 3 for Y-157/1 and a fresh Y-157/3 follower, reporting
-`transcript is shorter than byte offset 2021721` and `372041`, respectively. Y-159's
-follower exited cleanly with offset 55901. Filed as
-[#105](https://github.com/adamaltmejd/switchyard/issues/105); no data-loss or
-candidate-corruption diagnosis is established. Supported CLI evidence, report and
-trusted readback receipts are under
-`archive/reports/yard/2026-09-15-usecase-architecture/yard-tail-completion/`.
+- [#99](https://github.com/adamaltmejd/switchyard/issues/99): a stale re-run exit is
+  printed after the total-work window expired (Y-113, 2026-09-11).
+- [#102](https://github.com/adamaltmejd/switchyard/issues/102): automatic repairs repeat
+  a protected-test authority block (Y-125, Y-128).
+- [#104](https://github.com/adamaltmejd/switchyard/issues/104): worker `TMPDIR` creates
+  mixed-ownership scratch Git repositories; command-local `TMPDIR=/tmp` was the
+  workaround (Y-155, Y-161..Y-163).
+- [#105](https://github.com/adamaltmejd/switchyard/issues/105): a following transcript
+  exits 3 with an offset error at completion (Y-157).
+- [#108](https://github.com/adamaltmejd/switchyard/issues/108): `status --watch` fails
+  replaying a completed lane abandonment (Y-188).
+- [#109](https://github.com/adamaltmejd/switchyard/issues/109): the 0.15 to 0.16
+  config-shape upgrade deadlock. 0.17.5 ships `yard sync --config-only`; the 0.16 to
+  0.17 upgrade needed no shape change, so it is unexercised.
+- [#113](https://github.com/adamaltmejd/switchyard/issues/113): removing a workflow
+  orphans the tickets that name it; 0.17 warns at configuration load.
 
-### 2026-09-15: worker TMPDIR creates mixed-ownership scratch Git repositories
-
-Y-155's Sol worker reproduced scratch Git failures under its default
-`TMPDIR=/yard/state/tmp`: the repository directory belonged to `root:root`, while `.git`
-belonged to `501:dialout`; `git config` exited 128. Equivalent controls under `/tmp` had
-consistent ownership and succeeded. Command-local `TMPDIR=/tmp` let the focused tests
-pass without changing product code or Git's ownership protections. Filed as
-[#104](https://github.com/adamaltmejd/switchyard/issues/104). The ownership mechanism
-remains unconfirmed. Supported Yard transcript output, controls and submission receipt
-are local-only under
-`archive/reports/yard/2026-09-15-cold-value-storage/yard-tmp-ownership/`.
-
-Recurred during Y-161: the watcher path test passed alone but failed in the full file
-under the shared temp tree. Command-local `TMPDIR=/tmp` made all 19 watcher tests pass;
-no Git/path guard change was needed. The operator supplied the known workaround through
-a guarded nudge and one stop, preserving the ongoing work.
-
-Y-162 generation 7 reproduced the scratch-Git failure in four input-snapshot tests under
-`/yard/state/tmp`. The worker isolated the failure to that temp location before changing
-product code; its supported transcript records the controls. Command-local `TMPDIR=/tmp`
-passed all 127 focused tests and the full 4,223-test gate. No ownership-check bypass or
-product fix was needed.
-
-Y-163 repeated the temp-tree failure in three focused tests. A worker control with
-wildcard Git trust still left one failure and was discarded as evidence. After a guarded
-nudge and one stop delivered the known workaround, command-local `TMPDIR=/tmp` with
-ordinary Git trust passed all 140 focused tests. The worker kept product and test guards
-unchanged. Supported transcript: Y-163/2 generations 1–2; local scope evidence is under
-the same usecase-architecture archive.
-
-### 2026-09-15: published macOS binary fails signature verification
-
-On macOS 27.0 arm64, the installed 0.14.10 CLI exited 137 before printing output. Its
-complete SHA256 matched the published release artifact, but `codesign --verify` reported
-an invalid signature. A task-local copy with a renewed ad-hoc signature verified and ran
-successfully; the installed binary was left unchanged. Filed as
-[#103](https://github.com/adamaltmejd/switchyard/issues/103). The active operator uses
-that same-version copy under the local-only evidence directory
-`archive/reports/yard/2026-09-15-prepared-input-build/yard-tool/`; keep it while the
-daemon runs from it. Release identity, repair receipts and the redacted report are
-retained there. The trigger for the new host failure is not established.
-
-### 2026-09-11: Y-113 stopped by a network outage, then a host sleep spent its window
-
-Driving the curation-consolidation chain (Y-113..Y-120, Claude Fable 5.1 operating).
-Y-113/1's first worker generation died at 14:27Z on `provider-request-timeout` when the
-laptop lost its network; the host then slept from 15:01Z to 21:41Z. The attempt's
-360-minute total-work window is wall-clock by design (upstream #90's disposition) and
-had expired at 20:10Z while the lane sat stopped.
-
-- **Stale exit.** At 21:49Z `yard lane show Y-113/1` still printed A-295's `re-run` exit
-  (`yard lane start Y-113/1/e1 --expect-generation 1`). Taking it was accepted
-  ("re-running the implementation round; no new attempt") and cancelled within seconds
-  as `total-work-timeout`, raising A-296 with the guarded nudge. The nudge (its help: "a
-  fresh mandate renews the attempt's total-work window") started g3 on the retained
-  session; `totalWorkStartedAt` moved to 21:50:41Z. Cost: one cancelled generation and
-  one extra decision. Filed as
-  [#99](https://github.com/adamaltmejd/switchyard/issues/99); searched #53, #89, #90
-  first (adjacent, none covers an exit printed after the window expired). Raw wake
-  lines, lane JSON and the submitted body are local-only under
-  `archive/reports/yard/2026-09-11-y113-stale-rerun-exit/`.
-- The 16m43s / $3.12 g1 spend had committed nothing (`head -`); whether the on-disk
-  workspace state carried into g3 is only visible from the candidate.
-
-### 2026-09-13: automatic repairs repeat a protected-test authority block
-
-Reproduced the 0.14.8 observation on 0.14.10 while operating Y-125 and Y-128 with Sol.
-Y-128's consecutive automatic repair rounds reported that the required existing test
-edits were forbidden, made no changes, and still bought another round. Editing the
-ticket clarified scope but did not change the repair prompt's authority. A guarded
-unrestricted operator nudge permitted the specific correction. Filed as
-[#102](https://github.com/adamaltmejd/switchyard/issues/102); candidate and test guards
-were preserved. Redacted transcripts and submission text are local-only under
-`archive/reports/yard/2026-09-13-sol-operator/`.
+Retested and deleted on 2026-09-24 against 0.17.5: #103 (the installed binary's
+signature verifies and it runs), #111 (preflight names no retired `checks.*` keys), #112
+(DESIGN.md documents `[workspace]`), #114 (`yard init --patch | git apply` applies).
+#110 closed with a gate-side `when` scope that needs `TYPESAFE_API_KEY`, which this
+machine does not carry, so the flow gates stay batch-only; `.yard/config.toml` and
+`.yard/OPERATOR.md` "UI approval evidence" say so.
 
 ## Observed, not yet filed
 
@@ -287,16 +230,6 @@ once it has moved.
   "byte-identical" clause names its paths; an accepted proposal body needs a Proof
   section before unpark; recheck old briefs before admitting a batch.
 
-### 2026-09-18: watch fails when replaying a completed lane abandonment
-
-On Yard 0.15.3 (`19903129`), after supported abandonment of Y-188/1 with no committed
-candidate, `yard status --watch --notes --since 146431` repeatedly exited 1:
-`lane.abandoned on Y-188/1 records no terminal outcome`. Abandonment and cleanup
-completed. A fresh status cursor (146445) restored watching. Filed as
-[#108](https://github.com/adamaltmejd/switchyard/issues/108); no root cause is
-established. Raw receipts and the report are local-only under
-`archive/reports/yard/2026-09-18-abandoned-watch/`.
-
 ### 2026-09-18: pipeline-muse lanes reach the operator with lint failures
 
 **Lint half resolved by Yard 0.16.0 (2026-09-19).** Gates are now project-wide and
@@ -310,58 +243,3 @@ hash); the lane hit the automatic review maximum and needed an operator nudge wi
 design decision. Y-202/1 g1 ended "worker stopped with uncommitted or in-progress Git
 work" after 30 min and was recovered by the automatic unclean-clone cleanup; no operator
 action was needed, but the 30 min were spent.
-
-### 2026-09-19: the 0.15 -> 0.16 upgrade path is deadlocked, with no supported way across
-
-Upgrading this project from 0.15.3 to 0.16.0 cannot be completed with supported
-commands. The daemon validates `.yard/config.toml` **at canonical's target head**, not
-in the working tree, and the only command that moves canonical is `yard sync`, which
-autostarts a daemon:
-
-- the 0.16.0 daemon refuses to start while canonical holds the v0.15 config shape
-  (`workflows.default.implementer: expected string, received undefined`), so `yard sync`
-  cannot run to import the converted file;
-- the 0.15.3 daemon refuses to import the converted file into canonical
-  (`max_lanes, approve, gates, review: Unrecognized keys`), because invalid candidate
-  configuration cannot become authoritative.
-
-No config satisfies both loaders: each treats unknown keys as errors and they share no
-valid key set (`agent`/`checks` vs `implementer`/`gates`/`review`), so a transitional
-commit is impossible. Neither the release notes' "convert the file, install the
-executable, restart the daemon" nor the README's "Upgrading an existing store" mentions
-that the committed config at canonical is what gets validated.
-
-Worked around by fast-forwarding `refs/heads/main` in `.yard/local/git/canonical.git`
-directly, which bypasses the deliberately disabled canonical push remote. Filed as
-[#109](https://github.com/adamaltmejd/switchyard/issues/109); the fix wanted is a
-supported way to move canonical to a converted config — a `yard sync --config-only`, a
-documented bootstrap, or accepting a forward-shape config during upgrade. Raw receipts
-and the six report bodies are local-only under
-`archive/reports/yard/2026-09-19-0.16.0-upgrade/`.
-
-### 2026-09-19: a workflow can no longer select its gates
-
-0.16.0 retired per-workflow `checks`, so the gate set is project-wide and every declared
-gate runs on every landing batch. This project used the removed feature in both
-directions: `ui`/`light-ui` selected three rendered Playwright flow gates that other
-lanes did not pay for, and `pipeline`/`pipeline-muse` selected none at all for
-operator-admitted bounded `reg_meta_build` repair batches. Neither is expressible now.
-
-The three flow gates are declared without `stage`, which keeps them off candidate heads
-but also moves their retained PNGs to the landing batch — so `yard lane show` no longer
-prints rendered evidence for the candidate the operator is approving, which is what
-`.yard/OPERATOR.md` "UI approval evidence" was built on. Staging them instead would put
-three browser gates on every `reg_meta_build` repair. Filed as
-[#110](https://github.com/adamaltmejd/switchyard/issues/110) as a request for
-differential gates by workflow; monorepos need the cheap gates everywhere and the
-expensive ones only where they decide something.
-
-Four smaller 0.16.0 findings from the same session, all filed and awaiting the builder's
-disposition: `yard daemon preflight` naming retired `checks.<gate>.<key>` keys
-([#111](https://github.com/adamaltmejd/switchyard/issues/111)); DESIGN.md omitting
-`[workspace]` while the shipped config keeps the retired `[merge]` comment
-([#112](https://github.com/adamaltmejd/switchyard/issues/112)); removing a workflow
-orphaning the tickets that name it, which stranded Y-199/Y-205/Y-206 here
-([#113](https://github.com/adamaltmejd/switchyard/issues/113)); and `yard init`'s update
-patch not being pipeable to `git apply`
-([#114](https://github.com/adamaltmejd/switchyard/issues/114)).

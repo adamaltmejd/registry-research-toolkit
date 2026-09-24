@@ -25,10 +25,11 @@ dockerfile = ".yard/Dockerfile"
 
 # Agents hold harness/model/session settings. Jobs below hold access,
 # instructions and timeouts; workflows select an implementation agent.
-# Opus implements and resolves conflicts; Fable plans; Sonnet handles light work.
+# Opus 5.5 implements, plans and resolves conflicts; Sonnet handles light work;
+# GPT-6 Sol reviews (see [review.reviewers.*]).
 [agents.implementation]
 harness = "claude"
-model = "claude-opus-5"
+model = "claude-opus-5-5"
 effort = "xhigh"
 tools = { subagents = true }
 context_limit_tokens = 300000
@@ -36,12 +37,12 @@ compaction_threshold_share = 0.7
 
 [agents.planning]
 harness = "claude"
-model = "claude-fable-5-1"
+model = "claude-opus-5-5"
 effort = "high"
 
 [agents.conflict]
 harness = "claude"
-model = "claude-opus-5"
+model = "claude-opus-5-5"
 effort = "high"
 tools = { subagents = true }
 
@@ -102,7 +103,7 @@ total_work_timeout_minutes = 360
 # "container" or "host": container gates have no credentials and no network,
 # and a host gate must also name the platform and architecture it needs.
 # A gate that sets test_report to "junit" has its JUnit XML read back from
-# $YARD_TEST_REPORT. Give each gate a name of your own in place of "test".
+# $YARD_TEST_REPORT.
 
 # A container gate command is run as /bin/sh -c under env -i, so the image's
 # own ENV lines never reach it and nothing of your shell profile does either.
@@ -174,8 +175,11 @@ git diff --exit-code -- src/lib/api-types.ts
 ' '''
 timeout_minutes = 30
 
-# The rendered /project error/retry evidence (Y-34), selected by the `ui`
-# workflow only. It drives the CANDIDATE's own app — a fresh backend on the
+# The rendered /project error/retry evidence (Y-34). Like every gate it runs on
+# each landing batch; it declares no stage, so it stays off candidate heads and
+# its PNGs arrive with the batch, not before approval. Yard 0.17 can scope a gate
+# with `when` (Y-727), but that asks a pinned judgment needing TYPESAFE_API_KEY,
+# which this machine does not carry, so the flow gates stay unscoped. It drives the CANDIDATE's own app — a fresh backend on the
 # synthetic catalog fixture DB the backend tests build, plus the Vite dev server
 # — through three /project scenarios at four viewports (12 cases) and keeps one
 # PNG per settled state for the operator's visual judgment. No model runs here:
@@ -197,8 +201,8 @@ timeout_minutes = 30
 #
 # `artifacts` names exactly the files the driver writes into $YARD_ARTIFACT_DIR;
 # a missing or oversize one is a gate error, so the case list and this list are
-# one contract. Retained paths are on `yard lane show` — open the PNGs, they are
-# the evidence this gate exists to produce.
+# one contract. Retained paths are on the landing batch — open the PNGs, they
+# are the evidence this gate exists to produce.
 [gates.project-flows]
 command = '''sh -ec '
 export UV_CACHE_DIR=/opt/uv/cache UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_LINK_MODE=copy
@@ -235,8 +239,7 @@ artifacts = [
   "validation-error-1920x1080.png",
 ]
 
-# The rendered CATALOG evidence, selected by the `ui` workflow alongside
-# `project-flows`. Same driver, same provisioning, two scenarios at the same four
+# The rendered CATALOG evidence, a batch gate beside `project-flows`. Same driver, same provisioning, two scenarios at the same four
 # viewports (8 cases): the authored draft (Y-42) picks a column from a catalog leaf
 # with /project never opened, leaves the route, reloads into /project and recovers
 # the draft, then extends it with a second pick made on a cold catalog entry; the
@@ -283,8 +286,8 @@ artifacts = [
   "catalog-period-recovered-1920x1080.png",
 ]
 
-# The rendered DELIBERATE-REPLACEMENT evidence (Y-48), selected by the `ui`
-# workflow alongside the two gates above. Same driver, same provisioning, one
+# The rendered DELIBERATE-REPLACEMENT evidence (Y-48), a batch gate beside the
+# two above. Same driver, same provisioning, one
 # scenario at the same four viewports (4 cases): an edited draft is replaced on
 # purpose — New raises the confirmation over the work it would destroy, a cancel
 # keeps the draft and returns focus to the button that opened it, and an Open
@@ -320,9 +323,6 @@ artifacts = [
   "replace-opened-1920x1080.png",
 ]
 
-# Review runs on every candidate, gates before it. A confirmed gate failure
-# returns to the implementer like a blocking review finding, and max_rounds
-
 # Review runs on a candidate head whose candidate-stage gates have all passed,
 # and gates before it. A confirmed gate failure returns to the implementer like
 # a blocking review finding; max_rounds counts autoreview rounds only, and a
@@ -339,16 +339,18 @@ max_priority = "P3"
 # A seat is one reviewer under a name: engine, model and effort, with optional
 # instructions and context. A workflow selects a list of seats. A reviewer from
 # a different engine family than the implementer is recommended.
-# speed is a fast service tier for codex seats only (Y-493, was codex_speed):
+# speed is a fast service tier for codex seats only:
 # a queue, not an identity — model/effort stay what the review is recorded
 # against, and it is a load error on any other engine.
 # No seat declares a `when` scope: that asks a pinned judgment per candidate and
 # needs TYPESAFE_API_KEY in operator.env, which this machine does not carry. A
 # daemon without the key runs the whole panel, which is what an unanswered
 # question always selects.
+# autoreview runs seats on the host's codex CLI, not the vendored worker pin:
+# gpt-6-sol needs codex >= 0.156 there (0.153 refuses it on a ChatGPT session).
 [review.reviewers.codex]
 engine = "codex"
-model = "gpt-5.6-sol"
+model = "gpt-6-sol"
 effort = "high"
 speed = "fast"
 
@@ -358,8 +360,8 @@ speed = "fast"
 # (reg_webapp/frontend/DESIGN.md, ~15 KB), not the 178 KB engineering doc, and
 # never src/tokens.css — autoreview rejects that filename as sensitive.
 [review.reviewers.design]
-engine = "claude"
-model = "claude-opus-5"
+engine = "codex"
+model = "gpt-6-sol"
 effort = "high"
 context = [
   ".claude/skills/reg-webapp-design-reviewer/SKILL.md",

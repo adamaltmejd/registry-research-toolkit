@@ -2,7 +2,7 @@
 name: yard-drive
 description: Drive a Yard board — hold the wake-driven loop across every decision, answer a stopped lane through the exits its attention item names, read a candidate before approving it, dispose of advisory findings, and retire a ticket in the order that sticks. Load this whenever you are asked to operate, drive, run, watch or babysit a Yard board, or when you are about to answer a `yard status` attention item.
 ---
-<!-- yard-scaffold: yard 0.16.0 (commit c8737cdf0375fb83779a5b327a5fe20f2e297063) -->
+<!-- yard-scaffold: yard 0.17.5 (commit 484c794000c6dabc44f049978c5baac44b0945a3) -->
 
 # /yard-drive
 
@@ -188,12 +188,14 @@ configuration differs from canonical main@<sha>`. A restart is what loads it,
 and with lanes running it goes behind the admission hold: `yard pause`, then
 `yard daemon restart` or the host's service manager, then the edits the new
 configuration enables — a ticket unparked, a ticket moved to a workflow it now
-declares — then `yard resume`. The pause holds only what starts; lanes already
-working run on. Without it a ready ticket can be admitted into the gap around
-the restart and spend a whole attempt under the configuration you just
-replaced, because a lane's workflow, agent and brief are chosen when it is
-admitted and hold for the life of the attempt. README's "Restarting the
-daemon" is the same sequence in full.
+declares — then `yard resume`. The restart interrupts every lane that is
+working: the turn in flight is lost, the worktree is kept, and each lane wakes
+you with the item a crash would give it — `execution-interrupted`, whose
+continue exit picks the attempt back up. Without the pause a ready ticket can be
+admitted into the gap around the restart and spend a whole attempt under the
+configuration you just replaced, because a lane's workflow, agent and brief are
+chosen when it is admitted and hold for the life of the attempt. README's
+"Restarting the daemon" is the same sequence in full.
 
 If the read does not convince you, `yard lane reject ID -m "<what to change>"
 --expect-head <head>` returns the attempt to repair carrying your notes. The
