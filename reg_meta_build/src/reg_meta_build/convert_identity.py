@@ -7,10 +7,11 @@ A folded name does not establish that distinct spellings mean the same variable.
 Other rename clusters, shape splits and discriminator collisions need their existing
 decisions converted separately; no source identity is inferred from similar names.
 
-`convert_declared_partitions` is the production entry point: it loads any tracked
+`convert_declared_partitions` is the production entry point: it loads the tracked
 literal ownership for the family from the complete slug-entry set before
 converting, so a declaration like the Y-167 FDB 1.830 map takes effect in real
-builds instead of only in hand-plumbed calls.
+builds instead of only in hand-plumbed calls. A family with no tracked
+declaration raises; plain conversion lives only in `convert_column_partitions`.
 """
 
 from __future__ import annotations
@@ -250,25 +251,21 @@ def convert_declared_partitions(
     source_id: str,
     split_ids: tuple[str, ...],
 ) -> ColumnPartitionConversion:
-    """Convert one native family through any tracked literal column ownership.
+    """Convert one native family through its tracked literal column ownership.
 
     ``entries`` is the complete loaded slug-entry set (authored plus generated),
-    ``split_ids`` the accepted split keys from naming. When the family carries a
-    tracked ``columns`` declaration, it is fed as ``declared_columns`` with its
+    ``split_ids`` the accepted split keys from naming. The family's tracked
+    ``columns`` declaration is fed as ``declared_columns`` with its
     ``declaration_reference``; stale or new-intersecting evidence then fails
-    instead of converting half a family. Without a declaration this is exactly
-    ``convert_column_partitions`` without ownership, so families like the
-    accepted 1.828/1.537 partitions keep their automatic behavior. A tracked
-    declaration never invents splits: ``split_ids`` stays authoritative.
+    instead of converting half a family. A family with no tracked declaration
+    raises ``ValueError`` — a declared partition was asked for and none exists.
+    Plain conversion without ownership is only reachable through
+    ``convert_column_partitions``. A tracked declaration never invents splits:
+    ``split_ids`` stays authoritative.
     """
-    try:
-        ownership = declared_column_ownership(
-            entries, provider=provider, source_id=source_id
-        )
-    except ValueError:
-        return convert_column_partitions(
-            records, source_id=source_id, split_ids=split_ids
-        )
+    ownership = declared_column_ownership(
+        entries, provider=provider, source_id=source_id
+    )
     return convert_column_partitions(
         records,
         source_id=source_id,

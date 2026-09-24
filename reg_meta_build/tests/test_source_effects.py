@@ -1193,22 +1193,16 @@ def test_fdb_committed_declaration_converts_through_the_production_entry() -> No
     assert set(guard.expected_members) == {record_ref(record) for record in records}
 
 
-def test_fdb_two_spellings_stay_unresolved_without_a_declaration(
+def test_fdb_missing_declaration_raises_instead_of_plain_converting(
     tmp_path: Path,
 ) -> None:
-    # Both spellings fold to one discriminator, so no literal partition is
-    # unique: the accepted PGaturest partition survives while gaturest is
-    # withheld — the observed diagnostic-build failure. A declaration (above),
-    # not a case-folding rule, resolves it. Without one the production entry
-    # keeps the previous automatic behavior.
-    from reg_meta.fqid import derive_variable_slug
-
-    assert derive_variable_slug("GatuRest") == derive_variable_slug("Gaturest")
-    records = _fdb_family()
-    converted = _fdb_convert(records, tmp_path, body=_FDB_SLUGS_ONLY)
-    assert [b.source_id for b in converted.bindings] == ["1.830.pgaturest"]
-    assert converted.diagnostics[0].code == "split_identity_conversion_pending"
-    assert converted.diagnostics[0].withheld_output == ("1.830.gaturest",)
+    # Fail-fast, no fallback: asking for a declared partition when the family
+    # has no tracked `columns` declaration raises instead of silently
+    # converting without ownership (a relation-owned family lost its ownership
+    # map that way). Plain conversion stays reachable only through
+    # `convert_column_partitions`.
+    with pytest.raises(ValueError, match="no declared literal column ownership"):
+        _fdb_convert(_fdb_family(), tmp_path, body=_FDB_SLUGS_ONLY)
 
 
 def test_fdb_fourth_spelling_rejects_new_intersecting_evidence(
