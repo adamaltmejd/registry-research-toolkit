@@ -3,6 +3,10 @@ provider = "scb"
 slug = "rtb"
 native_id = "2"
 
+# SWECOV existing-register holdings for scb/rtb use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
+
 [[errata.column]]
 variant = "folkbokforda-personer"
 column = "Fodelseland"

@@ -504,16 +504,15 @@ class TestGenerator:
         assert {g.key for g in groups} == {"diag"}
 
     def test_accepted_family_reemitted_when_scope_passed(self) -> None:
-        # Idempotent regeneration: simulate an `[[accept]]`-ed auto family by
-        # materializing it as a `curated` concept group keyed on its own stem
-        # ('morsak') and claiming all three members. This reproduces a normal built
-        # DB AFTER the accept landed: every member is grouped AND the (register, key)
-        # names a group, so a naive rescan would drop the family twice over.
+        # Idempotent regeneration: simulate an accepted auto family by materializing
+        # it as a `curated` concept group keyed on its own stem ('morsak') and claiming
+        # all three members. Every member is grouped AND the (register, key) names a
+        # group, so a naive rescan would drop the family twice over.
         #
         # WITHOUT accepted_scopes the family is excluded (grouped members) — the bug.
         # WITH the family's (provider, register, key) in accepted_scopes it re-emits
         # as a candidate (members re-included, own key exempt from the collision
-        # guard), so the accept stays resolvable on the next build.
+        # guard), so the literal group can be regenerated without changing membership.
         conn = _base_db()
         _add_family(
             conn,
@@ -540,12 +539,12 @@ class TestGenerator:
             )
         conn.commit()
 
-        # Default (empty accepted_scopes): the materialized accept hides the family.
+        # Default (empty accepted_scopes): the materialized group hides the family.
         bare = infer_concept_group_candidates(conn)
         assert bare.candidates == []
         assert bare.skipped_existing_key == 0  # no ungrouped members → no family seen
 
-        # Accept-aware: the family re-emits, key-collision guard exempts its own key.
+        # With its group scope: the family re-emits, and its key is exempted.
         scope = frozenset({("scb", "lisa", "morsak")})
         aware = infer_concept_group_candidates(conn, accepted_scopes=scope)
         assert [c.key for c in aware.candidates] == ["morsak"]
@@ -557,15 +556,14 @@ class TestGenerator:
 
     def test_accepted_family_preserved_under_trim_collision(self) -> None:
         # Idempotent-regen + trim-collision interaction (Codex P2 #646): an
-        # `[[accept]]`-ed family `artal-person-1/2/3` (raw stem `artal-person-`,
+        # Materialized `[[group]]` family `artal-person-1/2/3` (raw stem `artal-person-`,
         # materialized as a curated group keyed on the trimmed `artal-person`) shares
         # its trimmed key with a SECOND independently-folding raw stem `artal-person4/5/6`
         # (raw stem `artal-person`) that appeared in a later build. The blanket
-        # trim-collision skip would drop the WHOLE bucket — including the accepted
-        # family — so the next build's `resolve_accept` would fail on the now-missing
-        # candidate. With the accepted scope passed, the accepted subgroup is preserved
-        # (re-emitted) and only the non-accepted peer is rejected; the collision is NOT
-        # counted (the accepted family survives, it is not a dropped collision).
+        # trim-collision skip would drop the WHOLE bucket — including the materialized
+        # family — so candidate regeneration could no longer reproduce its membership.
+        # With the group scope passed, that subgroup is preserved and only the peer is
+        # rejected; the collision is NOT counted.
         conn = _base_db()
         _add_family(
             conn,
@@ -583,7 +581,7 @@ class TestGenerator:
             name="Annat antal år personräkning",
             var_id_base=2710,
         )
-        # Materialize the accept: a curated group keyed on the trimmed `artal-person`
+        # Materialize the group keyed on the trimmed `artal-person`
         # claiming the THREE accepted members (the `artal-person-` family).
         cur = conn.execute(
             "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
@@ -602,23 +600,22 @@ class TestGenerator:
             )
         conn.commit()
 
-        # WITHOUT the accept scope: the accepted members are grouped → excluded, so
-        # only the peer `artal-person4/5/6` is ungrouped (no collision seen). It is
-        # then dropped anyway — its trimmed key `artal-person` collides with the
-        # materialized curated group's key. Either way the accepted family is missing.
+        # WITHOUT the group scope: its members are grouped → excluded, so only the peer
+        # `artal-person4/5/6` is ungrouped. Its trimmed key collides with the
+        # materialized group key, so the family is missing.
         bare = infer_concept_group_candidates(conn)
         assert bare.candidates == []
         assert bare.skipped_existing_key == 1
 
-        # WITH the accept scope: the accepted family is preserved and re-emitted; the
-        # non-accepted peer is rejected and NOT counted as a trim-collision.
+        # WITH the group scope: its family is preserved and re-emitted; the peer is
+        # rejected and NOT counted as a trim-collision.
         scope = frozenset({("scb", "lisa", "artal-person")})
         aware = infer_concept_group_candidates(conn, accepted_scopes=scope)
         assert aware.skipped_trim_collision == 0
         assert [c.key for c in aware.candidates] == ["artal-person"]
         c = aware.candidates[0]
         assert c.register_fqid == "scb/lisa"
-        # The re-emitted candidate is the accepted family (the `artal-person-` slugs),
+        # The re-emitted candidate is the materialized family (`artal-person-` slugs),
         # NOT the colliding peer.
         assert [m.slug for m in c.members] == [
             "artal-person-1",
@@ -627,20 +624,18 @@ class TestGenerator:
         ]
 
     def test_accepted_subgroup_degraded_peer_not_retargeted(self) -> None:
-        # Preserve-or-fail (#651): an `[[accept]]`-ed family whose accepted raw-stem
+        # Preserve-or-fail (#651): a materialized `[[group]]` family whose raw-stem
         # subgroup NO LONGER folds (its labels degraded to NULL after corpus drift)
         # shares its trimmed key with a DIFFERENT raw stem that DOES fold. Only ONE
-        # stem folds, so the old `len(fold_qual) > 1` accepted-preserve block was
-        # SKIPPED — the non-accepted peer was selected as the winner and, because the
-        # accepted key is collision-exempt, emitted UNDER the accepted scope, so the
-        # `[[accept]]` silently resolved to the WRONG variables. The fix selects the
-        # accepted subgroup as the sole winner regardless of `fold_qual` count; the
-        # degraded subgroup is then dropped by the emit path's NULL gate (the "fail"
-        # arm — `resolve_accept` fails loudly next build), and the folding peer is
-        # NEVER emitted under the accepted key.
+        # stem folds, so the old preserve block was SKIPPED — the peer was selected as
+        # winner and, because the materialized key is exempt, emitted UNDER that key
+        # with the WRONG variables. The fix selects the materialized subgroup as the
+        # sole winner regardless of `fold_qual` count; the degraded subgroup is then
+        # dropped by the emit path's NULL gate, and the folding peer is NEVER emitted
+        # under the materialized key.
         conn = _base_db()
-        # Accepted family `morsak-1/2/3` (raw stem `morsak-`), labels degraded to NULL
-        # so it no longer folds; its members are materialized as the accepted group.
+        # Materialized family `morsak-1/2/3` (raw stem `morsak-`), labels degraded to
+        # NULL so it no longer folds; its members are in the register group.
         for i, suffix in enumerate([1, 2, 3]):
             add_variable(
                 conn,
@@ -679,13 +674,13 @@ class TestGenerator:
 
         scope = frozenset({("scb", "lisa", "morsak")})
         result = infer_concept_group_candidates(conn, accepted_scopes=scope)
-        # The folding peer (`morsak4/5/6`) is NOT emitted under the accepted key — the
-        # accepted (degraded) subgroup is selected and dropped by the NULL gate, so the
-        # `morsak` key yields no candidate (preserve-or-fail). The peer is not a
-        # symmetric collision drop, so no trim-collision is counted.
+        # The folding peer (`morsak4/5/6`) is NOT emitted under the materialized key —
+        # the degraded subgroup is selected and dropped by the NULL gate, so `morsak`
+        # yields no candidate. The peer is not a symmetric collision drop, so no
+        # trim-collision is counted.
         assert result.skipped_trim_collision == 0
         assert [c.key for c in result.candidates] == []
-        # In particular the peer's slugs never surface under the accepted key.
+        # In particular the peer's slugs never surface under the materialized key.
         assert all(
             {m.slug for m in c.members}.isdisjoint({"morsak4", "morsak5", "morsak6"})
             for c in result.candidates
@@ -713,7 +708,7 @@ class TestGenerator:
             var_id_base=2810,
         )
         conn.commit()
-        # Accept a DIFFERENT scope — the colliding `artal-person` key is not accepted.
+        # Include a DIFFERENT group scope — `artal-person` is not materialized.
         scope = frozenset({("scb", "lisa", "morsak")})
         result = infer_concept_group_candidates(conn, accepted_scopes=scope)
         assert result.skipped_trim_collision == 1
@@ -749,7 +744,7 @@ class TestGenerator:
             )
         conn.commit()
 
-        # Accept a DIFFERENT, non-existent scope — the custom family stays excluded.
+        # Include a DIFFERENT, non-existent group scope — custom stays excluded.
         scope = frozenset({("scb", "lisa", "morsak")})
         result = infer_concept_group_candidates(conn, accepted_scopes=scope)
         assert result.candidates == []

@@ -3,6 +3,9 @@ provider = "scb"
 slug = "ureg"
 native_id = "24"
 
+# Y-113..Y-120 UREG was reviewed against the SWECOV inventory and SCB's
+# 2026-03-09 Registerinformation export; the review produced no UREG errata.
+
 [[enrichment.description]]
 register = "scb/ureg"
 variable = "kallkod"

@@ -41,6 +41,8 @@ if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 
+    from .curation_tree import RegisterCuration
+
 # A2.6: `register_version` is gone — the FQID grammar has no version segment;
 # version slugs are no longer curated or persisted, and the build-time
 # `register_version` table is dropped before ship.
@@ -603,7 +605,7 @@ def _is_split_base_pair(a: SlugEntry, b: SlugEntry) -> bool:
 
 
 @lru_cache(maxsize=8)
-def _register_files_for_curation_dir(path: str):
+def _register_files_for_curation_dir(path: str) -> tuple[RegisterCuration, ...]:
     """Read the immutable register tree once per resolved curation directory."""
     from .curation_tree import load_register_files
 
@@ -1137,7 +1139,7 @@ def declared_column_ownership(
     provider: str,
     source_id: str,
     curation_dir: Path | None = None,
-    register_files=None,
+    register_files: Iterable[RegisterCuration] | None = None,
 ) -> DeclaredColumnOwnership:
     """Read one family partition from ``curation/registers`` and validate its keys.
 

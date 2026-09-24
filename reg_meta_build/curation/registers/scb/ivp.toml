@@ -3,6 +3,10 @@ provider = "scb"
 slug = "ivp"
 native_id = "135"
 
+# SWECOV existing-register holdings for scb/ivp use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
+
 [[errata.column]]
 variant = "industrins-varuproduktion"
 column = "KvantText"

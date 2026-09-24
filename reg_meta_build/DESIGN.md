@@ -273,11 +273,10 @@ The target layout:
   sentinels, the label list behind the binding rule, and overrides.
 - Global files keep the cross-register curation: relations and `same_as`, tags, lineage,
   successions spanning registers, and slug freeze state.
-- Files generated from a built DB (`worklists/concept_groups.auto.toml`,
-  `worklists/delivery_enrichment.generated.toml`) are worklist output, not curation. The
-  concept-group generator reads the built DB and treats a matching literal register
-  `[[group]]` as an already accepted family; accepted families have one record, in their
-  register file.
+- `worklists/concept_groups.auto.toml` is generated from a built DB for the worklist
+  tool, not curation. Enrichment is register-scoped curation in each register file.
+  The concept-group generator treats a matching literal register `[[group]]` as an
+  already accepted family; accepted families have one record, in their register file.
 - SWECOV steward holdings belong to the steward layer, not to global SCB errata.
 
 The register tree is loaded once as strict Pydantic models. A register's provider, slug,

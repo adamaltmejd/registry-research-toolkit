@@ -3,6 +3,10 @@ provider = "scb"
 slug = "it-anvandning"
 native_id = "258"
 
+# scb/it-anvandning [[errata.delivered]] candidates were computed 2026-09-12
+# against SCB's raw Registerinformation export; folded duplicate columns
+# are merged with their version lists unioned.
+
 [[errata.delivered]]
 variant = "it-anvandning-i-foretag"
 column = "AWSVALPCT"
@@ -338,6 +342,10 @@ versions = ["2013", "2014", "2015", "2017", "2020"]
 upstream = "omitted-column-in-version"
 evidence = "SWECOV holds stratum in ITftg_Mikro_2015, ITftg_Mikro_2017, ITftg_Mikro_2020, ITftg_Stora_2013, ITftg_Stora_2014, ITftg_Stora_2015, ITftg_Stora_2017, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2013, 2014, 2015, 2017, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
 noted = "2026-09-12"
+
+# SWECOV existing-register holdings for scb/it-anvandning use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"

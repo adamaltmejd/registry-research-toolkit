@@ -1,4 +1,4 @@
-"""Concept-group input validation and offline accepted-candidate resolution.
+"""Concept-group input validation and literal register-group parsing.
 
 Common grouping and persistence are exercised by test_catalog_dependencies.py and
 test_resolved_metadata.py.
@@ -9,15 +9,11 @@ from __future__ import annotations
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.concept_groups import (
-    Accept,
     CodeLabelPair,
-    CuratedGroup,
     CuratedMember,
     load_classification_groups,
     load_code_label_pairs,
-    load_concept_group_accepts,
     load_worklist_concept_groups,
-    resolve_accept,
 )
 
 _SCB = frozenset({"scb"})
@@ -482,118 +478,6 @@ class TestLoader:
         assert exc.value.exit_code == EXIT_CONFIG
 
 
-class TestAcceptLoader:
-    @staticmethod
-    def _load(tmp_path, text: str):
-        path = tmp_path / "concept_groups.toml"
-        path.write_text(text, encoding="utf-8")
-        return load_concept_group_accepts(path)
-
-    def test_missing_file_is_empty(self, tmp_path) -> None:
-        assert load_concept_group_accepts(None) == ()
-        assert load_concept_group_accepts(tmp_path / "absent.toml") == ()
-
-    def test_parses_accept_with_overrides_and_exclude(self, tmp_path) -> None:
-        accepts = self._load(
-            tmp_path,
-            """
-            [[accept]]
-            register = "sos/dors"
-            key = "morsak"
-            label = "Multipel dödsorsak"
-            axis = "rank"
-            exclude = ["morsak9"]
-            """,
-        )
-        assert accepts == (
-            Accept("sos", "dors", "morsak", "Multipel dödsorsak", "rank", ("morsak9",)),
-        )
-
-    def test_parses_minimal_accept(self, tmp_path) -> None:
-        accepts = self._load(
-            tmp_path,
-            """
-            [[accept]]
-            register = "sos/dors"
-            key = "morsak"
-            """,
-        )
-        assert accepts == (Accept("sos", "dors", "morsak", None, None, ()),)
-
-    def test_unrelated_table_is_rejected(self, tmp_path) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            self._load(
-                tmp_path,
-                '[[accept]]\nregister = "sos/dors"\nkey = "morsak"\n'
-                '[[variable_group]]\nregister = "scb/lisa"\n',
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-
-    @pytest.mark.parametrize(
-        "text",
-        [
-            # 1-segment register
-            """
-            [[accept]]
-            register = "dors"
-            key = "morsak"
-            """,
-            # 3-segment register (too many)
-            """
-            [[accept]]
-            register = "sos/dors/morsak"
-            key = "morsak"
-            """,
-            # empty key
-            """
-            [[accept]]
-            register = "sos/dors"
-            key = ""
-            """,
-            # blank label (present but empty — drift, not a fallback)
-            """
-            [[accept]]
-            register = "sos/dors"
-            key = "morsak"
-            label = "  "
-            """,
-            # exclude with a non-string member
-            """
-            [[accept]]
-            register = "sos/dors"
-            key = "morsak"
-            exclude = ["ok", 7]
-            """,
-            # exclude not a list
-            """
-            [[accept]]
-            register = "sos/dors"
-            key = "morsak"
-            exclude = "morsak9"
-            """,
-        ],
-    )
-    def test_invalid_accept_shapes_fail(self, tmp_path, text: str) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            self._load(tmp_path, text)
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "concept_groups_invalid"
-
-    def test_duplicate_accept_fails(self, tmp_path) -> None:
-        text = """
-        [[accept]]
-        register = "sos/dors"
-        key = "morsak"
-        [[accept]]
-        register = "sos/dors"
-        key = "morsak"
-        axis = "rank"
-        """
-        with pytest.raises(RegMetaError) as exc:
-            self._load(tmp_path, text)
-        assert exc.value.code == "concept_groups_invalid"
-
-
 # ── code↔label pairs (#923) ─────────────────────────────────────────────────
 
 
@@ -709,67 +593,3 @@ class TestCodeLabelPairLoader:
             self._load(tmp_path, text)
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "code_label_pairs_invalid"
-
-
-@pytest.mark.parametrize("override", [False, True])
-def test_accepted_candidate_preserves_members_and_applies_overrides(override):
-    auto = CuratedGroup(
-        provider="scb",
-        register="lisa",
-        key="family",
-        label="Family",
-        axes=(("rank", "Rank"),),
-        members=tuple(
-            CuratedMember(
-                variable=f"v{i}",
-                delivery_column=None,
-                coords=(("rank", str(i), str(i)),),
-            )
-            for i in range(3)
-        ),
-    )
-    accept = Accept(
-        "scb",
-        "lisa",
-        "family",
-        "Override" if override else None,
-        "part" if override else None,
-        ("v2",),
-    )
-    result = resolve_accept(accept, {("scb", "lisa", "family"): auto})
-    assert result.label == ("Override" if override else "Family")
-    axis = "part" if override else "rank"
-    assert result.axes == ((axis, axis),)
-    assert tuple(m.variable for m in result.members) == ("v0", "v1")
-    assert tuple(m.coords for m in result.members) == (
-        ((axis, "0", "0"),),
-        ((axis, "1", "1"),),
-    )
-    assert result.origin == "accept"
-
-
-@pytest.mark.parametrize("failure", ["missing", "stale_exclude", "too_few"])
-def test_accepted_candidate_refuses_drift(failure):
-    auto = CuratedGroup(
-        provider="scb",
-        register="lisa",
-        key="family",
-        label="Family",
-        axes=(("rank", "Rank"),),
-        members=tuple(
-            CuratedMember(
-                variable=f"v{i}",
-                delivery_column=None,
-                coords=(("rank", str(i), str(i)),),
-            )
-            for i in range(2)
-        ),
-    )
-    exclude = {"missing": (), "stale_exclude": ("absent",), "too_few": ("v0",)}[failure]
-    accept = Accept("scb", "lisa", "family", None, None, exclude)
-    with pytest.raises(RegMetaError) as exc:
-        resolve_accept(
-            accept, {} if failure == "missing" else {("scb", "lisa", "family"): auto}
-        )
-    assert exc.value.code == "concept_groups_unresolved"
-    assert exc.value.exit_code == EXIT_CONFIG

@@ -63,7 +63,7 @@ Reading rules, each deliberate:
 * An omitted row names the `Registerversionnamn` the catalog carries VERBATIM
   (`register_version`, matched to a held edition through `edition_claims` — the
   coalescer's own parse of an SCB edition name), because that is the coordinate
-`curation/registers/scb/<slug>.toml` is authored in. A held edition no documented version covers
+  `curation/registers/scb/<slug>.toml` is authored in. A held edition no documented version covers
   needs a `[[errata.version]]` minted first, named with its period token; the
   `[[errata.delivered]]` then lists that token beside the real names. At this suggestion
   boundary only, an undocumented `LA2020` is spelled in SCB's native form

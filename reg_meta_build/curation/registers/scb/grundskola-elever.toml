@@ -3,6 +3,10 @@ provider = "scb"
 slug = "grundskola-elever"
 native_id = "193"
 
+# SWECOV existing-register holdings for scb/grundskola-elever use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
+
 [[errata.column]]
 variant = "individregister"
 column = "Ar"

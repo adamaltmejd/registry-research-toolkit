@@ -7,6 +7,10 @@ native_id = "257"
 # 15662 across five alias-less CVIDs in 2002–2012, so pooled holdings cannot
 # identify which competing column belongs to any target instance.
 
+# scb/innovation-foretag [[errata.delivered]] candidates were computed 2026-09-12
+# against SCB's raw Registerinformation export; folded duplicate columns
+# are merged with their version lists unioned.
+
 [[errata.delivered]]
 variant = "_default"
 column = "AGKAT"
@@ -358,6 +362,10 @@ versions = ["2004 - 2006", "2006 - 2008", "2008 - 2010", "2010 - 2012", "2012 - 
 upstream = "omitted-column-in-version"
 evidence = "SWECOV holds WEIGHT in CIS2006, CIS2008, CIS2010, CIS2012, CIS2014 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2006 - 2008, 2008 - 2010, 2010 - 2012, 2012 - 2014 without a row for this column; its named rows are in 2022 - 2024."
 noted = "2026-09-12"
+
+# SWECOV existing-register holdings for scb/innovation-foretag use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
 variant = "_default"
@@ -6589,6 +6597,9 @@ holdings_period = "2002-2020"
 source = "steward-holdings"
 evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
+
+# Delivery-column aliases (#365 PR1c) for scb/innovation-foretag: this file carries
+# 10 of the 45 SWECOV headers mapped to existing SCB variables.
 
 [[enrichment.alias]]
 register = "scb/innovation-foretag"

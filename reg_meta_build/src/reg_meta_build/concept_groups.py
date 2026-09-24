@@ -2,8 +2,8 @@
 
 The build consumes literal register groups, checked sibling components and guarded
 month families. Classification vintages form succession edges; curated classification
-umbrellas remain separate declarations. Candidate and accept resolvers are worklist
-utilities only; accepted build curation is already materialized as literal groups.
+umbrellas remain separate declarations. Candidate grouping is a worklist utility;
+accepted build curation is already materialized as literal groups.
 """
 
 from __future__ import annotations
@@ -44,8 +44,7 @@ def _register_files(path: Path | None):
 # uses only these), excluding the `.`/`..` dot-segments. NOT `is_slug`: keys are
 # intentionally not slug-validated, and the candidate generator emits valid
 # trailing-hyphen keys (e.g. `artal-person-`) that `is_slug` would reject — yet
-# they are path-safe, so over-rejecting them would break the `[[accept]]`
-# by-reference workflow (an accepted key can't be replaced).
+# they are path-safe and must round-trip as the literal key in register curation.
 _PATH_SAFE_KEY_RE = re.compile(r"[a-z0-9._~-]+")
 
 
@@ -138,15 +137,10 @@ class CuratedMember:
 
 @dataclass(frozen=True)
 class CuratedGroup:
-    """One curated family common resolution applies. `axes` is the group's ordered
+    """One literal register group consumed by common resolution. `axes` are its ordered
     named facet axes as `(axis, axis_label)` pairs (ordinal = index); a single-axis
     family carries one, an axis-less umbrella carries zero, and a multi-axis
-    family (the iot disposable-income group) N.
-    `origin` records how it was authored so `_apply_curated_groups` can tailor its
-    EXIT_CONFIG remediations: a hand-authored `[[variable_group]]` (the default)
-    points the maintainer at `curation/registers/<provider>/<slug>.toml`; an `[[accept]]`-resolved family
-    (`resolve_accept` sets `origin="accept"`) identifies a family resolved by the
-    worklist utility from its generated candidate, rather than a hand-picked key."""
+    family (the iot disposable-income group) carries several."""
 
     provider: str
     register: str
@@ -154,24 +148,6 @@ class CuratedGroup:
     label: str
     axes: tuple[tuple[str, str], ...]
     members: tuple[CuratedMember, ...]
-    origin: Literal["variable_group", "accept"] = "variable_group"
-
-
-@dataclass(frozen=True)
-class Accept:
-    """One `[[accept]]` entry for the worklist utility (#496): an OPT-IN to
-    fold an auto family from `worklists/concept_groups.auto.toml` BY REFERENCE. The
-    `(provider, register, key)` locates the auto family; `label`/`axis` override
-    the auto family's when set; `exclude` drops member slugs (a stem that picked
-    up an unrelated column). Resolved to a `CuratedGroup` during offline conversion
-    (`resolve_accept`) against the loaded auto families."""
-
-    provider: str
-    register: str
-    key: str
-    label: str | None
-    axis: str | None
-    exclude: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -599,151 +575,6 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
                 )
             )
     return tuple(out)
-
-
-def _require_opt_str(entry: dict, field: str, context: str) -> str | None:
-    """Optional non-empty string: None when absent, else `require_str`'s
-    stripped value (a present-but-blank `label`/`axis` is curation drift, not a
-    silent fallback to the auto family's value)."""
-    if entry.get(field) is None:
-        return None
-    return _require_str(entry, field, context)
-
-
-def load_concept_group_accepts(path: Path | None) -> tuple[Accept, ...]:
-    """Parse worklist-tool `[[accept]]` entries (#496), which fold auto families
-    from `worklists/concept_groups.auto.toml` by reference. The normal build does
-    not read accepts; it consumes the materialized register `[[group]]` entries.
-    Empty when no file or no `[[accept]]` tables.
-
-    Load-time validation (all EXIT_CONFIG, actionable): `register` is a
-    2-segment `provider/register` FQID; `key` non-empty; `label`/`axis` optional
-    but non-empty strings if present; `exclude` optional list of non-empty
-    strings; `(provider, register, key)` unique (a duplicate accept is drift).
-    Resolution against the auto families (does the family exist?) is a worklist
-    operation (`resolve_accept`)."""
-    entries = load_curation_entries(
-        path,
-        entry_key="accept",
-        label="concept-group",
-        prefix="concept_groups",
-        code_base="concept_groups",
-        file_name=str(path) if path is not None else "concept-group worklist TOML",
-        entry_fields="register / key (+ optional label / axis / exclude)",
-        sibling_keys=frozenset(),
-    )
-    out: list[Accept] = []
-    seen_keys: set[tuple[str, str, str]] = set()
-    for entry in entries:
-        register_fqid = _require_str(entry, "register", "[[accept]]")
-        parts = register_fqid.split("/")
-        if len(parts) != 2 or not all(parts):
-            raise curation_error(
-                "concept_groups_invalid",
-                f"concept_groups accept register {register_fqid!r} must be a "
-                "2-segment `provider/register` FQID.",
-                'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
-            )
-        key = _require_str(entry, "key", "[[accept]]")
-        scope_key = (parts[0], parts[1], key)
-        if scope_key in seen_keys:
-            raise curation_error(
-                "concept_groups_invalid",
-                f"concept_groups duplicate accept key {key!r} under {register_fqid}.",
-                "Accept each auto family once per register.",
-            )
-        seen_keys.add(scope_key)
-        label = _require_opt_str(entry, "label", f"accept {key!r}")
-        axis = _require_opt_str(entry, "axis", f"accept {key!r}")
-        raw_exclude = entry.get("exclude", [])
-        if not isinstance(raw_exclude, list) or not all(
-            isinstance(e, str) and e.strip() for e in raw_exclude
-        ):
-            raise curation_error(
-                "concept_groups_invalid",
-                f"concept_groups accept {key!r} `exclude` must be a list of "
-                f"non-empty strings, got {raw_exclude!r}.",
-                'Give `exclude = ["<slug>", …]` or omit it.',
-            )
-        out.append(
-            Accept(
-                provider=parts[0],
-                register=parts[1],
-                key=key,
-                label=label,
-                axis=axis,
-                exclude=tuple(e.strip() for e in raw_exclude),
-            )
-        )
-    return tuple(out)
-
-
-def resolve_accept(
-    accept: Accept, auto_by_scope: dict[tuple[str, str, str], CuratedGroup]
-) -> CuratedGroup:
-    """Resolve an `[[accept]]` against the loaded auto families → a
-    `CuratedGroup` for the worklist tool. The auto family must
-    exist; `label`/`axis` fall through to the auto family's when the accept
-    leaves them unset; `exclude` drops members (every excluded slug must be a
-    real member, else it's a stale exclude); >= 2 members must remain. Every
-    failure is EXIT_CONFIG with actionable remediation — accept-list drift is
-    fixed, not silently dropped."""
-    scope = (accept.provider, accept.register, accept.key)
-    auto = auto_by_scope.get(scope)
-    if auto is None:
-        raise curation_error(
-            "concept_groups_unresolved",
-            f"concept_groups accept {accept.key!r} ({accept.provider}/"
-            f"{accept.register}) references an auto family not in "
-            "worklists/concept_groups.auto.toml.",
-            "Regenerate worklists/concept_groups.auto.toml with `reg-meta-build "
-            "concept-group-candidates`, or fix the accept's register/key.",
-        )
-    if accept.exclude:
-        member_slugs = {m.variable for m in auto.members}
-        stale = [slug for slug in accept.exclude if slug not in member_slugs]
-        if stale:
-            raise curation_error(
-                "concept_groups_unresolved",
-                f"concept_groups accept {accept.key!r} excludes slug(s) {stale} "
-                "that are not members of the auto family.",
-                "Drop the stale `exclude` slug(s) or regenerate "
-                "worklists/concept_groups.auto.toml.",
-            )
-    members = tuple(m for m in auto.members if m.variable not in accept.exclude)
-    if len(members) < 2:
-        raise curation_error(
-            "concept_groups_unresolved",
-            f"concept_groups accept {accept.key!r} resolves to {len(members)} "
-            "member(s) after `exclude`; a group needs >= 2.",
-            "Exclude fewer members, or remove the accept entirely.",
-        )
-    # An auto family is always single-axis (the candidate generator emits the
-    # legacy single-axis shape), so it carries exactly one axis pair and each member
-    # one coord on it. An `axis` override renames that axis on the group AND on every
-    # member coord, keeping the group/coord axis names in sync (the validator
-    # requires each coord's axis to be a declared group axis). Legacy single-axis
-    # label == axis name, so the override sets both.
-    (auto_axis, _auto_axis_label) = auto.axes[0]
-    new_axis = accept.axis or auto_axis
-    return CuratedGroup(
-        provider=auto.provider,
-        register=auto.register,
-        key=auto.key,
-        label=accept.label or auto.label,
-        axes=_single_axis(new_axis),
-        members=tuple(
-            CuratedMember(
-                variable=m.variable,
-                delivery_column=m.delivery_column,
-                coords=tuple(
-                    (new_axis, value, label) for _axis, value, label in m.coords
-                ),
-            )
-            for m in members
-        ),
-        origin="accept",
-    )
 
 
 def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, ...]:

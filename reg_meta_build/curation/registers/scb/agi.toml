@@ -323,7 +323,7 @@ upstream = "omitted-column-in-version"
 evidence = "SWECOV holds VISSA_AVDRAG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
-# ══ SWECOV steward holdings (Y-116, was variable_grafts.toml) ═══════════════════
+# ══ Shared SWECOV steward-holdings conventions (Y-116) ═════════════════════════
 # Columns a SWECOV delivery holds on an existing (register, variant) that SCB's
 # machine metadata never documents. GENERATED from maintainer-local review
 # artifacts under input_data/swecov/derived/ — `build_catalog.py grafts` for the
@@ -339,6 +339,10 @@ noted = "2026-09-12"
 # carry no `data_type`; the survey delivery lists document most residual wave items
 # by code only, so `name`/`definition` repeat the orderable code until richer public
 # labels exist. `noted` is the date variable_grafts.toml recorded the omission.
+
+# SWECOV existing-register holdings for scb/agi use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
 variant = "individuppgifter-agi"
@@ -470,11 +474,9 @@ source = "steward-holdings"
 evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
-# Y-113..Y-120 version-gap investigation: SWECOV holdings on scb/agi, scb/gdb,
-# scb/ureg and scb/hreg. Each entry's `evidence` records the holdings fact
-# established from reg_webapp/stewards/swecov/inventory.toml and SCB's
-# Registerinformation.csv (2026-03-09 export). Coalescer-defect misses (HREG
-# sokande KursOrt/ProgOrt/YProg) are excluded; see report.md.
+# Y-113..Y-120 AGI evidence comes from the SWECOV inventory and SCB's
+# 2026-03-09 Registerinformation export; the local section below records the
+# AGI holdings and clone source for each declaration.
 
 # ── scb/agi — SCB documents AGI as two annual stream versions per year
 # ("<year>, löne- och förmånsutbetalningar" / "<year>, sociala ersättningar")
@@ -627,6 +629,9 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 # The apply pass attaches each to every register_variant where the variable has
 # a state; INSERT OR IGNORE so an already-known column is a no-op.
 # 45 aliases across 5 registers.
+
+# Delivery-column aliases (#365 PR1c) for scb/agi: this file carries
+# 2 of the 45 SWECOV headers mapped to existing SCB variables.
 
 [[enrichment.alias]]
 register = "scb/agi"

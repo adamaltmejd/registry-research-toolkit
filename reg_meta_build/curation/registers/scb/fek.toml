@@ -3,6 +3,10 @@ provider = "scb"
 slug = "fek"
 native_id = "168"
 
+# SWECOV existing-register holdings for scb/fek use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
+
 [[errata.column]]
 variant = "fek-slutdata"
 column = "AretsResultat"
@@ -264,6 +268,9 @@ register = "scb/fek"
 variable = "sektortillhorighet"
 description = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form."
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+# Delivery-column aliases (#365 PR1c) for scb/fek: this file carries
+# 27 of the 45 SWECOV headers mapped to existing SCB variables.
 
 [[enrichment.alias]]
 register = "scb/fek"

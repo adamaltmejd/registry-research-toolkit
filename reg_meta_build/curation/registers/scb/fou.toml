@@ -3,9 +3,9 @@ provider = "scb"
 slug = "fou"
 native_id = "182"
 
-# Survey-register [[delivered]] candidates (fou / it-anvandning / innovation-foretag),
-# computed 2026-09-12 against SCB's raw Registerinformation export; duplicates by
-# folded column merged (versions unioned).
+# scb/fou [[errata.delivered]] candidates were computed 2026-09-12 against
+# SCB's raw Registerinformation export; folded duplicate columns are merged
+# with their version lists unioned.
 
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -654,6 +654,10 @@ versions = ["2015", "2017"]
 upstream = "omitted-column-in-version"
 evidence = "SWECOV holds v1256 in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
+
+# SWECOV existing-register holdings for scb/fou use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
 variant = "foretagssektorn"
@@ -10574,6 +10578,9 @@ holdings_period = "1997-2021"
 source = "steward-holdings"
 evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
+
+# Delivery-column aliases (#365 PR1c) for scb/fou: this file carries
+# 4 of the 45 SWECOV headers mapped to existing SCB variables.
 
 [[enrichment.alias]]
 register = "scb/fou"

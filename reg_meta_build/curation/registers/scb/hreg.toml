@@ -3,11 +3,9 @@ provider = "scb"
 slug = "hreg"
 native_id = "47"
 
-# ── scb/ureg — personens-hogsta-utbildning-16-74 is documented 1997..2007 and
-# carries the SUN2000 columns only from the 2000 version; SWECOV's UREG1997,
-# UREG1998 and UREG1999 tables hold them (with the [[assign]] in
-# proposed_overlay.toml routing UREG1997..UREG2007 to this variant). Clone
-# source: 2000 (regver 1213), one row per column.
+# Y-113..Y-120 HREG evidence comes from the SWECOV inventory and SCB's
+# 2026-03-09 Registerinformation export. KursOrt, ProgOrt and YProg are excluded:
+# those apparent misses are coalescer defects, not holdings corrections (see report.md).
 
 # ── scb/hreg — sokande-grund-avancerad. SCB's export documents Kurskod, LInr
 # and LProg ONLY in the four Höstterminen 2005..2008 versions (no Vårterminen
@@ -64,6 +62,10 @@ versions = ["Vårterminen 2015", "Höstterminen 2015"]
 upstream = "omitted-column-in-version"
 evidence = "SWECOV holds PersonNr in Hreg_Sok_2015_2022 (edition 2015..2021); SCB's Registerinformation export documents the Vårterminen 2015 and Höstterminen 2015 versions of sokande-grund-avancerad without a PersonNr column and carries it from Vårterminen 2016 onwards."
 noted = "2026-09-12"
+
+# SWECOV existing-register holdings for scb/hreg use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
 variant = "grundutbildning-1993"

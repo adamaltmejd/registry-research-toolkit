@@ -31,7 +31,10 @@ from .fqid_slugs import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
+
+    from .curation_tree import RegisterCuration
 
 _FILE_NAME = "curation/registers/scb/<slug>.toml"
 _CODE = "scb_errata_invalid"
@@ -177,6 +180,16 @@ class ScbErrata:
         return bool(self.versions or self.delivered or self.columns)
 
 
+@dataclass(frozen=True)
+class _CurationEntry:
+    """One typed register-table value with its source coordinate."""
+
+    values: dict[str, object]
+    register_fqid: str
+    source_file: str
+    index: int
+
+
 def _scb_slug_ids(slug_dir: Path | None) -> tuple[dict[str, int], dict[str, int]]:
     """`({register_slug: register_id}, {"<register_slug>/<variant_slug>":
     register_variant_id})` from the curated `scb.toml`.
@@ -212,21 +225,22 @@ def _scb_slug_ids(slug_dir: Path | None) -> tuple[dict[str, int], dict[str, int]
     return registers, variants
 
 
-def _entries(path: Path | None, kind: str, registers=None) -> list[dict]:
+def _entries(kind: str, registers: Sequence[RegisterCuration]) -> list[_CurationEntry]:
     """One entry kind flattened from the sorted register files."""
-    if path is None:
-        return []
-    entries: list[dict] = []
-    for register in registers if registers is not None else load_register_files(path):
+    entries: list[_CurationEntry] = []
+    for register in registers:
         register_fqid = (
             f"{register.register_info.provider}/{register.register_info.slug}"
         )
         for index, entry in enumerate(getattr(register.errata, kind), start=1):
-            raw = entry.model_dump(mode="python", exclude_none=True)
-            raw["_curation_register"] = register_fqid
-            raw["_curation_file"] = register.source_file
-            raw["_curation_index"] = index
-            entries.append(raw)
+            entries.append(
+                _CurationEntry(
+                    values=entry.model_dump(mode="python", exclude_none=True),
+                    register_fqid=register_fqid,
+                    source_file=register.source_file,
+                    index=index,
+                )
+            )
     return entries
 
 
@@ -285,28 +299,19 @@ def scoped_state_provenance(
 
 
 def _resolve_variant(
-    entry: dict,
+    entry: _CurationEntry,
     table: str,
     registers: dict[str, int],
     variants: dict[str, int],
 ) -> tuple[int, int, str]:
     """`(register_id, register_variant_id, "<register_fqid>/<variant>")` for an
     entry's register-file coordinate and `variant`."""
-    register_fqid = entry["_curation_register"]
-    file = entry["_curation_file"]
-    index = entry["_curation_index"]
-    parts = register_fqid.split("/")
-    if len(parts) != 2 or not all(parts):
-        raise curation_error(
-            _CODE,
-            f"{file} [[errata.{table}]] entry {index}: register "
-            f"{register_fqid!r} must be a 2-segment "
-            "`provider/register` FQID.",
-            'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
-        )
-    provider, register = parts
-    context = f"{file} [[errata.{table}]] entry {index} ({register_fqid})"
-    variant = _require_str(entry, "variant", context)
+    provider, register = entry.register_fqid.split("/")
+    context = (
+        f"{entry.source_file} [[errata.{table}]] entry {entry.index} "
+        f"({entry.register_fqid})"
+    )
+    variant = _require_str(entry.values, "variant", context)
     context = f"{context}/{variant}"
     if provider != _PROVIDER:
         raise curation_error(
@@ -357,9 +362,9 @@ def load_scb_errata(
     column key: a column is one kind of omission or the other, never both.
     """
     registers_curation = load_register_files(path) if path is not None else ()
-    version_entries = _entries(path, "version", registers_curation)
-    delivered_entries = _entries(path, "delivered", registers_curation)
-    column_entries = _entries(path, "column", registers_curation)
+    version_entries = _entries("version", registers_curation)
+    delivered_entries = _entries("delivered", registers_curation)
+    column_entries = _entries("column", registers_curation)
     if not version_entries and not delivered_entries and not column_entries:
         # Before touching the slug dir: resolving FQIDs parses the whole
         # curated scb.toml (~20k entries), and the common case — no file, or a
@@ -370,10 +375,10 @@ def load_scb_errata(
     versions: list[ErrataVersion] = []
     seen_versions: set[tuple[int, str]] = set()
     for entry in version_entries:
-        context = f"{entry['_curation_file']} [[errata.version]] entry {entry['_curation_index']}"
         _, variant_id, context = _resolve_variant(entry, "version", registers, variants)
-        name = _require_str(entry, "name", context)
-        _require_evidence(entry, f"{context}/{name}")
+        values = entry.values
+        name = _require_str(values, "name", context)
+        _require_evidence(values, f"{context}/{name}")
         if not _edition_years(name):
             raise curation_error(
                 "scb_errata_version_year_unknown",
@@ -396,13 +401,14 @@ def load_scb_errata(
         register_id, variant_id, context = _resolve_variant(
             entry, "delivered", registers, variants
         )
-        column = _require_str(entry, "column", context)
+        values = entry.values
+        column = _require_str(values, "column", context)
         ctx = f"{context}/{column}"
-        evidence = _require_evidence(entry, ctx)
-        named = _named_versions(entry, ctx)
+        evidence = _require_evidence(values, ctx)
+        named = _named_versions(values, ctx)
         upstream = (
-            _require_str(entry, "upstream", ctx)
-            if "upstream" in entry
+            _require_str(values, "upstream", ctx)
+            if "upstream" in values
             else _DEFAULT_DELIVERED_CLASS
         )
         key = (variant_id, fold_column(column))
@@ -435,12 +441,13 @@ def load_scb_errata(
         register_id, variant_id, context = _resolve_variant(
             entry, "column", registers, variants
         )
-        column = _require_str(entry, "column", context)
+        values = entry.values
+        column = _require_str(values, "column", context)
         ctx = f"{context}/{column}"
-        source = _column_source(entry, ctx)
-        evidence = _require_evidence(entry, ctx)
-        placement = _column_placement(entry, ctx)
-        classification = _column_classification(entry, ctx)
+        source = _column_source(values, ctx)
+        evidence = _require_evidence(values, ctx)
+        placement = _column_placement(values, ctx)
+        classification = _column_classification(values, ctx)
         if classification is not None:
             if declared_classifications is None:
                 declared_classifications = declared_short_names()
@@ -456,12 +463,12 @@ def load_scb_errata(
             register_id=register_id,
             register_variant_id=variant_id,
             column=column,
-            name=_require_str(entry, "name", ctx),
-            definition=_require_str(entry, "definition", ctx),
-            data_type=_column_data_type(entry, ctx),
+            name=_require_str(values, "name", ctx),
+            definition=_require_str(values, "definition", ctx),
+            data_type=_column_data_type(values, ctx),
             classification=classification,
-            is_identifier=_require_bool(entry, "is_identifier", ctx),
-            is_sensitive=_require_bool(entry, "is_sensitive", ctx),
+            is_identifier=_require_bool(values, "is_identifier", ctx),
+            is_sensitive=_require_bool(values, "is_sensitive", ctx),
             versions=placement[0],
             holdings_period=placement[1],
             source=source,

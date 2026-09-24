@@ -10,6 +10,10 @@ versions = ["2020"]
 evidence = "SWECOV_variables_full_2026-06-15.csv row208 AKU_2020 contains exact IVECK; raw SCB VarId6631 documents Veckonummer för intervju under året / Kalendervecka through2019."
 noted = "2026-09-13"
 
+# SWECOV existing-register holdings for scb/aku use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
+
 [[errata.column]]
 variant = "aku-april-2005-dec-2020"
 column = "HsArbHemmaAntV"

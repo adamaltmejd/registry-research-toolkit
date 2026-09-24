@@ -3,6 +3,10 @@ provider = "scb"
 slug = "gymnasieskola-betyg"
 native_id = "102"
 
+# SWECOV existing-register holdings for scb/gymnasieskola-betyg use pooled dataset-grain
+# `holdings_period` ranges; each entry preserves its delivery source in
+# `evidence`, and holdings lists do not supply a source data type.
+
 [[errata.column]]
 variant = "slutbetyg"
 column = "AvgAr"
@@ -34,6 +38,9 @@ register = "scb/gymnasieskola-betyg"
 variable = "utokad"
 description = "Kursen är en s.k. utökad kurs."
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+# Delivery-column aliases (#365 PR1c) for scb/gymnasieskola-betyg: this file carries
+# 2 of the 45 SWECOV headers mapped to existing SCB variables.
 
 [[enrichment.alias]]
 register = "scb/gymnasieskola-betyg"
