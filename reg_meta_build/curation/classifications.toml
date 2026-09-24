@@ -76,6 +76,12 @@ vardemangdsversion = [
   "SUN 1996, 5 positioner, brutto",
 ]
 valid_codes_file = "sun1996.csv"
+sentinel_codes = [
+  { code = "*****", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00000", meaning = "Uppgift saknas" },
+  { code = "***", meaning = "Uppgift saknas" },
+]
 
 # SUN2000 has three orthogonal dimensions, each with its own code space:
 #   - Utbildningsnivå       → 3-digit numeric education level
@@ -101,6 +107,21 @@ valid_from = 2000
 valid_to = 2019
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
 valid_codes_file = "sun2000-niva.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9", meaning = "Uppgift saknas" },
+  { code = "NULL", meaning = "Uppgift om föräldern saknas" },
+  { code = "*", meaning = "Uppgift saknas" },
+  { code = "[BLANK]", meaning = "Uppgift saknas" },
+  { code = "M", meaning = "Uppgift saknas" },
+  { code = "99", meaning = "Uppgift saknas" },
+  { code = "88", meaning = "Vet ej" },
+  { code = "888", meaning = "Vet ej" },
+  { code = "988", meaning = "Vet ej" },
+  { code = "***", meaning = "Uppgift saknas" },
+  { code = "400", meaning = "Uppgift okänd" },
+  { code = "405", meaning = "Uppgift okänd" },
+]
 vardemangdsversion = [
   "SUN 2000 - Utbildningsnivå",
   "Utbildningsnivå (SUN 2000)  ",
@@ -116,6 +137,13 @@ valid_from = 2000
 valid_to = 2019
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
 valid_codes_file = "sun2000-inriktning.csv"
+sentinel_codes = [
+  { code = "*", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9", meaning = "Okänd" },
+  { code = "[BLANK]", meaning = "Uppgift saknas" },
+  { code = "****", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   "SUN 2000 - Utbildningsinriktning",
   "SUN2000Inriktning",
@@ -131,6 +159,9 @@ valid_to = 2019
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
 description = "Standardized education groups (3-character alphanumeric codes like 01Z, 15B, 35J)."
 valid_codes_file = "sun2000-grupp.csv"
+sentinel_codes = [
+  { code = "***", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   "SUN 2000 - Gruppering",
 ]
@@ -143,6 +174,14 @@ publisher = "SCB"
 valid_from = 2020
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
 valid_codes_file = "sun2020-niva.csv"
+sentinel_codes = [
+  { code = "999", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "88", meaning = "Vet ej" },
+  { code = "99", meaning = "Vill ej svara" },
+  { code = "400", meaning = "Uppgift okänd" },
+  { code = "405", meaning = "Uppgift okänd" },
+]
 vardemangdsversion = [
   "SUN 2020 - Utbildningsnivå",
 ]
@@ -169,6 +208,14 @@ publisher = "SCB"
 valid_from = 2000
 description = "Single-digit grouping of education level into 7 categories: 1=Förgymnasial <9 år, 2=Förgymnasial 9 år, 3=Gymnasial ≤2 år, 4=Gymnasial 3 år, 5=Eftergymnasial <3 år, 6=Eftergymnasial ≥3 år (exkl. forskarutbildning), 7=Forskarutbildning. Used as a coarse education-level grouping across many SCB registers (LISA, RAMS, STATIV, ...). Stable across SUN 2000 and SUN 2020."
 valid_codes_file = "niva-old.csv"
+sentinel_codes = [
+  { code = "*", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9", meaning = "Uppgift saknas" },
+  { code = "NULL", meaning = "Ej träff i källan" },
+  { code = "0", meaning = "Uppgift saknas" },
+  { code = "-", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   "SUN 2000 NivaOld",
   "SUN 2020 NivaOld",
@@ -182,6 +229,9 @@ publisher = "SCB"
 valid_from = 2000
 description = "Single-letter coarse grouping of education level: F=Förgymnasial, G=Gymnasial, K=Eftergymnasial <3 år, L=Eftergymnasial ≥3 år, U=Okänd. Used across SCB survey/election registers (PSU, ULF, valdeltagande, ...). Stable across SUN 2000 and SUN 2020."
 valid_codes_file = "niva-grov.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   "SUN 2000 NivåGrov",
   "SUN 2020 NivåGrov",
@@ -195,6 +245,11 @@ publisher = "SCB"
 valid_from = 2020
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
 valid_codes_file = "sun2020-inriktning.csv"
+sentinel_codes = [
+  { code = "*", meaning = "Okänd" },
+  { code = "NULL", meaning = "Ej träff i källan" },
+  { code = "000", meaning = "Ej aktuellt" },
+]
 vardemangdsversion = [
   "SUN 2020 - Utbildningsinriktning",
 ]
@@ -208,6 +263,9 @@ valid_from = 2020
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
 description = "Standardized education groups, including the more detailed 'Gruppering - Detaljerad' variant."
 valid_codes_file = "sun2020-grupp.csv"
+sentinel_codes = [
+  { code = "99Z", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   "SUN 2020 - Gruppering",
   "SUN 2020 - Gruppering - Detaljerad",
@@ -226,6 +284,41 @@ valid_from = 1996
 valid_to = 2013
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
 valid_codes_file = "ssyk96.csv"
+sentinel_codes = [
+  { code = "9999", meaning = "Partiellt bortfall" },
+  { code = "999", meaning = "Partiellt bortfall" },
+  { code = "99", meaning = "Uppgift saknas" },
+  { code = "****", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "XXXX", meaning = "Partiellt bortfall" },
+  { code = "XX", meaning = "Partiellt bortfall" },
+  { code = "***", meaning = "Uppgift saknas" },
+  { code = "xxx", meaning = "Partiellt bortfall" },
+  { code = "0000", meaning = "Okänt" },
+  { code = "5220", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8888", meaning = "Vet ej" },
+  { code = "88", meaning = "Vet ej" },
+  { code = "888", meaning = "Vet ej" },
+  { code = "7210", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "2410", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "2420", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8120", meaning = "Bortfall på fyrsiffernivå" },
+  { code = ".", meaning = "Uppgift saknas" },
+  { code = "2140", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "3110", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8260", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "000", meaning = "Ej förvärvsarbetande" },
+  { code = "041", meaning = "Bortfall på tresiffernivå" },
+  { code = "0413", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "2490", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "7230", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8280", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "[BLANK]", meaning = "Uppgift saknas" },
+  { code = "4210", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "7340", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8140", meaning = "Bortfall på fyrsiffernivå" },
+  { code = "8250", meaning = "Bortfall på fyrsiffernivå" },
+]
 vardemangdsversion = [
   "Standard för svensk yrkesklassificering 1996",
   "SSYK 96, alternativ",
@@ -243,6 +336,30 @@ publisher = "SCB"
 valid_from = 2014
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
 valid_codes_file = "ssyk2012.csv"
+sentinel_codes = [
+  { code = "****", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "***", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Uppgift saknas" },
+  { code = "9992", meaning = "Uppgift saknas" },
+  { code = "9993", meaning = "Uppgift saknas" },
+  { code = "XXXX", meaning = "Partiellt bortfall" },
+  { code = "99", meaning = "Uppgift saknas" },
+  { code = "NULL", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Okänt" },
+  { code = "*****", meaning = "Uppgift saknas" },
+  { code = "8888", meaning = "Vet ej" },
+  { code = "9991", meaning = "Okänt" },
+  { code = "9995", meaning = "Okänt" },
+  { code = "9997", meaning = "Vet ej" },
+  { code = "9996", meaning = "Okänt" },
+  { code = "88", meaning = "Partiellt bortfall" },
+  { code = "9994", meaning = "Okänt" },
+  { code = "X", meaning = "Uppgift saknas" },
+  { code = "XX", meaning = "Uppgift saknas" },
+  { code = "XXX", meaning = "Uppgift saknas" },
+  { code = "bortfall", meaning = "Okänt" },
+]
 vardemangdsversion = [
   "Standard för svensk yrkesklassificering 2012",
   "SSYK 2012, 3- och 4-siffernivå",
@@ -1085,6 +1202,10 @@ vardemangdsversion = [
   "ISCED 2011 AES",
 ]
 valid_codes_file = "isced2011.csv"
+sentinel_codes = [
+  { code = "-1", meaning = "Uppgift saknas" },
+  { code = "-2", meaning = "Inte tillämpligt" },
+]
 
 [[classification]]
 short_name = "ISCED-F2013"
