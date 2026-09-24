@@ -839,14 +839,16 @@ def build_selected_catalog(
             final_metadata = resolve_variable_successions(
                 lineage.metadata, lineage.variables, successions
             )
-            # Mandatory before any output placement, in both modes and whatever
-            # else the ledger holds: losing supported delivery is our bug, and no
-            # curation error may stand in for the source outcome that never came.
-            # Diagnostic mode reports each unexplained change as an error and
-            # continues; strict mode raises before anything is placed.
-            for value in check_delivery_coverage(
+            # Mandatory in both modes, whatever else the ledger holds: losing
+            # supported delivery is our bug, and no curation error may stand in
+            # for the source outcome that never came. Strict mode raises before
+            # anything is placed. Diagnostic mode records each unexplained
+            # change as an error diagnostic, still writes the diagnostic
+            # database and ledger, then ends the run as an engineering failure.
+            delivery_issues = check_delivery_coverage(
                 lineage.variables, coverage, withheld=withheld, diagnostic=diagnostic
-            ):
+            )
+            for value in delivery_issues:
                 issue(value)
             _emit_timing("pipeline: catalog dependencies", phase_started)
             build_result.update(
@@ -896,6 +898,15 @@ def build_selected_catalog(
                     }
                     build_result["corpus_validation"] = corpus_report
                     event("corpus_validation", corpus_report)
+            if delivery_issues:
+                # Diagnostic-only: strict mode raised above. The diagnostic
+                # database and ledger are written, but an unexplained delivery
+                # change is still an engineering defect, so the run ends with
+                # the engineering-failure outcome and text, never a completion.
+                build_result.update(
+                    status="engineering_failure",
+                    error="; ".join(found.detail for found in delivery_issues),
+                )
         except Exception as exc:
             if build_result.get("database"):
                 raise
