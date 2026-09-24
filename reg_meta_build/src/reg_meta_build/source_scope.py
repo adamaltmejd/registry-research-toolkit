@@ -100,9 +100,11 @@ def declared_register_fqids(
 
 def declared_dependency_keys(
     naming: tuple[NamingDeclaration, ...],
+    naming_ambiguities: tuple[NamingAmbiguity, ...],
 ) -> set[DependencyKey]:
     """The registers, variants and variables a scope's naming declares, keyed as
-    formation would make them available."""
+    formation would make them available. An ambiguous name is a declared variable
+    whose ownership is unresolved, keyed as the complete build withholds it."""
     registers = declared_register_fqids(naming)
     keys: set[DependencyKey] = {("register", fqid) for fqid in registers.values()}
     for declaration in naming:
@@ -114,6 +116,10 @@ def declared_dependency_keys(
             keys.add(("variant", register, slug))
         elif declaration.target.kind == "variable":
             keys.add(("variable", f"{register}/{slug}"))
+    for ambiguity in naming_ambiguities:
+        register = registers.get(ambiguity.family.register_key)
+        if register is not None:
+            keys.update(("variable", f"{register}/{n.slug}") for n in ambiguity.names)
     return keys
 
 

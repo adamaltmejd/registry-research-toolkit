@@ -620,7 +620,8 @@ registers never hides a reference error the complete build would report, since a
 there would silently drop a real edge. It defers a reference only when the other end
 provably exists but was not selected, known without forming it: the unselected scope
 files' naming declares those registers, variants and variables (a naming-ambiguity
-candidate is not a declaration), and the prepared store holds their observed register
+name is a declared variable whose ownership is unresolved, which the complete build
+withholds with a cause), and the prepared store holds their observed register
 names and native IDs. A representation or state is proven as far as its declared
 variable and variant; the complete build checks its column and period. Such a reference
 (a `same_as` or succession edge, a group or tag member, a code/label pair, a source

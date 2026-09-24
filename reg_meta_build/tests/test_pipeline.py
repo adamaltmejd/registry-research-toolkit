@@ -60,8 +60,13 @@ from reg_meta_build.source_curation import (
     PeerGuard,
 )
 from reg_meta_build.source_effects import record_ref
-from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
-from reg_meta_build.source_records import NativeCoordinates
+from reg_meta_build.source_naming import (
+    AcceptedNamingEntry,
+    NamingAmbiguity,
+    NamingDeclaration,
+    NativeNamingTarget,
+)
+from reg_meta_build.source_records import NativeCoordinates, canonical_sha256
 from reg_meta_build.validate import validate_built_db
 
 from reg_meta_build.fqid_slugs import SlugEntry
@@ -1672,6 +1677,103 @@ def test_a_reference_to_what_no_scope_declares_stays_fatal_when_scoped(
                 diagnostic=True,
                 registers=registers,
             )
+
+
+def _as_naming_ambiguity(selection, path):
+    """Rewrite one scope file so its variable exists only as an ambiguity name."""
+    raw = json.loads(selection.read_bytes())
+    (pinned,) = (s for s in raw["scopes"] if s["path"] == path)
+    file = selection.parent / path
+    scope = ScopeDeclarations.model_validate_json(gzip.decompress(file.read_bytes()))
+    (declaration,) = (d for d in scope.naming if d.target.kind == "variable")
+    prepared = open_prepared_catalog_sources(
+        Path(raw["prepared_path"]),
+        input_commit=raw["prepared_commit"],
+        expected_sha256=raw["prepared_sha256"],
+    )
+    records = tuple(
+        r
+        for _, members in prepared.records.iter_register_slices(scope.source)
+        for r in members
+        if native_variable_key(r) == declaration.target.source_key
+    )
+    expectations = capture_expectations(records, fields=("column_name",))
+    name = declaration.naming
+    ambiguity = NamingAmbiguity(
+        family=declaration.target.model_copy(
+            update={
+                "identity_revision": None,
+                "expectations": expectations,
+                "peer_guards": (
+                    PeerGuard(
+                        guard_id="exact-original-variable",
+                        source=scope.source,
+                        coordinates=(
+                            ("register", records[0].subject.register_name),
+                            ("variable", records[0].subject.variable),
+                        ),
+                        expected_members=tuple(e.ref for e in expectations),
+                    ),
+                ),
+            }
+        ),
+        entries=(
+            AcceptedNamingEntry(
+                revision=declaration.target.identity_revision,
+                origin="authored",
+                entry=name,
+                supplied_fields=("slug",),
+                content_sha256=canonical_sha256({"slug": name.slug}),
+            ),
+        ),
+        candidate_columns=tuple(
+            (name.source_id, r.fields.column_name.value) for r in records
+        ),
+        reason="Ownership of the accepted name is unresolved.",
+    )
+    pinned.update(
+        _scope_file(
+            selection.parent,
+            path,
+            scope.model_copy(
+                update={
+                    "naming": tuple(d for d in scope.naming if d is not declaration),
+                    "naming_ambiguities": (ambiguity,),
+                }
+            ),
+        ).model_dump(mode="json")
+    )
+    return raw
+
+
+@pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
+def test_a_naming_ambiguity_name_in_an_unselected_scope_is_deferred(
+    selection, tmp_path
+):
+    # Register 2 (scb/sample-1) names value-1 only as an ambiguity candidate:
+    # the complete build withholds it with a cause, so a scoped build defers it.
+    raw = _as_naming_ambiguity(selection, "scope-1.json.gz")
+    selection.write_text(json.dumps(raw))
+    report = tmp_path / "scoped"
+    result = build_selected_catalog(
+        selection, tmp_path / "scoped.db", report, diagnostic=True, registers=("1",)
+    )
+    assert result["counts"].get("error", 0) == 0
+    issues = [
+        i for i in _issues(report) if "variable_same_as:0" in i["withheld_output"]
+    ]
+    assert [i["code"] for i in issues] == ["deferred_out_of_slice_reference"]
+    # A slug in neither its naming nor an ambiguity name stays fatal.
+    raw["metadata"]["variable_same_as"][0]["b"] = "scb/sample-1/no-such"
+    selection.write_text(json.dumps(raw))
+    with pytest.raises(CatalogDependencyError, match="scb/sample-1/no-such"):
+        build_selected_catalog(
+            selection,
+            tmp_path / "fatal.db",
+            tmp_path / "fatal",
+            diagnostic=True,
+            registers=("1",),
+        )
 
 
 @pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)

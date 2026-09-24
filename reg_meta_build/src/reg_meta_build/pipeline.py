@@ -724,7 +724,11 @@ def build_selected_catalog(
                             },
                         )
                     if registers:
-                        slice_keys.update(declared_dependency_keys(scope.naming))
+                        slice_keys.update(
+                            declared_dependency_keys(
+                                scope.naming, scope.naming_ambiguities
+                            )
+                        )
                     for declaration in scope.naming:
                         if declaration.target.kind == "register_variant":
                             key = declaration.target.source_key
@@ -844,10 +848,13 @@ def build_selected_catalog(
                         if key in unvisited and coordinate.name:
                             names[register].add(coordinate.name)
                 for key in sorted(unvisited, key=repr):
-                    naming = _read_scope(root, key, scope_files[key]).naming
-                    declared = declared_dependency_keys(naming) - slice_keys
+                    scope = _read_scope(root, key, scope_files[key])
+                    declared = (
+                        declared_dependency_keys(scope.naming, scope.naming_ambiguities)
+                        - slice_keys
+                    )
                     unselected |= declared
-                    for register, fqid in declared_register_fqids(naming).items():
+                    for register, fqid in declared_register_fqids(scope.naming).items():
                         if ("register", fqid) in declared:
                             unselected_names.setdefault(fqid, set()).update(
                                 names[register]
