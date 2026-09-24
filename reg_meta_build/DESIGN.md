@@ -412,8 +412,7 @@ engineering defect, not a curation question: the build names the source records 
 exact missing window. The strict build stops before any output is placed; the diagnostic
 build records each unexplained fact change and each lost window as an error diagnostic
 on its obligation and continues, leaving the artifact nonpublishable. A missing optional
-field or
-an unrelated diagnostic is no permission to drop the state it belongs to.
+field or an unrelated diagnostic is no permission to drop the state it belongs to.
 
 ### Groups, relations and dependent output
 
