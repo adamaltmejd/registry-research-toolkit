@@ -7,7 +7,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta_build.catalog_dependencies import CatalogDependencies
+from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE, CatalogDependencies
 from reg_meta_build.resolved_metadata import (
     ResolvedLineageWarning,
     ResolvedStateLineage,
@@ -45,6 +45,7 @@ def resolve_catalog_lineage(
     metadata: ResolvedMetadata,
     evidence: Mapping[str, tuple[SourceRecordRef, ...]],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
+    selected_registers: frozenset[str] | None = None,
 ) -> LineageResolution:
     """Match literal source names and follow accepted variable identity edges.
 
@@ -53,7 +54,9 @@ def resolve_catalog_lineage(
     variant needs no choice; multiple variants require an explicit default.
     Unknown external source labels remain literal labels, not guessed registers.
     An attributed source with no supported source state withholds the edge as a
-    warning; ambiguity is an error.
+    warning; ambiguity is an error. A register-scoped build cannot tell an
+    external label from an unselected register, so it defers every label that
+    matches no selected register.
     """
     if metadata.state_lineage or metadata.lineage_warnings:
         raise ValueError("lineage must be resolved once from current catalog states")
@@ -66,7 +69,7 @@ def resolve_catalog_lineage(
         ("register", f"{r.provider}/{r.slug}") for r in registers
     }
     available.update(("variant", f"{r.provider}/{r.slug}", v.slug) for r, v in variants)
-    dependencies = CatalogDependencies(available, withheld)
+    dependencies = CatalogDependencies(available, withheld, selected_registers)
     usable_defaults = {}
     for register, variant in sorted(defaults.items()):
         if dependencies.require(
@@ -131,6 +134,18 @@ def resolve_catalog_lineage(
                 candidates.update(abbreviations.get((provider, token), ()))
                 candidates.update(names.get((provider, token), ()))
             matches[text] = next(iter(candidates)) if len(candidates) == 1 else None
+            if not candidates and selected_registers is not None:
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code=DEFERRED_REFERENCE,
+                        severity="warning",
+                        subject=fqid,
+                        detail=f"Source label {text!r} matches no selected register; the complete build attributes it or keeps it as a literal label.",
+                        refs=evidence[fqid],
+                        fields=("source_register_text",),
+                        withheld_output=(fqid + ":source_register",),
+                    )
+                )
             if len(candidates) > 1:
                 diagnostics.append(
                     ResolutionDiagnostic(

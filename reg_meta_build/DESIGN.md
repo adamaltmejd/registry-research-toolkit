@@ -605,8 +605,18 @@ reports any already completed artifact separately rather than implying publicati
 happened.
 
 `build-db --registers ...` builds a register subset, strict or diagnostic, for fast
-verification. Its output is never publishable, and its corpus volume guards report as
-not applicable. Transitional: not built yet.
+verification. It forms only the named scopes and decodes only their records; shared
+inputs (classifications, successions, support, identifier and event sources, metadata)
+stay complete. Occurrence accounting compares against the selected scopes' prepared
+counts. Strict mode still reports the selected registers' errors. A reference whose
+other end lies in an unselected register (a `same_as` or succession edge, a group or tag
+member, a code/label pair, a lineage default, a source event or a source label) is
+withheld as one warning code, `deferred_out_of_slice_reference`, counted as
+`deferred_references`. A scoped build cannot tell an external source label from an
+unselected register, so it defers every label that matches no selected register. Its
+output is create-only and marked incomplete and nonpublishable in both modes. The
+summary records the register list, `publication_ready` false and `corpus_validation`
+`not_applicable`; structural validation still runs.
 
 Publication uses staged output and atomic replacement, with the previous generation
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call
@@ -652,15 +662,20 @@ reg-meta-build verify-input-bundle --input-bundle DIR ...
 reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir NEW_DIR
 reg-meta-build build-db --selection FILE --report-dir DIR
 reg-meta-build build-db --selection FILE --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
+reg-meta-build --db NEW_DIR build-db --selection FILE --report-dir DIR --registers SPEC[,SPEC...]
 reg-meta-build inspect-source-records --input-bundle DIR ...
 reg-meta-build extend-db --base-db DB --providers-dir DIR --steward NAME ...
 reg-meta-build build-docs ...
 ```
 
 `--db DIR` and other global output flags precede the subcommand. Per-command `--help`
-describes paths and pins. Naming, classification, group, succession, same-as,
-split-sibling and document-coverage worklist commands produce review material; they do
-not approve or apply new curation during a build.
+describes paths and pins. A `--registers` SPEC names a scope by the key the selection
+already carries: an SCB register by its register id (`258`), a whole-source scope such
+as an SOS workbook or thin provider by its source dataset. It also combines with
+`--diagnostic --diagnostic-db-path NEW.db`. A strict subset needs an explicit new `--db`
+directory: it never replaces the active catalog. Naming, classification, group,
+succession, same-as, split-sibling and document-coverage worklist commands produce
+review material; they do not approve or apply new curation during a build.
 
 Transitional: `build-db --selection` and
 `prepare-input-bundle --curation-dir`/`--slug-dir` remain until curation compiles at

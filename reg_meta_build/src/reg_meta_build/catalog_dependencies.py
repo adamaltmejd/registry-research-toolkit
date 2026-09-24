@@ -58,6 +58,10 @@ if TYPE_CHECKING:
 
 type DependencyKey = tuple[str, ...]
 
+# A register-scoped build's one warning for a reference whose other end lies in
+# an unselected register. Only the complete build can resolve or refuse it.
+DEFERRED_REFERENCE = "deferred_out_of_slice_reference"
+
 
 def resolve_classification_successions(
     classifications: tuple[ResolvedClassification, ...],
@@ -521,18 +525,30 @@ class CatalogDependencyError(ValueError):
         )
 
 
+def _dependency_register(key: DependencyKey) -> str | None:
+    """The register FQID a key lives in; shared classifications and source columns
+    belong to no register."""
+    kind, fqid = key[0], key[1]
+    if kind in {"classification", "source_column"}:
+        return None
+    return fqid if kind in {"register", "variant"} else fqid.rsplit("/", 1)[0]
+
+
 class CatalogDependencies:
     """Exact available references and evidenced omissions, never a missing fallback.
 
     A key starts with its kind, followed by its complete catalog coordinates.
     Callers build the withheld map from resolution accounting, not the baseline DB.
     Descendant lookup may inherit a known withheld parent supplied by the caller.
+    A register-scoped build names its `selected_registers`; a missing key in any
+    other register is deferred to the complete build as a warning.
     """
 
     def __init__(
         self,
         available: set[DependencyKey],
         withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
+        selected_registers: frozenset[str] | None = None,
     ) -> None:
         if overlap := available & withheld.keys():
             raise ValueError(
@@ -543,6 +559,7 @@ class CatalogDependencies:
                 raise ValueError(f"withheld dependency lacks source evidence: {key!r}")
         self.available = available
         self.withheld = withheld
+        self.selected_registers = selected_registers
         self.diagnostics: list[ResolutionDiagnostic] = []
         self.missing: list[MissingCatalogDependency] = []
 
@@ -564,7 +581,23 @@ class CatalogDependencies:
             None,
         )
         if causes is None:
-            self.missing.append(MissingCatalogDependency(key, output))
+            register = _dependency_register(key)
+            if (
+                self.selected_registers is not None
+                and register is not None
+                and register not in self.selected_registers
+            ):
+                self.diagnostics.append(
+                    ResolutionDiagnostic(
+                        code=DEFERRED_REFERENCE,
+                        severity="warning",
+                        subject=output,
+                        detail=f"Dependency {key!r} lies in {register}, outside the selected registers; the complete build resolves it.",
+                        withheld_output=(output,),
+                    )
+                )
+            else:
+                self.missing.append(MissingCatalogDependency(key, output))
             return False
         for cause in causes:
             self.diagnostics.append(
@@ -712,6 +745,7 @@ def resolve_variable_edge_groups(
     curated_groups: tuple[ResolvedVariableGroup, ...],
     evidence: Mapping[str, tuple[SourceRecordRef, ...]],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
+    selected_registers: frozenset[str] | None = None,
 ) -> GroupEdgeResolution:
     """Resolve existing code/label and checked same-definition group edges.
 
@@ -742,7 +776,7 @@ def resolve_variable_edge_groups(
     if len(set(siblings)) != len(siblings) or any(a == b for a, b in siblings):
         raise ValueError("same-definition declarations must be unique non-self pairs")
     dependencies = CatalogDependencies(
-        {("variable", fqid) for fqid in by_fqid}, withheld
+        {("variable", fqid) for fqid in by_fqid}, withheld, selected_registers
     )
     claimed = {m.variable for g in curated_groups for m in g.members}
     components: DisjointSet[str] = DisjointSet()
@@ -842,6 +876,7 @@ def resolve_metadata_dependencies(
     variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...],
     classifications: tuple[ResolvedClassification, ...],
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
+    selected_registers: frozenset[str] | None = None,
 ) -> MetadataResolution:
     """Withhold only declared metadata depending on evidenced unresolved facts.
 
@@ -861,7 +896,7 @@ def resolve_metadata_dependencies(
     )
     for variable in variables:
         available.update(variable_dependency_keys(variable))
-    dependencies = CatalogDependencies(available, withheld)
+    dependencies = CatalogDependencies(available, withheld, selected_registers)
 
     def entity(fqid: str, output: str) -> bool:
         kind = "register" if fqid.count("/") == 1 else "variable"
@@ -910,9 +945,10 @@ def resolve_metadata_dependencies(
 
     def withheld_group(output: str, start: int) -> None:
         causes = dependencies.diagnostics[start:]
+        deferred = bool(causes) and all(c.code == DEFERRED_REFERENCE for c in causes)
         dependencies.diagnostics.append(
             ResolutionDiagnostic(
-                code="withheld_catalog_dependency",
+                code=DEFERRED_REFERENCE if deferred else "withheld_catalog_dependency",
                 severity="error"
                 if any(c.severity == "error" for c in causes)
                 else "warning",

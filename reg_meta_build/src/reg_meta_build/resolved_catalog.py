@@ -775,6 +775,7 @@ def write_resolved_catalog(
     *,
     manifest: dict[str, str],
     diagnostic: bool = False,
+    scoped: bool = False,
     corpus: bool = False,
     parent_registers: tuple[ResolvedRegister, ...] = (),
     parent_variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...] = (),
@@ -787,14 +788,16 @@ def write_resolved_catalog(
 
     No time, source precedence, slug derivation, or state coalescing is inferred.
     The caller supplies reproducible manifest values; schema-owned keys are fixed.
-    Both modes run the same contract and structural checks. Diagnostic artifacts
-    are marked incomplete/nonpublishable and can never replace an existing file.
+    Both modes run the same contract and structural checks. Diagnostic and
+    register-scoped artifacts are marked incomplete/nonpublishable and can never
+    replace an existing file.
     Independently resolved registers and (register, variant) pairs remain present
     even when their variable states are withheld. Shared definitions must agree.
     The complete pipeline additionally requires corpus safeguards before strict
     publication; partial writer fixtures leave those volume expectations disabled.
     """
     diagnostic = TypeAdapter(bool).validate_python(diagnostic, strict=True)
+    partial = diagnostic or TypeAdapter(bool).validate_python(scoped, strict=True)
     variables, registers, variants = validate_resolved_variables(
         variables, allow_empty=diagnostic
     )
@@ -841,8 +844,8 @@ def write_resolved_catalog(
     for key, value in {
         "schema_version": SCHEMA_VERSION,
         "catalog_artifact_kind": "diagnostic" if diagnostic else "catalog",
-        "catalog_publishable": "false" if diagnostic else "true",
-        "catalog_completeness": "incomplete" if diagnostic else "complete",
+        "catalog_publishable": "false" if partial else "true",
+        "catalog_completeness": "incomplete" if partial else "complete",
         CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY: str(
             CLASSIFICATION_SUCCESSION_AS_OF_YEAR
         ),
@@ -854,13 +857,13 @@ def write_resolved_catalog(
         import_metadata[key] = value
 
     output = Path(output)
-    if diagnostic and (
+    if partial and (
         output.exists()
         or output.is_symlink()
         or output.resolve() == (default_db_dir() / DB_FILENAME).resolve()
     ):
         raise ValueError(
-            "diagnostic output must be a new explicit path separate from the active catalog"
+            "diagnostic or register-scoped output must be a new explicit path separate from the active catalog"
         )
     output.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix=f".{output.name}.", dir=output.parent) as temporary:
@@ -1073,7 +1076,7 @@ def write_resolved_catalog(
             raise ValueError(
                 "resolved catalog validation failed: " + "; ".join(validation.failures)
             )
-        if diagnostic:
+        if partial:
             # Create-only placement is atomic and cannot clobber a normal catalog
             # even if another process creates the destination during the build.
             output.hardlink_to(staged)

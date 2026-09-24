@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
+from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE
 from reg_meta_build.resolved_metadata import (
     ResolvedSuccession,
     ResolvedVariantRef,
@@ -110,8 +111,14 @@ class SourceEventBindings:
                     variant = result.parents.variants.get(native_variant_key(record))
                     targets.add(("variant", fqid, variant.slug) if variant else None)
 
-    def resolve(self, metadata: ResolvedMetadata) -> ReferenceMetadataResolution:
-        """Keep independent edges; never choose an ambiguous native-ID binding."""
+    def resolve(
+        self, metadata: ResolvedMetadata, *, scoped: bool = False
+    ) -> ReferenceMetadataResolution:
+        """Keep independent edges; never choose an ambiguous native-ID binding.
+
+        A register-scoped build defers an event whose unresolved endpoints were
+        simply never observed: they may lie in an unselected register.
+        """
         diagnostics = []
         withheld = set()
         grouped = defaultdict(list)
@@ -129,17 +136,28 @@ class SourceEventBindings:
                     {event_ref, *(r for key in keys for r in self.refs[key])}, key=repr
                 )
             )
-            if any(
-                len(self.targets[key]) != 1 or None in self.targets[key] for key in keys
-            ):
+            unresolved = [
+                key
+                for key in keys
+                if len(self.targets[key]) != 1 or None in self.targets[key]
+            ]
+            if unresolved:
                 withheld.add(event_ref)
+                if scoped and not any(self.targets[k] for k in unresolved):
+                    code, severity = DEFERRED_REFERENCE, "warning"
+                    detail = f"Succession endpoints {tuple(unresolved)!r} are not observed in the selected registers; the complete build resolves them."
+                else:
+                    code, severity = "unresolved_source_event_endpoint", "error"
+                    detail = (
+                        f"Succession endpoints {keys!r} do not each identify one supported catalog entity: "
+                        f"{tuple(tuple(sorted(self.targets[k], key=repr)) for k in keys)!r}."
+                    )
                 diagnostics.append(
                     ResolutionDiagnostic(
-                        code="unresolved_source_event_endpoint",
-                        severity="error",
+                        code=code,
+                        severity=severity,
                         subject=repr(event.locator.semantic_record_key),
-                        detail=f"Succession endpoints {keys!r} do not each identify one supported catalog entity: "
-                        f"{tuple(tuple(sorted(self.targets[k], key=repr)) for k in keys)!r}.",
+                        detail=detail,
                         refs=refs,
                         withheld_output=("catalog_succession",),
                     )

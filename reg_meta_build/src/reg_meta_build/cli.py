@@ -176,7 +176,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "Resolve one complete prepared-source selection and materialize the catalog. "
             "Strict publication is the default and preserves the previous catalog on "
             "failure. Diagnostic mode requires a separate new output path and retains "
-            "all curation blockers. Prepare or update sources with prepare-sources."
+            "all curation blockers. --registers builds a nonpublishable register subset "
+            "for fast verification, strict or diagnostic, at a new path (strict: an "
+            "explicit --db DIR). Prepare or update sources with prepare-sources."
         ),
     )
     build_p.add_argument(
@@ -197,6 +199,16 @@ def _build_parser() -> argparse.ArgumentParser:
     build_p.add_argument(
         "--diagnostic-db-path",
         help="New explicit SQLite path required with --diagnostic.",
+    )
+    build_p.add_argument(
+        "--registers",
+        metavar="SPEC[,SPEC...]",
+        help=(
+            "Form only these selection scopes: an SCB register by its register id "
+            "(258), a whole-source scope such as an SOS workbook by its source "
+            "dataset. Shared inputs stay complete; references into other registers "
+            "are deferred warnings."
+        ),
     )
     build_p.add_argument(
         "--timing",
@@ -949,6 +961,15 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             message="Diagnostic mode requires a separate explicit --diagnostic-db-path and excludes --db.",
             remediation="Use both --diagnostic and --diagnostic-db-path, or omit both for a strict build.",
         )
+    registers = () if args.registers is None else tuple(args.registers.split(","))
+    if not all(registers) or (registers and not args.diagnostic and args.db is None):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_selection_options_invalid",
+            error_class="usage",
+            message="--registers needs nonempty comma-separated scope names and never writes the active catalog.",
+            remediation="Name each scope once between commas; give a strict register subset its own new --db DIR.",
+        )
     output = (
         Path(args.diagnostic_db_path)
         if args.diagnostic
@@ -960,6 +981,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             output,
             Path(args.report_dir),
             diagnostic=args.diagnostic,
+            registers=registers,
         )
     except CompletedArtifactError as exc:
         return _pipeline_report_failure(
@@ -2168,7 +2190,8 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Clean and validate sources once; write a new candidate for acceptance.",
     ),
     (
-        "build-db --selection FILE --report-dir DIR [--diagnostic --diagnostic-db-path DB]",
+        "build-db --selection FILE --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
+        "[--registers SPEC[,SPEC...]]",
         "Build from prepared sources and common curation; strict publication is the default.",
     ),
     (

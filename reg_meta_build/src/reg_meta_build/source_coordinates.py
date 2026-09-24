@@ -27,12 +27,16 @@ def _coordinate_key(coordinate: SourceCoordinate) -> NativeKey | None:
     return None
 
 
+def native_register_key(
+    source: str, provider: str, register_name: SourceCoordinate
+) -> NativeKey | None:
+    coordinate = _coordinate_key(register_name)
+    return None if coordinate is None else (source, provider, "register", *coordinate)
+
+
 def source_register_key(record: SourceRecord) -> NativeKey | None:
-    coordinate = _coordinate_key(record.subject.register_name)
-    return (
-        None
-        if coordinate is None
-        else (record.source, record.subject.provider, "register", *coordinate)
+    return native_register_key(
+        record.source, record.subject.provider, record.subject.register_name
     )
 
 
@@ -83,10 +87,9 @@ def native_parent_key(
     source: str, provider: str, parent: SourceParentObservation
 ) -> NativeKey | None:
     """Use the same native topology for parent claims and variable occurrences."""
-    register = _coordinate_key(parent.register_name)
-    if register is None:
+    register_key = native_register_key(source, provider, parent.register_name)
+    if register_key is None:
         return None
-    register_key = (source, provider, "register", *register)
     if parent.kind == "register":
         return register_key
     variant = _coordinate_key(parent.variant) if parent.variant is not None else None

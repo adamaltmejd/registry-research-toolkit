@@ -83,6 +83,7 @@ class ScopeResolution:
     siblings: SiblingResolution
     coverage: tuple[CoverageObligation, ...]
     acknowledged: dict[str, int]
+    register_fqids: dict[NativeKey, str]
 
 
 def resolve_source_scope(
@@ -584,6 +585,7 @@ def resolve_source_scope(
         siblings,
         tuple(coverage),
         dict(Counter(issue.code for issue in acknowledged)),
+        register_fqids,
     )
 
 

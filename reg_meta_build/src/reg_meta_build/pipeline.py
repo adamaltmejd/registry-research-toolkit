@@ -22,6 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 
 from reg_meta_build._curation import SentinelCode
 from reg_meta_build.catalog_dependencies import (
+    DEFERRED_REFERENCE,
     CoverageObligation,
     check_delivery_coverage,
     resolve_classification_successions,
@@ -218,12 +219,20 @@ def _selection_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ..
     return tuple(sentinels)
 
 
+def _scope_name(key: tuple[str, NativeKey | None]) -> str:
+    """Name a scope for `registers`: a register scope by its native register
+    coordinate (the SCB register id), a whole-source scope by its source."""
+    source, register = key
+    return source if register is None else str(register[-1])
+
+
 def build_selected_catalog(
     selection_path: Path,
     output: Path,
     report_dir: Path,
     *,
     diagnostic: bool = False,
+    registers: tuple[str, ...] = (),
 ) -> dict[str, object]:
     """Build the full declared selection; failures never replace an active catalog.
 
@@ -231,8 +240,12 @@ def build_selected_catalog(
     false. Unsupported implementation and malformed selections raise normally.
     The single event stream accounts for source records, cases and diagnostics;
     it references prepared evidence instead of copying every source projection.
+    `registers` forms only the named scopes, with shared inputs still complete,
+    and defers references into other registers. Its output is never publishable
+    and its corpus volume guards do not apply.
     """
     started = time.perf_counter()
+    publishable = not diagnostic and not registers
     selection_path = selection_path.resolve()
     selection_bytes = selection_path.read_bytes()
     selected = PipelineSelection.model_validate_json(selection_bytes)
@@ -252,7 +265,7 @@ def build_selected_catalog(
         or report_dir.is_relative_to(prepared_path)
         or any(path.is_relative_to(report_dir) for path in input_paths)
         or output.is_relative_to(report_dir)
-        or (diagnostic and output.exists())
+        or (not publishable and output.exists())
         or (output.exists() and not output.is_file())
     ):
         raise ValueError(
@@ -272,6 +285,11 @@ def build_selected_catalog(
         for source, register in scope_files
     ):
         raise ValueError("a source cannot select both whole-source and register scopes")
+    if unknown := set(registers) - {_scope_name(key) for key in scope_files}:
+        raise ValueError(f"--registers names no selected scope: {sorted(unknown)}")
+    visit = {
+        key for key in scope_files if not registers or _scope_name(key) in registers
+    }
     prepared = open_prepared_catalog_sources(
         prepared_path,
         input_commit=selected.prepared_commit,
@@ -308,7 +326,12 @@ def build_selected_catalog(
         e for e in prepared.manifest.inputs if e.record_usage == "occurrence"
     )
     sources = {e.revision.dataset for e in entries if e.revision is not None}
-    if {s.source for s in selected.scopes} != sources:
+    if registers:
+        if not {s.source for s in selected.scopes} <= sources:
+            raise ValueError(
+                "curation scopes name a source outside the prepared occurrence-source selection"
+            )
+    elif {s.source for s in selected.scopes} != sources:
         raise ValueError(
             "curation scopes do not cover the complete prepared occurrence-source selection"
         )
@@ -355,7 +378,7 @@ def build_selected_catalog(
     coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
-    sibling_pairs = set()
+    sibling_pairs, slice_registers = set(), set()
     build_result: dict[str, object] = {}
     with _retain_completed_artifact(build_result, report_dir), ExitStack() as stack:
         events = stack.enter_context(
@@ -370,6 +393,8 @@ def build_selected_catalog(
 
         def issue(value: ResolutionDiagnostic) -> None:
             counts[value.severity] += 1
+            if value.code == DEFERRED_REFERENCE:
+                counts["deferred_references"] += 1
             event("issue", value.model_dump(mode="json"))
 
         try:
@@ -542,13 +567,24 @@ def build_selected_catalog(
                     )
             _emit_timing("pipeline: reference metadata and support", phase_started)
             phase_started = time.perf_counter()
+            expected = 0
             for entry in entries:
                 assert entry.revision is not None
                 source = entry.revision.dataset
+                keys = {register for scope, register in visit if scope == source}
+                if not keys:
+                    continue
+                if registers and source not in whole_sources:
+                    records = prepared.records.register_record_counts(source)
+                    expected += sum(records[register] for register in keys)
+                else:
+                    expected += entry.counts.records
                 slices = (
                     ((None, tuple(prepared.records.iter_records(source=source))),)
                     if source in whole_sources
-                    else prepared.records.iter_register_slices(source)
+                    else prepared.records.iter_register_slices(
+                        source, keys if registers else None
+                    )
                 )
                 for register, originals in slices:
                     scope_started = time.perf_counter()
@@ -651,6 +687,7 @@ def build_selected_catalog(
                                 "refs": [r.model_dump(mode="json") for r in pair.refs],
                             },
                         )
+                    slice_registers.update(result.register_fqids.values())
                     for declaration in scope.naming:
                         if declaration.target.kind == "register_variant":
                             key = declaration.target.source_key
@@ -742,12 +779,13 @@ def build_selected_catalog(
                     _emit_timing(f"pipeline: scope {scope_key!r}", scope_started)
             _emit_timing("pipeline: all source scopes", phase_started)
             phase_started = time.perf_counter()
-            if seen_scopes != scope_files.keys():
+            if seen_scopes != visit:
                 raise ValueError("declared source scopes were not visited")
-            if counts["physical_occurrences"] != sum(e.counts.records for e in entries):
+            if counts["physical_occurrences"] != expected:
                 raise ValueError(
-                    "full source occurrence count differs from preparation"
+                    f"{'selected' if registers else 'full'} source occurrence count differs from preparation"
                 )
+            selected_registers = frozenset(slice_registers) if registers else None
             refs = {
                 fqid: tuple(
                     SourceRecordRef(source=s, semantic_record_key=k)
@@ -755,13 +793,13 @@ def build_selected_catalog(
                 )
                 for fqid, items in evidence.items()
             }
-            registers = {
+            register_parents = {
                 key: value
                 for (kind, key), value in parents.items()
                 if kind == "register"
             }
             variants = tuple(
-                (registers[variant_registers[key]], value)
+                (register_parents[variant_registers[key]], value)
                 for (kind, key), value in parents.items()
                 if kind == "variant"
             )
@@ -770,7 +808,7 @@ def build_selected_catalog(
             )
             panel = resolve_panel_dependencies(
                 tuple(v for v in variables.values() if v is not None),
-                registers=tuple(registers.values()),
+                registers=tuple(register_parents.values()),
                 variants=variants,
                 editions=editions,
                 withheld=withheld,
@@ -784,6 +822,7 @@ def build_selected_catalog(
                 curated_groups=selected.metadata.variable_groups,
                 evidence=refs,
                 withheld=withheld,
+                selected_registers=selected_registers,
             )
             months = resolve_month_groups(
                 panel.variables,
@@ -811,7 +850,7 @@ def build_selected_catalog(
                     ),
                 }
             )
-            source_events = event_bindings.resolve(metadata)
+            source_events = event_bindings.resolve(metadata, scoped=bool(registers))
             for value in source_events.diagnostics:
                 issue(value)
             resolved_metadata = resolve_metadata_dependencies(
@@ -821,6 +860,7 @@ def build_selected_catalog(
                 variants=panel.variants,
                 classifications=tuple(books.values()),
                 withheld=withheld,
+                selected_registers=selected_registers,
             )
             for value in resolved_metadata.diagnostics:
                 issue(value)
@@ -832,6 +872,7 @@ def build_selected_catalog(
                 metadata=resolved_metadata.metadata,
                 evidence=refs,
                 withheld=withheld,
+                selected_registers=selected_registers,
             )
             for value in lineage.diagnostics:
                 issue(value)
@@ -856,7 +897,7 @@ def build_selected_catalog(
             build_result.update(
                 {
                     "status": "blocked" if counts["error"] else "ready",
-                    "publication_ready": not diagnostic and not counts["error"],
+                    "publication_ready": publishable and not counts["error"],
                     "counts": dict(counts),
                     "acknowledged": dict(sorted(acknowledged.items())),
                     "variables": len(panel.variables),
@@ -864,13 +905,19 @@ def build_selected_catalog(
                     "database": None,
                 }
             )
+            if registers:
+                build_result.update(
+                    registers=sorted(set(registers)),
+                    corpus_validation="not_applicable",
+                )
             if diagnostic or not counts["error"]:
                 phase_started = time.perf_counter()
                 write_resolved_catalog(
                     lineage.variables,
                     output,
                     diagnostic=diagnostic,
-                    corpus=not diagnostic,
+                    scoped=bool(registers),
+                    corpus=publishable,
                     manifest={
                         "import_date": import_date,
                         "prepared_commit": selected.prepared_commit,
@@ -891,7 +938,7 @@ def build_selected_catalog(
                     database=str(output),
                 )
                 _emit_timing("pipeline: database materialization", phase_started)
-                if diagnostic:
+                if diagnostic and not registers:
                     # Structural validation already passed before placement. Keep
                     # the unchanged corpus safeguards visible on partial output.
                     validation = validate_built_db(output, corpus=True)

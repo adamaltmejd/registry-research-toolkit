@@ -15,6 +15,7 @@ import re
 import shutil
 import sqlite3
 import tempfile
+from collections import Counter
 from contextlib import closing, contextmanager
 from dataclasses import dataclass
 from functools import lru_cache
@@ -30,7 +31,7 @@ from reg_meta_build._accepted_prepared import (
 )
 from reg_meta_build.db import _file_sha256
 from reg_meta_build.input_snapshot import SnapshotError, _git
-from reg_meta_build.source_coordinates import _coordinate_key, native_variable_key
+from reg_meta_build.source_coordinates import native_register_key, native_variable_key
 from reg_meta_build.source_records import (
     CodeSetReference,
     DeliveredCell,
@@ -51,7 +52,7 @@ from reg_meta_build.source_records import (
 from reg_meta_build.source_support import SupportTarget, support_join_key
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Iterator
+    from collections.abc import Callable, Collection, Iterable, Iterator
 
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_support import SourceSupportJoin
@@ -845,7 +846,7 @@ class PreparedSourceRecords:
                 )
 
     def iter_register_slices(
-        self, source: str
+        self, source: str, registers: Collection[NativeKey | None] | None = None
     ) -> Iterator[tuple[NativeKey | None, tuple[SourceRecord, ...]]]:
         """Read complete source-native registers for overlapping occurrence decisions.
 
@@ -853,6 +854,7 @@ class PreparedSourceRecords:
         row, including parent-only and unknown-variable rows. Unknown registers have
         a separate slice; no source evidence is assigned to a fabricated register.
         The small temporary relation orders the read without changing accepted data.
+        Given `registers`, no other register is decoded.
         """
         with _decoded_database(self.root, self.manifest) as (conn, payload):
             partitions: dict[tuple[str, NativeKey | None], int] = {}
@@ -862,14 +864,13 @@ class PreparedSourceRecords:
                 "WHERE source=? ORDER BY provider, register_payload",
                 (source,),
             ):
-                coordinate = _coordinate_key(
-                    payload(row["register_payload"], "coordinate")
+                register = native_register_key(
+                    source,
+                    row["provider"],
+                    payload(row["register_payload"], "coordinate"),
                 )
-                register = (
-                    (source, row["provider"], "register", *coordinate)
-                    if coordinate is not None
-                    else None
-                )
+                if registers is not None and register not in registers:
+                    continue
                 partition = partitions.setdefault(
                     (row["provider"], register), len(partitions)
                 )
@@ -893,6 +894,25 @@ class PreparedSourceRecords:
                     keys[partition],
                     tuple(_read_record(conn, payload, row) for row in members),
                 )
+
+    def register_record_counts(self, source: str) -> Counter[NativeKey | None]:
+        """Count physical occurrences per register, keyed as `iter_register_slices`
+        yields them, without decoding a record."""
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            counts: Counter[NativeKey | None] = Counter()
+            for row in conn.execute(
+                "SELECT provider, register_payload, COUNT(*) AS records "
+                "FROM occurrence WHERE source=? GROUP BY provider, register_payload",
+                (source,),
+            ):
+                counts[
+                    native_register_key(
+                        source,
+                        row["provider"],
+                        payload(row["register_payload"], "coordinate"),
+                    )
+                ] += row["records"]
+            return counts
 
     def iter_without_native_family(self, source: str) -> Iterator[SourceRecord]:
         """Retain declarations and incomplete identities outside ordinary families."""

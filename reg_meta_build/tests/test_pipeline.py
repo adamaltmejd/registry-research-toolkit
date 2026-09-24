@@ -38,6 +38,7 @@ from reg_meta_build.prepared_catalog import (
     prepare_catalog_sources,
 )
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
+from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedVariableSameAs
 from reg_meta_build.source_coordinates import (
     native_parent_key,
     native_variable_key,
@@ -76,8 +77,9 @@ _SENTINEL_CSV = "code,label\n2,Miljo\n3,Beteende\n4,Bada\n"
 _SENTINEL_CELL = f"{BU_SPEC_LINED}\n9 = ej aktuellt"
 
 
-def _scope(records, *, slugs, revision, cases=()):
-    """One whole-source scope declaring every native target its records name."""
+def _scope(records, *, slugs, revision, cases=(), register_key=None):
+    """One scope, whole-source unless a `register_key` is given, declaring every
+    native target its records name."""
     provider = records[0].subject.provider
     variables = sorted(
         {key for key in map(native_variable_key, records) if key is not None}, key=repr
@@ -122,7 +124,7 @@ def _scope(records, *, slugs, revision, cases=()):
 
     return ScopeDeclarations(
         source=revision.dataset,
-        register_key=None,
+        register_key=register_key,
         cases=cases,
         naming=tuple(
             NamingDeclaration(
@@ -217,7 +219,11 @@ def selection(tmp_path, request):
     # the later summary row declares an identifier, so the built flags say which
     # native variable each row reached.
     renumbered = param == "renumbered"
-    lineage_warning = param == "lineage_warning"
+    # Two registers, one scope file each, referring to each other: OTHERREG's
+    # source label and a replacement event name TESTREG, and curation declares
+    # the two variables the same.
+    register_scoped = param == "register_scoped"
+    lineage_warning = param == "lineage_warning" or register_scoped
     columnless = param == "columnless"
     sentinel = param == "sentinel"
     write_scb_input(
@@ -233,6 +239,7 @@ def selection(tmp_path, request):
                     "typed",
                     "renumbered",
                     "lineage_warning",
+                    "register_scoped",
                     "columnless",
                     "sentinel",
                     *_SOS_CELLS,
@@ -299,6 +306,8 @@ def selection(tmp_path, request):
             timeseries_row(entitet="AktuellVariabel", id1="1001", id2="404")
         ]
         if param == "source_event"
+        else [timeseries_row(entitet="AktuellVariabel", id1="1001", id2="2001")]
+        if register_scoped
         else None,
         unika_rows=[
             "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0",
@@ -375,6 +384,29 @@ def selection(tmp_path, request):
             _scope(records, slugs=_SCB_SLUGS, revision=revision),
         )
     ]
+    if register_scoped:
+        # The whole-source scope's own slugs, register by register.
+        scopes = [
+            _scope_file(
+                directory,
+                f"scope-{index}.json.gz",
+                _scope(
+                    members,
+                    slugs={
+                        kind: f"{slug}-{index}" if index else slug
+                        for kind, slug in _SCB_SLUGS.items()
+                    },
+                    revision=revision,
+                    register_key=key,
+                ),
+            )
+            for index, (key, members) in enumerate(
+                sorted(
+                    prepared.records.iter_register_slices(revision.dataset),
+                    key=lambda item: repr(item[0]),
+                )
+            )
+        ]
     if param in _SOS_CELLS or sentinel:
         sos_revision = _input_revision(manifest, "sos_workbook")
         sos_records = tuple(prepared.records.iter_records(source=sos_revision.dataset))
@@ -432,10 +464,17 @@ def selection(tmp_path, request):
             for e in manifest.inputs
             if e.revision and e.path == "Timeseries.csv"
         )
-        if param == "source_event"
+        if param in {"source_event", "register_scoped"}
         else (),
         scopes=tuple(scopes),
         classifications=classifications,
+        metadata=ResolvedMetadata(
+            variable_same_as=(
+                ResolvedVariableSameAs(a="scb/sample/value", b="scb/sample-1/value-1"),
+            )
+        )
+        if register_scoped
+        else ResolvedMetadata(),
     )
     path = directory / "selection.json"
     path.write_text(selected.model_dump_json())
@@ -542,9 +581,12 @@ def test_build_command_has_no_legacy_or_validation_bypass(overrides):
         ["--diagnostic"],
         ["--diagnostic-db-path", "comparison.db"],
         ["--diagnostic", "--diagnostic-db-path", "comparison.db", "--db", "active"],
+        ["--registers", "1"],
+        ["--registers", ""],
+        ["--registers", "1,,2", "--diagnostic", "--diagnostic-db-path", "x.db"],
     ],
 )
-def test_diagnostic_command_requires_its_separate_output(options):
+def test_partial_build_commands_require_valid_separate_output(options):
     assert (
         run(
             [
@@ -1476,3 +1518,118 @@ def test_engineering_failures_never_become_diagnostic_waivers(
             selection, output, tmp_path / "invalid-report", diagnostic=True
         )
     assert not output.exists()
+
+
+def _issues(report):
+    with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+        return [e for e in map(json.loads, stream) if e["kind"] == "issue"]
+
+
+@pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
+def test_one_register_of_two_builds_a_nonpublishable_strict_subset(
+    selection, tmp_path, capsys
+):
+    # Real corpus validation: a subset cannot meet the corpus volume floors, so
+    # they must not apply rather than fail. Structural validation still runs.
+    report = tmp_path / "report"
+    status = run(
+        [
+            "--db",
+            str(tmp_path / "subset"),
+            "build-db",
+            "--selection",
+            str(selection),
+            "--report-dir",
+            str(report),
+            "--registers",
+            "1",
+        ]
+    )
+    result = json.loads(capsys.readouterr().out)
+    assert status == 0
+    assert result["status"] == "complete"
+    assert result["publication_ready"] is False
+    assert result["registers"] == ["1"]
+    assert result["corpus_validation"] == "not_applicable"
+    assert result["counts"]["physical_occurrences"] == 1
+    assert result["counts"].get("error", 0) == 0
+    assert json.loads((report / "summary.json").read_text()) == result
+    with sqlite3.connect(result["database"]) as conn:
+        assert conn.execute("SELECT slug FROM register").fetchall() == [("sample",)]
+        flags = dict(conn.execute("SELECT key, value FROM import_manifest"))
+    assert flags["catalog_publishable"] == "false"
+    assert flags["catalog_completeness"] == "incomplete"
+    # Create-only, like a diagnostic: a subset never replaces a catalog.
+    with pytest.raises(ValueError, match="build outputs must be separate"):
+        build_selected_catalog(
+            selection,
+            Path(result["database"]),
+            tmp_path / "again",
+            registers=("1",),
+        )
+
+
+@pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
+def test_references_into_unselected_registers_are_deferred_warnings(
+    selection, tmp_path, structural_validation_only
+):
+    tables = ("variable_same_as", "variable_replaced_by", "variable_state_lineage")
+    full = tmp_path / "full.db"
+    result = build_selected_catalog(selection, full, tmp_path / "full-report")
+    assert result["publication_ready"] is True
+    assert "deferred_references" not in result["counts"]
+    with sqlite3.connect(full) as conn:
+        for table in tables:
+            assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() != (0,)
+    for register, deferred in (
+        ("1", ["catalog_succession", "variable_same_as:0"]),
+        (
+            "2",
+            [
+                "catalog_succession",
+                "scb/sample-1/value-1:source_register",
+                "variable_same_as:0",
+            ],
+        ),
+    ):
+        output, report = tmp_path / f"{register}.db", tmp_path / f"report-{register}"
+        result = build_selected_catalog(
+            selection, output, report, diagnostic=True, registers=(register,)
+        )
+        assert result["status"] == "diagnostic_complete"
+        assert result["publication_ready"] is False
+        assert result["corpus_validation"] == "not_applicable"
+        assert result["counts"].get("error", 0) == 0
+        issues = _issues(report)
+        assert {(i["code"], i["severity"]) for i in issues} == {
+            ("deferred_out_of_slice_reference", "warning")
+        }
+        assert result["counts"]["deferred_references"] == len(deferred)
+        assert sorted(o for i in issues for o in i["withheld_output"]) == deferred
+        with sqlite3.connect(output) as conn:
+            for table in tables:
+                assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() == (0,)
+
+
+@pytest.mark.parametrize("selection", ["sos_lined"], indirect=True)
+def test_only_a_register_subset_lifts_the_complete_coverage_refusal(
+    selection, tmp_path
+):
+    raw = json.loads(selection.read_bytes())
+    raw["scopes"] = [s for s in raw["scopes"] if s["source"].startswith("scb-")]
+    selection.write_text(json.dumps(raw))
+    with pytest.raises(ValueError, match="do not cover the complete prepared"):
+        build_selected_catalog(selection, tmp_path / "full.db", tmp_path / "full")
+    with pytest.raises(ValueError, match="names no selected scope"):
+        build_selected_catalog(
+            selection, tmp_path / "x.db", tmp_path / "x", registers=("1",)
+        )
+    result = build_selected_catalog(
+        selection,
+        tmp_path / "scb.db",
+        tmp_path / "scb",
+        registers=("scb-registerinformation",),
+    )
+    assert result["status"] == "complete"
+    assert result["publication_ready"] is False
+    assert result["registers"] == ["scb-registerinformation"]
