@@ -40,7 +40,7 @@ prepared stores without expanding cold archives or repeating preparation validat
 Reports contain `summary.json` and a compressed structured event ledger with original
 source references, applicability failures and withheld output. Diagnostic mode retains
 error severity. Invalid pins, broken contracts and implementation failures remain fatal.
-See [DESIGN.md](DESIGN.md) for the three stage boundaries, precise curation scopes,
+See [DESIGN.md](DESIGN.md) for the four-step contract, precise curation scopes,
 source-update workflow and verification rules.
 
 ## Other commands

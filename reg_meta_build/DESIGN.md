@@ -10,9 +10,13 @@ public catalog/schema constants and read models. The builder owns input handling
 curation, materialization and validation. Cross-package constraints live in
 [../ARCHITECTURE.md](../ARCHITECTURE.md).
 
-The three-stage pipeline is the only `build-db` implementation. A diagnostic database is
-incomplete and cannot be activated by builder publication. Input declaration loaders and
-read-only worklists do not constitute an alternative build route.
+The four-step pipeline below is the only `build-db` implementation. A diagnostic
+database is incomplete and cannot be activated by builder publication. Input declaration
+loaders and read-only worklists do not constitute an alternative build route.
+
+Where the code has not caught up with this design, the text marks the current state as
+*transitional*; [../REFACTOR_SPEC.md](../REFACTOR_SPEC.md) orders the work that removes
+it.
 
 ## Responsibilities
 
@@ -24,36 +28,47 @@ The design serves five maintainer tasks:
 4. Explain affected identities, periods, coding and dependent catalog content.
 5. Repair a source adapter when an actual delivered format changes.
 
-There are three stages inside one builder:
+The builder has four steps:
 
-  | Stage    | Responsibility                                                                                            | Boundary                                                                                                                     |
-  | -------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-  | Cleaning | Decode actual provider formats into source-faithful observations and compact value dictionaries.          | No catalog FQIDs, identity merging, source winner, PDF interpretation or LLM calls.                                          |
-  | Curation | Resolve identities, fields, availability, coding, groups and relations through one common implementation. | Exact source scope and checked dependencies; no per-register Python rules or decisions based on another correction's output. |
-  | Build    | Assign storage IDs, write resolved rows, derive search indexes, validate and publish atomically.          | No independent semantic choices or post-write correction passes.                                                             |
+  | Step        | Responsibility                                                                                                              | Boundary                                                                                                                                                                                      |
+  | ----------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 1. Condense | Provider adapters decode raw deliveries into one common, compact form with minimal interpretation.                          | No catalog FQIDs, identity merging, source winner, PDF interpretation or LLM calls.                                                                                                           |
+  | 2. Rules    | Provider-generic automatic processing of identities, fields, periods, coding, classification binding, groups and relations. | No provider, register, variant or variable ids and no special cases in rule code. A regularity that holds across the corpus is a rule applied on every build, never a stored per-member case. |
+  | 3. Curation | Discretionary, tracked decisions for whatever the rules leave unresolved.                                                   | Tracked TOML naming literal source coordinates; no per-register Python and no decision based on another correction's output.                                                                  |
+  | 4. Build    | Assign storage IDs, write resolved rows, derive search indexes, validate and publish atomically.                            | Errors on anything unresolved until curation resolves or explicitly acknowledges it. No independent semantic choices or post-write correction passes.                                         |
+
+Cleaning and input storage below describe step 1. Common curation describes steps 2 and
+3 together. Strict and diagnostic builds describes step 4.
 
 The maintained call path is `pipeline.build_selected_catalog` →
 `prepared_catalog.open_prepared_catalog_sources` → `source_scope.resolve_source_scope`
 for each complete source/register scope → catalog dependency and lineage resolution →
 `resolved_catalog.write_resolved_catalog`.
 
-  | Module family                                                                           | Role                                                                      |
-  | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-  | `sources/*_records.py`, `sources/*_values.py`, source reference readers                 | Actual-format cleaning.                                                   |
-  | `source_records.py`, `source_values.py`, `source_reference_records.py`                  | Common source observations, values and literal reference declarations.    |
-  | `input_snapshot.py`, `prepared_sources.py`, `prepared_values.py`, `prepared_catalog.py` | Capture, validation, compact storage and pinned prepared-input access.    |
-  | `source_curation.py`, `source_effects.py`, `source_naming.py`                           | Applicability, original-evidence corrections and checked naming.          |
-  | `source_intervals.py`, `source_coding.py`, `source_formation.py`                        | Exact periods, membership reconciliation and ordinary variable formation. |
-  | `source_annotations.py`, `source_representations.py`, classification binding modules    | Checked aliases, parallel columns and classification decisions.           |
-  | `catalog_dependencies.py`, `catalog_lineage.py`, `source_event_resolution.py`           | Supported catalog relationships and exact dependent omissions.            |
-  | `resolved_catalog.py`, `resolved_metadata.py`, `db.py`                                  | Direct materialization, SQL schema, indexes and atomic publication.       |
-  | `validate.py`, `semantic_diff.py`, `dbdiff.py`                                          | Structural/corpus verification and comparison.                            |
-  | `extend_db.py`, `sources/curated.py`, `ir/`                                             | Separate steward extension over a released global catalog.                |
-  | `doc_db.py`                                                                             | Document indexing; independent of source fact resolution.                 |
+  | Step | Module family                                                                              | Role                                                                                              |
+  | ---- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+  | 1    | `sources/*_records.py`, `sources/*_values.py`, source reference readers                    | Actual-format decoding.                                                                           |
+  | 1    | `source_records.py`, `source_values.py`, `source_reference_records.py`, `normalization.py` | Common compact observations, values, literal reference declarations and mechanical normalization. |
+  | 1    | `input_snapshot.py`, `prepared_sources.py`, `prepared_values.py`, `prepared_catalog.py`    | Capture, validation, compact storage and pinned prepared-input access.                            |
+  | 2    | `source_intervals.py`, `source_coding.py`, `source_formation.py`                           | Exact periods, membership reconciliation and ordinary variable formation.                         |
+  | 2    | `catalog_dependencies.py`, `catalog_lineage.py`, `source_event_resolution.py`              | Supported catalog relationships and exact dependent omissions.                                    |
+  | 2, 3 | classification binding modules                                                             | The label binding rule and per-classification overrides.                                          |
+  | 3    | `source_curation.py`, `source_effects.py`, `source_naming.py`                              | Applicability, original-evidence corrections and checked naming.                                  |
+  | 3    | `source_annotations.py`, `source_representations.py`                                       | Checked aliases and parallel columns.                                                             |
+  | 3    | `convert_*.py`, the `pipeline.py` selection and scope files                                | Transitional offline conversion (see Curation source and layout).                                 |
+  | 4    | `resolved_catalog.py`, `resolved_metadata.py`, `db.py`                                     | Direct materialization, SQL schema, indexes and atomic publication.                               |
+  | 4    | `validate.py`, `semantic_diff.py`, `dbdiff.py`                                             | Structural/corpus verification and comparison.                                                    |
+  | —    | `extend_db.py`, `sources/curated.py`, `ir/`                                                | Separate steward extension over a released global catalog.                                        |
+  | —    | `doc_db.py`                                                                                | Document indexing; independent of source fact resolution.                                         |
 
-The selection contains data, never executable conversion hooks. Scope files load one
-register at a time. The runtime does not import one-time conversion scripts or use the
-legacy database as evidence.
+Transitional: builder code still names specific registers or variants in four places.
+They are debt to remove, not precedent:
+
+- `sources/scb.py` `_PROJECTION_REGISTERS`, which reads one forecast register's edition
+  names as vintages;
+- the LISA code-membership anchor in `validate.py`;
+- the CIS 2014 register/variant selector in `cis2016_matrix.py`;
+- the LISA variant pins in `source_inspection.py`.
 
 ## Source observations and authority
 
@@ -231,12 +246,58 @@ missing row also invalidates an omission claim covering that row.
 
 ## Common curation
 
-`source_curation.py` evaluates cases against the original complete source scope. A case
-names exact members, finite periods, fields and expected facts; supporting evidence and
-peer guards bound its applicability. Peer guards check completeness but do not select
-additional targets. Changed relevant facts, new intersecting evidence, lost support,
-changed membership or changed cardinality make the case stale. Unrelated later editions
-and layout changes remain applicable when their scoped projections are unchanged.
+### Curation source and layout
+
+Tracked TOML in this repository is the only curation input. The build reads it directly.
+It is not part of the input bundle, and no preparation depends on it, so a curation edit
+never forces a re-prepare. Curation compiles in-process on every build; there is no
+stored selection. The build summary records a hash of the curation tree. An optional
+decision dump serves inspection.
+
+Transitional: `prepare-input-bundle` copies `curation/` and `fqid_slugs/`
+(`--curation-dir`, `--slug-dir`) into the input bundle and the bundle contract validates
+them, so every curation edit forces a full re-prepare. Offline conversion
+(`convert_*.py`) turns curation into a stored `PipelineSelection` with per-register
+scope files, which `build-db --selection` reads, and the catalog embeds that selection's
+digest (`curation_selection_sha256`). The selection contains data, never executable
+conversion hooks; scope files load one register at a time. The runtime does not import
+one-time conversion scripts or use the legacy database as evidence.
+
+The target layout:
+
+- `curation/registers/<provider>/<register-slug>.toml` holds one register, with one
+  table per curation category. An optional directory holds a register family, e.g.
+  Komvux 248/249/250.
+- `curation/classifications/<short>.toml` holds one classification: its metadata,
+  sentinels, the label list behind the binding rule, and overrides.
+- Global files keep the cross-register curation: relations and `same_as`, tags, lineage,
+  successions spanning registers, and slug freeze state.
+- Files generated from a built DB (`concept_groups.auto.toml`,
+  `delivery_enrichment.generated.toml`) are worklist output, not curation.
+- SWECOV steward holdings belong to the steward layer, not to global SCB errata.
+
+Transitional: curation files are one per category (`curation/*.toml`,
+`fqid_slugs/<provider>.toml`), and the SWECOV holdings sit in
+`curation/scb_errata.toml`.
+
+### Entries and pins
+
+A curation entry carries no pin by default. It names literal source coordinates:
+register, variant, column and edition labels. The compile checks every entry against the
+complete source scope; an entry that matches nothing, or more than it names, is stale,
+which is an error. Unrelated later editions, layout changes and deliveries elsewhere
+therefore never stale it. Evidence fingerprints remain only for decisions that choose
+between competing lists that cannot be named literally: a `CodingDecision` and a copied
+coding (below).
+
+Transitional: `source_curation.py` evaluates cases converted offline into scope files.
+Each case pins exact members, finite periods, fields and expected facts (`expected_*`)
+captured at conversion, with peer guards that check completeness without selecting
+targets. Changed relevant facts, new intersecting evidence, lost support, changed
+membership or changed cardinality make it stale. Naming declarations are likewise pinned
+by whole-file hashes.
+
+### Decisions and formation
 
 Cases can coordinate identity, occurrence, field, period, coding and representation
 changes. They are not restricted to one atom per field. Equal assignments compose;
@@ -286,9 +347,10 @@ Unknown and pooled scopes retain their original validity constraints in the fing
 without acquiring dates. Scope fingerprints hash semantic content only — the (kind,
 label, intervals, pooled_start, pooled_end) tuple, with the pooled bounds kept when set
 — never the model dump, so a new optional scope field left as None leaves every existing
-fingerprint unchanged. Fingerprints are captured during offline conversion, never
-generated or refreshed by a build. Checked value-list field corrections bind using the
-effective declaration while retaining the original source record as evidence.
+fingerprint unchanged. A fingerprint lives in the tracked curation entry; a build checks
+it and never generates or refreshes it. Transitional: offline conversion captures
+fingerprints into the stored selection. Checked value-list field corrections bind using
+the effective declaration while retaining the original source record as evidence.
 
 An explicitly open upper bound differs from an unknown period. Resolution can retain a
 known start and explicit open end; the writer uses `9999-12-31` as the storage sentinel.
@@ -351,6 +413,13 @@ rewritten to fit canonical labels. A literal source-reference dictionary or chec
 declaration establishes a variable binding. Code overlap percentages, URL guesses and
 name similarity cannot.
 
+The label binding is a rule. A state whose value-set version label exactly matches an
+entry on a classification's label list binds to that classification. The binding is
+re-derived on every build with no codebook-hash pin, so no codebook or builder change
+requires regenerating curation; a classification's overrides are curation. Transitional:
+each binding is a stored `ClassificationDecision` case (`accepted-classification-seed`)
+pinned by `expected_classification`, the codebook content hash.
+
 Conformance compares exact code strings. Noncanonical members preserve the original list
 and declared binding as evidence, withhold the state classification link and emit an
 error. There is no global sentinel waiver. A classification may instead curate its own
@@ -364,8 +433,8 @@ no patterns and no cross-classification lists, and unknown keys or duplicate cod
 the load fast. Any other noncanonical code still severs the binding with the existing
 error, which lists only the non-sentinel codes. A sentinel must not be a canonical code;
 the load refuses the overlap. The sentinel list is conformance curation, not codebook
-content, so it is not pinned by the classification content hash and curating a sentinel
-does not stale accepted bindings. Original coding issues remain visible.
+content, so curating a sentinel never stales a binding. Original coding issues remain
+visible.
 
 A parallel-column decision names each literal column and its finite delivery window. It
 reconciles sibling metadata and coding before forming shared states. Conflicting facts
@@ -467,19 +536,29 @@ time grain and independently supported parent metadata survive.
 ## Strict and diagnostic builds
 
 Strict publication is the default. Every unhandled source discrepancy requiring a
-decision is an actionable structured error. Optional unspecified metadata may remain
-unknown with a diagnostic; an unsupported parser or missing implementation cannot be
-reclassified as curation. Unknown sensitivity/identifier flags cannot be represented
-faithfully in the current Boolean DB contract, so the variable and dependent output are
-withheld instead of substituting false.
+decision is an actionable structured error until curation resolves or acknowledges it.
+Optional unspecified metadata may remain unknown with a diagnostic; an unsupported
+parser or missing implementation cannot be reclassified as curation. Unknown
+sensitivity/identifier flags cannot be represented faithfully in the current Boolean DB
+contract, so the variable and dependent output are withheld instead of substituting
+false.
+
+A curation `[[acknowledge]]` entry names one exact issue code, its target coordinates, a
+reason and evidence. It turns that one issue into a counted warning and withholds the
+affected output. It is stale if it matches nothing. Strict publication accepts
+acknowledged issues. A warning is either defined by a rule, such as
+`omitted_columnless_occurrence`, or a counted acknowledgement. Transitional: there is no
+acknowledge surface; `source_scope.resolve_source_scope` rejects the existing
+`BoundedUnresolvedDecision`.
 
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
 selection and writes only independently supported output to a separate new path. It
-retains strict severity, source locators, fields, periods, catalog identities, reasons
-and withheld output. Competing evidence stays in the pinned prepared artifact. Every
-source occurrence has a disposition, including duplicates, support-only rows and omitted
-output. Existing curation accounting is separate: accounted does not imply applied or
-materialized.
+never aborts on a per-variable or per-family inconsistency: it withholds the affected
+output and reports it. It retains strict severity, source locators, fields, periods,
+catalog identities, reasons and withheld output. Competing evidence stays in the pinned
+prepared artifact. Every source occurrence has a disposition, including duplicates,
+support-only rows and omitted output. Existing curation accounting is separate:
+accounted does not imply applied or materialized.
 
 A completed diagnostic artifact is marked incomplete and nonpublishable in its manifest.
 Its CLI status is exit 10, distinct from publication readiness. Builder publication,
@@ -499,6 +578,10 @@ build leaves the active catalog intact. Output, backup and summary paths cannot 
 selected inputs, including through hard links or symlinks. A summary-writing failure
 reports any already completed artifact separately rather than implying publication never
 happened.
+
+`build-db --registers ...` builds a register subset, strict or diagnostic, for fast
+verification. Its output is never publishable, and its corpus volume guards report as
+not applicable. Transitional: not built yet.
 
 Publication uses staged output and atomic replacement, with the previous generation
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call
@@ -553,6 +636,10 @@ reg-meta-build build-docs ...
 describes paths and pins. Naming, classification, group, succession, same-as,
 split-sibling and document-coverage worklist commands produce review material; they do
 not approve or apply new curation during a build.
+
+Transitional: `build-db --selection` and
+`prepare-input-bundle --curation-dir`/`--slug-dir` remain until curation compiles at
+build time (see Curation source and layout).
 
 ## Steward extension
 

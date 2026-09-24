@@ -27,8 +27,9 @@ from-scratch rebuild tracked in #707 (archived under #699).
 
 **Remaining (this document):** composite panel keys, the steward delivery inventories
 and normalized order boundary, the remaining real steward coverage, measured web
-performance hardening, and the v1 slug freeze. (Webapp deployment — step 6.5 — shipped
-2026-06-11; the webapp-authoring hard-cut — step 7 — shipped 2026-06-11.)
+performance hardening, the `reg_meta_build` restructuring, and the v1 slug freeze.
+(Webapp deployment — step 6.5 — shipped 2026-06-11; the webapp-authoring hard-cut — step
+7 — shipped 2026-06-11.)
 
 ## Sequence
 
@@ -45,6 +46,7 @@ step numbering.
   | 11      | Steward catalogs (ifau, swecov)                                           | 7.5      | #206             |
   | 12      | Delivery inventory + shared normalized order manifest                     | 11       | —                |
   | P       | Remaining cache, classification-payload, and static-asset hardening       | 6.5      | —                |
+  | R       | `reg_meta_build` restructuring; no catalog release until parity           | —        | —                |
   | —       | v1 slug freeze + arm immutability                                         | all      | #209, #196, #197 |
 
 ## 6.5 — Deployment: containerize, Cloudflare, `global` up
@@ -387,6 +389,71 @@ Completion: the early validator/shared-cache proof, bounded classification paylo
 immutable asset policy ship; the search load harness joins the existing performance
 gate; controlled traces keep #1138's search budgets and #1139's CLS < 0.1 as regression
 evidence. Move the lasting cache/payload rationale into `reg_webapp/DESIGN.md`, then
+delete this section.
+
+## reg_meta_build restructuring (2026-09-24)
+
+The maintainer froze the Y-184 regeneration cycle on 2026-09-24 and adopted a
+restructuring of `reg_meta_build`. Rules had been encoded as pinned curation: the
+classification label rule became 18,756 stored cases and naming became 51,904
+declarations pinned by whole-file hashes, so every code change forced a hand-written
+regeneration. Curation sat in the input bundle, so each curation edit forced a 33–37 min
+re-prepare. Strict builds had no acknowledge surface, and every iteration was a
+whole-corpus build. Evidence (maintainer-local, gitignored):
+`archive/reports/curation-reorg-2026-09-24/`.
+
+The design lives in [`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md); its
+*transitional* notes mark what the work below removes.
+
+**Release gap (accepted).** The live catalog, reg_meta 0.40.1, was built by the removed
+`--providers` path, and main cannot rebuild it. There is no release until the new
+pipeline reaches parity. Progress is tracked as "registers at semantic parity with
+0.40.1".
+
+Ordered work (§ references point into DESIGN.md):
+
+1. Record the design (Y-222).
+2. Take curation out of the input bundle (§ Curation source and layout).
+3. Add `build-db --registers ...` (§ Strict and diagnostic builds).
+4. Compile curation in-process with pin-free entries (§ Entries and pins). Delete
+   `PipelineSelection`, the scope files and the offline conversion; add the optional
+   decision dump.
+5. Turn stored cases back into rules: re-derive the classification label binding (§
+   Classifications and representations), drop the naming hashes, and remove the
+   register-specific code § Responsibilities lists as debt.
+6. Add `[[acknowledge]]`, and remove any per-variable or per-family abort left in
+   diagnostic mode (§ Strict and diagnostic builds).
+7. Move to the target curation layout (§ Curation source and layout).
+8. Run the first slice, then take the open decision below.
+9. Finish the slice.
+10. Onboard the remaining registers one at a time through curation, each to semantic
+    parity with 0.40.1.
+
+**Slice.**
+
+- SCB: LISA (34), HREG (47), IT-användning (258), Innovation i företag (257), RTB (2),
+  IoT (25), AGI (392).
+- SOS: LOVA, MFR, patient register.
+- One thin authored FK source.
+
+The slice is done when all of these hold:
+
+- prepare is untouched by curation edits;
+- a strict `--registers` build exits 0 from tracked TOML alone, byte-identical on rerun;
+- every warning is rule-defined or a counted acknowledgement;
+- the semantic diff against reg_meta 0.40.1 for those registers is explained;
+- `extend-db` SWECOV over the slice passes its holdings gate.
+
+**Open decision, after the first slice run.** Whether the three systematic error classes
+get documented reconciliation rules or register-level acknowledgements:
+
+- `empty_active_coding`;
+- `unresolved_native_identity`;
+- `conflicting_occurrence_facts`, where 77% are two overlapping editions disagreeing on
+  type or length spelling.
+
+Completion: the slice is done and every register is onboarded at semantic parity with
+0.40.1. At that gate, remove DESIGN.md's transitional notes and its pointer here, then
 delete this section.
 
 ## v1 slug freeze (#209)

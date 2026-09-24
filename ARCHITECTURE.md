@@ -135,12 +135,16 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_bu
 
 ### Accepted source revisions and catalog generations
 
-`reg_meta_build` owns three stages: provider-format cleaning into prepared source
-records, provider-neutral curation and resolution, and mechanical SQLite writing.
+`reg_meta_build` follows a four-step contract: provider adapters condense raw deliveries
+into one common compact form; provider-generic rules process it on every build; tracked
+curation decides what the rules leave unresolved; and the build writes the SQLite
+catalog, erroring on anything unresolved until curation resolves or acknowledges it.
 Machine-readable inputs are selected by the exact commit and manifest of a host-local
-input repository. Builds reuse validated preparation; they never call LLMs or extract
-PDFs. The catalog embeds its prepared-source pins and curation-selection digest. See
-`reg_meta_build/DESIGN.md` for the contracts and update workflow.
+input repository; curation is tracked TOML in this repository. Builds reuse validated
+preparation; they never call LLMs or extract PDFs. The catalog embeds its
+prepared-source pins, and every build records a digest of the curation it used. See
+`reg_meta_build/DESIGN.md` for the contracts, the update workflow and what is still
+transitional.
 
 `reg_meta` and `reg_webapp` consume only the activated SQLite generation; they never
 read the input repository or recompute authority. Diagnostic builds write a separate
