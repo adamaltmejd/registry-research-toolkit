@@ -37,6 +37,7 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
     prepare_catalog_sources,
 )
+from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_coordinates import (
     native_parent_key,
     native_variable_key,
@@ -52,6 +53,7 @@ from reg_meta_build.source_curation import (
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import NativeCoordinates
+from reg_meta_build.validate import validate_built_db
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
@@ -1388,6 +1390,70 @@ def test_changed_delivery_facts_diagnostic_completes_with_error_diagnostic(
     assert "claimed data_type=" in issues[0]["detail"]
     assert "written 'text'" in issues[0]["detail"]
     assert json.loads((report / "summary.json").read_text()) == result
+
+
+def _coded(label, *members):
+    return {
+        "value_set_version_label": label,
+        "value_set": ResolvedCodeSet(members=members),
+    }
+
+
+# One per written per-column window check: the overlapping state copies a defect
+# inside formation adds to the fixture's single code-less `VALUE` state.
+_COLUMN_OVERLAPS = {
+    "overlapping_distinct_value_sets": (
+        _coded("a", ("1", "One")),
+        _coded("b", ("2", "Two")),
+    ),
+    "overlapping_codeless_codebearing_states": ({}, _coded("a", ("1", "One"))),
+    "overlapping_pooled_explicit_states": (
+        {},
+        {"pooled": True, "value_set_version_label": "p"},
+    ),
+}
+
+
+@pytest.mark.parametrize("selection", ["typed"], indirect=True)
+@pytest.mark.parametrize("code", _COLUMN_OVERLAPS)
+def test_overlapping_column_states_withhold_the_variable_only_in_diagnostic(
+    selection, tmp_path, monkeypatch, code
+):
+    """A per-column window conflict is the variable's, not the build's: strict
+    refuses before any database, diagnostic reports the same text as an error,
+    withholds the variable and writes a database that still validates."""
+    from reg_meta_build import source_formation
+
+    original = source_formation._coded_states
+
+    def overlap(segment, variant, coding, subject):
+        states, diagnostics, withheld = original(segment, variant, coding, subject)
+        return (
+            [s.model_copy(update=u) for s in states for u in _COLUMN_OVERLAPS[code]],
+            diagnostics,
+            withheld,
+        )
+
+    monkeypatch.setattr(source_formation, "_coded_states", overlap)
+    output, report = tmp_path / "overlap.db", tmp_path / "strict"
+    with pytest.raises(ValueError) as failure:
+        build_selected_catalog(selection, output, report, diagnostic=False)
+    assert "scb/sample/value people/VALUE" in str(failure.value)
+    assert not output.exists()
+    summary = json.loads((report / "summary.json").read_text())
+    assert summary["status"] == "engineering_failure"
+
+    report = tmp_path / "diagnostic"
+    result = build_selected_catalog(selection, output, report, diagnostic=True)
+    assert result["status"] == "diagnostic_complete"
+    assert result["publication_ready"] is False
+    assert result["variables"] == 0
+    with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+        issues = [json.loads(line) for line in stream if f'"{code}"' in line]
+    assert len(issues) == 1 and issues[0]["severity"] == "error"
+    assert issues[0]["detail"] == str(failure.value)
+    assert issues[0]["withheld_output"] == ["scb/sample/value"]
+    assert validate_built_db(output).passed
 
 
 @pytest.mark.parametrize("failure", ["unconverted", "scope", "hash", "escape"])

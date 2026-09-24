@@ -8,8 +8,10 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections import defaultdict
 from contextlib import closing
 from graphlib import CycleError, TopologicalSorter
+from itertools import combinations
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Literal, Self
@@ -52,7 +54,7 @@ from reg_meta_build.resolved_metadata import (
     prepare_resolved_metadata,
     write_resolved_metadata,
 )
-from reg_meta_build.validate import validate_built_db
+from reg_meta_build.validate import column_state_overlap_failure, validate_built_db
 
 
 class ResolvedRegister(_ResolvedModel):
@@ -375,6 +377,58 @@ def unresolved_variable_flags(variable: ResolvedVariable) -> tuple[str, ...]:
         for name in ("is_sensitive", "is_identifier")
         if getattr(variable, name) is None
     )
+
+
+# The conflicting pair of each per-column window check `validate_built_db` runs
+# on written states, by diagnostic code.
+_COLUMN_STATE_CONFLICTS = {
+    "overlapping_distinct_value_sets": lambda a, b: (
+        a.value_set is not None
+        and b.value_set is not None
+        and a.value_set != b.value_set
+    ),
+    "overlapping_codeless_codebearing_states": lambda a, b: (
+        (a.value_set is None) != (b.value_set is None)
+    ),
+    "overlapping_pooled_explicit_states": lambda a, b: a.pooled != b.pooled,
+}
+
+
+def column_state_overlaps(variable: ResolvedVariable) -> tuple[tuple[str, str], ...]:
+    """The per-column window checks this variable's states would fail once written.
+
+    One ``(code, message)`` per failed check, in the validator's wording. States
+    pair on one variant and one delivery column folded like the validator's
+    ``py_lower``, over closed windows, so formation can attribute the failure
+    before anything is written.
+    """
+    fqid = (
+        f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug}"
+    )
+    by_column: dict[tuple[str, str], list[ResolvedState]] = defaultdict(list)
+    for state in variable.states:
+        by_column[state.variant.slug, state.delivery_column_name.lower()].append(state)
+    # Pairwise like the validator's self-join; one column holds a handful of states.
+    overlapping = [
+        (column, a, b)
+        for (_, column), states in by_column.items()
+        for a, b in combinations(states, 2)
+        if a.valid_from <= b.valid_to and b.valid_from <= a.valid_to
+    ]
+    failures = []
+    for code, conflict in _COLUMN_STATE_CONFLICTS.items():
+        if pairs := [(c, a, b) for c, a, b in overlapping if conflict(a, b)]:
+            sample = "; ".join(
+                f"{fqid} {a.variant.slug}/{a.delivery_column_name} "
+                f"{a.valid_from}..{a.valid_to} {a.value_set_version_label!r} ∩ "
+                f"{b.valid_from}..{b.valid_to} {b.value_set_version_label!r}"
+                for _, a, b in pairs[:5]
+            )
+            columns = len({column for column, _, _ in pairs})
+            failures.append(
+                (code, column_state_overlap_failure(code, len(pairs), columns, sample))
+            )
+    return tuple(failures)
 
 
 def validate_resolved_variables(

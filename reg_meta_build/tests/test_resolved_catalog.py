@@ -29,6 +29,7 @@ from reg_meta_build.resolved_catalog import (
     ResolvedState,
     ResolvedVariable,
     ResolvedVariant,
+    column_state_overlaps,
     validate_resolved_variables,
     write_resolved_catalog,
 )
@@ -757,6 +758,49 @@ def test_parallel_resolved_columns_keep_distinct_coding_states(
     with pytest.raises(ValueError, match="overlapping distinct-value_set"):
         write_resolved_catalog((conflicting,), output, manifest={})
     assert output.read_bytes() == previous
+
+
+def _coded(label: str, code: str) -> dict[str, object]:
+    return {
+        "value_set_version_label": label,
+        "value_set": ResolvedCodeSet(members=((code, label),)),
+    }
+
+
+@pytest.mark.parametrize(
+    ("updates", "code"),
+    [
+        ((_coded("A", "01"), _coded("B", "02")), "overlapping_distinct_value_sets"),
+        (({}, _coded("A", "01")), "overlapping_codeless_codebearing_states"),
+        (
+            ({}, {"pooled": True, "value_set_version_label": "P"}),
+            "overlapping_pooled_explicit_states",
+        ),
+        # One code list under two labels is a representation, not a conflict.
+        (
+            (_coded("A", "01"), {**_coded("A", "01"), "value_set_version_label": "B"}),
+            None,
+        ),
+    ],
+)
+def test_formation_attributes_exactly_the_column_overlaps_the_writer_refuses(
+    tmp_path: Path, updates: tuple[dict[str, object], ...], code: str | None
+) -> None:
+    state = _state(2000)
+    variable = _variable().model_copy(
+        update={"states": tuple(state.model_copy(update=u) for u in updates)}
+    )
+    overlaps = column_state_overlaps(variable)
+    output = tmp_path / "reg_meta.db"
+    if code is None:
+        assert overlaps == ()
+        write_resolved_catalog((variable,), output, manifest={})
+        return
+    ((found, message),) = overlaps
+    assert found == code
+    with pytest.raises(ValueError) as failure:
+        write_resolved_catalog((variable,), output, manifest={})
+    assert message.split(": ")[0] in str(failure.value)
 
 
 @pytest.mark.parametrize("end", ["2021-02-29", "9999-01-01"])

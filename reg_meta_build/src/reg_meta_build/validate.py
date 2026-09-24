@@ -570,6 +570,34 @@ def _check_var_year_codes_anchor(
         result.ok(f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} excludes 00/05")
 
 
+# The per-column window checks below, by diagnostic code. Formation reports the
+# same failure before write (`resolved_catalog.column_state_overlaps`).
+_COLUMN_STATE_OVERLAPS = {
+    "overlapping_distinct_value_sets": (
+        "overlapping distinct-value_set state pair(s)",
+        "a period resolves to >1 value set",
+    ),
+    "overlapping_codeless_codebearing_states": (
+        "code-less ↔ code-bearing overlapping state pair(s)",
+        "a code-less window overlaps a code-bearing window",
+    ),
+    "overlapping_pooled_explicit_states": (
+        "pooled ↔ explicit overlapping state pair(s)",
+        "a pooled window overlaps an explicit window",
+    ),
+}
+
+
+def column_state_overlap_failure(
+    code: str, pairs: int, columns: int, sample: str
+) -> str:
+    what, why = _COLUMN_STATE_OVERLAPS[code]
+    return (
+        f"{pairs} {what} on one column across {columns} (variable, column) — "
+        f"{why}: {sample}"
+    )
+
+
 def _check_one_value_set_per_period(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
@@ -630,9 +658,9 @@ def _check_one_value_set_per_period(
         for r in rows[:5]
     )
     result.fail(
-        f"{len(rows)} overlapping distinct-value_set state pair(s) on one column "
-        f"across {len(affected)} (variable, column) — a period resolves to >1 "
-        f"value set: {sample}"
+        column_state_overlap_failure(
+            "overlapping_distinct_value_sets", len(rows), len(affected), sample
+        )
     )
 
 
@@ -708,9 +736,9 @@ def _check_no_codeless_codebearing_overlap(
         for r in rows[:5]
     )
     result.fail(
-        f"{len(rows)} code-less ↔ code-bearing overlapping state pair(s) on one "
-        f"column across {len(affected)} (variable, column) — a code-less window "
-        f"overlaps a code-bearing window: {sample}"
+        column_state_overlap_failure(
+            "overlapping_codeless_codebearing_states", len(rows), len(affected), sample
+        )
     )
 
 
@@ -781,9 +809,9 @@ def _check_pooled_state_overlap(
         for r in rows[:5]
     )
     result.fail(
-        f"{len(rows)} pooled ↔ explicit overlapping state pair(s) on one "
-        f"column across {len(affected)} (variable, column) — a pooled window "
-        f"overlaps an explicit window: {sample}"
+        column_state_overlap_failure(
+            "overlapping_pooled_explicit_states", len(rows), len(affected), sample
+        )
     )
 
 

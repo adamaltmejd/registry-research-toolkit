@@ -104,7 +104,8 @@ def resolve_source_scope(
 ) -> ScopeResolution:
     """Resolve one complete scope without IO policy.
 
-    The only strict/diagnostic fork is the stale-partition withholding below.
+    Two strict/diagnostic forks: the stale-partition withholding below, and
+    formation's per-column state overlaps, which a diagnostic build withholds.
 
     Missing mappings and unsupported decisions are implementation failures, with
     one diagnostic exception: an unmapped key that is the unsplit base of a
@@ -439,6 +440,7 @@ def resolve_source_scope(
             flags=flags,
             coding=classified.coding,
             representations=representation.cases,
+            diagnostic=diagnostic,
         )
         variables[key] = (
             formed.variable.model_copy(

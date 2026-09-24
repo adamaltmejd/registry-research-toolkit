@@ -19,6 +19,7 @@ from reg_meta_build.catalog_dependencies import CoverageObligation
 from reg_meta_build.resolved_catalog import (
     ResolvedState,
     ResolvedVariable,
+    column_state_overlaps,
     unresolved_variable_flags,
 )
 from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
@@ -361,6 +362,7 @@ def form_native_variable(
     flags: SourceFields,
     coding: Mapping[NativeKey, CodingResolution],
     representations: tuple[CurationCase, ...] = (),
+    diagnostic: bool = False,
 ) -> VariableFormation:
     """Form one ordinary native identity; return unsafe aspects as explicit issues.
 
@@ -375,6 +377,8 @@ def form_native_variable(
     Each physical input occurrence remains in the result.
     A formed variable also returns the delivery its supported occurrences still
     claim after the explicit coding/representation outcomes that withhold periods.
+    States that would fail the written catalog's per-column window checks raise
+    in a strict build; a diagnostic build reports them and withholds the variable.
     """
     effective = tuple(effective_occurrence(record) for record in records)
     if any(record.use != "catalog" for record in effective):
@@ -841,6 +845,11 @@ def form_native_variable(
         states=tuple(states),
         aliases=aliases,
     )
+    overlaps = column_state_overlaps(variable)
+    if overlaps and not diagnostic:
+        raise ValueError("; ".join(message for _, message in overlaps))
+    for code, message in overlaps:
+        issue(code, message, ("column_name", "period"), (subject,))
     if unknown := unresolved_variable_flags(variable):
         issue(
             "unresolved_flag",
@@ -848,6 +857,7 @@ def form_native_variable(
             unknown,
             (subject,),
         )
+    if overlaps or unknown:
         variable = None
     return VariableFormation(
         variable,

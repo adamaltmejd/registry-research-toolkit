@@ -562,15 +562,34 @@ output and reports it. It retains strict severity, source locators, fields, peri
 catalog identities, reasons and withheld output. Competing evidence stays in the pinned
 prepared artifact. Every source occurrence has a disposition, including duplicates,
 support-only rows and omitted output. Existing curation accounting is separate:
-accounted does not imply applied or materialized. Transitional: some per-variable checks
-still abort a diagnostic build, such as the `validate_built_db` structural check for
-overlapping value sets on one column.
+accounted does not imply applied or materialized.
 
 A completed diagnostic artifact is marked incomplete and nonpublishable in its manifest.
 Its CLI status is exit 10, distinct from publication readiness. Builder publication,
-including steward extension, rejects it. Contract/pin failures, invalid references,
-structural corruption and programming errors remain fatal in both modes. An explicitly
-unconverted required surface is also fatal.
+including steward extension, rejects it.
+
+Of the checks that stop a strict build, a diagnostic build reports each one it can
+attribute to a variable or family as an error diagnostic carrying the strict text:
+
+- Per-column state windows. The per-column window checks in `validate_built_db` are
+  distinct value sets, code-less against code-bearing, and pooled against explicit.
+  Formation runs them on the variable's resolved states. A failing variable and its
+  dependents are withheld.
+- Delivery coverage. `check_delivery_coverage` reports one error per obligation and
+  kind. The variable is still written.
+
+Everything else stays fatal in both modes:
+
+- an explicitly unconverted required surface;
+- selection, scope, pin and curation contracts;
+- cross-scope definition conflicts;
+- ledger accounting;
+- resolver invariants that hold by construction, and other programming errors;
+- writer preflight;
+- references that dependency resolution cannot explain by a withheld cause;
+- metadata graph duplicates and cycles;
+- the remaining global `validate_built_db` checks;
+- manifest, output path and SQLite integrity failures.
 
 The writer validates resolved references before writing, assigns deterministic storage
 IDs, and writes each final row once. It preserves separately resolved parent metadata
