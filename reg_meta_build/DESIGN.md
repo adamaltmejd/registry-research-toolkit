@@ -631,8 +631,7 @@ registers' errors without hiding them, but the full-build census arbitrates ever
 deferred reference. Shared-input diagnostics are still reported corpus-wide. The scoped
 output is create-only and marked incomplete and nonpublishable in both modes. The
 summary records the register list, `publication_ready` false and `corpus_validation`
-`not_applicable`;
-structural validation still runs.
+`not_applicable`; structural validation still runs.
 
 Publication uses staged output and atomic replacement, with the previous generation
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call
