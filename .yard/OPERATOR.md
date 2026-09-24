@@ -138,12 +138,12 @@ policy (2026-09-18), not suppression of build errors.
 sequence is approved until the operator has built it on the host as a register-scoped
 diagnostic build over the slice (`--registers` from
 `archive/reports/curation-reorg-2026-09-24/baseline/slice.txt`, about six minutes) and
-compared it with B0 there: `dbdiff` for content and the report for the issue delta.
-Lanes cannot read the prepared store, so the worker's handoff states the differences and
-issue delta it expects, and the operator checks the build against them. An unexplained
-difference blocks approval. A ticket that touches coding decisions compares against B0c
-(the slice plus FoU and FASIT) instead. The baseline's README records B0, B0c and the
-rerun identity.
+compared it with the baseline the README there names (B0-v18b from Y-229 on): `dbdiff`
+for content and the report for the issue delta. Lanes cannot read the prepared store, so
+the worker's handoff states the differences and issue delta it expects, and the operator
+checks the build against them. An unexplained difference blocks approval. A ticket that
+touches coding decisions compares against the matching B0c build (the slice plus FoU and
+FASIT) instead. The baseline's README records B0, B0c and the rerun identity.
 
 The full verification for the Y-184 batch (frozen 2026-09-24) lived on Y-184 as the
 combined checkpoint: after source adapters settle, prepare once if invalidated; after
