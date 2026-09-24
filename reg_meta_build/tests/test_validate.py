@@ -15,8 +15,8 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _curation_fixtures import write_lisa_errata
 from _csv_fixtures import write_input_bundle, write_scb_input
+from _curation_fixtures import write_lisa_errata
 from _shared_fixtures import connect_built_db
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import RegMetaError

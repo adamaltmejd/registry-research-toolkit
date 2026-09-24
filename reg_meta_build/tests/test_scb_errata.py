@@ -9,8 +9,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from _curation_fixtures import write_lisa_errata
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.scb_errata import (
     load_scb_errata,
     scoped_state_provenance,

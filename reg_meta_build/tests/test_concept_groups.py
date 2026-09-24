@@ -16,7 +16,6 @@ from reg_meta_build.concept_groups import (
     load_classification_groups,
     load_code_label_pairs,
     load_concept_group_accepts,
-    load_concept_groups,
     load_worklist_concept_groups,
     resolve_accept,
 )
