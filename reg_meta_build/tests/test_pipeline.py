@@ -1180,12 +1180,12 @@ def test_lost_delivery_coverage_refuses_the_build_before_any_database(
     assert missing in summary["error"]
 
 
-def test_lost_delivery_coverage_diagnostic_writes_ledger_then_ends_engineering_failure(
+def test_lost_delivery_coverage_diagnostic_completes_with_error_diagnostic(
     selection, tmp_path, monkeypatch, capsys
 ):
     """The operator's witness in diagnostic mode: the same truncation is recorded
-    as an error diagnostic, the diagnostic database and ledger are still
-    written, and the run ends as an engineering failure."""
+    as an error diagnostic, and the run still completes with a nonpublishable
+    database instead of failing after output is written."""
     from reg_meta_build import source_formation
 
     original = source_formation._coded_states
@@ -1215,9 +1215,8 @@ def test_lost_delivery_coverage_diagnostic_writes_ledger_then_ends_engineering_f
     result = json.loads(capsys.readouterr().out)
     missing = "2020-07-01..2020-12-31"
     assert status == EXIT_CONFIG
-    assert result["status"] == "engineering_failure"
+    assert result["status"] == "diagnostic_complete"
     assert result["publication_ready"] is False
-    assert missing in result["error"]
     assert output.exists()
     with gzip.open(report / "events.jsonl.gz", "rt") as stream:
         issues = [
@@ -1267,12 +1266,12 @@ def test_changed_delivery_facts_refuse_the_build_before_any_database(
 
 
 @pytest.mark.parametrize("selection", ["typed"], indirect=True)
-def test_changed_delivery_facts_diagnostic_writes_ledger_then_ends_engineering_failure(
+def test_changed_delivery_facts_diagnostic_completes_with_error_diagnostic(
     selection, tmp_path, monkeypatch, capsys
 ):
     """The operator's witness in diagnostic mode: the same retype is recorded as
-    an error diagnostic, the diagnostic database and ledger are still written,
-    and the run ends as an engineering failure."""
+    an error diagnostic, and the run still completes with a nonpublishable
+    database instead of failing after output is written."""
     from reg_meta_build import source_formation
 
     original = source_formation._coded_states
@@ -1301,9 +1300,8 @@ def test_changed_delivery_facts_diagnostic_writes_ledger_then_ends_engineering_f
     )
     result = json.loads(capsys.readouterr().out)
     assert status == EXIT_CONFIG
-    assert result["status"] == "engineering_failure"
+    assert result["status"] == "diagnostic_complete"
     assert result["publication_ready"] is False
-    assert "supported delivery facts changed" in result["error"]
     assert output.exists()
     with gzip.open(report / "events.jsonl.gz", "rt") as stream:
         issues = [

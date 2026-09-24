@@ -843,12 +843,12 @@ def build_selected_catalog(
             # supported delivery is our bug, and no curation error may stand in
             # for the source outcome that never came. Strict mode raises before
             # anything is placed. Diagnostic mode records each unexplained
-            # change as an error diagnostic, still writes the diagnostic
-            # database and ledger, then ends the run as an engineering failure.
-            delivery_issues = check_delivery_coverage(
+            # change as an error diagnostic and completes with a nonpublishable
+            # database, so one family's defect no longer hides the rest of the
+            # cycle.
+            for value in check_delivery_coverage(
                 lineage.variables, coverage, withheld=withheld, diagnostic=diagnostic
-            )
-            for value in delivery_issues:
+            ):
                 issue(value)
             _emit_timing("pipeline: catalog dependencies", phase_started)
             build_result.update(
@@ -898,15 +898,6 @@ def build_selected_catalog(
                     }
                     build_result["corpus_validation"] = corpus_report
                     event("corpus_validation", corpus_report)
-            if delivery_issues:
-                # Diagnostic-only: strict mode raised above. The diagnostic
-                # database and ledger are written, but an unexplained delivery
-                # change is still an engineering defect, so the run ends with
-                # the engineering-failure outcome and text, never a completion.
-                build_result.update(
-                    status="engineering_failure",
-                    error="; ".join(found.detail for found in delivery_issues),
-                )
         except Exception as exc:
             if build_result.get("database"):
                 raise
