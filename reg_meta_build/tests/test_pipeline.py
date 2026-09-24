@@ -1641,6 +1641,15 @@ def test_references_into_unselected_registers_are_deferred_warnings(
         with sqlite3.connect(output) as conn:
             for table in tables:
                 assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() == (0,)
+            # A tag wholly outside the slice is omitted, not written empty;
+            # a tag wholly inside keeps its members.
+            expected_tags = 0 if register == "1" else 1
+            assert conn.execute("SELECT COUNT(*) FROM tag").fetchone() == (
+                expected_tags,
+            )
+            assert conn.execute("SELECT COUNT(*) FROM tag_member").fetchone() == (
+                expected_tags,
+            )
 
 
 @pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)

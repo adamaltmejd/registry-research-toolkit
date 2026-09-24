@@ -1035,12 +1035,17 @@ def resolve_metadata_dependencies(
             withheld_group(output, start)
     tags = []
     for tag in metadata.tags:
+        skipped_before = dependencies.skipped
         with dependencies.entry():
             members = tuple(
                 member
                 for member in tag.members
                 if entity(member.target, f"tag:{tag.slug}:member:{member.target}")
             )
+        if not members and dependencies.skipped > skipped_before:
+            # Every member deferred to the complete build: omit the tag
+            # entirely rather than materializing it with an empty member list.
+            continue
         tags.append(tag.model_copy(update={"members": members}))
 
     def selected[T](

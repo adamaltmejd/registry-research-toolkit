@@ -619,8 +619,16 @@ member, a code/label pair, a source event or a source label) is withheld as one 
 code, `deferred_out_of_slice_reference`; `deferred_references` counts distinct
 references. A target no scope declares, including an undeclared variable in an existing
 unselected register, stays the complete build's error, and a source label matching no
-known register stays a literal label. Curation whose every reference is deferred is not
-evaluated, emits nothing and is counted once per entry as `skipped_curation`.
+known register stays a literal label. Succession-event endpoints observed only in
+unselected registers, and source labels naming exactly one unselected register, are
+likewise deferred; native IDs occurring in both scopes, and unselected occurrences with
+no supported target, need the complete occurrence census and are resolved only by the
+full build. Curation whose every reference is deferred is not
+evaluated, emits nothing and is counted once per entry as `skipped_curation`; a tag
+whose every member is deferred is omitted entirely rather than written with an empty
+member list. A scoped strict pass is therefore necessary but not sufficient: it reports
+the selected registers' errors without hiding them, but the full-build census arbitrates
+every deferred reference.
 Shared-input diagnostics are still reported corpus-wide. The scoped output is
 create-only and marked incomplete and nonpublishable in both modes. The summary records
 the register list, `publication_ready` false and `corpus_validation` `not_applicable`;

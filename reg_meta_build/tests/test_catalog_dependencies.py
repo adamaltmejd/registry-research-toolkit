@@ -176,6 +176,34 @@ def test_a_scoped_build_defers_only_what_unselected_scopes_declare():
     assert [m.key for m in dependencies.missing] == missing
 
 
+def test_a_tag_whose_members_all_lie_outside_the_slice_is_omitted():
+    variant = ResolvedVariant(slug="people", name="People")
+    variable = _variable(variant, "one")
+    metadata = ResolvedMetadata(
+        tags=(
+            ResolvedTag(
+                slug="topic",
+                label="Topic",
+                members=(
+                    ResolvedTagMember(target="scb/other/key", rank=1, starred=False),
+                ),
+            ),
+        )
+    )
+    result = resolve_metadata_dependencies(
+        metadata,
+        (variable,),
+        registers=(variable.register_ref,),
+        variants=((variable.register_ref, variant),),
+        classifications=(),
+        withheld={},
+        unselected={("variable", "scb/other/key")},
+    )
+    assert result.metadata.tags == ()
+    assert result.skipped == 1
+    assert result.diagnostics == ()
+
+
 def test_month_groups_resolve_before_writing_with_ordered_facets(tmp_path):
     variables = _month_variables("ink-")
     result = _month_resolution(variables)
