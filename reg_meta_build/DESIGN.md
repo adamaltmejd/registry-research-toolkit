@@ -246,7 +246,7 @@ correction's output as its supporting source. Application order cannot choose a 
 Ordinary variables form from an established native identity. Their names bind that exact
 source coordinate; additional deliveries do not require handwritten whole-variable
 cases. Column spellings that differ only by case or diacritics fold to one column by the
-shared column-identity key and need no partition or alias decision. An accepted name
+shared column-identity key and need no partition or alias decision. Two spellings delivered side by side in one edition of one variant are two columns, so the fold applies only when no single edition co-delivers two spellings of one fold key. An accepted name
 alone cannot establish a partition across ambiguous column spellings. A partition,
 rename or parallel-column family requires checked ownership and complete relevant
 membership. Related but different variables remain connected through groups; a shared

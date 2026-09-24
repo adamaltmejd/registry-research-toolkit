@@ -334,6 +334,41 @@ def test_diacritic_column_twins_fold_to_one_variable() -> None:
     assert "Kön" in warning.detail and "most recent spelling (Kon)" in warning.detail
 
 
+def test_co_delivered_twins_keep_the_error_and_form_nothing() -> None:
+    """Y-220: `Niva`/`Nivå` side by side in one edition are two columns.
+
+    Sequential twins keep folding; one edition co-delivering two spellings of
+    one fold key keeps the pre-Y-210 `unresolved_native_identity` error and
+    forms nothing."""
+    probe = effective_occurrence(_record(2001, column="Niva"))
+    assert probe.variant_key is not None
+    edition_key = (*probe.variant_key, "edition", "native-int", 14946)
+
+    def _edition_record(column: str, data_length: str) -> EffectiveOccurrence:
+        record = _record(2001, column=column)
+        return replace(
+            effective_occurrence(
+                record.model_copy(
+                    update={
+                        "fields": record.fields.model_copy(
+                            update={"data_length": value_field(data_length)}
+                        )
+                    }
+                )
+            ),
+            edition_key=edition_key,
+        )
+
+    result = _form((_edition_record("Niva", "3"), _edition_record("Nivå", "1")))
+    assert result.variable is None
+    assert result.coverage == ()
+    assert [d.code for d in result.diagnostics] == ["unresolved_native_identity"]
+    assert result.diagnostics[0].severity == "error"
+    distinct = _form((_record(2020, column="OLD"), _record(2021, column="NEW")))
+    assert result.diagnostics[0].detail == distinct.diagnostics[0].detail
+    assert result.diagnostics[0].fields == distinct.diagnostics[0].fields
+
+
 def test_unfolded_columns_still_require_partition_or_alias() -> None:
     """Y-210: distinct folds keep the error; no separator rule is added."""
     for old, new in (("BLK", "BLKFTG"), ("H56", "H5_6")):
