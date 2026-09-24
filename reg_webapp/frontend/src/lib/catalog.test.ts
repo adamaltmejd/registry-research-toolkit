@@ -4550,7 +4550,9 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
           .filter((s) => s.valid_from === "2018-01-01")
           .map((s) => s.delivery_column_name),
       ).toEqual(["A", "B"]);
-      expect(usage.spans).toEqual([{ from: "2017-01-01", to: "2018-12-31", pooled: false }]);
+      expect(usage.spans).toEqual([
+        { from: "2017-01-01", to: "2018-12-31", pooled: false },
+      ]);
     },
   );
 
@@ -4722,8 +4724,12 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     const vs = distinctValueSets(states);
     const doda = vs[0].usages.find((u) => u.variant === "doda");
     const fodda = vs[0].usages.find((u) => u.variant === "fodda");
-    expect(doda?.spans).toEqual([{ from: "2000-01-01", to: "2000-12-31", pooled: false }]);
-    expect(fodda?.spans).toEqual([{ from: "2001-01-01", to: "2001-12-31", pooled: false }]);
+    expect(doda?.spans).toEqual([
+      { from: "2000-01-01", to: "2000-12-31", pooled: false },
+    ]);
+    expect(fodda?.spans).toEqual([
+      { from: "2001-01-01", to: "2001-12-31", pooled: false },
+    ]);
   });
 
   it("keeps the open-ended ceiling on a still-delivered span", () => {
