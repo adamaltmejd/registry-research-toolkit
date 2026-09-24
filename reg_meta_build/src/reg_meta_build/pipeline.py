@@ -349,6 +349,7 @@ def build_selected_catalog(
         )
     report_dir.mkdir(parents=True, exist_ok=False)
     counts: Counter[str] = Counter()
+    acknowledged: Counter[str] = Counter()
     seen_scopes, seen_cases = set(), set()
     seen_unapplied = set()
     coverage: list[CoverageObligation] = []
@@ -635,6 +636,7 @@ def build_selected_catalog(
                         )
                         counts["unapplied_curation"] += 1
                     seen_scopes.add(scope_key)
+                    acknowledged.update(result.acknowledged)
                     coverage.extend(result.coverage)
                     sibling_pairs.update(result.siblings.pairs)
                     for pair in result.siblings.decisions:
@@ -856,6 +858,7 @@ def build_selected_catalog(
                     "status": "blocked" if counts["error"] else "ready",
                     "publication_ready": not diagnostic and not counts["error"],
                     "counts": dict(counts),
+                    "acknowledged": dict(sorted(acknowledged.items())),
                     "variables": len(panel.variables),
                     "states": sum(len(v.states) for v in panel.variables),
                     "database": None,

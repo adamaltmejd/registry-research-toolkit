@@ -300,36 +300,32 @@ class PeerGuard(_CurationModel):
         return self
 
 
-UnresolvedAspect = Literal[
-    "identity",
-    "availability",
-    "column_name",
-    "data_type",
-    "data_length",
-    "period",
-    "coding",
-]
+class AcknowledgeDecision(_CurationModel):
+    """Accept one exact unresolved error as a counted warning; its output stays withheld.
 
+    It names the issue by the code, subject and refs the diagnostic already
+    carries, so it pins no source members: matching nothing, or more than one
+    issue, is itself an error.
+    """
 
-class BoundedUnresolvedDecision(_CurationModel):
-    """Reviewed uncertainty that preserves source facts and withholds unsafe output."""
-
-    kind: Literal["bounded_unresolved"] = "bounded_unresolved"
-    reviewed: Literal[True]
-    withheld_aspects: tuple[UnresolvedAspect, ...]
+    kind: Literal["acknowledge"] = "acknowledge"
+    code: str
+    subject: str
+    refs: tuple[SourceRecordRef, ...]
     reason: str
-    safe_behavior: Literal["preserve_source_records"] = "preserve_source_records"
+    evidence: str
 
     @model_validator(mode="after")
-    def _complete(self) -> Self:
-        if not self.withheld_aspects or any(
-            not aspect.strip() for aspect in self.withheld_aspects
+    def _exact(self) -> Self:
+        if any(
+            not text.strip()
+            for text in (self.code, self.subject, self.reason, self.evidence)
         ):
-            raise ValueError("a bounded unresolved decision must name withheld aspects")
-        if len(self.withheld_aspects) != len(set(self.withheld_aspects)):
-            raise ValueError("withheld aspects must be unique")
-        if not self.reason.strip():
-            raise ValueError("a bounded unresolved decision needs a reason")
+            raise ValueError(
+                "an acknowledgement needs an issue code, subject, reason and evidence"
+            )
+        if len(set(self.refs)) != len(self.refs):
+            raise ValueError("acknowledged refs must be unique")
         return self
 
 
@@ -658,7 +654,7 @@ class ClassificationDecision(_ColumnDecision):
 
 
 type CurationDecision = (
-    BoundedUnresolvedDecision
+    AcknowledgeDecision
     | OccurrenceCorrectionDecision
     | SearchAliasDecision
     | AliasWindowDecision
@@ -681,7 +677,10 @@ class CurationCase(_CurationModel):
     def _finite_membership(self) -> Self:
         if not self.case_id.strip():
             raise ValueError("curation case_id must be non-empty")
-        if not self.targets:
+        if self.decision.kind == "acknowledge":
+            if self.targets or self.support or self.peer_guards:
+                raise ValueError("an acknowledgement names its issue, not source pins")
+        elif not self.targets:
             raise ValueError("a curation case needs exact targets")
         for role, expectations in (
             ("target", self.targets),
@@ -1091,11 +1090,13 @@ class ResolutionDiagnostic(_CurationModel):
     withheld_output: tuple[str, ...] = ()
     valid_from: str | None = None
     valid_to: str | None = None
+    # The acknowledging case of an error re-emitted as a counted warning.
+    acknowledged_by: str | None = None
 
 
 __all__ = [
+    "AcknowledgeDecision",
     "ApplicabilityIssue",
-    "BoundedUnresolvedDecision",
     "CaseEvaluation",
     "CodeSetExpectation",
     "CurationCase",
@@ -1106,7 +1107,6 @@ __all__ = [
     "RecordProjection",
     "ResolutionDiagnostic",
     "SourceRecordRef",
-    "UnresolvedAspect",
     "evaluate_case",
     "parent_fact_projection",
 ]

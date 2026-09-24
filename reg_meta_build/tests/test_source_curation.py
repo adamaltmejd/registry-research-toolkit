@@ -13,7 +13,8 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
 from reg_meta_build.source_curation import (
-    BoundedUnresolvedDecision,
+    AcknowledgeDecision,
+    CodingDecision,
     CurationCase,
     FieldExpectation,
     PeerGuard,
@@ -21,7 +22,6 @@ from reg_meta_build.source_curation import (
     RecordProjection,
     SourceEvidence,
     SourceRecordRef,
-    UnresolvedAspect,
     evaluate_case,
     evaluate_cases,
 )
@@ -162,11 +162,17 @@ def _expectation(
     )
 
 
-def _unresolved(*aspects: UnresolvedAspect) -> BoundedUnresolvedDecision:
-    return BoundedUnresolvedDecision(
+def _decision() -> CodingDecision:
+    """Any decision: these cases check applicability, never application."""
+    return CodingDecision(
         reviewed=True,
-        withheld_aspects=aspects,
+        column_key=("fixture-column",),
+        valid_from="2020-01-01",
+        valid_to="2020-12-31",
+        expected_codings=(),
+        selection="omit_state",
         reason="Retained source evidence does not justify a semantic winner.",
+        provenance="illustrative fixture",
     )
 
 
@@ -182,7 +188,7 @@ def test_native_identity_projection_ignores_unselected_metadata() -> None:
     )
     case = CurationCase(
         case_id="register-name",
-        decision=_unresolved("identity"),
+        decision=_decision(),
         targets=(
             RecordExpectation(
                 ref=_ref(original),
@@ -231,7 +237,7 @@ def test_peer_coordinates_match_native_identity_without_using_its_label() -> Non
     expected = _expectation(record, _expected_field(record, "data_type"))
     case = CurationCase(
         case_id="native-column",
-        decision=_unresolved("identity"),
+        decision=_decision(),
         targets=(expected,),
         peer_guards=(
             PeerGuard(
@@ -297,7 +303,7 @@ def test_batch_guards_find_new_peers_and_keep_residual_conditions(
     )
     case = CurationCase(
         case_id="checked",
-        decision=_unresolved("identity"),
+        decision=_decision(),
         targets=(_expectation(record, _expected_field(record, "column_name")),),
         peer_guards=(guard,),
     )
@@ -333,15 +339,32 @@ def test_batch_guards_find_new_peers_and_keep_residual_conditions(
     assert tuple(evidence) == (record, excluded, another)
 
 
-def test_unresolved_aspects_cannot_bypass_checks_by_using_an_unknown_label() -> None:
-    with pytest.raises(ValidationError, match="withheld_aspects"):
-        BoundedUnresolvedDecision.model_validate(
-            {
-                "reviewed": True,
-                "withheld_aspects": ("code_set_binding",),
-                "reason": "Use the explicit coding aspect and its dependency checks.",
-            }
+def test_an_acknowledgement_names_its_issue_and_pins_no_source_members() -> None:
+    ref = SourceRecordRef(source="scb-source", semantic_record_key=("member",))
+    decision = AcknowledgeDecision(
+        code="unresolved_catalog_identity",
+        subject="('scb', 'variable', 5)",
+        refs=(ref,),
+        reason="Accepted while the identity stays unresolved.",
+        evidence="Diagnostic build ledger.",
+    )
+    case = CurationCase(case_id="acknowledged", targets=(), decision=decision)
+    assert evaluate_case(case, ()).status == "applicable"
+    with pytest.raises(ValidationError, match="not source pins"):
+        CurationCase(
+            case_id="pinned",
+            targets=(
+                RecordExpectation(
+                    ref=ref,
+                    alternatives=(
+                        RecordProjection(native=NativeCoordinates(register_id=1)),
+                    ),
+                ),
+            ),
+            decision=decision,
         )
+    with pytest.raises(ValidationError, match="reason and evidence"):
+        AcknowledgeDecision.model_validate({**decision.model_dump(), "evidence": " "})
 
 
 def test_projection_order_and_value_rules_reuse_the_common_source_contract() -> None:
@@ -394,7 +417,7 @@ def test_raw_registerinformation_whitespace_does_not_stale_clean_projection() ->
                 _expected_field(expected, "data_type"),
             ),
         ),
-        decision=_unresolved("identity"),
+        decision=_decision(),
     )
 
     result = evaluate_case(case, [whitespace_changed])
@@ -557,13 +580,7 @@ def _lisa_case(known: SourceRecord, blank: SourceRecord) -> CurationCase:
                 expected_members=(_ref(known), _ref(blank)),
             ),
         ),
-        decision=_unresolved(
-            "column_name",
-            "data_type",
-            "data_length",
-            "identity",
-            "coding",
-        ),
+        decision=_decision(),
     )
 
 
@@ -584,7 +601,6 @@ def test_lisa_unresolved_case_ignores_layout_raw_and_unprojected_changes() -> No
 
     assert result.status == "applicable"
     assert result.decision == case.decision
-    assert result.decision.safe_behavior == "preserve_source_records"
 
 
 @pytest.mark.parametrize(
@@ -740,12 +756,7 @@ def _lova_case(records: tuple[SourceRecord, ...]) -> CurationCase:
         ),
         # Selective hyperlink expectations are outside this first projection. The
         # decision therefore withholds binding but does not claim link-change coverage.
-        decision=_unresolved(
-            "identity",
-            "data_type",
-            "period",
-            "coding",
-        ),
+        decision=_decision(),
     )
 
 
@@ -791,9 +802,7 @@ def test_lova_case_preserves_three_occurrences_and_unknown_open_scopes() -> None
 
     assert result.status == "applicable"
     assert records[1].edition_scope.kind == records[2].edition_scope.kind == "unknown"
-    assert result.decision is not None
-    assert "identity" in result.decision.withheld_aspects
-    assert "period" in result.decision.withheld_aspects
+    assert result.decision == case.decision
 
 
 def test_projection_sets_keep_conflicts_but_ignore_identical_duplicates() -> None:
@@ -829,7 +838,7 @@ def test_projection_sets_keep_conflicts_but_ignore_identical_duplicates() -> Non
     case = CurationCase(
         case_id="illustrative-same-key-conflict",
         targets=(expected,),
-        decision=_unresolved("data_type"),
+        decision=_decision(),
     )
     duplicate_integer = _replacement(
         base,

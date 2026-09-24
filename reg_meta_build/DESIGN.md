@@ -236,8 +236,8 @@ A source update follows this sequence:
 3. Pin the candidate prepared artifact and the existing checked decisions.
 4. Inspect applicability, strict errors, source and catalog impact, and semantic DB
    differences.
-5. Resolve new discrepancies through separately reviewed curation, or preserve exact
-   bounded unresolved decisions where safe output is justified.
+5. Resolve new discrepancies through separately reviewed curation, or acknowledge an
+   exact unresolved issue whose output stays withheld.
 6. Accept the reviewed input/decision revision explicitly, then build and publish
    strictly.
 
@@ -543,13 +543,17 @@ sensitivity/identifier flags cannot be represented faithfully in the current Boo
 contract, so the variable and dependent output are withheld instead of substituting
 false.
 
-A curation `[[acknowledge]]` entry names one exact issue code, its target coordinates, a
-reason and evidence. It turns that one issue into a counted warning and withholds the
-affected output. It is stale if it matches nothing. Strict publication accepts
-acknowledged issues. A warning is either defined by a rule, such as
-`omitted_columnless_occurrence`, or a counted acknowledgement. Transitional: there is no
-acknowledge surface; `source_scope.resolve_source_scope` rejects the existing
-`BoundedUnresolvedDecision`.
+A curation `[[acknowledge]]` entry names one exact issue code, its target coordinates
+(the subject and refs the diagnostic carries), a reason and evidence. Once its scope is
+resolved, the one matching error is re-emitted as a warning that keeps its code and
+names the acknowledging entry (`acknowledged_by`). The affected output stays withheld,
+and output withheld through it inherits the warning. The build summary counts
+acknowledgements per code. An entry that matches no error is stale, and one that matches
+more than one is over-broad; both are errors. Strict publication accepts acknowledged
+issues. A warning is either defined by a rule, such as `omitted_columnless_occurrence`,
+or a counted acknowledgement. Transitional: until curation compiles in-process, the
+entry is an `AcknowledgeDecision` scope case carrying exactly those fields, and it
+reaches only issues raised while its source scope resolves.
 
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
 selection and writes only independently supported output to a separate new path. It

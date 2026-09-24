@@ -31,6 +31,7 @@ from reg_meta_build.source_coordinates import (
     source_register_key,
 )
 from reg_meta_build.source_curation import (
+    AcknowledgeDecision,
     AliasWindowDecision,
     CheckedFieldChange,
     CheckedIdentityChange,
@@ -940,6 +941,104 @@ def test_streamed_diagnostics_preserve_strict_severity_and_source_refs():
     assert streamed.warning_count == collected.warning_count == 0
     assert emitted[0].refs == (record_ref(item),)
     assert streamed.withheld_dependencies == collected.withheld_dependencies
+
+
+def acknowledge(issue):
+    return CurationCase(
+        case_id="acknowledged",
+        targets=(),
+        decision=AcknowledgeDecision(
+            code=issue.code,
+            subject=issue.subject,
+            refs=issue.refs,
+            reason="Accepted while the source stays unresolved.",
+            evidence="Fixture diagnostic ledger.",
+        ),
+    )
+
+
+def test_an_acknowledged_error_becomes_a_counted_warning_and_stays_withheld():
+    item = record()
+    key = native_variable_key(item)
+    (issue,) = resolve((item,), provider_keys={key: None}).diagnostics
+    case = acknowledge(issue)
+    result = resolve((item,), cases=(case,), provider_keys={key: None})
+    warning = issue.model_copy(
+        update={"severity": "warning", "acknowledged_by": "acknowledged"}
+    )
+    assert result.diagnostics == (warning,)
+    assert (result.error_count, result.warning_count) == (0, 1)
+    assert result.acknowledged == {"unresolved_catalog_identity": 1}
+    assert result.variables == {key: None}
+    assert result.withheld_dependencies == {
+        ("variable", "scb/example/value-5"): (warning,)
+    }
+    assert [(e.case_id, e.status) for e in result.evaluations] == [
+        ("acknowledged", "applicable")
+    ]
+    with pytest.raises(ValueError, match="acknowledged twice"):
+        resolve(
+            (item,),
+            cases=(case, case.model_copy(update={"case_id": "again"})),
+            provider_keys={key: None},
+        )
+
+
+def test_a_stale_acknowledgement_is_an_error():
+    item = record()
+    key = native_variable_key(item)
+    (issue,) = resolve((item,), provider_keys={key: None}).diagnostics
+    # The issue no longer occurs: the variable forms and the acknowledgement errs.
+    result = resolve((item,), cases=(acknowledge(issue),))
+    assert result.variables[key] is not None
+    (stale,) = result.diagnostics
+    assert (stale.code, stale.severity, stale.case_id) == (
+        "stale_acknowledgement",
+        "error",
+        "acknowledged",
+    )
+    assert result.acknowledged == {}
+    # Coordinates match exactly, never by containment.
+    other = record(2, year="2021")
+    result = resolve(
+        (item, other),
+        cases=(acknowledge(issue),),
+        provider_keys={key: None},
+    )
+    assert [(d.code, d.severity) for d in result.diagnostics] == [
+        ("unresolved_catalog_identity", "error"),
+        ("stale_acknowledgement", "error"),
+    ]
+
+
+def test_an_overbroad_acknowledgement_is_an_error_and_acknowledges_nothing():
+    items = tuple(
+        item.model_copy(
+            update={
+                "fields": item.fields.model_copy(
+                    update={
+                        "definition": value_field(text),
+                        "description": value_field(text),
+                    }
+                )
+            }
+        )
+        for item, text in ((record(), "first"), (record(2, year="2021"), "second"))
+    )
+    conflicts = [
+        d for d in resolve(items).diagnostics if d.code == "conflicting_variable_fact"
+    ]
+    assert len(conflicts) == 2
+    assert len({(d.subject, d.refs) for d in conflicts}) == 1
+    result = resolve(items, cases=(acknowledge(conflicts[0]),))
+    assert [
+        d.severity for d in result.diagnostics if d.code == "conflicting_variable_fact"
+    ] == ["error", "error"]
+    (overbroad,) = (
+        d for d in result.diagnostics if d.code == "overbroad_acknowledgement"
+    )
+    assert (overbroad.severity, overbroad.case_id) == ("error", "acknowledged")
+    assert result.acknowledged == {}
 
 
 def test_pooled_variant_dependency_withholds_only_its_panel_axis():

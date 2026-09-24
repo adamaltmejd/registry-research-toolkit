@@ -42,6 +42,7 @@ from reg_meta_build.source_coordinates import (
     native_variable_key,
 )
 from reg_meta_build.source_curation import (
+    AcknowledgeDecision,
     CheckedFieldChange,
     CurationCase,
     FieldExpectation,
@@ -847,6 +848,79 @@ def test_unresolved_inline_code_list_is_reported_and_refused_for_publication(
         assert "inline:" in issue["detail"]
         assert issue["refs"]
         assert codes == []
+
+
+def _acknowledging(selection, issue):
+    """The same selection, acknowledging one ledger issue in its own scope."""
+    selected = PipelineSelection.model_validate_json(selection.read_bytes())
+    decision = AcknowledgeDecision.model_validate_json(
+        json.dumps(
+            {
+                "code": issue["code"],
+                "subject": issue["subject"],
+                "refs": issue["refs"],
+                "reason": "The delivered cell cannot separate its members.",
+                "evidence": "Diagnostic build ledger.",
+            }
+        )
+    )
+    case = CurationCase(case_id="acknowledged", targets=(), decision=decision)
+    scopes = []
+    for file in selected.scopes:
+        if file.source == decision.refs[0].source:
+            scope = ScopeDeclarations.model_validate_json(
+                gzip.decompress((selection.parent / file.path).read_bytes())
+            )
+            file = _scope_file(
+                selection.parent,
+                f"acknowledged-{file.path}",
+                scope.model_copy(update={"cases": (*scope.cases, case)}),
+            )
+        scopes.append(file)
+    path = selection.parent / "acknowledged.json"
+    path.write_text(
+        selected.model_copy(update={"scopes": tuple(scopes)}).model_dump_json()
+    )
+    return path
+
+
+@pytest.mark.parametrize("selection", ["sos_wrapped"], indirect=True)
+def test_strict_build_publishes_only_when_every_error_is_acknowledged(
+    selection, tmp_path, structural_validation_only
+):
+    blocked = build_selected_catalog(
+        selection, tmp_path / "blocked.db", tmp_path / "blocked"
+    )
+    assert blocked["status"] == "blocked"
+    assert blocked["acknowledged"] == {}
+    with gzip.open(tmp_path / "blocked" / "events.jsonl.gz", "rt") as stream:
+        (issue,) = (
+            event
+            for event in map(json.loads, stream)
+            if event["kind"] == "issue" and event["severity"] == "error"
+        )
+    strict_db, strict_report = tmp_path / "catalog.db", tmp_path / "strict"
+    strict = build_selected_catalog(
+        _acknowledging(selection, issue), strict_db, strict_report
+    )
+    assert strict["status"] == "complete"
+    assert strict["publication_ready"] is True
+    assert strict["counts"].get("error", 0) == 0
+    assert strict["acknowledged"] == {issue["code"]: 1}
+    with gzip.open(strict_report / "events.jsonl.gz", "rt") as stream:
+        (warning,) = (
+            event
+            for event in map(json.loads, stream)
+            if event["kind"] == "issue" and event["acknowledged_by"]
+        )
+    assert warning == {
+        **issue,
+        "severity": "warning",
+        "acknowledged_by": "acknowledged",
+    }
+    # Acknowledging fabricates nothing: the unseparated list stays withheld.
+    with sqlite3.connect(strict_db) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0] == 0
 
 
 def test_malformed_selection_sentinels_are_refused():

@@ -8,7 +8,7 @@ the complete selected corpus before invoking this resolver.
 
 from __future__ import annotations
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -19,6 +19,7 @@ from reg_meta_build.source_classification_bindings import apply_classification_c
 from reg_meta_build.source_coding_choices import apply_coding_choices
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
+    AcknowledgeDecision,
     CheckedIdentityChange,
     ClassificationDecision,
     CodingDecision,
@@ -26,6 +27,7 @@ from reg_meta_build.source_curation import (
     RepresentationDecision,
     ResolutionDiagnostic,
     SourceEvidence,
+    evaluate_cases,
 )
 from reg_meta_build.source_effects import (
     OccurrenceCorrections,
@@ -80,6 +82,7 @@ class ScopeResolution:
     withheld_dependencies: dict[DependencyKey, tuple[ResolutionDiagnostic, ...]]
     siblings: SiblingResolution
     coverage: tuple[CoverageObligation, ...]
+    acknowledged: dict[str, int]
 
 
 def resolve_source_scope(
@@ -120,29 +123,42 @@ def resolve_source_scope(
     Missing references are never converted to omissions merely because absent.
     Supported delivery the formed variables still owe the catalog is carried out
     unchanged, for the boundary guard that runs before the database is written.
+    An acknowledgement turns the one error it names into a counted warning once
+    the whole scope has been resolved; the output that error withheld stays withheld.
     """
     if len({c.case_id for c in cases}) != len(cases):
         raise ValueError("source scope case IDs must be unique")
-    supported = {
-        "correct_occurrences",
-        "coding",
-        "classification",
-        "representations",
-        "search_alias",
-        "alias_window",
-    }
-    if any(c.decision.kind not in supported for c in cases):
-        raise ValueError("unsupported source scope decision")
     evidence = SourceEvidence(originals)
     diagnostics = []
     counts = {"error": 0, "warning": 0}
+    acknowledgements = tuple(c for c in cases if c.decision.kind == "acknowledge")
+    # Errors an acknowledgement names, settled once the whole scope is resolved.
+    held: dict[
+        tuple[str, str, frozenset[SourceRecordRef]],
+        tuple[CurationCase, AcknowledgeDecision, list[ResolutionDiagnostic]],
+    ] = {}
+    for case in acknowledgements:
+        decision = case.decision
+        assert isinstance(decision, AcknowledgeDecision)
+        issue_key = decision.code, decision.subject, frozenset(decision.refs)
+        if issue_key in held:
+            raise ValueError(f"one issue is acknowledged twice: {case.case_id}")
+        held[issue_key] = case, decision, []
 
-    def emit(issue: ResolutionDiagnostic) -> None:
+    def record(issue: ResolutionDiagnostic) -> None:
         counts[issue.severity] += 1
         if on_diagnostic is None:
             diagnostics.append(issue)
         else:
             on_diagnostic(issue)
+
+    def emit(issue: ResolutionDiagnostic) -> None:
+        if held and issue.severity == "error":
+            match = held.get((issue.code, issue.subject, frozenset(issue.refs)))
+            if match is not None:
+                match[2].append(issue)
+                return
+        record(issue)
 
     names = {}
     withheld_naming = set()
@@ -165,6 +181,9 @@ def resolve_source_scope(
     for issue in corrected.diagnostics:
         emit(issue)
     evaluations = [a.evaluation for a in corrected.accounting]
+    # Acknowledgements pin no source members, so they are always applicable;
+    # a stale or over-broad one is reported when it is settled below.
+    evaluations.extend(evaluate_cases(acknowledgements, evidence))
     parents = resolve_parents(
         corrected.occurrences,
         tuple(names.values()),
@@ -233,7 +252,7 @@ def resolve_source_scope(
     aliases = []
     for case in cases:
         kind = case.decision.kind
-        if kind == "correct_occurrences":
+        if kind in {"correct_occurrences", "acknowledge"}:
             continue
         if kind in {"search_alias", "alias_window"}:
             aliases.append(case)
@@ -496,11 +515,6 @@ def resolve_source_scope(
         if cause.code == "ambiguous_named_identity"
     ):
         emit(issue)
-    withheld_dependencies = {
-        key: tuple(dict.fromkeys(causes))
-        for key, causes in withheld.items()
-        if key not in available
-    }
     if {e.case_id for e in evaluations} != {c.case_id for c in cases} or len(
         evaluations
     ) != len(cases):
@@ -526,6 +540,36 @@ def resolve_source_scope(
     )
     for issue in siblings.diagnostics:
         emit(issue)
+    acknowledged: dict[ResolutionDiagnostic, ResolutionDiagnostic] = {}
+    for case, decision, matched in held.values():
+        if len(matched) == 1:
+            issue = matched[0]
+            warning = issue.model_copy(
+                update={"severity": "warning", "acknowledged_by": case.case_id}
+            )
+            acknowledged[issue] = warning
+            record(warning)
+            continue
+        for issue in matched:
+            record(issue)
+        record(
+            ResolutionDiagnostic(
+                code="overbroad_acknowledgement"
+                if matched
+                else "stale_acknowledgement",
+                severity="error",
+                case_id=case.case_id,
+                subject=decision.subject,
+                detail=f"The acknowledgement of {decision.code!r} matches {len(matched)} issues; it must name exactly one.",
+                refs=decision.refs,
+            )
+        )
+    # Dependents of acknowledged output inherit the warning, not the error.
+    withheld_dependencies = {
+        key: tuple(dict.fromkeys(acknowledged.get(cause, cause) for cause in causes))
+        for key, causes in withheld.items()
+        if key not in available
+    }
     return ScopeResolution(
         parents,
         corrected,
@@ -537,6 +581,7 @@ def resolve_source_scope(
         withheld_dependencies,
         siblings,
         tuple(coverage),
+        dict(Counter(issue.code for issue in acknowledged)),
     )
 
 

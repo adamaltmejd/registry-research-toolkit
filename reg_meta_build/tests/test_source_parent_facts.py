@@ -14,7 +14,6 @@ from reg_meta_build.prepared_sources import (
     prepare_source_records,
 )
 from reg_meta_build.source_curation import (
-    BoundedUnresolvedDecision,
     CurationCase,
     FieldExpectation,
     RecordExpectation,
@@ -25,6 +24,7 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_records import SourceField, SourceRecord, SourceRevision
 from reg_meta_build.sources.scb_records import clean_scb_row
+from test_source_curation import _decision
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -197,11 +197,7 @@ def test_parent_guards_track_semantics_without_changing_variable_guards() -> Non
     reference = SourceRecordRef(
         source=first.source, semantic_record_key=first.locators[0].semantic_record_key
     )
-    decision = BoundedUnresolvedDecision(
-        reviewed=True,
-        withheld_aspects=("identity",),
-        reason="Synthetic finite source decision",
-    )
+    decision = _decision()
     parents = CurationCase(
         case_id="parent-facts",
         targets=(
