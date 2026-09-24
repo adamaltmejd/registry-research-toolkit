@@ -390,7 +390,10 @@ periods it assigns to a sibling column — what it does deliver stays a claim, s
 shared state and the alias windows it promises are themselves checked. Obligations
 travel with the scope result and are checked against the final resolved variables
 immediately before the database is written — in both modes, and whatever else the ledger
-already holds.
+already holds. The strict build stops before any output is placed. The diagnostic build
+records each unexplained fact change and each lost window as an error diagnostic on its
+obligation and completes with a nonpublishable database, so one family's defect no
+longer hides the rest of the cycle.
 
 Delivery is established by a final state or a declared representation window on the same
 variable, variant and column. Another column, another variant and a search alias without
@@ -411,8 +414,10 @@ outright, with source evidence, answers for its own claim through that entry, wh
 stage recorded it, and for nothing past that exact coordinate: an exact source-linked
 blocker stays a curation blocker without covering a sibling. Anything else missing is an
 engineering defect, not a curation question: the build names the source records and the
-exact missing window and stops before any output is placed. A missing optional field or
-an unrelated diagnostic is no permission to drop the state it belongs to.
+exact missing window. A strict build stops before any output is placed; a diagnostic
+build records the miss as an error diagnostic and still completes with a nonpublishable
+database. A missing optional field or an unrelated diagnostic is no permission to drop
+the state it belongs to.
 
 ### Groups, relations and dependent output
 

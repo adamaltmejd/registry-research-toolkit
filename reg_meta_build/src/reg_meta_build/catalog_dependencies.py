@@ -249,8 +249,13 @@ def check_delivery_coverage(
     obligations: Iterable[CoverageObligation],
     *,
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
-) -> None:
+    diagnostic: bool = False,
+) -> tuple[ResolutionDiagnostic, ...]:
     """Refuse silent loss of supported delivery coverage before the catalog is placed.
+
+    Strict mode raises on the first unexplained kind found. Diagnostic mode
+    returns one error diagnostic per obligation and kind instead, so the build
+    can report every problem and continue.
 
     Delivery is established by a final state or a declared representation window
     on the same resolved variable, variant and physical column; a search alias
@@ -279,8 +284,9 @@ def check_delivery_coverage(
             delivered[fqid, alias.variant.slug, alias.delivery_column_name].extend(
                 (window.valid_from, window.valid_to) for window in alias.windows
             )
-    losses = []
-    fact_changes = []
+    losses: list[str] = []
+    fact_changes: list[str] = []
+    notes: list[tuple[CoverageObligation, list[str], list[str]]] = []
     for obligation in obligations:
         if any(
             key in withheld
@@ -290,6 +296,8 @@ def check_delivery_coverage(
             )
         ):
             continue
+        ob_losses: list[str] = []
+        ob_facts: list[str] = []
         key = (obligation.fqid, obligation.variant, obligation.column)
         refs = ", ".join(
             "/".join((ref.source, *ref.semantic_record_key)) for ref in obligation.refs
@@ -297,7 +305,7 @@ def check_delivery_coverage(
         for start, end in remaining_windows(
             delivered.get(key, ()), obligation.valid_from, obligation.valid_to
         ):
-            losses.append(
+            ob_losses.append(
                 f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                 f"{start}..{end} claimed by {refs}"
             )
@@ -346,13 +354,13 @@ def check_delivery_coverage(
                     if state.valid_from <= end and state.valid_to >= start
                 )
                 for gap_start, gap_end in remaining_windows(clipped, start, end):
-                    fact_changes.append(
+                    ob_facts.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                         f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                         f"no written state carries the claimed facts for {gap_start}..{gap_end}"
                     )
                 for first, last, count in _ambiguous_backing_slices(clipped):
-                    fact_changes.append(
+                    ob_facts.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                         f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                         f"alias backing is ambiguous: {count} states of variant "
@@ -364,6 +372,8 @@ def check_delivery_coverage(
             and not claimed_attributions
             and not alias_cover
         ):
+            losses.extend(ob_losses)
+            notes.append((obligation, ob_facts, ob_losses))
             continue
         candidates: dict[tuple[str, str, str, str], ResolvedState] = {}
         for variable in by_fqid.get(obligation.fqid, ()):
@@ -414,13 +424,13 @@ def check_delivery_coverage(
                 candidates[token] = state
         for state in candidates.values():
             if check_type and state.data_type != expected_type:
-                fact_changes.append(
+                ob_facts.append(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                     f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                     f"claimed data_type={type_claim_label} written {state.data_type!r}"
                 )
             if check_length and state.data_length != expected_length:
-                fact_changes.append(
+                ob_facts.append(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                     f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                     f"claimed data_length={length_claim_label} written {state.data_length!r}"
@@ -433,11 +443,54 @@ def check_delivery_coverage(
                     item for item in claimed_attributions if item not in elements
                 ]
                 if missing:
-                    fact_changes.append(
+                    ob_facts.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                         f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
                         f"claimed attributions={tuple(missing)!r} written provenance={state.provenance!r}"
                     )
+        losses.extend(ob_losses)
+        fact_changes.extend(ob_facts)
+        notes.append((obligation, ob_facts, ob_losses))
+    if diagnostic:
+        found: list[ResolutionDiagnostic] = []
+        for obligation, ob_facts, ob_losses in notes:
+            if not (ob_facts or ob_losses):
+                continue
+            subject = (
+                f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                f"{obligation.valid_from}..{obligation.valid_to}"
+            )
+            if ob_facts:
+                found.append(
+                    ResolutionDiagnostic(
+                        code="unexplained_delivery_fact_change",
+                        severity="error",
+                        subject=subject,
+                        detail=(
+                            "supported delivery facts changed without an explicit "
+                            f"source outcome ({len(ob_facts)} fact(s)): "
+                            + "; ".join(ob_facts)
+                        ),
+                        refs=obligation.refs,
+                        withheld_output=(obligation.fqid,),
+                    )
+                )
+            if ob_losses:
+                found.append(
+                    ResolutionDiagnostic(
+                        code="unexplained_delivery_coverage_loss",
+                        severity="error",
+                        subject=subject,
+                        detail=(
+                            "supported delivery coverage was lost without an explicit "
+                            f"source outcome ({len(ob_losses)} window(s)): "
+                            + "; ".join(ob_losses)
+                        ),
+                        refs=obligation.refs,
+                        withheld_output=(obligation.fqid,),
+                    )
+                )
+        return tuple(found)
     if fact_changes:
         raise ValueError(
             "supported delivery facts changed without an explicit source outcome "
@@ -448,6 +501,7 @@ def check_delivery_coverage(
             "supported delivery coverage was lost without an explicit source outcome "
             f"({len(losses)} window(s)): " + "; ".join(losses[:10])
         )
+    return ()
 
 
 @dataclass(frozen=True)

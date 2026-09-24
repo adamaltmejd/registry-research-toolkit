@@ -1149,12 +1149,12 @@ def test_all_variables_withheld_remains_a_curation_failure(selection, tmp_path):
         )
 
 
-@pytest.mark.parametrize("diagnostic", [False, True])
 def test_lost_delivery_coverage_refuses_the_build_before_any_database(
-    selection, tmp_path, monkeypatch, diagnostic
+    selection, tmp_path, monkeypatch
 ):
     """The operator's witness: a defect inside formation truncates one supported
-    2020 occurrence, nothing else reports it, and the build must still refuse."""
+    2020 occurrence, nothing else reports it, and the strict build must refuse
+    before any database is placed."""
     from reg_meta_build import source_formation
 
     original = source_formation._coded_states
@@ -1170,7 +1170,7 @@ def test_lost_delivery_coverage_refuses_the_build_before_any_database(
     monkeypatch.setattr(source_formation, "_coded_states", truncate)
     output, report = tmp_path / "lost.db", tmp_path / "lost-report"
     with pytest.raises(ValueError, match="delivery coverage was lost") as failure:
-        build_selected_catalog(selection, output, report, diagnostic=diagnostic)
+        build_selected_catalog(selection, output, report, diagnostic=False)
     missing = "2020-07-01..2020-12-31"
     assert missing in str(failure.value)
     assert "scb/sample/value people/VALUE" in str(failure.value)
@@ -1180,13 +1180,63 @@ def test_lost_delivery_coverage_refuses_the_build_before_any_database(
     assert missing in summary["error"]
 
 
+def test_lost_delivery_coverage_diagnostic_completes_with_error_diagnostic(
+    selection, tmp_path, monkeypatch, capsys
+):
+    """The operator's witness in diagnostic mode: the same truncation is recorded
+    as an error diagnostic, and the run still completes with a nonpublishable
+    database instead of failing after output is written."""
+    from reg_meta_build import source_formation
+
+    original = source_formation._coded_states
+
+    def truncate(segment, variant, coding, subject):
+        states, diagnostics, withheld = original(segment, variant, coding, subject)
+        return (
+            [s.model_copy(update={"valid_to": "2020-06-30"}) for s in states],
+            diagnostics,
+            withheld,
+        )
+
+    monkeypatch.setattr(source_formation, "_coded_states", truncate)
+    output, report = tmp_path / "lost.db", tmp_path / "lost-report"
+    status = run(
+        [
+            "build-db",
+            "--selection",
+            str(selection),
+            "--report-dir",
+            str(report),
+            "--diagnostic",
+            "--diagnostic-db-path",
+            str(output),
+        ]
+    )
+    result = json.loads(capsys.readouterr().out)
+    missing = "2020-07-01..2020-12-31"
+    assert status == EXIT_CONFIG
+    assert result["status"] == "diagnostic_complete"
+    assert result["publication_ready"] is False
+    assert output.exists()
+    with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            json.loads(line)
+            for line in stream
+            if '"unexplained_delivery_coverage_loss"' in line
+        ]
+    assert len(issues) == 1 and issues[0]["severity"] == "error"
+    assert missing in issues[0]["detail"]
+    assert "scb/sample/value people/VALUE" in issues[0]["detail"]
+    assert json.loads((report / "summary.json").read_text()) == result
+
+
 @pytest.mark.parametrize("selection", ["typed"], indirect=True)
-@pytest.mark.parametrize("diagnostic", [False, True])
 def test_changed_delivery_facts_refuse_the_build_before_any_database(
-    selection, tmp_path, monkeypatch, diagnostic
+    selection, tmp_path, monkeypatch
 ):
     """The operator's witness: a defect inside formation retypes one supported
-    2020 state, nothing else reports it, and the build must still refuse."""
+    2020 state, nothing else reports it, and the strict build must refuse before
+    any database is placed."""
     from reg_meta_build import source_formation
 
     original = source_formation._coded_states
@@ -1205,7 +1255,7 @@ def test_changed_delivery_facts_refuse_the_build_before_any_database(
         ValueError,
         match="supported delivery facts changed without an explicit source outcome",
     ) as failure:
-        build_selected_catalog(selection, output, report, diagnostic=diagnostic)
+        build_selected_catalog(selection, output, report, diagnostic=False)
     assert "scb/sample/value people/VALUE" in str(failure.value)
     assert "claimed data_type=" in str(failure.value)
     assert "written 'text'" in str(failure.value)
@@ -1213,6 +1263,57 @@ def test_changed_delivery_facts_refuse_the_build_before_any_database(
     summary = json.loads((report / "summary.json").read_text())
     assert summary["status"] == "engineering_failure"
     assert "supported delivery facts changed" in summary["error"]
+
+
+@pytest.mark.parametrize("selection", ["typed"], indirect=True)
+def test_changed_delivery_facts_diagnostic_completes_with_error_diagnostic(
+    selection, tmp_path, monkeypatch, capsys
+):
+    """The operator's witness in diagnostic mode: the same retype is recorded as
+    an error diagnostic, and the run still completes with a nonpublishable
+    database instead of failing after output is written."""
+    from reg_meta_build import source_formation
+
+    original = source_formation._coded_states
+
+    def retype(segment, variant, coding, subject):
+        states, diagnostics, withheld = original(segment, variant, coding, subject)
+        return (
+            [s.model_copy(update={"data_type": "text"}) for s in states],
+            diagnostics,
+            withheld,
+        )
+
+    monkeypatch.setattr(source_formation, "_coded_states", retype)
+    output, report = tmp_path / "changed.db", tmp_path / "changed-report"
+    status = run(
+        [
+            "build-db",
+            "--selection",
+            str(selection),
+            "--report-dir",
+            str(report),
+            "--diagnostic",
+            "--diagnostic-db-path",
+            str(output),
+        ]
+    )
+    result = json.loads(capsys.readouterr().out)
+    assert status == EXIT_CONFIG
+    assert result["status"] == "diagnostic_complete"
+    assert result["publication_ready"] is False
+    assert output.exists()
+    with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            json.loads(line)
+            for line in stream
+            if '"unexplained_delivery_fact_change"' in line
+        ]
+    assert len(issues) == 1 and issues[0]["severity"] == "error"
+    assert "scb/sample/value people/VALUE" in issues[0]["detail"]
+    assert "claimed data_type=" in issues[0]["detail"]
+    assert "written 'text'" in issues[0]["detail"]
+    assert json.loads((report / "summary.json").read_text()) == result
 
 
 @pytest.mark.parametrize("failure", ["unconverted", "scope", "hash", "escape"])
