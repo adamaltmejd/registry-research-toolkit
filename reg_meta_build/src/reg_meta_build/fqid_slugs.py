@@ -601,7 +601,11 @@ def _register_partition_families(path: Path) -> set[tuple[str, str, str]]:
     from .curation_tree import load_register_files
 
     return {
-        (register.register_info.provider, register.register_info.native_id, partition.variable)
+        (
+            register.register_info.provider,
+            register.register_info.native_id,
+            partition.variable,
+        )
         for register in load_register_files(curation_dir)
         for partition in register.identity.partition
         if register.register_info.native_id is not None
@@ -1172,7 +1176,9 @@ def declared_column_ownership(
         for entry in slug_entries
         if entry.kind == "variable"
         and entry.provider == provider
-        and (entry.source_id == source_id or entry.source_id.startswith(source_id + "."))
+        and (
+            entry.source_id == source_id or entry.source_id.startswith(source_id + ".")
+        )
     ]
     if not family:
         raise ValueError(f"no tracked slug entries for family {provider}:{source_id!r}")
@@ -1239,9 +1245,7 @@ def declared_column_ownership(
             )
         merged[literal] = None
     known = {
-        entry.source_id
-        for entry in family
-        if len(entry.source_id.split(".")) == 3
+        entry.source_id for entry in family if len(entry.source_id.split(".")) == 3
     }
     owners = {owner for owner in merged.values() if owner is not None}
     if owners != known:

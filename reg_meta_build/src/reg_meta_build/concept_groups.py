@@ -35,6 +35,7 @@ def _register_files(path: Path | None):
 
     return load_register_files(path)
 
+
 # A concept-group key is one URL path segment in
 # `/catalog/group/<provider>/<register>/<key>` (#640). Path-safe = the RFC 3986
 # *unreserved* set, lowercased (every current materialized key and auto candidate

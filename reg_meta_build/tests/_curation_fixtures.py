@@ -20,8 +20,7 @@ def write_lisa_errata(root: Path, body: str) -> Path:
     ):
         body = body.replace(old, new)
     path.write_text(
-        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n'
-        + body,
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n' + body,
         encoding="utf-8",
     )
     return root

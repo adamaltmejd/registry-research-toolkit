@@ -342,7 +342,9 @@ class RegisterCuration(_CurationModel):
     enrichment: EnrichmentCuration = Field(default_factory=EnrichmentCuration)
     group: list[RegisterGroupEntry] = Field(default_factory=list)
     code_label_pair: list[CodeLabelPairEntry] = Field(default_factory=list)
-    representation: RepresentationCuration = Field(default_factory=RepresentationCuration)
+    representation: RepresentationCuration = Field(
+        default_factory=RepresentationCuration
+    )
     identity: IdentityCuration = Field(default_factory=IdentityCuration)
     acknowledge: list[AcknowledgeEntry] = Field(default_factory=list)
 
@@ -562,7 +564,9 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 )
             if isinstance(row, (IdentityPartitionEntry, IdentityColumnOwnerEntry)):
                 native_id = identity.native_id
-                if native_id is not None and not row.variable.startswith(native_id + "."):
+                if native_id is not None and not row.variable.startswith(
+                    native_id + "."
+                ):
                     raise curation_error(
                         _CODE,
                         f"{file} [[{table}]] entry {index}: variable "
@@ -675,14 +679,14 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
                 ) from exc
             for native_id, record in provider_data.get("register", {}).items():
                 if isinstance(record, dict) and isinstance(record.get("slug"), str):
-                    source_ids.setdefault((provider, record["slug"]), []).append(native_id)
+                    source_ids.setdefault((provider, record["slug"]), []).append(
+                        native_id
+                    )
         for entry in entries:
             identity = entry.register_info
             if identity.provider not in {"scb", "sos"}:
                 continue
-            file = (
-                f"curation/registers/{identity.provider}/{identity.slug}.toml"
-            )
+            file = f"curation/registers/{identity.provider}/{identity.slug}.toml"
             matching = source_ids.get((identity.provider, identity.slug), [])
             if len(matching) != 1 or matching[0] != identity.native_id:
                 raise curation_error(
@@ -705,7 +709,9 @@ def load_classification_groups(root: Path) -> ClassificationGroups:
         raw = tomllib.loads(path.read_text(encoding="utf-8"))
         groups = ClassificationGroups.model_validate(raw)
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
-        raise curation_error(_CODE, f"Could not parse {file}: {exc}", "Fix the TOML syntax.") from exc
+        raise curation_error(
+            _CODE, f"Could not parse {file}: {exc}", "Fix the TOML syntax."
+        ) from exc
     except ValidationError as exc:
         error = exc.errors(include_url=False)[0]
         location = error["loc"]

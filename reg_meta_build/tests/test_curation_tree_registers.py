@@ -52,8 +52,7 @@ _TABLES = (
     ),
     (
         "code_label_pair",
-        '[[code_label_pair]]\ncode = "scb/test/code"\n'
-        'label = "scb/test/label"\n',
+        '[[code_label_pair]]\ncode = "scb/test/code"\nlabel = "scb/test/label"\n',
         ('code = "scb/test/code"', 'code = "scb/other/code"'),
     ),
     (
@@ -110,8 +109,7 @@ def _write_register(root: Path, body: str, *, slug: str = "test") -> Path:
     path = root / "registers" / "scb" / f"{slug}.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        f'[register]\nprovider = "scb"\nslug = "{slug}"\n'
-        'native_id = "1"\n\n' + body,
+        f'[register]\nprovider = "scb"\nslug = "{slug}"\nnative_id = "1"\n\n' + body,
         encoding="utf-8",
     )
     return path
@@ -157,7 +155,9 @@ def test_register_scoped_entries_reject_wrong_register(
         load_register_files(root)
     assert exc.value.exit_code == EXIT_CONFIG
     assert table in exc.value.message
-    assert "does not match" in exc.value.message or "does not belong" in exc.value.message
+    assert (
+        "does not match" in exc.value.message or "does not belong" in exc.value.message
+    )
 
 
 def test_register_path_mismatch_fails(tmp_path: Path) -> None:
