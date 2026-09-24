@@ -265,6 +265,13 @@ valid_from = 1969
 valid_to = 1991
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
 valid_codes_file = "sni69.csv"
+sentinel_codes = [
+  { code = "00000", meaning = "Okänt" },
+  { code = "", meaning = "Okänt" },
+  { code = "000000", meaning = "Okänt värde" },
+  { code = "0", meaning = "Okänd" },
+  { code = "NULL", meaning = "Ej relevant" },
+]
 vardemangdsversion = [
   "Svensk standard för näringsgrensindelning, SNI 69",
   "SNI 69, AKU",
@@ -280,6 +287,14 @@ valid_from = 1992
 valid_to = 2001
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
 valid_codes_file = "sni92.csv"
+sentinel_codes = [
+  { code = "00000", meaning = "Okänt" },
+  { code = "00", meaning = "Ej specificerad verksamhet" },
+  { code = "", meaning = "Okänt" },
+  { code = "000", meaning = "Okänt" },
+  { code = "0000", meaning = "Okänt" },
+  { code = "NULL", meaning = "Ej relevant" },
+]
 vardemangdsversion = [
   "Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter",
   "Svensk standard för näringsgrensindelning, brancher SNI 92",
@@ -297,6 +312,24 @@ valid_from = 2002
 valid_to = 2007
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
 valid_codes_file = "sni2002.csv"
+sentinel_codes = [
+  { code = "00", meaning = "Ej specificerad verksamhet" },
+  { code = "00000", meaning = "Okänd" },
+  { code = "", meaning = "Okänd" },
+  { code = "XX", meaning = "Partiellt bortfall" },
+  { code = "XXXX", meaning = "Partiellt bortfall" },
+  { code = "XXXXX", meaning = "Partiellt bortfall" },
+  { code = "xxx", meaning = "Partiellt bortfall" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "1", meaning = "Okänt värde" },
+  { code = "2", meaning = "Okänt värde" },
+  { code = "5", meaning = "Okänt värde" },
+  { code = "X", meaning = "Partiellt bortfall" },
+  { code = ".", meaning = "Uppgift saknas" },
+  { code = "00009", meaning = "Okänt värde" },
+  { code = "000", meaning = "Okänt" },
+  { code = "0000", meaning = "Okänt" },
+]
 vardemangdsversion = [
   "Standard för svensk näringsgrensindelning, 2002 Branscher",
   "Standard för svensk näringsgrensindelning, 2002, Aktiviteter",
@@ -313,6 +346,31 @@ publisher = "SCB"
 valid_from = 2008
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
 valid_codes_file = "sni2007.csv"
+sentinel_codes = [
+  { code = "00000", meaning = "Okänd näringsgren" },
+  { code = "G99", meaning = "Okänd bransch" },
+  { code = "U99", meaning = "Okänd bransch" },
+  { code = "00", meaning = "Okänt" },
+  { code = "X", meaning = "Partiellt bortfall" },
+  { code = "XX", meaning = "Partiellt bortfall" },
+  { code = "0000", meaning = "Okänd" },
+  { code = "XXXX", meaning = "Partiellt bortfall" },
+  { code = "XXXXX", meaning = "Partiellt bortfall" },
+  { code = "xxx", meaning = "Partiellt bortfall" },
+  { code = "NULL", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Okänd" },
+  { code = "000", meaning = "Uppgift saknas" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "1", meaning = "Okänt värde" },
+  { code = "2", meaning = "Okänt värde" },
+  { code = "3", meaning = "Okänt värde" },
+  { code = "4", meaning = "Okänt värde" },
+  { code = "5", meaning = "Okänt värde" },
+  { code = "6", meaning = "Okänt värde" },
+  { code = "7", meaning = "Okänt värde" },
+  { code = "8", meaning = "Okänt värde" },
+  { code = "000000", meaning = "Okänd" },
+]
 vardemangdsversion = [
   "SNI 2007, Aktiviteter, alternativ",
   "SNI 2007, Branscher, alternativ",
@@ -983,6 +1041,9 @@ vardemangdsversion = [
   "Standard för institutionell sektorindelning 2000",
 ]
 valid_codes_file = "sektor2000.csv"
+sentinel_codes = [
+  { code = "000", meaning = "Uppgift saknas" },
+]
 
 # ---------------------------------------------------------------------------
 # Ownership sector — Sektorkod (RAMS/LISA)
@@ -1014,6 +1075,11 @@ vardemangdsversion = [
   "RAMS SektorKod fr.o.m. 1993",
 ]
 valid_codes_file = "sektorkod.csv"
+sentinel_codes = [
+  { code = "0", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "99", meaning = "Sektorkod okänd" },
+]
 
 # ---------------------------------------------------------------------------
 # Legal form — Juridisk form
@@ -1030,6 +1096,11 @@ vardemangdsversion = [
   "Standard för indelning efter juridisk form 2000",
 ]
 valid_codes_file = "jurform2000.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Uppgift saknas" },
+  { code = "0", meaning = "Okänt värde" },
+]
 
 [[classification]]
 short_name = "JURFORM2020"
@@ -1041,6 +1112,9 @@ vardemangdsversion = [
   "Standard för indelning efter juridisk form 2020",
 ]
 valid_codes_file = "jurform2020.csv"
+sentinel_codes = [
+  { code = "00", meaning = "Uppgift saknas" },
+]
 
 # ---------------------------------------------------------------------------
 # Owner category — Ägarkategori
@@ -1057,6 +1131,11 @@ vardemangdsversion = [
   "Standard för indelning efter ägarkategori 2000",
 ]
 valid_codes_file = "agarkat2000.csv"
+sentinel_codes = [
+  { code = "NULL", meaning = "Okänt värde" },
+  { code = "00", meaning = "Okänt värde" },
+  { code = "9", meaning = "Okänt" },
+]
 
 [[classification]]
 short_name = "AGARKAT2020"
@@ -1068,6 +1147,9 @@ vardemangdsversion = [
   "Standard för indelning efter ägarkategori 2020",
 ]
 valid_codes_file = "agarkat2020.csv"
+sentinel_codes = [
+  { code = "00", meaning = "Uppgift saknas" },
+]
 
 # ---------------------------------------------------------------------------
 # International — ISCED
