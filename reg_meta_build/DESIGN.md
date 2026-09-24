@@ -558,7 +558,9 @@ output and reports it. It retains strict severity, source locators, fields, peri
 catalog identities, reasons and withheld output. Competing evidence stays in the pinned
 prepared artifact. Every source occurrence has a disposition, including duplicates,
 support-only rows and omitted output. Existing curation accounting is separate:
-accounted does not imply applied or materialized.
+accounted does not imply applied or materialized. Transitional: some per-variable checks
+still abort a diagnostic build, such as the `validate_built_db` structural check for
+overlapping value sets on one column.
 
 A completed diagnostic artifact is marked incomplete and nonpublishable in its manifest.
 Its CLI status is exit 10, distinct from publication readiness. Builder publication,

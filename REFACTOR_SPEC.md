@@ -410,24 +410,22 @@ The design lives in [`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md); its
 pipeline reaches parity. Progress is tracked as "registers at semantic parity with
 0.40.1".
 
-Ordered work (§ references point into DESIGN.md):
+Ordered work. Curation cannot leave the input bundle before the in-process compile
+exists, because the current selection pins revisions of curation files inside the
+bundle. The target layout lands with the compile so the files move once.
 
 1. Record the design (Y-222).
-2. Take curation out of the input bundle (§ Curation source and layout).
-3. Add `build-db --registers ...` (§ Strict and diagnostic builds).
-4. Compile curation in-process with pin-free entries (§ Entries and pins). Delete
-   `PipelineSelection`, the scope files and the offline conversion; add the optional
-   decision dump.
-5. Turn stored cases back into rules: re-derive the classification label binding (§
-   Classifications and representations), drop the naming hashes, and remove the
-   register-specific code § Responsibilities lists as debt.
-6. Add `[[acknowledge]]`, and remove any per-variable or per-family abort left in
-   diagnostic mode (§ Strict and diagnostic builds).
-7. Move to the target curation layout (§ Curation source and layout).
-8. Run the first slice, then take the open decision below.
-9. Finish the slice.
-10. Onboard the remaining registers one at a time through curation, each to semantic
-    parity with 0.40.1.
+2. `build-db --registers` (Y-223).
+3. Diagnostic builds withhold and report instead of aborting (Y-225), and
+   `[[acknowledge]]` (Y-224).
+4. Compile curation in-process (plan Y-226 and its children). This covers the target
+   layout, taking curation out of the input bundle, pin-free entries, turning stored
+   cases back into rules (label binding, naming hashes), and deleting
+   `PipelineSelection`, the scope files and the offline conversion.
+5. Remove the register-specific code DESIGN.md lists as debt.
+6. First slice run, then the open decision below.
+7. Finish the slice.
+8. Onboard the remaining registers one at a time to semantic parity with 0.40.1.
 
 **Slice.**
 
