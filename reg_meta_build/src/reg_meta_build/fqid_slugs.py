@@ -722,6 +722,16 @@ def _provider_from_path(path: Path) -> str:
     return path.stem
 
 
+def _is_split_base_pair(a: SlugEntry, b: SlugEntry) -> bool:
+    """Whether ``a``/``b`` (either order) are a ``columns``-carrying split
+    ``<reg>.<var>.<split>`` and its own base family ``<reg>.<var>``."""
+    split, base = (a, b) if len(a.source_id.split(".")) == 3 else (b, a)
+    return (
+        split.columns is not None
+        and split.source_id.rpartition(".")[0] == base.source_id
+    )
+
+
 def load_provider_toml(path: Path) -> list[SlugEntry]:
     """Parse a per-provider slug TOML (``scb.toml``, ``sos.toml``, …).
 
@@ -753,7 +763,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
     # - register_variant, variable: per parent register (the register slot in
     #   `<provider>/<register>/<variant>...` already disambiguates them).
     # Source IDs are dotted: variant/variable `<reg>.<sub>`.
-    seen_slugs: dict[tuple[str, ...], str] = {}
+    seen_slugs: dict[tuple[str, ...], list[SlugEntry]] = {}
     for kind in ("register", "register_variant", "variable"):
         if kind not in data:
             continue
@@ -780,16 +790,26 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                 else:
                     slug_key = (kind, entry.slug)
                     scope_desc = f"within provider {provider!r}"
-                prev = seen_slugs.get(slug_key)
-                if prev is not None:
+                holders = seen_slugs.setdefault(slug_key, [])
+                # Y-219: the one allowed reuse is a `columns`-carrying split and
+                # its own base family entry. Such a family converts to
+                # accepted-column-partitions, whose scope never carries a
+                # base-family naming declaration (the base provider key is dropped,
+                # or None when negative members stay), so only the split
+                # materializes. If both ever do, `convert_naming`'s
+                # `naming_slug_collision` and `idx_variable_slug(register_id,
+                # slug)` refuse it.
+                if holders and (
+                    len(holders) > 1 or not _is_split_base_pair(holders[0], entry)
+                ):
                     raise _err(
                         "slug_toml_invalid",
                         f"{path.name}: slug {entry.slug!r} reused by "
-                        f"{kind}.{prev!r} and {kind}.{source_id!r} "
+                        f"{kind}.{holders[0].source_id!r} and {kind}.{source_id!r} "
                         f"({scope_desc}).",
                         f"Slugs must be unique per kind {scope_desc}.",
                     )
-                seen_slugs[slug_key] = source_id
+                holders.append(entry)
             entries.append(entry)
     _resolve_replaced_by(entries, scope=path.name)
     return entries

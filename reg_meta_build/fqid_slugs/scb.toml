@@ -29858,1042 +29858,1388 @@ slug = "utbildningsniva-1-position"
 # `sequential` rows only, full worklist per ticket revision 4). Each chain below
 # is non-overlapping delivery years on one native variable, so every spelling is
 # owned by a single split whose key discriminator reuses the family slug string
-# unchanged (the family slug row itself is untouched; split entries carry no slug
-# pin — the 1.830/Y-167 precedent). Overlapping rows need a partition decision and
+# unchanged. Y-219: each split also pins that same family slug (the family slug
+# row itself is untouched); the loader allows exactly this own-base reuse for a
+# `columns`-carrying split. Overlapping rows need a partition decision and
 # case-only twins belong to Y-210: neither is decided here.
 [variable."258.15.civilstand"]
+slug = "civilstand"
 columns = { Civil = "258.15.civilstand", H56 = "258.15.civilstand", H5_6 = "258.15.civilstand", LMS_DFMS = "258.15.civilstand" }
 columns_ref = "Y-211 2026-09-19: 258.15 'Civilstånd' sequential rename {Civil 2018-2025, H56 2014-2014, H5_6 2015-2017, LMS_DFMS 2012-2012} owned by civilstand (diagnostic v17 rename-worklist-258)"
 [variable."258.509.hussyk2"]
+slug = "hussyk2"
 columns = { H8 = "258.509.hussyk2", H9C = "258.509.hussyk2", HuSSYK2 = "258.509.hussyk2" }
 columns_ref = "Y-211 2026-09-19: 258.509 'Yrke på 2-siffernivå i huvudsysslan' sequential rename {H8 2018-2018, H9C 2017-2017, HuSSYK2 2007-2010} owned by hussyk2 (diagnostic v17 rename-worklist-258)"
 [variable."258.785.utbildningsinriktning-1-position"]
+slug = "utbildningsinriktning-1-position"
 columns = { H7_2 = "258.785.utbildningsinriktning-1-position", UtbInr = "258.785.utbildningsinriktning-1-position" }
 columns_ref = "Y-211 2026-09-19: 258.785 'Utbildningsinriktning (1 position)' sequential rename {H7_2 2018-2025, UtbInr 2007-2017} owned by utbildningsinriktning-1-position (diagnostic v17 rename-worklist-258)"
 [variable."258.7367.civilstand-aku-aldre"]
+slug = "civilstand-aku-aldre"
 columns = { Civil = "258.7367.civilstand-aku-aldre", Civilstand = "258.7367.civilstand-aku-aldre" }
 columns_ref = "Y-211 2026-09-19: 258.7367 'Civilstånd. AKU äldre' sequential rename {Civil 2012-2012, Civilstand 2007-2011} owned by civilstand-aku-aldre (diagnostic v17 rename-worklist-258)"
 [variable."258.12944.sjukskriven"]
+slug = "sjukskriven"
 columns = { G8X1 = "258.12944.sjukskriven", H8X1 = "258.12944.sjukskriven" }
 columns_ref = "Y-211 2026-09-19: 258.12944 'Sjukskriven' sequential rename {G8X1 2013-2013, H8X1 2015-2015} owned by sjukskriven (diagnostic v17 rename-worklist-258)"
 [variable."258.15889.dator-hemma"]
+slug = "dator-hemma"
 columns = { COMP = "258.15889.dator-hemma", DatA1 = "258.15889.dator-hemma" }
 columns_ref = "Y-211 2026-09-19: 258.15889 'Tillgång till dator i hemmet' sequential rename {COMP 2012-2012, DatA1 2007-2011} owned by dator-hemma (diagnostic v17 rename-worklist-258)"
 [variable."258.15892.tillgang-internet-hemma"]
+slug = "tillgang-internet-hemma"
 columns = { A000000001 = "258.15892.tillgang-internet-hemma", A1 = "258.15892.tillgang-internet-hemma", A2 = "258.15892.tillgang-internet-hemma", DatA2 = "258.15892.tillgang-internet-hemma", IACC = "258.15892.tillgang-internet-hemma" }
 columns_ref = "Y-211 2026-09-19: 258.15892 'Tillgång till Internet i hemmet' sequential rename {A000000001 2013-2014, A1 2018-2025, A2 2015-2017, DatA2 2007-2011, IACC 2012-2012} owned by tillgang-internet-hemma (diagnostic v17 rename-worklist-258)"
 [variable."258.15893.internet-stationar-dator"]
+slug = "internet-stationar-dator"
 columns = { B3a = "258.15893.internet-stationar-dator", DatA3A = "258.15893.internet-stationar-dator", IDKPC = "258.15893.internet-stationar-dator" }
 columns_ref = "Y-211 2026-09-19: 258.15893 'Internet via stationär dator' sequential rename {B3a 2016-2016, DatA3A 2007-2010, IDKPC 2014-2014} owned by internet-stationar-dator (diagnostic v17 rename-worklist-258)"
 [variable."258.15894.internet-via-barbar-dator"]
+slug = "internet-via-barbar-dator"
 columns = { A2B = "258.15894.internet-via-barbar-dator", DatA3B = "258.15894.internet-via-barbar-dator" }
 columns_ref = "Y-211 2026-09-19: 258.15894 'Internet via bärbar dator' sequential rename {A2B 2014-2014, DatA3B 2007-2010} owned by internet-via-barbar-dator (diagnostic v17 rename-worklist-258)"
 [variable."258.15895.internet-via-tv-mottagare"]
+slug = "internet-via-tv-mottagare"
 columns = { DatA3C = "258.15895.internet-via-tv-mottagare", DatA3D = "258.15895.internet-via-tv-mottagare" }
 columns_ref = "Y-211 2026-09-19: 258.15895 'Internet via TV-mottagare' sequential rename {DatA3C 2007-2007, DatA3D 2008-2010} owned by internet-via-tv-mottagare (diagnostic v17 rename-worklist-258)"
 [variable."258.15896.internet-via-spelkonsol"]
+slug = "internet-via-spelkonsol"
 columns = { B3g = "258.15896.internet-via-spelkonsol", DatA3D = "258.15896.internet-via-spelkonsol", DatA3E = "258.15896.internet-via-spelkonsol", IGAME = "258.15896.internet-via-spelkonsol" }
 columns_ref = "Y-211 2026-09-19: 258.15896 'Internet via spelkonsol' sequential rename {B3g 2016-2016, DatA3D 2007-2007, DatA3E 2008-2010, IGAME 2014-2014} owned by internet-via-spelkonsol (diagnostic v17 rename-worklist-258)"
 [variable."258.15897.internet-pa-annat-satt"]
+slug = "internet-pa-annat-satt"
 columns = { DatA3C = "258.15897.internet-pa-annat-satt", DatA3E = "258.15897.internet-pa-annat-satt" }
 columns_ref = "Y-211 2026-09-19: 258.15897 'Internet på annat sätt' sequential rename {DatA3C 2008-2009, DatA3E 2007-2007} owned by internet-pa-annat-satt (diagnostic v17 rename-worklist-258)"
 [variable."258.15898.internet-via-mobiltelefon"]
+slug = "internet-via-mobiltelefon"
 columns = { DatA3C1 = "258.15898.internet-via-mobiltelefon", DatA3E1 = "258.15898.internet-via-mobiltelefon" }
 columns_ref = "Y-211 2026-09-19: 258.15898 'Internet via mobiltelefon' sequential rename {DatA3C1 2008-2010, DatA3E1 2007-2007} owned by internet-via-mobiltelefon (diagnostic v17 rename-worklist-258)"
 [variable."258.15899.internet-via-handdator"]
+slug = "internet-via-handdator"
 columns = { DatA3C2 = "258.15899.internet-via-handdator", DatA3E2 = "258.15899.internet-via-handdator" }
 columns_ref = "Y-211 2026-09-19: 258.15899 'Internet via handdator' sequential rename {DatA3C2 2008-2010, DatA3E2 2007-2007} owned by internet-via-handdator (diagnostic v17 rename-worklist-258)"
 [variable."258.15900.anslutning-modem-isdn"]
+slug = "anslutning-modem-isdn"
 columns = { A2_1 = "258.15900.anslutning-modem-isdn", DIALUP = "258.15900.anslutning-modem-isdn", DatA3A = "258.15900.anslutning-modem-isdn", DatA4A = "258.15900.anslutning-modem-isdn" }
 columns_ref = "Y-211 2026-09-19: 258.15900 'Internetanslutning via modem och telefonlinje' sequential rename {A2_1 2016-2016, DIALUP 2012-2012, DatA3A 2011-2011, DatA4A 2007-2010} owned by anslutning-modem-isdn (diagnostic v17 rename-worklist-258)"
 [variable."258.15901.anslutning-dsl-fiber"]
+slug = "anslutning-dsl-fiber"
 columns = { A2A = "258.15901.anslutning-dsl-fiber", A2a = "258.15901.anslutning-dsl-fiber", A3a = "258.15901.anslutning-dsl-fiber", DSL = "258.15901.anslutning-dsl-fiber", DatA3B = "258.15901.anslutning-dsl-fiber", DatA4B = "258.15901.anslutning-dsl-fiber" }
 columns_ref = "Y-211 2026-09-19: 258.15901 'Internetanslutning via DSL, fiber, offentligt wifi etc' sequential rename {A2A 2019-2019, A2a 2018-2021, A3a 2016-2017, DSL 2012-2012, DatA3B 2011-2011, DatA4B 2007-2010} owned by anslutning-dsl-fiber (diagnostic v17 rename-worklist-258)"
 [variable."258.15903.anslutning-gsm"]
+slug = "anslutning-gsm"
 columns = { DatA3D = "258.15903.anslutning-gsm", DatA4D = "258.15903.anslutning-gsm", MPHNAR1 = "258.15903.anslutning-gsm" }
 columns_ref = "Y-211 2026-09-19: 258.15903 'Internetanslutning via GSM' sequential rename {DatA3D 2011-2011, DatA4D 2007-2010, MPHNAR1 2012-2012} owned by anslutning-gsm (diagnostic v17 rename-worklist-258)"
 [variable."258.15904.anslutning-satellit-wifi"]
+slug = "anslutning-satellit-wifi"
 columns = { A2_4 = "258.15904.anslutning-satellit-wifi", BBFWL = "258.15904.anslutning-satellit-wifi", DatA3C4 = "258.15904.anslutning-satellit-wifi", DatA4C2 = "258.15904.anslutning-satellit-wifi", DatA4E = "258.15904.anslutning-satellit-wifi" }
 columns_ref = "Y-211 2026-09-19: 258.15904 'Internetanslutning via Satellit, WiFi, WiMax' sequential rename {A2_4 2016-2016, BBFWL 2012-2012, DatA3C4 2011-2011, DatA4C2 2010-2010, DatA4E 2007-2009} owned by anslutning-satellit-wifi (diagnostic v17 rename-worklist-258)"
 [variable."258.15909.datb1"]
+slug = "datb1"
 columns = { B1a = "258.15909.datb1", DatB1 = "258.15909.datb1", IU = "258.15909.datb1" }
 columns_ref = "Y-211 2026-09-19: 258.15909 'När använde du senast internet?' sequential rename {B1a 2024-2025, DatB1 2007-2011, IU 2012-2014} owned by datb1 (diagnostic v17 rename-worklist-258)"
 [variable."258.15910.datb2"]
+slug = "datb2"
 columns = { B2 = "258.15910.datb2", C2 = "258.15910.datb2", DatB2 = "258.15910.datb2", IFU = "258.15910.datb2" }
 columns_ref = "Y-211 2026-09-19: 258.15910 'Använder internet hur ofta' sequential rename {B2 2018-2021, C2 2015-2017, DatB2 2007-2009, IFU 2013-2014} owned by datb2 (diagnostic v17 rename-worklist-258)"
 [variable."258.15917.mobiltelefon"]
+slug = "mobiltelefon"
 columns = { DatB4 = "258.15917.mobiltelefon", DatD8 = "258.15917.mobiltelefon" }
 columns_ref = "Y-211 2026-09-19: 258.15917 'Mobiltelefon' sequential rename {DatB4 2007-2007, DatD8 2008-2008} owned by mobiltelefon (diagnostic v17 rename-worklist-258)"
 [variable."258.15919.datc2"]
+slug = "datc2"
 columns = { CFU = "258.15919.datc2", DatC2 = "258.15919.datc2" }
 columns_ref = "Y-211 2026-09-19: 258.15919 'Använder Internet hur ofta' sequential rename {CFU 2012-2012, DatC2 2007-2011} owned by datc2 (diagnostic v17 rename-worklist-258)"
 [variable."258.15920.anvant-internet-hemma"]
+slug = "anvant-internet-hemma"
 columns = { DatC3A = "258.15920.anvant-internet-hemma", IHM = "258.15920.anvant-internet-hemma" }
 columns_ref = "Y-211 2026-09-19: 258.15920 'Använt Internet hemma' sequential rename {DatC3A 2007-2011, IHM 2013-2013} owned by anvant-internet-hemma (diagnostic v17 rename-worklist-258)"
 [variable."258.15921.anvant-internet-pa-arbetsplats"]
+slug = "anvant-internet-pa-arbetsplats"
 columns = { DatC3B = "258.15921.anvant-internet-pa-arbetsplats", IWRK = "258.15921.anvant-internet-pa-arbetsplats" }
 columns_ref = "Y-211 2026-09-19: 258.15921 'Använt Internet på arbetsplats' sequential rename {DatC3B 2007-2011, IWRK 2013-2013} owned by anvant-internet-pa-arbetsplats (diagnostic v17 rename-worklist-258)"
 [variable."258.15922.anvant-internet-pa-annan-plats"]
+slug = "anvant-internet-pa-annan-plats"
 columns = { DatC3E = "258.15922.anvant-internet-pa-annan-plats", IOTH = "258.15922.anvant-internet-pa-annan-plats" }
 columns_ref = "Y-211 2026-09-19: 258.15922 'Använt Internet på annan plats' sequential rename {DatC3E 2007-2011, IOTH 2013-2013} owned by anvant-internet-pa-annan-plats (diagnostic v17 rename-worklist-258)"
 [variable."258.15923.anvant-internet-pa-bibliotek"]
+slug = "anvant-internet-pa-bibliotek"
 columns = { DatC3E1 = "258.15923.anvant-internet-pa-bibliotek", ILIB = "258.15923.anvant-internet-pa-bibliotek" }
 columns_ref = "Y-211 2026-09-19: 258.15923 'Använt Internet på ett bibliotek' sequential rename {DatC3E1 2007-2011, ILIB 2013-2013} owned by anvant-internet-pa-bibliotek (diagnostic v17 rename-worklist-258)"
 [variable."258.15943.anvant-internet-i-skolan"]
+slug = "anvant-internet-i-skolan"
 columns = { DatC3C = "258.15943.anvant-internet-i-skolan", IED = "258.15943.anvant-internet-i-skolan" }
 columns_ref = "Y-211 2026-09-19: 258.15943 'Använt Internet i skolan' sequential rename {DatC3C 2007-2011, IED 2013-2013} owned by anvant-internet-i-skolan (diagnostic v17 rename-worklist-258)"
 [variable."258.15944.anvant-internet-annans-hem"]
+slug = "anvant-internet-annans-hem"
 columns = { DatC3D = "258.15944.anvant-internet-annans-hem", IOH = "258.15944.anvant-internet-annans-hem" }
 columns_ref = "Y-211 2026-09-19: 258.15944 'Använt Internet i någon annans hem' sequential rename {DatC3D 2007-2011, IOH 2013-2013} owned by anvant-internet-annans-hem (diagnostic v17 rename-worklist-258)"
 [variable."258.15945.anvant-internet-hos-myndighet"]
+slug = "anvant-internet-hos-myndighet"
 columns = { DatC3E3 = "258.15945.anvant-internet-hos-myndighet", IGOV = "258.15945.anvant-internet-hos-myndighet" }
 columns_ref = "Y-211 2026-09-19: 258.15945 'Använt Internet hos en myndighet' sequential rename {DatC3E3 2007-2011, IGOV 2013-2013} owned by anvant-internet-hos-myndighet (diagnostic v17 rename-worklist-258)"
 [variable."258.15946.anvant-internet-fritidscenter"]
+slug = "anvant-internet-fritidscenter"
 columns = { DatC3E4 = "258.15946.anvant-internet-fritidscenter", IVOL = "258.15946.anvant-internet-fritidscenter" }
 columns_ref = "Y-211 2026-09-19: 258.15946 'Använt Internet på kultur- eller fritidscentrum' sequential rename {DatC3E4 2007-2011, IVOL 2013-2013} owned by anvant-internet-fritidscenter (diagnostic v17 rename-worklist-258)"
 [variable."258.15947.anvant-internet-pa-internetcafe"]
+slug = "anvant-internet-pa-internetcafe"
 columns = { DatC3E5 = "258.15947.anvant-internet-pa-internetcafe", ICAFE = "258.15947.anvant-internet-pa-internetcafe" }
 columns_ref = "Y-211 2026-09-19: 258.15947 'Använt Internet på Internetcafé' sequential rename {DatC3E5 2007-2011, ICAFE 2013-2013} owned by anvant-internet-pa-internetcafe (diagnostic v17 rename-worklist-258)"
 [variable."258.15948.anvant-internet-pa-hotspot"]
+slug = "anvant-internet-pa-hotspot"
 columns = { DatC3E6 = "258.15948.anvant-internet-pa-hotspot", IHOT = "258.15948.anvant-internet-pa-hotspot" }
 columns_ref = "Y-211 2026-09-19: 258.15948 'Använt Internet på en hotspot' sequential rename {DatC3E6 2007-2011, IHOT 2013-2013} owned by anvant-internet-pa-hotspot (diagnostic v17 rename-worklist-258)"
 [variable."258.15950.mobiluppkoppling-gprs"]
+slug = "mobiluppkoppling-gprs"
 columns = { DatC4A = "258.15950.mobiluppkoppling-gprs", DatC4A1 = "258.15950.mobiluppkoppling-gprs" }
 columns_ref = "Y-211 2026-09-19: 258.15950 'Använder mobiltelefon med GPRS för internetuppkoppling' sequential rename {DatC4A 2007-2008, DatC4A1 2009-2011} owned by mobiluppkoppling-gprs (diagnostic v17 rename-worklist-258)"
 [variable."258.15951.mobiluppkoppling-3g"]
+slug = "mobiluppkoppling-3g"
 columns = { B3d = "258.15951.mobiluppkoppling-3g", BBMOBH = "258.15951.mobiluppkoppling-3g", DatC4A2 = "258.15951.mobiluppkoppling-3g", DatC4B = "258.15951.mobiluppkoppling-3g" }
 columns_ref = "Y-211 2026-09-19: 258.15951 'Använder Internet via mobiltelefon med 3G' sequential rename {B3d 2016-2016, BBMOBH 2013-2013, DatC4A2 2009-2010, DatC4B 2007-2008} owned by mobiluppkoppling-3g (diagnostic v17 rename-worklist-258)"
 [variable."258.15952.anvander-internet-handdator"]
+slug = "anvander-internet-handdator"
 columns = { B3b = "258.15952.anvander-internet-handdator", DatC4B = "258.15952.anvander-internet-handdator", DatC4C = "258.15952.anvander-internet-handdator" }
 columns_ref = "Y-211 2026-09-19: 258.15952 'Använder Internet via handdator' sequential rename {B3b 2016-2016, DatC4B 2009-2010, DatC4C 2007-2008} owned by anvander-internet-handdator (diagnostic v17 rename-worklist-258)"
 [variable."258.15953.internet-barbar-tradlost"]
+slug = "internet-barbar-tradlost"
 columns = { BBMOBM = "258.15953.internet-barbar-tradlost", DatC4B = "258.15953.internet-barbar-tradlost", DatC4C = "258.15953.internet-barbar-tradlost", DatC4D = "258.15953.internet-barbar-tradlost" }
 columns_ref = "Y-211 2026-09-19: 258.15953 'Använder Internet bärbar dator och trådlöst nätverk' sequential rename {BBMOBM 2013-2013, DatC4B 2011-2011, DatC4C 2009-2010, DatC4D 2007-2008} owned by internet-barbar-tradlost (diagnostic v17 rename-worklist-258)"
 [variable."258.15955.anvant-internet-for-e-post"]
+slug = "anvant-internet-for-e-post"
 columns = { B6a = "258.15955.anvant-internet-for-e-post", DatC5A = "258.15955.anvant-internet-for-e-post", IUEM = "258.15955.anvant-internet-for-e-post" }
 columns_ref = "Y-211 2026-09-19: 258.15955 'Använt Internet för e-post' sequential rename {B6a 2016-2016, DatC5A 2007-2010, IUEM 2013-2014} owned by anvant-internet-for-e-post (diagnostic v17 rename-worklist-258)"
 [variable."258.15964.prenumererat-nyheter-internet"]
+slug = "prenumererat-nyheter-internet"
 columns = { DatC5E1 = "258.15964.prenumererat-nyheter-internet", DatC5IA = "258.15964.prenumererat-nyheter-internet", DatC5J1 = "258.15964.prenumererat-nyheter-internet", DatC5Q = "258.15964.prenumererat-nyheter-internet", IUNW1SUB = "258.15964.prenumererat-nyheter-internet" }
 columns_ref = "Y-211 2026-09-19: 258.15964 'Prenumererat på nyhetstjänster via Internet' sequential rename {DatC5E1 2008-2008, DatC5IA 2007-2007, DatC5J1 2009-2010, DatC5Q 2011-2011, IUNW1SUB 2013-2013} owned by prenumererat-nyheter-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.15965.anvant-internet-for-soka-jobb"]
+slug = "anvant-internet-for-soka-jobb"
 columns = { DatC5F = "258.15965.anvant-internet-for-soka-jobb", DatC5J = "258.15965.anvant-internet-for-soka-jobb", DatC5K = "258.15965.anvant-internet-for-soka-jobb", IUJOB = "258.15965.anvant-internet-for-soka-jobb" }
 columns_ref = "Y-211 2026-09-19: 258.15965 'Använt Internet för söka jobb' sequential rename {DatC5F 2008-2008, DatC5J 2007-2007, DatC5K 2009-2011, IUJOB 2013-2013} owned by anvant-internet-for-soka-jobb (diagnostic v17 rename-worklist-258)"
 [variable."258.15973.anvant-internet-utbildningsinfo"]
+slug = "anvant-internet-utbildningsinfo"
 columns = { DatC5D = "258.15973.anvant-internet-utbildningsinfo", DatC5J = "258.15973.anvant-internet-utbildningsinfo", DatC5O = "258.15973.anvant-internet-utbildningsinfo", DatC5R = "258.15973.anvant-internet-utbildningsinfo" }
 columns_ref = "Y-211 2026-09-19: 258.15973 'Använt Internet för att söka utbildningsinformation' sequential rename {DatC5D 2011-2011, DatC5J 2008-2008, DatC5O 2009-2010, DatC5R 2007-2007} owned by anvant-internet-utbildningsinfo (diagnostic v17 rename-worklist-258)"
 [variable."258.15974.anvant-internet-kurser"]
+slug = "anvant-internet-kurser"
 columns = { B8a = "258.15974.anvant-internet-kurser", DatC5I = "258.15974.anvant-internet-kurser", DatC5K = "258.15974.anvant-internet-kurser", DatC5P = "258.15974.anvant-internet-kurser", DatC5S = "258.15974.anvant-internet-kurser" }
 columns_ref = "Y-211 2026-09-19: 258.15974 'Använt Internet för att genomföra kurser' sequential rename {B8a 2016-2016, DatC5I 2011-2011, DatC5K 2008-2008, DatC5P 2009-2010, DatC5S 2007-2007} owned by anvant-internet-kurser (diagnostic v17 rename-worklist-258)"
 [variable."258.15975.anvant-internet-kunskap-utbildning"]
+slug = "anvant-internet-kunskap-utbildning"
 columns = { DatC5L = "258.15975.anvant-internet-kunskap-utbildning", DatC5Q = "258.15975.anvant-internet-kunskap-utbildning", DatC5T = "258.15975.anvant-internet-kunskap-utbildning" }
 columns_ref = "Y-211 2026-09-19: 258.15975 'Använt Internet för att söka kunskap i utbildningssyfte' sequential rename {DatC5L 2008-2008, DatC5Q 2009-2010, DatC5T 2007-2007} owned by anvant-internet-kunskap-utbildning (diagnostic v17 rename-worklist-258)"
 [variable."258.16003.kopt-programvara-eller-dataspel"]
+slug = "kopt-programvara-eller-dataspel"
 columns = { DatD2F = "258.16003.kopt-programvara-eller-dataspel", DatE2F = "258.16003.kopt-programvara-eller-dataspel" }
 columns_ref = "Y-211 2026-09-19: 258.16003 'Köpt programvara eller dataspel' sequential rename {DatD2F 2007-2007, DatE2F 2008-2008} owned by kopt-programvara-eller-dataspel (diagnostic v17 rename-worklist-258)"
 [variable."258.16006.kopt-aktier-eller-forsakringar"]
+slug = "kopt-aktier-eller-forsakringar"
 columns = { BFIN = "258.16006.kopt-aktier-eller-forsakringar", DatD2I = "258.16006.kopt-aktier-eller-forsakringar", DatD2L = "258.16006.kopt-aktier-eller-forsakringar", DatD2M = "258.16006.kopt-aktier-eller-forsakringar", DatE2I = "258.16006.kopt-aktier-eller-forsakringar", DatE2M = "258.16006.kopt-aktier-eller-forsakringar" }
 columns_ref = "Y-211 2026-09-19: 258.16006 'Köpt aktier eller försäkringar' sequential rename {BFIN 2012-2014, DatD2I 2007-2007, DatD2L 2009-2009, DatD2M 2010-2010, DatE2I 2008-2008, DatE2M 2011-2011} owned by kopt-aktier-eller-forsakringar (diagnostic v17 rename-worklist-258)"
 [variable."258.16007.kopt-resor-eller-logi"]
+slug = "kopt-resor-eller-logi"
 columns = { DatD2J = "258.16007.kopt-resor-eller-logi", DatE2J = "258.16007.kopt-resor-eller-logi" }
 columns_ref = "Y-211 2026-09-19: 258.16007 'Köpt resor eller logi' sequential rename {DatD2J 2007-2007, DatE2J 2008-2008} owned by kopt-resor-eller-logi (diagnostic v17 rename-worklist-258)"
 [variable."258.16009.tips-lotto-eller-vadslagning"]
+slug = "tips-lotto-eller-vadslagning"
 columns = { DatD13 = "258.16009.tips-lotto-eller-vadslagning", DatD2L = "258.16009.tips-lotto-eller-vadslagning", DatD5 = "258.16009.tips-lotto-eller-vadslagning", DatE2L = "258.16009.tips-lotto-eller-vadslagning", DatE5 = "258.16009.tips-lotto-eller-vadslagning" }
 columns_ref = "Y-211 2026-09-19: 258.16009 'Tips, lotto eller vadslagning' sequential rename {DatD13 2009-2009, DatD2L 2007-2007, DatD5 2010-2010, DatE2L 2008-2008, DatE5 2011-2011} owned by tips-lotto-eller-vadslagning (diagnostic v17 rename-worklist-258)"
 [variable."258.16012.nedladdad-programvara-istallet-post"]
+slug = "nedladdad-programvara-istallet-post"
 columns = { BSOFTO = "258.16012.nedladdad-programvara-istallet-post", DatD3B = "258.16012.nedladdad-programvara-istallet-post", DatD3C = "258.16012.nedladdad-programvara-istallet-post", DatE3B = "258.16012.nedladdad-programvara-istallet-post", DatE3C = "258.16012.nedladdad-programvara-istallet-post", IUSOFT = "258.16012.nedladdad-programvara-istallet-post" }
 columns_ref = "Y-211 2026-09-19: 258.16012 'Laddat ner programvara elektroniskt i stället för leverans med vanlig post' sequential rename {BSOFTO 2014-2014, DatD3B 2007-2007, DatD3C 2009-2010, DatE3B 2008-2008, DatE3C 2011-2011, IUSOFT 2013-2013} owned by nedladdad-programvara-istallet-post (diagnostic v17 rename-worklist-258)"
 [variable."258.16013.kopt-datorbaserade-laromedel"]
+slug = "kopt-datorbaserade-laromedel"
 columns = { BELRN = "258.16013.kopt-datorbaserade-laromedel", DatD3C = "258.16013.kopt-datorbaserade-laromedel", DatD3D = "258.16013.kopt-datorbaserade-laromedel", DatE3C = "258.16013.kopt-datorbaserade-laromedel" }
 columns_ref = "Y-211 2026-09-19: 258.16013 'Köpt datorbaserade läromedel' sequential rename {BELRN 2013-2014, DatD3C 2007-2007, DatD3D 2009-2009, DatE3C 2008-2008} owned by kopt-datorbaserade-laromedel (diagnostic v17 rename-worklist-258)"
 [variable."258.16014.senast-datakurs"]
+slug = "senast-datakurs"
 columns = { DatB4 = "258.16014.senast-datakurs", DatE1 = "258.16014.senast-datakurs" }
 columns_ref = "Y-211 2026-09-19: 258.16014 'När deltog du senast i en datakurs?' sequential rename {DatB4 2008-2010, DatE1 2007-2007} owned by senast-datakurs (diagnostic v17 rename-worklist-258)"
 [variable."258.16025.har-flyttat-eller-kopierat-filer"]
+slug = "har-flyttat-eller-kopierat-filer"
 columns = { CCPY = "258.16025.har-flyttat-eller-kopierat-filer", DatE3A = "258.16025.har-flyttat-eller-kopierat-filer", DatF3A = "258.16025.har-flyttat-eller-kopierat-filer", E2A = "258.16025.har-flyttat-eller-kopierat-filer", E2a = "258.16025.har-flyttat-eller-kopierat-filer" }
 columns_ref = "Y-211 2026-09-19: 258.16025 'Har flyttat eller kopierat filer' sequential rename {CCPY 2012-2012, DatE3A 2007-2007, DatF3A 2011-2011, E2A 2019-2019, E2a 2016-2016} owned by har-flyttat-eller-kopierat-filer (diagnostic v17 rename-worklist-258)"
 [variable."258.16026.kopierat-klistrat-i-dokument"]
+slug = "kopierat-klistrat-i-dokument"
 columns = { CCPPS = "258.16026.kopierat-klistrat-i-dokument", DatE3B = "258.16026.kopierat-klistrat-i-dokument", DatF3B = "258.16026.kopierat-klistrat-i-dokument" }
 columns_ref = "Y-211 2026-09-19: 258.16026 'Kopierat och klistrat in saker inom ett dokument' sequential rename {CCPPS 2012-2012, DatE3B 2007-2007, DatF3B 2011-2011} owned by kopierat-klistrat-i-dokument (diagnostic v17 rename-worklist-258)"
 [variable."258.16027.anvant-dator-berakningar"]
+slug = "anvant-dator-berakningar"
 columns = { CSUM = "258.16027.anvant-dator-berakningar", DatE3C = "258.16027.anvant-dator-berakningar" }
 columns_ref = "Y-211 2026-09-19: 258.16027 'Använt en dator och gjort beräkningar' sequential rename {CSUM 2014-2014, DatE3C 2007-2007} owned by anvant-dator-berakningar (diagnostic v17 rename-worklist-258)"
 [variable."258.16028.komprimerat-eller-zippat-filer"]
+slug = "komprimerat-eller-zippat-filer"
 columns = { CZIP = "258.16028.komprimerat-eller-zippat-filer", DatE3D = "258.16028.komprimerat-eller-zippat-filer", DatF3D = "258.16028.komprimerat-eller-zippat-filer" }
 columns_ref = "Y-211 2026-09-19: 258.16028 'Komprimerat eller zippat filer' sequential rename {CZIP 2012-2012, DatE3D 2007-2007, DatF3D 2011-2011} owned by komprimerat-eller-zippat-filer (diagnostic v17 rename-worklist-258)"
 [variable."258.16029.installerat-tillbehor"]
+slug = "installerat-tillbehor"
 columns = { CINS = "258.16029.installerat-tillbehor", DatE3E = "258.16029.installerat-tillbehor", E1b = "258.16029.installerat-tillbehor" }
 columns_ref = "Y-211 2026-09-19: 258.16029 'Använt en dator och installerat nya tillbehör' sequential rename {CINS 2014-2014, DatE3E 2007-2007, E1b 2016-2016} owned by installerat-tillbehor (diagnostic v17 rename-worklist-258)"
 [variable."258.16030.skrivit-datorprogram"]
+slug = "skrivit-datorprogram"
 columns = { CPRG = "258.16030.skrivit-datorprogram", DatE3F = "258.16030.skrivit-datorprogram", F2f = "258.16030.skrivit-datorprogram" }
 columns_ref = "Y-211 2026-09-19: 258.16030 'Använt en dator och skrivit ett datorprogram' sequential rename {CPRG 2014-2014, DatE3F 2007-2007, F2f 2015-2017} owned by skrivit-datorprogram (diagnostic v17 rename-worklist-258)"
 [variable."258.16044.anvant-internet-sokmotor"]
+slug = "anvant-internet-sokmotor"
 columns = { DatE4A = "258.16044.anvant-internet-sokmotor", ISRCH = "258.16044.anvant-internet-sokmotor" }
 columns_ref = "Y-211 2026-09-19: 258.16044 'Använt Internet och använt en sökmotor' sequential rename {DatE4A 2007-2007, ISRCH 2013-2013} owned by anvant-internet-sokmotor (diagnostic v17 rename-worklist-258)"
 [variable."258.16045.anvant-epost-bifogade-filer"]
+slug = "anvant-epost-bifogade-filer"
 columns = { CEM = "258.16045.anvant-epost-bifogade-filer", DatE4B = "258.16045.anvant-epost-bifogade-filer" }
 columns_ref = "Y-211 2026-09-19: 258.16045 'Använt Internet och skickat e-post med bifogade filer' sequential rename {CEM 2013-2013, DatE4B 2007-2007} owned by anvant-epost-bifogade-filer (diagnostic v17 rename-worklist-258)"
 [variable."258.16049.anvant-internet-skapat-webbsida"]
+slug = "anvant-internet-skapat-webbsida"
 columns = { B6l = "258.16049.anvant-internet-skapat-webbsida", DatE4F = "258.16049.anvant-internet-skapat-webbsida" }
 columns_ref = "Y-211 2026-09-19: 258.16049 'Använt Internet och skapat en webbsida' sequential rename {B6l 2016-2016, DatE4F 2007-2007} owned by anvant-internet-skapat-webbsida (diagnostic v17 rename-worklist-258)"
 [variable."258.16084.datakunskaper-bytajobb"]
+slug = "datakunskaper-bytajobb"
 columns = { DatE6 = "258.16084.datakunskaper-bytajobb", ISK_SFJOB = "258.16084.datakunskaper-bytajobb" }
 columns_ref = "Y-211 2026-09-19: 258.16084 'Tillräckliga datakunskaper för att kunna byta jobb' sequential rename {DatE6 2007-2007, ISK_SFJOB 2013-2013} owned by datakunskaper-bytajobb (diagnostic v17 rename-worklist-258)"
 [variable."258.16086.antal-vuxna-hushall-16-74ar"]
+slug = "antal-vuxna-hushall-16-74ar"
 columns = { DatE10A = "258.16086.antal-vuxna-hushall-16-74ar", DatF10A = "258.16086.antal-vuxna-hushall-16-74ar", DatF82 = "258.16086.antal-vuxna-hushall-16-74ar" }
 columns_ref = "Y-211 2026-09-19: 258.16086 'Antal personer 16-74 år utöver dig själv i hushållet' sequential rename {DatE10A 2009-2009, DatF10A 2008-2008, DatF82 2007-2007} owned by antal-vuxna-hushall-16-74ar (diagnostic v17 rename-worklist-258)"
 [variable."258.16089.hushallets-nettoinkomst"]
+slug = "hushallets-nettoinkomst"
 columns = { DatE12 = "258.16089.hushallets-nettoinkomst", DatF10 = "258.16089.hushallets-nettoinkomst", DatF12 = "258.16089.hushallets-nettoinkomst", DatG14 = "258.16089.hushallets-nettoinkomst", DatG16 = "258.16089.hushallets-nettoinkomst", H16 = "258.16089.hushallets-nettoinkomst" }
 columns_ref = "Y-211 2026-09-19: 258.16089 'Hushållets nettoinkomst' sequential rename {DatE12 2009-2009, DatF10 2007-2007, DatF12 2008-2008, DatG14 2010-2010, DatG16 2011-2011, H16 2014-2020} owned by hushallets-nettoinkomst (diagnostic v17 rename-worklist-258)"
 [variable."258.16815.max-hastighet-internet"]
+slug = "max-hastighet-internet"
 columns = { ISPD = "258.16815.max-hastighet-internet", ISPDF = "258.16815.max-hastighet-internet" }
 columns_ref = "Y-211 2026-09-19: 258.16815 'Maximal hastighet för internetanslutning' sequential rename {ISPD 2013-2013, ISPDF 2014-2025} owned by max-hastighet-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.16832.anvander-internet-internetbank"]
+slug = "anvander-internet-internetbank"
 columns = { B6q = "258.16832.anvander-internet-internetbank", C4q = "258.16832.anvander-internet-internetbank", IUBK = "258.16832.anvander-internet-internetbank" }
 columns_ref = "Y-211 2026-09-19: 258.16832 'Använder internet för internetbank eller andra finansiella tjänster' sequential rename {B6q 2016-2016, C4q 2015-2015, IUBK 2013-2014} owned by anvander-internet-internetbank (diagnostic v17 rename-worklist-258)"
 [variable."258.17408.har-du-funktionshinder"]
+slug = "har-du-funktionshinder"
 columns = { G1 = "258.17408.har-du-funktionshinder", J1 = "258.17408.har-du-funktionshinder" }
 columns_ref = "Y-211 2026-09-19: 258.17408 'Har du funktionshinder' sequential rename {G1 2016-2017, J1 2018-2018} owned by har-du-funktionshinder (diagnostic v17 rename-worklist-258)"
 [variable."258.17514.bor-ensam-eller-med-andra"]
+slug = "bor-ensam-eller-med-andra"
 columns = { DatE10 = "258.17514.bor-ensam-eller-med-andra", DatF10 = "258.17514.bor-ensam-eller-med-andra", DatF81 = "258.17514.bor-ensam-eller-med-andra", DatG12A = "258.17514.bor-ensam-eller-med-andra", G14X = "258.17514.bor-ensam-eller-med-andra", H12X = "258.17514.bor-ensam-eller-med-andra", H14X = "258.17514.bor-ensam-eller-med-andra" }
 columns_ref = "Y-211 2026-09-19: 258.17514 'Bor du ensam eller bor det andra vuxna eller barn tillsammans med dig?' sequential rename {DatE10 2009-2009, DatF10 2008-2008, DatF81 2007-2007, DatG12A 2010-2010, G14X 2012-2013, H12X 2015-2021, H14X 2014-2014} owned by bor-ensam-eller-med-andra (diagnostic v17 rename-worklist-258)"
 [variable."258.17579.it-sakerhet-styrandedokument"]
+slug = "it-sakerhet-styrandedokument"
 columns = { SECPOL1 = "258.17579.it-sakerhet-styrandedokument", SECPOL2 = "258.17579.it-sakerhet-styrandedokument" }
 columns_ref = "Y-211 2026-09-19: 258.17579 'Har företaget styrandedokument för åtgärder eller rutiner för IT-säkerhet' sequential rename {SECPOL1 2015-2015, SECPOL2 2019-2024} owned by it-sakerhet-styrandedokument (diagnostic v17 rename-worklist-258)"
 [variable."258.17590.antal-vuxna-16-85-ar"]
+slug = "antal-vuxna-16-85-ar"
 columns = { AP = "258.17590.antal-vuxna-16-85-ar", HH_POP = "258.17590.antal-vuxna-16-85-ar" }
 columns_ref = "Y-211 2026-09-19: 258.17590 'Antal vuxna (16-85 år)' sequential rename {AP 2007-2011, HH_POP 2012-2012} owned by antal-vuxna-16-85-ar (diagnostic v17 rename-worklist-258)"
 [variable."258.17593.gruppering-av-alder-och-kon"]
+slug = "gruppering-av-alder-och-kon"
 columns = { AKlass_k = "258.17593.gruppering-av-alder-och-kon", Aux_AldKon = "258.17593.gruppering-av-alder-och-kon", aklass_k = "258.17593.gruppering-av-alder-och-kon", stratum = "258.17593.gruppering-av-alder-och-kon" }
 columns_ref = "Y-211 2026-09-19: 258.17593 'Gruppering av Ålder och Kön' sequential rename {AKlass_k 2007-2010, Aux_AldKon 2013-2023, aklass_k 2011-2012, stratum 2024-2025} owned by gruppering-av-alder-och-kon (diagnostic v17 rename-worklist-258)"
 [variable."258.17641.andel-arsverken-programvaruutv-extern"]
+slug = "andel-arsverken-programvaruutv-extern"
 columns = { UTVEGANV2 = "258.17641.andel-arsverken-programvaruutv-extern", UTVEXF = "258.17641.andel-arsverken-programvaruutv-extern" }
 columns_ref = "Y-211 2026-09-19: 258.17641 'Andel av antalet årsverken som arbetar med programvaruutveckling för extern förs' sequential rename {UTVEGANV2 2017-2017, UTVEXF 2013-2015} owned by andel-arsverken-programvaruutv-extern (diagnostic v17 rename-worklist-258)"
 [variable."258.17642.arsverken-programvaruutv-ovriga"]
+slug = "arsverken-programvaruutv-ovriga"
 columns = { UTVEXF2 = "258.17642.arsverken-programvaruutv-ovriga", UTVSUP = "258.17642.arsverken-programvaruutv-ovriga", UTVSUP2 = "258.17642.arsverken-programvaruutv-ovriga" }
 columns_ref = "Y-211 2026-09-19: 258.17642 'Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling -' sequential rename {UTVEXF2 2017-2017, UTVSUP 2013-2015, UTVSUP2 2018-2018} owned by arsverken-programvaruutv-ovriga (diagnostic v17 rename-worklist-258)"
 [variable."258.18023.ej-internet-hemma-annanstans"]
+slug = "ej-internet-hemma-annanstans"
 columns = { A3A = "258.18023.ej-internet-hemma-annanstans", DatA5A = "258.18023.ej-internet-hemma-annanstans", XELSE = "258.18023.ej-internet-hemma-annanstans" }
 columns_ref = "Y-211 2026-09-19: 258.18023 'Inte Internet hemma: Tillgång någon annanstans' sequential rename {A3A 2019-2019, DatA5A 2008-2008, XELSE 2013-2014} owned by ej-internet-hemma-annanstans (diagnostic v17 rename-worklist-258)"
 [variable."258.18025.ej-internet-hemma-dyr-utrustning"]
+slug = "ej-internet-hemma-dyr-utrustning"
 columns = { A3C = "258.18025.ej-internet-hemma-dyr-utrustning", A3c = "258.18025.ej-internet-hemma-dyr-utrustning", DatA5D = "258.18025.ej-internet-hemma-dyr-utrustning" }
 columns_ref = "Y-211 2026-09-19: 258.18025 'Inte Internet hemma: För dyr utrustning' sequential rename {A3C 2019-2019, A3c 2016-2016, DatA5D 2008-2008} owned by ej-internet-hemma-dyr-utrustning (diagnostic v17 rename-worklist-258)"
 [variable."258.18026.ej-internet-hemma-dyr-uppkoppling"]
+slug = "ej-internet-hemma-dyr-uppkoppling"
 columns = { A3D = "258.18026.ej-internet-hemma-dyr-uppkoppling", A3d = "258.18026.ej-internet-hemma-dyr-uppkoppling", DatA5E = "258.18026.ej-internet-hemma-dyr-uppkoppling" }
 columns_ref = "Y-211 2026-09-19: 258.18026 'Inte Internet hemma: För dyrt med uppkoppling' sequential rename {A3D 2019-2019, A3d 2016-2016, DatA5E 2008-2008} owned by ej-internet-hemma-dyr-uppkoppling (diagnostic v17 rename-worklist-258)"
 [variable."258.18027.ej-internet-hemma-saknar-kunskaper"]
+slug = "ej-internet-hemma-saknar-kunskaper"
 columns = { A3E = "258.18027.ej-internet-hemma-saknar-kunskaper", A3e = "258.18027.ej-internet-hemma-saknar-kunskaper", DatA5F = "258.18027.ej-internet-hemma-saknar-kunskaper" }
 columns_ref = "Y-211 2026-09-19: 258.18027 'Inte Internet hemma: Saknar kunskaper' sequential rename {A3E 2019-2019, A3e 2016-2016, DatA5F 2008-2008} owned by ej-internet-hemma-saknar-kunskaper (diagnostic v17 rename-worklist-258)"
 [variable."258.18028.ej-internet-hemma-sakerhetsskal"]
+slug = "ej-internet-hemma-sakerhetsskal"
 columns = { A3F = "258.18028.ej-internet-hemma-sakerhetsskal", A3f = "258.18028.ej-internet-hemma-sakerhetsskal", DatA5G = "258.18028.ej-internet-hemma-sakerhetsskal", XSEC = "258.18028.ej-internet-hemma-sakerhetsskal" }
 columns_ref = "Y-211 2026-09-19: 258.18028 'Inte Internet hemma: Integritets eller säkerhetsskäl' sequential rename {A3F 2019-2019, A3f 2016-2016, DatA5G 2008-2008, XSEC 2013-2014} owned by ej-internet-hemma-sakerhetsskal (diagnostic v17 rename-worklist-258)"
 [variable."258.18030.ej-internet-hemma-andra-skal"]
+slug = "ej-internet-hemma-andra-skal"
 columns = { A3H = "258.18030.ej-internet-hemma-andra-skal", A3h = "258.18030.ej-internet-hemma-andra-skal", DatA5I = "258.18030.ej-internet-hemma-andra-skal" }
 columns_ref = "Y-211 2026-09-19: 258.18030 'Inte Internet hemma: andra skäl' sequential rename {A3H 2019-2019, A3h 2016-2016, DatA5I 2008-2008} owned by ej-internet-hemma-andra-skal (diagnostic v17 rename-worklist-258)"
 [variable."258.18033.ej-internet-hemma-behover-ej"]
+slug = "ej-internet-hemma-behover-ej"
 columns = { A3B = "258.18033.ej-internet-hemma-behover-ej", DatA5C = "258.18033.ej-internet-hemma-behover-ej", XNEED = "258.18033.ej-internet-hemma-behover-ej" }
 columns_ref = "Y-211 2026-09-19: 258.18033 'Inte Internet hemma: Behöver inte Internet' sequential rename {A3B 2019-2019, DatA5C 2008-2008, XNEED 2013-2014} owned by ej-internet-hemma-behover-ej (diagnostic v17 rename-worklist-258)"
 [variable."258.18037.eget-domannamn"]
+slug = "eget-domannamn"
 columns = { DatN1 = "258.18037.eget-domannamn", H1 = "258.18037.eget-domannamn" }
 columns_ref = "Y-211 2026-09-19: 258.18037 'Eget domännamn' sequential rename {DatN1 2008-2010, H1 2012-2012} owned by eget-domannamn (diagnostic v17 rename-worklist-258)"
 [variable."258.18054.fritid-internet-podradio"]
+slug = "fritid-internet-podradio"
 columns = { DatD3E = "258.18054.fritid-internet-podradio", IUWEB2 = "258.18054.fritid-internet-podradio" }
 columns_ref = "Y-211 2026-09-19: 258.18054 'Använt Internet för fritidsaktivitet: podradio' sequential rename {DatD3E 2008-2008, IUWEB2 2014-2014} owned by fritid-internet-podradio (diagnostic v17 rename-worklist-258)"
 [variable."258.18055.fritid-internet-ladda-dataspel"]
+slug = "fritid-internet-ladda-dataspel"
 columns = { BSOFT = "258.18055.fritid-internet-ladda-dataspel", DatD3F = "258.18055.fritid-internet-ladda-dataspel" }
 columns_ref = "Y-211 2026-09-19: 258.18055 'Använt Internet för fritidsaktivitet:Laddat ner data-/videospel' sequential rename {BSOFT 2014-2014, DatD3F 2008-2008} owned by fritid-internet-ladda-dataspel (diagnostic v17 rename-worklist-258)"
 [variable."258.19119.awshm"]
+slug = "awshm"
 columns = { AWSEU = "258.19119.awshm", AWSHM = "258.19119.awshm" }
 columns_ref = "Y-211 2026-09-19: 258.19119 'Tog emot beställningar via en webbplats eller app från kunder i övriga EU' sequential rename {AWSEU 2017-2024, AWSHM 2013-2013} owned by awshm (diagnostic v17 rename-worklist-258)"
 [variable."258.19120.ehandel-bestallningar-webb-varlden"]
+slug = "ehandel-bestallningar-webb-varlden"
 columns = { AWSEU = "258.19120.ehandel-bestallningar-webb-varlden", AWSWW = "258.19120.ehandel-bestallningar-webb-varlden" }
 columns_ref = "Y-211 2026-09-19: 258.19120 'Tog emot beställningar via webbplats eller app från kunder i resten av världen' sequential rename {AWSEU 2013-2013, AWSWW 2017-2024} owned by ehandel-bestallningar-webb-varlden (diagnostic v17 rename-worklist-258)"
 [variable."258.19121.awsww"]
+slug = "awsww"
 columns = { AWSHM = "258.19121.awsww", AWSWW = "258.19121.awsww" }
 columns_ref = "Y-211 2026-09-19: 258.19121 'Tog emot beställningar via en webbplats eller app från kunder i Sverige' sequential rename {AWSHM 2017-2024, AWSWW 2013-2013} owned by awsww (diagnostic v17 rename-worklist-258)"
 [variable."258.21091.ej-internet-tillgang-annanstans"]
+slug = "ej-internet-tillgang-annanstans"
 columns = { A4a = "258.21091.ej-internet-tillgang-annanstans", DatA4A = "258.21091.ej-internet-tillgang-annanstans", DatA5A = "258.21091.ej-internet-tillgang-annanstans", XELSE = "258.21091.ej-internet-tillgang-annanstans" }
 columns_ref = "Y-211 2026-09-19: 258.21091 'Inte Internet pga har tillgång någon annanstans' sequential rename {A4a 2015-2017, DatA4A 2011-2011, DatA5A 2009-2010, XELSE 2012-2012} owned by ej-internet-tillgang-annanstans (diagnostic v17 rename-worklist-258)"
 [variable."258.21093.ej-internet-andra-skal"]
+slug = "ej-internet-andra-skal"
 columns = { A4h = "258.21093.ej-internet-andra-skal", DatA4I = "258.21093.ej-internet-andra-skal", DatA5B = "258.21093.ej-internet-andra-skal", DatA5I = "258.21093.ej-internet-andra-skal", XOTH = "258.21093.ej-internet-andra-skal" }
 columns_ref = "Y-211 2026-09-19: 258.21093 'Inte Internet pga något annat' sequential rename {A4h 2015-2017, DatA4I 2011-2011, DatA5B 2009-2009, DatA5I 2010-2010, XOTH 2012-2012} owned by ej-internet-andra-skal (diagnostic v17 rename-worklist-258)"
 [variable."258.21094.ej-internet-funktionshinder"]
+slug = "ej-internet-funktionshinder"
 columns = { DatA4H = "258.21094.ej-internet-funktionshinder", DatA5C = "258.21094.ej-internet-funktionshinder", DatA5H = "258.21094.ej-internet-funktionshinder", XDIS = "258.21094.ej-internet-funktionshinder" }
 columns_ref = "Y-211 2026-09-19: 258.21094 'Inte Internet pga fysiskt funktionshinder' sequential rename {DatA4H 2011-2011, DatA5C 2009-2009, DatA5H 2010-2010, XDIS 2012-2012} owned by ej-internet-funktionshinder (diagnostic v17 rename-worklist-258)"
 [variable."258.21095.ej-internet-dyr-utrustning"]
+slug = "ej-internet-dyr-utrustning"
 columns = { A4c = "258.21095.ej-internet-dyr-utrustning", DatA4C = "258.21095.ej-internet-dyr-utrustning", DatA5D = "258.21095.ej-internet-dyr-utrustning", XEQU = "258.21095.ej-internet-dyr-utrustning" }
 columns_ref = "Y-211 2026-09-19: 258.21095 'Inte tillgång till Internet pga dyr utrustning' sequential rename {A4c 2015-2017, DatA4C 2011-2011, DatA5D 2009-2010, XEQU 2012-2014} owned by ej-internet-dyr-utrustning (diagnostic v17 rename-worklist-258)"
 [variable."258.21096.ej-internet-dyr-uppkoppling"]
+slug = "ej-internet-dyr-uppkoppling"
 columns = { DatA4D = "258.21096.ej-internet-dyr-uppkoppling", DatA5E = "258.21096.ej-internet-dyr-uppkoppling", XACC = "258.21096.ej-internet-dyr-uppkoppling" }
 columns_ref = "Y-211 2026-09-19: 258.21096 'Inte Internet pga dyr Internetuppkoppling' sequential rename {DatA4D 2011-2011, DatA5E 2009-2010, XACC 2012-2012} owned by ej-internet-dyr-uppkoppling (diagnostic v17 rename-worklist-258)"
 [variable."258.21103.internetansl-mobiltelefon"]
+slug = "internetansl-mobiltelefon"
 columns = { BBMOBH = "258.21103.internetansl-mobiltelefon", DatA3C = "258.21103.internetansl-mobiltelefon", DatA3C1 = "258.21103.internetansl-mobiltelefon", DatA3C2 = "258.21103.internetansl-mobiltelefon" }
 columns_ref = "Y-211 2026-09-19: 258.21103 'Internetanslutning via mobiltelefon/smartphone' sequential rename {BBMOBH 2012-2012, DatA3C 2010-2010, DatA3C1 2009-2009, DatA3C2 2011-2011} owned by internetansl-mobiltelefon (diagnostic v17 rename-worklist-258)"
 [variable."258.21104.anvant-webbradio-webbtv"]
+slug = "anvant-webbradio-webbtv"
 columns = { DatC5F = "258.21104.anvant-webbradio-webbtv", IUWEB = "258.21104.anvant-webbradio-webbtv" }
 columns_ref = "Y-211 2026-09-19: 258.21104 'Använt Internet för att lyssna på webbradio/titta på webb-tv' sequential rename {DatC5F 2009-2010, IUWEB 2012-2012} owned by anvant-webbradio-webbtv (diagnostic v17 rename-worklist-258)"
 [variable."258.21111.internet-telefon-videosamtal"]
+slug = "internet-telefon-videosamtal"
 columns = { DatC5B = "258.21111.internet-telefon-videosamtal", DatC5O = "258.21111.internet-telefon-videosamtal", IUPH1 = "258.21111.internet-telefon-videosamtal" }
 columns_ref = "Y-211 2026-09-19: 258.21111 'Använt Internet för telefon-/videosamtal via Internet' sequential rename {DatC5B 2009-2010, DatC5O 2011-2011, IUPH1 2012-2012} owned by internet-telefon-videosamtal (diagnostic v17 rename-worklist-258)"
 [variable."258.21118.kopt-tjanster-tv-bredband-telefoni"]
+slug = "kopt-tjanster-tv-bredband-telefoni"
 columns = { BTS = "258.21118.kopt-tjanster-tv-bredband-telefoni", D2G = "258.21118.kopt-tjanster-tv-bredband-telefoni", D2g = "258.21118.kopt-tjanster-tv-bredband-telefoni", DatD2K = "258.21118.kopt-tjanster-tv-bredband-telefoni", DatD2L = "258.21118.kopt-tjanster-tv-bredband-telefoni", DatE2L = "258.21118.kopt-tjanster-tv-bredband-telefoni", E2g = "258.21118.kopt-tjanster-tv-bredband-telefoni" }
 columns_ref = "Y-211 2026-09-19: 258.21118 'Köpt tjänster som rör TV, bredband eller telefoni' sequential rename {BTS 2012-2014, D2G 2019-2019, D2g 2018-2018, DatD2K 2009-2009, DatD2L 2010-2010, DatE2L 2011-2011, E2g 2015-2017} owned by kopt-tjanster-tv-bredband-telefoni (diagnostic v17 rename-worklist-258)"
 [variable."258.21119.kopt-bestallt-semesterinkvartering"]
+slug = "kopt-bestallt-semesterinkvartering"
 columns = { BHOLAC = "258.21119.kopt-bestallt-semesterinkvartering", D2H = "258.21119.kopt-bestallt-semesterinkvartering", D2h = "258.21119.kopt-bestallt-semesterinkvartering", DatD2M = "258.21119.kopt-bestallt-semesterinkvartering", DatD2N = "258.21119.kopt-bestallt-semesterinkvartering", DatE2N = "258.21119.kopt-bestallt-semesterinkvartering", E2h = "258.21119.kopt-bestallt-semesterinkvartering" }
 columns_ref = "Y-211 2026-09-19: 258.21119 'Köpt/beställt semesterinkvartering' sequential rename {BHOLAC 2012-2012, D2H 2019-2019, D2h 2018-2018, DatD2M 2009-2009, DatD2N 2010-2010, DatE2N 2011-2011, E2h 2017-2017} owned by kopt-bestallt-semesterinkvartering (diagnostic v17 rename-worklist-258)"
 [variable."258.21125.antal-internetkop-senaste-3-man"]
+slug = "antal-internetkop-senaste-3-man"
 columns = { D11 = "258.21125.antal-internetkop-senaste-3-man", D4 = "258.21125.antal-internetkop-senaste-3-man", D5 = "258.21125.antal-internetkop-senaste-3-man", E10 = "258.21125.antal-internetkop-senaste-3-man", E8 = "258.21125.antal-internetkop-senaste-3-man", IBUY = "258.21125.antal-internetkop-senaste-3-man" }
 columns_ref = "Y-211 2026-09-19: 258.21125 'Antal gånger senaste 3 mån som köpt/beställt varor/tjänster via Internet' sequential rename {D11 2020-2021, D4 2016-2016, D5 2019-2019, E10 2023-2023, E8 2025-2025, IBUY 2013-2014} owned by antal-internetkop-senaste-3-man (diagnostic v17 rename-worklist-258)"
 [variable."258.21127.betalning-kreditkort-internet"]
+slug = "betalning-kreditkort-internet"
 columns = { DatD7A = "258.21127.betalning-kreditkort-internet", IPCC = "258.21127.betalning-kreditkort-internet" }
 columns_ref = "Y-211 2026-09-19: 258.21127 'Betalning via kredit-betalkortsnummer över Internet sen 12 mån' sequential rename {DatD7A 2009-2009, IPCC 2014-2014} owned by betalning-kreditkort-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.21129.betalning-betaltjanst-internet"]
+slug = "betalning-betaltjanst-internet"
 columns = { DatD7B = "258.21129.betalning-betaltjanst-internet", IPPPC = "258.21129.betalning-betaltjanst-internet" }
 columns_ref = "Y-211 2026-09-19: 258.21129 'Betalning via särskild betaltjänst/betalningsförmedling över Internet sen 12' sequential rename {DatD7B 2009-2009, IPPPC 2014-2014} owned by betalning-betaltjanst-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.21130.betalning-internetbank"]
+slug = "betalning-internetbank"
 columns = { DatD7C = "258.21130.betalning-internetbank", IPEBT = "258.21130.betalning-internetbank" }
 columns_ref = "Y-211 2026-09-19: 258.21130 'Betalning via Internetbank sen 12 mån' sequential rename {DatD7C 2009-2009, IPEBT 2014-2014} owned by betalning-internetbank (diagnostic v17 rename-worklist-258)"
 [variable."258.21132.datd9a"]
+slug = "datd9a"
 columns = { D6a = "258.21132.datd9a", DatD9A = "258.21132.datd9a", E6a = "258.21132.datd9a" }
 columns_ref = "Y-211 2026-09-19: 258.21132 'Problem (tekniska) vid Internetköp' sequential rename {D6a 2016-2016, DatD9A 2009-2009, E6a 2015-2015} owned by datd9a (diagnostic v17 rename-worklist-258)"
 [variable."258.21133.problem-info-garantier-kop"]
+slug = "problem-info-garantier-kop"
 columns = { D13b = "258.21133.problem-info-garantier-kop", D6b = "258.21133.problem-info-garantier-kop", DatD9B = "258.21133.problem-info-garantier-kop", E11b = "258.21133.problem-info-garantier-kop", E9b = "258.21133.problem-info-garantier-kop" }
 columns_ref = "Y-211 2026-09-19: 258.21133 'Problem (svårt info garantier/rättigheter) vid betalning' sequential rename {D13b 2021-2021, D6b 2016-2016, DatD9B 2009-2009, E11b 2023-2023, E9b 2025-2025} owned by problem-info-garantier-kop (diagnostic v17 rename-worklist-258)"
 [variable."258.21134.datd9c"]
+slug = "datd9c"
 columns = { D6c = "258.21134.datd9c", DatD9C = "258.21134.datd9c", E6c = "258.21134.datd9c" }
 columns_ref = "Y-211 2026-09-19: 258.21134 'Problem (längre leveranstid) vid Internetköp' sequential rename {D6c 2016-2016, DatD9C 2009-2009, E6c 2015-2015} owned by datd9c (diagnostic v17 rename-worklist-258)"
 [variable."258.21135.datd9d"]
+slug = "datd9d"
 columns = { D6d = "258.21135.datd9d", DatD9D = "258.21135.datd9d", E6d = "258.21135.datd9d" }
 columns_ref = "Y-211 2026-09-19: 258.21135 'Problem (högre slutpris) vid Internetköp' sequential rename {D6d 2016-2016, DatD9D 2009-2009, E6d 2015-2015} owned by datd9d (diagnostic v17 rename-worklist-258)"
 [variable."258.21136.datd9e"]
+slug = "datd9e"
 columns = { D6e = "258.21136.datd9e", DatD9E = "258.21136.datd9e", E6e = "258.21136.datd9e" }
 columns_ref = "Y-211 2026-09-19: 258.21136 'Problem (felaktig/skadad vara) vid Internetköp' sequential rename {D6e 2016-2016, DatD9E 2009-2009, E6e 2015-2015} owned by datd9e (diagnostic v17 rename-worklist-258)"
 [variable."258.21137.datd9f"]
+slug = "datd9f"
 columns = { D6f = "258.21137.datd9f", DatD9F = "258.21137.datd9f", E6f = "258.21137.datd9f" }
 columns_ref = "Y-211 2026-09-19: 258.21137 'Problem (bedrägeri) vid Internetköp' sequential rename {D6f 2016-2016, DatD9F 2009-2009, E6f 2015-2015} owned by datd9f (diagnostic v17 rename-worklist-258)"
 [variable."258.21138.datd9g"]
+slug = "datd9g"
 columns = { D6g = "258.21138.datd9g", DatD9G = "258.21138.datd9g", E6b = "258.21138.datd9g" }
 columns_ref = "Y-211 2026-09-19: 258.21138 'Problem (svårigheter att klaga/reklamera) vid Internetköp' sequential rename {D6g 2016-2016, DatD9G 2009-2009, E6b 2015-2015} owned by datd9g (diagnostic v17 rename-worklist-258)"
 [variable."258.21139.problem-annat-vid-internetkop"]
+slug = "problem-annat-vid-internetkop"
 columns = { D6i = "258.21139.problem-annat-vid-internetkop", DatD9H = "258.21139.problem-annat-vid-internetkop", E6i = "258.21139.problem-annat-vid-internetkop" }
 columns_ref = "Y-211 2026-09-19: 258.21139 'Problem (annat) vid Internetköp' sequential rename {D6i 2016-2016, DatD9H 2009-2009, E6i 2015-2015} owned by problem-annat-vid-internetkop (diagnostic v17 rename-worklist-258)"
 [variable."258.21155.ej-kopt-internet-sakerhetsskal"]
+slug = "ej-kopt-internet-sakerhetsskal"
 columns = { DatD12G = "258.21155.ej-kopt-internet-sakerhetsskal", F3A = "258.21155.ej-kopt-internet-sakerhetsskal" }
 columns_ref = "Y-211 2026-09-19: 258.21155 'Ej köpt via Internet pga personliga säkerhetsaspekter' sequential rename {DatD12G 2009-2009, F3A 2019-2019} owned by ej-kopt-internet-sakerhetsskal (diagnostic v17 rename-worklist-258)"
 [variable."258.21156.ej-kopt-internet-ej-kunna-returnera"]
+slug = "ej-kopt-internet-ej-kunna-returnera"
 columns = { DatD12H = "258.21156.ej-kopt-internet-ej-kunna-returnera", E7e = "258.21156.ej-kopt-internet-ej-kunna-returnera" }
 columns_ref = "Y-211 2026-09-19: 258.21156 'Ej köpt via Internet pga orolig ej kunna returnera' sequential rename {DatD12H 2009-2009, E7e 2015-2015} owned by ej-kopt-internet-ej-kunna-returnera (diagnostic v17 rename-worklist-258)"
 [variable."258.21167.eget-domannamn-annan"]
+slug = "eget-domannamn-annan"
 columns = { DatN1Annan = "258.21167.eget-domannamn-annan", DatN1B = "258.21167.eget-domannamn-annan", H2ANNAN = "258.21167.eget-domannamn-annan" }
 columns_ref = "Y-211 2026-09-19: 258.21167 'Eget domännamn Annan' sequential rename {DatN1Annan 2010-2010, DatN1B 2009-2009, H2ANNAN 2012-2012} owned by eget-domannamn-annan (diagnostic v17 rename-worklist-258)"
 [variable."258.21168.planerar-registrera-domannamn"]
+slug = "planerar-registrera-domannamn"
 columns = { DatN1C = "258.21168.planerar-registrera-domannamn", DatN1Nej = "258.21168.planerar-registrera-domannamn", H4 = "258.21168.planerar-registrera-domannamn" }
 columns_ref = "Y-211 2026-09-19: 258.21168 'Planerar att registrera eget domännamn' sequential rename {DatN1C 2009-2009, DatN1Nej 2010-2010, H4 2012-2012} owned by planerar-registrera-domannamn (diagnostic v17 rename-worklist-258)"
 [variable."258.21169.datoranv-kopiera-flytta-fil"]
+slug = "datoranv-kopiera-flytta-fil"
 columns = { CCPY = "258.21169.datoranv-kopiera-flytta-fil", DatB5A = "258.21169.datoranv-kopiera-flytta-fil", F2a = "258.21169.datoranv-kopiera-flytta-fil" }
 columns_ref = "Y-211 2026-09-19: 258.21169 'Gjort vid datoranvändning: kopierat/flyttat fil/mapp' sequential rename {CCPY 2014-2014, DatB5A 2009-2009, F2a 2015-2017} owned by datoranv-kopiera-flytta-fil (diagnostic v17 rename-worklist-258)"
 [variable."258.21170.datoranv-kopiera-klistra-dokument"]
+slug = "datoranv-kopiera-klistra-dokument"
 columns = { CCPPS = "258.21170.datoranv-kopiera-klistra-dokument", DatB5B = "258.21170.datoranv-kopiera-klistra-dokument" }
 columns_ref = "Y-211 2026-09-19: 258.21170 'Gjort vid datoranv: kopierat/klistrat in något i dokument' sequential rename {CCPPS 2014-2014, DatB5B 2009-2009} owned by datoranv-kopiera-klistra-dokument (diagnostic v17 rename-worklist-258)"
 [variable."258.21171.anvant-formler-i-ett-kalkylark"]
+slug = "anvant-formler-i-ett-kalkylark"
 columns = { CSUM = "258.21171.anvant-formler-i-ett-kalkylark", DatB5C = "258.21171.anvant-formler-i-ett-kalkylark", DatF3C = "258.21171.anvant-formler-i-ett-kalkylark" }
 columns_ref = "Y-211 2026-09-19: 258.21171 'Använt formler i ett kalkylark' sequential rename {CSUM 2012-2012, DatB5C 2009-2009, DatF3C 2011-2011} owned by anvant-formler-i-ett-kalkylark (diagnostic v17 rename-worklist-258)"
 [variable."258.21172.datoranv-komprimera-filer"]
+slug = "datoranv-komprimera-filer"
 columns = { CZIP = "258.21172.datoranv-komprimera-filer", DatB5D = "258.21172.datoranv-komprimera-filer" }
 columns_ref = "Y-211 2026-09-19: 258.21172 'Gjort vid datoranv: komprimerar filer' sequential rename {CZIP 2014-2014, DatB5D 2009-2009} owned by datoranv-komprimera-filer (diagnostic v17 rename-worklist-258)"
 [variable."258.21173.installerat-en-ny-utrustning"]
+slug = "installerat-en-ny-utrustning"
 columns = { CINS = "258.21173.installerat-en-ny-utrustning", DatB5E = "258.21173.installerat-en-ny-utrustning", DatF3E = "258.21173.installerat-en-ny-utrustning" }
 columns_ref = "Y-211 2026-09-19: 258.21173 'Installerat en ny utrustning' sequential rename {CINS 2012-2012, DatB5E 2009-2009, DatF3E 2011-2011} owned by installerat-en-ny-utrustning (diagnostic v17 rename-worklist-258)"
 [variable."258.21174.programmerat"]
+slug = "programmerat"
 columns = { CPRG = "258.21174.programmerat", DatB5F = "258.21174.programmerat", DatF3F = "258.21174.programmerat", E2f = "258.21174.programmerat" }
 columns_ref = "Y-211 2026-09-19: 258.21174 'Programmerat' sequential rename {CPRG 2012-2012, DatB5F 2009-2009, DatF3F 2011-2011, E2f 2016-2016} owned by programmerat (diagnostic v17 rename-worklist-258)"
 [variable."258.21177.kopt-andra-programvaror-internet"]
+slug = "kopt-andra-programvaror-internet"
 columns = { BOSOFT = "258.21177.kopt-andra-programvaror-internet", DatD2H = "258.21177.kopt-andra-programvaror-internet", DatD2I = "258.21177.kopt-andra-programvaror-internet", DatE2I = "258.21177.kopt-andra-programvaror-internet" }
 columns_ref = "Y-211 2026-09-19: 258.21177 'Köpt andra programvaror via Internet de senaste 12 mån' sequential rename {BOSOFT 2012-2012, DatD2H 2009-2009, DatD2I 2010-2010, DatE2I 2011-2011} owned by kopt-andra-programvaror-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.23254.drabbats-virus-datorinfektion"]
+slug = "drabbats-virus-datorinfektion"
 columns = { DatE2G = "258.23254.drabbats-virus-datorinfektion", G1a = "258.23254.drabbats-virus-datorinfektion" }
 columns_ref = "Y-211 2026-09-19: 258.23254 'Drabbats av virus eller annan datorinfektion' sequential rename {DatE2G 2010-2010, G1a 2015-2015} owned by drabbats-virus-datorinfektion (diagnostic v17 rename-worklist-258)"
 [variable."258.23256.drabbats-missbruk-personlig-info"]
+slug = "drabbats-missbruk-personlig-info"
 columns = { DatE2I = "258.23256.drabbats-missbruk-personlig-info", G1b = "258.23256.drabbats-missbruk-personlig-info" }
 columns_ref = "Y-211 2026-09-19: 258.23256 'Drabbats av missbruk av personlig info' sequential rename {DatE2I 2010-2010, G1b 2015-2015} owned by drabbats-missbruk-personlig-info (diagnostic v17 rename-worklist-258)"
 [variable."258.23258.drabbats-forlora-pengar-kortbedragerier"]
+slug = "drabbats-forlora-pengar-kortbedragerier"
 columns = { DatE2K = "258.23258.drabbats-forlora-pengar-kortbedragerier", G1c = "258.23258.drabbats-forlora-pengar-kortbedragerier" }
 columns_ref = "Y-211 2026-09-19: 258.23258 'Drabbats av att förlora pengar pga bedragare anv kortuppg' sequential rename {DatE2K 2010-2010, G1c 2015-2015} owned by drabbats-forlora-pengar-kortbedragerier (diagnostic v17 rename-worklist-258)"
 [variable."258.23259.drabbats-barn-olampliga-sidor"]
+slug = "drabbats-barn-olampliga-sidor"
 columns = { DatE2L = "258.23259.drabbats-barn-olampliga-sidor", G1e = "258.23259.drabbats-barn-olampliga-sidor" }
 columns_ref = "Y-211 2026-09-19: 258.23259 'Drabbats av att barn gått in på olämpliga sidor etc' sequential rename {DatE2L 2010-2010, G1e 2015-2015} owned by drabbats-barn-olampliga-sidor (diagnostic v17 rename-worklist-258)"
 [variable."258.23260.ej-kopt-varor-sakerhetsbekymmer"]
+slug = "ej-kopt-varor-sakerhetsbekymmer"
 columns = { DatE3A = "258.23260.ej-kopt-varor-sakerhetsbekymmer", G2a = "258.23260.ej-kopt-varor-sakerhetsbekymmer" }
 columns_ref = "Y-211 2026-09-19: 258.23260 'Ej beställt/köpt varor pga bekymmer om säkerheten' sequential rename {DatE3A 2010-2010, G2a 2015-2015} owned by ej-kopt-varor-sakerhetsbekymmer (diagnostic v17 rename-worklist-258)"
 [variable."258.23261.ej-bankarenden-sakerhetsbekymmer"]
+slug = "ej-bankarenden-sakerhetsbekymmer"
 columns = { DatE3B = "258.23261.ej-bankarenden-sakerhetsbekymmer", F3B = "258.23261.ej-bankarenden-sakerhetsbekymmer", G2b = "258.23261.ej-bankarenden-sakerhetsbekymmer" }
 columns_ref = "Y-211 2026-09-19: 258.23261 'Ej genomfört bankärenden pga bekymmer om säkerheten' sequential rename {DatE3B 2010-2010, F3B 2019-2019, G2b 2015-2015} owned by ej-bankarenden-sakerhetsbekymmer (diagnostic v17 rename-worklist-258)"
 [variable."258.23262.ej-personlig-info-sakerhetsbekymmer"]
+slug = "ej-personlig-info-sakerhetsbekymmer"
 columns = { DatE3C = "258.23262.ej-personlig-info-sakerhetsbekymmer", F3C = "258.23262.ej-personlig-info-sakerhetsbekymmer", G2c = "258.23262.ej-personlig-info-sakerhetsbekymmer" }
 columns_ref = "Y-211 2026-09-19: 258.23262 'Ej lagt ut personlig info pga bekymmer om säkerheten' sequential rename {DatE3C 2010-2010, F3C 2019-2019, G2c 2015-2015} owned by ej-personlig-info-sakerhetsbekymmer (diagnostic v17 rename-worklist-258)"
 [variable."258.23263.ej-myndigheter-sakerhetsbekymmer"]
+slug = "ej-myndigheter-sakerhetsbekymmer"
 columns = { DatE3D = "258.23263.ej-myndigheter-sakerhetsbekymmer", F3D = "258.23263.ej-myndigheter-sakerhetsbekymmer" }
 columns_ref = "Y-211 2026-09-19: 258.23263 'Ej kommunicera med myndigheter eller förvaltningar' sequential rename {DatE3D 2010-2010, F3D 2019-2019} owned by ej-myndigheter-sakerhetsbekymmer (diagnostic v17 rename-worklist-258)"
 [variable."258.23264.ej-laddat-mjukvara-sakerhetsbekymmer"]
+slug = "ej-laddat-mjukvara-sakerhetsbekymmer"
 columns = { DatE3E = "258.23264.ej-laddat-mjukvara-sakerhetsbekymmer", F3E = "258.23264.ej-laddat-mjukvara-sakerhetsbekymmer", G2e = "258.23264.ej-laddat-mjukvara-sakerhetsbekymmer" }
 columns_ref = "Y-211 2026-09-19: 258.23264 'Ej laddat ned mjukvara av säkerhetsskäl' sequential rename {DatE3E 2010-2010, F3E 2019-2019, G2e 2015-2015} owned by ej-laddat-mjukvara-sakerhetsbekymmer (diagnostic v17 rename-worklist-258)"
 [variable."258.23265.ej-mobil-internet-sakerhetsbekymmer"]
+slug = "ej-mobil-internet-sakerhetsbekymmer"
 columns = { DatE3F = "258.23265.ej-mobil-internet-sakerhetsbekymmer", G2f = "258.23265.ej-mobil-internet-sakerhetsbekymmer" }
 columns_ref = "Y-211 2026-09-19: 258.23265 'Ej använt Internet med mobil utrustning pga bekymmer om säkerheten' sequential rename {DatE3F 2010-2010, G2f 2015-2015} owned by ej-mobil-internet-sakerhetsbekymmer (diagnostic v17 rename-worklist-258)"
 [variable."258.23280.har-redan-anvant-sokmotor"]
+slug = "har-redan-anvant-sokmotor"
 columns = { DatF1A = "258.23280.har-redan-anvant-sokmotor", DatF4A = "258.23280.har-redan-anvant-sokmotor" }
 columns_ref = "Y-211 2026-09-19: 258.23280 'Har redan använt sökmotor' sequential rename {DatF1A 2010-2010, DatF4A 2011-2011} owned by har-redan-anvant-sokmotor (diagnostic v17 rename-worklist-258)"
 [variable."258.23281.skickat-epost-bifogade-filer"]
+slug = "skickat-epost-bifogade-filer"
 columns = { DatF1B = "258.23281.skickat-epost-bifogade-filer", DatF4B = "258.23281.skickat-epost-bifogade-filer" }
 columns_ref = "Y-211 2026-09-19: 258.23281 'Har skickat e-postmeddelanden m bifogade filer' sequential rename {DatF1B 2010-2010, DatF4B 2011-2011} owned by skickat-epost-bifogade-filer (diagnostic v17 rename-worklist-258)"
 [variable."258.23282.skickat-meddelanden-chattrum"]
+slug = "skickat-meddelanden-chattrum"
 columns = { DatF1C = "258.23282.skickat-meddelanden-chattrum", DatF4C = "258.23282.skickat-meddelanden-chattrum", ICHAT = "258.23282.skickat-meddelanden-chattrum" }
 columns_ref = "Y-211 2026-09-19: 258.23282 'Har skickat meddelanden till chattrum, nyhetsgrupper m.m' sequential rename {DatF1C 2010-2010, DatF4C 2011-2011, ICHAT 2013-2013} owned by skickat-meddelanden-chattrum (diagnostic v17 rename-worklist-258)"
 [variable."258.23283.har-anvant-internet-for-att-ringa"]
+slug = "har-anvant-internet-for-att-ringa"
 columns = { DatF1D = "258.23283.har-anvant-internet-for-att-ringa", DatF4D = "258.23283.har-anvant-internet-for-att-ringa" }
 columns_ref = "Y-211 2026-09-19: 258.23283 'Har använt Internet för att ringa' sequential rename {DatF1D 2010-2010, DatF4D 2011-2011} owned by har-anvant-internet-for-att-ringa (diagnostic v17 rename-worklist-258)"
 [variable."258.23284.anvant-fildelning-filmer-musik"]
+slug = "anvant-fildelning-filmer-musik"
 columns = { DatF1E = "258.23284.anvant-fildelning-filmer-musik", DatF4E = "258.23284.anvant-fildelning-filmer-musik", IEXCH = "258.23284.anvant-fildelning-filmer-musik" }
 columns_ref = "Y-211 2026-09-19: 258.23284 'Har använt fildelning för att utbyta filmer, musik etc' sequential rename {DatF1E 2010-2010, DatF4E 2011-2011, IEXCH 2013-2013} owned by anvant-fildelning-filmer-musik (diagnostic v17 rename-worklist-258)"
 [variable."258.23285.har-skapat-en-hemsida"]
+slug = "har-skapat-en-hemsida"
 columns = { CWEB = "258.23285.har-skapat-en-hemsida", DatF1F = "258.23285.har-skapat-en-hemsida", DatF4F = "258.23285.har-skapat-en-hemsida" }
 columns_ref = "Y-211 2026-09-19: 258.23285 'Har skapat en hemsida' sequential rename {CWEB 2013-2013, DatF1F 2010-2010, DatF4F 2011-2011} owned by har-skapat-en-hemsida (diagnostic v17 rename-worklist-258)"
 [variable."258.23287.utbildningsniva-grov"]
+slug = "utbildningsniva-grov"
 columns = { H7X = "258.23287.utbildningsniva-grov", UtbNiv = "258.23287.utbildningsniva-grov", utb = "258.23287.utbildningsniva-grov" }
 columns_ref = "Y-211 2026-09-19: 258.23287 'Utbildningsnivå grov' sequential rename {H7X 2018-2020, UtbNiv 2012-2012, utb 2015-2017} owned by utbildningsniva-grov (diagnostic v17 rename-worklist-258)"
 [variable."258.23389.inte-internet-pga-behover-inte-internet"]
+slug = "inte-internet-pga-behover-inte-internet"
 columns = { A4b = "258.23389.inte-internet-pga-behover-inte-internet", DatA4B = "258.23389.inte-internet-pga-behover-inte-internet", DatA5C = "258.23389.inte-internet-pga-behover-inte-internet", XNEED = "258.23389.inte-internet-pga-behover-inte-internet" }
 columns_ref = "Y-211 2026-09-19: 258.23389 'Inte internet pga. behöver inte internet' sequential rename {A4b 2015-2017, DatA4B 2011-2011, DatA5C 2010-2010, XNEED 2012-2012} owned by inte-internet-pga-behover-inte-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.23391.inte-internet-saknar-kunskaper"]
+slug = "inte-internet-saknar-kunskaper"
 columns = { A4e = "258.23391.inte-internet-saknar-kunskaper", DatA4E = "258.23391.inte-internet-saknar-kunskaper", DatA5F = "258.23391.inte-internet-saknar-kunskaper", XSKL = "258.23391.inte-internet-saknar-kunskaper" }
 columns_ref = "Y-211 2026-09-19: 258.23391 'Inte Internet pga vet inte hur man använder Internet' sequential rename {A4e 2015-2017, DatA4E 2011-2011, DatA5F 2010-2010, XSKL 2012-2014} owned by inte-internet-saknar-kunskaper (diagnostic v17 rename-worklist-258)"
 [variable."258.23392.inte-internet-pga-sakerhetsskal"]
+slug = "inte-internet-pga-sakerhetsskal"
 columns = { DatA4F = "258.23392.inte-internet-pga-sakerhetsskal", DatA5G = "258.23392.inte-internet-pga-sakerhetsskal", XSEC = "258.23392.inte-internet-pga-sakerhetsskal" }
 columns_ref = "Y-211 2026-09-19: 258.23392 'Inte Internet pga integritets- och säkerhetsskäl' sequential rename {DatA4F 2011-2011, DatA5G 2010-2010, XSEC 2012-2012} owned by inte-internet-pga-sakerhetsskal (diagnostic v17 rename-worklist-258)"
 [variable."258.23395.anvant-annan-mobil-uppkoppling"]
+slug = "anvant-annan-mobil-uppkoppling"
 columns = { DatC4D = "258.23395.anvant-annan-mobil-uppkoppling", IUMD_OTH = "258.23395.anvant-annan-mobil-uppkoppling" }
 columns_ref = "Y-211 2026-09-19: 258.23395 'Använt annan mobil uppkoppling' sequential rename {DatC4D 2010-2010, IUMD_OTH 2013-2014} owned by anvant-annan-mobil-uppkoppling (diagnostic v17 rename-worklist-258)"
 [variable."258.23398.laddat-ned-ebocker-istallet-post"]
+slug = "laddat-ned-ebocker-istallet-post"
 columns = { DatD3B = "258.23398.laddat-ned-ebocker-istallet-post", DatE3B = "258.23398.laddat-ned-ebocker-istallet-post" }
 columns_ref = "Y-211 2026-09-19: 258.23398 'Laddat ned e-böcker, tidningar mm elektroniskt i stället för att få via vanlig p' sequential rename {DatD3B 2010-2010, DatE3B 2011-2011} owned by laddat-ned-ebocker-istallet-post (diagnostic v17 rename-worklist-258)"
 [variable."258.23403.internetanslutning-mobilt-bredband"]
+slug = "internetanslutning-mobilt-bredband"
 columns = { DatA3C3 = "258.23403.internetanslutning-mobilt-bredband", DatA4C3 = "258.23403.internetanslutning-mobilt-bredband" }
 columns_ref = "Y-211 2026-09-19: 258.23403 'Internetanslutning via mobilt bredband (mobil eller dator)' sequential rename {DatA3C3 2011-2011, DatA4C3 2010-2010} owned by internetanslutning-mobilt-bredband (diagnostic v17 rename-worklist-258)"
 [variable."258.23404.internetanslutning-via-mobiltelefon"]
+slug = "internetanslutning-via-mobiltelefon"
 columns = { DatA4C4 = "258.23404.internetanslutning-via-mobiltelefon", DatC4A = "258.23404.internetanslutning-via-mobiltelefon" }
 columns_ref = "Y-211 2026-09-19: 258.23404 'Internetanslutning via mobiltelefon' sequential rename {DatA4C4 2010-2010, DatC4A 2011-2011} owned by internetanslutning-via-mobiltelefon (diagnostic v17 rename-worklist-258)"
 [variable."258.23405.data4c5"]
+slug = "data4c5"
 columns = { B3b = "258.23405.data4c5", BBMOBM = "258.23405.data4c5", DatA3C5 = "258.23405.data4c5", DatA4C5 = "258.23405.data4c5" }
 columns_ref = "Y-211 2026-09-19: 258.23405 'Internetanslutning via bärbar dator' sequential rename {B3b 2021-2023, BBMOBM 2012-2012, DatA3C5 2011-2011, DatA4C5 2010-2010} owned by data4c5 (diagnostic v17 rename-worklist-258)"
 [variable."258.25333.anvander-mobilt-bredband-3g-4g"]
-columns = { MOBBB = "258.25333.anvander-mobilt-bredband-3g-4g", PMD = "258.25333.anvander-mobilt-bredband-3g-4g" }
-columns_ref = "Y-211 2026-09-19: 258.25333 'Använder mobil bredbandsanslutning via 3G- eller 4G-nätet' sequential rename {MOBBB 2013-2018, PMD 2019-2021} owned by anvander-mobilt-bredband-3g-4g (diagnostic v17 rename-worklist-258)"
+slug = "anvander-mobilt-bredband-3g-4g"
+columns = { A3C = "258.25333.anvander-mobilt-bredband-3g-4g", MOBBB = "258.25333.anvander-mobilt-bredband-3g-4g", PMD = "258.25333.anvander-mobilt-bredband-3g-4g" }
+columns_ref = "Y-211 2026-09-19: 258.25333 'Använder mobil bredbandsanslutning via 3G- eller 4G-nätet' sequential rename {A3C 2014 (variant 557), MOBBB 2013-2018, PMD 2019-2021} owned by anvander-mobilt-bredband-3g-4g (diagnostic v17 rename-worklist-258)"
 [variable."258.26901.skickar-e-fakturor-processas-auto"]
+slug = "skickar-e-fakturor-processas-auto"
 columns = { INV4S_AP = "258.26901.skickar-e-fakturor-processas-auto", INVSNDAP = "258.26901.skickar-e-fakturor-processas-auto" }
 columns_ref = "Y-211 2026-09-19: 258.26901 'Skickar elektroniska fakturor som kan processas automatiskt i mottagarens it-sys' sequential rename {INV4S_AP 2018-2023, INVSNDAP 2013-2013} owned by skickar-e-fakturor-processas-auto (diagnostic v17 rename-worklist-258)"
 [variable."258.26902.skickar-e-fakturor-ej-processas-auto"]
+slug = "skickar-e-fakturor-ej-processas-auto"
 columns = { INV4S_EMP = "258.26902.skickar-e-fakturor-ej-processas-auto", INVSNDNAP = "258.26902.skickar-e-fakturor-ej-processas-auto" }
 columns_ref = "Y-211 2026-09-19: 258.26902 'Skickar elektroniska fakturor som INTE kan processas automatiskt i mottagarens i' sequential rename {INV4S_EMP 2018-2023, INVSNDNAP 2013-2013} owned by skickar-e-fakturor-ej-processas-auto (diagnostic v17 rename-worklist-258)"
 [variable."258.26903.tar-emot-e-fakturor-processas-auto"]
+slug = "tar-emot-e-fakturor-processas-auto"
 columns = { INV4R_AP = "258.26903.tar-emot-e-fakturor-processas-auto", INVRECAP = "258.26903.tar-emot-e-fakturor-processas-auto" }
 columns_ref = "Y-211 2026-09-19: 258.26903 'Tar emot elektroniska fakturor som kan processas automatiskt i företagets it-sys' sequential rename {INV4R_AP 2018-2018, INVRECAP 2013-2013} owned by tar-emot-e-fakturor-processas-auto (diagnostic v17 rename-worklist-258)"
 [variable."258.27281.ej-internet-bredband-saknas-omradet"]
+slug = "ej-internet-bredband-saknas-omradet"
 columns = { A3g = "258.27281.ej-internet-bredband-saknas-omradet", DatA4G = "258.27281.ej-internet-bredband-saknas-omradet", XBBNA = "258.27281.ej-internet-bredband-saknas-omradet" }
 columns_ref = "Y-211 2026-09-19: 258.27281 'Inte Internet pga bredband inte finns i området' sequential rename {A3g 2016-2016, DatA4G 2011-2011, XBBNA 2012-2014} owned by ej-internet-bredband-saknas-omradet (diagnostic v17 rename-worklist-258)"
 [variable."258.27984.rostat-webbenkater-politiska-fragor"]
+slug = "rostat-webbenkater-politiska-fragor"
 columns = { DatC5H = "258.27984.rostat-webbenkater-politiska-fragor", IUVOTE = "258.27984.rostat-webbenkater-politiska-fragor" }
 columns_ref = "Y-211 2026-09-19: 258.27984 'Röstat i webbenkäter om medborgerliga eller politiska frågor' sequential rename {DatC5H 2011-2011, IUVOTE 2013-2013} owned by rostat-webbenkater-politiska-fragor (diagnostic v17 rename-worklist-258)"
 [variable."258.27985.sokt-wikipedia-wiki-webbplatser"]
+slug = "sokt-wikipedia-wiki-webbplatser"
 columns = { DatC5J = "258.27985.sokt-wikipedia-wiki-webbplatser", IUWIKI = "258.27985.sokt-wikipedia-wiki-webbplatser" }
 columns_ref = "Y-211 2026-09-19: 258.27985 'Sökt på Wikipedia eller andra wiki-webbplatser' sequential rename {DatC5J 2011-2011, IUWIKI 2013-2013} owned by sokt-wikipedia-wiki-webbplatser (diagnostic v17 rename-worklist-258)"
 [variable."258.27995.skapat-elektroniska-presentationer"]
+slug = "skapat-elektroniska-presentationer"
 columns = { CPRES = "258.27995.skapat-elektroniska-presentationer", DatF3I = "258.27995.skapat-elektroniska-presentationer" }
 columns_ref = "Y-211 2026-09-19: 258.27995 'Skapat elektroniska presentationer' sequential rename {CPRES 2012-2014, DatF3I 2011-2011} owned by skapat-elektroniska-presentationer (diagnostic v17 rename-worklist-258)"
 [variable."258.27996.installerat-uppgraderat-operativsystem"]
+slug = "installerat-uppgraderat-operativsystem"
 columns = { CINSOS = "258.27996.installerat-uppgraderat-operativsystem", DatF3J = "258.27996.installerat-uppgraderat-operativsystem" }
 columns_ref = "Y-211 2026-09-19: 258.27996 'Installerat eller uppgraderat ett operativsystem' sequential rename {CINSOS 2012-2014, DatF3J 2011-2011} owned by installerat-uppgraderat-operativsystem (diagnostic v17 rename-worklist-258)"
 [variable."258.27997.laddat-upp-media-pa-webbsidor"]
+slug = "laddat-upp-media-pa-webbsidor"
 columns = { DatF4G = "258.27997.laddat-upp-media-pa-webbsidor", IUPLOAD = "258.27997.laddat-upp-media-pa-webbsidor" }
 columns_ref = "Y-211 2026-09-19: 258.27997 'Har laddat upp texter,bilder, filmer eller musik på webbsidor' sequential rename {DatF4G 2011-2011, IUPLOAD 2013-2013} owned by laddat-upp-media-pa-webbsidor (diagnostic v17 rename-worklist-258)"
 [variable."258.27998.andrat-sakerhetsinstallningar-internet"]
+slug = "andrat-sakerhetsinstallningar-internet"
 columns = { DatF4H = "258.27998.andrat-sakerhetsinstallningar-internet", IBCONF = "258.27998.andrat-sakerhetsinstallningar-internet" }
 columns_ref = "Y-211 2026-09-19: 258.27998 'Ändrat säkerhetsinställningar på internet' sequential rename {DatF4H 2011-2011, IBCONF 2013-2013} owned by andrat-sakerhetsinstallningar-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.28015.myndighet-tekniskt-fel-blankett"]
+slug = "myndighet-tekniskt-fel-blankett"
 columns = { DatD2C = "258.28015.myndighet-tekniskt-fel-blankett", GOV12RTX_TF = "258.28015.myndighet-tekniskt-fel-blankett" }
 columns_ref = "Y-211 2026-09-19: 258.28015 'Myndighetskontakter: inte skickat in blanketter pga blev tekniskt fel' sequential rename {DatD2C 2011-2011, GOV12RTX_TF 2012-2012} owned by myndighet-tekniskt-fel-blankett (diagnostic v17 rename-worklist-258)"
 [variable."258.28822.andel-anstallda-barbara-enheter-mobil"]
+slug = "andel-anstallda-barbara-enheter-mobil"
 columns = { EMPMD1PCT = "258.28822.andel-anstallda-barbara-enheter-mobil", EMPMD2PCT = "258.28822.andel-anstallda-barbara-enheter-mobil", EMPMDPCT = "258.28822.andel-anstallda-barbara-enheter-mobil" }
 columns_ref = "Y-211 2026-09-19: 258.28822 'Andel av de anställda som företaget tillhandahåller med andra bärbara enheter fö' sequential rename {EMPMD1PCT 2015-2018, EMPMD2PCT 2019-2022, EMPMDPCT 2013-2013} owned by andel-anstallda-barbara-enheter-mobil (diagnostic v17 rename-worklist-258)"
 [variable."258.28860.fast-bredband-vet-ej-typ"]
+slug = "fast-bredband-vet-ej-typ"
 columns = { A3E = "258.28860.fast-bredband-vet-ej-typ", A3X1 = "258.28860.fast-bredband-vet-ej-typ" }
 columns_ref = "Y-211 2026-09-19: 258.28860 'Internetanslutning fast bredband men vet inte vilken typ' sequential rename {A3E 2014-2014, A3X1 2012-2012} owned by fast-bredband-vet-ej-typ (diagnostic v17 rename-worklist-258)"
 [variable."258.28863.iuupl"]
+slug = "iuupl"
 columns = { B6k = "258.28863.iuupl", IUUPL = "258.28863.iuupl" }
 columns_ref = "Y-211 2026-09-19: 258.28863 'Använt internet; Laddat upp material som du själv skapat till webbsida som är ti' sequential rename {B6k 2016-2016, IUUPL 2012-2012} owned by iuupl (diagnostic v17 rename-worklist-258)"
 [variable."258.28866.anvant-internet-boka-tid-lakare"]
+slug = "anvant-internet-boka-tid-lakare"
 columns = { B3n = "258.28866.anvant-internet-boka-tid-lakare", B3p = "258.28866.anvant-internet-boka-tid-lakare", IUMAPP = "258.28866.anvant-internet-boka-tid-lakare" }
 columns_ref = "Y-211 2026-09-19: 258.28866 'Använt internet; boka tid hos läkare eller tandläkare via en webbsida' sequential rename {B3n 2020-2020, B3p 2024-2024, IUMAPP 2012-2014} owned by anvant-internet-boka-tid-lakare (diagnostic v17 rename-worklist-258)"
 [variable."258.28867.mobil-internet-barbar-dator-surfplatta"]
+slug = "mobil-internet-barbar-dator-surfplatta"
 columns = { IUMC = "258.28867.mobil-internet-barbar-dator-surfplatta", IUMC_LAP = "258.28867.mobil-internet-barbar-dator-surfplatta" }
 columns_ref = "Y-211 2026-09-19: 258.28867 'Mobil internetanvändning; Kopplar upp sig med bärbar dator eller surfplatta ?' sequential rename {IUMC 2013-2014, IUMC_LAP 2012-2012} owned by mobil-internet-barbar-dator-surfplatta (diagnostic v17 rename-worklist-258)"
 [variable."258.28868.mobil-internet-mobiltelefonnatet-barbar"]
+slug = "mobil-internet-mobiltelefonnatet-barbar"
 columns = { C3b = "258.28868.mobil-internet-mobiltelefonnatet-barbar", IUMC_MPH = "258.28868.mobil-internet-mobiltelefonnatet-barbar" }
 columns_ref = "Y-211 2026-09-19: 258.28868 'Mobil internetanvändning; använt mobiltelefonnätet och bärbar dator/surfplatta' sequential rename {C3b 2015-2017, IUMC_MPH 2012-2012} owned by mobil-internet-mobiltelefonnatet-barbar (diagnostic v17 rename-worklist-258)"
 [variable."258.28890.mobil-internet-andra-problem"]
+slug = "mobil-internet-andra-problem"
 columns = { D6H = "258.28890.mobil-internet-andra-problem", IUMD_PBOTH = "258.28890.mobil-internet-andra-problem" }
 columns_ref = "Y-211 2026-09-19: 258.28890 'Mobil internetanvändning; andra problem' sequential rename {D6H 2014-2014, IUMD_PBOTH 2012-2012} owned by mobil-internet-andra-problem (diagnostic v17 rename-worklist-258)"
 [variable."258.28897.mobil-internet-via-mobiltelefon"]
+slug = "mobil-internet-via-mobiltelefon"
 columns = { C3a = "258.28897.mobil-internet-via-mobiltelefon", IUHD_PHO = "258.28897.mobil-internet-via-mobiltelefon" }
 columns_ref = "Y-211 2026-09-19: 258.28897 'Mobil internetanvändning; kopplar upp sig med mobiltelefon eller smartphone?' sequential rename {C3a 2015-2017, IUHD_PHO 2012-2012} owned by mobil-internet-via-mobiltelefon (diagnostic v17 rename-worklist-258)"
 [variable."258.28898.mobil-internet-annan-enhet"]
+slug = "mobil-internet-annan-enhet"
 columns = { C3b1 = "258.28898.mobil-internet-annan-enhet", IUHD_OTH = "258.28898.mobil-internet-annan-enhet" }
 columns_ref = "Y-211 2026-09-19: 258.28898 'Mobil internetanvändning; kopplat upp sig med annan enhet än mobiltelefon/smartp' sequential rename {C3b1 2014-2017, IUHD_OTH 2012-2012} owned by mobil-internet-annan-enhet (diagnostic v17 rename-worklist-258)"
 [variable."258.28900.mobil-internet-mobiltelefon-tradlost"]
+slug = "mobil-internet-mobiltelefon-tradlost"
 columns = { C3a2 = "258.28900.mobil-internet-mobiltelefon-tradlost", IUHD_WL = "258.28900.mobil-internet-mobiltelefon-tradlost" }
 columns_ref = "Y-211 2026-09-19: 258.28900 'Mobil internetanvändning; anslutit mobiltelefon eller smarphone till internet vi' sequential rename {C3a2 2017-2017, IUHD_WL 2012-2012} owned by mobil-internet-mobiltelefon-tradlost (diagnostic v17 rename-worklist-258)"
 [variable."258.28901.mobiltelefon-tradlost-natverk-val"]
+slug = "mobiltelefon-tradlost-natverk-val"
 columns = { C3a1 = "258.28901.mobiltelefon-tradlost-natverk-val", IUHD_MPHBB = "258.28901.mobiltelefon-tradlost-natverk-val" }
 columns_ref = "Y-211 2026-09-19: 258.28901 'Använder du då mobiltelefonnätet, trådlöst nätverk eller både och?' sequential rename {C3a1 2015-2017, IUHD_MPHBB 2012-2012} owned by mobiltelefon-tradlost-natverk-val (diagnostic v17 rename-worklist-258)"
 [variable."258.29976.anvander-sociala-natverk"]
+slug = "anvander-sociala-natverk"
 columns = { SM1_SNET = "258.29976.anvander-sociala-natverk", SM_SNET = "258.29976.anvander-sociala-natverk" }
 columns_ref = "Y-211 2026-09-19: 258.29976 'Använder sociala nätverk (t.ex. Facebook eller LinkedIn)' sequential rename {SM1_SNET 2014-2023, SM_SNET 2013-2013} owned by anvander-sociala-natverk (diagnostic v17 rename-worklist-258)"
 [variable."258.29977.anvander-bloggar-microbloggar"]
+slug = "anvander-bloggar-microbloggar"
 columns = { SM1_BLOG = "258.29977.anvander-bloggar-microbloggar", SM_BLOG = "258.29977.anvander-bloggar-microbloggar" }
 columns_ref = "Y-211 2026-09-19: 258.29977 'Använder interna eller externa bloggar eller microbloggar (t.ex. Twitter)' sequential rename {SM1_BLOG 2014-2023, SM_BLOG 2013-2013} owned by anvander-bloggar-microbloggar (diagnostic v17 rename-worklist-258)"
 [variable."258.29978.anvander-webbplatser-dela-multimedia"]
+slug = "anvander-webbplatser-dela-multimedia"
 columns = { SM1_CNTSHR = "258.29978.anvander-webbplatser-dela-multimedia", SM_CNTSHR = "258.29978.anvander-webbplatser-dela-multimedia" }
 columns_ref = "Y-211 2026-09-19: 258.29978 'Använder webbplatser för att dela multimedia (t.ex. YouTube, Instagram eller Pic' sequential rename {SM1_CNTSHR 2014-2023, SM_CNTSHR 2013-2013} owned by anvander-webbplatser-dela-multimedia (diagnostic v17 rename-worklist-258)"
 [variable."258.29979.anvander-wiki-verktyg-kunskapsutbyte"]
+slug = "anvander-wiki-verktyg-kunskapsutbyte"
 columns = { SM1_WIKI = "258.29979.anvander-wiki-verktyg-kunskapsutbyte", SM_WIKI = "258.29979.anvander-wiki-verktyg-kunskapsutbyte" }
 columns_ref = "Y-211 2026-09-19: 258.29979 'Använder wiki-baserade verktyg för kunskapsubyte' sequential rename {SM1_WIKI 2014-2021, SM_WIKI 2013-2013} owned by anvander-wiki-verktyg-kunskapsutbyte (diagnostic v17 rename-worklist-258)"
 [variable."258.30000.bestallde-varor-tjanster-webb-app"]
+slug = "bestallde-varor-tjanster-webb-app"
 columns = { AEBUY = "258.30000.bestallde-varor-tjanster-webb-app", E_AWBUY = "258.30000.bestallde-varor-tjanster-webb-app" }
 columns_ref = "Y-211 2026-09-19: 258.30000 'Beställde varor eller tjänster via en webbplats eller via app' sequential rename {AEBUY 2013-2015, E_AWBUY 2017-2018} owned by bestallde-varor-tjanster-webb-app (diagnostic v17 rename-worklist-258)"
 [variable."258.30091.myndighetskontakter-tekniska-problem"]
+slug = "myndighetskontakter-tekniska-problem"
 columns = { C8b = "258.30091.myndighetskontakter-tekniska-problem", IGOVPB_TF = "258.30091.myndighetskontakter-tekniska-problem" }
 columns_ref = "Y-211 2026-09-19: 258.30091 'Myndighetskontakter: Tekniska problem' sequential rename {C8b 2022-2024, IGOVPB_TF 2013-2013} owned by myndighetskontakter-tekniska-problem (diagnostic v17 rename-worklist-258)"
 [variable."258.30094.myndighetskontakter-andra-problem"]
+slug = "myndighetskontakter-andra-problem"
 columns = { C8f = "258.30094.myndighetskontakter-andra-problem", IGOV12RTX_OTH = "258.30094.myndighetskontakter-andra-problem", IGOVPB_OTH = "258.30094.myndighetskontakter-andra-problem" }
 columns_ref = "Y-211 2026-09-19: 258.30094 'Myndighetskontakter: Har upplevt andra problem' sequential rename {C8f 2022-2024, IGOV12RTX_OTH 2014-2014, IGOVPB_OTH 2013-2013} owned by myndighetskontakter-andra-problem (diagnostic v17 rename-worklist-258)"
 [variable."258.30121.svarigheter-dator-internet-funktionsned"]
+slug = "svarigheter-dator-internet-funktionsned"
 columns = { G3 = "258.30121.svarigheter-dator-internet-funktionsned", I3 = "258.30121.svarigheter-dator-internet-funktionsned", J2 = "258.30121.svarigheter-dator-internet-funktionsned" }
 columns_ref = "Y-211 2026-09-19: 258.30121 'Upplever du svårigheter när du använder datorer och internet, på grund av din f' sequential rename {G3 2016-2017, I3 2013-2015, J2 2018-2018} owned by svarigheter-dator-internet-funktionsned (diagnostic v17 rename-worklist-258)"
 [variable."258.30695.internet-via-mobiltelefon-smartphone"]
+slug = "internet-via-mobiltelefon-smartphone"
 columns = { B3A = "258.30695.internet-via-mobiltelefon-smartphone", B4_1 = "258.30695.internet-via-mobiltelefon-smartphone" }
 columns_ref = "Y-211 2026-09-19: 258.30695 'Internet via mobiltelefon eller smartphone' sequential rename {B3A 2019-2019, B4_1 2018-2018} owned by internet-via-mobiltelefon-smartphone (diagnostic v17 rename-worklist-258)"
 [variable."258.30696.internet-via-smartphone-mobil-enhet"]
+slug = "internet-via-smartphone-mobil-enhet"
 columns = { B5a = "258.30696.internet-via-smartphone-mobil-enhet", IUMP = "258.30696.internet-via-smartphone-mobil-enhet" }
 columns_ref = "Y-211 2026-09-19: 258.30696 'Internet via smartphone eller annan mobil enhet' sequential rename {B5a 2016-2016, IUMP 2013-2014} owned by internet-via-smartphone-mobil-enhet (diagnostic v17 rename-worklist-258)"
 [variable."258.30724.andel-skickade-e-fakturor-processas-auto"]
+slug = "andel-skickade-e-fakturor-processas-auto"
 columns = { INV3SBG_PAP = "258.30724.andel-skickade-e-fakturor-processas-auto", INV4S_AP_P = "258.30724.andel-skickade-e-fakturor-processas-auto" }
 columns_ref = "Y-211 2026-09-19: 258.30724 'Andel skickade elektroniska fakturor som kan processas automatiskt i mottgarens' sequential rename {INV3SBG_PAP 2017-2017, INV4S_AP_P 2018-2023} owned by andel-skickade-e-fakturor-processas-auto (diagnostic v17 rename-worklist-258)"
 [variable."258.30733.internetsakerhet-cookies"]
+slug = "internetsakerhet-cookies"
 columns = { F3 = "258.30733.internetsakerhet-cookies", G4 = "258.30733.internetsakerhet-cookies" }
 columns_ref = "Y-211 2026-09-19: 258.30733 'Internetsäkerhet: Cookies' sequential rename {F3 2016-2016, G4 2015-2015} owned by internetsakerhet-cookies (diagnostic v17 rename-worklist-258)"
 [variable."258.30735.internetsakerhet-forhindrat-cookies"]
+slug = "internetsakerhet-forhindrat-cookies"
 columns = { F5 = "258.30735.internetsakerhet-forhindrat-cookies", G5 = "258.30735.internetsakerhet-forhindrat-cookies" }
 columns_ref = "Y-211 2026-09-19: 258.30735 'Internetsäkerhet: förhindrat cookies' sequential rename {F5 2016-2016, G5 2015-2015} owned by internetsakerhet-forhindrat-cookies (diagnostic v17 rename-worklist-258)"
 [variable."258.31024.urvalsvikt-individ"]
+slug = "urvalsvikt-individ"
 columns = { vikt_ind = "258.31024.urvalsvikt-individ", vikt_ind_SE = "258.31024.urvalsvikt-individ" }
 columns_ref = "Y-211 2026-09-19: 258.31024 'Urvalsvikt individ' sequential rename {vikt_ind 2021-2023, vikt_ind_SE 2024-2025} owned by urvalsvikt-individ (diagnostic v17 rename-worklist-258)"
 [variable."258.31026.urvalsvikt-for-bostadshushall"]
+slug = "urvalsvikt-for-bostadshushall"
 columns = { vikt_hus = "258.31026.urvalsvikt-for-bostadshushall", vikt_hus_SE = "258.31026.urvalsvikt-for-bostadshushall" }
 columns_ref = "Y-211 2026-09-19: 258.31026 'Urvalsvikt för bostadshushåll' sequential rename {vikt_hus 2021-2023, vikt_hus_SE 2024-2025} owned by urvalsvikt-for-bostadshushall (diagnostic v17 rename-worklist-258)"
 [variable."258.35480.big-data-platsdata-barbara-enheter"]
+slug = "big-data-platsdata-barbara-enheter"
 columns = { BDALOC = "258.35480.big-data-platsdata-barbara-enheter", BDLOC = "258.35480.big-data-platsdata-barbara-enheter" }
 columns_ref = "Y-211 2026-09-19: 258.35480 'Analyserade big data från platsdata från bärbara enheter' sequential rename {BDALOC 2020-2020, BDLOC 2018-2018} owned by big-data-platsdata-barbara-enheter (diagnostic v17 rename-worklist-258)"
 [variable."258.35485.big-data-andra-kallor"]
+slug = "big-data-andra-kallor"
 columns = { BDAOS = "258.35485.big-data-andra-kallor", BDOTH = "258.35485.big-data-andra-kallor" }
 columns_ref = "Y-211 2026-09-19: 258.35485 'Analyserade big data från andra källor än ovanstående' sequential rename {BDAOS 2020-2020, BDOTH 2018-2018} owned by big-data-andra-kallor (diagnostic v17 rename-worklist-258)"
 [variable."258.35487.big-data-sociala-medier"]
+slug = "big-data-sociala-medier"
 columns = { BDASM = "258.35487.big-data-sociala-medier", BDSM = "258.35487.big-data-sociala-medier" }
 columns_ref = "Y-211 2026-09-19: 258.35487 'Analyserade big data generarad från aktiviteter på sociala medier' sequential rename {BDASM 2020-2020, BDSM 2018-2018} owned by big-data-sociala-medier (diagnostic v17 rename-worklist-258)"
 [variable."258.35491.andel-mottagna-e-fakturor-processas"]
+slug = "andel-mottagna-e-fakturor-processas"
 columns = { INV3R_PAP = "258.35491.andel-mottagna-e-fakturor-processas", INV4R_AP_P = "258.35491.andel-mottagna-e-fakturor-processas" }
 columns_ref = "Y-211 2026-09-19: 258.35491 'Andel mottagna elektroniska fakturor som kan processas automatiskt' sequential rename {INV3R_PAP 2017-2017, INV4R_AP_P 2018-2018} owned by andel-mottagna-e-fakturor-processas (diagnostic v17 rename-worklist-258)"
 [variable."258.35514.ansl-surfplatta"]
+slug = "ansl-surfplatta"
 columns = { A2B = "258.35514.ansl-surfplatta", B3C = "258.35514.ansl-surfplatta", B3c = "258.35514.ansl-surfplatta" }
 columns_ref = "Y-211 2026-09-19: 258.35514 'Internetanslutning via surfplatta' sequential rename {A2B 2014-2014, B3C 2019-2019, B3c 2016-2025} owned by ansl-surfplatta (diagnostic v17 rename-worklist-258)"
 [variable."258.35516.annan-mobil-enhet"]
+slug = "annan-mobil-enhet"
 columns = { A2E = "258.35516.annan-mobil-enhet", B5c = "258.35516.annan-mobil-enhet" }
 columns_ref = "Y-211 2026-09-19: 258.35516 'Internet via annan mobil enhet än smartphone' sequential rename {A2E 2014-2014, B5c 2016-2016} owned by annan-mobil-enhet (diagnostic v17 rename-worklist-258)"
 [variable."258.35519.kop-av-varor-over-internet"]
+slug = "kop-av-varor-over-internet"
 columns = { D4 = "258.35519.kop-av-varor-over-internet", E6 = "258.35519.kop-av-varor-over-internet" }
 columns_ref = "Y-211 2026-09-19: 258.35519 'Köp av varor över internet' sequential rename {D4 2018-2018, E6 2017-2017} owned by kop-av-varor-over-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.35525.spelat-eller-laddat-ner-spel"]
+slug = "spelat-eller-laddat-ner-spel"
 columns = { B3m = "258.35525.spelat-eller-laddat-ner-spel", IUGM = "258.35525.spelat-eller-laddat-ner-spel" }
 columns_ref = "Y-211 2026-09-19: 258.35525 'Spelat eller laddat ner spel?' sequential rename {B3m 2024-2024, IUGM 2014-2014} owned by spelat-eller-laddat-ner-spel (diagnostic v17 rename-worklist-258)"
 [variable."258.35526.lyssnat-pa-musik"]
+slug = "lyssnat-pa-musik"
 columns = { B3i = "258.35526.lyssnat-pa-musik", CC_PMV = "258.35526.lyssnat-pa-musik" }
 columns_ref = "Y-211 2026-09-19: 258.35526 'Lyssnat på musik, t.ex. via strömningstjänster eller webbradio?' sequential rename {B3i 2022-2024, CC_PMV 2014-2014} owned by lyssnat-pa-musik (diagnostic v17 rename-worklist-258)"
 [variable."258.35529.e8a"]
+slug = "e8a"
 columns = { D13a = "258.35529.e8a", D7A = "258.35529.e8a", E11a = "258.35529.e8a", E8a = "258.35529.e8a", E9a = "258.35529.e8a" }
 columns_ref = "Y-211 2026-09-19: 258.35529 'Problem, tekniska vid Internetköp' sequential rename {D13a 2021-2021, D7A 2019-2019, E11a 2023-2023, E8a 2017-2017, E9a 2025-2025} owned by e8a (diagnostic v17 rename-worklist-258)"
 [variable."258.35531.e8c"]
+slug = "e8c"
 columns = { D13c = "258.35531.e8c", D7C = "258.35531.e8c", E11c = "258.35531.e8c", E8c = "258.35531.e8c", E9c = "258.35531.e8c" }
 columns_ref = "Y-211 2026-09-19: 258.35531 'Problem, längre leveranstid vid Internetköp' sequential rename {D13c 2021-2021, D7C 2019-2019, E11c 2023-2023, E8c 2017-2017, E9c 2025-2025} owned by e8c (diagnostic v17 rename-worklist-258)"
 [variable."258.35532.e8d"]
+slug = "e8d"
 columns = { D13d = "258.35532.e8d", D7D = "258.35532.e8d", E11d = "258.35532.e8d", E8d = "258.35532.e8d", E9d = "258.35532.e8d" }
 columns_ref = "Y-211 2026-09-19: 258.35532 'Problem, högre slutpris, vid Internetköp' sequential rename {D13d 2021-2021, D7D 2019-2019, E11d 2023-2023, E8d 2017-2017, E9d 2025-2025} owned by e8d (diagnostic v17 rename-worklist-258)"
 [variable."258.35534.anvant-redigera-media"]
+slug = "anvant-redigera-media"
 columns = { CC_EPV = "258.35534.anvant-redigera-media", E2E = "258.35534.anvant-redigera-media", E2d = "258.35534.anvant-redigera-media", F2d = "258.35534.anvant-redigera-media", F2e = "258.35534.anvant-redigera-media" }
 columns_ref = "Y-211 2026-09-19: 258.35534 'Digitala färdigheter: Använt programvara för att redigera bilder eller ljudfiler' sequential rename {CC_EPV 2014-2014, E2E 2019-2019, E2d 2021-2021, F2d 2023-2025, F2e 2015-2017} owned by anvant-redigera-media (diagnostic v17 rename-worklist-258)"
 [variable."258.35535.e8e"]
+slug = "e8e"
 columns = { D13e = "258.35535.e8e", D7E = "258.35535.e8e", E11e = "258.35535.e8e", E8e = "258.35535.e8e", E9e = "258.35535.e8e" }
 columns_ref = "Y-211 2026-09-19: 258.35535 'Problem, felaktig/skadad vara, vid Internetköp' sequential rename {D13e 2021-2021, D7E 2019-2019, E11e 2023-2023, E8e 2017-2017, E9e 2025-2025} owned by e8e (diagnostic v17 rename-worklist-258)"
 [variable."258.35536.e8f"]
+slug = "e8f"
 columns = { D13f = "258.35536.e8f", D7F = "258.35536.e8f", E11f = "258.35536.e8f", E8f = "258.35536.e8f", E9f = "258.35536.e8f" }
 columns_ref = "Y-211 2026-09-19: 258.35536 'Problem, bedrägeri, vid Internetköp' sequential rename {D13f 2021-2021, D7F 2019-2019, E11f 2023-2023, E8f 2017-2017, E9f 2025-2025} owned by e8f (diagnostic v17 rename-worklist-258)"
 [variable."258.35538.e8g"]
+slug = "e8g"
 columns = { D13g = "258.35538.e8g", D7G = "258.35538.e8g", E11g = "258.35538.e8g", E8g = "258.35538.e8g", E9g = "258.35538.e8g" }
 columns_ref = "Y-211 2026-09-19: 258.35538 'Problem, svårigheter att klaga/reklamera, vid Internetköp' sequential rename {D13g 2021-2021, D7G 2019-2019, E11g 2023-2023, E8g 2017-2017, E9g 2025-2025} owned by e8g (diagnostic v17 rename-worklist-258)"
 [variable."258.35540.problem-utland-aterfors"]
+slug = "problem-utland-aterfors"
 columns = { D13h = "258.35540.problem-utland-aterfors", D6h = "258.35540.problem-utland-aterfors", D7H = "258.35540.problem-utland-aterfors", E11h = "258.35540.problem-utland-aterfors", E6h = "258.35540.problem-utland-aterfors", E8h = "258.35540.problem-utland-aterfors", E9h = "258.35540.problem-utland-aterfors" }
 columns_ref = "Y-211 2026-09-19: 258.35540 'Problem,Återförsäljare i utlandet säljer eller levererar inte till Sverige, vid' sequential rename {D13h 2021-2021, D6h 2016-2016, D7H 2019-2019, E11h 2023-2023, E6h 2015-2015, E8h 2017-2017, E9h 2025-2025} owned by problem-utland-aterfors (diagnostic v17 rename-worklist-258)"
 [variable."258.35541.problem-ovriga-vid-internetkop"]
+slug = "problem-ovriga-vid-internetkop"
 columns = { D13i = "258.35541.problem-ovriga-vid-internetkop", D7I = "258.35541.problem-ovriga-vid-internetkop", E11i = "258.35541.problem-ovriga-vid-internetkop", E8i = "258.35541.problem-ovriga-vid-internetkop", E9i = "258.35541.problem-ovriga-vid-internetkop" }
 columns_ref = "Y-211 2026-09-19: 258.35541 'Problem, övriga, vid internetköp' sequential rename {D13i 2021-2021, D7I 2019-2019, E11i 2023-2023, E8i 2017-2017, E9i 2025-2025} owned by problem-ovriga-vid-internetkop (diagnostic v17 rename-worklist-258)"
 [variable."258.35548.deltagit-i-kurs-pa-natet"]
+slug = "deltagit-i-kurs-pa-natet"
 columns = { B5x = "258.35548.deltagit-i-kurs-pa-natet", C6a = "258.35548.deltagit-i-kurs-pa-natet", IUEDUIF = "258.35548.deltagit-i-kurs-pa-natet" }
 columns_ref = "Y-211 2026-09-19: 258.35548 'Deltagit i kurs på nätet' sequential rename {B5x 2018-2018, C6a 2015-2017, IUEDUIF 2013-2013} owned by deltagit-i-kurs-pa-natet (diagnostic v17 rename-worklist-258)"
 [variable."258.35549.sokt-halsoinformation"]
+slug = "sokt-halsoinformation"
 columns = { B4F = "258.35549.sokt-halsoinformation", B5j = "258.35549.sokt-halsoinformation", C4f = "258.35549.sokt-halsoinformation", IHIF = "258.35549.sokt-halsoinformation" }
 columns_ref = "Y-211 2026-09-19: 258.35549 'Sökt hälsoinformation' sequential rename {B4F 2019-2019, B5j 2018-2018, C4f 2015-2017, IHIF 2013-2013} owned by sokt-halsoinformation (diagnostic v17 rename-worklist-258)"
 [variable."258.35552.bokat-tid-lakare"]
+slug = "bokat-tid-lakare"
 columns = { B3p = "258.35552.bokat-tid-lakare", B6n = "258.35552.bokat-tid-lakare" }
 columns_ref = "Y-211 2026-09-19: 258.35552 'Bokat tid hos läkare via internet' sequential rename {B3p 2022-2022, B6n 2016-2016} owned by bokat-tid-lakare (diagnostic v17 rename-worklist-258)"
 [variable."258.35559.utbildn-annan-vilken"]
+slug = "utbildn-annan-vilken"
 columns = { C6dtxt = "258.35559.utbildn-annan-vilken", C6dtxtx = "258.35559.utbildn-annan-vilken" }
 columns_ref = "Y-211 2026-09-19: 258.35559 'Använt internet för annan utbildningsaktivitet, vilken aktivitet?' sequential rename {C6dtxt 2017-2017, C6dtxtx 2015-2015} owned by utbildn-annan-vilken (diagnostic v17 rename-worklist-258)"
 [variable."258.35567.internet-mobilt-bredband"]
+slug = "internet-mobilt-bredband"
 columns = { A2B = "258.35567.internet-mobilt-bredband", A2_3 = "258.35567.internet-mobilt-bredband", A2b = "258.35567.internet-mobilt-bredband", A3b = "258.35567.internet-mobilt-bredband" }
 columns_ref = "Y-211 2026-09-19: 258.35567 'Internetanslutning via mobilt bredband' sequential rename {A2B 2019-2019, A2_3 2016-2016, A2b 2018-2021, A3b 2017-2017} owned by internet-mobilt-bredband (diagnostic v17 rename-worklist-258)"
 [variable."258.35574.internet-via-smart-tv"]
+slug = "internet-via-smart-tv"
 columns = { B3f = "258.35574.internet-via-smart-tv", ITV2 = "258.35574.internet-via-smart-tv" }
 columns_ref = "Y-211 2026-09-19: 258.35574 'Internet via smart-TV' sequential rename {B3f 2016-2016, ITV2 2014-2014} owned by internet-via-smart-tv (diagnostic v17 rename-worklist-258)"
 [variable."258.36906.reserelaterade-tjanster"]
+slug = "reserelaterade-tjanster"
 columns = { B6a = "258.36906.reserelaterade-tjanster", B8A = "258.36906.reserelaterade-tjanster", C4o = "258.36906.reserelaterade-tjanster", C7a = "258.36906.reserelaterade-tjanster" }
 columns_ref = "Y-211 2026-09-19: 258.36906 'Använt reserelaterade tjänster' sequential rename {B6a 2018-2018, B8A 2019-2019, C4o 2015-2015, C7a 2017-2017} owned by reserelaterade-tjanster (diagnostic v17 rename-worklist-258)"
 [variable."258.36916.biltransport-privat-webb"]
+slug = "biltransport-privat-webb"
 columns = { B7a = "258.36916.biltransport-privat-webb", B9A = "258.36916.biltransport-privat-webb", C8a = "258.36916.biltransport-privat-webb" }
 columns_ref = "Y-211 2026-09-19: 258.36916 'Har ordnat biltransport från privatperson via webbplats eller app som enbart anv' sequential rename {B7a 2018-2018, B9A 2019-2019, C8a 2017-2017} owned by biltransport-privat-webb (diagnostic v17 rename-worklist-258)"
 [variable."258.36918.biltransport-annan-app"]
+slug = "biltransport-annan-app"
 columns = { B7b = "258.36918.biltransport-annan-app", B9B = "258.36918.biltransport-annan-app", C8b = "258.36918.biltransport-annan-app" }
 columns_ref = "Y-211 2026-09-19: 258.36918 'Har ordnat biltransport från privatperson via andra typer av webbplatser eller a' sequential rename {B7b 2018-2018, B9B 2019-2019, C8b 2017-2017} owned by biltransport-annan-app (diagnostic v17 rename-worklist-258)"
 [variable."258.36992.ej-internet-hemma-dyrt"]
+slug = "ej-internet-hemma-dyrt"
 columns = { A4d = "258.36992.ej-internet-hemma-dyrt", XACC = "258.36992.ej-internet-hemma-dyrt" }
 columns_ref = "Y-211 2026-09-19: 258.36992 'Inte Internet hemma: dyrt med uppkoppling' sequential rename {A4d 2015-2017, XACC 2013-2014} owned by ej-internet-hemma-dyrt (diagnostic v17 rename-worklist-258)"
 [variable."258.36993.ej-internet-annan-text"]
+slug = "ej-internet-annan-text"
 columns = { A4HTXTx = "258.36993.ej-internet-annan-text", A4htxt = "258.36993.ej-internet-annan-text", XOTH = "258.36993.ej-internet-annan-text" }
 columns_ref = "Y-211 2026-09-19: 258.36993 'Inte Internet pga något annat anledning' sequential rename {A4HTXTx 2015-2015, A4htxt 2017-2017, XOTH 2013-2014} owned by ej-internet-annan-text (diagnostic v17 rename-worklist-258)"
 [variable."258.36994.anvant-dator"]
+slug = "anvant-dator"
 columns = { B1 = "258.36994.anvant-dator", CU = "258.36994.anvant-dator" }
 columns_ref = "Y-211 2026-09-19: 258.36994 'Använt dator' sequential rename {B1 2015-2017, CU 2013-2014} owned by anvant-dator (diagnostic v17 rename-worklist-258)"
 [variable."258.36995.anvant-dator-3-man"]
+slug = "anvant-dator-3-man"
 columns = { B2 = "258.36995.anvant-dator-3-man", CFU = "258.36995.anvant-dator-3-man" }
 columns_ref = "Y-211 2026-09-19: 258.36995 'Använt dator 3 mån' sequential rename {B2 2015-2017, CFU 2013-2014} owned by anvant-dator-3-man (diagnostic v17 rename-worklist-258)"
 [variable."258.36996.barbar-dator-utanfor"]
+slug = "barbar-dator-utanfor"
 columns = { B3B = "258.36996.barbar-dator-utanfor", B4_3 = "258.36996.barbar-dator-utanfor", C3a = "258.36996.barbar-dator-utanfor" }
 columns_ref = "Y-211 2026-09-19: 258.36996 'Internetanslutning utanför hemmet via bärbar dator' sequential rename {B3B 2019-2019, B4_3 2018-2018, C3a 2017-2017} owned by barbar-dator-utanfor (diagnostic v17 rename-worklist-258)"
 [variable."258.36998.ansl-annan-enhet"]
+slug = "ansl-annan-enhet"
 columns = { B3D = "258.36998.ansl-annan-enhet", B3e = "258.36998.ansl-annan-enhet", B4_4 = "258.36998.ansl-annan-enhet", C3c = "258.36998.ansl-annan-enhet" }
 columns_ref = "Y-211 2026-09-19: 258.36998 'Internetanslutning via annan enhet' sequential rename {B3D 2019-2019, B3e 2021-2025, B4_4 2018-2018, C3c 2015-2017} owned by ansl-annan-enhet (diagnostic v17 rename-worklist-258)"
 [variable."258.36999.ansl-ej-via-mobil"]
+slug = "ansl-ej-via-mobil"
 columns = { B3E = "258.36999.ansl-ej-via-mobil", B4_5 = "258.36999.ansl-ej-via-mobil", htxt = "258.36999.ansl-ej-via-mobil" }
 columns_ref = "Y-211 2026-09-19: 258.36999 'Internetanslutning, ej via mobil' sequential rename {B3E 2019-2019, B4_5 2018-2018, htxt 2017-2017} owned by ansl-ej-via-mobil (diagnostic v17 rename-worklist-258)"
 [variable."258.37001.laddat-upp-eget-material"]
+slug = "laddat-upp-eget-material"
 columns = { B3g = "258.37001.laddat-upp-eget-material", B4K = "258.37001.laddat-upp-eget-material", C4d = "258.37001.laddat-upp-eget-material", IUUPL = "258.37001.laddat-upp-eget-material" }
 columns_ref = "Y-211 2026-09-19: 258.37001 'Använt internet; Laddat upp material som du själv skapat' sequential rename {B3g 2020-2020, B4K 2019-2019, C4d 2015-2017, IUUPL 2014-2014} owned by laddat-upp-eget-material (diagnostic v17 rename-worklist-258)"
 [variable."258.37002.postat-asikter-politik"]
+slug = "postat-asikter-politik"
 columns = { B4H = "258.37002.postat-asikter-politik", C4h = "258.37002.postat-asikter-politik" }
 columns_ref = "Y-211 2026-09-19: 258.37002 'Postat inlägg med åsikter om politik och samhällsfrågor' sequential rename {B4H 2019-2019, C4h 2015-2017} owned by postat-asikter-politik (diagnostic v17 rename-worklist-258)"
 [variable."258.37006.professionella-natverk"]
+slug = "professionella-natverk"
 columns = { C4k = "258.37006.professionella-natverk", IUPNET = "258.37006.professionella-natverk" }
 columns_ref = "Y-211 2026-09-19: 258.37006 'Deltagit i professionella nätverk som t ex. Linkedin' sequential rename {C4k 2015-2017, IUPNET 2013-2013} owned by professionella-natverk (diagnostic v17 rename-worklist-258)"
 [variable."258.37007.myndigh-blankett-ej-text"]
+slug = "myndigh-blankett-ej-text"
 columns = { C2gtxt = "258.37007.myndigh-blankett-ej-text", D2gtxt = "258.37007.myndigh-blankett-ej-text" }
 columns_ref = "Y-211 2026-09-19: 258.37007 'Myndghetskontakter: inte skickat in blanketter pga anledning' sequential rename {C2gtxt 2016-2016, D2gtxt 2017-2017} owned by myndigh-blankett-ej-text (diagnostic v17 rename-worklist-258)"
 [variable."258.37019.problem-info-garantier"]
+slug = "problem-info-garantier"
 columns = { D7B = "258.37019.problem-info-garantier", E8b = "258.37019.problem-info-garantier" }
 columns_ref = "Y-211 2026-09-19: 258.37019 'Problem med att hitta information vid beställning via internet' sequential rename {D7B 2019-2019, E8b 2017-2017} owned by problem-info-garantier (diagnostic v17 rename-worklist-258)"
 [variable."258.37020.kopt-salt-aktier"]
+slug = "kopt-salt-aktier"
 columns = { D6a = "258.37020.kopt-salt-aktier", D8C = "258.37020.kopt-salt-aktier", D9a = "258.37020.kopt-salt-aktier", E9a = "258.37020.kopt-salt-aktier" }
 columns_ref = "Y-211 2026-09-19: 258.37020 'Köpt eller sålt aktier via internet' sequential rename {D6a 2018-2018, D8C 2019-2019, D9a 2016-2016, E9a 2017-2017} owned by kopt-salt-aktier (diagnostic v17 rename-worklist-258)"
 [variable."258.37021.kopt-fornyat-forsakring"]
+slug = "kopt-fornyat-forsakring"
 columns = { D6b = "258.37021.kopt-fornyat-forsakring", D8A = "258.37021.kopt-fornyat-forsakring", E9b = "258.37021.kopt-fornyat-forsakring" }
 columns_ref = "Y-211 2026-09-19: 258.37021 'Köpt eller förnyat försäkring via internet' sequential rename {D6b 2018-2018, D8A 2019-2019, E9b 2017-2017} owned by kopt-fornyat-forsakring (diagnostic v17 rename-worklist-258)"
 [variable."258.37022.ansokt-lan-internet"]
+slug = "ansokt-lan-internet"
 columns = { D6c = "258.37022.ansokt-lan-internet", D8B = "258.37022.ansokt-lan-internet", D9c = "258.37022.ansokt-lan-internet", E9c = "258.37022.ansokt-lan-internet" }
 columns_ref = "Y-211 2026-09-19: 258.37022 'Ansökt om lån via internet' sequential rename {D6c 2018-2018, D8B 2019-2019, D9c 2016-2016, E9c 2017-2017} owned by ansokt-lan-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.37023.ej-kop-shoppa-fysiskt"]
+slug = "ej-kop-shoppa-fysiskt"
 columns = { D15a = "258.37023.ej-kop-shoppa-fysiskt", D9A = "258.37023.ej-kop-shoppa-fysiskt", E10a = "258.37023.ej-kop-shoppa-fysiskt", E7a = "258.37023.ej-kop-shoppa-fysiskt" }
 columns_ref = "Y-211 2026-09-19: 258.37023 'Orsak ej internetköp, bättre att shoppa i verkligheten' sequential rename {D15a 2021-2021, D9A 2019-2019, E10a 2017-2017, E7a 2015-2015} owned by ej-kop-shoppa-fysiskt (diagnostic v17 rename-worklist-258)"
 [variable."258.37024.ej-kop-vet-ej-hur"]
+slug = "ej-kop-vet-ej-hur"
 columns = { D15b = "258.37024.ej-kop-vet-ej-hur", D9B = "258.37024.ej-kop-vet-ej-hur", E10b = "258.37024.ej-kop-vet-ej-hur", E7b = "258.37024.ej-kop-vet-ej-hur" }
 columns_ref = "Y-211 2026-09-19: 258.37024 'Orsak ej internetköp, vet inte hur man beställer' sequential rename {D15b 2021-2021, D9B 2019-2019, E10b 2017-2017, E7b 2015-2015} owned by ej-kop-vet-ej-hur (diagnostic v17 rename-worklist-258)"
 [variable."258.37025.ej-kop-leveransproblem"]
+slug = "ej-kop-leveransproblem"
 columns = { D15d = "258.37025.ej-kop-leveransproblem", D9C = "258.37025.ej-kop-leveransproblem", E10c = "258.37025.ej-kop-leveransproblem" }
 columns_ref = "Y-211 2026-09-19: 258.37025 'Orsak ej internetköp, leveransproblem' sequential rename {D15d 2021-2021, D9C 2019-2019, E10c 2017-2017} owned by ej-kop-leveransproblem (diagnostic v17 rename-worklist-258)"
 [variable."258.37026.ej-kop-oro-betalning"]
+slug = "ej-kop-oro-betalning"
 columns = { D15e = "258.37026.ej-kop-oro-betalning", D9D = "258.37026.ej-kop-oro-betalning", E10d = "258.37026.ej-kop-oro-betalning", E7d = "258.37026.ej-kop-oro-betalning" }
 columns_ref = "Y-211 2026-09-19: 258.37026 'Orsak ej internetköp, oro kring betalning via internet' sequential rename {D15e 2021-2021, D9D 2019-2019, E10d 2017-2017, E7d 2015-2015} owned by ej-kop-oro-betalning (diagnostic v17 rename-worklist-258)"
 [variable."258.37027.ej-kop-farhagor-leverans"]
+slug = "ej-kop-farhagor-leverans"
 columns = { D15c = "258.37027.ej-kop-farhagor-leverans", D9E = "258.37027.ej-kop-farhagor-leverans", E10e = "258.37027.ej-kop-farhagor-leverans", E7c = "258.37027.ej-kop-farhagor-leverans" }
 columns_ref = "Y-211 2026-09-19: 258.37027 'Orsak ej internetköp, farhågor inför leveransen' sequential rename {D15c 2021-2021, D9E 2019-2019, E10e 2017-2017, E7c 2015-2015} owned by ej-kop-farhagor-leverans (diagnostic v17 rename-worklist-258)"
 [variable."258.37028.ej-kop-inget-betalkort"]
+slug = "ej-kop-inget-betalkort"
 columns = { D9F = "258.37028.ej-kop-inget-betalkort", E10f = "258.37028.ej-kop-inget-betalkort", E7f = "258.37028.ej-kop-inget-betalkort" }
 columns_ref = "Y-211 2026-09-19: 258.37028 'Orsak ej internetköp, inget betalkort att betala med' sequential rename {D9F 2019-2019, E10f 2017-2017, E7f 2015-2015} owned by ej-kop-inget-betalkort (diagnostic v17 rename-worklist-258)"
 [variable."258.37029.ej-kop-andra-skal"]
+slug = "ej-kop-andra-skal"
 columns = { D15i = "258.37029.ej-kop-andra-skal", D9I = "258.37029.ej-kop-andra-skal", E10h = "258.37029.ej-kop-andra-skal", E7h = "258.37029.ej-kop-andra-skal" }
 columns_ref = "Y-211 2026-09-19: 258.37029 'Orsak ej internetköp, andra skäl' sequential rename {D15i 2021-2021, D9I 2019-2019, E10h 2017-2017, E7h 2015-2015} owned by ej-kop-andra-skal (diagnostic v17 rename-worklist-258)"
 [variable."258.37034.kalkylprogram-avancerat"]
+slug = "kalkylprogram-avancerat"
 columns = { E2D1 = "258.37034.kalkylprogram-avancerat", E2c1 = "258.37034.kalkylprogram-avancerat", F2c1 = "258.37034.kalkylprogram-avancerat", F2d1 = "258.37034.kalkylprogram-avancerat" }
 columns_ref = "Y-211 2026-09-19: 258.37034 'Använt kalkylprogrammets avancerade funktioner' sequential rename {E2D1 2019-2019, E2c1 2021-2021, F2c1 2023-2025, F2d1 2015-2017} owned by kalkylprogram-avancerat (diagnostic v17 rename-worklist-258)"
 [variable."258.37036.tillgang-dator-hemma"]
+slug = "tillgang-dator-hemma"
 columns = { A1 = "258.37036.tillgang-dator-hemma", COMP = "258.37036.tillgang-dator-hemma" }
 columns_ref = "Y-211 2026-09-19: 258.37036 'Tillgång till dator hemma' sequential rename {A1 2015-2017, COMP 2013-2013} owned by tillgang-dator-hemma (diagnostic v17 rename-worklist-258)"
 [variable."258.37806.ej-kop-aterfors-utlandet"]
+slug = "ej-kop-aterfors-utlandet"
 columns = { D9G = "258.37806.ej-kop-aterfors-utlandet", E7g = "258.37806.ej-kop-aterfors-utlandet" }
 columns_ref = "Y-211 2026-09-19: 258.37806 'Orsak ej internetköp,återförsäljare i utlandet säljer eller levererar inte till' sequential rename {D9G 2019-2019, E7g 2015-2015} owned by ej-kop-aterfors-utlandet (diagnostic v17 rename-worklist-258)"
 [variable."258.38254.b4-2"]
+slug = "b4-2"
 columns = { B3b = "258.38254.b4-2", B4_2 = "258.38254.b4-2" }
 columns_ref = "Y-211 2026-09-19: 258.38254 'Internetanslutning via bärbar dator' sequential rename {B3b 2025-2025, B4_2 2018-2018} owned by b4-2 (diagnostic v17 rename-worklist-258)"
 [variable."258.38261.internet-dagligen-flera"]
+slug = "internet-dagligen-flera"
 columns = { B21 = "258.38261.internet-dagligen-flera", B2_1 = "258.38261.internet-dagligen-flera" }
 columns_ref = "Y-211 2026-09-19: 258.38261 'Använt internet flera gånger om dagen' sequential rename {B21 2019-2021, B2_1 2018-2018} owned by internet-dagligen-flera (diagnostic v17 rename-worklist-258)"
 [variable."258.38264.titta-streamat-tv"]
+slug = "titta-streamat-tv"
 columns = { B3i = "258.38264.titta-streamat-tv", B3j = "258.38264.titta-streamat-tv", B5f = "258.38264.titta-streamat-tv" }
 columns_ref = "Y-211 2026-09-19: 258.38264 'Använt internet för att titta på streamade TV-kanaler' sequential rename {B3i 2020-2020, B3j 2022-2024, B5f 2018-2018} owned by titta-streamat-tv (diagnostic v17 rename-worklist-258)"
 [variable."258.38266.titta-filmer-serier"]
+slug = "titta-filmer-serier"
 columns = { B3j = "258.38266.titta-filmer-serier", B3k = "258.38266.titta-filmer-serier", B5g = "258.38266.titta-filmer-serier" }
 columns_ref = "Y-211 2026-09-19: 258.38266 'Använt internet för att titta på filmer, serier' sequential rename {B3j 2020-2020, B3k 2022-2024, B5g 2018-2018} owned by titta-filmer-serier (diagnostic v17 rename-worklist-258)"
 [variable."258.38267.spela-ladda-ner-spel"]
+slug = "spela-ladda-ner-spel"
 columns = { B3l = "258.38267.spela-ladda-ner-spel", B3m = "258.38267.spela-ladda-ner-spel", B5i = "258.38267.spela-ladda-ner-spel" }
 columns_ref = "Y-211 2026-09-19: 258.38267 'Använt internet för att spela eller ladda ner spel' sequential rename {B3l 2020-2020, B3m 2022-2022, B5i 2018-2018} owned by spela-ladda-ner-spel (diagnostic v17 rename-worklist-258)"
 [variable."258.38268.titta-klipp-streaming"]
+slug = "titta-klipp-streaming"
 columns = { B3k = "258.38268.titta-klipp-streaming", B3l = "258.38268.titta-klipp-streaming", B5h = "258.38268.titta-klipp-streaming" }
 columns_ref = "Y-211 2026-09-19: 258.38268 'Använt internet för att titta på filmer och klipp via streamingstjänster' sequential rename {B3k 2020-2020, B3l 2022-2024, B5h 2018-2018} owned by titta-klipp-streaming (diagnostic v17 rename-worklist-258)"
 [variable."258.38273.ej-hyrt-semester-privat"]
+slug = "ej-hyrt-semester-privat"
 columns = { B6c = "258.38273.ej-hyrt-semester-privat", B8C = "258.38273.ej-hyrt-semester-privat" }
 columns_ref = "Y-211 2026-09-19: 258.38273 'Hyrt inte semesterboende från privatperson via någon webbplats eller app' sequential rename {B6c 2018-2018, B8C 2019-2019} owned by ej-hyrt-semester-privat (diagnostic v17 rename-worklist-258)"
 [variable."258.38275.hyrt-semester-annan-app"]
+slug = "hyrt-semester-annan-app"
 columns = { B6b = "258.38275.hyrt-semester-annan-app", B8B = "258.38275.hyrt-semester-annan-app" }
 columns_ref = "Y-211 2026-09-19: 258.38275 'Hyrt semesterboende från privatperson via andra webbplatser och appar' sequential rename {B6b 2018-2018, B8B 2019-2019} owned by hyrt-semester-annan-app (diagnostic v17 rename-worklist-258)"
 [variable."258.38276.ej-biltransport-privat"]
+slug = "ej-biltransport-privat"
 columns = { B7c = "258.38276.ej-biltransport-privat", B9C = "258.38276.ej-biltransport-privat" }
 columns_ref = "Y-211 2026-09-19: 258.38276 'Har inte ordnat biltransport från privatperson via någon webbplats eller app' sequential rename {B7c 2018-2018, B9C 2019-2019} owned by ej-biltransport-privat (diagnostic v17 rename-worklist-258)"
 [variable."258.38277.skaffat-tillfalligt-jobb"]
+slug = "skaffat-tillfalligt-jobb"
 columns = { B10 = "258.38277.skaffat-tillfalligt-jobb", B8 = "258.38277.skaffat-tillfalligt-jobb" }
 columns_ref = "Y-211 2026-09-19: 258.38277 'Har skaffat tillfälligt jobb från privatperson via webbplats eller app som enbar' sequential rename {B10 2019-2019, B8 2018-2018} owned by skaffat-tillfalligt-jobb (diagnostic v17 rename-worklist-258)"
 [variable."258.38285.smartphone-privat-bruk"]
+slug = "smartphone-privat-bruk"
 columns = { E2 = "258.38285.smartphone-privat-bruk", F2 = "258.38285.smartphone-privat-bruk" }
 columns_ref = "Y-211 2026-09-19: 258.38285 'Använder en smartphone för privat bruk' sequential rename {E2 2018-2018, F2 2020-2020} owned by smartphone-privat-bruk (diagnostic v17 rename-worklist-258)"
 [variable."258.38325.leverans-returkostnader"]
+slug = "leverans-returkostnader"
 columns = { AWSEU_DHCD = "258.38325.leverans-returkostnader", E_AWSEU_DHCD = "258.38325.leverans-returkostnader" }
 columns_ref = "Y-211 2026-09-19: 258.38325 'Höga leveranskostnader eller returkostnader' sequential rename {AWSEU_DHCD 2019-2022, E_AWSEU_DHCD 2017-2017} owned by leverans-returkostnader (diagnostic v17 rename-worklist-258)"
 [variable."258.38326.svar-losa-klagomal-rekl"]
+slug = "svar-losa-klagomal-rekl"
 columns = { AWSEU_DRCD = "258.38326.svar-losa-klagomal-rekl", E_AWSEU_DRCD = "258.38326.svar-losa-klagomal-rekl" }
 columns_ref = "Y-211 2026-09-19: 258.38326 'Svårigheter att lösa klagomål eller reklamationer' sequential rename {AWSEU_DRCD 2019-2022, E_AWSEU_DRCD 2017-2017} owned by svar-losa-klagomal-rekl (diagnostic v17 rename-worklist-258)"
 [variable."258.38327.anpassa-produktmarkning"]
+slug = "anpassa-produktmarkning"
 columns = { AWSEU_DAPL = "258.38327.anpassa-produktmarkning", E_AWSEU_DAPL = "258.38327.anpassa-produktmarkning" }
 columns_ref = "Y-211 2026-09-19: 258.38327 'Svårigheter att anpassa produktmärkningen' sequential rename {AWSEU_DAPL 2019-2022, E_AWSEU_DAPL 2017-2017} owned by anpassa-produktmarkning (diagnostic v17 rename-worklist-258)"
 [variable."258.38329.brist-sprakkunskap"]
+slug = "brist-sprakkunskap"
 columns = { AWSEU_DFL = "258.38329.brist-sprakkunskap", E_AWSEU_DFL = "258.38329.brist-sprakkunskap" }
 columns_ref = "Y-211 2026-09-19: 258.38329 'Brist på språkkunskap vid kommunikation med kunder' sequential rename {AWSEU_DFL 2019-2022, E_AWSEU_DFL 2017-2017} owned by brist-sprakkunskap (diagnostic v17 rename-worklist-258)"
 [variable."258.38330.partner-restriktioner-eu"]
+slug = "partner-restriktioner-eu"
 columns = { AWSEU_DBP = "258.38330.partner-restriktioner-eu", E_AWSEU_DBP = "258.38330.partner-restriktioner-eu" }
 columns_ref = "Y-211 2026-09-19: 258.38330 'Restriktioner hos era affärspartners att sälja till vissa EU-länder' sequential rename {AWSEU_DBP 2019-2022, E_AWSEU_DBP 2017-2017} owned by partner-restriktioner-eu (diagnostic v17 rename-worklist-258)"
 [variable."258.38393.egna-3d-skrivare"]
+slug = "egna-3d-skrivare"
 columns = { P3D1_OWN = "258.38393.egna-3d-skrivare", P3D_OWN = "258.38393.egna-3d-skrivare" }
 columns_ref = "Y-211 2026-09-19: 258.38393 'Använder egna, hyrda eller leasade 3D-skrivare' sequential rename {P3D1_OWN 2020-2020, P3D_OWN 2018-2018} owned by egna-3d-skrivare (diagnostic v17 rename-worklist-258)"
 [variable."258.38394.externa-3d-utskrift"]
+slug = "externa-3d-utskrift"
 columns = { P3D1_OTH = "258.38394.externa-3d-utskrift", P3D_OTH = "258.38394.externa-3d-utskrift" }
 columns_ref = "Y-211 2026-09-19: 258.38394 'Använder externa 3D-utskriftstjänster' sequential rename {P3D1_OTH 2020-2020, P3D_OTH 2018-2018} owned by externa-3d-utskrift (diagnostic v17 rename-worklist-258)"
 [variable."258.39488.internet-annan-utbildning"]
+slug = "internet-annan-utbildning"
 columns = { B5d = "258.39488.internet-annan-utbildning", B7D = "258.39488.internet-annan-utbildning" }
 columns_ref = "Y-211 2026-09-19: 258.39488 'Använt Internet för andra utbildningsaktiviteter' sequential rename {B5d 2020-2020, B7D 2019-2019} owned by internet-annan-utbildning (diagnostic v17 rename-worklist-258)"
 [variable."258.39536.skrivit-kod-i-programmeringssprak"]
+slug = "skrivit-kod-i-programmeringssprak"
 columns = { E2F = "258.39536.skrivit-kod-i-programmeringssprak", E2e = "258.39536.skrivit-kod-i-programmeringssprak", F2e = "258.39536.skrivit-kod-i-programmeringssprak" }
 columns_ref = "Y-211 2026-09-19: 258.39536 'Skrivit kod i programmeringsspråk' sequential rename {E2F 2019-2019, E2e 2021-2021, F2e 2023-2025} owned by skrivit-kod-i-programmeringssprak (diagnostic v17 rename-worklist-258)"
 [variable."258.41634.anvant-internet-halsovard-annan"]
+slug = "anvant-internet-halsovard-annan"
 columns = { B3p = "258.41634.anvant-internet-halsovard-annan", B3r = "258.41634.anvant-internet-halsovard-annan" }
 columns_ref = "Y-211 2026-09-19: 258.41634 'Använt internet: använt andra hälsovårdstjänster' sequential rename {B3p 2020-2020, B3r 2022-2024} owned by anvant-internet-halsovard-annan (diagnostic v17 rename-worklist-258)"
 [variable."258.41635.internet-halsojournal-natet"]
+slug = "internet-halsojournal-natet"
 columns = { B3o = "258.41635.internet-halsojournal-natet", B3q = "258.41635.internet-halsojournal-natet" }
 columns_ref = "Y-211 2026-09-19: 258.41635 'Använt internet: tagit del av sin personliga hälsojournal på nätet' sequential rename {B3o 2020-2020, B3q 2022-2024} owned by internet-halsojournal-natet (diagnostic v17 rename-worklist-258)"
 [variable."258.41680.iot-energihantering-hemmet"]
+slug = "iot-energihantering-hemmet"
 columns = { E1a = "258.41680.iot-energihantering-hemmet", Z1a = "258.41680.iot-energihantering-hemmet" }
 columns_ref = "Y-211 2026-09-19: 258.41680 'IoT: termostat, elmätare, gasmätare, energihantering' sequential rename {E1a 2022-2024, Z1a 2020-2020} owned by iot-energihantering-hemmet (diagnostic v17 rename-worklist-258)"
 [variable."258.41681.iot-sakerhetssystem-hemmet"]
+slug = "iot-sakerhetssystem-hemmet"
 columns = { E1b = "258.41681.iot-sakerhetssystem-hemmet", Z1b = "258.41681.iot-sakerhetssystem-hemmet" }
 columns_ref = "Y-211 2026-09-19: 258.41681 'IoT: hemlarmssystem, brandvarnare, säkerhetskameror, dörrlås' sequential rename {E1b 2022-2024, Z1b 2020-2020} owned by iot-sakerhetssystem-hemmet (diagnostic v17 rename-worklist-258)"
 [variable."258.41682.iot-hushallsapparater"]
+slug = "iot-hushallsapparater"
 columns = { E1c = "258.41682.iot-hushallsapparater", Z1c = "258.41682.iot-hushallsapparater" }
 columns_ref = "Y-211 2026-09-19: 258.41682 'IoT: hushållsapparater som robotdammsugare, kylskåp, ugn, kaffemaskin' sequential rename {E1c 2022-2024, Z1c 2020-2020} owned by iot-hushallsapparater (diagnostic v17 rename-worklist-258)"
 [variable."258.41683.iot-virtuell-assistent"]
+slug = "iot-virtuell-assistent"
 columns = { E1d = "258.41683.iot-virtuell-assistent", Z1d = "258.41683.iot-virtuell-assistent" }
 columns_ref = "Y-211 2026-09-19: 258.41683 'IoT: virtuell assistent i form av en smart högtalare eller en app' sequential rename {E1d 2022-2024, Z1d 2020-2020} owned by iot-virtuell-assistent (diagnostic v17 rename-worklist-258)"
 [variable."258.41684.iot-orsak-visste-ej"]
+slug = "iot-orsak-visste-ej"
 columns = { E2a = "258.41684.iot-orsak-visste-ej", Z2a = "258.41684.iot-orsak-visste-ej" }
 columns_ref = "Y-211 2026-09-19: 258.41684 'IoT: orsak att inte använda - visste inte att IoT finns' sequential rename {E2a 2022-2024, Z2a 2020-2020} owned by iot-orsak-visste-ej (diagnostic v17 rename-worklist-258)"
 [variable."258.41685.iot-orsak-ingen-anvandning"]
+slug = "iot-orsak-ingen-anvandning"
 columns = { E2b = "258.41685.iot-orsak-ingen-anvandning", Z2b = "258.41685.iot-orsak-ingen-anvandning" }
 columns_ref = "Y-211 2026-09-19: 258.41685 'IoT: orsak att inte använda - har ingen användning av IoT' sequential rename {E2b 2022-2024, Z2b 2020-2020} owned by iot-orsak-ingen-anvandning (diagnostic v17 rename-worklist-258)"
 [variable."258.41686.iot-orsak-for-dyrt"]
+slug = "iot-orsak-for-dyrt"
 columns = { E2c = "258.41686.iot-orsak-for-dyrt", Z2c = "258.41686.iot-orsak-for-dyrt" }
 columns_ref = "Y-211 2026-09-19: 258.41686 'IoT: orsak att inte använda - IoT är för dyrt' sequential rename {E2c 2022-2024, Z2c 2020-2020} owned by iot-orsak-for-dyrt (diagnostic v17 rename-worklist-258)"
 [variable."258.41687.iot-orsak-inkompatibelt"]
+slug = "iot-orsak-inkompatibelt"
 columns = { E2d = "258.41687.iot-orsak-inkompatibelt", Z2d = "258.41687.iot-orsak-inkompatibelt" }
 columns_ref = "Y-211 2026-09-19: 258.41687 'IoT: orsak att inte använda - fungerade inte med existerande IoT' sequential rename {E2d 2022-2024, Z2d 2020-2020} owned by iot-orsak-inkompatibelt (diagnostic v17 rename-worklist-258)"
 [variable."258.41688.iot-orsak-vet-inte-hur"]
+slug = "iot-orsak-vet-inte-hur"
 columns = { E2e = "258.41688.iot-orsak-vet-inte-hur", Z2e = "258.41688.iot-orsak-vet-inte-hur" }
 columns_ref = "Y-211 2026-09-19: 258.41688 'IoT: orsak att inte använda - vet inte hur man använder' sequential rename {E2e 2022-2024, Z2e 2020-2020} owned by iot-orsak-vet-inte-hur (diagnostic v17 rename-worklist-258)"
 [variable."258.41689.iot-orsak-oro-integritet"]
+slug = "iot-orsak-oro-integritet"
 columns = { E2f = "258.41689.iot-orsak-oro-integritet", Z2f = "258.41689.iot-orsak-oro-integritet" }
 columns_ref = "Y-211 2026-09-19: 258.41689 'IoT: orsak att inte använda - oro för integritet och skydd av personuppgifter' sequential rename {E2f 2022-2024, Z2f 2020-2020} owned by iot-orsak-oro-integritet (diagnostic v17 rename-worklist-258)"
 [variable."258.41690.iot-orsak-oro-it-sakerhet"]
+slug = "iot-orsak-oro-it-sakerhet"
 columns = { E2g = "258.41690.iot-orsak-oro-it-sakerhet", Z2g = "258.41690.iot-orsak-oro-it-sakerhet" }
 columns_ref = "Y-211 2026-09-19: 258.41690 'IoT: orsak att inte använda - oro för it-säkerheten' sequential rename {E2g 2022-2024, Z2g 2020-2020} owned by iot-orsak-oro-it-sakerhet (diagnostic v17 rename-worklist-258)"
 [variable."258.41691.iot-orsak-oro-halsoproblem"]
+slug = "iot-orsak-oro-halsoproblem"
 columns = { E2h = "258.41691.iot-orsak-oro-halsoproblem", Z2h = "258.41691.iot-orsak-oro-halsoproblem" }
 columns_ref = "Y-211 2026-09-19: 258.41691 'IoT: orsak att inte använda - oro för hälsoproblem' sequential rename {E2h 2022-2024, Z2h 2020-2020} owned by iot-orsak-oro-halsoproblem (diagnostic v17 rename-worklist-258)"
 [variable."258.41692.iot-barbar-teknik"]
+slug = "iot-barbar-teknik"
 columns = { E4a = "258.41692.iot-barbar-teknik", Z4a = "258.41692.iot-barbar-teknik" }
 columns_ref = "Y-211 2026-09-19: 258.41692 'IoT: smart klocka, fitnessband, glasögon, headset, kläder, skor' sequential rename {E4a 2022-2024, Z4a 2020-2020} owned by iot-barbar-teknik (diagnostic v17 rename-worklist-258)"
 [variable."258.41693.iot-overvakning-halsa"]
+slug = "iot-overvakning-halsa"
 columns = { E4b = "258.41693.iot-overvakning-halsa", Z4b = "258.41693.iot-overvakning-halsa" }
 columns_ref = "Y-211 2026-09-19: 258.41693 'IoT: övervakning av blodtryck, blodsocker, kroppsvikt, andra hälsoenheter' sequential rename {E4b 2022-2024, Z4b 2020-2020} owned by iot-overvakning-halsa (diagnostic v17 rename-worklist-258)"
 [variable."258.41694.iot-leksaker-dockor-robotleksaker"]
+slug = "iot-leksaker-dockor-robotleksaker"
 columns = { E4c = "258.41694.iot-leksaker-dockor-robotleksaker", Z4c = "258.41694.iot-leksaker-dockor-robotleksaker" }
 columns_ref = "Y-211 2026-09-19: 258.41694 'IoT: leksaker, dockor, robotleksaker' sequential rename {E4c 2022-2024, Z4c 2020-2020} owned by iot-leksaker-dockor-robotleksaker (diagnostic v17 rename-worklist-258)"
 [variable."258.41695.iot-bil-tradlos-uppkoppling"]
+slug = "iot-bil-tradlos-uppkoppling"
 columns = { E4d = "258.41695.iot-bil-tradlos-uppkoppling", Z4d = "258.41695.iot-bil-tradlos-uppkoppling" }
 columns_ref = "Y-211 2026-09-19: 258.41695 'IoT: bil med inbyggd trådlös internetuppkoppling' sequential rename {E4d 2022-2024, Z4d 2020-2020} owned by iot-bil-tradlos-uppkoppling (diagnostic v17 rename-worklist-258)"
 [variable."258.41696.iot-internetansluten-tv"]
+slug = "iot-internetansluten-tv"
 columns = { E3a = "258.41696.iot-internetansluten-tv", Z3a = "258.41696.iot-internetansluten-tv" }
 columns_ref = "Y-211 2026-09-19: 258.41696 'IoT: internetansluten TV' sequential rename {E3a 2022-2024, Z3a 2020-2020} owned by iot-internetansluten-tv (diagnostic v17 rename-worklist-258)"
 [variable."258.41697.iot-internetansluten-spelkonsol"]
+slug = "iot-internetansluten-spelkonsol"
 columns = { E3b = "258.41697.iot-internetansluten-spelkonsol", Z3b = "258.41697.iot-internetansluten-spelkonsol" }
 columns_ref = "Y-211 2026-09-19: 258.41697 'IoT: internetansluten spelkonsol' sequential rename {E3b 2022-2024, Z3b 2020-2020} owned by iot-internetansluten-spelkonsol (diagnostic v17 rename-worklist-258)"
 [variable."258.41698.iot-ljudsystem-smarta-hogtalare"]
+slug = "iot-ljudsystem-smarta-hogtalare"
 columns = { E3c = "258.41698.iot-ljudsystem-smarta-hogtalare", Z3c = "258.41698.iot-ljudsystem-smarta-hogtalare" }
 columns_ref = "Y-211 2026-09-19: 258.41698 'IoT: internetanslutet ljudsystem eller smarta högtalare' sequential rename {E3c 2022-2024, Z3c 2020-2020} owned by iot-ljudsystem-smarta-hogtalare (diagnostic v17 rename-worklist-258)"
 [variable."258.41728.kopt-filmer-eller-serier"]
+slug = "kopt-filmer-eller-serier"
 columns = { D2f = "258.41728.kopt-filmer-eller-serier", E2f = "258.41728.kopt-filmer-eller-serier" }
 columns_ref = "Y-211 2026-09-19: 258.41728 'Köpt filmer eller serier' sequential rename {D2f 2020-2022, E2f 2023-2023} owned by kopt-filmer-eller-serier (diagnostic v17 rename-worklist-258)"
 [variable."258.41739.kopt-varor-fran-privatperson"]
+slug = "kopt-varor-fran-privatperson"
 columns = { D4 = "258.41739.kopt-varor-fran-privatperson", E4 = "258.41739.kopt-varor-fran-privatperson", E6a = "258.41739.kopt-varor-fran-privatperson" }
 columns_ref = "Y-211 2026-09-19: 258.41739 'Köpt varor från privatperson' sequential rename {D4 2020-2022, E4 2023-2023, E6a 2025-2025} owned by kopt-varor-fran-privatperson (diagnostic v17 rename-worklist-258)"
 [variable."258.41742.kopt-natet-fran-sverige"]
+slug = "kopt-natet-fran-sverige"
 columns = { D3a = "258.41742.kopt-natet-fran-sverige", E3a = "258.41742.kopt-natet-fran-sverige" }
 columns_ref = "Y-211 2026-09-19: 258.41742 'Köpt varor eller tjänster senaste 3 mån: Från Sverige' sequential rename {D3a 2020-2022, E3a 2023-2023} owned by kopt-natet-fran-sverige (diagnostic v17 rename-worklist-258)"
 [variable."258.41743.kopt-natet-fran-eu"]
+slug = "kopt-natet-fran-eu"
 columns = { D3b = "258.41743.kopt-natet-fran-eu", E3b = "258.41743.kopt-natet-fran-eu" }
 columns_ref = "Y-211 2026-09-19: 258.41743 'Köpt varor eller tjänster senaste 3 mån: Från andra EU-länder' sequential rename {D3b 2020-2022, E3b 2023-2023} owned by kopt-natet-fran-eu (diagnostic v17 rename-worklist-258)"
 [variable."258.41744.kopt-natet-fran-utanfor-eu"]
+slug = "kopt-natet-fran-utanfor-eu"
 columns = { D3c = "258.41744.kopt-natet-fran-utanfor-eu", E3c = "258.41744.kopt-natet-fran-utanfor-eu" }
 columns_ref = "Y-211 2026-09-19: 258.41744 'Köpt varor eller tjänster senaste 3 mån: Från länder utanför EU' sequential rename {D3c 2020-2022, E3c 2023-2023} owned by kopt-natet-fran-utanfor-eu (diagnostic v17 rename-worklist-258)"
 [variable."258.41745.kopt-natet-fran-okant-land"]
+slug = "kopt-natet-fran-okant-land"
 columns = { D3d = "258.41745.kopt-natet-fran-okant-land", E3d = "258.41745.kopt-natet-fran-okant-land" }
 columns_ref = "Y-211 2026-09-19: 258.41745 'Köpt varor eller tjänster senaste 3 mån: Från okänt land' sequential rename {D3d 2020-2022, E3d 2023-2023} owned by kopt-natet-fran-okant-land (diagnostic v17 rename-worklist-258)"
 [variable."258.41746.betalat-ebocker-digitala-medier"]
+slug = "betalat-ebocker-digitala-medier"
 columns = { D5c = "258.41746.betalat-ebocker-digitala-medier", E5c = "258.41746.betalat-ebocker-digitala-medier" }
 columns_ref = "Y-211 2026-09-19: 258.41746 'Betalat för e-böcker, digitala magasin eller digitala tidningar' sequential rename {D5c 2020-2022, E5c 2023-2023} owned by betalat-ebocker-digitala-medier (diagnostic v17 rename-worklist-258)"
 [variable."258.41747.betalat-spel-internet"]
+slug = "betalat-spel-internet"
 columns = { D5d = "258.41747.betalat-spel-internet", E5d = "258.41747.betalat-spel-internet" }
 columns_ref = "Y-211 2026-09-19: 258.41747 'Betalt för spel på internet eller som nedladdning' sequential rename {D5d 2020-2022, E5d 2023-2023} owned by betalat-spel-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.41748.betalat-programvara-nedladdning"]
+slug = "betalat-programvara-nedladdning"
 columns = { D5e = "258.41748.betalat-programvara-nedladdning", E5e = "258.41748.betalat-programvara-nedladdning" }
 columns_ref = "Y-211 2026-09-19: 258.41748 'Betalt för dator- eller annan programvara som nedladdning' sequential rename {D5e 2020-2022, E5e 2023-2023} owned by betalat-programvara-nedladdning (diagnostic v17 rename-worklist-258)"
 [variable."258.41749.betalat-appar-halsa-fitness"]
+slug = "betalat-appar-halsa-fitness"
 columns = { D5e = "258.41749.betalat-appar-halsa-fitness", D5f = "258.41749.betalat-appar-halsa-fitness", E5e = "258.41749.betalat-appar-halsa-fitness", E5f = "258.41749.betalat-appar-halsa-fitness" }
 columns_ref = "Y-211 2026-09-19: 258.41749 'Betalt för appar relaterade till hälsa och fitness' sequential rename {D5e 2024-2024, D5f 2020-2022, E5e 2025-2025, E5f 2023-2023} owned by betalat-appar-halsa-fitness (diagnostic v17 rename-worklist-258)"
 [variable."258.41750.betalat-for-andra-appar"]
+slug = "betalat-for-andra-appar"
 columns = { D5f = "258.41750.betalat-for-andra-appar", D5g = "258.41750.betalat-for-andra-appar", E5f = "258.41750.betalat-for-andra-appar", E5g = "258.41750.betalat-for-andra-appar" }
 columns_ref = "Y-211 2026-09-19: 258.41750 'Betalt för andra appar' sequential rename {D5f 2024-2024, D5g 2020-2022, E5f 2025-2025, E5g 2023-2023} owned by betalat-for-andra-appar (diagnostic v17 rename-worklist-258)"
 [variable."258.41751.kopt-biljetter-sportevenemang"]
+slug = "kopt-biljetter-sportevenemang"
 columns = { D6a = "258.41751.kopt-biljetter-sportevenemang", E6a = "258.41751.kopt-biljetter-sportevenemang" }
 columns_ref = "Y-211 2026-09-19: 258.41751 'Köpt biljetter till sportevenemang' sequential rename {D6a 2020-2022, E6a 2023-2023} owned by kopt-biljetter-sportevenemang (diagnostic v17 rename-worklist-258)"
 [variable."258.41752.kopt-biljetter-kultur"]
+slug = "kopt-biljetter-kultur"
 columns = { D6b = "258.41752.kopt-biljetter-kultur", E6b = "258.41752.kopt-biljetter-kultur" }
 columns_ref = "Y-211 2026-09-19: 258.41752 'Köpt biljetter till kulturella eller andra evenemang' sequential rename {D6b 2020-2022, E6b 2023-2023} owned by kopt-biljetter-kultur (diagnostic v17 rename-worklist-258)"
 [variable."258.41753.kopt-abonnemang-internet-mobil"]
+slug = "kopt-abonnemang-internet-mobil"
 columns = { D3a = "258.41753.kopt-abonnemang-internet-mobil", D6c = "258.41753.kopt-abonnemang-internet-mobil", E3a = "258.41753.kopt-abonnemang-internet-mobil", E6c = "258.41753.kopt-abonnemang-internet-mobil" }
 columns_ref = "Y-211 2026-09-19: 258.41753 'Köpt abonnemang för internet eller mobiltelefon' sequential rename {D3a 2024-2024, D6c 2020-2022, E3a 2025-2025, E6c 2023-2023} owned by kopt-abonnemang-internet-mobil (diagnostic v17 rename-worklist-258)"
 [variable."258.41754.kopt-abonnemang-el-vatten-varme"]
+slug = "kopt-abonnemang-el-vatten-varme"
 columns = { D3b = "258.41754.kopt-abonnemang-el-vatten-varme", D6d = "258.41754.kopt-abonnemang-el-vatten-varme", E3b = "258.41754.kopt-abonnemang-el-vatten-varme", E6d = "258.41754.kopt-abonnemang-el-vatten-varme" }
 columns_ref = "Y-211 2026-09-19: 258.41754 'Köpt abonnemang på el, vatten eller värme, avfallshantering' sequential rename {D3b 2024-2024, D6d 2020-2022, E3b 2025-2025, E6d 2023-2023} owned by kopt-abonnemang-el-vatten-varme (diagnostic v17 rename-worklist-258)"
 [variable."258.41755.kopt-hushallstjanster"]
+slug = "kopt-hushallstjanster"
 columns = { D6e = "258.41755.kopt-hushallstjanster", E6d = "258.41755.kopt-hushallstjanster", E6e = "258.41755.kopt-hushallstjanster" }
 columns_ref = "Y-211 2026-09-19: 258.41755 'Köpt hushållstjänster' sequential rename {D6e 2020-2022, E6d 2025-2025, E6e 2023-2023} owned by kopt-hushallstjanster (diagnostic v17 rename-worklist-258)"
 [variable."258.41757.kopt-transporttjanst-foretag"]
+slug = "kopt-transporttjanst-foretag"
 columns = { D4a = "258.41757.kopt-transporttjanst-foretag", D8a = "258.41757.kopt-transporttjanst-foretag", E4a = "258.41757.kopt-transporttjanst-foretag", E7a = "258.41757.kopt-transporttjanst-foretag" }
 columns_ref = "Y-211 2026-09-19: 258.41757 'Köpt transporttjänst från transportföretag' sequential rename {D4a 2024-2024, D8a 2020-2022, E4a 2025-2025, E7a 2023-2023} owned by kopt-transporttjanst-foretag (diagnostic v17 rename-worklist-258)"
 [variable."258.41758.kopt-transport-privatperson"]
+slug = "kopt-transport-privatperson"
 columns = { D8b = "258.41758.kopt-transport-privatperson", E6b = "258.41758.kopt-transport-privatperson", E7b = "258.41758.kopt-transport-privatperson" }
 columns_ref = "Y-211 2026-09-19: 258.41758 'Köpt transporttjänst från privatperson' sequential rename {D8b 2020-2022, E6b 2025-2025, E7b 2023-2023} owned by kopt-transport-privatperson (diagnostic v17 rename-worklist-258)"
 [variable."258.41759.har-inte-kopt-nagon-transporttjanst"]
+slug = "har-inte-kopt-nagon-transporttjanst"
 columns = { D8b2 = "258.41759.har-inte-kopt-nagon-transporttjanst", E7b2 = "258.41759.har-inte-kopt-nagon-transporttjanst" }
 columns_ref = "Y-211 2026-09-19: 258.41759 'Har inte köpt någon transporttjänst' sequential rename {D8b2 2020-2022, E7b2 2023-2023} owned by har-inte-kopt-nagon-transporttjanst (diagnostic v17 rename-worklist-258)"
 [variable."258.41760.hyrt-semesterboende-foretag"]
+slug = "hyrt-semesterboende-foretag"
 columns = { D4b = "258.41760.hyrt-semesterboende-foretag", D9a = "258.41760.hyrt-semesterboende-foretag", E4b = "258.41760.hyrt-semesterboende-foretag", E8a = "258.41760.hyrt-semesterboende-foretag" }
 columns_ref = "Y-211 2026-09-19: 258.41760 'Hyrt semesterboende från ett företag' sequential rename {D4b 2024-2024, D9a 2020-2022, E4b 2025-2025, E8a 2023-2023} owned by hyrt-semesterboende-foretag (diagnostic v17 rename-worklist-258)"
 [variable."258.41761.hyrt-semesterboende-privatperson"]
+slug = "hyrt-semesterboende-privatperson"
 columns = { D9b = "258.41761.hyrt-semesterboende-privatperson", E6c = "258.41761.hyrt-semesterboende-privatperson", E8b = "258.41761.hyrt-semesterboende-privatperson" }
 columns_ref = "Y-211 2026-09-19: 258.41761 'Hyrt semesterboende från privatperson' sequential rename {D9b 2020-2022, E6c 2025-2025, E8b 2023-2023} owned by hyrt-semesterboende-privatperson (diagnostic v17 rename-worklist-258)"
 [variable."258.41762.har-inte-hyrt-nagot-semesterboende"]
+slug = "har-inte-hyrt-nagot-semesterboende"
 columns = { D9b2 = "258.41762.har-inte-hyrt-nagot-semesterboende", E8b2 = "258.41762.har-inte-hyrt-nagot-semesterboende" }
 columns_ref = "Y-211 2026-09-19: 258.41762 'Har inte hyrt något semesterboende' sequential rename {D9b2 2020-2022, E8b2 2023-2023} owned by har-inte-hyrt-nagot-semesterboende (diagnostic v17 rename-worklist-258)"
 [variable."258.41763.kopt-andra-tjanster-privat"]
+slug = "kopt-andra-tjanster-privat"
 columns = { D10 = "258.41763.kopt-andra-tjanster-privat", D6 = "258.41763.kopt-andra-tjanster-privat", E7 = "258.41763.kopt-andra-tjanster-privat", E9 = "258.41763.kopt-andra-tjanster-privat" }
 columns_ref = "Y-211 2026-09-19: 258.41763 'Köpt andra tjänster för privat bruk' sequential rename {D10 2020-2020, D6 2024-2024, E7 2025-2025, E9 2023-2023} owned by kopt-andra-tjanster-privat (diagnostic v17 rename-worklist-258)"
 [variable."258.41764.kopt-forsakringar-inkl-reseforsakring"]
+slug = "kopt-forsakringar-inkl-reseforsakring"
 columns = { D11a = "258.41764.kopt-forsakringar-inkl-reseforsakring", D13a = "258.41764.kopt-forsakringar-inkl-reseforsakring", D14a = "258.41764.kopt-forsakringar-inkl-reseforsakring", D7a = "258.41764.kopt-forsakringar-inkl-reseforsakring", E11a = "258.41764.kopt-forsakringar-inkl-reseforsakring", E12a = "258.41764.kopt-forsakringar-inkl-reseforsakring" }
 columns_ref = "Y-211 2026-09-19: 258.41764 'Köpt försäkringar inkl. reseförsäkring' sequential rename {D11a 2022-2022, D13a 2020-2020, D14a 2021-2021, D7a 2024-2024, E11a 2025-2025, E12a 2023-2023} owned by kopt-forsakringar-inkl-reseforsakring (diagnostic v17 rename-worklist-258)"
 [variable."258.41765.tagit-ett-lan-eller-kredit"]
+slug = "tagit-ett-lan-eller-kredit"
 columns = { D11b = "258.41765.tagit-ett-lan-eller-kredit", D13b = "258.41765.tagit-ett-lan-eller-kredit", D14b = "258.41765.tagit-ett-lan-eller-kredit", D7b = "258.41765.tagit-ett-lan-eller-kredit", E11b = "258.41765.tagit-ett-lan-eller-kredit", E12b = "258.41765.tagit-ett-lan-eller-kredit" }
 columns_ref = "Y-211 2026-09-19: 258.41765 'Tagit ett lån eller kredit' sequential rename {D11b 2022-2022, D13b 2020-2020, D14b 2021-2021, D7b 2024-2024, E11b 2025-2025, E12b 2023-2023} owned by tagit-ett-lan-eller-kredit (diagnostic v17 rename-worklist-258)"
 [variable."258.41766.kopt-salt-aktier-fonder"]
+slug = "kopt-salt-aktier-fonder"
 columns = { D11c = "258.41766.kopt-salt-aktier-fonder", D13c = "258.41766.kopt-salt-aktier-fonder", D14c = "258.41766.kopt-salt-aktier-fonder", D7c = "258.41766.kopt-salt-aktier-fonder", E11c = "258.41766.kopt-salt-aktier-fonder", E12c = "258.41766.kopt-salt-aktier-fonder" }
 columns_ref = "Y-211 2026-09-19: 258.41766 'Köpt eller sålt aktier, obligationer, fonder' sequential rename {D11c 2022-2022, D13c 2020-2020, D14c 2021-2021, D7c 2024-2024, E11c 2025-2025, E12c 2023-2023} owned by kopt-salt-aktier-fonder (diagnostic v17 rename-worklist-258)"
 [variable."258.41769.e-sakerhet-last-sekretesspolicy"]
+slug = "e-sakerhet-last-sekretesspolicy"
 columns = { E1a = "258.41769.e-sakerhet-last-sekretesspolicy", F1a = "258.41769.e-sakerhet-last-sekretesspolicy", G1a = "258.41769.e-sakerhet-last-sekretesspolicy" }
 columns_ref = "Y-211 2026-09-19: 258.41769 'E-säkerhet: Läst sekretesspolicy innan gett ut personuppgifter' sequential rename {E1a 2020-2020, F1a 2021-2021, G1a 2023-2025} owned by e-sakerhet-last-sekretesspolicy (diagnostic v17 rename-worklist-258)"
 [variable."258.41770.e-sakerhet-geografisk-plats"]
+slug = "e-sakerhet-geografisk-plats"
 columns = { E1b = "258.41770.e-sakerhet-geografisk-plats", F1b = "258.41770.e-sakerhet-geografisk-plats", G1b = "258.41770.e-sakerhet-geografisk-plats" }
 columns_ref = "Y-211 2026-09-19: 258.41770 'E-säkerhet: Begränsat åtkomst till sin geografisk plats' sequential rename {E1b 2020-2020, F1b 2021-2021, G1b 2023-2025} owned by e-sakerhet-geografisk-plats (diagnostic v17 rename-worklist-258)"
 [variable."258.41771.e-sakerhet-profil-natverk"]
+slug = "e-sakerhet-profil-natverk"
 columns = { E1c = "258.41771.e-sakerhet-profil-natverk", F1c = "258.41771.e-sakerhet-profil-natverk", G1c = "258.41771.e-sakerhet-profil-natverk" }
 columns_ref = "Y-211 2026-09-19: 258.41771 'E-säkerhet: Begränsat tillgång till profil eller innehåll på sociala nätverkssaj' sequential rename {E1c 2020-2020, F1c 2021-2021, G1c 2023-2025} owned by e-sakerhet-profil-natverk (diagnostic v17 rename-worklist-258)"
 [variable."258.41772.e-sakerhet-nekat-reklam"]
+slug = "e-sakerhet-nekat-reklam"
 columns = { E1d = "258.41772.e-sakerhet-nekat-reklam", F1d = "258.41772.e-sakerhet-nekat-reklam", G1d = "258.41772.e-sakerhet-nekat-reklam" }
 columns_ref = "Y-211 2026-09-19: 258.41772 'E-säkerhet: Nekat tillåtelse av användning av personuppgifter' sequential rename {E1d 2020-2020, F1d 2021-2021, G1d 2023-2025} owned by e-sakerhet-nekat-reklam (diagnostic v17 rename-worklist-258)"
 [variable."258.41773.e-sakerhet-saker-webbplats"]
+slug = "e-sakerhet-saker-webbplats"
 columns = { E1e = "258.41773.e-sakerhet-saker-webbplats", F1e = "258.41773.e-sakerhet-saker-webbplats", G1e = "258.41773.e-sakerhet-saker-webbplats" }
 columns_ref = "Y-211 2026-09-19: 258.41773 'E-säkerhet: Kontrollerat att webbplatsen där du lämnat personuppgifter var en sä' sequential rename {E1e 2020-2020, F1e 2021-2021, G1e 2023-2025} owned by e-sakerhet-saker-webbplats (diagnostic v17 rename-worklist-258)"
 [variable."258.41777.e-sakerhet-begart-egna-data"]
+slug = "e-sakerhet-begart-egna-data"
 columns = { E1f = "258.41777.e-sakerhet-begart-egna-data", F1f = "258.41777.e-sakerhet-begart-egna-data", G1f = "258.41777.e-sakerhet-begart-egna-data" }
 columns_ref = "Y-211 2026-09-19: 258.41777 'E-säkerhet: Begärt av webbplatser att få tillgång till de data' sequential rename {E1f 2020-2020, F1f 2021-2021, G1f 2023-2025} owned by e-sakerhet-begart-egna-data (diagnostic v17 rename-worklist-258)"
 [variable."258.41778.e-sakerhet-visste-om-kakor"]
+slug = "e-sakerhet-visste-om-kakor"
 columns = { E2 = "258.41778.e-sakerhet-visste-om-kakor", F2 = "258.41778.e-sakerhet-visste-om-kakor" }
 columns_ref = "Y-211 2026-09-19: 258.41778 'E-säkerhet: Visste att kakor kan användas för att spåra aktiviteter på internet' sequential rename {E2 2020-2020, F2 2021-2021} owned by e-sakerhet-visste-om-kakor (diagnostic v17 rename-worklist-258)"
 [variable."258.41779.e-sakerhet-installningar-kakor"]
+slug = "e-sakerhet-installningar-kakor"
 columns = { E3 = "258.41779.e-sakerhet-installningar-kakor", F3 = "258.41779.e-sakerhet-installningar-kakor", G2 = "258.41779.e-sakerhet-installningar-kakor" }
 columns_ref = "Y-211 2026-09-19: 258.41779 'E-säkerhet: Ändrat inställningar för att förhindra kakor' sequential rename {E3 2020-2020, F3 2021-2021, G2 2023-2025} owned by e-sakerhet-installningar-kakor (diagnostic v17 rename-worklist-258)"
 [variable."258.41780.e-sakerhet-orolig-reklam"]
+slug = "e-sakerhet-orolig-reklam"
 columns = { E4 = "258.41780.e-sakerhet-orolig-reklam", F4 = "258.41780.e-sakerhet-orolig-reklam", G3 = "258.41780.e-sakerhet-orolig-reklam" }
 columns_ref = "Y-211 2026-09-19: 258.41780 'E-säkerhet: Orolig över att internetaktiviteter registreras' sequential rename {E4 2020-2020, F4 2021-2021, G3 2023-2025} owned by e-sakerhet-orolig-reklam (diagnostic v17 rename-worklist-258)"
 [variable."258.41781.e-sakerhet-programvara-spaning"]
+slug = "e-sakerhet-programvara-spaning"
 columns = { E5 = "258.41781.e-sakerhet-programvara-spaning", F5 = "258.41781.e-sakerhet-programvara-spaning", G4 = "258.41781.e-sakerhet-programvara-spaning" }
 columns_ref = "Y-211 2026-09-19: 258.41781 'E-säkerhet: Använder programvara som begränsar spåra internetaktiviteter' sequential rename {E5 2020-2020, F5 2021-2021, G4 2023-2025} owned by e-sakerhet-programvara-spaning (diagnostic v17 rename-worklist-258)"
 [variable."258.44640.inga-problem-vid-internetkop"]
+slug = "inga-problem-vid-internetkop"
 columns = { D13j = "258.44640.inga-problem-vid-internetkop", E11j = "258.44640.inga-problem-vid-internetkop", E9j = "258.44640.inga-problem-vid-internetkop" }
 columns_ref = "Y-211 2026-09-19: 258.44640 'Inga problem vid internetköp' sequential rename {D13j 2021-2021, E11j 2023-2023, E9j 2025-2025} owned by inga-problem-vid-internetkop (diagnostic v17 rename-worklist-258)"
 [variable."258.44678.sett-falsk-info-pa-internet"]
+slug = "sett-falsk-info-pa-internet"
 columns = { E3 = "258.44678.sett-falsk-info-pa-internet", F3 = "258.44678.sett-falsk-info-pa-internet" }
 columns_ref = "Y-211 2026-09-19: 258.44678 'Har sett falsk eller tveksam information på internet' sequential rename {E3 2021-2021, F3 2023-2025} owned by sett-falsk-info-pa-internet (diagnostic v17 rename-worklist-258)"
 [variable."258.44679.kontrollerat-info-via-kallor"]
+slug = "kontrollerat-info-via-kallor"
 columns = { E5a = "258.44679.kontrollerat-info-via-kallor", F5a = "258.44679.kontrollerat-info-via-kallor" }
 columns_ref = "Y-211 2026-09-19: 258.44679 'Har kontrollerat falsk information genom källor/annan information' sequential rename {E5a 2021-2021, F5a 2023-2025} owned by kontrollerat-info-via-kallor (diagnostic v17 rename-worklist-258)"
 [variable."258.44680.kontrollerat-info-via-diskussion"]
+slug = "kontrollerat-info-via-diskussion"
 columns = { E5b = "258.44680.kontrollerat-info-via-diskussion", F5b = "258.44680.kontrollerat-info-via-diskussion" }
 columns_ref = "Y-211 2026-09-19: 258.44680 'Har kontrollerat falsk information genom att delta i diskussioner' sequential rename {E5b 2021-2021, F5b 2023-2025} owned by kontrollerat-info-via-diskussion (diagnostic v17 rename-worklist-258)"
 [variable."258.44681.kontrollerat-falsk-info-offline"]
+slug = "kontrollerat-falsk-info-offline"
 columns = { E5c = "258.44681.kontrollerat-falsk-info-offline", F5c = "258.44681.kontrollerat-falsk-info-offline" }
 columns_ref = "Y-211 2026-09-19: 258.44681 'Har kontrollerat falsk information offline' sequential rename {E5c 2021-2021, F5c 2023-2025} owned by kontrollerat-falsk-info-offline (diagnostic v17 rename-worklist-258)"
 [variable."258.44683.inte-kontrollerat-visste-redan"]
+slug = "inte-kontrollerat-visste-redan"
 columns = { E6a = "258.44683.inte-kontrollerat-visste-redan", F6a = "258.44683.inte-kontrollerat-visste-redan" }
 columns_ref = "Y-211 2026-09-19: 258.44683 'Har inte kontrollerat falsk information - visste att den var falsk' sequential rename {E6a 2021-2021, F6a 2023-2025} owned by inte-kontrollerat-visste-redan (diagnostic v17 rename-worklist-258)"
 [variable."258.44684.inte-kontrollerat-saknade-kunskap"]
+slug = "inte-kontrollerat-saknade-kunskap"
 columns = { E6b = "258.44684.inte-kontrollerat-saknade-kunskap", F6b = "258.44684.inte-kontrollerat-saknade-kunskap" }
 columns_ref = "Y-211 2026-09-19: 258.44684 'Har inte kontrollerat falsk information - saknas kunskap' sequential rename {E6b 2021-2021, F6b 2023-2025} owned by inte-kontrollerat-saknade-kunskap (diagnostic v17 rename-worklist-258)"
 [variable."258.44685.inte-kontrollerat-andra-skal"]
+slug = "inte-kontrollerat-andra-skal"
 columns = { E6c = "258.44685.inte-kontrollerat-andra-skal", F6c = "258.44685.inte-kontrollerat-andra-skal" }
 columns_ref = "Y-211 2026-09-19: 258.44685 'Har inte kontrollerat information - andra skäl' sequential rename {E6c 2021-2021, F6c 2023-2025} owned by inte-kontrollerat-andra-skal (diagnostic v17 rename-worklist-258)"
 [variable."258.44707.skapat-filer-dokument-bild-video"]
+slug = "skapat-filer-dokument-bild-video"
 columns = { E2b = "258.44707.skapat-filer-dokument-bild-video", F2b = "258.44707.skapat-filer-dokument-bild-video" }
 columns_ref = "Y-211 2026-09-19: 258.44707 'Skapat filer (dokument, bild, video)' sequential rename {E2b 2021-2021, F2b 2023-2025} owned by skapat-filer-dokument-bild-video (diagnostic v17 rename-worklist-258)"
 [variable."258.44708.kopierat-flyttat-filer-moln"]
+slug = "kopierat-flyttat-filer-moln"
 columns = { E1a = "258.44708.kopierat-flyttat-filer-moln", F1a = "258.44708.kopierat-flyttat-filer-moln" }
 columns_ref = "Y-211 2026-09-19: 258.44708 'Kopierat eller flyttat mellan mappar, enheter, molnen' sequential rename {E1a 2021-2021, F1a 2023-2025} owned by kopierat-flyttat-filer-moln (diagnostic v17 rename-worklist-258)"
 [variable."258.44709.laddat-ner-programvara"]
+slug = "laddat-ner-programvara"
 columns = { E1b = "258.44709.laddat-ner-programvara", F1b = "258.44709.laddat-ner-programvara" }
 columns_ref = "Y-211 2026-09-19: 258.44709 'Laddat ner eller installerat programvara eller appar' sequential rename {E1b 2021-2021, F1b 2023-2025} owned by laddat-ner-programvara (diagnostic v17 rename-worklist-258)"
 [variable."258.44710.andrat-installningar-programvara"]
+slug = "andrat-installningar-programvara"
 columns = { E1c = "258.44710.andrat-installningar-programvara", F1c = "258.44710.andrat-installningar-programvara" }
 columns_ref = "Y-211 2026-09-19: 258.44710 'Ändrat inställningar i programvara, appar eller enheter' sequential rename {E1c 2021-2021, F1c 2023-2025} owned by andrat-installningar-programvara (diagnostic v17 rename-worklist-258)"
 [variable."258.44734.ai-anvands-for-it-sakerhet"]
+slug = "ai-anvands-for-it-sakerhet"
 columns = { AI_PITS = "258.44734.ai-anvands-for-it-sakerhet", E_AI_PITS = "258.44734.ai-anvands-for-it-sakerhet" }
 columns_ref = "Y-211 2026-09-19: 258.44734 'Använder AI-baserad mjukvara eller system för it-säkerhet' sequential rename {AI_PITS 2023-2025, E_AI_PITS 2021-2021} owned by ai-anvands-for-it-sakerhet (diagnostic v17 rename-worklist-258)"
 [variable."258.44739.ai-anvands-for-marknadsforing"]
+slug = "ai-anvands-for-marknadsforing"
 columns = { AI_PMS = "258.44739.ai-anvands-for-marknadsforing", E_AI_PMS = "258.44739.ai-anvands-for-marknadsforing" }
 columns_ref = "Y-211 2026-09-19: 258.44739 'Använder AI-baserad mjukvara eller system för marknadsföring eller försäljning' sequential rename {AI_PMS 2023-2025, E_AI_PMS 2021-2021} owned by ai-anvands-for-marknadsforing (diagnostic v17 rename-worklist-258)"
 [variable."258.45813.ej-ansokt-dokument-annan-orsak"]
+slug = "ej-ansokt-dokument-annan-orsak"
 columns = { C7f = "258.45813.ej-ansokt-dokument-annan-orsak", C7g = "258.45813.ej-ansokt-dokument-annan-orsak" }
 columns_ref = "Y-211 2026-09-19: 258.45813 'Inte ansökt om något dokument pga annan orsak' sequential rename {C7f 2022-2023, C7g 2024-2025} owned by ej-ansokt-dokument-annan-orsak (diagnostic v17 rename-worklist-258)"
 [variable."258.45828.gron-it-kop-harddiskegenskaper"]
+slug = "gron-it-kop-harddiskegenskaper"
 columns = { F2b = "258.45828.gron-it-kop-harddiskegenskaper", F2c = "258.45828.gron-it-kop-harddiskegenskaper" }
 columns_ref = "Y-211 2026-09-19: 258.45828 'Grön IT: Egenskaper vid köp av utrustning - Hårddiskegenskaper' sequential rename {F2b 2022-2022, F2c 2024-2024} owned by gron-it-kop-harddiskegenskaper (diagnostic v17 rename-worklist-258)"
 [variable."258.45829.gron-it-kop-ekodesign"]
+slug = "gron-it-kop-ekodesign"
 columns = { F2c = "258.45829.gron-it-kop-ekodesign", F2d = "258.45829.gron-it-kop-ekodesign" }
 columns_ref = "Y-211 2026-09-19: 258.45829 'Grön IT: Egenskaper vid köp av utrustning - Ekodesign av produkten' sequential rename {F2c 2022-2022, F2d 2024-2024} owned by gron-it-kop-ekodesign (diagnostic v17 rename-worklist-258)"
 [variable."258.45830.gron-it-kop-forlang-livslangd"]
+slug = "gron-it-kop-forlang-livslangd"
 columns = { F2d = "258.45830.gron-it-kop-forlang-livslangd", F2e = "258.45830.gron-it-kop-forlang-livslangd" }
 columns_ref = "Y-211 2026-09-19: 258.45830 'Grön IT: Egenskaper vid köp av utrustning - Möjlighet att förlänga livslängden' sequential rename {F2d 2022-2022, F2e 2024-2024} owned by gron-it-kop-forlang-livslangd (diagnostic v17 rename-worklist-258)"
 [variable."258.45831.gron-it-kop-energieffektivitet"]
+slug = "gron-it-kop-energieffektivitet"
 columns = { F2e = "258.45831.gron-it-kop-energieffektivitet", F2f = "258.45831.gron-it-kop-energieffektivitet" }
 columns_ref = "Y-211 2026-09-19: 258.45831 'Grön IT: Egenskaper vid köp av utrustning - Produktens energieffektivitet' sequential rename {F2e 2022-2022, F2f 2024-2024} owned by gron-it-kop-energieffektivitet (diagnostic v17 rename-worklist-258)"
 [variable."258.45832.gron-it-kop-atertagningssystem"]
+slug = "gron-it-kop-atertagningssystem"
 columns = { F2f = "258.45832.gron-it-kop-atertagningssystem", F2g = "258.45832.gron-it-kop-atertagningssystem" }
 columns_ref = "Y-211 2026-09-19: 258.45832 'Grön IT: Egenskaper vid köp av utrustning - Återtagningssystem som erbjuds av ti' sequential rename {F2f 2022-2022, F2g 2024-2024} owned by gron-it-kop-atertagningssystem (diagnostic v17 rename-worklist-258)"
 [variable."258.45833.gron-it-kop-andra-egenskaper"]
+slug = "gron-it-kop-andra-egenskaper"
 columns = { F2g = "258.45833.gron-it-kop-andra-egenskaper", F2h = "258.45833.gron-it-kop-andra-egenskaper" }
 columns_ref = "Y-211 2026-09-19: 258.45833 'Grön IT: Egenskaper vid köp av utrustning - Andra egenskaper' sequential rename {F2g 2022-2022, F2h 2024-2024} owned by gron-it-kop-andra-egenskaper (diagnostic v17 rename-worklist-258)"
 [variable."258.45834.gron-it-kop-aldrig-kopt"]
+slug = "gron-it-kop-aldrig-kopt"
 columns = { F2h = "258.45834.gron-it-kop-aldrig-kopt", F2i = "258.45834.gron-it-kop-aldrig-kopt" }
 columns_ref = "Y-211 2026-09-19: 258.45834 'Grön IT: Egenskaper vid köp av utrustning - Har aldrig köpt någon utrustning' sequential rename {F2h 2022-2022, F2i 2024-2024} owned by gron-it-kop-aldrig-kopt (diagnostic v17 rename-worklist-258)"
 [variable."258.46805.sett-hotfullt-inlagg-personliga"]
+slug = "sett-hotfullt-inlagg-personliga"
 columns = { F8g = "258.46805.sett-hotfullt-inlagg-personliga", F8h = "258.46805.sett-hotfullt-inlagg-personliga" }
 columns_ref = "Y-211 2026-09-19: 258.46805 'Har sett hotfulla/nedvärderande inlägg som rör andra personliga egenskaper' sequential rename {F8g 2023-2023, F8h 2025-2025} owned by sett-hotfullt-inlagg-personliga (diagnostic v17 rename-worklist-258)"
 [variable."258.47998.anvant-generativa-ai-verktyg"]
+slug = "anvant-generativa-ai-verktyg"
 columns = { B5 = "258.47998.anvant-generativa-ai-verktyg", CH1 = "258.47998.anvant-generativa-ai-verktyg" }
 columns_ref = "Y-211 2026-09-19: 258.47998 'Använt generativa AI verktyg' sequential rename {B5 2025-2025, CH1 2024-2024} owned by anvant-generativa-ai-verktyg (diagnostic v17 rename-worklist-258)"
 [variable."258.47999.gen-ai-syfte-formell-utbildning"]
+slug = "gen-ai-syfte-formell-utbildning"
 columns = { B6c = "258.47999.gen-ai-syfte-formell-utbildning", CH2a = "258.47999.gen-ai-syfte-formell-utbildning" }
 columns_ref = "Y-211 2026-09-19: 258.47999 'Syfte med användning av generativa AI verktyg: formell utbildning' sequential rename {B6c 2025-2025, CH2a 2024-2024} owned by gen-ai-syfte-formell-utbildning (diagnostic v17 rename-worklist-258)"
 [variable."258.48000.gen-ai-syfte-professionell"]
+slug = "gen-ai-syfte-professionell"
 columns = { B6b = "258.48000.gen-ai-syfte-professionell", CH2b = "258.48000.gen-ai-syfte-professionell" }
 columns_ref = "Y-211 2026-09-19: 258.48000 'Syfte med användning av generativa AI verktyg: professionella' sequential rename {B6b 2025-2025, CH2b 2024-2024} owned by gen-ai-syfte-professionell (diagnostic v17 rename-worklist-258)"
 [variable."258.48003.gen-ai-syfte-privat"]
+slug = "gen-ai-syfte-privat"
 columns = { B6a = "258.48003.gen-ai-syfte-privat", CH2c = "258.48003.gen-ai-syfte-privat" }
 columns_ref = "Y-211 2026-09-19: 258.48003 'Syfte med användning av generativa AI verktyg: privata ändamål' sequential rename {B6a 2025-2025, CH2c 2024-2024} owned by gen-ai-syfte-privat (diagnostic v17 rename-worklist-258)"
 [variable."258.48005.gen-ai-orsak-ej-anvand"]
+slug = "gen-ai-orsak-ej-anvand"
 columns = { B7 = "258.48005.gen-ai-orsak-ej-anvand", CH3 = "258.48005.gen-ai-orsak-ej-anvand" }
 columns_ref = "Y-211 2026-09-19: 258.48005 'Orsak att inte använda generativa AI verktyg' sequential rename {B7 2025-2025, CH3 2024-2024} owned by gen-ai-orsak-ej-anvand (diagnostic v17 rename-worklist-258)"
 [variable."258.48010.skapat-konto-gratis-app"]
+slug = "skapat-konto-gratis-app"
 columns = { B6 = "258.48010.skapat-konto-gratis-app", G5 = "258.48010.skapat-konto-gratis-app" }
 columns_ref = "Y-211 2026-09-19: 258.48010 'Skapat ett konto/registrerat sig på en gratis app/tjänst' sequential rename {B6 2024-2024, G5 2025-2025} owned by skapat-konto-gratis-app (diagnostic v17 rename-worklist-258)"
 [variable."258.48011.raderat-konto-gratis-app"]
+slug = "raderat-konto-gratis-app"
 columns = { B7 = "258.48011.raderat-konto-gratis-app", G6 = "258.48011.raderat-konto-gratis-app" }
 columns_ref = "Y-211 2026-09-19: 258.48011 'Raderat/stängt ett konto på en gratis app/tjänst' sequential rename {B7 2024-2024, G6 2025-2025} owned by raderat-konto-gratis-app (diagnostic v17 rename-worklist-258)"
 [variable."258.48015.problem-radera-konto-app"]
+slug = "problem-radera-konto-app"
 columns = { B8 = "258.48015.problem-radera-konto-app", G7 = "258.48015.problem-radera-konto-app" }
 columns_ref = "Y-211 2026-09-19: 258.48015 'Stött på något problem vid försök att ta bort sitt konto på en gratis app/tjänst' sequential rename {B8 2024-2024, G7 2025-2025} owned by problem-radera-konto-app (diagnostic v17 rename-worklist-258)"
 [variable."258.48018.kopt-biljetter-sport-kulturell"]
+slug = "kopt-biljetter-sport-kulturell"
 columns = { D4c = "258.48018.kopt-biljetter-sport-kulturell", E4c = "258.48018.kopt-biljetter-sport-kulturell" }
 columns_ref = "Y-211 2026-09-19: 258.48018 'Köpt biljetter till sport- eller kulturella evenemang' sequential rename {D4c 2024-2024, E4c 2025-2025} owned by kopt-biljetter-sport-kulturell (diagnostic v17 rename-worklist-258)"
 [variable."258.48019.kopt-e-bocker-eller-ljudbocker"]
+slug = "kopt-e-bocker-eller-ljudbocker"
 columns = { D4d = "258.48019.kopt-e-bocker-eller-ljudbocker", E4d = "258.48019.kopt-e-bocker-eller-ljudbocker" }
 columns_ref = "Y-211 2026-09-19: 258.48019 'Köpt e-böcker eller ljudböcker' sequential rename {D4d 2024-2024, E4d 2025-2025} owned by kopt-e-bocker-eller-ljudbocker (diagnostic v17 rename-worklist-258)"
 [variable."258.48020.kopt-nedladdad-programvara-uppdatering"]
+slug = "kopt-nedladdad-programvara-uppdatering"
 columns = { D4e = "258.48020.kopt-nedladdad-programvara-uppdatering", E4e = "258.48020.kopt-nedladdad-programvara-uppdatering" }
 columns_ref = "Y-211 2026-09-19: 258.48020 'Köpt nedladdad programvara (inkl. uppdateringar)' sequential rename {D4e 2024-2024, E4e 2025-2025} owned by kopt-nedladdad-programvara-uppdatering (diagnostic v17 rename-worklist-258)"
 [variable."258.48021.kopt-dataspel-nedladdad-online"]
+slug = "kopt-dataspel-nedladdad-online"
 columns = { D4f = "258.48021.kopt-dataspel-nedladdad-online", E4f = "258.48021.kopt-dataspel-nedladdad-online" }
 columns_ref = "Y-211 2026-09-19: 258.48021 'Köpt dataspel, nedladdade eller online (inkl. uppdateringar)' sequential rename {D4f 2024-2024, E4f 2025-2025} owned by kopt-dataspel-nedladdad-online (diagnostic v17 rename-worklist-258)"
 [variable."258.48030.prenumererat-digital-tidning"]
+slug = "prenumererat-digital-tidning"
 columns = { D5c = "258.48030.prenumererat-digital-tidning", E5c = "258.48030.prenumererat-digital-tidning" }
 columns_ref = "Y-211 2026-09-19: 258.48030 'Prenumererat på digitala tidningar, nyhetssidor eller magasin' sequential rename {D5c 2024-2024, E5c 2025-2025} owned by prenumererat-digital-tidning (diagnostic v17 rename-worklist-258)"
 [variable."258.48031.betalat-dataspel-streaming"]
+slug = "betalat-dataspel-streaming"
 columns = { D5d = "258.48031.betalat-dataspel-streaming", E5d = "258.48031.betalat-dataspel-streaming" }
 columns_ref = "Y-211 2026-09-19: 258.48031 'Betalt för dataspel som streamingtjänst' sequential rename {D5d 2024-2024, E5d 2025-2025} owned by betalat-dataspel-streaming (diagnostic v17 rename-worklist-258)"
 

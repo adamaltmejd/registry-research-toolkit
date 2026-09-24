@@ -591,6 +591,28 @@ def test_repo_fdb_gaturest_declares_two_spelling_ownership() -> None:
     assert slugs[("scb", "1.830.pgaturest")] == "pgaturest"
 
 
+def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
+    # Y-219: a split entry carrying `columns` needs a slug — pinned in its
+    # provider TOML or present in the `.auto.toml` — or naming converts it to None.
+    slug_dir = repo_slug_dir()
+    assert slug_dir is not None
+    entries = load_slug_dir(slug_dir)
+    slugged = {
+        (e.provider, e.source_id)
+        for e in entries
+        if e.kind == "variable" and e.slug is not None
+    }
+    unslugged = sorted(
+        f"{e.provider}:{e.source_id}"
+        for e in entries
+        if e.kind == "variable"
+        and e.columns is not None
+        and len(e.source_id.split(".")) == 3
+        and (e.provider, e.source_id) not in slugged
+    )
+    assert unslugged == []
+
+
 def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> None:
     # A version named twice in one `versions` list would mint the same synthetic
     # row twice and die on the id collision mid-insert. Catch it at load, where

@@ -552,6 +552,43 @@ class TestProviderToml:
         assert exc.value.code == "slug_toml_invalid"
         assert "within register '34'" in exc.value.message
 
+    # Y-219: a `columns`-carrying split may reuse its own base family's slug.
+    _BASE = '[variable."34.4"]\nslug = "kon"\n'
+    _OWNED_SPLIT = (
+        '[variable."34.4.kon"]\nslug = "kon"\n'
+        'columns = { Kon = "34.4.kon" }\ncolumns_ref = "ref"\n'
+    )
+
+    @pytest.mark.parametrize("split_first", [False, True])
+    def test_split_with_columns_reuses_own_base_slug(
+        self, tmp_path: Path, split_first: bool
+    ):
+        pair = [self._BASE, self._OWNED_SPLIT]
+        body = "".join(reversed(pair) if split_first else pair)
+        entries = load_provider_toml(_write(tmp_path / "scb.toml", body))
+        assert {e.source_id: e.slug for e in entries} == {
+            "34.4": "kon",
+            "34.4.kon": "kon",
+        }
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            '[variable."34.5"]\nslug = "kon"\n' + _OWNED_SPLIT,
+            _BASE + '[variable."34.4.kon"]\nslug = "kon"\n',
+            _BASE + _OWNED_SPLIT + '[variable."34.4.kon2"]\nslug = "kon"\n'
+            'columns = { Kon2 = "34.4.kon2" }\ncolumns_ref = "ref"\n',
+        ],
+        ids=["another-family-base", "split-without-columns", "second-owning-split"],
+    )
+    def test_split_reusing_more_than_own_base_slug_rejected(
+        self, tmp_path: Path, body: str
+    ):
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(_write(tmp_path / "scb.toml", body))
+        assert exc.value.code == "slug_toml_invalid"
+        assert "within register '34'" in exc.value.message
+
     def test_replaced_by_chain_acyclic(self, tmp_path: Path):
         # Slug typo gets a `replaced_by` link to the new row; both rows stay
         # in the TOML and a one-hop chain resolves cleanly.
