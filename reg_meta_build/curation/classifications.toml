@@ -531,6 +531,10 @@ valid_from = 1980
 valid_to = 1980
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1980.csv"
+sentinel_codes = [
+  { code = "058313", meaning = "Okänd församling i Motala kommun" },
+  { code = "999999", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 1980-01-01/ Län, kommuner och församlingar',
 ]
@@ -544,6 +548,11 @@ valid_from = 1981
 valid_to = 1981
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1981.csv"
+sentinel_codes = [
+  { code = "", meaning = "Ej förvärvsarbetande" },
+  { code = "99", meaning = "Arbetsplats i utlandet eller på havet, växlande eller okänd" },
+  { code = "9999", meaning = "Arbetsplats i utlandet eller på havet, växlande eller okänd" },
+]
 vardemangdsversion = [
   'LKF 1981-01-01/ Län, kommuner och församlingar',
 ]
@@ -596,6 +605,9 @@ valid_from = 1985
 valid_to = 1985
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1985.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 1985-01-01/ Län, kommuner och församlingar',
 ]
@@ -609,6 +621,13 @@ valid_from = 1986
 valid_to = 1986
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1986.csv"
+sentinel_codes = [
+  { code = "", meaning = "Ej förvärvsarbetande" },
+  { code = "99", meaning = "Arbetsplats i utlandet eller på havet, växlande eller okänd" },
+  { code = "******", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Arbetsplats i utlandet eller på havet, växlande eller okänd" },
+  { code = "999999", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 1986-01-01/ Län, kommuner och församlingar',
 ]
@@ -622,6 +641,14 @@ valid_from = 1987
 valid_to = 1987
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1987.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Okänt värde" },
+  { code = "1111", meaning = "Okänt" },
+  { code = "99", meaning = "Svensk skola i utlandet" },
+  { code = "999999", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 1987-01-01/ Län, kommuner och församlingar',
 ]
@@ -635,6 +662,13 @@ valid_from = 1988
 valid_to = 1988
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1988.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Okänd" },
+  { code = "00", meaning = "Okänt värde" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "999999", meaning = "Utlandet" },
+]
 vardemangdsversion = [
   'LKF 1988-01-01/ Län, kommuner och församlingar',
 ]
@@ -648,6 +682,13 @@ valid_from = 1989
 valid_to = 1989
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1989.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Okänd" },
+  { code = "*****", meaning = "Okänd" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "999999", meaning = "Utlandet" },
+]
 vardemangdsversion = [
   'LKF 1989-01-01/ Län, kommuner och församlingar',
 ]
@@ -661,6 +702,12 @@ valid_from = 1990
 valid_to = 1990
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1990.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Uppgift saknas" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "999999", meaning = "Okänd" },
+]
 vardemangdsversion = [
   'LKF 1990-01-01/ Län, kommuner och församlingar',
 ]
@@ -674,6 +721,13 @@ valid_from = 1991
 valid_to = 1991
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1991.csv"
+sentinel_codes = [
+  { code = "", meaning = "Ej förvärvsarbetande eller uppgift om sysselsättning saknas" },
+  { code = "9999", meaning = "Arbetsstället beläget i utlandet" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Uppgift saknas" },
+  { code = "999999", meaning = "Okänd" },
+]
 vardemangdsversion = [
   'LKF 1991-01-01/ Län, kommuner och församlingar',
 ]
@@ -687,6 +741,15 @@ valid_from = 1992
 valid_to = 1992
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1992.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Uppgift saknas" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "999999", meaning = "Okänd" },
+]
 vardemangdsversion = [
   'LKF 1992-01-01/ Län, kommuner och församlingar',
 ]
@@ -700,6 +763,15 @@ valid_from = 1993
 valid_to = 1993
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1993.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "999999", meaning = "Okänd" },
+]
 vardemangdsversion = [
   'LKF 1993-01-01/ Län, kommuner och församlingar',
 ]
@@ -713,6 +785,15 @@ valid_from = 1994
 valid_to = 1994
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1994.csv"
+sentinel_codes = [
+  { code = "******", meaning = "Okänd" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "999999", meaning = "Utlandet" },
+]
 vardemangdsversion = [
   'LKF 1994-01-01/ Län, kommuner och församlingar',
 ]
@@ -726,6 +807,14 @@ valid_from = 1995
 valid_to = 1995
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1995.csv"
+sentinel_codes = [
+  { code = "******", meaning = "Okänd" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "999999", meaning = "Utlandet" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "9999", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   'LKF 1995-01-01/ Län, kommuner och församlingar',
 ]
@@ -739,6 +828,16 @@ valid_from = 1996
 valid_to = 1996
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1996.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "******", meaning = "Okänd" },
+  { code = "999999", meaning = "Utlandet" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "2088", meaning = "Okänd" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "9999", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   'LKF 1996-01-01/ Län, kommuner och församlingar',
 ]
@@ -752,6 +851,15 @@ valid_from = 1997
 valid_to = 1997
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1997.csv"
+sentinel_codes = [
+  { code = "******", meaning = "Okänd" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "999999", meaning = "Utlandet" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "99999", meaning = "Utlandet" },
+]
 vardemangdsversion = [
   'LKF 1997-01-01/ Län, kommuner och församlingar',
 ]
@@ -765,6 +873,15 @@ valid_from = 1998
 valid_to = 1998
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1998.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "******", meaning = "Okänd" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "999999", meaning = "Utlandet" },
+]
 vardemangdsversion = [
   'LKF 1998-01-01/ Län, kommuner och församlingar',
 ]
@@ -778,6 +895,18 @@ valid_from = 1999
 valid_to = 1999
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf1999.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9800", meaning = "Okänd kommun" },
+  { code = "99", meaning = "Obefintliga" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "", meaning = "Kommunkod saknas" },
+  { code = "******", meaning = "Okänd" },
+]
 vardemangdsversion = [
   'LKF 1999-01-01/ Län, kommuner och församlingar',
 ]
@@ -791,6 +920,19 @@ valid_from = 2000
 valid_to = 2000
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2000.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Har ej fastighet" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "9800", meaning = "Okänd kommun" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "80", meaning = "Utlandsanställd" },
+  { code = "8000", meaning = "Utlandsanställd" },
+  { code = "99", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   'LKF 2000-01-01/ Län, kommuner och församlingar',
 ]
@@ -804,6 +946,20 @@ valid_from = 2001
 valid_to = 2001
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2001.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "0", meaning = "Uppgift saknas" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "80", meaning = "Utlandsanställd" },
+  { code = "8000", meaning = "Utlandsanställd" },
+  { code = "9800", meaning = "Okänd kommun" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "9900", meaning = "Okänd kommun" },
+]
 vardemangdsversion = [
   'LKF 2001-01-01/ Län, kommuner och församlingar',
 ]
@@ -817,6 +973,18 @@ valid_from = 2002
 valid_to = 2002
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2002.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "9999", meaning = "Okänt" },
+  { code = "0", meaning = "Okänt" },
+  { code = "9800", meaning = "Okänd kommun" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "99", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   'LKF 2002-01-01/ Län, kommuner och församlingar',
 ]
@@ -830,6 +998,17 @@ valid_from = 2003
 valid_to = 2003
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2003.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "9800", meaning = "Okänd kommun" },
+  { code = "99", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   'LKF 2003-01-01/ Län, kommuner och församlingar',
 ]
@@ -843,6 +1022,19 @@ valid_from = 2004
 valid_to = 2004
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2004.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "9108", meaning = "Uppgift saknas" },
+  { code = "9800", meaning = "Okänd kommun" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "NULL", meaning = "Okänt värde" },
+]
 vardemangdsversion = [
   'LKF 2004-01-01/ Län, kommuner och församlingar',
 ]
@@ -856,6 +1048,20 @@ valid_from = 2005
 valid_to = 2005
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2005.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "0", meaning = "Okänt" },
+  { code = "99", meaning = "Uppgift saknas" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "2762", meaning = "Okänd kommun" },
+  { code = "80", meaning = "Utlandsanställd" },
+  { code = "9800", meaning = "Okänd kommun" },
+]
 vardemangdsversion = [
   'LKF 2005-01-01/ Län, kommuner och församlingar',
 ]
@@ -869,6 +1075,23 @@ valid_from = 2006
 valid_to = 2006
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2006.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "NULL", meaning = "Okänt värde" },
+  { code = "0", meaning = "Bortfall" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "9999", meaning = "Uppgift saknas" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "1111", meaning = "Okänt" },
+  { code = "2762", meaning = "Okänd kommun" },
+  { code = "9800", meaning = "Okänd kommun" },
+  { code = "9993", meaning = "Okänt" },
+  { code = "9994", meaning = "Okänt" },
+]
 vardemangdsversion = [
   'LKF 2006-01-01/ Län, kommuner och församlingar',
   'LKF 2006 med tillägg',
@@ -883,6 +1106,17 @@ valid_from = 2007
 valid_to = 2007
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2007.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Saknar fastighet eller uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Uppgift saknas" },
+  { code = "0", meaning = "Okänt" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+]
 vardemangdsversion = [
   'LKF 2007-01-01/ Län, kommuner och församlingar',
 ]
@@ -896,6 +1130,17 @@ valid_from = 2008
 valid_to = 2008
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2008.csv"
+sentinel_codes = [
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "0", meaning = "Okänt" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "NULL", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 2008-01-01/ Län, kommuner och församlingar ',
 ]
@@ -909,6 +1154,19 @@ valid_from = 2009
 valid_to = 2009
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2009.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "0", meaning = "Okänt" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "99", meaning = "Uppgift okänd" },
+  { code = "9999", meaning = "Uppgift saknas" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "NULL", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 2009-01-01/ Län, kommuner och församlingar ',
 ]
@@ -922,6 +1180,21 @@ valid_from = 2010
 valid_to = 2010
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2010.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "[NULL]", meaning = "Ej relevant/uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "00", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "0", meaning = "Okänt" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "NULL", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 2010-01-01/ Län, kommuner och församlingar ',
 ]
@@ -935,6 +1208,19 @@ valid_from = 2011
 valid_to = 2011
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2011.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9999", meaning = "Okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "0", meaning = "Okänt" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "99", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   'LKF 2011-01-01/ Län, kommuner och församlingar ',
 ]
@@ -948,6 +1234,19 @@ valid_from = 2012
 valid_to = 2012
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2012.csv"
+sentinel_codes = [
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9999", meaning = "Okänd" },
+  { code = "99", meaning = "Okänd" },
+  { code = "0", meaning = "Okänt" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+]
 vardemangdsversion = [
   'LKF 2012-01-01/ Län, kommuner och församlingar ',
 ]
@@ -961,6 +1260,20 @@ valid_from = 2013
 valid_to = 2013
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2013.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Eleven har ej flyttat/ Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "000.", meaning = "Okänt" },
+  { code = "000", meaning = "Okänt" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "9999", meaning = "Okänt" },
+  { code = "99", meaning = "Okänd" },
+  { code = "000000", meaning = "Okänd" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+]
 vardemangdsversion = [
   'LKF 2013-01-01/ Län, kommuner och församlingar ',
 ]
@@ -974,6 +1287,19 @@ valid_from = 2014
 valid_to = 2014
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2014.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas eller utomlands" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "9999", meaning = "Utländsk adress" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "0", meaning = "Okänt" },
+  { code = "99", meaning = "Uppgift saknas" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "NULL", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 2014-01-01/ Län, kommuner och församlingar ',
 ]
@@ -987,6 +1313,18 @@ valid_from = 2015
 valid_to = 2015
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2015.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Okänt" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "9999", meaning = "Okänd" },
+  { code = "0", meaning = "Okänt" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "99", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   'LKF 2015-01-01/ Län, kommuner och församlingar ',
 ]
@@ -1000,6 +1338,24 @@ valid_from = 2016
 valid_to = 2016
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2016.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "000.", meaning = "Okänt" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "000", meaning = "Okänt" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "9999", meaning = "Arbetsstället beläget i utlandet" },
+  { code = "0", meaning = "Okänt" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "0141", meaning = "Okänt" },
+  { code = "0147", meaning = "Okänt" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "[BLANK]", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 2016-01-01/ Län, kommuner och församlingar ',
 ]
@@ -1013,6 +1369,19 @@ valid_from = 2017
 valid_to = 2017
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2017.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Kommunkod saknas" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "0199", meaning = "Okänt" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "9999", meaning = "Arbetsstället beläget i utlandet" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "0", meaning = "Okänt" },
+]
 vardemangdsversion = [
   'LKF 2017-01-01/ Län, kommuner och församlingar ',
 ]
@@ -1026,6 +1395,20 @@ valid_from = 2018
 valid_to = 2018
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2018.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "00", meaning = "Län okänd" },
+  { code = "9999", meaning = "Okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "NULL", meaning = "Ej träff i källan" },
+  { code = "99", meaning = "Utländsk adress" },
+  { code = "0", meaning = "Okänt" },
+]
 vardemangdsversion = [
   '2018-01-01/ Län, kommuner och församlingar ',
 ]
@@ -1039,6 +1422,18 @@ valid_from = 2019
 valid_to = 2019
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2019.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Uppgift saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0199", meaning = "Ej svensk kommun" },
+  { code = "00", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "9900", meaning = "Okänd kommun" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+]
 vardemangdsversion = [
   '2019-01-01/ Län, kommuner och församlingar ',
 ]
@@ -1052,6 +1447,16 @@ valid_from = 2020
 valid_to = 2020
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2020.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Kommunkod saknas" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "0199", meaning = "Ej svensk kommun" },
+  { code = "00", meaning = "Okänt" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "9900", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   '2020-01-01/ Län, kommuner och församlingar ',
 ]
@@ -1065,6 +1470,18 @@ valid_from = 2021
 valid_to = 2021
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2021.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "00", meaning = "Okänt" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "0199", meaning = "Ej svensk kommun" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "9900", meaning = "Utländsk adress" },
+]
 vardemangdsversion = [
   '2021-01-01/ Län, kommuner och församlingar ',
 ]
@@ -1078,6 +1495,21 @@ valid_from = 2022
 valid_to = 2022
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2022.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Kommunkod saknas" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "00", meaning = "Okänt" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "0199", meaning = "Ej svensk hemortskommun" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "88", meaning = "Okänt län" },
+  { code = "98", meaning = "Okänt län" },
+]
 vardemangdsversion = [
   '2022-01-01/ Län, kommuner och församlingar ',
 ]
@@ -1091,6 +1523,20 @@ valid_from = 2023
 valid_to = 2023
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2023.csv"
+sentinel_codes = [
+  { code = "", meaning = "Uppgift saknas" },
+  { code = "0000", meaning = "Okänt" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "0097", meaning = "Okänd kommun" },
+  { code = "0098", meaning = "Okänd kommun" },
+  { code = "0099", meaning = "Okänd kommun" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "0199", meaning = "Okänt" },
+  { code = "9990", meaning = "Okänt" },
+]
 vardemangdsversion = [
   '2023-01-01 /Län, kommuner och församlingar',
 ]
@@ -1104,6 +1550,17 @@ valid_from = 2024
 valid_to = 2024
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2024.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Okänd" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "", meaning = "Okänd" },
+  { code = "00", meaning = "Okänd" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "0", meaning = "Okänt värde" },
+  { code = "00000", meaning = "Okänt värde" },
+  { code = "98", meaning = "Okänt län" },
+  { code = "NULL", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   '2024-01-01 /Län, kommuner och församlingar',
 ]
@@ -1117,6 +1574,14 @@ valid_from = 2025
 valid_to = 2025
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf2025.csv"
+sentinel_codes = [
+  { code = "0000", meaning = "Okänd" },
+  { code = "9999", meaning = "Utlandet" },
+  { code = "99", meaning = "Utlandet" },
+  { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "00", meaning = "Okänd" },
+  { code = "", meaning = "Uppgift saknas" },
+]
 vardemangdsversion = [
   'LKF 2025-01-01 /Län, kommuner och församlingar',
 ]
