@@ -3126,11 +3126,46 @@ def _family_diagnostic(
     )
 
 
+def _partition_memberships(
+    partition_cases: dict[Any, tuple[CurationCase, ...]],
+) -> dict[Any, dict[tuple[str | int, ...], frozenset[tuple[SourceRecordRef, str]]]]:
+    """Read the literal, checked owners emitted by the partition compiler."""
+    members: dict[
+        Any, dict[tuple[str | int, ...], set[tuple[SourceRecordRef, str]]]
+    ] = defaultdict(lambda: defaultdict(set))
+    for scope_key, cases in partition_cases.items():
+        for case in cases:
+            if not isinstance(case.decision, OccurrenceCorrectionDecision):
+                continue
+            for effect in case.decision.effects:
+                if not isinstance(effect, CheckedIdentityChange) or (
+                    "accepted-partition" not in effect.variable_key
+                ):
+                    continue
+                condition = effect.when[0] if len(effect.when) == 1 else None
+                if (
+                    condition is None
+                    or condition.name != "column_name"
+                    or condition.status != "value"
+                    or not isinstance(condition.value, str)
+                ):
+                    raise ValueError(
+                        f"{case.case_id}: partition owner lacks an exact literal column"
+                    )
+                members[scope_key][effect.variable_key].add(
+                    (effect.ref, condition.value)
+                )
+    return {
+        scope_key: {key: frozenset(rows) for key, rows in by_key.items()}
+        for scope_key, by_key in members.items()
+    }
+
+
 def compile_errata(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
     scopes: tuple[ScopeDeclarations, ...],
-    partition_naming: dict[Any, tuple[Any, ...]],
+    partition_cases: dict[Any, tuple[CurationCase, ...]],
     *,
     subset: bool,
 ) -> tuple[
@@ -3151,6 +3186,7 @@ def compile_errata(
 
     if not loaded:
         return {}, {}, {}, (), {}
+    partition_members = _partition_memberships(partition_cases)
     locations: dict[int, list[tuple[Any, tuple[str | int, ...]]]] = defaultdict(list)
     for scope in scopes:
         for name, key in _scope_registers(scope):
@@ -3327,30 +3363,38 @@ def compile_errata(
                 if table == "delivered":
                     assert isinstance(converted.decision, OccurrenceCorrectionDecision)
                     effects = []
+                    rebinding_blockers = []
                     for effect in converted.decision.effects:
                         if not isinstance(effect, CuratedOccurrenceAddition):
                             effects.append(effect)
                             continue
-                        owners = {
-                            declaration.target.source_key
-                            for declaration in partition_naming.get(scope_key, ())
-                            if len(declaration.target.source_key)
-                            > len(effect.variable_key)
-                            and declaration.target.source_key[
-                                : len(effect.variable_key)
-                            ]
+                        original_pairs = {
+                            (record_ref(record), row.column)
+                            for record in members
+                            if source_occurrence(record).variable_key
                             == effect.variable_key
-                            and declaration.target.source_key[len(effect.variable_key)]
-                            == "accepted-partition"
-                            and any(
-                                expectation.ref == record_ref(record)
-                                for expectation in declaration.target.expectations
-                                for record in members
-                                if source_occurrence(record).variable_key
-                                == effect.variable_key
-                                and _literal_field(record, "column_name") == row.column
-                            )
+                            and _literal_field(record, "column_name") == row.column
                         }
+                        owners = {
+                            key
+                            for key, pairs in partition_members.get(
+                                scope_key, {}
+                            ).items()
+                            if key[: len(effect.variable_key)] == effect.variable_key
+                            and pairs & original_pairs
+                        }
+                        partitioned = any(
+                            key[: len(effect.variable_key)] == effect.variable_key
+                            for key in partition_members.get(scope_key, {})
+                        )
+                        if len(owners) > 1:
+                            rebinding_blockers.append(
+                                f"literal column {row.column!r} has multiple split owners"
+                            )
+                        elif partitioned and not owners:
+                            rebinding_blockers.append(
+                                f"literal column {row.column!r} has no split owner"
+                            )
                         effects.append(
                             effect.model_copy(
                                 update={"variable_key": next(iter(owners))}
@@ -3358,6 +3402,21 @@ def compile_errata(
                             if len(owners) == 1
                             else effect
                         )
+                    if rebinding_blockers:
+                        overbroad = any(
+                            "multiple" in item for item in rebinding_blockers
+                        )
+                        statuses["over_broad" if overbroad else "stale"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                "; ".join(rebinding_blockers),
+                                overbroad=overbroad,
+                                refs=(record_ref(members[0]),),
+                            )
+                        )
+                        continue
                     converted = converted.model_copy(
                         update={
                             "decision": converted.decision.model_copy(
@@ -3425,6 +3484,7 @@ def compile_enrichment(
     prepared: PreparedCatalogSources,
     scopes: tuple[ScopeDeclarations, ...],
     naming: dict[Any, tuple[Any, ...]],
+    partition_cases: dict[Any, tuple[CurationCase, ...]],
     errata_cases: dict[Any, tuple[CurationCase, ...]],
     *,
     subset: bool,
@@ -3435,6 +3495,7 @@ def compile_enrichment(
 ]:
     """Bind delivery prose and search spellings to one compiled catalog name."""
     loaded = load_delivery_enrichment(tree.root)
+    partition_members = _partition_memberships(partition_cases)
     description_positions = {
         (item.provider, item.register, item.variable): index
         for index, item in enumerate(loaded.descriptions, 1)
@@ -3547,17 +3608,85 @@ def compile_enrichment(
                     )
                 all_records = record_cache[cache_key]
                 variable_key = target.target.source_key
+                by_split = partition_members.get(scope_key, {})
                 if "accepted-partition" in variable_key:
-                    refs = {item.ref for item in target.target.expectations}
-                    chosen = tuple(r for r in all_records if record_ref(r) in refs)
+                    base_key = variable_key[: variable_key.index("accepted-partition")]
+                    siblings = {
+                        key: pairs
+                        for key, pairs in by_split.items()
+                        if key[: len(base_key)] == base_key
+                    }
+                    selected_pairs = siblings.get(variable_key, frozenset())
+                    if any(
+                        pair in other_pairs
+                        for pair in selected_pairs
+                        for key, other_pairs in siblings.items()
+                        if key != variable_key
+                    ):
+                        statuses["over_broad"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                "one literal source member belongs to multiple split variables",
+                                overbroad=True,
+                                refs=register_anchor(name),
+                            )
+                        )
+                        continue
+                    chosen = tuple(
+                        record
+                        for record in all_records
+                        if (
+                            record_ref(record),
+                            _literal_field(record, "column_name"),
+                        )
+                        in selected_pairs
+                    )
+                    if not chosen:
+                        statuses["stale"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                "split has no checked literal source members",
+                                refs=register_anchor(name),
+                            )
+                        )
+                        continue
                 elif "declared-column" in variable_key:
+                    selected_pairs = frozenset()
                     chosen = ()
                 else:
+                    selected_pairs = frozenset()
+                    if (
+                        sum(
+                            key[: len(variable_key)] == variable_key for key in by_split
+                        )
+                        > 1
+                    ):
+                        statuses["over_broad"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                "native family resolves to multiple split variables",
+                                overbroad=True,
+                                refs=register_anchor(name),
+                            )
+                        )
+                        continue
                     chosen = tuple(
                         r
                         for r in all_records
                         if source_occurrence(r).variable_key == variable_key
                     )
+                chosen_refs = {record_ref(record) for record in chosen}
+                checked_records = tuple(
+                    record
+                    for record in all_records
+                    if record_ref(record) in chosen_refs
+                )
                 if isinstance(row, EnrichmentDescriptionEntry):
                     if not chosen or any(
                         _literal_field(r, "description") for r in chosen
@@ -3574,17 +3703,34 @@ def compile_enrichment(
                             )
                         )
                         continue
-                    expectations = capture_expectations(chosen, fields=("description",))
+                    expectations = capture_expectations(
+                        checked_records,
+                        fields=("column_name", "description")
+                        if selected_pairs
+                        else ("description",),
+                    )
+                    effect_pairs = (
+                        sorted(selected_pairs, key=lambda pair: (str(pair[0]), pair[1]))
+                        if selected_pairs
+                        else [(item.ref, None) for item in expectations]
+                    )
                     effects = tuple(
                         CheckedFieldChange(
-                            ref=item.ref,
+                            ref=ref,
                             replacement=FieldExpectation(
                                 name="description",
                                 status="value",
                                 value=row.description,
                             ),
+                            when=(
+                                FieldExpectation(
+                                    name="column_name", status="value", value=column
+                                ),
+                            )
+                            if column is not None
+                            else (),
                         )
-                        for item in expectations
+                        for ref, column in effect_pairs
                     )
                     decision = OccurrenceCorrectionDecision(
                         reviewed=True,
@@ -3593,7 +3739,7 @@ def compile_enrichment(
                         or f"Accepted delivery description for {target_name}",
                         provenance=row.provenance or f"curation:{case_id}",
                     )
-                    peer_guards = ()
+                    peer_guards = target.target.peer_guards
                 else:
                     assert isinstance(row, EnrichmentAliasEntry)
                     variant_keys = {
@@ -3637,8 +3783,14 @@ def compile_enrichment(
                             )
                         )
                         continue
+                    alias_refs = {record_ref(record) for record in alias_records}
                     expectations = capture_expectations(
-                        alias_records, fields=("column_name",)
+                        tuple(
+                            record
+                            for record in all_records
+                            if record_ref(record) in alias_refs
+                        ),
+                        fields=("column_name",),
                     )
                     anchor = alias_records[0]
                     peer_guards = target.target.peer_guards or (
@@ -3989,7 +4141,7 @@ def compile_curation(
         errata_keys,
         errata_diagnostics,
         errata_report,
-    ) = compile_errata(tree, prepared, scopes, partition_naming, subset=subset)
+    ) = compile_errata(tree, prepared, scopes, partition_cases, subset=subset)
     for key, extra in errata_cases.items():
         cases[key].extend(extra)
     for key, extra in errata_naming.items():
@@ -3997,7 +4149,7 @@ def compile_curation(
     for key, extra in errata_keys.items():
         provider_keys[key] = (*provider_keys.get(key, ()), *extra)
     enrichment_cases, enrichment_diagnostics, enrichment_report = compile_enrichment(
-        tree, prepared, scopes, naming, errata_cases, subset=subset
+        tree, prepared, scopes, naming, partition_cases, errata_cases, subset=subset
     )
     for key, extra in enrichment_cases.items():
         cases[key].extend(extra)

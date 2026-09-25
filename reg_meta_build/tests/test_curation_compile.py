@@ -24,6 +24,7 @@ from reg_meta_build.curation_compile import (
     compile_errata,
     compile_native_naming,
     compile_partitions,
+    convert_column_partitions,
     finalize_classification_bindings,
     merge_scope,
     merge_selection,
@@ -32,10 +33,14 @@ from reg_meta_build.curation_compile import (
 from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.id import mint
 from reg_meta_build.pipeline import PipelineSelection, ScopeDeclarations
-from reg_meta_build.resolved_catalog import ResolvedVariant
+from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
 from reg_meta_build.scb_errata import ErrataVersion, edition_bindings
 from reg_meta_build.source_annotations import apply_alias_cases
-from reg_meta_build.source_coding import CodeListClaim, copied_coding_fingerprints
+from reg_meta_build.source_coding import (
+    CodeListClaim,
+    copied_coding_fingerprints,
+    resolve_code_membership,
+)
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
@@ -44,15 +49,14 @@ from reg_meta_build.source_curation import (
     CuratedOccurrenceAddition,
     CurationCase,
     OccurrenceCorrectionDecision,
-    PeerGuard,
     SearchAliasDecision,
-    capture_expectations,
 )
 from reg_meta_build.source_effects import (
     _require_checked,
     apply_occurrence_cases,
     record_ref,
 )
+from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
@@ -1502,37 +1506,31 @@ def test_compiled_errata_missing_edition_is_stale(tmp_path: Path):
 
 def test_compiled_delivered_addition_uses_unique_literal_split(tmp_path: Path):
     donor = _errata_record(column="A", year="2020")
+    sibling = _errata_record(column="B", year="2020")
     other = _errata_record(column="B", year="2021", variable=6, member=21)
-    tree, prepared, scope = _errata_fixture(tmp_path, (donor, other), _DELIVERED)
-    native = native_variable_key(donor)
-    register = source_register_key(donor)
-    assert native is not None and register is not None
-    split = (*native, "accepted-partition", "a")
-    declaration = NamingDeclaration(
-        target=NativeNamingTarget(
-            kind="variable",
-            provider="scb",
-            source_key=split,
-            register_key=register,
-            expectations=capture_expectations((donor,), fields=("column_name",)),
-            peer_guards=(
-                PeerGuard(
-                    guard_id="split-a",
-                    source=donor.source,
-                    native=donor.subject.native,
-                    expected_members=(record_ref(donor),),
-                ),
-            ),
-        ),
-        naming=SlugEntry(kind="variable", provider="scb", source_id="1.5.a", slug="a"),
-        contributors=(),
+    tree, prepared, scope = _errata_fixture(
+        tmp_path, (donor, sibling, other), _DELIVERED
     )
+    native = native_variable_key(donor)
+    assert native is not None
+    converted = convert_column_partitions(
+        (donor, sibling),
+        source_id="1.5",
+        split_ids=("1.5.a", "1.5.b"),
+        declared_columns={"A": "1.5.a", "B": "1.5.b"},
+        declaration_reference="fixture",
+    )
+    assert converted.case is not None
     scope_key = (scope.source, scope.register_key)
     cases, _, _, diagnostics, _ = compile_errata(
-        tree, prepared, (scope,), {scope_key: (declaration,)}, subset=False
+        tree, prepared, (scope,), {scope_key: (converted.case,)}, subset=False
     )
     assert diagnostics == ()
-    assert cases[scope_key][0].decision.effects[0].variable_key == split
+    assert cases[scope_key][0].decision.effects[0].variable_key == (
+        *native,
+        "accepted-partition",
+        "1.5.a",
+    )
 
 
 def test_errata_and_enrichment_compile_is_order_independent(tmp_path: Path):
@@ -1558,7 +1556,9 @@ def test_errata_and_enrichment_compile_is_order_independent(tmp_path: Path):
 
     def enrichment_bytes(candidate):
         return repr(
-            compile_enrichment(candidate, prepared, (scope,), naming, {}, subset=False)
+            compile_enrichment(
+                candidate, prepared, (scope,), naming, {}, {}, subset=False
+            )
         ).encode()
 
     assert (
@@ -1707,7 +1707,7 @@ def test_compiled_enrichment_description_alias_and_staleness(tmp_path: Path):
         tmp_path, (record, second), _DESCRIPTION + _ALIAS
     )
     cases, diagnostics, _ = compile_enrichment(
-        tree, prepared, (scope,), naming, {}, subset=False
+        tree, prepared, (scope,), naming, {}, {}, subset=False
     )
     assert diagnostics == ()
     description, alias = cases[(scope.source, scope.register_key)]
@@ -1745,7 +1745,7 @@ def test_compiled_enrichment_description_alias_and_staleness(tmp_path: Path):
         tmp_path / "described", (described,), _DESCRIPTION
     )
     cases, diagnostics, _ = compile_enrichment(
-        tree, prepared, (scope,), naming, {}, subset=False
+        tree, prepared, (scope,), naming, {}, {}, subset=False
     )
     assert cases == {}
     assert [item.code for item in diagnostics] == ["stale_curation_entry"]
@@ -1753,29 +1753,29 @@ def test_compiled_enrichment_description_alias_and_staleness(tmp_path: Path):
 
 def test_compiled_enrichment_split_uses_partition_records(tmp_path: Path):
     first, second = _scb_partition_records(("A", "B"))
-    native = native_variable_key(first)
-    register = source_register_key(first)
-    assert native is not None and register is not None
-    split = NativeNamingTarget(
-        kind="variable",
-        provider="scb",
-        source_key=(*native, "accepted-partition", "b"),
-        register_key=register,
-        expectations=capture_expectations((second,), fields=("column_name",)),
-        peer_guards=(
-            PeerGuard(
-                guard_id="split-b",
-                source=second.source,
-                native=second.subject.native,
-                expected_members=(record_ref(second),),
-            ),
-        ),
+    converted = convert_column_partitions(
+        (first, second),
+        source_id="1.5",
+        split_ids=("1.5.a", "1.5.b"),
+        declared_columns={"A": "1.5.a", "B": "1.5.b"},
+        declaration_reference="fixture",
+    )
+    assert converted.case is not None
+    split = next(
+        item.target for item in converted.bindings if item.source_id == "1.5.b"
     )
     tree, prepared, scope, naming = _enrichment_fixture(
         tmp_path, (first, second), _DESCRIPTION + _ALIAS, target=split
     )
+    scope_key = (scope.source, scope.register_key)
     cases, diagnostics, _ = compile_enrichment(
-        tree, prepared, (scope,), naming, {}, subset=False
+        tree,
+        prepared,
+        (scope,),
+        naming,
+        {scope_key: (converted.case,)},
+        {},
+        subset=False,
     )
     assert diagnostics == ()
     assert cases[(scope.source, scope.register_key)][0].targets[0].ref == record_ref(
@@ -1785,6 +1785,144 @@ def test_compiled_enrichment_split_uses_partition_records(tmp_path: Path):
     assert alias.targets[0].ref == record_ref(second)
     _require_checked(alias.targets[0], ("column_name",), case_id=alias.case_id)
     assert alias.targets[0].ref in alias.peer_guards[0].expected_members
+
+
+def test_compiled_split_descriptions_condition_shared_native_member(tmp_path: Path):
+    first = _errata_record(column="A", year="2020")
+    second = _errata_record(column="B", year="2020")
+    assert record_ref(first) == record_ref(second)
+    converted = convert_column_partitions(
+        (first, second),
+        source_id="1.5",
+        split_ids=("1.5.a", "1.5.b"),
+        declared_columns={"A": "1.5.a", "B": "1.5.b"},
+        declaration_reference="fixture",
+    )
+    assert converted.case is not None
+    targets = {item.source_id: item.target for item in converted.bindings}
+    second_description = _DESCRIPTION.replace(
+        'variable = "a"', 'variable = "b"'
+    ).replace("Accepted prose", "Other prose")
+    tree, prepared, scope, naming = _enrichment_fixture(
+        tmp_path,
+        (first, second),
+        _DESCRIPTION + second_description + _ALIAS,
+        target=targets["1.5.a"],
+    )
+    scope_key = (scope.source, scope.register_key)
+    naming[scope_key] = (
+        *naming[scope_key],
+        NamingDeclaration(
+            target=targets["1.5.b"],
+            naming=SlugEntry(
+                kind="variable", provider="scb", source_id="1.5.b", slug="b"
+            ),
+            contributors=(),
+        ),
+    )
+    cases, diagnostics, _ = compile_enrichment(
+        tree,
+        prepared,
+        (scope,),
+        naming,
+        {scope_key: (converted.case,)},
+        {},
+        subset=False,
+    )
+    assert diagnostics == ()
+    descriptions = cases[scope_key][:2]
+    assert [case.decision.effects[0].when[0].value for case in descriptions] == [
+        "A",
+        "B",
+    ]
+    assert all(len(case.targets[0].alternatives) == 2 for case in descriptions)
+    result = apply_occurrence_cases((first, second), (converted.case, *descriptions))
+    assert not [
+        issue
+        for issue in result.diagnostics
+        if issue.code == "conflicting_curation_effects"
+    ]
+    assert {
+        occurrence.variable_key[-1]: occurrence.fields.description.value
+        for occurrence in result.occurrences
+    } == {"1.5.a": "Accepted prose", "1.5.b": "Other prose"}
+    for split, description in (
+        ("1.5.a", "Accepted prose"),
+        ("1.5.b", "Other prose"),
+    ):
+        (occurrence,) = tuple(
+            item for item in result.occurrences if item.variable_key[-1] == split
+        )
+        assert occurrence.variant_key is not None
+        assert occurrence.column_key is not None
+        column = occurrence.fields.column_name
+        assert column is not None and isinstance(column.value, str)
+        formed = form_native_variable(
+            (occurrence,),
+            register=ResolvedRegister(provider="scb", slug="sample", name="Sample"),
+            variants={
+                occurrence.variant_key: ResolvedVariant(slug="people", name="People")
+            },
+            slug=split.rsplit(".", 1)[1],
+            provider_key=column.value,
+            flags=SourceFields(
+                sensitivity=value_field(False), identifier=value_field(False)
+            ),
+            coding={occurrence.column_key: resolve_code_membership(())},
+        )
+        assert formed.variable is not None
+        assert formed.variable.description == description
+    alias = cases[scope_key][2]
+    assert isinstance(alias.decision, SearchAliasDecision)
+    assert alias.decision.variable_key == targets["1.5.a"].source_key
+    assert len(alias.targets[0].alternatives) == 2
+
+    described_second = second.model_copy(
+        update={
+            "fields": second.fields.model_copy(
+                update={"description": value_field("Sibling description")}
+            )
+        }
+    )
+    tree, prepared, scope, sibling_naming = _enrichment_fixture(
+        tmp_path / "sibling",
+        (first, described_second),
+        _DESCRIPTION,
+        target=targets["1.5.a"],
+    )
+    sibling_cases, diagnostics, _ = compile_enrichment(
+        tree,
+        prepared,
+        (scope,),
+        sibling_naming,
+        {scope_key: (converted.case,)},
+        {},
+        subset=False,
+    )
+    assert diagnostics == () and len(sibling_cases[scope_key]) == 1
+
+    base = native_variable_key(first)
+    register = source_register_key(first)
+    assert base is not None and register is not None
+    tree, prepared, scope, base_naming = _enrichment_fixture(
+        tmp_path / "base",
+        (first, second),
+        _DESCRIPTION,
+        target=NativeNamingTarget(
+            kind="variable", provider="scb", source_key=base, register_key=register
+        ),
+    )
+    broad, diagnostics, _ = compile_enrichment(
+        tree,
+        prepared,
+        (scope,),
+        base_naming,
+        {scope_key: (converted.case,)},
+        {},
+        subset=False,
+    )
+    assert broad == {}
+    assert [item.code for item in diagnostics] == ["overbroad_curation_entry"]
 
 
 def test_compiled_alias_for_declared_column_has_checked_anchor(tmp_path: Path):
@@ -1802,7 +1940,7 @@ def test_compiled_alias_for_declared_column_has_checked_anchor(tmp_path: Path):
     )
     assert diagnostics == ()
     cases, diagnostics, _ = compile_enrichment(
-        tree, prepared, (scope,), naming, errata_cases, subset=False
+        tree, prepared, (scope,), naming, {}, errata_cases, subset=False
     )
     assert diagnostics == ()
     alias = cases[(scope.source, scope.register_key)][0]
