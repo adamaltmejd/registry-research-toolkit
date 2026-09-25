@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
+from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
 from reg_meta.errors import EXIT_USAGE
 from reg_meta_build.catalog_dependencies import CatalogDependencyError
 from reg_meta_build.cli import run
@@ -48,7 +49,7 @@ class CatalogFixture:
 def catalog(tmp_path: Path, request) -> CatalogFixture:
     mode = getattr(request, "param", False)
     second = mode is True
-    thin = mode == "thin"
+    thin = mode in {"thin", "thin_two"}
     source = tmp_path / "source"
     records = [_var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")]
     summaries = [
@@ -81,9 +82,26 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
             '[[register]]\nkey = "remote"\nname = "Remote"\n'
             'valid_from = "2020-01-01"\nvalid_to = "2020-12-31"\n'
             '[[register.variable]]\nname = "Amount"\ncolumn = "AMOUNT"\n'
-            'data_type = "int"\n',
+            'data_type = "int"\n'
+            + (
+                '[[register]]\nkey = "aktivitetsstod"\nname = "Aktivitetsstöd"\n'
+                'valid_from = "2020-01-01"\nvalid_to = "2020-12-31"\n'
+                '[[register.variable]]\nname = "Benefit"\ncolumn = "BENEFIT"\n'
+                'data_type = "int"\n'
+                if mode == "thin_two"
+                else ""
+            ),
             encoding="utf-8",
         )
+    if mode == "sos_whole":
+        from openpyxl import load_workbook
+
+        sos_dir = write_sos_input(source, registers=DEFAULT_REGISTERS[1:2])
+        workbook_path = next(sos_dir.glob("*.xlsx"))
+        workbook = load_workbook(workbook_path)
+        workbook["Generell information"]["C4"] = None
+        workbook.save(workbook_path)
+        workbook.close()
     bundle = write_input_bundle(tmp_path / "inputs", source)
     prepared = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(bundle, prepared)
@@ -129,6 +147,31 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
             f'native_id = "{variable_id}"\n',
             encoding="utf-8",
         )
+        if mode == "thin_two":
+            register_id = authored_naming_id(
+                "register", provider="fk", register_key="aktivitetsstod"
+            )
+            variant_id = authored_naming_id(
+                "register_variant",
+                provider="fk",
+                register_key="aktivitetsstod",
+                member_key="_default",
+            )
+            variable_id = authored_naming_id(
+                "variable",
+                provider="fk",
+                register_key="aktivitetsstod",
+                member_key="BENEFIT",
+            )
+            (thin_curation / "aktivitetsstod.toml").write_text(
+                '[register]\nprovider = "fk"\nslug = "aktivitetsstod"\n'
+                f'native_id = "{register_id}"\n'
+                '[[variant]]\nslug = "default"\n'
+                f'native_id = "{variant_id}"\n'
+                '[[variable]]\nslug = "benefit"\n'
+                f'native_id = "{variable_id}"\n',
+                encoding="utf-8",
+            )
     return CatalogFixture(prepared, commit, manifest.sha256, curation)
 
 
@@ -287,6 +330,85 @@ def test_subset_resolves_only_named_scope(
         assert conn.execute("SELECT COUNT(*) FROM register").fetchone() == (1,)
     with pytest.raises(ValueError, match="names no selected scope"):
         catalog.build(tmp_path / "bad.db", tmp_path / "bad-report", registers=("3",))
+
+
+@pytest.mark.parametrize("catalog", ["thin_two"], indirect=True)
+def test_thin_source_has_register_scopes_selected_by_name_or_source_id(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+
+    prepared = open_prepared_catalog_sources(
+        catalog.prepared, expected_sha256=catalog.digest, input_commit=catalog.commit
+    )
+    source = "Forsakringskassan/fk.toml"
+    coordinates = prepared.records.register_coordinates(source)
+    assert {register[-1] for register, _, _ in coordinates if register} == {
+        "remote",
+        "aktivitetsstod",
+    }
+    assert len(coordinates) == 2
+    for index, selector in enumerate(("aktivitetsstod", f"{source}:aktivitetsstod")):
+        output, report = tmp_path / f"thin-{index}.db", tmp_path / f"thin-{index}"
+        result = catalog.build(output, report, registers=(selector,), diagnostic=True)
+        assert result["status"] == "diagnostic_complete"
+        assert result["counts"]["scopes"] == 1
+        assert result["counts"]["physical_occurrences"] == 2
+        assert result["variables"] == 1
+    full = catalog.build(
+        tmp_path / "full.db", tmp_path / "full-report", diagnostic=True
+    )
+    assert full["status"] == "diagnostic_complete"
+    assert full["counts"]["scopes"] == 3
+    assert full["variables"] == 3
+
+
+@pytest.mark.parametrize("catalog", ["sos_whole"], indirect=True)
+def test_sos_workbook_without_register_coordinate_stays_whole_source(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+
+    prepared = open_prepared_catalog_sources(
+        catalog.prepared, expected_sha256=catalog.digest, input_commit=catalog.commit
+    )
+    source = next(
+        entry.revision.dataset
+        for entry in prepared.manifest.inputs
+        if entry.role == "sos_workbook" and entry.revision is not None
+    )
+    coordinates = prepared.records.register_coordinates(source)
+    assert coordinates and {register for register, _, _ in coordinates} == {None}
+    result = catalog.build(
+        tmp_path / "sos.db",
+        tmp_path / "sos-report",
+        registers=(source,),
+        diagnostic=True,
+    )
+    assert result["status"] == "diagnostic_complete"
+    assert result["counts"]["scopes"] == 1
+    assert result["counts"]["physical_occurrences"] == sum(
+        count for _, _, count in coordinates
+    )
+
+
+def test_source_cannot_mix_whole_and_register_scopes(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build.prepared_sources import PreparedSourceRecords
+
+    original = PreparedSourceRecords.register_coordinates
+
+    def mixed(self, source):
+        coordinates = original(self, source)
+        if source == "scb-registerinformation":
+            return (*coordinates, (None, coordinates[0][1], 1))
+        return coordinates
+
+    monkeypatch.setattr(PreparedSourceRecords, "register_coordinates", mixed)
+    with pytest.raises(ValueError, match="both whole-source and register scopes"):
+        catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
+    assert not (tmp_path / "bad.db").exists()
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)

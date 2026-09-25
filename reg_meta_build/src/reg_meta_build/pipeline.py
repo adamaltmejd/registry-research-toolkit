@@ -274,25 +274,23 @@ def build_catalog(
         input_commit=input_commit,
         expected_sha256=input_manifest_sha256,
     )
-    scope_keys = set()
-    for entry in prepared.manifest.inputs:
-        if entry.record_usage != "occurrence" or entry.revision is None:
-            continue
-        source = entry.revision.dataset
-        if entry.role == "scb_records":
-            scope_keys.update(
-                (source, register)
-                for register, _, _ in prepared.records.register_coordinates(source)
-            )
-        else:
-            scope_keys.add((source, None))
-    whole_sources = {source for source, register in scope_keys if register is None}
-    visit = _selected_scopes(scope_keys, registers) if registers else set(scope_keys)
     occurrence_sources = {
         entry.revision.dataset
         for entry in prepared.manifest.inputs
         if entry.record_usage == "occurrence" and entry.revision is not None
     }
+    scope_keys = set()
+    for source in sorted(occurrence_sources):
+        source_registers = {
+            register for register, _, _ in prepared.records.register_coordinates(source)
+        }
+        if None in source_registers and len(source_registers) > 1:
+            raise ValueError(
+                f"a source cannot select both whole-source and register scopes: {source}"
+            )
+        scope_keys.update((source, register) for register in source_registers)
+    whole_sources = {source for source, register in scope_keys if register is None}
+    visit = _selected_scopes(scope_keys, registers) if registers else set(scope_keys)
     if registers and not {source for source, _ in scope_keys} <= occurrence_sources:
         raise ValueError(
             "curation scopes name a source outside the prepared occurrence-source selection"
