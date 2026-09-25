@@ -93,9 +93,6 @@ panel_time_grain = "delivery"
 # variable, and JE GatuRest also carries row 12814 whose text matches
 # PGaturest's row 6139.
 
-[[variable]]
-native_id = "1.830.gaturest"
-
 # Registret över totalbefolkningen (RTB)
 
 [[variable]]

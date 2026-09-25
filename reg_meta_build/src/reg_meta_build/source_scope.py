@@ -37,7 +37,7 @@ from reg_meta_build.source_effects import (
 )
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_intervals import reconcile_source_fields
-from reg_meta_build.source_naming import check_naming_target
+from reg_meta_build.source_naming import check_naming_target, native_provider_keys
 from reg_meta_build.source_representations import resolve_representation_cases
 from reg_meta_build.source_siblings import SiblingResolution, resolve_sibling_pairs
 from reg_meta_build.source_value_bindings import (
@@ -133,6 +133,7 @@ def resolve_source_scope(
     naming: tuple[NamingDeclaration, ...],
     naming_ambiguities: tuple[NamingAmbiguity, ...] = (),
     provider_keys: Mapping[NativeKey, str | None],
+    derive_native_provider_keys: bool = False,
     value_sessions: tuple[ValueBindingSession, ...],
     support: SourceSupportBindings,
     classifications: Mapping[str, ResolvedClassification],
@@ -238,6 +239,11 @@ def resolve_source_scope(
             emit(issue)
         if issues:
             withheld_naming.add(target.source_key)
+    if derive_native_provider_keys:
+        provider_keys = {
+            **native_provider_keys(evidence.native_variable_anchors, names.values()),
+            **provider_keys,
+        }
     occurrence_cases = tuple(
         c for c in cases if c.decision.kind == "correct_occurrences"
     )

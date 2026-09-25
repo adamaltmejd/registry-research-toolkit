@@ -3,6 +3,10 @@ provider = "fk"
 slug = "tandvardsstodet"
 native_id = "7664376130118991107"
 
+[[variable]]
+native_id = "7664376130118991107.ARO_SEKVNR"
+slug = "aro-sekvnr"
+
 [[variant]]
 native_id = "7664376130118991107.5077766157907221193"
 slug = "atgarder"

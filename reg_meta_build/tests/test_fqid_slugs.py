@@ -950,6 +950,23 @@ class TestSeedSlugs:
         entries = _load_register_auto_file(path, "scb", "1")
         assert {entry.source_id: entry.slug for entry in entries}["1.44"] == "kon"
 
+    def test_authored_pin_removes_matching_generated_pin_on_regeneration(
+        self, tmp_path: Path
+    ):
+        conn = build_slugged_db()
+        out = tmp_path / "out"
+        seed_all(conn, out)
+        authored = out / "registers" / "scb" / "lisa.toml"
+        authored.write_text(
+            '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
+            '[[variable]]\nnative_id = "1.44"\nslug = "kon"\n'
+        )
+        seed_all(conn, out)
+        body = (out / "registers" / "scb" / "lisa.auto.toml").read_text()
+        assert 'native_id = "1.44"' not in body
+        assert "never recomputed. Curator overrides" in body
+        assert "\n\n\n" not in body
+
     def test_omits_register_version_from_seed(self):
         # A2.6: register_version is not seeded at all (version left the FQID
         # grammar; no slug column). The former version-seed tests (unperiodized

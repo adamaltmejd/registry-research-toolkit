@@ -8,10 +8,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+import tomllib
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pydantic import TypeAdapter, ValidationError
 from reg_meta.fqid import FqidKind, parse as parse_fqid
@@ -20,8 +22,9 @@ from ._curation import SentinelCode
 from ._resolved_common import covers_window
 from .concept_groups import CodeLabelPair
 from .convert_errata import capture_expectations
+from .fqid_slugs import EntityKind, _load_register_auto_file, _validate_entry
 from .normalization import normalize_token
-from .resolved_catalog import ResolvedClassificationSuccession
+from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
 from .resolved_metadata import (
     ResolvedClassificationDerivation,
     ResolvedClassificationGroup,
@@ -41,7 +44,11 @@ from .resolved_metadata import (
     ResolvedVariantSuccession,
 )
 from .source_coding_choices import coding_expectations, compile_coding_selection
-from .source_coordinates import column_identity
+from .source_coordinates import (
+    column_identity,
+    native_parent_key,
+    source_register_key,
+)
 from .source_curation import (
     AcknowledgeDecision,
     CodingDecision,
@@ -53,6 +60,18 @@ from .source_curation import (
 )
 from .source_effects import record_ref
 from .source_intervals import coding_scope_bounds
+from .source_naming import (
+    AcceptedNamingEntry,
+    LegacyNamingBinding,
+    NamingFreezeSetting,
+    NamingSelection,
+    NativeNamingTarget,
+    authored_naming_id,
+    convert_naming,
+    native_provider_keys,
+    native_scb_naming_id,
+)
+from .source_records import SourceRevision, canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -95,8 +114,9 @@ FAMILIES: dict[str, Family] = {
             "accepted-sos-identity:",
             "existing-source-use:",
         ),
-        naming_shapes=("accepted-partition",),
+        naming_shapes=("accepted-partition", "accepted-shape", "accepted-name"),
         unapplied_datasets=("fqid_slugs/",),
+        scope_fields=("naming_ambiguities",),
     ),
     "errata": Family(
         case_prefixes=(
@@ -139,8 +159,8 @@ FAMILIES: dict[str, Family] = {
         ),
     ),
     "naming": Family(
-        naming_shapes=("accepted-shape", "accepted-name", "native"),
-        scope_fields=("naming_ambiguities", "provider_keys", "variants"),
+        naming_shapes=("native",),
+        scope_fields=("provider_keys", "variants"),
     ),
     "thin_provider": Family(
         case_prefixes=("accepted-authored:",), naming_shapes=("thin-provider",)
@@ -158,6 +178,7 @@ COMPILED = frozenset(
         "acknowledge",
         "classification_bindings",
         "coding",
+        "naming",
     }
 )
 
@@ -168,6 +189,15 @@ class CompiledCuration:
     cases: dict[tuple[str, tuple[str | int, ...] | None], tuple[CurationCase, ...]]
     report: dict[str, dict[str, list[str]]]
     diagnostics: tuple[ResolutionDiagnostic, ...] = ()
+    naming: dict[tuple[str, tuple[str | int, ...] | None], tuple[Any, ...]] | None = (
+        None
+    )
+    variants: dict[tuple[str, tuple[str | int, ...] | None], tuple[Any, ...]] | None = (
+        None
+    )
+    provider_keys: (
+        dict[tuple[str, tuple[str | int, ...] | None], tuple[Any, ...]] | None
+    ) = None
 
 
 def tree_sha256(root: Path) -> str:
@@ -244,15 +274,23 @@ def _naming_family(target: Any) -> str:
         "declared-column": "errata",
         "accepted-matrix": "matrix",
         "period-family": "representation",
-        "accepted-shape": "naming",
-        "accepted-name": "naming",
+        "accepted-shape": "identity",
+        "accepted-name": "identity",
+        "thin-provider": "thin_provider",
     }
     for part in source_key:
         if part in markers:
             return markers[part]
+    if target.kind in {"register", "register_variant"} or (
+        target.kind == "variable"
+        and len(source_key) >= 3
+        and source_key[-3] == "variable"
+        and source_key[-2] in {"native-int", "native-str"}
+    ):
+        return "naming"
     if target.provider not in {"scb", "sos"}:
         return "thin_provider"
-    return "naming"
+    raise ValueError(f"stored naming has no family: {source_key!r}")
 
 
 def _gap_family(gap: Any) -> str:
@@ -312,8 +350,9 @@ def merge_scope(
     merged = scope.model_copy(
         update={
             "cases": (*cases, *compiled.cases.get(key, ())),
-            "naming": naming,
+            "naming": (*naming, *(compiled.naming or {}).get(key, ())),
             "provider_keys": tuple(provider_keys),
+            "variants": (compiled.variants or {}).get(key, ()),
             "unapplied_curation": gaps,
         }
     )
@@ -580,6 +619,489 @@ def _scope_registers(
         if item.target.kind == "register"
         and item.naming.provider is not None
         and item.naming.slug is not None
+    )
+
+
+def _naming_source_id(
+    kind: Literal["register", "register_variant", "variable"],
+    key: tuple[str | int, ...],
+    *,
+    member: str | None = None,
+) -> str:
+    source, provider = key[:2]
+    register = (
+        key
+        if kind == "register"
+        else key[: key.index("variable" if kind == "variable" else "variant")]
+    )
+    canonical_scb = (
+        str(source).startswith("scb_canonical/") or source == "scb_canonical"
+    )
+    if provider == "scb" and not canonical_scb and register[-2] == "native-int":
+        register_id = register[-1]
+        member_id = None if kind == "register" else key[-1]
+        if not isinstance(register_id, int) or (
+            member_id is not None and not isinstance(member_id, int)
+        ):
+            raise ValueError(f"SCB native naming requires integer IDs: {key!r}")
+        return native_scb_naming_id(kind, register_id, member_id)
+    if provider == "sos":
+        matches = re.findall(r"\(([^()]+)\)", Path(str(source)).name)
+        if not matches:
+            raise ValueError(
+                f"SOS workbook lacks parenthesized register code: {source}"
+            )
+        register_id = matches[-1].lower()
+    else:
+        register_id = str(register[-1])
+    return authored_naming_id(
+        kind,
+        provider=str(provider),
+        register_key=register_id,
+        member_key=member
+        if member is not None
+        else (None if kind == "register" else str(key[-1])),
+        canonical_scb=provider == "scb",
+    )
+
+
+def _curation_naming_revision(path: Path) -> SourceRevision:
+    payload = path.read_bytes()
+    digest = hashlib.sha256(payload).hexdigest()
+    return SourceRevision.create(
+        dataset="curation/naming",
+        publisher="maintainer",
+        purpose="tracked naming",
+        upstream_revision=digest,
+        artifact_path=f"curation/registers/{path.parent.name}/{path.name}",
+        artifact_size=len(payload),
+        artifact_sha256=digest,
+    )
+
+
+def _tracked_naming_entry(
+    revision: SourceRevision,
+    kind: EntityKind,
+    native_id: str,
+    raw: dict[str, Any],
+    provider: str,
+    origin: Literal["authored", "generated"],
+) -> AcceptedNamingEntry:
+    return AcceptedNamingEntry(
+        revision=revision,
+        origin=origin,
+        entry=_validate_entry(kind, native_id, raw, provider=provider),
+        supplied_fields=tuple(sorted(raw)),
+        content_sha256=canonical_sha256(raw),
+    )
+
+
+def _register_naming_entries(tree: CurationTree, register: RegisterCuration):
+    path = tree.root / register.source_file.removeprefix("curation/")
+    info = register.register_info
+    revision = _curation_naming_revision(path)
+    entries = [
+        (
+            _tracked_naming_entry(
+                revision,
+                "register",
+                str(info.native_id),
+                {"slug": info.slug},
+                info.provider,
+                "authored",
+            ),
+            "[register]",
+        )
+    ]
+    for table, rows, kind in (
+        ("variant", register.variant, "register_variant"),
+        ("variable", register.variable, "variable"),
+    ):
+        for index, row in enumerate(rows, 1):
+            raw = row.model_dump(mode="json", exclude={"native_id"}, exclude_unset=True)
+            entries.append(
+                (
+                    _tracked_naming_entry(
+                        revision,
+                        cast("EntityKind", kind),
+                        row.native_id,
+                        raw,
+                        info.provider,
+                        "authored",
+                    ),
+                    f"[[{table}]] entry {index}",
+                )
+            )
+    auto = path.with_name(path.stem + ".auto.toml")
+    if auto.is_file():
+        auto_revision = _curation_naming_revision(auto)
+        raw_rows = tomllib.loads(auto.read_text(encoding="utf-8")).get("variable", [])
+        for index, entry in enumerate(
+            _load_register_auto_file(auto, info.provider, str(info.native_id)), 1
+        ):
+            raw = {
+                key: value
+                for key, value in raw_rows[index - 1].items()
+                if key != "native_id"
+            }
+            entries.append(
+                (
+                    _tracked_naming_entry(
+                        auto_revision,
+                        "variable",
+                        entry.source_id,
+                        raw,
+                        info.provider,
+                        "generated",
+                    ),
+                    f"[[variable]] entry {index}",
+                )
+            )
+    return tuple(entries)
+
+
+def compile_native_naming(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[ScopeDeclarations, ...],
+    *,
+    subset: bool,
+) -> tuple[
+    dict[Any, tuple[Any, ...]],
+    dict[Any, tuple[Any, ...]],
+    dict[Any, tuple[Any, ...]],
+    tuple[ResolutionDiagnostic, ...],
+    dict[str, dict[str, list[str]]],
+]:
+    """Bind tracked register slugs to exact native families and parent facts."""
+    scope_map = {(scope.source, scope.register_key): scope for scope in scopes}
+    bindings: dict[Any, list[LegacyNamingBinding]] = {key: [] for key in scope_map}
+    for source in sorted({scope.source for scope in scopes}):
+        for family_key, _members in prepared.records.iter_native_families(source):
+            scope_key = (source, family_key[:5])
+            if scope_key not in scope_map:
+                scope_key = (source, None)
+            if scope_key not in scope_map or family_key[-2] not in {
+                "native-int",
+                "native-str",
+            }:
+                continue
+            target = NativeNamingTarget(
+                kind="variable",
+                provider=str(family_key[1]),
+                source_key=family_key,
+                register_key=family_key[:5],
+            )
+            bindings[scope_key].append(
+                LegacyNamingBinding(
+                    kind="variable",
+                    provider=target.provider,
+                    source_id=_naming_source_id("variable", family_key),
+                    target=target,
+                )
+            )
+        wanted = {scope.register_key for scope in scopes if scope.source == source}
+        slices = (
+            ((None, tuple(prepared.records.iter_records(source=source))),)
+            if None in wanted
+            else prepared.records.iter_register_slices(source, wanted)
+        )
+        for register_key, records in slices:
+            scope_key = source, register_key
+            if scope_key not in scope_map:
+                continue
+            parents: dict[tuple[str, tuple[str | int, ...]], LegacyNamingBinding] = {}
+            explicit_variants: set[tuple[str | int, ...]] = set()
+            defaults: dict[
+                tuple[str | int, ...], tuple[str, tuple[str | int, ...]]
+            ] = {}
+            for record in records:
+                for parent in record.parent_facts:
+                    if parent.kind not in {"register", "variant"}:
+                        continue
+                    native_key = native_parent_key(
+                        record.source, record.subject.provider, parent
+                    )
+                    if native_key is None:
+                        continue
+                    kind = (
+                        "register" if parent.kind == "register" else "register_variant"
+                    )
+                    if kind == "register_variant":
+                        explicit_variants.add(native_key[:5])
+                    target = NativeNamingTarget(
+                        kind=kind,
+                        provider=record.subject.provider,
+                        source_key=native_key,
+                        register_key=None if kind == "register" else native_key[:5],
+                    )
+                    member = None
+                    if kind == "register_variant" and record.subject.provider != "scb":
+                        coordinate = parent.variant
+                        member = (
+                            coordinate.name
+                            if coordinate is not None
+                            and record.subject.provider == "sos"
+                            else str(coordinate.native_id)
+                            if coordinate is not None
+                            and coordinate.native_id is not None
+                            else None
+                        )
+                        if not member:
+                            raise ValueError(
+                                f"variant parent lacks its native naming member: {native_key!r}"
+                            )
+                    parents[kind, native_key] = LegacyNamingBinding(
+                        kind=kind,
+                        provider=target.provider,
+                        source_id=_naming_source_id(kind, native_key, member=member),
+                        target=target,
+                    )
+                native_register = source_register_key(record)
+                if (
+                    native_register is not None
+                    and record.subject.variant.status == "not_applicable"
+                ):
+                    defaults[native_register] = (
+                        record.subject.provider,
+                        native_register,
+                    )
+            for native_register, (provider, _) in defaults.items():
+                if native_register in explicit_variants or (
+                    provider == "scb"
+                    and not (
+                        source == "scb_canonical" or source.startswith("scb_canonical/")
+                    )
+                ):
+                    continue
+                default_key = (*native_register, "variant", "not-applicable")
+                target = NativeNamingTarget(
+                    kind="register_variant",
+                    provider=provider,
+                    source_key=default_key,
+                    register_key=native_register,
+                )
+                parents["register_variant", default_key] = LegacyNamingBinding(
+                    kind="register_variant",
+                    provider=provider,
+                    source_id=_naming_source_id(
+                        "register_variant", default_key, member="_default"
+                    ),
+                    target=target,
+                )
+            bindings[scope_key].extend(parents.values())
+    compiled_names = {}
+    compiled_variants = {}
+    compiled_provider_keys = {}
+    diagnostics = []
+    report: dict[str, dict[str, list[str]]] = {}
+    register_scopes: dict[str, list[tuple[str, tuple[str | int, ...] | None]]] = {}
+    for scope_key, scope in scope_map.items():
+        for name, _ in _scope_registers(scope):
+            register_scopes.setdefault(name, []).append(scope_key)
+    for register in sorted(tree.registers, key=lambda item: item.source_file):
+        name = f"{register.register_info.provider}/{register.register_info.slug}"
+        matches = register_scopes.get(name, ())
+        if len(matches) == 1:
+            continue
+        status = (
+            "over_broad"
+            if len(matches) > 1
+            else "not_evaluated_in_subset"
+            if subset
+            else "stale"
+        )
+        statuses = report.setdefault(
+            name,
+            {
+                key: []
+                for key in (
+                    "entries_read",
+                    "entries_matched",
+                    "stale",
+                    "over_broad",
+                    "not_evaluated",
+                    "not_evaluated_in_subset",
+                )
+            },
+        )
+        for entry, where in _register_naming_entries(tree, register):
+            if (
+                entry.entry.kind == "variable"
+                and len(entry.entry.source_id.split(".")) == 3
+            ):
+                continue
+            ref = f"{entry.revision.artifact_path} {where}"
+            statuses["entries_read"].append(ref)
+            statuses[status].append(ref)
+            if status != "not_evaluated_in_subset":
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="overbroad_curation_entry"
+                        if matches
+                        else "stale_curation_entry",
+                        severity="error",
+                        case_id=ref,
+                        subject=entry.entry.source_id,
+                        detail=f"{ref} matches {len(matches)} register scopes; expected one",
+                        withheld_output=(ref,),
+                    )
+                )
+    for scope_key, scope in sorted(scope_map.items(), key=lambda item: repr(item[0])):
+        selected = {name for name, _ in _scope_registers(scope)}
+        entries = []
+        locations = {}
+        entry_owners = {}
+        for register in sorted(tree.registers, key=lambda item: item.source_file):
+            name = f"{register.register_info.provider}/{register.register_info.slug}"
+            if name not in selected or len(register_scopes[name]) != 1:
+                continue
+            statuses = report.setdefault(
+                name,
+                {
+                    key: []
+                    for key in (
+                        "entries_read",
+                        "entries_matched",
+                        "stale",
+                        "over_broad",
+                        "not_evaluated",
+                        "not_evaluated_in_subset",
+                    )
+                },
+            )
+            for entry, where in _register_naming_entries(tree, register):
+                if (
+                    entry.entry.kind == "variable"
+                    and len(entry.entry.source_id.split(".")) == 3
+                ):
+                    continue  # Split naming is owned by identity until child 08.
+                ref = f"{entry.revision.artifact_path} {where}"
+                statuses["entries_read"].append(ref)
+                entries.append(entry)
+                locations[entry.entry_id] = ref
+                entry_owners[entry.entry_id] = name
+        bound = {(b.kind, b.provider, b.source_id) for b in bindings[scope_key]}
+        supplied = {
+            (entry.entry.kind, entry.entry.provider, entry.entry.source_id)
+            for entry in entries
+        }
+        unbound = supplied - bound
+        uncompiled = set()
+        for item in scope.naming:
+            token = item.naming.kind, item.naming.provider, item.naming.source_id
+            if token in unbound and _naming_family(item.target) not in COMPILED:
+                uncompiled.add(token)
+        for binding in bindings[scope_key]:
+            if binding.target.source_key[-2:] != (
+                "variant",
+                "not-applicable",
+            ):
+                continue
+            token = binding.kind, binding.provider, binding.source_id
+            if token not in supplied:
+                ref = f"{binding.provider}/{binding.source_id} default variant"
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        case_id=ref,
+                        subject=binding.source_id,
+                        detail=f"{ref} has no tracked default slug entry",
+                        withheld_output=(ref,),
+                    )
+                )
+        matched = []
+        for entry in entries:
+            ref = locations[entry.entry_id]
+            token = entry.entry.kind, entry.entry.provider, entry.entry.source_id
+            if token in bound:
+                matched.append(entry)
+                report[entry_owners[entry.entry_id]]["entries_matched"].append(ref)
+            elif token in uncompiled:
+                report[entry_owners[entry.entry_id]]["not_evaluated"].append(ref)
+            else:
+                name = entry_owners[entry.entry_id]
+                report[name]["stale"].append(ref)
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        case_id=ref,
+                        subject=entry.entry.source_id,
+                        detail=f"{ref} binds no native family or parent",
+                        withheld_output=(ref,),
+                    )
+                )
+        conversion = convert_naming(
+            NamingSelection(
+                files=(),
+                entries=tuple(matched),
+                freeze=tuple(
+                    NamingFreezeSetting(zone=provider, state="curating")
+                    for provider in sorted(
+                        {str(entry.entry.provider) for entry in matched}
+                    )
+                ),
+            ),
+            bindings[scope_key],
+        )
+        diagnostics.extend(conversion.diagnostics)
+        compiled_names[scope_key] = tuple(
+            sorted(
+                conversion.declarations,
+                key=lambda item: (item.target.kind, repr(item.target.source_key)),
+            )
+        )
+        compiled_provider_keys[scope_key] = tuple(
+            sorted(
+                native_provider_keys(
+                    (
+                        binding.target.source_key
+                        for binding in bindings[scope_key]
+                        if binding.kind == "variable"
+                    ),
+                    conversion.declarations,
+                ).items(),
+                key=lambda item: repr(item[0]),
+            )
+        )
+        variants = []
+        for declaration in conversion.declarations:
+            target = declaration.target
+            if target.kind != "register_variant" or target.source_key[-2:] != (
+                "variant",
+                "not-applicable",
+            ):
+                continue
+            slug = declaration.naming.slug
+            if slug is None:
+                continue
+            variants.append(
+                (
+                    target.source_key,
+                    ResolvedVariant.model_validate(
+                        {
+                            "slug": slug,
+                            "name": "_default",
+                            "description": None,
+                            "display_group": declaration.naming.display_group,
+                            "panel_entity_key": declaration.naming.panel_entity_key,
+                            "panel_time_key": declaration.naming.panel_time_key,
+                            "panel_time_grain": declaration.naming.panel_time_grain,
+                        }
+                    ),
+                )
+            )
+        compiled_variants[scope_key] = tuple(
+            sorted(variants, key=lambda item: repr(item[0]))
+        )
+    return (
+        compiled_names,
+        compiled_variants,
+        compiled_provider_keys,
+        tuple(diagnostics),
+        report,
     )
 
 
@@ -1011,6 +1533,13 @@ def compile_curation(
             )
             for entry_id in sorted(unmatched)
         )
+    naming, variants, provider_keys, naming_diagnostics, naming_report = (
+        compile_native_naming(tree, prepared, scopes, subset=subset)
+    )
+    for register, statuses in naming_report.items():
+        current = report.setdefault(register, {key: [] for key in statuses})
+        for key, values in statuses.items():
+            current.setdefault(key, []).extend(values)
     return CompiledCuration(
         fields={
             "classifications": books,
@@ -1026,7 +1555,10 @@ def compile_curation(
             for key, value in cases.items()
         },
         report=report,
-        diagnostics=tuple(diagnostics),
+        diagnostics=(*diagnostics, *naming_diagnostics),
+        naming=naming,
+        variants=variants,
+        provider_keys=provider_keys,
     )
 
 

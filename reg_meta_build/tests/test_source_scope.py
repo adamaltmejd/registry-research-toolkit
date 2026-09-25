@@ -181,6 +181,7 @@ def resolve(
     naming=None,
     naming_ambiguities=(),
     provider_keys=None,
+    derive_native_provider_keys=False,
     on_diagnostic=None,
     value_sessions=(),
     diagnostic=False,
@@ -204,6 +205,7 @@ def resolve(
         }
         if provider_keys is None
         else provider_keys,
+        derive_native_provider_keys=derive_native_provider_keys,
         value_sessions=value_sessions,
         support=support,
         classifications=classifications or {},
@@ -999,6 +1001,79 @@ def test_missing_conversion_is_fatal():
         resolve((item,), provider_keys={})
     with pytest.raises(ValueError, match="missing checked parent naming"):
         resolve((item,), naming=())
+
+
+def test_compiled_native_provider_key_comes_from_final_naming():
+    item = record()
+    key = native_variable_key(item)
+    named = resolve((item,), provider_keys={}, derive_native_provider_keys=True)
+    assert named.variables[key] is not None
+    assert named.variables[key].provider_key == "5"
+    unnamed = resolve(
+        (item,),
+        naming=tuple(name for name in names((item,)) if name.target.kind != "variable"),
+        provider_keys={},
+        derive_native_provider_keys=True,
+    )
+    assert unnamed.variables[key] is None
+    assert any(
+        issue.code == "unresolved_catalog_identity" for issue in unnamed.diagnostics
+    )
+
+
+def test_stored_period_family_name_keeps_its_provider_key_beside_native_names():
+    item = record()
+    native_key = native_variable_key(item)
+    period_key = ("curation", "period-family", "scb", 1, "value")
+    period_name = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=period_key,
+            register_key=source_register_key(item),
+            identity_revision=REVISION,
+        ),
+        naming=SlugEntry(
+            kind="variable",
+            provider="scb",
+            source_id="accepted-period-family:5",
+            slug="period-value",
+        ),
+        contributors=(),
+    )
+    result = resolve(
+        (item,),
+        naming=(*names((item,)), period_name),
+        provider_keys={period_key: "period-value"},
+        derive_native_provider_keys=True,
+    )
+    assert result.variables[native_key] is not None
+    assert result.variables[native_key].provider_key == "5"
+
+
+def test_native_provider_key_rejects_malformed_source_id_with_target():
+    item = record()
+    native_key = native_variable_key(item)
+    naming = tuple(
+        declaration.model_copy(
+            update={
+                "naming": replace(
+                    declaration.naming, source_id="accepted-period-family:5"
+                )
+            }
+        )
+        if declaration.target.source_key == native_key
+        else declaration
+        for declaration in names((item,))
+    )
+    with pytest.raises(ValueError, match="requires an R.V source_id") as error:
+        resolve(
+            (item,),
+            naming=naming,
+            provider_keys={},
+            derive_native_provider_keys=True,
+        )
+    assert repr(native_key) in str(error.value)
 
 
 def test_streamed_diagnostics_preserve_strict_severity_and_source_refs():

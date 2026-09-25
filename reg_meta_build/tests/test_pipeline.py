@@ -569,6 +569,65 @@ def selection(tmp_path, request, monkeypatch):
 
     curation = tmp_path / "curation"
     (curation / "classifications").mkdir(parents=True, exist_ok=True)
+    from reg_meta_build.curation_compile import _naming_source_id
+
+    parent_members = {}
+    for source in {item.source for item in (scb_scope,)} | {
+        ScopeDeclarations.model_validate_json(
+            gzip.decompress((directory / item.path).read_bytes())
+        ).source
+        for item in scopes
+    }:
+        for record in prepared.records.iter_records(source=source):
+            for parent in record.parent_facts:
+                if parent.kind == "variant":
+                    key = native_parent_key(
+                        record.source, record.subject.provider, parent
+                    )
+                    assert parent.variant is not None
+                    parent_members[key] = parent.variant.name
+    for item in scopes:
+        declaration_scope = ScopeDeclarations.model_validate_json(
+            gzip.decompress((directory / item.path).read_bytes())
+        )
+        for register in (
+            name for name in declaration_scope.naming if name.target.kind == "register"
+        ):
+            target = register.target
+            slug = register.naming.slug
+            assert slug is not None and target.provider is not None
+            register_path = curation / "registers" / target.provider / f"{slug}.toml"
+            register_path.parent.mkdir(parents=True, exist_ok=True)
+            lines = [
+                "[register]",
+                f"provider = {json.dumps(target.provider)}",
+                f"slug = {json.dumps(slug)}",
+                f"native_id = {json.dumps(_naming_source_id('register', target.source_key))}",
+            ]
+            for name in declaration_scope.naming:
+                if name.target.register_key != target.source_key:
+                    continue
+                kind = name.target.kind
+                if kind not in {"register_variant", "variable"}:
+                    continue
+                member = (
+                    parent_members.get(name.target.source_key)
+                    if kind == "register_variant"
+                    else None
+                )
+                source_id = _naming_source_id(
+                    kind, name.target.source_key, member=member
+                )
+                lines.extend(
+                    (
+                        "",
+                        "[[variant]]" if kind == "register_variant" else "[[variable]]",
+                        f"native_id = {json.dumps(source_id)}",
+                    )
+                )
+                if name.naming.slug is not None:
+                    lines.append(f"slug = {json.dumps(name.naming.slug)}")
+            register_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     if register_scoped:
         (curation / "relations.toml").write_text(
             '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
@@ -589,6 +648,12 @@ def selection(tmp_path, request, monkeypatch):
             fields={},
             cases=compile_curation(tree, prepared, scopes, subset=subset).cases,
             report={},
+            naming={
+                (scope.source, scope.register_key): scope.naming for scope in scopes
+            },
+            variants={
+                (scope.source, scope.register_key): scope.variants for scope in scopes
+            },
         ),
     )
     return path
@@ -1193,10 +1258,8 @@ def test_tracked_uncoded_window_changes_build_and_stale_entry_is_reported(
         issue["code"] == "missing_coding_period" for issue in _issues(baseline_report)
     )
 
-    register_dir = tmp_path / "curation" / "registers" / "scb"
-    register_dir.mkdir(parents=True)
-    register_file = register_dir / "sample.toml"
-    header = '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+    register_file = tmp_path / "curation" / "registers" / "scb" / "sample.toml"
+    header = register_file.read_text(encoding="utf-8")
     entry = (
         '\n[[coding.uncoded]]\nvariable = "1.101"\nvariant = "1.10"\n'
         'column = "VALUE"\nperiods = [["2021-01-01", "2021-12-31"]]\n'
