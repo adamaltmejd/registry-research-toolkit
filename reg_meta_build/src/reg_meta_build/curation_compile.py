@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -142,6 +141,7 @@ COMPILED = frozenset(
         "identifier_sources",
         "event_sources",
         "acknowledge",
+        "classification_bindings",
     }
 )
 
@@ -772,7 +772,7 @@ def compile_curation(
                         ),
                     )
                 )
-    variable_matches: Counter[str] = Counter()
+    variable_families: dict[str, set[tuple[str, tuple[str | int, ...]]]] = {}
     for scope in scopes:
         registers = {
             native_key: register for register, native_key in _scope_registers(scope)
@@ -783,8 +783,9 @@ def compile_curation(
                 and name.naming.slug is not None
                 and (register := registers.get(name.target.register_key)) is not None
             ):
-                variable_matches[f"{register}/{name.naming.slug}"] += 1
-    selected_providers = {register.split("/", 1)[0] for register in selected}
+                variable_families.setdefault(
+                    f"{register}/{name.naming.slug}", set()
+                ).add((scope.source, name.target.source_key))
     classification_report = {
         key: []
         for key in (
@@ -793,6 +794,7 @@ def compile_curation(
             "stale",
             "over_broad",
             "not_evaluated_in_subset",
+            "duplicate_overrides",
         )
     }
     for entry in tree.classifications:
@@ -802,13 +804,6 @@ def compile_curation(
         for index, _ in enumerate(entry.binding.value_set_labels, 1):
             ref = f"{base}#/binding/value_set_labels/{index}"
             classification_report["entries_read"].append(ref)
-            # The binding family is still stored. Its source labels can only be
-            # known to lie outside a subset when their provider is absent.
-            if (
-                subset
-                and (entry.binding.label_source or "scb") not in selected_providers
-            ):
-                classification_report["not_evaluated_in_subset"].append(ref)
         for index, bound in enumerate(entry.binding.variable, 1):
             ref = f"{base}#/binding/variable/{index}"
             classification_report["entries_read"].append(ref)
@@ -818,26 +813,16 @@ def compile_curation(
                     continue
                 status = "stale"
             else:
-                matches = variable_matches[bound.variable]
-                status = (
-                    "entries_matched"
-                    if matches == 1
-                    else "over_broad"
-                    if matches > 1
-                    else "stale"
-                )
+                matches = len(variable_families.get(bound.variable, ()))
+                status = "entries_matched" if matches == 1 else "stale"
             classification_report[status].append(ref)
             if status != "entries_matched":
                 diagnostics.append(
                     ResolutionDiagnostic(
-                        code=(
-                            "overbroad_curation_entry"
-                            if status == "over_broad"
-                            else "stale_curation_entry"
-                        ),
+                        code="stale_curation_entry",
                         severity="error",
                         subject=bound.variable,
-                        detail=f"{ref} matches {variable_matches[bound.variable]} selected variable declarations",
+                        detail=f"{ref} matches {len(variable_families.get(bound.variable, ()))} selected native families; expected exactly one",
                         withheld_output=(ref,),
                     )
                 )
@@ -872,3 +857,42 @@ def compile_curation(
         report=report,
         diagnostics=tuple(diagnostics),
     )
+
+
+def finalize_classification_bindings(
+    compiled: CompiledCuration,
+    tree: CurationTree,
+    *,
+    matched_labels: set[str],
+    duplicate_overrides: set[str],
+    subset: bool,
+) -> tuple[ResolutionDiagnostic, ...]:
+    """Report descriptor matches after all selected scopes have been resolved."""
+    if not tree.classifications or not compiled.report:
+        return ()
+    statuses = compiled.report["_classifications"]
+    diagnostics = []
+    for entry in tree.classifications:
+        base = f"classifications/{entry.classification.short_name}.toml"
+        for index, label in enumerate(entry.binding.value_set_labels, 1):
+            ref = f"{base}#/binding/value_set_labels/{index}"
+            status = (
+                "entries_matched"
+                if label in matched_labels
+                else "not_evaluated_in_subset"
+                if subset
+                else "stale"
+            )
+            statuses[status].append(ref)
+            if status == "stale":
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        subject=ref,
+                        detail=f"{ref} label {label!r} matches no source descriptor",
+                        withheld_output=(ref,),
+                    )
+                )
+    statuses["duplicate_overrides"] = sorted(duplicate_overrides)
+    return tuple(diagnostics)

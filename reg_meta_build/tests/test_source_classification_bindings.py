@@ -15,7 +15,6 @@ from reg_meta_build.resolved_catalog import (
 )
 from reg_meta_build.source_classification_bindings import (
     apply_classification_cases,
-    classification_content_sha256,
 )
 from reg_meta_build.source_coding import (
     CodeListClaim,
@@ -118,7 +117,7 @@ def _setup(*, code="01", inline=True, sentinels=()):
             valid_to="2020-12-31",
             expected_codings=coding_expectations(claims, "2020-01-01", "2020-12-31"),
             classification="fixture",
-            expected_classification=classification_content_sha256(classification),
+            expected_classification="0" * 64,
             binding_scope="declared",
             reason="Existing accepted classification declaration",
             provenance="accepted fixture",
@@ -181,31 +180,20 @@ def test_checked_classification_forms_and_writes_without_copying_canonical_label
         _apply(setup, coding=result.coding)
 
 
-def test_original_coding_or_canonical_book_change_invalidates_binding():
+def test_codebook_change_is_checked_against_current_delivery():
     setup = _setup()
     changed = _setup(code="02")[2]
-    assert (
-        _apply(setup, coding=changed).diagnostics[0].code
-        == "classification_evidence_changed"
-    )
+    assert _apply(setup, coding=changed).diagnostics == ()
     book = setup[3]["fixture"]
     reordered = book.model_copy(update={"codes": tuple(reversed(book.codes))})
-    assert classification_content_sha256(reordered) == classification_content_sha256(
-        book
-    )
     assert _apply(setup, classifications={"fixture": reordered}).diagnostics == ()
     changed_book = book.model_copy(update={"name": "Changed definition"})
     result = _apply(setup, classifications={"fixture": changed_book})
-    assert result.coding == setup[2]
-    assert result.diagnostics[0].code == "classification_evidence_changed"
+    assert result.diagnostics == ()
+    assert next(iter(result.coding.values())).segments[0].classification == "fixture"
 
 
-def test_book_losing_the_observed_code_refuses_the_old_acceptance():
-    # Y-170 shape: a decision accepted while the selected book contained the
-    # observed code must not replay once the book is corrected to exclude it.
-    # The stale case is refused outright (no severed-conformance substitute —
-    # the declaration was never re-reviewed), the original coding is untouched,
-    # and the formed state carries no classification.
+def test_book_losing_the_observed_code_severs_current_binding():
     setup = _setup(code="02")
     assert _apply(setup).diagnostics == ()
     book = setup[3]["fixture"]
@@ -213,11 +201,10 @@ def test_book_losing_the_observed_code_refuses_the_old_acceptance():
         update={"codes": tuple(c for c in book.codes if c.code != "02")}
     )
     result = _apply(setup, classifications={"fixture": shrunk})
-    assert result.coding == setup[2]
-    assert result.diagnostics[0].code == "classification_evidence_changed"
+    assert result.diagnostics[0].code == "nonconforming_classification_codes"
     state = _form(setup, result).states[0]
     assert state.classification is None
-    assert state.conformance is None
+    assert state.conformance is not None and state.conformance.status == "severed"
     assert state.value_set is not None and state.value_set.members == (
         ("02", "Source label"),
     )
@@ -234,7 +221,7 @@ def test_conflicting_bindings_withhold_only_overlap_and_preserve_inline_coding()
             "decision": case.decision.model_copy(
                 update={
                     "classification": "alternate",
-                    "expected_classification": classification_content_sha256(alternate),
+                    "expected_classification": "0" * 64,
                     "valid_from": "2020-07-01",
                     "expected_codings": coding_expectations(
                         setup[2][case.decision.column_key].claims,
@@ -321,18 +308,12 @@ def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
     )
 
 
-def test_naming_a_sentinel_does_not_stale_the_accepted_decision():
-    # The sentinel list is conformance curation, not codebook content: naming a
-    # sentinel leaves the pinned hash unchanged, so an already-accepted
-    # decision still applies without re-review.
+def test_naming_a_sentinel_does_not_stale_the_binding():
     setup = _setup()
     book = setup[3]["fixture"]
     assert _apply(setup).diagnostics == ()
     sentinel_book = book.model_copy(
         update={"sentinel_codes": (SentinelCode(code="99", meaning="not applicable"),)}
-    )
-    assert classification_content_sha256(sentinel_book) == (
-        classification_content_sha256(book)
     )
     assert _apply(setup, classifications={"fixture": sentinel_book}).diagnostics == ()
 
@@ -552,3 +533,146 @@ def test_source_scope_and_identity_do_not_supply_missing_classification_bounds()
         "unsupported_classification_scope",
         "unknown_classification_column",
     }
+
+
+def test_label_rule_normalizes_claims_and_preserves_occurrence_evidence():
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    claim = replace(original.claims[0], version_label="  LKF\u00a0 1998  ")
+    coding = {key: resolve_code_membership((claim,))}
+    matched: set[str] = set()
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding=coding,
+        classifications=setup[3],
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules={"LKF 1998": "fixture"},
+        matched_labels=matched,
+    )
+    segment = result.coding[key].segments[0]
+    assert segment.classification == "fixture"
+    assert segment.conformance is not None and segment.conformance.status == "kept"
+    assert (
+        "label rule: 'LKF 1998' -> fixture (classifications/FIX.toml)"
+        in segment.provenance
+    )
+    assert matched == {"LKF 1998"}
+    changed_book = setup[3]["fixture"].model_copy(
+        update={
+            "codes": (
+                *setup[3]["fixture"].codes,
+                ResolvedClassificationCode(code="03", label="New code"),
+            )
+        }
+    )
+    changed = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding=coding,
+        classifications={"fixture": changed_book},
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules={"LKF 1998": "fixture"},
+    )
+    assert changed.diagnostics == ()
+    assert changed.coding[key].segments[0].classification == "fixture"
+
+
+def test_label_rule_skips_segment_without_catalog_occurrence():
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    claim = replace(original.claims[0], version_label="Listed")
+    coding = {key: resolve_code_membership((claim,))}
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding=coding,
+        classifications=setup[3],
+        occurrences=(),
+        label_rules={"Listed": "fixture"},
+    )
+    assert result.coding == coding
+    assert result.diagnostics == ()
+
+
+def test_two_labels_for_one_book_make_one_rule_binding():
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    first = replace(original.claims[0], version_label="First")
+    second = replace(first, claim_id="other", version_label="Second")
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding={key: resolve_code_membership((first, second))},
+        classifications=setup[3],
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules={"First": "fixture", "Second": "fixture"},
+    )
+    segment = result.coding[key].segments[0]
+    assert segment.classification == "fixture"
+    assert segment.provenance == (
+        "label rule: 'First' -> fixture (classifications/FIX.toml)",
+    )
+    assert result.diagnostics == ()
+
+
+def test_label_rule_omits_state_and_conflicts_on_two_distinct_books():
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    first = replace(original.claims[0], version_label="First")
+    second = replace(first, claim_id="other", version_label="Second")
+    coding = {key: resolve_code_membership((first, second))}
+    alternate = setup[3]["fixture"].model_copy(update={"slug": "alternate"})
+    kwargs = {
+        "coding": coding,
+        "classifications": {**setup[3], "alternate": alternate},
+        "occurrences": (source_occurrence(setup[0]),),
+        "label_rules": {"First": "fixture", "Second": "alternate"},
+    }
+    result = apply_classification_cases((setup[0],), (), **kwargs)
+    assert result.coding[key].segments[0].classification is None
+    assert [issue.code for issue in result.diagnostics] == [
+        "conflicting_classification_decisions"
+    ]
+    omitted = replace(
+        coding[key],
+        segments=tuple(
+            replace(segment, state_disposition="omit")
+            for segment in coding[key].segments
+        ),
+    )
+    result = apply_classification_cases(
+        (setup[0],), (), **{**kwargs, "coding": {key: omitted}}
+    )
+    assert result.coding == {key: omitted}
+    assert result.diagnostics == ()
+
+
+def test_override_wins_over_label_rule_on_its_window():
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    claim = replace(original.claims[0], version_label="Listed")
+    alternate = setup[3]["fixture"].model_copy(update={"slug": "alternate"})
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding={key: resolve_code_membership((claim,))},
+        classifications={**setup[3], "alternate": alternate},
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules={"Listed": "fixture"},
+        override=("alternate", "classifications/ALT.toml#/binding/variable/1"),
+    )
+    assert result.diagnostics == ()
+    assert result.coding[key].segments[0].classification == "alternate"
+    duplicate_overrides: set[str] = set()
+    apply_classification_cases(
+        (setup[0],),
+        (),
+        coding={key: resolve_code_membership((claim,))},
+        classifications=setup[3],
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules={"Listed": "fixture"},
+        override=("fixture", "classifications/FIX.toml#/binding/variable/1"),
+        duplicate_overrides=duplicate_overrides,
+    )
+    assert duplicate_overrides == {"classifications/FIX.toml#/binding/variable/1"}

@@ -134,6 +134,10 @@ def resolve_source_scope(
     support: SourceSupportBindings,
     classifications: Mapping[str, ResolvedClassification],
     classification_references: Mapping[str, str],
+    label_rules: Mapping[str, str] = {},
+    classification_overrides: Mapping[str, tuple[str, str]] = {},
+    matched_labels: set[str] | None = None,
+    duplicate_overrides: set[str] | None = None,
     declared_variants: Mapping[NativeKey, ResolvedVariant] | None = None,
     revisions: tuple[SourceRevision, ...] = (),
     on_binding: Callable[[NativeKey, ValueBindingResult], None] | None = None,
@@ -243,6 +247,13 @@ def resolve_source_scope(
     for issue in parents.diagnostics:
         emit(issue)
     register_fqids = declared_register_fqids(names.values())
+    variable_fqids = Counter(
+        f"{register_fqids[declaration.target.register_key]}/{declaration.naming.slug}"
+        for declaration in names.values()
+        if declaration.target.kind == "variable"
+        and declaration.naming.slug is not None
+        and declaration.target.register_key in register_fqids
+    )
     withheld = defaultdict(list)
     parent_causes = defaultdict(list)
     for issue in parents.diagnostics:
@@ -399,6 +410,15 @@ def resolve_source_scope(
             tuple(c for c in selected if c.decision.kind == "coding"),
             coding={column: tuple(values) for column, values in claims.items()},
         )
+        declaration = names.get(("variable", key))
+        register_fqid = (
+            register_fqids.get(declaration.target.register_key) if declaration else None
+        )
+        fqid = (
+            f"{register_fqid}/{declaration.naming.slug}"
+            if register_fqid and declaration and declaration.naming.slug
+            else None
+        )
         classified = apply_classification_cases(
             evidence,
             tuple(c for c in selected if c.decision.kind == "classification"),
@@ -406,6 +426,14 @@ def resolve_source_scope(
             classifications=classifications,
             occurrences=occurrences,
             references=classification_references,
+            label_rules=label_rules,
+            override=(
+                classification_overrides.get(fqid)
+                if fqid is not None and variable_fqids[fqid] == 1
+                else None
+            ),
+            matched_labels=matched_labels,
+            duplicate_overrides=duplicate_overrides,
         )
         representation = resolve_representation_cases(
             evidence,
@@ -416,15 +444,6 @@ def resolve_source_scope(
             evaluations.extend(result.evaluations)
             for issue in result.diagnostics:
                 emit(issue)
-        declaration = names.get(("variable", key))
-        register_fqid = (
-            register_fqids.get(declaration.target.register_key) if declaration else None
-        )
-        fqid = (
-            f"{register_fqid}/{declaration.naming.slug}"
-            if register_fqid and declaration and declaration.naming.slug
-            else None
-        )
         if provider_key is not None and (
             declaration is None or declaration.naming.slug is None
         ):

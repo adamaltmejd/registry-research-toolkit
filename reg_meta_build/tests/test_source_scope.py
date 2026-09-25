@@ -21,7 +21,11 @@ from reg_meta_build.prepared_values import (
     open_prepared_source_values,
     prepare_source_values,
 )
-from reg_meta_build.resolved_catalog import ResolvedVariant
+from reg_meta_build.resolved_catalog import (
+    ResolvedClassification,
+    ResolvedClassificationCode,
+    ResolvedVariant,
+)
 from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_coordinates import (
     native_column_key,
@@ -180,6 +184,9 @@ def resolve(
     on_diagnostic=None,
     value_sessions=(),
     diagnostic=False,
+    classifications=None,
+    label_rules=None,
+    classification_overrides=None,
 ):
     support = SourceSupportBindings((), ())
     for item in records:
@@ -199,8 +206,10 @@ def resolve(
         else provider_keys,
         value_sessions=value_sessions,
         support=support,
-        classifications={},
+        classifications=classifications or {},
         classification_references={},
+        label_rules=label_rules or {},
+        classification_overrides=classification_overrides or {},
         revisions=(REVISION,),
         on_diagnostic=on_diagnostic,
         diagnostic=diagnostic,
@@ -515,6 +524,69 @@ def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(
     assert [
         (s.valid_from, s.valid_to, s.value_set.members) for s in variable.states
     ] == [("2020-01-01", "2020-12-31", (("01", "One"),))]
+
+
+def test_scope_forwards_label_rule_and_fqid_override(tmp_path):
+    item = record()
+    root = tmp_path / "values"
+    manifest = prepare_source_values(
+        root,
+        revision=REVISION,
+        validity_revision=REVISION,
+        descriptors=(SourceValueDescriptor("list", version=" Listed "),),
+        values=(SourceValue("value", "01", "One"),),
+        associations=(
+            SourceValueAssociation(
+                1, "list", "value", "values", member_id="1", item_id="1"
+            ),
+        ),
+        join=SourceValueJoin(
+            record_sources=(REVISION.dataset,),
+            member_target="native_member",
+            member_format="integer",
+            validity_target="item",
+            missing_validity="unrestricted",
+            rule="Exact fixture member relation",
+            provenance=("fixture",),
+        ),
+    )
+    source = open_prepared_source_values(
+        root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
+    )
+    first = ResolvedClassification(
+        slug="first",
+        short_name="FIRST",
+        name="First",
+        codes=(ResolvedClassificationCode(code="01", label="One"),),
+    )
+    second = first.model_copy(update={"slug": "second", "short_name": "SECOND"})
+    with open_value_bindings((source,)) as sessions:
+        ruled = resolve(
+            (item,),
+            value_sessions=sessions,
+            classifications={"first": first, "second": second},
+            label_rules={"Listed": "first"},
+        )
+        overridden = resolve(
+            (item,),
+            value_sessions=sessions,
+            classifications={"first": first, "second": second},
+            label_rules={"Listed": "first"},
+            classification_overrides={
+                "scb/example/value-5": (
+                    "second",
+                    "classifications/SECOND.toml#/binding/variable/1",
+                )
+            },
+        )
+    assert (
+        ruled.variables[native_variable_key(item)].states[0].classification == "first"
+    )
+    assert (
+        overridden.variables[native_variable_key(item)].states[0].classification
+        == "second"
+    )
+    assert not ruled.diagnostics and not overridden.diagnostics
 
 
 @pytest.mark.parametrize(

@@ -8,9 +8,9 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
 
+from reg_meta_build.normalization import normalize_text
 from reg_meta_build.source_classifications import resolve_classification_conformance
 from reg_meta_build.source_coding import CodingIssue, CodingResolution, CodingSegment
-from reg_meta_build.source_coding_choices import coding_expectations
 from reg_meta_build.source_curation import (
     ClassificationDecision,
     CurationCase,
@@ -19,7 +19,6 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import _require_checked, record_ref
 from reg_meta_build.source_intervals import scope_bounds
-from reg_meta_build.source_records import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -47,6 +46,8 @@ class _Binding:
     provenance: tuple[str, ...]
     inline_only: bool = False
     unresolved: bool = False
+    rule: bool = False
+    override: bool = False
 
 
 def _source_bindings(
@@ -168,20 +169,65 @@ def _sentinel_map(classification: ResolvedClassification) -> dict[str, str]:
     }
 
 
-def classification_content_sha256(classification: ResolvedClassification) -> str:
-    """Pin semantic codebook content, independently of member order and succession.
-
-    The sentinel list is NOT pinned: the pin exists so a codebook change stales
-    conformance decisions made against the old book, and a sentinel change never
-    alters canonical membership — it can only relax a severance to a
-    kept-with-warning. Pinning it would rehash every existing classification
-    and force a full re-conversion after every sentinel curation."""
-    body = classification.model_dump(mode="json", exclude={"codes", "sentinel_codes"})
-    body["codes"] = [
-        code.model_dump(mode="json")
-        for code in sorted(classification.codes, key=lambda c: (c.code, c.label))
-    ]
-    return canonical_sha256(body)
+def _label_rule_bindings(
+    coding: Mapping[NativeKey, CodingResolution],
+    occurrences: Iterable[EffectiveOccurrence],
+    labels: Mapping[str, str],
+) -> dict[NativeKey, list[_Binding]]:
+    """Bind every listed claim label on each included post-choice segment."""
+    by_column: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
+        defaultdict(list)
+    )
+    for occurrence in occurrences:
+        if occurrence.use == "catalog" and occurrence.column_key is not None:
+            scope = occurrence.edition_period_scope
+            if scope.kind == "not_applicable":
+                scope = occurrence.edition_scope
+            refs = tuple(sorted({record_ref(r) for r in occurrence.evidence}, key=repr))
+            for lo, hi in scope_bounds(scope) or ():
+                by_column[occurrence.column_key].append((lo, hi, refs))
+    selected: dict[NativeKey, list[_Binding]] = defaultdict(list)
+    for key, resolution in coding.items():
+        claims = {claim.claim_id: claim for claim in resolution.claims}
+        for segment in resolution.segments:
+            if segment.state_disposition != "include":
+                continue
+            start = date.fromisoformat(segment.valid_from).toordinal()
+            end = date.fromisoformat(segment.valid_to).toordinal()
+            refs = tuple(
+                sorted(
+                    {
+                        ref
+                        for lo, hi, evidence in by_column[key]
+                        if lo <= end and hi >= start
+                        for ref in evidence
+                    },
+                    key=repr,
+                )
+            )
+            if not refs:
+                continue
+            segment_labels = set()
+            for claim_id in segment.claim_ids:
+                claim = claims.get(claim_id)
+                if claim is not None and claim.version_label is not None:
+                    segment_labels.add(normalize_text(claim.version_label))
+            slug_labels = {}
+            for label in sorted(segment_labels):
+                if label in labels:
+                    slug_labels.setdefault(labels[label], label)
+            for slug, label in sorted(slug_labels.items()):
+                selected[key].append(
+                    _Binding(
+                        segment.valid_from,
+                        segment.valid_to,
+                        slug,
+                        refs,
+                        (f"label rule: {label!r} -> {slug}",),
+                        rule=True,
+                    )
+                )
+    return selected
 
 
 def apply_classification_cases(
@@ -192,6 +238,10 @@ def apply_classification_cases(
     classifications: Mapping[str, ResolvedClassification],
     occurrences: Iterable[EffectiveOccurrence] = (),
     references: Mapping[str, str] | None = None,
+    label_rules: Mapping[str, str] = {},
+    override: tuple[str, str] | None = None,
+    matched_labels: set[str] | None = None,
+    duplicate_overrides: set[str] | None = None,
 ) -> ClassificationBindingResolution:
     """Compose source declarations and checked cases before state formation.
 
@@ -207,6 +257,7 @@ def apply_classification_cases(
     Conflicting declarations are withheld, not resolved by call/file order.
     An occurrence-field correction can replace a checked original declaration.
     """
+    occurrences = tuple(occurrences)
     ordered = tuple(sorted(cases, key=lambda c: c.case_id))
     if len({c.case_id for c in ordered}) != len(ordered):
         raise ValueError("classification case IDs must be unique")
@@ -239,17 +290,84 @@ def apply_classification_cases(
     selected, diagnostics = _source_bindings(
         occurrences, references, coding, classifications
     )
-    class_hashes = {}
+    rule_bindings = _label_rule_bindings(coding, occurrences, label_rules)
+    for key, bindings in rule_bindings.items():
+        for binding in bindings:
+            assert binding.classification is not None
+            book = classifications[binding.classification]
+            selected[key].append(
+                replace(
+                    binding,
+                    provenance=(
+                        f"{binding.provenance[0]} (classifications/{book.short_name}.toml)",
+                    ),
+                )
+            )
+    if matched_labels is not None:
+        matched_labels.update(
+            normalize_text(claim.version_label)
+            for resolution in coding.values()
+            for claim in resolution.claims
+            if claim.version_label is not None
+            and normalize_text(claim.version_label) in label_rules
+        )
+    override_bindings: dict[NativeKey, list[_Binding]] = defaultdict(list)
+    if override is not None:
+        slug, ref = override
+        for occurrence in occurrences:
+            key = occurrence.column_key
+            if occurrence.use != "catalog" or key is None or key not in coding:
+                continue
+            scope = occurrence.edition_period_scope
+            if scope.kind == "not_applicable":
+                scope = occurrence.edition_scope
+            for lo, hi in scope_bounds(scope) or ():
+                binding = _Binding(
+                    date.fromordinal(lo).isoformat(),
+                    date.fromordinal(hi).isoformat(),
+                    slug,
+                    tuple(
+                        sorted({record_ref(r) for r in occurrence.evidence}, key=repr)
+                    ),
+                    (f"{ref}: override -> {slug}",),
+                    inline_only=True,
+                    override=True,
+                )
+                selected[key].append(binding)
+                override_bindings[key].append(binding)
+    if duplicate_overrides is not None and override is not None:
+        slug, ref = override
+        active_windows = [
+            (
+                key,
+                max(binding.valid_from, segment.valid_from),
+                min(binding.valid_to, segment.valid_to),
+            )
+            for key, bindings in override_bindings.items()
+            for binding in bindings
+            for segment in coding[key].segments
+            if segment.state_disposition == "include"
+            and segment.code_set is not None
+            and binding.valid_from <= segment.valid_to
+            and binding.valid_to >= segment.valid_from
+        ]
+        if active_windows and all(
+            any(
+                rule.classification == slug
+                and rule.valid_from <= start
+                and rule.valid_to >= end
+                for rule in rule_bindings.get(key, ())
+            )
+            for key, start, end in active_windows
+        ):
+            duplicate_overrides.add(ref)
     canonical = {}
     sentinel_maps = {}
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
         assert isinstance(decision, ClassificationDecision)
         classification = classifications[decision.classification]
-        if classification.slug not in class_hashes:
-            class_hashes[classification.slug] = classification_content_sha256(
-                classification
-            )
+        if classification.slug not in canonical:
             canonical[classification.slug] = frozenset(
                 c.code for c in classification.codes
             )
@@ -271,29 +389,6 @@ def apply_classification_cases(
                 )
             )
         if evaluation.status != "applicable":
-            continue
-        observed = coding_expectations(
-            coding[decision.column_key].claims, decision.valid_from, decision.valid_to
-        )
-        if set(observed) != set(decision.expected_codings) or (
-            class_hashes[classification.slug] != decision.expected_classification
-        ):
-            diagnostics.append(
-                ResolutionDiagnostic(
-                    code="classification_evidence_changed",
-                    severity="error",
-                    subject=repr(decision.column_key),
-                    case_id=case.case_id,
-                    detail="Original coding or the selected canonical codebook changed; "
-                    "the existing classification decision was not replayed. "
-                    + decision.provenance,
-                    refs=tuple(t.ref for t in (*case.targets, *case.support)),
-                    fields=("coding", "classification"),
-                    valid_from=decision.valid_from,
-                    valid_to=decision.valid_to,
-                    withheld_output=("state.classification",),
-                )
-            )
             continue
         selected[decision.column_key].append(
             _Binding(
@@ -351,6 +446,8 @@ def apply_classification_cases(
                 and d.valid_to >= end
                 and (not d.inline_only or segment.code_set is not None)
             ]
+            if any(d.override for d in active):
+                active = [d for d in active if not d.rule]
             if not active or segment.state_disposition != "include":
                 if prior:
                     segments.append(segment)

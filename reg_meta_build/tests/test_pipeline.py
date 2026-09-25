@@ -1143,6 +1143,51 @@ def test_hybrid_compiler_preserves_stored_global_selection(
     }
 
 
+@pytest.mark.parametrize("selection", ["sentinel"], indirect=True)
+def test_unmatched_classification_label_is_stale_only_in_full_build(
+    selection, tmp_path, structural_validation_only, monkeypatch
+):
+    from reg_meta_build.curation_compile import compile_curation
+
+    from reg_meta_build import pipeline
+
+    monkeypatch.setattr(pipeline, "compile_curation", compile_curation)
+    book = tmp_path / "curation" / "classifications" / f"{_SENTINEL_SHORT_NAME}.toml"
+    book.write_text(
+        book.read_text() + '\n[binding]\nvalue_set_labels = ["No such descriptor"]\n'
+    )
+    full_dump = tmp_path / "full-decisions"
+    build_selected_catalog(
+        selection,
+        tmp_path / "full.db",
+        tmp_path / "full-report",
+        diagnostic=True,
+        curation_dir=tmp_path / "curation",
+        dump_decisions=full_dump,
+    )
+    ref = f"classifications/{_SENTINEL_SHORT_NAME}.toml#/binding/value_set_labels/1"
+    assert any(
+        issue["code"] == "stale_curation_entry" and issue["subject"] == ref
+        for issue in _issues(tmp_path / "full-report")
+    )
+    subset_dump = tmp_path / "subset-decisions"
+    build_selected_catalog(
+        selection,
+        tmp_path / "subset.db",
+        tmp_path / "subset-report",
+        diagnostic=True,
+        registers=("scb-registerinformation",),
+        curation_dir=tmp_path / "curation",
+        dump_decisions=subset_dump,
+    )
+    report = json.loads((subset_dump / "compile-report.json").read_text())
+    assert ref in report["_classifications"]["not_evaluated_in_subset"]
+    assert not any(
+        issue["code"] == "stale_curation_entry" and issue["subject"] == ref
+        for issue in _issues(tmp_path / "subset-report")
+    )
+
+
 def test_dump_decisions_refuses_input_and_output_aliases(selection, tmp_path):
     for alias in (selection.parent, tmp_path / "report", tmp_path / "catalog.db"):
         with pytest.raises(ValueError, match="--dump-decisions"):
