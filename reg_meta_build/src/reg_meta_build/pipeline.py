@@ -35,6 +35,7 @@ from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
 from reg_meta_build.curation_compile import (
     compile_curation,
+    finalize_classification_bindings,
     merge_scope,
     merge_selection,
     source_event_id,
@@ -351,6 +352,19 @@ def build_selected_catalog(
             "curation scopes name a source outside the prepared occurrence-source selection"
         )
     tree = load_curation_tree(curation_dir)
+    label_rules = {
+        label: entry.classification.slug
+        for entry in tree.classifications
+        for label in entry.binding.value_set_labels
+    }
+    classification_overrides = {
+        bound.variable: (
+            entry.classification.slug,
+            f"classifications/{entry.classification.short_name}.toml#/binding/variable/{index}",
+        )
+        for entry in tree.classifications
+        for index, bound in enumerate(entry.binding.variable, 1)
+    }
     stored_scopes = {
         key: _read_scope(root, key, file) for key, file in scope_files.items()
     }
@@ -360,8 +374,17 @@ def build_selected_catalog(
         tuple(stored_scopes[key] for key in sorted(visit, key=repr)),
         subset=bool(registers),
     )
+    if "_classifications" in compiled.report:
+        valid_overrides = set(compiled.report["_classifications"]["entries_matched"])
+        classification_overrides = {
+            fqid: binding
+            for fqid, binding in classification_overrides.items()
+            if binding[1] in valid_overrides
+        }
     selected = merge_selection(selected, compiled)
     scopes = {key: merge_scope(scope, compiled) for key, scope in stored_scopes.items()}
+    matched_labels: set[str] = set()
+    duplicate_overrides: set[str] = set()
     curation_hash = tree_sha256(curation_dir)
     if dump_decisions is not None:
         dump_decisions.mkdir()
@@ -737,6 +760,10 @@ def build_selected_catalog(
                         support=support,
                         classifications=books,
                         classification_references=references,
+                        label_rules=label_rules,
+                        classification_overrides=classification_overrides,
+                        matched_labels=matched_labels,
+                        duplicate_overrides=duplicate_overrides,
                         declared_variants=_unique_pairs(
                             scope.variants, "declared variant"
                         ),
@@ -913,6 +940,25 @@ def build_selected_catalog(
             if counts["physical_occurrences"] != expected:
                 raise ValueError(
                     f"{'selected' if registers else 'full'} source occurrence count differs from preparation"
+                )
+            for binding_issue in finalize_classification_bindings(
+                compiled,
+                tree,
+                matched_labels=matched_labels,
+                duplicate_overrides=duplicate_overrides,
+                subset=bool(registers),
+            ):
+                issue(binding_issue)
+            if dump_decisions is not None:
+                (dump_decisions / "compile-report.json").write_text(
+                    json.dumps(
+                        compiled.report,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    + "\n",
+                    encoding="utf-8",
                 )
             # A scoped build skips curation whose every register reference lies
             # outside the selected registers. Elsewhere it defers only a

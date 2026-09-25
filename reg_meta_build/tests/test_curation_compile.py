@@ -14,6 +14,7 @@ from reg_meta_build.curation_compile import (
     _case_family,
     _gap_family,
     compile_curation,
+    finalize_classification_bindings,
     merge_scope,
     merge_selection,
     tree_sha256,
@@ -192,7 +193,7 @@ def test_global_families_and_manifest_wiring_compile_for_subset(tmp_path):
         ("scb-timeseries", "scb-registerinformation"),
     )
     assert result.report["_subset"]["dropped"] == []
-    assert len(result.report["_classifications"]["not_evaluated_in_subset"]) == 2
+    assert len(result.report["_classifications"]["not_evaluated_in_subset"]) == 1
     assert (
         "classifications/ALPHA.toml#/binding/value_set_labels/1"
         not in result.report["_classifications"]["not_evaluated_in_subset"]
@@ -321,6 +322,7 @@ def test_stored_case_with_unowned_prefix_fails(tmp_path):
 
 
 def test_stored_v18b_case_and_gap_families_are_owned():
+    assert "classification_bindings" in COMPILED
     cases = {
         "accepted-column-partitions:scb-registerinformation:1.2": "identity",
         "accepted-coding:46:0": "coding",
@@ -357,6 +359,31 @@ def test_stored_v18b_case_and_gap_families_are_owned():
         _case_family("accepted-cis2014-answers-extra")
 
 
+def test_compiled_classification_family_drops_both_stored_case_prefixes(tmp_path):
+    compiled = compile_curation(_tree(tmp_path / "curation"), _prepared(), (_scope(),))
+    register_key = ("scb-source", "scb", "register", "native-int", 1)
+    cases = tuple(
+        CurationCase(
+            case_id=case_id,
+            targets=(),
+            decision=AcknowledgeDecision(
+                code="fixture",
+                subject="scb/sample/one",
+                refs=(),
+                register_key=register_key,
+                reason="Reviewed",
+                evidence="Ledger",
+            ),
+        )
+        for case_id in (
+            f"accepted-classification-seed:{'a' * 64}",
+            "accepted-classification-override:1:0",
+        )
+    )
+    scope = _scope().model_copy(update={"cases": cases})
+    assert merge_scope(scope, compiled).cases == ()
+
+
 def test_selected_classification_variable_binding_has_exact_status(tmp_path):
     root = tmp_path / "curation"
     _tree(root)
@@ -386,10 +413,37 @@ def test_selected_classification_variable_binding_has_exact_status(tmp_path):
     assert not matched.diagnostics
     duplicate = named.model_copy(update={"source": "other"})
     overbroad = compile_curation(tree, _prepared(), (named, duplicate), subset=True)
-    assert overbroad.report["_classifications"]["over_broad"] == [ref]
-    assert [issue.code for issue in overbroad.diagnostics] == [
-        "overbroad_curation_entry"
+    assert overbroad.report["_classifications"]["stale"] == [ref]
+    assert [issue.code for issue in overbroad.diagnostics] == ["stale_curation_entry"]
+
+
+def test_classification_label_staleness_is_deferred_until_scope_resolution(tmp_path):
+    tree = _tree(tmp_path / "curation")
+    full = compile_curation(tree, _prepared(), (_scope(),))
+    issues = finalize_classification_bindings(
+        full,
+        tree,
+        matched_labels={"Selected provider label"},
+        duplicate_overrides=set(),
+        subset=False,
+    )
+    ref = "classifications/BETA.toml#/binding/value_set_labels/1"
+    assert ref in full.report["_classifications"]["stale"]
+    assert [(issue.code, issue.subject) for issue in issues] == [
+        ("stale_curation_entry", ref)
     ]
+    subset = compile_curation(tree, _prepared(), (_scope(),), subset=True)
+    assert not finalize_classification_bindings(
+        subset,
+        tree,
+        matched_labels=set(),
+        duplicate_overrides=set(),
+        subset=True,
+    )
+    assert set(subset.report["_classifications"]["not_evaluated_in_subset"]) >= {
+        ref,
+        "classifications/ALPHA.toml#/binding/value_set_labels/1",
+    }
 
 
 def test_unmatched_global_entry_is_stale_only_in_complete_build(tmp_path):
