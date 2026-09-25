@@ -1703,3 +1703,12 @@ native_id = "122.30845"
 slug = "yrkesbenamning-huvud"
 
 # register 123
+
+# ==== registers/scb/aku.toml (register 122) ====
+[[coding.uncoded]]
+variable = "122.31257"
+variant = "122.142"
+column = "ArSektor"
+periods = [["2007-01-01", "2007-12-31"], ["2008-01-01", "2008-12-31"], ["2010-01-01", "2010-12-31"], ["2011-01-01", "2011-12-31"], ["2012-01-01", "2012-12-31"]]
+reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+source = "codeless_overlap.toml#/resolve/0"  # v18 accepted-codeless:0:*, 5 case(s)

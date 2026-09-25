@@ -299,14 +299,16 @@ def compile_coding_selection(
     for claim in claims:
         if claim.version_label != extension.list:
             continue
-        resolved = resolve_code_membership((claim,))
-        if resolved.issues:
-            continue
-        all_sets.update(
-            frozenset(segment.code_set.members)
-            for segment in resolved.segments
-            if segment.code_set is not None and segment.code_set.members
-        )
+        for lower, upper in coding_scope_bounds(claim.scope) or ():
+            all_sets.update(
+                claim_members
+                for _, _, claim_members in _complete_lists(
+                    (claim,),
+                    date.fromordinal(lower).isoformat(),
+                    date.fromordinal(upper).isoformat(),
+                )
+                if claim_members is not None
+            )
     matching = {item for item in all_sets if members is None or item == members}
     if not matching:
         return None, "stale", "extended list has no complete member set"

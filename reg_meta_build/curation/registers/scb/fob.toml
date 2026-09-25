@@ -466,3 +466,24 @@ native_id = "32.41495.antbilarhh"
 slug = "antal-bilar-hushall"
 
 # register 320
+
+# ==== registers/scb/fob.toml (register 32) ====
+[[coding.choice]]
+variable = "32.42551"
+variant = "32.82"
+column = "Avlopp"
+periods = [["1975-01-01", "1975-12-31"]]
+keep = "AvloppFoB75Hh"
+over = ["AvloppFoB75Lgh"]
+reason = "FoB75 Avlopp 1975 (variant 82 'Lägenhet och hushåll'): household 'i huset' (Hh) vs dwelling 'i lägenheten' (Lgh), co-extensive relabel. Keep Hh — matches the variable definition 'om avlopp finns i huset'."
+source = "codelivery.toml#/resolve/16"  # v18 accepted-coding:16:*, 1 case(s)
+
+[[coding.choice]]
+variable = "32.4472"
+variant = "32.82"
+column = "UpplForm"
+periods = [["1975-01-01", "1975-12-31"]]
+keep = "UpplFormFoB75Lgh"
+over = ["UpplFormFoB75Hh"]
+reason = "FoB75 UpplForm: SCB's legacy catalog splits this by population — dwellings → Lgh (12), households → Hh (5) — but our mikrodata feed flattens both onto one (variant 82, version 1975, UpplForm) slot, cross-linked to both populations, so the split isn't recoverable from input. Keep the Lgh superset (Lgh ⊇ Hh) as the lossless interim; keeping Hh would drop dwelling-occupancy codes 5–9. SPLIT candidate by population — see comment."
+source = "codelivery.toml#/resolve/12"  # v18 accepted-coding:12:*, 1 case(s)

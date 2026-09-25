@@ -11628,3 +11628,54 @@ native_id = "182.39021.forskamneomr"
 slug = "forskningsamnesomrade"
 
 # register 187
+
+# ==== registers/scb/fou.toml (register 182) ====
+[[coding.choice]]
+variable = "182.3"
+variant = "182.441"
+column = "ID_INST"
+periods = [["2021-01-01", "2021-12-31"], ["2023-01-01", "2023-12-31"]]
+keep = "Universitet/högskolor"
+over = ["Högskolekod 2017"]
+reason = "FoU ID_INST 2023: 'Universitet/högskolor' (129) is a strict SUPERSET of the official 'Högskolekod 2017' (41) — every standard lärosäte code plus historical/extra institutions. Keep the superset so no delivered code is unlabeled."
+source = "codelivery.toml#/resolve/14"  # v18 accepted-coding:14:*, 2 case(s)
+
+[[coding.omit]]
+variable = "182.7745"
+variant = "182.442"
+column = "FoUUtgKomAr"
+periods = [["2005-01-01", "2005-12-31"]]
+reason = "Omit the uncoded state under the existing accepted drop decision."
+source = "codeless_overlap.toml#/resolve/21"  # v18 accepted-codeless:21:*, 1 case(s)
+
+[[coding.omit]]
+variable = "182.7745"
+variant = "182.444"
+column = "FoUUtgKomAr"
+periods = [["2005-01-01", "2005-12-31"], ["2007-01-01", "2007-12-31"], ["2009-01-01", "2009-12-31"], ["2011-01-01", "2011-01-31"]]
+reason = "Omit the uncoded state under the existing accepted drop decision."
+source = "codeless_overlap.toml#/resolve/21"  # v18 accepted-codeless:21:*, 4 case(s)
+
+[[coding.omit]]
+variable = "182.7745"
+variant = "182.373"
+column = "FoUUtgKomAr"
+periods = [["2005-01-01", "2005-12-31"], ["2007-01-01", "2007-12-31"]]
+reason = "Omit the uncoded state under the existing accepted drop decision."
+source = "codeless_overlap.toml#/resolve/21"  # v18 accepted-codeless:21:*, 2 case(s)
+
+[[coding.omit]]
+variable = "182.7745"
+variant = "182.446"
+column = "FoUUtgKomAr"
+periods = [["2005-01-01", "2005-12-31"], ["2007-01-01", "2007-12-31"], ["2009-01-01", "2009-02-16"], ["2015-01-01", "2015-12-31"], ["2017-01-01", "2017-12-31"]]
+reason = "Omit the uncoded state under the existing accepted drop decision."
+source = "codeless_overlap.toml#/resolve/21"  # v18 accepted-codeless:21:*, 5 case(s)
+
+[[coding.omit]]
+variable = "182.7745"
+variant = "182.443"
+column = "FoUUtgKomAr"
+periods = [["2007-01-01", "2007-12-31"], ["2009-01-01", "2009-12-31"], ["2011-01-01", "2011-12-31"]]
+reason = "Omit the uncoded state under the existing accepted drop decision."
+source = "codeless_overlap.toml#/resolve/21"  # v18 accepted-codeless:21:*, 3 case(s)

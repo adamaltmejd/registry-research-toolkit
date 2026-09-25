@@ -337,3 +337,24 @@ native_id = "187.4873.prodvarde"
 slug = "produktionsvarde"
 
 # register 189
+
+# ==== registers/scb/konjunkturstatistik-industri.toml (register 187) ====
+[[coding.choice]]
+variable = "187.3310"
+variant = "187.369"
+column = "AL2UndEjU"
+periods = [["1998-01-01", "1998-12-31"], ["1999-01-01", "1999-12-31"]]
+keep = "Br92-kod"
+over = ["Br07-kod"]
+reason = "Konjunkturstatistik AL2UndEjU 1998-1999: SNI92 (Br92, 53 codes) is contemporaneous; SNI2007 did not exist yet."
+source = "codelivery.toml#/resolve/0"  # v18 accepted-coding:0:*, 2 case(s)
+
+[[coding.choice]]
+variable = "187.3310"
+variant = "187.370"
+column = "AL2UndEjU"
+periods = [["2009-01-01", "2009-12-31"], ["2010-01-01", "2010-12-31"]]
+keep = "Br92-kod"
+over = ["Br07-kod"]
+reason = "Konjunkturstatistik AL2UndEjU 1998-1999: SNI92 (Br92, 53 codes) is contemporaneous; SNI2007 did not exist yet."
+source = "codelivery.toml#/resolve/0"  # v18 accepted-coding:0:*, 2 case(s)

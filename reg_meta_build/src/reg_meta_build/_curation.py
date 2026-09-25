@@ -5,7 +5,7 @@ The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `require_bool`, `require_evidence`, `require_fqid`, `resolve_variable_id`,
 `resolve_register_id`)
 serve the `[[entry]]` curation-TOML loaders —
-`codelivery.py`, `concept_groups.py`, `tags.py`,
+`concept_groups.py`, `tags.py`,
 `period_family_merges.py`, `delivery_enrichment.py`, `scb_errata.py`,
 `alias_windows.py`, and `relations.py` (the single
 typed `[[edge]]` surface for the curated pairwise relations — same_as /

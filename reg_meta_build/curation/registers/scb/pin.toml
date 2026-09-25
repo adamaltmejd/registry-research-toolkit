@@ -530,3 +530,14 @@ native_id = "382.4053.sni92upp"
 slug = "bransch-enligt-uppgiftslamnaren-2"
 
 # register 389
+
+# ==== registers/scb/pin.toml (register 382) ====
+[[coding.choice]]
+variable = "382.3310"
+variant = "382.372"
+column = "AL2UndEjU"
+periods = [["2009-01-01", "2009-12-31"], ["2010-01-01", "2010-12-31"]]
+keep = "Br07-kod"
+over = ["Br92-kod"]
+reason = "Produktion inom näringslivet AL2UndEjU 2009-2010: SNI2007 (Br07, 45 codes) is the operative standard by 2009."
+source = "codelivery.toml#/resolve/1"  # v18 accepted-coding:1:*, 2 case(s)

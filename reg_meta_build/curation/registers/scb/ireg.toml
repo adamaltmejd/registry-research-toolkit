@@ -149,3 +149,14 @@ native_id = "131.38120"
 slug = "forsta-urvalsar"
 
 # register 132
+
+# ==== registers/scb/ireg.toml (register 131) ====
+[[coding.extend]]
+variable = "131.3758"
+variant = "131.175"
+column = "svalt"
+periods = [["2005-01-01", "2006-12-31"], ["2015-01-01", "2021-12-31"]]
+list = "Blankettvarian, lager"
+witness = ["2007-01-01", "2007-12-31"]
+reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
+source = "codeless_overlap.toml#/resolve/29"  # v18 accepted-codeless:29:*, 2 case(s)

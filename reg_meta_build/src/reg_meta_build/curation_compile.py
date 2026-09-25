@@ -156,6 +156,7 @@ COMPILED = frozenset(
         "event_sources",
         "acknowledge",
         "classification_bindings",
+        "coding",
     }
 )
 
@@ -591,7 +592,7 @@ def compile_coding_register(
     """Compile one register's coding from established scope identities and claims.
 
     The caller supplies the same effective column groups and original claims that
-    source resolution uses. This family remains outside COMPILED in this slice.
+    source resolution uses.
     """
     register_fqid = f"{register.register_info.provider}/{register.register_info.slug}"
     register_keys = {

@@ -166,3 +166,28 @@ native_id = "239.7942.pnamn-kort"
 slug = "parti-kort"
 
 # register 24
+
+# ==== registers/scb/allmanna-val-nominerade.toml (register 239) ====
+[[coding.uncoded]]
+variable = "239.7942.ripartikod"
+variant = "239.466"
+column = "Ripartikod"
+periods = [["1991-01-01", "1991-12-31"], ["1994-01-01", "1994-12-31"], ["2002-01-01", "2002-12-31"], ["2006-01-01", "2006-12-31"], ["2010-01-01", "2010-09-18"]]
+reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+source = "codeless_overlap.toml#/resolve/1"  # v18 accepted-codeless:1:*, 5 case(s)
+
+[[coding.uncoded]]
+variable = "239.7942.ripartikod"
+variant = "239.477"
+column = "Ripartikod"
+periods = [["1991-01-01", "1991-12-31"], ["1994-01-01", "1994-12-31"], ["1998-01-01", "1998-12-31"], ["2002-01-01", "2002-12-31"], ["2006-01-01", "2006-12-31"], ["2010-01-01", "2010-09-18"]]
+reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+source = "codeless_overlap.toml#/resolve/1"  # v18 accepted-codeless:1:*, 6 case(s)
+
+[[coding.uncoded]]
+variable = "239.7942.ripartikod"
+variant = "239.476"
+column = "Ripartikod"
+periods = [["1991-01-01", "1991-12-31"], ["1994-01-01", "1994-12-31"], ["1998-01-01", "1998-12-31"], ["2002-01-01", "2002-12-31"], ["2006-01-01", "2006-12-31"], ["2010-01-01", "2010-09-18"]]
+reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+source = "codeless_overlap.toml#/resolve/1"  # v18 accepted-codeless:1:*, 6 case(s)

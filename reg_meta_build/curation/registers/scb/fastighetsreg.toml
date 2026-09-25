@@ -227,3 +227,14 @@ native_id = "276.22523.byggtyp"
 slug = "byggnadstyp"
 
 # register 282
+
+# ==== registers/scb/fastighetsreg.toml (register 276) ====
+[[coding.choice]]
+variable = "276.19639"
+variant = "276.971"
+column = "NYREGORS"
+periods = [["2015-12-31", "2015-12-31"], ["2016-12-31", "2016-12-31"], ["2017-12-31", "2017-12-31"], ["2018-12-31", "2018-12-31"], ["2019-12-31", "2019-12-31"], ["2020-12-31", "2020-12-31"], ["2021-12-31", "2021-12-31"], ["2022-12-31", "2022-12-31"], ["2023-12-31", "2023-12-31"], ["2024-12-31", "2024-12-31"], ["2025-12-31", "2025-12-31"]]
+keep = "Nyregistreringsorsak3"
+over = ["Nyregistreringsorsak 2"]
+reason = "Nyregistreringsorsak NYREGORS 2015-2025: dwelling-level 'Nyregistreringsorsak3' (Nybyggd/Befintlig lägenhet, 4) vs building-level 'Nyregistreringsorsak 2' (byggnad/bygglov, 6), co-delivered every year. Keep the lägenhet-level coding."
+source = "codelivery.toml#/resolve/19"  # v18 accepted-coding:19:*, 11 case(s)

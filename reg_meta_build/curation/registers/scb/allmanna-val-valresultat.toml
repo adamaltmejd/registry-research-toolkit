@@ -295,3 +295,24 @@ native_id = "243.8529.tot-ant-persrost"
 slug = "personroster-totalt"
 
 # register 245
+
+# ==== registers/scb/allmanna-val-valresultat.toml (register 243) ====
+[[coding.choice]]
+variable = "243.14775"
+variant = "243.494"
+column = "RI_valkretskod"
+periods = [["1982-01-01", "1982-12-31"], ["1988-01-01", "1988-12-31"]]
+keep = "Riksdagsvalkrets fram till 1994_mandat"
+over = ["Rikdagsvalkrets fram till 1994"]
+reason = "Riksdagsvalkrets RI_valkretskod 1982/1988: two pre-1994 codings renumber the constituencies (Kristianstads=11 base vs =14 in _mandat). Keep '…_mandat' — canonical spelling 'Riksdagsvalkrets' + mandate-allocation numbering."
+source = "codelivery.toml#/resolve/18"  # v18 accepted-coding:18:*, 2 case(s)
+
+[[coding.choice]]
+variable = "243.69.llkkdddd"
+variant = "243.494"
+column = "llkkdddd"
+periods = [["2006-01-01", "2006-12-31"]]
+keep = "Valdistrikt 2006 inkl poströster"
+over = ["Valdistrikt 2006"]
+reason = "Valresultat llkkdddd 2006: the 'inkl poströster' superset (6074 vs 5783)."
+source = "codelivery.toml#/resolve/8"  # v18 accepted-coding:8:*, 1 case(s)

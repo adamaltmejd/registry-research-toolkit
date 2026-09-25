@@ -1439,3 +1439,14 @@ native_id = "200.4049.attadr"
 slug = "postadress"
 
 # register 203
+
+# ==== registers/scb/arlig-energistatistik.toml (register 200) ====
+[[coding.extend]]
+variable = "200.35301.kvant"
+variant = "200.801"
+column = "kvant"
+periods = [["2009-01-01", "2017-12-31"], ["2019-01-01", "2020-10-25"]]
+list = "Bränslen för egna transporter"
+witness = ["2018-01-01", "2018-12-31"]
+reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
+source = "codeless_overlap.toml#/resolve/3"  # v18 accepted-codeless:3:*, 2 case(s)

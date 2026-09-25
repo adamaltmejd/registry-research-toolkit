@@ -279,6 +279,27 @@ def test_pin_free_extend_compiles_from_finite_witness() -> None:
     assert _apply(_record(), claims, *cases).accounting[0].status == "applied"
 
 
+def test_extend_ignores_incomplete_same_label_claim() -> None:
+    witness = _claim("list", "01", "2020-05-01", "2020-06-30")
+    incomplete = replace(
+        _claim("list", "02", "2020-07-01", "2020-08-31"),
+        members=(
+            CodeMembershipClaim("02", "Label", TemporalScope(kind="year_independent")),
+            CodeMembershipClaim("03", None, TemporalScope(kind="year_independent")),
+        ),
+    )
+    cases, diagnostics, _, _, _, _ = _compile_entry(
+        "extend",
+        {
+            "list": "list",
+            "witness": ["2020-05-01", "2020-06-30"],
+            "periods": [["2020-01-01", "2020-02-29"]],
+        },
+        (witness, incomplete),
+    )
+    assert not diagnostics and len(cases) == 1
+
+
 @pytest.mark.parametrize(
     ("kind", "values", "claims", "code"),
     [

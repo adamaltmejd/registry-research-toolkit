@@ -4889,3 +4889,94 @@ native_id = "237.6258.hy060g"
 slug = "ekonomiskt-bistand"
 
 # register 239
+
+# ==== registers/scb/ulf.toml (register 237) ====
+[[coding.choice]]
+variable = "237.10587"
+variant = "237.448"
+column = "UT0020"
+periods = [["1976-01-01", "1976-12-31"], ["1978-01-01", "1978-12-31"]]
+keep = "Utbildning 1"
+over = ["Fullbordad utbildning"]
+reason = "ULF UT0020 1976: 'Utbildning 1' (11 codes) is the substantive educational-attainment coding (Folkskola/Grundskola/.../Gymnasium). 'Fullbordad utbildning' (5: Fullbordade/Avbröt/Okänt) is a thin completion-status flag, not attainment — keep the attainment coding for 'Fullföljd skolutbildning'."
+source = "codelivery.toml#/resolve/7"  # v18 accepted-coding:7:*, 2 case(s)
+
+[[coding.choice]]
+variable = "237.10587"
+variant = "237.457"
+column = "UT0020"
+periods = [["1993-01-01", "1993-12-31"]]
+keep = "Utbildning 1"
+over = ["Fullbordad utbildning"]
+reason = "ULF UT0020 1976: 'Utbildning 1' (11 codes) is the substantive educational-attainment coding (Folkskola/Grundskola/.../Gymnasium). 'Fullbordad utbildning' (5: Fullbordade/Avbröt/Okänt) is a thin completion-status flag, not attainment — keep the attainment coding for 'Fullföljd skolutbildning'."
+source = "codelivery.toml#/resolve/7"  # v18 accepted-coding:7:*, 1 case(s)
+
+[[coding.choice]]
+variable = "237.10801"
+variant = "237.448"
+column = "SY0373"
+periods = [["1975-01-01", "1975-12-31"], ["1976-01-01", "1976-12-31"], ["1978-01-01", "1978-12-31"], ["1979-01-01", "1979-12-31"]]
+keep = "Ja nej 2"
+over = ["Ja nej 3"]
+reason = "ULF 'Förvärvsarbete heltid' SY0373 1975-1979: 'Ja nej 2' (8 Vet ej / 9 Vill ej svara alt. indirekt intervju) vs 'Ja nej 3' (9 Vill ej svara / 0 Värde saknas) — co-extensive, differ only in non-response codes. Keep 'Ja nej 2'."
+source = "codelivery.toml#/resolve/17"  # v18 accepted-coding:17:*, 4 case(s)
+
+[[coding.choice]]
+variable = "237.11788"
+variant = "237.458"
+column = "HA0020"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Ja nej 1"
+over = ["Dikotom"]
+reason = "ULF HA0020 2004: 'Ja nej 1' (6 codes) over 'Dikotom' (2 codes)."
+source = "codelivery.toml#/resolve/5"  # v18 accepted-coding:5:*, 1 case(s)
+
+[[coding.extend]]
+variable = "237.12675"
+variant = "237.457"
+column = "HA0162"
+periods = [["1990-01-01", "2001-12-31"]]
+list = "Påverkar arbetsförmåga"
+witness = ["1980-01-01", "1980-12-31"]
+reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
+source = "codeless_overlap.toml#/resolve/46"  # v18 accepted-codeless:46:*, 1 case(s)
+
+[[coding.extend]]
+variable = "237.12675"
+variant = "237.458"
+column = "HA0162"
+periods = [["2002-01-01", "2004-12-31"]]
+list = "Påverkar arbetsförmåga"
+witness = ["1989-01-01", "1989-12-31"]
+reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
+source = "codeless_overlap.toml#/resolve/46"  # v18 accepted-codeless:46:*, 1 case(s)
+
+[[coding.choice]]
+variable = "237.13593"
+variant = "237.448"
+column = "TK0083"
+periods = [["1978-01-01", "1978-12-31"]]
+keep = "Butiksbuss etc"
+over = ["Butiksbuss"]
+reason = "ULF TK0083 1978: 'Butiksbuss etc' (5 codes) is the superset."
+source = "codelivery.toml#/resolve/6"  # v18 accepted-coding:6:*, 1 case(s)
+
+[[coding.choice]]
+variable = "237.13598"
+variant = "237.448"
+column = "TK0094"
+periods = [["1978-01-01", "1978-12-31"]]
+keep = "Ja nej 1"
+over = ["Ja nej 3"]
+reason = "ULF TK0094 1978: 'Ja nej 1' (5 codes) over 'Ja nej 3' (1 code)."
+source = "codelivery.toml#/resolve/3"  # v18 accepted-coding:3:*, 1 case(s)
+
+[[coding.choice]]
+variable = "237.13600"
+variant = "237.448"
+column = "TK0095"
+periods = [["1978-01-01", "1978-12-31"]]
+keep = "Ja nej 1"
+over = ["Ja nej 3"]
+reason = "ULF TK0095 1978: 'Ja nej 1' (5 codes) over 'Ja nej 3' (1 code)."
+source = "codelivery.toml#/resolve/4"  # v18 accepted-coding:4:*, 1 case(s)

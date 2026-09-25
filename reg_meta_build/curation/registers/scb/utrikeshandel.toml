@@ -143,3 +143,14 @@ native_id = "188.19079"
 slug = "kvartal-period"
 
 # register 189
+
+# ==== registers/scb/utrikeshandel.toml (register 188) ====
+[[coding.extend]]
+variable = "188.19079"
+variant = "188.259"
+column = "Period"
+periods = [["1999-01-01", "2017-12-31"], ["2019-01-01", "2021-03-25"]]
+list = "Period kvartal"
+witness = ["2018-01-01", "2018-12-31"]
+reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
+source = "codeless_overlap.toml#/resolve/48"  # v18 accepted-codeless:48:*, 2 case(s)

@@ -61,3 +61,14 @@ native_id = "91.21009"
 slug = "undersokningsar"
 
 # register 97
+
+# ==== registers/scb/klp.toml (register 91) ====
+[[coding.extend]]
+variable = "91.19029"
+variant = "91.166"
+column = "REAktu"
+periods = [["2000-01-01", "2007-12-31"], ["2009-01-01", "2009-05-24"]]
+list = "Aktualitet för redovisningsenhet"
+witness = ["2008-01-01", "2008-12-31"]
+reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
+source = "codeless_overlap.toml#/resolve/30"  # v18 accepted-codeless:30:*, 2 case(s)

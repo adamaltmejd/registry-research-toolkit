@@ -20,8 +20,6 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
 from reg_meta_build._curation import repo_curation_path
 from reg_meta_build.alias_windows import load_alias_windows
-from reg_meta_build.codeless_overlap import load_codeless_overlap
-from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
     load_classification_groups,
     load_code_label_pairs,
@@ -53,8 +51,6 @@ _CURATION = _ROOT / "curation"
 
 def test_catalog_overlays_share_one_directory() -> None:
     names = {
-        "codeless_overlap.toml",
-        "codelivery.toml",
         "classification_groups.toml",
         "lineage.toml",
         "relations.toml",
@@ -103,19 +99,40 @@ def test_repo_lineage_parses_from_overlay() -> None:
     assert config.overrides == {}
 
 
-def test_repo_codelivery_parses() -> None:
-    assert load_codelivery(_CURATION / "codelivery.toml")
-
-
-def test_repo_codeless_overlap_parses() -> None:
-    # #868: the residual worklist is curated in-repo — the loader must accept it as
-    # well-formed (a malformed entry or header would raise here). It loads to a
-    # non-empty map of (register, variable, column) → (resolution, extend_label).
-    curation = load_codeless_overlap(_CURATION / "codeless_overlap.toml")
-    assert curation
-    assert curation[("scb", "lastbilstrafik", "varukod-sandning", "varukod")] == (
-        "cap",
-        None,
+def test_repo_coding_windows_are_ported() -> None:
+    tree = load_curation_tree(_CURATION)
+    coding = [
+        entry
+        for register in tree.registers
+        for kind in (
+            register.coding.choice,
+            register.coding.uncoded,
+            register.coding.omit,
+            register.coding.extend,
+        )
+        for entry in kind
+    ]
+    assert len(coding) == 61
+    assert sum(len(entry.periods) for entry in coding) == 218
+    assert (
+        sum(
+            len(entry.periods)
+            for register in tree.registers
+            for entry in register.coding.choice
+        )
+        == 37
+    )
+    assert (
+        sum(
+            bool(
+                register.coding.choice
+                or register.coding.uncoded
+                or register.coding.omit
+                or register.coding.extend
+            )
+            for register in tree.registers
+        )
+        == 21
     )
 
 

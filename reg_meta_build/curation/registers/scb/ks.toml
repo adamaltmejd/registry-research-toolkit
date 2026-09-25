@@ -125,3 +125,24 @@ native_id = "134.473"
 slug = "lan-arbetsstalle"
 
 # register 135
+
+# ==== registers/scb/ks.toml (register 134) ====
+[[coding.choice]]
+variable = "134.33"
+variant = "134.185"
+column = "Inst"
+periods = [["2015-01-01", "2015-12-31"]]
+keep = "Enhetsindelning 2014"
+over = ["Enhetsindelning 2000"]
+reason = "Kortperiodisk syss., Inst 2015: the 2014 institutional standard."
+source = "codelivery.toml#/resolve/10"  # v18 accepted-coding:10:*, 1 case(s)
+
+[[coding.choice]]
+variable = "134.33"
+variant = "134.185"
+column = "Inst"
+periods = [["2021-01-01", "2021-12-31"]]
+keep = "Enhetsindelning 2014"
+over = ["Standard för institutionell sektorindelning 2014"]
+reason = "Kortperiodisk syss., Inst 2015: the 2014 institutional standard."
+source = "codelivery.toml#/resolve/10"  # v18 accepted-coding:10:*, 1 case(s)

@@ -197,3 +197,12 @@ native_id = "162.4027"
 slug = "naringsgren"
 
 # register 164
+
+# ==== registers/scb/lastbilstrafik.toml (register 162) ====
+[[coding.uncoded]]
+variable = "162.4027"
+variant = "162.233"
+column = "SNI"
+periods = [["2003-01-01", "2003-12-31"], ["2005-01-01", "2007-12-31"]]
+reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+source = "codeless_overlap.toml#/resolve/32"  # v18 accepted-codeless:32:*, 2 case(s)
