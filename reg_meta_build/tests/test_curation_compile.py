@@ -650,6 +650,57 @@ def test_stored_split_naming_survives_compiled_native_merge():
     assert merged.provider_keys == ((split_key, "5.first"),)
 
 
+def test_stored_period_family_provider_key_survives_compiled_native_merge():
+    parent = _scope().naming[0]
+    native_key = (*parent.target.source_key, "variable", "native-int", 5)
+    native = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=native_key,
+            register_key=parent.target.source_key,
+            identity_revision=_revision("scb-registerinformation"),
+        ),
+        naming=SlugEntry(
+            kind="variable", provider="scb", source_id="1.5", slug="value"
+        ),
+        contributors=(),
+    )
+    period_key = ("curation", "period-family", "scb", 1, "value")
+    period = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=period_key,
+            register_key=parent.target.source_key,
+            identity_revision=_revision("scb-registerinformation"),
+        ),
+        naming=SlugEntry(
+            kind="variable",
+            provider="scb",
+            source_id="accepted-period-family:5",
+            slug="period-value",
+        ),
+        contributors=(),
+    )
+    scope = _scope().model_copy(
+        update={
+            "naming": (parent, native, period),
+            "provider_keys": ((native_key, "5"), (period_key, "period-value")),
+        }
+    )
+    compiled = CompiledCuration(
+        fields={},
+        cases={},
+        report={},
+        naming={(scope.source, scope.register_key): (parent, native)},
+        variants={(scope.source, scope.register_key): ()},
+    )
+    merged = merge_scope(scope, compiled)
+    assert merged.naming == (period, parent, native)
+    assert merged.provider_keys == ((period_key, "period-value"),)
+
+
 def test_tree_hash_covers_curation_and_transitional_slug_files(tmp_path):
     root = tmp_path / "curation"
     _tree(root)

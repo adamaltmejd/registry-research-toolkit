@@ -632,13 +632,24 @@ def convert_naming(
 def native_provider_keys(
     keys: Iterable[NativeKey], naming: Iterable[NamingDeclaration]
 ) -> dict[NativeKey, str | None]:
-    """Derive the provider's variable token from each final native name."""
-    named = {
-        item.target.source_key: item.naming.source_id.split(".")[1]
-        for item in naming
-        if item.target.kind == "variable" and item.naming.slug is not None
-    }
-    return {key: named.get(key) for key in keys}
+    """Derive tokens only for native variables supplied by this source scope."""
+    native_keys = tuple(keys)
+    native_key_set = set(native_keys)
+    named = {}
+    for item in naming:
+        target = item.target
+        if target.kind != "variable" or target.source_key not in native_key_set:
+            continue
+        source_id = item.naming.source_id
+        parts = source_id.split(".")
+        if len(parts) != 2 or not all(parts):
+            raise ValueError(
+                f"native provider key naming for {target.source_key!r} "
+                f"requires an R.V source_id, got {source_id!r}"
+            )
+        if item.naming.slug is not None:
+            named[target.source_key] = parts[1]
+    return {key: named.get(key) for key in native_keys}
 
 
 def check_naming_target(
