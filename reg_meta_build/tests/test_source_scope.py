@@ -40,6 +40,7 @@ from reg_meta_build.source_curation import (
     AliasWindowDecision,
     CheckedFieldChange,
     CheckedIdentityChange,
+    ClassificationDecision,
     CodingDecision,
     CuratedOccurrenceAddition,
     CurationCase,
@@ -918,22 +919,72 @@ def test_native_coding_column_key_follows_checked_partition(register_id: int):
         item for item in names((item,)) if item.target.kind != "variable"
     ) + (split_name,)
 
-    def run():
-        return resolve(
-            (item,),
-            cases=(partition.case, coding),
-            naming=naming,
-            provider_keys={split: "5.value"},
-        )
-
-    if register_id != 258:
-        with pytest.raises(ValueError, match="unconverted effective identity"):
-            run()
-        return
-    result = run()
+    result = resolve(
+        (item,),
+        cases=(partition.case, coding),
+        naming=naming,
+        provider_keys={split: "5.value"},
+    )
     assert {item.case_id: item.status for item in result.evaluations} == {
         partition.case.case_id: "applicable",
         coding.case_id: "applicable",
+    }
+    assert split in result.variables
+
+
+def test_native_classification_column_key_follows_checked_partition():
+    item = record(column="VALUE")
+    native = native_variable_key(item)
+    column = native_column_key(item)
+    assert native is not None and column is not None
+    partition = convert_column_partitions(
+        (item,), source_id="1.5", split_ids=("1.5.value",)
+    )
+    assert partition.case is not None
+    split = partition.bindings[0].target.source_key
+    book = ResolvedClassification(
+        slug="fixture",
+        short_name="FIXTURE",
+        name="Fixture",
+        codes=(ResolvedClassificationCode(code="01", label="One"),),
+    )
+    classification = CurationCase(
+        case_id="accepted-classification-base-key",
+        targets=capture_expectations((item,), fields=("column_name",), coding=True),
+        peer_guards=(guard(item),),
+        decision=ClassificationDecision(
+            reviewed=True,
+            column_key=column,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            expected_codings=(),
+            classification="fixture",
+            expected_classification="0" * 64,
+            binding_scope="declared",
+            reason="Accepted fixture classification",
+            provenance="Fixture decision",
+        ),
+    )
+    split_name = NamingDeclaration(
+        target=partition.bindings[0].target,
+        naming=SlugEntry(
+            kind="variable", provider="scb", source_id="1.5.value", slug="value"
+        ),
+        contributors=(),
+    )
+    naming = tuple(
+        item for item in names((item,)) if item.target.kind != "variable"
+    ) + (split_name,)
+    result = resolve(
+        (item,),
+        cases=(partition.case, classification),
+        naming=naming,
+        provider_keys={split: "5.value"},
+        classifications={"fixture": book},
+    )
+    assert {item.case_id: item.status for item in result.evaluations} == {
+        partition.case.case_id: "applicable",
+        classification.case_id: "applicable",
     }
     assert split in result.variables
 

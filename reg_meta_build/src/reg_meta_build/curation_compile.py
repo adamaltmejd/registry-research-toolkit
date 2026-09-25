@@ -1173,16 +1173,6 @@ def compile_partitions(
             ):
                 continue
             seen.add((source, native[:5], source_id))
-            # The pinned selection is the acceptance boundary for earlier SCB
-            # registers. Register 258's maps are the new acceptance work here.
-            previously_accepted = any(
-                case.case_id == f"accepted-column-partitions:{source}:{source_id}"
-                for case in scope_map[scope_key].cases
-            )
-            previously_ambiguous = any(
-                item.family.source_key == native
-                for item in scope_map[scope_key].naming_ambiguities
-            )
             expectations = capture_expectations(
                 records,
                 fields=("column_name",)
@@ -1199,8 +1189,6 @@ def compile_partitions(
                 expected_members=tuple(item.ref for item in expectations),
             )
             if native[1] == "scb":
-                if native[4] != 258 and not previously_accepted and not entries:
-                    continue
                 if not entries:
                     for i, _ in partitions:
                         diagnostics.append(
@@ -1220,14 +1208,6 @@ def compile_partitions(
                         )
                     continue
                 split_ids = tuple(sorted({item.entry.source_id for item in entries}))
-                if native[4] != 258 and not previously_accepted:
-                    if previously_ambiguous:
-                        ambiguities[scope_key].append(
-                            _partition_ambiguity(
-                                native, records, entries, split_ids, expectations, guard
-                            )
-                        )
-                    continue
                 split_bases[scope_key].add(native)
                 scoped = {}
                 for i, owner in scoped_entries:

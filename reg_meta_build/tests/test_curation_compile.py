@@ -1236,9 +1236,7 @@ def test_thin_copies_coding_from_its_own_declared_list(monkeypatch):
     assert addition.fields.value_set_declared.value == "own-list"
 
 
-def _partition_scope(
-    records: tuple[SourceRecord, ...], *, accepted: bool = True
-) -> ScopeDeclarations:
+def _partition_scope(records: tuple[SourceRecord, ...]) -> ScopeDeclarations:
     first = records[0]
     register = source_register_key(first)
     assert register is not None
@@ -1248,24 +1246,6 @@ def _partition_scope(
     return ScopeDeclarations(
         source=first.source,
         register_key=None,
-        cases=(
-            (
-                CurationCase(
-                    case_id=f"accepted-column-partitions:{first.source}:{register_id}.{first.subject.variable.native_id}",
-                    targets=(),
-                    decision=AcknowledgeDecision(
-                        code="fixture",
-                        subject="scb/sample/answer",
-                        refs=(),
-                        register_key=register,
-                        reason="Fixture acceptance boundary",
-                        evidence="fixture",
-                    ),
-                ),
-            )
-            if provider == "scb" and accepted
-            else ()
-        ),
         naming=(
             NamingDeclaration(
                 target=NativeNamingTarget(
@@ -1290,14 +1270,13 @@ def _compile_partition_fixture(
     records: tuple[SourceRecord, ...],
     *,
     shuffled: bool = False,
-    accepted: bool = True,
 ):
     native = native_variable_key(records[0])
     assert native is not None
     reader = SimpleNamespace(
         iter_native_families=lambda source: iter(((native, records),))
     )
-    scope = _partition_scope(records, accepted=accepted)
+    scope = _partition_scope(records)
     tree = load_curation_tree(root)
     if shuffled:
         tree = replace(tree, registers=tuple(reversed(tree.registers)))
@@ -1420,39 +1399,57 @@ def test_unassigned_and_partial_suffix_keep_base_identity(tmp_path: Path):
     )
 
 
-def test_unaccepted_scb_partition_is_withheld_except_register_258(tmp_path: Path):
+@pytest.mark.parametrize("register_id", [1, 258])
+def test_tracked_partition_compiles_without_stored_case(
+    tmp_path: Path, register_id: int
+):
     root = tmp_path / "curation"
     _scb_partition_tree(
         root,
-        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
-        '[[identity.partition]]\nvariable = "1.5"\n'
-        'columns = { ANSWER = "1.5.answer" }\n'
+        f'\n[[variable]]\nnative_id = "{register_id}.5.answer"\nslug = "answer"\n'
+        f'[[identity.partition]]\nvariable = "{register_id}.5"\n'
+        f'columns = {{ ANSWER = "{register_id}.5.answer" }}\n'
         'unassigned_columns = ["LEFT"]\ncolumns_ref = "fixture map"\n',
     )
-    records = _scb_partition_records(("ANSWER", "LEFT"))
-    compiled, key, native = _compile_partition_fixture(root, records, accepted=False)
+    if register_id == 258:
+        path = root / "registers" / "scb" / "sample.toml"
+        path.write_text(
+            path.read_text().replace('native_id = "1"', 'native_id = "258"'),
+            encoding="utf-8",
+        )
+    records = _scb_partition_records(("ANSWER", "LEFT"), register_id=register_id)
+    compiled, key, native = _compile_partition_fixture(root, records)
     cases, naming, keys, ambiguities, bases, issues = compiled
-    assert not cases.get(key)
-    assert not naming[key]
-    assert not keys[key]
-    assert not ambiguities.get(key)
-    assert native not in bases.get(key, set())
-    assert not issues
-
-    path = root / "registers" / "scb" / "sample.toml"
-    path.write_text(
-        path.read_text()
-        .replace('native_id = "1"', 'native_id = "258"')
-        .replace('"1.5', '"258.5'),
-        encoding="utf-8",
+    assert len(cases[key]) == 1
+    assert cases[key][0].case_id == (
+        f"accepted-column-partitions:scb-registerinformation:{register_id}.5"
     )
-    records = _scb_partition_records(("ANSWER", "LEFT"), register_id=258)
-    compiled, key, _ = _compile_partition_fixture(root, records, accepted=False)
-    assert len(compiled[0][key]) == 1
-    assert len(compiled[1][key]) == 1
+    assert {item.naming.source_id for item in naming[key]} == {
+        f"{register_id}.5.answer"
+    }
+    assert (native, None) in keys[key]
+    assert not ambiguities.get(key)
+    assert native in bases[key]
+    assert [issue.code for issue in issues] == ["unassigned_original_columns"]
 
 
-def test_withheld_family_keeps_its_existing_ambiguity_attribution(tmp_path: Path):
+def test_partition_map_without_split_name_is_stale(tmp_path: Path):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[identity.partition]]\nvariable = "1.5"\n'
+        'columns = { ANSWER = "1.5.answer" }\n'
+        'columns_ref = "fixture map"\n',
+    )
+    compiled, key, _ = _compile_partition_fixture(
+        root, _scb_partition_records(("ANSWER",))
+    )
+    assert not compiled[0].get(key)
+    assert [issue.code for issue in compiled[5]] == ["stale_curation_entry"]
+    assert "#/identity.partition/1" in compiled[5][0].detail
+
+
+def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path):
     root = tmp_path / "curation"
     _scb_partition_tree(
         root,
@@ -1460,10 +1457,9 @@ def test_withheld_family_keeps_its_existing_ambiguity_attribution(tmp_path: Path
         '[[variable]]\nnative_id = "1.5.unknown"\nslug = "unknown"\n',
     )
     records = _scb_partition_records(("ANSWER", "LEFT"))
-    accepted, key, native = _compile_partition_fixture(root, records)
-    stored_ambiguity = accepted[3][key][0]
-    scope = _partition_scope(records, accepted=False).model_copy(
-        update={"naming_ambiguities": (stored_ambiguity,)}
+    generated, key, native = _compile_partition_fixture(root, records)
+    scope = _partition_scope(records).model_copy(
+        update={"naming_ambiguities": generated[3][key]}
     )
     reader = SimpleNamespace(
         iter_native_families=lambda source: iter(((native, records),))
@@ -1473,10 +1469,10 @@ def test_withheld_family_keeps_its_existing_ambiguity_attribution(tmp_path: Path
         cast("Any", SimpleNamespace(records=reader)),
         (scope,),
     )
-    assert not compiled[0].get(key)
-    assert not compiled[1][key]
-    assert compiled[3][key][0].candidate_columns == stored_ambiguity.candidate_columns
-    assert native not in compiled[4].get(key, set())
+    assert compiled == generated
+    assert generated[0][key]
+    assert generated[3][key][0].candidate_columns == (("1.5.answer", "ANSWER"),)
+    assert native in generated[4][key]
 
 
 def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
@@ -1627,7 +1623,27 @@ def test_partition_replaces_stored_scope_declarations_in_compiled_selection(
         root, '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
     )
     records = _scb_partition_records(("ANSWER", "LEFT"))
+    register = source_register_key(records[0])
+    assert register is not None
     scope = _partition_scope(records)
+    scope = scope.model_copy(
+        update={
+            "cases": (
+                CurationCase(
+                    case_id="accepted-column-partitions:scb-registerinformation:1.5",
+                    targets=(),
+                    decision=AcknowledgeDecision(
+                        code="fixture",
+                        subject="scb/sample/answer",
+                        refs=(),
+                        register_key=register,
+                        reason="Stored fixture",
+                        evidence="fixture",
+                    ),
+                ),
+            )
+        }
+    )
     native = native_variable_key(records[0])
     assert native is not None
     prepared = _prepared()
