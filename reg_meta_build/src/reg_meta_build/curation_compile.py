@@ -51,6 +51,7 @@ from .source_curation import (
     ResolutionDiagnostic,
     SourceRecordRef,
 )
+from .source_effects import record_ref
 from .source_intervals import coding_scope_bounds
 
 if TYPE_CHECKING:
@@ -586,6 +587,7 @@ def compile_coding_register(
     register: RegisterCuration,
     scope: ScopeDeclarations,
     *,
+    originals: tuple[SourceRecord, ...],
     columns: Mapping[NativeKey, tuple[SourceRecord, ...]],
     coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
 ) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
@@ -613,7 +615,13 @@ def compile_coding_register(
                 for item in scope.naming
                 if item.target.kind == "variable"
                 and item.target.register_key in register_keys
-                and item.naming.source_id == entry.variable
+                and (
+                    item.naming.source_id == entry.variable
+                    or (
+                        item.target.source_key[-2] == "accepted-partition"
+                        and item.naming.source_id.startswith(entry.variable + ".")
+                    )
+                )
             }
             variants = {
                 item.target.source_key
@@ -687,7 +695,13 @@ def compile_coding_register(
                     )
                     continue
                 assert selection is not None
-                targets = capture_expectations(records, fields=("column_name",))
+                target_refs = {record_ref(record) for record in records}
+                target_records = tuple(
+                    record for record in originals if record_ref(record) in target_refs
+                )
+                if {record_ref(record) for record in target_records} != target_refs:
+                    raise ValueError(f"{case_id}: target refs left the original scope")
+                targets = capture_expectations(target_records, fields=("column_name",))
                 first = records[0]
                 guard = PeerGuard(
                     guard_id=case_id,

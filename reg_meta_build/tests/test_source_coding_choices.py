@@ -223,7 +223,7 @@ def _compile_entry(
             "coding": {
                 kind: [
                     {
-                        "variable": "1.5.part" if split else "1.5",
+                        "variable": "1.5",
                         "variant": "people",
                         "column": "VALUE",
                         "periods": [["2020-01-01", "2020-12-31"]],
@@ -238,7 +238,11 @@ def _compile_entry(
     register._source_file = "curation/registers/scb/sample.toml"
     columns = {column: (record,)}
     cases, diagnostics = compile_coding_register(
-        register, scope, columns=columns, coding={column: claims}
+        register,
+        scope,
+        originals=(record,),
+        columns=columns,
+        coding={column: claims},
     )
     return cases, diagnostics, register, scope, columns, column
 
@@ -277,6 +281,27 @@ def test_pin_free_extend_compiles_from_finite_witness() -> None:
     )
     assert not diagnostics and len(cases) == 1
     assert _apply(_record(), claims, *cases).accounting[0].status == "applied"
+
+
+def test_extend_list_only_complete_inside_short_witness() -> None:
+    claim = _claim("list", "01")
+    short_member = replace(
+        claim.members[0],
+        scope=TemporalScope(
+            kind="intervals",
+            intervals=(ScopeInterval(start="2020-05-01", end="2020-06-30"),),
+        ),
+    )
+    cases, diagnostics, _, _, _, _ = _compile_entry(
+        "extend",
+        {
+            "list": "list",
+            "witness": ["2020-05-01", "2020-06-30"],
+            "periods": [["2020-01-01", "2020-02-29"]],
+        },
+        (replace(claim, members=(short_member,)),),
+    )
+    assert not diagnostics and len(cases) == 1
 
 
 def test_extend_ignores_incomplete_same_label_claim() -> None:
@@ -381,7 +406,7 @@ def test_pin_free_coding_staleness(kind, values, claims, code) -> None:
 
 def test_pin_free_choice_member_disambiguation_and_split_key() -> None:
     claims = (_claim("keep", "01"), _claim("keep", "03"), _claim("other", "02"))
-    cases, diagnostics, _, _, _, column = _compile_entry(
+    cases, diagnostics, register, scope, _, column = _compile_entry(
         "choice",
         {"keep": "keep", "keep_members": [["01", "Label"]], "over": ["keep", "other"]},
         claims,
@@ -389,6 +414,43 @@ def test_pin_free_choice_member_disambiguation_and_split_key() -> None:
     )
     assert not diagnostics and cases[0].decision.column_key == column
     assert "accepted-partition" in column
+    assert register.coding.choice[0].variable == "1.5"
+    assert any(
+        item.naming.source_id == "1.5.part"
+        for item in scope.naming
+        if item.target.kind == "variable"
+    )
+
+
+def test_coding_target_captures_sibling_projection_on_same_ref() -> None:
+    record = _record()
+    sibling = record.model_copy(
+        update={
+            "fields": record.fields.model_copy(
+                update={"column_name": value_field("SIBLING")}
+            )
+        }
+    )
+    assert record_ref(record) == record_ref(sibling)
+    _, _, register, scope, columns, column = _compile_entry(
+        "uncoded", {}, (), record=record
+    )
+    cases, diagnostics = compile_coding_register(
+        register,
+        scope,
+        originals=(record, sibling),
+        columns=columns,
+        coding={column: ()},
+    )
+    assert not diagnostics and len(cases) == 1
+    assert len(cases[0].targets) == 1
+    assert len(cases[0].targets[0].alternatives) == 2
+    assert (
+        apply_coding_choices((record, sibling), cases, coding={column: ()})
+        .accounting[0]
+        .status
+        == "applied"
+    )
 
 
 def test_pin_free_coding_period_and_column_cardinality_are_checked() -> None:
@@ -442,6 +504,7 @@ def test_pin_free_coding_rejects_ambiguous_column_identity() -> None:
     cases, diagnostics = compile_coding_register(
         register,
         ambiguous,
+        originals=(record,),
         columns={other_column: (record,), column: columns[column]},
         coding={column: claims, other_column: claims},
     )
@@ -458,10 +521,11 @@ def test_pin_free_coding_compile_is_byte_identical() -> None:
     ]
     _, _, register, scope, columns, column = first
     unrelated = (*column[:-1], "OTHER")
-    other_record = _record(column="OTHER")
+    other_record = _record(year=2021, column="OTHER")
     shuffled, diagnostics = compile_coding_register(
         register,
         scope,
+        originals=(*columns[column], other_record),
         columns={unrelated: (other_record,), column: columns[column]},
         coding={unrelated: (), column: claims},
     )

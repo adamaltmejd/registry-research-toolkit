@@ -295,31 +295,21 @@ def compile_coding_selection(
         if extension.list_members is not None
         else None
     )
-    all_sets = set()
-    for claim in claims:
-        if claim.version_label != extension.list:
-            continue
-        for lower, upper in coding_scope_bounds(claim.scope) or ():
-            all_sets.update(
-                claim_members
-                for _, _, claim_members in _complete_lists(
-                    (claim,),
-                    date.fromordinal(lower).isoformat(),
-                    date.fromordinal(upper).isoformat(),
-                )
-                if claim_members is not None
-            )
+    witness_from, witness_to = extension.witness
+    complete_witness = _complete_lists(claims, witness_from, witness_to)
+    all_sets = {
+        claim_members
+        for _, label, claim_members in complete_witness
+        if label == extension.list and claim_members is not None
+    }
     matching = {item for item in all_sets if members is None or item == members}
     if not matching:
         return None, "stale", "extended list has no complete member set"
     if len(matching) != 1:
         return None, "over_broad", "extended label matches multiple member sets"
-    witness_from, witness_to = extension.witness
     witness = [
         digest
-        for digest, label, claim_members in _complete_lists(
-            claims, witness_from, witness_to
-        )
+        for digest, label, claim_members in complete_witness
         if label == extension.list and claim_members in matching
     ]
     if not witness:

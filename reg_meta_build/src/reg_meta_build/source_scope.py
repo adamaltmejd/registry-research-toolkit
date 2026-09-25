@@ -390,6 +390,7 @@ def resolve_source_scope(
         new_cases, new_diagnostics = compile_coding_register(
             register,
             coding_scope,
+            originals=originals,
             columns=coding_columns,
             coding=original_coding,
         )
