@@ -1273,13 +1273,11 @@ class TestSnapshot:
             "register": {},
             "register_variant": {},
             "variable": {},
-            "classification": {},
         }
         cur = {
             "register": {"scb/1": "lisa"},
             "register_variant": {},
             "variable": {},
-            "classification": {},
         }
         diff = diff_snapshot(prev, cur)
         assert diff["added"] == ["register/scb/1 = 'lisa'"]
@@ -1291,13 +1289,11 @@ class TestSnapshot:
             "register": {"scb/1": "lisa"},
             "register_variant": {},
             "variable": {},
-            "classification": {},
         }
         cur = {
             "register": {},
             "register_variant": {},
             "variable": {},
-            "classification": {},
         }
         diff = diff_snapshot(prev, cur)
         assert "register/scb/1" in diff["removed"][0]
@@ -1307,13 +1303,11 @@ class TestSnapshot:
             "register": {"scb/1": "lisa"},
             "register_variant": {},
             "variable": {},
-            "classification": {},
         }
         cur = {
             "register": {"scb/1": "lisa-renamed"},
             "register_variant": {},
             "variable": {},
-            "classification": {},
         }
         diff = diff_snapshot(prev, cur)
         assert diff["renamed"]
@@ -1324,7 +1318,6 @@ class TestSnapshot:
         path = tmp_path / SNAPSHOT_FILENAME
         # A2.6: no register_version in the snapshot (version left the grammar).
         payload = {
-            "classification": {"SUN2020": "sun2020"},
             "register": {"scb/1": "lisa"},
             "register_variant": {"scb/1.10": "individer-15plus"},
             "variable": {},
@@ -1336,7 +1329,6 @@ class TestSnapshot:
     def test_snapshot_missing_file_returns_empty(self, tmp_path: Path):
         loaded = read_snapshot(tmp_path / "nope.json")
         assert loaded == {
-            "classification": {},
             "register": {},
             "register_variant": {},
             "variable": {},
@@ -3005,7 +2997,7 @@ class TestPrecheckCli:
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
-            '{"classification":{},'
+            "{"
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -3246,7 +3238,7 @@ class TestPrecheckCliGrowOnly:
         (slug_dir / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
         # Baseline has `lisa`; the new TOML renames it to `lisa-individuals`.
         snapshot_before = (
-            '{"classification":{},'
+            "{"
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -3293,7 +3285,7 @@ class TestPrecheckCliGrowOnly:
         # The `scb` zone is sealed → dropping its variant row is blocked.
         (slug_dir / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
         snapshot_before = (
-            '{"classification":{},'
+            "{"
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -3328,7 +3320,7 @@ class TestPrecheckCliGrowOnly:
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
-            '{"classification":{},'
+            "{"
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -3373,7 +3365,7 @@ class TestPrecheckCliGrowOnly:
         db_dir, slug_dir = self._seed_layout(tmp_path)
         # Empty baseline; the two live entries are pure additions.
         (slug_dir / SNAPSHOT_FILENAME).write_text(
-            '{"classification":{},"register":{},"register_variant":{},"variable":{}}\n',
+            '{"register":{},"register_variant":{},"variable":{}}\n',
             encoding="utf-8",
         )
         _write(
@@ -3483,22 +3475,20 @@ class TestDiffSnapshotFrozenZones:
         "register": {"scb/1": "lisa", "sos/9": "deaths"},
         "register_variant": {},
         "variable": {},
-        "classification": {"SUN2020": "sun2020"},
     }
 
-    def test_default_frozen_zones_empty_keeps_legacy_keys(self) -> None:
+    def test_default_frozen_zones_empty_reports_register_changes(self) -> None:
         # No frozen_zones ⇒ blocked is empty and removed/renamed/added are
         # byte-identical to the pre-#470 three-key output.
         cur = {
             "register": {"sos/9": "deaths"},  # scb/1 removed
             "register_variant": {},
             "variable": {},
-            "classification": {"SUN2020": "sun2020-v2"},  # renamed
         }
         diff = diff_snapshot(self._PREV, cur)
         assert diff["blocked"] == []
         assert diff["removed"] == ["register/scb/1 (was 'lisa')"]
-        assert diff["renamed"] == ["classification/SUN2020: 'sun2020' -> 'sun2020-v2'"]
+        assert diff["renamed"] == []
         assert diff["added"] == []
 
     def test_only_frozen_zone_violations_block(self) -> None:
@@ -3506,14 +3496,11 @@ class TestDiffSnapshotFrozenZones:
             "register": {"scb/1": "lisa-renamed"},  # scb rename + sos/9 removed
             "register_variant": {},
             "variable": {},
-            "classification": {},  # SUN2020 removed
         }
-        # Freeze only `scb` → the sos removal and the classification removal are
-        # reported but NOT blocked.
+        # Freeze only `scb`; the sos removal is reported but not blocked.
         diff = diff_snapshot(self._PREV, cur, frozen_zones=frozenset({"scb"}))
         assert diff["blocked"] == ["register/scb/1: 'lisa' -> 'lisa-renamed'"]
         assert "register/sos/9 (was 'deaths')" in diff["removed"]
-        assert "classification/SUN2020 (was 'sun2020')" in diff["removed"]
 
 
 class TestFreezeStateAutoRegenerate:

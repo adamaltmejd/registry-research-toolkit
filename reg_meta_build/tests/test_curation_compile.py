@@ -1,4 +1,4 @@
-"""The global hybrid families compile from tracked coordinates, without pins."""
+"""Compile tracked curation families from source coordinates."""
 
 from __future__ import annotations
 
@@ -11,14 +11,10 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_compile import (
-    COMPILED,
-    FAMILIES,
     CompiledCuration,
-    _case_family,
     _compile_sos_register,
     _compile_thin_register,
-    _gap_family,
-    _naming_family,
+    compile_alias_windows,
     compile_curation,
     compile_enrichment,
     compile_errata,
@@ -26,13 +22,11 @@ from reg_meta_build.curation_compile import (
     compile_partitions,
     convert_column_partitions,
     finalize_classification_bindings,
-    merge_scope,
-    merge_selection,
     tree_sha256,
 )
 from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.id import mint
-from reg_meta_build.pipeline import PipelineSelection, ScopeDeclarations
+from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
 from reg_meta_build.scb_errata import ErrataVersion, edition_bindings
 from reg_meta_build.source_annotations import apply_alias_cases
@@ -41,13 +35,15 @@ from reg_meta_build.source_coding import (
     copied_coding_fingerprints,
     resolve_code_membership,
 )
-from reg_meta_build.source_coordinates import native_variable_key, source_register_key
+from reg_meta_build.source_coordinates import (
+    native_variable_key,
+    native_variant_key,
+    source_register_key,
+)
 from reg_meta_build.source_curation import (
-    AcknowledgeDecision,
     CheckedFieldChange,
     CheckedVariantAssignment,
     CuratedOccurrenceAddition,
-    CurationCase,
     OccurrenceCorrectionDecision,
     SearchAliasDecision,
 )
@@ -152,8 +148,8 @@ def _tree(root: Path):
     return load_curation_tree(root)
 
 
-def _scope() -> ScopeDeclarations:
-    return ScopeDeclarations(
+def _scope() -> CompiledScope:
+    return CompiledScope(
         source="scb-registerinformation",
         register_key=None,
         naming=(
@@ -162,7 +158,6 @@ def _scope() -> ScopeDeclarations:
                     kind="register",
                     provider="scb",
                     source_key=("scb", "register", 1),
-                    identity_revision=_revision("scb-registerinformation"),
                 ),
                 naming=SlugEntry(
                     kind="register", provider="scb", source_id="1", slug="sample"
@@ -256,7 +251,6 @@ def _bytes(compiled) -> bytes:
 def test_global_families_and_manifest_wiring_compile_for_subset(tmp_path):
     tree = _tree(tmp_path / "curation")
     result = compile_curation(tree, _prepared(), (_scope(),), subset=True)
-    assert FAMILIES.keys() >= COMPILED
     assert [book.metadata["slug"] for book in result.fields["classifications"]] == [
         "alpha",
         "beta",
@@ -294,15 +288,6 @@ def test_global_families_and_manifest_wiring_compile_for_subset(tmp_path):
     )
     full = compile_curation(tree, _prepared(), (_scope(),))
     assert full.report["_classifications"]["not_evaluated_in_subset"] == []
-    stored = PipelineSelection(
-        prepared_path="prepared",
-        prepared_commit="0" * 40,
-        prepared_sha256="0" * 64,
-        scopes=(),
-    )
-    merged = merge_selection(stored, result)
-    assert merged.code_label_pairs == result.fields["code_label_pairs"]
-    assert merged.metadata == metadata
 
 
 def test_compilation_is_byte_identical_with_shuffled_register_order(tmp_path):
@@ -445,24 +430,6 @@ def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
     )
 
 
-def test_compiled_partition_preserves_null_for_unvisited_family(tmp_path):
-    partition_base = (
-        "scb-registerinformation",
-        "scb",
-        "register",
-        "native-int",
-        25,
-        "variable",
-        "native-int",
-        1075,
-    )
-    scope = _scope().model_copy(update={"provider_keys": ((partition_base, None),)})
-    compiled = compile_curation(
-        _tree(tmp_path / "curation"), _prepared(), (scope,), subset=True
-    )
-    assert merge_scope(scope, compiled).provider_keys == ((partition_base, None),)
-
-
 def test_native_names_overlay_and_unnamed_provider_keys_compile(tmp_path):
     root = tmp_path / "curation"
     _tree(root)
@@ -527,72 +494,6 @@ def test_native_names_overlay_and_unnamed_provider_keys_compile(tmp_path):
     ]
 
 
-@pytest.mark.parametrize("auto_file", [False, True])
-def test_declared_column_pin_is_not_evaluated_by_native_naming(tmp_path, auto_file):
-    root = tmp_path / "curation"
-    _tree(root)
-    register_file = root / "registers" / "scb" / "sample.toml"
-    if auto_file:
-        register_file = register_file.with_name("sample.auto.toml")
-    register_file.write_text(
-        (register_file.read_text() if not auto_file else "")
-        + '\n[[variable]]\nnative_id = "1.ColumnName"\nslug = "column-name"\n'
-    )
-    scope = _scope()
-    declared_column = NamingDeclaration(
-        target=NativeNamingTarget(
-            kind="variable",
-            provider="scb",
-            source_key=(
-                "scb-registerinformation",
-                "scb",
-                "register",
-                "native-int",
-                1,
-                "declared-column",
-                "ColumnName",
-            ),
-            register_key=(
-                "scb-registerinformation",
-                "scb",
-                "register",
-                "native-int",
-                1,
-            ),
-            identity_revision=_revision("scb-registerinformation"),
-        ),
-        naming=SlugEntry(
-            kind="variable",
-            provider="scb",
-            source_id="1.ColumnName",
-            slug="column-name",
-        ),
-        contributors=(),
-    )
-    scope = scope.model_copy(update={"naming": (*scope.naming, declared_column)})
-    tree = load_curation_tree(root)
-    compiled = compile_curation(tree, _prepared(), (scope,), subset=True)
-    ref = f"curation/registers/scb/{register_file.name} [[variable]] entry 1"
-    assert [
-        issue for issue in compiled.diagnostics if issue.code == "stale_curation_entry"
-    ]
-    assert compiled.report["scb/sample"]["stale"] == [ref]
-    assert declared_column not in merge_scope(scope, compiled).naming
-
-    register_file.write_text(
-        register_file.read_text()
-        + '\n[[variable]]\nnative_id = "1.Missing"\nslug = "missing"\n'
-    )
-    compiled = compile_curation(
-        load_curation_tree(root), _prepared(), (scope,), subset=True
-    )
-    assert compiled.report["scb/sample"]["stale"][0] == ref
-    assert [(issue.code, issue.subject) for issue in compiled.diagnostics] == [
-        ("stale_curation_entry", "1.ColumnName"),
-        ("stale_curation_entry", "1.Missing"),
-    ]
-
-
 def test_thin_default_variant_carries_panel_fields(tmp_path):
     root = tmp_path / "curation"
     _tree(root)
@@ -634,7 +535,7 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
 
     native_register = source_register_key(cast("Any", record))
     assert native_register is not None
-    scope = ScopeDeclarations(
+    scope = CompiledScope(
         source=record.source,
         register_key=None,
         naming=(
@@ -721,102 +622,7 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
     )
 
 
-def test_stored_split_naming_is_replaced_by_compiled_partition():
-    parent = _scope().naming[0]
-    native = (
-        "scb-registerinformation",
-        "scb",
-        "register",
-        "native-int",
-        1,
-        "variable",
-        "native-int",
-        5,
-    )
-    split_key = (*native, "accepted-partition", "first")
-    split = NamingDeclaration(
-        target=NativeNamingTarget(
-            kind="variable",
-            provider="scb",
-            source_key=split_key,
-            register_key=native[:5],
-            identity_revision=_revision("scb-registerinformation"),
-        ),
-        naming=SlugEntry(
-            kind="variable", provider="scb", source_id="1.5.first", slug="first"
-        ),
-        contributors=(),
-    )
-    scope = _scope().model_copy(
-        update={
-            "naming": (parent, split),
-            "provider_keys": ((split_key, "5.first"),),
-        }
-    )
-    compiled = CompiledCuration(
-        fields={},
-        cases={},
-        report={},
-        naming={(scope.source, scope.register_key): (parent,)},
-        variants={(scope.source, scope.register_key): ()},
-    )
-    merged = merge_scope(scope, compiled)
-    assert merged.naming == (parent,)
-    assert merged.provider_keys == ()
-
-
-def test_stored_period_family_provider_key_is_removed_by_compiled_merge():
-    parent = _scope().naming[0]
-    native_key = (*parent.target.source_key, "variable", "native-int", 5)
-    native = NamingDeclaration(
-        target=NativeNamingTarget(
-            kind="variable",
-            provider="scb",
-            source_key=native_key,
-            register_key=parent.target.source_key,
-            identity_revision=_revision("scb-registerinformation"),
-        ),
-        naming=SlugEntry(
-            kind="variable", provider="scb", source_id="1.5", slug="value"
-        ),
-        contributors=(),
-    )
-    period_key = ("curation", "period-family", "scb", 1, "value")
-    period = NamingDeclaration(
-        target=NativeNamingTarget(
-            kind="variable",
-            provider="scb",
-            source_key=period_key,
-            register_key=parent.target.source_key,
-            identity_revision=_revision("scb-registerinformation"),
-        ),
-        naming=SlugEntry(
-            kind="variable",
-            provider="scb",
-            source_id="accepted-period-family:5",
-            slug="period-value",
-        ),
-        contributors=(),
-    )
-    scope = _scope().model_copy(
-        update={
-            "naming": (parent, native, period),
-            "provider_keys": ((native_key, "5"), (period_key, "period-value")),
-        }
-    )
-    compiled = CompiledCuration(
-        fields={},
-        cases={},
-        report={},
-        naming={(scope.source, scope.register_key): (parent, native)},
-        variants={(scope.source, scope.register_key): ()},
-    )
-    merged = merge_scope(scope, compiled)
-    assert merged.naming == (parent, native)
-    assert merged.provider_keys == ()
-
-
-def test_tree_hash_covers_curation_and_transitional_slug_files(tmp_path):
+def test_tree_hash_covers_curation_and_source_slug_files(tmp_path):
     root = tmp_path / "curation"
     _tree(root)
     first = tree_sha256(root)
@@ -828,138 +634,6 @@ def test_tree_hash_covers_curation_and_transitional_slug_files(tmp_path):
     slugs.mkdir()
     (slugs / "scb.toml").write_text('[register."1"]\nslug = "sample"\n')
     assert tree_sha256(root) != second
-
-
-def test_stored_case_with_unowned_prefix_fails(tmp_path):
-    compiled = compile_curation(_tree(tmp_path / "curation"), _prepared(), (_scope(),))
-    scope = _scope().model_copy(
-        update={
-            "cases": (
-                CurationCase(
-                    case_id="unowned",
-                    targets=(),
-                    decision=AcknowledgeDecision(
-                        code="error",
-                        subject="scb/sample/one",
-                        refs=(),
-                        register_key=("scb-source", "scb", "register", "native-int", 1),
-                        reason="Reviewed",
-                        evidence="Ledger",
-                    ),
-                ),
-            )
-        }
-    )
-    with pytest.raises(ValueError, match="unowned or ambiguous prefix"):
-        merge_scope(scope, compiled)
-
-
-def test_stored_v18b_case_and_gap_families_are_owned():
-    assert "classification_bindings" in COMPILED
-    assert "sos_thin" in COMPILED
-    assert "matrix_repr" in COMPILED
-    assert (
-        _naming_family(
-            NativeNamingTarget(
-                kind="variable",
-                provider="fohm",
-                source_key=(
-                    "Folkhalsomyndigheten/fohm.toml",
-                    "fohm",
-                    "register",
-                    "native-str",
-                    "nvr",
-                    "variable",
-                    "native-str",
-                    "dosnummer",
-                ),
-                register_key=(
-                    "Folkhalsomyndigheten/fohm.toml",
-                    "fohm",
-                    "register",
-                    "native-str",
-                    "nvr",
-                ),
-            )
-        )
-        == "sos_thin"
-    )
-    cases = {
-        "accepted-column-partitions:scb-registerinformation:1.2": "partition",
-        "accepted-coding:46:0": "coding",
-        "accepted-alias-window:5:identity": "matrix_repr",
-        f"accepted-classification-seed:{'a' * 64}": "classification_bindings",
-        "scb_errata.toml/column/1": "errata",
-        "accepted-authored:Folkhalsomyndigheten/fohm.toml:nvr:dosnummer": "sos_thin",
-        "delivery_enrichment.generated.toml/description/1": "enrichment",
-        "accepted-sos-routes:lss:ALDER": "sos_thin",
-        "scb_errata.toml/delivered/1": "errata",
-        "accepted-classification-override:1:0": "classification_bindings",
-        "accepted-codeless:46:0": "coding",
-        "delivery_enrichment.generated.toml/alias/1": "enrichment",
-        "accepted-period-family:5:identity": "matrix_repr",
-        "accepted-sos-identity:bu:FOD_DATUMN": "partition",
-        "accepted-cis2014-answers": "matrix_repr",
-        "accepted-cis2016-answers": "matrix_repr",
-        "existing-source-use:Socialstyrelsen/Metadata_Förteckning legitimerade": "sos_thin",
-    }
-    assert {case_id: _case_family(case_id) for case_id in cases} == cases
-    assert (
-        _naming_family(
-            NativeNamingTarget(
-                kind="variable",
-                provider="scb",
-                source_key=(
-                    "scb-registerinformation",
-                    "scb",
-                    "register",
-                    "native-int",
-                    257,
-                    "accepted-matrix",
-                    "case",
-                    "answer",
-                ),
-                register_key=(
-                    "scb-registerinformation",
-                    "scb",
-                    "register",
-                    "native-int",
-                    257,
-                ),
-            )
-        )
-        == "matrix_repr"
-    )
-    assert (
-        _naming_family(
-            NativeNamingTarget(
-                kind="variable",
-                provider="scb",
-                source_key=("curation", "period-family", "scb", "lisa", "lonfink"),
-                register_key=(
-                    "scb-registerinformation",
-                    "scb",
-                    "register",
-                    "native-int",
-                    34,
-                ),
-            )
-        )
-        == "matrix_repr"
-    )
-    gaps = {
-        "curation/delivery_enrichment.generated.toml": "enrichment",
-        "curation/classifications.toml": "classification_bindings",
-        "curation/codeless_overlap.toml": "coding",
-    }
-    assert {
-        dataset: _gap_family(
-            SimpleNamespace(revision=SimpleNamespace(dataset=dataset), pointer="/1")
-        )
-        for dataset in gaps
-    } == gaps
-    with pytest.raises(ValueError, match="unowned or ambiguous prefix"):
-        _case_family("accepted-cis2014-answers-extra")
 
 
 def _case_record(
@@ -1101,7 +775,7 @@ def test_thin_native_naming_captures_complete_family_guard(tmp_path):
 
     register_key = source_register_key(variable)
     assert register_key is not None
-    scope = ScopeDeclarations(
+    scope = CompiledScope(
         source=variable.source,
         register_key=None,
         naming=(
@@ -1296,14 +970,14 @@ def test_thin_copies_coding_from_its_own_declared_list(monkeypatch):
     assert addition.fields.value_set_declared.value == "own-list"
 
 
-def _partition_scope(records: tuple[SourceRecord, ...]) -> ScopeDeclarations:
+def _partition_scope(records: tuple[SourceRecord, ...]) -> CompiledScope:
     first = records[0]
     register = source_register_key(first)
     assert register is not None
     provider = first.subject.provider
     register_id = str(register[-1]) if provider == "scb" else "5891427617861710725"
     slug = "sample" if provider == "scb" else "par"
-    return ScopeDeclarations(
+    return CompiledScope(
         source=first.source,
         register_key=None,
         naming=(
@@ -1403,6 +1077,68 @@ def _errata_record(
     ).record
 
 
+def test_alias_window_column_must_exist_in_every_selected_edition(tmp_path: Path):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/scb/sample.toml"
+    path.write_text(
+        path.read_text(encoding="utf-8")
+        + '\n[[representation.alias_window]]\nvariable = "scb/sample/a"\n'
+        'variant = "people"\ncolumn = "A"\n'
+        'source_editions = ["2020", "2021"]\n'
+        'evidence = "Two exact source editions"\nnoted = "2026-09-25"\n',
+        encoding="utf-8",
+    )
+    (register,) = (
+        item
+        for item in load_curation_tree(root).registers
+        if item.register_info.slug == "sample"
+    )
+    first = _errata_record(column="A", year="2020")
+    second = _errata_record(column="B", year="2021", member=21)
+    register_key = source_register_key(first)
+    variant_key = native_variant_key(first)
+    variable_key = native_variable_key(first)
+    assert register_key and variant_key and variable_key
+    names = (
+        NamingDeclaration(
+            target=NativeNamingTarget(
+                kind="register", provider="scb", source_key=register_key
+            ),
+            naming=SlugEntry("register", "1", "sample", "scb"),
+            contributors=(),
+        ),
+        NamingDeclaration(
+            target=NativeNamingTarget(
+                kind="register_variant",
+                provider="scb",
+                source_key=variant_key,
+                register_key=register_key,
+            ),
+            naming=SlugEntry("register_variant", "1.2", "people", "scb"),
+            contributors=(),
+        ),
+        NamingDeclaration(
+            target=NativeNamingTarget(
+                kind="variable",
+                provider="scb",
+                source_key=variable_key,
+                register_key=register_key,
+            ),
+            naming=SlugEntry("variable", "1.5", "a", "scb"),
+            contributors=(),
+        ),
+    )
+    cases, issues = compile_alias_windows(register, (first, second), names)
+    assert cases == ()
+    assert [item.code for item in issues] == ["stale_curation_entry"]
+    assert "absent from a selected source edition" in issues[0].detail
+    cases, issues = compile_alias_windows(
+        register, (first, _errata_record(column="A", year="2021", member=21)), names
+    )
+    assert len(cases) == 1 and issues == ()
+
+
 def _errata_fixture(tmp_path: Path, records: tuple[SourceRecord, ...], fragment: str):
     root = tmp_path / "curation"
     _tree(root)
@@ -1491,6 +1227,10 @@ def test_compiled_errata_blockers_are_errors(tmp_path: Path, records, code):
     )
     assert cases == {}
     assert [item.code for item in diagnostics] == [code]
+    assert (
+        diagnostics[0].subject
+        == "curation/registers/scb/sample.toml#/errata.delivered/1"
+    )
 
 
 def test_compiled_errata_missing_edition_is_stale(tmp_path: Path):
@@ -1600,14 +1340,6 @@ def test_compiled_errata_column_placements_and_declared_flags(
     assert addition.fields.sensitivity is None
     assert keys[key][0][1] == "NewCol"
     assert naming[key][0].naming.source_id == "1.NewCol"
-    merged = merge_scope(
-        scope,
-        CompiledCuration(
-            fields={}, cases=cases, report={}, naming=naming, provider_keys=keys
-        ),
-    )
-    assert merged.provider_keys == keys[key]
-    assert merged.cases == cases[key]
     assert (
         apply_occurrence_cases((record,), (cases[key][0],)).accounting[0].disposition
         == "applied"
@@ -1749,6 +1481,10 @@ def test_compiled_enrichment_description_alias_and_staleness(tmp_path: Path):
     )
     assert cases == {}
     assert [item.code for item in diagnostics] == ["stale_curation_entry"]
+    assert (
+        diagnostics[0].subject
+        == "curation/registers/scb/sample.toml#/enrichment.description/1"
+    )
 
 
 def test_compiled_enrichment_split_uses_partition_records(tmp_path: Path):
@@ -2112,42 +1848,6 @@ def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path)
     assert native in generated[4][key]
 
 
-def test_merge_keeps_untouched_ambiguity_and_unresolved_key(tmp_path: Path):
-    root = tmp_path / "curation"
-    _scb_partition_tree(
-        root,
-        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
-        '[[variable]]\nnative_id = "1.5.unknown"\nslug = "unknown"\n',
-    )
-    records = _scb_partition_records(("ANSWER", "LEFT"))
-    generated, key, native = _compile_partition_fixture(root, records)
-    ambiguity = generated[3][key][0]
-    scope = _partition_scope(records).model_copy(
-        update={
-            "provider_keys": ((native, None),),
-            "naming_ambiguities": (ambiguity,),
-        }
-    )
-    compiled = CompiledCuration(
-        fields={},
-        cases={},
-        report={},
-        provider_keys={key: ((native, "5"),)},
-        naming_ambiguities={key: ()},
-        partition_bases={},
-    )
-    merged = merge_scope(scope, compiled)
-    assert merged.provider_keys == ((native, None),)
-    assert merged.naming_ambiguities == (ambiguity,)
-
-    replaced = merge_scope(
-        scope,
-        replace(compiled, partition_bases={key: frozenset((native,))}),
-    )
-    assert replaced.provider_keys == ((native, "5"),)
-    assert replaced.naming_ambiguities == ()
-
-
 def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
     root = tmp_path / "curation"
     _scb_partition_tree(
@@ -2288,89 +1988,6 @@ def test_partition_compile_is_byte_identical_on_rerun(tmp_path: Path):
     assert encode(first) == encode(second) == encode(shuffled)
 
 
-def test_partition_replaces_stored_scope_declarations_in_compiled_selection(
-    tmp_path: Path,
-):
-    root = tmp_path / "curation"
-    _scb_partition_tree(
-        root, '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
-    )
-    records = _scb_partition_records(("ANSWER", "LEFT"))
-    register = source_register_key(records[0])
-    assert register is not None
-    scope = _partition_scope(records)
-    scope = scope.model_copy(
-        update={
-            "cases": (
-                CurationCase(
-                    case_id="accepted-column-partitions:scb-registerinformation:1.5",
-                    targets=(),
-                    decision=AcknowledgeDecision(
-                        code="fixture",
-                        subject="scb/sample/answer",
-                        refs=(),
-                        register_key=register,
-                        reason="Stored fixture",
-                        evidence="fixture",
-                    ),
-                ),
-            )
-        }
-    )
-    native = native_variable_key(records[0])
-    assert native is not None
-    prepared = _prepared()
-
-    class Reader:
-        def iter_native_families(self, source):
-            return iter(((native, records),))
-
-        def iter_records(self, *, source):
-            return iter(records)
-
-        def iter_register_slices(self, source, registers):
-            return iter(((None, records),))
-
-    prepared.records = Reader()
-    compiled = compile_curation(
-        load_curation_tree(root), prepared, (scope,), subset=True
-    )
-    merged = merge_scope(scope, compiled)
-    assert len(merged.cases) == 1
-    assert {
-        item.naming.source_id
-        for item in merged.naming
-        if item.target.kind == "variable"
-    } == {"1.5.answer"}
-    assert (native, None) in merged.provider_keys
-    assert len(merged.naming_ambiguities) == 0
-
-
-def test_compiled_classification_family_drops_both_stored_case_prefixes(tmp_path):
-    compiled = compile_curation(_tree(tmp_path / "curation"), _prepared(), (_scope(),))
-    register_key = ("scb-source", "scb", "register", "native-int", 1)
-    cases = tuple(
-        CurationCase(
-            case_id=case_id,
-            targets=(),
-            decision=AcknowledgeDecision(
-                code="fixture",
-                subject="scb/sample/one",
-                refs=(),
-                register_key=register_key,
-                reason="Reviewed",
-                evidence="Ledger",
-            ),
-        )
-        for case_id in (
-            f"accepted-classification-seed:{'a' * 64}",
-            "accepted-classification-override:1:0",
-        )
-    )
-    scope = _scope().model_copy(update={"cases": cases})
-    assert merge_scope(scope, compiled).cases == ()
-
-
 def test_selected_classification_variable_binding_has_exact_status(tmp_path):
     root = tmp_path / "curation"
     _tree(root)
@@ -2382,29 +1999,6 @@ def test_selected_classification_variable_binding_has_exact_status(tmp_path):
     stale = compile_curation(tree, _prepared(), (scope,), subset=True)
     assert stale.report["_classifications"]["stale"] == [ref]
     assert [issue.code for issue in stale.diagnostics] == ["stale_curation_entry"]
-    register = scope.naming[0].target.source_key
-    variable = NamingDeclaration(
-        target=NativeNamingTarget(
-            kind="variable",
-            provider="scb",
-            source_key=(*register, "variable", 1),
-            register_key=register,
-            identity_revision=_revision(scope.source),
-        ),
-        naming=SlugEntry(kind="variable", provider="scb", source_id="1.1", slug="one"),
-        contributors=(),
-    )
-    named = scope.model_copy(update={"naming": (*scope.naming, variable)})
-    matched = compile_curation(tree, _prepared(), (named,), subset=True)
-    assert matched.report["_classifications"]["entries_matched"][-1] == ref
-    assert not matched.diagnostics
-    duplicate = named.model_copy(update={"source": "other"})
-    overbroad = compile_curation(tree, _prepared(), (named, duplicate), subset=True)
-    assert overbroad.report["_classifications"]["stale"] == [ref]
-    assert [issue.code for issue in overbroad.diagnostics] == [
-        "stale_curation_entry",
-        "overbroad_curation_entry",
-    ]
 
 
 def test_classification_label_staleness_is_deferred_until_scope_resolution(tmp_path):
@@ -2450,26 +2044,3 @@ def test_unmatched_global_entry_is_stale_only_in_complete_build(tmp_path):
         "curation/registers/scb/sample.toml#/group/1"
         in subset.report["scb/sample"]["not_evaluated_in_subset"]
     )
-
-
-def test_acknowledgement_owning_two_scopes_is_overbroad(tmp_path):
-    root = tmp_path / "curation"
-    _tree(root)
-    register = root / "registers" / "scb" / "sample.toml"
-    register.write_text(
-        register.read_text() + '\n[[acknowledge]]\ncode = "unresolved"\n'
-        'subject = "exact source key"\nrefs = []\nreason = "Reviewed"\n'
-        'evidence = "Ledger"\n'
-    )
-    other = _scope().model_copy(update={"source": "other"})
-    result = compile_curation(
-        load_curation_tree(root), _prepared(), (_scope(), other), subset=True
-    )
-    assert result.report["scb/sample"]["over_broad"] == [
-        "curation/registers/scb/sample.toml#/acknowledge/1",
-        "curation/registers/scb/sample.toml [register]",
-    ]
-    assert [item.code for item in result.diagnostics] == [
-        "overbroad_curation_entry",
-        "overbroad_curation_entry",
-    ]

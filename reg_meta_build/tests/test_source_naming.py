@@ -10,6 +10,7 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from _curation_fixtures import write_fdb_partition_curation
 from pydantic import ValidationError
 from reg_meta_build.curation_compile import convert_column_partitions
+from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.id import mint, mint_canonical_scb
 from reg_meta_build.source_coordinates import (
     native_parent_key,
@@ -70,16 +71,12 @@ def _entry(
     slug: str | None = "variable-a",
     *,
     origin: Literal["authored", "generated"] = "authored",
-    kind: Literal[
-        "register", "register_variant", "variable", "classification"
-    ] = "variable",
+    kind: Literal["register", "register_variant", "variable"] = "variable",
     **metadata: Any,
 ) -> AcceptedNamingEntry:
     raw = {**({"slug": slug} if slug is not None else {}), **metadata}
     naming = SlugEntry(kind, key, slug, provider="scb", **metadata)
-    revision = _revision().model_copy(
-        update={"artifact_path": f"scb{'.auto' if origin == 'generated' else ''}.toml"}
-    )
+    revision = f"fqid_slugs/scb{'.auto' if origin == 'generated' else ''}.toml"
     return AcceptedNamingEntry(
         revision=revision,
         origin=origin,
@@ -104,16 +101,13 @@ def _target(
     key: NativeKey = ("source", "variable", 101),
     *,
     register: NativeKey = ("source", "register", 1),
-    kind: Literal[
-        "register", "register_variant", "variable", "classification"
-    ] = "variable",
+    kind: Literal["register", "register_variant", "variable"] = "variable",
 ) -> NativeNamingTarget:
     return NativeNamingTarget(
         kind=kind,
         provider="scb",
         source_key=key,
         register_key=register if kind in ("variable", "register_variant") else None,
-        identity_revision=_revision(),
     )
 
 
@@ -141,32 +135,31 @@ def _record(
     return clean_scb_row(header, 2, cells, _revision()).record
 
 
-def test_pinned_reader_accounts_authored_generated_control_and_comparison(
+def test_reader_uses_tracked_register_files_and_relative_provenance(
     tmp_path: Path,
 ) -> None:
-    (tmp_path / "scb.toml").write_text(
-        '[variable."1.101"]\nslug = "authored"\ndeprecated = true\n'
-        '[register."1"]\nslug = "unbound"\n'
+    root = tmp_path / "curation"
+    register = root / "registers" / "scb"
+    register.mkdir(parents=True)
+    (root / "classifications").mkdir()
+    path = register / "sample.toml"
+    path.write_text(
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+        '[[variable]]\nnative_id = "1.101"\nslug = "authored"\ndeprecated = true\n',
+        encoding="utf-8",
     )
-    (tmp_path / "scb.auto.toml").write_text('[variable."1.101"]\nslug = "generated"\n')
-    (tmp_path / "freeze.toml").write_text('scb = "curating"\n')
-    (tmp_path / ".snapshot.json").write_text(
-        '{"variable": {"scb/1.101": "obsolete-baseline"}}'
+    (register / "sample.auto.toml").write_text(
+        '[[variable]]\nnative_id = "1.101"\nslug = "generated"\n',
+        encoding="utf-8",
     )
-    pins = tuple(_revision(path) for path in tmp_path.iterdir())
-    selection = read_naming_selection(tmp_path, pins)
+    selection = read_naming_selection(load_curation_tree(root))
     assert len(selection.entries) == 3
-    assert {file.role for file in selection.files} == {
-        "authored",
-        "generated",
-        "control",
-        "comparison",
-    }
-    assert sum(file.entry_count for file in selection.files) == 5
+    assert {file.role for file in selection.files} == {"authored", "generated"}
+    assert sum(file.entry_count for file in selection.files) == 3
     authored = next(
         entry
         for entry in selection.entries
-        if entry.revision.artifact_path.endswith("/scb.toml")
+        if entry.revision == "curation/registers/scb/sample.toml"
         and entry.entry.kind == "variable"
     )
     assert authored.content_sha256 == canonical_sha256(
@@ -182,19 +175,11 @@ def test_pinned_reader_accounts_authored_generated_control_and_comparison(
         "shadowed",
         "pending_source_binding",
     }
-    assert "obsolete-baseline" not in result.model_dump_json()
-    (tmp_path / "scb.toml").write_text('[variable."1.101"]\nslug = "modified"\n')
-    with pytest.raises(NamingConversionError, match="declared revision"):
-        read_naming_selection(tmp_path, pins)
-
-
-def test_reader_rejects_unselected_files_and_invalid_inventory(tmp_path: Path) -> None:
-    path = tmp_path / "scb.toml"
-    path.write_text("")
-    with pytest.raises(NamingConversionError, match="inventory"):
-        read_naming_selection(tmp_path, ())
-    with pytest.raises(NamingConversionError, match="unique"):
-        read_naming_selection(tmp_path, (_revision(path), _revision(path)))
+    path.write_text(path.read_text(encoding="utf-8").replace("authored", "modified"))
+    assert any(
+        entry.entry.slug == "modified"
+        for entry in read_naming_selection(load_curation_tree(root)).entries
+    )
 
 
 def test_absent_authored_slug_preserves_generated_name_and_authored_metadata() -> None:
@@ -268,25 +253,22 @@ _Y167_SPLITS = ("1.830.gaturest", "1.830.pgaturest")
 
 
 def _declaration_selection(tmp_path: Path) -> tuple[NamingSelection, Path]:
-    """A slug selection plus the register file carrying 1.830 ownership."""
-    slug_dir = tmp_path / "slug-inputs"
-    slug_dir.mkdir()
-    (slug_dir / "scb.toml").write_text(
-        '[register."1"]\nslug = "fdb"\n'
-        '[variable."1.830.gaturest"]\n'
-        '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
-        encoding="utf-8",
-    )
-    (slug_dir / "scb.auto.toml").write_text(
-        '[variable."1.830.gaturest"]\nslug = "gaturest"\n'
-        '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
-        encoding="utf-8",
-    )
-    (slug_dir / "freeze.toml").write_text('scb = "curating"\n', encoding="utf-8")
-    pins = tuple(_revision(path) for path in sorted(slug_dir.iterdir()))
-    selection = read_naming_selection(slug_dir, pins)
+    """Read tracked split names beside their register ownership declaration."""
     curation_dir = write_fdb_partition_curation(tmp_path / "curation")
-    return selection, curation_dir
+    (curation_dir / "classifications").mkdir()
+    register = curation_dir / "registers" / "scb" / "fdb.toml"
+    register.write_text(
+        register.read_text(encoding="utf-8")
+        + '[[variable]]\nnative_id = "1.830.gaturest"\n'
+        + '[[variable]]\nnative_id = "1.830.pgaturest"\nslug = "pgaturest"\n',
+        encoding="utf-8",
+    )
+    register.with_name("fdb.auto.toml").write_text(
+        '[[variable]]\nnative_id = "1.830.gaturest"\nslug = "gaturest"\n'
+        '[[variable]]\nnative_id = "1.830.pgaturest"\nslug = "pgaturest"\n',
+        encoding="utf-8",
+    )
+    return read_naming_selection(load_curation_tree(curation_dir)), curation_dir
 
 
 def test_tracked_column_ownership_survives_naming_conversion(
@@ -335,8 +317,14 @@ def test_tracked_column_ownership_survives_naming_conversion(
     # The empty authored row contributes no slug, so the generated gaturest
     # pin remains active. The authored pgaturest slug still shadows its
     # generated row under the existing override rule.
-    assert by_disposition["fqid_slugs/scb.toml#variable/1.830.gaturest"] == "bound"
-    assert by_disposition["fqid_slugs/scb.auto.toml#variable/1.830.gaturest"] == "bound"
+    assert (
+        by_disposition["curation/registers/scb/fdb.toml#variable/1.830.gaturest"]
+        == "bound"
+    )
+    assert (
+        by_disposition["curation/registers/scb/fdb.auto.toml#variable/1.830.gaturest"]
+        == "bound"
+    )
     by_id = {item.naming.source_id: item for item in result.declarations}
     gaturest = by_id["1.830.gaturest"]
     assert gaturest.naming.slug == "gaturest"
@@ -392,11 +380,7 @@ def test_nonidentical_duplicate_bindings_block_and_identical_duplicates_coalesce
     binding = _binding(entry)
     assert convert_naming(_selection(entry), (binding, binding)).complete
     changed_guard = binding.target.model_copy(
-        update={
-            "identity_revision": _revision().model_copy(
-                update={"upstream_revision": "other"}
-            )
-        }
+        update={"source_key": ("source", "variable", 102)}
     )
     result = convert_naming(
         _selection(entry), (binding, _binding(entry, changed_guard))
@@ -566,12 +550,6 @@ def test_native_name_depends_on_existing_identity_not_delivery_membership() -> N
         ),
         changed,
     )
-
-
-def test_source_artifact_identity_requires_the_exact_selected_revision() -> None:
-    target = _target()
-    assert not check_naming_target(target, (), revisions=(_revision(),))
-    assert check_naming_target(target, ())[0].code == "naming_identity_revision_changed"
 
 
 @pytest.mark.parametrize("kind", ["register", "register_variant"])

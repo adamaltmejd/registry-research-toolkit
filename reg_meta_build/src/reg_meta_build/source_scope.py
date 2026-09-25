@@ -54,7 +54,7 @@ if TYPE_CHECKING:
 
     from reg_meta_build.catalog_dependencies import CoverageObligation, DependencyKey
     from reg_meta_build.curation_tree import RegisterCuration
-    from reg_meta_build.pipeline import ScopeDeclarations
+    from reg_meta_build.pipeline import CompiledScope
     from reg_meta_build.resolved_catalog import (
         ResolvedClassification,
         ResolvedVariable,
@@ -69,7 +69,7 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.source_naming import NamingAmbiguity, NamingDeclaration
     from reg_meta_build.source_occurrences import EffectiveOccurrence
-    from reg_meta_build.source_records import SourceRecord, SourceRevision
+    from reg_meta_build.source_records import SourceRecord
     from reg_meta_build.source_support import SourceSupportBindings
     from reg_meta_build.source_value_bindings import (
         ValueBindingResult,
@@ -147,11 +147,10 @@ def resolve_source_scope(
     matched_labels: set[str] | None = None,
     duplicate_overrides: set[str] | None = None,
     declared_variants: Mapping[NativeKey, ResolvedVariant] | None = None,
-    revisions: tuple[SourceRevision, ...] = (),
     on_binding: Callable[[NativeKey, ValueBindingResult], None] | None = None,
     on_diagnostic: Callable[[ResolutionDiagnostic], None] | None = None,
     diagnostic: bool = False,
-    coding_scope: ScopeDeclarations | None = None,
+    coding_scope: CompiledScope | None = None,
     coding_registers: tuple[RegisterCuration, ...] = (),
     on_coding_compiled: Callable[
         [RegisterCuration, tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]],
@@ -238,7 +237,7 @@ def resolve_source_scope(
         if token in names and names[token].naming != declaration.naming:
             raise ValueError(f"conflicting catalog naming declarations: {token!r}")
         names.setdefault(token, declaration)
-        issues = check_naming_target(target, evidence, revisions=revisions)
+        issues = check_naming_target(target, evidence)
         for issue in issues:
             emit(issue)
         if issues:

@@ -127,8 +127,6 @@ type InputRole = Literal[
     "lisa_workbook",
     "thin_provider",
     "code_list",
-    "curation",
-    "naming",
 ]
 
 
@@ -138,7 +136,7 @@ class PreparedInputAccounting(_Model):
     role: InputRole
     record_usage: Literal["occurrence", "field_support", "support", "none"]
     present: bool
-    disposition: Literal["prepared", "absent", "excluded_curation", "excluded_naming"]
+    disposition: Literal["prepared", "absent"]
     revision: SourceRevision | None
     counts: SourceCounts = SourceCounts()
     exclusion_reason: str | None = None
@@ -151,23 +149,13 @@ class PreparedInputAccounting(_Model):
             raise ValueError(
                 "present inputs require exact revisions; absent inputs cannot have one"
             )
-        expected = (
-            "absent"
-            if not self.present
-            else "excluded_curation"
-            if self.role == "curation"
-            else "excluded_naming"
-            if self.role == "naming"
-            else "prepared"
-        )
+        expected = "prepared" if self.present else "absent"
         if self.disposition != expected:
             raise ValueError("input disposition differs from its role/presence")
         if self.record_usage != _record_usage(self.role, self.present):
             raise ValueError("record usage differs from its source format/presence")
         if self.disposition != "prepared" and self.counts != SourceCounts():
             raise ValueError("unprepared inputs cannot claim output counts")
-        if self.disposition.startswith("excluded_") and not self.exclusion_reason:
-            raise ValueError("excluded input requires an explicit reason")
         return self
 
 
@@ -393,15 +381,6 @@ def _role(path: str, *, origin: str) -> InputRole:
         or Path(path).is_relative_to("catalog/classifications")
     ) and Path(path).suffix == ".csv":
         return "code_list"
-    # Transitional: bundles no longer carry curation or naming files. These two
-    # branches only let the accepted prepared v13 manifest, which lists them, still
-    # open; delete them with that manifest.
-    elif Path(path).parent.as_posix() == "curation":
-        return "curation"
-    elif Path(path).parent.as_posix() == "fqid_slugs" and (
-        path.endswith(".toml") or path == "fqid_slugs/.snapshot.json"
-    ):
-        return "naming"
     raise PreparedCatalogError(
         f"no stage-1 input role for {origin}:{path}; update its reader/selection explicitly"
     )
@@ -468,22 +447,8 @@ def _inventory(bundle: CatalogBundleReader) -> tuple[PreparedInputAccounting, ..
                     artifact_size=size,
                     artifact_sha256=digest,
                 )
-            disposition = (
-                "absent"
-                if not item.present
-                else "excluded_curation"
-                if role == "curation"
-                else "excluded_naming"
-                if role == "naming"
-                else "prepared"
-            )
-            exclusion = (
-                "Decision declarations are pinned for stage 2; they are not provider observations."
-                if role == "curation"
-                else "Catalog identity declarations are pinned for stage 2; stage 1 does not assign FQIDs."
-                if role == "naming"
-                else None
-            )
+            disposition = "prepared" if item.present else "absent"
+            exclusion = None
             if role == "lisa_workbook" and not item.present:
                 exclusion = bundle.manifest.supplemental_datasets[0].exclusion_reason
             entries.append(

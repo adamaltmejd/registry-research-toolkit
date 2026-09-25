@@ -1,15 +1,10 @@
-"""Compile tracked curation beside a pinned, transitional selection.
-
-Families are closed: every stored declaration has one owner, and COMPILED replaces
-that owner's declarations in every scope. Later children move their converters here.
-"""
+"""Compile tracked curation against prepared source scopes."""
 
 from __future__ import annotations
 
 import hashlib
 import json
 import re
-import tomllib
 from calendar import monthrange
 from collections import defaultdict
 from dataclasses import dataclass
@@ -30,8 +25,7 @@ from .cis2016_matrix import (
 )
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import EnrichmentAliasEntry, EnrichmentDescriptionEntry
-from .delivery_enrichment import load_delivery_enrichment
-from .fqid_slugs import EntityKind, SlugEntry, _load_register_auto_file, _validate_entry
+from .fqid_slugs import SlugEntry
 from .normalization import normalize_token
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
 from .resolved_metadata import (
@@ -97,6 +91,7 @@ from .source_naming import (
     NamingFreezeSetting,
     NamingSelection,
     NativeNamingTarget,
+    _register_naming_entries,
     authored_naming_id,
     convert_naming,
     native_provider_keys,
@@ -107,7 +102,6 @@ from .source_records import (
     NativeCoordinates,
     ScopeInterval,
     SourceFields,
-    SourceRevision,
     TemporalScope,
     canonical_sha256,
 )
@@ -122,7 +116,7 @@ if TYPE_CHECKING:
         IdentitySplitEntry,
         RegisterCuration,
     )
-    from .pipeline import ScopeDeclarations
+    from .pipeline import CompiledScope
     from .prepared_catalog import PreparedCatalogSources
     from .source_coding import CodeListClaim
     from .source_coordinates import NativeKey
@@ -130,104 +124,10 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class Family:
-    case_prefixes: tuple[str, ...] = ()
-    case_ids: tuple[str, ...] = ()
-    naming_shapes: tuple[str, ...] = ()
-    selection_fields: tuple[str, ...] = ()
-    unapplied_datasets: tuple[str, ...] = ()
-    scope_fields: tuple[str, ...] = ()
-
-
-# A shape is the discriminator in NativeNamingTarget.source_key. The fallback is
-# explicitly the native/parent family, never an unowned wildcard case prefix.
-FAMILIES: dict[str, Family] = {
-    "classifications": Family(selection_fields=("classifications",)),
-    "classification_successions": Family(
-        selection_fields=("classification_successions",)
-    ),
-    "metadata": Family(selection_fields=("metadata",)),
-    "code_label_pairs": Family(selection_fields=("code_label_pairs",)),
-    "lineage_defaults": Family(selection_fields=("lineage_defaults",)),
-    "identifier_sources": Family(selection_fields=("identifier_sources",)),
-    "event_sources": Family(selection_fields=("event_sources",)),
-    "acknowledge": Family(case_prefixes=("curation/registers/",)),
-    "identity": Family(unapplied_datasets=("fqid_slugs/",)),
-    "partition": Family(
-        case_prefixes=("accepted-column-partitions:", "accepted-sos-identity:"),
-        naming_shapes=("accepted-partition", "accepted-shape", "accepted-name"),
-        scope_fields=("naming_ambiguities",),
-    ),
-    "errata": Family(
-        case_prefixes=(
-            "scb_errata.toml/column/",
-            "scb_errata.toml/delivered/",
-        ),
-        naming_shapes=("declared-column",),
-        unapplied_datasets=("curation/scb_errata.toml",),
-    ),
-    "matrix_repr": Family(
-        case_ids=("accepted-cis2014-answers", "accepted-cis2016-answers"),
-        case_prefixes=("accepted-period-family:", "accepted-alias-window:"),
-        naming_shapes=("accepted-matrix", "period-family"),
-        unapplied_datasets=("curation/cis",),
-    ),
-    "coding": Family(
-        case_prefixes=("accepted-coding:", "accepted-codeless:"),
-        unapplied_datasets=("curation/codeless_overlap.toml",),
-    ),
-    "classification_bindings": Family(
-        case_prefixes=(
-            "accepted-classification-seed:",
-            "accepted-classification-override:",
-        ),
-        unapplied_datasets=("curation/classifications.toml",),
-    ),
-    "enrichment": Family(
-        case_prefixes=(
-            "delivery_enrichment.generated.toml/description/",
-            "delivery_enrichment.generated.toml/alias/",
-        ),
-        unapplied_datasets=("curation/delivery_enrichment.generated.toml",),
-    ),
-    "annotations": Family(
-        # The synthetic SOS pipeline fixture supplies this exact reviewed case.
-        case_ids=("accepted-errata:sos-declared-flags",),
-        unapplied_datasets=("scb-registerinformation", "sos-"),
-    ),
-    "naming": Family(
-        naming_shapes=("native",),
-        scope_fields=("provider_keys", "variants"),
-    ),
-    "sos_thin": Family(
-        case_prefixes=(
-            "accepted-sos-routes:",
-            "existing-source-use:",
-            "accepted-authored:",
-        ),
-        naming_shapes=("thin-provider",),
-    ),
-}
-COMPILED = frozenset(
-    {
-        "classifications",
-        "classification_successions",
-        "metadata",
-        "code_label_pairs",
-        "lineage_defaults",
-        "identifier_sources",
-        "event_sources",
-        "acknowledge",
-        "classification_bindings",
-        "coding",
-        "naming",
-        "sos_thin",
-        "partition",
-        "matrix_repr",
-        "errata",
-        "enrichment",
-    }
-)
+class CompiledCodebook:
+    source: str
+    descriptor: str
+    metadata: dict[str, str | int | list[dict[str, str]] | None]
 
 
 @dataclass(frozen=True)
@@ -255,7 +155,7 @@ class CompiledCuration:
 
 
 def tree_sha256(root: Path) -> str:
-    """Hash sorted paths and file contents, including the transitional slug tree."""
+    """Hash sorted tracked curation paths and source slug files."""
     members = []
     for directory in (root, root.parent / "fqid_slugs"):
         if directory.is_dir():
@@ -286,7 +186,7 @@ _SENTINELS = TypeAdapter(list[SentinelCode])
 
 
 def validate_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ...]:
-    """The one strict validator for selection and tracked classification sentinels."""
+    """Validate tracked classification sentinels at the compile boundary."""
     if raw is None:
         return ()
     try:
@@ -303,167 +203,6 @@ def validate_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ...]
             f"classification {subject!r} lists a sentinel code more than once."
         )
     return tuple(sentinels)
-
-
-def _case_family(case_id: str) -> str:
-    owners = [
-        name
-        for name, family in FAMILIES.items()
-        if case_id in family.case_ids
-        or any(
-            case_id.startswith(prefix)
-            and ("#/acknowledge/" in case_id if name == "acknowledge" else True)
-            for prefix in family.case_prefixes
-        )
-    ]
-    if len(owners) != 1:
-        raise ValueError(f"stored case has an unowned or ambiguous prefix: {case_id}")
-    return owners[0]
-
-
-def _naming_family(target: Any) -> str:
-    source_key = target.source_key
-    if target.provider not in {"scb", "sos"}:
-        return "sos_thin"
-    markers = {
-        "accepted-partition": "partition",
-        "declared-column": "errata",
-        "accepted-matrix": "matrix_repr",
-        "period-family": "matrix_repr",
-        "accepted-shape": "partition",
-        "accepted-name": "partition",
-        "thin-provider": "sos_thin",
-    }
-    for part in source_key:
-        if part in markers:
-            return markers[part]
-    if target.kind in {"register", "register_variant"} or (
-        target.kind == "variable"
-        and len(source_key) >= 3
-        and source_key[-3] == "variable"
-        and source_key[-2] in {"native-int", "native-str"}
-    ):
-        return "naming"
-    raise ValueError(f"stored naming has no family: {source_key!r}")
-
-
-def _gap_family(gap: Any) -> str:
-    dataset = gap.revision.dataset
-    owners = [
-        name
-        for name, family in FAMILIES.items()
-        if any(dataset.startswith(prefix) for prefix in family.unapplied_datasets)
-    ]
-    if len(owners) != 1:
-        raise ValueError(
-            f"stored unapplied curation has no family: {dataset}#{gap.pointer}"
-        )
-    return owners[0]
-
-
-def merge_scope(
-    scope: ScopeDeclarations, compiled: CompiledCuration
-) -> ScopeDeclarations:
-    """Replace compiled families and reject every unowned stored declaration."""
-    from .pipeline import ScopeDeclarations
-
-    key = scope.source, scope.register_key
-    owned_fields = {
-        field for family in FAMILIES.values() for field in family.scope_fields
-    }
-    if owned_fields != {"naming_ambiguities", "provider_keys", "variants"}:
-        raise ValueError("scope family ownership is incomplete")
-    cases = tuple(
-        case for case in scope.cases if _case_family(case.case_id) not in COMPILED
-    )
-    naming = tuple(
-        item for item in scope.naming if _naming_family(item.target) not in COMPILED
-    )
-    gaps = tuple(
-        gap for gap in scope.unapplied_curation if _gap_family(gap) not in COMPILED
-    )
-    # A null key is the unsplit base of a partitioned identity. It has no naming
-    # declaration, but remains stored until partition is compiled.
-    naming_owners = {
-        item.target.source_key: _naming_family(item.target) for item in scope.naming
-    }
-    naming_owners.update(
-        (item.family.source_key, _naming_family(item.family))
-        for item in scope.naming_ambiguities
-    )
-    # Stored attribution and unresolved base keys still explain dependencies
-    # for families with no tracked split in this transitional selection.
-    partition_bases = (compiled.partition_bases or {}).get(key, frozenset())
-    untouched_nulls = {
-        source_key
-        for source_key, value in scope.provider_keys
-        if value is None and source_key not in partition_bases
-    }
-    provider_keys = []
-    for item in scope.provider_keys:
-        source_key, value = item
-        owner = "partition" if value is None else naming_owners.get(source_key)
-        if owner is None:
-            raise ValueError(
-                f"provider key has no converted catalog naming: {source_key!r}"
-            )
-        if owner not in COMPILED or source_key in untouched_nulls:
-            provider_keys.append(item)
-    merged = scope.model_copy(
-        update={
-            "cases": (*cases, *compiled.cases.get(key, ())),
-            "naming": (*naming, *(compiled.naming or {}).get(key, ())),
-            "provider_keys": (
-                *provider_keys,
-                *(
-                    item
-                    for item in (compiled.provider_keys or {}).get(key, ())
-                    if item[0] not in untouched_nulls
-                ),
-            ),
-            "naming_ambiguities": (
-                *(
-                    item
-                    for item in scope.naming_ambiguities
-                    if item.family.source_key not in partition_bases
-                ),
-                *(compiled.naming_ambiguities or {}).get(key, ()),
-            ),
-            "variants": (compiled.variants or {}).get(key, ()),
-            "unapplied_curation": gaps,
-        }
-    )
-    return ScopeDeclarations.model_validate_json(merged.model_dump_json())
-
-
-def merge_selection(selected: Any, compiled: CompiledCuration):
-    from .pipeline import PipelineSelection
-
-    owned = {
-        field: name
-        for name, family in FAMILIES.items()
-        for field in family.selection_fields
-    }
-    actual = set(PipelineSelection.model_fields) - {
-        "format",
-        "prepared_path",
-        "prepared_commit",
-        "prepared_sha256",
-        "scopes",
-        "unconverted",
-    }
-    if set(owned) != actual:
-        raise ValueError(
-            f"selection family ownership is incomplete: {sorted(actual ^ set(owned))}"
-        )
-    merged = selected.model_copy(
-        update={
-            field: value
-            for field, value in compiled.fields.items()
-            if owned[field] in COMPILED
-        }
-    )
-    return PipelineSelection.model_validate_json(merged.model_dump_json())
 
 
 def _register(ref: str) -> str:
@@ -688,7 +427,7 @@ def compile_declared_metadata(
 
 
 def _scope_registers(
-    scope: ScopeDeclarations,
+    scope: CompiledScope,
 ) -> tuple[tuple[str, tuple[str | int, ...]], ...]:
     return tuple(
         (f"{item.naming.provider}/{item.naming.slug}", item.target.source_key)
@@ -740,101 +479,6 @@ def _naming_source_id(
         else (None if kind == "register" else str(key[-1])),
         canonical_scb=provider == "scb",
     )
-
-
-def _curation_naming_revision(path: Path) -> SourceRevision:
-    payload = path.read_bytes()
-    digest = hashlib.sha256(payload).hexdigest()
-    return SourceRevision.create(
-        dataset="curation/naming",
-        publisher="maintainer",
-        purpose="tracked naming",
-        upstream_revision=digest,
-        artifact_path=f"curation/registers/{path.parent.name}/{path.name}",
-        artifact_size=len(payload),
-        artifact_sha256=digest,
-    )
-
-
-def _tracked_naming_entry(
-    revision: SourceRevision,
-    kind: EntityKind,
-    native_id: str,
-    raw: dict[str, Any],
-    provider: str,
-    origin: Literal["authored", "generated"],
-) -> AcceptedNamingEntry:
-    return AcceptedNamingEntry(
-        revision=revision,
-        origin=origin,
-        entry=_validate_entry(kind, native_id, raw, provider=provider),
-        supplied_fields=tuple(sorted(raw)),
-        content_sha256=canonical_sha256(raw),
-    )
-
-
-def _register_naming_entries(tree: CurationTree, register: RegisterCuration):
-    path = tree.root / register.source_file.removeprefix("curation/")
-    info = register.register_info
-    revision = _curation_naming_revision(path)
-    entries = [
-        (
-            _tracked_naming_entry(
-                revision,
-                "register",
-                str(info.native_id),
-                {"slug": info.slug},
-                info.provider,
-                "authored",
-            ),
-            "[register]",
-        )
-    ]
-    for table, rows, kind in (
-        ("variant", register.variant, "register_variant"),
-        ("variable", register.variable, "variable"),
-    ):
-        for index, row in enumerate(rows, 1):
-            raw = row.model_dump(mode="json", exclude={"native_id"}, exclude_unset=True)
-            entries.append(
-                (
-                    _tracked_naming_entry(
-                        revision,
-                        cast("EntityKind", kind),
-                        row.native_id,
-                        raw,
-                        info.provider,
-                        "authored",
-                    ),
-                    f"[[{table}]] entry {index}",
-                )
-            )
-    auto = path.with_name(path.stem + ".auto.toml")
-    if auto.is_file():
-        auto_revision = _curation_naming_revision(auto)
-        raw_rows = tomllib.loads(auto.read_text(encoding="utf-8")).get("variable", [])
-        for index, entry in enumerate(
-            _load_register_auto_file(auto, info.provider, str(info.native_id)), 1
-        ):
-            raw = {
-                key: value
-                for key, value in raw_rows[index - 1].items()
-                if key != "native_id"
-            }
-            entries.append(
-                (
-                    _tracked_naming_entry(
-                        auto_revision,
-                        "variable",
-                        entry.source_id,
-                        raw,
-                        info.provider,
-                        "generated",
-                    ),
-                    f"[[variable]] entry {index}",
-                )
-            )
-    return tuple(entries)
 
 
 @dataclass(frozen=True)
@@ -1421,6 +1065,18 @@ def compile_alias_windows(
                         _literal_field(record, "column_name"),
                     )
                 )
+        if any(
+            not any(column == entry.column for _, _, column in targets)
+            for targets in targets_by_edition.values()
+        ):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.variable,
+                    "alias column is absent from a selected source edition",
+                )
+            )
+            continue
         if any(len(targets) != 1 for targets in targets_by_edition.values()):
             diagnostics.append(
                 _overbroad_matrix_repr(
@@ -1472,7 +1128,7 @@ def compile_alias_windows(
 def compile_matrix_repr(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
-    scopes: tuple[ScopeDeclarations, ...],
+    scopes: tuple[CompiledScope, ...],
     naming: dict[Any, tuple[NamingDeclaration, ...]],
 ) -> tuple[
     dict[Any, tuple[CurationCase, ...]],
@@ -1480,7 +1136,7 @@ def compile_matrix_repr(
     dict[Any, tuple[tuple[tuple[str | int, ...], str], ...]],
     tuple[ResolutionDiagnostic, ...],
 ]:
-    """Replace the final stored cases with tracked, checked declarations."""
+    """Compile checked matrix and representation declarations from tracked curation."""
     registers = {
         f"{item.register_info.provider}/{item.register_info.slug}": item
         for item in tree.registers
@@ -1684,7 +1340,7 @@ def _partition_ambiguity(
 def compile_partitions(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
-    scopes: tuple[ScopeDeclarations, ...],
+    scopes: tuple[CompiledScope, ...],
 ) -> tuple[
     dict[Any, tuple[CurationCase, ...]],
     dict[Any, tuple[Any, ...]],
@@ -2152,7 +1808,7 @@ def _partition_owned_naming_entry(
 def compile_native_naming(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
-    scopes: tuple[ScopeDeclarations, ...],
+    scopes: tuple[CompiledScope, ...],
     *,
     subset: bool,
 ) -> tuple[
@@ -2308,9 +1964,17 @@ def compile_native_naming(
     diagnostics = []
     report: dict[str, dict[str, list[str]]] = {}
     register_scopes: dict[str, list[tuple[str, tuple[str | int, ...] | None]]] = {}
-    for scope_key, scope in scope_map.items():
-        for name, _ in _scope_registers(scope):
-            register_scopes.setdefault(name, []).append(scope_key)
+    for register in tree.registers:
+        info = register.register_info
+        name = f"{info.provider}/{info.slug}"
+        for scope_key, candidates in bindings.items():
+            if any(
+                item.kind == "register"
+                and item.provider == info.provider
+                and item.source_id == str(info.native_id)
+                for item in candidates
+            ):
+                register_scopes.setdefault(name, []).append(scope_key)
     for register in sorted(tree.registers, key=lambda item: item.source_file):
         name = f"{register.register_info.provider}/{register.register_info.slug}"
         matches = register_scopes.get(name, ())
@@ -2332,7 +1996,6 @@ def compile_native_naming(
                     "entries_matched",
                     "stale",
                     "over_broad",
-                    "not_evaluated",
                     "not_evaluated_in_subset",
                 )
             },
@@ -2340,7 +2003,7 @@ def compile_native_naming(
         for entry, where in _register_naming_entries(tree, register):
             if _partition_owned_naming_entry(register, entry):
                 continue
-            ref = f"{entry.revision.artifact_path} {where}"
+            ref = f"{entry.revision} {where}"
             statuses["entries_read"].append(ref)
             statuses[status].append(ref)
             if status != "not_evaluated_in_subset":
@@ -2357,7 +2020,9 @@ def compile_native_naming(
                     )
                 )
     for scope_key, scope in sorted(scope_map.items(), key=lambda item: repr(item[0])):
-        selected = {name for name, _ in _scope_registers(scope)}
+        selected = {
+            name for name, owners in register_scopes.items() if scope_key in owners
+        }
         entries = []
         locations = {}
         entry_owners = {}
@@ -2374,7 +2039,6 @@ def compile_native_naming(
                         "entries_matched",
                         "stale",
                         "over_broad",
-                        "not_evaluated",
                         "not_evaluated_in_subset",
                     )
                 },
@@ -2382,7 +2046,7 @@ def compile_native_naming(
             for entry, where in _register_naming_entries(tree, register):
                 if _partition_owned_naming_entry(register, entry):
                     continue
-                ref = f"{entry.revision.artifact_path} {where}"
+                ref = f"{entry.revision} {where}"
                 statuses["entries_read"].append(ref)
                 entries.append(entry)
                 locations[entry.entry_id] = ref
@@ -2392,12 +2056,6 @@ def compile_native_naming(
             (entry.entry.kind, entry.entry.provider, entry.entry.source_id)
             for entry in entries
         }
-        unbound = supplied - bound
-        uncompiled = set()
-        for item in scope.naming:
-            token = item.naming.kind, item.naming.provider, item.naming.source_id
-            if token in unbound and _naming_family(item.target) not in COMPILED:
-                uncompiled.add(token)
         for binding in bindings[scope_key]:
             if binding.target.source_key[-2:] != (
                 "variant",
@@ -2424,8 +2082,6 @@ def compile_native_naming(
             if token in bound:
                 matched.append(entry)
                 report[entry_owners[entry.entry_id]]["entries_matched"].append(ref)
-            elif token in uncompiled:
-                report[entry_owners[entry.entry_id]]["not_evaluated"].append(ref)
             else:
                 name = entry_owners[entry.entry_id]
                 report[name]["stale"].append(ref)
@@ -2524,7 +2180,7 @@ def _source_text(field: Any) -> str | None:
 def compile_sos_thin(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
-    scopes: tuple[ScopeDeclarations, ...],
+    scopes: tuple[CompiledScope, ...],
 ) -> tuple[
     dict[Any, tuple[CurationCase, ...]],
     tuple[ResolutionDiagnostic, ...],
@@ -2930,7 +2586,7 @@ def _compile_thin_register(
 
 def compile_coding_register(
     register: RegisterCuration,
-    scope: ScopeDeclarations,
+    scope: CompiledScope,
     *,
     originals: tuple[SourceRecord, ...],
     columns: Mapping[NativeKey, tuple[SourceRecord, ...]],
@@ -3164,7 +2820,7 @@ def _partition_memberships(
 def compile_errata(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
-    scopes: tuple[ScopeDeclarations, ...],
+    scopes: tuple[CompiledScope, ...],
     partition_cases: dict[Any, tuple[CurationCase, ...]],
     *,
     subset: bool,
@@ -3198,10 +2854,6 @@ def compile_errata(
     delivered = {
         (entry.register_id, entry.register_variant_id, fold_column(entry.column)): entry
         for entry in loaded.delivered
-    }
-    delivered_positions = {
-        (entry.register_id, entry.register_variant_id, fold_column(entry.column)): index
-        for index, entry in enumerate(loaded.delivered, 1)
     }
     columns = {
         (entry.register_id, entry.register_variant_id, fold_column(entry.column)): entry
@@ -3282,12 +2934,7 @@ def compile_errata(
             for index, row in enumerate(entries, 1):
                 case_id = f"{register.source_file}#/errata.{table}/{index}"
                 statuses["entries_read"].append(case_id)
-                subject = (
-                    f"curation/scb_errata.toml#/delivered/"
-                    f"{delivered_positions[register_id, variant_ids[row.variant], fold_column(row.column)]}"
-                    if table == "delivered"
-                    else f"{name}/{row.variant}/{row.column}"
-                )
+                subject = case_id
                 if len(matches) != 1:
                     status = (
                         "over_broad"
@@ -3482,7 +3129,7 @@ def compile_errata(
 def compile_enrichment(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
-    scopes: tuple[ScopeDeclarations, ...],
+    scopes: tuple[CompiledScope, ...],
     naming: dict[Any, tuple[Any, ...]],
     partition_cases: dict[Any, tuple[CurationCase, ...]],
     errata_cases: dict[Any, tuple[CurationCase, ...]],
@@ -3494,16 +3141,7 @@ def compile_enrichment(
     dict[str, dict[str, list[str]]],
 ]:
     """Bind delivery prose and search spellings to one compiled catalog name."""
-    loaded = load_delivery_enrichment(tree.root)
     partition_members = _partition_memberships(partition_cases)
-    description_positions = {
-        (item.provider, item.register, item.variable): index
-        for index, item in enumerate(loaded.descriptions, 1)
-    }
-    alias_positions = {
-        (item.provider, item.register, item.variable, item.delivery_column): index
-        for index, item in enumerate(loaded.aliases, 1)
-    }
     by_name: dict[str, list[tuple[Any, NamingDeclaration]]] = defaultdict(list)
     register_keys: dict[str, tuple[str | int, ...]] = {}
     register_locations: dict[str, list[tuple[Any, tuple[str | int, ...]]]] = (
@@ -3555,23 +3193,7 @@ def compile_enrichment(
             for index, row in enumerate(entries, 1):
                 case_id = f"{register.source_file}#/enrichment.{table}/{index}"
                 target_name = f"{name}/{row.variable}"
-                position = (
-                    description_positions[
-                        register.register_info.provider,
-                        register.register_info.slug,
-                        row.variable,
-                    ]
-                    if isinstance(row, EnrichmentDescriptionEntry)
-                    else alias_positions[
-                        register.register_info.provider,
-                        register.register_info.slug,
-                        row.variable,
-                        row.delivery_column,
-                    ]
-                )
-                subject = (
-                    f"curation/delivery_enrichment.generated.toml#/{table}/{position}"
-                )
+                subject = case_id
                 statuses["entries_read"].append(case_id)
                 targets = by_name.get(target_name, ())
                 if len(targets) != 1:
@@ -3832,12 +3454,24 @@ def compile_enrichment(
 def compile_curation(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
-    scopes: tuple[ScopeDeclarations, ...],
+    scopes: tuple[CompiledScope, ...],
     *,
     subset: bool = False,
 ) -> CompiledCuration:
     """Compile global families, wiring, and exact issue acknowledgements."""
-    from .pipeline import CodebookDeclaration
+    from .pipeline import CompiledScope
+
+    naming, variants, provider_keys, naming_diagnostics, naming_report = (
+        compile_native_naming(tree, prepared, scopes, subset=subset)
+    )
+    scopes = tuple(
+        CompiledScope.model_validate_json(
+            scope.model_copy(
+                update={"naming": naming.get((scope.source, scope.register_key), ())}
+            ).model_dump_json()
+        )
+        for scope in scopes
+    )
 
     selected = {register for scope in scopes for register, _ in _scope_registers(scope)}
     unmatched: list[str] = []
@@ -3845,7 +3479,7 @@ def compile_curation(
         tree, selected=selected, unmatched=unmatched
     )
     books = tuple(
-        CodebookDeclaration(
+        CompiledCodebook(
             source=f"classifications/{entry.classification.codes_file}",
             descriptor=normalize_token(Path(entry.classification.codes_file).stem),
             metadata={
@@ -4031,7 +3665,7 @@ def compile_curation(
         registers = {
             native_key: register for register, native_key in _scope_registers(scope)
         }
-        for name in scope.naming:
+        for name in naming.get((scope.source, scope.register_key), ()):
             if (
                 name.target.kind == "variable"
                 and name.naming.slug is not None
@@ -4094,9 +3728,6 @@ def compile_curation(
             )
             for entry_id in sorted(unmatched)
         )
-    naming, variants, provider_keys, naming_diagnostics, naming_report = (
-        compile_native_naming(tree, prepared, scopes, subset=subset)
-    )
     (
         partition_cases,
         partition_naming,

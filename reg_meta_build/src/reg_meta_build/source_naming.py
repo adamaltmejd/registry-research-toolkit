@@ -1,34 +1,27 @@
-"""Bind accepted naming entries to finite, source-native identities.
+"""Bind tracked naming entries to finite, source-native identities.
 
-This is an offline conversion boundary, not an identity resolver. Callers supply
-exact native bindings; a legacy split key needs its own explicit binding. Generated
-pins are authoritative only in curating/frozen zones, while snapshots remain
-comparison evidence. No new slug is derived here.
+The compile supplies exact native bindings; a split key needs its own explicit
+binding. No new slug is derived here.
 """
 
 from __future__ import annotations
 
-import json
 import tomllib
 from collections import defaultdict
 from dataclasses import asdict
-from pathlib import Path
-from typing import TYPE_CHECKING, Literal, Self
+from typing import TYPE_CHECKING, Any, Literal, Self, cast
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
 from reg_meta_build.fqid_slugs import (
-    AUTO_FILE_SUFFIX,
-    FREEZE_STATE_FILE,
-    SNAPSHOT_FILENAME,
     EntityKind,
     SlugEntry,
     SlugFreezeState,
+    _load_register_auto_file,
     _parse_register_id,
     _parse_variable_id,
     _parse_variant_id,
-    load_freeze_states,
-    load_provider_toml,
+    _validate_entry,
 )
 from reg_meta_build.id import mint, mint_canonical_scb
 from reg_meta_build.source_coordinates import native_parent_key, source_register_key
@@ -39,12 +32,13 @@ from reg_meta_build.source_curation import (
     SourceEvidence,
     evaluate_source_expectations,
 )
-from reg_meta_build.source_records import SourceRevision, canonical_sha256
-from reg_meta_build.sources.code_lists import read_selected_bytes
+from reg_meta_build.source_records import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from pathlib import Path
 
+    from reg_meta_build.curation_tree import CurationTree, RegisterCuration
     from reg_meta_build.source_records import SourceRecord
 
 
@@ -61,13 +55,11 @@ class _NamingModel(BaseModel):
 
 
 class NativeNamingTarget(_NamingModel):
-    """One exact native entity, guarded by source evidence or a source artifact.
+    """One exact native entity, guarded by source evidence.
 
     Keys are opaque to this module and retain integer/string distinctions. Variable
-    and variant names are scoped by their exact native register_key. A declaration
-    without row members (for example a standalone code-list identity) is guarded by
-    its selected identity_revision instead of invented variable observations.
-    A native variable can be named by its exact existing key without asserting
+    and variant names are scoped by their exact native register_key. A native variable
+    can be named by its exact existing key without asserting
     delivery membership. A curated partition still requires its checked members.
     Parent names can use checked identity anchors without a peer-set assertion.
     """
@@ -78,15 +70,12 @@ class NativeNamingTarget(_NamingModel):
     register_key: NativeKey | None = None
     expectations: tuple[RecordExpectation, ...] = ()
     peer_guards: tuple[PeerGuard, ...] = ()
-    identity_revision: SourceRevision | None = None
 
     @model_validator(mode="after")
     def _bounded_identity(self) -> Self:
         if not self.source_key or any(part == "" for part in self.source_key):
             raise ValueError("a naming target needs a nonempty exact source key")
-        if (self.kind == "classification") != (self.provider is None):
-            raise ValueError("only classification naming is provider-independent")
-        if self.provider is not None and not self.provider.strip():
+        if self.provider is None or not self.provider.strip():
             raise ValueError("provider cannot be blank")
         if self.kind in ("variable", "register_variant"):
             if not self.register_key:
@@ -95,10 +84,7 @@ class NativeNamingTarget(_NamingModel):
                 )
         elif self.register_key is not None:
             raise ValueError("only variable/variant naming takes a register key")
-        if self.identity_revision is not None:
-            if self.expectations or self.peer_guards:
-                raise ValueError("use member guards or an identity revision, not both")
-        elif (
+        if (
             self.kind in {"variable", "register", "register_variant"}
             and not self.expectations
             and not self.peer_guards
@@ -146,7 +132,7 @@ class LegacyNamingBinding(_NamingModel):
 class AcceptedNamingEntry(_NamingModel):
     """One validated original TOML entry, including absent slug intent."""
 
-    revision: SourceRevision
+    revision: str
     origin: Literal["authored", "generated"]
     entry: SlugEntry
     supplied_fields: tuple[str, ...]
@@ -154,12 +140,12 @@ class AcceptedNamingEntry(_NamingModel):
 
     @property
     def entry_id(self) -> str:
-        return f"{self.revision.artifact_path}#{self.entry.kind}/{self.entry.source_id}"
+        return f"{self.revision}#{self.entry.kind}/{self.entry.source_id}"
 
 
 class NamingInputFile(_NamingModel):
-    revision: SourceRevision
-    role: Literal["authored", "generated", "control", "comparison"]
+    revision: str
+    role: Literal["authored", "generated"]
     entry_count: int
 
 
@@ -185,7 +171,7 @@ class NamingAmbiguity(_NamingModel):
 
     This is diagnostic attribution, not a binding or an accepted unresolved
     decision. It cannot form a variable, assign a column or lower error severity.
-    The offline conversion must retain the exact original names and whole-family
+    The compile retains the exact original names and whole-family
     evidence after checking for an existing accepted ownership declaration.
     """
 
@@ -287,8 +273,6 @@ def _validate_legacy_key(kind: EntityKind, source_id: str) -> None:
         _parse_variant_id(source_id)
     elif kind == "variable":
         _parse_variable_id(source_id)
-    elif not source_id:
-        raise ValueError("classification naming requires an exact source key")
 
 
 def native_scb_naming_id(
@@ -348,88 +332,116 @@ def authored_naming_id(
     return source_id
 
 
-def read_naming_selection(
-    slug_dir: Path, revisions: Iterable[SourceRevision]
-) -> NamingSelection:
-    """Read exactly pinned naming files, retaining original per-entry provenance."""
-    revisions = tuple(revisions)
-    pins = {Path(revision.artifact_path).name: revision for revision in revisions}
-    if len(pins) != len(revisions):
-        raise NamingConversionError("naming input filenames must be unique")
-    paths = tuple(sorted(slug_dir.iterdir()))
-    if {path.name for path in paths} != set(pins):
-        raise NamingConversionError(
-            "naming directory and selected file inventory differ"
+def _curation_naming_revision(path: Path) -> str:
+    return f"curation/registers/{path.parent.name}/{path.name}"
+
+
+def _tracked_naming_entry(
+    revision: str,
+    kind: EntityKind,
+    native_id: str,
+    raw: dict[str, Any],
+    provider: str,
+    origin: Literal["authored", "generated"],
+) -> AcceptedNamingEntry:
+    return AcceptedNamingEntry(
+        revision=revision,
+        origin=origin,
+        entry=_validate_entry(kind, native_id, raw, provider=provider),
+        supplied_fields=tuple(sorted(raw)),
+        content_sha256=canonical_sha256(raw),
+    )
+
+
+def _register_naming_entries(tree: CurationTree, register: RegisterCuration):
+    path = tree.root / register.source_file.removeprefix("curation/")
+    info = register.register_info
+    revision = _curation_naming_revision(path)
+    entries = [
+        (
+            _tracked_naming_entry(
+                revision,
+                "register",
+                str(info.native_id),
+                {"slug": info.slug},
+                info.provider,
+                "authored",
+            ),
+            "[register]",
         )
-    if any(path.is_symlink() or not path.is_file() for path in paths):
-        raise NamingConversionError("naming inputs must be regular files")
-    payloads = {
-        path.name: read_selected_bytes(
-            path, pins[path.name], error_type=NamingConversionError
-        )
-        for path in paths
-    }
-    states = load_freeze_states(slug_dir)
-    entries: list[AcceptedNamingEntry] = []
-    files: list[NamingInputFile] = []
-    for path in paths:
-        revision = pins[path.name]
-        payload = payloads[path.name]
-        if path.name == FREEZE_STATE_FILE:
-            files.append(
-                NamingInputFile(
-                    revision=revision, role="control", entry_count=len(states)
-                )
-            )
-            continue
-        if path.name == SNAPSHOT_FILENAME:
-            try:
-                snapshot = json.loads(payload)
-                if not isinstance(snapshot, dict) or any(
-                    not isinstance(table, dict)
-                    or any(not isinstance(value, str) for value in table.values())
-                    for table in snapshot.values()
-                ):
-                    raise ValueError("expected tables of source keys and slug strings")
-            except (ValueError, UnicodeDecodeError) as exc:
-                raise NamingConversionError(f"invalid naming snapshot: {exc}") from exc
-            files.append(
-                NamingInputFile(
-                    revision=revision,
-                    role="comparison",
-                    entry_count=sum(map(len, snapshot.values())),
-                )
-            )
-            continue
-        if path.suffix != ".toml":
-            raise NamingConversionError(f"unsupported naming input: {path.name}")
-        loaded = load_provider_toml(path)
-        raw = tomllib.loads(payload.decode("utf-8"))
-        origin = "generated" if path.name.endswith(AUTO_FILE_SUFFIX) else "authored"
-        for entry in loaded:
-            supplied = raw[entry.kind][entry.source_id]
+    ]
+    for table, rows, kind in (
+        ("variant", register.variant, "register_variant"),
+        ("variable", register.variable, "variable"),
+    ):
+        for index, row in enumerate(rows, 1):
+            raw = row.model_dump(mode="json", exclude={"native_id"}, exclude_unset=True)
             entries.append(
-                AcceptedNamingEntry(
-                    revision=revision,
-                    origin=origin,
-                    entry=entry,
-                    supplied_fields=tuple(sorted(supplied)),
-                    content_sha256=canonical_sha256(supplied),
+                (
+                    _tracked_naming_entry(
+                        revision,
+                        cast("EntityKind", kind),
+                        row.native_id,
+                        raw,
+                        info.provider,
+                        "authored",
+                    ),
+                    f"[[{table}]] entry {index}",
                 )
             )
-        files.append(
-            NamingInputFile(revision=revision, role=origin, entry_count=len(loaded))
-        )
-    # The existing pure validators read paths; recheck pins after them so an input
-    # update during conversion cannot publish a selection from mixed revisions.
-    for path in paths:
-        read_selected_bytes(path, pins[path.name], error_type=NamingConversionError)
+    auto = path.with_name(path.stem + ".auto.toml")
+    if auto.is_file():
+        auto_revision = _curation_naming_revision(auto)
+        raw_rows = tomllib.loads(auto.read_text(encoding="utf-8")).get("variable", [])
+        for index, entry in enumerate(
+            _load_register_auto_file(auto, info.provider, str(info.native_id)), 1
+        ):
+            raw = {
+                key: value
+                for key, value in raw_rows[index - 1].items()
+                if key != "native_id"
+            }
+            entries.append(
+                (
+                    _tracked_naming_entry(
+                        auto_revision,
+                        "variable",
+                        entry.source_id,
+                        raw,
+                        info.provider,
+                        "generated",
+                    ),
+                    f"[[variable]] entry {index}",
+                )
+            )
+    return tuple(entries)
+
+
+def read_naming_selection(tree: CurationTree) -> NamingSelection:
+    """Read naming entries from the tracked curation tree."""
+    entries = tuple(
+        entry
+        for register in sorted(tree.registers, key=lambda item: item.source_file)
+        for entry, _ in _register_naming_entries(tree, register)
+    )
+    counts: dict[str, int] = defaultdict(int)
+    for entry in entries:
+        counts[entry.revision] += 1
     return NamingSelection(
-        files=tuple(files),
-        entries=tuple(entries),
+        files=tuple(
+            NamingInputFile(
+                revision=path,
+                role="generated" if path.endswith(".auto.toml") else "authored",
+                entry_count=count,
+            )
+            for path, count in sorted(counts.items())
+        ),
+        entries=entries,
         freeze=tuple(
-            NamingFreezeSetting(zone=zone, state=state)
-            for zone, state in sorted(states.items())
+            NamingFreezeSetting(zone=provider, state="curating")
+            for provider in sorted(
+                {entry.entry.provider for entry in entries if entry.entry.provider}
+            )
         ),
     )
 
@@ -475,8 +487,7 @@ def convert_naming(
             raise NamingConversionError(f"duplicate naming entry: {entry.entry_id}")
         if (
             entry.origin == "generated"
-            and states.get(entry.entry.provider or "classifications", "churning")
-            == "churning"
+            and states.get(entry.entry.provider, "churning") == "churning"
         ):
             dispositions[entry.entry_id] = NamingEntryDisposition(
                 entry_id=entry.entry_id,
@@ -655,8 +666,6 @@ def native_provider_keys(
 def check_naming_target(
     target: NativeNamingTarget,
     records: Iterable[SourceRecord],
-    *,
-    revisions: Iterable[SourceRevision] = (),
 ) -> tuple[ResolutionDiagnostic, ...]:
     """Check naming applicability against its original source evidence.
 
@@ -666,17 +675,6 @@ def check_naming_target(
     guards need only their exact referenced records. Independent source identities are
     never peers by name resemblance.
     """
-    if target.identity_revision is not None:
-        if target.identity_revision in revisions:
-            return ()
-        return (
-            ResolutionDiagnostic(
-                code="naming_identity_revision_changed",
-                severity="error",
-                subject=repr(target.source_key),
-                detail="the selected source declaration revision no longer matches its naming binding",
-            ),
-        )
     if target.kind == "variable" and not target.expectations and not target.peer_guards:
         evidence = (
             records if isinstance(records, SourceEvidence) else SourceEvidence(records)

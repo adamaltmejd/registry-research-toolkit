@@ -51,13 +51,11 @@ EntityKind = Literal[
     "register",
     "register_variant",
     "variable",
-    "classification",
 ]
 ENTITY_KINDS: tuple[EntityKind, ...] = (
     "register",
     "register_variant",
     "variable",
-    "classification",
 )
 PROVIDER_FILE_SUFFIX = ".toml"
 # Auto-derived variable slugs live alongside the hand-curated `<provider>.toml`
@@ -89,8 +87,7 @@ class SlugEntry:
     """One row of a slug TOML.
 
     ``source_id`` is the literal TOML key (always a quoted string).
-    ``provider`` is the filename stem for provider-scoped files; ``None`` for
-    classifications.
+    ``provider`` is the filename stem for provider-scoped files.
     """
 
     kind: EntityKind
@@ -3792,10 +3789,9 @@ def snapshot_payload(entries: list[SlugEntry]) -> dict[str, dict[str, str]]:
     for entry in entries:
         if entry.slug is None:
             continue
-        if entry.provider is not None:
-            key = f"{entry.provider}/{entry.source_id}"
-        else:
-            key = entry.source_id
+        if entry.provider is None:
+            raise ValueError("slug snapshot entry lacks a provider")
+        key = f"{entry.provider}/{entry.source_id}"
         payload[entry.kind][key] = entry.slug
     return payload
 

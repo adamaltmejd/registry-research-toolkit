@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import gzip
-import hashlib
-import json
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
@@ -14,7 +11,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.curation_compile import compile_matrix_repr, compile_period_families
 from reg_meta_build.curation_tree import load_register_files
 from reg_meta_build.period_family_merges import PeriodFamily, load_period_family_merges
-from reg_meta_build.pipeline import ScopeDeclarations, ScopeFile, _read_scope
+from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import column_identity, source_register_key
 from reg_meta_build.source_curation import RepresentationDecision
@@ -241,7 +238,7 @@ def test_matrix_repr_wires_period_cases_into_selected_scope(tmp_path: Path) -> N
         naming=SlugEntry(kind="register", provider="scb", source_id="34", slug="lisa"),
         contributors=(),
     )
-    scope = ScopeDeclarations(
+    scope = CompiledScope(
         source=records[0].source,
         register_key=register_key,
         naming=(named_register,),
@@ -261,45 +258,3 @@ def test_matrix_repr_wires_period_cases_into_selected_scope(tmp_path: Path) -> N
     assert issues == ()
     assert len(cases[key]) == 2
     assert len(names[key]) == len(keys[key]) == 1
-
-
-def test_pinned_empty_period_coding_pins_are_retired_before_strict_parse(
-    tmp_path: Path,
-) -> None:
-    root = _write_register(
-        tmp_path,
-        '[[representation.period_family]]\nregister = "scb/lisa"\n'
-        'family_stem = "lonfink"\nlabel = "Lön per månad"\nslug = "lonfink"\n',
-    )
-    (register,) = load_register_files(root)
-    cases, _, _, _ = compile_period_families(register, _month_records(12))
-    scope = ScopeDeclarations(
-        source="scb-registerinformation",
-        register_key=None,
-        cases=(
-            cases[1].model_copy(
-                update={"case_id": "accepted-period-family:1:representations"}
-            ),
-        ),
-    )
-    raw = json.loads(scope.model_dump_json())
-    for column in raw["cases"][0]["decision"]["columns"]:
-        column["expected_codings"] = []
-    compressed = gzip.compress(json.dumps(raw).encode())
-    path = tmp_path / "scope.json.gz"
-    path.write_bytes(compressed)
-    key = scope.source, scope.register_key
-    file = ScopeFile(
-        source=scope.source,
-        register_key=scope.register_key,
-        path=path.name,
-        sha256=hashlib.sha256(compressed).hexdigest(),
-    )
-    loaded = _read_scope(tmp_path, key, file)
-    assert loaded.cases[0].decision.columns[0].column == "LonFinkJan"
-    raw["cases"][0]["decision"]["columns"][0]["expected_codings"] = ["a" * 64]
-    compressed = gzip.compress(json.dumps(raw).encode())
-    path.write_bytes(compressed)
-    file = file.model_copy(update={"sha256": hashlib.sha256(compressed).hexdigest()})
-    with pytest.raises(ValueError, match="coding pin is not empty"):
-        _read_scope(tmp_path, key, file)

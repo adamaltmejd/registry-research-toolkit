@@ -159,7 +159,6 @@ def names(records):
                     register_key=source_register_key(first)
                     if kind != "register"
                     else None,
-                    identity_revision=REVISION,
                 ),
                 naming=SlugEntry(
                     kind=kind,
@@ -229,7 +228,6 @@ def resolve(
         classification_references={},
         label_rules=label_rules or {},
         classification_overrides=classification_overrides or {},
-        revisions=(REVISION,),
         on_diagnostic=on_diagnostic,
         diagnostic=diagnostic,
     )
@@ -253,7 +251,7 @@ def ambiguity(records, *, columns=None):
         ),
         entries=(
             AcceptedNamingEntry(
-                revision=REVISION,
+                revision="curation/registers/scb/example.toml",
                 origin="authored",
                 entry=SlugEntry("variable", "1.5.code", "code", provider="scb"),
                 supplied_fields=("slug",),
@@ -1100,41 +1098,6 @@ def test_withheld_variant_keeps_supported_sibling_states():
     )
 
 
-def test_stale_parent_name_withholds_dependents_but_is_not_a_contract_error():
-    item = record()
-    selected = names((item,))
-    stale_revision = REVISION.model_copy(update={"upstream_revision": "other"})
-    selected = tuple(
-        n.model_copy(
-            update={
-                "target": n.target.model_copy(
-                    update={"identity_revision": stale_revision}
-                )
-            }
-        )
-        if n.target.kind == "register"
-        else n
-        for n in selected
-    )
-    result = resolve((item,), naming=selected)
-    assert result.variables == {native_variable_key(item): None}
-    assert {d.code for d in result.diagnostics} == {
-        "naming_identity_revision_changed",
-        "withheld_parent_naming",
-        "withheld_register_dependency",
-    }
-    assert set(result.withheld_dependencies) == {
-        ("register", "scb/example"),
-        ("variant", "scb/example", "people-2"),
-        ("variable", "scb/example/value-5"),
-    }
-    assert all(
-        cause.refs == (record_ref(item),)
-        for causes in result.withheld_dependencies.values()
-        for cause in causes
-    )
-
-
 def test_missing_conversion_is_fatal():
     item = record()
     with pytest.raises(ValueError, match="missing explicit provider key"):
@@ -1171,7 +1134,6 @@ def test_stored_period_family_name_keeps_its_provider_key_beside_native_names():
             provider="scb",
             source_key=period_key,
             register_key=source_register_key(item),
-            identity_revision=REVISION,
         ),
         naming=SlugEntry(
             kind="variable",

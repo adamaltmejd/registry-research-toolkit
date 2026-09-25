@@ -15,7 +15,6 @@ from reg_meta.search import CodeSearchResult, VariableSearchResult
 from reg_meta_build._curation import SentinelCode
 from reg_meta_build.db import publish_db
 from reg_meta_build.resolved_catalog import (
-    CURATION_SELECTION_SHA256_KEY,
     CURATION_TREE_SHA256_KEY,
     ResolvedAlias,
     ResolvedAliasWindow,
@@ -216,9 +215,7 @@ def test_rerun_is_byte_identical_regardless_of_input_order(tmp_path: Path) -> No
     assert output.with_name("reg_meta.db.prev").read_bytes() == original
 
 
-@pytest.mark.parametrize(
-    "key", (CURATION_SELECTION_SHA256_KEY, CURATION_TREE_SHA256_KEY)
-)
+@pytest.mark.parametrize("key", (CURATION_TREE_SHA256_KEY,))
 @pytest.mark.parametrize("digest", ("short", "A" * 64))
 def test_curation_manifest_hashes_require_lowercase_sha256(
     tmp_path: Path, key: str, digest: str

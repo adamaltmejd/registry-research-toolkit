@@ -64,9 +64,7 @@ def _record(row: int = 2, **changes: str) -> SourceRecord:
     return clean_scb_row(header, row, cells, _REVISION).record
 
 
-def _names(
-    record: SourceRecord, revision: SourceRevision = _REVISION
-) -> tuple[NamingDeclaration, ...]:
+def _names(record: SourceRecord) -> tuple[NamingDeclaration, ...]:
     # Exact checked identities are inputs of parent resolution; applicability itself
     # is exercised by the naming and pipeline-boundary tests.
     result = []
@@ -85,7 +83,6 @@ def _names(
                     register_key=source_register_key(record)
                     if parent.kind == "variant"
                     else None,
-                    identity_revision=revision,
                 ),
                 naming=SlugEntry(
                     kind=kind,
@@ -266,9 +263,7 @@ def test_sos_dataset_label_does_not_conflict_with_dcat_title(tmp_path: Path) -> 
         and record.language in {None, "sv"}
     )
     assert len(parents) == 3
-    names = tuple(
-        declaration for record in parents for declaration in _names(record, revision)
-    )
+    names = tuple(declaration for record in parents for declaration in _names(record))
     resolved = resolve_parents(parents, names)
     assert not [
         diagnostic

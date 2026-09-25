@@ -9,7 +9,7 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
 from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.curation_tree import RegisterCuration
-from reg_meta_build.pipeline import ScopeDeclarations
+from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
 from reg_meta_build.source_coding import (
     CodeListClaim,
@@ -162,7 +162,7 @@ def _compile_entry(
         else occurrence.variable_key
     )
     column = column_identity(variable, occurrence.variant_key, "VALUE")
-    scope = ScopeDeclarations(
+    scope = CompiledScope(
         source=record.source,
         register_key=register_key,
         naming=(
@@ -171,15 +171,6 @@ def _compile_entry(
                     kind="register",
                     provider="scb",
                     source_key=register_key,
-                    identity_revision=SourceRevision.create(
-                        dataset=record.source,
-                        publisher="SCB",
-                        purpose="fixture",
-                        upstream_revision="1",
-                        artifact_path="records.csv",
-                        artifact_size=1,
-                        artifact_sha256="a" * 64,
-                    ),
                 ),
                 naming=SlugEntry("register", "1", "sample", "scb"),
                 contributors=(),
@@ -190,15 +181,6 @@ def _compile_entry(
                     provider="scb",
                     source_key=occurrence.variant_key,
                     register_key=register_key,
-                    identity_revision=SourceRevision.create(
-                        dataset=record.source,
-                        publisher="SCB",
-                        purpose="fixture",
-                        upstream_revision="1",
-                        artifact_path="records.csv",
-                        artifact_size=1,
-                        artifact_sha256="a" * 64,
-                    ),
                 ),
                 naming=SlugEntry("register_variant", "1.2", "people", "scb"),
                 contributors=(),

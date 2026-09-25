@@ -410,17 +410,16 @@ The design lives in [`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md); its
 pipeline reaches parity. Progress is tracked as "registers at semantic parity with
 0.40.1".
 
-Ordered work. Curation cannot leave the input bundle before the in-process compile
-exists, because the current selection pins revisions of curation files inside the
-bundle. The target layout lands with the compile so the files move once.
+Ordered work. The in-process compile landed with the target layout and removed curation
+from the input bundle.
 
 1. Record the design (Y-222).
 2. `build-db --registers` (Y-223).
 3. Diagnostic builds withhold and report instead of aborting (Y-225), and
    `[[acknowledge]]` (Y-224).
-4. Compile curation in-process (plan Y-226 and its children). This covers the target
-   layout, taking curation out of the input bundle, pin-free entries, turning stored
-   cases back into rules (label binding, naming hashes), and deleting
+4. **Done:** compile curation in-process (plan Y-226 and its children). This covers the
+   target layout, taking curation out of the input bundle, pin-free entries, turning
+   stored cases back into rules (label binding, naming hashes), and deleting
    `PipelineSelection`, the scope files and the offline conversion.
 5. Remove the register-specific code DESIGN.md lists as debt.
 6. First slice run, then the open decision below.

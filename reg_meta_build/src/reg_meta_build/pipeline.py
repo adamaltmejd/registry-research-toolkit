@@ -1,14 +1,8 @@
-"""One prepared-source → common resolution → direct catalog build path.
-
-Selection files contain declarations, never executable conversion code. Hybrid
-builds validate the stored scopes and merge tracked curation before resolution.
-Original observations and physical locators remain in the selected prepared store.
-"""
+"""Compile tracked curation against prepared sources and build the catalog."""
 
 from __future__ import annotations
 
 import gzip
-import hashlib
 import json
 import time
 from collections import Counter, defaultdict
@@ -16,9 +10,9 @@ from contextlib import ExitStack, contextmanager
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
@@ -34,10 +28,11 @@ from reg_meta_build.catalog_dependencies import (
 from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
 from reg_meta_build.curation_compile import (
+    CompiledCodebook,
     compile_curation,
+    compile_native_naming,
+    compile_partitions,
     finalize_classification_bindings,
-    merge_scope,
-    merge_selection,
     source_event_id,
     tree_sha256,
     validate_sentinels,
@@ -50,7 +45,6 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
 )
 from reg_meta_build.resolved_catalog import (
-    CURATION_SELECTION_SHA256_KEY,
     CURATION_TREE_SHA256_KEY,
     ResolvedClassification,
     ResolvedClassificationSuccession,
@@ -62,18 +56,14 @@ from reg_meta_build.source_classifications import resolve_canonical_codes
 from reg_meta_build.source_coordinates import NativeKey  # noqa: TC001
 from reg_meta_build.source_curation import (
     CurationCase,
-    PeerGuard,
-    RecordExpectation,
     ResolutionDiagnostic,
     SourceRecordRef,
-    evaluate_source_expectations,
 )
 from reg_meta_build.source_event_resolution import SourceEventBindings
 from reg_meta_build.source_naming import (  # noqa: TC001
     NamingAmbiguity,
     NamingDeclaration,
 )
-from reg_meta_build.source_records import SourceRevision  # noqa: TC001
 from reg_meta_build.source_reference_records import (
     SourceColumnTypeDeclaration,
     SourceEventDeclaration,
@@ -123,23 +113,8 @@ class _Model(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
 
 
-class UnappliedCuration(_Model):
-    """An existing decision lacking sufficient evidence to apply it safely.
-
-    Always an error, never an accepted waiver. Preserve the input entry and exact
-    observed ambiguity. Missing implementation belongs in selection.unconverted.
-    """
-
-    revision: SourceRevision
-    pointer: str = Field(pattern=r"^/")
-    reason: str = Field(min_length=1)
-    targets: tuple[RecordExpectation, ...] = Field(min_length=1)
-    peer_guards: tuple[PeerGuard, ...] = Field(min_length=1)
-    missing_variable: str | None = None
-
-
-class ScopeDeclarations(_Model):
-    """Already converted decisions for one complete source/register scope."""
+class CompiledScope(_Model):
+    """In-memory decisions for one complete prepared source scope."""
 
     source: str
     register_key: NativeKey | None
@@ -148,57 +123,18 @@ class ScopeDeclarations(_Model):
     naming_ambiguities: tuple[NamingAmbiguity, ...] = ()
     provider_keys: tuple[tuple[NativeKey, str | None], ...] = ()
     variants: tuple[tuple[NativeKey, ResolvedVariant], ...] = ()
-    unapplied_curation: tuple[UnappliedCuration, ...] = ()
 
 
-class ScopeFile(_Model):
-    source: str
-    register_key: NativeKey | None
-    path: str
-    sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+class CompiledGlobals(_Model):
+    """Strict contract for the declarations compiled from tracked curation."""
 
-
-class CodebookDeclaration(_Model):
-    source: str
-    descriptor: str
-    # These are the ResolvedClassification metadata fields, validated with the
-    # resolved source codes below. Membership is never copied into curation data.
-    # `sentinel_codes` carries the curated per-classification sentinel list as
-    # raw `{code, meaning}` tables — the same plain-JSON form the curated
-    # `[classification]` table holds; it is popped and validated below because
-    # strict JSON-contract validation cannot coerce the JSON list into the
-    # resolved tuple form.
-    metadata: dict[str, str | int | list[dict[str, str]] | None]
-
-
-class PipelineSelection(_Model):
-    format: Literal["reg-meta-build-selection"] = "reg-meta-build-selection"
-    prepared_path: str
-    prepared_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
-    prepared_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    scopes: tuple[ScopeFile, ...]
-    classifications: tuple[CodebookDeclaration, ...] = ()
+    classifications: tuple[CompiledCodebook, ...] = ()
     classification_successions: tuple[ResolvedClassificationSuccession, ...] = ()
     metadata: ResolvedMetadata = ResolvedMetadata()
     code_label_pairs: tuple[CodeLabelPair, ...] = ()
     identifier_sources: tuple[str, ...] = ()
     event_sources: tuple[tuple[str, str], ...] = ()
     lineage_defaults: tuple[tuple[str, str], ...] = ()
-    # A converter must disclose unfinished required work. Neither diagnostic mode
-    # nor a successful partial source scan may turn it into a publication waiver.
-    unconverted: tuple[str, ...] = ()
-
-
-def _member(root: Path, relative: str) -> Path:
-    path = Path(relative)
-    if path.is_absolute() or ".." in path.parts or path.as_posix() != relative:
-        raise ValueError(
-            f"selection member must be a normalized relative path: {relative}"
-        )
-    resolved = (root / path).resolve()
-    if not resolved.is_relative_to(root.resolve()):
-        raise ValueError("selection member escapes its directory")
-    return resolved
 
 
 def _unique_pairs[K, V](items: tuple[tuple[K, V], ...], description: str) -> dict[K, V]:
@@ -232,30 +168,10 @@ def _selected_scopes(
     return {key for spec in specs for key in names[spec]}
 
 
-def _read_scope(
-    root: Path, key: tuple[str, NativeKey | None], file: ScopeFile
-) -> ScopeDeclarations:
-    payload = _member(root, file.path).read_bytes()
-    if hashlib.sha256(payload).hexdigest() != file.sha256:
-        raise ValueError(f"curation file changed: {file.path}")
-    raw = json.loads(gzip.decompress(payload) if file.path.endswith(".gz") else payload)
-    # The pinned transitional selection still carries empty period coding pins.
-    # Its matrix_repr cases are replaced before resolution; strip only that retired
-    # field so the current strict model validates every retained declaration.
-    for case in raw.get("cases", ()):
-        if case.get("case_id", "").startswith("accepted-period-family:"):
-            for column in case.get("decision", {}).get("columns", ()):
-                if column.get("expected_codings", ()) != []:
-                    raise ValueError("stored period-family coding pin is not empty")
-                column.pop("expected_codings", None)
-    scope = ScopeDeclarations.model_validate_json(json.dumps(raw))
-    if (scope.source, scope.register_key) != key:
-        raise ValueError("scope file identifies another source scope")
-    return scope
-
-
-def build_selected_catalog(
-    selection_path: Path,
+def build_catalog(
+    prepared_path: Path,
+    input_commit: str,
+    input_manifest_sha256: str,
     output: Path,
     report_dir: Path,
     *,
@@ -264,10 +180,10 @@ def build_selected_catalog(
     curation_dir: Path | None = None,
     dump_decisions: Path | None = None,
 ) -> dict[str, object]:
-    """Build the full declared selection; failures never replace an active catalog.
+    """Build the compiled curation; failures never replace an active catalog.
 
     A diagnostic completion retains strict errors and returns publication_ready
-    false. Unsupported implementation and malformed selections raise normally.
+    false. Malformed prepared inputs or declarations raise normally.
     The single event stream accounts for source records, cases and diagnostics;
     it references prepared evidence instead of copying every source projection.
     `registers` forms only the named scopes, with shared inputs still complete,
@@ -275,12 +191,17 @@ def build_selected_catalog(
     that exist but were not selected. Its output is never publishable and its
     corpus volume guards do not apply.
     """
+    if len(input_commit) != 40 or any(
+        ch not in "0123456789abcdef" for ch in input_commit
+    ):
+        raise ValueError("--input-commit must be a lowercase 40-character SHA")
+    if len(input_manifest_sha256) != 64 or any(
+        ch not in "0123456789abcdef" for ch in input_manifest_sha256
+    ):
+        raise ValueError("--input-manifest-sha256 must be a lowercase SHA-256")
     started = time.perf_counter()
     publishable = not diagnostic and not registers
-    selection_path = selection_path.resolve()
-    selection_bytes = selection_path.read_bytes()
-    selected = PipelineSelection.model_validate_json(selection_bytes)
-    root = selection_path.parent
+    prepared_path = prepared_path.resolve()
     output, report_dir = output.resolve(), report_dir.resolve()
     if curation_dir is None:
         from reg_meta_build._curation import repo_curation_dir
@@ -292,13 +213,8 @@ def build_selected_catalog(
     if not curation_dir.is_dir():
         raise ValueError(f"curation directory does not exist: {curation_dir}")
     dump_decisions = dump_decisions.resolve() if dump_decisions is not None else None
-    prepared_path = Path(selected.prepared_path)
-    if not prepared_path.is_absolute():
-        prepared_path = root / prepared_path
-    prepared_path = prepared_path.resolve()
-    input_paths = {selection_path, *(_member(root, s.path) for s in selected.scopes)}
     output_paths = {output, Path(str(output) + ".prev")}
-    protected_dirs = (root, prepared_path, curation_dir)
+    protected_dirs = (prepared_path, curation_dir)
     if dump_decisions is not None and (
         dump_decisions.exists()
         or any(
@@ -310,52 +226,42 @@ def build_selected_catalog(
             "--dump-decisions must be a new directory separate from inputs and outputs"
         )
     if (
-        output_paths & input_paths
-        or any(
-            path.is_relative_to(root) or path.is_relative_to(curation_dir)
-            for path in output_paths
-        )
-        or report_dir.is_relative_to(root)
+        any(path.is_relative_to(curation_dir) for path in output_paths)
         or report_dir.is_relative_to(curation_dir)
         or any(path.is_relative_to(prepared_path) for path in output_paths)
         or report_dir.is_relative_to(prepared_path)
-        or any(path.is_relative_to(report_dir) for path in input_paths)
         or output.is_relative_to(report_dir)
         or (not publishable and output.exists())
         or (output.exists() and not output.is_file())
     ):
         raise ValueError(
-            "build outputs must be separate from selected inputs and each other"
+            "build outputs must be separate from prepared inputs and each other"
         )
-    if selected.unconverted:
-        raise ValueError(
-            "required conversion or implementation is incomplete: "
-            + "; ".join(selected.unconverted)
-        )
-    scope_files = _unique_pairs(
-        tuple(((s.source, s.register_key), s) for s in selected.scopes), "source scope"
-    )
-    whole_sources = {source for source, register in scope_files if register is None}
-    if any(
-        source in whole_sources and register is not None
-        for source, register in scope_files
-    ):
-        raise ValueError("a source cannot select both whole-source and register scopes")
-    visit = _selected_scopes(scope_files, registers) if registers else set(scope_files)
     prepared = open_prepared_catalog_sources(
         prepared_path,
-        input_commit=selected.prepared_commit,
-        expected_sha256=selected.prepared_sha256,
+        input_commit=input_commit,
+        expected_sha256=input_manifest_sha256,
     )
+    scope_keys = set()
+    for entry in prepared.manifest.inputs:
+        if entry.record_usage != "occurrence" or entry.revision is None:
+            continue
+        source = entry.revision.dataset
+        if entry.role == "scb_records":
+            scope_keys.update(
+                (source, register)
+                for register, _, _ in prepared.records.register_coordinates(source)
+            )
+        else:
+            scope_keys.add((source, None))
+    whole_sources = {source for source, register in scope_keys if register is None}
+    visit = _selected_scopes(scope_keys, registers) if registers else set(scope_keys)
     occurrence_sources = {
         entry.revision.dataset
         for entry in prepared.manifest.inputs
         if entry.record_usage == "occurrence" and entry.revision is not None
     }
-    if (
-        registers
-        and not {scope.source for scope in selected.scopes} <= occurrence_sources
-    ):
+    if registers and not {source for source, _ in scope_keys} <= occurrence_sources:
         raise ValueError(
             "curation scopes name a source outside the prepared occurrence-source selection"
         )
@@ -373,13 +279,14 @@ def build_selected_catalog(
         for entry in tree.classifications
         for index, bound in enumerate(entry.binding.variable, 1)
     }
-    stored_scopes = {
-        key: _read_scope(root, key, file) for key, file in scope_files.items()
-    }
+    scope_seeds = tuple(
+        CompiledScope(source=source, register_key=register)
+        for source, register in sorted(visit, key=repr)
+    )
     compiled = compile_curation(
         tree,
         prepared,
-        tuple(stored_scopes[key] for key in sorted(visit, key=repr)),
+        scope_seeds,
         subset=bool(registers),
     )
     if "_classifications" in compiled.report:
@@ -389,8 +296,72 @@ def build_selected_catalog(
             for fqid, binding in classification_overrides.items()
             if binding[1] in valid_overrides
         }
-    selected = merge_selection(selected, compiled)
-    scopes = {key: merge_scope(scope, compiled) for key, scope in stored_scopes.items()}
+    selected = CompiledGlobals.model_validate(compiled.fields, strict=True)
+    scopes = {
+        key: CompiledScope.model_validate_json(
+            json.dumps(
+                {
+                    "source": key[0],
+                    "register_key": key[1],
+                    "cases": [
+                        item.model_dump(mode="json")
+                        for item in compiled.cases.get(key, ())
+                    ],
+                    "naming": [
+                        item.model_dump(mode="json")
+                        for item in (compiled.naming or {}).get(key, ())
+                    ],
+                    "naming_ambiguities": [
+                        item.model_dump(mode="json")
+                        for item in (compiled.naming_ambiguities or {}).get(key, ())
+                    ],
+                    "provider_keys": (compiled.provider_keys or {}).get(key, ()),
+                    "variants": [
+                        (native_key, variant.model_dump(mode="json"))
+                        for native_key, variant in (compiled.variants or {}).get(
+                            key, ()
+                        )
+                    ],
+                }
+            )
+        )
+        for key in visit
+    }
+    unselected_scopes: dict[tuple[str, NativeKey | None], CompiledScope] = {}
+    if registers:
+        outside = tuple(
+            CompiledScope(source=source, register_key=register)
+            for source, register in sorted(scope_keys - visit, key=repr)
+        )
+        outside_naming, _, _, _, _ = compile_native_naming(
+            tree, prepared, outside, subset=True
+        )
+        outside_with_names = tuple(
+            scope.model_copy(
+                update={
+                    "naming": outside_naming.get((scope.source, scope.register_key), ())
+                }
+            )
+            for scope in outside
+        )
+        _, split_names, _, ambiguities, split_bases, _ = compile_partitions(
+            tree, prepared, outside_with_names
+        )
+        for scope in outside_with_names:
+            key = scope.source, scope.register_key
+            names = tuple(
+                name
+                for name in scope.naming
+                if name.target.source_key not in split_bases.get(key, set())
+            ) + split_names.get(key, ())
+            unselected_scopes[key] = CompiledScope.model_validate_json(
+                scope.model_copy(
+                    update={
+                        "naming": names,
+                        "naming_ambiguities": ambiguities.get(key, ()),
+                    }
+                ).model_dump_json()
+            )
     coding_registers = {
         f"{register.register_info.provider}/{register.register_info.slug}": register
         for register in tree.registers
@@ -468,7 +439,7 @@ def build_selected_catalog(
                     "show",
                     "-s",
                     "--format=%ct",
-                    selected.prepared_commit,
+                    input_commit,
                 )
             ),
             UTC,
@@ -478,8 +449,7 @@ def build_selected_catalog(
     )
     if _paths_overlap(
         output_paths,
-        input_paths
-        | {prepared_path / "manifest.json"}
+        {prepared_path / "manifest.json"}
         | {prepared_path / item.path for item in prepared.manifest.files},
     ) or any(path.exists() and not path.is_file() for path in output_paths):
         raise ValueError("catalog and backup paths must not alias selected inputs")
@@ -490,11 +460,11 @@ def build_selected_catalog(
     )
     sources = {e.revision.dataset for e in entries if e.revision is not None}
     if registers:
-        if not {s.source for s in selected.scopes} <= sources:
+        if not {s for s, _ in scope_keys} <= sources:
             raise ValueError(
                 "curation scopes name a source outside the prepared occurrence-source selection"
             )
-    elif {s.source for s in selected.scopes} != sources:
+    elif {s for s, _ in scope_keys} != sources:
         raise ValueError(
             "curation scopes do not cover the complete prepared occurrence-source selection"
         )
@@ -537,7 +507,6 @@ def build_selected_catalog(
     counts: Counter[str] = Counter()
     acknowledged: Counter[str] = Counter()
     seen_scopes, seen_cases, seen_coding = set(), set(), set()
-    seen_unapplied = set()
     coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
@@ -743,7 +712,7 @@ def build_selected_catalog(
             coordinates = (
                 {
                     source: prepared.records.register_coordinates(source)
-                    for source in {s for s, _ in scope_files if (s, None) not in visit}
+                    for source in {s for s, _ in scope_keys if (s, None) not in visit}
                 }
                 if registers
                 else {}
@@ -804,7 +773,7 @@ def build_selected_catalog(
                                 "cases": (*scopes[scope_key].cases, *new_cases),
                             }
                         )
-                        scopes[scope_key] = ScopeDeclarations.model_validate_json(
+                        scopes[scope_key] = CompiledScope.model_validate_json(
                             merged_scope.model_dump_json()
                         )
                         compiled.cases[scope_key] = tuple(
@@ -835,9 +804,6 @@ def build_selected_catalog(
                         declared_variants=_unique_pairs(
                             scope.variants, "declared variant"
                         ),
-                        revisions=tuple(
-                            e.revision for e in prepared.manifest.inputs if e.revision
-                        ),
                         on_diagnostic=issue,
                         diagnostic=diagnostic,
                         coding_scope=scope,
@@ -845,54 +811,6 @@ def build_selected_catalog(
                         on_coding_compiled=record_coding_compilation,
                     )
                     _emit_timing(f"pipeline: resolve {scope_key!r}", resolution_started)
-                    for gap in scope.unapplied_curation:
-                        entry_key = gap.revision.revision_id, gap.pointer
-                        if entry_key in seen_unapplied:
-                            raise ValueError("unapplied curation entry is repeated")
-                        seen_unapplied.add(entry_key)
-                        if gap.revision not in tuple(
-                            e.revision for e in prepared.manifest.inputs
-                        ):
-                            raise ValueError(
-                                "unapplied curation is not from the selected input revision"
-                            )
-                        if (
-                            gap.missing_variable is not None
-                            and ("variable", gap.missing_variable)
-                            not in result.withheld_dependencies
-                        ):
-                            raise ValueError(
-                                "unapplied curation target is not an evidenced withheld variable; finish its conversion"
-                            )
-                        stale = evaluate_source_expectations(
-                            gap.targets, (), gap.peer_guards, originals
-                        )
-                        entry = f"{gap.revision.dataset}#{gap.pointer}"
-                        issue(
-                            ResolutionDiagnostic(
-                                code="stale_unapplied_curation"
-                                if stale
-                                else "unapplied_existing_curation",
-                                severity="error",
-                                subject=entry,
-                                detail="Recorded curation ambiguity changed; re-evaluate the entry."
-                                if stale
-                                else gap.reason,
-                                refs=tuple(target.ref for target in gap.targets),
-                                withheld_output=(entry,),
-                            )
-                        )
-                        event(
-                            "unapplied_curation",
-                            {
-                                "entry": entry,
-                                "reason": gap.reason,
-                                "applicability_issues": [
-                                    s.model_dump(mode="json") for s in stale
-                                ],
-                            },
-                        )
-                        counts["unapplied_curation"] += 1
                     seen_scopes.add(scope_key)
                     acknowledged.update(result.acknowledged)
                     coverage.extend(result.coverage)
@@ -1087,9 +1005,9 @@ def build_selected_catalog(
                 )
             # A scoped build skips curation whose every register reference lies
             # outside the selected registers. Elsewhere it defers only a
-            # reference to what exists but was not selected: the unselected scope
-            # files declare those registers, variants and variables, and the
-            # prepared store holds their observed register names and native IDs.
+            # reference to what exists but was not selected: compiled naming in
+            # the unselected scopes declares those registers, variants and variables,
+            # and the prepared store holds their observed names and native IDs.
             # Anything else stays the complete build's error.
             slice_registers = (
                 {key[1] for key in slice_keys if key[0] == "register"}
@@ -1099,7 +1017,7 @@ def build_selected_catalog(
             unselected: set[tuple[str, ...]] = set()
             unselected_names: dict[str, set[str]] = {}
             if registers:
-                unvisited = scope_files.keys() - visit
+                unvisited = scope_keys - visit
                 names = defaultdict(set)
                 for source, rows in coordinates.items():
                     for register, coordinate, _ in rows:
@@ -1107,7 +1025,7 @@ def build_selected_catalog(
                         if key in unvisited and coordinate.name:
                             names[register].add(coordinate.name)
                 for key in sorted(unvisited, key=repr):
-                    scope = _read_scope(root, key, scope_files[key])
+                    scope = unselected_scopes[key]
                     declared = (
                         declared_dependency_keys(scope.naming, scope.naming_ambiguities)
                         - slice_keys
@@ -1288,11 +1206,8 @@ def build_selected_catalog(
                     corpus=publishable,
                     manifest={
                         "import_date": import_date,
-                        "prepared_commit": selected.prepared_commit,
-                        "prepared_manifest_sha256": selected.prepared_sha256,
-                        CURATION_SELECTION_SHA256_KEY: hashlib.sha256(
-                            selection_bytes
-                        ).hexdigest(),
+                        "prepared_commit": input_commit,
+                        "prepared_manifest_sha256": input_manifest_sha256,
                         CURATION_TREE_SHA256_KEY: curation_hash,
                     },
                     parent_registers=panel.registers,

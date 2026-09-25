@@ -467,6 +467,24 @@ def test_unsupported_or_incoherent_manifest_fails_before_opening_children(
         )
 
 
+def test_legacy_curation_role_cannot_open_prepared_manifest(tmp_path: Path) -> None:
+    selection = _selection(tmp_path)
+    destination = tmp_path / "prepared" / "catalog"
+    prepare_catalog_sources(selection, destination)
+    path = destination / "manifest.json"
+    document = json.loads(path.read_text(encoding="utf-8"))
+    document["inputs"][0]["role"] = "curation"
+    document["inputs"][0]["disposition"] = "excluded_curation"
+    path.write_text(json.dumps(document), encoding="utf-8")
+    commit = accept_prepared(destination)
+    with pytest.raises(ValueError, match="curation"):
+        open_prepared_catalog_sources(
+            destination,
+            expected_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+            input_commit=commit,
+        )
+
+
 @pytest.mark.parametrize("child", ["records", "values"])
 def test_child_manifest_hash_must_match_its_outer_preparation_proof(
     tmp_path: Path, child: str

@@ -40,10 +40,10 @@ The builder has four steps:
 Cleaning and input storage below describe step 1. Common curation describes steps 2 and
 3 together. Strict and diagnostic builds describes step 4.
 
-The maintained call path is `pipeline.build_selected_catalog` →
-`prepared_catalog.open_prepared_catalog_sources` → `source_scope.resolve_source_scope`
-for each complete source/register scope → catalog dependency and lineage resolution →
-`resolved_catalog.write_resolved_catalog`.
+The maintained call path is `pipeline.build_catalog` →
+`prepared_catalog.open_prepared_catalog_sources` → `curation_compile.compile_curation` →
+`source_scope.resolve_source_scope` for each complete source/register scope → catalog
+dependency and lineage resolution → `resolved_catalog.write_resolved_catalog`.
 
   | Step | Module family                                                                              | Role                                                                                              |
   | ---- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
@@ -55,7 +55,7 @@ for each complete source/register scope → catalog dependency and lineage resol
   | 2, 3 | classification binding modules                                                             | The label binding rule and per-classification overrides.                                          |
   | 3    | `source_curation.py`, `source_effects.py`, `source_naming.py`                              | Applicability, original-evidence corrections and checked naming.                                  |
   | 3    | `source_annotations.py`, `source_representations.py`                                       | Checked aliases and parallel columns.                                                             |
-  | 3    | `convert_*.py`, the `pipeline.py` selection and scope files                                | Transitional offline conversion (see Curation source and layout).                                 |
+  | 3    | `curation_tree.py`, `curation_compile.py`                                                  | Validate tracked entries and compile scoped decisions in memory.                                  |
   | 4    | `resolved_catalog.py`, `resolved_metadata.py`, `db.py`                                     | Direct materialization, SQL schema, indexes and atomic publication.                               |
   | 4    | `validate.py`, `semantic_diff.py`, `dbdiff.py`                                             | Structural/corpus verification and comparison.                                                    |
   | —    | `extend_db.py`, `sources/curated.py`, `ir/`                                                | Separate steward extension over a released global catalog.                                        |
@@ -254,20 +254,6 @@ never forces a re-prepare. Curation compiles in-process on every build; there is
 stored selection. The build summary records a hash of the curation tree. An optional
 decision dump serves inspection.
 
-Transitional: the tracked curation tree is the source for strict register-file readers
-and the next in-process compiler, but `build-db` still consumes a stored
-`PipelineSelection` compiled from curation pinned in an earlier input bundle.
-`convert_*.py` remains the one-off bridge; `build-db --selection` reads its per-register
-scope files and embeds the selection digest (`curation_selection_sha256`).
-`prepared_catalog` still recognizes legacy `curation/` and `fqid_slugs/` bundle paths so
-the accepted prepared v13 manifest opens. The selection contains data, never executable
-conversion hooks; scope files load one register at a time. The runtime does not import
-one-time conversion scripts or use the legacy database as evidence. In the hybrid merge,
-a stored provider key belongs to the family of its naming declaration or naming
-ambiguity. A null key on a partition base has neither and belongs to the identity
-family. Each key remains stored until its family is compiled, when that family derives
-its keys instead.
-
 The target layout:
 
 - `curation/registers/<provider>/<register-slug>.toml` holds one register, its
@@ -353,8 +339,8 @@ A curation entry carries no pin by default. It names literal source coordinates:
 register, variant, column and edition labels. The compile checks every entry against the
 complete source scope; an entry that matches nothing, or more than it names, is stale,
 which is an error. Unrelated later editions, layout changes and deliveries elsewhere
-therefore never stale it. Transitional stored `CodingDecision` cases and copied coding
-still carry evidence fingerprints (below).
+therefore never stale it. Compiled `CodingDecision` cases capture checked evidence in
+memory for the current build.
 
 Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision is
 window-grained. The compiler checks each window against that column's complete source
@@ -362,12 +348,11 @@ lists; optional `keep_members` and `list_members` are literal `[code, label]` pa
 one list label has multiple meanings. It captures coding fingerprints in memory. Neither
 the fingerprints nor source-member pins are stored in tracked coding tables.
 
-Transitional: `source_curation.py` evaluates cases converted offline into scope files.
-Each case pins exact members, finite periods, fields and expected facts (`expected_*`)
-captured at conversion, with peer guards that check completeness without selecting
-targets. Changed relevant facts, new intersecting evidence, lost support, changed
-membership or changed cardinality make it stale. Naming declarations are likewise pinned
-by whole-file hashes.
+`source_curation.py` evaluates cases compiled in memory from tracked coordinates. Each
+case checks exact members, finite periods, fields and expected facts (`expected_*`),
+with peer guards that check completeness without selecting targets. Changed relevant
+facts, new intersecting evidence, lost support, changed membership or changed
+cardinality make it stale.
 
 ### Decisions and formation
 
@@ -419,10 +404,9 @@ Unknown and pooled scopes retain their original validity constraints in the fing
 without acquiring dates. Scope fingerprints hash semantic content only — the (kind,
 label, intervals, pooled_start, pooled_end) tuple, with the pooled bounds kept when set
 — never the model dump, so a new optional scope field left as None leaves every existing
-fingerprint unchanged. A fingerprint lives in the tracked curation entry; a build checks
-it and never generates or refreshes it. Transitional: offline conversion captures
-fingerprints into the stored selection. Checked value-list field corrections bind using
-the effective declaration while retaining the original source record as evidence.
+fingerprint unchanged. A fingerprint is captured from prepared evidence in memory during
+each build. Checked value-list field corrections bind using the effective declaration
+while retaining the original source record as evidence.
 
 An explicitly open upper bound differs from an unknown period. Resolution can retain a
 known start and explicit open end; the writer uses `9999-12-31` as the storage sentinel.
@@ -488,9 +472,7 @@ name similarity cannot.
 The label binding is a rule. A state whose value-set version label exactly matches an
 entry on a classification's label list binds to that classification. The binding is
 re-derived on every build with no codebook-hash pin, so no codebook or builder change
-requires regenerating curation; a classification's overrides are curation. Transitional:
-each binding is a stored `ClassificationDecision` case (`accepted-classification-seed`)
-pinned by `expected_classification`, the codebook content hash.
+requires regenerating curation; a classification's overrides are curation.
 
 Conformance compares exact code strings. Noncanonical members preserve the original list
 and declared binding as evidence, withhold the state classification link and emit an
@@ -622,18 +604,17 @@ and output withheld through it inherits the warning. The build summary counts
 acknowledgements per code. An entry that matches no error is stale, and one that matches
 more than one is over-broad; both are errors. Strict publication accepts acknowledged
 issues. A warning is either defined by a rule, such as `omitted_columnless_occurrence`,
-or a counted acknowledgement. Transitional: until curation compiles in-process, the
-entry is an `AcknowledgeDecision` scope case carrying exactly those fields, and it
-reaches only issues raised while its source scope resolves.
+or a counted acknowledgement. The compiled `AcknowledgeDecision` reaches issues raised
+while its source scope resolves.
 
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
-selection and writes only independently supported output to a separate new path. It
-never aborts on a per-variable or per-family inconsistency: it withholds the affected
-output and reports it. It retains strict severity, source locators, fields, periods,
-catalog identities, reasons and withheld output. Competing evidence stays in the pinned
-prepared artifact. Every source occurrence has a disposition, including duplicates,
-support-only rows and omitted output. Existing curation accounting is separate:
-accounted does not imply applied or materialized.
+prepared scope set and writes only independently supported output to a separate new
+path. It never aborts on a per-variable or per-family inconsistency: it withholds the
+affected output and reports it. It retains strict severity, source locators, fields,
+periods, catalog identities, reasons and withheld output. Competing evidence stays in
+the pinned prepared artifact. Every source occurrence has a disposition, including
+duplicates, support-only rows and omitted output. Existing curation accounting is
+separate: accounted does not imply applied or materialized.
 
 A completed diagnostic artifact is marked incomplete and nonpublishable in its manifest.
 Its CLI status is exit 10, distinct from publication readiness. Builder publication,
@@ -652,7 +633,7 @@ attribute to a variable or family as an error diagnostic carrying the strict tex
 Everything else stays fatal in both modes:
 
 - an explicitly unconverted required surface;
-- selection, scope, pin and curation contracts;
+- prepared scope, pin and curation contracts;
 - cross-scope definition conflicts;
 - ledger accounting;
 - resolver invariants that hold by construction, and other programming errors;
@@ -753,27 +734,23 @@ temporary peak. Tiny fixture measurements cannot establish full-run savings.
 reg-meta-build prepare-input-bundle --input-dir DIR --scb-snapshot DIR ...
 reg-meta-build verify-input-bundle --input-bundle DIR ...
 reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir NEW_DIR
-reg-meta-build build-db --selection FILE --report-dir DIR
-reg-meta-build build-db --selection FILE --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
-reg-meta-build --db NEW_DIR build-db --selection FILE --report-dir DIR --registers SPEC[,SPEC...]
+reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--curation-dir DIR]
+reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
+reg-meta-build --db NEW_DIR build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --registers SPEC[,SPEC...]
 reg-meta-build inspect-source-records --input-bundle DIR ...
 reg-meta-build extend-db --base-db DB --providers-dir DIR --steward NAME ...
 reg-meta-build build-docs ...
 ```
 
 `--db DIR` and other global output flags precede the subcommand. Per-command `--help`
-describes paths and pins. A `--registers` SPEC names a scope by the key the selection
-already carries: an SCB register by its register id (`258`), a whole-source scope such
-as an SOS workbook or thin provider by its source dataset. A register id naming scopes
-in more than one source is refused; `SOURCE:ID` (`scb-registerinformation:258`) picks
-one. It also combines with `--diagnostic --diagnostic-db-path NEW.db`. A strict subset
-needs an explicit new `--db` directory: it never replaces the active catalog. Naming,
-classification, group, succession, same-as, split-sibling and document-coverage worklist
-commands produce review material; they do not approve or apply new curation during a
-build.
-
-Transitional: `build-db --selection` remains until curation compiles at build time (see
-Curation source and layout).
+describes paths and pins. A `--registers` SPEC names a prepared scope: an SCB register
+by its register id (`258`), a whole-source scope such as an SOS workbook or thin
+provider by its source dataset. A register id naming scopes in more than one source is
+refused; `SOURCE:ID` (`scb-registerinformation:258`) picks one. It also combines with
+`--diagnostic --diagnostic-db-path NEW.db`. A strict subset needs an explicit new `--db`
+directory: it never replaces the active catalog. Naming, classification, group,
+succession, same-as, split-sibling and document-coverage worklist commands produce
+review material; they do not approve or apply new curation during a build.
 
 ## Steward extension
 

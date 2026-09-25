@@ -168,9 +168,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
     build_p = sub.add_parser(
         "build-db",
-        help="Build the complete catalog from pinned prepared sources and curation.",
+        help="Build the complete catalog from accepted prepared sources and tracked curation.",
         description=(
-            "Resolve one complete prepared-source selection and materialize the catalog. "
+            "Resolve prepared sources with tracked curation and materialize the catalog. "
             "Strict publication is the default and preserves the previous catalog on "
             "failure. Diagnostic mode requires a separate new output path and retains "
             "all curation blockers. --registers builds a nonpublishable register subset "
@@ -179,9 +179,15 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     build_p.add_argument(
-        "--selection",
+        "--prepared", required=True, help="Accepted prepared catalog directory."
+    )
+    build_p.add_argument(
+        "--input-commit", required=True, help="Accepted prepared input commit."
+    )
+    build_p.add_argument(
+        "--input-manifest-sha256",
         required=True,
-        help="Pinned prepared sources and provider-neutral curation declarations.",
+        help="Accepted prepared manifest SHA-256.",
     )
     build_p.add_argument(
         "--curation-dir",
@@ -210,7 +216,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--registers",
         metavar="SPEC[,SPEC...]",
         help=(
-            "Form only these selection scopes. SPEC is a register id (258), "
+            "Form only these prepared scopes. SPEC is a register id (258), "
             "SOURCE:ID when that id names registers in several sources "
             "(scb-registerinformation:258), or a whole-source scope such as an SOS "
             "workbook by its source dataset. Shared inputs stay complete; curation "
@@ -935,7 +941,7 @@ def _pipeline_report_failure(
 
 
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .pipeline import CompletedArtifactError, build_selected_catalog
+    from .pipeline import CompletedArtifactError, build_catalog
 
     if args.timing:
         os.environ["REG_META_BUILD_TIMING"] = "1"
@@ -944,7 +950,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ):
         raise RegMetaError(
             exit_code=EXIT_USAGE,
-            code="pipeline_selection_options_invalid",
+            code="pipeline_options_invalid",
             error_class="usage",
             message="Diagnostic mode requires a separate explicit --diagnostic-db-path and excludes --db.",
             remediation="Use both --diagnostic and --diagnostic-db-path, or omit both for a strict build.",
@@ -953,7 +959,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if not all(registers) or (registers and not args.diagnostic and args.db is None):
         raise RegMetaError(
             exit_code=EXIT_USAGE,
-            code="pipeline_selection_options_invalid",
+            code="pipeline_options_invalid",
             error_class="usage",
             message="--registers needs nonempty comma-separated scope names and never writes the active catalog.",
             remediation="Name each scope once between commas; give a strict register subset its own new --db DIR.",
@@ -964,8 +970,10 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         else Path(args.db or default_db_dir()) / DB_FILENAME
     )
     try:
-        result = build_selected_catalog(
-            Path(args.selection),
+        result = build_catalog(
+            Path(args.prepared),
+            args.input_commit,
+            args.input_manifest_sha256,
             output,
             Path(args.report_dir),
             diagnostic=args.diagnostic,
@@ -2149,7 +2157,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Clean and validate sources once; write a new candidate for acceptance.",
     ),
     (
-        "build-db --selection FILE --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
+        "build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
         "[--registers SPEC[,SPEC...]] [--curation-dir DIR] [--dump-decisions DIR]",
         "Build from prepared sources and common curation; strict publication is the default.",
     ),
@@ -2271,32 +2279,17 @@ def _confined_bundle_output_path(
             remediation="Choose a separate summary path or use stdout.",
         )
     if args.command == "build-db" and (
-        selection_path := getattr(args, "selection", None)
+        prepared_path := getattr(args, "prepared", None)
     ):
-        from .pipeline import PipelineSelection
         from .prepared_catalog import prepared_catalog_paths
 
-        selection_file = Path(selection_path).expanduser().resolve()
+        prepared = Path(prepared_path).expanduser().resolve()
         try:
-            selected = PipelineSelection.model_validate_json(
-                selection_file.read_bytes()
-            )
+            protected = set(prepared_catalog_paths(prepared))
         except ValueError, OSError:
             # Let the handler report the precise input error, always to stdout.
             return None
-        prepared = Path(selected.prepared_path)
-        if not prepared.is_absolute():
-            prepared = selection_file.parent / prepared
-        try:
-            protected = {
-                selection_file,
-                *(selection_file.parent / scope.path for scope in selected.scopes),
-                *prepared_catalog_paths(prepared),
-            }
-        except ValueError, OSError:
-            # Invalid inputs must not direct even an error report into an alias.
-            return None
-        directories = {selection_file.parent, prepared.resolve()}
+        directories = {prepared}
         from ._curation import repo_curation_dir
 
         curation_dir = (
