@@ -362,10 +362,13 @@ max_priority = "P3"
 # implementer and its reviewer come from different providers. Muse was tried first
 # (2026-09-25) and dropped: it answers autoreview's overall_correctness with a
 # boolean instead of the verdict string, so every review errors.
+# medium, not high: at high some passes think past 20 minutes, and the request is
+# cut at ~1,200 s ("socket connection was closed unexpectedly" from pi's Bun
+# fetch), failing the whole review. Seen on Y-231 r3 and Y-230/2 (2026-09-25).
 [review.reviewers.deepseek]
 engine = "pi"
 model = "openrouter/deepseek/deepseek-v4.1-flash"
-effort = "high"
+effort = "medium"
 
 # autoreview runs codex seats on the host's codex CLI, not the vendored worker
 # pin: gpt-6-sol needs codex >= 0.156 there (0.153 refuses it on a ChatGPT
