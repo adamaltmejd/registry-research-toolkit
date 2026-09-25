@@ -982,15 +982,16 @@ def compile_native_naming(
                 locations[entry.entry_id] = ref
                 entry_owners[entry.entry_id] = name
         bound = {(b.kind, b.provider, b.source_id) for b in bindings[scope_key]}
-        uncompiled = {
-            (item.naming.kind, item.naming.provider, item.naming.source_id)
-            for item in scope.naming
-            if _naming_family(item.target) not in COMPILED
-        }
         supplied = {
             (entry.entry.kind, entry.entry.provider, entry.entry.source_id)
             for entry in entries
         }
+        unbound = supplied - bound
+        uncompiled = set()
+        for item in scope.naming:
+            token = item.naming.kind, item.naming.provider, item.naming.source_id
+            if token in unbound and _naming_family(item.target) not in COMPILED:
+                uncompiled.add(token)
         for binding in bindings[scope_key]:
             if binding.target.source_key[-2:] != (
                 "variant",
