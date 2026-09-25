@@ -383,29 +383,48 @@ def build_selected_catalog(
         }
     selected = merge_selection(selected, compiled)
     scopes = {key: merge_scope(scope, compiled) for key, scope in stored_scopes.items()}
+    coding_registers = {
+        f"{register.register_info.provider}/{register.register_info.slug}": register
+        for register in tree.registers
+        if (
+            register.coding.choice
+            or register.coding.uncoded
+            or register.coding.omit
+            or register.coding.extend
+        )
+    }
+    coding_ids = {}
+    for name, register in coding_registers.items():
+        ids = tuple(
+            f"{register.source_file}#/coding.{kind}/{index}/period/{period_index}"
+            for kind, entries in (
+                ("choice", register.coding.choice),
+                ("uncoded", register.coding.uncoded),
+                ("omit", register.coding.omit),
+                ("extend", register.coding.extend),
+            )
+            for index, entry in enumerate(entries, 1)
+            for period_index, _ in enumerate(entry.periods, 1)
+        )
+        coding_ids[name] = ids
+        compiled.report.setdefault(
+            name,
+            {
+                key: []
+                for key in (
+                    "entries_read",
+                    "entries_matched",
+                    "stale",
+                    "over_broad",
+                    "not_evaluated_in_subset",
+                )
+            },
+        )["entries_read"].extend(ids)
     matched_labels: set[str] = set()
     duplicate_overrides: set[str] = set()
     curation_hash = tree_sha256(curation_dir)
     if dump_decisions is not None:
         dump_decisions.mkdir()
-        for index, key in enumerate(sorted(visit, key=repr)):
-            (dump_decisions / f"scope-{index:05d}.json").write_text(
-                json.dumps(
-                    {
-                        "source": key[0],
-                        "register_key": key[1],
-                        "cases": [
-                            case.model_dump(mode="json")
-                            for case in compiled.cases.get(key, ())
-                        ],
-                    },
-                    ensure_ascii=False,
-                    sort_keys=True,
-                    separators=(",", ":"),
-                )
-                + "\n",
-                encoding="utf-8",
-            )
         (dump_decisions / "global.json").write_text(
             json.dumps(
                 compiled.fields,
@@ -509,7 +528,7 @@ def build_selected_catalog(
     report_dir.mkdir(parents=True, exist_ok=False)
     counts: Counter[str] = Counter()
     acknowledged: Counter[str] = Counter()
-    seen_scopes, seen_cases = set(), set()
+    seen_scopes, seen_cases, seen_coding = set(), set(), set()
     seen_unapplied = set()
     coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
@@ -747,6 +766,46 @@ def build_selected_catalog(
                     scope_started = time.perf_counter()
                     scope_key = source, register
                     scope = scopes[scope_key]
+                    scope_coding = tuple(
+                        coding_registers[name]
+                        for name in sorted(
+                            set(declared_register_fqids(scope.naming).values())
+                            & coding_registers.keys()
+                        )
+                    )
+
+                    def record_coding_compilation(
+                        register, new_cases, new_diagnostics, scope_key=scope_key
+                    ) -> None:
+                        name = f"{register.register_info.provider}/{register.register_info.slug}"
+                        if name in seen_coding:
+                            raise ValueError(f"coding register compiled twice: {name}")
+                        seen_coding.add(name)
+                        statuses = compiled.report[name]
+                        statuses["entries_matched"].extend(
+                            case.case_id for case in new_cases
+                        )
+                        for diagnostic_issue in new_diagnostics:
+                            statuses[
+                                "over_broad"
+                                if diagnostic_issue.code == "overbroad_curation_entry"
+                                else "stale"
+                            ].append(diagnostic_issue.case_id)
+                        merged_scope = scopes[scope_key].model_copy(
+                            update={
+                                "cases": (*scopes[scope_key].cases, *new_cases),
+                            }
+                        )
+                        scopes[scope_key] = ScopeDeclarations.model_validate_json(
+                            merged_scope.model_dump_json()
+                        )
+                        compiled.cases[scope_key] = tuple(
+                            sorted(
+                                (*compiled.cases.get(scope_key, ()), *new_cases),
+                                key=lambda case: case.case_id,
+                            )
+                        )
+
                     resolution_started = time.perf_counter()
                     result = resolve_source_scope(
                         originals,
@@ -772,6 +831,9 @@ def build_selected_catalog(
                         ),
                         on_diagnostic=issue,
                         diagnostic=diagnostic,
+                        coding_scope=scope,
+                        coding_registers=scope_coding,
+                        on_coding_compiled=record_coding_compilation,
                     )
                     _emit_timing(f"pipeline: resolve {scope_key!r}", resolution_started)
                     for gap in scope.unapplied_curation:
@@ -941,6 +1003,29 @@ def build_selected_catalog(
                 raise ValueError(
                     f"{'selected' if registers else 'full'} source occurrence count differs from preparation"
                 )
+            selected_coding_names = {
+                name
+                for key in visit
+                for name in declared_register_fqids(scopes[key].naming).values()
+            }
+            for name, ids in coding_ids.items():
+                if name in seen_coding:
+                    continue
+                if registers and name not in selected_coding_names:
+                    compiled.report[name]["not_evaluated_in_subset"].extend(ids)
+                    continue
+                compiled.report[name]["stale"].extend(ids)
+                for case_id in ids:
+                    issue(
+                        ResolutionDiagnostic(
+                            code="stale_curation_entry",
+                            severity="error",
+                            case_id=case_id,
+                            subject=name,
+                            detail=f"{case_id} matches no selected source scope",
+                            withheld_output=(case_id,),
+                        )
+                    )
             for binding_issue in finalize_classification_bindings(
                 compiled,
                 tree,
@@ -950,6 +1035,24 @@ def build_selected_catalog(
             ):
                 issue(binding_issue)
             if dump_decisions is not None:
+                for index, key in enumerate(sorted(visit, key=repr)):
+                    (dump_decisions / f"scope-{index:05d}.json").write_text(
+                        json.dumps(
+                            {
+                                "source": key[0],
+                                "register_key": key[1],
+                                "cases": [
+                                    case.model_dump(mode="json")
+                                    for case in compiled.cases.get(key, ())
+                                ],
+                            },
+                            ensure_ascii=False,
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        )
+                        + "\n",
+                        encoding="utf-8",
+                    )
                 (dump_decisions / "compile-report.json").write_text(
                     json.dumps(
                         compiled.report,

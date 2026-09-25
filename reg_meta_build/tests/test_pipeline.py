@@ -260,10 +260,25 @@ def selection(tmp_path, request, monkeypatch):
                     "register_scoped",
                     "register_dangling",
                     "columnless",
+                    "coding_gap",
                     "sentinel",
                     *_SOS_CELLS,
                 }
                 else "",
+            ),
+            *(
+                [
+                    _var_row(
+                        cvid=1002,
+                        var_id=101,
+                        colname="VALUE",
+                        data_type="int",
+                        year="2021",
+                        regver_id=111,
+                    )
+                ]
+                if param == "coding_gap"
+                else []
             ),
             *(
                 [
@@ -343,6 +358,13 @@ def selection(tmp_path, request, monkeypatch):
             "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0",
             *(
                 [
+                    "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2021|2021|0|0|0"
+                ]
+                if param == "coding_gap"
+                else []
+            ),
+            *(
+                [
                     "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2021|2021|0|0|1"
                 ]
                 if renumbered
@@ -387,6 +409,13 @@ def selection(tmp_path, request, monkeypatch):
             include=("vardemangder", "valid_dates"),
             vardemangder_rows=["List|1|1|One|broken|5001"],
             valid_dates_rows=["5001|2020-01-01|2020-12-31"],
+        )
+    if param == "coding_gap":
+        write_scb_input(
+            source,
+            include=("vardemangder", "valid_dates"),
+            vardemangder_rows=["Earlier list|1|1|One|1001|5001"],
+            valid_dates_rows=["5001|2019-01-01|2019-12-31"],
         )
     if sentinel:
         class_dir = source / "classifications"
@@ -1141,6 +1170,86 @@ def test_hybrid_compiler_preserves_stored_global_selection(
     assert {p.name: p.read_bytes() for p in dump.iterdir()} == {
         p.name: p.read_bytes() for p in second_dump.iterdir()
     }
+
+
+@pytest.mark.parametrize("selection", ["coding_gap"], indirect=True)
+def test_tracked_uncoded_window_changes_build_and_stale_entry_is_reported(
+    selection, tmp_path, monkeypatch
+):
+    from reg_meta_build.curation_compile import compile_curation
+
+    from reg_meta_build import pipeline
+
+    monkeypatch.setattr(pipeline, "compile_curation", compile_curation)
+    baseline_report = tmp_path / "coding-baseline-report"
+    build_selected_catalog(
+        selection,
+        tmp_path / "coding-baseline.db",
+        baseline_report,
+        diagnostic=True,
+    )
+    # The 2020 list does not establish coding for the later 2021 occurrence.
+    assert any(
+        issue["code"] == "missing_coding_period" for issue in _issues(baseline_report)
+    )
+
+    register_dir = tmp_path / "curation" / "registers" / "scb"
+    register_dir.mkdir(parents=True)
+    register_file = register_dir / "sample.toml"
+    header = '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+    entry = (
+        '\n[[coding.uncoded]]\nvariable = "1.101"\nvariant = "1.10"\n'
+        'column = "VALUE"\nperiods = [["2021-01-01", "2021-12-31"]]\n'
+        'reason = "The selected source has no code list in this window."\n'
+        'source = "fixture"\n'
+    )
+    register_file.write_text(header + entry)
+    applied_report = tmp_path / "coding-applied-report"
+    dump = tmp_path / "coding-decisions"
+    build_selected_catalog(
+        selection,
+        tmp_path / "coding-applied.db",
+        applied_report,
+        diagnostic=True,
+        dump_decisions=dump,
+    )
+    assert not any(
+        issue["code"] == "missing_coding_period" for issue in _issues(applied_report)
+    )
+    case_id = "curation/registers/scb/sample.toml#/coding.uncoded/1/period/1"
+    assert (
+        case_id
+        in json.loads((dump / "compile-report.json").read_text())["scb/sample"][
+            "entries_matched"
+        ]
+    )
+    assert any(
+        case["case_id"] == case_id
+        for case in json.loads((dump / "scope-00000.json").read_text())["cases"]
+    )
+
+    register_file.write_text(header + entry.replace("2021-01-01", "2019-01-01"))
+    stale_report = tmp_path / "coding-stale-report"
+    stale_dump = tmp_path / "coding-stale-decisions"
+    build_selected_catalog(
+        selection,
+        tmp_path / "coding-stale.db",
+        stale_report,
+        diagnostic=True,
+        dump_decisions=stale_dump,
+    )
+    assert any(
+        issue["code"] == "stale_curation_entry"
+        and issue["case_id"] == case_id
+        and issue["severity"] == "error"
+        for issue in _issues(stale_report)
+    )
+    assert (
+        case_id
+        in json.loads((stale_dump / "compile-report.json").read_text())["scb/sample"][
+            "stale"
+        ]
+    )
 
 
 @pytest.mark.parametrize("selection", ["sentinel"], indirect=True)

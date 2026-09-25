@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta_build.catalog_dependencies import variable_dependency_keys
 from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
+from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_classification_bindings import apply_classification_cases
 from reg_meta_build.source_coding_choices import apply_coding_choices
@@ -48,6 +49,8 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Mapping
 
     from reg_meta_build.catalog_dependencies import CoverageObligation, DependencyKey
+    from reg_meta_build.curation_tree import RegisterCuration
+    from reg_meta_build.pipeline import ScopeDeclarations
     from reg_meta_build.resolved_catalog import (
         ResolvedClassification,
         ResolvedVariable,
@@ -143,6 +146,13 @@ def resolve_source_scope(
     on_binding: Callable[[NativeKey, ValueBindingResult], None] | None = None,
     on_diagnostic: Callable[[ResolutionDiagnostic], None] | None = None,
     diagnostic: bool = False,
+    coding_scope: ScopeDeclarations | None = None,
+    coding_registers: tuple[RegisterCuration, ...] = (),
+    on_coding_compiled: Callable[
+        [RegisterCuration, tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]],
+        None,
+    ]
+    | None = None,
 ) -> ScopeResolution:
     """Resolve one complete scope without IO policy.
 
@@ -306,6 +316,91 @@ def resolve_source_scope(
             )
             if owner != occurrence.variable_key:
                 raise ValueError("one exact column key has multiple variable owners")
+    claims_by_variable: dict[NativeKey, dict[NativeKey, list[CodeListClaim]]] = {}
+    column_records: dict[NativeKey, dict[SourceRecordRef, SourceRecord]] = defaultdict(
+        dict
+    )
+
+    def bind_claims(
+        key: NativeKey, items: tuple[EffectiveOccurrence, ...]
+    ) -> dict[NativeKey, list[CodeListClaim]]:
+        claims: dict[NativeKey, list[CodeListClaim]] = defaultdict(list)
+        for occurrence in sorted(
+            items,
+            key=lambda o: (
+                repr(
+                    tuple(
+                        (r.source, r.subject.member.native_id)
+                        for r in (o.source_records or o.coding_records)
+                    )
+                ),
+                repr(
+                    o.edition_period_scope
+                    if o.edition_period_scope.kind != "not_applicable"
+                    else o.edition_scope
+                ),
+            ),
+        ):
+            column = occurrence.column_key
+            if column is None:
+                continue
+            if coding_registers:
+                for source_record in occurrence.evidence:
+                    column_records[column][record_ref(source_record)] = source_record
+            bound = bind_occurrence_code_lists(occurrence, value_sessions)
+            claims[column].extend(bound.claims)
+            if on_binding is not None:
+                on_binding(key, bound)
+            for issue in bound.issues:
+                emit(
+                    ResolutionDiagnostic(
+                        code=issue.code,
+                        severity="error",
+                        subject=repr(column),
+                        detail=f"Prepared coding evidence cannot be bound: {issue!r}",
+                        refs=tuple(
+                            dict.fromkeys(record_ref(r) for r in occurrence.evidence)
+                        ),
+                        fields=("coding",),
+                        withheld_output=("state.value_set",),
+                    )
+                )
+        return claims
+
+    if coding_registers:
+        # Coding decisions need every effective column and original claim in the
+        # register before any variable starts applying choices. Other scopes keep
+        # the bounded one-variable-at-a-time binding path.
+        for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
+            claims_by_variable[key] = bind_claims(key, tuple(items))
+    if coding_registers and coding_scope is None:
+        raise ValueError("coding register compilation requires its scope declarations")
+    compiled_cases = []
+    coding_columns = {
+        column: tuple(records[ref] for ref in sorted(records, key=repr))
+        for column, records in column_records.items()
+    }
+    original_coding = {
+        column: tuple(values)
+        for claims in claims_by_variable.values()
+        for column, values in claims.items()
+    }
+    for register in coding_registers:
+        assert coding_scope is not None
+        new_cases, new_diagnostics = compile_coding_register(
+            register,
+            coding_scope,
+            columns=coding_columns,
+            coding=original_coding,
+        )
+        compiled_cases.extend(new_cases)
+        for issue in new_diagnostics:
+            emit(issue)
+        if on_coding_compiled is not None:
+            on_coding_compiled(register, new_cases, new_diagnostics)
+    cases = (*cases, *compiled_cases)
+    if len({c.case_id for c in cases}) != len(cases):
+        raise ValueError("source scope case IDs must be unique")
     late = defaultdict(list)
     aliases = []
     for case in cases:
@@ -363,47 +458,11 @@ def resolve_source_scope(
             provider_key = None
         else:
             provider_key = provider_keys[key]
-        claims: dict[NativeKey, list[CodeListClaim]] = defaultdict(list)
-        # Adjacent physical duplicates share the value session's bounded native
-        # list cache. Source row order can interleave members or corrected scopes.
-        # Only binding order changes; formation retains the original evidence.
-        for occurrence in sorted(
-            occurrences,
-            key=lambda o: (
-                repr(
-                    tuple(
-                        (r.source, r.subject.member.native_id)
-                        for r in (o.source_records or o.coding_records)
-                    )
-                ),
-                repr(
-                    o.edition_period_scope
-                    if o.edition_period_scope.kind != "not_applicable"
-                    else o.edition_scope
-                ),
-            ),
-        ):
-            column = occurrence.column_key
-            if column is None:
-                continue
-            bound = bind_occurrence_code_lists(occurrence, value_sessions)
-            claims[column].extend(bound.claims)
-            if on_binding is not None:
-                on_binding(key, bound)
-            for issue in bound.issues:
-                emit(
-                    ResolutionDiagnostic(
-                        code=issue.code,
-                        severity="error",
-                        subject=repr(column),
-                        detail=f"Prepared coding evidence cannot be bound: {issue!r}",
-                        refs=tuple(
-                            dict.fromkeys(record_ref(r) for r in occurrence.evidence)
-                        ),
-                        fields=("coding",),
-                        withheld_output=("state.value_set",),
-                    )
-                )
+        claims = (
+            claims_by_variable[key]
+            if coding_registers
+            else bind_claims(key, occurrences)
+        )
         selected = tuple(late[key])
         chosen = apply_coding_choices(
             evidence,

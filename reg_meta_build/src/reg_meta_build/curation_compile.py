@@ -630,16 +630,20 @@ def compile_coding_register(
             }
             if len(matches) != 1:
                 status = "overbroad" if len(matches) > 1 else "stale"
-                diagnostics.append(
-                    ResolutionDiagnostic(
-                        code=f"{status}_curation_entry",
-                        severity="error",
-                        case_id=ref,
-                        subject=entry.variable,
-                        detail=f"{ref} resolves to {len(matches)} column keys; expected one",
-                        withheld_output=(ref,),
+                for period_index, (start, end) in enumerate(entry.periods, 1):
+                    case_id = f"{ref}/period/{period_index}"
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code=f"{status}_curation_entry",
+                            severity="error",
+                            case_id=case_id,
+                            subject=entry.variable,
+                            detail=f"{case_id} resolves to {len(matches)} column keys; expected one",
+                            valid_from=start,
+                            valid_to=end,
+                            withheld_output=(case_id,),
+                        )
                     )
-                )
                 continue
             column = next(iter(matches))
             records = columns[column]
