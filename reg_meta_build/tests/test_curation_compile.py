@@ -14,7 +14,6 @@ from reg_meta_build.curation_compile import (
     CompiledCuration,
     _compile_sos_register,
     _compile_thin_register,
-    compile_alias_windows,
     compile_curation,
     compile_enrichment,
     compile_errata,
@@ -1075,68 +1074,6 @@ def _errata_record(
     return clean_scb_row(
         header, member, cells, _revision("scb-registerinformation")
     ).record
-
-
-def test_alias_window_column_must_exist_in_every_selected_edition(tmp_path: Path):
-    root = tmp_path / "curation"
-    _tree(root)
-    path = root / "registers/scb/sample.toml"
-    path.write_text(
-        path.read_text(encoding="utf-8")
-        + '\n[[representation.alias_window]]\nvariable = "scb/sample/a"\n'
-        'variant = "people"\ncolumn = "A"\n'
-        'source_editions = ["2020", "2021"]\n'
-        'evidence = "Two exact source editions"\nnoted = "2026-09-25"\n',
-        encoding="utf-8",
-    )
-    (register,) = (
-        item
-        for item in load_curation_tree(root).registers
-        if item.register_info.slug == "sample"
-    )
-    first = _errata_record(column="A", year="2020")
-    second = _errata_record(column="B", year="2021", member=21)
-    register_key = source_register_key(first)
-    variant_key = native_variant_key(first)
-    variable_key = native_variable_key(first)
-    assert register_key and variant_key and variable_key
-    names = (
-        NamingDeclaration(
-            target=NativeNamingTarget(
-                kind="register", provider="scb", source_key=register_key
-            ),
-            naming=SlugEntry("register", "1", "sample", "scb"),
-            contributors=(),
-        ),
-        NamingDeclaration(
-            target=NativeNamingTarget(
-                kind="register_variant",
-                provider="scb",
-                source_key=variant_key,
-                register_key=register_key,
-            ),
-            naming=SlugEntry("register_variant", "1.2", "people", "scb"),
-            contributors=(),
-        ),
-        NamingDeclaration(
-            target=NativeNamingTarget(
-                kind="variable",
-                provider="scb",
-                source_key=variable_key,
-                register_key=register_key,
-            ),
-            naming=SlugEntry("variable", "1.5", "a", "scb"),
-            contributors=(),
-        ),
-    )
-    cases, issues = compile_alias_windows(register, (first, second), names)
-    assert cases == ()
-    assert [item.code for item in issues] == ["stale_curation_entry"]
-    assert "absent from a selected source edition" in issues[0].detail
-    cases, issues = compile_alias_windows(
-        register, (first, _errata_record(column="A", year="2021", member=21)), names
-    )
-    assert len(cases) == 1 and issues == ()
 
 
 def _errata_fixture(tmp_path: Path, records: tuple[SourceRecord, ...], fragment: str):

@@ -1065,18 +1065,6 @@ def compile_alias_windows(
                         _literal_field(record, "column_name"),
                     )
                 )
-        if any(
-            not any(column == entry.column for _, _, column in targets)
-            for targets in targets_by_edition.values()
-        ):
-            diagnostics.append(
-                _stale_partition(
-                    ref,
-                    entry.variable,
-                    "alias column is absent from a selected source edition",
-                )
-            )
-            continue
         if any(len(targets) != 1 for targets in targets_by_edition.values()):
             diagnostics.append(
                 _overbroad_matrix_repr(
