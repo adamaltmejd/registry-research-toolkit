@@ -36,7 +36,6 @@ from reg_meta_build.source_coding import (
 )
 from reg_meta_build.source_coordinates import (
     native_variable_key,
-    native_variant_key,
     source_register_key,
 )
 from reg_meta_build.source_curation import (
