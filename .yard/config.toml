@@ -341,7 +341,10 @@ artifacts = [
 # through P3). Both are keys of [review]: one truth per project.
 [review]
 max_rounds = 5
-timeout_minutes = 30
+# 90 because the DeepSeek pi seat reviews a large diff in ~500 KB chunks at 1-2
+# minutes each: Y-230's 28 chunks (mostly moved curation TOML) passed the old
+# 30-minute deadline half way through.
+timeout_minutes = 90
 blocking = "P1"
 max_priority = "P3"
 
