@@ -1053,7 +1053,9 @@ def test_strict_build_publishes_only_when_every_error_is_acknowledged(
 
 
 @pytest.mark.parametrize("selection", ["cross_register_ack"], indirect=True)
-def test_register_file_cannot_acknowledge_another_registers_error(selection, tmp_path):
+def test_register_file_cannot_acknowledge_another_registers_error(
+    selection, tmp_path, structural_validation_only
+):
     blocked = build_selected_catalog(
         selection, tmp_path / "blocked.db", tmp_path / "blocked"
     )
