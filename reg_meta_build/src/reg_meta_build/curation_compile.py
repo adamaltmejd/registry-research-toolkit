@@ -28,7 +28,7 @@ from .cis2016_matrix import (
     load_cis2014_matrix,
     load_cis2016_matrix,
 )
-from .concept_groups import CodeLabelPair, _MONTH_TOKENS
+from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .convert_errata import capture_expectations
 from .fqid_slugs import EntityKind, SlugEntry, _load_register_auto_file, _validate_entry
 from .normalization import normalize_token
@@ -1220,7 +1220,7 @@ def compile_period_families(
                         columns=tuple(
                             ColumnRepresentation(
                                 column=cast(
-                                    str,
+                                    "str",
                                     _literal_field(months[month][0], "column_name"),
                                 ),
                                 valid_from=f"{year}-{month:02}-01",
@@ -1353,7 +1353,7 @@ def compile_alias_windows(
                 )
             )
             continue
-        years = sorted(cast(set[int], years))
+        years = sorted(cast("set[int]", years))
         if years != list(range(years[0], years[-1] + 1)):
             diagnostics.append(
                 _stale_partition(

@@ -13,7 +13,6 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.curation_compile import compile_matrix_repr, compile_period_families
 from reg_meta_build.curation_tree import load_register_files
-from reg_meta_build.fqid_slugs import SlugEntry
 from reg_meta_build.period_family_merges import PeriodFamily, load_period_family_merges
 from reg_meta_build.pipeline import ScopeDeclarations, ScopeFile, _read_scope
 from reg_meta_build.source_coding import resolve_code_membership
@@ -24,6 +23,8 @@ from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import SourceRevision
 from reg_meta_build.source_representations import resolve_representation_cases
 from reg_meta_build.sources.scb_records import clean_scb_row
+
+from reg_meta_build.fqid_slugs import SlugEntry
 
 if TYPE_CHECKING:
     from pathlib import Path

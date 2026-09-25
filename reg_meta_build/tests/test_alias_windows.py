@@ -10,7 +10,6 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.alias_windows import load_alias_windows
 from reg_meta_build.curation_compile import compile_alias_windows
 from reg_meta_build.curation_tree import load_register_files
-from reg_meta_build.fqid_slugs import SlugEntry
 from reg_meta_build.source_coordinates import (
     native_variable_key,
     native_variant_key,
@@ -19,6 +18,8 @@ from reg_meta_build.source_coordinates import (
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import SourceRevision
 from reg_meta_build.sources.scb_records import clean_scb_row
+
+from reg_meta_build.fqid_slugs import SlugEntry
 
 if TYPE_CHECKING:
     from pathlib import Path
