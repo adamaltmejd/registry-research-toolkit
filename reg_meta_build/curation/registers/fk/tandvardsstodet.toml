@@ -87,11 +87,6 @@ slug = "lopnummer"
 
 
 [[variable]]
-native_id = "7664376130118991107.ARO_SEKVNR"
-slug = "aro-sekvnr"
-
-
-[[variable]]
 native_id = "7664376130118991107.HCP_INTERVALL_0"
 slug = "tandvard-ersattning-intervall-0"
 
