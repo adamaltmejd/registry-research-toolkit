@@ -216,10 +216,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--registers",
         metavar="SPEC[,SPEC...]",
         help=(
-            "Form only these prepared scopes. SPEC is a register id (258), "
-            "SOURCE:ID when that id names registers in several sources "
-            "(scb-registerinformation:258), or a whole-source scope such as an SOS "
-            "workbook by its source dataset. Shared inputs stay complete; curation "
+            "Form only these prepared scopes. SPEC is an SCB register id (258), "
+            "an SOS or thin-provider register name (Patientregistret, aktivitetsstod), "
+            "or SOURCE:ID (scb-registerinformation:258) to qualify a register. "
+            "Shared inputs stay complete; curation "
             "touching no selected register is skipped, and references to registers, "
             "variants and variables that unselected scopes declare are deferred "
             "warnings."

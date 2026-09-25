@@ -3654,61 +3654,6 @@ def compile_curation(
                         ),
                     )
                 )
-    variable_families: dict[str, set[tuple[str, tuple[str | int, ...]]]] = {}
-    for scope in scopes:
-        registers = {
-            native_key: register for register, native_key in _scope_registers(scope)
-        }
-        for name in naming.get((scope.source, scope.register_key), ()):
-            if (
-                name.target.kind == "variable"
-                and name.naming.slug is not None
-                and (register := registers.get(name.target.register_key)) is not None
-            ):
-                variable_families.setdefault(
-                    f"{register}/{name.naming.slug}", set()
-                ).add((scope.source, name.target.source_key))
-    classification_report = {
-        key: []
-        for key in (
-            "entries_read",
-            "entries_matched",
-            "stale",
-            "over_broad",
-            "not_evaluated_in_subset",
-            "duplicate_overrides",
-        )
-    }
-    for entry in tree.classifications:
-        base = f"classifications/{entry.classification.short_name}.toml"
-        classification_report["entries_read"].append(base)
-        classification_report["entries_matched"].append(base)
-        for index, _ in enumerate(entry.binding.value_set_labels, 1):
-            ref = f"{base}#/binding/value_set_labels/{index}"
-            classification_report["entries_read"].append(ref)
-        for index, bound in enumerate(entry.binding.variable, 1):
-            ref = f"{base}#/binding/variable/{index}"
-            classification_report["entries_read"].append(ref)
-            if _register(bound.variable) not in selected:
-                if subset:
-                    classification_report["not_evaluated_in_subset"].append(ref)
-                    continue
-                status = "stale"
-            else:
-                matches = len(variable_families.get(bound.variable, ()))
-                status = "entries_matched" if matches == 1 else "stale"
-            classification_report[status].append(ref)
-            if status != "entries_matched":
-                diagnostics.append(
-                    ResolutionDiagnostic(
-                        code="stale_curation_entry",
-                        severity="error",
-                        subject=bound.variable,
-                        detail=f"{ref} matches {len(variable_families.get(bound.variable, ()))} selected native families; expected exactly one",
-                        withheld_output=(ref,),
-                    )
-                )
-    report["_classifications"] = classification_report
     # The scoped resolver records what it actually skipped in this list.
     report["_subset"] = {"dropped": []}
     if not subset:
@@ -3794,6 +3739,61 @@ def compile_curation(
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
             current.setdefault(key, []).extend(values)
+    variable_families: dict[str, set[tuple[str, tuple[str | int, ...]]]] = {}
+    for scope in scopes:
+        registers = {
+            native_key: register for register, native_key in _scope_registers(scope)
+        }
+        for name in naming.get((scope.source, scope.register_key), ()):
+            if (
+                name.target.kind == "variable"
+                and name.naming.slug is not None
+                and (register := registers.get(name.target.register_key)) is not None
+            ):
+                variable_families.setdefault(
+                    f"{register}/{name.naming.slug}", set()
+                ).add((scope.source, name.target.source_key))
+    classification_report = {
+        key: []
+        for key in (
+            "entries_read",
+            "entries_matched",
+            "stale",
+            "over_broad",
+            "not_evaluated_in_subset",
+            "duplicate_overrides",
+        )
+    }
+    for entry in tree.classifications:
+        base = f"classifications/{entry.classification.short_name}.toml"
+        classification_report["entries_read"].append(base)
+        classification_report["entries_matched"].append(base)
+        for index, _ in enumerate(entry.binding.value_set_labels, 1):
+            ref = f"{base}#/binding/value_set_labels/{index}"
+            classification_report["entries_read"].append(ref)
+        for index, bound in enumerate(entry.binding.variable, 1):
+            ref = f"{base}#/binding/variable/{index}"
+            classification_report["entries_read"].append(ref)
+            if _register(bound.variable) not in selected:
+                if subset:
+                    classification_report["not_evaluated_in_subset"].append(ref)
+                    continue
+                status = "stale"
+            else:
+                matches = len(variable_families.get(bound.variable, ()))
+                status = "entries_matched" if matches == 1 else "stale"
+            classification_report[status].append(ref)
+            if status != "entries_matched":
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        subject=bound.variable,
+                        detail=f"{ref} matches {len(variable_families.get(bound.variable, ()))} selected native families; expected exactly one",
+                        withheld_output=(ref,),
+                    )
+                )
+    report["_classifications"] = classification_report
     return CompiledCuration(
         fields={
             "classifications": books,

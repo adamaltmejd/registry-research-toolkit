@@ -1937,6 +1937,51 @@ def test_selected_classification_variable_binding_has_exact_status(tmp_path):
     assert [issue.code for issue in stale.diagnostics] == ["stale_curation_entry"]
 
 
+def test_classification_binding_matches_partition_produced_name(tmp_path: Path) -> None:
+    root = tmp_path / "curation"
+    _tree(root)
+    register_file = root / "registers/scb/sample.toml"
+    register_file.write_text(
+        register_file.read_text(encoding="utf-8")
+        + '[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+        + '[[identity.partition]]\nvariable = "1.5"\n'
+        + 'columns = { ANSWER = "1.5.answer" }\ncolumns_ref = "fixture"\n',
+        encoding="utf-8",
+    )
+    (root / "classifications/GAMMA.toml").write_text(
+        '[classification]\nshort_name = "GAMMA"\nslug = "gamma"\n'
+        'name = "Gamma"\ncodes_file = "gamma.csv"\n'
+        '[[binding.variable]]\nvariable = "scb/sample/answer"\n',
+        encoding="utf-8",
+    )
+    records = _scb_partition_records(("ANSWER",))
+    native = native_variable_key(records[0])
+    register = source_register_key(records[0])
+    assert native is not None and register is not None
+
+    class Records:
+        def iter_native_families(self, source):
+            return iter(((native, records),))
+
+        def iter_records(self, *, source):
+            return iter(records)
+
+        def iter_register_slices(self, source, registers):
+            return iter(((register, records),))
+
+    prepared = _prepared()
+    prepared.records = Records()
+    scope = CompiledScope(source=records[0].source, register_key=register)
+    compiled = compile_curation(load_curation_tree(root), prepared, (scope,), subset=True)
+    ref = "classifications/GAMMA.toml#/binding/variable/1"
+    assert ref in compiled.report["_classifications"]["entries_matched"]
+    assert ref not in compiled.report["_classifications"]["stale"]
+    assert any(
+        item.target.kind == "variable" and item.naming.slug == "answer"
+        for item in (compiled.naming or {})[scope.source, scope.register_key]
+    )
+
+
 def test_classification_label_staleness_is_deferred_until_scope_resolution(tmp_path):
     tree = _tree(tmp_path / "curation")
     full = compile_curation(tree, _prepared(), (_scope(),))
