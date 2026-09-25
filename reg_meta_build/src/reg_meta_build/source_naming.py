@@ -31,6 +31,7 @@ from reg_meta_build.fqid_slugs import (
     load_provider_toml,
 )
 from reg_meta_build.id import mint, mint_canonical_scb
+from reg_meta_build.source_coordinates import native_parent_key, source_register_key
 from reg_meta_build.source_curation import (
     PeerGuard,
     RecordExpectation,
@@ -97,7 +98,11 @@ class NativeNamingTarget(_NamingModel):
         if self.identity_revision is not None:
             if self.expectations or self.peer_guards:
                 raise ValueError("use member guards or an identity revision, not both")
-        elif self.kind == "variable" and not self.expectations and not self.peer_guards:
+        elif (
+            self.kind in {"variable", "register", "register_variant"}
+            and not self.expectations
+            and not self.peer_guards
+        ):
             pass  # Exact native existence is checked against the selected evidence.
         elif not self.expectations or (
             not self.peer_guards and self.kind not in {"register", "register_variant"}
@@ -624,6 +629,18 @@ def convert_naming(
     )
 
 
+def native_provider_keys(
+    keys: Iterable[NativeKey], naming: Iterable[NamingDeclaration]
+) -> dict[NativeKey, str | None]:
+    """Derive the provider's variable token from each final native name."""
+    named = {
+        item.target.source_key: item.naming.source_id.split(".")[1]
+        for item in naming
+        if item.target.kind == "variable" and item.naming.slug is not None
+    }
+    return {key: named.get(key) for key in keys}
+
+
 def check_naming_target(
     target: NativeNamingTarget,
     records: Iterable[SourceRecord],
@@ -664,6 +681,37 @@ def check_naming_target(
                 severity="error",
                 subject=repr(target.source_key),
                 detail="Naming requires this exact existing native variable in its declared provider and register; curated partitions need their ownership guards.",
+            ),
+        )
+    if (
+        target.kind in {"register", "register_variant"}
+        and not target.expectations
+        and not target.peer_guards
+    ):
+        present = any(
+            native_parent_key(record.source, record.subject.provider, parent)
+            == target.source_key
+            for record in records
+            for parent in record.parent_facts
+            if parent.kind == ("register" if target.kind == "register" else "variant")
+        )
+        if target.kind == "register_variant" and target.source_key[-2:] == (
+            "variant",
+            "not-applicable",
+        ):
+            present = any(
+                source_register_key(record) == target.register_key
+                and record.subject.variant.status == "not_applicable"
+                for record in records
+            )
+        if present:
+            return ()
+        return (
+            ResolutionDiagnostic(
+                code="naming_native_identity_missing",
+                severity="error",
+                subject=repr(target.source_key),
+                detail="Naming requires this exact existing native parent in its declared provider and register.",
             ),
         )
     return tuple(

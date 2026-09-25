@@ -1558,7 +1558,7 @@ def write_auto_toml(
             slug_line += f"  # source: {kind}"
         lines.append(slug_line)
         lines.append("")
-    path.write_text("\n".join(lines), encoding="utf-8")
+    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -3397,8 +3397,16 @@ def seed_provider_toml(
 
 def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
     """Write only machine-owned variable pin files beside each register."""
+    from .curation_tree import load_register_files
+
     out_dir.mkdir(parents=True, exist_ok=True)
     written: dict[str, Path] = {}
+    curated = {
+        (register.register_info.provider, register.register_info.slug): {
+            row.native_id for row in register.variable if row.slug is not None
+        }
+        for register in load_register_files(out_dir)
+    }
     rows = conn.execute(
         "SELECT p.slug, r.register_id, r.slug FROM register r "
         "JOIN provider p ON p.provider_id = r.provider_id "
@@ -3424,6 +3432,11 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
             )
             # Generated pins retain retired rows and their first-sight spelling.
             slugs = {**slugs, **existing}
+        slugs = {
+            source_id: slug
+            for source_id, slug in slugs.items()
+            if source_id not in curated.get((provider, register_slug), set())
+        }
         write_auto_toml(path, provider, slugs, derivation)
         written[path.relative_to(out_dir).as_posix()] = path
     return written

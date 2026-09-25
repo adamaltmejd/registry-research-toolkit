@@ -651,6 +651,7 @@ class CurationTree:
     relations: CuratedRelations
     tags: tuple[CuratedTag, ...]
     lineage: LineageConfig
+    root: Path
 
 
 def _require_repo_curation_dir() -> Path:
@@ -1012,6 +1013,7 @@ def load_curation_tree(root: Path) -> CurationTree:
         relations=load_relations(root / "relations.toml"),
         tags=load_tags(root / "tags.toml"),
         lineage=lineage,
+        root=root,
     )
 
 

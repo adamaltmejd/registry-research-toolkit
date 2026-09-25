@@ -11,7 +11,11 @@ from _curation_fixtures import write_fdb_partition_curation
 from pydantic import ValidationError
 from reg_meta_build.convert_identity import convert_declared_partitions
 from reg_meta_build.id import mint, mint_canonical_scb
-from reg_meta_build.source_coordinates import native_variable_key, source_register_key
+from reg_meta_build.source_coordinates import (
+    native_parent_key,
+    native_variable_key,
+    source_register_key,
+)
 from reg_meta_build.source_curation import (
     PeerGuard,
     RecordExpectation,
@@ -619,4 +623,26 @@ def test_parent_naming_checks_identity_anchor_without_claiming_peer_membership(
                 "kind": "variable",
                 "register_key": ("source", "register", 1),
             }
+        )
+
+
+def test_expectation_free_parent_naming_checks_parent_facts() -> None:
+    record = _record()
+    for parent in record.parent_facts:
+        if parent.kind not in {"register", "variant"}:
+            continue
+        key = native_parent_key(record.source, record.subject.provider, parent)
+        assert key is not None
+        kind = "register" if parent.kind == "register" else "register_variant"
+        target = NativeNamingTarget(
+            kind=kind,
+            provider=record.subject.provider,
+            source_key=key,
+            register_key=source_register_key(record)
+            if kind == "register_variant"
+            else None,
+        )
+        assert not check_naming_target(target, (record,))
+        assert check_naming_target(
+            target.model_copy(update={"source_key": (*key, "missing")}), (record,)
         )

@@ -815,6 +815,7 @@ def build_selected_catalog(
                         provider_keys=_unique_pairs(
                             scope.provider_keys, "provider key"
                         ),
+                        derive_native_provider_keys=True,
                         value_sessions=sessions,
                         support=support,
                         classifications=books,
@@ -1044,6 +1045,19 @@ def build_selected_catalog(
                                 "cases": [
                                     case.model_dump(mode="json")
                                     for case in compiled.cases.get(key, ())
+                                ],
+                                "naming": [
+                                    item.model_dump(mode="json")
+                                    for item in (compiled.naming or {}).get(key, ())
+                                ],
+                                "provider_keys": (compiled.provider_keys or {}).get(
+                                    key, ()
+                                ),
+                                "variants": [
+                                    (native_key, variant.model_dump(mode="json"))
+                                    for native_key, variant in (
+                                        compiled.variants or {}
+                                    ).get(key, ())
                                 ],
                             },
                             ensure_ascii=False,

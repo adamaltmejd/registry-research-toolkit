@@ -181,6 +181,7 @@ def resolve(
     naming=None,
     naming_ambiguities=(),
     provider_keys=None,
+    derive_native_provider_keys=False,
     on_diagnostic=None,
     value_sessions=(),
     diagnostic=False,
@@ -204,6 +205,7 @@ def resolve(
         }
         if provider_keys is None
         else provider_keys,
+        derive_native_provider_keys=derive_native_provider_keys,
         value_sessions=value_sessions,
         support=support,
         classifications=classifications or {},
@@ -999,6 +1001,24 @@ def test_missing_conversion_is_fatal():
         resolve((item,), provider_keys={})
     with pytest.raises(ValueError, match="missing checked parent naming"):
         resolve((item,), naming=())
+
+
+def test_compiled_native_provider_key_comes_from_final_naming():
+    item = record()
+    key = native_variable_key(item)
+    named = resolve((item,), provider_keys={}, derive_native_provider_keys=True)
+    assert named.variables[key] is not None
+    assert named.variables[key].provider_key == "5"
+    unnamed = resolve(
+        (item,),
+        naming=tuple(name for name in names((item,)) if name.target.kind != "variable"),
+        provider_keys={},
+        derive_native_provider_keys=True,
+    )
+    assert unnamed.variables[key] is None
+    assert any(
+        issue.code == "unresolved_catalog_identity" for issue in unnamed.diagnostics
+    )
 
 
 def test_streamed_diagnostics_preserve_strict_severity_and_source_refs():
