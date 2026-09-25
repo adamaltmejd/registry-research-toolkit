@@ -1972,7 +1972,9 @@ def test_classification_binding_matches_partition_produced_name(tmp_path: Path) 
     prepared = _prepared()
     prepared.records = Records()
     scope = CompiledScope(source=records[0].source, register_key=register)
-    compiled = compile_curation(load_curation_tree(root), prepared, (scope,), subset=True)
+    compiled = compile_curation(
+        load_curation_tree(root), prepared, (scope,), subset=True
+    )
     ref = "classifications/GAMMA.toml#/binding/variable/1"
     assert ref in compiled.report["_classifications"]["entries_matched"]
     assert ref not in compiled.report["_classifications"]["stale"]
