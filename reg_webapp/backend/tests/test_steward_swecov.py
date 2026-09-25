@@ -46,11 +46,11 @@ _STEWARDS_DIR = Path(__file__).resolve().parents[2] / "stewards"
 _SWECOV = _STEWARDS_DIR / "swecov"
 _CIS2014_MATRIX_EVIDENCE = (
     Path(__file__).resolve().parents[3]
-    / "reg_meta_build/curation/cis2014-matrix-meaning-evidence.json"
+    / "reg_meta_build/curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json"
 )
 _CIS2016_MATRIX_EVIDENCE = (
     Path(__file__).resolve().parents[3]
-    / "reg_meta_build/curation/cis2016-matrix-meaning-evidence.json"
+    / "reg_meta_build/curation/registers/scb/innovation-foretag/cis2016-matrix-meaning-evidence.json"
 )
 
 
