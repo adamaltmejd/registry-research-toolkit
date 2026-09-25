@@ -18,6 +18,7 @@ from reg_meta_build.cli import run
 from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import prepare_catalog_sources
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
+from reg_meta_build.source_naming import authored_naming_id
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
@@ -45,7 +46,9 @@ class CatalogFixture:
 
 @pytest.fixture
 def catalog(tmp_path: Path, request) -> CatalogFixture:
-    second = getattr(request, "param", False)
+    mode = getattr(request, "param", False)
+    second = mode is True
+    thin = mode == "thin"
     source = tmp_path / "source"
     records = [_var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")]
     summaries = [
@@ -71,6 +74,16 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
         unika_rows=summaries,
         include=("registerinformation", "unika"),
     )
+    if thin:
+        thin_source = source / "Forsakringskassan"
+        thin_source.mkdir()
+        (thin_source / "fk.toml").write_text(
+            '[[register]]\nkey = "remote"\nname = "Remote"\n'
+            'valid_from = "2020-01-01"\nvalid_to = "2020-12-31"\n'
+            '[[register.variable]]\nname = "Amount"\ncolumn = "AMOUNT"\n'
+            'data_type = "int"\n',
+            encoding="utf-8",
+        )
     bundle = write_input_bundle(tmp_path / "inputs", source)
     prepared = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(bundle, prepared)
@@ -90,6 +103,30 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
             '[register]\nprovider = "scb"\nslug = "other"\nnative_id = "2"\n'
             '[[variant]]\nnative_id = "2.20"\nslug = "people"\n'
             '[[variable]]\nnative_id = "2.201"\nslug = "value"\n',
+            encoding="utf-8",
+        )
+    if thin:
+        thin_curation = curation / "registers" / "fk"
+        thin_curation.mkdir()
+        register_id = authored_naming_id(
+            "register", provider="fk", register_key="remote"
+        )
+        variant_id = authored_naming_id(
+            "register_variant",
+            provider="fk",
+            register_key="remote",
+            member_key="_default",
+        )
+        variable_id = authored_naming_id(
+            "variable", provider="fk", register_key="remote", member_key="AMOUNT"
+        )
+        (thin_curation / "remote.toml").write_text(
+            '[register]\nprovider = "fk"\nslug = "remote"\n'
+            f'native_id = "{register_id}"\n'
+            '[[variant]]\nslug = "default"\n'
+            f'native_id = "{variant_id}"\n'
+            '[[variable]]\nslug = "amount"\n'
+            f'native_id = "{variable_id}"\n',
             encoding="utf-8",
         )
     return CatalogFixture(prepared, commit, manifest.sha256, curation)
@@ -349,6 +386,50 @@ def test_compiled_global_contract_rejects_unknown_field(
     assert not (tmp_path / "bad.db").exists()
 
 
+def test_compiled_global_contract_revalidates_serialized_nested_field(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build.curation_compile import CompiledCodebook
+
+    from reg_meta_build import pipeline
+
+    compile_tree = pipeline.compile_curation
+
+    def invalid(*args, **kwargs):
+        compiled = compile_tree(*args, **kwargs)
+        book = CompiledCodebook("invalid", "invalid", {"broken": ["invalid"]})
+        return replace(compiled, fields={**compiled.fields, "classifications": (book,)})
+
+    monkeypatch.setattr(pipeline, "compile_curation", invalid)
+    with pytest.raises(ValueError, match="classifications.0.metadata.broken"):
+        catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
+    assert not (tmp_path / "bad.db").exists()
+
+
+def test_compiled_scope_contract_revalidates_serialized_naming(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build import pipeline
+
+    compile_tree = pipeline.compile_curation
+
+    def invalid(*args, **kwargs):
+        compiled = compile_tree(*args, **kwargs)
+        key, declarations = next(iter((compiled.naming or {}).items()))
+        declaration = declarations[0]
+        target = declaration.target.model_copy(update={"source_key": ()})
+        naming = declaration.model_copy(update={"target": target})
+        return replace(
+            compiled,
+            naming={**(compiled.naming or {}), key: (naming, *declarations[1:])},
+        )
+
+    monkeypatch.setattr(pipeline, "compile_curation", invalid)
+    with pytest.raises(ValueError, match="nonempty exact source key"):
+        catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
+    assert not (tmp_path / "bad.db").exists()
+
+
 def test_strict_curation_failure_preserves_previous_catalog(
     catalog: CatalogFixture, tmp_path: Path
 ) -> None:
@@ -577,6 +658,82 @@ def test_references_into_unselected_registers_are_deferred(
         with sqlite3.connect(output) as conn:
             for table in ("variable_same_as", "variable_replaced_by"):
                 assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() == (0,)
+
+
+@pytest.mark.parametrize("catalog", ["thin"], indirect=True)
+def test_reference_into_unselected_thin_provider_is_deferred(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    (catalog.curation / "relations.toml").write_text(
+        '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\nb = "fk/remote/amount"\n',
+        encoding="utf-8",
+    )
+    output, report = tmp_path / "slice.db", tmp_path / "report"
+    result = catalog.build(output, report, registers=("1",), diagnostic=True)
+    assert result["status"] == "diagnostic_complete"
+    assert result["counts"].get("error", 0) == 0
+    assert result["counts"]["deferred_references"] == 1
+    assert [(issue["code"], issue["severity"]) for issue in _issues(report)] == [
+        ("deferred_out_of_slice_reference", "warning")
+    ]
+    with sqlite3.connect(output) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM variable_same_as").fetchone() == (0,)
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+def test_unselected_additional_family_name_uses_complete_compiler(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build import pipeline
+
+    (catalog.curation / "relations.toml").write_text(
+        '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
+        'b = "scb/other/calendar"\n',
+        encoding="utf-8",
+    )
+    compile_tree = pipeline.compile_curation
+
+    def with_matrix_name(*args, **kwargs):
+        compiled = compile_tree(*args, **kwargs)
+        if not kwargs.get("subset") or len(args[2]) != 1:
+            return compiled
+        key = args[2][0].source, args[2][0].register_key
+        declarations = (compiled.naming or {}).get(key, ())
+        if not declarations or key[1] is None or key[1][-1] != 2:
+            return compiled
+        native = next(item for item in declarations if item.target.kind == "variable")
+        # The period-family compiler adds names after native naming and partitions.
+        matrix = native.model_copy(
+            update={
+                "target": native.target.model_copy(
+                    update={
+                        "source_key": (
+                            "curation",
+                            "period-family",
+                            "scb",
+                            "other",
+                            "calendar",
+                        )
+                    }
+                ),
+                "naming": replace(
+                    native.naming, source_id="matrix:calendar", slug="calendar"
+                ),
+            }
+        )
+        return replace(
+            compiled,
+            naming={**(compiled.naming or {}), key: (*declarations, matrix)},
+        )
+
+    monkeypatch.setattr(pipeline, "compile_curation", with_matrix_name)
+    output, report = tmp_path / "slice.db", tmp_path / "report"
+    result = catalog.build(output, report, registers=("1",), diagnostic=True)
+    assert result["counts"].get("error", 0) == 0
+    assert result["counts"]["deferred_references"] == 1
+    assert [(issue["code"], issue["severity"]) for issue in _issues(report)] == [
+        ("deferred_out_of_slice_reference", "warning")
+    ]
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)

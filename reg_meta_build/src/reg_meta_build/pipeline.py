@@ -29,9 +29,8 @@ from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
 from reg_meta_build.curation_compile import (
     CompiledCodebook,
+    CompiledCuration,
     compile_curation,
-    compile_native_naming,
-    compile_partitions,
     finalize_classification_bindings,
     source_event_id,
     tree_sha256,
@@ -135,6 +134,36 @@ class CompiledGlobals(_Model):
     identifier_sources: tuple[str, ...] = ()
     event_sources: tuple[tuple[str, str], ...] = ()
     lineage_defaults: tuple[tuple[str, str], ...] = ()
+
+
+def _compiled_scope(
+    key: tuple[str, NativeKey | None], compiled: CompiledCuration
+) -> CompiledScope:
+    """Validate one compiled scope through its serialized JSON contract."""
+    return CompiledScope.model_validate_json(
+        json.dumps(
+            {
+                "source": key[0],
+                "register_key": key[1],
+                "cases": [
+                    item.model_dump(mode="json") for item in compiled.cases.get(key, ())
+                ],
+                "naming": [
+                    item.model_dump(mode="json")
+                    for item in (compiled.naming or {}).get(key, ())
+                ],
+                "naming_ambiguities": [
+                    item.model_dump(mode="json")
+                    for item in (compiled.naming_ambiguities or {}).get(key, ())
+                ],
+                "provider_keys": (compiled.provider_keys or {}).get(key, ()),
+                "variants": [
+                    (native_key, variant.model_dump(mode="json"))
+                    for native_key, variant in (compiled.variants or {}).get(key, ())
+                ],
+            }
+        )
+    )
 
 
 def _unique_pairs[K, V](items: tuple[tuple[K, V], ...], description: str) -> dict[K, V]:
@@ -296,72 +325,31 @@ def build_catalog(
             for fqid, binding in classification_overrides.items()
             if binding[1] in valid_overrides
         }
-    selected = CompiledGlobals.model_validate(compiled.fields, strict=True)
-    scopes = {
-        key: CompiledScope.model_validate_json(
-            json.dumps(
-                {
-                    "source": key[0],
-                    "register_key": key[1],
-                    "cases": [
-                        item.model_dump(mode="json")
-                        for item in compiled.cases.get(key, ())
-                    ],
-                    "naming": [
-                        item.model_dump(mode="json")
-                        for item in (compiled.naming or {}).get(key, ())
-                    ],
-                    "naming_ambiguities": [
-                        item.model_dump(mode="json")
-                        for item in (compiled.naming_ambiguities or {}).get(key, ())
-                    ],
-                    "provider_keys": (compiled.provider_keys or {}).get(key, ()),
-                    "variants": [
-                        (native_key, variant.model_dump(mode="json"))
-                        for native_key, variant in (compiled.variants or {}).get(
-                            key, ()
-                        )
-                    ],
-                }
-            )
-        )
-        for key in visit
-    }
+    global_json = json.dumps(
+        compiled.fields,
+        default=lambda item: (
+            item.model_dump(mode="json")
+            if hasattr(item, "model_dump")
+            else item.__dict__
+        ),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    selected = CompiledGlobals.model_validate_json(global_json)
+    scopes = {key: _compiled_scope(key, compiled) for key in visit}
     unselected_scopes: dict[tuple[str, NativeKey | None], CompiledScope] = {}
     if registers:
+        outside_keys = scope_keys - visit
         outside = tuple(
             CompiledScope(source=source, register_key=register)
-            for source, register in sorted(scope_keys - visit, key=repr)
+            for source, register in sorted(outside_keys, key=repr)
         )
-        outside_naming, _, _, _, _ = compile_native_naming(
-            tree, prepared, outside, subset=True
-        )
-        outside_with_names = tuple(
-            scope.model_copy(
-                update={
-                    "naming": outside_naming.get((scope.source, scope.register_key), ())
-                }
-            )
-            for scope in outside
-        )
-        _, split_names, _, ambiguities, split_bases, _ = compile_partitions(
-            tree, prepared, outside_with_names
-        )
-        for scope in outside_with_names:
-            key = scope.source, scope.register_key
-            names = tuple(
-                name
-                for name in scope.naming
-                if name.target.source_key not in split_bases.get(key, set())
-            ) + split_names.get(key, ())
-            unselected_scopes[key] = CompiledScope.model_validate_json(
-                scope.model_copy(
-                    update={
-                        "naming": names,
-                        "naming_ambiguities": ambiguities.get(key, ()),
-                    }
-                ).model_dump_json()
-            )
+        outside_compiled = compile_curation(tree, prepared, outside, subset=True)
+        unselected_scopes = {
+            key: _compiled_scope(key, outside_compiled)
+            for key in sorted(outside_keys, key=repr)
+        }
     coding_registers = {
         f"{register.register_info.provider}/{register.register_info.slug}": register
         for register in tree.registers
@@ -405,18 +393,7 @@ def build_catalog(
     if dump_decisions is not None:
         dump_decisions.mkdir()
         (dump_decisions / "global.json").write_text(
-            json.dumps(
-                compiled.fields,
-                default=lambda item: (
-                    item.model_dump(mode="json")
-                    if hasattr(item, "model_dump")
-                    else item.__dict__
-                ),
-                ensure_ascii=False,
-                sort_keys=True,
-                separators=(",", ":"),
-            )
-            + "\n",
+            global_json + "\n",
             encoding="utf-8",
         )
         (dump_decisions / "compile-report.json").write_text(
