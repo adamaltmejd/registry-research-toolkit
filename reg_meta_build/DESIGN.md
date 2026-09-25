@@ -355,12 +355,11 @@ which is an error. Unrelated later editions, layout changes and deliveries elsew
 therefore never stale it. Transitional stored `CodingDecision` cases and copied coding
 still carry evidence fingerprints (below).
 
-Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision
-is window-grained. The compiler checks each window against that column's complete
-source lists; optional `keep_members` and `list_members` are literal `[code, label]`
-pairs when one list label has multiple meanings. It captures coding fingerprints in
-memory. Neither the fingerprints nor source-member pins are stored in tracked coding
-tables.
+Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision is
+window-grained. The compiler checks each window against that column's complete source
+lists; optional `keep_members` and `list_members` are literal `[code, label]` pairs when
+one list label has multiple meanings. It captures coding fingerprints in memory. Neither
+the fingerprints nor source-member pins are stored in tracked coding tables.
 
 Transitional: `source_curation.py` evaluates cases converted offline into scope files.
 Each case pins exact members, finite periods, fields and expected facts (`expected_*`)
