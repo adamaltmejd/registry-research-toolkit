@@ -372,11 +372,13 @@ model = "gpt-6-sol"
 effort = "high"
 speed = "fast"
 
-# A Muse seat reviews the trial workflow, so its implementer (OpenAI) and
-# reviewer (Meta) come from different providers.
-[review.reviewers.muse]
+# A DeepSeek seat reviews the trial workflow, so its implementer (OpenAI) and
+# reviewer (DeepSeek) come from different providers. Muse was tried first
+# (2026-09-25) and dropped: it answers autoreview's overall_correctness with a
+# boolean instead of the verdict string, so every review errors.
+[review.reviewers.deepseek]
 engine = "pi"
-model = "openrouter/meta/muse-spark-1.3-contributor"
+model = "openrouter/deepseek/deepseek-v4.1-flash"
 effort = "high"
 
 # The design seat judges source against the supplied design contracts. Rendered
@@ -454,11 +456,11 @@ implementer = "muse"
 implementer = "heavy"
 
 # trial: evaluates a candidate replacement for the default implementer
-# (2026-09-24: GPT-6 Luna, reviewed by Muse). If the trial holds, its agent and
-# review move into [workflows.default] and this workflow is deleted.
+# (2026-09-24: GPT-6 Luna, reviewed by DeepSeek). If the trial holds, its agent
+# and review move into [workflows.default] and this workflow is deleted.
 [workflows.trial]
 implementer = "luna"
-review = ["muse"]
+review = ["deepseek"]
 
 # build_artifacts names the directories ordinary build activity fills with
 # output your .gitignore already covers -- target, node_modules, dist, and
