@@ -13,9 +13,12 @@ import pytest
 from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
 from reg_meta.errors import EXIT_USAGE
+from reg_meta_build.catalog_dependencies import CatalogDependencyError
 from reg_meta_build.cli import run
 from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import prepare_catalog_sources
+from reg_meta_build.resolved_catalog import ResolvedCodeSet
+from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -344,3 +347,273 @@ def test_compiled_global_contract_rejects_unknown_field(
     with pytest.raises(ValueError, match="unknown"):
         catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
     assert not (tmp_path / "bad.db").exists()
+
+
+def test_strict_curation_failure_preserves_previous_catalog(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    register = catalog.curation / "registers/scb/sample.toml"
+    register.write_text(
+        register.read_text(encoding="utf-8")
+        + '[[variable]]\nnative_id = "1.999"\nslug = "missing"\n',
+        encoding="utf-8",
+    )
+    output = tmp_path / "active.db"
+    output.write_bytes(b"previous catalog")
+    result = catalog.build(output, tmp_path / "report")
+    assert result["status"] == "blocked"
+    assert result["database"] is None
+    assert output.read_bytes() == b"previous catalog"
+    assert not output.with_suffix(".db.prev").exists()
+
+
+def test_strict_corpus_failure_preserves_previous_catalog(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    output = tmp_path / "active.db"
+    output.write_bytes(b"previous catalog")
+    report = tmp_path / "report"
+    with pytest.raises(ValueError, match="resolved catalog validation failed"):
+        catalog.build(output, report)
+    summary = json.loads((report / "summary.json").read_text(encoding="utf-8"))
+    assert summary["status"] == "engineering_failure"
+    assert summary["counts"].get("error", 0) == 0
+    assert output.read_bytes() == b"previous catalog"
+    assert not output.with_suffix(".db.prev").exists()
+
+
+@pytest.mark.parametrize("diagnostic", [False, True])
+def test_lost_delivery_coverage_is_never_published(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, diagnostic: bool
+) -> None:
+    from reg_meta_build import source_formation
+
+    original = source_formation._coded_states
+
+    def truncate(segment, variant, coding, subject):
+        states, issues, withheld = original(segment, variant, coding, subject)
+        return (
+            [state.model_copy(update={"valid_to": "2020-06-30"}) for state in states],
+            issues,
+            withheld,
+        )
+
+    monkeypatch.setattr(source_formation, "_coded_states", truncate)
+    output, report = tmp_path / "lost.db", tmp_path / "report"
+    missing = "2020-07-01..2020-12-31"
+    if diagnostic:
+        result = catalog.build(output, report, diagnostic=True)
+        assert result["status"] == "diagnostic_complete"
+        assert result["publication_ready"] is False
+        assert output.exists()
+        issues = [
+            issue
+            for issue in _issues(report)
+            if issue["code"] == "unexplained_delivery_coverage_loss"
+        ]
+        assert len(issues) == 1 and issues[0]["severity"] == "error"
+        assert missing in issues[0]["detail"]
+        assert "scb/sample/value people/VALUE" in issues[0]["detail"]
+    else:
+        with pytest.raises(ValueError, match="delivery coverage was lost") as failure:
+            catalog.build(output, report)
+        assert missing in str(failure.value)
+        assert "scb/sample/value people/VALUE" in str(failure.value)
+        assert not output.exists()
+        assert json.loads((report / "summary.json").read_text())["status"] == (
+            "engineering_failure"
+        )
+
+
+@pytest.mark.parametrize("diagnostic", [False, True])
+def test_changed_delivery_facts_are_never_published(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, diagnostic: bool
+) -> None:
+    from reg_meta_build import source_formation
+
+    original = source_formation._coded_states
+
+    def retype(segment, variant, coding, subject):
+        states, issues, withheld = original(segment, variant, coding, subject)
+        return (
+            [state.model_copy(update={"data_type": "text"}) for state in states],
+            issues,
+            withheld,
+        )
+
+    monkeypatch.setattr(source_formation, "_coded_states", retype)
+    output, report = tmp_path / "changed.db", tmp_path / "report"
+    if diagnostic:
+        result = catalog.build(output, report, diagnostic=True)
+        assert result["status"] == "diagnostic_complete"
+        assert result["publication_ready"] is False
+        assert output.exists()
+        issues = [
+            issue
+            for issue in _issues(report)
+            if issue["code"] == "unexplained_delivery_fact_change"
+        ]
+        assert len(issues) == 1 and issues[0]["severity"] == "error"
+        detail = issues[0]["detail"]
+    else:
+        with pytest.raises(
+            ValueError, match="supported delivery facts changed"
+        ) as failure:
+            catalog.build(output, report)
+        detail = str(failure.value)
+        assert not output.exists()
+        assert json.loads((report / "summary.json").read_text())["status"] == (
+            "engineering_failure"
+        )
+    assert "scb/sample/value people/VALUE" in detail
+    assert "claimed data_type=" in detail
+    assert "written 'text'" in detail
+
+
+_COLUMN_OVERLAPS = {
+    "overlapping_distinct_value_sets": (
+        {
+            "value_set_version_label": "a",
+            "value_set": ResolvedCodeSet(members=(("1", "One"),)),
+        },
+        {
+            "value_set_version_label": "b",
+            "value_set": ResolvedCodeSet(members=(("2", "Two"),)),
+        },
+    ),
+    "overlapping_codeless_codebearing_states": (
+        {},
+        {
+            "value_set_version_label": "a",
+            "value_set": ResolvedCodeSet(members=(("1", "One"),)),
+        },
+    ),
+    "overlapping_pooled_explicit_states": (
+        {},
+        {"pooled": True, "value_set_version_label": "p"},
+    ),
+}
+
+
+@pytest.mark.parametrize("code", _COLUMN_OVERLAPS)
+def test_overlapping_states_withhold_only_variable_in_diagnostic(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, code: str
+) -> None:
+    from reg_meta_build import source_formation
+
+    original = source_formation._coded_states
+
+    def overlap(segment, variant, coding, subject):
+        states, issues, withheld = original(segment, variant, coding, subject)
+        return (
+            [
+                state.model_copy(update=update)
+                for state in states
+                for update in _COLUMN_OVERLAPS[code]
+            ],
+            issues,
+            withheld,
+        )
+
+    monkeypatch.setattr(source_formation, "_coded_states", overlap)
+    output, strict_report = tmp_path / "overlap.db", tmp_path / "strict"
+    with pytest.raises(ValueError) as failure:
+        catalog.build(output, strict_report)
+    assert "scb/sample/value people/VALUE" in str(failure.value)
+    assert not output.exists()
+    assert json.loads((strict_report / "summary.json").read_text())["status"] == (
+        "engineering_failure"
+    )
+    report = tmp_path / "diagnostic"
+    result = catalog.build(output, report, diagnostic=True)
+    assert result["status"] == "diagnostic_complete"
+    assert result["publication_ready"] is False
+    assert result["variables"] == 0
+    issues = [issue for issue in _issues(report) if issue["code"] == code]
+    assert len(issues) == 1 and issues[0]["severity"] == "error"
+    assert issues[0]["detail"] == str(failure.value)
+    assert issues[0]["withheld_output"] == ["scb/sample/value"]
+    assert validate_built_db(output, corpus=False).passed
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+def test_references_into_unselected_registers_are_deferred(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build import resolved_catalog
+
+    validate = resolved_catalog.validate_built_db
+    monkeypatch.setattr(
+        resolved_catalog,
+        "validate_built_db",
+        lambda path, *, corpus: validate(path, corpus=False),
+    )
+    (catalog.curation / "relations.toml").write_text(
+        '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
+        'b = "scb/other/value"\n'
+        '[[edge]]\ntype = "replaced_by"\nfrom = "scb/sample/value"\n'
+        'to = "scb/other/value"\neffective_year = 2021\n',
+        encoding="utf-8",
+    )
+    full = tmp_path / "full.db"
+    result = catalog.build(full, tmp_path / "full-report")
+    assert result["publication_ready"] is True
+    assert "deferred_references" not in result["counts"]
+    with sqlite3.connect(full) as conn:
+        for table in ("variable_same_as", "variable_replaced_by"):
+            assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() != (0,)
+    for register in ("1", "2"):
+        output, report = tmp_path / f"{register}.db", tmp_path / f"report-{register}"
+        result = catalog.build(output, report, diagnostic=True, registers=(register,))
+        assert result["status"] == "diagnostic_complete"
+        assert result["publication_ready"] is False
+        assert result["counts"].get("error", 0) == 0
+        issues = _issues(report)
+        assert issues
+        assert {(issue["code"], issue["severity"]) for issue in issues} == {
+            ("deferred_out_of_slice_reference", "warning")
+        }
+        assert result["counts"]["deferred_references"] == len(issues)
+        with sqlite3.connect(output) as conn:
+            for table in ("variable_same_as", "variable_replaced_by"):
+                assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() == (0,)
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+@pytest.mark.parametrize("target", ["scb/nosuch/value", "scb/other/missing"])
+def test_undeclared_reference_is_fatal_even_when_register_is_unselected(
+    catalog: CatalogFixture, tmp_path: Path, target: str
+) -> None:
+    (catalog.curation / "relations.toml").write_text(
+        f'[[edge]]\ntype = "same_as"\na = "scb/sample/value"\nb = "{target}"\n',
+        encoding="utf-8",
+    )
+    for name, registers in (("full", ()), ("scoped", ("1",))):
+        with pytest.raises(CatalogDependencyError, match=target):
+            catalog.build(
+                tmp_path / f"{name}.db",
+                tmp_path / f"{name}-report",
+                diagnostic=True,
+                registers=registers,
+            )
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+def test_curation_wholly_outside_slice_is_skipped_without_claiming_proof(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    target = "scb/nosuch/value"
+    (catalog.curation / "relations.toml").write_text(
+        f'[[edge]]\ntype = "same_as"\na = "scb/other/value"\nb = "{target}"\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(CatalogDependencyError, match=target):
+        catalog.build(tmp_path / "full.db", tmp_path / "full-report", diagnostic=True)
+    report = tmp_path / "slice-report"
+    result = catalog.build(tmp_path / "slice.db", report, registers=("1",))
+    assert result["status"] == "complete"
+    assert result["counts"].get("error", 0) == 0
+    assert result["counts"]["skipped_curation"] == 1
+    assert not any(
+        issue["code"] == "deferred_out_of_slice_reference" for issue in _issues(report)
+    )
