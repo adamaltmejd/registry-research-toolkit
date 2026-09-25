@@ -478,6 +478,72 @@ def test_native_names_overlay_and_unnamed_provider_keys_compile(tmp_path):
     ]
 
 
+@pytest.mark.parametrize("auto_file", [False, True])
+def test_declared_column_pin_is_not_evaluated_by_native_naming(tmp_path, auto_file):
+    root = tmp_path / "curation"
+    _tree(root)
+    register_file = root / "registers" / "scb" / "sample.toml"
+    if auto_file:
+        register_file = register_file.with_name("sample.auto.toml")
+    register_file.write_text(
+        (register_file.read_text() if not auto_file else "")
+        + '\n[[variable]]\nnative_id = "1.ColumnName"\nslug = "column-name"\n'
+    )
+    scope = _scope()
+    declared_column = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=(
+                "scb-registerinformation",
+                "scb",
+                "register",
+                "native-int",
+                1,
+                "declared-column",
+                "ColumnName",
+            ),
+            register_key=(
+                "scb-registerinformation",
+                "scb",
+                "register",
+                "native-int",
+                1,
+            ),
+            identity_revision=_revision("scb-registerinformation"),
+        ),
+        naming=SlugEntry(
+            kind="variable",
+            provider="scb",
+            source_id="1.ColumnName",
+            slug="column-name",
+        ),
+        contributors=(),
+    )
+    scope = scope.model_copy(update={"naming": (*scope.naming, declared_column)})
+    tree = load_curation_tree(root)
+    compiled = compile_curation(tree, _prepared(), (scope,), subset=True)
+    ref = f"curation/registers/scb/{register_file.name} [[variable]] entry 1"
+    assert not [
+        issue for issue in compiled.diagnostics if issue.code == "stale_curation_entry"
+    ]
+    assert compiled.report["scb/sample"]["not_evaluated"] == [ref]
+    assert compiled.report["scb/sample"]["stale"] == []
+    assert declared_column in merge_scope(scope, compiled).naming
+
+    register_file.write_text(
+        register_file.read_text()
+        + '\n[[variable]]\nnative_id = "1.Missing"\nslug = "missing"\n'
+    )
+    compiled = compile_curation(
+        load_curation_tree(root), _prepared(), (scope,), subset=True
+    )
+    assert compiled.report["scb/sample"]["not_evaluated"] == [ref]
+    assert [(issue.code, issue.subject) for issue in compiled.diagnostics] == [
+        ("stale_curation_entry", "1.Missing")
+    ]
+
+
 def test_thin_default_variant_carries_panel_fields(tmp_path):
     root = tmp_path / "curation"
     _tree(root)

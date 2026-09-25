@@ -920,6 +920,7 @@ def compile_native_naming(
                     "entries_matched",
                     "stale",
                     "over_broad",
+                    "not_evaluated",
                     "not_evaluated_in_subset",
                 )
             },
@@ -964,6 +965,7 @@ def compile_native_naming(
                         "entries_matched",
                         "stale",
                         "over_broad",
+                        "not_evaluated",
                         "not_evaluated_in_subset",
                     )
                 },
@@ -980,6 +982,11 @@ def compile_native_naming(
                 locations[entry.entry_id] = ref
                 entry_owners[entry.entry_id] = name
         bound = {(b.kind, b.provider, b.source_id) for b in bindings[scope_key]}
+        uncompiled = {
+            (item.naming.kind, item.naming.provider, item.naming.source_id)
+            for item in scope.naming
+            if _naming_family(item.target) not in COMPILED
+        }
         supplied = {
             (entry.entry.kind, entry.entry.provider, entry.entry.source_id)
             for entry in entries
@@ -1006,9 +1013,12 @@ def compile_native_naming(
         matched = []
         for entry in entries:
             ref = locations[entry.entry_id]
-            if (entry.entry.kind, entry.entry.provider, entry.entry.source_id) in bound:
+            token = entry.entry.kind, entry.entry.provider, entry.entry.source_id
+            if token in bound:
                 matched.append(entry)
                 report[entry_owners[entry.entry_id]]["entries_matched"].append(ref)
+            elif token in uncompiled:
+                report[entry_owners[entry.entry_id]]["not_evaluated"].append(ref)
             else:
                 name = entry_owners[entry.entry_id]
                 report[name]["stale"].append(ref)
@@ -1528,7 +1538,7 @@ def compile_curation(
     for register, statuses in naming_report.items():
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
-            current[key].extend(values)
+            current.setdefault(key, []).extend(values)
     return CompiledCuration(
         fields={
             "classifications": books,
