@@ -1258,10 +1258,8 @@ def test_tracked_uncoded_window_changes_build_and_stale_entry_is_reported(
         issue["code"] == "missing_coding_period" for issue in _issues(baseline_report)
     )
 
-    register_dir = tmp_path / "curation" / "registers" / "scb"
-    register_dir.mkdir(parents=True)
-    register_file = register_dir / "sample.toml"
-    header = '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+    register_file = tmp_path / "curation" / "registers" / "scb" / "sample.toml"
+    header = register_file.read_text(encoding="utf-8")
     entry = (
         '\n[[coding.uncoded]]\nvariable = "1.101"\nvariant = "1.10"\n'
         'column = "VALUE"\nperiods = [["2021-01-01", "2021-12-31"]]\n'
