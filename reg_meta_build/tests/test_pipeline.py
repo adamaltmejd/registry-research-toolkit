@@ -238,7 +238,9 @@ def selection(tmp_path, request, monkeypatch):
     # into native ID 404 and an external source label.
     dangling = param == "register_dangling"
     register_scoped = param in {"register_scoped", "events_outside"} or dangling
-    lineage_warning = param == "lineage_warning" or register_scoped
+    lineage_warning = (
+        param in {"lineage_warning", "cross_register_ack"} or register_scoped
+    )
     columnless = param == "columnless"
     sentinel = param == "sentinel"
     write_scb_input(
@@ -254,6 +256,7 @@ def selection(tmp_path, request, monkeypatch):
                     "typed",
                     "renumbered",
                     "lineage_warning",
+                    "cross_register_ack",
                     "register_scoped",
                     "register_dangling",
                     "columnless",
@@ -400,11 +403,26 @@ def selection(tmp_path, request, monkeypatch):
     records = tuple(prepared.records.iter_records(source=revision.dataset))
     directory = tmp_path / "selection"
     directory.mkdir()
+    scb_scope = _scope(records, slugs=_SCB_SLUGS, revision=revision)
+    if param == "cross_register_ack":
+        other = next(
+            item.target.source_key
+            for item in scb_scope.naming
+            if item.target.kind == "register" and item.naming.slug == "sample-1"
+        )
+        scb_scope = scb_scope.model_copy(
+            update={
+                "provider_keys": tuple(
+                    (key, None if key[: len(other)] == other else value)
+                    for key, value in scb_scope.provider_keys
+                )
+            }
+        )
     scopes = [
         _scope_file(
             directory,
             "scope.json.gz",
-            _scope(records, slugs=_SCB_SLUGS, revision=revision),
+            scb_scope,
         )
     ]
     if register_scoped:
@@ -1032,6 +1050,42 @@ def test_strict_build_publishes_only_when_every_error_is_acknowledged(
     # Acknowledging fabricates nothing: the unseparated list stays withheld.
     with sqlite3.connect(strict_db) as conn:
         assert conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0] == 0
+
+
+@pytest.mark.parametrize("selection", ["cross_register_ack"], indirect=True)
+def test_register_file_cannot_acknowledge_another_registers_error(selection, tmp_path):
+    blocked = build_selected_catalog(
+        selection, tmp_path / "blocked.db", tmp_path / "blocked"
+    )
+    assert blocked["status"] == "blocked"
+    with gzip.open(tmp_path / "blocked" / "events.jsonl.gz", "rt") as stream:
+        issue = next(
+            event
+            for event in map(json.loads, stream)
+            if event["kind"] == "issue"
+            and event["code"] == "unresolved_catalog_identity"
+        )
+    assert issue["refs"]
+    # The helper writes sample.toml; this issue belongs to sample-1.
+    _acknowledging(selection, issue)
+    result = build_selected_catalog(
+        selection, tmp_path / "cross.db", tmp_path / "cross"
+    )
+    assert result["status"] == "blocked"
+    assert result["acknowledged"] == {}
+    with gzip.open(tmp_path / "cross" / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            event
+            for event in map(json.loads, stream)
+            if event["kind"] == "issue" and event["severity"] == "error"
+        ]
+    assert any(
+        event["code"] == issue["code"]
+        and event["subject"] == issue["subject"]
+        and event["refs"] == issue["refs"]
+        for event in issues
+    )
+    assert any(event["code"] == "stale_curation_entry" for event in issues)
 
 
 @pytest.mark.parametrize("selection", ["sentinel", "register_scoped"], indirect=True)

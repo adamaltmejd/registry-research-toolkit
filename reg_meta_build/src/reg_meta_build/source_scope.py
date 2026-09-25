@@ -171,15 +171,20 @@ def resolve_source_scope(
     diagnostics = []
     counts = {"error": 0, "warning": 0}
     acknowledgements = tuple(c for c in cases if c.decision.kind == "acknowledge")
+    original_registers = (
+        {record_ref(item): source_register_key(item) for item in originals}
+        if acknowledgements
+        else {}
+    )
     # Errors an acknowledgement names, settled once the whole scope is resolved.
     held: dict[
-        tuple[str, str, frozenset[SourceRecordRef]],
+        tuple[str, str, tuple[SourceRecordRef, ...]],
         tuple[CurationCase, AcknowledgeDecision, list[ResolutionDiagnostic]],
     ] = {}
     for case in acknowledgements:
         decision = case.decision
         assert isinstance(decision, AcknowledgeDecision)
-        issue_key = decision.code, decision.subject, frozenset(decision.refs)
+        issue_key = decision.code, decision.subject, decision.refs
         if issue_key in held:
             raise ValueError(f"one issue is acknowledged twice: {case.case_id}")
         held[issue_key] = case, decision, []
@@ -193,8 +198,15 @@ def resolve_source_scope(
 
     def emit(issue: ResolutionDiagnostic) -> None:
         if held and issue.severity == "error":
-            match = held.get((issue.code, issue.subject, frozenset(issue.refs)))
-            if match is not None:
+            match = held.get((issue.code, issue.subject, issue.refs))
+            if (
+                match is not None
+                and issue.refs
+                and all(
+                    original_registers.get(ref) == match[1].register_key
+                    for ref in issue.refs
+                )
+            ):
                 match[2].append(issue)
                 return
         record(issue)

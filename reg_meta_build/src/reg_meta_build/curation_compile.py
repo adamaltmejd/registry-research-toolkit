@@ -515,14 +515,16 @@ def compile_declared_metadata(
     ), tuple(class_successions)
 
 
-def _scope_registers(scope: ScopeDeclarations) -> set[str]:
-    return {
-        f"{item.naming.provider}/{item.naming.slug}"
+def _scope_registers(
+    scope: ScopeDeclarations,
+) -> tuple[tuple[str, tuple[str | int, ...]], ...]:
+    return tuple(
+        (f"{item.naming.provider}/{item.naming.slug}", item.target.source_key)
         for item in scope.naming
         if item.target.kind == "register"
         and item.naming.provider is not None
         and item.naming.slug is not None
-    }
+    )
 
 
 def compile_curation(
@@ -535,7 +537,7 @@ def compile_curation(
     """Compile global families, wiring, and exact issue acknowledgements."""
     from .pipeline import CodebookDeclaration
 
-    selected = set().union(*(_scope_registers(scope) for scope in scopes))
+    selected = {register for scope in scopes for register, _ in _scope_registers(scope)}
     dropped: list[str] = []
     metadata, class_successions = compile_declared_metadata(
         tree, selected=selected, dropped=dropped
@@ -652,10 +654,15 @@ def compile_curation(
     cases: dict[tuple[str, tuple[str | int, ...] | None], list[CurationCase]] = {
         (scope.source, scope.register_key): [] for scope in scopes
     }
-    owners: dict[str, list[tuple[str, tuple[str | int, ...] | None]]] = {}
+    owners: dict[
+        str,
+        list[tuple[tuple[str, tuple[str | int, ...] | None], tuple[str | int, ...]]],
+    ] = {}
     for scope in scopes:
-        for register in _scope_registers(scope):
-            owners.setdefault(register, []).append((scope.source, scope.register_key))
+        for register, native_key in _scope_registers(scope):
+            owners.setdefault(register, []).append(
+                ((scope.source, scope.register_key), native_key)
+            )
     report: dict[str, dict[str, list[str]]] = {}
     diagnostics: list[ResolutionDiagnostic] = []
     for register in sorted(tree.registers, key=lambda item: item.source_file):
@@ -729,7 +736,8 @@ def compile_curation(
                 )
             else:
                 statuses["entries_matched"].append(case_id)
-                cases[matched[0]].append(
+                scope_key, register_key = matched[0]
+                cases[scope_key].append(
                     CurationCase(
                         case_id=case_id,
                         targets=(),
@@ -737,6 +745,7 @@ def compile_curation(
                             code=ack.code,
                             subject=ack.subject,
                             refs=refs,
+                            register_key=register_key,
                             reason=ack.reason,
                             evidence=ack.evidence,
                         ),

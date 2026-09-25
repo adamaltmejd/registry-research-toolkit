@@ -239,6 +239,7 @@ def test_stored_case_with_unowned_prefix_fails(tmp_path):
                         code="error",
                         subject="scb/sample/one",
                         refs=(),
+                        register_key=("scb-source", "scb", "register", "native-int", 1),
                         reason="Reviewed",
                         evidence="Ledger",
                     ),

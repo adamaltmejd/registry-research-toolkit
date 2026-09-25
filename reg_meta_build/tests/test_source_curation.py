@@ -345,6 +345,7 @@ def test_an_acknowledgement_names_its_issue_and_pins_no_source_members() -> None
         code="unresolved_catalog_identity",
         subject="('scb', 'variable', 5)",
         refs=(ref,),
+        register_key=("scb-source", "scb", "register", "native-int", 1),
         reason="Accepted while the identity stays unresolved.",
         evidence="Diagnostic build ledger.",
     )
