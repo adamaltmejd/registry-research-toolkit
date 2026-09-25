@@ -227,6 +227,9 @@ class CompiledCuration:
         dict[tuple[str, tuple[str | int, ...] | None], tuple[NamingAmbiguity, ...]]
         | None
     ) = None
+    partition_bases: (
+        dict[tuple[str, tuple[str | int, ...] | None], frozenset[NativeKey]] | None
+    ) = None
 
 
 def tree_sha256(root: Path) -> str:
@@ -366,6 +369,14 @@ def merge_scope(
         (item.family.source_key, _naming_family(item.family))
         for item in scope.naming_ambiguities
     )
+    # Stored attribution and unresolved base keys still explain dependencies
+    # for families with no tracked split in this transitional selection.
+    partition_bases = (compiled.partition_bases or {}).get(key, frozenset())
+    untouched_nulls = {
+        source_key
+        for source_key, value in scope.provider_keys
+        if value is None and source_key not in partition_bases
+    }
     provider_keys = []
     for item in scope.provider_keys:
         source_key, value = item
@@ -374,7 +385,7 @@ def merge_scope(
             raise ValueError(
                 f"provider key has no converted catalog naming: {source_key!r}"
             )
-        if owner not in COMPILED:
+        if owner not in COMPILED or source_key in untouched_nulls:
             provider_keys.append(item)
     merged = scope.model_copy(
         update={
@@ -382,9 +393,20 @@ def merge_scope(
             "naming": (*naming, *(compiled.naming or {}).get(key, ())),
             "provider_keys": (
                 *provider_keys,
-                *(compiled.provider_keys or {}).get(key, ()),
+                *(
+                    item
+                    for item in (compiled.provider_keys or {}).get(key, ())
+                    if item[0] not in untouched_nulls
+                ),
             ),
-            "naming_ambiguities": (compiled.naming_ambiguities or {}).get(key, ()),
+            "naming_ambiguities": (
+                *(
+                    item
+                    for item in scope.naming_ambiguities
+                    if item.family.source_key not in partition_bases
+                ),
+                *(compiled.naming_ambiguities or {}).get(key, ()),
+            ),
             "variants": (compiled.variants or {}).get(key, ()),
             "unapplied_curation": gaps,
         }
@@ -2819,6 +2841,7 @@ def compile_curation(
         variants=variants,
         provider_keys=provider_keys,
         naming_ambiguities=ambiguities,
+        partition_bases={key: frozenset(value) for key, value in split_bases.items()},
     )
 
 

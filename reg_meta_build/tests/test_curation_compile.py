@@ -428,7 +428,7 @@ def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
     )
 
 
-def test_compiled_partition_replaces_stored_null_base_provider_key(tmp_path):
+def test_compiled_partition_preserves_null_for_unvisited_family(tmp_path):
     partition_base = (
         "scb-registerinformation",
         "scb",
@@ -443,7 +443,7 @@ def test_compiled_partition_replaces_stored_null_base_provider_key(tmp_path):
     compiled = compile_curation(
         _tree(tmp_path / "curation"), _prepared(), (scope,), subset=True
     )
-    assert merge_scope(scope, compiled).provider_keys == ()
+    assert merge_scope(scope, compiled).provider_keys == ((partition_base, None),)
 
 
 def test_native_names_overlay_and_unnamed_provider_keys_compile(tmp_path):
@@ -1473,6 +1473,42 @@ def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path)
     assert generated[0][key]
     assert generated[3][key][0].candidate_columns == (("1.5.answer", "ANSWER"),)
     assert native in generated[4][key]
+
+
+def test_merge_keeps_untouched_ambiguity_and_unresolved_key(tmp_path: Path):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+        '[[variable]]\nnative_id = "1.5.unknown"\nslug = "unknown"\n',
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"))
+    generated, key, native = _compile_partition_fixture(root, records)
+    ambiguity = generated[3][key][0]
+    scope = _partition_scope(records).model_copy(
+        update={
+            "provider_keys": ((native, None),),
+            "naming_ambiguities": (ambiguity,),
+        }
+    )
+    compiled = CompiledCuration(
+        fields={},
+        cases={},
+        report={},
+        provider_keys={key: ((native, "5"),)},
+        naming_ambiguities={key: ()},
+        partition_bases={},
+    )
+    merged = merge_scope(scope, compiled)
+    assert merged.provider_keys == ((native, None),)
+    assert merged.naming_ambiguities == (ambiguity,)
+
+    replaced = merge_scope(
+        scope,
+        replace(compiled, partition_bases={key: frozenset((native,))}),
+    )
+    assert replaced.provider_keys == ((native, "5"),)
+    assert replaced.naming_ambiguities == ()
 
 
 def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):

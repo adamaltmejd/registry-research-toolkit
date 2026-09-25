@@ -1376,7 +1376,7 @@ def test_dump_decisions_refuses_input_and_output_aliases(selection, tmp_path):
 
 
 @pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
-def test_compiled_partition_derives_provider_key_for_nonpartitioned_subset(
+def test_compiled_partition_preserves_unresolved_key_for_nonpartitioned_subset(
     selection, tmp_path, monkeypatch
 ):
     from reg_meta_build.curation_compile import compile_curation
@@ -1423,9 +1423,9 @@ def test_compiled_partition_derives_provider_key_for_nonpartitioned_subset(
     assert {"deferred_out_of_slice_reference", "withheld_catalog_dependency"} <= {
         item["code"] for item in stored_issues
     }
-    assert {item["code"] for item in _issues(compiled_report)} == {
-        "deferred_out_of_slice_reference"
-    }
+    assert sorted(
+        (item["code"], item["severity"]) for item in _issues(compiled_report)
+    ) == sorted((item["code"], item["severity"]) for item in stored_issues)
     for table in ("tag", "tag_member"):
         with (
             sqlite3.connect(stored_db) as stored,
