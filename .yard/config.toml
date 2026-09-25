@@ -83,7 +83,7 @@ tools = { subagents = false }
 # light-ui leaves rendered evidence to gates.
 [workflows.default]
 implementer = "implementation"
-review = ["deepseek"]
+review = ["sol"]
 access = "writable"
 inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
@@ -341,9 +341,9 @@ artifacts = [
 # through P3). Both are keys of [review]: one truth per project.
 [review]
 max_rounds = 5
-# 90 because the DeepSeek pi seat reviews a large diff in ~500 KB chunks at 1-2
-# minutes each: Y-230's 28 chunks (mostly moved curation TOML) passed the old
-# 30-minute deadline half way through.
+# 90 because the DeepSeek pi seat (retired 2026-09-25) reviewed a large diff in
+# ~500 KB chunks at 1-2 minutes each: Y-230's 28 chunks (mostly moved curation
+# TOML) passed the old 30-minute deadline half way through.
 timeout_minutes = 90
 blocking = "P1"
 max_priority = "P3"
@@ -358,17 +358,19 @@ max_priority = "P3"
 # needs TYPESAFE_API_KEY in operator.env, which this machine does not carry. A
 # daemon without the key runs the whole panel, which is what an unanswered
 # question always selects.
-# The DeepSeek seat reviews every implementation workflow, so a Sol (OpenAI)
-# implementer and its reviewer come from different providers. Muse was tried first
-# (2026-09-25) and dropped: it answers autoreview's overall_correctness with a
-# boolean instead of the verdict string, so every review errors.
-# medium, not high: at high some passes think past 20 minutes, and the request is
-# cut at ~1,200 s ("socket connection was closed unexpectedly" from pi's Bun
-# fetch), failing the whole review. Seen on Y-231 r3 and Y-230/2 (2026-09-25).
-[review.reviewers.deepseek]
-engine = "pi"
-model = "openrouter/deepseek/deepseek-v4.1-flash"
-effort = "medium"
+# The Sol seat reviews every implementation workflow. Implementer and reviewer
+# share a model family, against the recommendation above, by choice
+# (2026-09-25): the operator's host slice proof is the independent check on
+# curation-reorg candidates, and the cross-provider seats failed in practice.
+# Muse answered autoreview's overall_correctness with a boolean, so every review
+# errored. The DeepSeek pi seat failed ~8 reviews in one day on budget,
+# malformed JSON, the ~1,200 s Bun fetch socket cut and the pinfold version
+# check, and its advisories were mostly false.
+[review.reviewers.sol]
+engine = "codex"
+model = "gpt-6-sol"
+effort = "high"
+speed = "fast"
 
 # autoreview runs codex seats on the host's codex CLI, not the vendored worker
 # pin: gpt-6-sol needs codex >= 0.156 there (0.153 refuses it on a ChatGPT
@@ -409,7 +411,7 @@ instructions = "Review this reg_webapp frontend candidate using only the diff an
 # approved on the worker's own render; see .yard/OPERATOR.md "UI approval
 # evidence".
 [workflows.ui]
-review = ["deepseek", "design"]
+review = ["sol", "design"]
 
 # The light workflow is the everyday lane for simple work, selected one ticket
 # at a time: a cheaper agent and no review. Skipping the review panel is its one
