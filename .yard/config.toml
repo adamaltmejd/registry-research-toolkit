@@ -447,6 +447,15 @@ implementer = "muse"
 [workflows.heavy]
 implementer = "heavy"
 
+# data-move: a ticket whose diff is mostly relocated curation data, landed on the
+# operator's host slice proof (byte-identical to baseline) instead of a review.
+# The DeepSeek seat cannot finish a diff this size: Y-230's 13 MB (28 ~500 KB
+# passes) failed four reviews on budget, malformed JSON and the ~1,200 s socket
+# cut, at high and at medium effort (2026-09-25). Gates still run.
+[workflows.data-move]
+implementer = "implementation"
+review = "none"
+
 # build_artifacts names the directories ordinary build activity fills with
 # output your .gitignore already covers -- target, node_modules, dist, and
 # whatever your toolchain writes. Each is a directory path relative to the
