@@ -55,6 +55,7 @@ class SourceEventBindings:
         self.targets: dict[NativeEventKey, set[DependencyKey | None]] = {}
         self.refs: dict[NativeEventKey, set[SourceRecordRef]] = {}
         self.unselected: set[NativeEventKey] = set()
+        self.skipped_events: list[SourceRecordRef] = []
         for event in self.events:
             if event.revision.dataset not in self.sources:
                 raise ValueError(
@@ -169,6 +170,7 @@ class SourceEventBindings:
                 outside = [k for k in unresolved if k in self.unselected]
                 if len(outside) == len(keys):
                     skipped += 1
+                    self.skipped_events.append(event_ref)
                     continue
                 withheld.add(event_ref)
                 if len(outside) == len(unresolved):

@@ -943,7 +943,9 @@ def test_streamed_diagnostics_preserve_strict_severity_and_source_refs():
     assert streamed.withheld_dependencies == collected.withheld_dependencies
 
 
-def acknowledge(issue):
+def acknowledge(issue, item):
+    register_key = source_register_key(item)
+    assert register_key is not None
     return CurationCase(
         case_id="acknowledged",
         targets=(),
@@ -951,6 +953,7 @@ def acknowledge(issue):
             code=issue.code,
             subject=issue.subject,
             refs=issue.refs,
+            register_key=register_key,
             reason="Accepted while the source stays unresolved.",
             evidence="Fixture diagnostic ledger.",
         ),
@@ -961,7 +964,7 @@ def test_an_acknowledged_error_becomes_a_counted_warning_and_stays_withheld():
     item = record()
     key = native_variable_key(item)
     (issue,) = resolve((item,), provider_keys={key: None}).diagnostics
-    case = acknowledge(issue)
+    case = acknowledge(issue, item)
     result = resolve((item,), cases=(case,), provider_keys={key: None})
     warning = issue.model_copy(
         update={"severity": "warning", "acknowledged_by": "acknowledged"}
@@ -989,11 +992,11 @@ def test_a_stale_acknowledgement_is_an_error():
     key = native_variable_key(item)
     (issue,) = resolve((item,), provider_keys={key: None}).diagnostics
     # The issue no longer occurs: the variable forms and the acknowledgement errs.
-    result = resolve((item,), cases=(acknowledge(issue),))
+    result = resolve((item,), cases=(acknowledge(issue, item),))
     assert result.variables[key] is not None
     (stale,) = result.diagnostics
     assert (stale.code, stale.severity, stale.case_id) == (
-        "stale_acknowledgement",
+        "stale_curation_entry",
         "error",
         "acknowledged",
     )
@@ -1002,12 +1005,12 @@ def test_a_stale_acknowledgement_is_an_error():
     other = record(2, year="2021")
     result = resolve(
         (item, other),
-        cases=(acknowledge(issue),),
+        cases=(acknowledge(issue, item),),
         provider_keys={key: None},
     )
     assert [(d.code, d.severity) for d in result.diagnostics] == [
         ("unresolved_catalog_identity", "error"),
-        ("stale_acknowledgement", "error"),
+        ("stale_curation_entry", "error"),
     ]
 
 
@@ -1030,12 +1033,12 @@ def test_an_overbroad_acknowledgement_is_an_error_and_acknowledges_nothing():
     ]
     assert len(conflicts) == 2
     assert len({(d.subject, d.refs) for d in conflicts}) == 1
-    result = resolve(items, cases=(acknowledge(conflicts[0]),))
+    result = resolve(items, cases=(acknowledge(conflicts[0], items[0]),))
     assert [
         d.severity for d in result.diagnostics if d.code == "conflicting_variable_fact"
     ] == ["error", "error"]
     (overbroad,) = (
-        d for d in result.diagnostics if d.code == "overbroad_acknowledgement"
+        d for d in result.diagnostics if d.code == "overbroad_curation_entry"
     )
     assert (overbroad.severity, overbroad.case_id) == ("error", "acknowledged")
     assert result.acknowledged == {}

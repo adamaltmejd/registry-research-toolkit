@@ -52,7 +52,6 @@ from reg_meta_build.source_coordinates import (
     native_variable_key,
 )
 from reg_meta_build.source_curation import (
-    AcknowledgeDecision,
     CheckedFieldChange,
     CurationCase,
     FieldExpectation,
@@ -171,7 +170,7 @@ def _sos_flag_cases(records):
     occurrences = tuple(r for r in records if native_variable_key(r) is not None)
     return (
         CurationCase(
-            case_id="sos-declared-flags",
+            case_id="accepted-errata:sos-declared-flags",
             targets=capture_expectations(occurrences, fields=fields),
             decision=OccurrenceCorrectionDecision(
                 reviewed=True,
@@ -224,7 +223,7 @@ def _scope_file(directory, name, scope):
 
 
 @pytest.fixture
-def selection(tmp_path, request):
+def selection(tmp_path, request, monkeypatch):
     param = getattr(request, "param", None)
     source = tmp_path / "source"
     # SCB renumbered one delivered column: two native variables share the summary's
@@ -238,8 +237,10 @@ def selection(tmp_path, request):
     # The dangling variant also refers to what no register holds: a replacement
     # into native ID 404 and an external source label.
     dangling = param == "register_dangling"
-    register_scoped = param == "register_scoped" or dangling
-    lineage_warning = param == "lineage_warning" or register_scoped
+    register_scoped = param in {"register_scoped", "events_outside"} or dangling
+    lineage_warning = (
+        param in {"lineage_warning", "cross_register_ack"} or register_scoped
+    )
     columnless = param == "columnless"
     sentinel = param == "sentinel"
     write_scb_input(
@@ -255,6 +256,7 @@ def selection(tmp_path, request):
                     "typed",
                     "renumbered",
                     "lineage_warning",
+                    "cross_register_ack",
                     "register_scoped",
                     "register_dangling",
                     "columnless",
@@ -322,9 +324,13 @@ def selection(tmp_path, request):
         timeseries_rows=[
             timeseries_row(entitet="AktuellVariabel", id1="1001", id2="404")
         ]
-        if param == "source_event"
+        if param in {"source_event", "source_event_sos"}
         else [
-            timeseries_row(entitet="AktuellVariabel", id1="1001", id2="2001"),
+            timeseries_row(
+                entitet="AktuellVariabel",
+                id1="2001" if param == "events_outside" else "1001",
+                id2="2001",
+            ),
             *(
                 [timeseries_row(entitet="AktuellVariabel", id1="2001", id2="404")]
                 if dangling
@@ -368,9 +374,12 @@ def selection(tmp_path, request):
                 ),
             ),
         )
-    elif param in _SOS_CELLS:
+    elif param in _SOS_CELLS or param == "source_event_sos":
         write_sos_input(
-            source, registers=(inline_value_set_register(_SOS_CELLS[param]),)
+            source,
+            registers=(
+                inline_value_set_register(_SOS_CELLS.get(param, BU_SPEC_LINED)),
+            ),
         )
     if param == "unbound_values":
         write_scb_input(
@@ -394,11 +403,26 @@ def selection(tmp_path, request):
     records = tuple(prepared.records.iter_records(source=revision.dataset))
     directory = tmp_path / "selection"
     directory.mkdir()
+    scb_scope = _scope(records, slugs=_SCB_SLUGS, revision=revision)
+    if param == "cross_register_ack":
+        other = next(
+            item.target.source_key
+            for item in scb_scope.naming
+            if item.target.kind == "register" and item.naming.slug == "sample-1"
+        )
+        scb_scope = scb_scope.model_copy(
+            update={
+                "provider_keys": tuple(
+                    (key, None if key[: len(other)] == other else value)
+                    for key, value in scb_scope.provider_keys
+                )
+            }
+        )
     scopes = [
         _scope_file(
             directory,
             "scope.json.gz",
-            _scope(records, slugs=_SCB_SLUGS, revision=revision),
+            scb_scope,
         )
     ]
     if register_scoped:
@@ -424,7 +448,7 @@ def selection(tmp_path, request):
                 )
             )
         ]
-    if param in _SOS_CELLS or sentinel:
+    if param in _SOS_CELLS or sentinel or param == "source_event_sos":
         sos_revision = _input_revision(manifest, "sos_workbook")
         sos_records = tuple(prepared.records.iter_records(source=sos_revision.dataset))
         scopes.append(
@@ -462,9 +486,9 @@ def selection(tmp_path, request):
                 source="classifications/insats.csv",
                 descriptor=descriptor,
                 metadata={
-                    "slug": book.slug,
-                    "short_name": book.short_name,
-                    "name": book.name,
+                    **book.model_dump(
+                        mode="json", exclude={"codes_file", "sentinel_codes"}
+                    ),
                     "sentinel_codes": [
                         sentinel.model_dump() for sentinel in book.sentinel_codes
                     ],
@@ -484,9 +508,7 @@ def selection(tmp_path, request):
             (e.revision.dataset, revision.dataset)
             for e in manifest.inputs
             if e.revision and e.path == "Timeseries.csv"
-        )
-        if param == "source_event" or register_scoped
-        else (),
+        ),
         scopes=tuple(scopes),
         classifications=classifications,
         metadata=ResolvedMetadata(
@@ -510,6 +532,36 @@ def selection(tmp_path, request):
     )
     path = directory / "selection.json"
     path.write_text(selected.model_dump_json())
+    # Legacy pipeline assertions exercise their individual resolver paths. Hybrid
+    # compilation has separate tests below with a real tracked tree.
+    from reg_meta_build.curation_compile import CompiledCuration, compile_curation
+
+    from reg_meta_build import _curation, pipeline
+
+    curation = tmp_path / "curation"
+    (curation / "classifications").mkdir(parents=True, exist_ok=True)
+    if register_scoped:
+        (curation / "relations.toml").write_text(
+            '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
+            'b = "scb/sample-1/value-1"\n',
+            encoding="utf-8",
+        )
+        (curation / "tags.toml").write_text(
+            '[[tag]]\nslug = "other"\nlabel = "Other"\n'
+            '[[tag.member]]\nvariable = "scb/sample-1/value-1"\n'
+            "rank = 1\nstarred = false\n",
+            encoding="utf-8",
+        )
+    monkeypatch.setattr(_curation, "repo_curation_dir", lambda: curation)
+    monkeypatch.setattr(
+        pipeline,
+        "compile_curation",
+        lambda tree, prepared, scopes, *, subset=False: CompiledCuration(
+            fields={},
+            cases=compile_curation(tree, prepared, scopes, subset=subset).cases,
+            report={},
+        ),
+    )
     return path
 
 
@@ -927,37 +979,38 @@ def test_unresolved_inline_code_list_is_reported_and_refused_for_publication(
 
 
 def _acknowledging(selection, issue):
-    """The same selection, acknowledging one ledger issue in its own scope."""
+    """Declare the issue in the register's tracked TOML."""
     selected = PipelineSelection.model_validate_json(selection.read_bytes())
-    decision = AcknowledgeDecision.model_validate_json(
-        json.dumps(
-            {
-                "code": issue["code"],
-                "subject": issue["subject"],
-                "refs": issue["refs"],
-                "reason": "The delivered cell cannot separate its members.",
-                "evidence": "Diagnostic build ledger.",
-            }
-        )
+    scope_file = next(
+        file for file in selected.scopes if file.source == issue["refs"][0]["source"]
     )
-    case = CurationCase(case_id="acknowledged", targets=(), decision=decision)
-    scopes = []
-    for file in selected.scopes:
-        if file.source == decision.refs[0].source:
-            scope = ScopeDeclarations.model_validate_json(
-                gzip.decompress((selection.parent / file.path).read_bytes())
-            )
-            file = _scope_file(
-                selection.parent,
-                f"acknowledged-{file.path}",
-                scope.model_copy(update={"cases": (*scope.cases, case)}),
-            )
-        scopes.append(file)
-    path = selection.parent / "acknowledged.json"
+    scope = ScopeDeclarations.model_validate_json(
+        gzip.decompress((selection.parent / scope_file.path).read_bytes())
+    )
+    register = next(
+        item.naming for item in scope.naming if item.target.kind == "register"
+    )
+    directory = selection.parent.parent / "curation" / "registers" / register.provider
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / f"{register.slug}.toml"
+    refs = [
+        json.dumps(ref, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        for ref in issue["refs"]
+    ]
     path.write_text(
-        selected.model_copy(update={"scopes": tuple(scopes)}).model_dump_json()
+        "[register]\n"
+        f"provider = {json.dumps(register.provider)}\n"
+        f"slug = {json.dumps(register.slug)}\n"
+        f"native_id = {json.dumps(register.source_id if register.source_id.isdecimal() else '1')}\n"
+        "\n[[acknowledge]]\n"
+        f"code = {json.dumps(issue['code'])}\n"
+        f"subject = {json.dumps(issue['subject'])}\n"
+        f"refs = {json.dumps(refs, ensure_ascii=False)}\n"
+        'reason = "The delivered cell cannot separate its members."\n'
+        'evidence = "Diagnostic build ledger."\n',
+        encoding="utf-8",
     )
-    return path
+    return selection
 
 
 @pytest.mark.parametrize("selection", ["sos_wrapped"], indirect=True)
@@ -992,25 +1045,269 @@ def test_strict_build_publishes_only_when_every_error_is_acknowledged(
     assert warning == {
         **issue,
         "severity": "warning",
-        "acknowledged_by": "acknowledged",
+        "acknowledged_by": "curation/registers/sos/kodregister.toml#/acknowledge/1",
     }
     # Acknowledging fabricates nothing: the unseparated list stays withheld.
     with sqlite3.connect(strict_db) as conn:
         assert conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0] == 0
 
 
-def test_malformed_selection_sentinels_are_refused():
-    from reg_meta_build.pipeline import _selection_sentinels
+@pytest.mark.parametrize("selection", ["cross_register_ack"], indirect=True)
+def test_register_file_cannot_acknowledge_another_registers_error(
+    selection, tmp_path, structural_validation_only
+):
+    blocked = build_selected_catalog(
+        selection, tmp_path / "blocked.db", tmp_path / "blocked"
+    )
+    assert blocked["status"] == "blocked"
+    with gzip.open(tmp_path / "blocked" / "events.jsonl.gz", "rt") as stream:
+        issue = next(
+            event
+            for event in map(json.loads, stream)
+            if event["kind"] == "issue"
+            and event["code"] == "unresolved_catalog_identity"
+        )
+    assert issue["refs"]
+    # The helper writes sample.toml; this issue belongs to sample-1.
+    _acknowledging(selection, issue)
+    result = build_selected_catalog(
+        selection, tmp_path / "cross.db", tmp_path / "cross"
+    )
+    assert result["status"] == "blocked"
+    assert result["acknowledged"] == {}
+    with gzip.open(tmp_path / "cross" / "events.jsonl.gz", "rt") as stream:
+        issues = [
+            event
+            for event in map(json.loads, stream)
+            if event["kind"] == "issue" and event["severity"] == "error"
+        ]
+    assert any(
+        event["code"] == issue["code"]
+        and event["subject"] == issue["subject"]
+        and event["refs"] == issue["refs"]
+        for event in issues
+    )
+    assert any(event["code"] == "stale_curation_entry" for event in issues)
 
-    assert _selection_sentinels(None, subject="insats") == ()
+
+@pytest.mark.parametrize("selection", ["sentinel", "register_scoped"], indirect=True)
+def test_hybrid_compiler_preserves_stored_global_selection(
+    selection, tmp_path, structural_validation_only, monkeypatch
+):
+    from reg_meta_build.curation_compile import compile_curation, tree_sha256
+    from reg_meta_build.semantic_diff import diff_catalog_semantics
+
+    from reg_meta_build import pipeline
+
+    stored = PipelineSelection.model_validate_json(selection.read_bytes())
+    baseline = tmp_path / "baseline.db"
+    original = build_selected_catalog(selection, baseline, tmp_path / "baseline-report")
+    assert original["status"] == "complete"
+    monkeypatch.setattr(pipeline, "compile_curation", compile_curation)
+    compiled = tmp_path / "compiled.db"
+    dump = tmp_path / "decisions"
+    result = build_selected_catalog(
+        selection,
+        compiled,
+        tmp_path / "compiled-report",
+        curation_dir=tmp_path / "curation",
+        dump_decisions=dump,
+    )
+    assert result["status"] == "complete"
+    assert result["curation_tree_sha256"] == tree_sha256(tmp_path / "curation")
+    with sqlite3.connect(compiled) as conn:
+        assert conn.execute(
+            "SELECT value FROM import_manifest WHERE key = 'curation_tree_sha256'"
+        ).fetchone() == (result["curation_tree_sha256"],)
+    assert diff_catalog_semantics(baseline, compiled).identical
+    declarations = json.loads((dump / "global.json").read_text())
+    assert declarations["classifications"] == [
+        entry.model_dump(mode="json") for entry in stored.classifications
+    ]
+    assert declarations["metadata"] == stored.metadata.model_dump(mode="json")
+    assert declarations["code_label_pairs"] == []
+    assert declarations["identifier_sources"] == list(stored.identifier_sources)
+    assert declarations["event_sources"] == [
+        list(pair) for pair in stored.event_sources
+    ]
+    second_dump = tmp_path / "decisions-again"
+    build_selected_catalog(
+        selection,
+        tmp_path / "compiled-again.db",
+        tmp_path / "compiled-report-again",
+        curation_dir=tmp_path / "curation",
+        dump_decisions=second_dump,
+    )
+    assert {p.name: p.read_bytes() for p in dump.iterdir()} == {
+        p.name: p.read_bytes() for p in second_dump.iterdir()
+    }
+
+
+def test_dump_decisions_refuses_input_and_output_aliases(selection, tmp_path):
+    for alias in (selection.parent, tmp_path / "report", tmp_path / "catalog.db"):
+        with pytest.raises(ValueError, match="--dump-decisions"):
+            build_selected_catalog(
+                selection,
+                tmp_path / "catalog.db",
+                tmp_path / "report",
+                dump_decisions=alias,
+            )
+
+
+@pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
+def test_hybrid_subset_preserves_dependency_diagnostics_and_tag_rows(
+    selection, tmp_path, monkeypatch
+):
+    from reg_meta_build.curation_compile import compile_curation
+
+    from reg_meta_build import pipeline
+
+    raw = json.loads(selection.read_bytes())
+    path = "scope-0.json.gz"
+    scope = ScopeDeclarations.model_validate_json(
+        gzip.decompress((selection.parent / path).read_bytes())
+    )
+    variable_key = next(key for key, _ in scope.provider_keys)
+    pinned = next(item for item in raw["scopes"] if item["path"] == path)
+    pinned.update(
+        _scope_file(
+            selection.parent,
+            path,
+            scope.model_copy(update={"provider_keys": ((variable_key, None),)}),
+        ).model_dump(mode="json")
+    )
+    selection.write_text(json.dumps(raw))
+    stored_db = tmp_path / "stored.db"
+    stored_report = tmp_path / "stored-report"
+    build_selected_catalog(
+        selection,
+        stored_db,
+        stored_report,
+        diagnostic=True,
+        registers=("1",),
+    )
+    monkeypatch.setattr(pipeline, "compile_curation", compile_curation)
+    dump = tmp_path / "subset-decisions"
+    compiled_db = tmp_path / "compiled.db"
+    compiled_report = tmp_path / "compiled-report"
+    build_selected_catalog(
+        selection,
+        compiled_db,
+        compiled_report,
+        diagnostic=True,
+        registers=("1",),
+        dump_decisions=dump,
+    )
+    stored_issues = _issues(stored_report)
+    assert {"deferred_out_of_slice_reference", "withheld_catalog_dependency"} <= {
+        item["code"] for item in stored_issues
+    }
+    assert _issues(compiled_report) == stored_issues
+    for table in ("tag", "tag_member"):
+        with (
+            sqlite3.connect(stored_db) as stored,
+            sqlite3.connect(compiled_db) as compiled,
+        ):
+            assert compiled.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall() == (
+                stored.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall()
+            )
+    with sqlite3.connect(compiled_db) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM tag").fetchone() == (0,)
+    globals_ = json.loads((dump / "global.json").read_text())
+    assert len(globals_["metadata"]["variable_same_as"]) == 1
+    assert len(globals_["metadata"]["tags"][0]["members"]) == 1
+    report = json.loads((dump / "compile-report.json").read_text())
+    assert not any("same_as" in entry for entry in report["_subset"]["dropped"])
+    assert not any("tag" in entry for entry in report["_subset"]["dropped"])
+
+
+@pytest.mark.parametrize("selection", ["source_event_sos"], indirect=True)
+def test_hybrid_subset_keeps_event_binding_for_scoped_resolver(
+    selection, tmp_path, monkeypatch
+):
+    from reg_meta_build.curation_compile import compile_curation
+
+    from reg_meta_build import pipeline
+
+    monkeypatch.setattr(pipeline, "compile_curation", compile_curation)
+    selected = PipelineSelection.model_validate_json(selection.read_bytes())
+    sos_source = next(
+        scope.source
+        for scope in selected.scopes
+        if scope.source != "scb-registerinformation"
+    )
+    dump = tmp_path / "sos-decisions"
+    result = build_selected_catalog(
+        selection,
+        tmp_path / "sos.db",
+        tmp_path / "sos-report",
+        diagnostic=True,
+        registers=(sos_source,),
+        dump_decisions=dump,
+    )
+    assert result["status"] == "diagnostic_complete"
+    globals_ = json.loads((dump / "global.json").read_text())
+    assert globals_["event_sources"] == [list(pair) for pair in selected.event_sources]
+    report = json.loads((dump / "compile-report.json").read_text())
+    assert report["_subset"]["dropped"] == []
+
+
+@pytest.mark.parametrize("selection", ["events_outside"], indirect=True)
+def test_hybrid_subset_reports_source_event_wholly_outside_register(
+    selection, tmp_path, monkeypatch
+):
+    from reg_meta_build.curation_compile import compile_curation
+
+    from reg_meta_build import pipeline
+
+    monkeypatch.setattr(pipeline, "compile_curation", compile_curation)
+    dump = tmp_path / "decisions"
+    build_selected_catalog(
+        selection,
+        tmp_path / "subset.db",
+        tmp_path / "subset-report",
+        diagnostic=True,
+        registers=("1",),
+        dump_decisions=dump,
+    )
+    report = json.loads((dump / "compile-report.json").read_text())
+    assert any("#/event/" in item for item in report["_subset"]["dropped"])
+
+
+@pytest.mark.parametrize("selection", ["sos_wrapped"], indirect=True)
+def test_tracked_acknowledgement_matching_nothing_is_an_error(selection, tmp_path):
+    build_selected_catalog(selection, tmp_path / "blocked.db", tmp_path / "blocked")
+    with gzip.open(tmp_path / "blocked" / "events.jsonl.gz", "rt") as stream:
+        issue = next(
+            event
+            for event in map(json.loads, stream)
+            if event["kind"] == "issue" and event["severity"] == "error"
+        )
+    stale = {**issue, "code": "issue-that-is-not-emitted"}
+    _acknowledging(selection, stale)
+    result = build_selected_catalog(
+        selection, tmp_path / "stale.db", tmp_path / "stale"
+    )
+    assert result["status"] == "blocked"
+    with gzip.open(tmp_path / "stale" / "events.jsonl.gz", "rt") as stream:
+        assert any(
+            event["kind"] == "issue" and event["code"] == "stale_curation_entry"
+            for event in map(json.loads, stream)
+        )
+
+
+def test_malformed_selection_sentinels_are_refused():
+    from reg_meta_build.curation_compile import validate_sentinels
+
+    assert validate_sentinels(None, subject="insats") == ()
     assert (
-        _selection_sentinels(
-            [{"code": "9", "meaning": "ej aktuellt"}], subject="insats"
-        )[0].code
+        validate_sentinels([{"code": "9", "meaning": "ej aktuellt"}], subject="insats")[
+            0
+        ].code
         == "9"
     )
     with pytest.raises(ValueError, match="more than once"):
-        _selection_sentinels(
+        validate_sentinels(
             [
                 {"code": "9", "meaning": "a"},
                 {"code": "9", "meaning": "b"},
@@ -1018,7 +1315,7 @@ def test_malformed_selection_sentinels_are_refused():
             subject="insats",
         )
     with pytest.raises(ValueError, match="sentinel_codes"):
-        _selection_sentinels([{"code": 9, "meaning": "ej aktuellt"}], subject="insats")
+        validate_sentinels([{"code": 9, "meaning": "ej aktuellt"}], subject="insats")
 
 
 @pytest.mark.parametrize("selection", ["sentinel"], indirect=True)

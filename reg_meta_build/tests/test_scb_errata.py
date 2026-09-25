@@ -68,6 +68,13 @@ def slug_dir(tmp_path: Path) -> Path:
 
 def _load(tmp_path: Path, slug_dir: Path, body: str):
     root = write_lisa_errata(tmp_path / "curation", body)
+    classes = root / "classifications"
+    classes.mkdir(exist_ok=True)
+    (classes / "SSYK96.toml").write_text(
+        '[classification]\nshort_name = "SSYK96"\nslug = "ssyk96"\n'
+        'name = "SSYK 96"\ncodes_file = "ssyk96.csv"\n',
+        encoding="utf-8",
+    )
     return load_scb_errata(root, slug_dir)
 
 
@@ -335,6 +342,22 @@ class TestColumnEntry:
     ) -> None:
         (entry,) = _load(tmp_path, slug_dir, _toml(classification='"SSYK96"')).columns
         assert entry.classification == "SSYK96"
+
+    def test_classification_added_only_to_candidate_tree_passes(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        root = write_lisa_errata(
+            tmp_path / "candidate" / "curation", _toml(classification='"NEW-BOOK"')
+        )
+        classes = root / "classifications"
+        classes.mkdir()
+        (classes / "NEW-BOOK.toml").write_text(
+            '[classification]\nshort_name = "NEW-BOOK"\nslug = "new-book"\n'
+            'name = "New book"\ncodes_file = "new-book.csv"\n',
+            encoding="utf-8",
+        )
+        (entry,) = load_scb_errata(root, slug_dir).columns
+        assert entry.classification == "NEW-BOOK"
 
     def test_undeclared_classification_fails(
         self, tmp_path: Path, slug_dir: Path

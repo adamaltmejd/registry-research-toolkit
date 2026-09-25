@@ -101,7 +101,7 @@ _TABLES = (
         "acknowledge",
         '[[acknowledge]]\ncode = "code"\nsubject = "scb/test/subject"\n'
         'refs = ["source"]\nreason = "reason"\nevidence = "evidence"\n',
-        ('subject = "scb/test/subject"', 'subject = "scb/other/subject"'),
+        None,
     ),
 )
 

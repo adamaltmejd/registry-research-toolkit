@@ -184,6 +184,15 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Pinned prepared sources and provider-neutral curation declarations.",
     )
     build_p.add_argument(
+        "--curation-dir",
+        help="Tracked curation directory (defaults to this checkout's tree).",
+    )
+    build_p.add_argument(
+        "--dump-decisions",
+        metavar="DIR",
+        help="Write canonical compiled declarations and per-register compile report.",
+    )
+    build_p.add_argument(
         "--report-dir",
         required=True,
         help="New directory for structured build issues and source accounting.",
@@ -973,6 +982,8 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             Path(args.report_dir),
             diagnostic=args.diagnostic,
             registers=registers,
+            curation_dir=Path(args.curation_dir) if args.curation_dir else None,
+            dump_decisions=Path(args.dump_decisions) if args.dump_decisions else None,
         )
     except CompletedArtifactError as exc:
         return _pipeline_report_failure(
@@ -2148,7 +2159,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     ),
     (
         "build-db --selection FILE --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
-        "[--registers SPEC[,SPEC...]]",
+        "[--registers SPEC[,SPEC...]] [--curation-dir DIR] [--dump-decisions DIR]",
         "Build from prepared sources and common curation; strict publication is the default.",
     ),
     (
@@ -2295,6 +2306,17 @@ def _confined_bundle_output_path(
             # Invalid inputs must not direct even an error report into an alias.
             return None
         directories = {selection_file.parent, prepared.resolve()}
+        from ._curation import repo_curation_dir
+
+        curation_dir = (
+            Path(args.curation_dir).expanduser().resolve()
+            if args.curation_dir
+            else repo_curation_dir()
+        )
+        if curation_dir is not None:
+            directories.add(curation_dir.resolve())
+        if args.dump_decisions:
+            directories.add(Path(args.dump_decisions).expanduser().resolve())
         if args.report_dir:
             directories.add(Path(args.report_dir).expanduser().resolve())
         database = (

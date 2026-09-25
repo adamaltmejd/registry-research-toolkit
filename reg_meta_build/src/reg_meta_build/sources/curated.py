@@ -14,7 +14,6 @@ from typing import TYPE_CHECKING
 from reg_meta.fqid import FqidError, period_token_to_bounds
 
 from reg_meta_build._curation import curation_error, require_bool
-from reg_meta_build.curation_tree import declared_short_names
 from reg_meta_build.db import _file_sha256
 from reg_meta_build.id import mint
 from reg_meta_build.ir import (
@@ -151,9 +150,12 @@ class CuratedAdapter:
         provider: str,
         *,
         steward: str,
+        classification_short_names: frozenset[str] = frozenset(),
     ) -> None:
         self.provider = provider
         self.steward = steward
+        # extend-db passes the books in its selected base catalog.
+        self.classification_short_names = classification_short_names
         self.provider_name: str | None = None
         self.source_label: str | None = None
         self.row_counts: dict[str, int] = {}
@@ -225,15 +227,12 @@ class CuratedAdapter:
             reg = self._load_register(path, entry, seen_reg_keys)
             registers.append(reg)
 
-        # Validate `classification` references against the declared classification
-        # files in a single pass once everything is parsed: any declared
-        # short_name passes; only an UNDECLARED short_name, i.e. a typo, fails.
-        # Read the files only when something references a classification, so a
-        # curated TOML with no `classification` keys needs no curation tree.
+        # Resolve against the selected base catalog's books, never this
+        # checkout's classifications. No lookup is needed without references.
         if any(
             var.classification is not None for reg in registers for var in reg.variables
         ):
-            declared = declared_short_names()
+            declared = self.classification_short_names
             for reg in registers:
                 for var in reg.variables:
                     if (

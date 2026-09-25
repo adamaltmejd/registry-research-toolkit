@@ -312,6 +312,7 @@ class AcknowledgeDecision(_CurationModel):
     code: str
     subject: str
     refs: tuple[SourceRecordRef, ...]
+    register_key: NativeKey
     reason: str
     evidence: str
 

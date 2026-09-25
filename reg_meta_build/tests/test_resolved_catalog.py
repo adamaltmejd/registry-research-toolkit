@@ -15,6 +15,8 @@ from reg_meta.search import CodeSearchResult, VariableSearchResult
 from reg_meta_build._curation import SentinelCode
 from reg_meta_build.db import publish_db
 from reg_meta_build.resolved_catalog import (
+    CURATION_SELECTION_SHA256_KEY,
+    CURATION_TREE_SHA256_KEY,
     ResolvedAlias,
     ResolvedAliasWindow,
     ResolvedClassification,
@@ -212,6 +214,19 @@ def test_rerun_is_byte_identical_regardless_of_input_order(tmp_path: Path) -> No
     )
     assert output.read_bytes() == original
     assert output.with_name("reg_meta.db.prev").read_bytes() == original
+
+
+@pytest.mark.parametrize(
+    "key", (CURATION_SELECTION_SHA256_KEY, CURATION_TREE_SHA256_KEY)
+)
+@pytest.mark.parametrize("digest", ("short", "A" * 64))
+def test_curation_manifest_hashes_require_lowercase_sha256(
+    tmp_path: Path, key: str, digest: str
+) -> None:
+    output = tmp_path / "reg_meta.db"
+    with pytest.raises(ValueError, match=f"manifest {key} must be a lowercase SHA-256"):
+        write_resolved_catalog((_variable(),), output, manifest={key: digest})
+    assert not output.exists()
 
 
 def test_resolved_metadata_is_written_without_source_inference(tmp_path: Path) -> None:

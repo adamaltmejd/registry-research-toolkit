@@ -78,7 +78,11 @@ def resolve_steward_providers_dir(providers_dir: Path | None, steward: str) -> P
     return resolved
 
 
-def _load_provider_ir(providers_dir: Path, steward: str) -> _ProviderGraph:
+def _load_provider_ir(
+    providers_dir: Path,
+    steward: str,
+    classification_short_names: frozenset[str] = frozenset(),
+) -> _ProviderGraph:
     """Load all steward provider TOMLs through the shared curated adapter."""
     paths = sorted(providers_dir.glob("*.toml"), key=lambda path: path.name)
     if not paths:
@@ -104,7 +108,11 @@ def _load_provider_ir(providers_dir: Path, steward: str) -> _ProviderGraph:
                 "Rename the file to a valid, non-reserved <provider>.toml basename.",
             ) from exc
 
-        adapter = CuratedAdapter(provider, steward=steward)
+        adapter = CuratedAdapter(
+            provider,
+            steward=steward,
+            classification_short_names=classification_short_names,
+        )
         for obj in adapter.emit(providers_dir):
             if isinstance(obj, IRRegister):
                 registers.append(obj)
@@ -318,7 +326,14 @@ def extend_db(
         )
 
     resolved_providers_dir = resolve_steward_providers_dir(providers_dir, steward)
-    graph = _load_provider_ir(resolved_providers_dir, steward)
+    with sqlite3.connect(f"file:{base_db}?mode=ro", uri=True) as source_db:
+        classification_short_names = frozenset(
+            name
+            for (name,) in source_db.execute("SELECT short_name FROM classification")
+        )
+    graph = _load_provider_ir(
+        resolved_providers_dir, steward, classification_short_names
+    )
     steward_slug_dir = resolve_steward_slug_dir(
         slug_dir, steward, skip_slugs=skip_slugs
     )

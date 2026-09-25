@@ -735,15 +735,6 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     f"renaming applies to SOS registers, not {identity.provider!r}.",
                     "Move the entry to the SOS register file it describes.",
                 )
-            if isinstance(row, AcknowledgeEntry):
-                subject = row.subject.split("/")
-                if len(subject) < 3 or "/".join(subject[:2]) != expected:
-                    raise curation_error(
-                        _CODE,
-                        f"{file} [[{table}]] entry {index}: acknowledge subject "
-                        f"{row.subject!r} does not belong to {expected!r}.",
-                        "Scope the acknowledgement subject to this register FQID.",
-                    )
 
 
 def _load_register_file(path: Path, directory: Path) -> RegisterCuration:

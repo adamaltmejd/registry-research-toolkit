@@ -262,7 +262,11 @@ scope files and embeds the selection digest (`curation_selection_sha256`).
 `prepared_catalog` still recognizes legacy `curation/` and `fqid_slugs/` bundle paths so
 the accepted prepared v13 manifest opens. The selection contains data, never executable
 conversion hooks; scope files load one register at a time. The runtime does not import
-one-time conversion scripts or use the legacy database as evidence.
+one-time conversion scripts or use the legacy database as evidence. In the hybrid merge,
+a stored provider key belongs to the family of its naming declaration or naming
+ambiguity. A null key on a partition base has neither and belongs to the identity
+family. Each key remains stored until its family is compiled, when that family derives
+its keys instead.
 
 The target layout:
 

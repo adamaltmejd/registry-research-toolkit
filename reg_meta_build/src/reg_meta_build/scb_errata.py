@@ -21,7 +21,7 @@ from ._curation import (
     require_evidence,
     require_str,
 )
-from .curation_tree import declared_short_names, load_register_files
+from .curation_tree import load_classifications, load_register_files
 from .edition_bounds import edition_claims
 from .fqid_slugs import (
     PROVIDER_FILE_SUFFIX,
@@ -337,15 +337,17 @@ def _resolve_variant(
 def load_scb_errata(
     path: Path | None,
     slug_dir: Path | None,
+    *,
+    classifications: frozenset[str] | None = None,
 ) -> ScbErrata:
     """Parse register-scoped errata, resolving each entry's `variant` slug
     against the curated `scb.toml` in `slug_dir`. ``path`` is the curation root.
     Empty when no curation tree (synthetic
     builds, wheel installs).
 
-    This checkout's `curation/classifications/` is consulted only when some
-    `[[column]]` names a `classification` — an undeclared short_name is a typo that
-    would otherwise be dropped silently by the candidate feed.
+    The supplied classification names, or the classifications under ``path``,
+    are consulted only when a `[[column]]` names a classification. This lets a
+    candidate curation tree introduce a book without depending on the checkout.
 
     Strict load, all EXIT_CONFIG with a remediation: only `[[errata.version]]` /
     `[[errata.delivered]]` / `[[errata.column]]` register-file tables; no unknown
@@ -450,7 +452,16 @@ def load_scb_errata(
         classification = _column_classification(values, ctx)
         if classification is not None:
             if declared_classifications is None:
-                declared_classifications = declared_short_names()
+                declared_classifications = (
+                    classifications
+                    if classifications is not None
+                    else frozenset(
+                        item.classification.short_name
+                        for item in load_classifications(path)
+                    )
+                    if path is not None
+                    else frozenset()
+                )
             if classification not in declared_classifications:
                 raise curation_error(
                     _CODE,
