@@ -274,17 +274,26 @@ def merge_scope(
     gaps = tuple(
         gap for gap in scope.unapplied_curation if _gap_family(gap) not in COMPILED
     )
-    # Child 06 will derive keys of compiled naming declarations. Until then all
-    # naming is stored, and no provider key can silently outlive its owner.
-    stored_keys = {item.target.source_key for item in naming}
-    provider_keys = tuple(
-        item for item in scope.provider_keys if item[0] in stored_keys
-    )
+    # A null key is the unsplit base of a partitioned identity. It has no naming
+    # declaration, but remains stored until identity is compiled.
+    naming_owners = {
+        item.target.source_key: _naming_family(item) for item in scope.naming
+    }
+    provider_keys = []
+    for item in scope.provider_keys:
+        source_key, value = item
+        owner = "identity" if value is None else naming_owners.get(source_key)
+        if owner is None:
+            raise ValueError(
+                f"provider key has no converted catalog naming: {source_key!r}"
+            )
+        if owner not in COMPILED:
+            provider_keys.append(item)
     merged = scope.model_copy(
         update={
             "cases": (*cases, *compiled.cases.get(key, ())),
             "naming": naming,
-            "provider_keys": provider_keys,
+            "provider_keys": tuple(provider_keys),
             "unapplied_curation": gaps,
         }
     )
@@ -559,6 +568,14 @@ def _scope_registers(
     )
 
 
+def _snapshot_key(entry: Any) -> tuple[str, str]:
+    revision = entry.revision
+    suffix = f":source/{entry.path}"
+    if revision is None or not revision.artifact_path.endswith(suffix):
+        raise ValueError(f"snapshot input lacks its source artifact: {entry.path}")
+    return revision.artifact_path[: -len(suffix)], revision.upstream_revision
+
+
 def compile_curation(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -643,15 +660,20 @@ def compile_curation(
         and e.path == "Identifierare.csv"
         and e.revision is not None
     )
+    event_targets = {
+        _snapshot_key(entry): entry.revision.dataset
+        for entry in inputs
+        if entry.origin == "snapshot"
+        and entry.path == "Registerinformation.csv"
+        and entry.revision is not None
+    }
     all_events = tuple(
-        (e.revision.dataset, target.revision.dataset)
-        for e in inputs
-        for target in inputs
-        if e.origin == target.origin == "snapshot"
-        and e.path == "Timeseries.csv"
-        and target.path == "Registerinformation.csv"
-        and e.revision is not None
-        and target.revision is not None
+        (entry.revision.dataset, event_targets[key])
+        for entry in inputs
+        if entry.origin == "snapshot"
+        and entry.path == "Timeseries.csv"
+        and entry.revision is not None
+        if (key := _snapshot_key(entry)) in event_targets
     )
     selected_sources = {scope.source for scope in scopes}
     events = tuple(item for item in all_events if item[1] in selected_sources)

@@ -30,13 +30,15 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def _revision(dataset: str) -> SourceRevision:
+def _revision(
+    dataset: str, *, artifact_path: str | None = None, upstream_revision: str = "v1"
+) -> SourceRevision:
     return SourceRevision.create(
         dataset=dataset,
         publisher="fixture",
         purpose="fixture",
-        upstream_revision="v1",
-        artifact_path=f"{dataset}.csv",
+        upstream_revision=upstream_revision,
+        artifact_path=artifact_path or f"{dataset}.csv",
         artifact_size=1,
         artifact_sha256="0" * 64,
     )
@@ -122,7 +124,11 @@ def _scope() -> ScopeDeclarations:
 
 def _prepared():
     inputs = tuple(
-        SimpleNamespace(origin="snapshot", path=path, revision=_revision(dataset))
+        SimpleNamespace(
+            origin="snapshot",
+            path=path,
+            revision=_revision(dataset, artifact_path=f"snapshot-a:source/{path}"),
+        )
         for path, dataset in (
             ("Identifierare.csv", "scb-identifierare"),
             ("Timeseries.csv", "scb-timeseries"),
@@ -220,6 +226,58 @@ def test_source_event_without_selected_target_is_reported(tmp_path):
         "prepared://scb-timeseries->scb-registerinformation"
         in result.report["_subset"]["dropped"]
     )
+
+
+def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
+    inputs = tuple(
+        SimpleNamespace(
+            origin="snapshot",
+            path=path,
+            revision=_revision(
+                dataset,
+                artifact_path=f"{snapshot}:source/{path}",
+                upstream_revision=edition,
+            ),
+        )
+        for snapshot, edition, path, dataset in (
+            ("snapshot-a", "v1", "Timeseries.csv", "timeseries-a"),
+            ("snapshot-b", "v2", "Timeseries.csv", "timeseries-b"),
+            ("snapshot-b", "v2", "Registerinformation.csv", "register-b"),
+            ("snapshot-a", "v1", "Registerinformation.csv", "register-a"),
+        )
+    )
+    prepared = SimpleNamespace(
+        manifest=SimpleNamespace(inputs=inputs), iter_evidence=lambda: iter(())
+    )
+    scopes = tuple(
+        _scope().model_copy(update={"source": source})
+        for source in ("register-a", "register-b")
+    )
+    result = compile_curation(
+        _tree(tmp_path / "curation"), prepared, scopes, subset=True
+    )
+    assert result.fields["event_sources"] == (
+        ("timeseries-a", "register-a"),
+        ("timeseries-b", "register-b"),
+    )
+
+
+def test_null_partition_base_provider_key_survives_hybrid_merge(tmp_path):
+    partition_base = (
+        "scb-registerinformation",
+        "scb",
+        "register",
+        "native-int",
+        25,
+        "variable",
+        "native-int",
+        1075,
+    )
+    scope = _scope().model_copy(update={"provider_keys": ((partition_base, None),)})
+    compiled = compile_curation(
+        _tree(tmp_path / "curation"), _prepared(), (scope,), subset=True
+    )
+    assert merge_scope(scope, compiled).provider_keys == ((partition_base, None),)
 
 
 def test_tree_hash_covers_curation_and_transitional_slug_files(tmp_path):
