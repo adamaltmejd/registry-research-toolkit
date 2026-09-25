@@ -69,7 +69,7 @@ def test_load_period_family_requires_authored_slug(tmp_path: Path) -> None:
         load_period_family_merges(root)
     assert exc.value.exit_code == EXIT_CONFIG
     assert "curation/registers/scb/lisa.toml" in exc.value.message
-    assert "[[representation.period_family]] entry 1" in exc.value.message
+    assert "[[representation.period_family.slug]] entry 1" in exc.value.message
     assert "slug" in exc.value.message
 
 
