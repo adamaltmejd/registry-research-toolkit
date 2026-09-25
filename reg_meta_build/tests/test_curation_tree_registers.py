@@ -58,7 +58,7 @@ _TABLES = (
     (
         "representation.period_family",
         '[[representation.period_family]]\nregister = "scb/test"\n'
-        'family_stem = "income"\nlabel = "Income"\n',
+        'family_stem = "income"\nlabel = "Income"\nslug = "income"\n',
         ('register = "scb/test"', 'register = "scb/other"'),
     ),
     (

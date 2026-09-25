@@ -280,7 +280,13 @@ class PeriodFamilyEntry(_CurationModel):
     register_fqid: str = Field(validation_alias="register")
     family_stem: str
     label: str
-    slug: str | None = None
+    slug: str
+
+    @field_validator("slug")
+    @classmethod
+    def _valid_slug(cls, value: str) -> str:
+        validate_slug(value, "variable")
+        return value
 
 
 class AliasWindowEntry(_CurationModel):
@@ -882,9 +888,23 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
     except ValidationError as exc:
         error = exc.errors(include_url=False)[0]
         parts = error["loc"]
-        table = ".".join(str(part) for part in parts if not isinstance(part, int))
-        index = next((part + 1 for part in parts if isinstance(part, int)), None)
-        where = f"[[{table}]] entry {index}" if index is not None else table
+        entry_location = next(
+            (
+                (position, part)
+                for position, part in enumerate(parts)
+                if isinstance(part, int)
+            ),
+            None,
+        )
+        if entry_location is None:
+            where = ".".join(str(part) for part in parts)
+        else:
+            entry_position, entry_index = entry_location
+            table = ".".join(str(part) for part in parts[:entry_position])
+            field = ".".join(str(part) for part in parts[entry_position + 1 :])
+            where = f"[[{table}]] entry {entry_index + 1}"
+            if field:
+                where += f" {field}"
         raise curation_error(
             _CODE,
             f"{file} {where}: {error['msg']}.",

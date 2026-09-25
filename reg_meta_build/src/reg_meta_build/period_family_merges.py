@@ -24,13 +24,13 @@ if TYPE_CHECKING:
 class PeriodFamily:
     """One `[[period_family]]` entry: the period columns under
     `provider/register` whose delivery-column name is `family_stem` + a period
-    token merge into one variable slugged `family_stem`, labelled `label`."""
+    token merge into one variable with authored `slug` and `label`."""
 
     provider: str
     register: str
     family_stem: str
     label: str
-    slug: str | None = None
+    slug: str
 
 
 _require_str = functools.partial(
@@ -47,7 +47,8 @@ def load_period_family_merges(path: Path | None) -> tuple[PeriodFamily, ...]:
 
     Load-time validation (all EXIT_CONFIG, actionable): only `[[period_family]]`
     top-level; `register` is a 2-segment `provider/register` FQID; `family_stem` /
-    `label` non-empty strings; each (register, family_stem) unique. Member
+    `label` non-empty strings and an explicit `slug`; each (register, family_stem)
+    unique. Member
     resolution and coding checks belong to the common resolver, not this loader."""
     out: list[PeriodFamily] = []
     seen: set[tuple[str, str, str]] = set()

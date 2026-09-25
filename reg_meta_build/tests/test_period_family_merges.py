@@ -20,7 +20,7 @@ from reg_meta_build.source_coordinates import column_identity, source_register_k
 from reg_meta_build.source_curation import RepresentationDecision
 from reg_meta_build.source_effects import apply_occurrence_cases
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
-from reg_meta_build.source_records import SourceRevision
+from reg_meta_build.source_records import SourceRevision, TemporalScope
 from reg_meta_build.source_representations import resolve_representation_cases
 from reg_meta_build.sources.scb_records import clean_scb_row
 
@@ -59,11 +59,25 @@ def test_load_period_family_parses_explicit_slug(tmp_path: Path) -> None:
     )
 
 
+def test_load_period_family_requires_authored_slug(tmp_path: Path) -> None:
+    root = _write_register(
+        tmp_path,
+        '[[representation.period_family]]\nregister = "scb/lisa"\n'
+        'family_stem = "lonfink"\nlabel = "Lön"\n',
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_period_family_merges(root)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "curation/registers/scb/lisa.toml" in exc.value.message
+    assert "[[representation.period_family]] entry 1" in exc.value.message
+    assert "slug" in exc.value.message
+
+
 def test_load_period_family_rejects_unknown_key(tmp_path: Path) -> None:
     root = _write_register(
         tmp_path,
         '[[representation.period_family]]\nregister = "scb/lisa"\n'
-        'family_stem = "lonfink"\nlabel = "Lön"\nunknown = "x"\n',
+        'family_stem = "lonfink"\nlabel = "Lön"\nslug = "lonfink"\nunknown = "x"\n',
     )
     with pytest.raises(RegMetaError) as exc:
         load_period_family_merges(root)
@@ -75,7 +89,7 @@ def test_load_period_family_rejects_wrong_register(tmp_path: Path) -> None:
     root = _write_register(
         tmp_path,
         '[[representation.period_family]]\nregister = "scb/rams"\n'
-        'family_stem = "lonfink"\nlabel = "Lön"\n',
+        'family_stem = "lonfink"\nlabel = "Lön"\nslug = "lonfink"\n',
     )
     with pytest.raises(RegMetaError) as exc:
         load_period_family_merges(root)
@@ -87,9 +101,9 @@ def test_load_period_family_rejects_duplicate_stem(tmp_path: Path) -> None:
     root = _write_register(
         tmp_path,
         '[[representation.period_family]]\nregister = "scb/lisa"\n'
-        'family_stem = "x"\nlabel = "A"\n\n'
+        'family_stem = "x"\nlabel = "A"\nslug = "x"\n\n'
         '[[representation.period_family]]\nregister = "scb/lisa"\n'
-        'family_stem = "x"\nlabel = "B"\n',
+        'family_stem = "x"\nlabel = "B"\nslug = "x"\n',
     )
     with pytest.raises(RegMetaError) as exc:
         load_period_family_merges(root)
@@ -186,11 +200,36 @@ def test_compile_twelve_months_and_missing_month(tmp_path: Path) -> None:
     assert [issue.code for issue in issues] == ["stale_curation_entry"]
 
 
+def test_month_without_assignable_year_is_stale(tmp_path: Path) -> None:
+    root = _write_register(
+        tmp_path,
+        '[[representation.period_family]]\nregister = "scb/lisa"\n'
+        'family_stem = "lonfink"\nlabel = "Lön per månad"\nslug = "lonfink"\n',
+    )
+    (register,) = load_register_files(root)
+    records = _month_records(12)
+    undated = records[0].model_copy(
+        update={
+            "edition_scope": TemporalScope(kind="unknown", label="year unavailable")
+        }
+    )
+    cases, names, keys, issues = compile_period_families(
+        register, (undated, *records[1:])
+    )
+    assert cases == names == keys == ()
+    assert [issue.code for issue in issues] == ["stale_curation_entry"]
+    assert (
+        "curation/registers/scb/lisa.toml#/representation.period_family/1"
+        in issues[0].detail
+    )
+    assert "LonFinkJan" in issues[0].detail
+
+
 def test_matrix_repr_wires_period_cases_into_selected_scope(tmp_path: Path) -> None:
     root = _write_register(
         tmp_path,
         '[[representation.period_family]]\nregister = "scb/lisa"\n'
-        'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
+        'family_stem = "lonfink"\nlabel = "Lön per månad"\nslug = "lonfink"\n',
     )
     (register,) = load_register_files(root)
     records = _month_records(12)
@@ -230,7 +269,7 @@ def test_pinned_empty_period_coding_pins_are_retired_before_strict_parse(
     root = _write_register(
         tmp_path,
         '[[representation.period_family]]\nregister = "scb/lisa"\n'
-        'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
+        'family_stem = "lonfink"\nlabel = "Lön per månad"\nslug = "lonfink"\n',
     )
     (register,) = load_register_files(root)
     cases, _, _, _ = compile_period_families(register, _month_records(12))

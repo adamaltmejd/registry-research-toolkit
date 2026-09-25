@@ -1073,11 +1073,35 @@ def _stale_partition(ref: str, subject: str, detail: str) -> ResolutionDiagnosti
 
 def _matrix_repr_guard(record: SourceRecord, case_id: str) -> PeerGuard:
     ref = record_ref(record)
+    subject = record.subject.native
     return PeerGuard(
-        guard_id=f"{case_id}:{'/'.join(ref.semantic_record_key)}",
+        guard_id=f"{case_id}:{canonical_sha256((ref.model_dump(mode='json'), subject.model_dump(mode='json')))}",
         source=record.source,
-        native=record.subject.native,
+        native=subject,
         expected_members=(ref,),
+    )
+
+
+def _matrix_repr_guards(
+    records: tuple[SourceRecord, ...], case_id: str
+) -> tuple[PeerGuard, ...]:
+    guards = (_matrix_repr_guard(record, case_id) for record in records)
+    return tuple(
+        sorted(
+            {guard.guard_id: guard for guard in guards}.values(),
+            key=lambda guard: guard.guard_id,
+        )
+    )
+
+
+def _overbroad_matrix_repr(ref: str, subject: str, detail: str) -> ResolutionDiagnostic:
+    return ResolutionDiagnostic(
+        code="overbroad_curation_entry",
+        severity="error",
+        case_id=ref,
+        subject=subject,
+        detail=f"{ref}: {detail}",
+        withheld_output=(ref,),
     )
 
 
@@ -1126,17 +1150,30 @@ def compile_period_families(
         groups: dict[
             tuple[tuple[str | int, ...], int], dict[int, list[SourceRecord]]
         ] = defaultdict(lambda: defaultdict(list))
+        unassigned = []
         for record in records:
             column = _literal_field(record, "column_name")
-            variant = native_variant_key(record)
-            year = _curation_year(record)
-            if column is None or variant is None or year is None:
+            if column is None:
                 continue
             slug = derive_variable_slug(column)
             for token, month in _MONTH_TOKENS.items():
                 if slug == stem + token or slug == stem + "-" + token:
+                    variant = native_variant_key(record)
+                    year = _curation_year(record)
+                    if variant is None or year is None:
+                        unassigned.append(column)
+                        break
                     groups[variant, year][month].append(record)
                     break
+        if unassigned:
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.family_stem,
+                    f"month members lack one variant and annual year: {sorted(set(unassigned))!r}",
+                )
+            )
+            continue
         if not groups:
             diagnostics.append(
                 _stale_partition(ref, entry.family_stem, "no month members")
@@ -1182,9 +1219,7 @@ def compile_period_families(
                 ),
                 coding=True,
             )
-            guards = tuple(
-                _matrix_repr_guard(record, identity_id) for record in members
-            )
+            guards = _matrix_repr_guards(members, identity_id)
             effects = tuple(
                 effect
                 for record in members
@@ -1252,15 +1287,13 @@ def compile_period_families(
                         source_key=family_key,
                         register_key=source_register_key(named_members[0]),
                         expectations=expected,
-                        peer_guards=tuple(
-                            _matrix_repr_guard(record, ref) for record in named_members
-                        ),
+                        peer_guards=_matrix_repr_guards(tuple(named_members), ref),
                     ),
                     naming=SlugEntry(
                         kind="variable",
                         provider=register.register_info.provider,
                         source_id=ref,
-                        slug=entry.slug or stem,
+                        slug=entry.slug,
                     ),
                     contributors=(),
                 )
@@ -1310,11 +1343,22 @@ def compile_alias_windows(
             and name.naming.slug == entry.variant
             and name.naming.provider == provider
         ]
+        variable_keys = {name.target.source_key for name in variable_names}
+        variant_keys = {name.target.source_key for name in variant_names}
+        if len(variable_keys) > 1 or len(variant_keys) > 1:
+            diagnostics.append(
+                _overbroad_matrix_repr(
+                    ref,
+                    entry.variable,
+                    "variable FQID or variant slug resolves to multiple compiled keys",
+                )
+            )
+            continue
         if (
             len(parts) != 3
             or parts[:2] != [provider, register_name]
-            or len(variable_names) != 1
-            or len(variant_names) != 1
+            or len(variable_keys) != 1
+            or len(variant_keys) != 1
         ):
             diagnostics.append(
                 _stale_partition(
@@ -1324,10 +1368,11 @@ def compile_alias_windows(
                 )
             )
             continue
-        variable_name = variable_names[0]
-        variable_key = variable_name.target.source_key
-        variant_key = variant_names[0].target.source_key
-        expected_refs = {item.ref for item in variable_name.target.expectations}
+        variable_key = next(iter(variable_keys))
+        variant_key = next(iter(variant_keys))
+        expected_refs = {
+            item.ref for name in variable_names for item in name.target.expectations
+        }
         selected = tuple(
             record
             for record in records
@@ -1347,6 +1392,28 @@ def compile_alias_windows(
                     ref,
                     entry.variable,
                     "source editions have no exact compiled variable members",
+                )
+            )
+            continue
+        targets_by_edition: dict[
+            str, set[tuple[SourceRecordRef, tuple[str | int, ...] | None, str | None]]
+        ] = defaultdict(set)
+        for record in selected:
+            edition = _edition_label(record)
+            if edition is not None:
+                targets_by_edition[edition].add(
+                    (
+                        record_ref(record),
+                        native_variable_key(record),
+                        _literal_field(record, "column_name"),
+                    )
+                )
+        if any(len(targets) != 1 for targets in targets_by_edition.values()):
+            diagnostics.append(
+                _overbroad_matrix_repr(
+                    ref,
+                    entry.variable,
+                    "source edition matches multiple record or column targets",
                 )
             )
             continue
@@ -1373,9 +1440,7 @@ def compile_alias_windows(
             CurationCase(
                 case_id=ref,
                 targets=expected,
-                peer_guards=tuple(
-                    _matrix_repr_guard(record, ref) for record in selected
-                ),
+                peer_guards=_matrix_repr_guards(selected, ref),
                 decision=AliasWindowDecision(
                     reviewed=True,
                     variable_key=variable_key,

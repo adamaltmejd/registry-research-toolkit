@@ -1147,16 +1147,19 @@ slug = "lone-eller-foretagarinkomst-manad"
 register = "scb/lisa"
 family_stem = "agi1lonfink"
 label = "Löne- eller företagarinkomst per månad (största förvärvskällan)"
+slug = "agi1lonfink"
 
 [[representation.period_family]]
 register = "scb/lisa"
 family_stem = "agi2lonfink"
 label = "Löne- eller företagarinkomst per månad (näst största förvärvskällan)"
+slug = "agi2lonfink"
 
 [[representation.period_family]]
 register = "scb/lisa"
 family_stem = "agi3lonfink"
 label = "Löne- eller företagarinkomst per månad (tredje största förvärvskällan)"
+slug = "agi3lonfink"
 
 # Source: archive/.../2026-09-16-goal-run/convert_relation_owned_partitions.py:33.
 # v18: accepted-column-partitions:scb-registerinformation:34.63 = 35 identity

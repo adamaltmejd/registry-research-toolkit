@@ -406,7 +406,7 @@ def test_repo_period_family_merges_parses() -> None:
     families = load_period_family_merges(_CURATION)
     assert families  # the #319 LISA monthly families ship with the repo
     assert len(families) == 8
-    assert sum(family.slug is not None for family in families) == 3
+    assert all(family.slug for family in families)
     # Member RESOLUTION (12 month columns exist for the stem) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.
     assert all(

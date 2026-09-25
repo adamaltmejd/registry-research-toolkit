@@ -24,6 +24,8 @@ from reg_meta_build.fqid_slugs import SlugEntry
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from reg_meta_build.source_records import SourceRecord
+
 
 def _write_register(tmp_path: Path, entry: str) -> Path:
     root = tmp_path / "curation"
@@ -139,3 +141,118 @@ def test_alias_window_uses_named_keys_and_source_edition(tmp_path: Path) -> None
     assert cases[0].decision.valid_from == "2018-01-01"
     assert cases[0].decision.valid_to == "2018-12-31"
     assert cases[0].decision.variable_key == native_variable_key(record)
+
+
+def _alias_record(cvid: int) -> SourceRecord:
+    revision = SourceRevision.create(
+        dataset="scb-registerinformation",
+        publisher="SCB",
+        purpose="test",
+        upstream_revision="1",
+        artifact_path="rows.csv",
+        artifact_size=1,
+        artifact_sha256="a" * 64,
+    )
+    header = REGISTERINFORMATION_HEADER.split("|")
+    return clean_scb_row(
+        header,
+        cvid,
+        {
+            name: (True, value, value)
+            for name, value in zip(
+                header,
+                _var_row(colname="E_AWBUY", cvid=cvid, var_id=5, year="2018").split(
+                    "|"
+                ),
+                strict=True,
+            )
+        },
+        revision,
+    ).record
+
+
+def _alias_names(record: SourceRecord) -> tuple[NamingDeclaration, ...]:
+    register_key = source_register_key(record)
+    return tuple(
+        NamingDeclaration(
+            target=NativeNamingTarget(
+                kind=kind,
+                provider="scb",
+                source_key=key,
+                register_key=register_key if kind != "register" else None,
+            ),
+            naming=SlugEntry(kind=kind, provider="scb", source_id=source_id, slug=slug),
+            contributors=(),
+        )
+        for kind, key, source_id, slug in (
+            ("register", register_key, "1", "testreg"),
+            ("register_variant", native_variant_key(record), "1.10", "test-variant"),
+            ("variable", native_variable_key(record), "1.5", "test-variable"),
+        )
+    )
+
+
+def test_alias_window_with_two_record_targets_is_overbroad(tmp_path: Path) -> None:
+    root = _write_register(tmp_path, _entry())
+    (register,) = load_register_files(root)
+    first, second = _alias_record(100), _alias_record(101)
+    assert first.subject.native != second.subject.native
+    cases, issues = compile_alias_windows(
+        register, (first, second), _alias_names(first)
+    )
+    assert cases == ()
+    assert [issue.code for issue in issues] == ["overbroad_curation_entry"]
+    assert (
+        "curation/registers/scb/testreg.toml#/representation.alias_window/1"
+        in issues[0].detail
+    )
+
+
+def test_alias_window_deduplicates_identical_guard_subjects(tmp_path: Path) -> None:
+    root = _write_register(tmp_path, _entry())
+    (register,) = load_register_files(root)
+    record = _alias_record(100)
+    cases, issues = compile_alias_windows(
+        register, (record, record), _alias_names(record)
+    )
+    assert issues == ()
+    assert len(cases) == 1
+    assert len(cases[0].peer_guards) == 1
+
+
+def test_alias_window_guards_same_ref_under_distinct_subjects(tmp_path: Path) -> None:
+    root = _write_register(tmp_path, _entry())
+    (register,) = load_register_files(root)
+    record = _alias_record(100)
+    other_native = record.subject.native.model_copy(update={"member_id": 101})
+    other = record.model_copy(
+        update={"subject": record.subject.model_copy(update={"native": other_native})}
+    )
+    cases, issues = compile_alias_windows(
+        register, (record, other), _alias_names(record)
+    )
+    assert issues == ()
+    assert len(cases) == 1
+    assert len({guard.guard_id for guard in cases[0].peer_guards}) == 2
+
+
+def test_alias_window_with_two_compiled_variable_keys_is_overbroad(
+    tmp_path: Path,
+) -> None:
+    root = _write_register(tmp_path, _entry())
+    (register,) = load_register_files(root)
+    record = _alias_record(100)
+    names = _alias_names(record)
+    variable_key = native_variable_key(record)
+    assert variable_key is not None
+    second_key = (*variable_key, "split")
+    second_variable = names[-1].model_copy(
+        update={
+            "target": names[-1].target.model_copy(update={"source_key": second_key})
+        }
+    )
+    cases, issues = compile_alias_windows(
+        register, (record,), (*names, second_variable)
+    )
+    assert cases == ()
+    assert [issue.code for issue in issues] == ["overbroad_curation_entry"]

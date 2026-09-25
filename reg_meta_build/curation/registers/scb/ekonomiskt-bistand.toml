@@ -7,11 +7,13 @@ native_id = "22"
 register = "scb/ekonomiskt-bistand"
 family_stem = "ibel"
 label = "Introduktionsersättning per månad"
+slug = "ibel"
 
 [[representation.period_family]]
 register = "scb/ekonomiskt-bistand"
 family_stem = "sbel"
 label = "Socialbidrag per månad"
+slug = "sbel"
 
 [[variant]]
 native_id = "22.73"
