@@ -221,8 +221,8 @@ def _case_family(case_id: str) -> str:
     return owners[0]
 
 
-def _naming_family(declaration: Any) -> str:
-    source_key = declaration.target.source_key
+def _naming_family(target: Any) -> str:
+    source_key = target.source_key
     markers = {
         "accepted-partition": "identity",
         "declared-column": "errata",
@@ -234,7 +234,7 @@ def _naming_family(declaration: Any) -> str:
     for part in source_key:
         if part in markers:
             return markers[part]
-    if declaration.target.provider not in {"scb", "sos"}:
+    if target.provider not in {"scb", "sos"}:
         return "thin_provider"
     return "naming"
 
@@ -269,7 +269,7 @@ def merge_scope(
         case for case in scope.cases if _case_family(case.case_id) not in COMPILED
     )
     naming = tuple(
-        item for item in scope.naming if _naming_family(item) not in COMPILED
+        item for item in scope.naming if _naming_family(item.target) not in COMPILED
     )
     gaps = tuple(
         gap for gap in scope.unapplied_curation if _gap_family(gap) not in COMPILED
@@ -277,8 +277,12 @@ def merge_scope(
     # A null key is the unsplit base of a partitioned identity. It has no naming
     # declaration, but remains stored until identity is compiled.
     naming_owners = {
-        item.target.source_key: _naming_family(item) for item in scope.naming
+        item.target.source_key: _naming_family(item.target) for item in scope.naming
     }
+    naming_owners.update(
+        (item.family.source_key, _naming_family(item.family))
+        for item in scope.naming_ambiguities
+    )
     provider_keys = []
     for item in scope.provider_keys:
         source_key, value = item
