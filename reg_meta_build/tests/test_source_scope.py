@@ -91,13 +91,20 @@ REVISION = SourceRevision.create(
 )
 
 
-def record(member=1, variable=5, variant=2, column="VALUE", year="2020"):
+def record(
+    member=1,
+    variable=5,
+    variant=2,
+    column="VALUE",
+    year="2020",
+    register_id=1,
+):
     header = REGISTERINFORMATION_HEADER.split("|")
     values = _var_row(
         cvid=member,
         var_id=variable,
         colname=column,
-        register=("TEST", 1, variant),
+        register=("TEST", register_id, variant),
         regver_id=int(year),
         year=year,
     ).split("|")
@@ -136,6 +143,9 @@ def names(records):
     for (kind, key), members in grouped.items():
         first = members[0]
         member_key = str(key[-1])
+        register_key = source_register_key(first)
+        assert register_key is not None
+        register_id = str(register_key[-1])
         result.append(
             NamingDeclaration(
                 target=NativeNamingTarget(
@@ -150,7 +160,9 @@ def names(records):
                 naming=SlugEntry(
                     kind=kind,
                     provider="scb",
-                    source_id="1" if kind == "register" else f"1.{member_key}",
+                    source_id=register_id
+                    if kind == "register"
+                    else f"{register_id}.{member_key}",
                     slug={
                         "register": "example",
                         "register_variant": f"people-{member_key}",
@@ -864,13 +876,16 @@ def test_coding_is_checked_despite_unresolved_catalog_identity():
     assert [d.code for d in result.diagnostics] == ["unresolved_catalog_identity"]
 
 
-def test_native_coding_column_key_follows_checked_partition():
-    item = record(column="VALUE")
+@pytest.mark.parametrize("register_id", [1, 258])
+def test_native_coding_column_key_follows_checked_partition(register_id: int):
+    item = record(column="VALUE", register_id=register_id)
     native = native_variable_key(item)
     column = native_column_key(item)
     assert native is not None and column is not None
     partition = convert_column_partitions(
-        (item,), source_id="1.5", split_ids=("1.5.value",)
+        (item,),
+        source_id=f"{register_id}.5",
+        split_ids=(f"{register_id}.5.value",),
     )
     assert partition.case is not None
     split = partition.bindings[0].target.source_key
@@ -894,7 +909,7 @@ def test_native_coding_column_key_follows_checked_partition():
         naming=SlugEntry(
             kind="variable",
             provider="scb",
-            source_id="1.5.value",
+            source_id=f"{register_id}.5.value",
             slug="value",
         ),
         contributors=(),
@@ -902,12 +917,20 @@ def test_native_coding_column_key_follows_checked_partition():
     naming = tuple(
         item for item in names((item,)) if item.target.kind != "variable"
     ) + (split_name,)
-    result = resolve(
-        (item,),
-        cases=(partition.case, coding),
-        naming=naming,
-        provider_keys={split: "5.value"},
-    )
+
+    def run():
+        return resolve(
+            (item,),
+            cases=(partition.case, coding),
+            naming=naming,
+            provider_keys={split: "5.value"},
+        )
+
+    if register_id != 258:
+        with pytest.raises(ValueError, match="unconverted effective identity"):
+            run()
+        return
+    result = run()
     assert {item.case_id: item.status for item in result.evaluations} == {
         partition.case.case_id: "applicable",
         coding.case_id: "applicable",

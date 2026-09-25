@@ -1236,16 +1236,36 @@ def test_thin_copies_coding_from_its_own_declared_list(monkeypatch):
     assert addition.fields.value_set_declared.value == "own-list"
 
 
-def _partition_scope(records: tuple[SourceRecord, ...]) -> ScopeDeclarations:
+def _partition_scope(
+    records: tuple[SourceRecord, ...], *, accepted: bool = True
+) -> ScopeDeclarations:
     first = records[0]
     register = source_register_key(first)
     assert register is not None
     provider = first.subject.provider
-    register_id = "1" if provider == "scb" else "5891427617861710725"
+    register_id = str(register[-1]) if provider == "scb" else "5891427617861710725"
     slug = "sample" if provider == "scb" else "par"
     return ScopeDeclarations(
         source=first.source,
         register_key=None,
+        cases=(
+            (
+                CurationCase(
+                    case_id=f"accepted-column-partitions:{first.source}:{register_id}.{first.subject.variable.native_id}",
+                    targets=(),
+                    decision=AcknowledgeDecision(
+                        code="fixture",
+                        subject="scb/sample/answer",
+                        refs=(),
+                        register_key=register,
+                        reason="Fixture acceptance boundary",
+                        evidence="fixture",
+                    ),
+                ),
+            )
+            if provider == "scb" and accepted
+            else ()
+        ),
         naming=(
             NamingDeclaration(
                 target=NativeNamingTarget(
@@ -1266,14 +1286,18 @@ def _partition_scope(records: tuple[SourceRecord, ...]) -> ScopeDeclarations:
 
 
 def _compile_partition_fixture(
-    root: Path, records: tuple[SourceRecord, ...], *, shuffled: bool = False
+    root: Path,
+    records: tuple[SourceRecord, ...],
+    *,
+    shuffled: bool = False,
+    accepted: bool = True,
 ):
     native = native_variable_key(records[0])
     assert native is not None
     reader = SimpleNamespace(
         iter_native_families=lambda source: iter(((native, records),))
     )
-    scope = _partition_scope(records)
+    scope = _partition_scope(records, accepted=accepted)
     tree = load_curation_tree(root)
     if shuffled:
         tree = replace(tree, registers=tuple(reversed(tree.registers)))
@@ -1289,7 +1313,10 @@ def _compile_partition_fixture(
 
 
 def _scb_partition_records(
-    columns: tuple[str, ...], *, variants: tuple[int, ...] | None = None
+    columns: tuple[str, ...],
+    *,
+    variants: tuple[int, ...] | None = None,
+    register_id: int = 1,
 ):
     header = REGISTERINFORMATION_HEADER.split("|")
     revision = _revision("scb-registerinformation")
@@ -1299,7 +1326,11 @@ def _scb_partition_records(
             cvid=20 + index,
             var_id=5,
             colname=column,
-            register=("TEST", 1, (variants or (2,) * len(columns))[index - 1]),
+            register=(
+                "TEST",
+                register_id,
+                (variants or (2,) * len(columns))[index - 1],
+            ),
         ).split("|")
         cells = {
             name: (True, value, value) for name, value in zip(header, row, strict=True)
@@ -1387,6 +1418,65 @@ def test_unassigned_and_partial_suffix_keep_base_identity(tmp_path: Path):
         apply_occurrence_cases(records, cases[key]).occurrences[1].variable_key
         == native
     )
+
+
+def test_unaccepted_scb_partition_is_withheld_except_register_258(tmp_path: Path):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+        '[[identity.partition]]\nvariable = "1.5"\n'
+        'columns = { ANSWER = "1.5.answer" }\n'
+        'unassigned_columns = ["LEFT"]\ncolumns_ref = "fixture map"\n',
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"))
+    compiled, key, native = _compile_partition_fixture(root, records, accepted=False)
+    cases, naming, keys, ambiguities, bases, issues = compiled
+    assert not cases.get(key)
+    assert not naming[key]
+    assert not keys[key]
+    assert not ambiguities.get(key)
+    assert native not in bases.get(key, set())
+    assert not issues
+
+    path = root / "registers" / "scb" / "sample.toml"
+    path.write_text(
+        path.read_text()
+        .replace('native_id = "1"', 'native_id = "258"')
+        .replace('"1.5', '"258.5'),
+        encoding="utf-8",
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"), register_id=258)
+    compiled, key, _ = _compile_partition_fixture(root, records, accepted=False)
+    assert len(compiled[0][key]) == 1
+    assert len(compiled[1][key]) == 1
+
+
+def test_withheld_family_keeps_its_existing_ambiguity_attribution(tmp_path: Path):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+        '[[variable]]\nnative_id = "1.5.unknown"\nslug = "unknown"\n',
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"))
+    accepted, key, native = _compile_partition_fixture(root, records)
+    stored_ambiguity = accepted[3][key][0]
+    scope = _partition_scope(records, accepted=False).model_copy(
+        update={"naming_ambiguities": (stored_ambiguity,)}
+    )
+    reader = SimpleNamespace(
+        iter_native_families=lambda source: iter(((native, records),))
+    )
+    compiled = compile_partitions(
+        load_curation_tree(root),
+        cast("Any", SimpleNamespace(records=reader)),
+        (scope,),
+    )
+    assert not compiled[0].get(key)
+    assert not compiled[1][key]
+    assert compiled[3][key][0].candidate_columns == stored_ambiguity.candidate_columns
+    assert native not in compiled[4].get(key, set())
 
 
 def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
@@ -1483,6 +1573,21 @@ def test_sos_type_split_and_name_rename(tmp_path: Path, rename: bool):
     assert all(item.variable_key != native for item in corrected)
     if rename:
         assert corrected[0].fields.column_name.value == "INVARN9"
+        reader = SimpleNamespace(
+            iter_native_families=lambda source: iter(((native, records),)),
+            iter_records=lambda **kwargs: iter(records),
+            iter_register_slices=lambda source, wanted: iter(((None, records),)),
+        )
+        names = compile_native_naming(
+            load_curation_tree(root),
+            cast("Any", SimpleNamespace(records=reader)),
+            (_partition_scope(records),),
+            subset=True,
+        )
+        assert not any(
+            issue.code == "stale_curation_entry" and "INVARN9" in issue.detail
+            for issue in names[3]
+        )
     else:
         assert corrected[0].variable_key != corrected[1].variable_key
     assert all(value is not None for _, value in keys[key])

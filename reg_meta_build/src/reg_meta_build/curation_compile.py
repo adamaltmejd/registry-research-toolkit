@@ -1051,6 +1051,41 @@ def _literal_field(record: SourceRecord, name: str) -> str | None:
     )
 
 
+def _partition_ambiguity(
+    native: tuple[str | int, ...],
+    records: tuple[SourceRecord, ...],
+    entries: tuple[AcceptedNamingEntry, ...],
+    split_ids: tuple[str, ...],
+    expectations: tuple[Any, ...],
+    guard: PeerGuard,
+) -> NamingAmbiguity:
+    columns = {
+        column
+        for record in records
+        if (column := _literal_field(record, "column_name")) is not None
+    }
+    return NamingAmbiguity(
+        family=NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=native,
+            register_key=native[:5],
+            expectations=expectations,
+            peer_guards=(guard,),
+        ),
+        entries=entries,
+        candidate_columns=tuple(
+            sorted(
+                (split, column)
+                for split in split_ids
+                for column in columns
+                if derive_variable_slug(column) == split.rsplit(".", 1)[1]
+            )
+        ),
+        reason="Some accepted split keys lack exact literal ownership.",
+    )
+
+
 def compile_partitions(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -1138,8 +1173,21 @@ def compile_partitions(
             ):
                 continue
             seen.add((source, native[:5], source_id))
+            # The pinned selection is the acceptance boundary for earlier SCB
+            # registers. Register 258's maps are the new acceptance work here.
+            previously_accepted = any(
+                case.case_id == f"accepted-column-partitions:{source}:{source_id}"
+                for case in scope_map[scope_key].cases
+            )
+            previously_ambiguous = any(
+                item.family.source_key == native
+                for item in scope_map[scope_key].naming_ambiguities
+            )
             expectations = capture_expectations(
-                records, fields=("column_name", "name", "data_type")
+                records,
+                fields=("column_name",)
+                if native[1] == "scb"
+                else ("column_name", "name", "data_type"),
             )
             guard = PeerGuard(
                 guard_id=f"accepted-partitions:{source}:{source_id}",
@@ -1151,6 +1199,8 @@ def compile_partitions(
                 expected_members=tuple(item.ref for item in expectations),
             )
             if native[1] == "scb":
+                if native[4] != 258 and not previously_accepted and not entries:
+                    continue
                 if not entries:
                     for i, _ in partitions:
                         diagnostics.append(
@@ -1169,8 +1219,16 @@ def compile_partitions(
                             )
                         )
                     continue
-                split_bases[scope_key].add(native)
                 split_ids = tuple(sorted({item.entry.source_id for item in entries}))
+                if native[4] != 258 and not previously_accepted:
+                    if previously_ambiguous:
+                        ambiguities[scope_key].append(
+                            _partition_ambiguity(
+                                native, records, entries, split_ids, expectations, guard
+                            )
+                        )
+                    continue
+                split_bases[scope_key].add(native)
                 scoped = {}
                 for i, owner in scoped_entries:
                     ref = f"{register.source_file}#/identity.column_owner/{i}"
@@ -1238,32 +1296,9 @@ def compile_partitions(
                     item for item in entries if item.entry.source_id in bound
                 )
                 if bound != set(split_ids):
-                    columns = {
-                        column
-                        for record in records
-                        if (column := _literal_field(record, "column_name")) is not None
-                    }
-                    candidates = tuple(
-                        sorted(
-                            (split, column)
-                            for split in split_ids
-                            for column in columns
-                            if derive_variable_slug(column) == split.rsplit(".", 1)[1]
-                        )
-                    )
                     ambiguities[scope_key].append(
-                        NamingAmbiguity(
-                            family=NativeNamingTarget(
-                                kind="variable",
-                                provider="scb",
-                                source_key=native,
-                                register_key=native[:5],
-                                expectations=expectations,
-                                peer_guards=(guard,),
-                            ),
-                            entries=entries,
-                            candidate_columns=candidates,
-                            reason="Some accepted split keys lack exact literal ownership.",
+                        _partition_ambiguity(
+                            native, records, entries, split_ids, expectations, guard
                         )
                     )
             elif native[1] == "sos":
@@ -1520,6 +1555,18 @@ def compile_partitions(
     )
 
 
+def _partition_owned_naming_entry(
+    register: RegisterCuration, entry: AcceptedNamingEntry
+) -> bool:
+    if entry.entry.kind != "variable":
+        return False
+    source_id = entry.entry.source_id
+    return len(source_id.split(".")) == 3 or any(
+        source_id == f"{register.register_info.native_id}.{rename.column}"
+        for rename in register.identity.rename
+    )
+
+
 def compile_native_naming(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -1709,10 +1756,7 @@ def compile_native_naming(
             },
         )
         for entry, where in _register_naming_entries(tree, register):
-            if (
-                entry.entry.kind == "variable"
-                and len(entry.entry.source_id.split(".")) == 3
-            ):
+            if _partition_owned_naming_entry(register, entry):
                 continue
             ref = f"{entry.revision.artifact_path} {where}"
             statuses["entries_read"].append(ref)
@@ -1754,11 +1798,8 @@ def compile_native_naming(
                 },
             )
             for entry, where in _register_naming_entries(tree, register):
-                if (
-                    entry.entry.kind == "variable"
-                    and len(entry.entry.source_id.split(".")) == 3
-                ):
-                    continue  # Split naming is owned by identity until child 08.
+                if _partition_owned_naming_entry(register, entry):
+                    continue
                 ref = f"{entry.revision.artifact_path} {where}"
                 statuses["entries_read"].append(ref)
                 entries.append(entry)

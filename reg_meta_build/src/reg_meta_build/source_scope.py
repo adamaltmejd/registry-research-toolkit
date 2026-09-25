@@ -322,9 +322,17 @@ def resolve_source_scope(
             continue
         groups[occurrence.variable_key].append(occurrence)
         if occurrence.column_key is not None:
-            for source_record in occurrence.source_records:
-                if (original := native_column_key(source_record)) is not None:
-                    original_columns[original].add(occurrence.column_key)
+            # Only 258 gains new accepted partitions in this compilation step.
+            # Earlier registers keep their stored coding/classification outcome.
+            if (
+                len(occurrence.variable_key) >= 10
+                and occurrence.variable_key[1] == "scb"
+                and occurrence.variable_key[4] == 258
+                and occurrence.variable_key[-2] == "accepted-partition"
+            ):
+                for source_record in occurrence.source_records:
+                    if (original := native_column_key(source_record)) is not None:
+                        original_columns[original].add(occurrence.column_key)
             owner = column_owners.setdefault(
                 occurrence.column_key, occurrence.variable_key
             )
