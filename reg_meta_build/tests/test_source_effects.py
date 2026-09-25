@@ -10,12 +10,6 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.db import open_db
 from reg_meta_build.catalog_resolution import resolve_parents
-from reg_meta_build.convert_errata import (
-    ErrataEditionBinding,
-    capture_expectations,
-    convert_column_entry,
-    convert_delivered_entry,
-)
 from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
@@ -24,7 +18,13 @@ from reg_meta_build.resolved_catalog import (
     ResolvedVariant,
     write_resolved_catalog,
 )
-from reg_meta_build.scb_errata import ErrataColumn, ErrataDelivered
+from reg_meta_build.scb_errata import (
+    ErrataColumn,
+    ErrataDelivered,
+    ErrataEditionBinding,
+    convert_column_entry,
+    convert_delivered_entry,
+)
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_curation import (
@@ -41,6 +41,7 @@ from reg_meta_build.source_curation import (
     RecordExpectation,
     RecordProjection,
     SearchAliasDecision,
+    capture_expectations,
 )
 from reg_meta_build.source_effects import (
     apply_occurrence_cases,

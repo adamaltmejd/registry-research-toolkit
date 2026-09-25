@@ -11,7 +11,6 @@ from pydantic import ValidationError
 from reg_meta.catalog import Catalog
 from reg_meta.db import open_db
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
-from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedVariant,
@@ -32,8 +31,12 @@ from reg_meta_build.source_curation import (
     OccurrenceCorrectionDecision,
     PeerGuard,
     RepresentationDecision,
+    capture_expectations,
 )
-from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
+from reg_meta_build.source_effects import (
+    apply_occurrence_cases,
+    record_ref,
+)
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (

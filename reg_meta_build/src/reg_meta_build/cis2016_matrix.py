@@ -27,7 +27,6 @@ from pydantic import (
 from reg_meta.fqid import derive_variable_slug
 
 from ._curation import curation_error
-from .convert_errata import capture_expectations
 from .fqid_slugs import SlugEntry
 from .source_coding import copied_coding_fingerprints
 from .source_coordinates import source_register_key
@@ -40,6 +39,7 @@ from .source_curation import (
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
+    capture_expectations,
 )
 from .source_naming import NamingDeclaration, NativeNamingTarget
 from .source_occurrences import source_occurrence

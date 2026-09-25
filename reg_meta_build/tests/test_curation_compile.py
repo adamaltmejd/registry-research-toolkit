@@ -20,6 +20,8 @@ from reg_meta_build.curation_compile import (
     _gap_family,
     _naming_family,
     compile_curation,
+    compile_enrichment,
+    compile_errata,
     compile_native_naming,
     compile_partitions,
     finalize_classification_bindings,
@@ -31,17 +33,26 @@ from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.id import mint
 from reg_meta_build.pipeline import PipelineSelection, ScopeDeclarations
 from reg_meta_build.resolved_catalog import ResolvedVariant
+from reg_meta_build.scb_errata import ErrataVersion, edition_bindings
 from reg_meta_build.source_coding import CodeListClaim, copied_coding_fingerprints
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
+    CheckedFieldChange,
     CheckedVariantAssignment,
     CuratedOccurrenceAddition,
     CurationCase,
     OccurrenceCorrectionDecision,
+    PeerGuard,
+    SearchAliasDecision,
+    capture_expectations,
 )
-from reg_meta_build.source_effects import apply_occurrence_cases
+from reg_meta_build.source_effects import (
+    apply_occurrence_cases,
+    record_ref,
+)
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
+from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
@@ -556,12 +567,11 @@ def test_declared_column_pin_is_not_evaluated_by_native_naming(tmp_path, auto_fi
     tree = load_curation_tree(root)
     compiled = compile_curation(tree, _prepared(), (scope,), subset=True)
     ref = f"curation/registers/scb/{register_file.name} [[variable]] entry 1"
-    assert not [
+    assert [
         issue for issue in compiled.diagnostics if issue.code == "stale_curation_entry"
     ]
-    assert compiled.report["scb/sample"]["not_evaluated"] == [ref]
-    assert compiled.report["scb/sample"]["stale"] == []
-    assert declared_column in merge_scope(scope, compiled).naming
+    assert compiled.report["scb/sample"]["stale"] == [ref]
+    assert declared_column not in merge_scope(scope, compiled).naming
 
     register_file.write_text(
         register_file.read_text()
@@ -570,9 +580,10 @@ def test_declared_column_pin_is_not_evaluated_by_native_naming(tmp_path, auto_fi
     compiled = compile_curation(
         load_curation_tree(root), _prepared(), (scope,), subset=True
     )
-    assert compiled.report["scb/sample"]["not_evaluated"] == [ref]
+    assert compiled.report["scb/sample"]["stale"][0] == ref
     assert [(issue.code, issue.subject) for issue in compiled.diagnostics] == [
-        ("stale_curation_entry", "1.Missing")
+        ("stale_curation_entry", "1.ColumnName"),
+        ("stale_curation_entry", "1.Missing"),
     ]
 
 
@@ -873,14 +884,13 @@ def test_stored_v18b_case_and_gap_families_are_owned():
         "accepted-alias-window:5:identity": "matrix_repr",
         f"accepted-classification-seed:{'a' * 64}": "classification_bindings",
         "scb_errata.toml/column/1": "errata",
-        "accepted-errata:sos-declared-flags": "errata",
         "accepted-authored:Folkhalsomyndigheten/fohm.toml:nvr:dosnummer": "sos_thin",
-        "delivery_enrichment.generated.toml/description/1": "annotations",
+        "delivery_enrichment.generated.toml/description/1": "enrichment",
         "accepted-sos-routes:lss:ALDER": "sos_thin",
         "scb_errata.toml/delivered/1": "errata",
         "accepted-classification-override:1:0": "classification_bindings",
         "accepted-codeless:46:0": "coding",
-        "delivery_enrichment.generated.toml/alias/1": "annotations",
+        "delivery_enrichment.generated.toml/alias/1": "enrichment",
         "accepted-period-family:5:identity": "matrix_repr",
         "accepted-sos-identity:bu:FOD_DATUMN": "partition",
         "accepted-cis2014-answers": "matrix_repr",
@@ -932,7 +942,7 @@ def test_stored_v18b_case_and_gap_families_are_owned():
         == "matrix_repr"
     )
     gaps = {
-        "curation/delivery_enrichment.generated.toml": "annotations",
+        "curation/delivery_enrichment.generated.toml": "enrichment",
         "curation/classifications.toml": "classification_bindings",
         "curation/codeless_overlap.toml": "coding",
     }
@@ -1360,6 +1370,390 @@ def _scb_partition_records(
         }
         records.append(clean_scb_row(header, index, cells, revision).record)
     return tuple(records)
+
+
+def _errata_record(
+    *,
+    column: str,
+    year: str,
+    variable: int = 5,
+    member: int = 20,
+    variant: int = 2,
+) -> SourceRecord:
+    header = REGISTERINFORMATION_HEADER.split("|")
+    row = _var_row(
+        colname=column,
+        cvid=member,
+        var_id=variable,
+        year=year,
+        regver_id=int(year),
+        register=("TEST", 1, variant),
+    ).split("|")
+    cells = {
+        name: (True, value, value) for name, value in zip(header, row, strict=True)
+    }
+    return clean_scb_row(
+        header, member, cells, _revision("scb-registerinformation")
+    ).record
+
+
+def _errata_fixture(tmp_path: Path, records: tuple[SourceRecord, ...], fragment: str):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/scb/sample.toml"
+    path.write_text(
+        path.read_text()
+        + '\n[[variant]]\nnative_id = "1.2"\nslug = "people"\n'
+        + fragment
+        + (
+            '\n[[variable]]\nnative_id = "1.NewCol"\nslug = "new-col"\n'
+            if "[[errata.column]]" in fragment
+            else ""
+        ),
+        encoding="utf-8",
+    )
+    scope = _partition_scope(records)
+    native = source_register_key(records[0])
+    assert native is not None
+    reader = SimpleNamespace(
+        iter_register_slices=lambda source, registers: iter(((native, records),))
+    )
+    return load_curation_tree(root), cast("Any", SimpleNamespace(records=reader)), scope
+
+
+_DELIVERED = (
+    '\n[[errata.delivered]]\nvariant = "people"\ncolumn = "A"\n'
+    'versions = ["2021"]\nevidence = "accepted delivery"\nnoted = "2026-09-25"\n'
+)
+
+
+def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):
+    donor = _errata_record(column="A", year="2020")
+    other = _errata_record(column="B", year="2021", variable=6, member=21)
+    tree, prepared, scope = _errata_fixture(tmp_path, (donor, other), _DELIVERED)
+    cases, _, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert diagnostics == ()
+    case = cases[(scope.source, scope.register_key)][0]
+    assert isinstance(case.decision.effects[0], CuratedOccurrenceAddition)
+    assert case.decision.effects[0].edition_key == source_occurrence(other).edition_key
+
+    blank = _errata_record(column="", year="2021", member=22)
+    tree, prepared, scope = _errata_fixture(
+        tmp_path / "blank", (donor, blank), _DELIVERED
+    )
+    cases, _, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert diagnostics == ()
+    assert isinstance(
+        cases[(scope.source, scope.register_key)][0].decision.effects[0],
+        CheckedFieldChange,
+    )
+
+
+@pytest.mark.parametrize(
+    "records,code",
+    [
+        ((("B", "2020", 5, 20), ("B", "2021", 6, 21)), "stale_curation_entry"),
+        (
+            (("A", "2020", 5, 20), ("A", "2020", 6, 21), ("B", "2021", 7, 22)),
+            "overbroad_curation_entry",
+        ),
+        ((("A", "2020", 5, 20), ("A", "2021", 5, 21)), "stale_curation_entry"),
+        (
+            (("A", "2020", 5, 20), ("", "2021", 5, 21), ("", "2021", 5, 22)),
+            "overbroad_curation_entry",
+        ),
+        ((("A", "2020", 5, 20), ("B", "2021", 5, 21)), "stale_curation_entry"),
+    ],
+)
+def test_compiled_errata_blockers_are_errors(tmp_path: Path, records, code):
+    members = tuple(
+        _errata_record(column=c, year=y, variable=v, member=m) for c, y, v, m in records
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, members, _DELIVERED)
+    cases, _, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert cases == {}
+    assert [item.code for item in diagnostics] == [code]
+
+
+def test_compiled_errata_missing_edition_is_stale(tmp_path: Path):
+    donor = _errata_record(column="A", year="2020")
+    tree, prepared, scope = _errata_fixture(tmp_path, (donor,), _DELIVERED)
+    cases, _, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert cases == {}
+    assert diagnostics[0].code == "stale_curation_entry"
+    assert "2021" in diagnostics[0].detail
+
+
+def test_compiled_delivered_addition_uses_unique_literal_split(tmp_path: Path):
+    donor = _errata_record(column="A", year="2020")
+    other = _errata_record(column="B", year="2021", variable=6, member=21)
+    tree, prepared, scope = _errata_fixture(tmp_path, (donor, other), _DELIVERED)
+    native = native_variable_key(donor)
+    register = source_register_key(donor)
+    assert native is not None and register is not None
+    split = (*native, "accepted-partition", "a")
+    declaration = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=split,
+            register_key=register,
+            expectations=capture_expectations((donor,), fields=("column_name",)),
+            peer_guards=(
+                PeerGuard(
+                    guard_id="split-a",
+                    source=donor.source,
+                    native=donor.subject.native,
+                    expected_members=(record_ref(donor),),
+                ),
+            ),
+        ),
+        naming=SlugEntry(kind="variable", provider="scb", source_id="1.5.a", slug="a"),
+        contributors=(),
+    )
+    scope_key = (scope.source, scope.register_key)
+    cases, _, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {scope_key: (declaration,)}, subset=False
+    )
+    assert diagnostics == ()
+    assert cases[scope_key][0].decision.effects[0].variable_key == split
+
+
+def test_errata_and_enrichment_compile_is_order_independent(tmp_path: Path):
+    donor = _errata_record(column="A", year="2020")
+    other = _errata_record(column="B", year="2021", variable=6, member=21)
+    tree, prepared, scope = _errata_fixture(tmp_path, (donor, other), _DELIVERED)
+
+    def errata_bytes(candidate):
+        return repr(
+            compile_errata(candidate, prepared, (scope,), {}, subset=False)
+        ).encode()
+
+    assert (
+        errata_bytes(tree)
+        == errata_bytes(tree)
+        == errata_bytes(replace(tree, registers=tuple(reversed(tree.registers))))
+    )
+
+    record = _errata_record(column="A", year="2020")
+    tree, prepared, scope, naming = _enrichment_fixture(
+        tmp_path / "enrichment", (record,), _DESCRIPTION + _ALIAS
+    )
+
+    def enrichment_bytes(candidate):
+        return repr(
+            compile_enrichment(candidate, prepared, (scope,), naming, {}, subset=False)
+        ).encode()
+
+    assert (
+        enrichment_bytes(tree)
+        == enrichment_bytes(tree)
+        == enrichment_bytes(replace(tree, registers=tuple(reversed(tree.registers))))
+    )
+
+
+@pytest.mark.parametrize(
+    "placement,kind,edition_name",
+    [
+        ('versions = ["2020"]', "intervals", "2020"),
+        ("all_versions = true", "unknown", None),
+        ('holdings_period = "2019-2021"', "pooled", None),
+    ],
+)
+def test_compiled_errata_column_placements_and_declared_flags(
+    tmp_path: Path, placement: str, kind: str, edition_name: str | None
+):
+    record = _errata_record(column="A", year="2020")
+    fragment = (
+        '\n[[errata.column]]\nvariant = "people"\ncolumn = "NewCol"\n'
+        'name = "New column"\ndefinition = "Documented"\n'
+        'source = "steward-holdings"\nevidence = "held"\n'
+        'noted = "2026-09-25"\n' + placement + "\n"
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, (record,), fragment)
+    cases, naming, keys, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert diagnostics == ()
+    key = (scope.source, scope.register_key)
+    addition = cases[key][0].decision.effects[0]
+    assert isinstance(addition, CuratedOccurrenceAddition)
+    assert addition.edition_scope.kind == kind
+    assert (addition.edition_key is not None) == (edition_name is not None)
+    assert addition.fields.identifier is None
+    assert addition.fields.sensitivity is None
+    assert keys[key][0][1] == "NewCol"
+    assert naming[key][0].naming.source_id == "1.NewCol"
+    merged = merge_scope(
+        scope,
+        CompiledCuration(
+            fields={}, cases=cases, report={}, naming=naming, provider_keys=keys
+        ),
+    )
+    assert merged.provider_keys == keys[key]
+    assert merged.cases == cases[key]
+
+
+def test_compiled_errata_declared_edition_uses_variant_support(tmp_path: Path):
+    record = _errata_record(column="A", year="2020")
+    fragment = (
+        '\n[[errata.version]]\nvariant = "people"\nname = "2019"\n'
+        'evidence = "omitted edition"\nnoted = "2026-09-25"\n'
+        '\n[[errata.column]]\nvariant = "people"\ncolumn = "NewCol"\n'
+        'name = "New column"\ndefinition = "Documented"\n'
+        'source = "scb-docs"\nevidence = "held"\nnoted = "2026-09-25"\n'
+        'versions = ["2019"]\nis_identifier = false\n'
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, (record,), fragment)
+    cases, _, _, diagnostics, report = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert diagnostics == ()
+    addition = cases[(scope.source, scope.register_key)][0].decision.effects[0]
+    assert addition.edition_key[-2:] == ("accepted-edition", "2019")
+    assert addition.fields.identifier.value is False
+    assert addition.fields.sensitivity is None
+    assert len(addition.evidence) == 1
+    assert any(
+        "errata.version" in item for item in report["scb/sample"]["entries_matched"]
+    )
+
+
+def test_errata_edition_bindings_refuse_conflicting_native_interpretation():
+    first = _errata_record(column="A", year="2020")
+    conflicting = _errata_record(column="B", year="2020", member=21).model_copy(
+        update={"original_period_text": "2020 revised"}
+    )
+    with pytest.raises(ValueError, match="conflicting interpretations"):
+        edition_bindings((first, conflicting), ())
+    with pytest.raises(ValueError, match="already native"):
+        edition_bindings((first,), (ErrataVersion(2, "2020"),))
+
+
+def _enrichment_fixture(
+    tmp_path: Path,
+    records: tuple[SourceRecord, ...],
+    fragment: str,
+    *,
+    target: NativeNamingTarget | None = None,
+):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/scb/sample.toml"
+    path.write_text(path.read_text() + fragment, encoding="utf-8")
+    scope = _partition_scope(records)
+    native = source_register_key(records[0])
+    variable = native_variable_key(records[0])
+    assert native is not None and variable is not None
+    declaration = NamingDeclaration(
+        target=target
+        or NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=variable,
+            register_key=native,
+        ),
+        naming=SlugEntry(kind="variable", provider="scb", source_id="1.5", slug="a"),
+        contributors=(),
+    )
+    reader = SimpleNamespace(
+        iter_register_slices=lambda source, registers: iter(((native, records),))
+    )
+    key = (scope.source, scope.register_key)
+    return (
+        load_curation_tree(root),
+        cast("Any", SimpleNamespace(records=reader)),
+        scope,
+        {key: (declaration,)},
+    )
+
+
+_DESCRIPTION = (
+    '\n[[enrichment.description]]\nregister = "scb/sample"\n'
+    'variable = "a"\ndescription = "Accepted prose"\n'
+    'provenance = "delivery list"\n'
+)
+_ALIAS = (
+    '\n[[enrichment.alias]]\nregister = "scb/sample"\n'
+    'variable = "a"\ndelivery_column = "FormerA"\n'
+    'provenance = "delivery list"\n'
+)
+
+
+def test_compiled_enrichment_description_alias_and_staleness(tmp_path: Path):
+    record = _errata_record(column="A", year="2020")
+    second = _errata_record(column="A", year="2021", member=21, variant=3)
+    tree, prepared, scope, naming = _enrichment_fixture(
+        tmp_path, (record, second), _DESCRIPTION + _ALIAS
+    )
+    cases, diagnostics, _ = compile_enrichment(
+        tree, prepared, (scope,), naming, {}, subset=False
+    )
+    assert diagnostics == ()
+    description, alias = cases[(scope.source, scope.register_key)]
+    assert isinstance(description.decision.effects[0], CheckedFieldChange)
+    assert description.decision.effects[0].replacement.value == "Accepted prose"
+    assert isinstance(alias.decision, SearchAliasDecision)
+    assert set(alias.decision.variant_keys) == {
+        source_occurrence(record).variant_key,
+        source_occurrence(second).variant_key,
+    }
+
+    described = record.model_copy(
+        update={
+            "fields": record.fields.model_copy(
+                update={"description": value_field("Already")}
+            )
+        }
+    )
+    tree, prepared, scope, naming = _enrichment_fixture(
+        tmp_path / "described", (described,), _DESCRIPTION
+    )
+    cases, diagnostics, _ = compile_enrichment(
+        tree, prepared, (scope,), naming, {}, subset=False
+    )
+    assert cases == {}
+    assert [item.code for item in diagnostics] == ["stale_curation_entry"]
+
+
+def test_compiled_enrichment_split_uses_partition_records(tmp_path: Path):
+    first, second = _scb_partition_records(("A", "B"))
+    native = native_variable_key(first)
+    register = source_register_key(first)
+    assert native is not None and register is not None
+    split = NativeNamingTarget(
+        kind="variable",
+        provider="scb",
+        source_key=(*native, "accepted-partition", "b"),
+        register_key=register,
+        expectations=capture_expectations((second,), fields=("column_name",)),
+        peer_guards=(
+            PeerGuard(
+                guard_id="split-b",
+                source=second.source,
+                native=second.subject.native,
+                expected_members=(record_ref(second),),
+            ),
+        ),
+    )
+    tree, prepared, scope, naming = _enrichment_fixture(
+        tmp_path, (first, second), _DESCRIPTION, target=split
+    )
+    cases, diagnostics, _ = compile_enrichment(
+        tree, prepared, (scope,), naming, {}, subset=False
+    )
+    assert diagnostics == ()
+    assert cases[(scope.source, scope.register_key)][0].targets[0].ref == record_ref(
+        second
+    )
 
 
 def _scb_partition_tree(root: Path, extra: str):

@@ -1109,3 +1109,58 @@ __all__ = [
     "evaluate_case",
     "parent_fact_projection",
 ]
+
+
+def record_ref(record: SourceRecord) -> SourceRecordRef:
+    return SourceRecordRef(
+        source=record.source, semantic_record_key=record.locators[0].semantic_record_key
+    )
+
+
+def capture_expectations(
+    records: tuple[SourceRecord, ...],
+    *,
+    fields: tuple[str, ...],
+    parents: bool = False,
+    coding: bool = False,
+) -> tuple[RecordExpectation, ...]:
+    """Capture a finite conversion baseline; never call this to refresh stale cases."""
+    grouped = defaultdict(dict)
+    for record in records:
+        projection = RecordProjection(
+            fields=tuple(
+                FieldExpectation(name=name, status="absent")
+                if field is None
+                else FieldExpectation(name=name, status=field.status, value=field.value)
+                for name in fields
+                for field in (getattr(record.fields, name),)
+            ),
+            subject=record.subject,
+            edition_scope=record.edition_scope,
+            edition_period_scope=record.edition_period_scope,
+            code_set_references=tuple(
+                CodeSetExpectation(
+                    reference_id=ref.reference_id,
+                    content_sha256=ref.content_sha256,
+                )
+                for ref in record.code_set_references
+            )
+            if coding
+            else None,
+            parent_facts=tuple(
+                parent_fact_projection(parent) for parent in record.parent_facts
+            )
+            if parents
+            else None,
+        )
+        token = canonical_sha256(projection.model_dump(mode="json"))
+        grouped[record_ref(record)][token] = projection
+    return tuple(
+        RecordExpectation(
+            ref=ref, alternatives=tuple(items[key] for key in sorted(items))
+        )
+        for ref, items in sorted(
+            grouped.items(),
+            key=lambda item: (item[0].source, item[0].semantic_record_key),
+        )
+    )

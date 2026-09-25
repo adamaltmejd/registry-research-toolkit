@@ -23,11 +23,13 @@ from reg_meta_build.source_curation import (
     CuratedOccurrenceAddition,
     CurationCase,
     OccurrenceCorrectionDecision,
+    RecordExpectation,
     ResolutionDiagnostic,
     SourceEvidence,
     SourceRecordRef,
     _field_matches,
     evaluate_cases,
+    record_ref,
 )
 from reg_meta_build.source_intervals import scope_bounds
 from reg_meta_build.source_occurrences import (
@@ -41,7 +43,6 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
     from reg_meta_build.source_coding import CodeListClaim
-    from reg_meta_build.source_curation import RecordExpectation
     from reg_meta_build.source_records import SourceRecord
 
 
@@ -58,12 +59,6 @@ class OccurrenceCorrections:
     occurrences: tuple[EffectiveOccurrence, ...]
     accounting: tuple[CorrectionAccounting, ...]
     diagnostics: tuple[ResolutionDiagnostic, ...]
-
-
-def record_ref(record: SourceRecord) -> SourceRecordRef:
-    return SourceRecordRef(
-        source=record.source, semantic_record_key=record.locators[0].semantic_record_key
-    )
 
 
 def _require_checked(expected: RecordExpectation, fields: tuple[str, ...] = ()) -> None:

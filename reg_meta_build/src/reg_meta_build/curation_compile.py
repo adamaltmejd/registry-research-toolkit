@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING, Any, Literal, cast
 from pydantic import TypeAdapter, ValidationError
 from reg_meta.fqid import FqidKind, derive_variable_slug, parse as parse_fqid
 
-from ._curation import SentinelCode
+from ._curation import SentinelCode, fold_column
 from ._resolved_common import covers_window
 from .cis2016_matrix import (
     Cis2014Matrix,
@@ -29,7 +29,8 @@ from .cis2016_matrix import (
     load_cis2016_matrix,
 )
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
-from .convert_errata import capture_expectations
+from .curation_tree import EnrichmentAliasEntry, EnrichmentDescriptionEntry
+from .delivery_enrichment import load_delivery_enrichment
 from .fqid_slugs import EntityKind, SlugEntry, _load_register_auto_file, _validate_entry
 from .normalization import normalize_token
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
@@ -50,6 +51,12 @@ from .resolved_metadata import (
     ResolvedVariableSameAs,
     ResolvedVariantRef,
     ResolvedVariantSuccession,
+)
+from .scb_errata import (
+    convert_column_entry,
+    convert_delivered_entry,
+    edition_bindings,
+    load_scb_errata,
 )
 from .source_coding import copied_coding_fingerprints
 from .source_coding_choices import coding_expectations, compile_coding_selection
@@ -76,7 +83,9 @@ from .source_curation import (
     PeerGuard,
     RepresentationDecision,
     ResolutionDiagnostic,
+    SearchAliasDecision,
     SourceRecordRef,
+    capture_expectations,
 )
 from .source_effects import record_ref
 from .source_intervals import coding_scope_bounds, scope_bounds
@@ -93,6 +102,7 @@ from .source_naming import (
     native_provider_keys,
     native_scb_naming_id,
 )
+from .source_occurrences import source_occurrence
 from .source_records import (
     ScopeInterval,
     SourceFields,
@@ -151,7 +161,6 @@ FAMILIES: dict[str, Family] = {
         case_prefixes=(
             "scb_errata.toml/column/",
             "scb_errata.toml/delivered/",
-            "accepted-errata:",
         ),
         naming_shapes=("declared-column",),
         unapplied_datasets=("curation/scb_errata.toml",),
@@ -173,16 +182,17 @@ FAMILIES: dict[str, Family] = {
         ),
         unapplied_datasets=("curation/classifications.toml",),
     ),
-    "annotations": Family(
+    "enrichment": Family(
         case_prefixes=(
             "delivery_enrichment.generated.toml/description/",
             "delivery_enrichment.generated.toml/alias/",
         ),
-        unapplied_datasets=(
-            "scb-registerinformation",
-            "sos-",
-            "curation/delivery_enrichment.generated.toml",
-        ),
+        unapplied_datasets=("curation/delivery_enrichment.generated.toml",),
+    ),
+    "annotations": Family(
+        # The synthetic SOS pipeline fixture supplies this exact reviewed case.
+        case_ids=("accepted-errata:sos-declared-flags",),
+        unapplied_datasets=("scb-registerinformation", "sos-"),
     ),
     "naming": Family(
         naming_shapes=("native",),
@@ -213,6 +223,8 @@ COMPILED = frozenset(
         "sos_thin",
         "partition",
         "matrix_repr",
+        "errata",
+        "enrichment",
     }
 )
 
@@ -2123,9 +2135,16 @@ def _partition_owned_naming_entry(
     if entry.entry.kind != "variable":
         return False
     source_id = entry.entry.source_id
-    return len(source_id.split(".")) == 3 or any(
-        source_id == f"{register.register_info.native_id}.{rename.column}"
-        for rename in register.identity.rename
+    return (
+        len(source_id.split(".")) == 3
+        or any(
+            source_id == f"{register.register_info.native_id}.{rename.column}"
+            for rename in register.identity.rename
+        )
+        or any(
+            source_id == f"{register.register_info.native_id}.{column.column}"
+            for column in register.errata.column
+        )
     )
 
 
@@ -3071,6 +3090,561 @@ def _snapshot_key(entry: Any) -> tuple[str, str]:
     return revision.artifact_path[: -len(suffix)], revision.upstream_revision
 
 
+def _family_status(report: dict[str, dict[str, list[str]]], name: str):
+    return report.setdefault(
+        name,
+        {
+            key: []
+            for key in (
+                "entries_read",
+                "entries_matched",
+                "stale",
+                "over_broad",
+                "not_evaluated_in_subset",
+            )
+        },
+    )
+
+
+def _family_diagnostic(
+    case_id: str,
+    subject: str,
+    detail: str,
+    *,
+    overbroad: bool = False,
+    refs: tuple[SourceRecordRef, ...] = (),
+) -> ResolutionDiagnostic:
+    return ResolutionDiagnostic(
+        code="overbroad_curation_entry" if overbroad else "stale_curation_entry",
+        severity="error",
+        case_id=case_id,
+        subject=subject,
+        detail=f"{case_id}: {detail}",
+        refs=refs,
+        withheld_output=(case_id,),
+    )
+
+
+def compile_errata(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[ScopeDeclarations, ...],
+    partition_naming: dict[Any, tuple[Any, ...]],
+    *,
+    subset: bool,
+) -> tuple[
+    dict[Any, tuple[CurationCase, ...]],
+    dict[Any, tuple[NamingDeclaration, ...]],
+    dict[Any, tuple[tuple[tuple[str | int, ...], str], ...]],
+    tuple[ResolutionDiagnostic, ...],
+    dict[str, dict[str, list[str]]],
+]:
+    """Compile the SCB omission ledger against complete native variant slices."""
+    loaded = load_scb_errata(
+        tree.root,
+        None,
+        classifications=frozenset(
+            c.classification.short_name for c in tree.classifications
+        ),
+    )
+
+    if not loaded:
+        return {}, {}, {}, (), {}
+    locations: dict[int, list[tuple[Any, tuple[str | int, ...]]]] = defaultdict(list)
+    for scope in scopes:
+        for name, key in _scope_registers(scope):
+            if name.startswith("scb/") and isinstance(key[-1], int):
+                locations[key[-1]].append(((scope.source, scope.register_key), key))
+    versions = defaultdict(list)
+    for entry in loaded.versions:
+        versions[entry.register_variant_id].append(entry)
+    delivered = {
+        (entry.register_id, entry.register_variant_id, fold_column(entry.column)): entry
+        for entry in loaded.delivered
+    }
+    delivered_positions = {
+        (entry.register_id, entry.register_variant_id, fold_column(entry.column)): index
+        for index, entry in enumerate(loaded.delivered, 1)
+    }
+    columns = {
+        (entry.register_id, entry.register_variant_id, fold_column(entry.column)): entry
+        for entry in loaded.columns
+    }
+    cases: dict[Any, list[CurationCase]] = defaultdict(list)
+    naming: dict[Any, dict[tuple[str | int, ...], NamingDeclaration]] = defaultdict(
+        dict
+    )
+    keys: dict[Any, dict[tuple[str | int, ...], str]] = defaultdict(dict)
+    diagnostics: list[ResolutionDiagnostic] = []
+    report: dict[str, dict[str, list[str]]] = {}
+    for register in sorted(tree.registers, key=lambda item: item.source_file):
+        if register.register_info.provider != "scb" or not (
+            register.errata.version
+            or register.errata.delivered
+            or register.errata.column
+        ):
+            continue
+        native_id = register.register_info.native_id
+        if native_id is None:
+            raise ValueError(f"{register.source_file}: SCB register has no native_id")
+        register_id = int(native_id)
+        name = f"scb/{register.register_info.slug}"
+        statuses = _family_status(report, name)
+        accepted_names = {
+            item.entry.source_id: item
+            for item, _ in reversed(_register_naming_entries(tree, register))
+            if item.entry.kind == "variable"
+        }
+        matches = locations.get(register_id, ())
+        records = ()
+        if len(matches) == 1:
+            scope_key, register_key = matches[0]
+            records = tuple(
+                record
+                for _, members in prepared.records.iter_register_slices(
+                    scope_key[0], (register_key,)
+                )
+                for record in members
+            )
+        by_variant: dict[int, tuple[SourceRecord, ...]] = {}
+        for variant in register.variant:
+            variant_id = int(variant.native_id.split(".")[-1])
+            by_variant[variant_id] = tuple(
+                r for r in records if r.subject.native.register_variant_id == variant_id
+            )
+        bound_editions = {}
+        for variant_id, members in by_variant.items():
+            if members:
+                bound_editions[variant_id] = edition_bindings(
+                    members, tuple(versions.get(variant_id, ()))
+                )
+        variant_ids = {
+            item.slug: int(item.native_id.split(".")[-1]) for item in register.variant
+        }
+        for index, row in enumerate(register.errata.version, 1):
+            case_id = f"{register.source_file}#/errata.version/{index}"
+            statuses["entries_read"].append(case_id)
+            variant_id = variant_ids[row.variant]
+            if variant_id in bound_editions:
+                statuses["entries_matched"].append(case_id)
+            elif not matches and subset:
+                statuses["not_evaluated_in_subset"].append(case_id)
+            else:
+                statuses["stale"].append(case_id)
+                diagnostics.append(
+                    _family_diagnostic(
+                        case_id,
+                        f"{name}/{row.variant}/{row.name}",
+                        "declared edition has no native variant records",
+                    )
+                )
+        for table, entries in (
+            ("delivered", register.errata.delivered),
+            ("column", register.errata.column),
+        ):
+            for index, row in enumerate(entries, 1):
+                case_id = f"{register.source_file}#/errata.{table}/{index}"
+                statuses["entries_read"].append(case_id)
+                subject = (
+                    f"curation/scb_errata.toml#/delivered/"
+                    f"{delivered_positions[register_id, variant_ids[row.variant], fold_column(row.column)]}"
+                    if table == "delivered"
+                    else f"{name}/{row.variant}/{row.column}"
+                )
+                if len(matches) != 1:
+                    status = (
+                        "over_broad"
+                        if matches
+                        else "not_evaluated_in_subset"
+                        if subset
+                        else "stale"
+                    )
+                    statuses[status].append(case_id)
+                    if status != "not_evaluated_in_subset":
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                f"matches {len(matches)} register scopes; expected one",
+                                overbroad=bool(matches),
+                            )
+                        )
+                    continue
+                variant_id = variant_ids[row.variant]
+                members = by_variant.get(variant_id, ())
+                editions = bound_editions.get(variant_id, ())
+                if not members:
+                    blockers = ("no native variant records",)
+                    converted = None
+                elif missing := sorted(
+                    set(row.versions or ()) - {e.name for e in editions}
+                ):
+                    blockers = (f"missing named version {missing!r}",)
+                    converted = None
+                elif any(
+                    sum(edition.name == version for edition in editions) > 1
+                    for version in row.versions or ()
+                ):
+                    blockers = ("ambiguous named version",)
+                    converted = None
+                elif table == "column" and (
+                    accepted_names.get(f"{register_id}.{row.column}") is None
+                    or accepted_names[f"{register_id}.{row.column}"].entry.slug is None
+                ):
+                    blockers = ("declared column has no tracked slug",)
+                    converted = None
+                elif table == "delivered":
+                    entry = delivered[register_id, variant_id, fold_column(row.column)]
+                    result = convert_delivered_entry(
+                        entry, case_id=case_id, records=members, editions=editions
+                    )
+                    blockers, converted = result.blockers, result.case
+                else:
+                    entry = columns[register_id, variant_id, fold_column(row.column)]
+                    result = convert_column_entry(
+                        entry,
+                        case_id=case_id,
+                        records=members,
+                        editions=editions,
+                        declared_flags=frozenset(row.model_fields_set)
+                        & {"is_identifier", "is_sensitive"},
+                    )
+                    blockers, converted = result.blockers, result.case
+                if converted is None:
+                    overbroad = any("ambiguous" in blocker for blocker in blockers)
+                    statuses["over_broad" if overbroad else "stale"].append(case_id)
+                    diagnostics.append(
+                        _family_diagnostic(
+                            case_id,
+                            subject,
+                            "; ".join(blockers),
+                            overbroad=overbroad,
+                            refs=(record_ref(members[0]),) if members else (),
+                        )
+                    )
+                    continue
+                if table == "delivered":
+                    assert isinstance(converted.decision, OccurrenceCorrectionDecision)
+                    effects = []
+                    for effect in converted.decision.effects:
+                        if not isinstance(effect, CuratedOccurrenceAddition):
+                            effects.append(effect)
+                            continue
+                        owners = {
+                            declaration.target.source_key
+                            for declaration in partition_naming.get(scope_key, ())
+                            if len(declaration.target.source_key)
+                            > len(effect.variable_key)
+                            and declaration.target.source_key[
+                                : len(effect.variable_key)
+                            ]
+                            == effect.variable_key
+                            and declaration.target.source_key[len(effect.variable_key)]
+                            == "accepted-partition"
+                            and any(
+                                expectation.ref == record_ref(record)
+                                for expectation in declaration.target.expectations
+                                for record in members
+                                if source_occurrence(record).variable_key
+                                == effect.variable_key
+                                and _literal_field(record, "column_name") == row.column
+                            )
+                        }
+                        effects.append(
+                            effect.model_copy(
+                                update={"variable_key": next(iter(owners))}
+                            )
+                            if len(owners) == 1
+                            else effect
+                        )
+                    converted = converted.model_copy(
+                        update={
+                            "decision": converted.decision.model_copy(
+                                update={"effects": tuple(effects)}
+                            )
+                        }
+                    )
+                else:
+                    variable_key = (
+                        *register_key,
+                        "declared-column",
+                        fold_column(row.column),
+                    )
+                    if variable_key not in naming[scope_key]:
+                        anchor = members[0]
+                        ref = record_ref(anchor)
+                        source_id = f"{register_id}.{row.column}"
+                        accepted = accepted_names[source_id]
+                        slug = accepted.entry.slug
+                        assert slug is not None
+                        naming[scope_key][variable_key] = NamingDeclaration(
+                            target=NativeNamingTarget(
+                                kind="variable",
+                                provider="scb",
+                                source_key=variable_key,
+                                register_key=register_key,
+                                expectations=capture_expectations((anchor,), fields=()),
+                                peer_guards=(
+                                    PeerGuard(
+                                        guard_id=f"{case_id}:naming-anchor",
+                                        source=anchor.source,
+                                        native=anchor.subject.native,
+                                        expected_members=(ref,),
+                                    ),
+                                ),
+                            ),
+                            naming=SlugEntry(
+                                kind="variable",
+                                provider="scb",
+                                source_id=source_id,
+                                slug=slug,
+                            ),
+                            contributors=(accepted,),
+                        )
+                        keys[scope_key][variable_key] = row.column
+                cases[scope_key].append(converted)
+                statuses["entries_matched"].append(case_id)
+    return (
+        {key: tuple(value) for key, value in cases.items()},
+        {
+            key: tuple(value[k] for k in sorted(value, key=repr))
+            for key, value in naming.items()
+        },
+        {
+            key: tuple(sorted(value.items(), key=lambda item: repr(item[0])))
+            for key, value in keys.items()
+        },
+        tuple(diagnostics),
+        report,
+    )
+
+
+def compile_enrichment(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[ScopeDeclarations, ...],
+    naming: dict[Any, tuple[Any, ...]],
+    errata_cases: dict[Any, tuple[CurationCase, ...]],
+    *,
+    subset: bool,
+) -> tuple[
+    dict[Any, tuple[CurationCase, ...]],
+    tuple[ResolutionDiagnostic, ...],
+    dict[str, dict[str, list[str]]],
+]:
+    """Bind delivery prose and search spellings to one compiled catalog name."""
+    loaded = load_delivery_enrichment(tree.root)
+    description_positions = {
+        (item.provider, item.register, item.variable): index
+        for index, item in enumerate(loaded.descriptions, 1)
+    }
+    alias_positions = {
+        (item.provider, item.register, item.variable, item.delivery_column): index
+        for index, item in enumerate(loaded.aliases, 1)
+    }
+    by_name: dict[str, list[tuple[Any, NamingDeclaration]]] = defaultdict(list)
+    register_keys: dict[str, tuple[str | int, ...]] = {}
+    register_locations: dict[str, list[tuple[Any, tuple[str | int, ...]]]] = (
+        defaultdict(list)
+    )
+    for scope in scopes:
+        scope_key = (scope.source, scope.register_key)
+        for register, register_key in _scope_registers(scope):
+            register_keys[register] = register_key
+            register_locations[register].append((scope_key, register_key))
+            for item in naming.get(scope_key, ()):
+                if (
+                    item.target.kind == "variable"
+                    and item.target.register_key == register_key
+                    and item.naming.slug is not None
+                ):
+                    by_name[f"{register}/{item.naming.slug}"].append((scope_key, item))
+    cases: dict[Any, list[CurationCase]] = defaultdict(list)
+    diagnostics: list[ResolutionDiagnostic] = []
+    report: dict[str, dict[str, list[str]]] = {}
+    record_cache: dict[tuple[Any, tuple[str | int, ...]], tuple[SourceRecord, ...]] = {}
+
+    def register_anchor(name: str) -> tuple[SourceRecordRef, ...]:
+        locations = register_locations.get(name, ())
+        if len(locations) != 1:
+            return ()
+        scope_key, register_key = locations[0]
+        cache_key = (scope_key, register_key)
+        if cache_key not in record_cache:
+            record_cache[cache_key] = tuple(
+                record
+                for _, members in prepared.records.iter_register_slices(
+                    scope_key[0], (register_key,)
+                )
+                for record in members
+            )
+        members = record_cache[cache_key]
+        return (record_ref(members[0]),) if members else ()
+
+    for register in sorted(tree.registers, key=lambda item: item.source_file):
+        if not (register.enrichment.description or register.enrichment.alias):
+            continue
+        name = f"{register.register_info.provider}/{register.register_info.slug}"
+        statuses = _family_status(report, name)
+        for table, entries in (
+            ("description", register.enrichment.description),
+            ("alias", register.enrichment.alias),
+        ):
+            for index, row in enumerate(entries, 1):
+                case_id = f"{register.source_file}#/enrichment.{table}/{index}"
+                target_name = f"{name}/{row.variable}"
+                position = (
+                    description_positions[
+                        register.register_info.provider,
+                        register.register_info.slug,
+                        row.variable,
+                    ]
+                    if isinstance(row, EnrichmentDescriptionEntry)
+                    else alias_positions[
+                        register.register_info.provider,
+                        register.register_info.slug,
+                        row.variable,
+                        row.delivery_column,
+                    ]
+                )
+                subject = (
+                    f"curation/delivery_enrichment.generated.toml#/{table}/{position}"
+                )
+                statuses["entries_read"].append(case_id)
+                targets = by_name.get(target_name, ())
+                if len(targets) != 1:
+                    status = (
+                        "over_broad"
+                        if len(targets) > 1
+                        else "not_evaluated_in_subset"
+                        if subset and name not in register_keys
+                        else "stale"
+                    )
+                    statuses[status].append(case_id)
+                    if status != "not_evaluated_in_subset":
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                f"matches {len(targets)} compiled naming targets; expected one",
+                                overbroad=len(targets) > 1,
+                                refs=register_anchor(name),
+                            )
+                        )
+                    continue
+                scope_key, target = targets[0]
+                register_key = target.target.register_key
+                assert register_key is not None
+                cache_key = (scope_key, register_key)
+                if cache_key not in record_cache:
+                    record_cache[cache_key] = tuple(
+                        record
+                        for _, members in prepared.records.iter_register_slices(
+                            scope_key[0], (register_key,)
+                        )
+                        for record in members
+                    )
+                all_records = record_cache[cache_key]
+                variable_key = target.target.source_key
+                if "accepted-partition" in variable_key:
+                    refs = {item.ref for item in target.target.expectations}
+                    chosen = tuple(r for r in all_records if record_ref(r) in refs)
+                elif "declared-column" in variable_key:
+                    chosen = ()
+                else:
+                    chosen = tuple(
+                        r
+                        for r in all_records
+                        if source_occurrence(r).variable_key == variable_key
+                    )
+                if isinstance(row, EnrichmentDescriptionEntry):
+                    if not chosen or any(
+                        _literal_field(r, "description") for r in chosen
+                    ):
+                        statuses["stale"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                "target has no original records or already has a description",
+                                refs=(record_ref(chosen[0]),)
+                                if chosen
+                                else register_anchor(name),
+                            )
+                        )
+                        continue
+                    expectations = capture_expectations(chosen, fields=("description",))
+                    effects = tuple(
+                        CheckedFieldChange(
+                            ref=item.ref,
+                            replacement=FieldExpectation(
+                                name="description",
+                                status="value",
+                                value=row.description,
+                            ),
+                        )
+                        for item in expectations
+                    )
+                    decision = OccurrenceCorrectionDecision(
+                        reviewed=True,
+                        effects=effects,
+                        reason=row.provenance
+                        or f"Accepted delivery description for {target_name}",
+                        provenance=row.provenance or f"curation:{case_id}",
+                    )
+                else:
+                    assert isinstance(row, EnrichmentAliasEntry)
+                    variant_keys = {
+                        key
+                        for r in chosen
+                        if (key := source_occurrence(r).variant_key) is not None
+                    }
+                    variant_keys.update(
+                        effect.variant_key
+                        for case in errata_cases.get(scope_key, ())
+                        if isinstance(case.decision, OccurrenceCorrectionDecision)
+                        for effect in case.decision.effects
+                        if isinstance(effect, CuratedOccurrenceAddition)
+                        and effect.variable_key == variable_key
+                    )
+                    if not variant_keys:
+                        statuses["stale"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                "target has no occurrence variants",
+                                refs=register_anchor(name),
+                            )
+                        )
+                        continue
+                    expectations = (
+                        capture_expectations(chosen, fields=())
+                        if chosen
+                        else target.target.expectations
+                    )
+                    decision = SearchAliasDecision(
+                        reviewed=True,
+                        variable_key=variable_key,
+                        variant_keys=tuple(sorted(variant_keys, key=repr)),
+                        column=row.delivery_column,
+                        reason=row.provenance
+                        or f"Accepted delivery alias for {target_name}",
+                        provenance=row.provenance or f"curation:{case_id}",
+                    )
+                cases[scope_key].append(
+                    CurationCase(
+                        case_id=case_id, targets=expectations, decision=decision
+                    )
+                )
+                statuses["entries_matched"].append(case_id)
+    return (
+        {key: tuple(value) for key, value in cases.items()},
+        tuple(diagnostics),
+        report,
+    )
+
+
 def compile_curation(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -3377,6 +3951,29 @@ def compile_curation(
         key: (*values, *matrix_keys.get(key, ()))
         for key, values in provider_keys.items()
     }
+    (
+        errata_cases,
+        errata_naming,
+        errata_keys,
+        errata_diagnostics,
+        errata_report,
+    ) = compile_errata(tree, prepared, scopes, partition_naming, subset=subset)
+    for key, extra in errata_cases.items():
+        cases[key].extend(extra)
+    for key, extra in errata_naming.items():
+        naming[key] = (*naming.get(key, ()), *extra)
+    for key, extra in errata_keys.items():
+        provider_keys[key] = (*provider_keys.get(key, ()), *extra)
+    enrichment_cases, enrichment_diagnostics, enrichment_report = compile_enrichment(
+        tree, prepared, scopes, naming, errata_cases, subset=subset
+    )
+    for key, extra in enrichment_cases.items():
+        cases[key].extend(extra)
+    for family_report in (errata_report, enrichment_report):
+        for register, statuses in family_report.items():
+            current = report.setdefault(register, {key: [] for key in statuses})
+            for status, entries in statuses.items():
+                current.setdefault(status, []).extend(entries)
     for register, statuses in naming_report.items():
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
@@ -3408,6 +4005,8 @@ def compile_curation(
             *naming_diagnostics,
             *partition_diagnostics,
             *matrix_diagnostics,
+            *errata_diagnostics,
+            *enrichment_diagnostics,
             *thin_diagnostics,
         ),
         naming=naming,

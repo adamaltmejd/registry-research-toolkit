@@ -5,7 +5,6 @@ from dataclasses import replace
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta_build._curation import SentinelCode
-from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationCode,
@@ -26,6 +25,7 @@ from reg_meta_build.source_curation import (
     ClassificationDecision,
     CurationCase,
     PeerGuard,
+    capture_expectations,
 )
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import source_occurrence

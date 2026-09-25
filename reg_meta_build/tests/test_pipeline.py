@@ -25,7 +25,6 @@ from reg_meta.errors import EXIT_CONFIG, EXIT_OUTPUT, EXIT_USAGE
 from reg_meta_build.catalog_dependencies import CatalogDependencyError
 from reg_meta_build.cli import run
 from reg_meta_build.concept_groups import CodeLabelPair
-from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.curation_tree import load_classifications
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.pipeline import (
@@ -57,6 +56,7 @@ from reg_meta_build.source_curation import (
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
+    capture_expectations,
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_naming import (

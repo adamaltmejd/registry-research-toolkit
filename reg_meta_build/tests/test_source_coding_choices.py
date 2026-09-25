@@ -7,7 +7,6 @@ from dataclasses import replace
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
-from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.curation_tree import RegisterCuration
 from reg_meta_build.pipeline import ScopeDeclarations
@@ -25,6 +24,7 @@ from reg_meta_build.source_curation import (
     CodingSelection,
     CurationCase,
     PeerGuard,
+    capture_expectations,
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_formation import form_native_variable

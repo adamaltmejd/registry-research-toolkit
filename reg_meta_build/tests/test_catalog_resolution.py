@@ -9,7 +9,6 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.db import open_db
 from reg_meta_build.catalog_resolution import resolve_parents
-from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.resolved_catalog import write_resolved_catalog
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import (
@@ -17,6 +16,7 @@ from reg_meta_build.source_coordinates import (
     native_parent_key,
     source_register_key,
 )
+from reg_meta_build.source_curation import capture_expectations
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_naming import (

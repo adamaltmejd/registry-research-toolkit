@@ -16,7 +16,6 @@ from reg_meta_build.catalog_dependencies import (
     resolve_panel_dependencies,
     variable_dependency_keys,
 )
-from reg_meta_build.convert_errata import capture_expectations
 from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.prepared_values import (
     open_prepared_source_values,
@@ -49,8 +48,12 @@ from reg_meta_build.source_curation import (
     PeerGuard,
     SearchAliasDecision,
     SourceEvidence,
+    capture_expectations,
 )
-from reg_meta_build.source_effects import copied_coding_key, record_ref
+from reg_meta_build.source_effects import (
+    copied_coding_key,
+    record_ref,
+)
 from reg_meta_build.source_naming import (
     AcceptedNamingEntry,
     NamingAmbiguity,
