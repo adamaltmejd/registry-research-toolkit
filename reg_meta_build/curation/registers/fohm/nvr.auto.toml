@@ -23,6 +23,10 @@ native_id = "7553527605692442211.kon"
 slug = "kon"  # source: kolumnnamn
 
 [[variable]]
+native_id = "7553527605692442211.nplid"
+slug = "nplid"  # source: kolumnnamn
+
+[[variable]]
 native_id = "7553527605692442211.satsnummer"
 slug = "satsnummer"  # source: kolumnnamn
 

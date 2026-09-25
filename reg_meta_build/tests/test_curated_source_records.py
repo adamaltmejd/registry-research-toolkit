@@ -4,17 +4,16 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import TYPE_CHECKING
+import tomllib
+from pathlib import Path
 
 import pytest
+from reg_meta.fqid import derive_variable_slug
 from reg_meta_build.source_records import SourceRevision
 from reg_meta_build.sources.curated_records import (
     CuratedSourceError,
     read_curated_source,
 )
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 def _source(
@@ -307,3 +306,26 @@ def test_reader_requires_exact_source_revision_bytes(tmp_path: Path) -> None:
     path.write_text(path.read_text() + "\n# changed\n")
     with pytest.raises(CuratedSourceError, match="differs from its declared revision"):
         read_curated_source(path, revision, provider="agency")
+
+
+def test_fohm_thin_slug_entries_follow_authored_columns() -> None:
+    root = Path(__file__).parents[1]
+    source = tomllib.loads(
+        (root / "input_data/Folkhalsomyndigheten/fohm.toml").read_text()
+    )
+    for register, columns in (
+        ("sminet", {"provtagningsdatum", "statistikdatum"}),
+        ("nvr", {"nplid"}),
+    ):
+        declared = next(item for item in source["register"] if item["key"] == register)
+        assert columns <= {item["column"] for item in declared["variable"]}
+        auto = tomllib.loads(
+            (root / f"curation/registers/fohm/{register}.auto.toml").read_text()
+        )
+        for column in columns:
+            entry = next(
+                item
+                for item in auto["variable"]
+                if item["native_id"].endswith(f".{column}")
+            )
+            assert entry["slug"] == derive_variable_slug(column)

@@ -43,17 +43,24 @@ from .resolved_metadata import (
     ResolvedVariantRef,
     ResolvedVariantSuccession,
 )
+from .source_coding import copied_coding_fingerprints
 from .source_coding_choices import coding_expectations, compile_coding_selection
 from .source_coordinates import (
     column_identity,
     native_parent_key,
+    native_variable_key,
+    native_variant_key,
     source_register_key,
 )
 from .source_curation import (
     AcknowledgeDecision,
+    CheckedSourceUse,
+    CheckedVariantAssignment,
     CodingDecision,
+    CuratedOccurrenceAddition,
     CurationCase,
     FieldExpectation,
+    OccurrenceCorrectionDecision,
     PeerGuard,
     ResolutionDiagnostic,
     SourceRecordRef,
@@ -71,7 +78,14 @@ from .source_naming import (
     native_provider_keys,
     native_scb_naming_id,
 )
-from .source_records import SourceRevision, canonical_sha256
+from .source_records import (
+    ScopeInterval,
+    SourceFields,
+    SourceRevision,
+    TemporalScope,
+    canonical_sha256,
+)
+from .source_value_bindings import bind_code_lists, open_value_bindings
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -110,9 +124,7 @@ FAMILIES: dict[str, Family] = {
     "identity": Family(
         case_prefixes=(
             "accepted-column-partitions:",
-            "accepted-sos-routes:",
             "accepted-sos-identity:",
-            "existing-source-use:",
         ),
         naming_shapes=("accepted-partition", "accepted-shape", "accepted-name"),
         unapplied_datasets=("fqid_slugs/",),
@@ -162,8 +174,13 @@ FAMILIES: dict[str, Family] = {
         naming_shapes=("native",),
         scope_fields=("provider_keys", "variants"),
     ),
-    "thin_provider": Family(
-        case_prefixes=("accepted-authored:",), naming_shapes=("thin-provider",)
+    "sos_thin": Family(
+        case_prefixes=(
+            "accepted-sos-routes:",
+            "existing-source-use:",
+            "accepted-authored:",
+        ),
+        naming_shapes=("thin-provider",),
     ),
 }
 COMPILED = frozenset(
@@ -179,6 +196,7 @@ COMPILED = frozenset(
         "classification_bindings",
         "coding",
         "naming",
+        "sos_thin",
     }
 )
 
@@ -269,6 +287,8 @@ def _case_family(case_id: str) -> str:
 
 def _naming_family(target: Any) -> str:
     source_key = target.source_key
+    if target.provider not in {"scb", "sos"}:
+        return "sos_thin"
     markers = {
         "accepted-partition": "identity",
         "declared-column": "errata",
@@ -276,7 +296,7 @@ def _naming_family(target: Any) -> str:
         "period-family": "representation",
         "accepted-shape": "identity",
         "accepted-name": "identity",
-        "thin-provider": "thin_provider",
+        "thin-provider": "sos_thin",
     }
     for part in source_key:
         if part in markers:
@@ -288,8 +308,6 @@ def _naming_family(target: Any) -> str:
         and source_key[-2] in {"native-int", "native-str"}
     ):
         return "naming"
-    if target.provider not in {"scb", "sos"}:
-        return "thin_provider"
     raise ValueError(f"stored naming has no family: {source_key!r}")
 
 
@@ -777,7 +795,7 @@ def compile_native_naming(
     scope_map = {(scope.source, scope.register_key): scope for scope in scopes}
     bindings: dict[Any, list[LegacyNamingBinding]] = {key: [] for key in scope_map}
     for source in sorted({scope.source for scope in scopes}):
-        for family_key, _members in prepared.records.iter_native_families(source):
+        for family_key, members in prepared.records.iter_native_families(source):
             scope_key = (source, family_key[:5])
             if scope_key not in scope_map:
                 scope_key = (source, None)
@@ -786,11 +804,34 @@ def compile_native_naming(
                 "native-str",
             }:
                 continue
+            provider = str(family_key[1])
+            expectations = (
+                capture_expectations(members, fields=())
+                if provider not in {"scb", "sos"}
+                else ()
+            )
+            guards = (
+                (
+                    PeerGuard(
+                        guard_id=f"thin:{source}:{family_key!r}",
+                        source=source,
+                        coordinates=(
+                            ("register", members[0].subject.register_name),
+                            ("variable", members[0].subject.variable),
+                        ),
+                        expected_members=tuple(item.ref for item in expectations),
+                    ),
+                )
+                if expectations
+                else ()
+            )
             target = NativeNamingTarget(
                 kind="variable",
-                provider=str(family_key[1]),
+                provider=provider,
                 source_key=family_key,
                 register_key=family_key[:5],
+                expectations=expectations,
+                peer_guards=guards,
             )
             bindings[scope_key].append(
                 LegacyNamingBinding(
@@ -1103,6 +1144,423 @@ def compile_native_naming(
         tuple(diagnostics),
         report,
     )
+
+
+def _source_text(field: Any) -> str | None:
+    return (
+        field.value
+        if field is not None
+        and field.status == "value"
+        and isinstance(field.value, str)
+        else None
+    )
+
+
+def compile_sos_thin(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[ScopeDeclarations, ...],
+) -> tuple[
+    dict[Any, tuple[CurationCase, ...]],
+    tuple[ResolutionDiagnostic, ...],
+    dict[str, dict[str, list[str]]],
+]:
+    """Compile SOS routing and authored coverage from selected original records."""
+    registers = {
+        f"{entry.register_info.provider}/{entry.register_info.slug}": entry
+        for entry in tree.registers
+    }
+    cases: dict[Any, list[CurationCase]] = {}
+    diagnostics: list[ResolutionDiagnostic] = []
+    report: dict[str, dict[str, list[str]]] = {}
+    if not any(
+        name in registers and registers[name].register_info.provider != "scb"
+        for scope in scopes
+        for name, _ in _scope_registers(scope)
+    ):
+        return {}, (), {}
+    with open_value_bindings(prepared.value_sources) as sessions:
+        for scope in sorted(
+            scopes, key=lambda item: (item.source, repr(item.register_key))
+        ):
+            scope_key = scope.source, scope.register_key
+            wanted = tuple(
+                sorted(
+                    (
+                        (registers[name], key)
+                        for name, key in _scope_registers(scope)
+                        if name in registers
+                        and registers[name].register_info.provider != "scb"
+                    ),
+                    key=lambda item: item[0].source_file,
+                )
+            )
+            if not wanted:
+                continue
+            if scope.register_key is None:
+                records = tuple(prepared.records.iter_records(source=scope.source))
+            else:
+                records = tuple(
+                    record
+                    for _, members in prepared.records.iter_register_slices(
+                        scope.source, (scope.register_key,)
+                    )
+                    for record in members
+                )
+            for register, register_key in wanted:
+                selected = tuple(
+                    record
+                    for record in records
+                    if source_register_key(record) == register_key
+                )
+                provider = register.register_info.provider
+                if not selected and provider != "sos":
+                    continue
+                if provider == "sos":
+                    new_cases, issues, statuses = _compile_sos_register(
+                        register, selected
+                    )
+                    diagnostics.extend(issues)
+                    report[f"sos/{register.register_info.slug}"] = statuses
+                else:
+                    new_cases = _compile_thin_register(selected, sessions)
+                cases.setdefault(scope_key, []).extend(new_cases)
+    return (
+        {
+            key: tuple(sorted(value, key=lambda case: case.case_id))
+            for key, value in cases.items()
+        },
+        tuple(diagnostics),
+        report,
+    )
+
+
+def _compile_sos_register(
+    register: RegisterCuration, records: tuple[SourceRecord, ...]
+) -> tuple[
+    tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...], dict[str, list[str]]
+]:
+    from collections import defaultdict
+
+    statuses = {
+        key: []
+        for key in (
+            "entries_read",
+            "entries_matched",
+            "stale",
+            "over_broad",
+            "not_evaluated_in_subset",
+        )
+    }
+    parent_by_name: dict[str, set[NativeKey]] = defaultdict(set)
+    lookup_signals: dict[str, list[bool]] = defaultdict(list)
+    lookup_records = []
+    diagnostics = []
+    has_variant_parent = False
+    for record in records:
+        for parent in record.parent_facts:
+            if parent.kind != "variant":
+                continue
+            has_variant_parent = True
+            if parent.variant is None or not parent.variant.name:
+                continue
+            name = parent.variant.name
+            key = native_parent_key(record.source, "sos", parent)
+            if key is not None:
+                parent_by_name[name].add(key)
+            label = _source_text(parent.fields.name)
+            level = _source_text(parent.fields.aggregation_level)
+            named = label is not None and label.casefold().startswith("styrtabell")
+            aggregated = level is not None and level.casefold() == "ej relevant"
+            if named != aggregated:
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="invalid_sos_lookup_signals",
+                        severity="error",
+                        subject=name,
+                        detail=f"{record.source}: variant {name!r} has only one styrtabell lookup signal",
+                        refs=(record_ref(record),),
+                        withheld_output=(name,),
+                    )
+                )
+            lookup_signals[name].append(named and aggregated)
+            if named and aggregated:
+                lookup_records.append(record)
+    lookup_names = {
+        name for name, signals in lookup_signals.items() if signals and all(signals)
+    }
+    routes = {}
+    for index, entry in enumerate(register.identity.route, 1):
+        if entry.deldatamangd in routes:
+            raise ValueError(
+                f"{register.source_file}#/identity.route/{index}: duplicate Deldatamängd token {entry.deldatamangd!r}"
+            )
+        routes[entry.deldatamangd] = tuple(entry.variants)
+    matched = set()
+    source_use_records = [
+        record
+        for record in lookup_records
+        if record.subject.variant.name in lookup_names
+    ]
+    variables = tuple(
+        record for record in records if native_variable_key(record) is not None
+    )
+    for record in variables:
+        token = record.subject.variant.name
+        names = routes.get(token, (token,) if token is not None else ())
+        if token in routes:
+            matched.add(token)
+        if names and all(name in lookup_names for name in names):
+            source_use_records.append(record)
+    source_use_refs = {record_ref(record) for record in source_use_records}
+    cases = []
+    if source_use_records:
+        all_refs = tuple(sorted({record_ref(record) for record in records}, key=str))
+        targets = capture_expectations(tuple(source_use_records), fields=())
+        first = records[0]
+        case_id = f"existing-source-use:{first.source}"
+        cases.append(
+            CurationCase(
+                case_id=case_id,
+                targets=targets,
+                peer_guards=(
+                    PeerGuard(
+                        guard_id=case_id,
+                        source=first.source,
+                        coordinates=(("register", first.subject.register_name),),
+                        expected_members=all_refs,
+                    ),
+                ),
+                decision=OccurrenceCorrectionDecision(
+                    reviewed=True,
+                    effects=tuple(
+                        CheckedSourceUse(ref=target.ref) for target in targets
+                    ),
+                    reason="Lookup-table records are source support.",
+                    provenance=register.source_file,
+                ),
+            )
+        )
+    families: dict[NativeKey, list[SourceRecord]] = defaultdict(list)
+    for record in variables:
+        key = native_variable_key(record)
+        assert key is not None
+        families[key].append(record)
+    for family_key, family in sorted(families.items(), key=lambda item: repr(item[0])):
+        effects = {}
+        for record in family:
+            ref = record_ref(record)
+            if ref in source_use_refs:
+                continue
+            token = record.subject.variant.name
+            if not has_variant_parent:
+                register_key = source_register_key(record)
+                assert register_key is not None
+                variant_keys = ((*register_key, "variant", "not-applicable"),)
+            elif token in routes:
+                variant_keys = tuple(
+                    key
+                    for name in routes[token]
+                    for key in sorted(parent_by_name.get(name, ()), key=repr)
+                )
+            else:
+                continue
+            own_variant = native_variant_key(record)
+            variant_keys = tuple(key for key in variant_keys if key != own_variant)
+            if not variant_keys:
+                continue
+            effect = CheckedVariantAssignment(ref=ref, variant_keys=variant_keys)
+            if ref in effects and effects[ref] != effect:
+                raise ValueError(
+                    f"{record.source}: one SOS record has conflicting routes"
+                )
+            effects[ref] = effect
+        if not effects:
+            continue
+        case_id = f"accepted-sos-routes:{register.register_info.slug}:{family_key[-1]}"
+        expectations = capture_expectations(tuple(family), fields=())
+        targets = tuple(item for item in expectations if item.ref in effects)
+        cases.append(
+            CurationCase(
+                case_id=case_id,
+                targets=targets,
+                support=tuple(item for item in expectations if item not in targets),
+                peer_guards=(
+                    PeerGuard(
+                        guard_id=case_id,
+                        source=family[0].source,
+                        coordinates=(
+                            ("register", family[0].subject.register_name),
+                            ("variable", family[0].subject.variable),
+                        ),
+                        expected_members=tuple(item.ref for item in expectations),
+                    ),
+                ),
+                decision=OccurrenceCorrectionDecision(
+                    reviewed=True,
+                    effects=tuple(effects[ref] for ref in sorted(effects, key=str)),
+                    reason="Route the declared Deldatamängd token to its named variants.",
+                    provenance=register.source_file,
+                ),
+            )
+        )
+    for index, entry in enumerate(register.identity.route, 1):
+        ref = f"{register.source_file}#/identity.route/{index}"
+        statuses["entries_read"].append(ref)
+        missing = [name for name in entry.variants if name not in parent_by_name]
+        if entry.deldatamangd in matched and entry.variants and not missing:
+            statuses["entries_matched"].append(ref)
+        else:
+            statuses["stale"].append(ref)
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="stale_curation_entry",
+                    severity="error",
+                    case_id=ref,
+                    subject=entry.deldatamangd,
+                    detail=f"{ref}: unmatched token or missing variant parents {missing!r}",
+                    withheld_output=(ref,),
+                )
+            )
+    return tuple(cases), tuple(diagnostics), statuses
+
+
+def _compile_thin_register(
+    records: tuple[SourceRecord, ...], sessions: Any
+) -> tuple[CurationCase, ...]:
+    register_facts = tuple(
+        parent
+        for record in records
+        for parent in record.parent_facts
+        if parent.kind == "register"
+    )
+    if len(register_facts) != 1:
+        raise ValueError(
+            f"{records[0].source}: thin register needs one parent declaration"
+        )
+    register = register_facts[0]
+    variants = {}
+    for record in records:
+        for parent in record.parent_facts:
+            if parent.kind != "variant":
+                continue
+            name = parent.variant.native_id if parent.variant is not None else None
+            if not isinstance(name, str) or name in variants:
+                raise ValueError(
+                    f"{record.source}: duplicate or missing thin variant key {name!r}"
+                )
+            variants[name] = parent
+    reg_from = _source_text(register.fields.coverage_from)
+    reg_to = _source_text(register.fields.coverage_to)
+    cases = []
+    for record in records:
+        variable_key = native_variable_key(record)
+        if variable_key is None:
+            continue
+        ref = record_ref(record)
+        register_key = source_register_key(record)
+        assert register_key is not None
+        col = record.subject.variable.native_id
+        assert isinstance(col, str)
+        case_id = f"accepted-authored:{record.source}:{register_key[-1]}:{col}"
+        selected = (
+            tuple(
+                reference.native_id for reference in record.subject.variant_references
+            )
+            if record.subject.variant_references
+            else tuple(sorted(variants))
+            if variants
+            else ("_default",)
+        )
+        effects: list[Any] = [CheckedSourceUse(ref=ref)]
+        for name in selected:
+            if name == "_default" and not variants:
+                variant_key = (*register_key, "variant", "not-applicable")
+                variant_from = variant_to = None
+            else:
+                parent = variants.get(name)
+                if parent is None:
+                    raise ValueError(f"{case_id}: unknown declared variant {name!r}")
+                variant_key = native_parent_key(
+                    record.source, record.subject.provider, parent
+                )
+                if variant_key is None:
+                    raise ValueError(f"{case_id}: variant has no native parent key")
+                variant_from = _source_text(parent.fields.coverage_from)
+                variant_to = _source_text(parent.fields.coverage_to)
+            starts = [
+                value
+                for value in (
+                    _source_text(record.fields.coverage_from) or reg_from,
+                    variant_from,
+                )
+                if value is not None
+            ]
+            ends = [
+                value
+                for value in (
+                    _source_text(record.fields.coverage_to) or reg_to,
+                    variant_to,
+                )
+                if value is not None
+            ]
+            start = max(starts) if starts else None
+            end = min(ends) if ends else None
+            if start is None or (end is not None and end < start):
+                raise ValueError(
+                    f"{case_id}: empty or inverted thin coverage window for {name!r}"
+                )
+            period = TemporalScope(
+                kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
+            )
+            copied = record.fields.value_set_declared is not None
+            effects.append(
+                CuratedOccurrenceAddition(
+                    occurrence_key=f"{case_id}:{name}",
+                    provider=record.subject.provider,
+                    variable_key=variable_key,
+                    variant_key=variant_key,
+                    fields=record.fields,
+                    edition_scope=TemporalScope(kind="not_applicable"),
+                    edition_period_scope=period,
+                    evidence=(ref,),
+                    donor=ref,
+                    copied_fields=tuple(SourceFields.model_fields),
+                    copy_coding=copied,
+                    expected_codings=copied_coding_fingerprints(
+                        bind_code_lists(record, sessions, scope=period).claims
+                    )
+                    if copied
+                    else None,
+                )
+            )
+        expectations = capture_expectations(
+            (record,), fields=tuple(SourceFields.model_fields), coding=True
+        )
+        cases.append(
+            CurationCase(
+                case_id=case_id,
+                targets=expectations,
+                peer_guards=(
+                    PeerGuard(
+                        guard_id=case_id,
+                        source=record.source,
+                        coordinates=(
+                            ("register", record.subject.register_name),
+                            ("variable", record.subject.variable),
+                        ),
+                        expected_members=(ref,),
+                    ),
+                ),
+                decision=OccurrenceCorrectionDecision(
+                    reviewed=True,
+                    effects=tuple(effects),
+                    reason="Authored thin-provider record declares its own finite coverage.",
+                    provenance=record.source,
+                ),
+            )
+        )
+    return tuple(cases)
 
 
 def compile_coding_register(
@@ -1540,6 +1998,13 @@ def compile_curation(
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
             current.setdefault(key, []).extend(values)
+    thin_cases, thin_diagnostics, thin_report = compile_sos_thin(tree, prepared, scopes)
+    for key, new_cases in thin_cases.items():
+        cases[key].extend(new_cases)
+    for register, statuses in thin_report.items():
+        current = report.setdefault(register, {key: [] for key in statuses})
+        for key, values in statuses.items():
+            current.setdefault(key, []).extend(values)
     return CompiledCuration(
         fields={
             "classifications": books,
@@ -1555,7 +2020,7 @@ def compile_curation(
             for key, value in cases.items()
         },
         report=report,
-        diagnostics=(*diagnostics, *naming_diagnostics),
+        diagnostics=(*diagnostics, *naming_diagnostics, *thin_diagnostics),
         naming=naming,
         variants=variants,
         provider_keys=provider_keys,

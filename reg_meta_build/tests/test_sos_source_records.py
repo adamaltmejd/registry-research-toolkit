@@ -815,6 +815,33 @@ def _write_complete_workbook(path: Path) -> None:
     workbook.close()
 
 
+def test_styrtabell_parent_keeps_both_lookup_signals(tmp_path: Path) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_complete_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    sheet = workbook["Deldatamängder"]
+    sheet["B2"] = "Styrtabell för diagnoser"
+    sheet["E1"] = "Aggregeringsnivå"
+    sheet["E2"] = "Ej relevant"
+    workbook.save(path)
+    workbook.close()
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+    parent = next(
+        fact
+        for record in cleaned.records
+        for fact in record.parent_facts
+        if fact.kind == "variant"
+        and fact.variant is not None
+        and fact.variant.name == "PAR_OV"
+    )
+    assert parent.fields.name is not None
+    assert parent.fields.aggregation_level is not None
+    assert parent.fields.name.value == "Styrtabell för diagnoser"
+    assert parent.fields.aggregation_level.value == "Ej relevant"
+
+
 def test_common_parent_metadata_preserves_languages_conflicts_and_raw_context(
     tmp_path: Path,
 ) -> None:

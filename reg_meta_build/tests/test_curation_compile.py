@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from dataclasses import replace
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 import pytest
 from reg_meta.errors import RegMetaError
@@ -14,7 +14,10 @@ from reg_meta_build.curation_compile import (
     FAMILIES,
     CompiledCuration,
     _case_family,
+    _compile_sos_register,
+    _compile_thin_register,
     _gap_family,
+    _naming_family,
     compile_curation,
     compile_native_naming,
     finalize_classification_bindings,
@@ -26,10 +29,30 @@ from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.id import mint
 from reg_meta_build.pipeline import PipelineSelection, ScopeDeclarations
 from reg_meta_build.resolved_catalog import ResolvedVariant
+from reg_meta_build.source_coding import CodeListClaim, copied_coding_fingerprints
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
-from reg_meta_build.source_curation import AcknowledgeDecision, CurationCase
+from reg_meta_build.source_curation import (
+    AcknowledgeDecision,
+    CheckedVariantAssignment,
+    CuratedOccurrenceAddition,
+    CurationCase,
+    OccurrenceCorrectionDecision,
+)
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
-from reg_meta_build.source_records import SourceCoordinate, SourceRevision
+from reg_meta_build.source_records import (
+    DeliveredCell,
+    NativeCoordinates,
+    RecordLocator,
+    SourceCoordinate,
+    SourceFieldCells,
+    SourceFields,
+    SourceParentObservation,
+    SourceRecord,
+    SourceRevision,
+    SourceSubject,
+    TemporalScope,
+    value_field,
+)
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
@@ -173,6 +196,7 @@ def _prepared():
         manifest=SimpleNamespace(inputs=inputs),
         iter_evidence=lambda: iter(()),
         records=Records(),
+        value_sources=(),
     )
 
 
@@ -388,7 +412,7 @@ def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
         for source in ("register-a", "register-b")
     )
     result = compile_curation(
-        _tree(tmp_path / "curation"), prepared, scopes, subset=True
+        _tree(tmp_path / "curation"), cast("Any", prepared), scopes, subset=True
     )
     assert result.fields["event_sources"] == (
         ("timeseries-a", "register-a"),
@@ -807,6 +831,33 @@ def test_stored_case_with_unowned_prefix_fails(tmp_path):
 
 def test_stored_v18b_case_and_gap_families_are_owned():
     assert "classification_bindings" in COMPILED
+    assert "sos_thin" in COMPILED
+    assert (
+        _naming_family(
+            NativeNamingTarget(
+                kind="variable",
+                provider="fohm",
+                source_key=(
+                    "Folkhalsomyndigheten/fohm.toml",
+                    "fohm",
+                    "register",
+                    "native-str",
+                    "nvr",
+                    "variable",
+                    "native-str",
+                    "dosnummer",
+                ),
+                register_key=(
+                    "Folkhalsomyndigheten/fohm.toml",
+                    "fohm",
+                    "register",
+                    "native-str",
+                    "nvr",
+                ),
+            )
+        )
+        == "sos_thin"
+    )
     cases = {
         "accepted-column-partitions:scb-registerinformation:1.2": "identity",
         "accepted-coding:46:0": "coding",
@@ -814,9 +865,9 @@ def test_stored_v18b_case_and_gap_families_are_owned():
         f"accepted-classification-seed:{'a' * 64}": "classification_bindings",
         "scb_errata.toml/column/1": "errata",
         "accepted-errata:sos-declared-flags": "errata",
-        "accepted-authored:Folkhalsomyndigheten/fohm.toml:nvr:dosnummer": "thin_provider",
+        "accepted-authored:Folkhalsomyndigheten/fohm.toml:nvr:dosnummer": "sos_thin",
         "delivery_enrichment.generated.toml/description/1": "annotations",
-        "accepted-sos-routes:lss:ALDER": "identity",
+        "accepted-sos-routes:lss:ALDER": "sos_thin",
         "scb_errata.toml/delivered/1": "errata",
         "accepted-classification-override:1:0": "classification_bindings",
         "accepted-codeless:46:0": "coding",
@@ -825,7 +876,7 @@ def test_stored_v18b_case_and_gap_families_are_owned():
         "accepted-sos-identity:bu:FOD_DATUMN": "identity",
         "accepted-cis2014-answers": "matrix",
         "accepted-cis2016-answers": "matrix",
-        "existing-source-use:Socialstyrelsen/Metadata_Förteckning legitimerade": "identity",
+        "existing-source-use:Socialstyrelsen/Metadata_Förteckning legitimerade": "sos_thin",
     }
     assert {case_id: _case_family(case_id) for case_id in cases} == cases
     gaps = {
@@ -841,6 +892,340 @@ def test_stored_v18b_case_and_gap_families_are_owned():
     } == gaps
     with pytest.raises(ValueError, match="unowned or ambiguous prefix"):
         _case_family("accepted-cis2014-answers-extra")
+
+
+def _case_record(
+    *,
+    provider: str,
+    register: str,
+    variant: str | None = None,
+    variable: str | None = None,
+    parent: Literal["register", "variant"] | None = None,
+    fields: SourceFields | None = None,
+    references: tuple[str, ...] = (),
+) -> SourceRecord:
+    source = "Socialstyrelsen/test.xlsx" if provider == "sos" else "Agency/test.toml"
+    reg = SourceCoordinate(
+        status="value",
+        name=register if provider == "sos" else None,
+        native_id=register if provider != "sos" else None,
+    )
+    var = (
+        SourceCoordinate(
+            status="value",
+            name=variant if provider == "sos" else None,
+            native_id=variant if provider != "sos" else None,
+        )
+        if variant is not None
+        else SourceCoordinate(status="not_applicable")
+    )
+    col = (
+        SourceCoordinate(status="value", native_id=variable)
+        if variable
+        else SourceCoordinate(status="not_applicable")
+    )
+    subject = SourceSubject(
+        provider=provider,
+        register=reg,
+        variant=var,
+        variant_references=tuple(
+            SourceCoordinate(status="value", native_id=item) for item in references
+        ),
+        population=SourceCoordinate(status="unknown"),
+        variable=col,
+        member=col,
+        native=NativeCoordinates(),
+    )
+    facts = ()
+    cells = ()
+    if parent is not None:
+        coordinate = reg if parent == "register" else var
+        parent_fields = fields or SourceFields(name=value_field(variant or register))
+        names = tuple(
+            name
+            for name in SourceFields.model_fields
+            if getattr(parent_fields, name) is not None
+        )
+        cells = tuple(
+            DeliveredCell(
+                name=name,
+                present=True,
+                raw_value=str(getattr(parent_fields, name).value),
+                interpreted_value=str(getattr(parent_fields, name).value),
+            )
+            for name in names
+        )
+        facts = (
+            SourceParentObservation(
+                kind=parent,
+                coordinate=coordinate,
+                register=reg,
+                variant=var if parent == "variant" else None,
+                fields=parent_fields,
+                field_cells=tuple(
+                    SourceFieldCells(field=name, positions=(index,))
+                    for index, name in enumerate(names)
+                ),
+            ),
+        )
+    semantic = (
+        f"register:{register}",
+        f"variant:{variant}",
+        f"variable:{variable}",
+        f"parent:{parent}",
+    )
+    return SourceRecord.create(
+        revision=_revision(source, artifact_path=source),
+        locators=(
+            RecordLocator(
+                semantic_record_key=semantic,
+                physical_file=source,
+                physical_table="fixture",
+                physical_record=repr(semantic),
+                physical_cells=tuple(
+                    f"fixture.{name}" for name in (cell.name for cell in cells)
+                ),
+            ),
+        ),
+        subject=subject,
+        edition_scope=TemporalScope(kind="not_applicable"),
+        edition_period_scope=TemporalScope(kind="not_applicable"),
+        fields=fields or SourceFields(),
+        parent_facts=facts,
+        delivered_cells=cells,
+    )
+
+
+def _route_register(*routes):
+    return SimpleNamespace(
+        register_info=SimpleNamespace(slug="sample"),
+        source_file="curation/registers/sos/sample.toml",
+        identity=SimpleNamespace(
+            route=tuple(
+                SimpleNamespace(deldatamangd=token, variants=names)
+                for token, names in routes
+            )
+        ),
+    )
+
+
+def test_thin_native_naming_captures_complete_family_guard(tmp_path):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/fk/r.toml"
+    path.parent.mkdir()
+    register_id = mint("fk", "r")
+    path.write_text(
+        f'[register]\nprovider = "fk"\nslug = "r"\nnative_id = "{register_id}"\n'
+        f'[[variant]]\nnative_id = "{register_id}.{mint("fk", "r", "_default")}"\nslug = "_default"\n'
+        f'[[variable]]\nnative_id = "{register_id}.col"\nslug = "col"\n'
+    )
+    parent = _case_record(provider="fk", register="r", parent="register")
+    variable = _case_record(provider="fk", register="r", variable="col")
+    records = (parent, variable)
+
+    class Reader:
+        def iter_native_families(self, source):
+            return iter(((native_variable_key(variable), (variable,)),))
+
+        def iter_records(self, *, source):
+            return iter(records)
+
+    register_key = source_register_key(variable)
+    assert register_key is not None
+    scope = ScopeDeclarations(
+        source=variable.source,
+        register_key=None,
+        naming=(
+            NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind="register", provider="fk", source_key=register_key
+                ),
+                naming=SlugEntry(
+                    kind="register", provider="fk", source_id=str(register_id), slug="r"
+                ),
+                contributors=(),
+            ),
+        ),
+    )
+    names, _, _, diagnostics, _ = compile_native_naming(
+        load_curation_tree(root),
+        cast("Any", SimpleNamespace(records=Reader())),
+        (scope,),
+        subset=True,
+    )
+    assert diagnostics == ()
+    target = next(
+        item.target
+        for item in names[(variable.source, None)]
+        if item.target.kind == "variable"
+    )
+    assert len(target.expectations) == 1
+    assert target.peer_guards[0].expected_members == (target.expectations[0].ref,)
+
+
+def test_sos_variantless_workbook_routes_to_default():
+    record = _case_record(
+        provider="sos", register="Book", variant="TOKEN", variable="COL"
+    )
+    cases, diagnostics, _ = _compile_sos_register(_route_register(), (record,))
+    assert diagnostics == ()
+    assert len(cases) == 1
+    assert isinstance(cases[0].decision, OccurrenceCorrectionDecision)
+    effect = cases[0].decision.effects[0]
+    assert isinstance(effect, CheckedVariantAssignment)
+    assert effect.variant_keys == (
+        (
+            "Socialstyrelsen/test.xlsx",
+            "sos",
+            "register",
+            "name",
+            "Book",
+            "variant",
+            "not-applicable",
+        ),
+    )
+
+
+def test_sos_token_routes_to_two_native_parents_and_unmatched_route_is_stale():
+    record = _case_record(
+        provider="sos", register="Book", variant="TOKEN", variable="COL"
+    )
+    parents = tuple(
+        _case_record(provider="sos", register="Book", variant=name, parent="variant")
+        for name in ("A", "B")
+    )
+    register = _route_register(("TOKEN", ("A", "B")), ("MISSING", ("A",)))
+    cases, diagnostics, statuses = _compile_sos_register(register, (*parents, record))
+    assert len(cases) == 1
+    assert isinstance(cases[0].decision, OccurrenceCorrectionDecision)
+    effect = cases[0].decision.effects[0]
+    assert isinstance(effect, CheckedVariantAssignment)
+    assert {key[-1] for key in effect.variant_keys} == {"A", "B"}
+    assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+    assert statuses["stale"] == ["curation/registers/sos/sample.toml#/identity.route/2"]
+
+
+def test_sos_styrtabell_requires_both_lookup_signals():
+    parent = _case_record(
+        provider="sos",
+        register="Book",
+        variant="A",
+        parent="variant",
+        fields=SourceFields(name=value_field("Styrtabell A")),
+    )
+    _, diagnostics, _ = _compile_sos_register(_route_register(), (parent,))
+    assert [issue.code for issue in diagnostics] == ["invalid_sos_lookup_signals"]
+
+
+def test_sos_lookup_parent_and_routed_variable_become_source_uses():
+    parent = _case_record(
+        provider="sos",
+        register="Book",
+        variant="A",
+        parent="variant",
+        fields=SourceFields(
+            name=value_field("Styrtabell A"),
+            aggregation_level=value_field("Ej relevant"),
+        ),
+    )
+    variable = _case_record(
+        provider="sos", register="Book", variant="TOKEN", variable="COL"
+    )
+    cases, diagnostics, _ = _compile_sos_register(
+        _route_register(("TOKEN", ("A",))), (parent, variable)
+    )
+    assert diagnostics == ()
+    assert len(cases) == 1
+    assert cases[0].case_id.startswith("existing-source-use:")
+    assert len(cases[0].targets) == 2
+    assert isinstance(cases[0].decision, OccurrenceCorrectionDecision)
+    assert {effect.kind for effect in cases[0].decision.effects} == {"source_use"}
+
+
+def test_thin_intersects_raw_windows_and_rejects_inversion():
+    register = _case_record(
+        provider="fk",
+        register="r",
+        parent="register",
+        fields=SourceFields(
+            coverage_from=value_field("2000-01-01"),
+            coverage_to=value_field("2020-12-31"),
+        ),
+    )
+    variant = _case_record(
+        provider="fk",
+        register="r",
+        variant="v",
+        parent="variant",
+        fields=SourceFields(
+            coverage_from=value_field("2010-01-01"),
+            coverage_to=value_field("2018-12-31"),
+        ),
+    )
+    variable = _case_record(
+        provider="fk",
+        register="r",
+        variable="col",
+        references=("v",),
+        fields=SourceFields(
+            coverage_from=value_field("2005-01-01"),
+            coverage_to=value_field("2019-12-31"),
+        ),
+    )
+    (case,) = _compile_thin_register((register, variant, variable), ())
+    assert isinstance(case.decision, OccurrenceCorrectionDecision)
+    addition = case.decision.effects[1]
+    assert isinstance(addition, CuratedOccurrenceAddition)
+    assert [
+        (part.start, part.end) for part in addition.edition_period_scope.intervals
+    ] == [("2010-01-01", "2018-12-31")]
+    inverted = variant.model_copy(
+        update={
+            "parent_facts": (
+                variant.parent_facts[0].model_copy(
+                    update={
+                        "fields": SourceFields(coverage_from=value_field("2021-01-01"))
+                    }
+                ),
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="inverted thin coverage"):
+        _compile_thin_register((register, inverted, variable), ())
+
+
+def test_thin_copies_coding_from_its_own_declared_list(monkeypatch):
+    register = _case_record(
+        provider="fk",
+        register="r",
+        parent="register",
+        fields=SourceFields(coverage_from=value_field("2010-01-01")),
+    )
+    variable = _case_record(
+        provider="fk",
+        register="r",
+        variable="col",
+        fields=SourceFields(value_set_declared=value_field("own-list")),
+    )
+    claim = CodeListClaim(
+        claim_id="own-list", scope=TemporalScope(kind="year_independent"), members=()
+    )
+
+    def own_list(record, sessions, *, scope):
+        assert record is variable
+        assert scope.intervals[0].start == "2010-01-01"
+        return SimpleNamespace(claims=(claim,))
+
+    monkeypatch.setattr("reg_meta_build.curation_compile.bind_code_lists", own_list)
+    (case,) = _compile_thin_register((register, variable), ())
+    assert isinstance(case.decision, OccurrenceCorrectionDecision)
+    addition = case.decision.effects[1]
+    assert isinstance(addition, CuratedOccurrenceAddition)
+    assert addition.copy_coding
+    assert addition.expected_codings == copied_coding_fingerprints((claim,))
+    assert addition.fields.value_set_declared is not None
+    assert addition.fields.value_set_declared.value == "own-list"
 
 
 def test_compiled_classification_family_drops_both_stored_case_prefixes(tmp_path):

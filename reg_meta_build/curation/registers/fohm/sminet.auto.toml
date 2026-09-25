@@ -27,6 +27,10 @@ native_id = "9022860280161092196.kon"
 slug = "kon"  # source: kolumnnamn
 
 [[variable]]
+native_id = "9022860280161092196.provtagningsdatum"
+slug = "provtagningsdatum"  # source: kolumnnamn
+
+[[variable]]
 native_id = "9022860280161092196.rikskod"
 slug = "rikskod"  # source: kolumnnamn
 
@@ -45,6 +49,10 @@ slug = "smittsparningsstatus"  # source: kolumnnamn
 [[variable]]
 native_id = "9022860280161092196.smittvag"
 slug = "smittvag"  # source: kolumnnamn
+
+[[variable]]
+native_id = "9022860280161092196.statistikdatum"
+slug = "statistikdatum"  # source: kolumnnamn
 
 [[variable]]
 native_id = "9022860280161092196.typ_av_infektion"
