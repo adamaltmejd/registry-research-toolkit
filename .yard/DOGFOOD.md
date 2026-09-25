@@ -243,3 +243,11 @@ hash); the lane hit the automatic review maximum and needed an operator nudge wi
 design decision. Y-202/1 g1 ended "worker stopped with uncommitted or in-progress Git
 work" after 30 min and was recovered by the automatic unclean-clone cleanup; no operator
 action was needed, but the 30 min were spent.
+
+### 2026-09-25: watch-side sync says dirty where `yard sync` moves
+
+Filed as [switchyard#124](https://github.com/adamaltmejd/switchyard/issues/124). Twice
+(Y-232 and Y-234 landings) a `yard status --watch --sync` terminal wake reported
+`"sync":{"moved":false,"reason":"dirty"}` with only an untracked `.codex/config.toml` in
+the tree; a manual `yard sync` right after fast-forwarded. Workaround: run `yard sync`
+after each landed wake.
