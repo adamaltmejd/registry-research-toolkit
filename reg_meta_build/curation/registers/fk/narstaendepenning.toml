@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "narstaendepenning"
+native_id = "5136717806447986475"
+
+[[variant]]
+native_id = "5136717806447986475.6449766685553259956"
+slug = "_default"
+display_group = "Närståendepenning"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Smittbärarpenning
+
+[[variable]]
+native_id = "5136717806447986475.personnummer"
+slug = "lopnr-personnr"

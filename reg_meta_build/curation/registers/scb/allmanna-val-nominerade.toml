@@ -13,3 +13,156 @@ native_id = "239"
 [[code_label_pair]]
 code = "scb/allmanna-val-nominerade/partikod"
 label = "scb/allmanna-val-nominerade/partinamn"
+
+[[variant]]
+native_id = "239.466"
+slug = "riksdagsval"
+display_group = "Riksdagsval"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "239.476"
+slug = "regionfullmaktigeval"
+display_group = "Regionfullmäktigeval"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "239.477"
+slug = "kommunfullmaktigeval"
+display_group = "Kommunfullmäktigeval"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Europaparlamentsval, valresultat
+
+[[variable]]
+native_id = "239.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "239.775"
+slug = "utbildningsniva-aggregat-grov"
+
+[[variable]]
+native_id = "239.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "239.784"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "239.22348"
+slug = "boende-disponibel-inkomst"
+
+# register 240 (ep-val-resultat)
+
+[[variable]]
+native_id = "239.14775.valkretsnamn"
+slug = "riksdagsvalkrets-namn"
+
+[[variable]]
+native_id = "239.16238.valkretsnamn"
+slug = "landstingsvalkrets-namn"
+
+[[variable]]
+native_id = "239.16239.valkretsnamn"
+slug = "kommunvalkrets"
+
+# register 240 (ep-val-resultat)
+
+[[variable]]
+native_id = "239.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "239.25"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "239.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "239.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "239.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "239.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "239.327"
+slug = "efternamn"
+
+[[variable]]
+native_id = "239.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "239.335"
+slug = "forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "239.1305"
+slug = "disponibel-inkomst-familj"
+
+[[variable]]
+native_id = "239.5056"
+slug = "landstingskod"
+
+[[variable]]
+native_id = "239.5059"
+slug = "landstingets-namn"
+
+[[variable]]
+native_id = "239.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "239.6818"
+slug = "medborgarland-varldsdel"
+
+[[variable]]
+native_id = "239.7916"
+slug = "forvarvsinkomst-kvintilgrupp"
+
+[[variable]]
+native_id = "239.8529"
+slug = "personroster-totalt"
+
+# register 240
+
+[[variable]]
+native_id = "239.14775.ri-valkretskod"
+slug = "riksdagsvalkrets-kod"
+
+[[variable]]
+native_id = "239.16238.lt-valkretskod"
+slug = "landstingsvalkrets-kod"
+
+[[variable]]
+native_id = "239.16239.ko-valkretskod"
+slug = "kommunvalkrets-kod"
+
+[[variable]]
+native_id = "239.49.lansnamn"
+slug = "lan"
+
+[[variable]]
+native_id = "239.7942.pnamn-kort"
+slug = "parti-kort"
+
+# register 24

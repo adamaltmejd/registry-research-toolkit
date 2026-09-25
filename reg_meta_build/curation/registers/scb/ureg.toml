@@ -11,3 +11,207 @@ register = "scb/ureg"
 variable = "kallkod"
 description = "Källa för uppgift om högsta utbildning"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[variant]]
+native_id = "24.78"
+slug = "personens-hogsta-utbildning-16-74"
+display_group = "Personens högsta utbildning,16-74 år"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "24.709"
+slug = "personens-hogsta-utbildning"
+display_group = "Personens högsta utbildning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "24.1225"
+slug = "ut-invandrares-utbildning"
+display_group = "Ut-och invandrares utbildning"
+panel_entity_key = "eget-personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "24.1383"
+slug = "personens-samtliga-utbildningar"
+display_group = "Personens samtliga utbildningar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "24.1630"
+slug = "komvux"
+display_group = "Komvux"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "24.1631"
+slug = "gymnasieintyg"
+display_group = "Gymnasieintyg"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "24.1634"
+slug = "samlat-betygsdokument"
+display_group = "Samlat betygsdokument/studiebevis"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Inkomst- och taxeringsregistret (IoT)
+
+[[variable]]
+native_id = "24.4544"
+slug = "eget-personnr"
+
+
+[[variable]]
+native_id = "24.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "24.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "24.44"
+slug = "kon"
+
+[[variable]]
+native_id = "24.73"
+slug = "ar"
+
+[[variable]]
+native_id = "24.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "24.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "24.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "24.751"
+slug = "arsversion"
+
+[[variable]]
+native_id = "24.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "24.32900"
+slug = "koneget"
+
+# register 25 (iot)
+
+[[variable]]
+native_id = "24.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "24.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "24.753"
+slug = "examensar"
+
+[[variable]]
+native_id = "24.754"
+slug = "examenskommun"
+
+[[variable]]
+native_id = "24.793"
+slug = "examenstermin"
+
+[[variable]]
+native_id = "24.866"
+slug = "fodd-i-sverige-utomlands"
+
+[[variable]]
+native_id = "24.1536"
+slug = "studievag-gymnasieskolan"
+
+[[variable]]
+native_id = "24.15724"
+slug = "grund-for-bosattning-grupperad"
+
+[[variable]]
+native_id = "24.16234"
+slug = "fodelseland-eller-lan"
+
+[[variable]]
+native_id = "24.17351"
+slug = "medborgarskap"
+
+[[variable]]
+native_id = "24.27129"
+slug = "grund-for-bosattning-klassgrupp"
+
+[[variable]]
+native_id = "24.41673"
+slug = "deltagande-kurs"
+
+# register 25
+
+[[variable]]
+native_id = "24.32912.vistelsetid"
+slug = "vistelsetid-migrant"
+
+[[variable]]
+native_id = "24.40077.atutim"
+slug = "undervisningstimmar"
+
+[[variable]]
+native_id = "24.7018.hutcsun2000niva"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "24.7018.hutxsun2000niva"
+slug = "utbildningsniva-3-positioner-2"
+
+[[variable]]
+native_id = "24.7062.fblanmigar"
+slug = "folkbokforingslan"
+
+[[variable]]
+native_id = "24.785.hutcsun2000inr1"
+slug = "utbildningsinriktning-1-position"
+
+[[variable]]
+native_id = "24.785.hutxsun2000inr1"
+slug = "utbildningsinriktning-1-position-2"
+
+[[variable]]
+native_id = "24.8189.hutcsun"
+slug = "utbildningens-niva-och-inriktning"
+
+[[variable]]
+native_id = "24.8772.hutcsun2000inr"
+slug = "utbildningsinriktning-individen"
+
+[[variable]]
+native_id = "24.8772.hutxsun2000inr"
+slug = "utbildningsinriktning-individen-2"
+
+# register 240

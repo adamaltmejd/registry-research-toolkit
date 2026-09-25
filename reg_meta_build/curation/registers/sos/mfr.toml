@@ -65,3 +65,559 @@ key = "diagnoskod-graviditet"
 label = "Diagnoskod under graviditet"
 axis = "ordinal"
 members = [{ variable = "diagnoskod-graviditet-1", value = "1", label = "1" }, { variable = "diagnoskod-graviditet-2", value = "2", label = "2" }, { variable = "diagnoskod-graviditet-3", value = "3", label = "3" }, { variable = "diagnoskod-graviditet-4", value = "4", label = "4" }]
+
+[[variant]]
+native_id = "6052270801387609014.6500057991853870690"
+slug = "mfr"
+display_group = "MFR"
+panel_entity_key = "personnr-mor"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "6052270801387609014.8238708481874343227"
+slug = "mfr-fok"
+display_group = "MFR_FOK"
+panel_entity_key = "personnr-barn"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "6052270801387609014.7877915304423976076"
+slug = "mfr-ivf"
+display_group = "MFR_IVF"
+panel_entity_key = "personnr-mor"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "6052270801387609014.5479369406799642076"
+slug = "mfr-lmed"
+display_group = "MFR_LMED"
+panel_entity_key = "personnr-mor"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Patientregistret (PAR)
+
+[[variable]]
+native_id = "6052270801387609014.BPNR"
+slug = "personnr-barn"
+
+
+[[variable]]
+native_id = "6052270801387609014.MPNR"
+slug = "personnr-mor"
+
+
+[[variable]]
+native_id = "6052270801387609014.AMNIO"
+slug = "fosterdiagnostik-amniocentes"
+
+[[variable]]
+native_id = "6052270801387609014.APGAR1"
+slug = "apgar-1-minut"
+
+[[variable]]
+native_id = "6052270801387609014.APGAR10"
+slug = "apgar-10-minuter"
+
+[[variable]]
+native_id = "6052270801387609014.APGAR5"
+slug = "apgar-5-minut"
+
+[[variable]]
+native_id = "6052270801387609014.BAD"
+slug = "smartlindring-bad"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG1"
+slug = "diagnoskod-barnet-1"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG10"
+slug = "diagnoskod-barnet-10"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG11"
+slug = "diagnoskod-barnet-11"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG12"
+slug = "diagnoskod-barnet-12"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG13"
+slug = "diagnoskod-barnet-13"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG14"
+slug = "diagnoskod-barnet-14"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG15"
+slug = "diagnoskod-barnet-15"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG16"
+slug = "diagnoskod-barnet-16"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG17"
+slug = "diagnoskod-barnet-17"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG18"
+slug = "diagnoskod-barnet-18"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG19"
+slug = "diagnoskod-barnet-19"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG2"
+slug = "diagnoskod-barnet-2"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG20"
+slug = "diagnoskod-barnet-20"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG3"
+slug = "diagnoskod-barnet-3"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG4"
+slug = "diagnoskod-barnet-4"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG5"
+slug = "diagnoskod-barnet-5"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG6"
+slug = "diagnoskod-barnet-6"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG7"
+slug = "diagnoskod-barnet-7"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG8"
+slug = "diagnoskod-barnet-8"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG9"
+slug = "diagnoskod-barnet-9"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG_BK1"
+slug = "barnets-diagnoskod-bk-1"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG_BK2"
+slug = "barnets-diagnoskod-bk-2"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG_BK3"
+slug = "barnets-diagnoskod-bk-3"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG_BK4"
+slug = "barnets-diagnoskod-bk-4"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG_BK5"
+slug = "barnets-diagnoskod-bk-5"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG_BK6"
+slug = "barnets-diagnoskod-bk-6"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG_BK7"
+slug = "barnets-diagnoskod-bk-7"
+
+[[variable]]
+native_id = "6052270801387609014.BDIAG_BK8"
+slug = "barnets-diagnoskod-bk-8"
+
+[[variable]]
+native_id = "6052270801387609014.BESOK"
+slug = "antal-modrahalsovardsbesok"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP"
+slug = "atgardskod-barnet"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP1"
+slug = "atgardskod-barnet-1"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP10"
+slug = "atgardskod-barnet-10"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP11"
+slug = "atgardskod-barnet-11"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP12"
+slug = "atgardskod-barnet-12"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP2"
+slug = "atgardskod-barnet-2"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP3"
+slug = "atgardskod-barnet-3"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP4"
+slug = "atgardskod-barnet-4"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP5"
+slug = "atgardskod-barnet-5"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP6"
+slug = "atgardskod-barnet-6"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP7"
+slug = "atgardskod-barnet-7"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP8"
+slug = "atgardskod-barnet-8"
+
+[[variable]]
+native_id = "6052270801387609014.BFLOP9"
+slug = "atgardskod-barnet-9"
+
+[[variable]]
+native_id = "6052270801387609014.BLANGD"
+slug = "barnets-fodelselangd"
+
+[[variable]]
+native_id = "6052270801387609014.BLANGDF2"
+slug = "barnets-fodelselangd-2"
+
+[[variable]]
+native_id = "6052270801387609014.BORD"
+slug = "borduppgift"
+
+[[variable]]
+native_id = "6052270801387609014.BORDF2"
+slug = "borduppgift-f2"
+
+[[variable]]
+native_id = "6052270801387609014.BORDNR"
+slug = "bordordning"
+
+[[variable]]
+native_id = "6052270801387609014.BORDNRF2"
+slug = "bordordning-f2"
+
+[[variable]]
+native_id = "6052270801387609014.BPNRQ"
+slug = "personnummerkvalitet-barnet"
+
+[[variable]]
+native_id = "6052270801387609014.BVIKT"
+slug = "barnets-fodelsevikt"
+
+[[variable]]
+native_id = "6052270801387609014.CVB"
+slug = "fosterdiagnostik-chorionvillibiopsi"
+
+[[variable]]
+native_id = "6052270801387609014.DODKL"
+slug = "dodsklockslag-barnet"
+
+[[variable]]
+native_id = "6052270801387609014.EPIBL"
+slug = "smartlindring-epidural"
+
+[[variable]]
+native_id = "6052270801387609014.FBARN"
+slug = "friskt-barn"
+
+[[variable]]
+native_id = "6052270801387609014.FID"
+slug = "unikt-lopnummer"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP"
+slug = "forlossningsoperation"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP1"
+slug = "atgardskod-forlosta-1"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP10"
+slug = "atgardskod-forlosta-10"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP11"
+slug = "atgardskod-forlosta-11"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP12"
+slug = "atgardskod-forlosta-12"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP2"
+slug = "atgardskod-forlosta-2"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP3"
+slug = "atgardskod-forlosta-3"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP4"
+slug = "atgardskod-forlosta-4"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP5"
+slug = "atgardskod-forlosta-5"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP6"
+slug = "atgardskod-forlosta-6"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP7"
+slug = "atgardskod-forlosta-7"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP8"
+slug = "atgardskod-forlosta-8"
+
+[[variable]]
+native_id = "6052270801387609014.FLOP9"
+slug = "atgardskod-forlosta-9"
+
+[[variable]]
+native_id = "6052270801387609014.FNAT"
+slug = "medborgarskap-fader"
+
+[[variable]]
+native_id = "6052270801387609014.FODKL"
+slug = "fodelseklockslag"
+
+[[variable]]
+native_id = "6052270801387609014.GDIAG1"
+slug = "diagnoskod-graviditet-1"
+
+[[variable]]
+native_id = "6052270801387609014.GDIAG2"
+slug = "diagnoskod-graviditet-2"
+
+[[variable]]
+native_id = "6052270801387609014.GDIAG3"
+slug = "diagnoskod-graviditet-3"
+
+[[variable]]
+native_id = "6052270801387609014.GDIAG4"
+slug = "diagnoskod-graviditet-4"
+
+[[variable]]
+native_id = "6052270801387609014.GRDBS"
+slug = "graviditetslangd-dagar-basta-skattning"
+
+[[variable]]
+native_id = "6052270801387609014.GRDFV"
+slug = "graviditetslangd-dagar-utover-veckor"
+
+[[variable]]
+native_id = "6052270801387609014.GRDSM"
+slug = "graviditetslangd-dagar-utover-veckor-sm"
+
+[[variable]]
+native_id = "6052270801387609014.GRDUL"
+slug = "graviditetslangd-dagar-utover-veckor-ul"
+
+[[variable]]
+native_id = "6052270801387609014.GRVBS"
+slug = "graviditetslangd-veckor-basta-skattning"
+
+[[variable]]
+native_id = "6052270801387609014.GRVFV"
+slug = "graviditetslangd-fullbordade-veckor"
+
+[[variable]]
+native_id = "6052270801387609014.GRVSM"
+slug = "graviditetslangd-veckor-sista-mens"
+
+[[variable]]
+native_id = "6052270801387609014.GRVUL"
+slug = "graviditetslangd-veckor-ultraljud"
+
+[[variable]]
+native_id = "6052270801387609014.HOMF"
+slug = "barnets-huvudomfang"
+
+[[variable]]
+native_id = "6052270801387609014.IFSML"
+slug = "smartlindring-ej-farmakologisk"
+
+[[variable]]
+native_id = "6052270801387609014.INTUB"
+slug = "upplivningsatgarder-intubation"
+
+[[variable]]
+native_id = "6052270801387609014.ISML"
+slug = "smartlindring-ingen"
+
+[[variable]]
+native_id = "6052270801387609014.KLIPP"
+slug = "perinealklipp"
+
+[[variable]]
+native_id = "6052270801387609014.LK"
+slug = "kommunkod"
+
+[[variable]]
+native_id = "6052270801387609014.LKF"
+slug = "lan-kommun-forsamlingskod"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG1"
+slug = "diagnoskod-forlosta-1"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG10"
+slug = "diagnoskod-forlosta-10"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG11"
+slug = "diagnoskod-forlosta-11"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG12"
+slug = "diagnoskod-forlosta-12"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG2"
+slug = "diagnoskod-forlosta-2"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG3"
+slug = "diagnoskod-forlosta-3"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG4"
+slug = "diagnoskod-forlosta-4"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG5"
+slug = "diagnoskod-forlosta-5"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG6"
+slug = "diagnoskod-forlosta-6"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG7"
+slug = "diagnoskod-forlosta-7"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG8"
+slug = "diagnoskod-forlosta-8"
+
+[[variable]]
+native_id = "6052270801387609014.MDIAG9"
+slug = "diagnoskod-forlosta-9"
+
+[[variable]]
+native_id = "6052270801387609014.METOD"
+slug = "behandlingsmetod"
+
+[[variable]]
+native_id = "6052270801387609014.MFLOP"
+slug = "atgardskod-forlosta"
+
+[[variable]]
+native_id = "6052270801387609014.MHVNR"
+slug = "modrahalsovardsnr"
+
+[[variable]]
+native_id = "6052270801387609014.MISSB"
+slug = "fosterskada-kromosomavvikelse"
+
+[[variable]]
+native_id = "6052270801387609014.MLGA"
+slug = "tung-for-tiden-lga"
+
+[[variable]]
+native_id = "6052270801387609014.MNAT"
+slug = "medborgarskap-forlosta"
+
+[[variable]]
+native_id = "6052270801387609014.MPNRQ"
+slug = "personnummerkvalitet-gravida"
+
+[[variable]]
+native_id = "6052270801387609014.MSGA"
+slug = "latt-for-tiden-sga"
+
+[[variable]]
+native_id = "6052270801387609014.MVIKT"
+slug = "forsta-uppmatta-vikt-gravida"
+
+[[variable]]
+native_id = "6052270801387609014.PUDBL"
+slug = "smartlindring-pudendus"
+
+[[variable]]
+native_id = "6052270801387609014.ROK0"
+slug = "rokning-fore-graviditet"
+
+[[variable]]
+native_id = "6052270801387609014.ROK1"
+slug = "rokning-inskrivning-mhv"
+
+[[variable]]
+native_id = "6052270801387609014.ROK2"
+slug = "rokning-senare-graviditet"
+
+[[variable]]
+native_id = "6052270801387609014.SMDAT"
+slug = "senaste-menstruation-dag"
+
+[[variable]]
+native_id = "6052270801387609014.SNUS0"
+slug = "snusning-3-manader-fore-graviditet"
+
+[[variable]]
+native_id = "6052270801387609014.SNUS1"
+slug = "snusning-vid-inskrivning-mhv"
+
+[[variable]]
+native_id = "6052270801387609014.SNUS2"
+slug = "snusning-senare-graviditet"
+
+[[variable]]
+native_id = "6052270801387609014.TANG"
+slug = "forlossningsavslut-tang"
+
+[[variable]]
+native_id = "6052270801387609014.TID7DOD"
+slug = "barn-doda-0-6-dygn-antal"
+
+[[variable]]
+native_id = "6052270801387609014.TNS"
+slug = "smartlindring-tens"
+
+[[variable]]
+native_id = "6052270801387609014.VENT"
+slug = "upplivningsatgarder-ventilation-pa-mask"
+# register 6293204766641962219

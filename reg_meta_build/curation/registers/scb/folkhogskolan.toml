@@ -6,3 +6,372 @@ native_id = "105"
 [[code_label_pair]]
 code = "scb/folkhogskolan/kommunalforbund-id"
 label = "scb/folkhogskolan/kommunalforbund-namn"
+
+[[variant]]
+native_id = "105.116"
+slug = "grupper-varterminen"
+display_group = "Grupper - Vårterminen"
+
+
+[[variant]]
+native_id = "105.117"
+slug = "grupper-hostterminen"
+display_group = "Grupper - Höstterminen"
+
+
+[[variant]]
+native_id = "105.1269"
+slug = "deltagarregister"
+display_group = "Deltagarregister"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "105.1451"
+slug = "pedagogisk-personal"
+display_group = "Pedagogisk personal"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "105.1557"
+slug = "deltagare-i-sfi"
+display_group = "Deltagare i sfi"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Forskarexaminerades arbetsmarknad
+
+[[variable]]
+native_id = "105.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "105.49"
+slug = "lan"
+
+[[variable]]
+native_id = "105.73"
+slug = "ar"
+
+[[variable]]
+native_id = "105.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "105.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "105.1579"
+slug = "termin"
+
+[[variable]]
+native_id = "105.6420"
+slug = "huvudman-for-skolan"
+
+[[variable]]
+native_id = "105.8073"
+slug = "sun-niva-old-mor"
+
+[[variable]]
+native_id = "105.8074"
+slug = "faderns-utbildningsniva"
+
+[[variable]]
+native_id = "105.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "105.8580"
+slug = "utbbak-ej-grundskola"
+
+[[variable]]
+native_id = "105.8581"
+slug = "utbbak-hogre-utbildning"
+
+[[variable]]
+native_id = "105.8599"
+slug = "utbbak-grundskolekompetens"
+
+[[variable]]
+native_id = "105.8605"
+slug = "utbbak-paborjad-gymnasium"
+
+[[variable]]
+native_id = "105.8606"
+slug = "utbbak-gymnasium-2ar"
+
+[[variable]]
+native_id = "105.8607"
+slug = "utbbak-gymnasium-3ar"
+
+[[variable]]
+native_id = "105.8609"
+slug = "deltagare-folkhogskolan"
+
+[[variable]]
+native_id = "105.8611"
+slug = "distansutbildning"
+
+[[variable]]
+native_id = "105.8612"
+slug = "gaststuderande-europa"
+
+[[variable]]
+native_id = "105.8613"
+slug = "gaststuderande-norden"
+
+[[variable]]
+native_id = "105.8615"
+slug = "invandrade-folkhogskolan"
+
+[[variable]]
+native_id = "105.8617"
+slug = "kursinriktning"
+
+[[variable]]
+native_id = "105.8619"
+slug = "kursniva-folkhogskolan"
+
+[[variable]]
+native_id = "105.8621"
+slug = "kursort-folkhogskolan"
+
+[[variable]]
+native_id = "105.8622"
+slug = "omfattning-folkhogskolan"
+
+[[variable]]
+native_id = "105.8623"
+slug = "alder-18-ar-folkhogskolan"
+
+[[variable]]
+native_id = "105.8624"
+slug = "alder-60ar-folkhogskolan"
+
+[[variable]]
+native_id = "105.8625"
+slug = "alder-18-24-ar-folkhogskolan"
+
+[[variable]]
+native_id = "105.8627"
+slug = "internatboende"
+
+[[variable]]
+native_id = "105.8630"
+slug = "alder-25-29-ar-folkhogskolan"
+
+[[variable]]
+native_id = "105.8631"
+slug = "alder-30-45-ar-folkhogskolan"
+
+[[variable]]
+native_id = "105.8632"
+slug = "alder-46-60-ar-folkhogskolan"
+
+[[variable]]
+native_id = "105.8635"
+slug = "kurstyp-folkhogskolan"
+
+[[variable]]
+native_id = "105.10483"
+slug = "folkhogskola"
+
+[[variable]]
+native_id = "105.30545"
+slug = "termin-for-kursen"
+
+[[variable]]
+native_id = "105.30825"
+slug = "behorighet-yrkeshogskolan"
+
+[[variable]]
+native_id = "105.32454"
+slug = "foraldrarnas-utbildningsniva"
+
+[[variable]]
+native_id = "105.32721"
+slug = "distansundervisning"
+
+[[variable]]
+native_id = "105.35415"
+slug = "langd-eftergymnasial"
+
+[[variable]]
+native_id = "105.35416"
+slug = "intyg-eftergymnasial"
+
+[[variable]]
+native_id = "105.35418"
+slug = "gaststuderande"
+
+[[variable]]
+native_id = "105.45623"
+slug = "nyborjare-sarskild-kurs"
+
+[[variable]]
+native_id = "105.45626"
+slug = "kommun-for-kurs"
+
+# register 108 (gyst)
+
+[[variable]]
+native_id = "105.14815.skolkommun"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "105.32738.skollan"
+slug = "skollan"
+
+[[variable]]
+native_id = "105.36.hemkommun"
+slug = "kommun"
+
+[[variable]]
+native_id = "105.36.hemkommun-ht"
+slug = "hemkommun-ht"
+
+[[variable]]
+native_id = "105.36.hemkommun-vt"
+slug = "hemkommun-vt"
+
+[[variable]]
+native_id = "105.36.kommun"
+slug = "hemkommun"
+
+[[variable]]
+native_id = "105.36.kurskommun"
+slug = "kurskommun"
+
+[[variable]]
+native_id = "105.36.skolkommun"
+slug = "skolkommun-kod"
+
+[[variable]]
+native_id = "105.38533.nyb-gymn"
+slug = "nyborjare-pa-allman-kurs"
+
+[[variable]]
+native_id = "105.6809.hemkommun"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "105.6809.hemkommun-ht"
+slug = "folkbokforingskommun-ht"
+
+[[variable]]
+native_id = "105.6809.hemkommun-vt"
+slug = "folkbokforingskommun-vt"
+
+# register 108 (gyst)
+
+[[variable]]
+native_id = "105.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "105.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "105.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "105.304"
+slug = "fodelselandnamnfar"
+
+[[variable]]
+native_id = "105.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "105.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "105.4362"
+slug = "ar-behorighetsgivande-utb"
+
+[[variable]]
+native_id = "105.8557"
+slug = "utbildningsanordnare"
+
+[[variable]]
+native_id = "105.8703"
+slug = "tjanstgoringsniva"
+
+[[variable]]
+native_id = "105.8771"
+slug = "pedagogisk-hogskoleexamen"
+
+[[variable]]
+native_id = "105.8773"
+slug = "typ-av-anstallning"
+
+[[variable]]
+native_id = "105.14671"
+slug = "studievag-sfi"
+
+[[variable]]
+native_id = "105.14673"
+slug = "undervisningstimmar-sfi"
+
+[[variable]]
+native_id = "105.14674"
+slug = "orsak-kursavbrott-sfi"
+
+[[variable]]
+native_id = "105.19529"
+slug = "scbid"
+
+[[variable]]
+native_id = "105.23867"
+slug = "klassbeteckning"
+
+[[variable]]
+native_id = "105.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "105.32756"
+slug = "nyinskriven-elev"
+
+[[variable]]
+native_id = "105.32792"
+slug = "typ-av-gymnasieexamen"
+
+[[variable]]
+native_id = "105.35151"
+slug = "inlasningsdatum"
+
+[[variable]]
+native_id = "105.36571"
+slug = "funktionsnedsattning"
+
+[[variable]]
+native_id = "105.39039"
+slug = "personens-namn"
+
+[[variable]]
+native_id = "105.39219"
+slug = "senaste-kursstart"
+
+# register 106
+
+[[variable]]
+native_id = "105.38417.gyfid"
+slug = "kommunalforbund-id"
+
+[[variable]]
+native_id = "105.38417.gyfnamn"
+slug = "kommunalforbund-namn"
+
+# register 108

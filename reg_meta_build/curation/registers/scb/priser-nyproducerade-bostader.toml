@@ -1,0 +1,115 @@
+[register]
+provider = "scb"
+slug = "priser-nyproducerade-bostader"
+native_id = "73"
+
+[[variant]]
+native_id = "73.187"
+slug = "_default"
+display_group = "Priser för nyproducerade bostäder"
+panel_entity_key = "husbeteckning"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Energistatistik för småhus
+
+[[variable]]
+native_id = "73.17413"
+slug = "husbeteckning"
+
+
+[[variable]]
+native_id = "73.21412"
+slug = "ovriga-upplysningar-blankett"
+
+[[variable]]
+native_id = "73.21422"
+slug = "tidsatgang-kostnadsblankett"
+
+[[variable]]
+native_id = "73.37437"
+slug = "ovriga-upplysningar"
+
+# register 74 (energi-smahus)
+
+[[variable]]
+native_id = "73.21421.tidsatgang"
+slug = "tidsatgang-husblankett"
+
+# register 8 (fordonsreg)
+
+[[variable]]
+native_id = "73.16423"
+slug = "orgnr-foretaget"
+
+[[variable]]
+native_id = "73.729"
+slug = "mervardesskatt-netto"
+
+[[variable]]
+native_id = "73.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "73.5113"
+slug = "byggherre"
+
+[[variable]]
+native_id = "73.15195"
+slug = "redovisningsar"
+
+[[variable]]
+native_id = "73.17046"
+slug = "antal-lagenheter-totalt"
+
+[[variable]]
+native_id = "73.17232"
+slug = "byggherrekategori"
+
+[[variable]]
+native_id = "73.17235"
+slug = "fardigstallandear-manad"
+
+[[variable]]
+native_id = "73.17236"
+slug = "paborjandear-manad"
+
+[[variable]]
+native_id = "73.17373"
+slug = "bruttoarea-totalt"
+
+[[variable]]
+native_id = "73.17378"
+slug = "byggherrens-adress"
+
+[[variable]]
+native_id = "73.17379"
+slug = "byggherrens-postadress"
+
+[[variable]]
+native_id = "73.17380"
+slug = "byggherrens-postnummer"
+
+[[variable]]
+native_id = "73.19086"
+slug = "antal-lagenheter"
+
+[[variable]]
+native_id = "73.21097"
+slug = "lokalarea-totalt"
+
+[[variable]]
+native_id = "73.22863"
+slug = "lansregion"
+
+# register 74
+
+[[variable]]
+native_id = "73.21077.antvaningsplanfh"
+slug = "antal-vaningsplan-flerbostadshus"
+
+[[variable]]
+native_id = "73.21077.vaningsplansmahus"
+slug = "antal-vaningsplan-smahus"
+
+# register 75

@@ -1253,7 +1253,7 @@ def _check_entity_key_vars_curated(
         else:
             result.info(
                 "run `reg-meta-build entity-key-pins --out-dir <dir>` and commit each "
-                "<provider>.toml block to fqid_slugs/<provider>.toml"
+                "register block to curation/registers/<provider>/<register>.toml"
             )
     else:
         result.ok(f"all {len(entity_key_vars):,} entity-key var(s) are curated")

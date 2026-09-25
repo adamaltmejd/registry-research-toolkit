@@ -1,0 +1,214 @@
+[register]
+provider = "scb"
+slug = "fastighetspriser"
+native_id = "71"
+
+[[variant]]
+native_id = "71.193"
+slug = "fastighetspriser"
+display_group = "Fastighetspriser och lagfarter"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "forvarvdat"
+panel_time_grain = "row"
+
+# (keep) 'fastighet' is the noun (property); not a truncation of the register
+# slug 'fastighetspriser' (property prices) — different concept. Applies to 71.334 too.
+
+[[variant]]
+native_id = "71.333"
+slug = "forvarvare-av-fastighet"
+display_group = "Förvärvare av fastighet"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "71.334"
+slug = "overlatare-av-fastighet"
+display_group = "Överlåtare av fastighet"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Ombyggnad och rivning av flerbostadshus
+
+[[variable]]
+native_id = "71.26"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "71.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "71.412"
+slug = "postort"
+
+[[variable]]
+native_id = "71.414"
+slug = "postort-fullstandig"
+
+[[variable]]
+native_id = "71.567"
+slug = "taxeringsvarde-byggnader"
+
+[[variable]]
+native_id = "71.571"
+slug = "taxeringsvarde-mark"
+
+[[variable]]
+native_id = "71.636"
+slug = "bruksar-eller-vardear"
+
+[[variable]]
+native_id = "71.3274"
+slug = "total-bostadsyta"
+
+[[variable]]
+native_id = "71.3413"
+slug = "vardear"
+
+[[variable]]
+native_id = "71.3734"
+slug = "koordinat-ost"
+
+[[variable]]
+native_id = "71.3746"
+slug = "bostadsyta-hyreshusenhet"
+
+[[variable]]
+native_id = "71.16268"
+slug = "markvarde"
+
+[[variable]]
+native_id = "71.16269"
+slug = "byggnadsvarde"
+
+[[variable]]
+native_id = "71.16273"
+slug = "areal-total"
+
+# register 72 (ombyggnad-och-rivning)
+
+[[variable]]
+native_id = "71.3732.ostkoordinat"
+slug = "koordinat-nord"
+
+# register 73 (priser-nyproducerade-bostader)
+
+[[variable]]
+native_id = "71.449"
+slug = "idtaxenhet"
+
+[[variable]]
+native_id = "71.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "71.64"
+slug = "tatort-tom-2010"
+
+[[variable]]
+native_id = "71.77"
+slug = "areal-betesmark"
+
+[[variable]]
+native_id = "71.78"
+slug = "areal-skogsmark"
+
+[[variable]]
+native_id = "71.79"
+slug = "areal-akermark"
+
+[[variable]]
+native_id = "71.80"
+slug = "areal-ovrig-mark"
+
+[[variable]]
+native_id = "71.504"
+slug = "antal-varderingsenheter-skogsmark"
+
+[[variable]]
+native_id = "71.505"
+slug = "antal-varderingsenheter-skogsimpediment"
+
+[[variable]]
+native_id = "71.562"
+slug = "taxeringsvarde-for-akermark"
+
+[[variable]]
+native_id = "71.564"
+slug = "basvarde-totalt"
+
+[[variable]]
+native_id = "71.573"
+slug = "taxeringsvarde-for-skogsmark"
+
+[[variable]]
+native_id = "71.575"
+slug = "taxeringsvarde-for-skogsimpediment"
+
+[[variable]]
+native_id = "71.635"
+slug = "byggnadsar"
+
+[[variable]]
+native_id = "71.637"
+slug = "om-eller-tillbyggnar"
+
+[[variable]]
+native_id = "71.3407"
+slug = "biutrymmesyta-i-smahus"
+
+[[variable]]
+native_id = "71.3409"
+slug = "vardegrundande-yta-i-smahus"
+
+[[variable]]
+native_id = "71.3719"
+slug = "summa-standardpoang"
+
+[[variable]]
+native_id = "71.3720"
+slug = "typ-av-bebyggelse"
+
+[[variable]]
+native_id = "71.3724"
+slug = "areal-skogsimpediment"
+
+[[variable]]
+native_id = "71.3745"
+slug = "antal-taxeringsenheter"
+
+[[variable]]
+native_id = "71.7565"
+slug = "riksomrade"
+
+[[variable]]
+native_id = "71.8132"
+slug = "typ-av-smahusbebyggelse"
+
+[[variable]]
+native_id = "71.16256"
+slug = "antal-fastigheter"
+
+[[variable]]
+native_id = "71.16275"
+slug = "taxeringsar"
+
+[[variable]]
+native_id = "71.16282"
+slug = "skattekontor"
+
+[[variable]]
+native_id = "71.16287"
+slug = "fangeskod"
+
+[[variable]]
+native_id = "71.16894"
+slug = "laddningsdatum"
+
+# register 72

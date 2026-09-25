@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "handikappersattning"
+native_id = "6861565800980927454"
+
+[[variant]]
+native_id = "6861565800980927454.5002536168826239399"
+slug = "_default"
+display_group = "Handikappersättning"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Närståendepenning
+
+[[variable]]
+native_id = "6861565800980927454.personnummer"
+slug = "lopnr-personnr"

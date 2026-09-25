@@ -26,3 +26,180 @@ label = "scb/vaxtskyddsmedel/vaxtskyddsmedelsnamn"
 [[code_label_pair]]
 code = "scb/vaxtskyddsmedel/vsid"
 label = "scb/vaxtskyddsmedel/vsnamn"
+
+[[variant]]
+native_id = "235.431"
+slug = "_default"
+display_group = "Växtskyddsmedelsundersökningen"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Undersökningarna av levnadsförhållanden (ULF)
+
+[[variable]]
+native_id = "235.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "235.5264"
+slug = "typ-av-spruta"
+
+[[variable]]
+native_id = "235.15178"
+slug = "areal-sam-blankett"
+
+[[variable]]
+native_id = "235.42779"
+slug = "mangd-glyfosatmedel"
+
+[[variable]]
+native_id = "235.42780"
+slug = "behandlad-areal"
+
+[[variable]]
+native_id = "235.48465"
+slug = "skyddsavstand-inga"
+
+[[variable]]
+native_id = "235.48497"
+slug = "utrustning-skoljvattentank"
+
+[[variable]]
+native_id = "235.48529"
+slug = "undersokningar"
+
+[[variable]]
+native_id = "235.48769"
+slug = "besprutningar-storsta-falt"
+
+[[variable]]
+native_id = "235.48770"
+slug = "grodid-2006"
+
+[[variable]]
+native_id = "235.48809"
+slug = "lillan-svar"
+
+[[variable]]
+native_id = "235.48814"
+slug = "glyfosat-trada"
+
+[[variable]]
+native_id = "235.48815"
+slug = "glyfosat-fanggroda"
+
+[[variable]]
+native_id = "235.48816"
+slug = "glyfosat-stubb"
+
+[[variable]]
+native_id = "235.48817"
+slug = "glyfosat-vallbrott"
+
+[[variable]]
+native_id = "235.48824"
+slug = "glyfosat-behandlad-areal"
+
+[[variable]]
+native_id = "235.48825"
+slug = "glyfosat-dos-per-hektar"
+
+[[variable]]
+native_id = "235.48829"
+slug = "glyfosat-id"
+
+[[variable]]
+native_id = "235.48830"
+slug = "glyfosat-namn"
+
+[[variable]]
+native_id = "235.48839"
+slug = "sprutningstillfallen"
+
+[[variable]]
+native_id = "235.48850"
+slug = "areal-fran-lbr"
+
+[[variable]]
+native_id = "235.48967"
+slug = "urvnr-undersokningar"
+
+[[variable]]
+native_id = "235.48969"
+slug = "utrustning-skoljvattentank-2006"
+
+[[variable]]
+native_id = "235.49036"
+slug = "anvandningsomrade-preparat"
+
+[[variable]]
+native_id = "235.49037"
+slug = "urvnr-ordinarie"
+
+[[variable]]
+native_id = "235.49041"
+slug = "glyfosat-behandlad-areal-2"
+
+[[variable]]
+native_id = "235.49058"
+slug = "glyfosat-totalmangd"
+
+[[variable]]
+native_id = "235.49059"
+slug = "glyfosat-id-2006"
+
+[[variable]]
+native_id = "235.49080"
+slug = "grodid-glyfosat-2006"
+
+# register 237 (ulf)
+
+[[variable]]
+native_id = "235.33042.vaxtskyddsmedelid"
+slug = "vaxtskyddsmedel-id"
+
+[[variable]]
+native_id = "235.33042.vaxtskyddsmedelnamn"
+slug = "vaxtskyddsmedel-namn"
+
+[[variable]]
+native_id = "235.4030.lillan-svar"
+slug = "lillan-svar-alt"
+
+[[variable]]
+native_id = "235.42774.dosperhektar"
+slug = "dos-vaxtskyddsmedel"
+
+[[variable]]
+native_id = "235.42778.fanggroda"
+slug = "glyfosat-omrade-fanggroda"
+
+[[variable]]
+native_id = "235.42778.stubb"
+slug = "glyfosat-omrade-stubb"
+
+[[variable]]
+native_id = "235.42778.trada"
+slug = "glyfosat-omrade-trada"
+
+[[variable]]
+native_id = "235.42778.vallbrott"
+slug = "glyfosat-omrade-vallbrott"
+
+[[variable]]
+native_id = "235.49013.vaxtskyddsmedelnamn"
+slug = "vaxtskyddsmedelsnamn"
+
+# register 237 (ulf)
+
+[[variable]]
+native_id = "235.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "235.48867"
+slug = "urval-vaxtskyddsmedel"
+
+# register 237

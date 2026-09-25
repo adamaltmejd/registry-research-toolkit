@@ -1,0 +1,59 @@
+[register]
+provider = "scb"
+slug = "arbetskraftsbarometern"
+native_id = "99"
+
+[[variant]]
+native_id = "99.105"
+slug = "_default"
+display_group = "Arbetskraftsbarometern"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Gymnasieskola: betyg
+
+[[variable]]
+native_id = "99.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "99.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "99.17"
+slug = "arbetsstallenummer"
+
+[[variable]]
+native_id = "99.1641"
+slug = "naringsgren-arbetsstalle"
+
+[[variable]]
+native_id = "99.1819"
+slug = "sektorkod"
+
+[[variable]]
+native_id = "99.3575"
+slug = "foretagets-namn"
+
+[[variable]]
+native_id = "99.6392"
+slug = "antal-sysselsatta"
+
+[[variable]]
+native_id = "99.6404"
+slug = "arbstallnamn"
+
+[[variable]]
+native_id = "99.6415"
+slug = "urvalssannolikhet"
+
+# register 102
+
+[[variable]]
+native_id = "99.6416.utbgrp"
+slug = "utbildningsgrupp"
+
+# === END #747 catalog-wide concept-slug consistency ===

@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "finansrakenskaper"
+native_id = "299"
+
+[[variant]]
+native_id = "299.838"
+slug = "_default"
+display_group = "Finansräkenskaper"
+
+# Leveranser av fordonsgas
+
+[[variable]]
+native_id = "299.457"
+slug = "varde"
+
+# register 300 (fordonsgas)

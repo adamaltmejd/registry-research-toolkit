@@ -6,3 +6,92 @@ native_id = "286"
 [[code_label_pair]]
 code = "scb/ep-val-nominerade/partikod"
 label = "scb/ep-val-nominerade/partinamn"
+
+[[variant]]
+native_id = "286.736"
+slug = "_default"
+display_group = "Europaparlamentsval"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Jordbrukets vattenanvändning
+
+[[variable]]
+native_id = "286.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "286.775"
+slug = "utbildningsniva-aggregat-grov"
+
+[[variable]]
+native_id = "286.1305"
+slug = "disponibel-inkomst-familj"
+
+# register 289 (jordbrukets-vattenanvandning)
+
+[[variable]]
+native_id = "286.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "286.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "286.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "286.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "286.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "286.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "286.335"
+slug = "forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "286.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "286.784"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "286.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "286.6818"
+slug = "medborgarland-varldsdel"
+
+[[variable]]
+native_id = "286.7916"
+slug = "forvarvsinkomst-kvintilgrupp"
+
+[[variable]]
+native_id = "286.8529"
+slug = "personroster-totalt"
+
+[[variable]]
+native_id = "286.14775"
+slug = "riksdagsvalkrets-kod"
+
+# register 290
+
+[[variable]]
+native_id = "286.7942.pnamn-kort"
+slug = "parti-kort"
+
+# register 29

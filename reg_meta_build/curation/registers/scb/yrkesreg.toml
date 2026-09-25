@@ -1,0 +1,342 @@
+[register]
+provider = "scb"
+slug = "yrkesreg"
+native_id = "55"
+
+[[variant]]
+native_id = "55.160"
+slug = "forvarvsarbetande"
+display_group = "Förvärvsarbetande"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "55.161"
+slug = "yrkesverksamma"
+display_group = "Yrkesverksamma"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "55.162"
+slug = "grundregister-yrkesreg"
+display_group = "Grundregister (Yrkesreg)"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Konjunkturstatistik, löner för statlig sektor (KLS)
+
+[[variable]]
+native_id = "55.2736.sektorkod"
+slug = "sektorkod-2"
+
+# #418/#931: concept_groups.toml member-ref slug pins (pre-#472-seal harden).
+# Every `variable =` ref in concept_groups.toml binds to a variable.slug; if that
+# slug rests only on an auto-derived pin (scb.auto.toml) it churns each build and
+# can dangle the group ref. The agi{1,2,3}lonfink monthly family keeps its current
+# auto slug; the LISA huvudsaklig näringsgren groups are curated to concept-stem
+# slugs plus population + SNI vintage/granularity, matching the #935 parallel-
+# sibling convention instead of exposing raw delivery prefixes.
+
+
+[[variable]]
+native_id = "55.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "55.510"
+slug = "ssyk3"
+
+[[variable]]
+native_id = "55.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "55.1165"
+slug = "inkomst-aktiv-enskild-naringsverksamhet"
+
+[[variable]]
+native_id = "55.1172"
+slug = "kontant-bruttolon"
+
+[[variable]]
+native_id = "55.1173"
+slug = "inkomst-av-tjanst"
+
+[[variable]]
+native_id = "55.1315"
+slug = "utbildnings-inriktning-sun-2000"
+
+[[variable]]
+native_id = "55.1819"
+slug = "sektorkod"
+
+[[variable]]
+native_id = "55.1842"
+slug = "ssyk3-storsta"
+
+[[variable]]
+native_id = "55.4904"
+slug = "ssyk3-nast"
+
+[[variable]]
+native_id = "55.4905"
+slug = "ssyk4-nast"
+
+[[variable]]
+native_id = "55.4911"
+slug = "yrkesstallning-nast-forvarvskallan"
+
+[[variable]]
+native_id = "55.4916"
+slug = "nov2peorgnr"
+
+[[variable]]
+native_id = "55.4928"
+slug = "yrkesstallning-nov2"
+
+[[variable]]
+native_id = "55.4948"
+slug = "yrkesstallning-storsta-forvarvskallan"
+
+[[variable]]
+native_id = "55.6416"
+slug = "utbildningsgrupp"
+
+[[variable]]
+native_id = "55.15549"
+slug = "antal-sysselsatta-foretag-syssreg"
+
+[[variable]]
+native_id = "55.16223"
+slug = "ssyk3-ovrigt"
+
+[[variable]]
+native_id = "55.16224"
+slug = "ssyk4-storsta"
+
+[[variable]]
+native_id = "55.16225"
+slug = "ssyk4"
+
+[[variable]]
+native_id = "55.16226"
+slug = "ssyk4-ovrigt"
+
+[[variable]]
+native_id = "55.16247"
+slug = "storleksklass-anst-nov2"
+
+[[variable]]
+native_id = "55.16251"
+slug = "bruttolon-foretagarink-huvud"
+
+[[variable]]
+native_id = "55.16559"
+slug = "forekomst-medborgarskap"
+
+[[variable]]
+native_id = "55.16560"
+slug = "ssyk4-nov2"
+
+[[variable]]
+native_id = "55.17862"
+slug = "yrkesstallning-huvud"
+
+[[variable]]
+native_id = "55.19695"
+slug = "antalsyss-jobb2-reg"
+
+[[variable]]
+native_id = "55.24089"
+slug = "antalsyss-ovrigt-reg"
+
+[[variable]]
+native_id = "55.24093"
+slug = "antalsyss-storsta-reg"
+
+[[variable]]
+native_id = "55.24095"
+slug = "antalsyss-nast-reg"
+
+[[variable]]
+native_id = "55.24105"
+slug = "antalsyss-bisyssla"
+
+[[variable]]
+native_id = "55.25621"
+slug = "sektorkod-storsta-forvarvskalla"
+
+[[variable]]
+native_id = "55.29578"
+slug = "medborgarskap"
+
+[[variable]]
+native_id = "55.32959"
+slug = "distrikt"
+
+[[variable]]
+native_id = "55.34097"
+slug = "summerad-inkomst"
+
+[[variable]]
+native_id = "55.37795"
+slug = "ssyk4-egf"
+
+[[variable]]
+native_id = "55.37797"
+slug = "ssyk3-egf"
+
+[[variable]]
+native_id = "55.37799"
+slug = "yseg-egf"
+
+[[variable]]
+native_id = "55.47378"
+slug = "antalsyss-jobb2"
+
+[[variable]]
+native_id = "55.47379"
+slug = "antalsyss-storsta"
+
+[[variable]]
+native_id = "55.47380"
+slug = "antalsyss-nast"
+
+[[variable]]
+native_id = "55.47381"
+slug = "antalsyss-ovrigt"
+
+# register 60 (kls)
+
+[[variable]]
+native_id = "55.2736.ku1sektorkod"
+slug = "sektor-ku1"
+
+[[variable]]
+native_id = "55.2736.sektor"
+slug = "sektor-huvud"
+
+[[variable]]
+native_id = "55.65.distriktskod"
+slug = "utbildningsinriktning"
+
+[[variable]]
+native_id = "55.65.sun2000inr"
+slug = "sun2000inr"
+
+# register 60 (kls)
+
+[[variable]]
+native_id = "55.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "55.63"
+slug = "sysselsattningsstatus-november"
+
+[[variable]]
+native_id = "55.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "55.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "55.801"
+slug = "utbildningsgrupp-enl-sun-2000"
+
+[[variable]]
+native_id = "55.1821"
+slug = "yrkesstallning"
+
+[[variable]]
+native_id = "55.1930"
+slug = "ssykar"
+
+[[variable]]
+native_id = "55.1932"
+slug = "ssykkalla"
+
+[[variable]]
+native_id = "55.1933"
+slug = "ku1ssykar"
+
+[[variable]]
+native_id = "55.4908"
+slug = "tjanstgoringsomfattning-nast"
+
+[[variable]]
+native_id = "55.4944"
+slug = "yrkesverksam-under-aret"
+
+[[variable]]
+native_id = "55.16227"
+slug = "ku2ssykkalla"
+
+[[variable]]
+native_id = "55.16237"
+slug = "ku1ssykkalla"
+
+[[variable]]
+native_id = "55.16244"
+slug = "ku2ssykar"
+
+[[variable]]
+native_id = "55.16248"
+slug = "tjanstgoringsomfattning-storst"
+
+[[variable]]
+native_id = "55.17528"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "55.17678"
+slug = "kommun-for-bostaden"
+
+[[variable]]
+native_id = "55.18897"
+slug = "ssyk-status"
+
+[[variable]]
+native_id = "55.18911"
+slug = "ssyk-overensstammelse"
+
+[[variable]]
+native_id = "55.29960"
+slug = "yrkesbaserad-seg"
+
+[[variable]]
+native_id = "55.37409"
+slug = "antal-sysselsatta-foretaget"
+
+[[variable]]
+native_id = "55.45150"
+slug = "sysselsatt-nordisk-inkomst"
+
+# register 60
+
+[[variable]]
+native_id = "55.29921.ku1ssyk3-2012"
+slug = "yrke-ssyk3-storsta"
+
+[[variable]]
+native_id = "55.29921.ku1ssyk4-2012"
+slug = "yrke-ssyk4-storsta"
+
+[[variable]]
+native_id = "55.45149.bas"
+slug = "arbetsmarknadsstatus"
+
+[[variable]]
+native_id = "55.45149.basalt"
+slug = "arbetsmarknadsstatus-alt"
+
+# register 60

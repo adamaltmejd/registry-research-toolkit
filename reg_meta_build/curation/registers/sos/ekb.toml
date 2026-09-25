@@ -1,0 +1,1913 @@
+[register]
+provider = "sos"
+slug = "ekb"
+native_id = "5352018376318353790"
+
+[[variant]]
+native_id = "5352018376318353790.6291235931365109975"
+slug = "ekb-ar"
+display_group = "EKB_AR"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "5352018376318353790.5596904919895902135"
+slug = "ekb-manad"
+display_group = "EKB_MANAD"
+panel_entity_key = "personnr"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+# Cancerregistret (CAN)
+
+[[variable]]
+native_id = "5352018376318353790.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP01"
+slug = "belopp-annat-januari"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP02"
+slug = "belopp-annat-februari"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP03"
+slug = "belopp-annat-mars"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP04"
+slug = "belopp-annat-april"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP05"
+slug = "belopp-annat-maj"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP06"
+slug = "belopp-annat-juni"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP07"
+slug = "belopp-annat-juli"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP08"
+slug = "belopp-annat-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP09"
+slug = "belopp-annat-september"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP10"
+slug = "belopp-annat-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP11"
+slug = "belopp-annat-november"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATBELOPP12"
+slug = "belopp-annat-december"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND01"
+slug = "ovrigt-annat-januari"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND02"
+slug = "ovrigt-annat-februari"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND03"
+slug = "ovrigt-annat-mars"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND04"
+slug = "ovrigt-annat-april"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND05"
+slug = "ovrigt-annat-maj"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND06"
+slug = "ovrigt-annat-juni"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND07"
+slug = "ovrigt-annat-juli"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND08"
+slug = "ovrigt-annat-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND09"
+slug = "ovrigt-annat-september"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND10"
+slug = "ovrigt-annat-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND11"
+slug = "ovrigt-annat-november"
+
+[[variable]]
+native_id = "5352018376318353790.ANNATIND12"
+slug = "ovrigt-annat-december"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN0"
+slug = "antal-barn-0-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN00"
+slug = "antal-barn-00-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN0015"
+slug = "antal-barn-under-16-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN0017"
+slug = "antal-barn-under-18-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN01"
+slug = "antal-barn-01-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN02"
+slug = "antal-barn-02-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN03"
+slug = "antal-barn-03-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN04"
+slug = "antal-barn-04-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN05"
+slug = "antal-barn-05-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN06"
+slug = "antal-barn-06-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN07"
+slug = "antal-barn-07-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN08"
+slug = "antal-barn-08-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN09"
+slug = "antal-barn-09-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN1"
+slug = "antal-barn-1-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN10"
+slug = "antal-barn-10-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN11"
+slug = "antal-barn-11-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN12"
+slug = "antal-barn-12-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN13"
+slug = "antal-barn-13-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN14"
+slug = "antal-barn-14-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN15"
+slug = "antal-barn-15-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN16"
+slug = "antal-barn-16-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN1617"
+slug = "antal-barn-16-17-ar-2"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN17"
+slug = "antal-barn-17-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN2"
+slug = "antal-barn-2-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN3"
+slug = "antal-barn-3-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN4"
+slug = "antal-barn-4-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN5"
+slug = "antal-barn-5-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN6"
+slug = "antal-barn-6-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN7"
+slug = "antal-barn-7-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN8"
+slug = "antal-barn-8-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTBARN9"
+slug = "antal-barn-9-ar"
+
+[[variable]]
+native_id = "5352018376318353790.ANTPERS1821"
+slug = "antal-ovriga-personer-18-21-ar"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT01"
+slug = "avslutskod-januari"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT02"
+slug = "avslutskod-februari"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT03"
+slug = "avslutskod-mars"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT04"
+slug = "avslutskod-april"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT05"
+slug = "avslutskod-maj"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT06"
+slug = "avslutskod-juni"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT07"
+slug = "avslutskod-juli"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT08"
+slug = "avslutskod-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT09"
+slug = "avslutskod-september"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT10"
+slug = "avslutskod-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT11"
+slug = "avslutskod-november"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUT12"
+slug = "avslutskod-december"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH01"
+slug = "avslutskod-hushallet-januari"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH02"
+slug = "avslutskod-hushallet-februari"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH03"
+slug = "avslutskod-hushallet-mars"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH04"
+slug = "avslutskod-hushallet-april"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH05"
+slug = "avslutskod-hushallet-maj"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH06"
+slug = "avslutskod-hushallet-juni"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH07"
+slug = "avslutskod-hushallet-juli"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH08"
+slug = "avslutskod-hushallet-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH09"
+slug = "avslutskod-hushallet-september"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH10"
+slug = "avslutskod-hushallet-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH11"
+slug = "avslutskod-hushallet-november"
+
+[[variable]]
+native_id = "5352018376318353790.AVSLUTHH12"
+slug = "avslutskod-hushallet-december"
+
+[[variable]]
+native_id = "5352018376318353790.BARN1617"
+slug = "antal-barn-16-17-ar"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP01"
+slug = "ekonomiskt-bistand-januari"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP02"
+slug = "ekonomiskt-bistand-februari"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP03"
+slug = "ekonomiskt-bistand-mars"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP04"
+slug = "ekonomiskt-bistand-april"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP05"
+slug = "ekonomiskt-bistand-maj"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP06"
+slug = "ekonomiskt-bistand-juni"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP07"
+slug = "ekonomiskt-bistand-juli"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP08"
+slug = "ekonomiskt-bistand-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP09"
+slug = "ekonomiskt-bistand-september"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP10"
+slug = "ekonomiskt-bistand-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP11"
+slug = "ekonomiskt-bistand-november"
+
+[[variable]]
+native_id = "5352018376318353790.EKBBELOPP12"
+slug = "ekonomiskt-bistand-december"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB01"
+slug = "ekonomiskt-bistand-utbetalt-januari"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB02"
+slug = "ekonomiskt-bistand-utbetalt-februari"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB03"
+slug = "ekonomiskt-bistand-utbetalt-mars"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB04"
+slug = "ekonomiskt-bistand-utbetalt-april"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB05"
+slug = "ekonomiskt-bistand-utbetalt-maj"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB06"
+slug = "ekonomiskt-bistand-utbetalt-juni"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB07"
+slug = "ekonomiskt-bistand-utbetalt-juli"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB08"
+slug = "ekonomiskt-bistand-utbetalt-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB09"
+slug = "ekonomiskt-bistand-utbetalt-september"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB10"
+slug = "ekonomiskt-bistand-utbetalt-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB11"
+slug = "ekonomiskt-bistand-utbetalt-november"
+
+[[variable]]
+native_id = "5352018376318353790.EKBUTB12"
+slug = "ekonomiskt-bistand-utbetalt-december"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP01"
+slug = "livsforing-elskuld-januari"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP02"
+slug = "livsforing-elskuld-februari"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP03"
+slug = "livsforing-elskuld-mars"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP04"
+slug = "livsforing-elskuld-april"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP05"
+slug = "livsforing-elskuld-maj"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP06"
+slug = "livsforing-elskuld-juni"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP07"
+slug = "livsforing-elskuld-juli"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP08"
+slug = "livsforing-elskuld-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP09"
+slug = "livsforing-elskuld-september"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP10"
+slug = "livsforing-elskuld-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP11"
+slug = "livsforing-elskuld-november"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDBELOPP12"
+slug = "livsforing-elskuld-december"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND01"
+slug = "ovrigt-elskuld-januari"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND02"
+slug = "ovrigt-elskuld-februari"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND03"
+slug = "ovrigt-elskuld-mars"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND04"
+slug = "ovrigt-elskuld-april"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND05"
+slug = "ovrigt-elskuld-maj"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND06"
+slug = "ovrigt-elskuld-juni"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND07"
+slug = "ovrigt-elskuld-juli"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND08"
+slug = "ovrigt-elskuld-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND09"
+slug = "ovrigt-elskuld-september"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND10"
+slug = "ovrigt-elskuld-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND11"
+slug = "ovrigt-elskuld-november"
+
+[[variable]]
+native_id = "5352018376318353790.ELSKULDIND12"
+slug = "ovrigt-elskuld-december"
+
+[[variable]]
+native_id = "5352018376318353790.FODAR"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "5352018376318353790.FODDAT"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "5352018376318353790.FODDATN"
+slug = "fodelsedatum-numerisk"
+
+[[variable]]
+native_id = "5352018376318353790.FSTOD"
+slug = "forsorjningsstod-belopp"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP01"
+slug = "forsorjningsstod-januari"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP02"
+slug = "forsorjningsstod-februari"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP03"
+slug = "forsorjningsstod-mars"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP04"
+slug = "forsorjningsstod-april"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP05"
+slug = "forsorjningsstod-maj"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP06"
+slug = "forsorjningsstod-juni"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP07"
+slug = "forsorjningsstod-juli"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP08"
+slug = "forsorjningsstod-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP09"
+slug = "forsorjningsstod-september"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP10"
+slug = "forsorjningsstod-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP11"
+slug = "forsorjningsstod-november"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBELOPP12"
+slug = "forsorjningsstod-december"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP01"
+slug = "forsorjningsstod-boende-januari"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP02"
+slug = "forsorjningsstod-boende-februari"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP03"
+slug = "forsorjningsstod-boende-mars"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP04"
+slug = "forsorjningsstod-boende-april"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP05"
+slug = "forsorjningsstod-boende-maj"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP06"
+slug = "forsorjningsstod-boende-juni"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP07"
+slug = "forsorjningsstod-boende-juli"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP08"
+slug = "forsorjningsstod-boende-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP09"
+slug = "forsorjningsstod-boende-september"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP10"
+slug = "forsorjningsstod-boende-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP11"
+slug = "forsorjningsstod-boende-november"
+
+[[variable]]
+native_id = "5352018376318353790.FSTODBOENDEBELOPP12"
+slug = "forsorjningsstod-boende-december"
+
+[[variable]]
+native_id = "5352018376318353790.HID"
+slug = "hushallsid"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER01"
+slug = "forsorjningshinder-januari"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER02"
+slug = "forsorjningshinder-februari"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER03"
+slug = "forsorjningshinder-mars"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER04"
+slug = "forsorjningshinder-april"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER05"
+slug = "forsorjningshinder-maj"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER06"
+slug = "forsorjningshinder-juni"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER07"
+slug = "forsorjningshinder-juli"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER08"
+slug = "forsorjningshinder-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER09"
+slug = "forsorjningshinder-september"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER10"
+slug = "forsorjningshinder-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER11"
+slug = "forsorjningshinder-november"
+
+[[variable]]
+native_id = "5352018376318353790.HINDER12"
+slug = "forsorjningshinder-december"
+
+[[variable]]
+native_id = "5352018376318353790.HSBEL"
+slug = "halso-sjukvard-belopp"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP01"
+slug = "livsforing-halso-sjukvard-januari"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP02"
+slug = "livsforing-halso-sjukvard-februari"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP03"
+slug = "livsforing-halso-sjukvard-mars"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP04"
+slug = "livsforing-halso-sjukvard-april"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP05"
+slug = "livsforing-halso-sjukvard-maj"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP06"
+slug = "livsforing-halso-sjukvard-juni"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP07"
+slug = "livsforing-halso-sjukvard-juli"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP08"
+slug = "livsforing-halso-sjukvard-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP09"
+slug = "livsforing-halso-sjukvard-september"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP10"
+slug = "livsforing-halso-sjukvard-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP11"
+slug = "livsforing-halso-sjukvard-november"
+
+[[variable]]
+native_id = "5352018376318353790.HSBELOPP12"
+slug = "livsforing-halso-sjukvard-december"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND"
+slug = "utbetalning-livsforing-ovrigt"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND01"
+slug = "ovrigt-halso-sjukvard-januari"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND02"
+slug = "ovrigt-halso-sjukvard-februari"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND03"
+slug = "ovrigt-halso-sjukvard-mars"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND04"
+slug = "ovrigt-halso-sjukvard-april"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND05"
+slug = "ovrigt-halso-sjukvard-maj"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND06"
+slug = "ovrigt-halso-sjukvard-juni"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND07"
+slug = "ovrigt-halso-sjukvard-juli"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND08"
+slug = "ovrigt-halso-sjukvard-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND09"
+slug = "ovrigt-halso-sjukvard-september"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND10"
+slug = "ovrigt-halso-sjukvard-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND11"
+slug = "ovrigt-halso-sjukvard-november"
+
+[[variable]]
+native_id = "5352018376318353790.HSIND12"
+slug = "ovrigt-halso-sjukvard-december"
+
+[[variable]]
+native_id = "5352018376318353790.HTYP"
+slug = "hushallstyp"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP01"
+slug = "livsforing-hyresskuld-januari"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP02"
+slug = "livsforing-hyresskuld-februari"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP03"
+slug = "livsforing-hyresskuld-mars"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP04"
+slug = "livsforing-hyresskuld-april"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP05"
+slug = "livsforing-hyresskuld-maj"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP06"
+slug = "livsforing-hyresskuld-juni"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP07"
+slug = "livsforing-hyresskuld-juli"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP08"
+slug = "livsforing-hyresskuld-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP09"
+slug = "livsforing-hyresskuld-september"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP10"
+slug = "livsforing-hyresskuld-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP11"
+slug = "livsforing-hyresskuld-november"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDBELOPP12"
+slug = "livsforing-hyresskuld-december"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND01"
+slug = "ovrigt-hyresskuld-januari"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND02"
+slug = "ovrigt-hyresskuld-februari"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND03"
+slug = "ovrigt-hyresskuld-mars"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND04"
+slug = "ovrigt-hyresskuld-april"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND05"
+slug = "ovrigt-hyresskuld-maj"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND06"
+slug = "ovrigt-hyresskuld-juni"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND07"
+slug = "ovrigt-hyresskuld-juli"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND08"
+slug = "ovrigt-hyresskuld-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND09"
+slug = "ovrigt-hyresskuld-september"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND10"
+slug = "ovrigt-hyresskuld-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND11"
+slug = "ovrigt-hyresskuld-november"
+
+[[variable]]
+native_id = "5352018376318353790.HYRESSKULDIND12"
+slug = "ovrigt-hyresskuld-december"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP01"
+slug = "introduktionsersattning-januari"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP02"
+slug = "introduktionsersattning-februari"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP03"
+slug = "introduktionsersattning-mars"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP04"
+slug = "introduktionsersattning-april"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP05"
+slug = "introduktionsersattning-maj"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP06"
+slug = "introduktionsersattning-juni"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP07"
+slug = "introduktionsersattning-juli"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP08"
+slug = "introduktionsersattning-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP09"
+slug = "introduktionsersattning-september"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP10"
+slug = "introduktionsersattning-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP11"
+slug = "introduktionsersattning-november"
+
+[[variable]]
+native_id = "5352018376318353790.IEBELOPP12"
+slug = "introduktionsersattning-december"
+
+[[variable]]
+native_id = "5352018376318353790.INSALDST01"
+slug = "aldste-insats-arbetsforberedande"
+
+[[variable]]
+native_id = "5352018376318353790.INSALDST02"
+slug = "aldste-insats-arbetspraktik"
+
+[[variable]]
+native_id = "5352018376318353790.INSALDST03"
+slug = "aldste-insats-jobbsokaraktivitet"
+
+[[variable]]
+native_id = "5352018376318353790.INSALDST04"
+slug = "aldste-insats-kurs"
+
+[[variable]]
+native_id = "5352018376318353790.INSALDST05"
+slug = "aldste-insats-studievagledning"
+
+[[variable]]
+native_id = "5352018376318353790.INSALDST06"
+slug = "aldste-insats-ovriga-arbetsmarknads"
+
+[[variable]]
+native_id = "5352018376318353790.INSALDST07"
+slug = "aldste-insats-ej-aktuellt-arbetsmarknads"
+
+[[variable]]
+native_id = "5352018376318353790.INSYNGST01"
+slug = "yngstes-insats-arbetsforberedande"
+
+[[variable]]
+native_id = "5352018376318353790.INSYNGST02"
+slug = "yngstes-insats-arbetspraktik"
+
+[[variable]]
+native_id = "5352018376318353790.INSYNGST03"
+slug = "yngstes-insats-jobbsokaraktivitet"
+
+[[variable]]
+native_id = "5352018376318353790.INSYNGST04"
+slug = "yngstes-insats-kurs"
+
+[[variable]]
+native_id = "5352018376318353790.INSYNGST05"
+slug = "yngstes-insats-studie-yrkesvagledning"
+
+[[variable]]
+native_id = "5352018376318353790.INSYNGST06"
+slug = "yngstes-insats-ovriga-kommunala"
+
+[[variable]]
+native_id = "5352018376318353790.INSYNGST07"
+slug = "yngstes-insats-ej-kommunala"
+
+[[variable]]
+native_id = "5352018376318353790.KOMMUN"
+slug = "kommunkod"
+
+[[variable]]
+native_id = "5352018376318353790.LK"
+slug = "lan-kommun-fran-folkbokforing"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP01"
+slug = "livsforing-ovrig-skuld-januari"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP02"
+slug = "livsforing-ovrig-skuld-februari"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP03"
+slug = "livsforing-ovrig-skuld-mars"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP04"
+slug = "livsforing-ovrig-skuld-april"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP05"
+slug = "livsforing-ovrig-skuld-maj"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP06"
+slug = "livsforing-ovrig-skuld-juni"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP07"
+slug = "livsforing-ovrig-skuld-juli"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP08"
+slug = "livsforing-ovrig-skuld-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP09"
+slug = "livsforing-ovrig-skuld-september"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP10"
+slug = "livsforing-ovrig-skuld-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP11"
+slug = "livsforing-ovrig-skuld-november"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDBELOPP12"
+slug = "livsforing-ovrig-skuld-december"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND01"
+slug = "ovrig-skuld-januari"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND02"
+slug = "ovrig-skuld-februari"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND03"
+slug = "ovrig-skuld-mars"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND04"
+slug = "ovrig-skuld-april"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND05"
+slug = "ovrig-skuld-maj"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND06"
+slug = "ovrig-skuld-juni"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND07"
+slug = "ovrig-skuld-juli"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND08"
+slug = "ovrig-skuld-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND09"
+slug = "ovrig-skuld-september"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND10"
+slug = "ovrig-skuld-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND11"
+slug = "ovrig-skuld-november"
+
+[[variable]]
+native_id = "5352018376318353790.OVRIGSKULDIND12"
+slug = "ovrig-skuld-december"
+
+[[variable]]
+native_id = "5352018376318353790.PERSONNR_ALDST"
+slug = "personnr-aldsta-sokande"
+
+[[variable]]
+native_id = "5352018376318353790.PERSONNR_YNGST"
+slug = "personnr-yngsta-sokande"
+
+[[variable]]
+native_id = "5352018376318353790.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1ALDER"
+slug = "alder-sokande-1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER"
+slug = "hinder-sokande-1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER01"
+slug = "aldstes-hinder-januari-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER02"
+slug = "aldstes-hinder-februari-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER03"
+slug = "aldstes-hinder-mars-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER04"
+slug = "aldstes-hinder-april-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER05"
+slug = "aldstes-hinder-maj-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER06"
+slug = "aldstes-hinder-juni-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER07"
+slug = "aldstes-hinder-juli-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER08"
+slug = "aldstes-hinder-augusti-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER09"
+slug = "aldstes-hinder-september-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER10"
+slug = "aldstes-hinder-oktober-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER11"
+slug = "aldstes-hinder-november-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK1HINDER12"
+slug = "aldstes-hinder-december-sok1"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER"
+slug = "hinder-sokande-2"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER01"
+slug = "sok2-hinder-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER02"
+slug = "sok2-hinder-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER03"
+slug = "sok2-hinder-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER04"
+slug = "sok2-hinder-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER05"
+slug = "sok2-hinder-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER06"
+slug = "sok2-hinder-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER07"
+slug = "sok2-hinder-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER08"
+slug = "sok2-hinder-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER09"
+slug = "sok2-hinder-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER10"
+slug = "sok2-hinder-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER11"
+slug = "sok2-hinder-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOK2HINDER12"
+slug = "sok2-hinder-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTALDER"
+slug = "alder-sokande-aldst"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT01"
+slug = "avslutskod-aldsta-sokande-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT02"
+slug = "avslutskod-aldsta-sokande-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT03"
+slug = "avslutskod-aldsta-sokande-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT04"
+slug = "avslutskod-aldsta-sokande-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT05"
+slug = "avslutskod-aldsta-sokande-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT06"
+slug = "avslutskod-aldsta-sokande-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT07"
+slug = "avslutskod-aldsta-sokande-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT08"
+slug = "avslutskod-aldsta-sokande-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT09"
+slug = "avslutskod-aldsta-sokande-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT10"
+slug = "avslutskod-aldsta-sokande-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT11"
+slug = "avslutskod-aldsta-sokande-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTAVSLUT12"
+slug = "avslutskod-aldsta-sokande-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER01"
+slug = "aldstes-hinder-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER02"
+slug = "aldstes-hinder-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER03"
+slug = "aldstes-hinder-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER04"
+slug = "aldstes-hinder-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER05"
+slug = "aldstes-hinder-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER06"
+slug = "aldstes-hinder-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER07"
+slug = "aldstes-hinder-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER08"
+slug = "aldstes-hinder-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER09"
+slug = "aldstes-hinder-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER10"
+slug = "aldstes-hinder-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER11"
+slug = "aldstes-hinder-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTHINDER12"
+slug = "aldstes-hinder-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKALDSTPNR"
+slug = "personnr-aldsta-sokande-2"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01"
+slug = "arbetsforberedande-insatser"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_01"
+slug = "arbetsforberedande-insatser-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_02"
+slug = "arbetsforberedande-insatser-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_03"
+slug = "arbetsforberedande-insatser-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_04"
+slug = "arbetsforberedande-insatser-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_05"
+slug = "arbetsforberedande-insatser-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_06"
+slug = "arbetsforberedande-insatser-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_07"
+slug = "arbetsforberedande-insatser-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_08"
+slug = "arbetsforberedande-insatser-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_09"
+slug = "arbetsforberedande-insatser-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_10"
+slug = "arbetsforberedande-insatser-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_11"
+slug = "arbetsforberedande-insatser-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS01_12"
+slug = "arbetsforberedande-insatser-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02"
+slug = "arbetspraktik"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_01"
+slug = "arbetspraktik-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_02"
+slug = "arbetspraktik-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_03"
+slug = "arbetspraktik-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_04"
+slug = "arbetspraktik-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_05"
+slug = "arbetspraktik-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_06"
+slug = "arbetspraktik-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_07"
+slug = "arbetspraktik-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_08"
+slug = "arbetspraktik-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_09"
+slug = "arbetspraktik-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_10"
+slug = "arbetspraktik-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_11"
+slug = "arbetspraktik-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS02_12"
+slug = "arbetspraktik-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03"
+slug = "jobbsokaraktivitet"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_01"
+slug = "jobbsokaraktivitet-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_02"
+slug = "jobbsokaraktivitet-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_03"
+slug = "jobbsokaraktivitet-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_04"
+slug = "jobbsokaraktivitet-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_05"
+slug = "jobbsokaraktivitet-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_06"
+slug = "jobbsokaraktivitet-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_07"
+slug = "jobbsokaraktivitet-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_08"
+slug = "jobbsokaraktivitet-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_09"
+slug = "jobbsokaraktivitet-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_10"
+slug = "jobbsokaraktivitet-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_11"
+slug = "jobbsokaraktivitet-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS03_12"
+slug = "jobbsokaraktivitet-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04"
+slug = "kurs"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_01"
+slug = "kurs-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_02"
+slug = "kurs-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_03"
+slug = "kurs-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_04"
+slug = "kurs-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_05"
+slug = "kurs-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_06"
+slug = "kurs-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_07"
+slug = "kurs-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_08"
+slug = "kurs-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_09"
+slug = "kurs-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_10"
+slug = "kurs-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_11"
+slug = "kurs-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS04_12"
+slug = "kurs-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05"
+slug = "studie-yrkesvagledning"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_01"
+slug = "studie-yrkesvagledning-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_02"
+slug = "studie-yrkesvagledning-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_03"
+slug = "studie-yrkesvagledning-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_04"
+slug = "studie-yrkesvagledning-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_05"
+slug = "studie-yrkesvagledning-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_06"
+slug = "studie-yrkesvagledning-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_07"
+slug = "studie-yrkesvagledning-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_08"
+slug = "studie-yrkesvagledning-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_09"
+slug = "studie-yrkesvagledning-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_10"
+slug = "studie-yrkesvagledning-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_11"
+slug = "studie-yrkesvagledning-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS05_12"
+slug = "studie-yrkesvagledning-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06"
+slug = "ovriga-arbetsmarknadsinsatser"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_01"
+slug = "arbetsmarknadsinsatser-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_02"
+slug = "arbetsmarknadsinsatser-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_03"
+slug = "arbetsmarknadsinsatser-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_04"
+slug = "arbetsmarknadsinsatser-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_05"
+slug = "arbetsmarknadsinsatser-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_06"
+slug = "arbetsmarknadsinsatser-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_07"
+slug = "arbetsmarknadsinsatser-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_08"
+slug = "arbetsmarknadsinsatser-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_09"
+slug = "arbetsmarknadsinsatser-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_10"
+slug = "arbetsmarknadsinsatser-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_11"
+slug = "arbetsmarknadsinsatser-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS06_12"
+slug = "arbetsmarknadsinsatser-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07"
+slug = "ej-arbetsmarknadsinsatser"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_01"
+slug = "ej-arbetsmarknadsinsatser-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_02"
+slug = "ej-arbetsmarknadsinsatser-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_03"
+slug = "ej-arbetsmarknadsinsatser-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_04"
+slug = "ej-arbetsmarknadsinsatser-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_05"
+slug = "ej-arbetsmarknadsinsatser-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_06"
+slug = "ej-arbetsmarknadsinsatser-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_07"
+slug = "ej-arbetsmarknadsinsatser-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_08"
+slug = "ej-arbetsmarknadsinsatser-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_09"
+slug = "ej-arbetsmarknadsinsatser-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_10"
+slug = "ej-arbetsmarknadsinsatser-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_11"
+slug = "ej-arbetsmarknadsinsatser-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKINS07_12"
+slug = "ej-arbetsmarknadsinsatser-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTALDER"
+slug = "alder-sokande-yngst"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT01"
+slug = "avslutskod-yngsta-sokande-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT02"
+slug = "avslutskod-yngsta-sokande-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT03"
+slug = "avslutskod-yngsta-sokande-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT04"
+slug = "avslutskod-yngsta-sokande-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT05"
+slug = "avslutskod-yngsta-sokande-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT06"
+slug = "avslutskod-yngsta-sokande-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT07"
+slug = "avslutskod-yngsta-sokande-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT08"
+slug = "avslutskod-yngsta-sokande-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT09"
+slug = "avslutskod-yngsta-sokande-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT10"
+slug = "avslutskod-yngsta-sokande-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT11"
+slug = "avslutskod-yngsta-sokande-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTAVSLUT12"
+slug = "avslutskod-yngsta-sokande-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER01"
+slug = "yngstes-hinder-januari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER02"
+slug = "yngstes-hinder-februari"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER03"
+slug = "yngstes-hinder-mars"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER04"
+slug = "yngstes-hinder-april"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER05"
+slug = "yngstes-hinder-maj"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER06"
+slug = "yngstes-hinder-juni"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER07"
+slug = "yngstes-hinder-juli"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER08"
+slug = "yngstes-hinder-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER09"
+slug = "yngstes-hinder-september"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER10"
+slug = "yngstes-hinder-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER11"
+slug = "yngstes-hinder-november"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTHINDER12"
+slug = "yngstes-hinder-december"
+
+[[variable]]
+native_id = "5352018376318353790.SOKYNGSTPNR"
+slug = "personnr-yngsta-sokande-2"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP01"
+slug = "tandvard-belopp-januari"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP02"
+slug = "tandvard-belopp-februari"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP03"
+slug = "tandvard-belopp-mars"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP04"
+slug = "tandvard-belopp-april"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP05"
+slug = "tandvard-belopp-maj"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP06"
+slug = "tandvard-belopp-juni"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP07"
+slug = "tandvard-belopp-juli"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP08"
+slug = "tandvard-belopp-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP09"
+slug = "tandvard-belopp-september"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP10"
+slug = "tandvard-belopp-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP11"
+slug = "tandvard-belopp-november"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVBELOPP12"
+slug = "tandvard-belopp-december"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND01"
+slug = "tandvard-januari"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND02"
+slug = "tandvard-februari"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND03"
+slug = "tandvard-mars"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND04"
+slug = "tandvard-april"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND05"
+slug = "tandvard-maj"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND06"
+slug = "tandvard-juni"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND07"
+slug = "tandvard-juli"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND08"
+slug = "tandvard-augusti"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND09"
+slug = "tandvard-september"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND10"
+slug = "tandvard-oktober"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND11"
+slug = "tandvard-november"
+
+[[variable]]
+native_id = "5352018376318353790.TANDVIND12"
+slug = "tandvard-december"
+
+[[variable]]
+native_id = "5352018376318353790.UTLHH"
+slug = "utlanskt-hushall"
+# register 5369119272181688462

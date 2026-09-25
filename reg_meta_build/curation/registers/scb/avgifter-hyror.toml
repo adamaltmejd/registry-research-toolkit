@@ -1,0 +1,121 @@
+[register]
+provider = "scb"
+slug = "avgifter-hyror"
+native_id = "198"
+
+[[variant]]
+native_id = "198.300"
+slug = "_default"
+display_group = "Avgifter/hyror för nybyggda lägenheter"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Hyror i bostadslägenheter (HIB)
+
+[[variable]]
+native_id = "198.26"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "198.2314"
+slug = "taxeringsenhet-id"
+
+[[variable]]
+native_id = "198.3593"
+slug = "utdelningspostort"
+
+[[variable]]
+native_id = "198.3751"
+slug = "lopnummer"
+
+[[variable]]
+native_id = "198.5105"
+slug = "lagenhetstyp"
+
+[[variable]]
+native_id = "198.5109"
+slug = "hyra-avgift"
+
+[[variable]]
+native_id = "198.5112"
+slug = "outhyrda-lagenheter"
+
+[[variable]]
+native_id = "198.5113"
+slug = "byggherre"
+
+[[variable]]
+native_id = "198.5115"
+slug = "region-fem-regioner"
+
+[[variable]]
+native_id = "198.5117"
+slug = "kategoribostad"
+
+[[variable]]
+native_id = "198.5473"
+slug = "id-nummer"
+
+[[variable]]
+native_id = "198.5476"
+slug = "antal-lagenheter-bygglov"
+
+[[variable]]
+native_id = "198.5477"
+slug = "bostadsarea-bygglov"
+
+[[variable]]
+native_id = "198.7781"
+slug = "lagenheter-per-typ"
+
+[[variable]]
+native_id = "198.7786"
+slug = "lghnr"
+
+[[variable]]
+native_id = "198.8092"
+slug = "lagenhetsinnehavare"
+
+[[variable]]
+native_id = "198.22357"
+slug = "arshyra-arsavgift"
+
+# register 199 (hib)
+
+[[variable]]
+native_id = "198.17046.totlgh"
+slug = "antal-lagenheter-totalt"
+
+[[variable]]
+native_id = "198.17411.lghareor"
+slug = "bostadsarea"
+
+# register 199 (hib)
+
+[[variable]]
+native_id = "198.2187"
+slug = "agarkategori"
+
+[[variable]]
+native_id = "198.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "198.5092"
+slug = "hustyp"
+
+[[variable]]
+native_id = "198.7782"
+slug = "fardigstallda-hus"
+
+[[variable]]
+native_id = "198.7785"
+slug = "upplatelseform-utvald-lagenhet"
+
+[[variable]]
+native_id = "198.14762"
+slug = "fardigstallandear"
+
+# register 199

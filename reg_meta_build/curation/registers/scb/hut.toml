@@ -1,0 +1,503 @@
+[register]
+provider = "scb"
+slug = "hut"
+native_id = "86"
+
+[[variant]]
+native_id = "86.390"
+slug = "individ-2003-2012"
+display_group = "Individ 2003-2012"
+panel_entity_key = ["lopnummer-kosthushall", "ordningsnummer-inom-kosthushallet"]
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: bubnrh lives only in the 2021 variants; the 2003-2012 household id is
+# Löpnummer, kosthushåll (LOPNR).
+
+[[variant]]
+native_id = "86.391"
+slug = "hushall-2003-2012"
+display_group = "Hushåll 2003-2012"
+panel_entity_key = "lopnummer-kosthushall"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "86.1500"
+slug = "hushall-1999-2001"
+display_group = "Hushåll 1999-2001"
+panel_entity_key = "kundnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "86.1664"
+slug = "hushall-2021"
+display_group = "Hushåll 2021-"
+panel_entity_key = "hushallsid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "86.1665"
+slug = "individ-2021"
+display_group = "Individ 2021-"
+panel_entity_key = "eget-personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Konjunkturstatistik, löner för kommuner (KLK)
+
+[[variable]]
+native_id = "86.3268"
+slug = "ordningsnummer-inom-kosthushallet"
+
+
+[[variable]]
+native_id = "86.3273"
+slug = "lopnummer-kosthushall"
+
+
+[[variable]]
+native_id = "86.4544"
+slug = "eget-personnr"
+
+
+[[variable]]
+native_id = "86.5708"
+slug = "kundnr"
+
+
+[[variable]]
+native_id = "86.30360"
+slug = "hushallsid"
+
+
+[[variable]]
+native_id = "86.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "86.462"
+slug = "stratum"
+
+[[variable]]
+native_id = "86.2767"
+slug = "boyta-kvm"
+
+[[variable]]
+native_id = "86.3189"
+slug = "antal-rum-exkl-kok"
+
+[[variable]]
+native_id = "86.3192"
+slug = "forfogande-over-bostaden"
+
+[[variable]]
+native_id = "86.3193"
+slug = "typ-av-boende"
+
+[[variable]]
+native_id = "86.3197"
+slug = "antal-barn-0-19-ar"
+
+[[variable]]
+native_id = "86.3220"
+slug = "konsumtionsenhet"
+
+[[variable]]
+native_id = "86.3224"
+slug = "hushallets-vikt"
+
+[[variable]]
+native_id = "86.3225"
+slug = "hushallets-disponibla-inkomst"
+
+[[variable]]
+native_id = "86.3271"
+slug = "vikt"
+
+[[variable]]
+native_id = "86.6169"
+slug = "hushallsutgift"
+
+[[variable]]
+native_id = "86.21242"
+slug = "konsumtionsenhet-2004"
+
+[[variable]]
+native_id = "86.29408"
+slug = "hushallstyp-kosthushall"
+
+[[variable]]
+native_id = "86.40441"
+slug = "utgift-forbrukningsvaror"
+
+[[variable]]
+native_id = "86.40447"
+slug = "utgift-for-klader"
+
+[[variable]]
+native_id = "86.40451"
+slug = "utgift-for-skor"
+
+[[variable]]
+native_id = "86.40455"
+slug = "utgift-for-inkop-av-bil"
+
+[[variable]]
+native_id = "86.40480"
+slug = "utgift-hushallstjanster"
+
+[[variable]]
+native_id = "86.40481"
+slug = "utgift-klader-skor"
+
+[[variable]]
+native_id = "86.40483"
+slug = "utgift-for-transport"
+
+[[variable]]
+native_id = "86.40484"
+slug = "utgift-fritid-kultur"
+
+[[variable]]
+native_id = "86.40485"
+slug = "utgift-for-bostad"
+
+[[variable]]
+native_id = "86.40486"
+slug = "utgift-skattepliktiga-formaner"
+
+[[variable]]
+native_id = "86.40487"
+slug = "totala-utgifter"
+
+[[variable]]
+native_id = "86.40488"
+slug = "utgift-for-livsmedel"
+
+[[variable]]
+native_id = "86.40887"
+slug = "utgift-for-bord"
+
+[[variable]]
+native_id = "86.40895"
+slug = "utgift-for-sangar"
+
+[[variable]]
+native_id = "86.40897"
+slug = "utgift-for-utemobler"
+
+[[variable]]
+native_id = "86.40903"
+slug = "utgift-ovriga-tillbehor"
+
+[[variable]]
+native_id = "86.40904"
+slug = "utgift-sanglinne"
+
+[[variable]]
+native_id = "86.40909"
+slug = "utgift-for-spis"
+
+[[variable]]
+native_id = "86.40912"
+slug = "utgift-for-kyl-frys"
+
+[[variable]]
+native_id = "86.40913"
+slug = "utgift-for-diskmaskin"
+
+[[variable]]
+native_id = "86.40915"
+slug = "utgift-tvattmaskin-tork"
+
+[[variable]]
+native_id = "86.40919"
+slug = "utgift-reparation-hyra-tillbehor"
+
+[[variable]]
+native_id = "86.40922"
+slug = "utgift-for-glas-porslin"
+
+[[variable]]
+native_id = "86.40927"
+slug = "utgift-for-verktyg"
+
+[[variable]]
+native_id = "86.40937"
+slug = "utgift-for-tandvard"
+
+[[variable]]
+native_id = "86.40952"
+slug = "utgift-husvagn-slapvagn"
+
+[[variable]]
+native_id = "86.40954"
+slug = "utgift-for-cykel"
+
+[[variable]]
+native_id = "86.40961"
+slug = "utgift-for-taxi"
+
+[[variable]]
+native_id = "86.40991"
+slug = "utgift-internetabonnemang"
+
+[[variable]]
+native_id = "86.41002"
+slug = "utgift-musikinstrument"
+
+[[variable]]
+native_id = "86.41003"
+slug = "utgift-for-bat-batmotor"
+
+[[variable]]
+native_id = "86.41011"
+slug = "utgift-for-fototjanster"
+
+[[variable]]
+native_id = "86.41016"
+slug = "utgift-for-sallskapsdjur"
+
+[[variable]]
+native_id = "86.41017"
+slug = "utgift-for-veterinar"
+
+[[variable]]
+native_id = "86.41022"
+slug = "utgift-for-blommor"
+
+[[variable]]
+native_id = "86.41033"
+slug = "utgift-idrottsevenemang"
+
+[[variable]]
+native_id = "86.41047"
+slug = "utgift-for-vaskor"
+
+[[variable]]
+native_id = "86.41054"
+slug = "utgift-sjuk-olycksfallsfors"
+
+[[variable]]
+native_id = "86.41057"
+slug = "utgift-fackavg-a-kassa"
+
+# register 89 (klk)
+
+[[variable]]
+native_id = "86.31"
+slug = "forsamling"
+
+[[variable]]
+native_id = "86.49"
+slug = "lan"
+
+[[variable]]
+native_id = "86.302"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "86.388"
+slug = "antal-barn"
+
+[[variable]]
+native_id = "86.779"
+slug = "utbildningsniva-1-position"
+
+[[variable]]
+native_id = "86.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "86.2463"
+slug = "undersokningsar"
+
+[[variable]]
+native_id = "86.3218"
+slug = "inkomstranta"
+
+[[variable]]
+native_id = "86.3223"
+slug = "antal-individer-kosthushallet"
+
+[[variable]]
+native_id = "86.3265"
+slug = "datumreg"
+
+[[variable]]
+native_id = "86.4454"
+slug = "individ-hushallsid"
+
+[[variable]]
+native_id = "86.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "86.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "86.7900"
+slug = "byggnadsar"
+
+[[variable]]
+native_id = "86.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "86.8167"
+slug = "antal-svarande-objekt"
+
+[[variable]]
+native_id = "86.15195"
+slug = "redovisningsar"
+
+[[variable]]
+native_id = "86.16075"
+slug = "hushallsforestandare"
+
+[[variable]]
+native_id = "86.16510"
+slug = "rantebidrag"
+
+[[variable]]
+native_id = "86.17411"
+slug = "boarea"
+
+[[variable]]
+native_id = "86.18187"
+slug = "skuldranta-m-m"
+
+[[variable]]
+native_id = "86.21273"
+slug = "imputering-boyta"
+
+[[variable]]
+native_id = "86.22273"
+slug = "disponibel-inkomst-kosthushall-2004"
+
+[[variable]]
+native_id = "86.22328"
+slug = "region-fyra-delar"
+
+[[variable]]
+native_id = "86.22335"
+slug = "konsumtionsenhetsvikt-2004"
+
+[[variable]]
+native_id = "86.22368"
+slug = "bilinnehav-antal-bilar"
+
+[[variable]]
+native_id = "86.30781"
+slug = "koktyp"
+
+[[variable]]
+native_id = "86.31997"
+slug = "typ-av-uppgift"
+
+[[variable]]
+native_id = "86.32773"
+slug = "antal-personer-i-hushallet"
+
+[[variable]]
+native_id = "86.32957"
+slug = "kommunkod"
+
+[[variable]]
+native_id = "86.35335"
+slug = "regionindelning"
+
+[[variable]]
+native_id = "86.35579"
+slug = "hushallsforestandaren"
+
+[[variable]]
+native_id = "86.35581"
+slug = "relation-till-urvalsperson"
+
+[[variable]]
+native_id = "86.35704"
+slug = "hushallsvikt-kalibrerad"
+
+[[variable]]
+native_id = "86.35992"
+slug = "antal-rum"
+
+[[variable]]
+native_id = "86.36030"
+slug = "uppvarmningsutgift-annat-bransle"
+
+[[variable]]
+native_id = "86.36031"
+slug = "uppvarmningsutgift-el"
+
+[[variable]]
+native_id = "86.36032"
+slug = "uppvarmningsutgift-fjarrvarme"
+
+[[variable]]
+native_id = "86.36033"
+slug = "uppvarmningsutgift-olja"
+
+[[variable]]
+native_id = "86.36034"
+slug = "uppvarmningsutgift-biobransle"
+
+[[variable]]
+native_id = "86.37949"
+slug = "hushallsforestandarens-alder"
+
+[[variable]]
+native_id = "86.38249"
+slug = "fodd-i-sverige-eller-utomlands"
+
+[[variable]]
+native_id = "86.40881"
+slug = "utgift-fritidsbostad-forsakring"
+
+[[variable]]
+native_id = "86.40948"
+slug = "utgift-bilforsakring"
+
+[[variable]]
+native_id = "86.40957"
+slug = "utgift-forsakring-annat-fordon"
+
+[[variable]]
+native_id = "86.41007"
+slug = "utgift-batforsakring"
+
+[[variable]]
+native_id = "86.45856"
+slug = "urvalskvartal"
+
+# register 89
+
+[[variable]]
+native_id = "86.15.civid"
+slug = "civilstand"
+
+[[variable]]
+native_id = "86.15.civurv"
+slug = "civilstand-urval"
+
+[[variable]]
+native_id = "86.25796.delurv"
+slug = "delurval"
+
+[[variable]]
+native_id = "86.3270.bsyssel"
+slug = "sysselsattningstyp"
+
+[[variable]]
+native_id = "86.75.carb1"
+slug = "arbetsinkomst"
+
+# register 97

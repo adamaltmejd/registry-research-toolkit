@@ -647,7 +647,7 @@ class CuratedAdapter:
         yield IRRegister(
             register_id=register_id,
             provider=self.provider,
-            slug="",  # populate_slugs fills it from fqid_slugs/<provider>.toml
+            slug="",  # register curation supplies the slug
             name=reg.name,
             description=reg.description,
             purpose=reg.purpose,

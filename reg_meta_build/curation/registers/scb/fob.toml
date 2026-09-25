@@ -1,0 +1,468 @@
+[register]
+provider = "scb"
+slug = "fob"
+native_id = "32"
+
+[[variant]]
+native_id = "32.80"
+slug = "familj"
+display_group = "Familj"
+panel_entity_key = "famfpersonnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "32.81"
+slug = "individ"
+display_group = "Individ"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "32.82"
+slug = "lagenhet-och-hushall"
+display_group = "Lägenhet och hushåll"
+panel_entity_key = "lghnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "32.83"
+slug = "vy-fob"
+display_group = "Vy"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Longitudinell integrationsdatabas för sjukförsäkrings- och arbetsmarknadsstudier (LISA)
+
+[[variable]]
+native_id = "32.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "32.7786"
+slug = "lghnr"
+
+
+[[variable]]
+native_id = "32.42375"
+slug = "famfpersonnr"
+
+
+[[variable]]
+native_id = "32.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "32.2313"
+slug = "uppvarmningssatt-annat"
+
+[[variable]]
+native_id = "32.23477"
+slug = "yrke"
+
+[[variable]]
+native_id = "32.29827"
+slug = "hushallsstallning"
+
+[[variable]]
+native_id = "32.31099"
+slug = "barn-16-17-ar"
+
+[[variable]]
+native_id = "32.35992"
+slug = "antal-rum"
+
+[[variable]]
+native_id = "32.40766"
+slug = "barn-7-12-ar"
+
+[[variable]]
+native_id = "32.41498"
+slug = "fastighetslopnr"
+
+[[variable]]
+native_id = "32.41499"
+slug = "lagenhetslopnummer"
+
+[[variable]]
+native_id = "32.41501"
+slug = "husnr"
+
+[[variable]]
+native_id = "32.41506"
+slug = "kommunblock-fob"
+
+[[variable]]
+native_id = "32.41508"
+slug = "inflyttningsar"
+
+[[variable]]
+native_id = "32.41556"
+slug = "yrkesstallning-fob"
+
+[[variable]]
+native_id = "32.41571"
+slug = "barn-0-15-ar"
+
+[[variable]]
+native_id = "32.41572"
+slug = "kommunblocksdel"
+
+[[variable]]
+native_id = "32.41574"
+slug = "uppslagsnummer"
+
+[[variable]]
+native_id = "32.41575"
+slug = "yngsta-barnets-fodelsear"
+
+[[variable]]
+native_id = "32.41889"
+slug = "boende-i-hushallet"
+
+[[variable]]
+native_id = "32.42065"
+slug = "barn-13-15-ar"
+
+[[variable]]
+native_id = "32.42070"
+slug = "barn-7-9-ar"
+
+[[variable]]
+native_id = "32.42071"
+slug = "barn-10-12-ar"
+
+[[variable]]
+native_id = "32.42100"
+slug = "personer-0-15-ar"
+
+[[variable]]
+native_id = "32.42199"
+slug = "utrikes-fodda"
+
+[[variable]]
+native_id = "32.42200"
+slug = "utlandska-medborgare-fob"
+
+[[variable]]
+native_id = "32.42211"
+slug = "hiss"
+
+[[variable]]
+native_id = "32.42334"
+slug = "sysselsattning-referensperson"
+
+[[variable]]
+native_id = "32.42513"
+slug = "uppvarmning-annat-ej-centralvarme"
+
+[[variable]]
+native_id = "32.42519"
+slug = "hushallsstallning-slutlig"
+
+[[variable]]
+native_id = "32.42520"
+slug = "personer-65-w-ar"
+
+[[variable]]
+native_id = "32.42529"
+slug = "forvarvsarbetande-20w-hh"
+
+[[variable]]
+native_id = "32.42532"
+slug = "byggnadsnummer"
+
+[[variable]]
+native_id = "32.42556"
+slug = "forvarvsarbetande-20-w"
+
+[[variable]]
+native_id = "32.42570"
+slug = "vatten"
+
+[[variable]]
+native_id = "32.42575"
+slug = "anhoriga"
+
+[[variable]]
+native_id = "32.42597"
+slug = "lokaler"
+
+[[variable]]
+native_id = "32.42608"
+slug = "rumsenheter-bostadsrum"
+
+[[variable]]
+native_id = "32.42610"
+slug = "rumsenheter-samtliga-rum"
+
+[[variable]]
+native_id = "32.42626"
+slug = "ovriga-boende"
+
+[[variable]]
+native_id = "32.42630"
+slug = "personer-0-6-ar"
+
+[[variable]]
+native_id = "32.42631"
+slug = "personer-16-w-ar"
+
+[[variable]]
+native_id = "32.46081"
+slug = "utbildningsniva-fob90"
+
+[[variable]]
+native_id = "32.48430"
+slug = "utbildningsniva-fob70"
+
+# register 34 (lisa)
+
+[[variable]]
+native_id = "32.17124.antrumenhbrk"
+slug = "antal-rumsenheter"
+
+[[variable]]
+native_id = "32.17124.antrumenhrok"
+slug = "antal-rumsenheter-rok"
+
+[[variable]]
+native_id = "32.3188.hhtyp"
+slug = "hushallstyp"
+
+[[variable]]
+native_id = "32.41534.yrke"
+slug = "yrkeskod-fob"
+
+[[variable]]
+native_id = "32.42217.trangbo"
+slug = "trangboddhet"
+
+[[variable]]
+native_id = "32.42534.rpsyss"
+slug = "forvarvsarbete-referensperson"
+
+# register 321 (lokal-demokrati)
+
+[[variable]]
+native_id = "32.17"
+slug = "arbetsstallenummer"
+
+[[variable]]
+native_id = "32.19"
+slug = "a-region"
+
+[[variable]]
+native_id = "32.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "32.75"
+slug = "arbetsinkomst"
+
+[[variable]]
+native_id = "32.245"
+slug = "civilstandsdatum"
+
+[[variable]]
+native_id = "32.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "32.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "32.480"
+slug = "sekvenssiffra"
+
+[[variable]]
+native_id = "32.637"
+slug = "om-eller-tillbyggnar"
+
+[[variable]]
+native_id = "32.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "32.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "32.2224"
+slug = "typkod"
+
+[[variable]]
+native_id = "32.2301"
+slug = "uppvarmningssatt-vattenburen-el"
+
+[[variable]]
+native_id = "32.2315"
+slug = "uppvarmningssatt-olja"
+
+[[variable]]
+native_id = "32.2316"
+slug = "uppvarmningssatt-ved"
+
+[[variable]]
+native_id = "32.2318"
+slug = "uppvarmningssatt-naturgas-stadsgas"
+
+[[variable]]
+native_id = "32.2320"
+slug = "uppvarmningssatt-fjarrvarme"
+
+[[variable]]
+native_id = "32.2321"
+slug = "uppvarmningssatt-panncentral-narvarme"
+
+[[variable]]
+native_id = "32.2322"
+slug = "uppvarmningssatt-direktverkande-el"
+
+[[variable]]
+native_id = "32.2324"
+slug = "uppvarmningssatt-luftburen-el"
+
+[[variable]]
+native_id = "32.2679"
+slug = "forvarvsarbetande"
+
+[[variable]]
+native_id = "32.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "32.4932"
+slug = "arbetsstalle-storleksklass"
+
+[[variable]]
+native_id = "32.5068"
+slug = "huvudsaklig-sysselsattning"
+
+[[variable]]
+native_id = "32.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "32.7071"
+slug = "medborgarskapsar"
+
+[[variable]]
+native_id = "32.7546"
+slug = "dispositionsform-bostad"
+
+[[variable]]
+native_id = "32.16297"
+slug = "nybyggnadsar"
+
+[[variable]]
+native_id = "32.16312"
+slug = "folkbokforingsforsamling"
+
+[[variable]]
+native_id = "32.17506"
+slug = "centralvarme"
+
+[[variable]]
+native_id = "32.17561"
+slug = "forsamling-arbetsstallet"
+
+[[variable]]
+native_id = "32.17990"
+slug = "uppvarmningssatt-luft-luftvarmepump"
+
+[[variable]]
+native_id = "32.18249"
+slug = "fastighets-lopnr-arbetsstallet"
+
+[[variable]]
+native_id = "32.19086"
+slug = "antal-lagenheter"
+
+[[variable]]
+native_id = "32.21077"
+slug = "antal-vaningsplan"
+
+[[variable]]
+native_id = "32.23619"
+slug = "fastighetstyp"
+
+[[variable]]
+native_id = "32.30344"
+slug = "byggnadsperiod"
+
+[[variable]]
+native_id = "32.30347"
+slug = "bebodd-obebodd"
+
+[[variable]]
+native_id = "32.30833"
+slug = "alder-yngsta-i-hushallet"
+
+[[variable]]
+native_id = "32.30834"
+slug = "alder-aldsta-i-hushallet"
+
+[[variable]]
+native_id = "32.31035"
+slug = "socioekonomisk-grupp-hushall"
+
+[[variable]]
+native_id = "32.31101"
+slug = "barn-18-19-ar"
+
+[[variable]]
+native_id = "32.35594"
+slug = "personnr-huvudman"
+
+[[variable]]
+native_id = "32.39371"
+slug = "taxeringsdistrikt"
+
+[[variable]]
+native_id = "32.39455"
+slug = "vigseldatum"
+
+[[variable]]
+native_id = "32.40288"
+slug = "storstadsomrade"
+
+[[variable]]
+native_id = "32.42210"
+slug = "taxeringsform"
+
+[[variable]]
+native_id = "32.42371"
+slug = "yngsta-barnets-alder"
+
+# register 34
+
+[[variable]]
+native_id = "32.2873.arbstnordkoord"
+slug = "nordlig-mittpunktskoord-arbst"
+
+[[variable]]
+native_id = "32.2873.nordkoordinat"
+slug = "nordlig-mittpunktskoordinat"
+
+[[variable]]
+native_id = "32.29578.medb"
+slug = "medborgarskap"
+
+[[variable]]
+native_id = "32.41495.antbilar"
+slug = "antal-bilar"
+
+[[variable]]
+native_id = "32.41495.antbilarhh"
+slug = "antal-bilar-hushall"
+
+# register 320

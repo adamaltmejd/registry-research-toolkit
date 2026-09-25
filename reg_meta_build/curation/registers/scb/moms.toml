@@ -56,3 +56,128 @@ register = "scb/moms"
 variable = "stkl"
 description = "Storleksgrupp på företaget efter antal anställda enligt FDB"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[variant]]
+native_id = "13.536"
+slug = "momsdeklarationsregistret"
+display_group = "Momsdeklarationsregistret"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Ekonomiskt bistånd (socialbidrag)
+
+[[variable]]
+native_id = "13.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "13.2857"
+slug = "redovisningsmanad"
+
+[[variable]]
+native_id = "13.15225"
+slug = "omsattning-i-sverige"
+
+[[variable]]
+native_id = "13.15250"
+slug = "omsattning-i-sverige-moms2007"
+
+[[variable]]
+native_id = "13.15273"
+slug = "redovisningsmanad-momsregistret"
+
+[[variable]]
+native_id = "13.19052"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "13.19054"
+slug = "naringsgren-for-statistiken-huvudsaklig"
+
+# register 24 (ureg)
+
+[[variable]]
+native_id = "13.4027.ng0"
+slug = "naringsgren"
+
+# register 135 (ivp)
+
+[[variable]]
+native_id = "13.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "13.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "13.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "13.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "13.1006"
+slug = "redovisningsgrupp-moms"
+
+[[variable]]
+native_id = "13.1054"
+slug = "sateskommun"
+
+[[variable]]
+native_id = "13.15195"
+slug = "redovisningsar"
+
+[[variable]]
+native_id = "13.15211"
+slug = "utgaende-moms-6"
+
+[[variable]]
+native_id = "13.15212"
+slug = "utgaende-moms-12"
+
+[[variable]]
+native_id = "13.15215"
+slug = "utgaende-moms-25"
+
+[[variable]]
+native_id = "13.15230"
+slug = "momsfri-omsattning"
+
+[[variable]]
+native_id = "13.15231"
+slug = "momspl-uttag-fastighetsforvaltning"
+
+[[variable]]
+native_id = "13.15242"
+slug = "avdragsgill-ingaende-moms"
+
+[[variable]]
+native_id = "13.15245"
+slug = "export-varor-eg-land"
+
+[[variable]]
+native_id = "13.15257"
+slug = "m12-utgaende-moms-6"
+
+[[variable]]
+native_id = "13.15258"
+slug = "utgaende-moms-12-m11"
+
+[[variable]]
+native_id = "13.15259"
+slug = "utgaende-moms-25-m10"
+
+[[variable]]
+native_id = "13.23686"
+slug = "summa-utgaende-moms"
+
+[[variable]]
+native_id = "13.32695"
+slug = "referensperiod-antal-manader"
+
+# register 22

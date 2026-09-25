@@ -1,0 +1,291 @@
+[register]
+provider = "scb"
+slug = "fordonsreg"
+native_id = "8"
+
+[[variant]]
+native_id = "8.739"
+slug = "eu-mopeder"
+display_group = "EU-mopeder"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.740"
+slug = "bussar"
+display_group = "Bussar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.741"
+slug = "lastbilar"
+display_group = "Lastbilar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.742"
+slug = "personbilar"
+display_group = "Personbilar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.743"
+slug = "motorcyklar"
+display_group = "Motorcyklar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.745"
+slug = "slapvagnar"
+display_group = "Släpvagnar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.748"
+slug = "traktorer"
+display_group = "Traktorer"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.749"
+slug = "terrangskotrar"
+display_group = "Terrängskotrar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.1186"
+slug = "snoskotrar"
+display_group = "Snöskotrar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.1187"
+slug = "terranghjulingar"
+display_group = "Terränghjulingar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8.1188"
+slug = "ovriga-fordonsslag"
+display_group = "Övriga fordonsslag"
+
+# Lantbruksregistret (LBR)
+
+[[variable]]
+native_id = "8.16564"
+slug = "chassi"
+
+
+[[variable]]
+native_id = "8.2350"
+slug = "arsmodell-imputerad"
+
+[[variable]]
+native_id = "8.2814"
+slug = "fabrikat"
+
+[[variable]]
+native_id = "8.3017"
+slug = "koppling"
+
+[[variable]]
+native_id = "8.3028"
+slug = "yrkesmassig-trafik-buss"
+
+[[variable]]
+native_id = "8.3031"
+slug = "yrkesmassig-trafik-linje"
+
+[[variable]]
+native_id = "8.3057"
+slug = "karosserikod-moped"
+
+[[variable]]
+native_id = "8.3061"
+slug = "koppling-1"
+
+[[variable]]
+native_id = "8.3062"
+slug = "koppling-2"
+
+[[variable]]
+native_id = "8.6353"
+slug = "fabrikat-moped-klass-i"
+
+[[variable]]
+native_id = "8.19640"
+slug = "avregistreringsorsak"
+
+[[variable]]
+native_id = "8.20694"
+slug = "utryckningsfordon"
+
+[[variable]]
+native_id = "8.25339"
+slug = "avregorsak"
+
+[[variable]]
+native_id = "8.26037"
+slug = "yrkesmassig-busstrafik"
+
+[[variable]]
+native_id = "8.26040"
+slug = "yrkesmassig-linjetrafik"
+
+[[variable]]
+native_id = "8.37093"
+slug = "fordonets-benamning"
+
+[[variable]]
+native_id = "8.37110"
+slug = "handelsbeteckning"
+
+[[variable]]
+native_id = "8.37397"
+slug = "fordonskategori"
+
+[[variable]]
+native_id = "8.38738"
+slug = "naringsgrenskod-sni-2002"
+
+[[variable]]
+native_id = "8.41377"
+slug = "yrkesmassig-utryckning"
+
+[[variable]]
+native_id = "8.48835"
+slug = "drivmedel-grupperad"
+
+# register 10 (lbr)
+
+[[variable]]
+native_id = "8.1721.brforbr1"
+slug = "brforbr-2"
+
+[[variable]]
+native_id = "8.25764.effektenh1"
+slug = "effektenh-2"
+
+[[variable]]
+native_id = "8.37378.drivm"
+slug = "drivmedel"
+
+[[variable]]
+native_id = "8.37378.drivmedel"
+slug = "drivmedel-2"
+
+[[variable]]
+native_id = "8.4027.sni2002"
+slug = "naringsgren"
+# #931: fordonsreg näringsgren parallel siblings (SNI vintage × owner-role)
+
+[[variable]]
+native_id = "8.4027.sni92"
+slug = "naringsgren-sni92"
+
+[[variable]]
+native_id = "8.4027.sni92-2"
+slug = "naringsgren-sni92-foregaende"
+
+[[variable]]
+native_id = "8.4027.sni92-3"
+slug = "naringsgren-sni92-nastforegaende"
+
+[[variable]]
+native_id = "8.4027.sni2002-2"
+slug = "naringsgren-sni2002-foregaende"
+
+[[variable]]
+native_id = "8.4027.sni2002-3"
+slug = "naringsgren-sni2002-nastforegaende"
+
+[[variable]]
+native_id = "8.4027.sni2007"
+slug = "naringsgren-sni2007"
+
+[[variable]]
+native_id = "8.4027.sni2007-2"
+slug = "naringsgren-sni2007-foregaende"
+
+[[variable]]
+native_id = "8.4027.sni2007-3"
+slug = "naringsgren-sni2007-nastforegaende"
+
+[[variable]]
+native_id = "8.4027.sni2007-ag"
+slug = "naringsgren-sni2007-administrativ"
+
+# register 97 (hek)
+
+[[variable]]
+native_id = "8.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "8.58"
+slug = "postnromrade"
+
+[[variable]]
+native_id = "8.20686"
+slug = "krockkudde"
+
+# register 10
+
+[[variable]]
+native_id = "8.1721.brforbr"
+slug = "bransleforbrukning"
+
+[[variable]]
+native_id = "8.1721.brforbrviktad"
+slug = "bransleforbrukning-viktad"
+
+[[variable]]
+native_id = "8.1975.kaross"
+slug = "karosserikod"
+
+[[variable]]
+native_id = "8.1975.karosserikod1"
+slug = "karosserikod-2"
+
+[[variable]]
+native_id = "8.2187.agkat"
+slug = "agarkategori"
+
+[[variable]]
+native_id = "8.3005.inst"
+slug = "institutionell-kod"
+
+[[variable]]
+native_id = "8.3265.datfreg"
+slug = "datumreg"
+
+# register 86

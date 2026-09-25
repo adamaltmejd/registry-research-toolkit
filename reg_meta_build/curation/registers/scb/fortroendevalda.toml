@@ -10,3 +10,203 @@ label = "scb/fortroendevalda/partinamn"
 [[code_label_pair]]
 code = "scb/fortroendevalda/skl-grupp"
 label = "scb/fortroendevalda/skl-gruppnamn"
+
+[[variant]]
+native_id = "270.638"
+slug = "fortroendevalda"
+display_group = "Förtroendevalda i kommuner"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "270.1094"
+slug = "fortroendevalda-i-regioner-landsting"
+display_group = "Förtroendevalda i regioner/landsting"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Namnstatistik
+
+[[variable]]
+native_id = "270.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "270.22"
+slug = "disponibel-inkomst"
+
+[[variable]]
+native_id = "270.125"
+slug = "sammanraknad-forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "270.511"
+slug = "ssyk4-huvud"
+
+[[variable]]
+native_id = "270.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "270.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "270.784"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "270.2692"
+slug = "institutionell-sektorkod"
+
+[[variable]]
+native_id = "270.2736"
+slug = "sektor"
+
+[[variable]]
+native_id = "270.4633"
+slug = "antal-barn-under-6"
+
+[[variable]]
+native_id = "270.5056"
+slug = "landstingskod"
+
+[[variable]]
+native_id = "270.7071"
+slug = "medborgarskapsar"
+
+[[variable]]
+native_id = "270.29608"
+slug = "antal-barn-under-18"
+
+[[variable]]
+native_id = "270.32957"
+slug = "kommunkod"
+
+[[variable]]
+native_id = "270.37393"
+slug = "landsting"
+
+# register 271 (namnstatistik)
+
+[[variable]]
+native_id = "270.269.medbar-1"
+slug = "medborgarskapsdatum-2"
+
+[[variable]]
+native_id = "270.332.arinv"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "270.36.kommun"
+slug = "kommun"
+
+[[variable]]
+native_id = "270.36.kommunkod"
+slug = "kommunindelning"
+
+[[variable]]
+native_id = "270.510.ssyk3"
+slug = "yrke-ssyk3-huvud"
+
+[[variable]]
+native_id = "270.99.cfviki"
+slug = "sammanraknad-forvarvsinkomst"
+
+# register 273 (stativ)
+
+[[variable]]
+native_id = "270.4544"
+slug = "eget-personnr"
+
+[[variable]]
+native_id = "270.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "270.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "270.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "270.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "270.389"
+slug = "antal-barn-under-18-ar"
+
+[[variable]]
+native_id = "270.391"
+slug = "antal-barn-under-6-ar"
+
+[[variable]]
+native_id = "270.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "270.1305"
+slug = "disponibel-inkomst-familj"
+
+[[variable]]
+native_id = "270.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "270.1930"
+slug = "ssykar"
+
+[[variable]]
+native_id = "270.2351"
+slug = "regionkod"
+
+[[variable]]
+native_id = "270.2907"
+slug = "region"
+
+[[variable]]
+native_id = "270.5059"
+slug = "landstingets-namn"
+
+[[variable]]
+native_id = "270.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "270.6818"
+slug = "medborgarland-varldsdel"
+
+[[variable]]
+native_id = "270.19052"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "270.21517"
+slug = "disponibel-inkomst-familj-2004"
+
+# register 271
+
+[[variable]]
+native_id = "270.269.medbar"
+slug = "medborgarskapsdatum"
+
+[[variable]]
+native_id = "270.269.medbdat"
+slug = "medborgarskapsdatum-3"
+
+[[variable]]
+native_id = "270.63.syssstat"
+slug = "sysselsattningsstatus-november"
+
+[[variable]]
+native_id = "270.99.csfvi"
+slug = "sammanraknad-forvarvsinkomst-2"
+
+# register 273

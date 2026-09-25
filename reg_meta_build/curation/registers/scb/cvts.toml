@@ -1,0 +1,89 @@
+[register]
+provider = "scb"
+slug = "cvts"
+native_id = "374"
+
+[[variant]]
+native_id = "374.1356"
+slug = "_default"
+display_group = "Continuing Vocational Training Survey"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Företagsstatistik för industri-, bygg och tjänstesektorn
+
+[[variable]]
+native_id = "374.4600"
+slug = "scbid"
+
+
+[[variable]]
+native_id = "374.39613"
+slug = "studier-yrkeskvalifikation"
+
+# register 375 (foretagsstatistik)
+
+[[variable]]
+native_id = "374.45"
+slug = "land"
+
+[[variable]]
+native_id = "374.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "374.2951"
+slug = "arbetskraftskostnader"
+
+[[variable]]
+native_id = "374.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "374.4656"
+slug = "insamlingsmetod"
+
+[[variable]]
+native_id = "374.6211"
+slug = "svarande-per-stratum"
+
+[[variable]]
+native_id = "374.6290"
+slug = "nuts"
+
+[[variable]]
+native_id = "374.6306"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "374.21044"
+slug = "bidragsbelopp"
+
+[[variable]]
+native_id = "374.37405"
+slug = "suburval"
+
+[[variable]]
+native_id = "374.39617"
+slug = "foretagsstorlek"
+
+[[variable]]
+native_id = "374.39651"
+slug = "svarsalternativ"
+
+# register 375
+
+[[variable]]
+native_id = "374.690.a2f"
+slug = "antal-anstallda-kvinnor"
+
+[[variable]]
+native_id = "374.690.a2m"
+slug = "antal-anstallda-man"
+
+[[variable]]
+native_id = "374.690.a2tot"
+slug = "antal-anstallda"
+
+# register 377

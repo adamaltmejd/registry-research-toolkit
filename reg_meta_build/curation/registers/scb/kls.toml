@@ -1,0 +1,119 @@
+[register]
+provider = "scb"
+slug = "kls"
+native_id = "60"
+
+[[variant]]
+native_id = "60.168"
+slug = "_default"
+display_group = "Konjunkturstatistik, löner för statlig sektor"
+panel_entity_key = "personnr"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+# Geografidatabasen (GDB)
+
+[[variable]]
+native_id = "60.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "60.50"
+slug = "manad"
+
+[[variable]]
+native_id = "60.1854"
+slug = "sektorkod-enl-kls"
+
+[[variable]]
+native_id = "60.2736"
+slug = "sektor"
+
+[[variable]]
+native_id = "60.7450"
+slug = "matmanad"
+
+[[variable]]
+native_id = "60.27169"
+slug = "lonepop-man"
+
+# register 70 (gdb)
+
+[[variable]]
+native_id = "60.1834.lonepopman"
+slug = "lonepopulation-2"
+
+# register 7 (ftr)
+
+[[variable]]
+native_id = "60.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "60.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "60.1822"
+slug = "fasta-lonetillagg"
+
+[[variable]]
+native_id = "60.1832"
+slug = "lonebeteckning"
+
+[[variable]]
+native_id = "60.1837"
+slug = "naturaformaner"
+
+[[variable]]
+native_id = "60.1838"
+slug = "overtidstillagg"
+
+[[variable]]
+native_id = "60.1844"
+slug = "rorliga-lonetillagg"
+
+[[variable]]
+native_id = "60.1846"
+slug = "tjanstledighet"
+
+[[variable]]
+native_id = "60.1852"
+slug = "tjanstebenamning"
+
+[[variable]]
+native_id = "60.1853"
+slug = "naringsgren-enligt-nr"
+
+[[variable]]
+native_id = "60.3098"
+slug = "faktiskt-arbetad-tid"
+
+[[variable]]
+native_id = "60.3129"
+slug = "avtalsenlig-veckoarbetstid"
+
+[[variable]]
+native_id = "60.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "60.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "60.15882"
+slug = "semestertillagg"
+
+[[variable]]
+native_id = "60.15926"
+slug = "foraldrapenningtillagg"
+
+# register 70
+
+[[variable]]
+native_id = "60.1834.lonepop"
+slug = "lonepopulation"
+
+# register 70

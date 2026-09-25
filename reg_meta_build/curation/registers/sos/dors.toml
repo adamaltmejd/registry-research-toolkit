@@ -37,3 +37,712 @@ members = [{ variable = "dodsorsak-position-1", value = "01", label = "1" }, { v
 [[identity.route]]
 deldatamangd = "DORS-COV"
 variants = ["COV_DORS_HERMES"] # v18: 26 rows
+
+[[variant]]
+native_id = "5369119272181688462.7577027114532436818"
+slug = "dors-avi"
+display_group = "DORS_AVI"
+panel_entity_key = "personnr"
+panel_time_key = "dodsdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5369119272181688462.7117668989275245835"
+slug = "dors"
+display_group = "DORS"
+panel_entity_key = "personnr"
+panel_time_key = "dodsdatum"
+panel_time_grain = "row"
+
+# Event register like its dors/dors-avi siblings (#211: the DORS-COV token map
+# gave the variant real states, so the row date column resolves here).
+
+[[variant]]
+native_id = "5369119272181688462.5309929884760526431"
+slug = "cov-dors-hermes"
+display_group = "COV_DORS_HERMES"
+panel_entity_key = "personnr"
+panel_time_key = "dodsdatum"
+panel_time_grain = "row"
+
+# Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA) (LOVA)
+#
+# #211: the A_LOVA* token map gave every variant real states, so the LOPNR
+# column resolves per variant (auto slug flipped name-derived
+# `lopnummer-som-ersatter-personnummer` -> column-derived `lopnr`). The data
+# variants are stacked multi-year extractions, so the time axis is the
+# per-row year/date column (row grain), not the delivery period. The
+# styrtabell tokens (A_LOVA_STYR_*) are no longer minted as variants (#373):
+# they are value-set decode tables (kod->klartext), bound to the coded
+# variables' value sets — so there are no styrtabell variants here to slug.
+
+[[variable]]
+native_id = "5369119272181688462.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "5369119272181688462.DALDKL5"
+slug = "dodsalder-femarsklasser"
+
+[[variable]]
+native_id = "5369119272181688462.DBGRUND1"
+slug = "obduktion"
+
+[[variable]]
+native_id = "5369119272181688462.DBGRUND5"
+slug = "undersokning-fore-doden"
+
+[[variable]]
+native_id = "5369119272181688462.DBGRUND6"
+slug = "undersokning-utanfor-sjukhus"
+
+[[variable]]
+native_id = "5369119272181688462.DBGRUND7"
+slug = "yttre-undersokning-efter-doden"
+
+[[variable]]
+native_id = "5369119272181688462.DBGRUND8"
+slug = "annan-kalla"
+
+[[variable]]
+native_id = "5369119272181688462.DODSDAT"
+slug = "dodsdatum"
+
+[[variable]]
+native_id = "5369119272181688462.FCIV"
+slug = "foregaende-civilstand"
+
+[[variable]]
+native_id = "5369119272181688462.FLAND"
+slug = "fodelseland-fritext"
+
+[[variable]]
+native_id = "5369119272181688462.FODDAT"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "5369119272181688462.FODDATN"
+slug = "fodelsedatum-sas"
+
+[[variable]]
+native_id = "5369119272181688462.FOD_LAN"
+slug = "fodelselan"
+
+[[variable]]
+native_id = "5369119272181688462.GKOD"
+slug = "granskningskod"
+
+[[variable]]
+native_id = "5369119272181688462.INLAS"
+slug = "inlasningsdatum"
+
+[[variable]]
+native_id = "5369119272181688462.INTYG"
+slug = "dodsorsak-inrapporteringssatt"
+
+[[variable]]
+native_id = "5369119272181688462.KAP17"
+slug = "kapitel-17-kod-icd-9"
+
+[[variable]]
+native_id = "5369119272181688462.KAP19"
+slug = "skadans-natur-kap19"
+
+[[variable]]
+native_id = "5369119272181688462.KAP22"
+slug = "skadans-natur-kap22"
+
+[[variable]]
+native_id = "5369119272181688462.LK"
+slug = "lan-kommun-fran-folkbokforing"
+
+[[variable]]
+native_id = "5369119272181688462.LKF"
+slug = "forsamlingskod"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK1"
+slug = "dodsorsak-1"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK10"
+slug = "dodsorsak-10"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK11"
+slug = "dodsorsak-11"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK12"
+slug = "dodsorsak-12"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK13"
+slug = "dodsorsak-13"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK14"
+slug = "dodsorsak-14"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK15"
+slug = "dodsorsak-15"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK16"
+slug = "dodsorsak-16"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK17"
+slug = "dodsorsak-17"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK18"
+slug = "dodsorsak-18"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK19"
+slug = "dodsorsak-19"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK2"
+slug = "dodsorsak-2"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK20"
+slug = "dodsorsak-20"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK21"
+slug = "dodsorsak-21"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK22"
+slug = "dodsorsak-22"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK23"
+slug = "dodsorsak-23"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK24"
+slug = "dodsorsak-24"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK25"
+slug = "dodsorsak-25"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK26"
+slug = "dodsorsak-26"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK27"
+slug = "dodsorsak-27"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK28"
+slug = "dodsorsak-28"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK29"
+slug = "dodsorsak-29"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK3"
+slug = "dodsorsak-3"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK30"
+slug = "dodsorsak-30"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK31"
+slug = "dodsorsak-31"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK32"
+slug = "dodsorsak-32"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK33"
+slug = "dodsorsak-33"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK34"
+slug = "dodsorsak-34"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK35"
+slug = "dodsorsak-35"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK36"
+slug = "dodsorsak-36"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK37"
+slug = "dodsorsak-37"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK38"
+slug = "dodsorsak-38"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK39"
+slug = "dodsorsak-39"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK4"
+slug = "dodsorsak-4"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK40"
+slug = "dodsorsak-40"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK41"
+slug = "dodsorsak-41"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK42"
+slug = "dodsorsak-42"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK43"
+slug = "dodsorsak-43"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK44"
+slug = "dodsorsak-44"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK45"
+slug = "dodsorsak-45"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK46"
+slug = "dodsorsak-46"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK47"
+slug = "dodsorsak-47"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK48"
+slug = "dodsorsak-48"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK5"
+slug = "dodsorsak-5"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK6"
+slug = "dodsorsak-6"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK7"
+slug = "dodsorsak-7"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK8"
+slug = "dodsorsak-8"
+
+[[variable]]
+native_id = "5369119272181688462.MORSAK9"
+slug = "dodsorsak-9"
+
+[[variable]]
+native_id = "5369119272181688462.OPDAT"
+slug = "operationsdatum"
+
+[[variable]]
+native_id = "5369119272181688462.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "5369119272181688462.RO1"
+slug = "dodsorsak-position-1"
+
+[[variable]]
+native_id = "5369119272181688462.RO10"
+slug = "dodsorsak-position-10"
+
+[[variable]]
+native_id = "5369119272181688462.RO11"
+slug = "dodsorsak-position-11"
+
+[[variable]]
+native_id = "5369119272181688462.RO12"
+slug = "dodsorsak-position-12"
+
+[[variable]]
+native_id = "5369119272181688462.RO13"
+slug = "dodsorsak-position-13"
+
+[[variable]]
+native_id = "5369119272181688462.RO14"
+slug = "dodsorsak-position-14"
+
+[[variable]]
+native_id = "5369119272181688462.RO15"
+slug = "dodsorsak-position-15"
+
+[[variable]]
+native_id = "5369119272181688462.RO16"
+slug = "dodsorsak-position-16"
+
+[[variable]]
+native_id = "5369119272181688462.RO17"
+slug = "dodsorsak-position-17"
+
+[[variable]]
+native_id = "5369119272181688462.RO18"
+slug = "dodsorsak-position-18"
+
+[[variable]]
+native_id = "5369119272181688462.RO19"
+slug = "dodsorsak-position-19"
+
+[[variable]]
+native_id = "5369119272181688462.RO2"
+slug = "dodsorsak-position-2"
+
+[[variable]]
+native_id = "5369119272181688462.RO20"
+slug = "dodsorsak-position-20"
+
+[[variable]]
+native_id = "5369119272181688462.RO21"
+slug = "dodsorsak-position-21"
+
+[[variable]]
+native_id = "5369119272181688462.RO22"
+slug = "dodsorsak-position-22"
+
+[[variable]]
+native_id = "5369119272181688462.RO23"
+slug = "dodsorsak-position-23"
+
+[[variable]]
+native_id = "5369119272181688462.RO24"
+slug = "dodsorsak-position-24"
+
+[[variable]]
+native_id = "5369119272181688462.RO25"
+slug = "dodsorsak-position-25"
+
+[[variable]]
+native_id = "5369119272181688462.RO26"
+slug = "dodsorsak-position-26"
+
+[[variable]]
+native_id = "5369119272181688462.RO27"
+slug = "dodsorsak-position-27"
+
+[[variable]]
+native_id = "5369119272181688462.RO28"
+slug = "dodsorsak-position-28"
+
+[[variable]]
+native_id = "5369119272181688462.RO29"
+slug = "dodsorsak-position-29"
+
+[[variable]]
+native_id = "5369119272181688462.RO3"
+slug = "dodsorsak-position-3"
+
+[[variable]]
+native_id = "5369119272181688462.RO30"
+slug = "dodsorsak-position-30"
+
+[[variable]]
+native_id = "5369119272181688462.RO31"
+slug = "dodsorsak-position-31"
+
+[[variable]]
+native_id = "5369119272181688462.RO32"
+slug = "dodsorsak-position-32"
+
+[[variable]]
+native_id = "5369119272181688462.RO33"
+slug = "dodsorsak-position-33"
+
+[[variable]]
+native_id = "5369119272181688462.RO34"
+slug = "dodsorsak-position-34"
+
+[[variable]]
+native_id = "5369119272181688462.RO35"
+slug = "dodsorsak-position-35"
+
+[[variable]]
+native_id = "5369119272181688462.RO36"
+slug = "dodsorsak-position-36"
+
+[[variable]]
+native_id = "5369119272181688462.RO37"
+slug = "dodsorsak-position-37"
+
+[[variable]]
+native_id = "5369119272181688462.RO38"
+slug = "dodsorsak-position-38"
+
+[[variable]]
+native_id = "5369119272181688462.RO39"
+slug = "dodsorsak-position-39"
+
+[[variable]]
+native_id = "5369119272181688462.RO4"
+slug = "dodsorsak-position-4"
+
+[[variable]]
+native_id = "5369119272181688462.RO40"
+slug = "dodsorsak-position-40"
+
+[[variable]]
+native_id = "5369119272181688462.RO41"
+slug = "dodsorsak-position-41"
+
+[[variable]]
+native_id = "5369119272181688462.RO42"
+slug = "dodsorsak-position-42"
+
+[[variable]]
+native_id = "5369119272181688462.RO43"
+slug = "dodsorsak-position-43"
+
+[[variable]]
+native_id = "5369119272181688462.RO44"
+slug = "dodsorsak-position-44"
+
+[[variable]]
+native_id = "5369119272181688462.RO45"
+slug = "dodsorsak-position-45"
+
+[[variable]]
+native_id = "5369119272181688462.RO46"
+slug = "dodsorsak-position-46"
+
+[[variable]]
+native_id = "5369119272181688462.RO47"
+slug = "dodsorsak-position-47"
+
+[[variable]]
+native_id = "5369119272181688462.RO48"
+slug = "dodsorsak-position-48"
+
+[[variable]]
+native_id = "5369119272181688462.RO5"
+slug = "dodsorsak-position-5"
+
+[[variable]]
+native_id = "5369119272181688462.RO6"
+slug = "dodsorsak-position-6"
+
+[[variable]]
+native_id = "5369119272181688462.RO7"
+slug = "dodsorsak-position-7"
+
+[[variable]]
+native_id = "5369119272181688462.RO8"
+slug = "dodsorsak-position-8"
+
+[[variable]]
+native_id = "5369119272181688462.RO9"
+slug = "dodsorsak-position-9"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS1"
+slug = "substans-1"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS10"
+slug = "substans-10"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS11"
+slug = "substans-11"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS12"
+slug = "substans-12"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS13"
+slug = "substans-13"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS14"
+slug = "substans-14"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS15"
+slug = "substans-15"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS16"
+slug = "substans-16"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS17"
+slug = "substans-17"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS18"
+slug = "substans-18"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS19"
+slug = "substans-19"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS2"
+slug = "substans-2"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS20"
+slug = "substans-20"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS21"
+slug = "substans-21"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS22"
+slug = "substans-22"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS23"
+slug = "substans-23"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS24"
+slug = "substans-24"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS25"
+slug = "substans-25"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS26"
+slug = "substans-26"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS27"
+slug = "substans-27"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS28"
+slug = "substans-28"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS29"
+slug = "substans-29"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS3"
+slug = "substans-3"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS30"
+slug = "substans-30"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS31"
+slug = "substans-31"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS32"
+slug = "substans-32"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS33"
+slug = "substans-33"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS34"
+slug = "substans-34"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS35"
+slug = "substans-35"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS36"
+slug = "substans-36"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS37"
+slug = "substans-37"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS38"
+slug = "substans-38"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS39"
+slug = "substans-39"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS4"
+slug = "substans-4"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS40"
+slug = "substans-40"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS41"
+slug = "substans-41"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS42"
+slug = "substans-42"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS43"
+slug = "substans-43"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS44"
+slug = "substans-44"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS45"
+slug = "substans-45"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS46"
+slug = "substans-46"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS47"
+slug = "substans-47"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS48"
+slug = "substans-48"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS5"
+slug = "substans-5"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS6"
+slug = "substans-6"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS7"
+slug = "substans-7"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS8"
+slug = "substans-8"
+
+[[variable]]
+native_id = "5369119272181688462.SUBSTANS9"
+slug = "substans-9"
+# register 5891427617861710725

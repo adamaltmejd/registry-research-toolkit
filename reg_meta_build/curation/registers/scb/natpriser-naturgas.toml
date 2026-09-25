@@ -1,0 +1,35 @@
+[register]
+provider = "scb"
+slug = "natpriser-naturgas"
+native_id = "284"
+
+[[variant]]
+native_id = "284.720"
+slug = "natpriser"
+display_group = "Nätpriser"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "284.721"
+slug = "leverantorsbyten"
+display_group = "Leverantörsbyten"
+
+# Nationalräkenskaper
+
+[[variable]]
+native_id = "284.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "284.19676"
+slug = "natpris-1-jan-hushall"
+
+[[variable]]
+native_id = "284.19677"
+slug = "natpris-1-jan-industrikunder"
+
+# register 285 (nationalrakenskaper)

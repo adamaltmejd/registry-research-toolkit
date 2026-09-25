@@ -20,3 +20,73 @@ variants = ["Beslut om omedelbart omhändertagande för tvångsvård enligt lage
 [[identity.route]]
 deldatamangd = "lvm_utskr"
 variants = ["Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"] # v18: 30 rows
+
+[[variant]]
+native_id = "6293204766641962219.6579580878381606150"
+slug = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
+display_group = "Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+panel_entity_key = "personnr"
+panel_time_key = "ansdatumn"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "6293204766641962219.5504744580319271019"
+slug = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
+display_group = "Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+panel_entity_key = "personnr"
+panel_time_key = "besdatumn"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "6293204766641962219.5577711036561484975"
+slug = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
+display_group = "Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+panel_entity_key = "personnr"
+panel_time_key = "stdatumn"
+panel_time_grain = "row"
+
+# Registret över socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)
+
+[[variable]]
+native_id = "6293204766641962219.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "6293204766641962219.ANSDATUM"
+slug = "ansokningsdatum"
+
+[[variable]]
+native_id = "6293204766641962219.AR"
+slug = "beslutsar"
+
+[[variable]]
+native_id = "6293204766641962219.BESDATUM"
+slug = "beslutsdatum"
+
+[[variable]]
+native_id = "6293204766641962219.BHEM"
+slug = "behandlingshem"
+
+[[variable]]
+native_id = "6293204766641962219.FODLAND"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "6293204766641962219.FRIV"
+slug = "frivillig-vard"
+
+[[variable]]
+native_id = "6293204766641962219.LK"
+slug = "placerande-kommun"
+
+[[variable]]
+native_id = "6293204766641962219.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "6293204766641962219.PROVN"
+slug = "provningsbeslut"
+# register 6512206290021964828

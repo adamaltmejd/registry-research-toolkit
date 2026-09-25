@@ -1,0 +1,263 @@
+[register]
+provider = "scb"
+slug = "gymnasieskola-sokande"
+native_id = "260"
+
+[[variant]]
+native_id = "260.598"
+slug = "bakgrund-elev-1994-2016"
+display_group = "Bakgrund - elev, 1994 – 2016"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "260.1246"
+slug = "sokande-1994-och-senare"
+display_group = "Sökande, 1994 och senare"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "260.1247"
+slug = "antagna-1994-2016"
+display_group = "Antagna, 1994 – 2016"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "260.1323"
+slug = "sokande-antagna-1985-1993"
+display_group = "Sökande och Antagna, 1985 – 1993"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "260.1327"
+slug = "antagna-bakgrund-2017"
+display_group = "Antagna och Bakgrund - elev, 2017 och senare"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Byggkostnadsindex (BKI)
+
+[[variable]]
+native_id = "260.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "260.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "260.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "260.73"
+slug = "ar"
+
+[[variable]]
+native_id = "260.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "260.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "260.3603"
+slug = "fodelselandnamn"
+
+[[variable]]
+native_id = "260.4693"
+slug = "gymnasieprogram"
+
+[[variable]]
+native_id = "260.19344"
+slug = "ar-for-antagningen"
+
+[[variable]]
+native_id = "260.25826"
+slug = "ar-for-ansokan"
+
+[[variable]]
+native_id = "260.30632"
+slug = "medelbetyg"
+
+[[variable]]
+native_id = "260.31989"
+slug = "lopnr-elev"
+
+[[variable]]
+native_id = "260.35155"
+slug = "behorighet-gymnasieprogram"
+
+[[variable]]
+native_id = "260.35156"
+slug = "antagningsstatus"
+
+[[variable]]
+native_id = "260.35159"
+slug = "rangordning-gymnasieprogram"
+
+[[variable]]
+native_id = "260.35162"
+slug = "valutfall"
+
+[[variable]]
+native_id = "260.35268"
+slug = "direktansokande-fran-ak9"
+
+# register 263 (bki)
+
+[[variable]]
+native_id = "260.104.skolkod"
+slug = "skolkod"
+
+[[variable]]
+native_id = "260.35158.sgrupp1"
+slug = "sokgrupp"
+
+[[variable]]
+native_id = "260.36.hgyreg"
+slug = "kommun"
+
+[[variable]]
+native_id = "260.36.kommun"
+slug = "skola-kommun"
+
+[[variable]]
+native_id = "260.3614.u-gbetyg"
+slug = "meritvarde"
+
+[[variable]]
+native_id = "260.36733.hgyreg"
+slug = "gymnasieregion"
+
+[[variable]]
+native_id = "260.40053.skolkod"
+slug = "arbetslivserfarenhet-forutbildning"
+
+# register 270 (fortroendevalda)
+
+[[variable]]
+native_id = "260.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "260.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "260.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "260.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "260.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "260.1994"
+slug = "rektorsomrades-id"
+
+[[variable]]
+native_id = "260.8187"
+slug = "utlandsk-bakgrund"
+
+[[variable]]
+native_id = "260.26963"
+slug = "inriktning-fristaende-gr"
+
+[[variable]]
+native_id = "260.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "260.30471"
+slug = "direktovergang"
+
+[[variable]]
+native_id = "260.30634"
+slug = "summa-betyg"
+
+[[variable]]
+native_id = "260.32738"
+slug = "skollan"
+
+[[variable]]
+native_id = "260.35151"
+slug = "inlasningsdatum"
+
+[[variable]]
+native_id = "260.35887"
+slug = "nyligen-invandrad"
+
+# register 263
+
+[[variable]]
+native_id = "260.104.skol-ar9"
+slug = "skolkod-ar9"
+
+[[variable]]
+native_id = "260.1536.stvkod"
+slug = "studievag-gymnasieskolan"
+
+[[variable]]
+native_id = "260.36624.ilinje"
+slug = "gymnasielinje"
+
+[[variable]]
+native_id = "260.36730.sektor1"
+slug = "utbildningssektor"
+
+[[variable]]
+native_id = "260.67.utlbakgr2"
+slug = "utlbakgr"
+
+[[variable]]
+native_id = "260.8073.sun2000niva-1-mor"
+slug = "sun-niva-1-mor"
+
+[[variable]]
+native_id = "260.8073.sun2000niva-3-mor"
+slug = "sun-niva-3-mor"
+
+[[variable]]
+native_id = "260.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "260.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "260.8073.sun2000niva-sv-mor"
+slug = "sun-niva-sv-mor"
+
+[[variable]]
+native_id = "260.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "260.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "260.8137.hman"
+slug = "huvudman"
+
+# register 264

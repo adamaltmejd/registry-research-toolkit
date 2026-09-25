@@ -10,3 +10,140 @@ label = "scb/kompletterande-utbildning/kategorinamn"
 [[code_label_pair]]
 code = "scb/kompletterande-utbildning/studievag"
 label = "scb/kompletterande-utbildning/studievag-namn"
+
+[[variant]]
+native_id = "326.1025"
+slug = "deltagare-2012-2015"
+display_group = "Deltagare, 2012-2015"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "326.1465"
+slug = "deltagare-2001-2011"
+display_group = "Deltagare, 2001-2011"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "326.1467"
+slug = "utbildningsdeltagare-fullfoljt-2001-2011"
+display_group = "Utbildningsdeltagare som fullföljt utbildningen, 2001-2011"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Aktieägarstatistik
+
+[[variable]]
+native_id = "326.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "326.67"
+slug = "utlsvbakg"
+
+[[variable]]
+native_id = "326.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "326.1579"
+slug = "termin"
+
+[[variable]]
+native_id = "326.14815"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "326.25047"
+slug = "namn-person"
+
+[[variable]]
+native_id = "326.29138"
+slug = "tillsynsform"
+
+# register 330 (aktieagarstatistik)
+
+[[variable]]
+native_id = "326.104.namn"
+slug = "skola"
+
+[[variable]]
+native_id = "326.36.kommun"
+slug = "kommun"
+
+[[variable]]
+native_id = "326.66.sun2000niva"
+slug = "utbildningsniva"
+
+# register 333 (breg)
+
+[[variable]]
+native_id = "326.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "326.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "326.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "326.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "326.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "326.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "326.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "326.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "326.15458"
+slug = "statligt-studiestod"
+
+[[variable]]
+native_id = "326.23867"
+slug = "klassbeteckning"
+
+# register 330
+
+[[variable]]
+native_id = "326.30476.stvkod"
+slug = "studievag"
+
+[[variable]]
+native_id = "326.30476.stvnamn"
+slug = "studievag-namn"
+
+[[variable]]
+native_id = "326.6133.fullf"
+slug = "fullfoljt-utbildning"
+
+[[variable]]
+native_id = "326.8073.sun2000niva-1-mor"
+slug = "sun-niva-1-mor"
+
+[[variable]]
+native_id = "326.8073.sun2000niva-3-mor"
+slug = "sun-niva-3-mor"
+
+# register 333

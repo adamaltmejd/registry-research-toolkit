@@ -16,3 +16,44 @@ holdings_period = "1990-2024"
 source = "steward-holdings"
 evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
+
+[[variant]]
+native_id = "167.240"
+slug = "konkurser-offentliga-ackord"
+display_group = "Konkurser o offentliga ackord"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Företagens ekonomi (FEK)
+
+[[variable]]
+native_id = "167.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "167.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "167.97"
+slug = "referensmanad"
+
+[[variable]]
+native_id = "167.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "167.4040"
+slug = "foretagsenhetens-startar"
+
+[[variable]]
+native_id = "167.18011"
+slug = "sni2007-5siffror"
+
+[[variable]]
+native_id = "167.21549"
+slug = "objekttyp"
+
+# register 168

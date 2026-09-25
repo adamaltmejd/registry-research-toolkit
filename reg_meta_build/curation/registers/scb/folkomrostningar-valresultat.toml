@@ -1,0 +1,43 @@
+[register]
+provider = "scb"
+slug = "folkomrostningar-valresultat"
+native_id = "244"
+
+[[variant]]
+native_id = "244.473"
+slug = "valresultat"
+display_group = "Valresultat"
+
+
+[[variant]]
+native_id = "244.1084"
+slug = "rostberattigade"
+display_group = "Röstberättigade"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Europaparlamentsval, valdeltagandeundersökningen
+
+[[variable]]
+native_id = "244.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "244.69"
+slug = "valdistrikt"
+
+[[variable]]
+native_id = "244.302"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "244.16239"
+slug = "kommunvalkrets-kod"
+
+[[variable]]
+native_id = "244.25238"
+slug = "antal-avgivna-roster"
+
+# register 245

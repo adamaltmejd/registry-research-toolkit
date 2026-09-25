@@ -12,3 +12,124 @@ key = "yrkesbeteckning"
 label = "Kod för yrkesbeteckning"
 axis = "ordinal"
 members = [{ variable = "yrkesbeteckning-1", value = "1", label = "1" }, { variable = "yrkesbeteckning-2", value = "2", label = "2" }, { variable = "yrkesbeteckning-3", value = "3", label = "3" }, { variable = "yrkesbeteckning-4", value = "4", label = "4" }, { variable = "yrkesbeteckning-5", value = "5", label = "5" }]
+
+[[variant]]
+native_id = "6512206290021964828.5569968863053916323"
+slug = "hsl"
+display_group = "HSL"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "6512206290021964828.5726579377988208763"
+slug = "hsl2"
+display_group = "HSL2"
+panel_entity_key = "personnr"
+panel_time_key = "atgardsdatum"
+panel_time_grain = "row"
+
+# Registret över insatser till barn och unga (BU)
+
+[[variable]]
+native_id = "6512206290021964828.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "6512206290021964828.APR"
+slug = "hade-hsl-april"
+
+[[variable]]
+native_id = "6512206290021964828.ATG_DATUM"
+slug = "atgardsdatum"
+
+[[variable]]
+native_id = "6512206290021964828.AUG"
+slug = "hade-hsl-augusti"
+
+[[variable]]
+native_id = "6512206290021964828.DEC"
+slug = "hade-hsl-december"
+
+[[variable]]
+native_id = "6512206290021964828.FEB"
+slug = "hade-hsl-februari"
+
+[[variable]]
+native_id = "6512206290021964828.FODDATN"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "6512206290021964828.HKOM"
+slug = "hemkommun"
+
+[[variable]]
+native_id = "6512206290021964828.JAN"
+slug = "hade-hsl-januari"
+
+[[variable]]
+native_id = "6512206290021964828.JUL"
+slug = "hade-hsl-juli"
+
+[[variable]]
+native_id = "6512206290021964828.JUN"
+slug = "hade-hsl-juni"
+
+[[variable]]
+native_id = "6512206290021964828.KDEL"
+slug = "kommundel"
+
+[[variable]]
+native_id = "6512206290021964828.LK"
+slug = "kommun"
+
+[[variable]]
+native_id = "6512206290021964828.MAJ"
+slug = "hade-hsl-maj"
+
+[[variable]]
+native_id = "6512206290021964828.MAR"
+slug = "hade-hsl-mars"
+
+[[variable]]
+native_id = "6512206290021964828.NOV"
+slug = "hade-hsl-november"
+
+[[variable]]
+native_id = "6512206290021964828.OKT"
+slug = "hade-hsl-oktober"
+
+[[variable]]
+native_id = "6512206290021964828.PERIOD"
+slug = "ar-manad"
+
+[[variable]]
+native_id = "6512206290021964828.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "6512206290021964828.SEP"
+slug = "hade-hsl-september"
+
+[[variable]]
+native_id = "6512206290021964828.YRKESBET1"
+slug = "yrkesbeteckning-1"
+
+[[variable]]
+native_id = "6512206290021964828.YRKESBET2"
+slug = "yrkesbeteckning-2"
+
+[[variable]]
+native_id = "6512206290021964828.YRKESBET3"
+slug = "yrkesbeteckning-3"
+
+[[variable]]
+native_id = "6512206290021964828.YRKESBET4"
+slug = "yrkesbeteckning-4"
+
+[[variable]]
+native_id = "6512206290021964828.YRKESBET5"
+slug = "yrkesbeteckning-5"
+# register 7119586976865944958

@@ -84,3 +84,192 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 [[code_label_pair]]
 code = "scb/lararreg/huvudman"
 label = "scb/lararreg/huvudman-namn"
+
+[[variant]]
+native_id = "232.411"
+slug = "tjansteregistret"
+display_group = "Tjänsteregistret"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "232.412"
+slug = "personregistret"
+display_group = "Personregistret"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "232.1497"
+slug = "lararprognos-skola-forskola"
+display_group = "Lärarprognos inom skola och förskola"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Gymnasieskola: elever per 15 oktober
+
+[[variable]]
+native_id = "232.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "232.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "232.49"
+slug = "lan"
+
+[[variable]]
+native_id = "232.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "232.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "232.6418"
+slug = "befattningskod-pedagogisk"
+
+[[variable]]
+native_id = "232.6421"
+slug = "pedagogisk-utbildning"
+
+[[variable]]
+native_id = "232.6943"
+slug = "tjanstledig-hosttermin"
+
+[[variable]]
+native_id = "232.8698"
+slug = "inriktning-fristaende-gy"
+
+[[variable]]
+native_id = "232.8701"
+slug = "kopt-utbildning-i-komvux"
+
+[[variable]]
+native_id = "232.8771"
+slug = "pedagogisk-hogskoleexamen"
+
+[[variable]]
+native_id = "232.8773"
+slug = "typ-av-anstallning"
+
+[[variable]]
+native_id = "232.30366"
+slug = "skolenhetskod"
+
+[[variable]]
+native_id = "232.30578"
+slug = "verksamhetstyp"
+
+[[variable]]
+native_id = "232.30664"
+slug = "kopt-utbildning"
+
+[[variable]]
+native_id = "232.35203"
+slug = "tjanstgoringsniva-tjanstlediga"
+
+[[variable]]
+native_id = "232.35237"
+slug = "specialundervisning"
+
+[[variable]]
+native_id = "232.39138"
+slug = "hemspraksundervisning"
+
+# register 233 (gymnasieskola-elever)
+
+[[variable]]
+native_id = "232.30583.hemsp"
+slug = "undervisning-i-modersmal"
+
+[[variable]]
+native_id = "232.8703.nivakod1"
+slug = "tjanstgoringsniva"
+
+# register 235 (vaxtskyddsmedel)
+
+[[variable]]
+native_id = "232.56.peorgnr"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "232.56.peorgnr-anord"
+slug = "person-orgnr-anordnare"
+
+[[variable]]
+native_id = "232.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "232.1396"
+slug = "lasar"
+
+[[variable]]
+native_id = "232.5056"
+slug = "landstingskod"
+
+[[variable]]
+native_id = "232.8552"
+slug = "gymnasieforbund-id"
+
+[[variable]]
+native_id = "232.8702"
+slug = "sarskoleform"
+
+[[variable]]
+native_id = "232.8770"
+slug = "senaste-aktivt-ar"
+
+[[variable]]
+native_id = "232.26963"
+slug = "inriktning-fristaende-gr"
+
+[[variable]]
+native_id = "232.35151"
+slug = "inlasningsdatum"
+
+[[variable]]
+native_id = "232.37237"
+slug = "tjanstgorande-larare"
+
+[[variable]]
+native_id = "232.38249"
+slug = "fodd-i-sverige-eller-utomlands"
+
+[[variable]]
+native_id = "232.39039"
+slug = "personens-namn"
+
+# register 233
+
+[[variable]]
+native_id = "232.38250.stvrht"
+slug = "studieveckor-ht"
+
+[[variable]]
+native_id = "232.38250.stvrla"
+slug = "studieveckor-la"
+
+[[variable]]
+native_id = "232.8137.hman"
+slug = "huvudman"
+
+[[variable]]
+native_id = "232.8137.hmannamn"
+slug = "huvudman-namn"
+
+[[variable]]
+native_id = "232.8557.utbanord"
+slug = "utbildningsanordnare"
+
+# register 233

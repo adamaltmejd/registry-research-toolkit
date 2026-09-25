@@ -1,0 +1,77 @@
+[register]
+provider = "scb"
+slug = "gymnasial-yrkesutbildning"
+native_id = "352"
+
+[[variant]]
+native_id = "352.1216"
+slug = "_default"
+display_group = "Gymnasial yrkesutbildning"
+panel_entity_key = "personnr-urval"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Anpassad gymnasieskola
+
+[[variable]]
+native_id = "352.7020"
+slug = "personnr-urval"
+
+
+[[variable]]
+native_id = "352.1536"
+slug = "studievag-gymnasieskolan"
+
+[[variable]]
+native_id = "352.4656"
+slug = "insamlingsmetod"
+
+[[variable]]
+native_id = "352.4697"
+slug = "gymnasiebetyg"
+
+[[variable]]
+native_id = "352.6141"
+slug = "grundlaggande-behorighet-hogskola"
+
+[[variable]]
+native_id = "352.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "352.8187"
+slug = "utlandsk-bakgrund"
+
+[[variable]]
+native_id = "352.16347"
+slug = "typ-av-betyg"
+
+[[variable]]
+native_id = "352.17473"
+slug = "kalibreringsvikt"
+
+[[variable]]
+native_id = "352.17587"
+slug = "fodelseland-grupp"
+
+[[variable]]
+native_id = "352.18245"
+slug = "grupp-andra-fas-urval"
+
+[[variable]]
+native_id = "352.24773"
+slug = "metod-for-intervju"
+
+[[variable]]
+native_id = "352.32454"
+slug = "foraldrarnas-utbildningsniva"
+
+[[variable]]
+native_id = "352.32798"
+slug = "totalt-poang-slutbetyg"
+
+[[variable]]
+native_id = "352.32873"
+slug = "larling"
+
+# register 353

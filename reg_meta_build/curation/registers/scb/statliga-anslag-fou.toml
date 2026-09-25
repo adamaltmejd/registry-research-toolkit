@@ -1,0 +1,57 @@
+[register]
+provider = "scb"
+slug = "statliga-anslag-fou"
+native_id = "293"
+
+[[variant]]
+native_id = "293.807"
+slug = "_default"
+display_group = "Statliga anslag till forskning och utveckling"
+
+# Statistik för avrinningsområden
+
+[[variable]]
+native_id = "293.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "293.25190"
+slug = "anslagsnamn"
+
+[[variable]]
+native_id = "293.25191"
+slug = "anslagsnummer"
+
+[[variable]]
+native_id = "293.25192"
+slug = "anslagsbelopp"
+
+[[variable]]
+native_id = "293.25195"
+slug = "preliminara-anslag-fou"
+
+[[variable]]
+native_id = "293.25223"
+slug = "andel-fou"
+
+[[variable]]
+native_id = "293.25224"
+slug = "departementkod"
+
+[[variable]]
+native_id = "293.25227"
+slug = "utgiftsomrade"
+
+[[variable]]
+native_id = "293.25230"
+slug = "anslag-foregaende-ar"
+
+[[variable]]
+native_id = "293.25231"
+slug = "akod"
+
+[[variable]]
+native_id = "293.25232"
+slug = "politikomrade"
+
+# register 294 (avrinningsomraden)

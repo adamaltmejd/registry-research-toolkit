@@ -1,0 +1,87 @@
+[register]
+provider = "scb"
+slug = "inkvarteringsstatistik"
+native_id = "151"
+
+[[variant]]
+native_id = "151.933"
+slug = "hotell-stugbyar"
+display_group = "Hotell, stugbyar och vandrarhem"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "151.973"
+slug = "camping"
+display_group = "Camping"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "151.974"
+slug = "privata-stugor-lagenheter"
+display_group = "Förmedlare av privata stugor och lägenheter"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Försäljning av kalk för jord- och trädgårdsbruk, sjöar och vatten samt skog
+
+[[variable]]
+native_id = "151.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "151.1810"
+slug = "imputerad"
+
+[[variable]]
+native_id = "151.7048"
+slug = "stangdorsak"
+
+# register 155 (trafo)
+
+[[variable]]
+native_id = "151.4370.bbd"
+slug = "belagda-baddar"
+
+[[variable]]
+native_id = "151.4370.bbd-1"
+slug = "belagda-baddar-2"
+
+# register 156 (industrins-miljoskyddskostnader)
+
+[[variable]]
+native_id = "151.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "151.537"
+slug = "postnr"
+
+[[variable]]
+native_id = "151.1797"
+slug = "gatuadress"
+
+[[variable]]
+native_id = "151.7013"
+slug = "anlaggningstyp"
+
+[[variable]]
+native_id = "151.27262"
+slug = "svarsstatus"
+
+[[variable]]
+native_id = "151.27294"
+slug = "ar-och-manad"
+
+[[variable]]
+native_id = "151.27307"
+slug = "boendeform-camping"
+
+# register 152

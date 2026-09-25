@@ -1,0 +1,18 @@
+[register]
+provider = "fohm"
+slug = "sminet"
+native_id = "9022860280161092196"
+
+[[variant]]
+native_id = "9022860280161092196.5579831904407731840"
+slug = "_default"
+display_group = "SmiNet"
+panel_entity_key = "personnr"
+panel_time_key = "diagnosdatum"
+panel_time_grain = "row"
+
+# Nationella vaccinationsregistret (NVR)
+
+[[variable]]
+native_id = "9022860280161092196.personnummer"
+slug = "personnr"

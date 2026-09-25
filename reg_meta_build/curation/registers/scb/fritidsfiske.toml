@@ -10,3 +10,100 @@ label = "scb/fritidsfiske/lansnamn"
 [[code_label_pair]]
 code = "scb/fritidsfiske/kommunkod"
 label = "scb/fritidsfiske/kommunnamn"
+
+[[variant]]
+native_id = "390.1503"
+slug = "_default"
+display_group = "Fritidsfiske"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Statens skolor för vuxna (SSV)
+
+[[variable]]
+native_id = "390.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "390.66"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "390.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "390.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "390.43179"
+slug = "antal-fiskedrag"
+
+[[variable]]
+native_id = "390.43180"
+slug = "antal-meter-fiskelina"
+
+# register 391 (ssv)
+
+[[variable]]
+native_id = "390.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "390.447"
+slug = "lansnamn"
+
+[[variable]]
+native_id = "390.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "390.4656"
+slug = "insamlingsmetod"
+
+[[variable]]
+native_id = "390.7062"
+slug = "folkbokforingslan"
+
+[[variable]]
+native_id = "390.8164"
+slug = "urvalsstratum"
+
+[[variable]]
+native_id = "390.17473"
+slug = "kalibreringsvikt"
+
+[[variable]]
+native_id = "390.17589"
+slug = "gruppering-av-alder"
+
+[[variable]]
+native_id = "390.22520"
+slug = "aldgkon"
+
+[[variable]]
+native_id = "390.32957"
+slug = "kommunkod"
+
+[[variable]]
+native_id = "390.40288"
+slug = "storstadsomrade"
+
+# register 391
+
+[[variable]]
+native_id = "390.15.civil"
+slug = "civilstand"
+
+[[variable]]
+native_id = "390.99.aux-ink"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "390.99.csfvi"
+slug = "sammanraknad-forvarvsinkomst-2"
+
+# register 397

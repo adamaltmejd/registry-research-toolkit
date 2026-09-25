@@ -1,0 +1,475 @@
+[register]
+provider = "scb"
+slug = "lokal-demokrati"
+native_id = "321"
+
+[[variant]]
+native_id = "321.1001"
+slug = "kommuner"
+display_group = "Kommuner"
+
+
+[[variant]]
+native_id = "321.1005"
+slug = "regioner"
+display_group = "Regioner"
+
+# Distansutbildning i högskolan
+
+[[variable]]
+native_id = "321.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "321.2907"
+slug = "region"
+
+[[variable]]
+native_id = "321.5056"
+slug = "landstingskod"
+
+[[variable]]
+native_id = "321.16093"
+slug = "artal-for-registret-num"
+
+[[variable]]
+native_id = "321.28500"
+slug = "politisk-majoritet-centerpartiet"
+
+[[variable]]
+native_id = "321.28579"
+slug = "politisk-majoritet-liberalerna"
+
+[[variable]]
+native_id = "321.28580"
+slug = "politisk-majoritet-kristdemokraterna"
+
+[[variable]]
+native_id = "321.28581"
+slug = "politisk-majoritet-miljopartiet"
+
+[[variable]]
+native_id = "321.28582"
+slug = "politisk-majoritet-moderaterna"
+
+[[variable]]
+native_id = "321.28583"
+slug = "politisk-majoritet-socialdemokraterna"
+
+[[variable]]
+native_id = "321.28584"
+slug = "politisk-majoritet-vansterpartiet"
+
+[[variable]]
+native_id = "321.28598"
+slug = "revisionens-ordforande-minoritet"
+
+[[variable]]
+native_id = "321.28604"
+slug = "offentlig-privat-partnerskap-opp"
+
+[[variable]]
+native_id = "321.28618"
+slug = "klagomalshantering"
+
+[[variable]]
+native_id = "321.28619"
+slug = "tjanstegarantier-servicedeklarationer"
+
+[[variable]]
+native_id = "321.28620"
+slug = "webb-kalendarium"
+
+[[variable]]
+native_id = "321.28621"
+slug = "webb-protokoll-sammantraden"
+
+[[variable]]
+native_id = "321.28623"
+slug = "webbplats-med-debattforum"
+
+[[variable]]
+native_id = "321.28625"
+slug = "webb-skicka-meddelanden"
+
+[[variable]]
+native_id = "321.28631"
+slug = "mojlighet-att-lamna-medborgarforslag"
+
+[[variable]]
+native_id = "321.28633"
+slug = "sammantraden-i-fullmaktige"
+
+[[variable]]
+native_id = "321.28634"
+slug = "tv-radio-eller-webbsandningar"
+
+[[variable]]
+native_id = "321.28656"
+slug = "offentlig-utfragning-hearing"
+
+[[variable]]
+native_id = "321.28657"
+slug = "genomford-medborgarundersokning"
+
+[[variable]]
+native_id = "321.28664"
+slug = "politiskt-organ-for-demokratifragor"
+
+[[variable]]
+native_id = "321.28665"
+slug = "medel-avsatt-for-demokratifragor"
+
+[[variable]]
+native_id = "321.29338"
+slug = "organ-kommunstyrelse-beslutanderatt"
+
+[[variable]]
+native_id = "321.29340"
+slug = "kommun-eller-stadsdelsnamnd"
+
+[[variable]]
+native_id = "321.29346"
+slug = "overenskommelse-civila-samhallet"
+
+[[variable]]
+native_id = "321.29347"
+slug = "partistod"
+
+[[variable]]
+native_id = "321.29349"
+slug = "kommunala-bolag-under-moderbolag"
+
+[[variable]]
+native_id = "321.29354"
+slug = "medborgardialog-strategi"
+
+[[variable]]
+native_id = "321.29419"
+slug = "demokratistrategi"
+
+[[variable]]
+native_id = "321.29420"
+slug = "medborgardialog-via-webb"
+
+[[variable]]
+native_id = "321.29421"
+slug = "webb-moteshandlingar"
+
+[[variable]]
+native_id = "321.29423"
+slug = "webbplats-med-kommunala-foreskrifter"
+
+[[variable]]
+native_id = "321.29424"
+slug = "webb-diarie-arendesystem"
+
+[[variable]]
+native_id = "321.29602"
+slug = "politisk-majoritet-sverigedemokraterna"
+
+[[variable]]
+native_id = "321.29664"
+slug = "organ-direkt-under-kommunfullmaktige"
+
+[[variable]]
+native_id = "321.35982"
+slug = "ideburet-offentligt-partnerskap-iop"
+
+[[variable]]
+native_id = "321.35984"
+slug = "webb-politiska-styret"
+
+[[variable]]
+native_id = "321.35985"
+slug = "forekomst-av-flerpartsstyrning"
+
+[[variable]]
+native_id = "321.41363"
+slug = "artal-for-uppgiften"
+
+[[variable]]
+native_id = "321.41487"
+slug = "organ-direkt-under-fullmaktige"
+
+[[variable]]
+native_id = "321.41488"
+slug = "organ-under-styrelse-med-beslutanderatt"
+
+[[variable]]
+native_id = "321.42782"
+slug = "offentlig-privat-samverkan-ops"
+
+[[variable]]
+native_id = "321.42786"
+slug = "utse-ledamoter-namnder-styrelser"
+
+[[variable]]
+native_id = "321.42787"
+slug = "andra-organ-under-fullmaktige"
+
+[[variable]]
+native_id = "321.42788"
+slug = "partistod-till-ungdomsforbund"
+
+[[variable]]
+native_id = "321.42790"
+slug = "mojlighet-att-lamna-e-forslag"
+
+[[variable]]
+native_id = "321.42792"
+slug = "stod-for-e-forslag"
+
+[[variable]]
+native_id = "321.42793"
+slug = "allmanhetens-fragestund"
+
+[[variable]]
+native_id = "321.42794"
+slug = "fortroendevaldas-trygghet-ansvar"
+
+[[variable]]
+native_id = "321.42795"
+slug = "hot-hat-vald-mot-fortroendevalda"
+
+[[variable]]
+native_id = "321.42796"
+slug = "revisorer-vald-med-undantag-granskning"
+
+[[variable]]
+native_id = "321.48943"
+slug = "beslut-om-foraldraledighet"
+
+[[variable]]
+native_id = "321.48944"
+slug = "politisk-vilde"
+
+[[variable]]
+native_id = "321.48945"
+slug = "antal-anstallda-politiska-sekreterare"
+
+[[variable]]
+native_id = "321.48946"
+slug = "medborgarforslag-mojlighet-borttagen"
+
+[[variable]]
+native_id = "321.48947"
+slug = "medborgarforslag-mojlighet-tidpunkt"
+
+[[variable]]
+native_id = "321.48957"
+slug = "e-forslag-mojlighet-borttagen"
+
+[[variable]]
+native_id = "321.48958"
+slug = "e-forslag-mojlighet-tidpunkt"
+
+[[variable]]
+native_id = "321.48959"
+slug = "fullmaktigesammantraden-webb-tillgang"
+
+[[variable]]
+native_id = "321.48974"
+slug = "forekomst-av-namndsammantraden"
+
+[[variable]]
+native_id = "321.48976"
+slug = "rad-fokusgrupper-textsvar"
+
+[[variable]]
+native_id = "321.48979"
+slug = "organ-for-demokratifragor"
+
+[[variable]]
+native_id = "321.48980"
+slug = "organ-for-demokratifragor-text"
+
+[[variable]]
+native_id = "321.48981"
+slug = "samverkan"
+
+[[variable]]
+native_id = "321.48986"
+slug = "forekomst-av-bolag"
+
+[[variable]]
+native_id = "321.48987"
+slug = "delagda-bolag"
+
+[[variable]]
+native_id = "321.48988"
+slug = "helagda-bolag"
+
+[[variable]]
+native_id = "321.48991"
+slug = "inget-rad-fokusgrupper"
+
+[[variable]]
+native_id = "321.48992"
+slug = "beslut-om-medborgardialoger"
+
+[[variable]]
+native_id = "321.48993"
+slug = "delta-i-medborgardialoger-via-webbplats"
+
+[[variable]]
+native_id = "321.48999"
+slug = "politisk-majoritet-annat-parti-fritext"
+
+[[variable]]
+native_id = "321.49020"
+slug = "fullmaktige-ekonomiska-mal-bolag"
+
+# register 322 (distansutbildning)
+
+[[variable]]
+native_id = "321.28585.fr1a-9-text"
+slug = "politisk-majoritet-annat-parti"
+
+[[variable]]
+native_id = "321.28597.fr2"
+slug = "professionella-namnder-styrelser"
+
+[[variable]]
+native_id = "321.28613.brukaromr"
+slug = "brukarrepresentation-utover-delegering"
+
+[[variable]]
+native_id = "321.28613.brukarsys"
+slug = "brukarsys-utover-delegering"
+
+[[variable]]
+native_id = "321.28613.fr27-1"
+slug = "brukarrepresentation-fr27"
+
+[[variable]]
+native_id = "321.28617.fr42-1"
+slug = "medborgarkontor-fr42"
+
+[[variable]]
+native_id = "321.28629.fr11-text"
+slug = "folkomrostning-forekomst-text"
+
+[[variable]]
+native_id = "321.28629.fr7"
+slug = "folkomrostning-forekomst-fr7"
+
+[[variable]]
+native_id = "321.28629.fr8"
+slug = "folkomrostning-forekomst-fr8"
+
+[[variable]]
+native_id = "321.28629.fr9"
+slug = "folkomrostning-forekomst-fr9"
+
+[[variable]]
+native_id = "321.28630.fr10a"
+slug = "folkinitiativ-folkomrostning-fr10a"
+
+[[variable]]
+native_id = "321.28630.fr10a-text"
+slug = "folkinitiativ-folkomrostning-fr10a-text"
+
+[[variable]]
+native_id = "321.28630.fr10b-text"
+slug = "folkinitiativ-folkomrostning-fr10b-text"
+
+[[variable]]
+native_id = "321.28630.fr8a-text"
+slug = "folkinitiativ-folkomrostning-fr8a-text"
+
+[[variable]]
+native_id = "321.28630.fr8b-text"
+slug = "folkinitiativ-folkomrostning-fr8b-text"
+
+[[variable]]
+native_id = "321.28632.fr10a-text"
+slug = "inkomna-medborgarforslag-fr10a"
+
+[[variable]]
+native_id = "321.28632.fr10b-text"
+slug = "inkomna-medborgarforslag-fr10b"
+
+[[variable]]
+native_id = "321.28632.fr11-text"
+slug = "inkomna-medborgarforslag-fr11"
+
+[[variable]]
+native_id = "321.28632.fr8a-text"
+slug = "inkomna-medborgarforslag-fr8a"
+
+[[variable]]
+native_id = "321.28632.fr8b-text"
+slug = "inkomna-medborgarforslag-fr8b"
+
+[[variable]]
+native_id = "321.28667.fr26-1"
+slug = "rad-fokusgrupper-fr26"
+
+[[variable]]
+native_id = "321.29348.fr4"
+slug = "pol-sekreterare-forekomst-fr4"
+
+[[variable]]
+native_id = "321.29348.fr6"
+slug = "pol-sekreterare-forekomst-fr6"
+
+[[variable]]
+native_id = "321.29348.fr7"
+slug = "pol-sekreterare-forekomst-fr7"
+
+[[variable]]
+native_id = "321.29348.fr8"
+slug = "pol-sekreterare-forekomst-fr8"
+
+[[variable]]
+native_id = "321.29350.fr10a"
+slug = "faststall-bolagsmal-fr10a"
+
+[[variable]]
+native_id = "321.29350.fr24-1"
+slug = "faststall-bolagsmal-fr24"
+
+[[variable]]
+native_id = "321.29350.fr26-1"
+slug = "faststall-bolagsmal-fr26"
+
+[[variable]]
+native_id = "321.29350.fr39-1"
+slug = "faststall-bolagsmal-fr39"
+
+[[variable]]
+native_id = "321.35983.fr40-1"
+slug = "samarbete-verksamhetsutveckling-fr40"
+
+[[variable]]
+native_id = "321.35983.fr41-1"
+slug = "samarbete-verksamhetsutveckling-fr41"
+
+[[variable]]
+native_id = "321.41361.brukaromr"
+slug = "brukarrepresentation"
+
+[[variable]]
+native_id = "321.41361.brukarsys"
+slug = "brukarrepresentation-brukarsys"
+
+[[variable]]
+native_id = "321.42791.fr17"
+slug = "inkomna-e-forslag-fr17"
+
+# register 326 (kompletterande-utbildning)
+
+[[variable]]
+native_id = "321.42791.fr20"
+slug = "fr2"
+
+[[variable]]
+native_id = "321.2351"
+slug = "regionkod"
+
+[[variable]]
+native_id = "321.38417"
+slug = "kommunalforbund-antal"
+
+# register 322

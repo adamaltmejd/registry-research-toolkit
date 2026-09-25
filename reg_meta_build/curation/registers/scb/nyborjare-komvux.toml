@@ -1,0 +1,91 @@
+[register]
+provider = "scb"
+slug = "nyborjare-komvux"
+native_id = "42"
+
+[[variant]]
+native_id = "42.124"
+slug = "_default"
+display_group = "Nybörjare i Komvux"
+
+# Universitets- och högskoleregistret (HREG)
+
+[[variable]]
+native_id = "42.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "42.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "42.5090"
+slug = "arbetsmarknadssektor"
+
+[[variable]]
+native_id = "42.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "42.5697"
+slug = "lilla-n-per-stratum"
+
+[[variable]]
+native_id = "42.5768"
+slug = "manadsloneintervall"
+
+[[variable]]
+native_id = "42.6306"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "42.8682"
+slug = "valet-idag-av-utbildning"
+
+[[variable]]
+native_id = "42.10599"
+slug = "fullfoljt-komvux"
+
+[[variable]]
+native_id = "42.15867"
+slug = "plan-lasa-pa-komvux"
+
+[[variable]]
+native_id = "42.25054"
+slug = "arbete-under-matveckan"
+
+[[variable]]
+native_id = "42.30824"
+slug = "minst-en-timmes-arbete-under-matveckan"
+
+# register 47
+
+[[variable]]
+native_id = "42.14653.f5a1"
+slug = "kurs-i-komvux-1"
+
+[[variable]]
+native_id = "42.14653.f5b1"
+slug = "kurs-i-komvux-2"
+
+[[variable]]
+native_id = "42.14653.f5c1"
+slug = "kurs-i-komvux-3"
+
+[[variable]]
+native_id = "42.14653.f5d1"
+slug = "kurs-i-komvux-4"
+
+[[variable]]
+native_id = "42.14653.f5e1"
+slug = "kurs-i-komvux-5"
+
+[[variable]]
+native_id = "42.14653.f5f1"
+slug = "kurs-i-komvux-6"
+
+[[variable]]
+native_id = "42.14653.f5g1"
+slug = "kurs-i-komvux-7"
+
+# register 47

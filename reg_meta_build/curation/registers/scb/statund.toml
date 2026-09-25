@@ -1,0 +1,132 @@
+[register]
+provider = "scb"
+slug = "statund"
+native_id = "400"
+
+[[variant]]
+native_id = "400.1576"
+slug = "folkbokforda-personer"
+display_group = "Folkbokförda personer"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "400.1577"
+slug = "invandringar"
+display_group = "Invandringar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "400.1578"
+slug = "utvandringar"
+display_group = "Utvandringar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "400.1579"
+slug = "fodda"
+display_group = "Födda"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "400.1580"
+slug = "doda"
+display_group = "Döda"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "400.1581"
+slug = "inrikes-flyttningar"
+display_group = "Inrikes flyttningar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Befolkningens arbetsmarknadsstatus
+
+[[variable]]
+native_id = "400.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "400.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "400.254"
+slug = "folkbokforingsdatum"
+
+[[variable]]
+native_id = "400.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "400.279"
+slug = "alder-vid-handelsen"
+
+[[variable]]
+native_id = "400.283"
+slug = "dodsdatum"
+
+[[variable]]
+native_id = "400.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "400.339"
+slug = "flyttningsgrans"
+
+[[variable]]
+native_id = "400.388"
+slug = "antal-barn"
+
+[[variable]]
+native_id = "400.3410"
+slug = "utvandringsdatum"
+
+[[variable]]
+native_id = "400.29339"
+slug = "hushallstyp-bostadshushall"
+
+[[variable]]
+native_id = "400.29832"
+slug = "lopnummer-bostadshushall"
+
+# register 404
+
+[[variable]]
+native_id = "400.16297.byggper"
+slug = "nybyggnadsar"
+
+[[variable]]
+native_id = "400.26.fastbet"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "400.36.kommung"
+slug = "kommungrupp"
+
+[[variable]]
+native_id = "400.3730.uuid-fast"
+slug = "fastighetens-identitetsnummer"
+
+[[variable]]
+native_id = "400.558.nykoprefix"
+slug = "forsamling-stockholm"
+
+# register 404

@@ -1,0 +1,171 @@
+[register]
+provider = "scb"
+slug = "skyddad-natur"
+native_id = "158"
+
+[[variant]]
+native_id = "158.225"
+slug = "_default"
+display_group = "Skyddad natur"
+
+# Tätorter
+
+[[variable]]
+native_id = "158.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "158.49"
+slug = "lan"
+
+[[variable]]
+native_id = "158.2870"
+slug = "avstand-till-skyddad-natur"
+
+[[variable]]
+native_id = "158.2874"
+slug = "naturtyp-skyddade-omraden-areal"
+
+[[variable]]
+native_id = "158.2875"
+slug = "skyddade-omraden-miljobalken-areal"
+
+[[variable]]
+native_id = "158.3818"
+slug = "kostnader-for-sakrade-omraden"
+
+[[variable]]
+native_id = "158.19070"
+slug = "typ-av-skyddad-kulturmiljo"
+
+[[variable]]
+native_id = "158.19071"
+slug = "fridlyst-vaxt-djurart-antal"
+
+[[variable]]
+native_id = "158.19072"
+slug = "beslutsdatum-for-skyddad-natur"
+
+[[variable]]
+native_id = "158.25491"
+slug = "brottsmisstankar-brottskod-8015"
+
+[[variable]]
+native_id = "158.28060"
+slug = "skyddade-omraden-miljobalken-antal"
+
+[[variable]]
+native_id = "158.28061"
+slug = "skyddade-alvar-areal"
+
+[[variable]]
+native_id = "158.29316"
+slug = "andel-skyddad-areal-omkring-tatort"
+
+[[variable]]
+native_id = "158.29317"
+slug = "folkmangd-inom-skyddat-omrade"
+
+[[variable]]
+native_id = "158.29318"
+slug = "typ-av-kostnad"
+
+[[variable]]
+native_id = "158.29322"
+slug = "typ-av-beslut-skyddade-omraden"
+
+[[variable]]
+native_id = "158.29508"
+slug = "nationalparker"
+
+[[variable]]
+native_id = "158.29511"
+slug = "nationalparker-naturreservat-marin"
+
+[[variable]]
+native_id = "158.29521"
+slug = "kulturreservat"
+
+[[variable]]
+native_id = "158.29523"
+slug = "skyddade-alvar"
+
+[[variable]]
+native_id = "158.29529"
+slug = "fridlyst-vaxt-djurart"
+
+[[variable]]
+native_id = "158.29530"
+slug = "naturtyp-skyddade-omraden"
+
+[[variable]]
+native_id = "158.29543"
+slug = "produktiv-skogsmark-skyddade-omraden"
+
+[[variable]]
+native_id = "158.30393"
+slug = "skyddade-omraden-lander-areal"
+
+[[variable]]
+native_id = "158.30394"
+slug = "skyddad-natur-i-varlden-andel"
+
+[[variable]]
+native_id = "158.30401"
+slug = "skyddad-areal-per-land"
+
+[[variable]]
+native_id = "158.31178"
+slug = "produktiv-skogsmark-per-region-areal"
+
+[[variable]]
+native_id = "158.31179"
+slug = "produktiv-skyddad-skog-region-andel"
+
+[[variable]]
+native_id = "158.31180"
+slug = "andel-hyggen-ungskogar-areal-skogsmark"
+
+[[variable]]
+native_id = "158.31181"
+slug = "produktiv-skog-nyttjande-areal"
+
+[[variable]]
+native_id = "158.31182"
+slug = "markagare-i-naturreservat"
+
+[[variable]]
+native_id = "158.35114"
+slug = "skyddade-gronomraden-andel"
+
+[[variable]]
+native_id = "158.37766"
+slug = "naturvardsavtal-areal"
+
+[[variable]]
+native_id = "158.37767"
+slug = "markersattningar-areal"
+
+[[variable]]
+native_id = "158.39597"
+slug = "namn-pa-geografiskt-objekt"
+
+[[variable]]
+native_id = "158.40422"
+slug = "tatort-2018"
+
+[[variable]]
+native_id = "158.40423"
+slug = "regionala-havsomraden"
+
+[[variable]]
+native_id = "158.43152"
+slug = "gallandedatum-for-skyddad-natur"
+
+# register 162 (lastbilstrafik)
+
+[[variable]]
+native_id = "158.39461"
+slug = "datatyp-for-geometri"
+
+# register 159

@@ -14,3 +14,278 @@ label = "scb/komvux/kommunalforbund-namn"
 [[code_label_pair]]
 code = "scb/komvux/kommunalforbund-id-2"
 label = "scb/komvux/kommunalforbund-namn-2"
+
+[[variant]]
+native_id = "249.498"
+slug = "kursdeltagare"
+display_group = "Kursdeltagare i kommunal vuxenutbildning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "249.1107"
+slug = "elever"
+display_group = "Elever i kommunal vuxenutbildning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "249.1215"
+slug = "kursdeltagare-slutbetyg"
+display_group = "Kursdeltagare med slutbetyg eller gymnasieexamen"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "249.1222"
+slug = "elever-slutbetyg"
+display_group = "Elever med slutbetyg eller gymnasieexamen"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "249.1405"
+slug = "nationella-prov"
+display_group = "Nationella prov"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Komvux som anpassad utbildning
+
+[[variable]]
+native_id = "249.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "249.4"
+slug = "datum"
+
+[[variable]]
+native_id = "249.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "249.73"
+slug = "ar"
+
+[[variable]]
+native_id = "249.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "249.1579"
+slug = "termin"
+
+[[variable]]
+native_id = "249.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "249.8552"
+slug = "gymnasieforbund-id"
+
+[[variable]]
+native_id = "249.8557"
+slug = "utbildningsanordnare"
+
+[[variable]]
+native_id = "249.14640"
+slug = "betyg"
+
+[[variable]]
+native_id = "249.14653"
+slug = "kurs-i-komvux"
+
+[[variable]]
+native_id = "249.14658"
+slug = "typ-av-undervisning"
+
+[[variable]]
+native_id = "249.14672"
+slug = "kurs"
+
+[[variable]]
+native_id = "249.28311"
+slug = "kursdeltid"
+
+[[variable]]
+native_id = "249.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "249.29427"
+slug = "gymnasieforbundets-namn"
+
+[[variable]]
+native_id = "249.30545"
+slug = "termin-for-kursen"
+
+[[variable]]
+native_id = "249.32756"
+slug = "nyinskriven-elev"
+
+[[variable]]
+native_id = "249.32791"
+slug = "utfardandedatum"
+
+[[variable]]
+native_id = "249.40036"
+slug = "tidigare-utbildning"
+
+[[variable]]
+native_id = "249.40049"
+slug = "avslutad-kurs"
+
+# register 250 (komvux-anpassad)
+
+[[variable]]
+native_id = "249.14815.skolkommun"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "249.36.hemkommun"
+slug = "hemkommun"
+
+[[variable]]
+native_id = "249.36.skolkommun"
+slug = "skolenhet-kommun"
+
+[[variable]]
+native_id = "249.38417.gyfid"
+slug = "kommunalforbund-id"
+
+[[variable]]
+native_id = "249.38417.gyfnamn"
+slug = "kommunalforbund-namn"
+
+# register 25 (iot)
+
+[[variable]]
+native_id = "249.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "249.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "249.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "249.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "249.4693"
+slug = "gymnasieprogram"
+
+[[variable]]
+native_id = "249.8006"
+slug = "verksamhetsform-skolvasendet"
+
+[[variable]]
+native_id = "249.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "249.8701"
+slug = "kopt-utbildning-i-komvux"
+
+[[variable]]
+native_id = "249.14642"
+slug = "niva-vuxenutbildning"
+
+[[variable]]
+native_id = "249.14651"
+slug = "avklarade-undervisningstimmar"
+
+[[variable]]
+native_id = "249.14652"
+slug = "utbildningsatgard-vux"
+
+[[variable]]
+native_id = "249.14655"
+slug = "kursstart"
+
+[[variable]]
+native_id = "249.14656"
+slug = "kursslut"
+
+[[variable]]
+native_id = "249.14657"
+slug = "datumavbrott"
+
+[[variable]]
+native_id = "249.18398"
+slug = "lokal-kurs"
+
+[[variable]]
+native_id = "249.28163"
+slug = "statsbidrag"
+
+[[variable]]
+native_id = "249.29141"
+slug = "provversion"
+
+[[variable]]
+native_id = "249.32792"
+slug = "typ-av-gymnasieexamen"
+
+[[variable]]
+native_id = "249.32798"
+slug = "totalt-poang-slutbetyg"
+
+[[variable]]
+native_id = "249.36646"
+slug = "orsak-ej-inrapporterat-betyg"
+
+[[variable]]
+native_id = "249.39842"
+slug = "ar-for-komvuxutbildning"
+
+[[variable]]
+native_id = "249.40077"
+slug = "undervisningstimmar"
+
+# register 250
+
+[[variable]]
+native_id = "249.1086.orgnamn"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "249.30455.ma-a-pom"
+slug = "a-poang-merit"
+
+[[variable]]
+native_id = "249.32757.poang1"
+slug = "poangomfattning-grundlaggande"
+
+[[variable]]
+native_id = "249.32758.poang2"
+slug = "poangomfattning-gymnasial"
+
+[[variable]]
+native_id = "249.38417.kfid"
+slug = "kommunalforbund-id-2"
+
+[[variable]]
+native_id = "249.38417.kfnamn"
+slug = "kommunalforbund-namn-2"
+
+[[variable]]
+native_id = "249.8534.komgrupp17"
+slug = "kommungrupp-kod"
+
+# register 25

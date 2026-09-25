@@ -1,0 +1,436 @@
+[register]
+provider = "scb"
+slug = "rpu"
+native_id = "103"
+
+[[variant]]
+native_id = "103.109"
+slug = "befolkningens-studiedeltagande"
+display_group = "Befolkningens studiedeltagande"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "103.1518"
+slug = "studiemedel-erhallet"
+display_group = "Studiemedel, erhållet"
+panel_entity_key = "personnr"
+panel_time_key = ["kalenderar", "halvar"]
+panel_time_grain = "row"
+
+# Elevpaneler för longitudinella studier
+
+[[variable]]
+native_id = "103.57.personnr"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "103.3"
+slug = "hogskolekod"
+
+[[variable]]
+native_id = "103.63"
+slug = "sysselsattningsstatus-november"
+
+[[variable]]
+native_id = "103.73"
+slug = "ar"
+
+[[variable]]
+native_id = "103.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "103.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "103.304"
+slug = "fodelselandnamnfar"
+
+[[variable]]
+native_id = "103.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "103.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "103.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "103.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "103.1413"
+slug = "studiemedel-studiebidrag"
+
+[[variable]]
+native_id = "103.1429"
+slug = "studiemedel-lan"
+
+[[variable]]
+native_id = "103.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "103.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "103.6145"
+slug = "studerat-pa-distans"
+
+[[variable]]
+native_id = "103.6416"
+slug = "utbildningsgrupp"
+
+[[variable]]
+native_id = "103.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "103.7564"
+slug = "studiemedelsutnyttjande"
+
+[[variable]]
+native_id = "103.7918"
+slug = "medborgarskapskategori"
+
+[[variable]]
+native_id = "103.8076"
+slug = "fodd-sverige-utomlands-far"
+
+[[variable]]
+native_id = "103.8077"
+slug = "fodd-sverige-utomlands-mor"
+
+[[variable]]
+native_id = "103.14813"
+slug = "sun2000niva-oldadmor"
+
+[[variable]]
+native_id = "103.14814"
+slug = "sun2000niva-oldadfar"
+
+[[variable]]
+native_id = "103.14816"
+slug = "yngsta-barnets-alder-grp"
+
+[[variable]]
+native_id = "103.16234"
+slug = "fodelseland-eller-lan"
+
+[[variable]]
+native_id = "103.29578"
+slug = "medborgarskap"
+
+[[variable]]
+native_id = "103.39556"
+slug = "studietakt"
+
+[[variable]]
+native_id = "103.40355"
+slug = "studiemedelsberattigade-skolformer"
+
+[[variable]]
+native_id = "103.41169"
+slug = "studiemedel-folkhogskola"
+
+[[variable]]
+native_id = "103.41173"
+slug = "studiemedel-hogskola"
+
+[[variable]]
+native_id = "103.41257"
+slug = "forskarutbildning"
+
+[[variable]]
+native_id = "103.41258"
+slug = "omfattning-forskarstudier"
+
+[[variable]]
+native_id = "103.41291"
+slug = "hogskolestuderande-ht"
+
+# register 104 (elevpaneler)
+
+[[variable]]
+native_id = "103.57.pnr11"
+slug = "personnr-2"
+
+[[variable]]
+native_id = "103.24"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "103.25"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "103.27"
+slug = "fastlopnr"
+
+[[variable]]
+native_id = "103.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "103.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "103.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "103.379"
+slug = "personnr-adoptivfar"
+
+[[variable]]
+native_id = "103.380"
+slug = "personnr-adoptivmor"
+
+[[variable]]
+native_id = "103.753"
+slug = "examensar"
+
+[[variable]]
+native_id = "103.866"
+slug = "fodd-i-sverige-utomlands"
+
+[[variable]]
+native_id = "103.1169"
+slug = "inkomst-av-naringsverksamhet"
+
+[[variable]]
+native_id = "103.1172"
+slug = "kontant-bruttolon"
+
+[[variable]]
+native_id = "103.1173"
+slug = "inkomst-av-tjanst"
+
+[[variable]]
+native_id = "103.1271"
+slug = "antal-barn-4-10-ar"
+
+[[variable]]
+native_id = "103.1286"
+slug = "antal-barn-0-17-ar"
+
+[[variable]]
+native_id = "103.1543"
+slug = "examens-omfattning-poang"
+
+[[variable]]
+native_id = "103.1598"
+slug = "vuxenstudiestod-studiebidrag-ovriga"
+
+[[variable]]
+native_id = "103.1829"
+slug = "ersattning-forlorad-arbetsfortjanst"
+
+[[variable]]
+native_id = "103.5248"
+slug = "studier-utomlands"
+
+[[variable]]
+native_id = "103.5582"
+slug = "antal-barn-under-16-ar"
+
+[[variable]]
+native_id = "103.7062"
+slug = "folkbokforingslan"
+
+[[variable]]
+native_id = "103.7504"
+slug = "antal-barn-16-17-ar"
+
+[[variable]]
+native_id = "103.7637"
+slug = "fodelselandnamnadmor"
+
+[[variable]]
+native_id = "103.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "103.8189"
+slug = "utbildningens-niva-och-inriktning"
+
+[[variable]]
+native_id = "103.9060"
+slug = "antal-barn-0-3-ar"
+
+[[variable]]
+native_id = "103.14598"
+slug = "fodelselandnamnadfar"
+
+[[variable]]
+native_id = "103.14849"
+slug = "grov-sektorindelning"
+
+[[variable]]
+native_id = "103.16384"
+slug = "tilltalsnamn"
+
+[[variable]]
+native_id = "103.21520"
+slug = "studiemedel-bidrag"
+
+[[variable]]
+native_id = "103.21704"
+slug = "tillaggsbidrag-studiemedel"
+
+[[variable]]
+native_id = "103.38250"
+slug = "studieveckor"
+
+[[variable]]
+native_id = "103.39039"
+slug = "personens-namn"
+
+[[variable]]
+native_id = "103.40375"
+slug = "namn-utbildningsanordnare"
+
+[[variable]]
+native_id = "103.42607"
+slug = "sysselsattningsstatus-november-agi"
+
+[[variable]]
+native_id = "103.45144"
+slug = "klassificerad-sysselsatt"
+
+# register 104
+
+[[variable]]
+native_id = "103.1170.svux"
+slug = "vuxenstudiestod"
+
+[[variable]]
+native_id = "103.1170.svuxa"
+slug = "vuxenstudiestod-2"
+
+[[variable]]
+native_id = "103.14642.kxnivaht"
+slug = "niva-vuxenutbildning-ht"
+
+[[variable]]
+native_id = "103.14642.kxnivavt"
+slug = "niva-vuxenutbildning-vt"
+
+[[variable]]
+native_id = "103.14651.kxutimht"
+slug = "avklarade-undervisningstimmar-ht"
+
+[[variable]]
+native_id = "103.14651.kxutimvt"
+slug = "avklarade-undervisningstimmar-vt"
+
+[[variable]]
+native_id = "103.17509.astsni2"
+# Y-128: claimed-year ordering exposes Astsni2 as variable 34373's current
+# split discriminator; retain its established astsni identity.
+slug = "astsni"
+
+[[variable]]
+native_id = "103.1819.sekt"
+slug = "sektorkod"
+
+[[variable]]
+native_id = "103.1819.sektorkod"
+slug = "sektorkod-2"
+
+[[variable]]
+native_id = "103.32454.sunnivafarmormax-exklad"
+slug = "sun2000niva-for"
+
+[[variable]]
+native_id = "103.32454.sunnivaoldfarmormax"
+slug = "sun2000niva-old-for"
+
+[[variable]]
+native_id = "103.32454.sunnivaoldfarmormax-exklad"
+slug = "sun2000niva-old-for-2"
+
+[[variable]]
+native_id = "103.66.rpusunniva"
+slug = "sunniva"
+
+[[variable]]
+native_id = "103.66.rpusunniva-vt"
+slug = "sunniva-vt"
+
+[[variable]]
+native_id = "103.749.aldersgrp"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "103.7924.studdelt"
+slug = "studiedeltagande-ht"
+
+[[variable]]
+native_id = "103.8073.sun2000niva-oldmor"
+slug = "sun-niva-old-mor"
+
+[[variable]]
+native_id = "103.8073.sun2000niva2mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "103.8073.sun2000nivamor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "103.8073.sun2020niva-oldmor"
+slug = "sun-niva-old-mor-2"
+
+[[variable]]
+native_id = "103.8073.sun2020nivamor"
+slug = "sun-niva-mor-3"
+
+[[variable]]
+native_id = "103.8073.sunnivamor"
+slug = "sun-niva-mor-4"
+
+[[variable]]
+native_id = "103.8074.sun2000niva-oldfar"
+slug = "sun2000niva-old-far"
+
+[[variable]]
+native_id = "103.8074.sun2000niva2far"
+slug = "sun2000niva-far"
+
+[[variable]]
+native_id = "103.8074.sun2000nivafar"
+slug = "sun2000niva-far-2"
+
+[[variable]]
+native_id = "103.8074.sun2020niva-oldfar"
+slug = "sun2020niva-old-far"
+
+[[variable]]
+native_id = "103.8074.sun2020nivafar"
+slug = "sun2020niva-far"
+
+[[variable]]
+native_id = "103.8074.sunnivafar"
+slug = "sunniva-far"
+
+[[variable]]
+native_id = "103.8635.fhkurstypht"
+slug = "kurstyp-folkhogskolan-ht"
+
+[[variable]]
+native_id = "103.8635.fhkurstypvt"
+slug = "kurstyp-folkhogskolan-vt"
+
+# register 104

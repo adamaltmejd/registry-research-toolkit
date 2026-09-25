@@ -1,0 +1,35 @@
+[register]
+provider = "scb"
+slug = "fordonsgas"
+native_id = "300"
+
+[[variant]]
+native_id = "300.847"
+slug = "_default"
+display_group = "Fordonsgas"
+
+# Vuxnas deltagande i utbildning (AES)
+
+[[variable]]
+native_id = "300.23942"
+slug = "antal-publika-tankstallen"
+
+[[variable]]
+native_id = "300.23943"
+slug = "antal-tankstallen-bussar"
+
+[[variable]]
+native_id = "300.23944"
+slug = "gas-till-bussar"
+
+[[variable]]
+native_id = "300.23945"
+slug = "gas-publika-tankstallen"
+
+# register 301 (aes)
+
+[[variable]]
+native_id = "300.50"
+slug = "manad"
+
+# register 301

@@ -1,0 +1,199 @@
+[register]
+provider = "scb"
+slug = "lastbilstrafik"
+native_id = "162"
+
+[[variant]]
+native_id = "162.233"
+slug = "_default"
+display_group = "Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar"
+panel_entity_key = "orgnr"
+panel_time_key = "datum"
+panel_time_grain = "row"
+
+# Partisympatiundersökningen (PSU)
+
+[[variable]]
+native_id = "162.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "162.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "162.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "162.1724"
+slug = "e-postadress-kontaktperson"
+
+[[variable]]
+native_id = "162.1947"
+slug = "palastade-kilo"
+
+[[variable]]
+native_id = "162.1949"
+slug = "korningskilometer"
+
+[[variable]]
+native_id = "162.1952"
+slug = "lastningsgrad-volym"
+
+[[variable]]
+native_id = "162.1956"
+slug = "varuslag-korning"
+
+[[variable]]
+native_id = "162.1963"
+slug = "antal-axlar-lastbil"
+
+[[variable]]
+native_id = "162.1966"
+slug = "avprickningsdatum"
+
+[[variable]]
+native_id = "162.1975"
+slug = "karosserikod"
+
+[[variable]]
+native_id = "162.1986"
+slug = "maximilastvikt-lastbil"
+
+[[variable]]
+native_id = "162.2012"
+slug = "tjanstevikt-lastbil"
+
+[[variable]]
+native_id = "162.2013"
+slug = "totalvikt-lastbil"
+
+[[variable]]
+native_id = "162.2015"
+slug = "mobiltelefonnummer"
+
+[[variable]]
+native_id = "162.2017"
+slug = "telefaxnummer"
+
+[[variable]]
+native_id = "162.2022"
+slug = "avlastningsomrade-omlastning"
+
+[[variable]]
+native_id = "162.2023"
+slug = "avlastningsort-omlastning"
+
+[[variable]]
+native_id = "162.2025"
+slug = "palastningsomrade-omlastning"
+
+[[variable]]
+native_id = "162.2026"
+slug = "palastningsort-omlastning"
+
+[[variable]]
+native_id = "162.2028"
+slug = "antal-axlar-pa-slapet"
+
+[[variable]]
+native_id = "162.2030"
+slug = "slapets-maximilastvikt"
+
+[[variable]]
+native_id = "162.2033"
+slug = "slapets-tjanstevikt"
+
+[[variable]]
+native_id = "162.2034"
+slug = "slapets-totalvikt"
+
+[[variable]]
+native_id = "162.2037"
+slug = "avlastningsomrade"
+
+[[variable]]
+native_id = "162.2039"
+slug = "avlastningsort"
+
+[[variable]]
+native_id = "162.2044"
+slug = "sandningens-vikt-i-kilo"
+
+[[variable]]
+native_id = "162.2046"
+slug = "korda-kilometer-sandning"
+
+[[variable]]
+native_id = "162.2049"
+slug = "lastningsgrad-i-volymmatt"
+
+[[variable]]
+native_id = "162.2055"
+slug = "palastningsomrade"
+
+[[variable]]
+native_id = "162.2057"
+slug = "palastningsort"
+
+[[variable]]
+native_id = "162.2061"
+slug = "varukod-sandning"
+
+[[variable]]
+native_id = "162.16332"
+slug = "slapets-registreringsland"
+
+[[variable]]
+native_id = "162.16333"
+slug = "transitland"
+
+[[variable]]
+native_id = "162.16334"
+slug = "slapets-karosserikod"
+
+# register 164 (psu)
+
+[[variable]]
+native_id = "162.400"
+slug = "adress"
+
+[[variable]]
+native_id = "162.403"
+slug = "ort"
+
+[[variable]]
+native_id = "162.537"
+slug = "postnr"
+
+[[variable]]
+native_id = "162.1653"
+slug = "kommentar-uppgiftslamnare"
+
+[[variable]]
+native_id = "162.1970"
+slug = "foretagsidentifikation"
+
+[[variable]]
+native_id = "162.1972"
+slug = "granskningskod"
+
+[[variable]]
+native_id = "162.1973"
+slug = "inkommen-datum"
+
+[[variable]]
+native_id = "162.1974"
+slug = "internettillgang"
+
+[[variable]]
+native_id = "162.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "162.4027"
+slug = "naringsgren"
+
+# register 164

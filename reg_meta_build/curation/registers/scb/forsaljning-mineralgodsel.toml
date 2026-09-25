@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "forsaljning-mineralgodsel"
+native_id = "149"
+
+[[variant]]
+native_id = "149.216"
+slug = "_default"
+display_group = "Försäljning av mineralgödsel för jord- och trädgårdsbruk"
+panel_entity_key = "leverantorsnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Inkvarteringsstatistik
+
+[[variable]]
+native_id = "149.2222"
+slug = "leverantorsnummer"

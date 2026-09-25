@@ -1,0 +1,113 @@
+[register]
+provider = "scb"
+slug = "lcs"
+native_id = "234"
+
+[[variant]]
+native_id = "234.409"
+slug = "_default"
+display_group = "Labour Cost Survey"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Växtskyddsmedelsundersökningen
+
+[[variable]]
+native_id = "234.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "234.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "234.5070"
+slug = "arbetade-timmar-heltid"
+
+[[variable]]
+native_id = "234.5073"
+slug = "arbetade-timmar-deltid"
+
+[[variable]]
+native_id = "234.6306"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "234.7142"
+slug = "direkta-loner-bonusar"
+
+[[variable]]
+native_id = "234.7144"
+slug = "direkta-loner"
+
+[[variable]]
+native_id = "234.7146"
+slug = "bonusar"
+
+[[variable]]
+native_id = "234.7147"
+slug = "avsattning-sparprogram"
+
+[[variable]]
+native_id = "234.7149"
+slug = "lon-for-ej-arbetad-tid"
+
+[[variable]]
+native_id = "234.7154"
+slug = "formaner-varor-tjanster"
+
+[[variable]]
+native_id = "234.8148"
+slug = "renr"
+
+[[variable]]
+native_id = "234.8162"
+slug = "antal-svarande-enheter"
+
+[[variable]]
+native_id = "234.8181"
+slug = "anstallda-register"
+
+# register 235 (vaxtskyddsmedel)
+
+[[variable]]
+native_id = "234.690"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "234.1972"
+slug = "granskningskod"
+
+[[variable]]
+native_id = "234.4031"
+slug = "storleksklass-pa-foretag"
+
+[[variable]]
+native_id = "234.4032"
+slug = "antal-anstallda-foretaget"
+
+[[variable]]
+native_id = "234.4268"
+slug = "pensionskostnader"
+
+[[variable]]
+native_id = "234.14704"
+slug = "storleksklass-pa-foretag-eu"
+
+[[variable]]
+native_id = "234.14720"
+slug = "urvalskod"
+
+[[variable]]
+native_id = "234.16099"
+slug = "bostadsformaner"
+
+# register 235
+
+[[variable]]
+native_id = "234.4027.frsni92f"
+slug = "naringsgren"
+
+# register 237

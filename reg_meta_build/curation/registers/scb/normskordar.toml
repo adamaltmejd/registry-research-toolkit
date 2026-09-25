@@ -1,0 +1,33 @@
+[register]
+provider = "scb"
+slug = "normskordar"
+native_id = "209"
+
+[[variant]]
+native_id = "209.310"
+slug = "_default"
+display_group = "Normskördar"
+
+# Skörd av slåttervall
+
+[[variable]]
+native_id = "209.49"
+slug = "lan"
+
+[[variable]]
+native_id = "209.2323"
+slug = "antal-bearbetade-svar"
+
+[[variable]]
+native_id = "209.2433"
+slug = "produktionsomrade-skordeomrade"
+
+[[variable]]
+native_id = "209.2437"
+slug = "skordeomrade"
+
+[[variable]]
+native_id = "209.7601"
+slug = "hektarskord"
+
+# register 211 (skord-slattervall)

@@ -1,0 +1,148 @@
+[register]
+provider = "scb"
+slug = "ses"
+native_id = "246"
+
+[[variant]]
+native_id = "246.491"
+slug = "foretag"
+display_group = "Företag"
+
+
+[[variant]]
+native_id = "246.652"
+slug = "individer-i-privat-sektor"
+display_group = "Individer i privat sektor"
+panel_entity_key = "individnyckel"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "246.654"
+slug = "foretag-organisationer"
+display_group = "Företag/Organisationer"
+
+
+[[variant]]
+native_id = "246.655"
+slug = "individer"
+display_group = "Individer"
+panel_entity_key = "individnyckel"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Högskolestuderandes levnadsvillkor
+
+[[variable]]
+native_id = "246.17328"
+slug = "individnyckel"
+
+
+[[variable]]
+native_id = "246.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "246.1194"
+slug = "kontant-bruttolon-mm"
+
+[[variable]]
+native_id = "246.5622"
+slug = "lonesumma-skift-ob"
+
+[[variable]]
+native_id = "246.5719"
+slug = "antal-overtidstimmar"
+
+[[variable]]
+native_id = "246.6091"
+slug = "formaner"
+
+[[variable]]
+native_id = "246.7146"
+slug = "bonusar"
+
+[[variable]]
+native_id = "246.15113"
+slug = "artal-fodelse"
+
+[[variable]]
+native_id = "246.16335"
+slug = "overtidsersattning"
+
+[[variable]]
+native_id = "246.17335"
+slug = "antal-veckor"
+
+[[variable]]
+native_id = "246.17341"
+slug = "timmar"
+
+[[variable]]
+native_id = "246.17350"
+slug = "nyckel"
+
+[[variable]]
+native_id = "246.17356"
+slug = "lon-referensmanaden"
+
+[[variable]]
+native_id = "246.17357"
+slug = "timlon"
+
+# register 248 (komvux-sfi)
+
+[[variable]]
+native_id = "246.44"
+slug = "kon"
+
+[[variable]]
+native_id = "246.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "246.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "246.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "246.120"
+slug = "yrkesuppgift"
+
+[[variable]]
+native_id = "246.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "246.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "246.6087"
+slug = "bilforman"
+
+[[variable]]
+native_id = "246.6267"
+slug = "alder"
+
+[[variable]]
+native_id = "246.6290"
+slug = "nuts"
+
+[[variable]]
+native_id = "246.14704"
+slug = "storleksklass-pa-foretag-eu"
+
+[[variable]]
+native_id = "246.17351"
+slug = "medborgarskap"
+
+[[variable]]
+native_id = "246.17402"
+slug = "koncerntillhorighet"
+
+# register 247

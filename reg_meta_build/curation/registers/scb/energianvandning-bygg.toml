@@ -1,0 +1,63 @@
+[register]
+provider = "scb"
+slug = "energianvandning-bygg"
+native_id = "203"
+
+[[variant]]
+native_id = "203.304"
+slug = "_default"
+display_group = "Energianvändning inom byggsektorn"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Skörd av spannmål, trindsäd och oljeväxter
+
+[[variable]]
+native_id = "203.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "203.1937"
+slug = "kommentar"
+
+[[variable]]
+native_id = "203.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "203.3567"
+slug = "svarstid-enkat"
+
+[[variable]]
+native_id = "203.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "203.16418"
+slug = "inkopsvarde-kvantitet"
+
+[[variable]]
+native_id = "203.16419"
+slug = "blankett-indatum"
+
+[[variable]]
+native_id = "203.21414"
+slug = "kommentarsfalt"
+
+[[variable]]
+native_id = "203.26138"
+slug = "branslebenamning"
+
+[[variable]]
+native_id = "203.26148"
+slug = "bransle-enhet"
+
+# register 208
+
+[[variable]]
+native_id = "203.7873.byggnader"
+slug = "total-energianvandning"
+
+# register 208

@@ -1,0 +1,93 @@
+[register]
+provider = "scb"
+slug = "forskarexaminerades-arbetsmarknad"
+native_id = "106"
+
+[[variant]]
+native_id = "106.118"
+slug = "_default"
+display_group = "Forskarexaminerades arbetsmarknad"
+
+# Gymnasieungdomars studieintresse
+
+[[variable]]
+native_id = "106.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "106.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "106.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "106.1665"
+slug = "registreringsdatum"
+
+[[variable]]
+native_id = "106.1768"
+slug = "examenstyp"
+
+[[variable]]
+native_id = "106.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "106.5020"
+slug = "antal-manader-arbetslos"
+
+[[variable]]
+native_id = "106.5068"
+slug = "huvudsaklig-sysselsattning"
+
+[[variable]]
+native_id = "106.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "106.5090"
+slug = "arbetsmarknadssektor"
+
+[[variable]]
+native_id = "106.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "106.5697"
+slug = "lilla-n-per-stratum"
+
+[[variable]]
+native_id = "106.6306"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "106.8682"
+slug = "valet-idag-av-utbildning"
+
+[[variable]]
+native_id = "106.15399"
+slug = "hemmavarande-barn"
+
+[[variable]]
+native_id = "106.30824"
+slug = "minst-en-timmes-arbete-under-matveckan"
+
+[[variable]]
+native_id = "106.36561"
+slug = "hogskole-universitetskod"
+
+[[variable]]
+native_id = "106.38974"
+slug = "arbets-overensstammelse-forskning"
+
+[[variable]]
+native_id = "106.40780"
+slug = "formell-tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "106.40817"
+slug = "lasar-forskarexamen"
+
+# register 108

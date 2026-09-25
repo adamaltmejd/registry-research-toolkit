@@ -1,0 +1,151 @@
+[register]
+provider = "scb"
+slug = "ireg"
+native_id = "131"
+
+[[variant]]
+native_id = "131.175"
+slug = "lagerstatistik"
+display_group = "Lagerstatistik för varuhandel och tjänstenäringar"
+panel_entity_key = "orgnr-12"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "131.177"
+slug = "kvartalsomsattning-tjanstesektorn"
+display_group = "Kvartalsomsättning tjänstesektorn"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "131.533"
+slug = "tjansteproduktionsindex"
+display_group = "Tjänsteproduktionsindex"
+
+# Industrins energianvändning (ISEN)
+
+[[variable]]
+native_id = "131.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "131.3578"
+slug = "orgnr-12"
+
+
+[[variable]]
+native_id = "131.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "131.2163"
+slug = "leveransperiod"
+
+[[variable]]
+native_id = "131.2608"
+slug = "branschgrupper"
+
+[[variable]]
+native_id = "131.2846"
+slug = "lopnummer-urvalsenheter"
+
+[[variable]]
+native_id = "131.3310"
+slug = "branschgrupp"
+
+[[variable]]
+native_id = "131.3751"
+slug = "lopnummer"
+
+[[variable]]
+native_id = "131.3758"
+slug = "blankettyp"
+
+[[variable]]
+native_id = "131.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "131.4030"
+slug = "lillan"
+
+[[variable]]
+native_id = "131.4079"
+slug = "omsattningsvarde"
+
+[[variable]]
+native_id = "131.5072"
+slug = "moms"
+
+[[variable]]
+native_id = "131.5084"
+slug = "inrikes-omsattning"
+
+[[variable]]
+native_id = "131.15169"
+slug = "bransch"
+
+[[variable]]
+native_id = "131.17112"
+slug = "periodindikator"
+
+# register 132 (isen)
+
+[[variable]]
+native_id = "131.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "131.814"
+slug = "faxnummer"
+
+[[variable]]
+native_id = "131.2921"
+slug = "urvalsar"
+
+[[variable]]
+native_id = "131.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "131.4045"
+slug = "koncernmarkering"
+
+[[variable]]
+native_id = "131.4053"
+slug = "bransch-enligt-uppgiftslamnaren"
+
+[[variable]]
+native_id = "131.4066"
+slug = "storleksgrupp"
+
+[[variable]]
+native_id = "131.5002"
+slug = "lagervarde"
+
+[[variable]]
+native_id = "131.19079"
+slug = "kvartal-period"
+
+[[variable]]
+native_id = "131.19538"
+slug = "upprakningsfaktor"
+
+[[variable]]
+native_id = "131.28064"
+slug = "imputeringsstatus"
+
+[[variable]]
+native_id = "131.31002"
+slug = "urvalsversion"
+
+[[variable]]
+native_id = "131.38120"
+slug = "forsta-urvalsar"
+
+# register 132

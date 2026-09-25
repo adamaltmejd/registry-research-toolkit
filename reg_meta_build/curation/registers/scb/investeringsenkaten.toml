@@ -1,0 +1,282 @@
+[register]
+provider = "scb"
+slug = "investeringsenkaten"
+native_id = "183"
+
+[[variant]]
+native_id = "183.253"
+slug = "investeringsenkaten-fullstandigt"
+display_group = "Fullständigt innehåll"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "183.254"
+slug = "investeringsenkaten-resultat"
+display_group = "Resultat"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "183.1700"
+slug = "investeringsenkaten-2019"
+display_group = "Investeringsenkäten 2019-"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Lönestrukturstatistik, hela ekonomin (SLH)
+
+[[variable]]
+native_id = "183.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "183.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "183.29"
+slug = "fenr"
+
+[[variable]]
+native_id = "183.49"
+slug = "lan"
+
+[[variable]]
+native_id = "183.1350"
+slug = "anstallda-storleksklass-stat"
+
+[[variable]]
+native_id = "183.1454"
+slug = "venr"
+
+[[variable]]
+native_id = "183.1653"
+slug = "kommentar-uppgiftslamnare"
+
+[[variable]]
+native_id = "183.1728"
+slug = "blankett-statuskod"
+
+[[variable]]
+native_id = "183.1795"
+slug = "blankettnummer"
+
+[[variable]]
+native_id = "183.1811"
+slug = "variabelnummer"
+
+[[variable]]
+native_id = "183.1937"
+slug = "kommentar"
+
+[[variable]]
+native_id = "183.2297"
+slug = "undersokningsomgang"
+
+[[variable]]
+native_id = "183.2325"
+slug = "urval"
+
+[[variable]]
+native_id = "183.2463"
+slug = "undersokningsar"
+
+[[variable]]
+native_id = "183.2466"
+slug = "funktionell-bransch"
+
+[[variable]]
+native_id = "183.2467"
+slug = "institutionell-bransch"
+
+[[variable]]
+native_id = "183.2475"
+slug = "populationsstorlek-strata"
+
+[[variable]]
+native_id = "183.2483"
+slug = "industrigruppering-eu"
+
+[[variable]]
+native_id = "183.2783"
+slug = "investeringar-verkstallda-ny-ombyggnad"
+
+[[variable]]
+native_id = "183.2784"
+slug = "investeringar-verkstallda-bostader"
+
+[[variable]]
+native_id = "183.2785"
+slug = "investeringar-verkstallda-anlaggningar"
+
+[[variable]]
+native_id = "183.2786"
+slug = "investeringar-verkstallda-maskiner"
+
+[[variable]]
+native_id = "183.2788"
+slug = "verkstallda-transport-bilar"
+
+[[variable]]
+native_id = "183.2789"
+slug = "verkstallda-transport-bussar"
+
+[[variable]]
+native_id = "183.2790"
+slug = "verkstallda-transport-rullande"
+
+[[variable]]
+native_id = "183.2791"
+slug = "verkstallda-transport-flygplan"
+
+[[variable]]
+native_id = "183.2792"
+slug = "verkstallda-transport-ovrigt"
+
+[[variable]]
+native_id = "183.2793"
+slug = "investeringar-verkstallda-ovrigt"
+
+[[variable]]
+native_id = "183.2794"
+slug = "investeringar-verkstallda-programvaror"
+
+[[variable]]
+native_id = "183.2796"
+slug = "investeringar-leasing-transport"
+
+[[variable]]
+native_id = "183.2797"
+slug = "investeringar-leasing-datorstryda"
+
+[[variable]]
+native_id = "183.2798"
+slug = "investeringar-leasing-ovrig-data"
+
+[[variable]]
+native_id = "183.2799"
+slug = "investeringar-leasing-ovriga-maskiner"
+
+[[variable]]
+native_id = "183.2823"
+slug = "investeringar-planerade-ny-ombyggnad"
+
+[[variable]]
+native_id = "183.2824"
+slug = "investeringar-planerade-bostader"
+
+[[variable]]
+native_id = "183.2825"
+slug = "investeringar-planerade-anlaggningar"
+
+[[variable]]
+native_id = "183.2826"
+slug = "investeringar-planerade-maskiner"
+
+[[variable]]
+native_id = "183.2828"
+slug = "planerade-transport-bilar"
+
+[[variable]]
+native_id = "183.2829"
+slug = "planerade-transport-bussar"
+
+[[variable]]
+native_id = "183.2830"
+slug = "planerade-transport-rullande"
+
+[[variable]]
+native_id = "183.2831"
+slug = "planerade-transport-flygplan"
+
+[[variable]]
+native_id = "183.2832"
+slug = "planerade-transport-ovrigt"
+
+[[variable]]
+native_id = "183.2858"
+slug = "investeringar-underhall"
+
+[[variable]]
+native_id = "183.2859"
+slug = "investeringar-underhall-maskiner"
+
+[[variable]]
+native_id = "183.2861"
+slug = "investeringar-verkstallda-fastigheter"
+
+[[variable]]
+native_id = "183.2862"
+slug = "investeringar-inkop-av-mark"
+
+[[variable]]
+native_id = "183.4028"
+slug = "storan"
+
+[[variable]]
+native_id = "183.5151"
+slug = "blankettstatus-kvartal"
+
+[[variable]]
+native_id = "183.19052"
+slug = "naringsgren-for-statistiken"
+
+# register 186 (slh)
+
+[[variable]]
+native_id = "183.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "183.781"
+slug = "benamning"
+
+[[variable]]
+native_id = "183.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "183.1853"
+slug = "naringsgren-enligt-nr"
+
+[[variable]]
+native_id = "183.2464"
+slug = "antal-svarande"
+
+[[variable]]
+native_id = "183.2474"
+slug = "datum-inkommet-svar"
+
+[[variable]]
+native_id = "183.2478"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "183.2802"
+slug = "varde-investeringar"
+
+[[variable]]
+native_id = "183.2846"
+slug = "lopnummer-urvalsenheter"
+
+[[variable]]
+native_id = "183.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "183.4042"
+slug = "firmanamn"
+
+[[variable]]
+native_id = "183.19538"
+slug = "upprakningsfaktor"
+
+# register 186

@@ -62,3 +62,645 @@ register = "scb/rams"
 family_stem = "lonfink"
 label = "Löne- eller företagarinkomst per månad"
 slug = "lone-eller-foretagarinkomst-manad"
+
+[[variant]]
+native_id = "26.157"
+slug = "individer"
+display_group = "Individer"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "26.158"
+slug = "foretag"
+display_group = "Företag"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "26.159"
+slug = "arbetsstallen"
+display_group = "Arbetsställen"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "26.617"
+slug = "fad-arbetsstallen"
+display_group = "Företagens och arbetsställenas dynamik (FAD), Arbetsställen"
+panel_entity_key = "cfar-nummer-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "26.618"
+slug = "fad-foretag"
+display_group = "Företagens och arbetsställenas dynamik (FAD), Företag"
+panel_entity_key = "person-orgnr-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "26.657"
+slug = "fad-nedlagda-arbetsstallen"
+display_group = "Företagens och arbetsställenas dynamik (FAD), Nedlagda arbetsställen"
+panel_entity_key = "cfar-nummer-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "26.658"
+slug = "fad-nedlagda-foretag"
+display_group = "Företagens och arbetsställenas dynamik (FAD), Nedlagda företag"
+panel_entity_key = "person-orgnr-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "26.1615"
+slug = "jobbregistret"
+display_group = "Registret över jobb"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Longitudinell individdatabas (LINDA)
+
+[[variable]]
+native_id = "26.56.peorgnr"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "26.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "26.14.cfarnr"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "26.14.cfarnr1"
+slug = "cfar-nummer-2"
+
+
+[[variable]]
+native_id = "26.56.peorgnr2"
+slug = "person-orgnr-2"
+
+
+[[variable]]
+native_id = "26.17"
+slug = "arbetsstallenummer"
+
+[[variable]]
+native_id = "26.28"
+slug = "syssstat-allman"
+
+[[variable]]
+native_id = "26.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "26.49"
+slug = "lan"
+
+[[variable]]
+native_id = "26.372"
+slug = "familjeidentitet-rtb"
+
+[[variable]]
+native_id = "26.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "26.753"
+slug = "examensar"
+
+[[variable]]
+native_id = "26.754"
+slug = "examenskommun"
+
+[[variable]]
+native_id = "26.793"
+slug = "examenstermin"
+
+[[variable]]
+native_id = "26.903"
+slug = "antal-kontrolluppgifter"
+
+[[variable]]
+native_id = "26.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "26.1165"
+slug = "inkomst-aktiv-enskild-naringsverksamhet"
+
+[[variable]]
+native_id = "26.2692"
+slug = "institutionell-sektorkod"
+
+[[variable]]
+native_id = "26.3005"
+slug = "institutionell-kod"
+
+[[variable]]
+native_id = "26.4963"
+slug = "typ-av-foretag"
+
+[[variable]]
+native_id = "26.4989"
+slug = "foretagets-adress"
+
+[[variable]]
+native_id = "26.15118"
+slug = "foregaende-ast-nr"
+
+[[variable]]
+native_id = "26.15532"
+slug = "antal-sysselsatta-ast"
+
+[[variable]]
+native_id = "26.15533"
+slug = "summerad-inkomst-ast"
+
+[[variable]]
+native_id = "26.15549"
+slug = "antal-sysselsatta-foretag-syssreg"
+
+[[variable]]
+native_id = "26.16019"
+slug = "startar-ftg-fad"
+
+[[variable]]
+native_id = "26.16033"
+slug = "antal-sysselsatta-ar-1"
+
+[[variable]]
+native_id = "26.16034"
+slug = "antal-sysselsatta-ar-2"
+
+[[variable]]
+native_id = "26.16037"
+slug = "klassificering-ast-fad"
+
+[[variable]]
+native_id = "26.16038"
+slug = "klassificering-ftg-fad"
+
+[[variable]]
+native_id = "26.16041"
+slug = "startar-ast-fad"
+
+[[variable]]
+native_id = "26.16042"
+slug = "antal-sysselsatta-ast-ar-1"
+
+[[variable]]
+native_id = "26.16043"
+slug = "antal-sysselsatta-ast-ar-2"
+
+[[variable]]
+native_id = "26.16069"
+slug = "yrkesstallning-per-ku"
+
+[[variable]]
+native_id = "26.16233"
+slug = "institutionell-sektorkod-rams"
+
+[[variable]]
+native_id = "26.16899"
+slug = "lone-eller-foretagarinkomst"
+
+[[variable]]
+native_id = "26.17484"
+slug = "antal-arbetsstallen"
+
+[[variable]]
+native_id = "26.17734"
+slug = "syssstat-nov-jobbet"
+
+[[variable]]
+native_id = "26.37409"
+slug = "antal-sysselsatta-foretaget"
+
+[[variable]]
+native_id = "26.37411"
+slug = "antal-anstallda-foretaget"
+
+[[variable]]
+native_id = "26.37412"
+slug = "antal-ku-individen"
+
+[[variable]]
+native_id = "26.37808"
+slug = "antal-anstallda-ftg-syssreg"
+
+[[variable]]
+native_id = "26.37815"
+slug = "etableringsgrans-arbmark"
+
+[[variable]]
+native_id = "26.37831"
+slug = "antal-arbetade-manader"
+
+[[variable]]
+native_id = "26.42022"
+slug = "naringsgren-stat-foreg-huvud"
+
+[[variable]]
+native_id = "26.42607"
+slug = "sysselsattningsstatus-november-agi"
+
+[[variable]]
+native_id = "26.42926"
+slug = "antal-arbetade-manader-agi"
+
+[[variable]]
+native_id = "26.42929"
+slug = "etableringsgrans"
+
+[[variable]]
+native_id = "26.44694"
+slug = "antal-sysselsatta-ast-syssreg"
+
+[[variable]]
+native_id = "26.44696"
+slug = "antal-sysselsatta-ast-astreg"
+
+[[variable]]
+native_id = "26.44746"
+slug = "antal-arbetstallen-peorgnr"
+
+# register 29 (linda)
+
+[[variable]]
+native_id = "26.19053.ast2sni07"
+slug = "naringsgren-huvud-fad-sni2007"
+
+
+[[variable]]
+native_id = "26.19053.astsni69"
+slug = "naringsgren-huvud"
+
+
+[[variable]]
+native_id = "26.19053.astsni02"
+slug = "naringsgren-huvud-sni2002"
+
+
+[[variable]]
+native_id = "26.19053.astsni92begr"
+slug = "naringsgren-huvud-sni92-begransad"
+
+
+[[variable]]
+native_id = "26.19053.astsni"
+slug = "naringsgren-huvud-jobbreg-1996"
+
+
+[[variable]]
+native_id = "26.19054.astsni02"
+slug = "naringsgren-stat-huvud"
+
+
+[[variable]]
+native_id = "26.19054.astsni92"
+slug = "naringsgren-stat-huvud-sni92"
+
+
+[[variable]]
+native_id = "26.19054.ast2ngs07"
+slug = "naringsgren-stat-huvud-fad-ngs07"
+
+
+[[variable]]
+native_id = "26.19054.ast2sni07"
+slug = "naringsgren-stat-huvud-fad-sni2007"
+
+[[variable]]
+native_id = "26.33.sektor"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "26.34.jurform"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "26.4027.ftgsni69"
+slug = "naringsgren-ftg"
+
+[[variable]]
+native_id = "26.4027.ftgsni92begr"
+slug = "naringsgren-ftg-sni92-begransad"
+
+[[variable]]
+native_id = "26.63.syssstat"
+slug = "sysselsattningsstatus-november"
+
+[[variable]]
+native_id = "26.6392.antalsysc"
+slug = "antal-sysselsatta"
+
+[[variable]]
+native_id = "26.6392.antalsyss"
+slug = "antal-sysselsatta-syssreg"
+
+[[variable]]
+native_id = "26.74.agkat"
+slug = "agarkontroll"
+
+# register 260 (gymnasieskola-sokande)
+
+[[variable]]
+native_id = "26.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "26.16"
+slug = "antal-anstallda-ku"
+
+[[variable]]
+native_id = "26.18"
+slug = "arbetsstallestatus"
+
+[[variable]]
+native_id = "26.24"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "26.25"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "26.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "26.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "26.242"
+slug = "alder-31-12-relationsperson"
+
+[[variable]]
+native_id = "26.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "26.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "26.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "26.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "26.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "26.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "26.537"
+slug = "postnr"
+
+[[variable]]
+native_id = "26.666"
+slug = "anstallda-storleksklass"
+
+[[variable]]
+native_id = "26.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "26.781"
+slug = "benamning"
+
+[[variable]]
+native_id = "26.784"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "26.799"
+slug = "belagenhetsadress-gata"
+
+[[variable]]
+native_id = "26.800"
+slug = "bgatunr"
+
+[[variable]]
+native_id = "26.801"
+slug = "utbildningsgrupp-enl-sun-2000"
+
+[[variable]]
+native_id = "26.804"
+slug = "besokspostort"
+
+[[variable]]
+native_id = "26.832"
+slug = "hjalpverksamhetskod"
+
+[[variable]]
+native_id = "26.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "26.1049"
+slug = "gatunr"
+
+[[variable]]
+native_id = "26.1593"
+slug = "antal-ast"
+
+[[variable]]
+native_id = "26.1821"
+slug = "yrkesstallning"
+
+[[variable]]
+native_id = "26.1829"
+slug = "ersattning-forlorad-arbetsfortjanst"
+
+[[variable]]
+native_id = "26.3575"
+slug = "foretagets-namn"
+
+[[variable]]
+native_id = "26.3752"
+slug = "kontaktperson"
+
+[[variable]]
+native_id = "26.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "26.4975"
+slug = "antal-kvinnor-arbetsstallet"
+
+[[variable]]
+native_id = "26.4988"
+slug = "antal-man-pa-arbetsstallet"
+
+[[variable]]
+native_id = "26.6056"
+slug = "anstalld-fran-manad"
+
+[[variable]]
+native_id = "26.6057"
+slug = "anstalld-till-manad"
+
+[[variable]]
+native_id = "26.6096"
+slug = "kostnadsersattningar"
+
+[[variable]]
+native_id = "26.6098"
+slug = "ovriga-ersattningar"
+
+[[variable]]
+native_id = "26.6267"
+slug = "alder"
+
+[[variable]]
+native_id = "26.8189"
+slug = "utbildningens-niva-och-inriktning"
+
+[[variable]]
+native_id = "26.15530"
+slug = "arbetsstalle-populationstyp"
+
+[[variable]]
+native_id = "26.15535"
+slug = "antal-man-ast-forgymn"
+
+[[variable]]
+native_id = "26.15536"
+slug = "antal-man-ast-gymn"
+
+[[variable]]
+native_id = "26.15537"
+slug = "antal-man-ast-eftergymn-k"
+
+[[variable]]
+native_id = "26.15538"
+slug = "antal-man-ast-eftergymn-l"
+
+[[variable]]
+native_id = "26.15539"
+slug = "antal-kvinnor-forgymn"
+
+[[variable]]
+native_id = "26.15540"
+slug = "antal-kvinnor-gymn"
+
+[[variable]]
+native_id = "26.15541"
+slug = "antal-kv-korteftergymn"
+
+[[variable]]
+native_id = "26.15542"
+slug = "antal-kv-langeftergymn"
+
+[[variable]]
+native_id = "26.15546"
+slug = "inkomst-enskild-naringsverksamhet"
+
+[[variable]]
+native_id = "26.16040"
+slug = "fad-arbetsstalle-id"
+
+[[variable]]
+native_id = "26.16234"
+slug = "fodelseland-eller-lan"
+
+[[variable]]
+native_id = "26.16323"
+slug = "naringsgren-foretag"
+
+[[variable]]
+native_id = "26.17556"
+slug = "belagenhetsadress"
+
+[[variable]]
+native_id = "26.17561"
+slug = "forsamling-arbetsstallet"
+
+[[variable]]
+native_id = "26.17732"
+slug = "enskild-naringsverksamhet-overskott"
+
+[[variable]]
+native_id = "26.17733"
+slug = "enskild-naringsverksamhet-underskott"
+
+[[variable]]
+native_id = "26.18249"
+slug = "fastighets-lopnr-arbetsstallet"
+
+[[variable]]
+native_id = "26.18384"
+slug = "pension-enligt-ku"
+
+[[variable]]
+native_id = "26.31398"
+slug = "inkomst-foranledd-studier"
+
+[[variable]]
+native_id = "26.31499"
+slug = "inkomst-foranledd-sjukdom"
+
+[[variable]]
+native_id = "26.31575"
+slug = "inkomst-foranledd-arbetsloshet"
+
+[[variable]]
+native_id = "26.31653"
+slug = "inkomst-foranledd-fortidspension"
+
+[[variable]]
+native_id = "26.37828"
+slug = "huvudsaklig-inkomstkalla"
+
+[[variable]]
+native_id = "26.41952"
+slug = "tillfalligt-franvarande"
+
+[[variable]]
+native_id = "26.42951"
+slug = "antal-manader-loneutbetalning"
+
+[[variable]]
+native_id = "26.42953"
+slug = "markering-lonegaranti"
+
+# register 29
+
+[[variable]]
+native_id = "26.33.sektor1"
+slug = "institutionell-sektor-2"
+
+[[variable]]
+native_id = "26.34.jurform1"
+slug = "juridisk-form-2"
+
+# register 260

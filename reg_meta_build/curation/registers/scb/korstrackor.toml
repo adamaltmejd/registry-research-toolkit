@@ -1,0 +1,11 @@
+[register]
+provider = "scb"
+slug = "korstrackor"
+native_id = "360"
+
+[[variant]]
+native_id = "360.1291"
+slug = "_default"
+display_group = "Körsträckor"
+
+# Nystartade företag, kvartal

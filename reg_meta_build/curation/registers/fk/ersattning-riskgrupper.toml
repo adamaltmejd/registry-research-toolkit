@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "ersattning-riskgrupper"
+native_id = "5304830980745799212"
+
+[[variant]]
+native_id = "5304830980745799212.8049980962017583996"
+slug = "_default"
+display_group = "Ersättning till riskgrupper"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Ersättning för sjuklönekostnader
+
+[[variable]]
+native_id = "5304830980745799212.personnummer"
+slug = "lopnr-personnr"

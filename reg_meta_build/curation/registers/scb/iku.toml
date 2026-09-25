@@ -1,0 +1,207 @@
+[register]
+provider = "scb"
+slug = "iku"
+native_id = "197"
+
+[[variant]]
+native_id = "197.299"
+slug = "privatagda-flerbostadshus"
+display_group = "Privatägda flerbostadshus"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: panel keys removed — fastbet lives only in privatagda-flerbostadshus; the HOA
+# rows register no identity column.
+
+[[variant]]
+native_id = "197.394"
+slug = "bostadsrattsforeningar"
+display_group = "Bostadsrättsföreningar"
+
+# #287: panel keys removed — fastbet lives only in privatagda-flerbostadshus; the company
+# rows register no identity column.
+
+[[variant]]
+native_id = "197.395"
+slug = "allmannyttiga-bostadsforetag"
+display_group = "Allmännyttiga bostadsföretag"
+
+# Avgifter/hyror för nybyggda lägenheter
+
+[[variable]]
+native_id = "197.26"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "197.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "197.3179"
+slug = "taxeringsvarde"
+
+[[variable]]
+native_id = "197.3274"
+slug = "total-bostadsyta"
+
+[[variable]]
+native_id = "197.3413"
+slug = "vardear"
+
+[[variable]]
+native_id = "197.3419"
+slug = "total-lokalyta"
+
+[[variable]]
+native_id = "197.16297"
+slug = "nybyggnadsar"
+
+[[variable]]
+native_id = "197.16466"
+slug = "bostadsrattsforening"
+
+[[variable]]
+native_id = "197.16471"
+slug = "ombyggnad"
+
+[[variable]]
+native_id = "197.16472"
+slug = "foreningens-taxeringsvarde"
+
+[[variable]]
+native_id = "197.16476"
+slug = "lokaler-antal"
+
+[[variable]]
+native_id = "197.16478"
+slug = "garage-bilplatser-antal"
+
+[[variable]]
+native_id = "197.16488"
+slug = "intaktsreduktioner-bostader"
+
+[[variable]]
+native_id = "197.16491"
+slug = "intakter-efter-avdrag"
+
+[[variable]]
+native_id = "197.16500"
+slug = "driftskostnader-underhall"
+
+[[variable]]
+native_id = "197.16502"
+slug = "driftskostnader-reparationer"
+
+[[variable]]
+native_id = "197.16503"
+slug = "driftskostnader-uppvarmning"
+
+[[variable]]
+native_id = "197.16504"
+slug = "driftskostnader-fastighetsel"
+
+[[variable]]
+native_id = "197.16507"
+slug = "driftskostnader-ovrigt"
+
+[[variable]]
+native_id = "197.16517"
+slug = "fastighetslan"
+
+[[variable]]
+native_id = "197.16570"
+slug = "bostadsbolag"
+
+[[variable]]
+native_id = "197.16586"
+slug = "intakter-bostader"
+
+[[variable]]
+native_id = "197.16587"
+slug = "intakter-lokaler"
+
+[[variable]]
+native_id = "197.16588"
+slug = "intakter-garage-bilplatser"
+
+[[variable]]
+native_id = "197.16592"
+slug = "intakter-ovriga"
+
+[[variable]]
+native_id = "197.16599"
+slug = "tomtrattsavgald"
+
+[[variable]]
+native_id = "197.16604"
+slug = "intakter-rantebidrag"
+
+[[variable]]
+native_id = "197.16605"
+slug = "summa-finansiella-intakter"
+
+[[variable]]
+native_id = "197.16607"
+slug = "driftkostnader-fastighetsskotsel"
+
+[[variable]]
+native_id = "197.16609"
+slug = "driftkostnader-vatten-avlopp"
+
+[[variable]]
+native_id = "197.17046"
+slug = "antal-lagenheter-totalt"
+
+[[variable]]
+native_id = "197.17661"
+slug = "hushallsel-intakter"
+
+[[variable]]
+native_id = "197.21423"
+slug = "intaktsreduktioner-summa"
+
+[[variable]]
+native_id = "197.21695"
+slug = "totalyta"
+
+[[variable]]
+native_id = "197.22862"
+slug = "kommunregion"
+
+[[variable]]
+native_id = "197.30402"
+slug = "driftskostnader-reparationer-underhall"
+
+# register 198 (avgifter-hyror)
+
+[[variable]]
+native_id = "197.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "197.610"
+slug = "fastighetsskatt"
+
+[[variable]]
+native_id = "197.1724"
+slug = "e-postadress-kontaktperson"
+
+[[variable]]
+native_id = "197.3752"
+slug = "kontaktperson"
+
+[[variable]]
+native_id = "197.16510"
+slug = "rantebidrag"
+
+[[variable]]
+native_id = "197.16511"
+slug = "tomtrattsavgald-och-arrendeavgifter"
+
+[[variable]]
+native_id = "197.16523"
+slug = "rantekostnader"
+
+# register 198

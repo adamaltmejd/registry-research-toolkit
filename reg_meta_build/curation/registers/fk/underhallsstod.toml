@@ -1,0 +1,77 @@
+[register]
+provider = "fk"
+slug = "underhallsstod"
+native_id = "9011624717046135047"
+
+[[variant]]
+native_id = "9011624717046135047.8680353104330860502"
+slug = "utbetalningar-barn"
+display_group = "Underhållsstöd"
+panel_entity_key = "lopnr-bm"
+panel_time_key = "ersattningperiod-from"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "9011624717046135047.8699076028733205250"
+slug = "beslut"
+display_group = "Underhållsstöd"
+panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
+panel_time_key = "datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "9011624717046135047.8368711561888390862"
+slug = "utbetalningar-manad"
+display_group = "Underhållsstöd"
+panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
+panel_time_key = "datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "9011624717046135047.7561693197164962636"
+slug = "beslut-bidragsskyldig"
+display_group = "Underhållsstöd"
+panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
+panel_time_key = "datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "9011624717046135047.6749975705142537045"
+slug = "inbetalningar"
+display_group = "Underhållsstöd"
+panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
+panel_time_key = "datum-inbet"
+panel_time_grain = "row"
+
+# Aktivitetsstöd
+
+[[variable]]
+native_id = "9011624717046135047.LOPNR_BARN"
+slug = "lopnr-barn"
+
+
+[[variable]]
+native_id = "9011624717046135047.LOPNR_BM"
+slug = "lopnr-bm"
+
+
+[[variable]]
+native_id = "9011624717046135047.LOPNR_BS"
+slug = "lopnr-bs"
+
+
+[[variable]]
+native_id = "9011624717046135047.LOPNR_D85"
+slug = "lopnr-d85"
+
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 19 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 5597417723181852215

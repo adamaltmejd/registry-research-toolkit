@@ -14,3 +14,140 @@ label = "scb/anpassad-gymnasieskola/huvudman-namn"
 [[code_label_pair]]
 code = "scb/anpassad-gymnasieskola/skolenhetskod"
 label = "scb/anpassad-gymnasieskola/skolenhetens-namn"
+
+[[variant]]
+native_id = "353.1219"
+slug = "elever"
+display_group = "Elever"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Trädbränsle-, torv- och avfallspriser
+
+[[variable]]
+native_id = "353.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "353.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "353.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "353.26032"
+slug = "integrerad-elev-anpassad"
+
+[[variable]]
+native_id = "353.40835"
+slug = "integrerad-sarskolelev"
+
+# register 355 (tradbransle-torv)
+
+[[variable]]
+native_id = "353.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "353.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "353.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "353.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "353.1554"
+slug = "ar-termin-aktiviteten"
+
+[[variable]]
+native_id = "353.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "353.4642"
+slug = "faderns-fodelseland"
+
+[[variable]]
+native_id = "353.4643"
+slug = "moderns-fodelseland"
+
+[[variable]]
+native_id = "353.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "353.7817"
+slug = "deltagit-sva"
+
+[[variable]]
+native_id = "353.8552"
+slug = "gymnasieforbund-id"
+
+[[variable]]
+native_id = "353.23867"
+slug = "klassbeteckning"
+
+[[variable]]
+native_id = "353.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "353.29427"
+slug = "gymnasieforbundets-namn"
+
+[[variable]]
+native_id = "353.30471"
+slug = "direktovergang"
+
+[[variable]]
+native_id = "353.30654"
+slug = "skolenhetens-namn"
+
+[[variable]]
+native_id = "353.32873"
+slug = "larling"
+
+[[variable]]
+native_id = "353.35887"
+slug = "nyligen-invandrad"
+
+[[variable]]
+native_id = "353.40833"
+slug = "central-insamlingsenhet"
+
+# register 355
+
+[[variable]]
+native_id = "353.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "353.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "353.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "353.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "353.8137.hman"
+slug = "huvudman"
+
+[[variable]]
+native_id = "353.8137.hmannamn"
+slug = "huvudman-namn"
+
+# register 355

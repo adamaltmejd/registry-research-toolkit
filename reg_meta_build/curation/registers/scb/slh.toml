@@ -1,0 +1,97 @@
+[register]
+provider = "scb"
+slug = "slh"
+native_id = "186"
+
+[[variant]]
+native_id = "186.256"
+slug = "_default"
+display_group = "Lönestrukturstatistik, hela ekonomin"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Konjunkturstatistik för industrin
+
+[[variable]]
+native_id = "186.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "186.510"
+slug = "ssyk3"
+
+[[variable]]
+native_id = "186.511"
+slug = "ssyk4-huvud"
+
+[[variable]]
+native_id = "186.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "186.779"
+slug = "utbildningsniva-1-position"
+
+[[variable]]
+native_id = "186.784"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "186.785"
+slug = "utbildningsinriktning-1-position"
+
+[[variable]]
+native_id = "186.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "186.6416"
+slug = "utbildningsgrupp"
+
+[[variable]]
+native_id = "186.17503"
+slug = "lopnummer-sektor"
+
+# register 187 (konjunkturstatistik-industri)
+
+[[variable]]
+native_id = "186.65.utbin"
+slug = "utbildningsinriktning"
+
+[[variable]]
+native_id = "186.66.utbnv"
+slug = "utbildningsniva"
+
+# register 187 (konjunkturstatistik-industri)
+
+[[variable]]
+native_id = "186.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "186.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "186.120"
+slug = "yrkesuppgift"
+
+[[variable]]
+native_id = "186.753"
+slug = "examensar"
+
+[[variable]]
+native_id = "186.801"
+slug = "utbildningsgrupp-enl-sun-2000"
+
+[[variable]]
+native_id = "186.6349"
+slug = "rorliga-lonetillagg-uppraknade"
+
+[[variable]]
+native_id = "186.46223"
+slug = "anstallningstyp"
+
+# register 187

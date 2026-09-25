@@ -1,0 +1,61 @@
+[register]
+provider = "scb"
+slug = "miljorakenskaper"
+native_id = "295"
+
+[[variant]]
+native_id = "295.857"
+slug = "luftrakenskaper"
+display_group = "Lufträkenskaper"
+
+
+[[variant]]
+native_id = "295.858"
+slug = "miljorelaterade-skatter"
+display_group = "Miljörelaterade skatter"
+
+
+[[variant]]
+native_id = "295.859"
+slug = "miljomotiverade-subventioner"
+display_group = "Miljömotiverade subventioner"
+
+
+[[variant]]
+native_id = "295.1547"
+slug = "miljosektorn"
+display_group = "Miljösektorn"
+
+# Prisindex
+
+[[variable]]
+native_id = "295.24838"
+slug = "luftutslapp"
+
+[[variable]]
+native_id = "295.25745"
+slug = "miljomotiverad-subvention"
+
+[[variable]]
+native_id = "295.25746"
+slug = "miljoskatt"
+
+[[variable]]
+native_id = "295.39358"
+slug = "bransletyp"
+
+[[variable]]
+native_id = "295.39359"
+slug = "forbrant-bransle"
+
+# register 296 (prisindex)
+
+[[variable]]
+native_id = "295.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "295.7345"
+slug = "arbetsstallenummer-i-huvudsysslan"
+
+# register 296

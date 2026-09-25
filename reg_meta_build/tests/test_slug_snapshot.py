@@ -1,7 +1,8 @@
 """Immutability snapshot for committed slug TOMLs (grow-only; see DESIGN.md → Slug immutability).
 
-Compares the live TOMLs at ``reg_meta_build/fqid_slugs/`` against the
-committed snapshot at ``reg_meta_build/fqid_slugs/.snapshot.json``. Adds
+Compares register-owned global slugs against
+``reg_meta_build/curation/.slug_snapshot.json`` and steward slugs against
+their local snapshots. Adds
 are allowed; removals and slug renames fail the build.
 
 After legitimate additions, regenerate the snapshot with:
@@ -29,6 +30,7 @@ from reg_meta_build.fqid_slugs import (
     pinned_zones,
     read_snapshot,
     repo_slug_dir,
+    snapshot_path,
     snapshot_payload,
 )
 
@@ -80,7 +82,9 @@ def _all_slug_dirs() -> list:
     if root is None:
         return []
     steward = sorted(
-        d for d in root.iterdir() if d.is_dir() and (d / SNAPSHOT_FILENAME).is_file()
+        d
+        for d in (root.parent / "fqid_slugs").iterdir()
+        if d.is_dir() and (d / SNAPSHOT_FILENAME).is_file()
     )
     return [root, *steward]
 
@@ -113,7 +117,7 @@ def test_no_removed_or_renamed_slugs(slug_dir):
     violated.
     """
     fz = frozen_zones(load_freeze_states(slug_dir))
-    previous = read_snapshot(slug_dir / SNAPSHOT_FILENAME)
+    previous = read_snapshot(snapshot_path(slug_dir))
     current = snapshot_payload(load_slug_dir(slug_dir))
     diff = diff_snapshot(previous, current, frozen_zones=fz)
     if diff["blocked"]:
@@ -130,7 +134,7 @@ def test_snapshot_covers_committed_additions(slug_dir):
     """After review of new slug entries, the snapshot must be regenerated so
     future PRs branch from a clean baseline. Surfaces drift as a separate
     failure mode from removals/renames."""
-    previous = read_snapshot(slug_dir / SNAPSHOT_FILENAME)
+    previous = read_snapshot(snapshot_path(slug_dir))
     current = snapshot_payload(load_slug_dir(slug_dir))
     diff = diff_snapshot(previous, current)
     if diff["added"]:
@@ -179,7 +183,9 @@ def _git_committed_filenames(directory: Path) -> set[str] | None:
     if listed.returncode != 0:
         return None  # also covers an unborn HEAD (no commit) — can't assert
     names = (n for n in listed.stdout.split("\0") if n)
-    return {n for n in names if "/" not in n}  # top-level entries only
+    if (directory / "registers").is_dir():
+        return set(names)
+    return {n for n in names if "/" not in n}
 
 
 def _untracked_pinned_autos(slug_dir: Path) -> list[str] | None:
@@ -205,6 +211,13 @@ def _untracked_pinned_autos(slug_dir: Path) -> list[str] | None:
     committed = _git_committed_filenames(slug_dir)
     if committed is None:
         return None
+    if (slug_dir / "registers").is_dir():
+        return sorted(
+            path.relative_to(slug_dir).as_posix()
+            for path in (slug_dir / "registers").rglob(f"*{AUTO_FILE_SUFFIX}")
+            if path.parent.name in pinned
+            and path.relative_to(slug_dir).as_posix() not in committed
+        )
     return sorted(
         name
         for zone in pinned

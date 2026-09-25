@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "bostadsbidrag"
+native_id = "8901855898588660269"
+
+[[variant]]
+native_id = "8901855898588660269.6926768036030898876"
+slug = "_default"
+display_group = "Bostadsbidrag"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Bostadsersättning
+
+[[variable]]
+native_id = "8901855898588660269.personnummer"
+slug = "lopnr-personnr"

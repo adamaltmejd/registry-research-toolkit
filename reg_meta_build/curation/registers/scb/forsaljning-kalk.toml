@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "forsaljning-kalk"
+native_id = "152"
+
+[[variant]]
+native_id = "152.219"
+slug = "_default"
+display_group = "Försäljning av kalk för jord- och trädgårdsbruk, sjöar och vatten samt skog"
+
+# Vägtrafikolyckor, element, fordon, person, förare (Trafo)
+
+[[variable]]
+native_id = "152.3575"
+slug = "foretagets-namn"
+
+# register 155

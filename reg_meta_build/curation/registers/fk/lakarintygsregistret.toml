@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "lakarintygsregistret"
+native_id = "7970092672219058188"
+
+[[variant]]
+native_id = "7970092672219058188.4967946144295878372"
+slug = "_default"
+display_group = "Läkarintygsregistret"
+panel_entity_key = "lopnr"
+panel_time_key = "period-from"
+panel_time_grain = "row"
+
+# Tandvårdsstödet
+
+[[variable]]
+native_id = "7970092672219058188.LOPNR"
+slug = "lopnr"

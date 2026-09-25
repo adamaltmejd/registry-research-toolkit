@@ -24,10 +24,9 @@ from ._curation import (
 from .curation_tree import load_classifications, load_register_files
 from .edition_bounds import edition_claims
 from .fqid_slugs import (
-    PROVIDER_FILE_SUFFIX,
     _parse_register_id,
     _parse_variant_id,
-    load_provider_toml,
+    iter_curated_provider_entries,
 )
 
 if TYPE_CHECKING:
@@ -202,13 +201,14 @@ def _scb_slug_ids(slug_dir: Path | None) -> tuple[dict[str, int], dict[str, int]
     variants: dict[str, int] = {}
     if slug_dir is None:
         return registers, variants
-    path = slug_dir / f"{_PROVIDER}{PROVIDER_FILE_SUFFIX}"
-    if not path.is_file():
-        return registers, variants
     # Deprecated entries are grow-only slug HISTORY, not live coordinates (the
     # rule `populate_slugs` and `slug_dir_curates_canonical_scb` both apply): a
     # retired slug must not shadow the live entry that replaced it.
-    entries = [e for e in load_provider_toml(path) if not e.deprecated]
+    entries = [
+        e
+        for e in iter_curated_provider_entries(slug_dir)
+        if e.provider == _PROVIDER and not e.deprecated
+    ]
     by_register_id = {
         _parse_register_id(e.source_id): e.slug
         for e in entries
@@ -328,8 +328,7 @@ def _resolve_variant(
             "scb_errata_unknown_variant",
             f"scb_errata {context} does not name a curated SCB "
             f"{'register' if register_id is None else 'register variant'}.",
-            f"Use a `[register]` / `[register_variant]` slug curated in "
-            f"fqid_slugs/{_PROVIDER}{PROVIDER_FILE_SUFFIX}.",
+            "Use [register] / [[variant]] slugs in the owning register file.",
         )
     return register_id, variant_id, context
 

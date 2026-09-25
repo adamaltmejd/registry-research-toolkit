@@ -1,0 +1,39 @@
+[register]
+provider = "fk"
+slug = "vardbidrag"
+native_id = "5430440157686027706"
+
+[[variant]]
+native_id = "5430440157686027706.5740549366009254918"
+slug = "_default"
+display_group = "Vårdbidrag"
+panel_entity_key = ["lopnr-personnr", "lopnr-personnr-barn"]
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+
+# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546, #554).
+#
+# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
+# (the default freeze zone re-derives it). These pins freeze the slug each
+# entity-key ref depends on so a reslug can't dangle the ref. The build-side
+# curation gate (validate._check_entity_key_vars_curated) makes the pin
+# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL
+# global providers (#554).
+#
+# Regenerate after onboarding/repointing a panel: run
+#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/
+# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml
+# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —
+# pins reproduce the slug the variable already carries).
+# 38 pin(s).
+
+
+[[variable]]
+native_id = "5430440157686027706.personnummer"
+slug = "lopnr-personnr"
+
+
+[[variable]]
+native_id = "5430440157686027706.personnummer_barn"
+slug = "lopnr-personnr-barn"

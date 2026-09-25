@@ -1,0 +1,50 @@
+[register]
+provider = "fk"
+slug = "foraldrapenning"
+native_id = "7724610645254369578"
+
+[[variant]]
+native_id = "7724610645254369578.6145127829134819148"
+slug = "fp-fall"
+display_group = "Föräldrapenning"
+panel_entity_key = "persid"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7724610645254369578.6642064092255968002"
+slug = "fp-delfall1"
+display_group = "Föräldrapenning"
+panel_entity_key = ["persid", "persid-barn"]
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7724610645254369578.5372217754457252716"
+slug = "fl-fall"
+display_group = "Föräldrapenning"
+panel_entity_key = "persid"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7724610645254369578.4684116283909747746"
+slug = "fl-delfall1"
+display_group = "Föräldrapenning"
+panel_entity_key = ["persid", "persid-barn"]
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+# Tillfällig föräldrapenning
+
+[[variable]]
+native_id = "7724610645254369578.PERSID"
+slug = "persid"
+
+
+[[variable]]
+native_id = "7724610645254369578.PERSID_BARN"
+slug = "persid-barn"

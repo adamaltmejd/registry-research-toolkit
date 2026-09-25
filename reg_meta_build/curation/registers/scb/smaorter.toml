@@ -10,3 +10,40 @@ label = "scb/smaorter/kommunnamn"
 [[code_label_pair]]
 code = "scb/smaorter/lan"
 label = "scb/smaorter/lannamn"
+
+[[variant]]
+native_id = "157.224"
+slug = "_default"
+display_group = "Småorter"
+
+# Skyddad natur
+
+[[variable]]
+native_id = "157.25139"
+slug = "startdatum"
+
+[[variable]]
+native_id = "157.2188"
+slug = "folkmangd"
+
+[[variable]]
+native_id = "157.25146"
+slug = "slutdatum"
+
+[[variable]]
+native_id = "157.35609"
+slug = "smaort-kod"
+
+[[variable]]
+native_id = "157.35979"
+slug = "registreringsar"
+
+[[variable]]
+native_id = "157.39461"
+slug = "datatyp-for-geometri"
+
+[[variable]]
+native_id = "157.39462"
+slug = "objekt-id"
+
+# register 158

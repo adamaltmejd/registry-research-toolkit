@@ -1,0 +1,39 @@
+[register]
+provider = "scb"
+slug = "skord-slattervall"
+native_id = "211"
+
+[[variant]]
+native_id = "211.312"
+slug = "_default"
+display_group = "Skörd av slåttervall fr o m 2016"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Vattenbruk
+
+[[variable]]
+native_id = "211.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "211.49"
+slug = "lan"
+
+[[variable]]
+native_id = "211.2437"
+slug = "skordeomrade"
+
+# register 215 (vattenbruk)
+
+[[variable]]
+native_id = "211.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "211.15390"
+slug = "ej-utnyttjad-vallareal"
+
+# register 215

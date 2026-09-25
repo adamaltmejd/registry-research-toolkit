@@ -1,0 +1,504 @@
+[register]
+provider = "scb"
+slug = "arbetsmiljoundersokningen"
+native_id = "123"
+
+[[variant]]
+native_id = "123.413"
+slug = "arbetsmiljoundersokningen"
+display_group = "Arbetsmiljöundersökningen"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "123.1316"
+slug = "arbetsmiljoundersokningen-2015"
+display_group = "Arbetsmiljöundersökningen 2015 -"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Arbetsorsakade besvär
+
+[[variable]]
+native_id = "123.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "123.49"
+slug = "lan"
+
+[[variable]]
+native_id = "123.488"
+slug = "alder-vid-matmanad"
+
+[[variable]]
+native_id = "123.509"
+slug = "hussyk2"
+
+[[variable]]
+native_id = "123.511"
+slug = "ssyk4-huvud"
+
+[[variable]]
+native_id = "123.544"
+slug = "sektor-i-huvudsysslan"
+
+[[variable]]
+native_id = "123.3824"
+slug = "utbildning-pa-betald-arbetstid"
+
+[[variable]]
+native_id = "123.3826"
+slug = "anvander-bil-i-arbetet"
+
+[[variable]]
+native_id = "123.3870"
+slug = "foretagshalsovard"
+
+[[variable]]
+native_id = "123.3871"
+slug = "arbetar-framatbojd"
+
+[[variable]]
+native_id = "123.3876"
+slug = "hander-upplyfta-axelhojd"
+
+[[variable]]
+native_id = "123.3881"
+slug = "sei-i-huvudsysslan"
+
+[[variable]]
+native_id = "123.3884"
+slug = "arbetstid-i-bilen"
+
+[[variable]]
+native_id = "123.3888"
+slug = "krav-i-arbetet"
+
+[[variable]]
+native_id = "123.3889"
+slug = "sjuknarvaro"
+
+[[variable]]
+native_id = "123.3899"
+slug = "kan-inte-koppla-av-tankarna"
+
+[[variable]]
+native_id = "123.3905"
+slug = "hinner-inte-prata-om-arbetet"
+
+[[variable]]
+native_id = "123.3908"
+slug = "anvander-datormus"
+
+[[variable]]
+native_id = "123.3917"
+slug = "drar-in-pa-luncher-arbetar-over"
+
+[[variable]]
+native_id = "123.3920"
+slug = "psykiskt-pafrestande"
+
+[[variable]]
+native_id = "123.3921"
+slug = "anvander-persondator"
+
+[[variable]]
+native_id = "123.3923"
+slug = "korta-pauser-nar-som-helst"
+
+[[variable]]
+native_id = "123.3927"
+slug = "upplarningstid"
+
+[[variable]]
+native_id = "123.3962"
+slug = "hjalp-vid-svara-uppgifter"
+
+[[variable]]
+native_id = "123.3969"
+slug = "datormus"
+
+[[variable]]
+native_id = "123.3970"
+slug = "anvander-tangentbord"
+
+[[variable]]
+native_id = "123.3974"
+slug = "arbete-fysiskt-tungt-latt"
+
+[[variable]]
+native_id = "123.3975"
+slug = "arbetsmiljobrister-atgardats"
+
+[[variable]]
+native_id = "123.3979"
+slug = "upprepningar-av-moment-i-timmen"
+
+[[variable]]
+native_id = "123.3984"
+slug = "mojlighet-lara-och-utvecklas"
+
+[[variable]]
+native_id = "123.3991"
+slug = "vriden-arbetsstallning"
+
+[[variable]]
+native_id = "123.4002"
+slug = "sittande-stallning"
+
+[[variable]]
+native_id = "123.6267"
+slug = "alder"
+
+[[variable]]
+native_id = "123.6500"
+slug = "lordagsarbete-i-huvudsysslan"
+
+[[variable]]
+native_id = "123.6508"
+slug = "antal-anstallda-arbetsplatsen"
+
+[[variable]]
+native_id = "123.6514"
+slug = "kvallsarbete-frekvens"
+
+[[variable]]
+native_id = "123.6522"
+slug = "nattarbete-frekvens"
+
+[[variable]]
+native_id = "123.6586"
+slug = "anknytningsgrad"
+
+[[variable]]
+native_id = "123.6588"
+slug = "hussyk1"
+
+[[variable]]
+native_id = "123.6590"
+slug = "hussyk3"
+
+[[variable]]
+native_id = "123.6775"
+slug = "overtidstimmar-totalt-huvudsyssla"
+
+[[variable]]
+native_id = "123.7074"
+slug = "kvallsarbete-harledd"
+
+[[variable]]
+native_id = "123.7103"
+slug = "nattarbete-harledd"
+
+[[variable]]
+native_id = "123.7112"
+slug = "anstallningsar-harledd"
+
+[[variable]]
+native_id = "123.7179"
+slug = "arbete-enbart-vardagar"
+
+[[variable]]
+native_id = "123.16120"
+slug = "ensidiga-rorelser-okat-minskat"
+
+[[variable]]
+native_id = "123.16125"
+slug = "arbetstid-datorn-i-strack"
+
+[[variable]]
+native_id = "123.16135"
+slug = "misstrostan"
+
+[[variable]]
+native_id = "123.16138"
+slug = "kroppsligt-anstrangande-arbete"
+
+[[variable]]
+native_id = "123.18002"
+slug = "arbete-enbart-dagtid"
+
+[[variable]]
+native_id = "123.18005"
+slug = "heltid-deltid-huvudsysslan"
+
+[[variable]]
+native_id = "123.18007"
+slug = "sni2007-1bokstav"
+
+[[variable]]
+native_id = "123.18008"
+slug = "sni2007-2siffror"
+
+[[variable]]
+native_id = "123.18009"
+slug = "sni2007-3siffror"
+
+[[variable]]
+native_id = "123.18010"
+slug = "sni2007-4siffror"
+
+[[variable]]
+native_id = "123.18011"
+slug = "sni2007-5siffror"
+
+[[variable]]
+native_id = "123.24292"
+slug = "understallda-chef-antal"
+
+[[variable]]
+native_id = "123.24293"
+slug = "fraga-skicka-webbenkat"
+
+[[variable]]
+native_id = "123.24294"
+slug = "grad-aku-tom-2004"
+
+[[variable]]
+native_id = "123.24336"
+slug = "understallda-chef-intervall"
+
+[[variable]]
+native_id = "123.24348"
+slug = "anstallningsar-arbetsplatsen"
+
+[[variable]]
+native_id = "123.24349"
+slug = "overtid-minst-5-timmar"
+
+[[variable]]
+native_id = "123.24350"
+slug = "overtid-minst-10-timmar"
+
+[[variable]]
+native_id = "123.24359"
+slug = "arbetar-dagtid-pa-vardagar"
+
+[[variable]]
+native_id = "123.24361"
+slug = "lordag-sondag-arbete"
+
+[[variable]]
+native_id = "123.24363"
+slug = "arbetar-skift"
+
+[[variable]]
+native_id = "123.24928"
+slug = "kvallsarbete-minst-halvdag"
+
+[[variable]]
+native_id = "123.24932"
+slug = "nattarbete-minst-halften"
+
+[[variable]]
+native_id = "123.24934"
+slug = "etablering-arbetsmarknaden"
+
+[[variable]]
+native_id = "123.24989"
+slug = "isolering-kontakt-lagom"
+
+[[variable]]
+native_id = "123.25599"
+slug = "nuvarande-arbetsformaga"
+
+[[variable]]
+native_id = "123.25603"
+slug = "ensamarbete"
+
+[[variable]]
+native_id = "123.25604"
+slug = "anstallningsar-arbetsplats"
+
+[[variable]]
+native_id = "123.25605"
+slug = "antal-understallda-direkt"
+
+[[variable]]
+native_id = "123.31240"
+slug = "arbetar-sondagar-i-huvudsysslan"
+
+[[variable]]
+native_id = "123.31241"
+slug = "overtid-utan-ersattning"
+
+[[variable]]
+native_id = "123.32699"
+slug = "overtid-enbart-med-ersattning"
+
+[[variable]]
+native_id = "123.36183"
+slug = "understallda-narmaste-chef"
+
+[[variable]]
+native_id = "123.36189"
+slug = "surfplatta-smartphone"
+
+[[variable]]
+native_id = "123.36211"
+slug = "arbetstid-surfplatta"
+
+[[variable]]
+native_id = "123.36562"
+slug = "arbetstid-skrivbord"
+
+[[variable]]
+native_id = "123.36563"
+slug = "kontorsarbetsplats-typ"
+
+[[variable]]
+native_id = "123.36564"
+slug = "tillgang-till-tyst-rum"
+
+[[variable]]
+native_id = "123.36565"
+slug = "justerbart-bord"
+
+[[variable]]
+native_id = "123.36566"
+slug = "arbetsrum-mojlighet-bra-arbete"
+
+[[variable]]
+native_id = "123.38225"
+slug = "svara-pa-enkat"
+
+[[variable]]
+native_id = "123.41606"
+slug = "arbetsrorelser-per-minut"
+
+[[variable]]
+native_id = "123.41611"
+slug = "besvar-orsak-yrkesbyte"
+
+[[variable]]
+native_id = "123.41612"
+slug = "arbetsbesvar-tidigare-yrke"
+
+[[variable]]
+native_id = "123.41785"
+slug = "fortfarande-dessa-besvar"
+
+[[variable]]
+native_id = "123.41791"
+slug = "misstrostar-av-kritik"
+
+[[variable]]
+native_id = "123.42186"
+slug = "besvar-i-tidigare-yrke"
+
+[[variable]]
+native_id = "123.42187"
+slug = "besvar-byte-av-yrke"
+
+[[variable]]
+native_id = "123.42188"
+slug = "fortfarande-besvar-tidigare-yrke"
+
+[[variable]]
+native_id = "123.42189"
+slug = "koppla-av-arbetet-nar-ledig"
+
+[[variable]]
+native_id = "123.42220"
+slug = "misstrostar-kritik"
+
+[[variable]]
+native_id = "123.42221"
+slug = "tunga-momenten-okat"
+
+[[variable]]
+native_id = "123.42223"
+slug = "samma-moment-per-2-minuter"
+
+[[variable]]
+native_id = "123.42243"
+slug = "misstrostar-av-svarigheter"
+
+[[variable]]
+native_id = "123.45870"
+slug = "kvallsarbete-halvdag-hs"
+
+[[variable]]
+native_id = "123.45872"
+slug = "nattarbete-halvdag-hs"
+
+[[variable]]
+native_id = "123.49017"
+slug = "lan-enligt-folkbokforingen"
+
+[[variable]]
+native_id = "123.49018"
+slug = "personnr-2"
+
+# register 124 (arbetsorsakade-besvar)
+
+[[variable]]
+native_id = "123.3835.understl"
+slug = "antal-understallda"
+
+[[variable]]
+native_id = "123.3945.mertunga"
+slug = "tunga-arbetsmoment-tidigare"
+
+[[variable]]
+native_id = "123.6771.enbers"
+slug = "overtid-med-ersattning"
+
+# register 124 (arbetsorsakade-besvar)
+
+[[variable]]
+native_id = "123.2736"
+slug = "sektor"
+
+[[variable]]
+native_id = "123.3854"
+slug = "overtid-frekvens"
+
+[[variable]]
+native_id = "123.3877"
+slug = "arbete-hemifran"
+
+[[variable]]
+native_id = "123.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "123.6776"
+slug = "overtid-totalt"
+
+[[variable]]
+native_id = "123.6784"
+slug = "naringsgren-sni2002-5siffer"
+
+[[variable]]
+native_id = "123.24295"
+slug = "hussyk2-2"
+
+[[variable]]
+native_id = "123.24296"
+slug = "hussyk3-2"
+
+[[variable]]
+native_id = "123.36571"
+slug = "funktionsnedsattning"
+
+[[variable]]
+native_id = "123.36572"
+slug = "nedsatt-arbetsformaga"
+
+[[variable]]
+native_id = "123.36575"
+slug = "utbildningsniva-grupperad"
+
+# register 124
+
+[[variable]]
+native_id = "123.6771.huoters"
+slug = "overtid-med-ersattning-2"
+
+# register 128

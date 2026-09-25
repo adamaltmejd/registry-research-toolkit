@@ -1,0 +1,317 @@
+[register]
+provider = "scb"
+slug = "lsum"
+native_id = "128"
+
+[[variable]]
+native_id = "128.56"
+slug = "person-orgnr"
+
+
+[[variant]]
+native_id = "128.154"
+slug = "anstallningar-nattbefolkning"
+display_group = "Anställningar - nattbefolkning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "128.155"
+slug = "foretag-kuagg"
+display_group = "Företag - Uppgifter aggregerade till företagsnivå (KUAGG)"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "128.156"
+slug = "arbetsstallen-uppgifter"
+display_group = "Arbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST)"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "128.280"
+slug = "individer-sociala-agi-ku"
+display_group = "Individer - sociala AGI/KU"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "128.451"
+slug = "anstallningar-dagbefolkning"
+display_group = "Anställningar - dagbefolkning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Lönestrukturstatistik, kommuner (SLK)
+
+[[variable]]
+native_id = "128.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "128.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "128.596"
+slug = "tjanstepension"
+
+[[variable]]
+native_id = "128.744"
+slug = "antal-km-milersattning"
+
+[[variable]]
+native_id = "128.1192"
+slug = "ovriga-kostnadsersattningar"
+
+[[variable]]
+native_id = "128.1641"
+slug = "naringsgren-arbetsstalle"
+
+[[variable]]
+native_id = "128.6088"
+slug = "institutionell-sektorkod-lsum"
+
+[[variable]]
+native_id = "128.6091"
+slug = "formaner"
+
+[[variable]]
+native_id = "128.6096"
+slug = "kostnadsersattningar"
+
+[[variable]]
+native_id = "128.6098"
+slug = "ovriga-ersattningar"
+
+[[variable]]
+native_id = "128.6103"
+slug = "bransleforman"
+
+[[variable]]
+native_id = "128.6106"
+slug = "typ-av-post"
+
+[[variable]]
+native_id = "128.6140"
+slug = "antal-kontrolluppgifter-per-foretag"
+
+[[variable]]
+native_id = "128.6199"
+slug = "summerade-formaner"
+
+[[variable]]
+native_id = "128.6203"
+slug = "antal-agi-ku"
+
+[[variable]]
+native_id = "128.29247"
+slug = "pensionsutbetalning"
+
+[[variable]]
+native_id = "128.39365"
+slug = "rutunderlag"
+
+[[variable]]
+native_id = "128.39366"
+slug = "rotunderlag"
+
+[[variable]]
+native_id = "128.39368"
+slug = "rotulag"
+
+[[variable]]
+native_id = "128.41337"
+slug = "ej-skatteavdrag"
+
+# register 130 (slk)
+
+[[variable]]
+native_id = "128.16323.ftgsni2002"
+slug = "ftgsni2002"
+
+[[variable]]
+native_id = "128.16323.ftgsni92"
+slug = "ftgsni92"
+
+[[variable]]
+native_id = "128.19053.ftgsni92"
+slug = "naringsgren-huvudsaklig"
+
+# register 13 (moms)
+
+[[variable]]
+native_id = "128.17"
+slug = "arbetsstallenummer"
+
+[[variable]]
+native_id = "128.24"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "128.25"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "128.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "128.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "128.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "128.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "128.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "128.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "128.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "128.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "128.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "128.1068"
+slug = "antal-manader-med-bilforman"
+
+[[variable]]
+native_id = "128.1824"
+slug = "avdrag-vissa-lonetillagg"
+
+[[variable]]
+native_id = "128.1831"
+slug = "traktamente-utom-riket"
+
+[[variable]]
+native_id = "128.1833"
+slug = "traktamente-inom-riket"
+
+[[variable]]
+native_id = "128.4055"
+slug = "kostnadsavdrag"
+
+[[variable]]
+native_id = "128.6056"
+slug = "anstalld-fran-manad"
+
+[[variable]]
+native_id = "128.6057"
+slug = "anstalld-till-manad"
+
+[[variable]]
+native_id = "128.6089"
+slug = "delagare-i-famansbolag"
+
+[[variable]]
+native_id = "128.6090"
+slug = "ersattning-egenavgifter"
+
+[[variable]]
+native_id = "128.6093"
+slug = "hyresersattning"
+
+[[variable]]
+native_id = "128.6097"
+slug = "logiersattning"
+
+[[variable]]
+native_id = "128.6099"
+slug = "ovriga-skattepliktiga-ersattningar"
+
+[[variable]]
+native_id = "128.6104"
+slug = "ersattning-resa-utomlands-bosatta"
+
+[[variable]]
+native_id = "128.6111"
+slug = "ersattningsbelopp"
+
+[[variable]]
+native_id = "128.6112"
+slug = "ersattningskod"
+
+[[variable]]
+native_id = "128.16411"
+slug = "fri-parkering"
+
+[[variable]]
+native_id = "128.19568"
+slug = "loneink"
+
+[[variable]]
+native_id = "128.21879"
+slug = "skattepliktiga-ersattningar-ej-sociala"
+
+[[variable]]
+native_id = "128.28808"
+slug = "referensperiod"
+
+[[variable]]
+native_id = "128.29246"
+slug = "antal-personer-vid-arbetsstallet"
+
+[[variable]]
+native_id = "128.41336"
+slug = "antal-dagar-sjoinkomst"
+
+# register 130
+
+[[variable]]
+native_id = "128.1073.justering"
+slug = "rattad-post"
+
+[[variable]]
+native_id = "128.22251.pensforman"
+slug = "forman-som-pension"
+
+[[variable]]
+native_id = "128.41328.ambassadanstsv"
+slug = "ambassad-anstalld-sverige"
+
+[[variable]]
+native_id = "128.6060.bilers"
+slug = "bilersattning"
+
+[[variable]]
+native_id = "128.6060.bilers-fel"
+slug = "bilersattning-fel"
+
+[[variable]]
+native_id = "128.6092.bostforman"
+slug = "bostadsforman"
+
+[[variable]]
+native_id = "128.6092.bostforman-fel"
+slug = "bostadsforman-fel"
+
+# register 132

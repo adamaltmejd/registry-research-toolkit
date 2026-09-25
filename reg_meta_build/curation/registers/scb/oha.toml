@@ -1,0 +1,81 @@
+[register]
+provider = "scb"
+slug = "oha"
+native_id = "143"
+
+[[variant]]
+native_id = "143.209"
+slug = "outhyrda-allmannyttiga"
+display_group = "Outhyrda bostadslägenheter i allmännyttiga bostadsföretag"
+panel_entity_key = "foretagsidentifikation"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "143.210"
+slug = "outhyrda-privatagda"
+display_group = "Outhyrda bostadslägenheter i privatägda bostadsföretag"
+panel_entity_key = "taxeringsid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Höstsådda arealer
+
+[[variable]]
+native_id = "143.1970"
+slug = "foretagsidentifikation"
+
+
+[[variable]]
+native_id = "143.7860"
+slug = "taxeringsid"
+
+
+[[variable]]
+native_id = "143.2267"
+slug = "ursprungligt-byggar"
+
+[[variable]]
+native_id = "143.2295"
+slug = "antal-per-lagenhetstyp"
+
+[[variable]]
+native_id = "143.2297"
+slug = "undersokningsomgang"
+
+[[variable]]
+native_id = "143.2298"
+slug = "ursprunglig-byggnadsperiod"
+
+[[variable]]
+native_id = "143.2304"
+slug = "klassificering-av-lagenhetsbestandet"
+
+[[variable]]
+native_id = "143.2323"
+slug = "antal-bearbetade-svar"
+
+[[variable]]
+native_id = "143.19086"
+slug = "antal-lagenheter"
+
+# register 145 (hostsadda-arealer)
+
+[[variable]]
+native_id = "143.2299"
+slug = "lagenhetstyp"
+
+[[variable]]
+native_id = "143.2302"
+slug = "kommungruppering-regioner"
+
+[[variable]]
+native_id = "143.2314"
+slug = "taxeringsenhet-id"
+
+[[variable]]
+native_id = "143.2325"
+slug = "urval"
+
+# register 145

@@ -10,3 +10,952 @@ label = "scb/tidsanvandning/kommunnamn"
 [[code_label_pair]]
 code = "scb/tidsanvandning/lan"
 label = "scb/tidsanvandning/lansnamn"
+
+[[variant]]
+native_id = "367.1321"
+slug = "tidsanvandningsundersokningen"
+display_group = "Tidsanvändningsundersökningen"
+
+
+[[variant]]
+native_id = "367.1666"
+slug = "tidsstudien"
+display_group = "Tidsstudien"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Kommunernas aktivitetsansvar
+
+[[variable]]
+native_id = "367.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "367.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "367.3223"
+slug = "antal-individer-kosthushallet"
+
+[[variable]]
+native_id = "367.5068"
+slug = "huvudsaklig-sysselsattning"
+
+[[variable]]
+native_id = "367.7018"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "367.11393"
+slug = "individvikt"
+
+[[variable]]
+native_id = "367.14720"
+slug = "urvalskod"
+
+[[variable]]
+native_id = "367.21665"
+slug = "fast-tidsbegransad-anstallning"
+
+[[variable]]
+native_id = "367.36285"
+slug = "vilja-mer-vardagar"
+
+[[variable]]
+native_id = "367.36288"
+slug = "umgas-med-vanner-och-bekanta"
+
+[[variable]]
+native_id = "367.36299"
+slug = "antal-barn-under-19-ar"
+
+[[variable]]
+native_id = "367.36353"
+slug = "ensam-vid-aktiviteten"
+
+[[variable]]
+native_id = "367.36359"
+slug = "narvarande-person"
+
+[[variable]]
+native_id = "367.36375"
+slug = "nar-fyllde-svarande-i-dagboken"
+
+[[variable]]
+native_id = "367.36376"
+slug = "antal-dagar-efter-dagboksdagen"
+
+[[variable]]
+native_id = "367.36380"
+slug = "nattsomn-andra-natten"
+
+[[variable]]
+native_id = "367.36382"
+slug = "vaknade-pa-morgonen"
+
+[[variable]]
+native_id = "367.36383"
+slug = "stressad-under-bokforingsdagen"
+
+[[variable]]
+native_id = "367.36384"
+slug = "normal-dag"
+
+[[variable]]
+native_id = "367.36385"
+slug = "positiv-upplevelse"
+
+[[variable]]
+native_id = "367.36386"
+slug = "negativ-upplevelse"
+
+[[variable]]
+native_id = "367.36387"
+slug = "jobb-eller-studier"
+
+[[variable]]
+native_id = "367.36388"
+slug = "typ-av-dagboksdag"
+
+[[variable]]
+native_id = "367.36390"
+slug = "forvarvsarbete-totalt"
+
+[[variable]]
+native_id = "367.36391"
+slug = "arbetsresor"
+
+[[variable]]
+native_id = "367.36392"
+slug = "arbetsresor-direkt"
+
+[[variable]]
+native_id = "367.36393"
+slug = "arbetsresor-med-arenden"
+
+[[variable]]
+native_id = "367.36394"
+slug = "tjansteresa"
+
+[[variable]]
+native_id = "367.36395"
+slug = "forvarvsarbete-exkl-resor"
+
+[[variable]]
+native_id = "367.36396"
+slug = "overtidsarbete-i-huvudyrke"
+
+[[variable]]
+native_id = "367.36397"
+slug = "ordinarie-arbete-i-huvudyrke"
+
+[[variable]]
+native_id = "367.36398"
+slug = "bisyssla-extraknack"
+
+[[variable]]
+native_id = "367.36399"
+slug = "maltider-i-samband-med-arbete"
+
+[[variable]]
+native_id = "367.36400"
+slug = "annan-tid-pa-arbetsplatsen"
+
+[[variable]]
+native_id = "367.36401"
+slug = "hemarbete-totalt"
+
+[[variable]]
+native_id = "367.36402"
+slug = "resor-i-samband-med-hemarbete"
+
+[[variable]]
+native_id = "367.36403"
+slug = "resor-underhalls-hushallsarbete"
+
+[[variable]]
+native_id = "367.36404"
+slug = "resor-omsorg-egna-barn"
+
+[[variable]]
+native_id = "367.36405"
+slug = "resor-hjalp-vuxna-hushall"
+
+[[variable]]
+native_id = "367.36406"
+slug = "resor-inkop-varor-tjanster"
+
+[[variable]]
+native_id = "367.36407"
+slug = "resor-hemarbete-ovriga"
+
+[[variable]]
+native_id = "367.36408"
+slug = "resor-hemarbete-ospecificerade"
+
+[[variable]]
+native_id = "367.36409"
+slug = "hushallsarbete-totalt"
+
+[[variable]]
+native_id = "367.36410"
+slug = "brodbakning"
+
+[[variable]]
+native_id = "367.36411"
+slug = "matlagning-tid"
+
+[[variable]]
+native_id = "367.36414"
+slug = "egenproduktion-av-matvaror"
+
+[[variable]]
+native_id = "367.36415"
+slug = "diskning-avdukning"
+
+[[variable]]
+native_id = "367.36416"
+slug = "stadning-av-bostaden"
+
+[[variable]]
+native_id = "367.36417"
+slug = "tvatt-strykning"
+
+[[variable]]
+native_id = "367.36418"
+slug = "vard-tillverkning-av-klader"
+
+[[variable]]
+native_id = "367.36419"
+slug = "eldning-vedhuggning"
+
+[[variable]]
+native_id = "367.36420"
+slug = "ospecificerat-hushallsarbete"
+
+[[variable]]
+native_id = "367.36421"
+slug = "underhallsarbete-totalt"
+
+[[variable]]
+native_id = "367.36422"
+slug = "skotsel-av-tomt-och-tradgard"
+
+[[variable]]
+native_id = "367.36423"
+slug = "rastning-av-hund"
+
+[[variable]]
+native_id = "367.36424"
+slug = "annan-skotsel-av-sallskapsdjur"
+
+[[variable]]
+native_id = "367.36425"
+slug = "byggnadsarbeten-ombyggnader"
+
+[[variable]]
+native_id = "367.36426"
+slug = "reparationer-underhall-i-hemmet"
+
+[[variable]]
+native_id = "367.36427"
+slug = "reparation-underhall-av-fordon"
+
+[[variable]]
+native_id = "367.36428"
+slug = "reparation-underhall-av-annat"
+
+[[variable]]
+native_id = "367.36429"
+slug = "ospecificerat-underhall"
+
+[[variable]]
+native_id = "367.36430"
+slug = "omsorg-om-egna-barn-totalt"
+
+[[variable]]
+native_id = "367.36431"
+slug = "tillsyn-och-hjalp-till-barn"
+
+[[variable]]
+native_id = "367.36432"
+slug = "hjalp-med-laxlasning"
+
+[[variable]]
+native_id = "367.36433"
+slug = "lek-med-barn"
+
+[[variable]]
+native_id = "367.36434"
+slug = "samtal-med-barn"
+
+[[variable]]
+native_id = "367.36435"
+slug = "hoglasning-for-barn"
+
+[[variable]]
+native_id = "367.36436"
+slug = "foraldramoten-m-m"
+
+[[variable]]
+native_id = "367.36437"
+slug = "narvaro-vid-barns-aktiviteter"
+
+[[variable]]
+native_id = "367.36438"
+slug = "annan-omsorg-om-barn"
+
+[[variable]]
+native_id = "367.36439"
+slug = "omsorg-om-andra-totalt"
+
+[[variable]]
+native_id = "367.36440"
+slug = "hjalp-till-vuxna-i-eget-hushall"
+
+[[variable]]
+native_id = "367.36441"
+slug = "hjalp-till-barn-i-andras-hushall"
+
+[[variable]]
+native_id = "367.36442"
+slug = "annan-hjalp-till-andras-hushall"
+
+[[variable]]
+native_id = "367.36443"
+slug = "besok-hos-patient-pa-sjukhus"
+
+[[variable]]
+native_id = "367.36444"
+slug = "ospecificerad-omsorg-om-andra"
+
+[[variable]]
+native_id = "367.36445"
+slug = "inkop-varor-tjanster-totalt"
+
+[[variable]]
+native_id = "367.36446"
+slug = "inkop-av-dagligvaror"
+
+[[variable]]
+native_id = "367.36447"
+slug = "inkop-av-andra-varor"
+
+[[variable]]
+native_id = "367.36448"
+slug = "medicinsk-behandling-utom-hemmet"
+
+[[variable]]
+native_id = "367.36449"
+slug = "arenden-offentliga-inrattningar"
+
+[[variable]]
+native_id = "367.36450"
+slug = "andra-och-ospecificerade-arenden"
+
+[[variable]]
+native_id = "367.36451"
+slug = "annat-hemarbete"
+
+[[variable]]
+native_id = "367.36452"
+slug = "personliga-behov-totalt"
+
+[[variable]]
+native_id = "367.36453"
+slug = "resor-i-sb-med-personliga-behov"
+
+[[variable]]
+native_id = "367.36454"
+slug = "personlig-omvardnad-totalt"
+
+[[variable]]
+native_id = "367.36455"
+slug = "nattsomn"
+
+[[variable]]
+native_id = "367.36456"
+slug = "middagslur"
+
+[[variable]]
+native_id = "367.36457"
+slug = "sangliggande-p-g-a-sjukdom"
+
+[[variable]]
+native_id = "367.36458"
+slug = "personlig-hygien-av-pakladning"
+
+[[variable]]
+native_id = "367.36459"
+slug = "bastu-solarium"
+
+[[variable]]
+native_id = "367.36460"
+slug = "annan-personlig-omvardnad"
+
+[[variable]]
+native_id = "367.36461"
+slug = "maltider-totalt"
+
+[[variable]]
+native_id = "367.36462"
+slug = "maltider"
+
+[[variable]]
+native_id = "367.36463"
+slug = "kaffe-forfriskningar"
+
+[[variable]]
+native_id = "367.36464"
+slug = "studier-totalt"
+
+[[variable]]
+native_id = "367.36465"
+slug = "resor-i-samband-med-studier"
+
+[[variable]]
+native_id = "367.36466"
+slug = "resor-malinriktade-studier"
+
+[[variable]]
+native_id = "367.36467"
+slug = "resor-studiecirklar"
+
+[[variable]]
+native_id = "367.36468"
+slug = "resor-utbildning-ospecificerade"
+
+[[variable]]
+native_id = "367.36469"
+slug = "studier-exkl-resor"
+
+[[variable]]
+native_id = "367.36470"
+slug = "malinriktade-studier-lektioner"
+
+[[variable]]
+native_id = "367.36471"
+slug = "malinriktade-studier-hemarbete"
+
+[[variable]]
+native_id = "367.36472"
+slug = "ospecificerat-utbildning"
+
+[[variable]]
+native_id = "367.36473"
+slug = "studiecirklar-och-liknande"
+
+[[variable]]
+native_id = "367.36474"
+slug = "lasning-av-facklitteratur-o-dyl"
+
+[[variable]]
+native_id = "367.36475"
+slug = "ospecificerat-studiecirklar"
+
+[[variable]]
+native_id = "367.36476"
+slug = "ospecificerat-utbildning-studiecirklar"
+
+[[variable]]
+native_id = "367.36477"
+slug = "fri-tid-totalt"
+
+[[variable]]
+native_id = "367.36478"
+slug = "resor-i-sb-med-fri-tid"
+
+[[variable]]
+native_id = "367.36479"
+slug = "idrott-och-friluftsliv-totalt"
+
+[[variable]]
+native_id = "367.36480"
+slug = "promenader-i-skog-och-mark"
+
+[[variable]]
+native_id = "367.36481"
+slug = "andra-promenader"
+
+[[variable]]
+native_id = "367.36482"
+slug = "jakt"
+
+[[variable]]
+native_id = "367.36483"
+slug = "fiske"
+
+[[variable]]
+native_id = "367.36484"
+slug = "idrott-motion-utomhus"
+
+[[variable]]
+native_id = "367.36485"
+slug = "idrott-motion-inomhus"
+
+[[variable]]
+native_id = "367.36486"
+slug = "bilutflykter-tid"
+
+[[variable]]
+native_id = "367.36487"
+slug = "annat-idrotts-eller-friluftsliv"
+
+[[variable]]
+native_id = "367.36488"
+slug = "foreningsverksamhet-m-m-totalt"
+
+[[variable]]
+native_id = "367.36489"
+slug = "foreningsverksamhet-ej-religios"
+
+[[variable]]
+native_id = "367.36490"
+slug = "religios-verksamhet"
+
+[[variable]]
+native_id = "367.36491"
+slug = "underhallning-kultur-totalt"
+
+[[variable]]
+native_id = "367.36492"
+slug = "askadare-vid-idrottsevenemang"
+
+[[variable]]
+native_id = "367.36493"
+slug = "biobesok"
+
+[[variable]]
+native_id = "367.36494"
+slug = "teater-konsert-utstallningar"
+
+[[variable]]
+native_id = "367.36495"
+slug = "biblioteksbesok-tid"
+
+[[variable]]
+native_id = "367.36496"
+slug = "annan-underhallning"
+
+[[variable]]
+native_id = "367.36497"
+slug = "social-samvaro-totalt"
+
+[[variable]]
+native_id = "367.36498"
+slug = "fest-kalas"
+
+[[variable]]
+native_id = "367.36499"
+slug = "besok-hos-slakt-och-vanner"
+
+[[variable]]
+native_id = "367.36500"
+slug = "besok-av-slakt-och-vanner"
+
+[[variable]]
+native_id = "367.36501"
+slug = "samtal"
+
+[[variable]]
+native_id = "367.36502"
+slug = "telefonsamtal"
+
+[[variable]]
+native_id = "367.36503"
+slug = "besok-pa-restaurang-cafe-bar"
+
+[[variable]]
+native_id = "367.36504"
+slug = "dans-diskotek"
+
+[[variable]]
+native_id = "367.36505"
+slug = "spel-sallskapslekar"
+
+[[variable]]
+native_id = "367.36506"
+slug = "andra-sociala-sammankomster"
+
+[[variable]]
+native_id = "367.36507"
+slug = "tv-och-radio-totalt"
+
+[[variable]]
+native_id = "367.36508"
+slug = "tv-videotittande"
+
+[[variable]]
+native_id = "367.36509"
+slug = "radiolyssnande"
+
+[[variable]]
+native_id = "367.36510"
+slug = "ospecificerad-radio-eller-tv"
+
+[[variable]]
+native_id = "367.36511"
+slug = "lasning-totalt"
+
+[[variable]]
+native_id = "367.36512"
+slug = "dagstidningslasning"
+
+[[variable]]
+native_id = "367.36513"
+slug = "veckotidningslasning"
+
+[[variable]]
+native_id = "367.36514"
+slug = "boklasning"
+
+[[variable]]
+native_id = "367.36515"
+slug = "ovrig-ospecificerad-lasning"
+
+[[variable]]
+native_id = "367.36516"
+slug = "hobbies-totalt"
+
+[[variable]]
+native_id = "367.36517"
+slug = "stickning"
+
+[[variable]]
+native_id = "367.36518"
+slug = "annat-handarbete"
+
+[[variable]]
+native_id = "367.36519"
+slug = "annan-datoranvandning"
+
+[[variable]]
+native_id = "367.36520"
+slug = "tekniska-hobbies-samling"
+
+[[variable]]
+native_id = "367.36521"
+slug = "spel-lek-ensam"
+
+[[variable]]
+native_id = "367.36522"
+slug = "internetanvandning"
+
+[[variable]]
+native_id = "367.36523"
+slug = "penningspel"
+
+[[variable]]
+native_id = "367.36524"
+slug = "lyssna-pa-cd-bandspelare"
+
+[[variable]]
+native_id = "367.36525"
+slug = "musikutovning"
+
+[[variable]]
+native_id = "367.36526"
+slug = "andra-hobbies"
+
+[[variable]]
+native_id = "367.36527"
+slug = "ovrig-fri-tid-totalt"
+
+[[variable]]
+native_id = "367.36528"
+slug = "vila-meditera-gora-ingenting"
+
+[[variable]]
+native_id = "367.36529"
+slug = "ovrig-och-ospecificerad-fri-tid"
+
+[[variable]]
+native_id = "367.36530"
+slug = "ovrigt-okodbart-totalt"
+
+[[variable]]
+native_id = "367.36531"
+slug = "ospecificerade-resor"
+
+[[variable]]
+native_id = "367.36532"
+slug = "forde-tidsdagbok"
+
+[[variable]]
+native_id = "367.36533"
+slug = "ej-uppgiven-eller-okodbar-akt"
+
+[[variable]]
+native_id = "367.36534"
+slug = "total-tid"
+
+[[variable]]
+native_id = "367.36537"
+slug = "individvikt-tid"
+
+[[variable]]
+native_id = "367.38725"
+slug = "ensamhushall"
+
+[[variable]]
+native_id = "367.38750"
+slug = "tidbrist-istallet"
+
+[[variable]]
+native_id = "367.39403"
+slug = "ospecificerat-arbete"
+
+[[variable]]
+native_id = "367.39404"
+slug = "ospecificerad-annan-tid-arbetsplatsen"
+
+[[variable]]
+native_id = "367.39405"
+slug = "ospecificerade-maltider"
+
+[[variable]]
+native_id = "367.39406"
+slug = "promenader-ovriga"
+
+[[variable]]
+native_id = "367.39407"
+slug = "promenader-i-skog-och-mark-ta"
+
+[[variable]]
+native_id = "367.39408"
+slug = "spel-och-lek-ensam"
+
+[[variable]]
+native_id = "367.40265"
+slug = "urval-ta1990"
+
+[[variable]]
+native_id = "367.40373"
+slug = "ospecificerad-hjalp-andra-hushall"
+
+[[variable]]
+native_id = "367.45479"
+slug = "upplevd-halsa"
+
+[[variable]]
+native_id = "367.45482"
+slug = "svart-delta-aktiviteter-6-manader"
+
+# register 368 (kommunernas-aktivitetsansvar)
+
+[[variable]]
+native_id = "367.25026.f10"
+slug = "arbetade-timmar-per-vecka"
+
+[[variable]]
+native_id = "367.36389.f14"
+slug = "arbetstid-utomhus"
+
+[[variable]]
+native_id = "367.801.sun2000niva"
+slug = "utbildningsgrupp-enl-sun-2000"
+
+# register 371 (fasit)
+
+[[variable]]
+native_id = "367.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "367.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "367.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "367.388"
+slug = "antal-barn"
+
+[[variable]]
+native_id = "367.391"
+slug = "antal-barn-under-6-ar"
+
+[[variable]]
+native_id = "367.393"
+slug = "yngstabarn"
+
+[[variable]]
+native_id = "367.447"
+slug = "lansnamn"
+
+[[variable]]
+native_id = "367.1198"
+slug = "loneinkomst"
+
+[[variable]]
+native_id = "367.1286"
+slug = "antal-barn-0-17-ar"
+
+[[variable]]
+native_id = "367.1290"
+slug = "sammanraknad-forvarvsinkomst-familj"
+
+[[variable]]
+native_id = "367.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "367.1618"
+slug = "loneinkomst-familj"
+
+[[variable]]
+native_id = "367.2474"
+slug = "datum-inkommet-svar"
+
+[[variable]]
+native_id = "367.3188"
+slug = "hushallstyp"
+
+[[variable]]
+native_id = "367.3195"
+slug = "h-region"
+
+[[variable]]
+native_id = "367.3270"
+slug = "sysselsattningstyp"
+
+[[variable]]
+native_id = "367.4656"
+slug = "insamlingsmetod"
+
+[[variable]]
+native_id = "367.4677"
+slug = "sysselsattningsstatus"
+
+[[variable]]
+native_id = "367.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "367.8772"
+slug = "utbildningsinriktning-individen"
+
+[[variable]]
+native_id = "367.9063"
+slug = "antal-barn-13-18-ar"
+
+[[variable]]
+native_id = "367.9072"
+slug = "antal-barn-7-18-ar"
+
+[[variable]]
+native_id = "367.11766"
+slug = "korkort-bil"
+
+[[variable]]
+native_id = "367.13564"
+slug = "cd-spelare"
+
+[[variable]]
+native_id = "367.13575"
+slug = "forradsutrymme"
+
+[[variable]]
+native_id = "367.15889"
+slug = "dator-hemma"
+
+[[variable]]
+native_id = "367.15937"
+slug = "datum-for-svar"
+
+[[variable]]
+native_id = "367.17357"
+slug = "timlon"
+
+[[variable]]
+native_id = "367.17473"
+slug = "kalibreringsvikt"
+
+[[variable]]
+native_id = "367.18102"
+slug = "arbetsinkomst-familj"
+
+[[variable]]
+native_id = "367.21517"
+slug = "disponibel-inkomst-familj-2004"
+
+[[variable]]
+native_id = "367.24584"
+slug = "disponibel-inkomst-individ-2004"
+
+[[variable]]
+native_id = "367.32773"
+slug = "antal-personer-i-hushallet"
+
+[[variable]]
+native_id = "367.35581"
+slug = "relation-till-urvalsperson"
+
+[[variable]]
+native_id = "367.35783"
+slug = "internet-i-bostaden"
+
+[[variable]]
+native_id = "367.35992"
+slug = "antal-rum"
+
+[[variable]]
+native_id = "367.36224"
+slug = "procent-av-heltid"
+
+[[variable]]
+native_id = "367.36303"
+slug = "antal-barn-under-7-ar"
+
+[[variable]]
+native_id = "367.38042"
+slug = "naringsgren-sni-2-siffer"
+
+[[variable]]
+native_id = "367.40298"
+slug = "antal-barn-0-24-ar"
+
+[[variable]]
+native_id = "367.42371"
+slug = "yngsta-barnets-alder"
+
+# register 368
+
+[[variable]]
+native_id = "367.125.cfviki00"
+slug = "sammanraknad-forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "367.1378.born"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "367.19979.idbo"
+slug = "aktiv-i-boendeforening"
+
+[[variable]]
+native_id = "367.2686.lonman"
+slug = "manadslon"
+
+[[variable]]
+native_id = "367.2768.bostadstyptxt"
+slug = "bostadstyp"
+
+[[variable]]
+native_id = "367.2768.hustyp"
+slug = "bostadstyp-2"
+
+[[variable]]
+native_id = "367.28679.syss"
+slug = "sysselsattning-aktivitet"
+
+[[variable]]
+native_id = "367.3131.lonform"
+slug = "loneform"
+
+# register 368

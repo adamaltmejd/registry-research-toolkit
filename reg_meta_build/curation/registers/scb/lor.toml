@@ -1,0 +1,95 @@
+[register]
+provider = "scb"
+slug = "lor"
+native_id = "411"
+
+[[variant]]
+native_id = "411.1750"
+slug = "lediga-jobb-lor"
+display_group = "Lediga jobb (LOR)"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "411.1751"
+slug = "rekryteringserfarenheter"
+display_group = "Rekryteringserfarenheter och rekryteringsbehov (LOR)"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "411.1755"
+slug = "rekryteringserfarenheter-yrke"
+display_group = "Rekryteringserfarenheter och rekryteringsbehov per yrke (LOR)"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Register över självförsörjning
+
+[[variable]]
+native_id = "411.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "411.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "411.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "411.690"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "411.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "411.4614"
+slug = "urvalsstorlek-per-stratum"
+
+[[variable]]
+native_id = "411.4973"
+slug = "lediga-jobb-obemannade"
+
+[[variable]]
+native_id = "411.4982"
+slug = "lediga-jobb-arbetsstalle"
+
+[[variable]]
+native_id = "411.4983"
+slug = "lediga-jobb-vikarie"
+
+[[variable]]
+native_id = "411.19052"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "411.23815"
+slug = "tidsatgang-besvara-blankett"
+
+[[variable]]
+native_id = "411.28853"
+slug = "statuskod"
+
+[[variable]]
+native_id = "411.46661"
+slug = "antal-rampopulation-per-stratum"
+
+[[variable]]
+native_id = "411.46663"
+slug = "antal-svarande-per-stratum"
+
+[[variable]]
+native_id = "411.48348"
+slug = "antal-anstallda-enligt-ramen"
+
+# register 10

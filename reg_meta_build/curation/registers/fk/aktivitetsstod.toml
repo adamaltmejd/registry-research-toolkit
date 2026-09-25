@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "aktivitetsstod"
+native_id = "5184724777840514491"
+
+[[variant]]
+native_id = "5184724777840514491.6697432127942940279"
+slug = "_default"
+display_group = "Aktivitetsstöd"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Barnbidrag
+
+[[variable]]
+native_id = "5184724777840514491.personnummer"
+slug = "lopnr-personnr"

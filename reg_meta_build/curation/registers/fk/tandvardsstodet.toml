@@ -1,0 +1,105 @@
+[register]
+provider = "fk"
+slug = "tandvardsstodet"
+native_id = "7664376130118991107"
+
+[[variant]]
+native_id = "7664376130118991107.5077766157907221193"
+slug = "atgarder"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7664376130118991107.7671954325840591968"
+slug = "betalningar"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "betalningsdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7664376130118991107.5853774716918891216"
+slug = "abonnemang"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "manad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7664376130118991107.5617756065568718224"
+slug = "abonnemang-detaljerat"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "avtalsstart"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7664376130118991107.4978493193100727668"
+slug = "ersattningsperioder"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnummer"
+panel_time_key = "ersperiod-startdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7664376130118991107.7488921345828009336"
+slug = "efterhandskontroll"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "besoksdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7664376130118991107.5778824113583968346"
+slug = "arenden-detaljerat"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "besoksdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7664376130118991107.6332006637200314922"
+slug = "arende-atgard"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "aro-sekvnr"
+panel_time_key = "beslutstidpunkt"
+panel_time_grain = "row"
+
+# Underhållsstöd
+
+[[variable]]
+native_id = "7664376130118991107.LOPNR_ARENDE_ID"
+slug = "lopnr-arende-id"
+
+
+[[variable]]
+native_id = "7664376130118991107.LOPNUMMER"
+slug = "lopnummer"
+
+
+[[variable]]
+native_id = "7664376130118991107.ARO_SEKVNR"
+slug = "aro-sekvnr"
+
+
+[[variable]]
+native_id = "7664376130118991107.HCP_INTERVALL_0"
+slug = "tandvard-ersattning-intervall-0"
+
+[[variable]]
+native_id = "7664376130118991107.HCP_INTERVALL_1"
+slug = "tandvard-ersattning-intervall-1"
+
+[[variable]]
+native_id = "7664376130118991107.HCP_INTERVALL_2"
+slug = "tandvard-ersattning-intervall-2"
+# register 8881065292063230279

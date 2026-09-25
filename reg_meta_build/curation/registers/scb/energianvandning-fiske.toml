@@ -11,3 +11,96 @@ key = "signal"
 label = "Fartygets identitetssnummer"
 axis = "ordinal"
 members = [{ variable = "signal1", value = "1", label = "1" }, { variable = "signal2", value = "2", label = "2" }, { variable = "signal3", value = "3", label = "3" }, { variable = "signal4", value = "4", label = "4" }]
+
+[[variant]]
+native_id = "196.276"
+slug = "_default"
+display_group = "Energianvändningen inom fiskesektorn"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Intäkts- och kostnadsundersökning för flerbostadshus (IKU)
+
+[[variable]]
+native_id = "196.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "196.1648"
+slug = "fiskefartyg-antal"
+
+[[variable]]
+native_id = "196.1649"
+slug = "fiskefartygsagarens-namn"
+
+[[variable]]
+native_id = "196.1651"
+slug = "saltvatten-sotvatten"
+
+[[variable]]
+native_id = "196.1653"
+slug = "kommentar-uppgiftslamnare"
+
+[[variable]]
+native_id = "196.1658"
+slug = "telefon-fax-epost"
+
+[[variable]]
+native_id = "196.1723"
+slug = "inkommen-blankett-datum"
+
+[[variable]]
+native_id = "196.19754"
+slug = "telefonnummer-till-kontaktperson"
+
+# register 197 (iku)
+
+[[variable]]
+native_id = "196.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "196.1654"
+slug = "kontaktperson-mobilnr"
+
+[[variable]]
+native_id = "196.1655"
+slug = "kontaktpersonens-namn"
+
+[[variable]]
+native_id = "196.2598"
+slug = "bransleslag-varmevarden"
+
+[[variable]]
+native_id = "196.3306"
+slug = "imputeringskod"
+
+# register 197
+
+[[variable]]
+native_id = "196.1721.forbr"
+slug = "bransleforbrukning"
+
+[[variable]]
+native_id = "196.1721.forbr-mwh"
+slug = "bransleforbrukning-mwh"
+
+[[variable]]
+native_id = "196.1721.forbr-naturligt-matt"
+slug = "bransleforbrukning-naturligt-matt"
+
+[[variable]]
+native_id = "196.1721.forbrukning"
+slug = "bransleforbrukning-2"
+
+[[variable]]
+native_id = "196.83.bid"
+slug = "bransleslag"
+
+[[variable]]
+native_id = "196.83.btext"
+slug = "bransleslag-text"
+
+# register 199

@@ -1,0 +1,137 @@
+[register]
+provider = "scb"
+slug = "slp"
+native_id = "50"
+
+[[variant]]
+native_id = "50.171"
+slug = "_default"
+display_group = "Lönestrukturstatistik, privat sektor (SLP)"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Lönestrukturstatistik, regioner (SLR)
+
+[[variable]]
+native_id = "50.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "50.65"
+slug = "utbildningsinriktning"
+
+[[variable]]
+native_id = "50.66"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "50.120"
+slug = "yrkesuppgift"
+
+[[variable]]
+native_id = "50.5543"
+slug = "lopnummer"
+
+[[variable]]
+native_id = "50.34100"
+slug = "manadslon-formaner"
+
+[[variable]]
+native_id = "50.34101"
+slug = "lonesumma-formaner"
+
+# register 51 (slr)
+
+[[variable]]
+native_id = "50.31093.mformaner"
+slug = "manadsforman"
+
+[[variable]]
+native_id = "50.31093.sumformaner"
+slug = "sumforman"
+
+# register 51 (slr)
+
+[[variable]]
+native_id = "50.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "50.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "50.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "50.753"
+slug = "examensar"
+
+[[variable]]
+native_id = "50.1641"
+slug = "naringsgren-arbetsstalle"
+
+[[variable]]
+native_id = "50.3081"
+slug = "imputering"
+
+[[variable]]
+native_id = "50.3098"
+slug = "faktiskt-arbetad-tid"
+
+[[variable]]
+native_id = "50.3117"
+slug = "personalkategori"
+
+[[variable]]
+native_id = "50.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "50.4031"
+slug = "storleksklass-pa-foretag"
+
+[[variable]]
+native_id = "50.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "50.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "50.5531"
+slug = "storleksklass-pa-arbetsstallet"
+
+[[variable]]
+native_id = "50.5546"
+slug = "manadslon-totallon"
+
+[[variable]]
+native_id = "50.5614"
+slug = "lonesumma-jour-beredskap"
+
+[[variable]]
+native_id = "50.5617"
+slug = "lonesumma-totalt"
+
+[[variable]]
+native_id = "50.5622"
+slug = "lonesumma-skift-ob"
+
+[[variable]]
+native_id = "50.5719"
+slug = "antal-overtidstimmar"
+
+[[variable]]
+native_id = "50.31094"
+slug = "antal-semesterdagar"
+
+[[variable]]
+native_id = "50.46223"
+slug = "anstallningstyp"
+
+# register 51

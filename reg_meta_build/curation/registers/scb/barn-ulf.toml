@@ -1,0 +1,490 @@
+[register]
+provider = "scb"
+slug = "barn-ulf"
+native_id = "405"
+
+[[variant]]
+native_id = "405.450"
+slug = "barn-ulf-10-18-ar"
+display_group = "Barn-ULF 10-18 år"
+panel_entity_key = "barnid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: personnr (Bakgrund: personnummer) lives only in the 2023 variant; the
+# child identity here is BarnID (Bakgrund: identitet).
+
+[[variant]]
+native_id = "405.1249"
+slug = "barn-ulf-12-18-ar"
+display_group = "Barn-ULF 12-18 år"
+panel_entity_key = "barnid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "405.1680"
+slug = "barn-ulf-12-18-ar-2023"
+display_group = "Barn-ULF 12-18 år, 2023–"
+panel_entity_key = "personnr-bakgrund"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Innovation i offentlig sektor
+
+[[variable]]
+native_id = "405.31177"
+slug = "barnid"
+
+
+[[variable]]
+native_id = "405.47167"
+slug = "personnr-bakgrund"
+
+
+[[variable]]
+native_id = "405.19144"
+slug = "skola-hjalp-med-laxorna"
+
+[[variable]]
+native_id = "405.19162"
+slug = "relationer-traffar-pappa"
+
+[[variable]]
+native_id = "405.19167"
+slug = "relationer-traffar-mamma"
+
+[[variable]]
+native_id = "405.19168"
+slug = "hushallssysslor-laga-mat"
+
+[[variable]]
+native_id = "405.19172"
+slug = "hushallssysslor-tvatta-klader"
+
+[[variable]]
+native_id = "405.19173"
+slug = "hushallssysslor-passa-syskon"
+
+[[variable]]
+native_id = "405.19174"
+slug = "hushallssysslor-handla-mat"
+
+[[variable]]
+native_id = "405.19175"
+slug = "hushallssysslor-utomhusarbete"
+
+[[variable]]
+native_id = "405.19176"
+slug = "hushallssysslor-timmar-per-vecka"
+
+[[variable]]
+native_id = "405.19177"
+slug = "fritid-lasa-bocker"
+
+[[variable]]
+native_id = "405.19185"
+slug = "ovrigt-mote-med-organisation"
+
+[[variable]]
+native_id = "405.19187"
+slug = "fritid-ha-kompisar-hemma"
+
+[[variable]]
+native_id = "405.19188"
+slug = "fritid-vara-hemma-hos-kompisar"
+
+[[variable]]
+native_id = "405.19189"
+slug = "fritid-traffa-kompisar-annanstans"
+
+[[variable]]
+native_id = "405.19190"
+slug = "fritid-trana-idrott-forening"
+
+[[variable]]
+native_id = "405.19191"
+slug = "fritid-annan-aktivitet-ej-idrott"
+
+[[variable]]
+native_id = "405.19193"
+slug = "fritid-besokt-teater"
+
+[[variable]]
+native_id = "405.19195"
+slug = "fritid-besokt-museum"
+
+[[variable]]
+native_id = "405.19196"
+slug = "fritid-besokt-bibliotek"
+
+[[variable]]
+native_id = "405.19209"
+slug = "trygghet-undvika-ungdomar"
+
+[[variable]]
+native_id = "405.19210"
+slug = "trygghet-undvika-vuxna"
+
+[[variable]]
+native_id = "405.19212"
+slug = "trygghet-hotad-i-bostadsomradet"
+
+[[variable]]
+native_id = "405.19213"
+slug = "trygghet-i-bostadsomradet-dagtid"
+
+[[variable]]
+native_id = "405.19214"
+slug = "trygghet-bostadsomradet-kvallstid"
+
+[[variable]]
+native_id = "405.19216"
+slug = "trygghet-skolvagen"
+
+[[variable]]
+native_id = "405.19217"
+slug = "trygghet-klassrummet"
+
+[[variable]]
+native_id = "405.19218"
+slug = "trygghet-rasterna"
+
+[[variable]]
+native_id = "405.19220"
+slug = "skola-hjalp-av-larare"
+
+[[variable]]
+native_id = "405.19226"
+slug = "skola-nara-van-i-klassen"
+
+[[variable]]
+native_id = "405.19227"
+slug = "skola-oskyldigt-anklagad"
+
+[[variable]]
+native_id = "405.19228"
+slug = "skola-ingen-att-vara-med"
+
+[[variable]]
+native_id = "405.19230"
+slug = "skola-andra-slar-mig"
+
+[[variable]]
+native_id = "405.19232"
+slug = "skola-for-mycket-prov"
+
+[[variable]]
+native_id = "405.19233"
+slug = "skola-prov-samtidigt-amnen"
+
+[[variable]]
+native_id = "405.19234"
+slug = "skola-lugnt-i-klassrummet"
+
+[[variable]]
+native_id = "405.19235"
+slug = "skola-lugnt-i-skolmatsalen"
+
+[[variable]]
+native_id = "405.19236"
+slug = "skola-nagon-i-klassen-mobbad"
+
+[[variable]]
+native_id = "405.19237"
+slug = "skola-illa-behandlad-av-larare"
+
+[[variable]]
+native_id = "405.19238"
+slug = "skola-svart-hinna-ata-pa-lunchen"
+
+[[variable]]
+native_id = "405.19239"
+slug = "skola-toaletter-rena-fungerar"
+
+[[variable]]
+native_id = "405.19242"
+slug = "hushallssysslor-gora-frukost"
+
+[[variable]]
+native_id = "405.19244"
+slug = "fritid-tranat-pa-egen-hand"
+
+[[variable]]
+native_id = "405.19250"
+slug = "relationer-hemma-vill-veta"
+
+[[variable]]
+native_id = "405.19251"
+slug = "relationer-bestamma-hemma"
+
+[[variable]]
+native_id = "405.19256"
+slug = "relationer-pratar-aldre-syskon"
+
+[[variable]]
+native_id = "405.19257"
+slug = "relationer-pratar-yngre-syskon"
+
+[[variable]]
+native_id = "405.19258"
+slug = "relationer-pratar-med-slakting"
+
+[[variable]]
+native_id = "405.19259"
+slug = "relationer-pratar-med-larare"
+
+[[variable]]
+native_id = "405.19260"
+slug = "relationer-pratar-skolskoterska"
+
+[[variable]]
+native_id = "405.19261"
+slug = "relationer-pratar-med-tjejkompis"
+
+[[variable]]
+native_id = "405.19262"
+slug = "halsa-pratar-med-killkompis"
+
+[[variable]]
+native_id = "405.19263"
+slug = "relationer-pratar-pojkvan-flickvan"
+
+[[variable]]
+native_id = "405.19264"
+slug = "relationer-pratar-kompis-foralder"
+
+[[variable]]
+native_id = "405.19265"
+slug = "relationer-pratar-nagon-annan"
+
+[[variable]]
+native_id = "405.19268"
+slug = "relationer-pratar-inte-med-nagon"
+
+[[variable]]
+native_id = "405.19277"
+slug = "relationer-kanner-kompis-foraldrar"
+
+[[variable]]
+native_id = "405.19281"
+slug = "halsa-bra-humor"
+
+[[variable]]
+native_id = "405.19282"
+slug = "halsa-svart-att-koncentrera-sig"
+
+[[variable]]
+native_id = "405.19283"
+slug = "halsa-spand-och-nervos"
+
+[[variable]]
+native_id = "405.19285"
+slug = "relationer-pratar-med-mamma"
+
+[[variable]]
+native_id = "405.19286"
+slug = "halsa-ledsen-eller-nere"
+
+[[variable]]
+native_id = "405.19287"
+slug = "relationer-pratar-med-pappa"
+
+[[variable]]
+native_id = "405.19288"
+slug = "halsa-arg"
+
+[[variable]]
+native_id = "405.19289"
+slug = "halsa-pratar-med-mammas-sambo"
+
+[[variable]]
+native_id = "405.19290"
+slug = "halsa-nojd-med-mig-sjalv"
+
+[[variable]]
+native_id = "405.19291"
+slug = "halsa-pratar-med-pappas-sambo"
+
+[[variable]]
+native_id = "405.19297"
+slug = "trygghet-kanner-manga-omradet"
+
+[[variable]]
+native_id = "405.19298"
+slug = "halsa-sur-och-irriterad"
+
+[[variable]]
+native_id = "405.19320"
+slug = "ekonomi-har-inte-nagot-av-detta"
+
+[[variable]]
+native_id = "405.19321"
+slug = "hushallssysslor-hjalper-inte-hemma"
+
+[[variable]]
+native_id = "405.19322"
+slug = "fritid-inget-av-detta"
+
+[[variable]]
+native_id = "405.19325"
+slug = "ovrigt-inte-protesterat-namnda-satt-2"
+
+[[variable]]
+native_id = "405.19328"
+slug = "skola-arskurs"
+
+[[variable]]
+native_id = "405.19329"
+slug = "bakgrund-barnets-familjetyp"
+
+[[variable]]
+native_id = "405.19333"
+slug = "bakgrund-barnets-boende"
+
+[[variable]]
+native_id = "405.21438"
+slug = "skola-elever-visar-inte-gillar-mig"
+
+[[variable]]
+native_id = "405.21448"
+slug = "fritid-tid-for-internet-vardag"
+
+[[variable]]
+native_id = "405.21451"
+slug = "fritid-traffa-kompisar-online"
+
+[[variable]]
+native_id = "405.21452"
+slug = "halsa-hur-jag-mar"
+
+[[variable]]
+native_id = "405.21453"
+slug = "relationer-na-pappa-pa-jobbet"
+
+[[variable]]
+native_id = "405.21454"
+slug = "relationer-na-mamma-pa-jobbet"
+
+[[variable]]
+native_id = "405.21457"
+slug = "relationer-noga-med-var-jag-ar"
+
+[[variable]]
+native_id = "405.21458"
+slug = "fritid-tv-program-film-vardag"
+
+[[variable]]
+native_id = "405.21459"
+slug = "fritid-tv-dataspel-vardag"
+
+[[variable]]
+native_id = "405.21460"
+slug = "trygghet-krankning-natet"
+
+[[variable]]
+native_id = "405.21461"
+slug = "skola-takten-pa-skolarbetet"
+
+[[variable]]
+native_id = "405.21462"
+slug = "stress-for-lite-lektioner"
+
+[[variable]]
+native_id = "405.21463"
+slug = "skola-stress-laxor-prov"
+
+[[variable]]
+native_id = "405.21484"
+slug = "fritid-folja-nyheterna"
+
+[[variable]]
+native_id = "405.21485"
+slug = "fritid-vara-helt-ledig"
+
+[[variable]]
+native_id = "405.36138"
+slug = "bakgrund-artal"
+
+[[variable]]
+native_id = "405.36140"
+slug = "bakgrund-fodelseland"
+
+[[variable]]
+native_id = "405.37774"
+slug = "bakgrund-kommun"
+
+[[variable]]
+native_id = "405.47166"
+slug = "bakgrund-kommun-2"
+
+[[variable]]
+native_id = "405.47174"
+slug = "bakgrund-utlandsk-svensk"
+
+[[variable]]
+native_id = "405.47197"
+slug = "berakning-urvalsram-stratum"
+
+[[variable]]
+native_id = "405.49067"
+slug = "ekonomi-ha-rad-100kr"
+
+[[variable]]
+native_id = "405.49370"
+slug = "skola-grundskola-gymnasieskola"
+
+[[variable]]
+native_id = "405.49374"
+slug = "bakgrund-sysselsattning"
+
+[[variable]]
+native_id = "405.49406"
+slug = "bakgrund-sei-foralderns-make"
+
+[[variable]]
+native_id = "405.49407"
+slug = "bakgrund-sei-foralder-i-ulf"
+
+[[variable]]
+native_id = "405.49418"
+slug = "bakgrund-utlandsk-svensk-foralder-ulf"
+
+[[variable]]
+native_id = "405.49420"
+slug = "bakgrund-utbildningsniva-foralder-ulf"
+
+[[variable]]
+native_id = "405.49421"
+slug = "bakgrund-utbildningsniva-foralderns-make"
+
+[[variable]]
+native_id = "405.49422"
+slug = "bakgrund-sysselsattning-foralder-ulf"
+
+[[variable]]
+native_id = "405.49423"
+slug = "bakgrund-sysselsattning-foralderns-make"
+
+[[variable]]
+native_id = "405.49435"
+slug = "ekonomi-arbetat-for-att-tjana-pengar-2"
+
+[[variable]]
+native_id = "405.49436"
+slug = "bakgrund-sei-hushallet"
+
+# register 407 (innovation-offentlig)
+
+[[variable]]
+native_id = "405.19207.work"
+slug = "ekonomi-arbetat-for-att-tjana-pengar"
+
+# register 408 (anst)
+
+[[variable]]
+native_id = "405.47165"
+slug = "inlamningsdatum"
+
+# register 407

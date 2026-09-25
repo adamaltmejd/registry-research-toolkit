@@ -6,3 +6,170 @@ native_id = "304"
 [[code_label_pair]]
 code = "scb/fritidshem/huvudman"
 label = "scb/fritidshem/huvudman-namn"
+
+[[variant]]
+native_id = "304.852"
+slug = "grundskola"
+display_group = "Grundskola"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "304.1536"
+slug = "anpassad-grundskola"
+display_group = "Anpassad grundskola"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "304.1537"
+slug = "specialskola"
+display_group = "Specialskola"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Grundskola: nationella prov åk 3
+
+[[variable]]
+native_id = "304.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "304.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "304.6809"
+slug = "folkbokforingskommun"
+
+# register 305 (grundskola-prov-ak3)
+
+[[variable]]
+native_id = "304.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "304.104"
+slug = "skolkod-fritidshem"
+
+[[variable]]
+native_id = "304.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "304.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "304.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "304.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "304.3635"
+slug = "skolans-namn"
+
+[[variable]]
+native_id = "304.4642"
+slug = "faderns-fodelseland"
+
+[[variable]]
+native_id = "304.4643"
+slug = "moderns-fodelseland"
+
+[[variable]]
+native_id = "304.15712"
+slug = "stodundervisning"
+
+[[variable]]
+native_id = "304.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "304.30366"
+slug = "skolenhetskod"
+
+[[variable]]
+native_id = "304.30654"
+slug = "skolenhetens-namn"
+
+[[variable]]
+native_id = "304.30657"
+slug = "avdelningsbeteckning"
+
+[[variable]]
+native_id = "304.32721"
+slug = "distansundervisning"
+
+[[variable]]
+native_id = "304.35887"
+slug = "nyligen-invandrad"
+
+[[variable]]
+native_id = "304.40103"
+slug = "utbildningsform"
+
+[[variable]]
+native_id = "304.40833"
+slug = "central-insamlingsenhet"
+
+[[variable]]
+native_id = "304.40835"
+slug = "integrerad-sarskolelev"
+
+[[variable]]
+native_id = "304.40841"
+slug = "elevens-boendeform"
+
+[[variable]]
+native_id = "304.40842"
+slug = "kursplan-grundsarskola"
+
+[[variable]]
+native_id = "304.48467"
+slug = "anpassad-grundskola-kursplan"
+
+# register 305
+
+[[variable]]
+native_id = "304.8073.sun2000niva-1-mor"
+slug = "sun-niva-1-mor"
+
+[[variable]]
+native_id = "304.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "304.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "304.8073.sun2000niva-sv-mor"
+slug = "sun-niva-sv-mor"
+
+[[variable]]
+native_id = "304.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "304.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "304.8137.hman"
+slug = "huvudman"
+
+[[variable]]
+native_id = "304.8137.hmannamn"
+slug = "huvudman-namn"
+
+# register 305

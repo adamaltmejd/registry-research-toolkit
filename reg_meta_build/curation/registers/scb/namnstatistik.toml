@@ -1,0 +1,64 @@
+[register]
+provider = "scb"
+slug = "namnstatistik"
+native_id = "271"
+
+[[variant]]
+native_id = "271.639"
+slug = "folkbokforda-personer"
+display_group = "Folkbokförda - personer"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# (keep) 'namn' (names) is the variant's scope; register slug 'namnstatistik'
+# (name statistics) names the broader register — not a truncation.
+
+[[variant]]
+native_id = "271.640"
+slug = "folkbokforda-namn"
+display_group = "Folkbokförda - namn"
+
+
+[[variant]]
+native_id = "271.641"
+slug = "namngivna-nyfodda"
+display_group = "Namngivna nyfödda"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Omförhandling och byten av elavtal
+
+[[variable]]
+native_id = "271.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "271.327"
+slug = "efternamn"
+
+[[variable]]
+native_id = "271.16384"
+slug = "tilltalsnamn"
+
+[[variable]]
+native_id = "271.16398"
+slug = "antal-fornamn"
+
+[[variable]]
+native_id = "271.16399"
+slug = "antal-tilltalsnamn"
+
+[[variable]]
+native_id = "271.16400"
+slug = "antal-efternamn"
+
+# register 272 (elavtal-byten)
+
+[[variable]]
+native_id = "271.398"
+slug = "fornamn"
+
+# register 273

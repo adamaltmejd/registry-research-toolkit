@@ -1,0 +1,171 @@
+[register]
+provider = "scb"
+slug = "foretagsreg"
+native_id = "372"
+
+[[variant]]
+native_id = "372.1346"
+slug = "arbetsstalleenheter"
+display_group = "Arbetsställeenheter"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "372.1347"
+slug = "juridiska-enheter"
+display_group = "Juridiska enheter"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Continuing Vocational Training Statistics
+
+[[variable]]
+native_id = "372.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "372.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "372.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "372.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "372.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "372.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "372.781"
+slug = "benamning"
+
+[[variable]]
+native_id = "372.803"
+slug = "belagenhetsadress-postnr"
+
+[[variable]]
+native_id = "372.804"
+slug = "besokspostort"
+
+[[variable]]
+native_id = "372.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "372.1038"
+slug = "antal-firmor"
+
+[[variable]]
+native_id = "372.1130"
+slug = "koncernmoderns-orgnr"
+
+[[variable]]
+native_id = "372.1133"
+slug = "privat-publikt-foretag"
+
+[[variable]]
+native_id = "372.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "372.17484"
+slug = "antal-arbetsstallen"
+
+[[variable]]
+native_id = "372.17556"
+slug = "belagenhetsadress"
+
+[[variable]]
+native_id = "372.48346"
+slug = "antal-anstallda-arbetsstalle"
+
+[[variable]]
+native_id = "372.48347"
+slug = "antal-anstallda-juridisk-enhet"
+
+# register 374 (cvts)
+
+[[variable]]
+native_id = "372.55"
+slug = "omsattning-enligt-moms"
+
+[[variable]]
+native_id = "372.666"
+slug = "anstallda-storleksklass"
+
+[[variable]]
+native_id = "372.668"
+slug = "arbstalle-status"
+
+[[variable]]
+native_id = "372.832"
+slug = "hjalpverksamhetskod"
+
+[[variable]]
+native_id = "372.971"
+slug = "aktiekapital"
+
+[[variable]]
+native_id = "372.1009"
+slug = "arbetsgivarstatus"
+
+[[variable]]
+native_id = "372.1047"
+slug = "je-foretagsstatus"
+
+[[variable]]
+native_id = "372.1052"
+slug = "je-status"
+
+[[variable]]
+native_id = "372.1054"
+slug = "sateskommun"
+
+[[variable]]
+native_id = "372.1058"
+slug = "sateslan"
+
+[[variable]]
+native_id = "372.1134"
+slug = "bolagsstatus"
+
+[[variable]]
+native_id = "372.37573"
+slug = "huvudarbetsstalle"
+
+# register 374
+
+[[variable]]
+native_id = "372.1086.jenamn"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "372.1086.namn"
+slug = "namn-juridiska-enheten-2"
+
+[[variable]]
+native_id = "372.19.aregion"
+slug = "a-region"
+
+[[variable]]
+native_id = "372.413.coadress"
+slug = "c-o-adress"
+
+[[variable]]
+native_id = "372.814.fax"
+slug = "faxnummer"
+
+# register 374

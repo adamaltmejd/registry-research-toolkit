@@ -1,0 +1,144 @@
+[register]
+provider = "scb"
+slug = "bylbbs"
+native_id = "76"
+
+[[variant]]
+native_id = "76.190"
+slug = "nybyggnad-av-bostader"
+display_group = "Nybyggnad av bostäder"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "paborjandear-manad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "76.191"
+slug = "bygglov-for-bostader"
+display_group = "Bygglov för bostäder och lokaler"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "datum-for-bygglovets-beslut"
+panel_time_grain = "row"
+
+# Byggnadsprisindex (BPI)
+
+[[variable]]
+native_id = "76.26"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "76.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "76.5113"
+slug = "byggherre"
+
+[[variable]]
+native_id = "76.17046"
+slug = "antal-lagenheter-totalt"
+
+[[variable]]
+native_id = "76.17232"
+slug = "byggherrekategori"
+
+[[variable]]
+native_id = "76.17235"
+slug = "fardigstallandear-manad"
+
+[[variable]]
+native_id = "76.17236"
+slug = "paborjandear-manad"
+
+[[variable]]
+native_id = "76.17240"
+slug = "fardigstallandear-manad-justerad"
+
+[[variable]]
+native_id = "76.17371"
+slug = "bruttoarea-bostader"
+
+[[variable]]
+native_id = "76.17372"
+slug = "bruttoarea-lokaler"
+
+[[variable]]
+native_id = "76.17373"
+slug = "bruttoarea-totalt"
+
+[[variable]]
+native_id = "76.17374"
+slug = "datum-for-inkommen-bygganmalan"
+
+[[variable]]
+native_id = "76.17375"
+slug = "datum-for-bygglovets-beslut"
+
+[[variable]]
+native_id = "76.17376"
+slug = "datum-for-byggnationens-paborjan"
+
+[[variable]]
+native_id = "76.17377"
+slug = "datum-for-bygglovets-rapportering"
+
+[[variable]]
+native_id = "76.17378"
+slug = "byggherrens-adress"
+
+[[variable]]
+native_id = "76.17380"
+slug = "byggherrens-postnummer"
+
+[[variable]]
+native_id = "76.17381"
+slug = "fastighetens-adress"
+
+[[variable]]
+native_id = "76.17383"
+slug = "gruppbebyggelse"
+
+[[variable]]
+native_id = "76.17385"
+slug = "huvudsaklig-byggnadstyp"
+
+[[variable]]
+native_id = "76.17411"
+slug = "bostadsarea"
+
+# register 86 (hut)
+
+[[variable]]
+native_id = "76.1724"
+slug = "e-postadress-kontaktperson"
+
+[[variable]]
+native_id = "76.1804"
+slug = "telefonnummer-2"
+
+[[variable]]
+native_id = "76.2877"
+slug = "antal-fritidshus"
+
+[[variable]]
+native_id = "76.3735"
+slug = "fastighetspostnr"
+
+[[variable]]
+native_id = "76.3752"
+slug = "kontaktperson"
+
+[[variable]]
+native_id = "76.15195"
+slug = "redovisningsar"
+
+[[variable]]
+native_id = "76.17379"
+slug = "byggherrens-postadress"
+
+[[variable]]
+native_id = "76.17899"
+slug = "telefonnummer-1"
+
+# register 77

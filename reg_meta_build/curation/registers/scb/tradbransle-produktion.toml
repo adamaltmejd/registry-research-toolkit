@@ -1,0 +1,53 @@
+[register]
+provider = "scb"
+slug = "tradbransle-produktion"
+native_id = "358"
+
+[[variant]]
+native_id = "358.1286"
+slug = "oforadlat-tradbransle"
+display_group = "Oförädlat trädbränsle"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Nätanslutna solcellsanläggningar
+
+[[variable]]
+native_id = "358.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "358.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "358.4600"
+slug = "scbid"
+
+# register 359 (solel)
+
+[[variable]]
+native_id = "358.50"
+slug = "manad"
+
+[[variable]]
+native_id = "358.73"
+slug = "ar"
+
+[[variable]]
+native_id = "358.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "358.39651"
+slug = "svarsalternativ"
+
+# register 359
+
+[[variable]]
+native_id = "358.83.bid"
+slug = "bransleslag"
+
+# register 366

@@ -1,0 +1,177 @@
+[register]
+provider = "scb"
+slug = "elevpaneler"
+native_id = "104"
+
+[[variant]]
+native_id = "104.840"
+slug = "elevpanel-7"
+display_group = "Elevpanel 7"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "104.1090"
+slug = "elevpanel-6"
+display_group = "Elevpanel 6"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "104.1164"
+slug = "elevpanel-8"
+display_group = "Elevpanel 8"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Folkhögskolan
+
+[[variable]]
+native_id = "104.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "104.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "104.2777"
+slug = "svarskod"
+
+[[variable]]
+native_id = "104.7814"
+slug = "atgardsprogram"
+
+[[variable]]
+native_id = "104.7849"
+slug = "rektorsomradeskod"
+
+# register 105 (folkhogskolan)
+
+[[variable]]
+native_id = "104.104.skolkod"
+slug = "skolkod"
+
+# register 105 (folkhogskolan)
+
+[[variable]]
+native_id = "104.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "104.866"
+slug = "fodd-i-sverige-utomlands"
+
+[[variable]]
+native_id = "104.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "104.3233"
+slug = "elevnamn"
+
+[[variable]]
+native_id = "104.3599"
+slug = "betyg-bild"
+
+[[variable]]
+native_id = "104.3620"
+slug = "betyg-religion"
+
+[[variable]]
+native_id = "104.3621"
+slug = "betyg-samhallskunskap"
+
+[[variable]]
+native_id = "104.3622"
+slug = "betyg-slojd"
+
+[[variable]]
+native_id = "104.3625"
+slug = "betyg-svenska"
+
+[[variable]]
+native_id = "104.3627"
+slug = "betyg-teknik"
+
+[[variable]]
+native_id = "104.3629"
+slug = "betyg-teckensprak"
+
+[[variable]]
+native_id = "104.6420"
+slug = "huvudman-for-skolan"
+
+[[variable]]
+native_id = "104.7815"
+slug = "deltagit-modersmalsundervisning"
+
+[[variable]]
+native_id = "104.7816"
+slug = "anpassad-studigang"
+
+[[variable]]
+native_id = "104.7817"
+slug = "deltagit-sva"
+
+[[variable]]
+native_id = "104.8073"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "104.8074"
+slug = "faderns-utbildningsniva"
+
+[[variable]]
+native_id = "104.8164"
+slug = "urvalsstratum"
+
+[[variable]]
+native_id = "104.23791"
+slug = "deltagit-engelska"
+
+[[variable]]
+native_id = "104.23867"
+slug = "klassbeteckning"
+
+# register 105
+
+[[variable]]
+native_id = "104.14815.kommun"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "104.25186.m1-betyg"
+slug = "moderna-sprak-elevens-val-betyg"
+
+[[variable]]
+native_id = "104.25186.m1-spr"
+slug = "moderna-sprak-elevens-val-sprak"
+
+[[variable]]
+native_id = "104.25188.ml-spr"
+slug = "ml-sprak"
+
+[[variable]]
+native_id = "104.30366.nyskolenhkod"
+slug = "ny-skolenhetskod"
+
+[[variable]]
+native_id = "104.30366.skolenhkod"
+slug = "skolenhetskod-2"
+
+[[variable]]
+native_id = "104.34103.m2-betyg"
+slug = "moderna-sprak-sprakval-betyg"
+
+[[variable]]
+native_id = "104.34103.m2-spr"
+slug = "moderna-sprak-sprakval"
+
+# register 105

@@ -1,0 +1,119 @@
+[register]
+provider = "scb"
+slug = "mabra"
+native_id = "141"
+
+[[variant]]
+native_id = "141.207"
+slug = "_default"
+display_group = "Månatlig bränsle-, gas och lagerstatistik"
+panel_entity_key = "cfar-nummer"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+# Register över månatlig elstatistik (MANEL)
+
+[[variable]]
+native_id = "141.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "141.73"
+slug = "ar"
+
+[[variable]]
+native_id = "141.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "141.5518"
+slug = "scb-nummer"
+
+[[variable]]
+native_id = "141.16688"
+slug = "branslekod"
+
+[[variable]]
+native_id = "141.16705"
+slug = "leveranser-branslen-ovriga"
+
+[[variable]]
+native_id = "141.19015"
+slug = "volym"
+
+[[variable]]
+native_id = "141.19529"
+slug = "scbid"
+
+[[variable]]
+native_id = "141.20486"
+slug = "exportpris-fob"
+
+[[variable]]
+native_id = "141.20487"
+slug = "exportpris-cif"
+
+[[variable]]
+native_id = "141.20488"
+slug = "importpris-cif"
+
+[[variable]]
+native_id = "141.20490"
+slug = "importpris-fob"
+
+[[variable]]
+native_id = "141.20669"
+slug = "etanol-fame-volym"
+
+[[variable]]
+native_id = "141.20671"
+slug = "leveranser-egna-aterforsaljare"
+
+[[variable]]
+native_id = "141.20672"
+slug = "leveranser-kol-koks-aterforsaljare"
+
+[[variable]]
+native_id = "141.20673"
+slug = "ovriga-levererade-kvantiteter"
+
+[[variable]]
+native_id = "141.21009"
+slug = "undersokningsar"
+
+[[variable]]
+native_id = "141.40052"
+slug = "radnummer"
+
+# register 142 (manel)
+
+[[variable]]
+native_id = "141.4029"
+slug = "undersokningsmanad"
+
+[[variable]]
+native_id = "141.5462"
+slug = "uppdateringsdatum"
+
+[[variable]]
+native_id = "141.16336"
+slug = "organisationsidentitet"
+
+[[variable]]
+native_id = "141.16721"
+slug = "land-for-import-export"
+
+[[variable]]
+native_id = "141.16728"
+slug = "foretagets-id-nummer"
+
+[[variable]]
+native_id = "141.28808"
+slug = "referensperiod"
+
+[[variable]]
+native_id = "141.45153"
+slug = "vikt-ton"
+
+# register 142

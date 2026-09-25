@@ -1,0 +1,49 @@
+[register]
+provider = "scb"
+slug = "studieuppehall"
+native_id = "317"
+
+[[variant]]
+native_id = "317.982"
+slug = "_default"
+display_group = "Tiden mellan gymnasieskolan och universitetet/högskolan"
+
+# Produktionsindex över näringslivet
+
+[[variable]]
+native_id = "317.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "317.6172"
+slug = "lopnummer-for-individ"
+
+[[variable]]
+native_id = "317.8073"
+slug = "sun-niva-grov-mor"
+
+[[variable]]
+native_id = "317.17587"
+slug = "fodelseland-grupp"
+
+[[variable]]
+native_id = "317.25163"
+slug = "utbildningsomrade-grov"
+
+[[variable]]
+native_id = "317.28176"
+slug = "utbildningstyp"
+
+[[variable]]
+native_id = "317.28305"
+slug = "designvikt"
+
+[[variable]]
+native_id = "317.28679"
+slug = "sysselsattning-aktivitet"
+
+[[variable]]
+native_id = "317.28690"
+slug = "antagen"
+
+# register 318

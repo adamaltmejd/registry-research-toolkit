@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "finansiella-foretag"
+native_id = "292"
+
+[[variant]]
+native_id = "292.843"
+slug = "finansiella-foretag-indata"
+display_group = "Indata"
+
+# Statliga anslag till forskning och utveckling
+
+[[variable]]
+native_id = "292.23859"
+slug = "kvartal-och-ar"
+
+# register 295

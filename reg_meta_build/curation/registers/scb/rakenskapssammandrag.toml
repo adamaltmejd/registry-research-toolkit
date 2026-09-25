@@ -1,0 +1,3919 @@
+[register]
+provider = "scb"
+slug = "rakenskapssammandrag"
+native_id = "253"
+
+[[variant]]
+native_id = "253.542"
+slug = "rakenskapssammandrag"
+display_group = "Räkenskapssammandrag för kommuner och landsting"
+
+
+[[variant]]
+native_id = "253.543"
+slug = "rakenskapssammandrag-landsting"
+display_group = "Räkenskapssammandrag för landsting"
+
+# Investeringsfonder/Värdepappersfonder, tillgångar och skulder
+
+[[variable]]
+native_id = "253.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "253.446"
+slug = "kommunnamn"
+
+[[variable]]
+native_id = "253.5099"
+slug = "invanare-per-kommun"
+
+[[variable]]
+native_id = "253.16816"
+slug = "invanare-7-15-ar"
+
+[[variable]]
+native_id = "253.18113"
+slug = "entreprenad-kop-huvud-stodverksamhet"
+
+[[variable]]
+native_id = "253.18114"
+slug = "bidrag-och-transfereringar"
+
+[[variable]]
+native_id = "253.18115"
+slug = "kalkylerad-kapitalkostnad"
+
+[[variable]]
+native_id = "253.18116"
+slug = "externa-loner"
+
+[[variable]]
+native_id = "253.18117"
+slug = "varor"
+
+[[variable]]
+native_id = "253.18118"
+slug = "ovriga-kostnader-externa"
+
+[[variable]]
+native_id = "253.18119"
+slug = "externa-lokalhyror"
+
+[[variable]]
+native_id = "253.18120"
+slug = "interna-lokalkostnader"
+
+[[variable]]
+native_id = "253.18121"
+slug = "interna-kop-ovriga-kostnader"
+
+[[variable]]
+native_id = "253.18122"
+slug = "kommunnyckel"
+
+[[variable]]
+native_id = "253.18123"
+slug = "scbnyckel"
+
+[[variable]]
+native_id = "253.18124"
+slug = "summa-bruttokostnad"
+
+[[variable]]
+native_id = "253.18125"
+slug = "taxor-och-avgifter"
+
+[[variable]]
+native_id = "253.18126"
+slug = "externa-bostads-lokalhyror"
+
+[[variable]]
+native_id = "253.18127"
+slug = "ovriga-externa-intakter"
+
+[[variable]]
+native_id = "253.18128"
+slug = "anslutningsavgifter"
+
+[[variable]]
+native_id = "253.18129"
+slug = "summa-bruttointakter"
+
+[[variable]]
+native_id = "253.18130"
+slug = "nettokostnad-gemensam-verksamhet"
+
+[[variable]]
+native_id = "253.18131"
+slug = "fordelning-i-kolumn-scb-nyckel"
+
+[[variable]]
+native_id = "253.18132"
+slug = "fordelning-kommun-nyckel"
+
+[[variable]]
+native_id = "253.18133"
+slug = "fordelning-scb-nyckel"
+
+[[variable]]
+native_id = "253.18134"
+slug = "kalkylerade-po-kapitalkostnader"
+
+[[variable]]
+native_id = "253.18135"
+slug = "kalkylerad-personalomkostnad"
+
+[[variable]]
+native_id = "253.18136"
+slug = "interna-kostnader"
+
+[[variable]]
+native_id = "253.18137"
+slug = "sociala-avgifter-pensionsutbetalningar"
+
+[[variable]]
+native_id = "253.18138"
+slug = "forandring-pensionsavsattningar"
+
+[[variable]]
+native_id = "253.18139"
+slug = "pensionskostnad-avgiftsbestamd-del"
+
+[[variable]]
+native_id = "253.18140"
+slug = "div-forluster-ovriga-riskkostnader"
+
+[[variable]]
+native_id = "253.18141"
+slug = "reaforluster-div-periodiseringar"
+
+[[variable]]
+native_id = "253.18142"
+slug = "jamforelsestorande-kostnader"
+
+[[variable]]
+native_id = "253.18143"
+slug = "interna-intakter"
+
+[[variable]]
+native_id = "253.18144"
+slug = "forsaljning-exploateringsfastigheter"
+
+[[variable]]
+native_id = "253.18145"
+slug = "reavinster-div-periodiseringar"
+
+[[variable]]
+native_id = "253.18146"
+slug = "jamforelsestorande-intakter"
+
+[[variable]]
+native_id = "253.18147"
+slug = "verksamhetens-intakter"
+
+[[variable]]
+native_id = "253.18148"
+slug = "verksamhetens-kostnader"
+
+[[variable]]
+native_id = "253.18169"
+slug = "kop-huvudverksamhet-fran-kommunagda"
+
+[[variable]]
+native_id = "253.18170"
+slug = "kop-huvudverksamhet-fran-ovriga-foretag"
+
+[[variable]]
+native_id = "253.18171"
+slug = "kop-huvudverksamhet-fran-kommuner"
+
+[[variable]]
+native_id = "253.18172"
+slug = "kop-huvudverksamhet-fran-kommunalforbund"
+
+[[variable]]
+native_id = "253.18173"
+slug = "kop-huvudverksamhet-fran-landsting"
+
+[[variable]]
+native_id = "253.18174"
+slug = "kop-huvudverksamhet-fran-staten"
+
+[[variable]]
+native_id = "253.18175"
+slug = "kop-huvudverksamhet-fran-foreningar"
+
+[[variable]]
+native_id = "253.18176"
+slug = "kop-stodverksamhet-fran-foreningar"
+
+[[variable]]
+native_id = "253.18178"
+slug = "kop-stodverksamhet-fran-kommunagda"
+
+[[variable]]
+native_id = "253.18179"
+slug = "kop-stodverksamhet-fran-ovriga-foretag"
+
+[[variable]]
+native_id = "253.18180"
+slug = "kop-stodverksamhet-fran-kommuner"
+
+[[variable]]
+native_id = "253.18181"
+slug = "kop-stodverksamhet-fran-kommunalforbund"
+
+[[variable]]
+native_id = "253.18182"
+slug = "kop-stodverksamhet-fran-landsting"
+
+[[variable]]
+native_id = "253.18188"
+slug = "kop-stodverksamhet-fran-enskilda"
+
+[[variable]]
+native_id = "253.18193"
+slug = "kop-stodverksamhet-fran-staten"
+
+[[variable]]
+native_id = "253.18194"
+slug = "transfereringar-till-kommunal-forbund"
+
+[[variable]]
+native_id = "253.18195"
+slug = "transfereringar-till-kommunagda"
+
+[[variable]]
+native_id = "253.18196"
+slug = "transfereringar-till-ovriga-foretag"
+
+[[variable]]
+native_id = "253.18197"
+slug = "transfereringar-till-kommuner"
+
+[[variable]]
+native_id = "253.18199"
+slug = "transfereringar-till-foreningar"
+
+[[variable]]
+native_id = "253.18202"
+slug = "transfereringar-till-landsting"
+
+[[variable]]
+native_id = "253.18203"
+slug = "transfereringar-till-staten"
+
+[[variable]]
+native_id = "253.18204"
+slug = "transfereringar-till-enskilda"
+
+[[variable]]
+native_id = "253.18210"
+slug = "forsaljning-till-annan-kommun"
+
+[[variable]]
+native_id = "253.18211"
+slug = "forsaljning-till-landsting"
+
+[[variable]]
+native_id = "253.18212"
+slug = "driftbidrag-fran-staten"
+
+[[variable]]
+native_id = "253.18213"
+slug = "bidrag-fran-eu"
+
+[[variable]]
+native_id = "253.18214"
+slug = "markhyror-och-bidrag"
+
+[[variable]]
+native_id = "253.18215"
+slug = "statsbidrag-maxtaxa"
+
+[[variable]]
+native_id = "253.18216"
+slug = "kvalitetssakrande-atgarder"
+
+[[variable]]
+native_id = "253.18218"
+slug = "kop-huvudverksamhet-fran-enskilda"
+
+[[variable]]
+native_id = "253.18221"
+slug = "investeringsinkomster"
+
+[[variable]]
+native_id = "253.18224"
+slug = "exploateringsutgifter"
+
+[[variable]]
+native_id = "253.18228"
+slug = "exploateringsintakter"
+
+[[variable]]
+native_id = "253.18419"
+slug = "investeringsutgifter"
+
+[[variable]]
+native_id = "253.18421"
+slug = "investeringsutgifter-inventarier"
+
+[[variable]]
+native_id = "253.18422"
+slug = "investeringsutgifter-entreprenader"
+
+[[variable]]
+native_id = "253.18423"
+slug = "investeringsutgifter-mark-byggnader"
+
+[[variable]]
+native_id = "253.18424"
+slug = "investeringsinkomster-statliga-bidrag"
+
+[[variable]]
+native_id = "253.18425"
+slug = "exploateringsutgifter-for-entreprenader"
+
+[[variable]]
+native_id = "253.18426"
+slug = "exploateringsutgifter-for-konsulter"
+
+[[variable]]
+native_id = "253.18427"
+slug = "exploateringsutgifter-inkop-mark"
+
+[[variable]]
+native_id = "253.18428"
+slug = "exploateringsintakter-forsaljning"
+
+[[variable]]
+native_id = "253.18429"
+slug = "avskrivningar-kommunen"
+
+[[variable]]
+native_id = "253.18430"
+slug = "finansiella-intakter-kommunen"
+
+[[variable]]
+native_id = "253.18431"
+slug = "orealiserade-valutakursvinster"
+
+[[variable]]
+native_id = "253.18432"
+slug = "finansiella-kostnader-kommunen"
+
+[[variable]]
+native_id = "253.18433"
+slug = "finansiell-kostnad-pensionsavsattningar"
+
+[[variable]]
+native_id = "253.18434"
+slug = "orealiserad-valutakursforlust"
+
+[[variable]]
+native_id = "253.18435"
+slug = "extraordinara-intakter-kommunen"
+
+[[variable]]
+native_id = "253.18437"
+slug = "nedskrivningar"
+
+[[variable]]
+native_id = "253.18440"
+slug = "ovriga-ej-likviditetspaverkande-poster"
+
+[[variable]]
+native_id = "253.18443"
+slug = "okning-minskning-forrad-exploatering"
+
+[[variable]]
+native_id = "253.18444"
+slug = "okning-minskning-av-kortfristiga-skulder"
+
+[[variable]]
+native_id = "253.18445"
+slug = "bruttoinvesteringar"
+
+[[variable]]
+native_id = "253.18446"
+slug = "forsaljningspris-materiella-imateriella"
+
+[[variable]]
+native_id = "253.18447"
+slug = "investering-finansiella-tillgangar"
+
+[[variable]]
+native_id = "253.18449"
+slug = "forsaljning-finansiella-tillgangar"
+
+[[variable]]
+native_id = "253.18450"
+slug = "erhallna-investeringsbidrag-ovriga"
+
+[[variable]]
+native_id = "253.18451"
+slug = "nyupptagna-lan"
+
+[[variable]]
+native_id = "253.18452"
+slug = "amortering-av-skuld"
+
+[[variable]]
+native_id = "253.18453"
+slug = "skatteintakter-kommunen"
+
+[[variable]]
+native_id = "253.18455"
+slug = "summa-verksamhetens-intakter-enligt-rr"
+
+[[variable]]
+native_id = "253.18456"
+slug = "verksamhetens-intakter-koncernen"
+
+[[variable]]
+native_id = "253.18457"
+slug = "verksamhetens-kostnader-kommunen"
+
+[[variable]]
+native_id = "253.18458"
+slug = "verksamhetens-kostnader-koncernen"
+
+[[variable]]
+native_id = "253.18459"
+slug = "skatteintakter-koncernen"
+
+[[variable]]
+native_id = "253.18461"
+slug = "utjamning-generella-bidrag-koncernen"
+
+[[variable]]
+native_id = "253.18462"
+slug = "valutakursvinster-aterforing-koncernen"
+
+[[variable]]
+native_id = "253.18463"
+slug = "finansiella-intakter-koncernen"
+
+[[variable]]
+native_id = "253.18464"
+slug = "finansiella-kostnader-koncernen"
+
+[[variable]]
+native_id = "253.18466"
+slug = "extraordinara-intakter-koncernen"
+
+[[variable]]
+native_id = "253.18467"
+slug = "extraordinara-kostnader-kommunen"
+
+[[variable]]
+native_id = "253.18468"
+slug = "extraordinara-kostnader-koncernen"
+
+[[variable]]
+native_id = "253.18469"
+slug = "gjorda-avsattningar"
+
+[[variable]]
+native_id = "253.18470"
+slug = "skattekostnader-for-koncernen"
+
+[[variable]]
+native_id = "253.18471"
+slug = "iansprakstagna-avsattningar"
+
+[[variable]]
+native_id = "253.18472"
+slug = "utjamning-generella-bidrag-kommunen"
+
+[[variable]]
+native_id = "253.18473"
+slug = "okning-minskning-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "253.18474"
+slug = "arets-resultat-i-resultatrakningen"
+
+[[variable]]
+native_id = "253.18475"
+slug = "arets-resultat-koncernen"
+
+[[variable]]
+native_id = "253.18476"
+slug = "immateriella-tillgangar-kommunen"
+
+[[variable]]
+native_id = "253.18477"
+slug = "immateriella-tillgangar-koncernen"
+
+[[variable]]
+native_id = "253.18478"
+slug = "mark-byggn-tekn-anlaggningar-kommunen"
+
+[[variable]]
+native_id = "253.18479"
+slug = "mark-byggn-tekn-anlaggningar-koncernen"
+
+[[variable]]
+native_id = "253.18480"
+slug = "maskiner-och-inventarier-kommunen"
+
+[[variable]]
+native_id = "253.18481"
+slug = "maskiner-och-inventarier-koncernen"
+
+[[variable]]
+native_id = "253.18482"
+slug = "summa-materiella-tillgangar-kommunen"
+
+[[variable]]
+native_id = "253.18484"
+slug = "summa-materiella-tillgangar-koncernen"
+
+[[variable]]
+native_id = "253.18485"
+slug = "aktier-andelar-bostadsratter-kommunen"
+
+[[variable]]
+native_id = "253.18487"
+slug = "aktier-andelar-bostadsratter-koncernen"
+
+[[variable]]
+native_id = "253.18488"
+slug = "aktier-andelar-bostadsratter-i-koncern"
+
+[[variable]]
+native_id = "253.18489"
+slug = "obligationer-forlagsbevis-cert-kommunen"
+
+[[variable]]
+native_id = "253.18490"
+slug = "obligationer-forlagsbevis-cert-koncernen"
+
+[[variable]]
+native_id = "253.18491"
+slug = "grundfondskapital-kommunen"
+
+[[variable]]
+native_id = "253.18492"
+slug = "grundfondskapital-koncernen"
+
+[[variable]]
+native_id = "253.18493"
+slug = "langfristiga-fordringar-kommunen"
+
+[[variable]]
+native_id = "253.18494"
+slug = "langfristiga-fordringar-koncernen"
+
+[[variable]]
+native_id = "253.18495"
+slug = "langfristiga-fordringar-koncernforetag"
+
+[[variable]]
+native_id = "253.18496"
+slug = "summa-finansiella-tillgangar-kommunen"
+
+[[variable]]
+native_id = "253.18497"
+slug = "summa-finansiella-tillgangar-koncernen"
+
+[[variable]]
+native_id = "253.18498"
+slug = "summa-anlaggningstillgangar-kommunen"
+
+[[variable]]
+native_id = "253.18500"
+slug = "forrad-lager-exploatering-kommunen"
+
+[[variable]]
+native_id = "253.18502"
+slug = "forrad-lager-exploatering-koncernen"
+
+[[variable]]
+native_id = "253.18503"
+slug = "kundfordringar-kommunen"
+
+[[variable]]
+native_id = "253.18505"
+slug = "kundfordringar-koncernen"
+
+[[variable]]
+native_id = "253.18506"
+slug = "kundfordringar-koncernforetag"
+
+[[variable]]
+native_id = "253.18507"
+slug = "div-kortfristiga-fordringar-kommunen"
+
+[[variable]]
+native_id = "253.18508"
+slug = "div-kortfristiga-fordringar-koncernen"
+
+[[variable]]
+native_id = "253.18510"
+slug = "fordringar-hos-staten-kommunen"
+
+[[variable]]
+native_id = "253.18511"
+slug = "kortfristiga-fordringar-staten-koncernen"
+
+[[variable]]
+native_id = "253.18512"
+slug = "kortfristiga-fordringar-koncernforetag"
+
+[[variable]]
+native_id = "253.18513"
+slug = "forutbetalda-kostnader-intakter-kommunen"
+
+[[variable]]
+native_id = "253.18514"
+slug = "forutbetalda-upplupna-intakter-koncernen"
+
+[[variable]]
+native_id = "253.18515"
+slug = "aktier-och-andelar-kommunen"
+
+[[variable]]
+native_id = "253.18516"
+slug = "aktier-och-andelar-koncernen"
+
+[[variable]]
+native_id = "253.18517"
+slug = "obligationer-forlagsbevis-m-m-kommunen"
+
+[[variable]]
+native_id = "253.18518"
+slug = "certifikat-kommunen"
+
+[[variable]]
+native_id = "253.18520"
+slug = "certifikat-koncernen"
+
+[[variable]]
+native_id = "253.18521"
+slug = "nedskrivning-placeringar-kommunen"
+
+[[variable]]
+native_id = "253.18522"
+slug = "nedskrivning-placeringar-koncernen"
+
+[[variable]]
+native_id = "253.18523"
+slug = "summa-fordringar-placeringar-kommunen"
+
+[[variable]]
+native_id = "253.18524"
+slug = "summa-fordringar-placeringar-koncernen"
+
+[[variable]]
+native_id = "253.18526"
+slug = "summa-omsattningstillgangar-kommunen"
+
+[[variable]]
+native_id = "253.18527"
+slug = "summa-omsattningstillgangar-koncernen"
+
+[[variable]]
+native_id = "253.18528"
+slug = "summa-tillgangar-kommunen"
+
+[[variable]]
+native_id = "253.18529"
+slug = "summa-tillgangar-koncernen"
+
+[[variable]]
+native_id = "253.18534"
+slug = "eget-kapital-kommunen"
+
+[[variable]]
+native_id = "253.18535"
+slug = "eget-kapital-koncernen"
+
+[[variable]]
+native_id = "253.18536"
+slug = "eget-kapital-ingaende-varde-kommunen"
+
+[[variable]]
+native_id = "253.18537"
+slug = "eget-kapital-ingaende-varde-koncernen"
+
+[[variable]]
+native_id = "253.18539"
+slug = "summa-avsattningar-kommunen"
+
+[[variable]]
+native_id = "253.18540"
+slug = "summa-avsattningar-koncernen"
+
+[[variable]]
+native_id = "253.18543"
+slug = "avsattningar-for-pensioner-kommunen"
+
+[[variable]]
+native_id = "253.18544"
+slug = "avsattningar-for-pensioner-koncernen"
+
+[[variable]]
+native_id = "253.18545"
+slug = "avsattningar-avtalspension-kommunen"
+
+[[variable]]
+native_id = "253.18546"
+slug = "avsattning-loneskatt-kommunen"
+
+[[variable]]
+native_id = "253.18547"
+slug = "avsattning-loneskatt-koncernen"
+
+[[variable]]
+native_id = "253.18548"
+slug = "andra-avsattningar-kommunen"
+
+[[variable]]
+native_id = "253.18549"
+slug = "andra-avsattningar-koncernen"
+
+[[variable]]
+native_id = "253.18550"
+slug = "andra-avsattningar-avfallstipp-kommunen"
+
+[[variable]]
+native_id = "253.18551"
+slug = "andra-avsattningar-avfallstipp-koncernen"
+
+[[variable]]
+native_id = "253.18552"
+slug = "langfristiga-skulder-kommunen"
+
+[[variable]]
+native_id = "253.18553"
+slug = "langfristiga-skulder-koncernen"
+
+[[variable]]
+native_id = "253.18555"
+slug = "lan-i-banker-och-kreditinstitut-kommunen"
+
+[[variable]]
+native_id = "253.18557"
+slug = "lan-i-banker-kreditinstitut-koncernen"
+
+[[variable]]
+native_id = "253.18559"
+slug = "lan-i-utlandsk-valuta-kommunen"
+
+[[variable]]
+native_id = "253.18561"
+slug = "lan-i-utlandsk-valuta-koncernen"
+
+[[variable]]
+native_id = "253.18564"
+slug = "langfristiga-skulder-till-koncernforetag"
+
+[[variable]]
+native_id = "253.18574"
+slug = "checkkredit-ovriga-skulder-kommunen"
+
+[[variable]]
+native_id = "253.18577"
+slug = "checkkredit-ovriga-skulder-koncernen"
+
+[[variable]]
+native_id = "253.18579"
+slug = "langfristig-leasingskuld-koncernen"
+
+[[variable]]
+native_id = "253.18582"
+slug = "kortfristiga-skulder-kommunen"
+
+[[variable]]
+native_id = "253.18583"
+slug = "kortfristiga-skulder-koncernen"
+
+[[variable]]
+native_id = "253.18584"
+slug = "kortfristiga-kreditinstitut-kommunen"
+
+[[variable]]
+native_id = "253.18585"
+slug = "kortfristiga-kreditinstitut-koncernen"
+
+[[variable]]
+native_id = "253.18586"
+slug = "kortfristiga-skulder-koncernforetag"
+
+[[variable]]
+native_id = "253.18587"
+slug = "leverantorsskulder-kommunen"
+
+[[variable]]
+native_id = "253.18588"
+slug = "leverantorsskulder-koncernen"
+
+[[variable]]
+native_id = "253.18589"
+slug = "leverantorsskulder-koncernforetag"
+
+[[variable]]
+native_id = "253.18590"
+slug = "skulder-till-staten-kommunen"
+
+[[variable]]
+native_id = "253.18591"
+slug = "skulder-till-staten-koncernen"
+
+[[variable]]
+native_id = "253.18592"
+slug = "upplupna-semesterloner-kommunen"
+
+[[variable]]
+native_id = "253.18593"
+slug = "loneskatt-avgiftsbestamd-kommunen"
+
+[[variable]]
+native_id = "253.18594"
+slug = "upplupna-semesterloner-koncernen"
+
+[[variable]]
+native_id = "253.18595"
+slug = "loneskatt-avgiftsbestamd-koncernen"
+
+[[variable]]
+native_id = "253.18596"
+slug = "pensionskostnad-avgiftsbestamd-kommunen"
+
+[[variable]]
+native_id = "253.18597"
+slug = "pensionskostnad-avgiftsbestamd-koncernen"
+
+[[variable]]
+native_id = "253.18598"
+slug = "ovriga-kortfristiga-skulder-kommunen"
+
+[[variable]]
+native_id = "253.18599"
+slug = "ovriga-kortfristiga-skulder-koncernen"
+
+[[variable]]
+native_id = "253.18600"
+slug = "summa-skulder-kommunen"
+
+[[variable]]
+native_id = "253.18601"
+slug = "summa-skulder-koncernen"
+
+[[variable]]
+native_id = "253.18602"
+slug = "skulder-avsattningar-kapital-kommunen"
+
+[[variable]]
+native_id = "253.18603"
+slug = "skulder-avsattningar-kapital-koncernen"
+
+[[variable]]
+native_id = "253.18604"
+slug = "utlamnade-lan-till-kommunagda-bolag"
+
+[[variable]]
+native_id = "253.18605"
+slug = "langfristiga-skulder-exkl-kommunagda"
+
+[[variable]]
+native_id = "253.18606"
+slug = "loneskatt-avgiftsbestamd-innevarande-ar"
+
+[[variable]]
+native_id = "253.18608"
+slug = "pensionskostnad-avgiftsbestamd-ar"
+
+[[variable]]
+native_id = "253.18609"
+slug = "oronmarkt-framtida-pensionsutbetalningar"
+
+[[variable]]
+native_id = "253.18610"
+slug = "summa-ansvarsforbindelser"
+
+[[variable]]
+native_id = "253.18611"
+slug = "borgen-forlustansvar-egnahem-smahus"
+
+[[variable]]
+native_id = "253.18612"
+slug = "borgen-kommunala-bostadsforetag"
+
+[[variable]]
+native_id = "253.18613"
+slug = "borgen-ovriga-bostadsforetag"
+
+[[variable]]
+native_id = "253.18615"
+slug = "borgen-ovriga-kommunala-foretag"
+
+[[variable]]
+native_id = "253.18616"
+slug = "ovriga-ansvarsforbindelser"
+
+[[variable]]
+native_id = "253.18617"
+slug = "pensionsforpliktelser-ej-bland-skulder"
+
+[[variable]]
+native_id = "253.18618"
+slug = "loneskatt-pensionsforpliktelser"
+
+[[variable]]
+native_id = "253.18627"
+slug = "inkop-av-anlaggningstillgangar"
+
+[[variable]]
+native_id = "253.18628"
+slug = "inkop-finansiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "253.18629"
+slug = "inkop-maskiner-inventarier"
+
+[[variable]]
+native_id = "253.18630"
+slug = "inkop-mark-byggnader-anlaggningar"
+
+[[variable]]
+native_id = "253.18631"
+slug = "bidrag-till-enskilda"
+
+[[variable]]
+native_id = "253.18632"
+slug = "darav-anhorigbidrag"
+
+[[variable]]
+native_id = "253.18633"
+slug = "bostadssociala-bidrag"
+
+[[variable]]
+native_id = "253.18634"
+slug = "bidrag-till-foreningar-foretag-m-fl"
+
+[[variable]]
+native_id = "253.18635"
+slug = "bidrag-juridiska-personer-ersattning-fk"
+
+[[variable]]
+native_id = "253.18636"
+slug = "personal"
+
+[[variable]]
+native_id = "253.18637"
+slug = "loner-m-m"
+
+[[variable]]
+native_id = "253.18638"
+slug = "loner-darav-sjuklon"
+
+[[variable]]
+native_id = "253.18639"
+slug = "sociala-avgifter-enl-lag-och-avtal"
+
+[[variable]]
+native_id = "253.18640"
+slug = "pensionsutbetalningar"
+
+[[variable]]
+native_id = "253.18641"
+slug = "darav-pensionsutbetalningar-fran-98"
+
+[[variable]]
+native_id = "253.18642"
+slug = "pensionsutbetalningar-fore-1998"
+
+[[variable]]
+native_id = "253.18643"
+slug = "pensionsutbetalningar-avtalspension"
+
+[[variable]]
+native_id = "253.18644"
+slug = "pensionsforsakringsavgifter"
+
+[[variable]]
+native_id = "253.18645"
+slug = "pensionsforsakringsavgifter-enskilda"
+
+[[variable]]
+native_id = "253.18646"
+slug = "pensionsforsakringsavgifter-fap"
+
+[[variable]]
+native_id = "253.18652"
+slug = "forvaltningsavgifter"
+
+[[variable]]
+native_id = "253.18653"
+slug = "material"
+
+[[variable]]
+native_id = "253.18654"
+slug = "bransle-energi-och-vatten"
+
+[[variable]]
+native_id = "253.18655"
+slug = "darav-vatten-och-avlopp"
+
+[[variable]]
+native_id = "253.18656"
+slug = "livsmedel"
+
+[[variable]]
+native_id = "253.18657"
+slug = "kontorsmaterial"
+
+[[variable]]
+native_id = "253.18658"
+slug = "material-ovrigt"
+
+[[variable]]
+native_id = "253.18659"
+slug = "tjanster-inkl-kop-av-huvudverksamhet"
+
+[[variable]]
+native_id = "253.18660"
+slug = "husbyggnadsentreprenader"
+
+[[variable]]
+native_id = "253.18661"
+slug = "anlaggnings-och-reparationsentreprenader"
+
+[[variable]]
+native_id = "253.18662"
+slug = "entreprenad-kop-huvudverksamhet"
+
+[[variable]]
+native_id = "253.18663"
+slug = "entreprenad-kop-stodverksamhet"
+
+[[variable]]
+native_id = "253.18664"
+slug = "konsulttjanster-andra-tjanster"
+
+[[variable]]
+native_id = "253.18665"
+slug = "tillfalligt-inhyrd-personal"
+
+[[variable]]
+native_id = "253.18666"
+slug = "hyra-leasing-anlaggningstillgangar"
+
+[[variable]]
+native_id = "253.18667"
+slug = "tele-it-kommunikation-postbefordran"
+
+[[variable]]
+native_id = "253.18668"
+slug = "reparation-underhall-maskiner"
+
+[[variable]]
+native_id = "253.18669"
+slug = "transporter"
+
+[[variable]]
+native_id = "253.18670"
+slug = "tjanster-inkl-kop-lokalhyror"
+
+[[variable]]
+native_id = "253.18671"
+slug = "markhyror"
+
+[[variable]]
+native_id = "253.18672"
+slug = "forsakringsavgifter-riskkostnader-div"
+
+[[variable]]
+native_id = "253.18673"
+slug = "darav-forsakringsavgifter"
+
+[[variable]]
+native_id = "253.18674"
+slug = "darav-sjalvrisker"
+
+[[variable]]
+native_id = "253.18675"
+slug = "darav-kundforluster-ovriga-riskkostnader"
+
+[[variable]]
+native_id = "253.18676"
+slug = "darav-infriad-borgen"
+
+[[variable]]
+native_id = "253.18677"
+slug = "darav-avgifter"
+
+[[variable]]
+native_id = "253.18678"
+slug = "darav-fordonsskatt-och-fastighetsskatt"
+
+[[variable]]
+native_id = "253.18679"
+slug = "tjanster-ovrigt"
+
+[[variable]]
+native_id = "253.18680"
+slug = "avgifter-i-utjamningssystemen"
+
+[[variable]]
+native_id = "253.18681"
+slug = "inkomstutjamningsavgift"
+
+[[variable]]
+native_id = "253.18682"
+slug = "regleringsavgift"
+
+[[variable]]
+native_id = "253.18683"
+slug = "kostnadsutjamningsavgift"
+
+[[variable]]
+native_id = "253.18684"
+slug = "avgift-till-lss-utjamningen"
+
+[[variable]]
+native_id = "253.18685"
+slug = "rantekostnader-pa-lan"
+
+[[variable]]
+native_id = "253.18686"
+slug = "rantekostnader-leverantorskulder-bank"
+
+[[variable]]
+native_id = "253.18688"
+slug = "darav-bidrag-till-bostadsforetag"
+
+[[variable]]
+native_id = "253.18689"
+slug = "realiserade-valutakursforluster-ovriga"
+
+[[variable]]
+native_id = "253.18690"
+slug = "utgifter-ianspraktagande-avsattningar"
+
+[[variable]]
+native_id = "253.18691"
+slug = "summa-externa-utgifter"
+
+[[variable]]
+native_id = "253.18692"
+slug = "forsaljning-av-tillgangar-m-m"
+
+[[variable]]
+native_id = "253.18693"
+slug = "forsaljningspris-maskiner-inventarier"
+
+[[variable]]
+native_id = "253.18694"
+slug = "forsaljningspris-mark-byggnader"
+
+[[variable]]
+native_id = "253.18695"
+slug = "forsaljningspris-exploatering"
+
+[[variable]]
+native_id = "253.18696"
+slug = "forsaljningspris-ovriga-anlaggningar"
+
+[[variable]]
+native_id = "253.18697"
+slug = "forsaljningspris-finansiella"
+
+[[variable]]
+native_id = "253.18698"
+slug = "forsaljning-exploatering-omsattning"
+
+[[variable]]
+native_id = "253.18699"
+slug = "forsaljning-ovrigt-omsattningstillgang"
+
+[[variable]]
+native_id = "253.18700"
+slug = "forsaljningsmedel"
+
+[[variable]]
+native_id = "253.18701"
+slug = "forrattnings-och-granskningsavgifter"
+
+[[variable]]
+native_id = "253.18702"
+slug = "taxor-och-avgifter-ovrigt"
+
+[[variable]]
+native_id = "253.18703"
+slug = "hyror-och-arrenden"
+
+[[variable]]
+native_id = "253.18704"
+slug = "bostads-och-lokalhyror"
+
+[[variable]]
+native_id = "253.18705"
+slug = "markhyror-och-arrenden-m-m"
+
+[[variable]]
+native_id = "253.18706"
+slug = "hyror-och-arrenden-ovrigt"
+
+[[variable]]
+native_id = "253.18707"
+slug = "bidrag"
+
+[[variable]]
+native_id = "253.18708"
+slug = "driftbidrag-fran-staten-myndigheter"
+
+[[variable]]
+native_id = "253.18709"
+slug = "driftbidrag-fran-ams"
+
+[[variable]]
+native_id = "253.18710"
+slug = "driftbidrag-fran-kommuner-och-landsting"
+
+[[variable]]
+native_id = "253.18711"
+slug = "ersattning-fk-personlig-assistent"
+
+[[variable]]
+native_id = "253.18712"
+slug = "momsbidrag-vid-kop-ej-skattepliktig"
+
+[[variable]]
+native_id = "253.18713"
+slug = "statliga-investeringsbidrag"
+
+[[variable]]
+native_id = "253.18714"
+slug = "eu-bidrag"
+
+[[variable]]
+native_id = "253.18715"
+slug = "ovriga-bidrag"
+
+[[variable]]
+native_id = "253.18716"
+slug = "forsaljning-verksamhet-kommuner-regioner"
+
+[[variable]]
+native_id = "253.18717"
+slug = "forsaljning-av-verksamhet-annan-kommun"
+
+[[variable]]
+native_id = "253.18718"
+slug = "forsaljning-av-verksamhet-landsting"
+
+[[variable]]
+native_id = "253.18719"
+slug = "forsaljning-entreprenad-ovriga"
+
+[[variable]]
+native_id = "253.18720"
+slug = "allman-kommunalskatt"
+
+[[variable]]
+native_id = "253.18721"
+slug = "slutavrakning-innevarande-ar"
+
+[[variable]]
+native_id = "253.18722"
+slug = "ovriga-skatter"
+
+[[variable]]
+native_id = "253.18723"
+slug = "bidrag-utjamning-generella-statsbidrag"
+
+[[variable]]
+native_id = "253.18724"
+slug = "inkomstutjamningsbidrag"
+
+[[variable]]
+native_id = "253.18725"
+slug = "strukturbidrag"
+
+[[variable]]
+native_id = "253.18726"
+slug = "inforandebidrag"
+
+[[variable]]
+native_id = "253.18727"
+slug = "regleringsbidrag"
+
+[[variable]]
+native_id = "253.18728"
+slug = "kostnadsutjamningsbidrag"
+
+[[variable]]
+native_id = "253.18729"
+slug = "bidrag-for-lss-utjamning"
+
+[[variable]]
+native_id = "253.18730"
+slug = "ovriga-bidrag-fran-staten"
+
+[[variable]]
+native_id = "253.18731"
+slug = "utdelning-pa-aktier-och-andelar"
+
+[[variable]]
+native_id = "253.18732"
+slug = "ranteintakter"
+
+[[variable]]
+native_id = "253.18733"
+slug = "ranteintakter-pa-kundfordringar"
+
+[[variable]]
+native_id = "253.18734"
+slug = "realiserade-valutakursvinster-ovriga"
+
+[[variable]]
+native_id = "253.18735"
+slug = "darav-bidrag-bostadsdelegationen"
+
+[[variable]]
+native_id = "253.18736"
+slug = "summa-externa-inkomster"
+
+[[variable]]
+native_id = "253.19556"
+slug = "extraordinara-intakter"
+
+[[variable]]
+native_id = "253.19558"
+slug = "extraordinara-kostnader"
+
+[[variable]]
+native_id = "253.19715"
+slug = "debiterat-i-kolumn-l"
+
+[[variable]]
+native_id = "253.19716"
+slug = "interna-intakter-justering"
+
+[[variable]]
+native_id = "253.19717"
+slug = "anslutningsavgifter-driftredovisningen"
+
+[[variable]]
+native_id = "253.19720"
+slug = "resultat-fore-extraordinara-kommunen"
+
+[[variable]]
+native_id = "253.19721"
+slug = "resultat-fore-extraordinara-koncernen"
+
+[[variable]]
+native_id = "253.19722"
+slug = "arets-resultat-kommunen-resultatrakning"
+
+[[variable]]
+native_id = "253.19723"
+slug = "arets-resultat-koncernen-resultatrakning"
+
+[[variable]]
+native_id = "253.19724"
+slug = "arets-resultat-kommunen-fia"
+
+[[variable]]
+native_id = "253.19725"
+slug = "avskrivningar-kommunen-fia"
+
+[[variable]]
+native_id = "253.19726"
+slug = "ovriga-tillforda-anvanda-medel"
+
+[[variable]]
+native_id = "253.19727"
+slug = "summa-anlaggningstillgangar-koncernen"
+
+[[variable]]
+native_id = "253.19729"
+slug = "kassa-och-bank-kommunen"
+
+[[variable]]
+native_id = "253.19730"
+slug = "kassa-och-bank-koncernen"
+
+[[variable]]
+native_id = "253.19731"
+slug = "avsattningar-avtalspension-koncernen"
+
+[[variable]]
+native_id = "253.19732"
+slug = "summa-bidrag-och-transfereringar"
+
+[[variable]]
+native_id = "253.19735"
+slug = "darav-pensionsforsakringsavgift-fore-98"
+
+[[variable]]
+native_id = "253.19736"
+slug = "pensionskostnad-avgiftsbestamd-darav"
+
+[[variable]]
+native_id = "253.19737"
+slug = "forandring-av-pensionsavsattning"
+
+[[variable]]
+native_id = "253.19738"
+slug = "verksamhetens-nettokostnader-kommunen"
+
+[[variable]]
+native_id = "253.19739"
+slug = "verksamhetens-nettokostnader-koncernen"
+
+[[variable]]
+native_id = "253.19740"
+slug = "lopande-verksamhet"
+
+[[variable]]
+native_id = "253.19741"
+slug = "investeringsverksamheten"
+
+[[variable]]
+native_id = "253.19742"
+slug = "finansieringsverksamheten"
+
+[[variable]]
+native_id = "253.19743"
+slug = "arets-kassaflode"
+
+[[variable]]
+native_id = "253.19745"
+slug = "kontaktperson-rs"
+
+[[variable]]
+native_id = "253.19747"
+slug = "namn-pa-kontaktpersonen"
+
+[[variable]]
+native_id = "253.19753"
+slug = "e-post-kontaktperson-rs"
+
+[[variable]]
+native_id = "253.19754"
+slug = "telefonnummer-till-kontaktperson"
+
+[[variable]]
+native_id = "253.19800"
+slug = "extraordinara-kostnader-externa-utgifter"
+
+[[variable]]
+native_id = "253.19802"
+slug = "summa-finansiella-kostnader"
+
+[[variable]]
+native_id = "253.19803"
+slug = "summa-finansiella-intakter"
+
+[[variable]]
+native_id = "253.19804"
+slug = "extraordinara-intakter-externa-inkomster"
+
+[[variable]]
+native_id = "253.20676"
+slug = "upplupen-pensionskostnad-tidigare-ar"
+
+[[variable]]
+native_id = "253.20677"
+slug = "upplupen-sarskild-loneskatt-tidigare-ar"
+
+[[variable]]
+native_id = "253.20678"
+slug = "pensionskostnad-innevarande-ar"
+
+[[variable]]
+native_id = "253.20679"
+slug = "summa-taxor-och-avgifter"
+
+[[variable]]
+native_id = "253.20680"
+slug = "summa-skatteintakter"
+
+[[variable]]
+native_id = "253.23034"
+slug = "arets-resultat-enl-resultatrakningen"
+
+[[variable]]
+native_id = "253.23036"
+slug = "summa-balanskravsresultat"
+
+[[variable]]
+native_id = "253.23037"
+slug = "tillagg-realisationsvinster-undantag"
+
+[[variable]]
+native_id = "253.23124"
+slug = "tillagg-iansprakstagande-av-sparande"
+
+[[variable]]
+native_id = "253.23125"
+slug = "avgar-samtliga-realisationsvinster"
+
+[[variable]]
+native_id = "253.23126"
+slug = "tillagg-realisationsforluster-undantag"
+
+[[variable]]
+native_id = "253.23127"
+slug = "tillagg-orealiserade-forluster"
+
+[[variable]]
+native_id = "253.23128"
+slug = "andra-synnerliga-skal"
+
+[[variable]]
+native_id = "253.23129"
+slug = "justerat-resultat"
+
+[[variable]]
+native_id = "253.23130"
+slug = "ackumulerat-negativt-resultat"
+
+[[variable]]
+native_id = "253.23131"
+slug = "darav-vardnadsbidrag-barnomsorg"
+
+[[variable]]
+native_id = "253.23132"
+slug = "darav-fran-skolverket"
+
+[[variable]]
+native_id = "253.23133"
+slug = "darav-fran-socialstyrelsen"
+
+[[variable]]
+native_id = "253.23134"
+slug = "darav-fran-migrationsverket"
+
+[[variable]]
+native_id = "253.23135"
+slug = "kommunal-fastighetsavgift"
+
+[[variable]]
+native_id = "253.23180"
+slug = "bruttokostnad-forskola"
+
+[[variable]]
+native_id = "253.23183"
+slug = "bruttointakt-forskola"
+
+[[variable]]
+native_id = "253.23184"
+slug = "interna-intakter-forskola"
+
+[[variable]]
+native_id = "253.23185"
+slug = "bruttokostnad-pedagogisk-omsorg"
+
+[[variable]]
+native_id = "253.23186"
+slug = "bruttointakter-pedagogisk-omsorg"
+
+[[variable]]
+native_id = "253.23187"
+slug = "darav-interna-intakter-pedagogisk-omsorg"
+
+[[variable]]
+native_id = "253.23206"
+slug = "bruttokostnad-fritidshem"
+
+[[variable]]
+native_id = "253.23211"
+slug = "bruttointakt-fritidshem"
+
+[[variable]]
+native_id = "253.23212"
+slug = "interna-intakter-fritidshem"
+
+[[variable]]
+native_id = "253.23213"
+slug = "bruttokostnad-forskoleklass"
+
+[[variable]]
+native_id = "253.23218"
+slug = "bruttointakt-forskoleklass"
+
+[[variable]]
+native_id = "253.23219"
+slug = "interna-intakter-forskoleklass"
+
+[[variable]]
+native_id = "253.23220"
+slug = "bruttokostnad-grundskola"
+
+[[variable]]
+native_id = "253.23221"
+slug = "bruttointakt-grundskola"
+
+[[variable]]
+native_id = "253.23222"
+slug = "interna-intakter-grundskola"
+
+[[variable]]
+native_id = "253.23223"
+slug = "bruttointakt-grundsarskola"
+
+[[variable]]
+native_id = "253.23224"
+slug = "bruttokostnad-grundsarskola"
+
+[[variable]]
+native_id = "253.23225"
+slug = "interna-intakter-grundsarskola"
+
+[[variable]]
+native_id = "253.23226"
+slug = "bruttointakt-gymnasieskola"
+
+[[variable]]
+native_id = "253.23227"
+slug = "bruttokostnad-gymnasieskola"
+
+[[variable]]
+native_id = "253.23228"
+slug = "interna-intakter-gymnasieskola"
+
+[[variable]]
+native_id = "253.23229"
+slug = "bruttokostnad-gymnasiesarskola"
+
+[[variable]]
+native_id = "253.23230"
+slug = "bruttointakt-gymnasiesarskola"
+
+[[variable]]
+native_id = "253.23231"
+slug = "interna-intakter-gymnasiesarskola"
+
+[[variable]]
+native_id = "253.23232"
+slug = "bruttokostnad-grundvux"
+
+[[variable]]
+native_id = "253.23300"
+slug = "bruttointakt-grundvux"
+
+[[variable]]
+native_id = "253.23301"
+slug = "interna-intakter-grundvux"
+
+[[variable]]
+native_id = "253.23302"
+slug = "bruttokostnad-gymnasial-vuxenutbildning"
+
+[[variable]]
+native_id = "253.23303"
+slug = "bruttointakt-gymnasial-vuxenutbildning"
+
+[[variable]]
+native_id = "253.23304"
+slug = "interna-intakter-gymnasial"
+
+[[variable]]
+native_id = "253.23305"
+slug = "bruttokostnader-sarvux"
+
+[[variable]]
+native_id = "253.23306"
+slug = "bruttointakter-sarvux"
+
+[[variable]]
+native_id = "253.23307"
+slug = "interna-intakter-sarvux"
+
+[[variable]]
+native_id = "253.23309"
+slug = "bruttokostnader-svenska-for-invandrare"
+
+[[variable]]
+native_id = "253.23310"
+slug = "bruttointakter-svenska-for-invandrare"
+
+[[variable]]
+native_id = "253.23311"
+slug = "interna-intakter-svenska-for-invandrare"
+
+[[variable]]
+native_id = "253.23313"
+slug = "bruttokostnad-aldre-funktionsnedsattning"
+
+[[variable]]
+native_id = "253.23314"
+slug = "kop-av-huvudverksamhet-aldre"
+
+[[variable]]
+native_id = "253.23315"
+slug = "taxor-och-avgifter-aldre"
+
+[[variable]]
+native_id = "253.23316"
+slug = "externa-bostads-och-lokalhyror-aldre"
+
+[[variable]]
+native_id = "253.23317"
+slug = "ovriga-externa-intakter-aldre"
+
+[[variable]]
+native_id = "253.23318"
+slug = "forsaljning-av-verksamhet-aldre"
+
+[[variable]]
+native_id = "253.23319"
+slug = "interna-intakter-aldre"
+
+[[variable]]
+native_id = "253.23320"
+slug = "kop-av-huvudverksamhet-foreningar"
+
+[[variable]]
+native_id = "253.23321"
+slug = "kop-av-huvudverksamhet-kommunagda"
+
+[[variable]]
+native_id = "253.23322"
+slug = "kop-av-huvudverksamhet-privata"
+
+[[variable]]
+native_id = "253.23323"
+slug = "kop-av-huvudverksamhet-kommuner"
+
+[[variable]]
+native_id = "253.23324"
+slug = "kop-av-huvudverksamhet-kommunalforbund"
+
+[[variable]]
+native_id = "253.23325"
+slug = "kop-av-huvudverksamhet-landsting"
+
+[[variable]]
+native_id = "253.23326"
+slug = "kop-av-huvudverksamhet-staten"
+
+[[variable]]
+native_id = "253.23327"
+slug = "kop-av-huvudverksamhet-hushall"
+
+[[variable]]
+native_id = "253.23328"
+slug = "bruttokostnad-hsl"
+
+[[variable]]
+native_id = "253.23329"
+slug = "kop-av-huvudverksamhet-hsl"
+
+[[variable]]
+native_id = "253.23330"
+slug = "taxor-och-avgifter-hsl"
+
+[[variable]]
+native_id = "253.23331"
+slug = "externa-bostads-och-lokalhyror-hsl"
+
+[[variable]]
+native_id = "253.23332"
+slug = "ovriga-externa-intakter-hsl"
+
+[[variable]]
+native_id = "253.23333"
+slug = "darav-forsaljning-av-verksamhet-hsl"
+
+[[variable]]
+native_id = "253.23334"
+slug = "interna-intakter-hsl"
+
+[[variable]]
+native_id = "253.23335"
+slug = "bruttokostnad-ifo"
+
+[[variable]]
+native_id = "253.23336"
+slug = "interna-intakter-aldre-funktionshinder"
+
+[[variable]]
+native_id = "253.23337"
+slug = "forsaljning-av-verksamhet-entreprenad"
+
+[[variable]]
+native_id = "253.23338"
+slug = "taxor-och-avgifter-for-familjeradgivning"
+
+[[variable]]
+native_id = "253.24182"
+slug = "verksamhetens-intakter-landsting"
+
+[[variable]]
+native_id = "253.24184"
+slug = "loner-exkl-skattefria-ersattningar"
+
+[[variable]]
+native_id = "253.24206"
+slug = "ovriga-kostnader-for-personal"
+
+[[variable]]
+native_id = "253.24231"
+slug = "investeringsutgifter-landsting"
+
+[[variable]]
+native_id = "253.24233"
+slug = "investeringsutgifter-medtek-inventarier"
+
+[[variable]]
+native_id = "253.24234"
+slug = "investeringsutgifter-for-inventarier"
+
+[[variable]]
+native_id = "253.24238"
+slug = "investeringsinkomster-landsting"
+
+[[variable]]
+native_id = "253.24241"
+slug = "interna-lokalhyror-landsting"
+
+[[variable]]
+native_id = "253.24244"
+slug = "patientavgifter-inom-slutenvarden"
+
+[[variable]]
+native_id = "253.24245"
+slug = "patientavgifter-for-tandvard"
+
+[[variable]]
+native_id = "253.24249"
+slug = "forsaljning-av-tjanster"
+
+[[variable]]
+native_id = "253.24250"
+slug = "forsaljning-av-material-och-varor"
+
+[[variable]]
+native_id = "253.24251"
+slug = "erhallna-bidrag"
+
+[[variable]]
+native_id = "253.24254"
+slug = "ovriga-intakter-landsting"
+
+[[variable]]
+native_id = "253.24259"
+slug = "finansiella-intakter-darav-ranteintakter"
+
+[[variable]]
+native_id = "253.24260"
+slug = "finansiella-intakter-utdelning-aktier"
+
+[[variable]]
+native_id = "253.24973"
+slug = "tillfalligt-konjunkturstod-generellt"
+
+[[variable]]
+native_id = "253.28089"
+slug = "interna-intakter-ifo"
+
+[[variable]]
+native_id = "253.28090"
+slug = "forsaljning-av-verksamhet-ifo"
+
+[[variable]]
+native_id = "253.28096"
+slug = "kop-av-huvudverksamhet-utlandet"
+
+[[variable]]
+native_id = "253.28181"
+slug = "nettokostnad"
+
+[[variable]]
+native_id = "253.28182"
+slug = "nettokostnad-exkl-lakemedel"
+
+[[variable]]
+native_id = "253.28183"
+slug = "lakemedelskostnader-inom-formanen"
+
+[[variable]]
+native_id = "253.28184"
+slug = "lakemedelskostnader-pa-rekvisition"
+
+[[variable]]
+native_id = "253.28186"
+slug = "pensionsutbetalningar-intjanade-t-o-m"
+
+[[variable]]
+native_id = "253.28187"
+slug = "verksamhetens-nettokostnad"
+
+[[variable]]
+native_id = "253.28188"
+slug = "kostnad-for-tandvardsmoms"
+
+[[variable]]
+native_id = "253.28189"
+slug = "patientavgifter-och-andra-avg"
+
+[[variable]]
+native_id = "253.28190"
+slug = "forsaljning-av-verksamhet"
+
+[[variable]]
+native_id = "253.28192"
+slug = "fordelade-kostnader-serviceverksamheter"
+
+[[variable]]
+native_id = "253.28193"
+slug = "interndebiterade-intakter"
+
+[[variable]]
+native_id = "253.28199"
+slug = "summa-intakter"
+
+[[variable]]
+native_id = "253.28200"
+slug = "externa-intakter"
+
+[[variable]]
+native_id = "253.28202"
+slug = "kop-av-verksamhet"
+
+[[variable]]
+native_id = "253.28203"
+slug = "lamnade-bidrag"
+
+[[variable]]
+native_id = "253.28205"
+slug = "material-landsting"
+
+[[variable]]
+native_id = "253.28206"
+slug = "tjanster"
+
+[[variable]]
+native_id = "253.28207"
+slug = "nedskrivning-anlaggningstillgangar"
+
+[[variable]]
+native_id = "253.28208"
+slug = "interndebiterade-kostnader-inkl-rantor"
+
+[[variable]]
+native_id = "253.28209"
+slug = "summa-verksamhetens-kostnader-enligt-rr"
+
+[[variable]]
+native_id = "253.28210"
+slug = "externa-kostnader"
+
+[[variable]]
+native_id = "253.28211"
+slug = "kapitaltjanstkostnader"
+
+[[variable]]
+native_id = "253.28212"
+slug = "externa-lokalhyror-landsting"
+
+[[variable]]
+native_id = "253.28213"
+slug = "externa-hyresintakter-for-fastigheter"
+
+[[variable]]
+native_id = "253.28214"
+slug = "investeringsutgifter-for-byggnader-mark"
+
+[[variable]]
+native_id = "253.28215"
+slug = "investeringsutgifter-darav-byggnader"
+
+[[variable]]
+native_id = "253.28216"
+slug = "investeringsutgifter-darav-inkop-av-mark"
+
+[[variable]]
+native_id = "253.28217"
+slug = "patientavgifter-trafikantavgifter-spec"
+
+[[variable]]
+native_id = "253.28218"
+slug = "patientavgifter-inom-oppenvarden"
+
+[[variable]]
+native_id = "253.28219"
+slug = "patientavgifter-inom-primarvarden"
+
+[[variable]]
+native_id = "253.28220"
+slug = "patientavgifter-somatisk-vard"
+
+[[variable]]
+native_id = "253.28221"
+slug = "patientavgifter-psykiatrisk-vard"
+
+[[variable]]
+native_id = "253.28222"
+slug = "patientavgifter-for-hemsjukvard"
+
+[[variable]]
+native_id = "253.28223"
+slug = "ovriga-avgifter"
+
+[[variable]]
+native_id = "253.28224"
+slug = "forsaljning-av-verksamhet-spec"
+
+[[variable]]
+native_id = "253.28225"
+slug = "verksamhet-darav-tandvardsersattning-fk"
+
+[[variable]]
+native_id = "253.28226"
+slug = "forsaljning-av-tjanster-spec"
+
+[[variable]]
+native_id = "253.28227"
+slug = "verksamhet-darav-laboratorietjanster"
+
+[[variable]]
+native_id = "253.28228"
+slug = "verksamhet-darav-medicintekniska"
+
+[[variable]]
+native_id = "253.28229"
+slug = "forsaljning-av-material-och-varor-spec"
+
+[[variable]]
+native_id = "253.28230"
+slug = "erhallna-bidrag-spec"
+
+[[variable]]
+native_id = "253.28231"
+slug = "erhallna-bidrag-specialdestinerade"
+
+[[variable]]
+native_id = "253.28232"
+slug = "erhallna-bidrag-varav-alf-medel"
+
+[[variable]]
+native_id = "253.28233"
+slug = "erhallna-bidrag-personalanknutna"
+
+[[variable]]
+native_id = "253.28234"
+slug = "erhallna-bidrag-ersattning-upphandling"
+
+[[variable]]
+native_id = "253.28235"
+slug = "erhallna-bidrag-darav-eu-bidrag"
+
+[[variable]]
+native_id = "253.28236"
+slug = "erhallna-bidrag-darav-ovriga-bidrag"
+
+[[variable]]
+native_id = "253.28237"
+slug = "ovriga-intakter-spec"
+
+[[variable]]
+native_id = "253.28238"
+slug = "ovriga-intakter-vinst-avyttring"
+
+[[variable]]
+native_id = "253.28239"
+slug = "summa-externa-intakter"
+
+[[variable]]
+native_id = "253.28240"
+slug = "personalkostnader-fortroendevalda"
+
+[[variable]]
+native_id = "253.28241"
+slug = "lon-arbetstid-kostnadsersattningar"
+
+[[variable]]
+native_id = "253.28242"
+slug = "loner-darav-sjuklon-landsting"
+
+[[variable]]
+native_id = "253.28243"
+slug = "pensionskostnader-spec"
+
+[[variable]]
+native_id = "253.28244"
+slug = "pensionskostnader-forandring-avsattning"
+
+[[variable]]
+native_id = "253.28245"
+slug = "pensionskostnader-avgiftsbestamd"
+
+[[variable]]
+native_id = "253.28246"
+slug = "pensionskostnader-utbetalning"
+
+[[variable]]
+native_id = "253.28247"
+slug = "sociala-avgifter-lag-avtal-spec"
+
+[[variable]]
+native_id = "253.28248"
+slug = "ovriga-personalkostnader-spec"
+
+[[variable]]
+native_id = "253.28249"
+slug = "kostnader-for-lanedator"
+
+[[variable]]
+native_id = "253.28250"
+slug = "kop-verksamhet-material-lamnade-bidrag"
+
+[[variable]]
+native_id = "253.28251"
+slug = "kop-av-verksamhet-spec"
+
+[[variable]]
+native_id = "253.28252"
+slug = "verksamhetsanknutna-tjanster-spec"
+
+[[variable]]
+native_id = "253.28253"
+slug = "verksamhetstjanster-dosdispensering"
+
+[[variable]]
+native_id = "253.28254"
+slug = "lakemedel-sjukvardsmaterial-spec"
+
+[[variable]]
+native_id = "253.28255"
+slug = "lakemedel-darav-lakemedelforman"
+
+[[variable]]
+native_id = "253.28256"
+slug = "lakemedel-darav-utanfor-forman"
+
+[[variable]]
+native_id = "253.28257"
+slug = "lakemedel-darav-sjukvardsmaterial"
+
+[[variable]]
+native_id = "253.28258"
+slug = "lakemedel-darav-inkontinensartiklar"
+
+[[variable]]
+native_id = "253.28259"
+slug = "material-och-varor-spec"
+
+[[variable]]
+native_id = "253.28260"
+slug = "material-varor-darav-livsmedel-ravaror"
+
+[[variable]]
+native_id = "253.28261"
+slug = "lamnade-bidrag-spec"
+
+[[variable]]
+native_id = "253.28262"
+slug = "ovriga-kostnader-spec"
+
+[[variable]]
+native_id = "253.28263"
+slug = "lokal-och-fastighetskostnader-spec"
+
+[[variable]]
+native_id = "253.28264"
+slug = "lokal-fastighetskostnader-reparation"
+
+[[variable]]
+native_id = "253.28265"
+slug = "energi-mm-spec"
+
+[[variable]]
+native_id = "253.28266"
+slug = "transporter-och-frakter-spec"
+
+[[variable]]
+native_id = "253.28267"
+slug = "transporter-frakter-patienttransporter"
+
+[[variable]]
+native_id = "253.28268"
+slug = "transporter-och-frakter-darav-sjukresor"
+
+[[variable]]
+native_id = "253.28269"
+slug = "resekostnader-spec"
+
+[[variable]]
+native_id = "253.28270"
+slug = "forsakringsavgifter-riskkostnader"
+
+[[variable]]
+native_id = "253.28271"
+slug = "forsakringspremier"
+
+[[variable]]
+native_id = "253.28272"
+slug = "forsakringsavgifter-darav-kundforluster"
+
+[[variable]]
+native_id = "253.28273"
+slug = "nedskrivning-aterforing-spec"
+
+[[variable]]
+native_id = "253.28274"
+slug = "nedskrivning-av-anlaggningstillgangar"
+
+[[variable]]
+native_id = "253.28275"
+slug = "aterforing-av-nedskrivning"
+
+[[variable]]
+native_id = "253.28276"
+slug = "avskrivningar-spec"
+
+[[variable]]
+native_id = "253.28277"
+slug = "avskrivningar-for-lanedatorer"
+
+[[variable]]
+native_id = "253.28278"
+slug = "ovrigt-enligt-not-2"
+
+[[variable]]
+native_id = "253.28279"
+slug = "summa-externa-kostnader"
+
+[[variable]]
+native_id = "253.28280"
+slug = "forsaljning-verksamhet-landsting"
+
+[[variable]]
+native_id = "253.28281"
+slug = "forsaljning-verksamhet-landstingsagda"
+
+[[variable]]
+native_id = "253.28282"
+slug = "forsaljning-verksamhet-kommuner"
+
+[[variable]]
+native_id = "253.28283"
+slug = "forsaljning-verksamhet-kommunalforbund"
+
+[[variable]]
+native_id = "253.28284"
+slug = "forsaljning-verksamhet-privata"
+
+[[variable]]
+native_id = "253.28285"
+slug = "forsaljning-verksamhet-stat"
+
+[[variable]]
+native_id = "253.28286"
+slug = "forsaljning-verksamhet-ideella"
+
+[[variable]]
+native_id = "253.28287"
+slug = "forsaljning-verksamhet-hushall"
+
+[[variable]]
+native_id = "253.28288"
+slug = "forsaljning-verksamhet-inom-eu"
+
+[[variable]]
+native_id = "253.28289"
+slug = "forsaljning-verksamhet-utanfor-eu"
+
+[[variable]]
+native_id = "253.28290"
+slug = "kop-verksamhet-privata-foretag"
+
+[[variable]]
+native_id = "253.28291"
+slug = "kop-verksamhet-ideella"
+
+[[variable]]
+native_id = "253.28292"
+slug = "kop-verksamhet-kommunalforbund"
+
+[[variable]]
+native_id = "253.28293"
+slug = "kop-verksamhet-kommuner"
+
+[[variable]]
+native_id = "253.28294"
+slug = "kop-verksamhet-hushall"
+
+[[variable]]
+native_id = "253.28295"
+slug = "kop-verksamhet-landsting"
+
+[[variable]]
+native_id = "253.28296"
+slug = "kop-av-verksamhet-fran-stat"
+
+[[variable]]
+native_id = "253.28297"
+slug = "kop-verksamhet-landstingsagda"
+
+[[variable]]
+native_id = "253.28298"
+slug = "kop-verksamhet-fria-nyttigheter"
+
+[[variable]]
+native_id = "253.28299"
+slug = "kop-verksamhet-inom-eu"
+
+[[variable]]
+native_id = "253.28300"
+slug = "kop-verksamhet-utanfor-eu"
+
+[[variable]]
+native_id = "253.28310"
+slug = "upplupna-skatteintakter"
+
+[[variable]]
+native_id = "253.28312"
+slug = "personalens-kallskatt"
+
+[[variable]]
+native_id = "253.28313"
+slug = "sociala-avgifter-sarskild-loneskatt"
+
+[[variable]]
+native_id = "253.28314"
+slug = "bidrag-gavor-investeringar-ovriga"
+
+[[variable]]
+native_id = "253.28315"
+slug = "bidrag-vht-int"
+
+[[variable]]
+native_id = "253.28317"
+slug = "forrattnings-granskningsavgifter"
+
+[[variable]]
+native_id = "253.28318"
+slug = "anslutningsavgifter-from-2011"
+
+[[variable]]
+native_id = "253.28319"
+slug = "taxor-avgifter-ovrigt-2011"
+
+[[variable]]
+native_id = "253.28320"
+slug = "bostads-och-lokalhyror-from-2011"
+
+[[variable]]
+native_id = "253.28322"
+slug = "markhyror-arrenden-from-2011"
+
+[[variable]]
+native_id = "253.28323"
+slug = "hyror-arrenden-ovrigt-2011"
+
+[[variable]]
+native_id = "253.28324"
+slug = "driftbidrag-staten-myndigheter"
+
+[[variable]]
+native_id = "253.28325"
+slug = "driftbidrag-fran-ams-from-2011"
+
+[[variable]]
+native_id = "253.28326"
+slug = "kostnadsersattningar-bidrag-kommuner"
+
+[[variable]]
+native_id = "253.28327"
+slug = "ersattning-fk-personlig-assistans"
+
+[[variable]]
+native_id = "253.28328"
+slug = "momsbidrag-kop-ej-skattepliktig"
+
+[[variable]]
+native_id = "253.28329"
+slug = "eu-bidrag-intakter"
+
+[[variable]]
+native_id = "253.28330"
+slug = "forsaljning-verksamhet-annan-kommun"
+
+[[variable]]
+native_id = "253.28331"
+slug = "forsaljning-verksamhet-landsting-2011"
+
+[[variable]]
+native_id = "253.28332"
+slug = "forsaljning-verksamhet-tjanster-ovriga"
+
+[[variable]]
+native_id = "253.28333"
+slug = "ovriga-periodiseringar"
+
+[[variable]]
+native_id = "253.28334"
+slug = "bidrag-till-enskilda-from-2011"
+
+[[variable]]
+native_id = "253.28335"
+slug = "anhorigbidrag"
+
+[[variable]]
+native_id = "253.28336"
+slug = "vardnadsbidrag-barnomsorg"
+
+[[variable]]
+native_id = "253.28337"
+slug = "bostadssociala-bidrag-from-2011"
+
+[[variable]]
+native_id = "253.28338"
+slug = "bidrag-foreningar-foretag-2011"
+
+[[variable]]
+native_id = "253.28339"
+slug = "ersattning-fk-assistent"
+
+[[variable]]
+native_id = "253.28340"
+slug = "bidrag-till-staten-2011"
+
+[[variable]]
+native_id = "253.28341"
+slug = "loner-m-m-from-2011"
+
+[[variable]]
+native_id = "253.28342"
+slug = "sjuklon-from-2011"
+
+[[variable]]
+native_id = "253.28343"
+slug = "sociala-avgifter-inkl-loneskatt"
+
+[[variable]]
+native_id = "253.28344"
+slug = "loneskatt"
+
+[[variable]]
+native_id = "253.28345"
+slug = "pensionsutbetalningar-from-2011"
+
+[[variable]]
+native_id = "253.28346"
+slug = "lamnade-bidrag-hushall"
+
+[[variable]]
+native_id = "253.28347"
+slug = "lamnade-bidrag-ideella"
+
+[[variable]]
+native_id = "253.28348"
+slug = "lamnade-bidrag-kommunalforbund"
+
+[[variable]]
+native_id = "253.28349"
+slug = "lamnade-bidrag-kommuner-gotland"
+
+[[variable]]
+native_id = "253.28350"
+slug = "lamnade-bidrag-landsting"
+
+[[variable]]
+native_id = "253.28351"
+slug = "lamnade-bidrag-landstingsagda"
+
+[[variable]]
+native_id = "253.28352"
+slug = "lamnade-bidrag-lander-inom-eu"
+
+[[variable]]
+native_id = "253.28353"
+slug = "lamnade-bidrag-lander-utanfor-eu"
+
+[[variable]]
+native_id = "253.28354"
+slug = "lamnade-bidrag-privata"
+
+[[variable]]
+native_id = "253.28355"
+slug = "lamnade-bidrag-till-stat"
+
+[[variable]]
+native_id = "253.28356"
+slug = "forsaljning-tjanster-hushall"
+
+[[variable]]
+native_id = "253.28357"
+slug = "forsaljning-tjanster-ideella"
+
+[[variable]]
+native_id = "253.28358"
+slug = "forsaljning-tjanster-kommunalforbund"
+
+[[variable]]
+native_id = "253.28359"
+slug = "forsaljning-tjanster-kommuner"
+
+[[variable]]
+native_id = "253.28360"
+slug = "forsaljning-tjanster-landsting"
+
+[[variable]]
+native_id = "253.28361"
+slug = "forsaljning-tjanster-landstingsagda"
+
+[[variable]]
+native_id = "253.28362"
+slug = "forsaljning-tjanster-inom-eu"
+
+[[variable]]
+native_id = "253.28363"
+slug = "forsaljning-tjanster-utanfor-eu"
+
+[[variable]]
+native_id = "253.28364"
+slug = "forsaljning-tjanster-privata"
+
+[[variable]]
+native_id = "253.28365"
+slug = "forsaljning-tjanster-stat"
+
+[[variable]]
+native_id = "253.28366"
+slug = "erhallna-bidrag-hushall"
+
+[[variable]]
+native_id = "253.28367"
+slug = "erhallna-bidrag-ideella"
+
+[[variable]]
+native_id = "253.28368"
+slug = "erhallna-bidrag-kommunalforbund"
+
+[[variable]]
+native_id = "253.28369"
+slug = "erhallna-bidrag-kommuner"
+
+[[variable]]
+native_id = "253.28370"
+slug = "erhallna-bidrag-landsting"
+
+[[variable]]
+native_id = "253.28371"
+slug = "erhallna-bidrag-landstingsagda"
+
+[[variable]]
+native_id = "253.28372"
+slug = "erhallna-bidrag-inom-eu"
+
+[[variable]]
+native_id = "253.28373"
+slug = "erhallna-bidrag-utanfor-eu"
+
+[[variable]]
+native_id = "253.28374"
+slug = "erhallna-bidrag-privata"
+
+[[variable]]
+native_id = "253.28375"
+slug = "erhallna-bidrag-fran-stat"
+
+[[variable]]
+native_id = "253.28376"
+slug = "kop-verksamhetsanknutna-hushall"
+
+[[variable]]
+native_id = "253.28377"
+slug = "kop-verksamhetsanknutna-ideella"
+
+[[variable]]
+native_id = "253.28378"
+slug = "kop-verksamhetsanknutna-kommunalforbund"
+
+[[variable]]
+native_id = "253.28379"
+slug = "kop-verksamhetsanknutna-kommuner"
+
+[[variable]]
+native_id = "253.28380"
+slug = "kop-verksamhetsanknutna-landsting"
+
+[[variable]]
+native_id = "253.28381"
+slug = "kop-verksamhetsanknutna-landstingsagda"
+
+[[variable]]
+native_id = "253.28382"
+slug = "verksamhetsanknutna-inom-eu"
+
+[[variable]]
+native_id = "253.28383"
+slug = "verksamhetsanknutna-utanfor-eu"
+
+[[variable]]
+native_id = "253.28384"
+slug = "kop-verksamhetsanknutna-privata"
+
+[[variable]]
+native_id = "253.28385"
+slug = "pensionsutbetalningar-sarskild-avtals"
+
+[[variable]]
+native_id = "253.28386"
+slug = "pensionsutbetalningar-formansbestamd"
+
+[[variable]]
+native_id = "253.28388"
+slug = "pensionsforsakringsavg-2011"
+
+[[variable]]
+native_id = "253.28389"
+slug = "forvaltningsavgifter-from-2011"
+
+[[variable]]
+native_id = "253.28390"
+slug = "pensionskostnad-avgiftsbestamd-ar-x"
+
+[[variable]]
+native_id = "253.28391"
+slug = "personalsociala-kostnader"
+
+[[variable]]
+native_id = "253.28392"
+slug = "bransle-energi-vatten-2011"
+
+[[variable]]
+native_id = "253.28393"
+slug = "livsmedel-from-2011"
+
+[[variable]]
+native_id = "253.28394"
+slug = "kontorsmaterial-from-2011"
+
+[[variable]]
+native_id = "253.28395"
+slug = "material-ovrigt-from-2011"
+
+[[variable]]
+native_id = "253.28396"
+slug = "vatten-och-avlopp-from-2011"
+
+[[variable]]
+native_id = "253.28397"
+slug = "husbyggnadsentreprenader-2011"
+
+[[variable]]
+native_id = "253.28398"
+slug = "anlaggnings-reparationsentreprenader"
+
+[[variable]]
+native_id = "253.28399"
+slug = "entreprenad-kop-huvudverksamhet-2011"
+
+[[variable]]
+native_id = "253.28400"
+slug = "entreprenad-kop-stodverksamhet-2011"
+
+[[variable]]
+native_id = "253.28401"
+slug = "konsulttjanster-andra-tjanster-2011"
+
+[[variable]]
+native_id = "253.28402"
+slug = "tillfalligt-inhyrd-personal-2011"
+
+[[variable]]
+native_id = "253.28403"
+slug = "hyra-leasing-anlaggningar-2011"
+
+[[variable]]
+native_id = "253.28404"
+slug = "tele-it-postbefordran-2011"
+
+[[variable]]
+native_id = "253.28405"
+slug = "reparation-underhall-maskiner-2011"
+
+[[variable]]
+native_id = "253.28406"
+slug = "transporter-from-2011"
+
+[[variable]]
+native_id = "253.28407"
+slug = "lokalhyror-from-2011"
+
+[[variable]]
+native_id = "253.28408"
+slug = "markhyror-from-2011"
+
+[[variable]]
+native_id = "253.28409"
+slug = "forsakringsavg-riskkostnader-2011"
+
+[[variable]]
+native_id = "253.28410"
+slug = "tjanster-ovrigt-from-2011"
+
+[[variable]]
+native_id = "253.28411"
+slug = "forsakringsavgifter"
+
+[[variable]]
+native_id = "253.28412"
+slug = "sjalvrisker"
+
+[[variable]]
+native_id = "253.28413"
+slug = "kundforluster-riskkostnader"
+
+[[variable]]
+native_id = "253.28414"
+slug = "infriad-borgen"
+
+[[variable]]
+native_id = "253.28415"
+slug = "avgifter"
+
+[[variable]]
+native_id = "253.28416"
+slug = "fordonsskatt-och-fastighetsskatt"
+
+[[variable]]
+native_id = "253.28417"
+slug = "forlust-avyttring-materiella-anl"
+
+[[variable]]
+native_id = "253.28418"
+slug = "forlust-finansiella-tillgangar"
+
+[[variable]]
+native_id = "253.28419"
+slug = "forandring-avsattning-upplosning"
+
+[[variable]]
+native_id = "253.28420"
+slug = "allman-kommunalskatt-from-2011"
+
+[[variable]]
+native_id = "253.28421"
+slug = "slutavrakning-innevarande-ar-2011"
+
+[[variable]]
+native_id = "253.28422"
+slug = "justeringspost-slutavrakning-ar-x-1"
+
+[[variable]]
+native_id = "253.28423"
+slug = "ovriga-skatter-from-2011"
+
+[[variable]]
+native_id = "253.28424"
+slug = "inkomstutjamningsbidrag-2011"
+
+[[variable]]
+native_id = "253.28425"
+slug = "strukturbidrag-from-2011"
+
+[[variable]]
+native_id = "253.28426"
+slug = "inforandebidrag-from-2011"
+
+[[variable]]
+native_id = "253.28428"
+slug = "regleringsbidrag-from-2011"
+
+[[variable]]
+native_id = "253.28429"
+slug = "kostnadsutjamningsbidrag-from-2011"
+
+[[variable]]
+native_id = "253.28431"
+slug = "bidrag-for-lss-utjamning-from-2011"
+
+[[variable]]
+native_id = "253.28432"
+slug = "inkomstutjamningsavgift-from-2011"
+
+[[variable]]
+native_id = "253.28433"
+slug = "regleringsavgift-from-2011"
+
+[[variable]]
+native_id = "253.28435"
+slug = "kostnadsutjamningsavgift-from-2011"
+
+[[variable]]
+native_id = "253.28436"
+slug = "avgift-lss-utjamning-from-2011"
+
+[[variable]]
+native_id = "253.28437"
+slug = "fastighetsavgift-from-2011"
+
+[[variable]]
+native_id = "253.28438"
+slug = "utdelning-pa-aktier-och-andelar-kommunen"
+
+[[variable]]
+native_id = "253.28439"
+slug = "ranteintakter-from-2011"
+
+[[variable]]
+native_id = "253.28440"
+slug = "ranteintakter-kundfordringar-from-2011"
+
+[[variable]]
+native_id = "253.28441"
+slug = "realiserade-valutakursvinster"
+
+[[variable]]
+native_id = "253.28442"
+slug = "orealiserade-valutakursvinster-tom-2010"
+
+[[variable]]
+native_id = "253.28443"
+slug = "aterforing-av-nedskrivning-tillgangar"
+
+[[variable]]
+native_id = "253.28444"
+slug = "ovriga-finansiella-intakter-from-2011"
+
+[[variable]]
+native_id = "253.28445"
+slug = "rantekostnader-pa-lan-from-2011"
+
+[[variable]]
+native_id = "253.28446"
+slug = "ranta-pensionsavsattning-loneskatt"
+
+[[variable]]
+native_id = "253.28447"
+slug = "rantekostnader-leverantorskulder"
+
+[[variable]]
+native_id = "253.28448"
+slug = "realiserade-valutakursforluster"
+
+[[variable]]
+native_id = "253.28449"
+slug = "orealiserade-valutakursvinster-from-2011"
+
+[[variable]]
+native_id = "253.28450"
+slug = "nedskrivning-finansiella-tillgangar"
+
+[[variable]]
+native_id = "253.28451"
+slug = "ovriga-finansiella-kostnader-from-2011"
+
+[[variable]]
+native_id = "253.28452"
+slug = "kop-verksamhetsanknutna-tjanster-stat"
+
+[[variable]]
+native_id = "253.28453"
+slug = "inhyrd-personal-hushall-individer"
+
+[[variable]]
+native_id = "253.28454"
+slug = "inhyrd-personal-ideella-foreningar"
+
+[[variable]]
+native_id = "253.28455"
+slug = "inhyrd-personal-kommunalforbund"
+
+[[variable]]
+native_id = "253.28456"
+slug = "inhyrd-personal-kommuner"
+
+[[variable]]
+native_id = "253.28457"
+slug = "inhyrd-personal-landsting-regioner"
+
+[[variable]]
+native_id = "253.28458"
+slug = "inhyrd-personal-landstingsagda-foretag"
+
+[[variable]]
+native_id = "253.28459"
+slug = "inhyrd-personal-lander-inom-eu"
+
+[[variable]]
+native_id = "253.28460"
+slug = "inhyrd-personal-lander-utanfor-eu"
+
+[[variable]]
+native_id = "253.28461"
+slug = "inhyrd-personal-privata-foretag"
+
+[[variable]]
+native_id = "253.28462"
+slug = "inhyrd-personal-stat"
+
+[[variable]]
+native_id = "253.28464"
+slug = "maskiner-inventarier-investering"
+
+[[variable]]
+native_id = "253.28465"
+slug = "mark-byggn-tekn-anlaggningar"
+
+[[variable]]
+native_id = "253.28467"
+slug = "finansiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "253.28468"
+slug = "aktier-andelar-bostadsratter-investering"
+
+[[variable]]
+native_id = "253.28484"
+slug = "entreprenad-kop-huvudverksamhet-drift"
+
+[[variable]]
+native_id = "253.28485"
+slug = "entreprenad-kop-huvud-hushall-individer"
+
+[[variable]]
+native_id = "253.28486"
+slug = "entreprenad-kop-huvudverksamhet-utlandet"
+
+[[variable]]
+native_id = "253.28487"
+slug = "kop-huvudverksamhet-hushall-individer"
+
+[[variable]]
+native_id = "253.28489"
+slug = "bidrag-transfereringar-hushall-individer"
+
+[[variable]]
+native_id = "253.28490"
+slug = "bidrag-transfereringar-privata-foretag"
+
+[[variable]]
+native_id = "253.28491"
+slug = "bidrag-transfereringar-utlandet"
+
+[[variable]]
+native_id = "253.28492"
+slug = "markhyror-bidrag-motpartsredovisningen"
+
+[[variable]]
+native_id = "253.28506"
+slug = "darav-upplosning-bidrag-statl-infrastr"
+
+[[variable]]
+native_id = "253.28531"
+slug = "lamnade-bidrag-darav-infrastruktur"
+
+[[variable]]
+native_id = "253.28718"
+slug = "forlust-avyttring-utrangering-tillgang"
+
+[[variable]]
+native_id = "253.28719"
+slug = "darav-upplosning-bidrag-infrastruktur"
+
+[[variable]]
+native_id = "253.29292"
+slug = "patientavgifter-trafikavgifter"
+
+[[variable]]
+native_id = "253.29293"
+slug = "investeringsutgifter-materiella-tillg"
+
+[[variable]]
+native_id = "253.29294"
+slug = "investeringsutgifter-materiella-byggnad"
+
+[[variable]]
+native_id = "253.29295"
+slug = "investeringsutgifter-medicinteknisk"
+
+[[variable]]
+native_id = "253.29296"
+slug = "investeringsutgifter-ovriga-inventarier"
+
+[[variable]]
+native_id = "253.29297"
+slug = "investeringsutgifter-immateriella-tot"
+
+[[variable]]
+native_id = "253.29298"
+slug = "investeringsutgifter-immat-medteknik"
+
+[[variable]]
+native_id = "253.29299"
+slug = "biljettintakter-kollektivtrafik"
+
+[[variable]]
+native_id = "253.29300"
+slug = "erhallna-bidrag-darav-investeringsbidrag"
+
+[[variable]]
+native_id = "253.29302"
+slug = "forbrukningsinventarier"
+
+[[variable]]
+native_id = "253.29303"
+slug = "varav-upplosning-aktiverat-bidrag"
+
+[[variable]]
+native_id = "253.29304"
+slug = "forsaljning-verksamhet-utlandet"
+
+[[variable]]
+native_id = "253.29305"
+slug = "kop-verksamhet-utlandet"
+
+[[variable]]
+native_id = "253.29306"
+slug = "lamnade-bidrag-utlandet"
+
+[[variable]]
+native_id = "253.29307"
+slug = "forsaljning-tjanster-utlandet"
+
+[[variable]]
+native_id = "253.29308"
+slug = "erhallna-bidrag-utlandet"
+
+[[variable]]
+native_id = "253.29309"
+slug = "kop-verksamhetsanknutna-tjanster-utland"
+
+[[variable]]
+native_id = "253.29310"
+slug = "inhyrd-personal-utlandet"
+
+[[variable]]
+native_id = "253.30658"
+slug = "lamnade-bidrag-kostnadsforing"
+
+[[variable]]
+native_id = "253.30659"
+slug = "lamnade-bidrag-upplosning-bidrag"
+
+[[variable]]
+native_id = "253.30945"
+slug = "avgar-aterforing-orealiserade-forluster"
+
+[[variable]]
+native_id = "253.30946"
+slug = "tillagg-medel-resultatutjamningsreserv"
+
+[[variable]]
+native_id = "253.30947"
+slug = "arets-resultat-balanskravsjusteringar"
+
+[[variable]]
+native_id = "253.32740"
+slug = "aterbetalning-av-afa"
+
+[[variable]]
+native_id = "253.32743"
+slug = "bidrag-till-infrastruktur"
+
+[[variable]]
+native_id = "253.32746"
+slug = "tjanster-darav-fastighets-entreprenader"
+
+[[variable]]
+native_id = "253.32747"
+slug = "ovriga-frammande-tjanster"
+
+[[variable]]
+native_id = "253.32748"
+slug = "kostnadsforing-bidrag-infrastruktur"
+
+[[variable]]
+native_id = "253.32749"
+slug = "upplosning-bidrag-statlig-infrastruktur"
+
+[[variable]]
+native_id = "253.32750"
+slug = "forbrukningsinventarier-2"
+
+[[variable]]
+native_id = "253.32751"
+slug = "inkop-av-exploateringsmark"
+
+[[variable]]
+native_id = "253.32752"
+slug = "rips"
+
+[[variable]]
+native_id = "253.32753"
+slug = "mellankommunal-kostnadsutjamning"
+
+[[variable]]
+native_id = "253.32759"
+slug = "darav-afa"
+
+[[variable]]
+native_id = "253.32760"
+slug = "avgar-medel-resultatutjamningsreserv"
+
+[[variable]]
+native_id = "253.32762"
+slug = "resultatutjamningsreserv"
+
+[[variable]]
+native_id = "253.32763"
+slug = "ovrigt-eget-kapital"
+
+[[variable]]
+native_id = "253.32764"
+slug = "justeringar-i-eget-kapital"
+
+[[variable]]
+native_id = "253.32766"
+slug = "skuld-ersattningar-investeringsbidrag"
+
+[[variable]]
+native_id = "253.32768"
+slug = "upplupna-sociala-avgifter"
+
+[[variable]]
+native_id = "253.32775"
+slug = "avgar-ovriga-justeringar"
+
+[[variable]]
+native_id = "253.32776"
+slug = "tillagg-ovriga-justeringar"
+
+[[variable]]
+native_id = "253.32777"
+slug = "exploateringsfastigheter"
+
+[[variable]]
+native_id = "253.32778"
+slug = "borgensatagande-for-lan"
+
+[[variable]]
+native_id = "253.32779"
+slug = "borgensatagande-lan-offentliga-bolag"
+
+[[variable]]
+native_id = "253.32786"
+slug = "infriad-borgen-for-lan"
+
+[[variable]]
+native_id = "253.32806"
+slug = "infriad-borgen-avseende-lan"
+
+[[variable]]
+native_id = "253.32807"
+slug = "aterbetalning-borgensataganden"
+
+[[variable]]
+native_id = "253.32808"
+slug = "borgensavgift"
+
+[[variable]]
+native_id = "253.35238"
+slug = "anskaffningskostnad-forsald-exploatering"
+
+[[variable]]
+native_id = "253.35239"
+slug = "larm-bevakning-brandskydd-kursavgifter"
+
+[[variable]]
+native_id = "253.35241"
+slug = "tillfalligt-stod-flyktingsituationen"
+
+[[variable]]
+native_id = "253.35242"
+slug = "utdelning-pa-aktier-andelar-koncernen"
+
+[[variable]]
+native_id = "253.35922"
+slug = "lakemedel-darav-landstingssubvention"
+
+[[variable]]
+native_id = "253.35923"
+slug = "lakemedel-darav-smittskyddslakemedel"
+
+[[variable]]
+native_id = "253.35927"
+slug = "investeringsbidrag"
+
+[[variable]]
+native_id = "253.35928"
+slug = "ovriga-bidrag-driftbidrag"
+
+[[variable]]
+native_id = "253.35988"
+slug = "avsattning-bidrag-infrastruktur-kommunen"
+
+[[variable]]
+native_id = "253.35990"
+slug = "uppbokade-investeringsbidrag-kommunen"
+
+[[variable]]
+native_id = "253.35996"
+slug = "nyupptagna-lan-kommun-koncern"
+
+[[variable]]
+native_id = "253.35998"
+slug = "kortfristig-del-langfristig-skuld"
+
+[[variable]]
+native_id = "253.36588"
+slug = "summa-kortfristiga-fordringar-koncernen"
+
+[[variable]]
+native_id = "253.36589"
+slug = "summa-kortfristiga-placeringar-koncernen"
+
+[[variable]]
+native_id = "253.36590"
+slug = "summa-kortfristiga-placeringar-kommunen"
+
+[[variable]]
+native_id = "253.36592"
+slug = "ranteintakter-koncernen"
+
+[[variable]]
+native_id = "253.36593"
+slug = "aterforing-nedskrivning-finansiella"
+
+[[variable]]
+native_id = "253.36594"
+slug = "reavinst-finansiella-koncernen"
+
+[[variable]]
+native_id = "253.36595"
+slug = "reavinst-finansiella-kommunen"
+
+[[variable]]
+native_id = "253.36596"
+slug = "rantekostnader-kommunen"
+
+[[variable]]
+native_id = "253.36597"
+slug = "rantekostnader-koncernen"
+
+[[variable]]
+native_id = "253.36598"
+slug = "ranta-pa-pensionsavsattning-koncernen"
+
+[[variable]]
+native_id = "253.36599"
+slug = "nedskrivning-finansiella-koncernen"
+
+[[variable]]
+native_id = "253.36600"
+slug = "forlust-avyttring-finansiella-koncernen"
+
+[[variable]]
+native_id = "253.36601"
+slug = "inkop-av-mark"
+
+[[variable]]
+native_id = "253.36602"
+slug = "forsaljning-mark-brutto-rearesultat"
+
+[[variable]]
+native_id = "253.36603"
+slug = "investeringsinkomster-exkl-forsaljning"
+
+[[variable]]
+native_id = "253.36604"
+slug = "investeringsinkomster-bidrag-staten"
+
+[[variable]]
+native_id = "253.36605"
+slug = "investeringsinkomster-bidrag-eu"
+
+[[variable]]
+native_id = "253.36606"
+slug = "investeringsinkomster-fran-foretag"
+
+[[variable]]
+native_id = "253.36607"
+slug = "investeringsinkomster-ovriga"
+
+[[variable]]
+native_id = "253.36608"
+slug = "investeringsutgifter-foretag-fastighet"
+
+[[variable]]
+native_id = "253.36609"
+slug = "investeringsutgifter-foretag-energi"
+
+[[variable]]
+native_id = "253.36610"
+slug = "investeringsutgifter-foretag-transport"
+
+[[variable]]
+native_id = "253.36611"
+slug = "investeringsutgifter-foretag-ovrig"
+
+[[variable]]
+native_id = "253.36612"
+slug = "investeringsinkomster-foretag-fastighet"
+
+[[variable]]
+native_id = "253.36613"
+slug = "investeringsinkomster-foretag-energi"
+
+[[variable]]
+native_id = "253.36614"
+slug = "investeringsinkomster-foretag-transport"
+
+[[variable]]
+native_id = "253.36615"
+slug = "investeringsinkomster-foretag-ovrig"
+
+[[variable]]
+native_id = "253.37129"
+slug = "ovriga-investeringsinkomster"
+
+[[variable]]
+native_id = "253.37130"
+slug = "totala-investeringsinkomster-foretag"
+
+[[variable]]
+native_id = "253.37131"
+slug = "investeringsbidrag-fran-eu"
+
+[[variable]]
+native_id = "253.37132"
+slug = "investeringsbidrag-fran-staten"
+
+[[variable]]
+native_id = "253.37133"
+slug = "generella-bidrag-darav-byggbonus"
+
+[[variable]]
+native_id = "253.37134"
+slug = "finansiella-kostnader-jamforelsestorande"
+
+[[variable]]
+native_id = "253.37135"
+slug = "finansiella-intakter-jamforelsestorande"
+
+[[variable]]
+native_id = "253.37136"
+slug = "avskrivningar-jamforelsestorande"
+
+[[variable]]
+native_id = "253.37137"
+slug = "sale-and-leaseback-av-tillgangar"
+
+[[variable]]
+native_id = "253.37138"
+slug = "partnerskap-offentlig-privat"
+
+[[variable]]
+native_id = "253.37139"
+slug = "villkorade-forsaljningar-claw-back"
+
+[[variable]]
+native_id = "253.37170"
+slug = "nedskrivningar-landsting"
+
+[[variable]]
+native_id = "253.37171"
+slug = "skatteintakter"
+
+[[variable]]
+native_id = "253.37172"
+slug = "finansiella-kostnader-landstinget"
+
+[[variable]]
+native_id = "253.37173"
+slug = "finansiella-intakter-landstinget"
+
+[[variable]]
+native_id = "253.37174"
+slug = "bidrag-fran-avgifter-till-utjamningen"
+
+[[variable]]
+native_id = "253.37175"
+slug = "ovriga-generella-bidrag"
+
+[[variable]]
+native_id = "253.37181"
+slug = "skattekostnader-bokslutsdispositioner"
+
+[[variable]]
+native_id = "253.37190"
+slug = "jamforelsestorande-intakter-verksamhet"
+
+[[variable]]
+native_id = "253.37191"
+slug = "jamforelsestorande-kostnader-verksamhet"
+
+[[variable]]
+native_id = "253.37192"
+slug = "rantedel-i-arets-loneskattekostnad"
+
+[[variable]]
+native_id = "253.37193"
+slug = "rantedel-i-arets-pensionskostnad"
+
+[[variable]]
+native_id = "253.37194"
+slug = "pensionsutbelalningar-intjanade-tom-1997"
+
+[[variable]]
+native_id = "253.37195"
+slug = "pensionsutbetalningar-intjanade-1998"
+
+[[variable]]
+native_id = "253.37196"
+slug = "justeringspost-for-skatteintakter"
+
+[[variable]]
+native_id = "253.37197"
+slug = "prognos-for-avrakningslikvid"
+
+[[variable]]
+native_id = "253.37198"
+slug = "preliminara-skatteinbetalningar"
+
+[[variable]]
+native_id = "253.37243"
+slug = "strukturbidrag-landsting"
+
+[[variable]]
+native_id = "253.37244"
+slug = "inforandebidrag-landsting"
+
+[[variable]]
+native_id = "253.37245"
+slug = "regleringsbidrag-landsting"
+
+[[variable]]
+native_id = "253.37246"
+slug = "kostnadsutjamningsbidrag-landsting"
+
+[[variable]]
+native_id = "253.37247"
+slug = "inkomstutjamningsbidrag-landsting"
+
+[[variable]]
+native_id = "253.37248"
+slug = "statsbidrag-utjamning-netto-landsting"
+
+[[variable]]
+native_id = "253.37249"
+slug = "bidrag-till-lakemedelsformanen"
+
+[[variable]]
+native_id = "253.37250"
+slug = "inkomstutjamningsavgift-landsting"
+
+[[variable]]
+native_id = "253.37251"
+slug = "kostnadsutjamningsavgift-landsting"
+
+[[variable]]
+native_id = "253.37252"
+slug = "regleringsavgift-landsting"
+
+[[variable]]
+native_id = "253.37253"
+slug = "finansiella-intakter-vinst-avyttring"
+
+[[variable]]
+native_id = "253.37254"
+slug = "finansiella-intakter-aterforing"
+
+[[variable]]
+native_id = "253.37255"
+slug = "finansiella-intakter-valutakursvinster"
+
+[[variable]]
+native_id = "253.37256"
+slug = "finansiella-intakter-orealiserade"
+
+[[variable]]
+native_id = "253.37258"
+slug = "finansiella-intakter-ovriga-landsting"
+
+[[variable]]
+native_id = "253.37259"
+slug = "finansiella-intakter-borgensavgifter"
+
+[[variable]]
+native_id = "253.37260"
+slug = "finansiella-intakter-aterbetalning"
+
+[[variable]]
+native_id = "253.37262"
+slug = "finansiella-kostnader-rantekostnader"
+
+[[variable]]
+native_id = "253.37263"
+slug = "finansiella-kostnader-forlust-avyttring"
+
+[[variable]]
+native_id = "253.37264"
+slug = "finansiella-kostnader-nedskrivning"
+
+[[variable]]
+native_id = "253.37265"
+slug = "finansiella-kostnader-valutakursforlust"
+
+[[variable]]
+native_id = "253.37266"
+slug = "finansiella-kostnader-orealiserade"
+
+[[variable]]
+native_id = "253.37267"
+slug = "finansiella-kostnader-ovriga"
+
+[[variable]]
+native_id = "253.37268"
+slug = "immateriella-tillgangar-landsting"
+
+[[variable]]
+native_id = "253.37269"
+slug = "maskiner-inventarier-leasing-landsting"
+
+[[variable]]
+native_id = "253.37270"
+slug = "aktier-och-andelar-landsting"
+
+[[variable]]
+native_id = "253.37271"
+slug = "maskiner-och-inventarier-landsting"
+
+[[variable]]
+native_id = "253.37273"
+slug = "aktier-andelar-landsting-koncernforetag"
+
+[[variable]]
+native_id = "253.37274"
+slug = "obligationer-certifikat-landsting"
+
+[[variable]]
+native_id = "253.37275"
+slug = "bidrag-till-infrastruktur-landsting"
+
+[[variable]]
+native_id = "253.37276"
+slug = "langfristiga-fordringar-landsting"
+
+[[variable]]
+native_id = "253.37277"
+slug = "langfristiga-fordringar-hos-koncern"
+
+[[variable]]
+native_id = "253.37278"
+slug = "forrad-lager-landsting"
+
+[[variable]]
+native_id = "253.37279"
+slug = "kundfordringar-landsting"
+
+[[variable]]
+native_id = "253.37280"
+slug = "kundfordringar-koncernforetag-landsting"
+
+[[variable]]
+native_id = "253.37282"
+slug = "ovriga-kortfristiga-fordringar-landsting"
+
+[[variable]]
+native_id = "253.37283"
+slug = "kortfristiga-fordringar-landsting-staten"
+
+[[variable]]
+native_id = "253.37284"
+slug = "fordringar-landsting-koncern"
+
+[[variable]]
+native_id = "253.37285"
+slug = "kortfristiga-fordringar-landsting-moms"
+
+[[variable]]
+native_id = "253.37286"
+slug = "forutbetalda-kostnader-landsting"
+
+[[variable]]
+native_id = "253.37287"
+slug = "forutbetalda-landsting-skatteintakter"
+
+[[variable]]
+native_id = "253.37288"
+slug = "kortfristiga-placeringar-landsting"
+
+[[variable]]
+native_id = "253.37289"
+slug = "placeringar-landsting-aktier"
+
+[[variable]]
+native_id = "253.37290"
+slug = "placeringar-landsting-obligationer"
+
+[[variable]]
+native_id = "253.37291"
+slug = "placeringar-landsting-certifikat"
+
+[[variable]]
+native_id = "253.37292"
+slug = "kortfristiga-placeringar-nedskrivning"
+
+[[variable]]
+native_id = "253.37293"
+slug = "kassa-och-bank-landsting"
+
+[[variable]]
+native_id = "253.37299"
+slug = "eget-kapital-landsting"
+
+[[variable]]
+native_id = "253.37300"
+slug = "ovrig-eget-kapital-landsting"
+
+[[variable]]
+native_id = "253.37301"
+slug = "resultatutjamningsreserv-landsting"
+
+[[variable]]
+native_id = "253.37302"
+slug = "avsattningar-landsting-infrastruktur"
+
+[[variable]]
+native_id = "253.37303"
+slug = "avsattningar-landsting-pensioner-fr-1998"
+
+[[variable]]
+native_id = "253.37304"
+slug = "avsattningar-landsting"
+
+[[variable]]
+native_id = "253.37305"
+slug = "langfristiga-skulder-landsting-koncern"
+
+[[variable]]
+native_id = "253.37306"
+slug = "langfristiga-skulder-banker-landsting"
+
+[[variable]]
+native_id = "253.37307"
+slug = "skulder-checkrakningskredit-landsting"
+
+[[variable]]
+native_id = "253.37308"
+slug = "arets-investeringsbidrag-skuld-landsting"
+
+[[variable]]
+native_id = "253.37309"
+slug = "investeringsbidrag-skuld-landsting"
+
+[[variable]]
+native_id = "253.37310"
+slug = "langfristiga-skulder-landsting"
+
+[[variable]]
+native_id = "253.37312"
+slug = "skulder-lan-utlandsk-valuta-landsting"
+
+[[variable]]
+native_id = "253.37313"
+slug = "langfristig-leasingskuld-landsting"
+
+[[variable]]
+native_id = "253.37316"
+slug = "leverantorsskulder-koncern-landsting"
+
+[[variable]]
+native_id = "253.37317"
+slug = "leverantorsskulder-landsting"
+
+[[variable]]
+native_id = "253.37318"
+slug = "kortfristiga-skulder-landsting"
+
+[[variable]]
+native_id = "253.37319"
+slug = "kortfristig-laneskuld-koncern-landsting"
+
+[[variable]]
+native_id = "253.37320"
+slug = "ovriga-kortfristiga-laneskuld-landsting"
+
+[[variable]]
+native_id = "253.37321"
+slug = "kortfristig-del-leasingskuld-landsting"
+
+[[variable]]
+native_id = "253.37322"
+slug = "skulder-mervardesskatt-landsting"
+
+[[variable]]
+native_id = "253.37323"
+slug = "moms-sarskilda-punktskatter-landsting"
+
+[[variable]]
+native_id = "253.37324"
+slug = "skulder-till-staten-landsting"
+
+[[variable]]
+native_id = "253.37325"
+slug = "ovriga-kortfristiga-lan-utlandsk-valuta"
+
+[[variable]]
+native_id = "253.37326"
+slug = "kortfristig-del-langfristiga-skuld"
+
+[[variable]]
+native_id = "253.37327"
+slug = "upplupna-semesterloner-landsting"
+
+[[variable]]
+native_id = "253.37328"
+slug = "upplupna-kostnader-forutbetalda-intakter"
+
+[[variable]]
+native_id = "253.37329"
+slug = "upplupna-pensionskostnader-landsting"
+
+[[variable]]
+native_id = "253.37330"
+slug = "upplupen-loneskatt-landsting"
+
+[[variable]]
+native_id = "253.37331"
+slug = "upplupna-sociala-avgifter-landsting"
+
+[[variable]]
+native_id = "253.37332"
+slug = "upplupna-sociala-avgifter-enl-lag"
+
+[[variable]]
+native_id = "253.37336"
+slug = "kortfristiga-skulder-totalt-landsting"
+
+[[variable]]
+native_id = "253.37337"
+slug = "forutbetalda-skatteintakter-landsting"
+
+[[variable]]
+native_id = "253.37338"
+slug = "borgensataganden-for-lan-landsting"
+
+[[variable]]
+native_id = "253.37339"
+slug = "ovriga-ansvarsforbindelser-landsting"
+
+[[variable]]
+native_id = "253.37340"
+slug = "pensionsformaner-fore-1998-loneskatt"
+
+[[variable]]
+native_id = "253.37341"
+slug = "pensionsformaner-fore-1998-landsting"
+
+[[variable]]
+native_id = "253.37342"
+slug = "ansvarsforbindelser-lan-offentliga"
+
+[[variable]]
+native_id = "253.37343"
+slug = "byggnader-och-mark-landsting"
+
+[[variable]]
+native_id = "253.37344"
+slug = "mark-landsting"
+
+[[variable]]
+native_id = "253.37345"
+slug = "investeringar-ub-anlaggningstillgangar"
+
+[[variable]]
+native_id = "253.37346"
+slug = "investeringar-ovriga-forandringar"
+
+[[variable]]
+native_id = "253.37350"
+slug = "investeringar-omklassificeringar"
+
+[[variable]]
+native_id = "253.37351"
+slug = "investeringar-nedskrivning-aterforing"
+
+[[variable]]
+native_id = "253.37352"
+slug = "investeringar-landsting-avskrivningar"
+
+[[variable]]
+native_id = "253.37353"
+slug = "investeringar-landsting-reaforlust"
+
+[[variable]]
+native_id = "253.37354"
+slug = "investeringar-landsting-reavinst"
+
+[[variable]]
+native_id = "253.37355"
+slug = "investeringar-landsting-forsaljningspris"
+
+[[variable]]
+native_id = "253.37356"
+slug = "investeringar-landsting-inkop"
+
+[[variable]]
+native_id = "253.37357"
+slug = "investeringar-ib-anlaggningstillgangar"
+
+[[variable]]
+native_id = "253.37358"
+slug = "investeringsutgifter-totalt-landsting"
+
+[[variable]]
+native_id = "253.37359"
+slug = "investeringsutgifter-medicintekniska"
+
+[[variable]]
+native_id = "253.37360"
+slug = "investering-immateriella-landsting"
+
+[[variable]]
+native_id = "253.37361"
+slug = "investeringsutgifter-byggnader-mark"
+
+[[variable]]
+native_id = "253.37362"
+slug = "investering-materiella-landsting"
+
+[[variable]]
+native_id = "253.37364"
+slug = "investeringar-ovrig-verksamhet-landsting"
+
+[[variable]]
+native_id = "253.37365"
+slug = "investeringsutgifter-transport-landsting"
+
+[[variable]]
+native_id = "253.37366"
+slug = "investering-energi-vatten-landsting"
+
+[[variable]]
+native_id = "253.37367"
+slug = "investering-fastigheter-landsting"
+
+[[variable]]
+native_id = "253.37368"
+slug = "inkomster-ovrig-verksamhet-landsting"
+
+[[variable]]
+native_id = "253.37369"
+slug = "inkomster-transport-landsting"
+
+[[variable]]
+native_id = "253.37370"
+slug = "inkomster-energi-vatten-landsting"
+
+[[variable]]
+native_id = "253.37371"
+slug = "inkomster-fastigheter-landsting"
+
+[[variable]]
+native_id = "253.37381"
+slug = "tillagg-ovriga-justeringar-landsting"
+
+[[variable]]
+native_id = "253.37382"
+slug = "avgar-ovriga-justeringar-landsting"
+
+[[variable]]
+native_id = "253.37383"
+slug = "anvandning-resultatutjamningsreserv"
+
+[[variable]]
+native_id = "253.37384"
+slug = "reservering-resultatutjamningsreserv"
+
+[[variable]]
+native_id = "253.37385"
+slug = "aterforing-orealiserade-forluster"
+
+[[variable]]
+native_id = "253.37386"
+slug = "orealiserade-forluster-i-vardepapper"
+
+[[variable]]
+native_id = "253.37387"
+slug = "realisationsforluster-undantagsmojlighet"
+
+[[variable]]
+native_id = "253.37388"
+slug = "realisationsvinster-undantagsmojlighet"
+
+[[variable]]
+native_id = "253.37389"
+slug = "reducering-samtliga-realisationsvinster"
+
+[[variable]]
+native_id = "253.42472"
+slug = "entreprenad-kop-hushall-individer"
+
+# register 254 (investeringsfonder)

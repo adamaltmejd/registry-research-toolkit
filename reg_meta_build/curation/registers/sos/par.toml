@@ -42,3 +42,337 @@ parts = [
   { data_type = "integer", owner = "5891427617861710725.ATC.atc" },  # slug dia-yo-kod-ar-atc-kod
   { data_type = "text", owner = "5891427617861710725.ATC.atc-1" },   # slug atc-komplement-diagnos
 ]
+
+[[variant]]
+native_id = "5891427617861710725.6299896919770839454"
+slug = "par-sv"
+display_group = "PAR_SV"
+panel_entity_key = "personnr"
+panel_time_key = "indatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5891427617861710725.5623677195158740599"
+slug = "par-ov"
+display_group = "PAR_OV"
+panel_entity_key = "personnr"
+panel_time_key = "indatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5891427617861710725.6508659120530331974"
+slug = "par-tv"
+display_group = "PAR_TV"
+panel_entity_key = "personnr"
+panel_time_key = "indatum"
+panel_time_grain = "row"
+
+# Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM (LVM)
+#
+# #211: the lvm_* token map gave the variants real states, so the PNR column
+# resolves per variant (auto slug flipped name-derived `personnummer` ->
+# column-derived `pnr`). The variants are event registers (applications /
+# immediate-custody decisions / care episodes) — row grain on the numeric
+# event-date column of each, consistent with PAR/CAN/DORS.
+
+[[variable]]
+native_id = "5891427617861710725.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "5891427617861710725.ATC.atc"
+slug = "dia-yo-kod-ar-atc-kod"
+
+[[variable]]
+native_id = "5891427617861710725.ATC.atc-1"
+slug = "atc-komplement-diagnos"
+
+# register 7550156225339591583 (bu)
+
+[[variable]]
+native_id = "5891427617861710725.ALDER_S"
+slug = "alder-vid-arets-slut"
+
+[[variable]]
+native_id = "5891427617861710725.ANE1"
+slug = "anestesikod-1"
+
+[[variable]]
+native_id = "5891427617861710725.ANE2"
+slug = "anestesikod-2"
+
+[[variable]]
+native_id = "5891427617861710725.ATCO"
+slug = "atc-komplement-atgardskod"
+
+[[variable]]
+native_id = "5891427617861710725.ATG"
+slug = "atgardskod-eller-atc-kod"
+
+[[variable]]
+native_id = "5891427617861710725.ATGARD"
+slug = "atgardskod-eller-atc-kod-2"
+
+[[variable]]
+native_id = "5891427617861710725.ATGDATUM"
+slug = "atgardsdatum"
+
+[[variable]]
+native_id = "5891427617861710725.DIA"
+slug = "diagnoskod-atc-skada-forgiftning"
+
+[[variable]]
+native_id = "5891427617861710725.DRG"
+slug = "diagnosrelaterad-grupp"
+
+[[variable]]
+native_id = "5891427617861710725.EKOD"
+slug = "yttre-orsakskoder"
+
+[[variable]]
+native_id = "5891427617861710725.EKOD1"
+slug = "yttre-orsakskod-1"
+
+[[variable]]
+native_id = "5891427617861710725.EKOD2"
+slug = "yttre-orsakskod-2"
+
+[[variable]]
+native_id = "5891427617861710725.EKOD3"
+slug = "yttre-orsakskod-3"
+
+[[variable]]
+native_id = "5891427617861710725.EKOD4"
+slug = "yttre-orsakskod-4"
+
+[[variable]]
+native_id = "5891427617861710725.EKOD5"
+slug = "yttre-orsakskod-5"
+
+[[variable]]
+native_id = "5891427617861710725.EKOD6"
+slug = "yttre-orsakskod-6"
+
+[[variable]]
+native_id = "5891427617861710725.EKOD7"
+slug = "yttre-orsakskod-7"
+
+[[variable]]
+native_id = "5891427617861710725.FLAND"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "5891427617861710725.FODAR"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "5891427617861710725.FODDATN"
+slug = "fodelsedatum-sas"
+
+[[variable]]
+native_id = "5891427617861710725.FODDATUMN"
+slug = "fodelsedatum-sas-m"
+
+[[variable]]
+native_id = "5891427617861710725.HDIA"
+slug = "typ-av-diagnos"
+
+[[variable]]
+native_id = "5891427617861710725.IDNR"
+slug = "lopnr-oppenvardskontakt"
+
+[[variable]]
+native_id = "5891427617861710725.KTYP"
+slug = "form-oppenvardskontakt"
+
+[[variable]]
+native_id = "5891427617861710725.LK"
+slug = "folkbokforingsort-lan-kommun"
+
+[[variable]]
+native_id = "5891427617861710725.LKF"
+slug = "folkbokforingsort-lan-kommun-forsamling"
+
+[[variable]]
+native_id = "5891427617861710725.LT_IN"
+slug = "uppgiftslamnare"
+
+[[variable]]
+native_id = "5891427617861710725.MVO"
+slug = "medicinskt-verksamhetsomrade"
+
+[[variable]]
+native_id = "5891427617861710725.OP"
+slug = "atgardskoder"
+
+[[variable]]
+native_id = "5891427617861710725.OPD1"
+slug = "atgardsdatum-1"
+
+[[variable]]
+native_id = "5891427617861710725.OPD10"
+slug = "atgardsdatum-10"
+
+[[variable]]
+native_id = "5891427617861710725.OPD11"
+slug = "atgardsdatum-11"
+
+[[variable]]
+native_id = "5891427617861710725.OPD12"
+slug = "atgardsdatum-12"
+
+[[variable]]
+native_id = "5891427617861710725.OPD13"
+slug = "atgardsdatum-13"
+
+[[variable]]
+native_id = "5891427617861710725.OPD14"
+slug = "atgardsdatum-14"
+
+[[variable]]
+native_id = "5891427617861710725.OPD15"
+slug = "atgardsdatum-15"
+
+[[variable]]
+native_id = "5891427617861710725.OPD16"
+slug = "atgardsdatum-16"
+
+[[variable]]
+native_id = "5891427617861710725.OPD17"
+slug = "atgardsdatum-17"
+
+[[variable]]
+native_id = "5891427617861710725.OPD18"
+slug = "atgardsdatum-18"
+
+[[variable]]
+native_id = "5891427617861710725.OPD19"
+slug = "atgardsdatum-19"
+
+[[variable]]
+native_id = "5891427617861710725.OPD2"
+slug = "atgardsdatum-2"
+
+[[variable]]
+native_id = "5891427617861710725.OPD20"
+slug = "atgardsdatum-20"
+
+[[variable]]
+native_id = "5891427617861710725.OPD21"
+slug = "atgardsdatum-21"
+
+[[variable]]
+native_id = "5891427617861710725.OPD22"
+slug = "atgardsdatum-22"
+
+[[variable]]
+native_id = "5891427617861710725.OPD23"
+slug = "atgardsdatum-23"
+
+[[variable]]
+native_id = "5891427617861710725.OPD24"
+slug = "atgardsdatum-24"
+
+[[variable]]
+native_id = "5891427617861710725.OPD25"
+slug = "atgardsdatum-25"
+
+[[variable]]
+native_id = "5891427617861710725.OPD26"
+slug = "atgardsdatum-26"
+
+[[variable]]
+native_id = "5891427617861710725.OPD27"
+slug = "atgardsdatum-27"
+
+[[variable]]
+native_id = "5891427617861710725.OPD28"
+slug = "atgardsdatum-28"
+
+[[variable]]
+native_id = "5891427617861710725.OPD29"
+slug = "atgardsdatum-29"
+
+[[variable]]
+native_id = "5891427617861710725.OPD3"
+slug = "atgardsdatum-3"
+
+[[variable]]
+native_id = "5891427617861710725.OPD30"
+slug = "atgardsdatum-30"
+
+[[variable]]
+native_id = "5891427617861710725.OPD4"
+slug = "atgardsdatum-4"
+
+[[variable]]
+native_id = "5891427617861710725.OPD5"
+slug = "atgardsdatum-5"
+
+[[variable]]
+native_id = "5891427617861710725.OPD6"
+slug = "atgardsdatum-6"
+
+[[variable]]
+native_id = "5891427617861710725.OPD7"
+slug = "atgardsdatum-7"
+
+[[variable]]
+native_id = "5891427617861710725.OPD8"
+slug = "atgardsdatum-8"
+
+[[variable]]
+native_id = "5891427617861710725.OPD9"
+slug = "atgardsdatum-9"
+
+[[variable]]
+native_id = "5891427617861710725.OP_NR"
+slug = "sekvensnr-atgard"
+
+[[variable]]
+native_id = "5891427617861710725.PERM"
+slug = "permission"
+
+[[variable]]
+native_id = "5891427617861710725.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "5891427617861710725.PVARD"
+slug = "planerad-vardkontakt"
+
+[[variable]]
+native_id = "5891427617861710725.RNR"
+slug = "reservnummer"
+
+[[variable]]
+native_id = "5891427617861710725.RTC"
+slug = "kvalitetsvariabel-drg"
+
+[[variable]]
+native_id = "5891427617861710725.SENINV"
+slug = "senaste-invandring"
+
+[[variable]]
+native_id = "5891427617861710725.SENINV1"
+slug = "senaste-invandring-1"
+
+[[variable]]
+native_id = "5891427617861710725.SLUT"
+slug = "slutdatum-psyk-vardform"
+
+[[variable]]
+native_id = "5891427617861710725.START"
+slug = "startdatum-psykiatrisk-vardform"
+
+[[variable]]
+native_id = "5891427617861710725.VTID"
+slug = "vardtid"
+
+[[variable]]
+native_id = "5891427617861710725.YO"
+slug = "yttre-orsakskod-eller-atc"
+# register 6052270801387609014

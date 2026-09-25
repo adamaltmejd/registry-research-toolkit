@@ -1,0 +1,46 @@
+[register]
+provider = "scb"
+slug = "infi"
+native_id = "227"
+
+[[variant]]
+native_id = "227.459"
+slug = "ravaror"
+display_group = "Råvaror"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "227.462"
+slug = "externa-kostnader"
+display_group = "Externa kostnader"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Förmögenhetsregistret
+
+[[variable]]
+native_id = "227.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "227.119"
+slug = "varukod-kn"
+
+[[variable]]
+native_id = "227.4339"
+slug = "imputerat-varde-kostnader-ravaror"
+
+[[variable]]
+native_id = "227.8101"
+slug = "externa-kostnader-vatten-avlopp"
+
+[[variable]]
+native_id = "227.19052"
+slug = "naringsgren-for-statistiken"
+
+# register 228

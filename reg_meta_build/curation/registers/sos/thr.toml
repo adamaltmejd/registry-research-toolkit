@@ -1,0 +1,99 @@
+[register]
+provider = "sos"
+slug = "thr"
+native_id = "8948214044434034899"
+
+[[variant]]
+native_id = "8948214044434034899.9064008527617471683"
+slug = "thr-besok"
+display_group = "THR_BESOK"
+panel_entity_key = "personnr"
+panel_time_key = "besoksdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "8948214044434034899.6658941053497987406"
+slug = "thr-besok-landsting"
+display_group = "THR_BESOK_LANDSTING"
+panel_entity_key = "personnr"
+panel_time_key = "besoksdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "8948214044434034899.6343572965862509640"
+slug = "thr-tandhalsa"
+display_group = "THR_TANDHALSA"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "8948214044434034899.5474396019852278710"
+slug = "thr-tandhalsa-landsting"
+display_group = "THR_TANDHALSA_LANDSTING"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546, #554).
+#
+# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
+# (the default freeze zone re-derives it). These pins freeze the slug each
+# entity-key ref depends on so a reslug can't dangle the ref. The build-side
+# curation gate (validate._check_entity_key_vars_curated) makes the pin
+# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL
+# global providers (#554).
+#
+# Regenerate after onboarding/repointing a panel: run
+#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/
+# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml
+# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —
+# pins reproduce the slug the variable already carries).
+# 15 pin(s).
+
+
+[[variable]]
+native_id = "8948214044434034899.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "8948214044434034899.BESLUTSDATUMN"
+slug = "beslutsdatum"
+
+[[variable]]
+native_id = "8948214044434034899.BESOKSDATUMN"
+slug = "besoksdatum"
+
+[[variable]]
+native_id = "8948214044434034899.EU_PAT"
+slug = "eu-patient"
+
+[[variable]]
+native_id = "8948214044434034899.FODLAND"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "8948214044434034899.GRUND"
+slug = "grund-till-vard"
+
+[[variable]]
+native_id = "8948214044434034899.MEDBORG"
+slug = "medborgarskap"
+
+[[variable]]
+native_id = "8948214044434034899.ORG_NR"
+slug = "orgnr"
+
+[[variable]]
+native_id = "8948214044434034899.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "8948214044434034899.SENINV"
+slug = "senaste-invandring"
+# register 9047831179457584381

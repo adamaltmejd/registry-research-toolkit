@@ -126,3 +126,324 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 [[code_label_pair]]
 code = "scb/grundskola-prov-ak9/skolkod"
 label = "scb/grundskola-prov-ak9/skolans-namn"
+
+[[variant]]
+native_id = "190.266"
+slug = "amne-sv-eng-ma"
+display_group = "Ämne: SV, ENG, MA"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "190.1162"
+slug = "amne-sv-eng-ma-no-so"
+display_group = "Ämne: SV, ENG, MA, NO, SO"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "190.1166"
+slug = "amne-no"
+display_group = "Ämne: NO"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Svenska utlandsskolor: elever, lärare och utbildningsresultat
+
+[[variable]]
+native_id = "190.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "190.3635"
+slug = "skolans-namn"
+
+[[variable]]
+native_id = "190.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "190.7817"
+slug = "deltagit-sva"
+
+[[variable]]
+native_id = "190.8190"
+slug = "inriktning-fristaende"
+
+[[variable]]
+native_id = "190.8517"
+slug = "provtyp-for-engelska-a"
+
+[[variable]]
+native_id = "190.8518"
+slug = "provtyp-for-engelska-b"
+
+[[variable]]
+native_id = "190.8521"
+slug = "provtyp-for-engelska-c"
+
+[[variable]]
+native_id = "190.8522"
+slug = "provtyp-for-svenska-a"
+
+[[variable]]
+native_id = "190.8523"
+slug = "provtyp-for-svenska-b"
+
+[[variable]]
+native_id = "190.8524"
+slug = "provtyp-for-svenska-c"
+
+[[variable]]
+native_id = "190.8525"
+slug = "provtyp-for-matematik-a"
+
+[[variable]]
+native_id = "190.8526"
+slug = "provtyp-for-matematik-b1"
+
+[[variable]]
+native_id = "190.8527"
+slug = "provtyp-for-matematik-b2"
+
+[[variable]]
+native_id = "190.8528"
+slug = "provtyp-for-matematik-c"
+
+[[variable]]
+native_id = "190.24273"
+slug = "provtyp-naturvetenskap-b"
+
+[[variable]]
+native_id = "190.30451"
+slug = "so-a-delt"
+
+[[variable]]
+native_id = "190.30452"
+slug = "so-b-delt"
+
+[[variable]]
+native_id = "190.30646"
+slug = "undervisningsgrupp-i-no"
+
+[[variable]]
+native_id = "190.30654"
+slug = "skolenhetens-namn"
+
+[[variable]]
+native_id = "190.30684"
+slug = "provtyp-for-no1"
+
+[[variable]]
+native_id = "190.30685"
+slug = "provtyp-for-no2"
+
+[[variable]]
+native_id = "190.30686"
+slug = "provtyp-for-no3"
+
+[[variable]]
+native_id = "190.30847"
+slug = "antal-delprov-no"
+
+[[variable]]
+native_id = "190.30848"
+slug = "provtyp-for-no-b"
+
+[[variable]]
+native_id = "190.30857"
+slug = "deltagande-i-prov-i-no"
+
+# register 192 (svenska-utlandsskolor)
+
+[[variable]]
+native_id = "190.67.utlbakgr"
+slug = "utlbakgr-alt"
+
+# register 192 (svenska-utlandsskolor)
+
+[[variable]]
+native_id = "190.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "190.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "190.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "190.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "190.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "190.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "190.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "190.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "190.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "190.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "190.8187"
+slug = "utlandsk-bakgrund"
+
+[[variable]]
+native_id = "190.8207"
+slug = "ma-delt-a"
+
+[[variable]]
+native_id = "190.8211"
+slug = "ma-delt-c"
+
+[[variable]]
+native_id = "190.8245"
+slug = "provbetyg-matematik"
+
+[[variable]]
+native_id = "190.8246"
+slug = "betyg-delprov-a-svenska"
+
+[[variable]]
+native_id = "190.8276"
+slug = "ej-deltagit-i-svenska"
+
+[[variable]]
+native_id = "190.8480"
+slug = "provbetyg-svenska"
+
+[[variable]]
+native_id = "190.8489"
+slug = "betyg-delprov-a-engelska"
+
+[[variable]]
+native_id = "190.8492"
+slug = "betyg-delprov-b-engelska"
+
+[[variable]]
+native_id = "190.24275"
+slug = "provbetyg-fysik"
+
+[[variable]]
+native_id = "190.24277"
+slug = "provbetyg-kemi"
+
+[[variable]]
+native_id = "190.27376"
+slug = "svenska-delprov-a"
+
+[[variable]]
+native_id = "190.27377"
+slug = "sv-delprov-b"
+
+[[variable]]
+native_id = "190.27378"
+slug = "sv-delprov-c"
+
+[[variable]]
+native_id = "190.28165"
+slug = "engelska-delprov-a"
+
+[[variable]]
+native_id = "190.28167"
+slug = "en-delprov-b"
+
+[[variable]]
+native_id = "190.28168"
+slug = "en-delprov-c"
+
+[[variable]]
+native_id = "190.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "190.30448"
+slug = "ma-delt-b"
+
+[[variable]]
+native_id = "190.30449"
+slug = "ma-delt-d"
+
+[[variable]]
+native_id = "190.30454"
+slug = "kursplan-i-svenska"
+
+[[variable]]
+native_id = "190.30642"
+slug = "provbetyg-geografi"
+
+[[variable]]
+native_id = "190.30643"
+slug = "provbetyg-historia"
+
+[[variable]]
+native_id = "190.30644"
+slug = "provbetyg-samhallskunskap"
+
+[[variable]]
+native_id = "190.30645"
+slug = "provbetyg-religion"
+
+[[variable]]
+native_id = "190.39019"
+slug = "nyinvandring"
+
+# register 192
+
+[[variable]]
+native_id = "190.30455.ma-a-pom"
+slug = "a-poang-merit"
+
+[[variable]]
+native_id = "190.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "190.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "190.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "190.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "190.8073.sunniva-mor"
+slug = "sun-niva-mor-3"
+
+[[variable]]
+native_id = "190.8073.sunniva-mor-omkodad"
+slug = "sun-niva-mor-omkodad"
+
+[[variable]]
+native_id = "190.8073.sunniva-old-mor"
+slug = "sun-niva-old-mor"
+
+# register 193

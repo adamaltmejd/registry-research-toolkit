@@ -14,3 +14,192 @@ label = "scb/ep-val-deltagande/kommunnamn"
 [[code_label_pair]]
 code = "scb/ep-val-deltagande/medborgarland-varldsdel-2"
 label = "scb/ep-val-deltagande/medborgarland-varldsdel-namn"
+
+[[variant]]
+native_id = "245.474"
+slug = "_default"
+display_group = "Valdeltagande"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Structure of earnings Survey
+
+[[variable]]
+native_id = "245.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "245.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "245.49"
+slug = "lan"
+
+[[variable]]
+native_id = "245.775"
+slug = "utbildningsniva-aggregat-grov"
+
+[[variable]]
+native_id = "245.7911"
+slug = "forstagangsvaljare-allmanna-val"
+
+[[variable]]
+native_id = "245.14850"
+slug = "kommungrupp"
+
+[[variable]]
+native_id = "245.20681"
+slug = "rostat-europaparlamentsval"
+
+[[variable]]
+native_id = "245.21876"
+slug = "forstagangsvaljare-europaparlamentsval"
+
+[[variable]]
+native_id = "245.28836"
+slug = "nummer-i-rostlangden"
+
+# register 246 (ses)
+
+[[variable]]
+native_id = "245.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "245.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "245.125"
+slug = "sammanraknad-forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "245.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "245.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "245.269"
+slug = "medborgarskapsdatum"
+
+[[variable]]
+native_id = "245.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "245.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "245.544"
+slug = "sektor-i-huvudsysslan"
+
+[[variable]]
+native_id = "245.1305"
+slug = "disponibel-inkomst-familj"
+
+[[variable]]
+native_id = "245.3582"
+slug = "stora-n"
+
+[[variable]]
+native_id = "245.3881"
+slug = "sei-i-huvudsysslan"
+
+[[variable]]
+native_id = "245.6375"
+slug = "arbetskraftsstatus-aldre"
+
+[[variable]]
+native_id = "245.6545"
+slug = "facklig-centralorganisation"
+
+[[variable]]
+native_id = "245.6840"
+slug = "studier"
+
+[[variable]]
+native_id = "245.6845"
+slug = "studier-hel-eller-deltid"
+
+[[variable]]
+native_id = "245.7008"
+slug = "gift-sambo-ensamstaende"
+
+[[variable]]
+native_id = "245.7809"
+slug = "anknytningsgrad-aku"
+
+[[variable]]
+native_id = "245.7916"
+slug = "forvarvsinkomst-kvintilgrupp"
+
+[[variable]]
+native_id = "245.15298"
+slug = "arbetskraftsstatus"
+
+[[variable]]
+native_id = "245.17256"
+slug = "vistelsetid"
+
+[[variable]]
+native_id = "245.17810"
+slug = "nordlig-koordinat-sweref"
+
+[[variable]]
+native_id = "245.17812"
+slug = "ostlig-koordinat-sweref"
+
+[[variable]]
+native_id = "245.30120"
+slug = "bostadskategori"
+
+# register 246
+
+[[variable]]
+native_id = "245.6556.fodelselandgrp"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "245.6556.fodelselandvd"
+slug = "fodelseland-varldsdel-2"
+
+[[variable]]
+native_id = "245.6818.medblandgrp"
+slug = "medborgarland-varldsdel"
+
+[[variable]]
+native_id = "245.6818.medborgarlandvd"
+slug = "medborgarland-varldsdel-2"
+
+[[variable]]
+native_id = "245.6818.medborgarlandvdnamn"
+slug = "medborgarland-varldsdel-namn"
+
+[[variable]]
+native_id = "245.69.llkkdddd"
+slug = "valdistrikt"
+
+[[variable]]
+native_id = "245.69.valdistnamn"
+slug = "valdistriktsnamn"
+
+[[variable]]
+native_id = "245.69.valdistrikt"
+slug = "valdistrikt-2"
+
+[[variable]]
+native_id = "245.8534.kgruppnamn"
+slug = "kommungrupp-namn"
+
+[[variable]]
+native_id = "245.8534.kgruppnr"
+slug = "kommungrupp-kod"
+
+# register 248

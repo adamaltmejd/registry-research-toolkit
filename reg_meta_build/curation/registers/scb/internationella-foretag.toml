@@ -1,0 +1,47 @@
+[register]
+provider = "scb"
+slug = "internationella-foretag"
+native_id = "369"
+
+[[variant]]
+native_id = "369.1330"
+slug = "svenska-koncerner"
+display_group = "Svenska koncerner med dotterbolag i utlandet"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Fördelningsanalytiskt statistiksystem för inkomster och transfereringar (FASIT)
+
+[[variable]]
+native_id = "369.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "369.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "369.37567"
+slug = "antal-foretag-per-land"
+
+[[variable]]
+native_id = "369.37568"
+slug = "antal-anstallda-per-land"
+
+# register 371 (fasit)
+
+[[variable]]
+native_id = "369.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "369.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "369.15169"
+slug = "bransch"
+
+# register 371

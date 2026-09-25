@@ -1,0 +1,41 @@
+[register]
+provider = "scb"
+slug = "utrikeshandel-tjanster"
+native_id = "3084667015646526536"
+
+[[variant]]
+native_id = "3084667015646526536.4096212573084827577"
+slug = "_default"
+display_group = "Utrikeshandel med tjänster"
+# Panel shape (#567): company × year × quarter panel. Entity = the reporting company
+# (peorgnr); time is row-level (Ar/Kvartal columns) so grain = "row". The composite
+# panel_time_key now carries BOTH the year (ar) and the quarter (kvartal) — the quarter
+# no longer collapses, the two slugs together address one delivered quarter.
+# Bulk-delivered (årgångar 2004–2024 in one extract), so time is row-derived, not
+# delivery-aligned.
+panel_entity_key = "person-orgnr"
+panel_time_key = ["redovisningsar", "kvartal"]
+panel_time_grain = "row"
+
+# Arbetsgivardeklarationer, huvuduppgifter (AGI/Huvud) — canonical-SCB content on the
+# `scb` provider with a low-band mint_canonical_scb id (the employer-level header
+# sibling of the individual-level register 392; absent from SCB's machine export).
+
+[[variable]]
+native_id = "3084667015646526536.Peorgnr"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "3084667015646526536.Ar"
+slug = "redovisningsar"
+
+[[variable]]
+native_id = "3084667015646526536.Intakt"
+slug = "intakt-export"
+
+[[variable]]
+native_id = "3084667015646526536.Kostnad"
+slug = "kostnad-import"
+
+# register 32

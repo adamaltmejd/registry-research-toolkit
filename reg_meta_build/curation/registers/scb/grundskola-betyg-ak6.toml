@@ -144,3 +144,150 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 [[code_label_pair]]
 code = "scb/grundskola-betyg-ak6/huvudman"
 label = "scb/grundskola-betyg-ak6/hmannamn"
+
+[[variant]]
+native_id = "340.1118"
+slug = "_default"
+display_group = "Grundskolan: betyg årskurs 6"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Gymnasieskola: nationella prov
+
+[[variable]]
+native_id = "340.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "340.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "340.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "340.36"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "340.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "340.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "340.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "340.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "340.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "340.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "340.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "340.3599"
+slug = "betyg-bild"
+
+[[variable]]
+native_id = "340.3619"
+slug = "blockbetyg-no-amnen"
+
+[[variable]]
+native_id = "340.3620"
+slug = "betyg-religion"
+
+[[variable]]
+native_id = "340.3621"
+slug = "betyg-samhallskunskap"
+
+[[variable]]
+native_id = "340.3622"
+slug = "betyg-slojd"
+
+[[variable]]
+native_id = "340.3624"
+slug = "blockbetyg-so-amnen"
+
+[[variable]]
+native_id = "340.3625"
+slug = "betyg-svenska"
+
+[[variable]]
+native_id = "340.3627"
+slug = "betyg-teknik"
+
+[[variable]]
+native_id = "340.3629"
+slug = "betyg-teckensprak"
+
+[[variable]]
+native_id = "340.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "340.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "340.23867"
+slug = "klassbeteckning"
+
+[[variable]]
+native_id = "340.25186"
+slug = "moderna-sprak-elevens-val-sprak"
+
+[[variable]]
+native_id = "340.25187"
+slug = "moderna-sprak-sprakval-sprak"
+
+[[variable]]
+native_id = "340.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "340.39019"
+slug = "nyinvandring"
+
+# register 342
+
+[[variable]]
+native_id = "340.3594.antalf"
+slug = "antal-amnen-ej-natt"
+
+[[variable]]
+native_id = "340.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "340.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "340.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "340.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "340.8073.sunniva-mor-omkodad"
+slug = "sun-niva-mor-omkodad"
+
+# register 342

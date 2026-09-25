@@ -1202,3 +1202,1847 @@ columns_ref = "curation/concept_groups.toml group scb/lisa/naringsgren member de
 variable = "34.16221"
 columns = { "AGI1AstSNI2007" = "34.16221.agi1astsni2007", "AGI1AstSNI2007G" = "34.16221.agi1astsni2007g", "AGI1AstSNI2007U" = "34.16221.agi1astsni2007u", "KU1AstSNI2002" = "34.16221.ku1astsni92", "KU1AstSNI2002B" = "34.16221.ku1astsni2002b", "KU1AstSNI2002G" = "34.16221.ku1astsni2002g", "KU1AstSNI2007" = "34.16221.ku1astsni92", "KU1AstSNI2007G" = "34.16221.ku1astsni2007g", "KU1AstSNI2007U" = "34.16221.ku1astsni2007u", "KU1AstSNI69" = "34.16221.ku1astsni69", "KU1AstSNI92" = "34.16221.ku1astsni92", "KU1AstSNI92B" = "34.16221.ku1astsni92b", "KU1AstSNI92G" = "34.16221.ku1astsni92g", "KU1AstSni2007G" = "34.16221.ku1astsni2007g", "KU1AstSni2007U" = "34.16221.ku1astsni2007u", "KU1Astsni2002B" = "34.16221.ku1astsni2002b", "KU1Astsni2002G" = "34.16221.ku1astsni2002g" }
 columns_ref = "curation/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+[[variant]]
+native_id = "34.151"
+slug = "arbetsstallen"
+display_group = "Arbetsställen"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "34.152"
+slug = "foretag"
+display_group = "Företag"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "34.153"
+slug = "individer-15plus"
+display_group = "Individer, 15 år och äldre"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "34.1335"
+slug = "individer-16plus"
+display_group = "Individer, 16 år och äldre"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "34.1582"
+slug = "individer-fodelseland"
+display_group = "Individer födelseland"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "34.1583"
+slug = "individer-in-utvandring"
+display_group = "Individer in- och utvandring"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "34.1584"
+slug = "individer-avlidna"
+display_group = "Individer avlidna"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Nybörjare i Komvux
+
+[[variable]]
+native_id = "34.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "34.43033"
+slug = "agi1lonfink"
+
+
+[[variable]]
+native_id = "34.43049"
+slug = "agi2lonfink"
+
+
+[[variable]]
+native_id = "34.43087"
+slug = "agi3lonfink"
+
+
+[[variable]]
+native_id = "34.19054.ast-sni92"
+slug = "naringsgren-huvud-arbetsstalle"
+
+
+[[variable]]
+native_id = "34.19054.ast-sni92b"
+slug = "naringsgren-huvud-arbetsstalle-sni92b"
+
+
+[[variable]]
+native_id = "34.19054.ast-sni92g"
+slug = "naringsgren-huvud-arbetsstalle-sni92g"
+
+
+[[variable]]
+native_id = "34.19054.ast-sni2002b"
+slug = "naringsgren-huvud-arbetsstalle-sni2002b"
+
+
+[[variable]]
+native_id = "34.19054.ast-sni2002g"
+slug = "naringsgren-huvud-arbetsstalle-sni2002g"
+
+
+[[variable]]
+native_id = "34.19054.ast-sni2007g"
+slug = "naringsgren-huvud-arbetsstalle-sni2007g"
+
+
+[[variable]]
+native_id = "34.19054.ast-sni2007u"
+slug = "naringsgren-huvud-arbetsstalle-sni2007u"
+
+
+[[variable]]
+native_id = "34.19054.astsni69"
+slug = "naringsgren-huvud-individ"
+
+
+[[variable]]
+native_id = "34.19054.astsni92b"
+slug = "naringsgren-huvud-individ-sni92b"
+
+
+[[variable]]
+native_id = "34.19054.astsni92g"
+slug = "naringsgren-huvud-individ-sni92g"
+
+
+[[variable]]
+native_id = "34.19054.astsni2002b"
+slug = "naringsgren-huvud-individ-sni2002b"
+
+
+[[variable]]
+native_id = "34.19054.astsni2002g"
+slug = "naringsgren-huvud-individ-sni2002g"
+
+
+[[variable]]
+native_id = "34.19054.astsni2007g"
+slug = "naringsgren-huvud-individ-sni2007g"
+
+
+[[variable]]
+native_id = "34.19054.astsni2007u"
+slug = "naringsgren-huvud-individ-sni2007u"
+
+
+[[variable]]
+native_id = "34.19054.org-sni92"
+slug = "naringsgren-huvud-foretag"
+
+
+[[variable]]
+native_id = "34.19054.org-sni92b"
+slug = "naringsgren-huvud-foretag-sni92b"
+
+
+[[variable]]
+native_id = "34.19054.org-sni92g"
+slug = "naringsgren-huvud-foretag-sni92g"
+
+
+[[variable]]
+native_id = "34.19054.org-sni2002b"
+slug = "naringsgren-huvud-foretag-sni2002b"
+
+
+[[variable]]
+native_id = "34.19054.org-sni2002g"
+slug = "naringsgren-huvud-foretag-sni2002g"
+
+
+[[variable]]
+native_id = "34.19054.org-sni2007g"
+slug = "naringsgren-huvud-foretag-sni2007g"
+
+
+[[variable]]
+native_id = "34.19054.org-sni2007u"
+slug = "naringsgren-huvud-foretag-sni2007u"
+
+# #931: LISA income-source näringsgren split siblings. Keep the source switch
+# visible (KU <=2018, AGI 2019+) while replacing raw delivery-prefix slugs with
+# concept-stem + rank + source + SNI vintage/granularity.
+
+
+[[variable]]
+native_id = "34.16221.ku1astsni92"
+slug = "naringsgren-storsta-ku"
+
+
+[[variable]]
+native_id = "34.16221.ku1astsni69"
+slug = "naringsgren-storsta-ku-sni69"
+
+
+[[variable]]
+native_id = "34.16221.ku1astsni92b"
+slug = "naringsgren-storsta-ku-sni92b"
+
+
+[[variable]]
+native_id = "34.16221.ku1astsni92g"
+slug = "naringsgren-storsta-ku-sni92g"
+
+
+[[variable]]
+native_id = "34.16221.ku1astsni2002b"
+slug = "naringsgren-storsta-ku-sni2002b"
+
+
+[[variable]]
+native_id = "34.16221.ku1astsni2002g"
+slug = "naringsgren-storsta-ku-sni2002g"
+
+
+[[variable]]
+native_id = "34.16221.ku1astsni2007g"
+slug = "naringsgren-storsta-ku-sni2007g"
+
+
+[[variable]]
+native_id = "34.16221.ku1astsni2007u"
+slug = "naringsgren-storsta-ku-sni2007u"
+
+
+[[variable]]
+native_id = "34.16221.agi1astsni2007"
+slug = "naringsgren-storsta-agi-sni2007"
+
+
+[[variable]]
+native_id = "34.16221.agi1astsni2007g"
+slug = "naringsgren-storsta-agi-sni2007g"
+
+
+[[variable]]
+native_id = "34.16221.agi1astsni2007u"
+slug = "naringsgren-storsta-agi-sni2007u"
+
+
+[[variable]]
+native_id = "34.31165.ku2astsni92"
+slug = "naringsgren-nast-storsta-ku"
+
+
+[[variable]]
+native_id = "34.31165.ku2astsni69"
+slug = "naringsgren-nast-storsta-ku-sni69"
+
+
+[[variable]]
+native_id = "34.31165.ku2astsni92b"
+slug = "naringsgren-nast-storsta-ku-sni92b"
+
+
+[[variable]]
+native_id = "34.31165.ku2astsni92g"
+slug = "naringsgren-nast-storsta-ku-sni92g"
+
+
+[[variable]]
+native_id = "34.31165.ku2astsni2002b"
+slug = "naringsgren-nast-storsta-ku-sni2002b"
+
+
+[[variable]]
+native_id = "34.31165.ku2astsni2002g"
+slug = "naringsgren-nast-storsta-ku-sni2002g"
+
+
+[[variable]]
+native_id = "34.31165.ku2astsni2007g"
+slug = "naringsgren-nast-storsta-ku-sni2007g"
+
+
+[[variable]]
+native_id = "34.31165.ku2astsni2007u"
+slug = "naringsgren-nast-storsta-ku-sni2007u"
+
+
+[[variable]]
+native_id = "34.31165.agi2astsni2007"
+slug = "naringsgren-nast-storsta-agi-sni2007"
+
+
+[[variable]]
+native_id = "34.31165.agi2astsni2007g"
+slug = "naringsgren-nast-storsta-agi-sni2007g"
+
+
+[[variable]]
+native_id = "34.31165.agi2astsni2007u"
+slug = "naringsgren-nast-storsta-agi-sni2007u"
+
+
+[[variable]]
+native_id = "34.31300.ku3astsni92"
+slug = "naringsgren-tredje-storsta-ku"
+
+
+[[variable]]
+native_id = "34.31300.ku3astsni69"
+slug = "naringsgren-tredje-storsta-ku-sni69"
+
+
+[[variable]]
+native_id = "34.31300.ku3astsni92b"
+slug = "naringsgren-tredje-storsta-ku-sni92b"
+
+
+[[variable]]
+native_id = "34.31300.ku3astsni92g"
+slug = "naringsgren-tredje-storsta-ku-sni92g"
+
+
+[[variable]]
+native_id = "34.31300.ku3astsni2002b"
+slug = "naringsgren-tredje-storsta-ku-sni2002b"
+
+
+[[variable]]
+native_id = "34.31300.ku3astsni2002g"
+slug = "naringsgren-tredje-storsta-ku-sni2002g"
+
+
+[[variable]]
+native_id = "34.31300.ku3astsni2007g"
+slug = "naringsgren-tredje-storsta-ku-sni2007g"
+
+
+[[variable]]
+native_id = "34.31300.ku3astsni2007u"
+slug = "naringsgren-tredje-storsta-ku-sni2007u"
+
+
+[[variable]]
+native_id = "34.31300.agi3astsni2007"
+slug = "naringsgren-tredje-storsta-agi-sni2007"
+
+
+[[variable]]
+native_id = "34.31300.agi3astsni2007g"
+slug = "naringsgren-tredje-storsta-agi-sni2007g"
+
+
+[[variable]]
+native_id = "34.31300.agi3astsni2007u"
+slug = "naringsgren-tredje-storsta-agi-sni2007u"
+
+
+# #400: canonical-attach LISA variable slugs. The 32 doc-coverage columns minted
+# onto register 34 (scb/lisa) by the #400 attach loader land with auto slugs derived
+# from the cryptic delivery column (`peorgnrsregj`, `astkommunj`, `aluamk`, …), which
+# violate the leaf-slug canonical-form rules (DESIGN.md "Leaf-slug curation
+# conventions"). Curate each to the NAME-derived canonical leaf, aligned to its
+# existing register-34 sibling — exactly as #471/#747 did for every other SCB slug.
+#
+# Most are "enligt justerad metod" (J): SCB's single 2003 RAMS-method backcast. Each
+# takes a `-justerad` role suffix off its sibling's base concept (AstKommun
+# `kommun-for-arbetsstalle` → `kommun-for-arbetsstalle-justerad`, …). The MiDAS
+# pension day-counts have no exact sibling (catalog siblings are MONTHS, `*-bman`/
+# `*-nman`) so they take the catalog day-count convention `*-bruttodagar`/
+# `*-nettodagar` on the established `fortpens-`/`sjukbidr-` stem; the MiDAS belopp
+# columns share a NAME with the existing `fortpens-belopp`/`sjukbidr-belopp` rows but
+# are a different measurement basis (MiDAS source/window) → default-to-distinct, a
+# `-midas` discriminator keeps the join keys from conflating. The three SSYK/YSEG J16
+# härledd columns keep their already-clean code-style J16-family slugs (matching the
+# successors `ssyk{3,4}-2012-j16` / `eseg-j16`): `ssyk3-j16`/`ssyk4-j16` are the
+# `from` endpoints of the relations.toml succession edges, so they are pinned here to
+# rest those refs on a curated (not auto) basis. Every value is collision-free within
+# register 34.
+
+# ── Yrke / socioekonomisk gruppering (J16 härledd; code-style J16 family) ──
+
+[[variable]]
+native_id = "34.Ssyk3_J16"
+slug = "ssyk3-j16"
+
+
+[[variable]]
+native_id = "34.Ssyk4_J16"
+slug = "ssyk4-j16"
+
+
+[[variable]]
+native_id = "34.YSEG_J16"
+slug = "yseg-j16"
+
+
+[[variable]]
+native_id = "34.Nyk"
+slug = "yrke-fob"
+
+# ── Justerad metod (RAMS 2004-metodbrott), backcast årgång 2003 ──
+
+[[variable]]
+native_id = "34.YrkStallnJ"
+slug = "yrkesstallning-justerad"
+
+
+[[variable]]
+native_id = "34.AstKommunJ"
+slug = "kommun-for-arbetsstalle-justerad"
+
+
+[[variable]]
+native_id = "34.AstLanJ"
+slug = "lan-arbetsstalle-justerad"
+
+
+[[variable]]
+native_id = "34.AstSNI2002J"
+slug = "astsni-justerad"
+
+
+[[variable]]
+native_id = "34.AstSNI2002BJ"
+slug = "astsni2002b-justerad"
+
+
+[[variable]]
+native_id = "34.AstSNI2002GJ"
+slug = "astsni2002g-justerad"
+
+
+[[variable]]
+native_id = "34.SektorKodJ"
+slug = "sektorkod-justerad"
+
+
+[[variable]]
+native_id = "34.InstKod7J"
+slug = "institutionell-sektorkod-justerad"
+
+
+[[variable]]
+native_id = "34.CfarNrSregJ"
+slug = "cfar-nummer-justerad"
+
+
+[[variable]]
+native_id = "34.PeOrgNrSregJ"
+slug = "person-orgnr-justerad"
+
+
+[[variable]]
+native_id = "34.ArbstIdJ"
+slug = "fad-arbetsstalle-id-justerad"
+
+
+[[variable]]
+native_id = "34.LoneInkJ"
+slug = "loneink-justerad"
+
+# ── Förtidspension / sjukbidrag (MiDAS), 1994–2002 ──
+
+[[variable]]
+native_id = "34.FortPens_Bdag_MiDAS"
+slug = "fortpens-bruttodagar"
+
+
+[[variable]]
+native_id = "34.FortPens_Ndag_MiDAS"
+slug = "fortpens-nettodagar"
+
+
+[[variable]]
+native_id = "34.FortPens_Belopp_MiDAS"
+slug = "fortpens-belopp-midas"
+
+
+[[variable]]
+native_id = "34.SjukBidr_Bdag_MiDAS"
+slug = "sjukbidr-bruttodagar"
+
+
+[[variable]]
+native_id = "34.SjukBidr_Ndag_MiDAS"
+slug = "sjukbidr-nettodagar"
+
+
+[[variable]]
+native_id = "34.SjukBidr_Belopp_MiDAS"
+slug = "sjukbidr-belopp-midas"
+
+# ── Efterlevandeförmånskoder (ATP / folkpension), 1990–2002 ──
+
+[[variable]]
+native_id = "34.ATPFam"
+slug = "atp-efterlevandeforman"
+
+
+[[variable]]
+native_id = "34.FolkFam"
+slug = "folkpension-efterlevandeforman"
+
+# ── Arbetsmarknadsersättningar / -åtgärder ──
+
+[[variable]]
+native_id = "34.ALUAMK"
+slug = "alu-fran-amk"
+
+
+[[variable]]
+native_id = "34.AMK"
+slug = "arbetsmarknadskassa"
+
+
+[[variable]]
+native_id = "34.OTA"
+slug = "offentligt-tillfalligt-arbete"
+
+# ── Sjukpenning / avgångsersättning ──
+
+[[variable]]
+native_id = "34.SjukPA"
+slug = "sjukpenning-arbetsgivarintrade"
+
+
+[[variable]]
+native_id = "34.TAE"
+slug = "tillfallig-avgangsersattning"
+
+# ── Arbetad tid / demografi / identitet ──
+
+[[variable]]
+native_id = "34.ArbTid"
+slug = "arbetad-tid"
+
+
+[[variable]]
+native_id = "34.FastBet"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "34.MedbLandNamn"
+slug = "medborgarskap"
+
+
+# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546).
+#
+# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
+# (the default freeze zone re-derives it). These pins freeze the slug each
+# entity-key ref depends on so a reslug can't dangle the ref. The build-side
+# curation gate (validate._check_entity_key_vars_curated) makes the pin
+# MANDATORY — a new entity-key variable can't ship un-pinned.
+#
+# Regenerate after onboarding/repointing a panel: run
+#   reg-meta-build --db <built-db> entity-key-pins \
+#     --output-toml /tmp/entity_key_pins.toml
+# and fold the NON-duplicate entries in here. dbdiff-identical (slug values
+# only — pins reproduce the slug the variable already carries).
+# 240 pin(s).
+
+
+[[variable]]
+native_id = "34.14.cfarnr"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "34.56.peorgnr"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "34.16"
+slug = "antal-anstallda-ku"
+
+[[variable]]
+native_id = "34.17"
+slug = "arbetsstallenummer"
+
+[[variable]]
+native_id = "34.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "34.591"
+slug = "tjanstepension-tjanst"
+
+[[variable]]
+native_id = "34.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "34.690"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "34.774"
+slug = "utbildningsniva-aggregat-old"
+
+[[variable]]
+native_id = "34.1165"
+slug = "inkomst-aktiv-enskild-naringsverksamhet"
+
+[[variable]]
+native_id = "34.1821"
+slug = "yrkesstallning"
+
+[[variable]]
+native_id = "34.1842"
+slug = "ssyk3-storsta"
+
+[[variable]]
+native_id = "34.1933"
+slug = "ku1ssykar"
+
+[[variable]]
+native_id = "34.1935"
+slug = "ku1astkommun"
+
+[[variable]]
+native_id = "34.1936"
+slug = "ku1astlan"
+
+[[variable]]
+native_id = "34.2509"
+slug = "tillaggspension"
+
+[[variable]]
+native_id = "34.2669"
+slug = "vuxenstudiestod-lan-ovriga"
+
+[[variable]]
+native_id = "34.4904"
+slug = "ssyk3-nast"
+
+[[variable]]
+native_id = "34.4905"
+slug = "ssyk4-nast"
+
+[[variable]]
+native_id = "34.4911"
+slug = "yrkesstallning-nast-forvarvskallan"
+
+[[variable]]
+native_id = "34.4944"
+slug = "yrkesverksam-under-aret"
+
+[[variable]]
+native_id = "34.4948"
+slug = "yrkesstallning-storsta-forvarvskallan"
+
+[[variable]]
+native_id = "34.15532"
+slug = "antal-sysselsatta-ast"
+
+[[variable]]
+native_id = "34.15858"
+slug = "ku2astnr"
+
+[[variable]]
+native_id = "34.16214"
+slug = "ku1astnr"
+
+[[variable]]
+native_id = "34.16219"
+slug = "ku1peorgnr"
+
+[[variable]]
+native_id = "34.16220"
+slug = "ku2peorgnr"
+
+[[variable]]
+native_id = "34.16224"
+slug = "ssyk4-storsta"
+
+[[variable]]
+native_id = "34.16227"
+slug = "ku2ssykkalla"
+
+[[variable]]
+native_id = "34.16237"
+slug = "ku1ssykkalla"
+
+[[variable]]
+native_id = "34.16244"
+slug = "ku2ssykar"
+
+[[variable]]
+native_id = "34.16249"
+slug = "ku1ink"
+
+[[variable]]
+native_id = "34.16250"
+slug = "ku2ink"
+
+[[variable]]
+native_id = "34.18911"
+slug = "ssyk-overensstammelse"
+
+[[variable]]
+native_id = "34.21004"
+slug = "ku1cfarnr"
+
+[[variable]]
+native_id = "34.21005"
+slug = "ku2cfarnr"
+
+[[variable]]
+native_id = "34.25621"
+slug = "sektorkod-storsta-forvarvskalla"
+
+[[variable]]
+native_id = "34.29246"
+slug = "antal-personer-vid-arbetsstallet"
+
+[[variable]]
+native_id = "34.29960"
+slug = "yrkesbaserad-seg"
+
+[[variable]]
+native_id = "34.31108"
+slug = "ku2astkommun"
+
+[[variable]]
+native_id = "34.31109"
+slug = "ku2astlan"
+
+[[variable]]
+native_id = "34.31110"
+slug = "institutionell-sektorkod-foretag"
+
+[[variable]]
+native_id = "34.31111"
+slug = "ku2instkod"
+
+[[variable]]
+native_id = "34.31118"
+slug = "sektorkod-nast-forvarvskalla"
+
+[[variable]]
+native_id = "34.31191"
+slug = "medbgreg-eu15"
+
+[[variable]]
+native_id = "34.31289"
+slug = "ku1instkod"
+
+[[variable]]
+native_id = "34.31290"
+slug = "ku3ink"
+
+[[variable]]
+native_id = "34.31291"
+slug = "ku3peorgnr"
+
+[[variable]]
+native_id = "34.31292"
+slug = "ku3cfarnr"
+
+[[variable]]
+native_id = "34.31293"
+slug = "ku3astnr"
+
+[[variable]]
+native_id = "34.31294"
+slug = "ku3yrkesstallning"
+
+[[variable]]
+native_id = "34.31295"
+slug = "ku3astkommun"
+
+[[variable]]
+native_id = "34.31296"
+slug = "ku3astlan"
+
+[[variable]]
+native_id = "34.31298"
+slug = "ku3instkod"
+
+[[variable]]
+native_id = "34.31299"
+slug = "sektorkod-tredje-forvarvskalla"
+
+[[variable]]
+native_id = "34.31388"
+slug = "forvink-aktiv"
+
+[[variable]]
+native_id = "34.31395"
+slug = "forvink-ers-aktiv"
+
+[[variable]]
+native_id = "34.31512"
+slug = "sjukfall-antal"
+
+[[variable]]
+native_id = "34.31516"
+slug = "sjukfall-bruttodagar"
+
+[[variable]]
+native_id = "34.31517"
+slug = "sjukfall-nettodagar"
+
+[[variable]]
+native_id = "34.31518"
+slug = "sjukfall-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31532"
+slug = "sjukpenning-bruttodagar"
+
+[[variable]]
+native_id = "34.31533"
+slug = "sjukpenning-nettodagar"
+
+[[variable]]
+native_id = "34.31534"
+slug = "sjukpenning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31535"
+slug = "rehabiliteringspenning-bruttodagar"
+
+[[variable]]
+native_id = "34.31536"
+slug = "rehabiliteringspenning-nettodagar"
+
+[[variable]]
+native_id = "34.31537"
+slug = "rehabiliteringspenning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31538"
+slug = "arbetsskadesjukpenning-bruttodagar"
+
+[[variable]]
+native_id = "34.31539"
+slug = "arbetsskadesjukpenning-nettodagar"
+
+[[variable]]
+native_id = "34.31540"
+slug = "arbetsskadesjukpenning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31740"
+slug = "sjukersattning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31744"
+slug = "aktivitetsersattning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31747"
+slug = "summa-inkomst-foranledd-av-alderspension"
+
+[[variable]]
+native_id = "34.35479"
+slug = "akassa-alu"
+
+[[variable]]
+native_id = "34.36228"
+slug = "sjukersattning-bruttodagar"
+
+[[variable]]
+native_id = "34.36229"
+slug = "sjukersattning-nettodagar"
+
+[[variable]]
+native_id = "34.36230"
+slug = "aktivitetsersattning-bruttodagar"
+
+[[variable]]
+native_id = "34.36231"
+slug = "aktivitetsersattning-nettodagar"
+
+[[variable]]
+native_id = "34.37047"
+slug = "foraldrapenning-antal-bruttodagar"
+
+[[variable]]
+native_id = "34.37048"
+slug = "foraldrapenning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.37049"
+slug = "foraldrapenning-antal-nettodagar"
+
+[[variable]]
+native_id = "34.41952"
+slug = "tillfalligt-franvarande"
+
+[[variable]]
+native_id = "34.42953"
+slug = "markering-lonegaranti"
+
+[[variable]]
+native_id = "34.47670"
+slug = "forvink-ers"
+
+[[variable]]
+native_id = "34.47671"
+slug = "forvink"
+
+[[variable]]
+native_id = "34.49430"
+slug = "operativ-verksamhetsledare"
+
+[[variable]]
+native_id = "34.49432"
+slug = "antal-personer-pa-arbetsstallet"
+
+# register 47 (hreg)
+
+[[variable]]
+native_id = "34.29832"
+slug = "lopnummer-bostadshushall"
+
+[[variable]]
+native_id = "34.30360"
+slug = "hushallsid"
+
+[[variable]]
+native_id = "34.14.cfarnr-lisa"
+slug = "cfar-nummer-2"
+
+[[variable]]
+native_id = "34.14.cfarnrsreg"
+slug = "cfar-nummer-3"
+
+[[variable]]
+native_id = "34.56.peorgnr-lisa"
+slug = "person-orgnr-2"
+
+[[variable]]
+native_id = "34.56.peorgnrsreg"
+slug = "person-orgnr-3"
+
+[[variable]]
+native_id = "34.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "34.22"
+slug = "disponibel-inkomst"
+
+[[variable]]
+native_id = "34.24"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "34.25"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "34.87"
+slug = "foradlingsvarde"
+
+[[variable]]
+native_id = "34.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "34.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "34.283"
+slug = "dodsdatum"
+
+[[variable]]
+native_id = "34.372"
+slug = "familjeidentitet-rtb"
+
+[[variable]]
+native_id = "34.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "34.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "34.585"
+slug = "delpension"
+
+[[variable]]
+native_id = "34.588"
+slug = "allman-pension-folkpension-atp"
+
+[[variable]]
+native_id = "34.589"
+slug = "tjanstepension-itp"
+
+[[variable]]
+native_id = "34.590"
+slug = "tjanstepension-kpa"
+
+[[variable]]
+native_id = "34.596"
+slug = "tjanstepension"
+
+[[variable]]
+native_id = "34.605"
+slug = "ovriga-tillaggspensioner"
+
+[[variable]]
+native_id = "34.724"
+slug = "tjanstepension-stp"
+
+[[variable]]
+native_id = "34.753"
+slug = "examensar"
+
+[[variable]]
+native_id = "34.754"
+slug = "examenskommun"
+
+[[variable]]
+native_id = "34.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "34.801"
+slug = "utbildningsgrupp-enl-sun-2000"
+
+[[variable]]
+native_id = "34.1054"
+slug = "sateskommun"
+
+[[variable]]
+native_id = "34.1110"
+slug = "inkomst-av-kapital"
+
+[[variable]]
+native_id = "34.1171"
+slug = "utbildningsbidrag-doktorander"
+
+[[variable]]
+native_id = "34.1172"
+slug = "kontant-bruttolon"
+
+[[variable]]
+native_id = "34.1177"
+slug = "ersattning-inkomst-anstallning"
+
+[[variable]]
+native_id = "34.1187"
+slug = "akassa-arbetsloshet"
+
+[[variable]]
+native_id = "34.1197"
+slug = "vardbidrag"
+
+[[variable]]
+native_id = "34.1198"
+slug = "loneinkomst"
+
+[[variable]]
+native_id = "34.1283"
+slug = "ekonomiskt-bistand-uppdelat"
+
+[[variable]]
+native_id = "34.1304"
+slug = "delkomponent-disponibel-inkomst"
+
+[[variable]]
+native_id = "34.1305"
+slug = "disponibel-inkomst-familj"
+
+[[variable]]
+native_id = "34.1395"
+slug = "mottaget-bidragsforskott"
+
+[[variable]]
+native_id = "34.1403"
+slug = "handikappersattning"
+
+[[variable]]
+native_id = "34.1408"
+slug = "rekryteringsbidrag"
+
+[[variable]]
+native_id = "34.1430"
+slug = "studiemedel-studiehjalp-lan-och-bidrag"
+
+[[variable]]
+native_id = "34.1491"
+slug = "tjanstepension-statliga-bolag"
+
+[[variable]]
+native_id = "34.1508"
+slug = "garantipension"
+
+[[variable]]
+native_id = "34.1516"
+slug = "inkomstpension"
+
+[[variable]]
+native_id = "34.1523"
+slug = "premiepension"
+
+[[variable]]
+native_id = "34.1594"
+slug = "arbetsskadeersattning"
+
+[[variable]]
+native_id = "34.1596"
+slug = "sarskilt-utbildningsbidrag"
+
+[[variable]]
+native_id = "34.1598"
+slug = "vuxenstudiestod-studiebidrag-ovriga"
+
+[[variable]]
+native_id = "34.1599"
+slug = "vuxenstudiestod-bidrag-arbetslosa"
+
+[[variable]]
+native_id = "34.1613"
+slug = "rehabiliteringsersattning"
+
+[[variable]]
+native_id = "34.1616"
+slug = "narstaendepenning"
+
+[[variable]]
+native_id = "34.1621"
+slug = "generationsvaxlingsersattning"
+
+[[variable]]
+native_id = "34.1625"
+slug = "foraldrapenning-vab"
+
+[[variable]]
+native_id = "34.1626"
+slug = "foraldrapenning-barns-fodelse"
+
+[[variable]]
+native_id = "34.2507"
+slug = "sarskilt-pensionstillagg"
+
+[[variable]]
+native_id = "34.2508"
+slug = "statlig-tjanstepension-inkl-kapan"
+
+[[variable]]
+native_id = "34.2574"
+slug = "disponibel-inkomst-per-ke-familj"
+
+[[variable]]
+native_id = "34.2655"
+slug = "aktivitetsersattning-garanti"
+
+[[variable]]
+native_id = "34.2661"
+slug = "andel-inkomstpension"
+
+[[variable]]
+native_id = "34.2662"
+slug = "aktivitetsersattning-inkomst"
+
+[[variable]]
+native_id = "34.2666"
+slug = "ersattning-varnpliktiga-totalt"
+
+[[variable]]
+native_id = "34.2667"
+slug = "vuxenstudiestod-lan-arbetslosa"
+
+[[variable]]
+native_id = "34.2691"
+slug = "andel-sjukersattning-inkomstrelaterad"
+
+[[variable]]
+native_id = "34.2696"
+slug = "konsumtionsenheter-familj"
+
+[[variable]]
+native_id = "34.2706"
+slug = "andel-premiepension"
+
+[[variable]]
+native_id = "34.4072"
+slug = "bruttoinvesteringar-mark"
+
+[[variable]]
+native_id = "34.4080"
+slug = "summa-nettoinvesteringar"
+
+[[variable]]
+native_id = "34.4094"
+slug = "nettoinvesteringar-mark"
+
+[[variable]]
+native_id = "34.4098"
+slug = "medelantal-anstallda"
+
+[[variable]]
+native_id = "34.4104"
+slug = "bruttoinvesteringar-maskiner-inventarier"
+
+[[variable]]
+native_id = "34.4175"
+slug = "summa-bruttoinvesteringar"
+
+[[variable]]
+native_id = "34.4178"
+slug = "bruttoinvesteringar-byggnader"
+
+[[variable]]
+native_id = "34.4207"
+slug = "anlaggningstillgangar"
+
+[[variable]]
+native_id = "34.4213"
+slug = "summa-omsattningstillgangar"
+
+[[variable]]
+native_id = "34.4224"
+slug = "summa-eget-kapital"
+
+[[variable]]
+native_id = "34.4230"
+slug = "avsattningar"
+
+[[variable]]
+native_id = "34.4248"
+slug = "summa-kortfristiga-skulder"
+
+[[variable]]
+native_id = "34.4249"
+slug = "summa-langfristiga-skulder"
+
+[[variable]]
+native_id = "34.4250"
+slug = "summa-obeskattade-reserver"
+
+[[variable]]
+native_id = "34.4257"
+slug = "ovriga-rorelseintakter"
+
+[[variable]]
+native_id = "34.4263"
+slug = "kostnader-loner-ersattningar"
+
+[[variable]]
+native_id = "34.4279"
+slug = "rorelseresultat"
+
+[[variable]]
+native_id = "34.4280"
+slug = "resultat-efter-finansiella-poster"
+
+[[variable]]
+native_id = "34.4317"
+slug = "skattekostnader"
+
+[[variable]]
+native_id = "34.4327"
+slug = "redovisat-resultat"
+
+[[variable]]
+native_id = "34.4381"
+slug = "bostadsbidrag"
+
+[[variable]]
+native_id = "34.4418"
+slug = "arbetsmarknadsstod"
+
+[[variable]]
+native_id = "34.4834"
+slug = "nettoinvesteringar-maskiner-inventarier"
+
+[[variable]]
+native_id = "34.4908"
+slug = "tjanstgoringsomfattning-nast"
+
+[[variable]]
+native_id = "34.4975"
+slug = "antal-kvinnor-arbetsstallet"
+
+[[variable]]
+native_id = "34.4988"
+slug = "antal-man-pa-arbetsstallet"
+
+[[variable]]
+native_id = "34.5028"
+slug = "nettoomsattning-justerad-merchanting"
+
+[[variable]]
+native_id = "34.5594"
+slug = "folkpension-egen-forman"
+
+[[variable]]
+native_id = "34.5649"
+slug = "folkpension"
+
+[[variable]]
+native_id = "34.7608"
+slug = "antal-barn-0-ar"
+
+[[variable]]
+native_id = "34.7609"
+slug = "antal-barn-10-ar"
+
+[[variable]]
+native_id = "34.7610"
+slug = "antal-barn-2-ar"
+
+[[variable]]
+native_id = "34.7611"
+slug = "antal-barn-3-ar"
+
+[[variable]]
+native_id = "34.7612"
+slug = "antal-barn-4-ar"
+
+[[variable]]
+native_id = "34.7613"
+slug = "antal-barn-5-ar"
+
+[[variable]]
+native_id = "34.7614"
+slug = "antal-barn-6-ar"
+
+[[variable]]
+native_id = "34.7615"
+slug = "antal-barn-7-ar"
+
+[[variable]]
+native_id = "34.7616"
+slug = "antal-barn-8-ar"
+
+[[variable]]
+native_id = "34.7617"
+slug = "antal-barn-9-ar"
+
+[[variable]]
+native_id = "34.7618"
+slug = "antal-barn-1-ar"
+
+[[variable]]
+native_id = "34.7619"
+slug = "antal-barn-11-ar"
+
+[[variable]]
+native_id = "34.7620"
+slug = "antal-barn-12-ar"
+
+[[variable]]
+native_id = "34.7621"
+slug = "antal-barn-13-ar"
+
+[[variable]]
+native_id = "34.7622"
+slug = "antal-barn-14-ar"
+
+[[variable]]
+native_id = "34.7623"
+slug = "antal-barn-15-ar"
+
+[[variable]]
+native_id = "34.7924"
+slug = "studiedeltagande-ht"
+
+[[variable]]
+native_id = "34.15533"
+slug = "summerad-inkomst-ast"
+
+[[variable]]
+native_id = "34.15535"
+slug = "antal-man-ast-forgymn"
+
+[[variable]]
+native_id = "34.15536"
+slug = "antal-man-ast-gymn"
+
+[[variable]]
+native_id = "34.15537"
+slug = "antal-man-ast-eftergymn-k"
+
+[[variable]]
+native_id = "34.15538"
+slug = "antal-man-ast-eftergymn-l"
+
+[[variable]]
+native_id = "34.15539"
+slug = "antal-kvinnor-forgymn"
+
+[[variable]]
+native_id = "34.15540"
+slug = "antal-kvinnor-gymn"
+
+[[variable]]
+native_id = "34.15541"
+slug = "antal-kv-korteftergymn"
+
+[[variable]]
+native_id = "34.15542"
+slug = "antal-kv-langeftergymn"
+
+[[variable]]
+native_id = "34.15546"
+slug = "inkomst-enskild-naringsverksamhet"
+
+[[variable]]
+native_id = "34.16040"
+slug = "fad-arbetsstalle-id"
+
+[[variable]]
+native_id = "34.16248"
+slug = "tjanstgoringsomfattning-storst"
+
+[[variable]]
+native_id = "34.16899"
+slug = "lone-eller-foretagarinkomst"
+
+[[variable]]
+native_id = "34.17528"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "34.17678"
+slug = "kommun-for-bostaden"
+
+[[variable]]
+native_id = "34.17732"
+slug = "enskild-naringsverksamhet-overskott"
+
+[[variable]]
+native_id = "34.17733"
+slug = "enskild-naringsverksamhet-underskott"
+
+[[variable]]
+native_id = "34.19616"
+slug = "antal-barn-17-ar"
+
+[[variable]]
+native_id = "34.19617"
+slug = "antal-barn-16-ar"
+
+[[variable]]
+native_id = "34.19618"
+slug = "antal-barn-18-ar"
+
+[[variable]]
+native_id = "34.19619"
+slug = "antal-barn-19-ar"
+
+[[variable]]
+native_id = "34.19620"
+slug = "antal-barn-20-ar"
+
+[[variable]]
+native_id = "34.19621"
+slug = "antal-barn-21-ar"
+
+[[variable]]
+native_id = "34.19656"
+slug = "sociala-kostnader-personalkostnader"
+
+[[variable]]
+native_id = "34.19951"
+slug = "bruttoinvesteringar-byggnader-mark"
+
+[[variable]]
+native_id = "34.19954"
+slug = "nettoinvesteringar-byggnader-mark"
+
+[[variable]]
+native_id = "34.21242"
+slug = "konsumtionsenhet-2004"
+
+[[variable]]
+native_id = "34.21468"
+slug = "ersattning-amprogram-skattefri"
+
+[[variable]]
+native_id = "34.21469"
+slug = "ersattning-amprogram-skattepliktig"
+
+[[variable]]
+native_id = "34.21515"
+slug = "delkomponent-disponibel-inkomst-2004"
+
+[[variable]]
+native_id = "34.21516"
+slug = "disponibel-inkomst-per-ke-familj-2004"
+
+[[variable]]
+native_id = "34.21517"
+slug = "disponibel-inkomst-familj-2004"
+
+[[variable]]
+native_id = "34.22173"
+slug = "andel-grad-sjukersattning-garanti"
+
+[[variable]]
+native_id = "34.22246"
+slug = "bostadstillagg-sarskilt-familj"
+
+[[variable]]
+native_id = "34.22335"
+slug = "konsumtionsenhetsvikt-2004"
+
+[[variable]]
+native_id = "34.22349"
+slug = "ekonomiskt-bistand-socialbidrag"
+
+[[variable]]
+native_id = "34.24175"
+slug = "andel-grad-sjukersattning-vilande"
+
+[[variable]]
+native_id = "34.24193"
+slug = "andel-grad-aktivitetsersattning-vilande"
+
+[[variable]]
+native_id = "34.24757"
+slug = "inkomst-aktiv-naringsverksamhet"
+
+[[variable]]
+native_id = "34.24758"
+slug = "inkomst-passiv-naringsverksamhet"
+
+[[variable]]
+native_id = "34.27151"
+slug = "vardnadsbidrag-utbetalt-belopp"
+
+[[variable]]
+native_id = "34.28875"
+slug = "militar-utbildning-ersattning"
+
+[[variable]]
+native_id = "34.29339"
+slug = "hushallstyp-bostadshushall"
+
+[[variable]]
+native_id = "34.29506"
+slug = "boendetillagg"
+
+[[variable]]
+native_id = "34.29998"
+slug = "hemvarn-ersattning"
+
+[[variable]]
+native_id = "34.30353"
+slug = "familjeidentitet"
+
+[[variable]]
+native_id = "34.30639"
+slug = "mottaget-underhallsbidrag"
+
+[[variable]]
+native_id = "34.30640"
+slug = "givet-underhallsbidrag"
+
+[[variable]]
+native_id = "34.30907"
+slug = "larlingsersattning"
+
+[[variable]]
+native_id = "34.31099"
+slug = "barn-16-17-ar"
+
+[[variable]]
+native_id = "34.31101"
+slug = "barn-18-19-ar"
+
+[[variable]]
+native_id = "34.31397"
+slug = "forvarvsinkomst-netto"
+
+[[variable]]
+native_id = "34.31496"
+slug = "sjukpenning-ej-arbetsgivarintrade"
+
+[[variable]]
+native_id = "34.31544"
+slug = "aktivitetsstod-dagar"
+
+[[variable]]
+native_id = "34.31545"
+slug = "aktivitetsstod-belopp"
+
+[[variable]]
+native_id = "34.31546"
+slug = "aktivitetsstod-sjuk-dag"
+
+[[variable]]
+native_id = "34.31547"
+slug = "aktivitetsstod-sjuk-belopp"
+
+[[variable]]
+native_id = "34.31572"
+slug = "antal-dagar-arbetsloshet"
+
+[[variable]]
+native_id = "34.31656"
+slug = "sjukersattning"
+
+[[variable]]
+native_id = "34.31820"
+slug = "aktivitetsersattning"
+
+[[variable]]
+native_id = "34.31825"
+slug = "privat-pensionsforsakring"
+
+[[variable]]
+native_id = "34.31828"
+slug = "arbetsskadelivranta"
+
+[[variable]]
+native_id = "34.31839"
+slug = "disponibel-inkomst-individ-familj-2004"
+
+[[variable]]
+native_id = "34.32790"
+slug = "larlingsersattning-antal-manader"
+
+[[variable]]
+native_id = "34.37815"
+slug = "etableringsgrans-arbmark"
+
+[[variable]]
+native_id = "34.37831"
+slug = "antal-arbetade-manader"
+
+[[variable]]
+native_id = "34.38219"
+slug = "utbildningsbidrag-kompl-ped"
+
+[[variable]]
+native_id = "34.41178"
+slug = "korttidsstudiestod"
+
+[[variable]]
+native_id = "34.41299"
+slug = "nettoinv-byggnader-mark"
+
+[[variable]]
+native_id = "34.41480"
+slug = "sfi-skattpliktigt"
+
+[[variable]]
+native_id = "34.42408"
+slug = "omvardnads-och-ferieomvardnadsbidrag"
+
+[[variable]]
+native_id = "34.42411"
+slug = "merkostnadsersattning-vuxen"
+
+[[variable]]
+native_id = "34.42413"
+slug = "merkostnadsersattning-barn"
+
+[[variable]]
+native_id = "34.44458"
+slug = "ersattning-for-karens"
+
+[[variable]]
+native_id = "34.44459"
+slug = "ersattning-riskgrupper"
+
+[[variable]]
+native_id = "34.44462"
+slug = "stipendium-skattefritt"
+
+[[variable]]
+native_id = "34.44791"
+slug = "pensioner-utlandskt-beskattade"
+
+[[variable]]
+native_id = "34.45150"
+slug = "sysselsatt-nordisk-inkomst"
+
+[[variable]]
+native_id = "34.45923"
+slug = "inkomstpensionstillagg"
+
+[[variable]]
+native_id = "34.46222"
+slug = "arbetsrelaterad-inkomstniva"
+
+[[variable]]
+native_id = "34.46233"
+slug = "omstallningsstudiestod"
+
+[[variable]]
+native_id = "34.46235"
+slug = "ersattning-for-arbete"
+
+[[variable]]
+native_id = "34.46236"
+slug = "ersattning-vid-arbetsloshet"
+
+[[variable]]
+native_id = "34.46237"
+slug = "ersattning-studier"
+
+[[variable]]
+native_id = "34.46238"
+slug = "pension"
+
+[[variable]]
+native_id = "34.46239"
+slug = "ersattning-nedsatt-arbetsformaga"
+
+[[variable]]
+native_id = "34.46240"
+slug = "ersattning-vid-sjukdom"
+
+[[variable]]
+native_id = "34.46241"
+slug = "ersattning-foraldraledighet"
+
+[[variable]]
+native_id = "34.46242"
+slug = "ekonomiskt-stod"
+
+[[variable]]
+native_id = "34.46252"
+slug = "andel-inkomst-fran-arbete"
+
+[[variable]]
+native_id = "34.46253"
+slug = "andel-ink-pension"
+
+[[variable]]
+native_id = "34.46254"
+slug = "andel-ink-nedsatt-arbetsformaga"
+
+[[variable]]
+native_id = "34.46255"
+slug = "andel-ink-sjukdom"
+
+[[variable]]
+native_id = "34.46256"
+slug = "andel-ink-ekonomiskt-stod"
+
+[[variable]]
+native_id = "34.46257"
+slug = "andel-ink-foraldraledighet"
+
+[[variable]]
+native_id = "34.46258"
+slug = "andel-ink-studier"
+
+[[variable]]
+native_id = "34.46259"
+slug = "andel-ink-arbetsloshet"
+
+# register 42
+
+[[variable]]
+native_id = "34.1398.bostbidr"
+slug = "bostadsbidrag-barnfamiljer-mfl"
+
+[[variable]]
+native_id = "34.1569.fodelselandnamn"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "34.18897.ssykstatus"
+slug = "ssyk-status"
+
+[[variable]]
+native_id = "34.305.fodelselandnamnmor"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "34.305.fodgrmor"
+slug = "fodelseland-grupp-mor"
+
+[[variable]]
+native_id = "34.30826.bosttill"
+slug = "bostadstillagg-sarskilt-pensionarer"
+
+[[variable]]
+native_id = "34.31398.raks-studink"
+slug = "inkomst-foranledd-studier"
+
+[[variable]]
+native_id = "34.31398.stud"
+slug = "inkomst-foranledd-studier-2"
+
+[[variable]]
+native_id = "34.31499.raks-sjukink"
+slug = "inkomst-foranledd-sjukdom"
+
+[[variable]]
+native_id = "34.31499.sjukre"
+slug = "inkomst-foranledd-sjukdom-2"
+
+[[variable]]
+native_id = "34.31575.arblos"
+slug = "inkomst-foranledd-arbetsloshet"
+
+[[variable]]
+native_id = "34.31575.raks-arblosink"
+slug = "inkomst-foranledd-arbetsloshet-2"
+
+[[variable]]
+native_id = "34.31653.fortid"
+slug = "inkomst-foranledd-fortidspension"
+
+[[variable]]
+native_id = "34.31653.raks-fortidink"
+slug = "inkomst-foranledd-fortidspension-2"
+
+[[variable]]
+native_id = "34.37828.huvinkkalla"
+slug = "huvudsaklig-inkomstkalla"
+
+[[variable]]
+native_id = "34.39295.aluees"
+slug = "alu-fran-akassa"
+
+[[variable]]
+native_id = "34.45149.bas"
+slug = "arbetsmarknadsstatus"
+
+[[variable]]
+native_id = "34.45149.basalt"
+slug = "arbetsmarknadsstatus-alt"
+
+[[variable]]
+native_id = "34.63.syssstat"
+slug = "sysselsattningsstatus-november"
+
+[[variable]]
+native_id = "34.784.sun2000inr"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "34.784.sun2020inr"
+slug = "utbildningsinriktning-4-positioner-2"
+
+# register 340

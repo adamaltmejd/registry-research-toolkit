@@ -10,3 +10,74 @@ label = "scb/fritidshusomraden/kommunnamn"
 [[code_label_pair]]
 code = "scb/fritidshusomraden/lan"
 label = "scb/fritidshusomraden/lannamn"
+
+[[variant]]
+native_id = "216.317"
+slug = "_default"
+display_group = "Fritidshusområden"
+
+# Bebyggd mark i strandskyddsområden
+
+[[variable]]
+native_id = "216.2189"
+slug = "landareal"
+
+[[variable]]
+native_id = "216.2876"
+slug = "fritidshusomrade"
+
+[[variable]]
+native_id = "216.2877"
+slug = "antal-fritidshus"
+
+[[variable]]
+native_id = "216.2878"
+slug = "antal-ovriga-hus"
+
+[[variable]]
+native_id = "216.22523"
+slug = "byggnadstyp"
+
+[[variable]]
+native_id = "216.25193"
+slug = "typ-avgransning"
+
+[[variable]]
+native_id = "216.25836"
+slug = "antal-byggnader"
+
+[[variable]]
+native_id = "216.35630"
+slug = "fritidshusomraden"
+
+[[variable]]
+native_id = "216.35632"
+slug = "overlapp-fritidshusomrade-tatort"
+
+[[variable]]
+native_id = "216.35633"
+slug = "antal-fritidshusomraden"
+
+[[variable]]
+native_id = "216.35634"
+slug = "fritidshus-i-fritidshusomraden"
+
+# register 217 (bebyggd-mark-strandskydd)
+
+[[variable]]
+native_id = "216.25139"
+slug = "startdatum"
+
+[[variable]]
+native_id = "216.25146"
+slug = "slutdatum"
+
+[[variable]]
+native_id = "216.35979"
+slug = "registreringsar"
+
+[[variable]]
+native_id = "216.39461"
+slug = "datatyp-for-geometri"
+
+# register 217

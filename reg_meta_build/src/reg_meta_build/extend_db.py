@@ -233,7 +233,7 @@ def resolve_steward_slug_dir(
                     "Pass --slug-dir, run from a repo checkout, or use --skip-slugs."
                 ),
             )
-        resolved = global_dir / steward
+        resolved = global_dir.parent / "fqid_slugs" / steward
     if not resolved.is_dir():
         raise RegMetaError(
             exit_code=EXIT_CONFIG,

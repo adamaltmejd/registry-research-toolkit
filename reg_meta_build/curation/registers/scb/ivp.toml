@@ -22,3 +22,111 @@ register = "scb/ivp"
 variable = "total-kvantitet"
 description = "Kvantitet på varor som har tillverkats under året (behöver inte ha levererats/sålts). Uppgiften samlas endast in för en mindre del av varunumren och ingår inte alltid i mikrodatauppdrag."
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[variant]]
+native_id = "135.186"
+slug = "industrins-varuproduktion"
+display_group = "Industrins varuproduktion"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "135.1635"
+slug = "returravara"
+display_group = "Returråvara"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Kvartalsvis bränslestatistik
+
+[[variable]]
+native_id = "135.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "135.119"
+slug = "varukod-kn"
+
+[[variable]]
+native_id = "135.1853"
+slug = "naringsgren-enligt-nr"
+
+[[variable]]
+native_id = "135.2478"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "135.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "135.4969"
+slug = "kvantitetsenhet"
+
+[[variable]]
+native_id = "135.44373"
+slug = "typ-av-returravara"
+
+# register 139 (branslestatistik)
+
+[[variable]]
+native_id = "135.3307.metlev"
+slug = "imputeringsmetod-lev"
+
+[[variable]]
+native_id = "135.3307.mettot"
+slug = "imputeringsmetod-tot"
+
+[[variable]]
+native_id = "135.4992.levkvant"
+slug = "leverad-kvantitet"
+
+[[variable]]
+native_id = "135.5003.totb"
+slug = "totb-kvant1"
+
+# register 139 (branslestatistik)
+
+[[variable]]
+native_id = "135.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "135.1641"
+slug = "naringsgren-arbetsstalle"
+
+[[variable]]
+native_id = "135.1798"
+slug = "inkommen"
+
+[[variable]]
+native_id = "135.2636"
+slug = "kontrollnr-redovisningsenh"
+
+[[variable]]
+native_id = "135.5006"
+slug = "imputkalla"
+
+[[variable]]
+native_id = "135.5016"
+slug = "bortfallskod"
+
+[[variable]]
+native_id = "135.20973"
+slug = "typkod-lonbearbetning"
+
+[[variable]]
+native_id = "135.21009"
+slug = "undersokningsar"
+
+# register 139
+
+[[variable]]
+native_id = "135.4992.totkvant"
+slug = "total-kvantitet"
+
+# register 139

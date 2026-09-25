@@ -6,3 +6,123 @@ native_id = "115"
 [[code_label_pair]]
 code = "scb/kommunalskatter/kommun"
 label = "scb/kommunalskatter/kommun-eller-lansnamn"
+
+[[variant]]
+native_id = "115.130"
+slug = "kommunalskatter"
+display_group = "Kommunalskatter - Primärkommun"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "115.646"
+slug = "kommunalskatter-landsting"
+display_group = "Kommunalskatter-Landsting"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: peorgnr lives only in sibling variants; the tax-rate rows are per
+# municipality — Kommun (kommunkod).
+
+[[variant]]
+native_id = "115.1227"
+slug = "primarkommun-region"
+display_group = "Kommunalskatter - primärkommun och region/landsting"
+panel_entity_key = "kommun"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Kommunernas och regionernas finansiella tillgångar och skulder (KTS)
+
+[[variable]]
+native_id = "115.36"
+slug = "kommun"
+
+
+[[variable]]
+native_id = "115.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "115.49"
+slug = "lan"
+
+[[variable]]
+native_id = "115.2188"
+slug = "folkmangd"
+
+[[variable]]
+native_id = "115.5099"
+slug = "invanare-per-kommun"
+
+[[variable]]
+native_id = "115.16805"
+slug = "kommun-eller-lansnamn"
+
+[[variable]]
+native_id = "115.16808"
+slug = "folkmangd-31-dec-t-2"
+
+[[variable]]
+native_id = "115.16819"
+slug = "total-kommunal-skattesats"
+
+[[variable]]
+native_id = "115.16821"
+slug = "skattesats-primarkommunen"
+
+[[variable]]
+native_id = "115.16824"
+slug = "skattesats-landsting"
+
+[[variable]]
+native_id = "115.16827"
+slug = "total-kyrkoavgiftssats"
+
+[[variable]]
+native_id = "115.16829"
+slug = "begravningsavgiftssats"
+
+[[variable]]
+native_id = "115.19693"
+slug = "region-landsting"
+
+[[variable]]
+native_id = "115.22203"
+slug = "skatteunderlag-t-1"
+
+[[variable]]
+native_id = "115.32913"
+slug = "skatteunderlag-sv-kyrkan"
+
+# register 116 (kts)
+
+[[variable]]
+native_id = "115.607"
+slug = "skatteunderlag"
+
+[[variable]]
+native_id = "115.2763"
+slug = "argang"
+
+[[variable]]
+native_id = "115.5056"
+slug = "landstingskod"
+
+[[variable]]
+native_id = "115.5059"
+slug = "landstingets-namn"
+
+[[variable]]
+native_id = "115.14850"
+slug = "kommungrupp"
+
+[[variable]]
+native_id = "115.16818"
+slug = "befolkningstathet"
+
+# register 117

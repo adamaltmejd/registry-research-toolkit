@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "ersattning-karens"
+native_id = "7296709609943288914"
+
+[[variant]]
+native_id = "7296709609943288914.9204483061530265555"
+slug = "_default"
+display_group = "Ersättning för karens"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Ersättning till riskgrupper
+
+[[variable]]
+native_id = "7296709609943288914.personnummer"
+slug = "lopnr-personnr"

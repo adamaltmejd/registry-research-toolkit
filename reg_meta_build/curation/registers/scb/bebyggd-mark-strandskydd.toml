@@ -10,3 +10,122 @@ label = "scb/bebyggd-mark-strandskydd/kommunnamn"
 [[code_label_pair]]
 code = "scb/bebyggd-mark-strandskydd/lan"
 label = "scb/bebyggd-mark-strandskydd/lannamn"
+
+[[variant]]
+native_id = "217.816"
+slug = "bebyggd-mark"
+display_group = "Bebyggd mark i strandskyddsområden"
+
+
+[[variant]]
+native_id = "217.934"
+slug = "bebyggelsepaverkad-kust"
+display_group = "Bebyggelsepåverkad kust och strand"
+
+# Kust, stränder och öar
+
+[[variable]]
+native_id = "217.64"
+slug = "tatort-tom-2010"
+
+[[variable]]
+native_id = "217.3720"
+slug = "typ-av-bebyggelse"
+
+[[variable]]
+native_id = "217.3745"
+slug = "antal-taxeringsenheter"
+
+[[variable]]
+native_id = "217.7900"
+slug = "byggnadsar"
+
+[[variable]]
+native_id = "217.22523"
+slug = "byggnadstyp"
+
+[[variable]]
+native_id = "217.23680"
+slug = "kust-och-strandlinje"
+
+[[variable]]
+native_id = "217.25832"
+slug = "de-tre-storsta-insjoarna"
+
+[[variable]]
+native_id = "217.25834"
+slug = "kust-och-strandareal-100m"
+
+[[variable]]
+native_id = "217.25835"
+slug = "kust-och-strandkvot-300m"
+
+[[variable]]
+native_id = "217.25836"
+slug = "antal-byggnader"
+
+[[variable]]
+native_id = "217.25837"
+slug = "andel-byggnader"
+
+[[variable]]
+native_id = "217.25840"
+slug = "kust-och-strandareal-300m"
+
+[[variable]]
+native_id = "217.25841"
+slug = "kust-och-strandkvot-100m"
+
+[[variable]]
+native_id = "217.25842"
+slug = "antal-byggnader-per-hektar-100m"
+
+[[variable]]
+native_id = "217.25843"
+slug = "antal-byggnader-per-hektar-300m"
+
+[[variable]]
+native_id = "217.25860"
+slug = "kust-och-strandlangd-100m"
+
+[[variable]]
+native_id = "217.25861"
+slug = "kust-och-strandlangd-300m"
+
+[[variable]]
+native_id = "217.32024"
+slug = "bebyggelsepaverkad-kust-och-strandlinje"
+
+[[variable]]
+native_id = "217.32025"
+slug = "antal-strandnara-byggnader"
+
+[[variable]]
+native_id = "217.42758"
+slug = "strandlinje-i-tatort"
+
+[[variable]]
+native_id = "217.42759"
+slug = "strandlinje-inom-skyddad-natur"
+
+[[variable]]
+native_id = "217.42765"
+slug = "byggnad-i-tatort"
+
+[[variable]]
+native_id = "217.42766"
+slug = "byggnad-inom-formellt-skyddad-natur"
+
+# register 219 (kust-strander-oar)
+
+[[variable]]
+native_id = "217.39461"
+slug = "datatyp-for-geometri"
+
+# register 219
+
+[[variable]]
+native_id = "217.39462.objectid"
+slug = "objekt-id"
+
+# register 219

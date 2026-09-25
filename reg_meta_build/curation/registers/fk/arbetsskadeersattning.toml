@@ -1,0 +1,36 @@
+[register]
+provider = "fk"
+slug = "arbetsskadeersattning"
+native_id = "5285952033367956531"
+
+[[variant]]
+native_id = "5285952033367956531.7947960492149761686"
+slug = "arbetsskadelivranta-manadsdata"
+display_group = "Arbetsskadeersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5285952033367956531.7870777863327006367"
+slug = "yrkesskadelivranta-manadsdata"
+display_group = "Arbetsskadeersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5285952033367956531.7267190485107607471"
+slug = "beslut"
+display_group = "Arbetsskadeersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "startdatum"
+panel_time_grain = "row"
+
+# Assistansersättning
+
+[[variable]]
+native_id = "5285952033367956531.Lopnr"
+slug = "lopnr"

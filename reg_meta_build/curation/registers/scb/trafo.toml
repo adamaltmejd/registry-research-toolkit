@@ -1,0 +1,79 @@
+[register]
+provider = "scb"
+slug = "trafo"
+native_id = "155"
+
+[[variant]]
+native_id = "155.222"
+slug = "vagtrafikolyckor"
+display_group = "Vägtrafikolyckor med personskada"
+panel_entity_key = "person-orgnr"
+panel_time_key = "indat"
+panel_time_grain = "row"
+
+# Industrins miljöskyddskostnader
+
+[[variable]]
+native_id = "155.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "155.2376"
+slug = "ovningskorning"
+
+[[variable]]
+native_id = "155.2379"
+slug = "behorighetsdatum-korkort"
+
+[[variable]]
+native_id = "155.2382"
+slug = "utlandskt-korkort-bytt"
+
+[[variable]]
+native_id = "155.2383"
+slug = "personrad"
+
+[[variable]]
+native_id = "155.2804"
+slug = "godkannandedatum-handledare"
+
+[[variable]]
+native_id = "155.4675"
+slug = "person-id"
+
+# register 156 (industrins-miljoskyddskostnader)
+
+[[variable]]
+native_id = "155.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "155.279"
+slug = "alder-vid-handelsen"
+
+[[variable]]
+native_id = "155.1975"
+slug = "karosserikod"
+
+[[variable]]
+native_id = "155.2012"
+slug = "tjanstevikt-lastbil"
+
+[[variable]]
+native_id = "155.2013"
+slug = "totalvikt-lastbil"
+
+[[variable]]
+native_id = "155.2813"
+slug = "motoreffektnorm-kw"
+
+[[variable]]
+native_id = "155.2814"
+slug = "fabrikat"
+
+[[variable]]
+native_id = "155.20694"
+slug = "utryckningsfordon"
+
+# register 156

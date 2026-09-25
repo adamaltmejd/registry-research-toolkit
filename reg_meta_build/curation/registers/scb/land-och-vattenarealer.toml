@@ -1,0 +1,55 @@
+[register]
+provider = "scb"
+slug = "land-och-vattenarealer"
+native_id = "225"
+
+[[variant]]
+native_id = "225.326"
+slug = "_default"
+display_group = "Land- och vattenarealer"
+
+# Detaljhandelns geografi
+
+[[variable]]
+native_id = "225.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "225.49"
+slug = "lan"
+
+[[variable]]
+native_id = "225.16344"
+slug = "fyra-storsta-insjoar-vattenareal"
+
+[[variable]]
+native_id = "225.29559"
+slug = "gallandedatum"
+
+[[variable]]
+native_id = "225.39461"
+slug = "datatyp-for-geometri"
+
+# register 226 (detaljhandelns-geografi)
+
+[[variable]]
+native_id = "225.16346.sp-geometry"
+slug = "totalareal-land-vatten"
+
+# register 229 (personalutbildningsstatistik)
+
+[[variable]]
+native_id = "225.2189"
+slug = "landareal"
+
+[[variable]]
+native_id = "225.16345"
+slug = "havsvatten"
+
+# register 227
+
+[[variable]]
+native_id = "225.39462.objectid"
+slug = "objekt-id"
+
+# register 229

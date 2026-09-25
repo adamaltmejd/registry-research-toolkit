@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "byggproduktionsindex"
+native_id = "319"
+
+[[variant]]
+native_id = "319.986"
+slug = "_default"
+display_group = "Byggproduktionsindex"
+# Sub-annual aggregate series (#730, follow-up to #577): year (ar) × month (manad).
+# Genuinely national — no geography column, so there is no panel subject and no
+# panel_entity_key (a pure time series, unlike the geography×time panels above). The
+# composite time key addresses one delivered month, so grain = "row".
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+# Grundskola: nationella prov åk 6

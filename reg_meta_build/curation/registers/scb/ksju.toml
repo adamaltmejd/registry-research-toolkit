@@ -123,3 +123,130 @@ variable = "195.4027"
 columns = { Ksjusni = "195.4027.ksjusni", NG1_2007 = "195.4027.ng1-2007", NGS1 = "195.4027.ng1-2007", NgGr1 = "195.4027.ng1-2007", bransch = "195.4027.bransch", lgrp = "195.4027.lgrp" }
 unassigned_columns = ["NG1", "NgGr1_2002", "NgGr2", "NgS1", "NgS1_2002", "Sni1", "Sni2", "SniA", "bgr98", "bgr98n", "bgr98t", "bgr98u", "bgr98x", "ng1", "nggr2_2002", "ngs1", "ngs1_2002", "sni2", "snigrupp"]
 columns_ref = "curation/concept_groups.toml group scb/ksju/naringsgren members 0..4; fqid_slugs/scb.toml comment on 195.4027.ng1-2007 names the NG1_2007/NgGr1/NGS1 alias chain. Other columns have no ownership declaration."
+
+[[variant]]
+native_id = "195.275"
+slug = "sjukfranvaro-sjukloneperioden"
+display_group = "Sjukfrånvaro under sjuklöneperioden"
+panel_entity_key = "personnr"
+panel_time_key = "sjukfrom"
+panel_time_grain = "row"
+
+# var 4027 "Näringsgren": #845 retired the #261 fold_override, so the stem rule
+# now SPLITS this näringsgren variable into FOUR siblings instead of fiat-folding
+# them: the NG1_2007/NgGr1/NGS1 alias-chain (2006–2023, this entry), the
+# `Ksjusni` column (2011–2023), the `bransch` column (2011), and the 2009-only
+# `lgrp` predecessor. All four are the SAME SNI näringsgren concept under
+# different KSju delivery columns; they are grouped back into one näringsgren
+# family via concept_groups.toml (group key `naringsgren`). This chain keeps the
+# bare `naringsgren`; the sibling slugs below name the semantic role rather than
+# echoing delivery-column names (#875/#931).
+
+[[variable]]
+native_id = "195.4027.ng1-2007"
+slug = "naringsgren"
+
+
+[[variable]]
+native_id = "195.4027.bransch"
+slug = "naringsgren-2siffer"
+
+
+[[variable]]
+native_id = "195.4027.ksjusni"
+slug = "naringsgren-rams"
+
+# Energianvändningen inom fiskesektorn
+
+[[variable]]
+native_id = "195.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "195.49"
+slug = "lan"
+
+[[variable]]
+native_id = "195.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "195.4614"
+slug = "urvalsstorlek-per-stratum"
+
+[[variable]]
+native_id = "195.8160"
+slug = "styrkod-observation"
+
+[[variable]]
+native_id = "195.15149"
+slug = "naringsgrupp"
+
+[[variable]]
+native_id = "195.15150"
+slug = "lansgrupp"
+
+[[variable]]
+native_id = "195.36024"
+slug = "lopnummer-sjukfall"
+
+# register 196 (energianvandning-fiske)
+
+[[variable]]
+native_id = "195.4027.lgrp"
+slug = "naringsgren-grupperad-2009"
+
+# register 198 (avgifter-hyror)
+
+[[variable]]
+native_id = "195.14"
+slug = "cfar-nummer"
+
+[[variable]]
+native_id = "195.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "195.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "195.63"
+slug = "sysselsattningsstatus-november"
+
+[[variable]]
+native_id = "195.97"
+slug = "referensmanad"
+
+[[variable]]
+native_id = "195.4932"
+slug = "arbetsstalle-storleksklass"
+
+[[variable]]
+native_id = "195.8167"
+slug = "antal-svarande-objekt"
+
+[[variable]]
+native_id = "195.8170"
+slug = "sektor-organisation"
+
+[[variable]]
+native_id = "195.14849"
+slug = "grov-sektorindelning"
+
+[[variable]]
+native_id = "195.26835"
+slug = "imputerat-varde"
+
+[[variable]]
+native_id = "195.28853"
+slug = "statuskod"
+
+# register 196
+
+[[variable]]
+native_id = "195.8164.strata"
+slug = "urvalsstratum"
+
+# register 196

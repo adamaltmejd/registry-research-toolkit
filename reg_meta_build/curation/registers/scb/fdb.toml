@@ -27,3 +27,302 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 variable = "1.830"
 columns = { GatuRest = "1.830.gaturest", Gaturest = "1.830.gaturest", PGaturest = "1.830.pgaturest" }
 columns_ref = "Y-167 2026-09-18: FDB 1.830 keeps {GatuRest, Gaturest} on gaturest and {PGaturest} on pgaturest (variants 424/427, 1999-2025); counter-evidence retained: AE variable-dict row 31477 reads GatuRest as PGaturest, JE GatuRest row 12814 matches PGaturest row 6139; register 383 out of scope"
+
+[[variant]]
+native_id = "1.424"
+slug = "arbetsstalleenheter"
+display_group = "Arbetsställeenheter"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "1.425"
+slug = "administrativa"
+display_group = "Administrativa arbetsställen"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "1.426"
+slug = "foretagsenheter"
+display_group = "Företagsenheter"
+panel_entity_key = "fenr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "1.427"
+slug = "juridiska-enheter"
+display_group = "Juridiska enheter"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "1.428"
+slug = "lokala-verksamhetsenheter"
+display_group = "Lokala verksamhetsenheter"
+panel_entity_key = "lvenr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "1.429"
+slug = "verksamhetsenheter"
+display_group = "Verksamhetsenheter"
+panel_entity_key = "venr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Y-167 (maintainer decision 2026-09-18): FDB VarId 830 literal column ownership.
+# Native VarId 830 delivers three literal spellings across FDB variants
+# Arbetsställeenheter (424) and Juridiska enheter (427), 1999–2025: GatuRest and
+# Gaturest share one identity (slug gaturest), PGaturest keeps its own (slug
+# pgaturest) — mirroring the accepted 1.828 Gata/PGata and 1.537 PostNr/PPostNr
+# partitions. The auto file keeps both slugs; this authored entry only adds the
+# tracked ownership map the converter reads (no slug pin). Register 383
+# (Utförarregistret) rows are out of scope. Counter-evidence retained, not
+# resolved away: AE variable-dict row 31477 documents GatuRest→PGaturest as one
+# variable, and JE GatuRest also carries row 12814 whose text matches
+# PGaturest's row 6139.
+
+[[variable]]
+native_id = "1.830.gaturest"
+
+# Registret över totalbefolkningen (RTB)
+
+[[variable]]
+native_id = "1.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "1.29"
+slug = "fenr"
+
+
+[[variable]]
+native_id = "1.48"
+slug = "lvenr"
+
+
+[[variable]]
+native_id = "1.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "1.1454"
+slug = "venr"
+
+
+[[variable]]
+native_id = "1.413"
+slug = "c-o-adress"
+
+[[variable]]
+native_id = "1.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "1.668"
+slug = "arbstalle-status"
+
+[[variable]]
+native_id = "1.675"
+slug = "anstallda-ku"
+
+[[variable]]
+native_id = "1.832"
+slug = "hjalpverksamhetskod"
+
+[[variable]]
+native_id = "1.880"
+slug = "ng-rangordning"
+
+[[variable]]
+native_id = "1.881"
+slug = "ng-tid-oms-pct"
+
+[[variable]]
+native_id = "1.885"
+slug = "ngs-rangordning"
+
+[[variable]]
+native_id = "1.887"
+slug = "procent-tid-omsattning"
+
+[[variable]]
+native_id = "1.905"
+slug = "lon-enligt-kontrolluppgifterna"
+
+[[variable]]
+native_id = "1.941"
+slug = "antal-ve"
+
+[[variable]]
+native_id = "1.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "1.998"
+slug = "antal-rorligt-anstallda"
+
+[[variable]]
+native_id = "1.1006"
+slug = "redovisningsgrupp-moms"
+
+[[variable]]
+native_id = "1.1047"
+slug = "je-foretagsstatus"
+
+[[variable]]
+native_id = "1.1052"
+slug = "je-status"
+
+[[variable]]
+native_id = "1.1054"
+slug = "sateskommun"
+
+[[variable]]
+native_id = "1.1134"
+slug = "bolagsstatus"
+
+[[variable]]
+native_id = "1.46424"
+slug = "ae-statistisk-status"
+
+[[variable]]
+native_id = "1.46437"
+slug = "je-statistisk-foretagsstatus"
+
+[[variable]]
+native_id = "1.46471"
+slug = "ve-antal-allman"
+
+[[variable]]
+native_id = "1.48346"
+slug = "antal-anstallda-arbetsstalle"
+
+[[variable]]
+native_id = "1.48347"
+slug = "antal-anstallda-juridisk-enhet"
+
+# register 2 (rtb)
+
+[[variable]]
+native_id = "1.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "1.55"
+slug = "omsattning-enligt-moms"
+
+[[variable]]
+native_id = "1.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "1.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "1.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "1.666"
+slug = "anstallda-storleksklass"
+
+[[variable]]
+native_id = "1.680"
+slug = "antal-anstallda-statistiskt-matt"
+
+[[variable]]
+native_id = "1.781"
+slug = "benamning"
+
+[[variable]]
+native_id = "1.799"
+slug = "belagenhetsadress-gata"
+
+[[variable]]
+native_id = "1.803"
+slug = "belagenhetsadress-postnr"
+
+[[variable]]
+native_id = "1.804"
+slug = "besokspostort"
+
+[[variable]]
+native_id = "1.814"
+slug = "faxnummer"
+
+[[variable]]
+native_id = "1.834"
+slug = "antal-lokala-ve"
+
+[[variable]]
+native_id = "1.903"
+slug = "antal-kontrolluppgifter"
+
+[[variable]]
+native_id = "1.925"
+slug = "antal-juridiska-enheter"
+
+[[variable]]
+native_id = "1.971"
+slug = "aktiekapital"
+
+[[variable]]
+native_id = "1.1009"
+slug = "arbetsgivarstatus"
+
+[[variable]]
+native_id = "1.1038"
+slug = "antal-firmor"
+
+[[variable]]
+native_id = "1.1058"
+slug = "sateslan"
+
+[[variable]]
+native_id = "1.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "1.1133"
+slug = "privat-publikt-foretag"
+
+[[variable]]
+native_id = "1.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "1.1350"
+slug = "anstallda-storleksklass-stat"
+
+[[variable]]
+native_id = "1.1593"
+slug = "antal-ast"
+
+[[variable]]
+native_id = "1.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "1.19052"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "1.29697"
+slug = "antal-arbetsstallen-aeant"
+
+# register 2

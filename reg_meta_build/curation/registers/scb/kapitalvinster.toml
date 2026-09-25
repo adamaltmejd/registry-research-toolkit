@@ -1,0 +1,195 @@
+[register]
+provider = "scb"
+slug = "kapitalvinster"
+native_id = "395"
+
+[[variant]]
+native_id = "395.1530"
+slug = "individ"
+display_group = "Individ"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Registerdata för integration
+
+[[variable]]
+native_id = "395.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "395.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "395.31"
+slug = "forsamling"
+
+[[variable]]
+native_id = "395.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "395.44"
+slug = "kon"
+
+[[variable]]
+native_id = "395.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "395.41167"
+slug = "kapitalvinst-smahus-bostadsratt"
+
+[[variable]]
+native_id = "395.41168"
+slug = "kapitalforlust-smahus-bostadsratt"
+
+[[variable]]
+native_id = "395.41563"
+slug = "kapitalvinst-bostadsratt"
+
+[[variable]]
+native_id = "395.41565"
+slug = "kapitalforlust-bostadsratt"
+
+# register 397 (stuv)
+
+[[variable]]
+native_id = "395.22"
+slug = "disponibel-inkomst"
+
+[[variable]]
+native_id = "395.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "395.335"
+slug = "forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "395.1069"
+slug = "objekttyp-langdtillhorighet"
+
+[[variable]]
+native_id = "395.1101"
+slug = "avdrag-forvaltningskostnad-kapital"
+
+[[variable]]
+native_id = "395.1106"
+slug = "avdrag-skuldranta-kapital"
+
+[[variable]]
+native_id = "395.1108"
+slug = "avdrag-realisationsforlust-kapital"
+
+[[variable]]
+native_id = "395.1110"
+slug = "inkomst-av-kapital"
+
+[[variable]]
+native_id = "395.1159"
+slug = "inkomstranta-utdelning-kapital"
+
+[[variable]]
+native_id = "395.1304"
+slug = "delkomponent-disponibel-inkomst"
+
+[[variable]]
+native_id = "395.1305"
+slug = "disponibel-inkomst-familj"
+
+[[variable]]
+native_id = "395.2556"
+slug = "positiv-rantefordelning-kapital"
+
+[[variable]]
+native_id = "395.2558"
+slug = "realisationsvinst-kapital"
+
+[[variable]]
+native_id = "395.2709"
+slug = "markering-traff-rtb"
+
+[[variable]]
+native_id = "395.3288"
+slug = "kapitalvinst-annan-fond-rantefond"
+
+[[variable]]
+native_id = "395.3289"
+slug = "kapitalforlust-annan-fond-rantefond"
+
+[[variable]]
+native_id = "395.3290"
+slug = "kapitalvinst-rantefond"
+
+[[variable]]
+native_id = "395.3291"
+slug = "kapitalforlust-rantefond"
+
+[[variable]]
+native_id = "395.5585"
+slug = "senast-kanda-civilstand"
+
+[[variable]]
+native_id = "395.21515"
+slug = "delkomponent-disponibel-inkomst-2004"
+
+[[variable]]
+native_id = "395.21517"
+slug = "disponibel-inkomst-familj-2004"
+
+[[variable]]
+native_id = "395.21711"
+slug = "kapitalforlust-brutto"
+
+[[variable]]
+native_id = "395.21729"
+slug = "kapitalvinst-brutto"
+
+[[variable]]
+native_id = "395.41109"
+slug = "kapitalvinst-aktier-fonder-k-blankett"
+
+[[variable]]
+native_id = "395.41110"
+slug = "kapitalforlust-aktier-fonder-k4"
+
+[[variable]]
+native_id = "395.41127"
+slug = "kapitalvinst-fonder"
+
+[[variable]]
+native_id = "395.41128"
+slug = "kapitalforlust-fonder"
+
+[[variable]]
+native_id = "395.41152"
+slug = "kapitalvinst-naringsfastighet-skatt"
+
+[[variable]]
+native_id = "395.41153"
+slug = "kapitalforlust-naringsfastighet-avdrag"
+
+[[variable]]
+native_id = "395.41162"
+slug = "kapitalvinst-finansiellt-brutto"
+
+[[variable]]
+native_id = "395.41163"
+slug = "kapitalforlust-finansiellt-brutto"
+
+[[variable]]
+native_id = "395.41170"
+slug = "kapitalvinst-naringsfastighet"
+
+[[variable]]
+native_id = "395.41171"
+slug = "kapitalforlust-naringsfastighet"
+
+[[variable]]
+native_id = "395.41213"
+slug = "kapitalvinst-finansiellt-netto"
+
+# register 396

@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "utvecklingsersattning"
+native_id = "5517508967525103350"
+
+[[variant]]
+native_id = "5517508967525103350.8173457916985157617"
+slug = "_default"
+display_group = "Utvecklingsersättning"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Vårdbidrag
+
+[[variable]]
+native_id = "5517508967525103350.personnummer"
+slug = "lopnr-personnr"

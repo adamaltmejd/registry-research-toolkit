@@ -1,0 +1,759 @@
+[register]
+provider = "scb"
+slug = "personalutbildningsstatistik"
+native_id = "229"
+
+[[variant]]
+native_id = "229.396"
+slug = "_default"
+display_group = "Personalutbildningsstatistik (PUT)"
+panel_entity_key = "lopnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# 'Hela året YYYY' (1999-2003) entries removed: with halvår siblings moved
+# to YYYY-H1/YYYY-H2, the bare-year slot is uncontested and derive_period
+# auto-fills them at build time.
+
+# Anpassad grundskola
+
+[[variable]]
+native_id = "229.3751"
+slug = "lopnummer"
+
+
+[[variable]]
+native_id = "229.66"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "229.544"
+slug = "sektor-i-huvudsysslan"
+
+[[variable]]
+native_id = "229.774"
+slug = "utbildningsniva-aggregat-old"
+
+[[variable]]
+native_id = "229.2302"
+slug = "kommungruppering-regioner"
+
+[[variable]]
+native_id = "229.6375"
+slug = "arbetskraftsstatus-aldre"
+
+[[variable]]
+native_id = "229.6545"
+slug = "facklig-centralorganisation"
+
+[[variable]]
+native_id = "229.6586"
+slug = "anknytningsgrad"
+
+[[variable]]
+native_id = "229.8053"
+slug = "kursamne-1"
+
+[[variable]]
+native_id = "229.8056"
+slug = "kursamne-2"
+
+[[variable]]
+native_id = "229.8058"
+slug = "kursamne-3"
+
+[[variable]]
+native_id = "229.8059"
+slug = "kursamne-4"
+
+[[variable]]
+native_id = "229.8062"
+slug = "kursamne-5"
+
+[[variable]]
+native_id = "229.8072"
+slug = "kursomfattning-1"
+
+[[variable]]
+native_id = "229.8075"
+slug = "kursomfattning-2"
+
+[[variable]]
+native_id = "229.8560"
+slug = "kursomfattning-3"
+
+[[variable]]
+native_id = "229.8561"
+slug = "kursomfattning-4"
+
+[[variable]]
+native_id = "229.8562"
+slug = "kursomfattning-5"
+
+[[variable]]
+native_id = "229.8563"
+slug = "studietimmar-per-kursdag-1"
+
+[[variable]]
+native_id = "229.8564"
+slug = "studietimmar-per-kursdag-2"
+
+[[variable]]
+native_id = "229.8565"
+slug = "studietimmar-per-kursdag-3"
+
+[[variable]]
+native_id = "229.8566"
+slug = "studietimmar-per-kursdag-4"
+
+[[variable]]
+native_id = "229.8567"
+slug = "studietimmar-per-kursdag-5"
+
+[[variable]]
+native_id = "229.8568"
+slug = "kurs-avslutad-1"
+
+[[variable]]
+native_id = "229.8569"
+slug = "kurs-avslutad-2"
+
+[[variable]]
+native_id = "229.8570"
+slug = "kurs-avslutad-3"
+
+[[variable]]
+native_id = "229.8571"
+slug = "kurs-avslutad-4"
+
+[[variable]]
+native_id = "229.8572"
+slug = "kurs-avslutad-5"
+
+[[variable]]
+native_id = "229.8582"
+slug = "kunskap-samma-bransch-1"
+
+[[variable]]
+native_id = "229.8587"
+slug = "kunskap-samma-bransch-2"
+
+[[variable]]
+native_id = "229.8588"
+slug = "kunskap-samma-bransch-3"
+
+[[variable]]
+native_id = "229.8589"
+slug = "kunskap-samma-bransch-4"
+
+[[variable]]
+native_id = "229.8590"
+slug = "kunskap-samma-bransch-5"
+
+[[variable]]
+native_id = "229.8591"
+slug = "kunskap-andra-bransch-3"
+
+[[variable]]
+native_id = "229.8592"
+slug = "kunskap-andra-bransch-2"
+
+[[variable]]
+native_id = "229.8593"
+slug = "kunskap-andra-bransch-1"
+
+[[variable]]
+native_id = "229.8594"
+slug = "kunskap-andra-bransch-4"
+
+[[variable]]
+native_id = "229.8595"
+slug = "kunskap-andra-bransch-5"
+
+[[variable]]
+native_id = "229.17457"
+slug = "deltagit-i-sjalvstudier"
+
+[[variable]]
+native_id = "229.17495"
+slug = "kursomfattning-manader-1"
+
+[[variable]]
+native_id = "229.17496"
+slug = "kursomfattning-manader-2"
+
+[[variable]]
+native_id = "229.17497"
+slug = "kursomfattning-manader-3"
+
+[[variable]]
+native_id = "229.17498"
+slug = "kursomfattning-manader-4"
+
+[[variable]]
+native_id = "229.17499"
+slug = "kursomfattning-manader-5"
+
+[[variable]]
+native_id = "229.28538"
+slug = "studietid"
+
+[[variable]]
+native_id = "229.30546"
+slug = "sjalvstudie-omfattning"
+
+[[variable]]
+native_id = "229.39617"
+slug = "foretagsstorlek"
+
+[[variable]]
+native_id = "229.41261"
+slug = "utbildningsbehov"
+
+# register 232 (lararreg)
+
+[[variable]]
+native_id = "229.17492.gxpld3"
+slug = "gxpld-3"
+
+[[variable]]
+native_id = "229.17492.xplangd3"
+slug = "xplangd-2"
+
+[[variable]]
+native_id = "229.17493.gxpld4"
+slug = "gxpld-4"
+
+[[variable]]
+native_id = "229.17493.xplangd4"
+slug = "xplangd-3"
+
+[[variable]]
+native_id = "229.17494.gxpld10"
+slug = "gxpld-5"
+
+[[variable]]
+native_id = "229.17494.xplangd0"
+slug = "xplangd-4"
+
+[[variable]]
+native_id = "229.17500.gxpld2"
+slug = "gxpld-2"
+
+[[variable]]
+native_id = "229.17500.xplangd2"
+slug = "xplangd-5"
+
+[[variable]]
+native_id = "229.41263.t13a"
+slug = "kurs-medforde-resa"
+
+[[variable]]
+native_id = "229.41263.t13b"
+slug = "kurs-medforde-resa-2"
+
+[[variable]]
+native_id = "229.41263.t13c"
+slug = "kurs-medforde-resa-3"
+
+[[variable]]
+native_id = "229.41263.t13d"
+slug = "kurs-medforde-resa-4"
+
+[[variable]]
+native_id = "229.41263.t13e"
+slug = "kurs-medforde-resa-5"
+
+[[variable]]
+native_id = "229.41264.t14a"
+slug = "kurs-medforde-overnattning"
+
+[[variable]]
+native_id = "229.41264.t14b"
+slug = "kurs-medforde-overnattning-2"
+
+[[variable]]
+native_id = "229.41264.t14c"
+slug = "kurs-medforde-overnattning-3"
+
+[[variable]]
+native_id = "229.41264.t14d"
+slug = "kurs-medforde-overnattning-4"
+
+[[variable]]
+native_id = "229.41264.t14e"
+slug = "kurs-medforde-overnattning-5"
+
+[[variable]]
+native_id = "229.41265.t15a"
+slug = "antal-overnattningar"
+
+[[variable]]
+native_id = "229.41265.t15b"
+slug = "antal-overnattningar-2"
+
+[[variable]]
+native_id = "229.41265.t15c"
+slug = "antal-overnattningar-3"
+
+[[variable]]
+native_id = "229.41265.t15d"
+slug = "antal-overnattningar-4"
+
+[[variable]]
+native_id = "229.41265.t15e"
+slug = "antal-overnattningar-5"
+
+[[variable]]
+native_id = "229.41266.t16a"
+slug = "antal-kursdeltagare"
+
+[[variable]]
+native_id = "229.41266.t16b"
+slug = "antal-kursdeltagare-2"
+
+[[variable]]
+native_id = "229.41266.t16c"
+slug = "antal-kursdeltagare-3"
+
+[[variable]]
+native_id = "229.41266.t16d"
+slug = "antal-kursdeltagare-4"
+
+[[variable]]
+native_id = "229.41266.t16e"
+slug = "antal-kursdeltagare-5"
+
+[[variable]]
+native_id = "229.41323.t13a"
+slug = "kursinnehall-anvandning"
+
+[[variable]]
+native_id = "229.41323.t13b"
+slug = "kursinnehall-anvandning-2"
+
+[[variable]]
+native_id = "229.41323.t13c"
+slug = "kursinnehall-anvandning-3"
+
+[[variable]]
+native_id = "229.41323.t13d"
+slug = "kursinnehall-anvandning-4"
+
+[[variable]]
+native_id = "229.41323.t13e"
+slug = "kursinnehall-anvandning-5"
+
+[[variable]]
+native_id = "229.41323.t13f"
+slug = "kursinnehall-anvandning-6"
+
+[[variable]]
+native_id = "229.41323.t13g"
+slug = "kursinnehall-anvandning-7"
+
+[[variable]]
+native_id = "229.41323.t13h"
+slug = "kursinnehall-anvandning-8"
+
+[[variable]]
+native_id = "229.41323.t13i"
+slug = "kursinnehall-anvandning-9"
+
+[[variable]]
+native_id = "229.41323.t13j"
+slug = "kursinnehall-anvandning-10"
+
+[[variable]]
+native_id = "229.41323.t14a"
+slug = "kursinnehall-anvandning-11"
+
+[[variable]]
+native_id = "229.41323.t14b"
+slug = "kursinnehall-anvandning-12"
+
+[[variable]]
+native_id = "229.41323.t14c"
+slug = "kursinnehall-anvandning-13"
+
+[[variable]]
+native_id = "229.41323.t14d"
+slug = "kursinnehall-anvandning-14"
+
+[[variable]]
+native_id = "229.41323.t14e"
+slug = "kursinnehall-anvandning-15"
+
+[[variable]]
+native_id = "229.8063.t11a"
+slug = "kursanordnare-1"
+
+[[variable]]
+native_id = "229.8063.t12a"
+slug = "kursanordnare-1-2"
+
+[[variable]]
+native_id = "229.8066.arr2"
+slug = "arr-2"
+
+[[variable]]
+native_id = "229.8066.t11b"
+slug = "kursanordnare-2"
+
+[[variable]]
+native_id = "229.8066.t12b"
+slug = "kursanordnare-2-2"
+
+[[variable]]
+native_id = "229.8067.arr3"
+slug = "arr-3"
+
+[[variable]]
+native_id = "229.8067.t11c"
+slug = "kursanordnare-3"
+
+[[variable]]
+native_id = "229.8067.t12c"
+slug = "kursanordnare-3-2"
+
+[[variable]]
+native_id = "229.8068.arr4"
+slug = "arr-4"
+
+[[variable]]
+native_id = "229.8068.t11d"
+slug = "kursanordnare-4"
+
+[[variable]]
+native_id = "229.8068.t12d"
+slug = "kursanordnare-4-2"
+
+[[variable]]
+native_id = "229.8069.arr10"
+slug = "kursanordnare-5-3"
+
+[[variable]]
+native_id = "229.8069.t11e"
+slug = "kurs-utbildningsanordnare-kurs-5"
+
+[[variable]]
+native_id = "229.8069.t12e"
+slug = "kursanordnare-5-2"
+
+[[variable]]
+native_id = "229.8573.t11a"
+slug = "kurs-1-arbetstid"
+
+[[variable]]
+native_id = "229.8573.t12a"
+slug = "kurs-1-arbetstid-2"
+
+[[variable]]
+native_id = "229.8573.t12f"
+slug = "kurs-1-arbetstid-3"
+
+[[variable]]
+native_id = "229.8573.t13a"
+slug = "kurs-1-arbetstid-4"
+
+[[variable]]
+native_id = "229.8574.t11b"
+slug = "kurs-2-arbetstid"
+
+[[variable]]
+native_id = "229.8574.t12b"
+slug = "kurs-2-arbetstid-2"
+
+[[variable]]
+native_id = "229.8574.t12g"
+slug = "kurs-2-arbetstid-3"
+
+[[variable]]
+native_id = "229.8574.t13b"
+slug = "kurs-2-arbetstid-4"
+
+[[variable]]
+native_id = "229.8575.t11c"
+slug = "kurs-3-arbetstid"
+
+[[variable]]
+native_id = "229.8575.t12c"
+slug = "kurs-3-arbetstid-2"
+
+[[variable]]
+native_id = "229.8575.t12h"
+slug = "kurs-3-arbetstid-3"
+
+[[variable]]
+native_id = "229.8575.t13c"
+slug = "kurs-3-arbetstid-4"
+
+[[variable]]
+native_id = "229.8576.t11d"
+slug = "kurs-4-arbetstid"
+
+[[variable]]
+native_id = "229.8576.t12d"
+slug = "kurs-4-arbetstid-2"
+
+[[variable]]
+native_id = "229.8576.t12i"
+slug = "kurs-4-arbetstid-3"
+
+[[variable]]
+native_id = "229.8576.t13d"
+slug = "kurs-4-arbetstid-4"
+
+[[variable]]
+native_id = "229.8578.t11e"
+slug = "kurs-5-arbetstid"
+
+[[variable]]
+native_id = "229.8578.t12e"
+slug = "kurs-5-arbetstid-2"
+
+[[variable]]
+native_id = "229.8578.t12j"
+slug = "kurs-5-arbetstid-3"
+
+[[variable]]
+native_id = "229.8578.t13e"
+slug = "kurs-5-arbetstid-4"
+
+[[variable]]
+native_id = "229.8579.t12a"
+slug = "studieform-kurs-1"
+
+[[variable]]
+native_id = "229.8579.t12f"
+slug = "studieform-kurs-1-2"
+
+[[variable]]
+native_id = "229.8579.t13a"
+slug = "studieform-kurs-1-3"
+
+[[variable]]
+native_id = "229.8579.t13f"
+slug = "studieform-kurs-1-4"
+
+[[variable]]
+native_id = "229.8579.t14a"
+slug = "studieform-kurs-1-5"
+
+[[variable]]
+native_id = "229.8583.t12b"
+slug = "studieform-kurs-2"
+
+[[variable]]
+native_id = "229.8583.t12g"
+slug = "studieform-kurs-2-2"
+
+[[variable]]
+native_id = "229.8583.t13b"
+slug = "studieform-kurs-2-3"
+
+[[variable]]
+native_id = "229.8583.t13g"
+slug = "studieform-kurs-2-4"
+
+[[variable]]
+native_id = "229.8583.t14b"
+slug = "studieform-kurs-2-5"
+
+[[variable]]
+native_id = "229.8584.t12c"
+slug = "studieform-kurs-3"
+
+[[variable]]
+native_id = "229.8584.t12h"
+slug = "studieform-kurs-3-2"
+
+[[variable]]
+native_id = "229.8584.t13c"
+slug = "studieform-kurs-3-3"
+
+[[variable]]
+native_id = "229.8584.t13h"
+slug = "studieform-kurs-3-4"
+
+[[variable]]
+native_id = "229.8584.t14c"
+slug = "studieform-kurs-3-5"
+
+[[variable]]
+native_id = "229.8585.t12d"
+slug = "studieform-kurs-4"
+
+[[variable]]
+native_id = "229.8585.t12i"
+slug = "studieform-kurs-4-2"
+
+[[variable]]
+native_id = "229.8585.t13d"
+slug = "studieform-kurs-4-3"
+
+[[variable]]
+native_id = "229.8585.t13i"
+slug = "studieform-kurs-4-4"
+
+[[variable]]
+native_id = "229.8585.t14d"
+slug = "studieform-kurs-4-5"
+
+[[variable]]
+native_id = "229.8586.t12e"
+slug = "studieform-kurs-5"
+
+[[variable]]
+native_id = "229.8586.t12j"
+slug = "studieform-kurs-5-2"
+
+[[variable]]
+native_id = "229.8586.t13e"
+slug = "studieform-kurs-5-3"
+
+[[variable]]
+native_id = "229.8586.t13j"
+slug = "studieform-kurs-5-4"
+
+[[variable]]
+native_id = "229.8586.t14e"
+slug = "studieform-kurs-5-5"
+
+# register 232 (lararreg)
+
+[[variable]]
+native_id = "229.462"
+slug = "stratum"
+
+[[variable]]
+native_id = "229.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "229.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "229.784"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "229.1545"
+slug = "utbildningsinriktning-3-positioner"
+
+[[variable]]
+native_id = "229.2679"
+slug = "forvarvsarbetande"
+
+[[variable]]
+native_id = "229.3195"
+slug = "h-region"
+
+[[variable]]
+native_id = "229.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "229.4032"
+slug = "antal-anstallda-foretaget"
+
+[[variable]]
+native_id = "229.4677"
+slug = "sysselsattningsstatus"
+
+[[variable]]
+native_id = "229.5090"
+slug = "arbetsmarknadssektor"
+
+[[variable]]
+native_id = "229.5697"
+slug = "lilla-n-per-stratum"
+
+[[variable]]
+native_id = "229.5699"
+slug = "hjalp-kalibrering-2"
+
+[[variable]]
+native_id = "229.6439"
+slug = "hjalp-arbetssokande-ams"
+
+[[variable]]
+native_id = "229.6440"
+slug = "hjalp-alder-kon"
+
+[[variable]]
+native_id = "229.6442"
+slug = "hjalp-fodelseland"
+
+[[variable]]
+native_id = "229.6443"
+slug = "hjalp-region"
+
+[[variable]]
+native_id = "229.6444"
+slug = "hjalp-naringsgren-sysselsatta"
+
+[[variable]]
+native_id = "229.6508"
+slug = "antal-anstallda-arbetsplatsen"
+
+[[variable]]
+native_id = "229.6604"
+slug = "vanligen-arbetad-tid-huvudsysslan"
+
+[[variable]]
+native_id = "229.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "229.7809"
+slug = "anknytningsgrad-aku"
+
+[[variable]]
+native_id = "229.15298"
+slug = "arbetskraftsstatus"
+
+[[variable]]
+native_id = "229.15832"
+slug = "arbetstid-per-vecka"
+
+[[variable]]
+native_id = "229.17454"
+slug = "deltagit-personalutbildning"
+
+[[variable]]
+native_id = "229.17472"
+slug = "anstallningstid-grupperad"
+
+[[variable]]
+native_id = "229.17473"
+slug = "kalibreringsvikt"
+
+[[variable]]
+native_id = "229.18007"
+slug = "sni2007-1bokstav"
+
+[[variable]]
+native_id = "229.18008"
+slug = "sni2007-2siffror"
+
+[[variable]]
+native_id = "229.18245"
+slug = "grupp-andra-fas-urval"
+
+[[variable]]
+native_id = "229.39024"
+slug = "amne-sarkurs"
+
+# register 231
+
+[[variable]]
+native_id = "229.17464.taljare"
+slug = "antal-timmar-utbildning"
+
+[[variable]]
+native_id = "229.5696.storan"
+slug = "stora-n-per-stratum"
+
+# register 231

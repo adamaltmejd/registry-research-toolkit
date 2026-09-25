@@ -458,17 +458,18 @@ delete this section.
 
 The grow-only slug-immutability gate is **per-provider**, not global. There is no
 `UNFROZEN` sentinel file; freeze state lives in
-`reg_meta_build/fqid_slugs/<slug-dir>/freeze.toml` as a flat TOML map
-`<zone> = "<state>"` (absent file or unlisted zone ⇒ `churning`). The three states
+`reg_meta_build/curation/slug_state.toml` for global registers (and
+`reg_meta_build/fqid_slugs/<steward>/freeze.toml` for steward overlays) as a flat TOML
+map `<zone> = "<state>"` (absent file or unlisted zone ⇒ `churning`). The three states
 advance one-way: `churning` → `curating` → `frozen`. All 8 global providers are now at
-`curating` (#759): `freeze.toml` is committed and their `<provider>.auto.toml` slugs are
-pinned. Steward dirs (e.g. `swecov/`) remain churning. The remaining advance is the
-per-provider `frozen` seal (#472).
+`curating` (#759): `slug_state.toml` is committed and their per-register `*.auto.toml`
+slugs are pinned. Steward dirs (e.g. `swecov/`) remain churning. The remaining advance
+is the per-provider `frozen` seal (#472).
 
 At the v1 release: curation (#471) and the churning→curating advance (#759) have
 shipped. What remains is to seal each provider — (1) verify no identity-churn issues are
 open for it (the #418 pre-seal re-verify), and (2) set its zone to `frozen` in
-`freeze.toml`, which arms the rename-refusal gate. Classification slugs moved to
+`slug_state.toml`, which arms the rename-refusal gate. Classification slugs moved to
 `curation/classifications/<short>.toml` (Y-228) and left the slug snapshot and its
 freeze zones; their rename guard is a follow-up to #472. There is no single global step
 to arm the gate — the seal is per-provider and per-zone. See #470 (machinery), #471

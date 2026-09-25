@@ -1,0 +1,71 @@
+[register]
+provider = "scb"
+slug = "bki"
+native_id = "263"
+
+[[variant]]
+native_id = "263.606"
+slug = "_default"
+display_group = "Byggkostnadsindex (BKI)"
+
+# Standardiserade räkenskapsutdrag (SRU)
+
+[[variable]]
+native_id = "263.22023"
+slug = "maskiner-maskinutnyttjande"
+
+[[variable]]
+native_id = "263.22024"
+slug = "inbyggt-material"
+
+[[variable]]
+native_id = "263.22025"
+slug = "arbetslon-exkl-loneglidning"
+
+[[variable]]
+native_id = "263.22026"
+slug = "transporter-drivmedel-elkraft"
+
+[[variable]]
+native_id = "263.22027"
+slug = "omkostnader"
+
+[[variable]]
+native_id = "263.22028"
+slug = "byggherrekostnader"
+
+[[variable]]
+native_id = "263.22865"
+slug = "person-samordnings-orgnr"
+
+[[variable]]
+native_id = "263.24301"
+slug = "transporter-bygg-anlaggning"
+
+[[variable]]
+native_id = "263.24302"
+slug = "dieselolja"
+
+[[variable]]
+native_id = "263.24303"
+slug = "elkraft-nybyggnad"
+
+[[variable]]
+native_id = "263.24304"
+slug = "schaktmaskiner"
+
+[[variable]]
+native_id = "263.24305"
+slug = "ovriga-maskiner"
+
+# register 264 (sru)
+
+[[variable]]
+native_id = "263.50"
+slug = "manad"
+
+[[variable]]
+native_id = "263.23603"
+slug = "produktgruppsvikt"
+
+# register 264

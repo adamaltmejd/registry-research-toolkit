@@ -1,0 +1,53 @@
+[register]
+provider = "scb"
+slug = "hogutbildades-arbetsmarknad"
+native_id = "302"
+
+[[variant]]
+native_id = "302.850"
+slug = "_default"
+display_group = "Högutbildades arbetsmarknad"
+
+# Fritidshem: elever
+
+[[variable]]
+native_id = "302.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "302.3584"
+slug = "urvalsvikt"
+
+[[variable]]
+native_id = "302.5090"
+slug = "arbetsmarknadssektor"
+
+[[variable]]
+native_id = "302.6172"
+slug = "lopnummer-for-individ"
+
+[[variable]]
+native_id = "302.8773"
+slug = "typ-av-anstallning"
+
+[[variable]]
+native_id = "302.25052"
+slug = "tillracklig-utbildningsniva-arbete"
+
+[[variable]]
+native_id = "302.25118"
+slug = "arbetsomfattning"
+
+[[variable]]
+native_id = "302.25135"
+slug = "arbetes-overensstammelse"
+
+[[variable]]
+native_id = "302.25154"
+slug = "nojd-med-avslutad-utbildning"
+
+[[variable]]
+native_id = "302.25163"
+slug = "utbildningsomrade-grov"
+
+# register 304

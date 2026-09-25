@@ -1,0 +1,275 @@
+[register]
+provider = "scb"
+slug = "aes"
+native_id = "301"
+
+[[variant]]
+native_id = "301.849"
+slug = "_default"
+display_group = "Undersökningen om vuxnas deltagande i utbildning (AES)"
+panel_entity_key = "eget-personnr"
+panel_time_key = ["ar-for-intervju", "matmanad"]
+panel_time_grain = "row"
+
+# Högutbildades arbetsmarknad
+
+[[variable]]
+native_id = "301.4544"
+slug = "eget-personnr"
+
+
+[[variable]]
+native_id = "301.44"
+slug = "kon"
+
+[[variable]]
+native_id = "301.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "301.3751"
+slug = "lopnummer"
+
+[[variable]]
+native_id = "301.6587"
+slug = "anstallningsar-huvudsysslan"
+
+[[variable]]
+native_id = "301.7450"
+slug = "matmanad"
+
+[[variable]]
+native_id = "301.18234"
+slug = "yrkesuppgift-isco"
+
+[[variable]]
+native_id = "301.19714"
+slug = "naringsgren-sysselsatt"
+
+[[variable]]
+native_id = "301.24773"
+slug = "metod-for-intervju"
+
+[[variable]]
+native_id = "301.24785"
+slug = "ar-for-intervju"
+
+[[variable]]
+native_id = "301.24799"
+slug = "medborgarskap-iso"
+
+[[variable]]
+native_id = "301.24805"
+slug = "formell-utbildning"
+
+[[variable]]
+native_id = "301.24808"
+slug = "antal-formella"
+
+[[variable]]
+native_id = "301.24827"
+slug = "icke-formell-utbildning"
+
+[[variable]]
+native_id = "301.24828"
+slug = "antal-icke-formella"
+
+[[variable]]
+native_id = "301.24958"
+slug = "informell-utbildning"
+
+[[variable]]
+native_id = "301.24974"
+slug = "utbildningsinriktning-isced"
+
+[[variable]]
+native_id = "301.25103"
+slug = "uenr"
+
+[[variable]]
+native_id = "301.25604"
+slug = "anstallningsar-arbetsplats"
+
+[[variable]]
+native_id = "301.32765"
+slug = "hushallspersoner-0-13"
+
+[[variable]]
+native_id = "301.32770"
+slug = "hushallspersoner-14-24"
+
+[[variable]]
+native_id = "301.32771"
+slug = "hushallspersoner-25-plus"
+
+[[variable]]
+native_id = "301.32773"
+slug = "antal-personer-i-hushallet"
+
+[[variable]]
+native_id = "301.32782"
+slug = "formell-utbildning-kostnad"
+
+[[variable]]
+native_id = "301.32902"
+slug = "anstallningsar-nuvarande"
+
+[[variable]]
+native_id = "301.35124"
+slug = "formell-avbruten"
+
+[[variable]]
+native_id = "301.35142"
+slug = "formell-undervisningsmetod"
+
+[[variable]]
+native_id = "301.35174"
+slug = "antal-missnoje-formell"
+
+[[variable]]
+native_id = "301.35180"
+slug = "antal-resultat-formell"
+
+[[variable]]
+native_id = "301.35199"
+slug = "antal-datoraktiviteter"
+
+[[variable]]
+native_id = "301.35201"
+slug = "antal-internetaktiviteter"
+
+[[variable]]
+native_id = "301.37530"
+slug = "utbildningsbehov"
+
+# register 304 (fritidshem)
+
+[[variable]]
+native_id = "301.24832.infpurp"
+slug = "syfte-icke-formell"
+
+[[variable]]
+native_id = "301.24959.langlevel1"
+slug = "sprak-niva-fold"
+
+[[variable]]
+native_id = "301.35189.seeksource-1"
+slug = "informationskalla-fold"
+
+[[variable]]
+native_id = "301.35197.difftype-01"
+slug = "svarighet-typ-fold"
+
+# register 32 (fob)
+
+[[variable]]
+native_id = "301.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "301.20"
+slug = "urbaniseringsgrad-eu"
+
+[[variable]]
+native_id = "301.2712"
+slug = "hogsta-utbildning-avslutningsar"
+
+[[variable]]
+native_id = "301.3188"
+slug = "hushallstyp"
+
+[[variable]]
+native_id = "301.5593"
+slug = "fodelsemanad"
+
+[[variable]]
+native_id = "301.10191"
+slug = "insamling-direkt-indirekt"
+
+[[variable]]
+native_id = "301.17256"
+slug = "vistelsetid"
+
+[[variable]]
+native_id = "301.17589"
+slug = "gruppering-av-alder"
+
+[[variable]]
+native_id = "301.21260"
+slug = "nutsregion"
+
+[[variable]]
+native_id = "301.22693"
+slug = "arbete-under-aret"
+
+[[variable]]
+native_id = "301.27158"
+slug = "boendeland"
+
+[[variable]]
+native_id = "301.28498"
+slug = "slutfort-kurs"
+
+[[variable]]
+native_id = "301.35122"
+slug = "samboforhallande"
+
+[[variable]]
+native_id = "301.35125"
+slug = "sokt-utbildningsinfo"
+
+[[variable]]
+native_id = "301.37532"
+slug = "utbildningens-startar"
+
+[[variable]]
+native_id = "301.40780"
+slug = "formell-tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "301.45317"
+slug = "alder-insamlingsdagen"
+
+[[variable]]
+native_id = "301.45318"
+slug = "fodelsedag-passerad"
+
+[[variable]]
+native_id = "301.45479"
+slug = "upplevd-halsa"
+
+[[variable]]
+native_id = "301.46223"
+slug = "anstallningstyp"
+
+# register 302
+
+[[variable]]
+native_id = "301.15329.feddistol"
+slug = "distansstudier-natuniversitet"
+
+[[variable]]
+native_id = "301.32454.hatfather"
+slug = "utbildningsniva-far"
+
+[[variable]]
+native_id = "301.32454.hatmother"
+slug = "utbildningsniva-mor"
+
+[[variable]]
+native_id = "301.6550.birthfather"
+slug = "fodelseland-iso-far"
+
+[[variable]]
+native_id = "301.6550.birthmother"
+slug = "fodelseland-iso-mor"
+
+[[variable]]
+native_id = "301.6550.birthplace"
+slug = "fodelseland-iso"
+
+[[variable]]
+native_id = "301.6550.fodland"
+slug = "fodelseland-iso-2"
+
+# register 304

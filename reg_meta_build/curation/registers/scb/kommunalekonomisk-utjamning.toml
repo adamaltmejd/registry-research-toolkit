@@ -1,0 +1,789 @@
+[register]
+provider = "scb"
+slug = "kommunalekonomisk-utjamning"
+native_id = "117"
+
+[[variant]]
+native_id = "117.132"
+slug = "kommunalekonomisk-utjamning-regioner"
+display_group = "Kommunalekonomisk utjämning för regioner"
+
+
+[[variant]]
+native_id = "117.134"
+slug = "kommunalekonomisk-utjamning-kommuner"
+display_group = "Kommunalekonomisk utjämning för kommuner"
+
+
+[[variant]]
+native_id = "117.779"
+slug = "lss-utjamning"
+display_group = "Utjämning av LSS-kostnader mellan kommuner"
+
+# Taxeringsutfallet
+
+[[variable]]
+native_id = "117.49"
+slug = "lan"
+
+[[variable]]
+native_id = "117.446"
+slug = "kommunnamn"
+
+[[variable]]
+native_id = "117.2736"
+slug = "sektor"
+
+[[variable]]
+native_id = "117.2907"
+slug = "region"
+
+[[variable]]
+native_id = "117.8244"
+slug = "antal-gymnasieelever-byggprogrammet"
+
+[[variable]]
+native_id = "117.8249"
+slug = "antal-gymnasieelever-elprogrammet"
+
+[[variable]]
+native_id = "117.8251"
+slug = "antal-gymnasieelever-energiprogrammet"
+
+[[variable]]
+native_id = "117.8257"
+slug = "antal-gymnasieelever-estetiska"
+
+[[variable]]
+native_id = "117.8260"
+slug = "antal-gymnasieelever-fordonsprogrammet"
+
+[[variable]]
+native_id = "117.8263"
+slug = "antal-gymnasieelever-handels"
+
+[[variable]]
+native_id = "117.8267"
+slug = "antal-gymnasieelever-hotell-restaurang"
+
+[[variable]]
+native_id = "117.8271"
+slug = "antal-gymnasieelever-hantverksprogrammet"
+
+[[variable]]
+native_id = "117.8273"
+slug = "antal-gymnasieelever-ovrigt-program"
+
+[[variable]]
+native_id = "117.8277"
+slug = "antal-gymnasieelever-industriprogrammet"
+
+[[variable]]
+native_id = "117.8282"
+slug = "antal-gymnasieelever-individuella"
+
+[[variable]]
+native_id = "117.8310"
+slug = "antal-gymnasieelever-livsmedelprogrammet"
+
+[[variable]]
+native_id = "117.8313"
+slug = "antal-gymnasieelever-medieprogrammet"
+
+[[variable]]
+native_id = "117.8319"
+slug = "antal-gymnasieelever-naturbruk"
+
+[[variable]]
+native_id = "117.8324"
+slug = "antal-gymnasieelever-naturvetenskap"
+
+[[variable]]
+native_id = "117.8327"
+slug = "antal-gymnasieelever-omvardnad"
+
+[[variable]]
+native_id = "117.8333"
+slug = "antal-gymnasieelever-specialutformade"
+
+[[variable]]
+native_id = "117.8336"
+slug = "antal-gymnasieelever-samhallsvetenskap"
+
+[[variable]]
+native_id = "117.8340"
+slug = "antal-gymnasieelever-teknikprogrammet"
+
+[[variable]]
+native_id = "117.8463"
+slug = "utjamningsar"
+
+[[variable]]
+native_id = "117.8464"
+slug = "folkmangd-den-1-november-ar-t-1"
+
+[[variable]]
+native_id = "117.8465"
+slug = "inforandebidrag-utfall"
+
+[[variable]]
+native_id = "117.8466"
+slug = "inkomstutjamning-utfall"
+
+[[variable]]
+native_id = "117.8467"
+slug = "kostnadsutjamning-utfall"
+
+[[variable]]
+native_id = "117.8468"
+slug = "regleringsbidrag-avgift-utfall"
+
+[[variable]]
+native_id = "117.8469"
+slug = "strukturbidrag-utfall"
+
+[[variable]]
+native_id = "117.8470"
+slug = "utjamning-utfall-kr-per-inv"
+
+[[variable]]
+native_id = "117.8471"
+slug = "utjamning-utfall-kronor"
+
+[[variable]]
+native_id = "117.8472"
+slug = "glesbygd-merkostnader"
+
+[[variable]]
+native_id = "117.8473"
+slug = "aldreomsorg"
+
+[[variable]]
+native_id = "117.8474"
+slug = "barn-och-ungdomar-med-utlandsk-bakgrund"
+
+[[variable]]
+native_id = "117.8475"
+slug = "forskoleverksamhet-och-skolbarnsomsorg"
+
+[[variable]]
+native_id = "117.8476"
+slug = "bebyggelsestruktur"
+
+[[variable]]
+native_id = "117.8477"
+slug = "befolkningsforandringar"
+
+[[variable]]
+native_id = "117.8479"
+slug = "byggkostnader"
+
+[[variable]]
+native_id = "117.8481"
+slug = "folkmangd-1-november-rtb"
+
+[[variable]]
+native_id = "117.8482"
+slug = "gator-och-vagar"
+
+[[variable]]
+native_id = "117.8483"
+slug = "forskoleklass-och-grundskola"
+
+[[variable]]
+native_id = "117.8484"
+slug = "gymnasieskola"
+
+[[variable]]
+native_id = "117.8486"
+slug = "individ-och-familjeomsorg"
+
+[[variable]]
+native_id = "117.8488"
+slug = "kollektivtrafik-standardkostnad"
+
+[[variable]]
+native_id = "117.8490"
+slug = "strukturkostnad"
+
+[[variable]]
+native_id = "117.8491"
+slug = "svagt-befolkningsunderlag"
+
+[[variable]]
+native_id = "117.8493"
+slug = "naringslivs-sysselsattningsframjande"
+
+[[variable]]
+native_id = "117.8494"
+slug = "utjamningsbidrag-utjamningsavgift"
+
+[[variable]]
+native_id = "117.8495"
+slug = "uppvarmningskostnader"
+
+[[variable]]
+native_id = "117.8496"
+slug = "vatten-och-avlopp"
+
+[[variable]]
+native_id = "117.8504"
+slug = "lanets-folkmangd-den-1-november"
+
+[[variable]]
+native_id = "117.8510"
+slug = "lan-eller-kommuner-utanfor-landsting"
+
+[[variable]]
+native_id = "117.22081"
+slug = "antal-gifta-kvinnor-65-69-svensk"
+
+[[variable]]
+native_id = "117.22090"
+slug = "antal-gifta-kvinnor-70-74-svensk"
+
+[[variable]]
+native_id = "117.22092"
+slug = "antal-gifta-kvinnor-75-79-svensk"
+
+[[variable]]
+native_id = "117.22093"
+slug = "antal-gifta-kvinnor-80-84-svensk"
+
+[[variable]]
+native_id = "117.22094"
+slug = "antal-gifta-kvinnor-85-89-svensk"
+
+[[variable]]
+native_id = "117.22095"
+slug = "antal-gifta-kvinnor-90-w-svensk"
+
+[[variable]]
+native_id = "117.22096"
+slug = "antal-ej-gifta-kvinnor-65-69-svensk"
+
+[[variable]]
+native_id = "117.22097"
+slug = "antal-ej-gifta-kvinnor-70-74-svensk"
+
+[[variable]]
+native_id = "117.22098"
+slug = "antal-ej-gifta-kvinnor-75-79-svensk"
+
+[[variable]]
+native_id = "117.22099"
+slug = "antal-ej-gifta-kvinnor-80-84-svensk"
+
+[[variable]]
+native_id = "117.22100"
+slug = "antal-ej-gifta-kvinnor-85-89-svensk"
+
+[[variable]]
+native_id = "117.22101"
+slug = "antal-ej-gifta-kvinnor-90-w-svensk"
+
+[[variable]]
+native_id = "117.22102"
+slug = "antal-gifta-man-65-69-svensk"
+
+[[variable]]
+native_id = "117.22103"
+slug = "antal-gifta-man-70-74-svensk"
+
+[[variable]]
+native_id = "117.22104"
+slug = "antal-gifta-man-75-79-svensk"
+
+[[variable]]
+native_id = "117.22105"
+slug = "antal-gifta-man-80-84-svensk"
+
+[[variable]]
+native_id = "117.22106"
+slug = "antal-gifta-man-85-89-svensk"
+
+[[variable]]
+native_id = "117.22107"
+slug = "antal-gifta-man-90-w-svensk"
+
+[[variable]]
+native_id = "117.22108"
+slug = "antal-ej-gifta-man-65-69-svensk"
+
+[[variable]]
+native_id = "117.22109"
+slug = "antal-ej-gifta-man-70-74-svensk"
+
+[[variable]]
+native_id = "117.22110"
+slug = "antal-ej-gifta-man-75-79-svensk"
+
+[[variable]]
+native_id = "117.22111"
+slug = "antal-ej-gifta-man-80-84-svensk"
+
+[[variable]]
+native_id = "117.22112"
+slug = "antal-ej-gifta-man-85-89-svensk"
+
+[[variable]]
+native_id = "117.22113"
+slug = "antal-ej-gifta-man-90-w-svensk"
+
+[[variable]]
+native_id = "117.22115"
+slug = "antal-gifta-kvinnor-65-69-utlandsk"
+
+[[variable]]
+native_id = "117.22117"
+slug = "antal-gifta-kvinnor-70-74-utlandsk"
+
+[[variable]]
+native_id = "117.22119"
+slug = "antal-gifta-kvinnor-75-79-utlandsk"
+
+[[variable]]
+native_id = "117.22120"
+slug = "antal-gifta-kvinnor-80-84-utlandsk"
+
+[[variable]]
+native_id = "117.22121"
+slug = "antal-gifta-kvinnor-85-89-utlandsk"
+
+[[variable]]
+native_id = "117.22122"
+slug = "antal-gifta-kvinnor-90-w-utlandsk"
+
+[[variable]]
+native_id = "117.22124"
+slug = "antal-ej-gifta-kvinnor-65-69-utlandsk"
+
+[[variable]]
+native_id = "117.22126"
+slug = "antal-ej-gifta-kvinnor-70-74-utlandsk"
+
+[[variable]]
+native_id = "117.22127"
+slug = "antal-ej-gifta-kvinnor-75-79-utlandsk"
+
+[[variable]]
+native_id = "117.22129"
+slug = "antal-ej-gifta-kvinnor-80-84-utlandsk"
+
+[[variable]]
+native_id = "117.22131"
+slug = "antal-ej-gifta-kvinnor-85-89-utlandsk"
+
+[[variable]]
+native_id = "117.22137"
+slug = "antal-ej-gifta-kvinnor-90-w-utlandsk"
+
+[[variable]]
+native_id = "117.22138"
+slug = "antal-gifta-man-65-69-utlandsk"
+
+[[variable]]
+native_id = "117.22139"
+slug = "antal-gifta-man-70-74-utlandsk"
+
+[[variable]]
+native_id = "117.22140"
+slug = "antal-gifta-man-75-79-utlandsk"
+
+[[variable]]
+native_id = "117.22142"
+slug = "antal-gifta-man-85-89-utlandsk"
+
+[[variable]]
+native_id = "117.22143"
+slug = "antal-gifta-man-80-84-utlandsk"
+
+[[variable]]
+native_id = "117.22145"
+slug = "antal-gifta-man-90-w-utlandsk"
+
+[[variable]]
+native_id = "117.22147"
+slug = "antal-ej-gifta-man-90-w-utlandsk"
+
+[[variable]]
+native_id = "117.22149"
+slug = "antal-ej-gifta-man-65-69-utlandsk"
+
+[[variable]]
+native_id = "117.22150"
+slug = "antal-ej-gifta-man-70-74-utlandsk"
+
+[[variable]]
+native_id = "117.22152"
+slug = "antal-ej-gifta-man-75-79-utlandsk"
+
+[[variable]]
+native_id = "117.22154"
+slug = "antal-ej-gifta-man-80-84-utlandsk"
+
+[[variable]]
+native_id = "117.22160"
+slug = "antal-ej-gifta-man-85-89-utlandsk"
+
+[[variable]]
+native_id = "117.22187"
+slug = "antal-gymnasieelever-barn-fritid"
+
+[[variable]]
+native_id = "117.22189"
+slug = "folkmangd-den-31-december-ar-t-2"
+
+[[variable]]
+native_id = "117.22190"
+slug = "folkmangd-den-31-december-ar-t-4"
+
+[[variable]]
+native_id = "117.22191"
+slug = "folkmangd-den-31-december-ar-t-3"
+
+[[variable]]
+native_id = "117.22192"
+slug = "folkmangd-den-31-december-ar-t-12"
+
+[[variable]]
+native_id = "117.22194"
+slug = "folkmangd-den-1-november-ar-t-2"
+
+[[variable]]
+native_id = "117.22195"
+slug = "folkmangd-den-1-november-ar-t-6"
+
+[[variable]]
+native_id = "117.22196"
+slug = "folkmangd-den-1-november-ar-t-5"
+
+[[variable]]
+native_id = "117.22197"
+slug = "folkmangd-den-1-november-ar-t-4"
+
+[[variable]]
+native_id = "117.22198"
+slug = "folkmangd-den-1-november-ar-t-3"
+
+[[variable]]
+native_id = "117.22199"
+slug = "folkmangd-den-30-juni-ar-t-1"
+
+[[variable]]
+native_id = "117.22200"
+slug = "antal-gymnasieelever-ovriga-2005"
+
+[[variable]]
+native_id = "117.22201"
+slug = "loner-standardkostnad"
+
+[[variable]]
+native_id = "117.22202"
+slug = "befolkningsminskning-de-senaste-tio-aren"
+
+[[variable]]
+native_id = "117.22207"
+slug = "antal-barn-i-aldrarna-13-ar"
+
+[[variable]]
+native_id = "117.22208"
+slug = "antal-barn-i-aldrarna-45-ar"
+
+[[variable]]
+native_id = "117.22209"
+slug = "antal-barn-i-aldern-6-ar"
+
+[[variable]]
+native_id = "117.22210"
+slug = "antal-barn-i-aldrarna-79-ar"
+
+[[variable]]
+native_id = "117.22212"
+slug = "antal-ungdomar-i-aldrarna-1618-ar"
+
+[[variable]]
+native_id = "117.22216"
+slug = "vardnadshavare-barn19-totalt-t-4"
+
+[[variable]]
+native_id = "117.22217"
+slug = "vardnadshavare-barn19-totalt-t-3"
+
+[[variable]]
+native_id = "117.22218"
+slug = "vardnadshavare-barn19-del-t-4"
+
+[[variable]]
+native_id = "117.22219"
+slug = "vardnadshavare-barn19-del-t-3"
+
+[[variable]]
+native_id = "117.22220"
+slug = "antal-utrikes-fodda-barn-715-ar"
+
+[[variable]]
+native_id = "117.22226"
+slug = "antal-barn-012-ensamforaldrar"
+
+[[variable]]
+native_id = "117.22228"
+slug = "antal-barn-1619-ar-med-utlandsk-bakgrund"
+
+[[variable]]
+native_id = "117.22229"
+slug = "ensamstaende-kvinnor-1844-barn017"
+
+[[variable]]
+native_id = "117.22230"
+slug = "utrikes-fodda-flyktingar-ovriga"
+
+[[variable]]
+native_id = "117.22231"
+slug = "antal-man-2534-ar"
+
+[[variable]]
+native_id = "117.22232"
+slug = "antal-man-2534-ar-med-lag-inkomst"
+
+[[variable]]
+native_id = "117.22233"
+slug = "antal-man-3544-ar"
+
+[[variable]]
+native_id = "117.22234"
+slug = "antal-man-3544-ar-med-lag-inkomst"
+
+[[variable]]
+native_id = "117.22235"
+slug = "antal-man-4554-ar"
+
+[[variable]]
+native_id = "117.22236"
+slug = "antal-man-4554-ar-med-lag-inkomst"
+
+[[variable]]
+native_id = "117.22237"
+slug = "antal-man-5564-ar"
+
+[[variable]]
+native_id = "117.22238"
+slug = "antal-man-5564-ar-med-lag-inkomst"
+
+[[variable]]
+native_id = "117.22356"
+slug = "kallortstillagg"
+
+[[variable]]
+native_id = "117.22449"
+slug = "lanskod-fyrstallig"
+
+[[variable]]
+native_id = "117.22451"
+slug = "landstingsnamn-i-kortform"
+
+[[variable]]
+native_id = "117.22452"
+slug = "lanskod-med-tillagg-av-l"
+
+[[variable]]
+native_id = "117.22453"
+slug = "regionens-folkmangd-1-november-t-1"
+
+[[variable]]
+native_id = "117.22456"
+slug = "inkomstutjamning-regioner-utfall"
+
+[[variable]]
+native_id = "117.22457"
+slug = "kostnadsutjamning-regioner-a"
+
+[[variable]]
+native_id = "117.22458"
+slug = "strukturbidrag-regioner-utfall"
+
+[[variable]]
+native_id = "117.22459"
+slug = "inforandebidrag-regioner-utfall"
+
+[[variable]]
+native_id = "117.22460"
+slug = "regleringsbidrag-avgift-regionen"
+
+[[variable]]
+native_id = "117.22465"
+slug = "utjamning-regioner-utfall-kr-inv"
+
+[[variable]]
+native_id = "117.22466"
+slug = "utjamning-regioner-kronor"
+
+[[variable]]
+native_id = "117.22467"
+slug = "delsektor"
+
+[[variable]]
+native_id = "117.22468"
+slug = "utfall-for-modellen-halso-och-sjukvard"
+
+[[variable]]
+native_id = "117.22469"
+slug = "utfall-modellen-befolkningsforandring"
+
+[[variable]]
+native_id = "117.22470"
+slug = "kostnadsutjamning-utfall-avseende-loner"
+
+[[variable]]
+native_id = "117.22471"
+slug = "utfall-modellen-kollektivtrafik-reg"
+
+[[variable]]
+native_id = "117.22472"
+slug = "regionens-strukturkostnad"
+
+[[variable]]
+native_id = "117.22473"
+slug = "kostnadsutjamning-regioner-b"
+
+[[variable]]
+native_id = "117.22474"
+slug = "kostnadsutjamning-utfall-hogskola"
+
+[[variable]]
+native_id = "117.22475"
+slug = "kostnadsutjamning-utfall-kallortstillagg"
+
+[[variable]]
+native_id = "117.23682"
+slug = "lss-insatser-standardkostnad-pk-ix"
+
+[[variable]]
+native_id = "117.23683"
+slug = "ersattning-forsakringskassan-assistans"
+
+[[variable]]
+native_id = "117.23684"
+slug = "grundlaggande-standardkostnad"
+
+[[variable]]
+native_id = "117.23685"
+slug = "utjamningsar-lss-utjamning"
+
+[[variable]]
+native_id = "117.23826"
+slug = "summa-beraknade-personalkostnader"
+
+[[variable]]
+native_id = "117.23828"
+slug = "personalkostnadsindex-pk-ix"
+
+[[variable]]
+native_id = "117.23829"
+slug = "slutlig-standardkostnad-lss-insatser-tkr"
+
+[[variable]]
+native_id = "117.23830"
+slug = "slutlig-standardkostnad-lss-insatser-kr"
+
+[[variable]]
+native_id = "117.23831"
+slug = "lss-utjamning-bidrag-avgift-kr-inv"
+
+[[variable]]
+native_id = "117.23832"
+slug = "lss-utjamningsavgift-kr"
+
+[[variable]]
+native_id = "117.23833"
+slug = "lss-utjamningsbidrag-kr"
+
+[[variable]]
+native_id = "117.29627"
+slug = "antal-barn-6-12-ar"
+
+[[variable]]
+native_id = "117.29631"
+slug = "antal-barn-7-15-ar-med-utlandskbakgrund"
+
+[[variable]]
+native_id = "117.29632"
+slug = "tillagg-avdrag-hemsprak-svenska2"
+
+[[variable]]
+native_id = "117.29636"
+slug = "programvalsfaktor-utjamningsaret"
+
+[[variable]]
+native_id = "117.29657"
+slug = "administration"
+
+[[variable]]
+native_id = "117.29658"
+slug = "raddningstjanst"
+
+[[variable]]
+native_id = "117.29659"
+slug = "forsamlingar-hog-andel-utlandsk-bakgrund"
+
+[[variable]]
+native_id = "117.29660"
+slug = "loner-from-utjamningsar-2014"
+
+[[variable]]
+native_id = "117.29952"
+slug = "glesbygdstillagg"
+
+[[variable]]
+native_id = "117.29953"
+slug = "aldersersattning"
+
+[[variable]]
+native_id = "117.46091"
+slug = "utjamning-kommuner-utfall-kr-inv"
+
+[[variable]]
+native_id = "117.46092"
+slug = "utjamning-kommuner-utfall-kronor"
+
+[[variable]]
+native_id = "117.46093"
+slug = "utjamning-kommuner-utfall-tkr"
+
+[[variable]]
+native_id = "117.46094"
+slug = "inkomstutjamning-kommuner-utfall"
+
+[[variable]]
+native_id = "117.46097"
+slug = "regleringsbidrag-avgift-kommuner-utfall"
+
+[[variable]]
+native_id = "117.46098"
+slug = "utjamningsar-kommunalekonomisk-utjamning"
+
+# register 118 (taxeringsutfallet)
+
+[[variable]]
+native_id = "117.36.kommun"
+slug = "kommun"
+
+[[variable]]
+native_id = "117.36.namn"
+slug = "kommun-namn"
+
+# register 121 (frida)
+
+[[variable]]
+native_id = "117.4693"
+slug = "gymnasieprogram"
+
+[[variable]]
+native_id = "117.22203"
+slug = "skatteunderlag-t-1"
+
+[[variable]]
+native_id = "117.29648"
+slug = "tillagg-avdrag-institutionsboende"
+
+# register 118

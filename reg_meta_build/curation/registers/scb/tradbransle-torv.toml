@@ -1,0 +1,67 @@
+[register]
+provider = "scb"
+slug = "tradbransle-torv"
+native_id = "355"
+
+[[variant]]
+native_id = "355.1229"
+slug = "_default"
+display_group = "Trädbränsle-, torv- och avfallspriser"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Grundskola: nationella prov åk 5
+
+[[variable]]
+native_id = "355.1839.peorgnr"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "355.412"
+slug = "postort"
+
+# register 356 (grundskola-prov-ak5)
+
+[[variable]]
+native_id = "355.400.poanst"
+slug = "postadress-anst"
+
+# register 366 (utbildningsanalyser)
+
+[[variable]]
+native_id = "355.145"
+slug = "identitet"
+
+[[variable]]
+native_id = "355.1839.orgnr"
+slug = "orgnr-2"
+
+[[variable]]
+native_id = "355.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "355.6404"
+slug = "arbstallnamn"
+
+[[variable]]
+native_id = "355.22863"
+slug = "lansregion"
+
+[[variable]]
+native_id = "355.23859"
+slug = "kvartal-och-ar"
+
+[[variable]]
+native_id = "355.35270"
+slug = "anlaggningens-namn"
+
+# register 356
+
+[[variable]]
+native_id = "355.83.brslag"
+slug = "bransleslag"
+
+# register 356

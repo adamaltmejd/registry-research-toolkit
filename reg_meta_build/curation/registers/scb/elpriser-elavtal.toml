@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "elpriser-elavtal"
+native_id = "283"
+
+[[variant]]
+native_id = "283.711"
+slug = "_default"
+display_group = "Elpriser och elavtal"
+panel_entity_key = "orgnr-foretaget"
+panel_time_key = ["ar", "referensmanad"]
+panel_time_grain = "row"
+
+# Nätpriser på naturgas och byten av naturgasleverantör
+
+[[variable]]
+native_id = "283.16423"
+slug = "orgnr-foretaget"
+
+
+[[variable]]
+native_id = "283.97"
+slug = "referensmanad"
+
+# register 286

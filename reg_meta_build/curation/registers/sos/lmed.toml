@@ -22,3 +22,137 @@ members = [{ variable = "specialistutbildningskod-1", value = "1", label = "1" }
 [[identity.route]]
 deldatamangd = "LMED VARA/LMED"
 variants = ["LMED", "LMED VARA"] # v18: 1 row (FDDD)
+
+[[variant]]
+native_id = "7661979173609203267.8189345851195899633"
+slug = "lmed"
+display_group = "LMED"
+panel_entity_key = "personnr"
+panel_time_key = "edatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7661979173609203267.5835879744305207105"
+slug = "lmed-vara"
+display_group = "LMED VARA"
+
+# Registret över ekonomiskt bistånd (EKB)
+
+[[variable]]
+native_id = "7661979173609203267.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "7661979173609203267.AFORM"
+slug = "agarform"
+
+[[variable]]
+native_id = "7661979173609203267.ANTAL_MULTIPEL_1"
+slug = "forpackningsmultipel-1"
+
+[[variable]]
+native_id = "7661979173609203267.ANTAL_MULTIPEL_2"
+slug = "forpackningsmultipel-2"
+
+[[variable]]
+native_id = "7661979173609203267.APRIS"
+slug = "pris-per-forpackning"
+
+[[variable]]
+native_id = "7661979173609203267.ARTIKEL_BENAMNING"
+slug = "varubenamning"
+
+[[variable]]
+native_id = "7661979173609203267.BYTET"
+slug = "bytet-tillatet"
+
+[[variable]]
+native_id = "7661979173609203267.DOSER"
+slug = "doseringstext"
+
+[[variable]]
+native_id = "7661979173609203267.FDDD"
+slug = "antal-uthamtade-ddd"
+
+[[variable]]
+native_id = "7661979173609203267.FODDAT"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "7661979173609203267.FODDATN"
+slug = "fodelsedatum-numerisk"
+
+[[variable]]
+native_id = "7661979173609203267.FORPS"
+slug = "forpacknings-storlek-beskrivning"
+
+[[variable]]
+native_id = "7661979173609203267.FTYP"
+slug = "formanstyp"
+
+[[variable]]
+native_id = "7661979173609203267.LAKEMEDELSFORM"
+slug = "beredningsform"
+
+[[variable]]
+native_id = "7661979173609203267.LFORM"
+slug = "lakemedelsform"
+
+[[variable]]
+native_id = "7661979173609203267.LK"
+slug = "lan-och-kommun"
+
+[[variable]]
+native_id = "7661979173609203267.LKF"
+slug = "lan-kommun-forsamling"
+
+[[variable]]
+native_id = "7661979173609203267.LNMN"
+slug = "artikel-benamning"
+
+[[variable]]
+native_id = "7661979173609203267.OTYP"
+slug = "ordinationstyp-forsaljningssatt"
+
+[[variable]]
+native_id = "7661979173609203267.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "7661979173609203267.RECB"
+slug = "receptbelagd-status"
+
+[[variable]]
+native_id = "7661979173609203267.SPKOD1"
+slug = "specialistutbildningskod-1"
+
+[[variable]]
+native_id = "7661979173609203267.SPKOD2"
+slug = "specialistutbildningskod-2"
+
+[[variable]]
+native_id = "7661979173609203267.SPKOD3"
+slug = "specialistutbildningskod-3"
+
+[[variable]]
+native_id = "7661979173609203267.TKOST"
+slug = "totalkostnad-exkl-moms"
+
+[[variable]]
+native_id = "7661979173609203267.URSPR"
+slug = "ursprung"
+
+[[variable]]
+native_id = "7661979173609203267.UTBK"
+slug = "utbildningskod"
+
+[[variable]]
+native_id = "7661979173609203267.VERKS"
+slug = "verksamhetsinriktning"
+
+[[variable]]
+native_id = "7661979173609203267.VFORM"
+slug = "vardform"
+# register 7847722537922273761

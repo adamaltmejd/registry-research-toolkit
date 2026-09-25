@@ -642,3 +642,80 @@ delivery_column = "BOSTADSF_SMAHUS_ULAG_AG"
 register = "scb/agi"
 variable = "bostadsf-smahus-ul-ag-ea"
 delivery_column = "BOSTADSF_SMAHUS_ULAG_EA"
+
+[[variant]]
+native_id = "392.1519"
+slug = "individuppgifter-agi"
+display_group = "Individuppgifter (AGI)"
+panel_entity_key = "person-samordnings-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Transportsektorns energianvändning (inrikes sjöfart)
+
+[[variable]]
+native_id = "392.22865"
+slug = "person-samordnings-orgnr"
+
+
+[[variable]]
+native_id = "392.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "392.17"
+slug = "arbetsstallenummer"
+
+[[variable]]
+native_id = "392.1172"
+slug = "kontant-bruttolon"
+
+[[variable]]
+native_id = "392.1192"
+slug = "ovriga-kostnadsersattningar"
+
+[[variable]]
+native_id = "392.1824"
+slug = "avdrag-vissa-lonetillagg"
+
+[[variable]]
+native_id = "392.4055"
+slug = "kostnadsavdrag"
+
+[[variable]]
+native_id = "392.6104"
+slug = "ersattning-resa-utomlands-bosatta"
+
+[[variable]]
+native_id = "392.6111"
+slug = "ersattningsbelopp"
+
+[[variable]]
+native_id = "392.6112"
+slug = "ersattningskod"
+
+[[variable]]
+native_id = "392.21209"
+slug = "underlag-skattereduktion-rut-forman"
+
+[[variable]]
+native_id = "392.21816"
+slug = "avdragen-preliminar-a-skatt-arbetsgivare"
+
+[[variable]]
+native_id = "392.21879"
+slug = "skattepliktiga-ersattningar-ej-sociala"
+
+[[variable]]
+native_id = "392.24169"
+slug = "underlag-skattereduktion-rot-forman"
+
+[[variable]]
+native_id = "392.28808"
+slug = "referensperiod"
+
+[[variable]]
+native_id = "392.41337"
+slug = "ej-skatteavdrag"
+
+# register 393

@@ -1,0 +1,199 @@
+[register]
+provider = "sos"
+slug = "sol"
+native_id = "9047831179457584381"
+
+[[variant]]
+native_id = "9047831179457584381.7344771358524101306"
+slug = "sol"
+display_group = "SOL"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "9047831179457584381.9078593388686399599"
+slug = "sol-incr"
+display_group = "SOL_INCR"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "9047831179457584381.6418472685745483159"
+slug = "sol-2007-2012"
+display_group = "SOL_2007_2012"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Tandhälsoregistret (THR)
+
+[[variable]]
+native_id = "9047831179457584381.PNR"
+slug = "personnr"
+
+# === BEGIN #471 SOS slug curation overrides (generated) ===
+# 4 curated variable-slug overrides from the #471 fan-out
+# curation (2 LLM rounds + code validation; agent final_slug authoritative).
+# Emitted only where the improved name-arm generator (#732 lever A) still
+# differs from the curated slug. Regenerate via the curation pipeline; do
+# not hand-edit inside the markers.
+
+# register 5891427617861710725 (par)
+
+[[variable]]
+native_id = "9047831179457584381.ABDAT"
+slug = "beslutsdatum-avslutat-bistand"
+
+[[variable]]
+native_id = "9047831179457584381.ABIDR"
+slug = "anhorigbidrag"
+
+[[variable]]
+native_id = "9047831179457584381.ABIST"
+slug = "annat-bistandsbeslut"
+
+[[variable]]
+native_id = "9047831179457584381.ABO"
+slug = "annat-boende"
+
+[[variable]]
+native_id = "9047831179457584381.ADAT"
+slug = "datum-avslut"
+
+[[variable]]
+native_id = "9047831179457584381.ANNAN"
+slug = "annan-insats"
+
+[[variable]]
+native_id = "9047831179457584381.AVAN"
+slug = "avlosning-av-anhorig"
+
+[[variable]]
+native_id = "9047831179457584381.AVDAT"
+slug = "datum-avslut-utan-verkstallan"
+
+[[variable]]
+native_id = "9047831179457584381.BDAT"
+slug = "beslutsdatum"
+
+[[variable]]
+native_id = "9047831179457584381.BOSTO"
+slug = "boendestod"
+
+[[variable]]
+native_id = "9047831179457584381.BOTIM"
+slug = "boendestodstimmar"
+
+[[variable]]
+native_id = "9047831179457584381.DAGV"
+slug = "dagverksamhet"
+
+[[variable]]
+native_id = "9047831179457584381.EPH"
+slug = "enpersonshushall"
+
+[[variable]]
+native_id = "9047831179457584381.FODAR"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "9047831179457584381.FODDAT"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "9047831179457584381.FODDATN"
+slug = "fodelsedatum-numerisk"
+
+[[variable]]
+native_id = "9047831179457584381.HKOM"
+slug = "hemkommun-periodens-slut"
+
+[[variable]]
+native_id = "9047831179457584381.HTJ"
+slug = "hemtjanst"
+
+[[variable]]
+native_id = "9047831179457584381.HTJLED"
+slug = "hemtjanst-ledsagning"
+
+[[variable]]
+native_id = "9047831179457584381.HTJPOMV"
+slug = "hemtjanst-personlig-omvardnad"
+
+[[variable]]
+native_id = "9047831179457584381.HTJSERV"
+slug = "hemtjanst-service"
+
+[[variable]]
+native_id = "9047831179457584381.KDEL"
+slug = "kommundel"
+
+[[variable]]
+native_id = "9047831179457584381.KONTF"
+slug = "kontaktfamilj"
+
+[[variable]]
+native_id = "9047831179457584381.KONTP"
+slug = "kontaktperson"
+
+[[variable]]
+native_id = "9047831179457584381.LED"
+slug = "hemtjanst-ledsagning-2"
+
+[[variable]]
+native_id = "9047831179457584381.LK"
+slug = "kommun"
+
+[[variable]]
+native_id = "9047831179457584381.MATD"
+slug = "matdistribution"
+
+[[variable]]
+native_id = "9047831179457584381.OBO"
+slug = "ordinart-boende"
+
+[[variable]]
+native_id = "9047831179457584381.OMDR"
+slug = "sarskilt-boende-hemtjanst-dygnet-runt"
+
+[[variable]]
+native_id = "9047831179457584381.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "9047831179457584381.POMV"
+slug = "hemtjanst-personlig-omvardnad-2"
+
+[[variable]]
+native_id = "9047831179457584381.SBO"
+slug = "sarskilt-boende"
+
+[[variable]]
+native_id = "9047831179457584381.SERV"
+slug = "hemtjanst-service-2"
+
+[[variable]]
+native_id = "9047831179457584381.SURV"
+slug = "forandring-perioden"
+
+[[variable]]
+native_id = "9047831179457584381.TRYGG"
+slug = "trygghetslarm"
+
+[[variable]]
+native_id = "9047831179457584381.VBDAT"
+slug = "bistandsbeslutsdatum"
+
+[[variable]]
+native_id = "9047831179457584381.VDAT"
+slug = "datum-verkstallighet"
+
+[[variable]]
+native_id = "9047831179457584381.VVDAT"
+slug = "datum-verkstallighet-bistandsbeslut"
+
+# === END #760 non-SCB concept-slug curation ===

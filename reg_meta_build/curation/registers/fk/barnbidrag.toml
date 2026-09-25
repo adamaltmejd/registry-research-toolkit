@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "barnbidrag"
+native_id = "4635732609514065093"
+
+[[variant]]
+native_id = "4635732609514065093.5324721756578836203"
+slug = "_default"
+display_group = "Barnbidrag"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Bostadsbidrag
+
+[[variable]]
+native_id = "4635732609514065093.personnummer"
+slug = "lopnr-personnr"

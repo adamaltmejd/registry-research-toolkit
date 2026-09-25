@@ -1,0 +1,98 @@
+[register]
+provider = "scb"
+slug = "skolvasendet-kostnader"
+native_id = "194"
+
+[[variant]]
+native_id = "194.512"
+slug = "_default"
+display_group = "Kostnader för skolväsendet"
+panel_entity_key = "skolenhetskod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Konjunkturstatistik över sjuklöner (KSju)
+
+[[variable]]
+native_id = "194.30366"
+slug = "skolenhetskod"
+
+
+[[variable]]
+native_id = "194.14841"
+slug = "fsg-annan-kommun"
+
+[[variable]]
+native_id = "194.14858"
+slug = "kop-annan-kommun"
+
+[[variable]]
+native_id = "194.14871"
+slug = "antal-elever-skolkommun"
+
+[[variable]]
+native_id = "194.30481"
+slug = "kop-fran-kommun"
+
+[[variable]]
+native_id = "194.30483"
+slug = "fsg-till-kommun"
+
+# register 195 (ksju)
+
+[[variable]]
+native_id = "194.30485.skelev"
+slug = "antal-elever"
+
+[[variable]]
+native_id = "194.8702.sform"
+slug = "sarskoleform-2"
+
+# register 195 (ksju)
+# var 4027 näringsgren 2009-only predecessor: the `lgrp` sibling of the #845
+# split (see the `195.4027.ng1-2007` entry above). It's the 2009 grouped-SNI
+# member of the näringsgren group (concept_groups.toml key `naringsgren`).
+
+[[variable]]
+native_id = "194.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "194.4819"
+slug = "ovriga-kostnader"
+
+[[variable]]
+native_id = "194.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "194.8552"
+slug = "gymnasieforbund-id"
+
+[[variable]]
+native_id = "194.8698"
+slug = "inriktning-fristaende-gy"
+
+[[variable]]
+native_id = "194.16587"
+slug = "intakter-lokaler"
+
+[[variable]]
+native_id = "194.26963"
+slug = "inriktning-fristaende-gr"
+
+[[variable]]
+native_id = "194.28237"
+slug = "ovriga-intakter-spec"
+
+[[variable]]
+native_id = "194.30348"
+slug = "typ-av-gymnasieprogram"
+
+# register 195
+
+[[variable]]
+native_id = "194.8702.sarform"
+slug = "sarskoleform"
+
+# register 195

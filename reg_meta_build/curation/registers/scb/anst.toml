@@ -20,3 +20,159 @@ register = "scb/anst"
 variable = "person-orgnr-3"
 description = "Organisationsnummer"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[variant]]
+native_id = "408.1714"
+slug = "sus"
+display_group = "Sjukfrånvaro under sjuklöneperioden (SuS)"
+panel_entity_key = "personnr"
+panel_time_key = "sjukfrom"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "408.1733"
+slug = "anstallningar-grund"
+display_group = "Anställningar, grund"
+panel_entity_key = "person-samordningsnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "408.1743"
+slug = "anstallningar-period"
+display_group = "Anställningar, period"
+panel_entity_key = "person-samordningsnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "408.1752"
+slug = "anstallningar-laps"
+display_group = "Anställningar, LAPS"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Civila samhället
+
+[[variable]]
+native_id = "408.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "408.47187"
+slug = "person-samordningsnummer"
+
+
+[[variable]]
+native_id = "408.56.peorgnr"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "408.1172"
+slug = "kontant-bruttolon"
+
+[[variable]]
+native_id = "408.8170"
+slug = "sektor-organisation"
+
+[[variable]]
+native_id = "408.28808"
+slug = "referensperiod"
+
+# register 410 (esk)
+
+[[variable]]
+native_id = "408.33.sektor"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "408.47454.indman"
+slug = "anstallning"
+
+# register 47 (hreg)
+
+[[variable]]
+native_id = "408.56.agipeorgnr"
+slug = "person-orgnr-arbetsgivare"
+
+[[variable]]
+native_id = "408.56.anstpeorgnr"
+slug = "person-orgnr-anstalld"
+
+[[variable]]
+native_id = "408.56.peorgnrram"
+slug = "person-orgnr-3"
+
+[[variable]]
+native_id = "408.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "408.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "408.97"
+slug = "referensmanad"
+
+[[variable]]
+native_id = "408.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "408.4614"
+slug = "urvalsstorlek-per-stratum"
+
+[[variable]]
+native_id = "408.8164"
+slug = "urvalsstratum"
+
+[[variable]]
+native_id = "408.16323"
+slug = "naringsgren-foretag"
+
+[[variable]]
+native_id = "408.17472"
+slug = "anstallningstid-grupperad"
+
+[[variable]]
+native_id = "408.21757"
+slug = "avdrag-regionalt-stod"
+
+[[variable]]
+native_id = "408.24353"
+slug = "kallapersonnr"
+
+[[variable]]
+native_id = "408.42953"
+slug = "markering-lonegaranti"
+
+[[variable]]
+native_id = "408.46663"
+slug = "antal-svarande-per-stratum"
+
+[[variable]]
+native_id = "408.48348"
+slug = "antal-anstallda-enligt-ramen"
+
+# register 409
+
+[[variable]]
+native_id = "408.26835.indagiimputhuvuduppgift"
+slug = "imputerat-varde"
+
+[[variable]]
+native_id = "408.3310.bgr-off"
+slug = "branschgrupp-offentlig"
+
+[[variable]]
+native_id = "408.3310.bgr-priv"
+slug = "branschgrupp-privat"
+
+# register 4171412747617845054

@@ -1,0 +1,109 @@
+[register]
+provider = "scb"
+slug = "esk"
+native_id = "410"
+
+[[variant]]
+native_id = "410.1740"
+slug = "lagerinvesteringar"
+display_group = "Lagerinvesteringar"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "410.1741"
+slug = "fasta-bruttoinvesteringar"
+display_group = "Fasta bruttoinvesteringar"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Lediga jobb och rekryteringsbehov (LOR)
+
+[[variable]]
+native_id = "410.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "410.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "410.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "410.73"
+slug = "ar"
+
+[[variable]]
+native_id = "410.2463"
+slug = "undersokningsar"
+
+[[variable]]
+native_id = "410.2802"
+slug = "varde-investeringar"
+
+[[variable]]
+native_id = "410.4042"
+slug = "firmanamn"
+
+[[variable]]
+native_id = "410.5002"
+slug = "lagervarde"
+
+[[variable]]
+native_id = "410.19079"
+slug = "kvartal-period"
+
+# register 10 (lbr)
+
+[[variable]]
+native_id = "410.1795"
+slug = "blankettnummer"
+
+[[variable]]
+native_id = "410.1811"
+slug = "variabelnummer"
+
+[[variable]]
+native_id = "410.2846"
+slug = "lopnummer-urvalsenheter"
+
+[[variable]]
+native_id = "410.3310"
+slug = "branschgrupp"
+
+[[variable]]
+native_id = "410.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "410.4066"
+slug = "storleksgrupp"
+
+[[variable]]
+native_id = "410.19538"
+slug = "upprakningsfaktor"
+
+[[variable]]
+native_id = "410.28064"
+slug = "imputeringsstatus"
+
+[[variable]]
+native_id = "410.28853"
+slug = "statuskod"
+
+[[variable]]
+native_id = "410.31002"
+slug = "urvalsversion"
+
+[[variable]]
+native_id = "410.36787"
+slug = "variabelnamn"
+
+# register 411

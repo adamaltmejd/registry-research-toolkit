@@ -1,0 +1,183 @@
+[register]
+provider = "scb"
+slug = "hib"
+native_id = "199"
+
+[[variant]]
+native_id = "199.301"
+slug = "_default"
+display_group = "Hyror i bostadslägenheter"
+panel_entity_key = "lghbet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Årlig energistatistik (el, gas och fjärrvärme)
+
+[[variable]]
+native_id = "199.35378"
+slug = "lghbet"
+
+
+[[variable]]
+native_id = "199.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "199.2296"
+slug = "agarkategori"
+
+[[variable]]
+native_id = "199.2302"
+slug = "kommungruppering-regioner"
+
+[[variable]]
+native_id = "199.3413"
+slug = "vardear"
+
+[[variable]]
+native_id = "199.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "199.4555"
+slug = "bostadsyta"
+
+[[variable]]
+native_id = "199.14742"
+slug = "vem-har-kontrakt"
+
+[[variable]]
+native_id = "199.14753"
+slug = "vardear-klassindelat"
+
+[[variable]]
+native_id = "199.14755"
+slug = "schablon-varmgarage"
+
+[[variable]]
+native_id = "199.14756"
+slug = "schablon-kallgarage"
+
+[[variable]]
+native_id = "199.14757"
+slug = "schablon-motorvarmare"
+
+[[variable]]
+native_id = "199.14758"
+slug = "schablon-bilplats"
+
+[[variable]]
+native_id = "199.14759"
+slug = "schablon-hushallsel"
+
+[[variable]]
+native_id = "199.14763"
+slug = "upplatelseform-tabellering"
+
+[[variable]]
+native_id = "199.21548"
+slug = "forhandl-nasta-ar"
+
+[[variable]]
+native_id = "199.22862"
+slug = "kommunregion"
+
+[[variable]]
+native_id = "199.30770"
+slug = "agarkategori-bostad"
+
+[[variable]]
+native_id = "199.35293"
+slug = "ordinarie-lagenhet"
+
+[[variable]]
+native_id = "199.35383"
+slug = "agare-forvaltare-postnr"
+
+[[variable]]
+native_id = "199.38146"
+slug = "hyra-nyforhandlad-just"
+
+[[variable]]
+native_id = "199.38147"
+slug = "hyra-december-justerad"
+
+# register 200 (arlig-energistatistik)
+
+[[variable]]
+native_id = "199.14751.bransle"
+slug = "uppvarmning-i-hyran"
+
+[[variable]]
+native_id = "199.14752.strom"
+slug = "hushallsel-i-hyran"
+
+[[variable]]
+native_id = "199.14754.garage"
+slug = "garage-bilplats-i-hyran"
+
+[[variable]]
+native_id = "199.50.man"
+slug = "manad"
+
+# register 2 (rtb)
+
+[[variable]]
+native_id = "199.56.apeorgnr"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "199.56.fpeorgnr"
+slug = "person-orgnr-2"
+
+[[variable]]
+native_id = "199.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "199.31"
+slug = "forsamling"
+
+[[variable]]
+native_id = "199.2299"
+slug = "lagenhetstyp"
+
+[[variable]]
+native_id = "199.3316"
+slug = "land-agare"
+
+[[variable]]
+native_id = "199.4584"
+slug = "hyra-avgift-per-manad"
+
+[[variable]]
+native_id = "199.5109"
+slug = "hyra-avgift"
+
+[[variable]]
+native_id = "199.5115"
+slug = "region-fem-regioner"
+
+[[variable]]
+native_id = "199.14750"
+slug = "rabattbelopp"
+
+[[variable]]
+native_id = "199.14762"
+slug = "fardigstallandear"
+
+[[variable]]
+native_id = "199.16297"
+slug = "nybyggnadsar"
+
+[[variable]]
+native_id = "199.30120"
+slug = "bostadskategori"
+
+# register 200
+
+[[variable]]
+native_id = "199.16420.komment"
+slug = "kommentar-uppgiftslamnaren"
+
+# register 2

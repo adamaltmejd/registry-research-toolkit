@@ -1,0 +1,57 @@
+[register]
+provider = "scb"
+slug = "avrinningsomraden"
+native_id = "294"
+
+[[variant]]
+native_id = "294.810"
+slug = "_default"
+display_group = "Statistik för avrinningsområden"
+
+# Miljöräkenskaper
+
+[[variable]]
+native_id = "294.2189"
+slug = "landareal"
+
+[[variable]]
+native_id = "294.2888"
+slug = "totalareal"
+
+[[variable]]
+native_id = "294.3144"
+slug = "vattenareal"
+
+[[variable]]
+native_id = "294.24689"
+slug = "husdjur-antal"
+
+[[variable]]
+native_id = "294.25421"
+slug = "typ-av-avlopp"
+
+[[variable]]
+native_id = "294.25422"
+slug = "befolkning"
+
+[[variable]]
+native_id = "294.25423"
+slug = "antal-fritidsfastigheter"
+
+[[variable]]
+native_id = "294.25426"
+slug = "vattenflode"
+
+[[variable]]
+native_id = "294.25462"
+slug = "akerareal"
+
+[[variable]]
+native_id = "294.25463"
+slug = "groda-enl-iaks"
+
+[[variable]]
+native_id = "294.25464"
+slug = "typ-av-husdjur"
+
+# register 295 (miljorakenskaper)

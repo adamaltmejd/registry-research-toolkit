@@ -148,3 +148,180 @@ label = "scb/grundskola-elever/skolenhetens-namn"
 [[code_label_pair]]
 code = "scb/grundskola-elever/skolkod"
 label = "scb/grundskola-elever/skolans-namn"
+
+[[variant]]
+native_id = "193.771"
+slug = "individregister"
+display_group = "Individregister"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Kostnader för förskola, fritidshem, annan pedagogisk verksamhet, skola och vuxenutbildning
+
+[[variable]]
+native_id = "193.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "193.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "193.1554"
+slug = "ar-termin-aktiviteten"
+
+[[variable]]
+native_id = "193.1579"
+slug = "termin"
+
+[[variable]]
+native_id = "193.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "193.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "193.7914"
+slug = "arskurs"
+
+[[variable]]
+native_id = "193.25186"
+slug = "moderna-sprak-val"
+
+# register 194 (skolvasendet-kostnader)
+
+[[variable]]
+native_id = "193.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "193.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "193.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "193.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "193.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "193.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "193.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "193.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "193.3635"
+slug = "skolans-namn"
+
+[[variable]]
+native_id = "193.4642"
+slug = "faderns-fodelseland"
+
+[[variable]]
+native_id = "193.4643"
+slug = "moderns-fodelseland"
+
+[[variable]]
+native_id = "193.7814"
+slug = "atgardsprogram"
+
+[[variable]]
+native_id = "193.7816"
+slug = "anpassad-studigang"
+
+[[variable]]
+native_id = "193.7817"
+slug = "deltagit-sva"
+
+[[variable]]
+native_id = "193.15712"
+slug = "stodundervisning"
+
+[[variable]]
+native_id = "193.23867"
+slug = "klassbeteckning"
+
+[[variable]]
+native_id = "193.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "193.30654"
+slug = "skolenhetens-namn"
+
+[[variable]]
+native_id = "193.31989"
+slug = "lopnr-elev"
+
+[[variable]]
+native_id = "193.32721"
+slug = "distansundervisning"
+
+[[variable]]
+native_id = "193.35887"
+slug = "nyligen-invandrad"
+
+[[variable]]
+native_id = "193.40833"
+slug = "central-insamlingsenhet"
+
+# register 194
+
+[[variable]]
+native_id = "193.8073.sun2000niva-1-mor"
+slug = "sun-niva-1-mor"
+
+[[variable]]
+native_id = "193.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "193.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "193.8073.sun2000niva-old-mor"
+slug = "sun-niva-old-mor"
+
+[[variable]]
+native_id = "193.8073.sun2000niva-sv-mor"
+slug = "sun-niva-sv-mor"
+
+[[variable]]
+native_id = "193.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "193.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "193.8137.hman"
+slug = "huvudman"
+
+[[variable]]
+native_id = "193.8137.hmannamn"
+slug = "huvudman-namn"
+
+[[variable]]
+native_id = "193.MSPR2_SPRAK"
+slug = "moderna-sprak-sprakval-sprak"
+
+# register 194

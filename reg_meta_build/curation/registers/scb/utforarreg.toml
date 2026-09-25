@@ -1,0 +1,101 @@
+[register]
+provider = "scb"
+slug = "utforarreg"
+native_id = "383"
+
+[[variant]]
+native_id = "383.1442"
+slug = "_default"
+display_group = "Utförarregistret"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Riksbankens kreditdatabas (KRITA)
+
+[[variable]]
+native_id = "383.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "383.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "383.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "383.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "383.413"
+slug = "c-o-adress"
+
+[[variable]]
+native_id = "383.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "383.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "383.666"
+slug = "anstallda-storleksklass"
+
+[[variable]]
+native_id = "383.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "383.668"
+slug = "arbstalle-status"
+
+[[variable]]
+native_id = "383.781"
+slug = "benamning"
+
+[[variable]]
+native_id = "383.799"
+slug = "belagenhetsadress-gata"
+
+[[variable]]
+native_id = "383.803"
+slug = "belagenhetsadress-postnr"
+
+[[variable]]
+native_id = "383.804"
+slug = "besokspostort"
+
+[[variable]]
+native_id = "383.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "383.1047"
+slug = "je-foretagsstatus"
+
+[[variable]]
+native_id = "383.1052"
+slug = "je-status"
+
+[[variable]]
+native_id = "383.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "383.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "383.4049"
+slug = "postadress"
+
+[[variable]]
+native_id = "383.17556"
+slug = "belagenhetsadress"
+
+# register 389

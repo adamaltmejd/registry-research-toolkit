@@ -149,3 +149,348 @@ column = "INVARN9"
 
 # Not carried: sos.py KNOWN_MERGE_ALLOWLIST {("lova", "EXAMAR")} (L1489) only
 # silenced a same-name data_type warning; the merge was the default. No v18 case.
+
+[[variant]]
+native_id = "7847722537922273761.6625693372895183876"
+slug = "lova"
+display_group = "LOVA"
+panel_entity_key = "lopnr"
+panel_time_key = "ar"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7847722537922273761.5062264322777987324"
+slug = "lova-examen"
+display_group = "LOVA EXAMEN"
+panel_entity_key = "lopnr"
+panel_time_key = "examar"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7847722537922273761.5782470112533969966"
+slug = "lova-hosp"
+display_group = "LOVA HOSP"
+panel_entity_key = "lopnr"
+panel_time_key = "leg-specdatum"
+panel_time_grain = "row"
+
+# Person directory (folkbokföringsuppgifter, one row per löpnummer) — no
+# per-row event axis, so the delivery-period sentinel stays.
+
+[[variant]]
+native_id = "7847722537922273761.8897592339203104611"
+slug = "lova-person"
+display_group = "LOVA PERSON"
+panel_entity_key = "lopnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Registret över insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)
+
+[[variable]]
+native_id = "7847722537922273761.LOPNR"
+slug = "lopnr"
+
+
+[[variable]]
+native_id = "7847722537922273761.ALDER"
+slug = "alder-vid-arets-slut"
+
+[[variable]]
+native_id = "7847722537922273761.ASTSNI2007"
+slug = "arbetsstellets-naringsgren-sni2007"
+
+[[variable]]
+native_id = "7847722537922273761.AVLIDENDATUM"
+slug = "dodsdatum"
+
+[[variable]]
+native_id = "7847722537922273761.BRYT_DAT_1_NOV"
+slug = "flagga-brytdatum-1-november"
+
+[[variable]]
+native_id = "7847722537922273761.HSKOD"
+slug = "hogskola"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN1"
+slug = "invandringsdatum-1-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN2"
+slug = "invandringsdatum-2-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN3"
+slug = "invandringsdatum-3-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN4"
+slug = "invandringsdatum-4-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN5"
+slug = "invandringsdatum-5-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN6"
+slug = "invandringsdatum-6-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN7"
+slug = "invandringsdatum-7-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN8"
+slug = "invandringsdatum-8-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVARN9"
+slug = "invandringsdatum-9-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM1"
+slug = "invandringsdatum-1"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM2"
+slug = "invandringsdatum-2"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM3"
+slug = "invandringsdatum-3"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM4"
+slug = "invandringsdatum-4"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM5"
+slug = "invandringsdatum-5"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM6"
+slug = "invandringsdatum-6"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM7"
+slug = "invandringsdatum-7"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM8"
+slug = "invandringsdatum-8"
+
+[[variable]]
+native_id = "7847722537922273761.INVDATUM9"
+slug = "invandringsdatum-9"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND1"
+slug = "invandringsland-1"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND2"
+slug = "invandringsland-2"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND3"
+slug = "invandringsland-3"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND4"
+slug = "invandringsland-4"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND5"
+slug = "invandringsland-5"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND6"
+slug = "invandringsland-6"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND7"
+slug = "invandringsland-7"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND8"
+slug = "invandringsland-8"
+
+[[variable]]
+native_id = "7847722537922273761.INVLAND9"
+slug = "invandringsland-9"
+
+[[variable]]
+native_id = "7847722537922273761.KU2ASTSNI2007"
+slug = "nast-storsta-forvarvskalla-sni2007"
+
+[[variable]]
+native_id = "7847722537922273761.PEORGNR"
+slug = "orgnr-foretaget"
+
+[[variable]]
+native_id = "7847722537922273761.SSYK3"
+slug = "ssyk96-3"
+
+[[variable]]
+native_id = "7847722537922273761.SSYK3_2012_J16"
+slug = "ssyk2012-3-foretagare"
+
+[[variable]]
+native_id = "7847722537922273761.SSYK3_J16"
+slug = "ssyk96-3-foretagare"
+
+[[variable]]
+native_id = "7847722537922273761.SSYK4"
+slug = "ssyk96-4"
+
+[[variable]]
+native_id = "7847722537922273761.SSYK4_2012"
+slug = "ssyk2012-4-foretagare"
+
+[[variable]]
+native_id = "7847722537922273761.SSYK4_2012_J16"
+slug = "ssyk2012-4-foretagare-j16"
+
+[[variable]]
+native_id = "7847722537922273761.SSYK4_J16"
+slug = "ssyk96-4-foretagare"
+
+[[variable]]
+native_id = "7847722537922273761.SSYKAR_J16"
+slug = "artal-yrkesuppgift"
+
+[[variable]]
+native_id = "7847722537922273761.SSYKSTATUS_J16"
+slug = "ssyk-overensstammelse"
+
+[[variable]]
+native_id = "7847722537922273761.SUN2000INR"
+slug = "utbildningsinriktning-sun2000"
+
+[[variable]]
+native_id = "7847722537922273761.SUN2000NIVA"
+slug = "utbildningsniva-sun2000"
+
+[[variable]]
+native_id = "7847722537922273761.SUN2020INR"
+slug = "utbildningsinriktning-sun2020"
+
+[[variable]]
+native_id = "7847722537922273761.SUN2020NIVA"
+slug = "utbildningsniva-sun2020"
+
+[[variable]]
+native_id = "7847722537922273761.TMGRP"
+slug = "examen-grov-gruppering-kod"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN1"
+slug = "utvandringsdatum-1-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN2"
+slug = "utvandringsdatum-2-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN3"
+slug = "utvandringsdatum-3-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN4"
+slug = "utvandringsdatum-4-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN5"
+slug = "utvandringsdatum-5-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN6"
+slug = "utvandringsdatum-6-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN7"
+slug = "utvandringsdatum-7-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN8"
+slug = "utvandringsdatum-8-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVARN9"
+slug = "utvandringsdatum-9-numerisk"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM1"
+slug = "utvandringsdatum-1"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM2"
+slug = "utvandringsdatum-2"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM3"
+slug = "utvandringsdatum-3"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM4"
+slug = "utvandringsdatum-4"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM5"
+slug = "utvandringsdatum-5"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM6"
+slug = "utvandringsdatum-6"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM7"
+slug = "utvandringsdatum-7"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM8"
+slug = "utvandringsdatum-8"
+
+[[variable]]
+native_id = "7847722537922273761.UTVDATUM9"
+slug = "utvandringsdatum-9"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND1"
+slug = "utvandringsland-1"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND2"
+slug = "utvandringsland-2"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND3"
+slug = "utvandringsland-3"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND4"
+slug = "utvandringsland-4"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND5"
+slug = "utvandringsland-5"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND6"
+slug = "utvandringsland-6"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND7"
+slug = "utvandringsland-7"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND8"
+slug = "utvandringsland-8"
+
+[[variable]]
+native_id = "7847722537922273761.UTVLAND9"
+slug = "utvandringsland-9"
+# register 8948214044434034899

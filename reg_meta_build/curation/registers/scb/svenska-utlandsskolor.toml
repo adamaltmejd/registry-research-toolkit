@@ -1,0 +1,123 @@
+[register]
+provider = "scb"
+slug = "svenska-utlandsskolor"
+native_id = "192"
+
+[[variant]]
+native_id = "192.268"
+slug = "grundskolan-elever"
+display_group = "Grundskolan, elever"
+panel_entity_key = "skolkod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "192.404"
+slug = "gymnasieskolan-elever"
+display_group = "Gymnasieskolan, elever"
+panel_entity_key = "skolkod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "192.405"
+slug = "kompletterande-undervisning"
+display_group = "Kompletterande undervisning, elever"
+panel_entity_key = "skolkod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "192.406"
+slug = "distansundervisning"
+display_group = "Distansundervisning, elever"
+panel_entity_key = "skolkod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "192.407"
+slug = "skolledning"
+display_group = "Skolledning och undervisningsvolym"
+panel_entity_key = "skolkod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "192.408"
+slug = "larare"
+display_group = "Lärare"
+panel_entity_key = "skolkod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "192.1134"
+slug = "skolor"
+display_group = "Skolor"
+panel_entity_key = "skolkod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Grundskola: elever per 15 oktober
+
+[[variable]]
+native_id = "192.104"
+slug = "skolkod"
+
+
+[[variable]]
+native_id = "192.7938"
+slug = "antal-rektorer-man"
+
+[[variable]]
+native_id = "192.7941"
+slug = "antal-ovriga-skolledare-man"
+
+# register 193 (grundskola-elever)
+
+[[variable]]
+native_id = "192.7937.rektman"
+slug = "antal-rektorer"
+
+[[variable]]
+native_id = "192.7939.skollman"
+slug = "antal-ovriga-skolledare"
+
+# register 194 (skolvasendet-kostnader)
+
+[[variable]]
+native_id = "192.30366"
+slug = "skolenhetskod"
+
+[[variable]]
+native_id = "192.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "192.431"
+slug = "landsnamn-utland"
+
+[[variable]]
+native_id = "192.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "192.1536"
+slug = "studievag-gymnasieskolan"
+
+[[variable]]
+native_id = "192.6172"
+slug = "lopnummer-for-individ"
+
+[[variable]]
+native_id = "192.7914"
+slug = "arskurs"
+
+# register 193

@@ -10,3 +10,32 @@ label = "scb/tatorter/kommunnamn"
 [[code_label_pair]]
 code = "scb/tatorter/lan"
 label = "scb/tatorter/lannamn"
+
+[[variant]]
+native_id = "159.226"
+slug = "_default"
+display_group = "Tätorter"
+
+# Utrikes och inrikes trafik med fartyg (HAMN)
+
+[[variable]]
+native_id = "159.2188"
+slug = "folkmangd"
+
+[[variable]]
+native_id = "159.17810"
+slug = "nordlig-koordinat-sweref"
+
+[[variable]]
+native_id = "159.17812"
+slug = "ostlig-koordinat-sweref"
+
+[[variable]]
+native_id = "159.39461"
+slug = "datatyp-for-geometri"
+
+[[variable]]
+native_id = "159.39462"
+slug = "objekt-id"
+
+# register 161

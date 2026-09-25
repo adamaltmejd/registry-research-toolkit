@@ -12,3 +12,156 @@ label = "Introduktionsersättning per månad"
 register = "scb/ekonomiskt-bistand"
 family_stem = "sbel"
 label = "Socialbidrag per månad"
+
+[[variant]]
+native_id = "22.73"
+slug = "bistandshushall"
+display_group = "Biståndshushåll"
+
+
+[[variant]]
+native_id = "22.435"
+slug = "bistandsmottagare"
+display_group = "Biståndsmottagare"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# (keep) Quarterly-statistics umbrella; siblings 22.73 (biståndshushåll)
+# and 22.435 (biståndsmottagare) carve out specific units.
+# #287: panel keys removed — personnr lives only in bistandsmottagare; this quarterly
+# variant has no identity column with states at all.
+
+[[variant]]
+native_id = "22.508"
+slug = "ekonomiskt-bistand"
+display_group = "Ekonomiskt bistånd, kvartalsstatistik"
+
+# Befolkningens utbildning (Utbildningsregistret)
+
+[[variable]]
+native_id = "22.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "22.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "22.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "22.256"
+slug = "fodelselan"
+
+[[variable]]
+native_id = "22.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "22.7062"
+slug = "folkbokforingslan"
+
+[[variable]]
+native_id = "22.7071"
+slug = "medborgarskapsar"
+
+[[variable]]
+native_id = "22.7173"
+slug = "manader-introduktionsersattning"
+
+[[variable]]
+native_id = "22.7498"
+slug = "manader-ekonomiskt-bistand"
+
+[[variable]]
+native_id = "22.7499"
+slug = "introduktionsersattning"
+
+[[variable]]
+native_id = "22.7500"
+slug = "utbetalt-belopp-till-hushallet"
+
+[[variable]]
+native_id = "22.7501"
+slug = "antal-barn-0-15-ar"
+
+[[variable]]
+native_id = "22.7504"
+slug = "antal-barn-16-17-ar"
+
+[[variable]]
+native_id = "22.7608"
+slug = "antal-barn-0-ar"
+
+[[variable]]
+native_id = "22.7609"
+slug = "antal-barn-10-ar"
+
+[[variable]]
+native_id = "22.7610"
+slug = "antal-barn-2-ar"
+
+[[variable]]
+native_id = "22.7611"
+slug = "antal-barn-3-ar"
+
+[[variable]]
+native_id = "22.7612"
+slug = "antal-barn-4-ar"
+
+[[variable]]
+native_id = "22.7613"
+slug = "antal-barn-5-ar"
+
+[[variable]]
+native_id = "22.7614"
+slug = "antal-barn-6-ar"
+
+[[variable]]
+native_id = "22.7615"
+slug = "antal-barn-7-ar"
+
+[[variable]]
+native_id = "22.7616"
+slug = "antal-barn-8-ar"
+
+[[variable]]
+native_id = "22.7617"
+slug = "antal-barn-9-ar"
+
+[[variable]]
+native_id = "22.7618"
+slug = "antal-barn-1-ar"
+
+[[variable]]
+native_id = "22.7619"
+slug = "antal-barn-11-ar"
+
+[[variable]]
+native_id = "22.7620"
+slug = "antal-barn-12-ar"
+
+[[variable]]
+native_id = "22.7621"
+slug = "antal-barn-13-ar"
+
+[[variable]]
+native_id = "22.7622"
+slug = "antal-barn-14-ar"
+
+[[variable]]
+native_id = "22.7623"
+slug = "antal-barn-15-ar"
+
+[[variable]]
+native_id = "22.8556"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "22.17351"
+slug = "medborgarskap"
+
+# register 24

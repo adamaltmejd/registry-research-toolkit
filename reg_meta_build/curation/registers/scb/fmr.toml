@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "fmr"
+native_id = "181"
+
+[[variant]]
+native_id = "181.285"
+slug = "fmr-indata"
+display_group = "Indata"
+
+# Forskning och utveckling i Sverige
+
+[[variable]]
+native_id = "181.1884"
+slug = "rapportdatum"
+
+[[variable]]
+native_id = "181.1928"
+slug = "balans-transaktionsvarde"
+
+# register 182 (fou)

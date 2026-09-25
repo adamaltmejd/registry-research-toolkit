@@ -270,9 +270,10 @@ its keys instead.
 
 The target layout:
 
-- `curation/registers/<provider>/<register-slug>.toml` holds one register, with one
-  table per curation category. An optional directory holds a register family, e.g.
-  Komvux 248/249/250.
+- `curation/registers/<provider>/<register-slug>.toml` holds one register, its
+  `[register]` slug, `[[variant]]` and `[[variable]]` naming, and the other register
+  curation. Generated variable pins live beside it in `<register-slug>.auto.toml`. An
+  optional directory holds a register family, e.g. Komvux 248/249/250.
 - `curation/classifications/<short>.toml` holds one classification: its metadata,
   sentinels, the label list behind the binding rule, and overrides.
 - Global files keep the cross-register curation: relations and `same_as`, tags, lineage,
@@ -284,9 +285,9 @@ The target layout:
 - SWECOV steward holdings belong to the steward layer, not to global SCB errata.
 
 The register tree is loaded once as strict Pydantic models. A register's provider, slug,
-and native id agree with both its path and the tracked slug file. Unknown tables,
-unknown fields, duplicate declarations, and entries scoped to a different register fail
-with the source file and entry index.
+and native id agree with its path. Unknown tables, unknown fields, duplicate
+declarations, and entries scoped to a different register fail with the source file and
+entry index.
 
 SCB errata records only claims about rows omitted from SCB's own export. The register
 file implies the register; each entry names a variant and literal SCB column/version

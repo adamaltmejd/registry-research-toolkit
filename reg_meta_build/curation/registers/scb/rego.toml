@@ -1,0 +1,104 @@
+[register]
+provider = "scb"
+slug = "rego"
+native_id = "133"
+
+[[variant]]
+native_id = "133.182"
+slug = "arbetsstalle-manad"
+display_group = "Arbetsställe, månad"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "133.183"
+slug = "arbetsstalle-ar"
+display_group = "Arbetsställe, år"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "133.184"
+slug = "bransch-kommun-manad"
+display_group = "Bransch, kommun, månad"
+
+
+[[variant]]
+native_id = "133.1328"
+slug = "bransch-kommun-ar"
+display_group = "Bransch, kommun, år"
+
+# Kortperiodisk sysselsättningsstatistik (KS)
+
+[[variable]]
+native_id = "133.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "133.1641"
+slug = "naringsgren-arbetsstalle"
+
+[[variable]]
+native_id = "133.17484"
+slug = "antal-arbetsstallen"
+
+[[variable]]
+native_id = "133.17628"
+slug = "antal-anstallda"
+
+# register 134 (ks)
+
+[[variable]]
+native_id = "133.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "133.73"
+slug = "ar"
+
+[[variable]]
+native_id = "133.803"
+slug = "belagenhetsadress-postnr"
+
+[[variable]]
+native_id = "133.4032"
+slug = "antal-anstallda-foretaget"
+
+[[variable]]
+native_id = "133.15230"
+slug = "momsfri-omsattning"
+
+[[variable]]
+native_id = "133.15242"
+slug = "avdragsgill-ingaende-moms"
+
+[[variable]]
+native_id = "133.15245"
+slug = "export-varor-eg-land"
+
+[[variable]]
+native_id = "133.15257"
+slug = "m12-utgaende-moms-6"
+
+[[variable]]
+native_id = "133.15258"
+slug = "utgaende-moms-12-m11"
+
+[[variable]]
+native_id = "133.15259"
+slug = "utgaende-moms-25-m10"
+
+[[variable]]
+native_id = "133.16323"
+slug = "naringsgren-foretag"
+
+[[variable]]
+native_id = "133.23686"
+slug = "summa-utgaende-moms"
+
+# register 134

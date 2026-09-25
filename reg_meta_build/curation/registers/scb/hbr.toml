@@ -1,0 +1,65 @@
+[register]
+provider = "scb"
+slug = "hbr"
+native_id = "348"
+
+[[variant]]
+native_id = "348.1174"
+slug = "_default"
+display_group = "Historiska befolkningsregistret"
+panel_entity_key = "personnr"
+panel_time_key = "startdatum"
+panel_time_grain = "row"
+
+# Flergenerationsregistret
+
+[[variable]]
+native_id = "348.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "348.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "348.25139"
+slug = "startdatum"
+
+[[variable]]
+native_id = "348.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "348.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "348.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "348.350"
+slug = "utvandringsland"
+
+[[variable]]
+native_id = "348.351"
+slug = "fastighetsbeteckning-tidigare"
+
+[[variable]]
+native_id = "348.353"
+slug = "forsamling-tidigare"
+
+[[variable]]
+native_id = "348.355"
+slug = "kommun-tidigare"
+
+[[variable]]
+native_id = "348.8002"
+slug = "ateranvant-personnr"
+
+[[variable]]
+native_id = "348.25146"
+slug = "slutdatum"
+
+# register 349

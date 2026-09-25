@@ -1,0 +1,503 @@
+[register]
+provider = "scb"
+slug = "bast"
+native_id = "165"
+
+[[variant]]
+native_id = "165.238"
+slug = "_default"
+display_group = "Företagens kortperiodiska tillgångar och skulder"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Företagens utländska handelskrediter (HKU)
+
+[[variable]]
+native_id = "165.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "165.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "165.1793"
+slug = "anstand"
+
+[[variable]]
+native_id = "165.1937"
+slug = "kommentar"
+
+[[variable]]
+native_id = "165.2468"
+slug = "outlier"
+
+[[variable]]
+native_id = "165.5280"
+slug = "kommentar-1"
+
+[[variable]]
+native_id = "165.5283"
+slug = "kommentar-2"
+
+[[variable]]
+native_id = "165.5284"
+slug = "kommentar-3"
+
+[[variable]]
+native_id = "165.5285"
+slug = "kommentar-4"
+
+[[variable]]
+native_id = "165.5296"
+slug = "kommentar-internetrapportor"
+
+[[variable]]
+native_id = "165.5311"
+slug = "utlandska-noterade-aktieagartillskott"
+
+[[variable]]
+native_id = "165.5314"
+slug = "bearbetningskod"
+
+[[variable]]
+native_id = "165.5319"
+slug = "utlandska-noterade-aktier-inlosen"
+
+[[variable]]
+native_id = "165.5326"
+slug = "utlandska-noterade-aktier-nyteckning"
+
+[[variable]]
+native_id = "165.5329"
+slug = "banktillgodohavande-omv"
+
+[[variable]]
+native_id = "165.5335"
+slug = "utlaning-langa-lan-omv"
+
+[[variable]]
+native_id = "165.5336"
+slug = "utlaning-langa-lan-utlandet-omv"
+
+[[variable]]
+native_id = "165.5340"
+slug = "upplaning-korta-lan-omv"
+
+[[variable]]
+native_id = "165.5341"
+slug = "upplaning-korta-lan-utlandet-omv"
+
+[[variable]]
+native_id = "165.5347"
+slug = "upplaning-langa-lan-omv"
+
+[[variable]]
+native_id = "165.5348"
+slug = "upplaning-langa-lan-utlandet-omv"
+
+[[variable]]
+native_id = "165.5350"
+slug = "svenska-noterade-aktier-omv"
+
+[[variable]]
+native_id = "165.5352"
+slug = "ovriga-svenska-aktier-omv"
+
+[[variable]]
+native_id = "165.5354"
+slug = "utlandska-noterade-aktier-omv"
+
+[[variable]]
+native_id = "165.5355"
+slug = "ovriga-utlandska-aktier-omv"
+
+[[variable]]
+native_id = "165.5357"
+slug = "finansiella-derivat-utlandet-stallning"
+
+[[variable]]
+native_id = "165.5358"
+slug = "utlaning-korta-lan-stallning"
+
+[[variable]]
+native_id = "165.5359"
+slug = "utlaning-korta-lan-utlandet-stallning"
+
+[[variable]]
+native_id = "165.5376"
+slug = "utlaning-langa-lan-stallning"
+
+[[variable]]
+native_id = "165.5377"
+slug = "utlaning-langa-lan-utlandet-stallning"
+
+[[variable]]
+native_id = "165.5381"
+slug = "upplaning-korta-lan-stallning"
+
+[[variable]]
+native_id = "165.5382"
+slug = "upplaning-korta-lan-utlandet-stallning"
+
+[[variable]]
+native_id = "165.5388"
+slug = "upplaning-langa-lan-stallning"
+
+[[variable]]
+native_id = "165.5389"
+slug = "upplaning-langa-lan-utlandet-stallning"
+
+[[variable]]
+native_id = "165.5391"
+slug = "svenska-noterade-aktier-stallning"
+
+[[variable]]
+native_id = "165.5393"
+slug = "ovriga-svenska-aktier-stallning"
+
+[[variable]]
+native_id = "165.5395"
+slug = "utlandska-noterade-aktier-stallning"
+
+[[variable]]
+native_id = "165.5396"
+slug = "ovriga-utlandska-aktier-stallning"
+
+[[variable]]
+native_id = "165.5397"
+slug = "banktillgodohavande-trans"
+
+[[variable]]
+native_id = "165.5402"
+slug = "finansiella-derivat-utlandet-trans"
+
+[[variable]]
+native_id = "165.5403"
+slug = "utlaning-korta-lan-trans"
+
+[[variable]]
+native_id = "165.5404"
+slug = "utlaning-korta-lan-utlandet-trans"
+
+[[variable]]
+native_id = "165.5422"
+slug = "utlaning-langa-lan-utlandet-trans"
+
+[[variable]]
+native_id = "165.5426"
+slug = "upplaning-korta-lan-trans"
+
+[[variable]]
+native_id = "165.5427"
+slug = "upplaning-korta-lan-utlandet-trans"
+
+[[variable]]
+native_id = "165.5433"
+slug = "upplaning-langa-lan-trans"
+
+[[variable]]
+native_id = "165.5434"
+slug = "upplaning-langa-lan-utlandet-trans"
+
+[[variable]]
+native_id = "165.5436"
+slug = "finansiella-derivat-utlandet-omv"
+
+[[variable]]
+native_id = "165.5437"
+slug = "utlaning-korta-lan-omv"
+
+[[variable]]
+native_id = "165.5438"
+slug = "utlaning-korta-lan-utlandet-omv"
+
+[[variable]]
+native_id = "165.5455"
+slug = "svenska-noterade-aktier-trans"
+
+[[variable]]
+native_id = "165.5457"
+slug = "aterkop-egna-aktier-trans"
+
+[[variable]]
+native_id = "165.5458"
+slug = "ovriga-svenska-aktier-trans"
+
+[[variable]]
+native_id = "165.5460"
+slug = "utlandska-noterade-aktier-trans"
+
+[[variable]]
+native_id = "165.5463"
+slug = "anvandarid"
+
+[[variable]]
+native_id = "165.21274"
+slug = "aktier-svenska-noterade-stallning"
+
+[[variable]]
+native_id = "165.21275"
+slug = "aktier-svenska-noterade-trans"
+
+[[variable]]
+native_id = "165.21276"
+slug = "aktier-svenska-noterade-omv"
+
+[[variable]]
+native_id = "165.21277"
+slug = "aktier-svenska-onoterade-stallning"
+
+[[variable]]
+native_id = "165.21278"
+slug = "aktier-svenska-onoterade-trans"
+
+[[variable]]
+native_id = "165.21279"
+slug = "aktier-svenska-onoterade-omv"
+
+[[variable]]
+native_id = "165.21281"
+slug = "aktier-svenska-onoterade-koncern-trans"
+
+[[variable]]
+native_id = "165.21286"
+slug = "aktier-utlandska-noterade-stallning"
+
+[[variable]]
+native_id = "165.21287"
+slug = "aktier-utlandska-noterade-trans"
+
+[[variable]]
+native_id = "165.21288"
+slug = "aktier-utlandska-noterade-omv"
+
+[[variable]]
+native_id = "165.21289"
+slug = "aktier-utlandska-onoterade-stallning"
+
+[[variable]]
+native_id = "165.21290"
+slug = "aktier-utlandska-onoterade-trans"
+
+[[variable]]
+native_id = "165.21291"
+slug = "aktier-utlandska-onoterade-omv"
+
+[[variable]]
+native_id = "165.24683"
+slug = "finansiella-derivat-icke-fin-stallning"
+
+[[variable]]
+native_id = "165.24684"
+slug = "finansiella-derivat-icke-fin-trans"
+
+[[variable]]
+native_id = "165.24688"
+slug = "dagslan-stallning"
+
+[[variable]]
+native_id = "165.24735"
+slug = "dagslan-trans"
+
+[[variable]]
+native_id = "165.24736"
+slug = "dagslan-omv"
+
+[[variable]]
+native_id = "165.24746"
+slug = "lan-stallning"
+
+[[variable]]
+native_id = "165.24747"
+slug = "lan-trans"
+
+[[variable]]
+native_id = "165.24748"
+slug = "lan-omv"
+
+[[variable]]
+native_id = "165.24749"
+slug = "lan-utlandet-omv"
+
+[[variable]]
+native_id = "165.24750"
+slug = "lan-utlandet-stallning"
+
+[[variable]]
+native_id = "165.24751"
+slug = "lan-utlandet-trans"
+
+[[variable]]
+native_id = "165.24752"
+slug = "ovriga-svenska-aktier-utlandet-trans"
+
+[[variable]]
+native_id = "165.24753"
+slug = "utlandska-aktier-och-andelar-stallning"
+
+[[variable]]
+native_id = "165.24754"
+slug = "utlandska-aktier-och-andelar-trans"
+
+[[variable]]
+native_id = "165.24755"
+slug = "utlandska-aktier-och-andelar-omv"
+
+[[variable]]
+native_id = "165.24813"
+slug = "utlandska-aktier-och-andelar-nyteckning"
+
+[[variable]]
+native_id = "165.24816"
+slug = "utlandska-aktier-och-andelar-inlosen"
+
+[[variable]]
+native_id = "165.24818"
+slug = "utlandska-aktier-aktieagartillskott"
+
+[[variable]]
+native_id = "165.24847"
+slug = "banktillgodohavande-stallning"
+
+[[variable]]
+native_id = "165.25429"
+slug = "ovriga-sv-aktier-utlandet-trans"
+
+[[variable]]
+native_id = "165.25434"
+slug = "dagslan-utlandet-omv"
+
+[[variable]]
+native_id = "165.25435"
+slug = "dagslan-utlandet-stallning"
+
+[[variable]]
+native_id = "165.25436"
+slug = "dagslan-utlandet-trans"
+
+[[variable]]
+native_id = "165.25437"
+slug = "dagslan-skuld-omv"
+
+[[variable]]
+native_id = "165.25438"
+slug = "dagslan-skuld-stallning"
+
+[[variable]]
+native_id = "165.25439"
+slug = "dagslan-skuld-trans"
+
+[[variable]]
+native_id = "165.25440"
+slug = "dagslan-skuld-utlandet-omv"
+
+[[variable]]
+native_id = "165.25441"
+slug = "dagslan-skuld-utlandet-stallning"
+
+[[variable]]
+native_id = "165.25442"
+slug = "dagslan-skuld-utlandet-trans"
+
+[[variable]]
+native_id = "165.25444"
+slug = "annan-upplaning-omv"
+
+[[variable]]
+native_id = "165.25445"
+slug = "annan-upplaning-stallning"
+
+[[variable]]
+native_id = "165.25446"
+slug = "annan-upplaning-trans"
+
+[[variable]]
+native_id = "165.25447"
+slug = "annan-upplaning-utlandet-omv"
+
+[[variable]]
+native_id = "165.25448"
+slug = "annan-upplaning-utlandet-stallning"
+
+[[variable]]
+native_id = "165.25449"
+slug = "annan-upplaning-utlandet-trans"
+
+[[variable]]
+native_id = "165.25450"
+slug = "finansiella-derivat-icke-fin-omv"
+
+[[variable]]
+native_id = "165.25451"
+slug = "banktillgodohavande-utlandet-omv"
+
+[[variable]]
+native_id = "165.25452"
+slug = "banktillgodohavande-utlandet-stallning"
+
+[[variable]]
+native_id = "165.25453"
+slug = "banktillgodohavande-utlandet-trans"
+
+[[variable]]
+native_id = "165.25496"
+slug = "svenska-noterade-aktier-aterkop-trans"
+
+[[variable]]
+native_id = "165.25497"
+slug = "ovriga-utlandska-aktier-trans"
+
+[[variable]]
+native_id = "165.28084"
+slug = "balansstatistik"
+
+# register 168 (fek)
+
+[[variable]]
+native_id = "165.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "165.412"
+slug = "postort"
+
+[[variable]]
+native_id = "165.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "165.537"
+slug = "postnr"
+
+[[variable]]
+native_id = "165.1804"
+slug = "telefonnummer-2"
+
+[[variable]]
+native_id = "165.1973"
+slug = "inkommen-datum"
+
+[[variable]]
+native_id = "165.2464"
+slug = "antal-svarande"
+
+[[variable]]
+native_id = "165.5293"
+slug = "rotationsgrupp"
+
+[[variable]]
+native_id = "165.5462"
+slug = "uppdateringsdatum"
+
+[[variable]]
+native_id = "165.14720"
+slug = "urvalskod"
+
+[[variable]]
+native_id = "165.28064"
+slug = "imputeringsstatus"
+
+# register 166

@@ -1,0 +1,93 @@
+[register]
+provider = "scb"
+slug = "befolkningsframskrivningar"
+native_id = "310"
+
+[[variant]]
+native_id = "310.881"
+slug = "framskrivning-befolkning"
+display_group = "Framskrivning av befolkningen"
+
+
+[[variant]]
+native_id = "310.887"
+slug = "framskrivning-fodda-fruktsamhet"
+display_group = "Framskrivning av antal födda och summerad fruktsamhet"
+
+
+[[variant]]
+native_id = "310.888"
+slug = "framskrivning-doda"
+display_group = "Framskrivning av antal döda och dödstal"
+
+
+[[variant]]
+native_id = "310.889"
+slug = "framskrivning-invandrare"
+display_group = "Framskrivning av antal invandrare/immigranter"
+
+
+[[variant]]
+native_id = "310.891"
+slug = "framskrivning-utvandrade"
+display_group = "antal utvandrade och utflyttartal"
+
+# Hälsoräkenskaper
+
+[[variable]]
+native_id = "310.44"
+slug = "kon"
+
+[[variable]]
+native_id = "310.73"
+slug = "ar"
+
+[[variable]]
+native_id = "310.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "310.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "310.292"
+slug = "antal-fodda"
+
+[[variable]]
+native_id = "310.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "310.392"
+slug = "antal-personer"
+
+[[variable]]
+native_id = "310.15161"
+slug = "alder-31-12-biologisk-mor"
+
+[[variable]]
+native_id = "310.24569"
+slug = "antal-utvandrare"
+
+[[variable]]
+native_id = "310.24570"
+slug = "antal-invandrare"
+
+[[variable]]
+native_id = "310.24571"
+slug = "antal-doda"
+
+[[variable]]
+native_id = "310.24574"
+slug = "aldersspecifikt-fruktsamhetstal"
+
+[[variable]]
+native_id = "310.24575"
+slug = "utflyttartal"
+
+[[variable]]
+native_id = "310.24576"
+slug = "dodstal"
+
+# register 311 (halsorakenskaper)

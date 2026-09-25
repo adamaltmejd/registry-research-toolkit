@@ -1,0 +1,80 @@
+[register]
+provider = "fk"
+slug = "tillfallig-foraldrapenning"
+native_id = "6486633934264544358"
+
+[[variant]]
+native_id = "6486633934264544358.8505472833822035600"
+slug = "fall-1"
+display_group = "Tillfällig föräldrapenning"
+panel_entity_key = "lopnr"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "6486633934264544358.5584742198526159311"
+slug = "delfall1-1-8"
+display_group = "Tillfällig föräldrapenning"
+panel_entity_key = ["lopnr", "lopnr-barn"]
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "6486633934264544358.8701685101033115090"
+slug = "fall-2"
+display_group = "Tillfällig föräldrapenning"
+panel_entity_key = "lopnr-barn"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "6486633934264544358.4620932338325394957"
+slug = "delfall2-1-8"
+display_group = "Tillfällig föräldrapenning"
+panel_entity_key = "lopnr-barn"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+# Sjuk- och aktivitetsersättning
+
+[[variable]]
+native_id = "6486633934264544358.LOPNR"
+slug = "lopnr"
+
+
+[[variable]]
+native_id = "6486633934264544358.LOPNR_BARN"
+slug = "lopnr-barn"
+
+
+[[variable]]
+native_id = "6486633934264544358.A10"
+slug = "adoption-10-dagar"
+
+[[variable]]
+native_id = "6486633934264544358.ASJ"
+slug = "allvarligt-sjukt-barn"
+
+[[variable]]
+native_id = "6486633934264544358.DAB"
+slug = "barn-avliden"
+
+[[variable]]
+native_id = "6486633934264544358.F10"
+slug = "fodsel-10-dagar"
+
+[[variable]]
+native_id = "6486633934264544358.KD"
+slug = "kontaktdagar"
+
+[[variable]]
+native_id = "6486633934264544358.OVS"
+slug = "ordinarie-vardares-sjukdom"
+
+[[variable]]
+native_id = "6486633934264544358.VAB"
+slug = "vard-av-barn"
+# register 7664376130118991107

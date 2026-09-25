@@ -1,0 +1,50 @@
+[register]
+provider = "fk"
+slug = "omvardnadsbidrag"
+native_id = "6302817431190760455"
+
+[[variant]]
+native_id = "6302817431190760455.4988674510339160094"
+slug = "mottagare"
+display_group = "Omvårdnadsbidrag"
+panel_entity_key = "lopnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "6302817431190760455.9055963153352559129"
+slug = "barn"
+display_group = "Omvårdnadsbidrag"
+panel_entity_key = ["lopnr", "lopnr-barn"]
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "6302817431190760455.5148735333309541992"
+slug = "beviljanden"
+display_group = "Omvårdnadsbidrag"
+panel_entity_key = ["lopnr", "lopnr-barn"]
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "6302817431190760455.5322547415543745301"
+slug = "avslag"
+display_group = "Omvårdnadsbidrag"
+panel_entity_key = ["lopnr", "lopnr-barn"]
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+# Läkarintygsregistret
+
+[[variable]]
+native_id = "6302817431190760455.Lopnr"
+slug = "lopnr"
+
+
+[[variable]]
+native_id = "6302817431190760455.Lopnr_barn"
+slug = "lopnr-barn"

@@ -6,3 +6,174 @@ native_id = "139"
 [[code_label_pair]]
 code = "scb/branslestatistik/land-for-import-export"
 label = "scb/branslestatistik/lnamn"
+
+[[variant]]
+native_id = "139.203"
+slug = "industrins-bransleforbrukning"
+display_group = "Industrins bränsleförbrukning och lager"
+panel_entity_key = "cfar-nummer-arbetsstalle"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# (keep) 'energi' is an umbrella for energiförbrukning + energianvändning + lager
+# (per display_group); broader than any single sub-topic, deliberate brevity.
+
+[[variant]]
+native_id = "139.204"
+slug = "varmeverkens-energi"
+display_group = "Värmeverkens energiförbrukning, energianvändning och lager"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Energistatistik för lokaler
+
+[[variable]]
+native_id = "139.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "139.16315"
+slug = "cfar-nummer-arbetsstalle"
+
+
+[[variable]]
+native_id = "139.2579"
+slug = "bransleslag-maxi"
+
+[[variable]]
+native_id = "139.2585"
+slug = "bransleslag-maxi-kvbr"
+
+[[variable]]
+native_id = "139.2586"
+slug = "bransleslag-mini-kvbr"
+
+[[variable]]
+native_id = "139.2601"
+slug = "bransleslag-koder"
+
+[[variable]]
+native_id = "139.2953"
+slug = "leveranser-hemmamarknad"
+
+[[variable]]
+native_id = "139.4992"
+slug = "kvantitet-vara"
+
+[[variable]]
+native_id = "139.19498"
+slug = "bransleforbrukning-elprod"
+
+[[variable]]
+native_id = "139.19517"
+slug = "ovriga-branslen-i-klartext"
+
+[[variable]]
+native_id = "139.37348"
+slug = "bransleslag-mini"
+
+[[variable]]
+native_id = "139.37419"
+slug = "ovriga-branslen"
+
+# register 141 (mabra)
+
+[[variable]]
+native_id = "139.145.idnr"
+slug = "idnr"
+
+[[variable]]
+native_id = "139.16721.lid"
+slug = "land-for-import-export"
+
+[[variable]]
+native_id = "139.2581.brslag"
+slug = "bransleslaget-i-klartext"
+
+[[variable]]
+native_id = "139.2581.text"
+slug = "bransleslaget-text"
+
+[[variable]]
+native_id = "139.83.bid"
+slug = "bransleslag"
+
+[[variable]]
+native_id = "139.83.brslag"
+slug = "bransleslag-namn"
+
+[[variable]]
+native_id = "139.83.text"
+slug = "bransleslag-text"
+
+# register 147 (godselmedelsanvandning)
+
+[[variable]]
+native_id = "139.16423"
+slug = "orgnr-foretaget"
+
+[[variable]]
+native_id = "139.145.scbid"
+slug = "identitet"
+
+[[variable]]
+native_id = "139.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "139.919"
+slug = "foretagsenhetens-status"
+
+[[variable]]
+native_id = "139.1721"
+slug = "bransleforbrukning"
+
+[[variable]]
+native_id = "139.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "139.2598"
+slug = "bransleslag-varmevarden"
+
+[[variable]]
+native_id = "139.2604"
+slug = "inkopt-kvantitet"
+
+[[variable]]
+native_id = "139.2936"
+slug = "ingaende-lager"
+
+[[variable]]
+native_id = "139.6404"
+slug = "arbstallnamn"
+
+[[variable]]
+native_id = "139.16416"
+slug = "bransleslaget-enhet"
+
+[[variable]]
+native_id = "139.16692"
+slug = "utgaende-lager"
+
+[[variable]]
+native_id = "139.19503"
+slug = "foretagsnamn-leverantorer-mottagare"
+
+[[variable]]
+native_id = "139.19523"
+slug = "elproduktion"
+
+[[variable]]
+native_id = "139.19538"
+slug = "upprakningsfaktor"
+
+# register 140
+
+[[variable]]
+native_id = "139.1641.ng2007"
+slug = "naringsgren-arbetsstalle"
+
+# register 140

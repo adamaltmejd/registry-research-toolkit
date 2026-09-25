@@ -1,0 +1,229 @@
+[register]
+provider = "scb"
+slug = "slr"
+native_id = "51"
+
+[[variant]]
+native_id = "51.170"
+slug = "_default"
+display_group = "Lönestrukturstatistik, regioner"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Lönestrukturstatistik, statlig sektor (SLS)
+
+[[variable]]
+native_id = "51.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "51.511"
+slug = "ssyk4-huvud"
+
+[[variable]]
+native_id = "51.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "51.2519"
+slug = "lopnummer-anstallningar"
+
+[[variable]]
+native_id = "51.2686"
+slug = "manadslon"
+
+[[variable]]
+native_id = "51.3105"
+slug = "fast-kontant-lon"
+
+[[variable]]
+native_id = "51.3112"
+slug = "sysselsattningsgrad-manadsavlonade"
+
+[[variable]]
+native_id = "51.3118"
+slug = "sjuklon-1"
+
+[[variable]]
+native_id = "51.3119"
+slug = "sjuklon-2"
+
+[[variable]]
+native_id = "51.3125"
+slug = "tjanstledighetskod-scb"
+
+[[variable]]
+native_id = "51.3131"
+slug = "loneform"
+
+[[variable]]
+native_id = "51.5715"
+slug = "manadslon-grundlon-rorliga"
+
+[[variable]]
+native_id = "51.5726"
+slug = "utbildningens-niva"
+
+[[variable]]
+native_id = "51.5728"
+slug = "tjanstledighetskod"
+
+[[variable]]
+native_id = "51.5784"
+slug = "anstallningsform-hel-del-ovrig"
+
+[[variable]]
+native_id = "51.5825"
+slug = "ersattning-vard-barn"
+
+[[variable]]
+native_id = "51.5829"
+slug = "lonekod"
+
+[[variable]]
+native_id = "51.6290"
+slug = "nuts"
+
+[[variable]]
+native_id = "51.6306"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "51.6416"
+slug = "utbildningsgrupp"
+
+[[variable]]
+native_id = "51.36036"
+slug = "sjuklon-forsta-period"
+
+[[variable]]
+native_id = "51.36037"
+slug = "sjuklon-andra-period"
+
+# register 52 (sls)
+
+[[variable]]
+native_id = "51.1846.tjlk"
+slug = "tjanstledighet"
+
+[[variable]]
+native_id = "51.1846.tjlscb"
+slug = "tjanstledighet-scb"
+
+[[variable]]
+native_id = "51.5717.anform"
+slug = "overenskommen-sysselsattningsgrad"
+
+[[variable]]
+native_id = "51.5717.osysly"
+slug = "sysselsattningsgrad-osysly"
+
+# register 55 (yrkesreg)
+
+[[variable]]
+native_id = "51.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "51.120"
+slug = "yrkesuppgift"
+
+[[variable]]
+native_id = "51.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "51.1537"
+slug = "ar-for-examensbevis"
+
+[[variable]]
+native_id = "51.1822"
+slug = "fasta-lonetillagg"
+
+[[variable]]
+native_id = "51.1825"
+slug = "grundlon"
+
+[[variable]]
+native_id = "51.1834"
+slug = "lonepopulation"
+
+[[variable]]
+native_id = "51.1837"
+slug = "naturaformaner"
+
+[[variable]]
+native_id = "51.1844"
+slug = "rorliga-lonetillagg"
+
+[[variable]]
+native_id = "51.1847"
+slug = "avtal"
+
+[[variable]]
+native_id = "51.2522"
+slug = "antal-arbetade-timmar-manadsavlonade"
+
+[[variable]]
+native_id = "51.2524"
+slug = "antal-arbetade-timmar-timavlonade"
+
+[[variable]]
+native_id = "51.3102"
+slug = "avtalsomrade"
+
+[[variable]]
+native_id = "51.3110"
+slug = "obekvamtidstillagg"
+
+[[variable]]
+native_id = "51.3113"
+slug = "tillagg-for-overtid"
+
+[[variable]]
+native_id = "51.3134"
+slug = "beredskapstillagg"
+
+[[variable]]
+native_id = "51.5032"
+slug = "jourtillagg"
+
+[[variable]]
+native_id = "51.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "51.5118"
+slug = "verksamhetsomrade"
+
+[[variable]]
+native_id = "51.5719"
+slug = "antal-overtidstimmar"
+
+[[variable]]
+native_id = "51.5735"
+slug = "avtalad-veckoarbetstid"
+
+[[variable]]
+native_id = "51.5768"
+slug = "manadsloneintervall"
+
+[[variable]]
+native_id = "51.5976"
+slug = "tjanstledighetsomfattning"
+
+[[variable]]
+native_id = "51.6091"
+slug = "formaner"
+
+[[variable]]
+native_id = "51.18234"
+slug = "yrkesuppgift-isco"
+
+[[variable]]
+native_id = "51.31094"
+slug = "antal-semesterdagar"
+
+# register 52

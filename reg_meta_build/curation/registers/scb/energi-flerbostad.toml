@@ -1,0 +1,141 @@
+[register]
+provider = "scb"
+slug = "energi-flerbostad"
+native_id = "75"
+
+[[variant]]
+native_id = "75.201"
+slug = "_default"
+display_group = "Energistatistik för flerbostadshus"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Bostadsbyggnads- och bygglovsstatistik (BYLBBS)
+
+[[variable]]
+native_id = "75.26"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "75.31"
+slug = "forsamling"
+
+[[variable]]
+native_id = "75.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "75.49"
+slug = "lan"
+
+[[variable]]
+native_id = "75.2330"
+slug = "vedanvandning"
+
+[[variable]]
+native_id = "75.4019"
+slug = "anvant-uppvarmningssatt"
+
+[[variable]]
+native_id = "75.4235"
+slug = "gasanvandning"
+
+[[variable]]
+native_id = "75.7748"
+slug = "total-elanvandning"
+
+[[variable]]
+native_id = "75.7865"
+slug = "franluftsvarmepump"
+
+[[variable]]
+native_id = "75.7868"
+slug = "utevarmepump"
+
+[[variable]]
+native_id = "75.7869"
+slug = "bergvarmepump"
+
+[[variable]]
+native_id = "75.7876"
+slug = "andel-lokal-garageyta"
+
+[[variable]]
+native_id = "75.7891"
+slug = "elvvarme-inkl-varmvatten"
+
+[[variable]]
+native_id = "75.7900"
+slug = "byggnadsar"
+
+[[variable]]
+native_id = "75.7905"
+slug = "fjarrvarme-anvandning"
+
+[[variable]]
+native_id = "75.7906"
+slug = "fjarrkyla-anvandning"
+
+[[variable]]
+native_id = "75.7950"
+slug = "eldningsolja-1"
+
+[[variable]]
+native_id = "75.7969"
+slug = "eldningsolja-2"
+
+[[variable]]
+native_id = "75.7998"
+slug = "varmvattenforbrukning"
+
+[[variable]]
+native_id = "75.8034"
+slug = "totalarea"
+
+[[variable]]
+native_id = "75.8051"
+slug = "uppvarmningssatt-taxenhet"
+
+# register 76 (bylbbs)
+
+[[variable]]
+native_id = "75.145"
+slug = "identitet"
+
+[[variable]]
+native_id = "75.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "75.3020"
+slug = "avregistreringskod-flerhus"
+
+[[variable]]
+native_id = "75.7860"
+slug = "taxeringsid"
+
+[[variable]]
+native_id = "75.8162"
+slug = "antal-svarande-enheter"
+
+[[variable]]
+native_id = "75.19579"
+slug = "varmeeffekt-luft-luftvarmepump"
+
+[[variable]]
+native_id = "75.19580"
+slug = "varmeeffekt-franluft-vattenvarmepump"
+
+[[variable]]
+native_id = "75.19581"
+slug = "varmeeffekt-berg-jord-sjovarmepump"
+
+# register 76
+
+[[variable]]
+native_id = "75.7838.gdakt"
+slug = "graddagar"
+
+# register 8

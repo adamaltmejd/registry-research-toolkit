@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "etableringsersattning"
+native_id = "5110940353417222695"
+
+[[variant]]
+native_id = "5110940353417222695.9051315687489963701"
+slug = "_default"
+display_group = "Etableringsersättning"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Etableringstillägg
+
+[[variable]]
+native_id = "5110940353417222695.personnummer"
+slug = "lopnr-personnr"

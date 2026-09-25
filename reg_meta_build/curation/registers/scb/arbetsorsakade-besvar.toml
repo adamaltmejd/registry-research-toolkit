@@ -1,0 +1,363 @@
+[register]
+provider = "scb"
+slug = "arbetsorsakade-besvar"
+native_id = "124"
+
+[[variant]]
+native_id = "124.145"
+slug = "arbetsorsakade-besvar"
+display_group = "Arbetsorsakade besvär 2001-2016"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "124.1418"
+slug = "arbetsorsakade-besvar-2018"
+display_group = "Arbetsorsakade besvär fr.om. 2018"
+
+# Situationen på arbetsmarknaden för personer med funktionsnedsättning
+
+[[variable]]
+native_id = "124.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "124.509"
+slug = "hussyk2"
+
+[[variable]]
+native_id = "124.511"
+slug = "ssyk4-huvud"
+
+[[variable]]
+native_id = "124.544"
+slug = "sektor-i-huvudsysslan"
+
+[[variable]]
+native_id = "124.3881"
+slug = "sei-i-huvudsysslan"
+
+[[variable]]
+native_id = "124.6439"
+slug = "hjalp-arbetssokande-ams"
+
+[[variable]]
+native_id = "124.6440"
+slug = "hjalp-alder-kon"
+
+[[variable]]
+native_id = "124.6442"
+slug = "hjalp-fodelseland"
+
+[[variable]]
+native_id = "124.6443"
+slug = "hjalp-region"
+
+[[variable]]
+native_id = "124.6444"
+slug = "hjalp-naringsgren-sysselsatta"
+
+[[variable]]
+native_id = "124.6499"
+slug = "nattarbete-huvudsysslan"
+
+[[variable]]
+native_id = "124.6508"
+slug = "antal-anstallda-arbetsplatsen"
+
+[[variable]]
+native_id = "124.6514"
+slug = "kvallsarbete-frekvens"
+
+[[variable]]
+native_id = "124.6522"
+slug = "nattarbete-frekvens"
+
+[[variable]]
+native_id = "124.6587"
+slug = "anstallningsar-huvudsysslan"
+
+[[variable]]
+native_id = "124.6588"
+slug = "hussyk1"
+
+[[variable]]
+native_id = "124.6590"
+slug = "hussyk3"
+
+[[variable]]
+native_id = "124.6771"
+slug = "overtid-med-ersattning"
+
+[[variable]]
+native_id = "124.6775"
+slug = "overtidstimmar-totalt-huvudsyssla"
+
+[[variable]]
+native_id = "124.6776"
+slug = "overtid-totalt"
+
+[[variable]]
+native_id = "124.6837"
+slug = "antal-personer-stratum-urval"
+
+[[variable]]
+native_id = "124.7074"
+slug = "kvallsarbete-harledd"
+
+[[variable]]
+native_id = "124.7102"
+slug = "lordagsarbete-i-huvudsysslan-harledd"
+
+[[variable]]
+native_id = "124.7103"
+slug = "nattarbete-harledd"
+
+[[variable]]
+native_id = "124.7105"
+slug = "sondagsarbete-i-huvudsysslan-harledd"
+
+[[variable]]
+native_id = "124.7179"
+slug = "arbete-enbart-vardagar"
+
+[[variable]]
+native_id = "124.7949"
+slug = "besvar-andra-forhallanden"
+
+[[variable]]
+native_id = "124.7954"
+slug = "besvar-andra-forhallanden-aret"
+
+[[variable]]
+native_id = "124.7958"
+slug = "besvar-minskat-andrade-uppg"
+
+[[variable]]
+native_id = "124.7963"
+slug = "besvar-i-buk-backen"
+
+[[variable]]
+native_id = "124.7965"
+slug = "forandrade-arbetsuppg"
+
+[[variable]]
+native_id = "124.7976"
+slug = "sjukskriven-tid-fore-rehab"
+
+[[variable]]
+native_id = "124.8013"
+slug = "rehabiliteringsutredning"
+
+[[variable]]
+native_id = "124.8022"
+slug = "sjukfranvaro-matveckan-besvar"
+
+[[variable]]
+native_id = "124.8024"
+slug = "anmalan-forsakringskassan"
+
+[[variable]]
+native_id = "124.15298"
+slug = "arbetskraftsstatus"
+
+[[variable]]
+native_id = "124.17410"
+slug = "anmalan-senaste-12-manader"
+
+[[variable]]
+native_id = "124.18002"
+slug = "arbete-enbart-dagtid"
+
+[[variable]]
+native_id = "124.18005"
+slug = "heltid-deltid-huvudsysslan"
+
+[[variable]]
+native_id = "124.18006"
+slug = "skiftarbete-anstallda-huvudsyssla"
+
+[[variable]]
+native_id = "124.18007"
+slug = "sni2007-1bokstav"
+
+[[variable]]
+native_id = "124.18008"
+slug = "sni2007-2siffror"
+
+[[variable]]
+native_id = "124.18009"
+slug = "sni2007-3siffror"
+
+[[variable]]
+native_id = "124.18010"
+slug = "sni2007-4siffror"
+
+[[variable]]
+native_id = "124.18011"
+slug = "sni2007-5siffror"
+
+[[variable]]
+native_id = "124.23406"
+slug = "antal-svarande-stratum-referensmanad"
+
+[[variable]]
+native_id = "124.24349"
+slug = "overtid-minst-5-timmar"
+
+[[variable]]
+native_id = "124.24350"
+slug = "overtid-minst-10-timmar"
+
+[[variable]]
+native_id = "124.24763"
+slug = "antal-svarande-personer"
+
+[[variable]]
+native_id = "124.24932"
+slug = "nattarbete-minst-halften"
+
+[[variable]]
+native_id = "124.25604"
+slug = "anstallningsar-arbetsplats"
+
+[[variable]]
+native_id = "124.31256"
+slug = "overtid-utan-ersattning-anstallda"
+
+[[variable]]
+native_id = "124.32464"
+slug = "ej-anmalt-avvaktar-besvar"
+
+[[variable]]
+native_id = "124.32582"
+slug = "besvar-buk-och-backen"
+
+[[variable]]
+native_id = "124.32598"
+slug = "besvar-gatt-ned-tid"
+
+[[variable]]
+native_id = "124.32600"
+slug = "besvar-blivit-omplacerad"
+
+[[variable]]
+native_id = "124.32603"
+slug = "antal-svarande-fas2"
+
+[[variable]]
+native_id = "124.32690"
+slug = "besvar-andra-forhallanden-fore-aret"
+
+[[variable]]
+native_id = "124.32698"
+slug = "hjalp-alder-arbetskraftsstatus"
+
+[[variable]]
+native_id = "124.32711"
+slug = "besvar-fardvag-olycka-fore-aret"
+
+[[variable]]
+native_id = "124.32728"
+slug = "antal-fas2"
+
+[[variable]]
+native_id = "124.32734"
+slug = "andel-urvalstillfalle-fas1"
+
+[[variable]]
+native_id = "124.32735"
+slug = "andel-urvalstillfalle-fas2"
+
+[[variable]]
+native_id = "124.35738"
+slug = "besvar-minskat-forandring"
+
+[[variable]]
+native_id = "124.35879"
+slug = "stratum-fas2"
+
+[[variable]]
+native_id = "124.35924"
+slug = "sjukskriven-matveckan-arbetsolycka"
+
+[[variable]]
+native_id = "124.35929"
+slug = "sjukskriven-matveckan-fardvag"
+
+[[variable]]
+native_id = "124.35931"
+slug = "arbetar-pa-helgen"
+
+[[variable]]
+native_id = "124.35932"
+slug = "sjukskriven-matveckan-andra-forhallanden"
+
+[[variable]]
+native_id = "124.40083"
+slug = "ej-anmalt-okand-skyldighet"
+
+[[variable]]
+native_id = "124.40084"
+slug = "ej-anmalt-avvaktar-utredning"
+
+[[variable]]
+native_id = "124.40085"
+slug = "ej-anmalt-inte-allvarliga"
+
+[[variable]]
+native_id = "124.40086"
+slug = "ej-anmalt-ingen-ersattning"
+
+[[variable]]
+native_id = "124.40087"
+slug = "ej-anmalt-radd-arbetsgivare"
+
+[[variable]]
+native_id = "124.40088"
+slug = "ej-anmalt-andra-skal"
+
+[[variable]]
+native_id = "124.41955"
+slug = "besvar-minskat-uppg-eller-tid"
+
+[[variable]]
+native_id = "124.41980"
+slug = "sjukskriven-matveckan-orsak"
+
+# register 127 (kv)
+
+[[variable]]
+native_id = "124.8044.tff"
+slug = "fardvagsolycka"
+
+# register 128 (lsum)
+
+[[variable]]
+native_id = "124.6498"
+slug = "kvallsarbete-i-huvudsysslan"
+
+[[variable]]
+native_id = "124.6586"
+slug = "anknytningsgrad"
+
+[[variable]]
+native_id = "124.7112"
+slug = "anstallningsar-harledd"
+
+[[variable]]
+native_id = "124.24928"
+slug = "kvallsarbete-minst-halvdag"
+
+[[variable]]
+native_id = "124.32699"
+slug = "overtid-enbart-med-ersattning"
+
+[[variable]]
+native_id = "124.36575"
+slug = "utbildningsniva-grupperad"
+
+# register 125

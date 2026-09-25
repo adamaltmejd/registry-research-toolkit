@@ -10,3 +10,70 @@ label = "scb/klr/landstingets-namn"
 [[code_label_pair]]
 code = "scb/klr/landstingskod"
 label = "scb/klr/landstingets-namn"
+
+[[variant]]
+native_id = "90.165"
+slug = "_default"
+display_group = "Konjunkturstatistik, löner för regioner"
+# Sub-annual aggregate panel (#730, follow-up to #577): one row per region per
+# year (ar) × month (manad). The subject is an aggregate geography, so
+# panel_entity_key = "region" (cf. register_variant."115.1227", which keys on the
+# aggregate geography "kommun"). The composite time key addresses one delivered
+# month, so grain = "row".
+panel_entity_key = "region"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+# Konjunkturstatistik, löner för privat sektor (KLP)
+
+[[variable]]
+native_id = "90.2907"
+slug = "region"
+
+[[variable]]
+native_id = "90.5056"
+slug = "landstingskod"
+
+[[variable]]
+native_id = "90.5061"
+slug = "antal-heltidsanstallda"
+
+[[variable]]
+native_id = "90.5071"
+slug = "antal-deltidsanstallda"
+
+[[variable]]
+native_id = "90.5074"
+slug = "antal-timanstallda"
+
+[[variable]]
+native_id = "90.5735"
+slug = "avtalad-veckoarbetstid"
+
+[[variable]]
+native_id = "90.37393"
+slug = "landsting"
+
+# register 91 (klp)
+
+[[variable]]
+native_id = "90.2522"
+slug = "antal-arbetade-timmar-manadsavlonade"
+
+[[variable]]
+native_id = "90.2524"
+slug = "antal-arbetade-timmar-timavlonade"
+
+[[variable]]
+native_id = "90.2525"
+slug = "anstallningsavtal"
+
+[[variable]]
+native_id = "90.3081"
+slug = "imputering"
+
+[[variable]]
+native_id = "90.5059"
+slug = "landstingets-namn"
+
+# register 91

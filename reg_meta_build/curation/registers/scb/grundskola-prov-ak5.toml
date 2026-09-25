@@ -6,3 +6,144 @@ native_id = "356"
 [[code_label_pair]]
 code = "scb/grundskola-prov-ak5/skolkod"
 label = "scb/grundskola-prov-ak5/skolans-namn"
+
+[[variant]]
+native_id = "356.1252"
+slug = "_default"
+display_group = "Grundskola: nationella prov åk 5"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Hushållens boendeutgifter (BUT)
+
+[[variable]]
+native_id = "356.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "356.73"
+slug = "ar"
+
+[[variable]]
+native_id = "356.304"
+slug = "fodelselandnamnfar"
+
+[[variable]]
+native_id = "356.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "356.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "356.3603"
+slug = "fodelselandnamn"
+
+[[variable]]
+native_id = "356.3635"
+slug = "skolans-namn"
+
+[[variable]]
+native_id = "356.7817"
+slug = "deltagit-sva"
+
+[[variable]]
+native_id = "356.8187"
+slug = "utlandsk-bakgrund"
+
+[[variable]]
+native_id = "356.14815"
+slug = "skolkommun"
+
+# register 357 (but)
+
+[[variable]]
+native_id = "356.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "356.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "356.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "356.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "356.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "356.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "356.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "356.23791"
+slug = "deltagit-engelska"
+
+[[variable]]
+native_id = "356.27376"
+slug = "svenska-delprov-a"
+
+[[variable]]
+native_id = "356.27377"
+slug = "sv-delprov-b"
+
+[[variable]]
+native_id = "356.27378"
+slug = "sv-delprov-c"
+
+[[variable]]
+native_id = "356.28165"
+slug = "engelska-delprov-a"
+
+[[variable]]
+native_id = "356.28167"
+slug = "en-delprov-b"
+
+[[variable]]
+native_id = "356.31989"
+slug = "lopnr-elev"
+
+[[variable]]
+native_id = "356.32454"
+slug = "sun2000niva-for"
+
+# register 357
+
+[[variable]]
+native_id = "356.8073.muniva"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "356.8073.sun2000niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "356.8073.sunniva-mor"
+slug = "sun-niva-mor-3"
+
+[[variable]]
+native_id = "356.8073.sunniva-mor-omkodad"
+slug = "sun-niva-mor-omkodad"
+
+[[variable]]
+native_id = "356.8073.sunniva-old-mor"
+slug = "sun-niva-old-mor"
+
+[[variable]]
+native_id = "356.8074.funiva"
+slug = "faderns-utbildningsniva"
+
+# register 358

@@ -1,0 +1,61 @@
+[register]
+provider = "scb"
+slug = "elavtal-byten"
+native_id = "272"
+
+[[variant]]
+native_id = "272.644"
+slug = "elavtal-omforhandling-byten"
+display_group = "Omförhandling  och byten av elavtal"
+
+# Registret för integrationsstudier (STATIV)
+
+[[variable]]
+native_id = "272.2768"
+slug = "bostadstyp"
+
+[[variable]]
+native_id = "272.16733"
+slug = "antal-vuxna-i-hushallet"
+
+[[variable]]
+native_id = "272.16740"
+slug = "antal-barn-i-hushallet"
+
+[[variable]]
+native_id = "272.16741"
+slug = "minst-tre-manader-pa-adress"
+
+[[variable]]
+native_id = "272.16742"
+slug = "eget-elavtal"
+
+[[variable]]
+native_id = "272.16770"
+slug = "typ-av-elavtal"
+
+[[variable]]
+native_id = "272.16772"
+slug = "byte-av-elleverantor"
+
+[[variable]]
+native_id = "272.16775"
+slug = "anledning-byte-elleverantor"
+
+[[variable]]
+native_id = "272.16777"
+slug = "elforbrukning"
+
+[[variable]]
+native_id = "272.16778"
+slug = "andring-av-elavtal"
+
+[[variable]]
+native_id = "272.25488"
+slug = "gemensam-faktura-elnattjanst"
+
+[[variable]]
+native_id = "272.25489"
+slug = "anledning-ej-byte-elleverantor"
+
+# register 273 (stativ)

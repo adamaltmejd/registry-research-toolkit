@@ -1,0 +1,285 @@
+[register]
+provider = "scb"
+slug = "hogutbildade-utrikes-fodda"
+native_id = "110"
+
+[[variant]]
+native_id = "110.122"
+slug = "_default"
+display_group = "Högutbildade utrikes födda"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Inträdet på arbetsmarknaden
+
+[[variable]]
+native_id = "110.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "110.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "110.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "110.5090"
+slug = "arbetsmarknadssektor"
+
+[[variable]]
+native_id = "110.5694"
+slug = "scb-stratum"
+
+[[variable]]
+native_id = "110.6172"
+slug = "lopnummer-for-individ"
+
+[[variable]]
+native_id = "110.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "110.8773"
+slug = "typ-av-anstallning"
+
+[[variable]]
+native_id = "110.20505"
+slug = "examen-universitet-hogskola"
+
+[[variable]]
+native_id = "110.24945"
+slug = "hogskoleutbildning-land"
+
+[[variable]]
+native_id = "110.24946"
+slug = "hogskoleutbildning-langd"
+
+[[variable]]
+native_id = "110.24948"
+slug = "hogskoleutbildning-inriktning"
+
+[[variable]]
+native_id = "110.24949"
+slug = "examensbevis-utbildningsbevis"
+
+[[variable]]
+native_id = "110.24950"
+slug = "examensar-avbrottsar"
+
+[[variable]]
+native_id = "110.24951"
+slug = "utbildningsland"
+
+[[variable]]
+native_id = "110.24952"
+slug = "utbildning-utvarderats-svenska"
+
+[[variable]]
+native_id = "110.24953"
+slug = "hur-utbildningen-varderas"
+
+[[variable]]
+native_id = "110.25037"
+slug = "arbete-utomlands-matchar-utb"
+
+[[variable]]
+native_id = "110.25038"
+slug = "arbete-utomlands-annan-utb"
+
+[[variable]]
+native_id = "110.25039"
+slug = "arbetslos-utomlands"
+
+[[variable]]
+native_id = "110.25040"
+slug = "arbete-i-sverige-matchar-utb"
+
+[[variable]]
+native_id = "110.25041"
+slug = "arbete-i-sverige-annan-utb"
+
+[[variable]]
+native_id = "110.25042"
+slug = "arbete-utomlands-ej-hogskola"
+
+[[variable]]
+native_id = "110.25043"
+slug = "studerat-hogskola-sverige"
+
+[[variable]]
+native_id = "110.25044"
+slug = "studerat-annan-utbildning-sv"
+
+[[variable]]
+native_id = "110.25045"
+slug = "varit-arbetslos-i-sverige"
+
+[[variable]]
+native_id = "110.25046"
+slug = "deltagit-program-af"
+
+[[variable]]
+native_id = "110.25050"
+slug = "arbetade-minst-en-timme"
+
+[[variable]]
+native_id = "110.25052"
+slug = "tillracklig-utbildningsniva-arbete"
+
+[[variable]]
+native_id = "110.25053"
+slug = "nojd-med-arbetet"
+
+[[variable]]
+native_id = "110.25055"
+slug = "arbetstimmar-per-vecka"
+
+[[variable]]
+native_id = "110.25056"
+slug = "hogskoleutbildning-overensstammelse"
+
+[[variable]]
+native_id = "110.25057"
+slug = "arbetat-i-hogskoleomradet"
+
+[[variable]]
+native_id = "110.25058"
+slug = "vill-arbeta-i-hogskoleomradet"
+
+[[variable]]
+native_id = "110.25059"
+slug = "svart-fa-matchande-arbete"
+
+[[variable]]
+native_id = "110.25063"
+slug = "svart-fa-arbete-pga-namn"
+
+[[variable]]
+native_id = "110.25065"
+slug = "svart-fa-arbete-pga-sprak"
+
+[[variable]]
+native_id = "110.25071"
+slug = "antal-sokta-arbeten-matchande"
+
+[[variable]]
+native_id = "110.25072"
+slug = "antal-sokta-arbeten-ej-hogskola"
+
+[[variable]]
+native_id = "110.25080"
+slug = "antal-sokta-arbeten-hogskola-ej-fatt"
+
+[[variable]]
+native_id = "110.25092"
+slug = "klarar-diskussion-svenska"
+
+[[variable]]
+native_id = "110.25093"
+slug = "klarar-argumentera-svenska"
+
+[[variable]]
+native_id = "110.25094"
+slug = "klarar-muntlig-presentation-svenska"
+
+[[variable]]
+native_id = "110.25095"
+slug = "klarar-skriftlig-rapport-svenska"
+
+[[variable]]
+native_id = "110.25096"
+slug = "klarar-diskussion-engelska"
+
+[[variable]]
+native_id = "110.25097"
+slug = "klarar-argumentera-engelska"
+
+[[variable]]
+native_id = "110.25099"
+slug = "klarar-muntlig-presentation-engelska"
+
+[[variable]]
+native_id = "110.25100"
+slug = "klarar-skriftlig-rapport-engelska"
+
+[[variable]]
+native_id = "110.39258"
+slug = "aldersindelning"
+
+[[variable]]
+native_id = "110.39260"
+slug = "stratum-huf"
+
+# register 111 (intradet-pa-arbetsmarknaden)
+
+[[variable]]
+native_id = "110.25064.f24f"
+slug = "svart-fa-arbete-pga-alder"
+
+[[variable]]
+native_id = "110.25070.f24f"
+slug = "svart-fa-arbete-utb-svar-bedoma"
+
+# register 111 (intradet-pa-arbetsmarknaden)
+
+[[variable]]
+native_id = "110.22021"
+slug = "personnr-2"
+
+[[variable]]
+native_id = "110.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "110.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "110.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "110.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "110.4655"
+slug = "avregkod"
+
+[[variable]]
+native_id = "110.4736"
+slug = "vikt"
+
+[[variable]]
+native_id = "110.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "110.5697"
+slug = "lilla-n-per-stratum"
+
+[[variable]]
+native_id = "110.6588"
+slug = "hussyk1"
+
+[[variable]]
+native_id = "110.13053"
+slug = "skal-att-flytta-till-sverige"
+
+[[variable]]
+native_id = "110.25054"
+slug = "arbete-under-matveckan"
+
+[[variable]]
+native_id = "110.25135"
+slug = "arbetes-overensstammelse"
+
+[[variable]]
+native_id = "110.30822"
+slug = "yrke-matveckan"
+
+# register 111

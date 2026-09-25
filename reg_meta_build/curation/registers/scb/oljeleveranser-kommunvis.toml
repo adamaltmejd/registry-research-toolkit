@@ -1,0 +1,71 @@
+[register]
+provider = "scb"
+slug = "oljeleveranser-kommunvis"
+native_id = "201"
+
+[[variant]]
+native_id = "201.303"
+slug = "_default"
+display_group = "Oljeleveranser, kommunvis redovisning"
+panel_entity_key = "orgnr-12"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Energianvändning inom byggsektorn
+
+[[variable]]
+native_id = "201.3578"
+slug = "orgnr-12"
+
+
+[[variable]]
+native_id = "201.73"
+slug = "ar"
+
+[[variable]]
+native_id = "201.83"
+slug = "bransleslag"
+
+[[variable]]
+native_id = "201.446"
+slug = "kommunnamn"
+
+[[variable]]
+native_id = "201.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "201.2581"
+slug = "bransleslaget-i-klartext"
+
+[[variable]]
+native_id = "201.19529"
+slug = "scbid"
+
+[[variable]]
+native_id = "201.20251"
+slug = "kontrollnr"
+
+[[variable]]
+native_id = "201.20256"
+slug = "bolag"
+
+[[variable]]
+native_id = "201.32957"
+slug = "kommunkod"
+
+[[variable]]
+native_id = "201.48558"
+slug = "namn-pa-foretaget"
+
+# register 209 (normskordar)
+
+[[variable]]
+native_id = "201.36.kommun"
+slug = "kommun"
+
+[[variable]]
+native_id = "201.36.lk"
+slug = "kommun-lk"
+
+# register 208 (skord-spannmal)

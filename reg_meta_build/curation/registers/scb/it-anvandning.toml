@@ -3663,3 +3663,3904 @@ columns_ref = "Y-211 2026-09-19: 258.48030 'Prenumererat på digitala tidningar,
 variable = "258.48031"
 columns = { D5d = "258.48031.betalat-dataspel-streaming", E5d = "258.48031.betalat-dataspel-streaming" }
 columns_ref = "Y-211 2026-09-19: 258.48031 'Betalt för dataspel som streamingtjänst' sequential rename {D5d 2024-2024, E5d 2025-2025} owned by betalat-dataspel-streaming (diagnostic v17 rename-worklist-258)"
+
+[[variant]]
+native_id = "258.556"
+slug = "it-anvandning-i-foretag"
+display_group = "IT-användning i företag"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "258.557"
+slug = "befolkningens-it-anvandning"
+display_group = "Befolkningens IT-användning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Företagens utgifter för IT
+
+[[variable]]
+native_id = "258.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "258.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "258.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "258.509"
+slug = "hussyk2"
+
+[[variable]]
+native_id = "258.785"
+slug = "utbildningsinriktning-1-position"
+
+[[variable]]
+native_id = "258.1974"
+slug = "internettillgang"
+
+[[variable]]
+native_id = "258.4614"
+slug = "urvalsstorlek-per-stratum"
+
+[[variable]]
+native_id = "258.6211"
+slug = "svarande-per-stratum"
+
+[[variable]]
+native_id = "258.6290"
+slug = "nuts2"
+
+[[variable]]
+native_id = "258.6815"
+slug = "antal-svarande-stratum-referensmanad"
+
+[[variable]]
+native_id = "258.6845"
+slug = "studier-hel-eller-deltid"
+
+[[variable]]
+native_id = "258.7367"
+slug = "civilstand-aku-aldre"
+
+[[variable]]
+native_id = "258.9288"
+slug = "antal-ar-gymnasium"
+
+[[variable]]
+native_id = "258.12944"
+slug = "sjukskriven"
+
+[[variable]]
+native_id = "258.15889"
+slug = "dator-hemma"
+
+[[variable]]
+native_id = "258.15892"
+slug = "tillgang-internet-hemma"
+
+[[variable]]
+native_id = "258.15893"
+slug = "internet-stationar-dator"
+
+[[variable]]
+native_id = "258.15894"
+slug = "internet-via-barbar-dator"
+
+[[variable]]
+native_id = "258.15895"
+slug = "internet-via-tv-mottagare"
+
+[[variable]]
+native_id = "258.15896"
+slug = "internet-via-spelkonsol"
+
+[[variable]]
+native_id = "258.15897"
+slug = "internet-pa-annat-satt"
+
+[[variable]]
+native_id = "258.15898"
+slug = "internet-via-mobiltelefon"
+
+[[variable]]
+native_id = "258.15899"
+slug = "internet-via-handdator"
+
+[[variable]]
+native_id = "258.15900"
+slug = "anslutning-modem-isdn"
+
+[[variable]]
+native_id = "258.15901"
+slug = "anslutning-dsl-fiber"
+
+[[variable]]
+native_id = "258.15902"
+slug = "anslutning-fast-bb-kabel"
+
+[[variable]]
+native_id = "258.15903"
+slug = "anslutning-gsm"
+
+[[variable]]
+native_id = "258.15904"
+slug = "anslutning-satellit-wifi"
+
+[[variable]]
+native_id = "258.15905"
+slug = "inget-behov-av-bredband"
+
+[[variable]]
+native_id = "258.15917"
+slug = "mobiltelefon"
+
+[[variable]]
+native_id = "258.15920"
+slug = "anvant-internet-hemma"
+
+[[variable]]
+native_id = "258.15921"
+slug = "anvant-internet-pa-arbetsplats"
+
+[[variable]]
+native_id = "258.15922"
+slug = "anvant-internet-pa-annan-plats"
+
+[[variable]]
+native_id = "258.15923"
+slug = "anvant-internet-pa-bibliotek"
+
+[[variable]]
+native_id = "258.15943"
+slug = "anvant-internet-i-skolan"
+
+[[variable]]
+native_id = "258.15944"
+slug = "anvant-internet-annans-hem"
+
+[[variable]]
+native_id = "258.15945"
+slug = "anvant-internet-hos-myndighet"
+
+[[variable]]
+native_id = "258.15946"
+slug = "anvant-internet-fritidscenter"
+
+[[variable]]
+native_id = "258.15947"
+slug = "anvant-internet-pa-internetcafe"
+
+[[variable]]
+native_id = "258.15948"
+slug = "anvant-internet-pa-hotspot"
+
+[[variable]]
+native_id = "258.15950"
+slug = "mobiluppkoppling-gprs"
+
+[[variable]]
+native_id = "258.15951"
+slug = "mobiluppkoppling-3g"
+
+[[variable]]
+native_id = "258.15952"
+slug = "anvander-internet-handdator"
+
+[[variable]]
+native_id = "258.15953"
+slug = "internet-barbar-tradlost"
+
+[[variable]]
+native_id = "258.15955"
+slug = "anvant-internet-for-e-post"
+
+[[variable]]
+native_id = "258.15958"
+slug = "anvant-internet-sokvaror"
+
+[[variable]]
+native_id = "258.15959"
+slug = "anvant-internet-resor"
+
+[[variable]]
+native_id = "258.15961"
+slug = "anvant-internet-musik-spel"
+
+[[variable]]
+native_id = "258.15962"
+slug = "anvant-nedladdning-programvara"
+
+[[variable]]
+native_id = "258.15963"
+slug = "anvant-internet-nyheter"
+
+[[variable]]
+native_id = "258.15964"
+slug = "prenumererat-nyheter-internet"
+
+[[variable]]
+native_id = "258.15965"
+slug = "anvant-internet-for-soka-jobb"
+
+[[variable]]
+native_id = "258.15966"
+slug = "anvant-internet-halsoinformation"
+
+[[variable]]
+native_id = "258.15967"
+slug = "anvant-internet-annan-info"
+
+[[variable]]
+native_id = "258.15968"
+slug = "utfort-bankarenden-pa-natet"
+
+[[variable]]
+native_id = "258.15969"
+slug = "anvant-internet-salja-varor"
+
+[[variable]]
+native_id = "258.15973"
+slug = "anvant-internet-utbildningsinfo"
+
+[[variable]]
+native_id = "258.15974"
+slug = "anvant-internet-kurser"
+
+[[variable]]
+native_id = "258.15975"
+slug = "anvant-internet-kunskap-utbildning"
+
+[[variable]]
+native_id = "258.15998"
+slug = "nar-handlade-du-senast-via-internet"
+
+[[variable]]
+native_id = "258.15999"
+slug = "kopt-lakemedel"
+
+[[variable]]
+native_id = "258.16000"
+slug = "kopt-mat-eller-specerivaror"
+
+[[variable]]
+native_id = "258.16001"
+slug = "kopt-bocker-tidningar-ink-e-bocker"
+
+[[variable]]
+native_id = "258.16002"
+slug = "kopt-klader-eller-sportartiklar"
+
+[[variable]]
+native_id = "258.16003"
+slug = "kopt-programvara-eller-dataspel"
+
+[[variable]]
+native_id = "258.16004"
+slug = "kopt-datorer-eller-datautrustning"
+
+[[variable]]
+native_id = "258.16005"
+slug = "kopt-hemelektronik-eller-kameror"
+
+[[variable]]
+native_id = "258.16006"
+slug = "kopt-aktier-eller-forsakringar"
+
+[[variable]]
+native_id = "258.16007"
+slug = "kopt-resor-eller-logi"
+
+[[variable]]
+native_id = "258.16008"
+slug = "kopt-biljetter-till-evenemang"
+
+[[variable]]
+native_id = "258.16009"
+slug = "tips-lotto-eller-vadslagning"
+
+[[variable]]
+native_id = "258.16010"
+slug = "kopt-andra-varor-eller-tjanster"
+
+[[variable]]
+native_id = "258.16011"
+slug = "kopt-nedladdad-film-musik"
+
+[[variable]]
+native_id = "258.16012"
+slug = "nedladdad-programvara-istallet-post"
+
+[[variable]]
+native_id = "258.16013"
+slug = "kopt-datorbaserade-laromedel"
+
+[[variable]]
+native_id = "258.16014"
+slug = "senast-datakurs"
+
+[[variable]]
+native_id = "258.16025"
+slug = "har-flyttat-eller-kopierat-filer"
+
+[[variable]]
+native_id = "258.16026"
+slug = "kopierat-klistrat-i-dokument"
+
+[[variable]]
+native_id = "258.16027"
+slug = "anvant-dator-berakningar"
+
+[[variable]]
+native_id = "258.16028"
+slug = "komprimerat-eller-zippat-filer"
+
+[[variable]]
+native_id = "258.16029"
+slug = "installerat-tillbehor"
+
+[[variable]]
+native_id = "258.16030"
+slug = "skrivit-datorprogram"
+
+[[variable]]
+native_id = "258.16044"
+slug = "anvant-internet-sokmotor"
+
+[[variable]]
+native_id = "258.16045"
+slug = "anvant-epost-bifogade-filer"
+
+[[variable]]
+native_id = "258.16049"
+slug = "anvant-internet-skapat-webbsida"
+
+[[variable]]
+native_id = "258.16077"
+slug = "datakunskaper-i-skolan"
+
+[[variable]]
+native_id = "258.16078"
+slug = "datakunskaper-vuxenutbildning"
+
+[[variable]]
+native_id = "258.16079"
+slug = "datakunskaper-arbetsrelaterat"
+
+[[variable]]
+native_id = "258.16080"
+slug = "datakunskaper-sjalvstudier"
+
+[[variable]]
+native_id = "258.16081"
+slug = "datakunskaper-prova-fram"
+
+[[variable]]
+native_id = "258.16082"
+slug = "datakunskaper-hjalp-andra"
+
+[[variable]]
+native_id = "258.16084"
+slug = "datakunskaper-bytajobb"
+
+[[variable]]
+native_id = "258.16086"
+slug = "antal-vuxna-hushall-16-74ar"
+
+[[variable]]
+native_id = "258.16088"
+slug = "antal-personer-under-16-ar-i-hushallet"
+
+[[variable]]
+native_id = "258.16089"
+slug = "hushallets-nettoinkomst"
+
+[[variable]]
+native_id = "258.16815"
+slug = "max-hastighet-internet"
+
+[[variable]]
+native_id = "258.16832"
+slug = "anvander-internet-internetbank"
+
+[[variable]]
+native_id = "258.16849"
+slug = "har-tillgang-till-internet"
+
+[[variable]]
+native_id = "258.16914"
+slug = "webbplats-produktkatalog"
+
+[[variable]]
+native_id = "258.16915"
+slug = "webbplats-kundanpassa-produkt"
+
+[[variable]]
+native_id = "258.16917"
+slug = "webbplats-bestalla-online"
+
+[[variable]]
+native_id = "258.16919"
+slug = "webbplats-anpassat-innehall"
+
+[[variable]]
+native_id = "258.16935"
+slug = "infoubyte-betalinstruktioner-bank"
+
+[[variable]]
+native_id = "258.16936"
+slug = "infoubyte-myndigheter"
+
+[[variable]]
+native_id = "258.16946"
+slug = "lagertillgang-infoutbyte"
+
+[[variable]]
+native_id = "258.17408"
+slug = "har-du-funktionshinder"
+
+[[variable]]
+native_id = "258.17510"
+slug = "kopt-hushallsvaror"
+
+[[variable]]
+native_id = "258.17514"
+slug = "bor-ensam-eller-med-andra"
+
+[[variable]]
+native_id = "258.17572"
+slug = "crm-marknadsforingsanalys"
+
+[[variable]]
+native_id = "258.17579"
+slug = "it-sakerhet-styrandedokument"
+
+[[variable]]
+native_id = "258.17583"
+slug = "urvalsstorlek-nsamp"
+
+[[variable]]
+native_id = "258.17584"
+slug = "antal-svarsobjekt-nresp"
+
+[[variable]]
+native_id = "258.17588"
+slug = "sysselsattningstyp-skapad"
+
+[[variable]]
+native_id = "258.17590"
+slug = "antal-vuxna-16-85-ar"
+
+[[variable]]
+native_id = "258.17593"
+slug = "gruppering-av-alder-och-kon"
+
+[[variable]]
+native_id = "258.17641"
+slug = "andel-arsverken-programvaruutv-extern"
+
+[[variable]]
+native_id = "258.17642"
+slug = "arsverken-programvaruutv-ovriga"
+
+[[variable]]
+native_id = "258.17651"
+slug = "internetansl-modem-isdn"
+
+[[variable]]
+native_id = "258.17652"
+slug = "internetansl-gsm"
+
+[[variable]]
+native_id = "258.17653"
+slug = "bredbandsansl-annan-fast"
+
+[[variable]]
+native_id = "258.17675"
+slug = "andel-sysselsatta-internetdator"
+
+[[variable]]
+native_id = "258.18023"
+slug = "ej-internet-hemma-annanstans"
+
+[[variable]]
+native_id = "258.18024"
+slug = "ej-internet-hemma-vill-inte-ha"
+
+[[variable]]
+native_id = "258.18025"
+slug = "ej-internet-hemma-dyr-utrustning"
+
+[[variable]]
+native_id = "258.18026"
+slug = "ej-internet-hemma-dyr-uppkoppling"
+
+[[variable]]
+native_id = "258.18027"
+slug = "ej-internet-hemma-saknar-kunskaper"
+
+[[variable]]
+native_id = "258.18028"
+slug = "ej-internet-hemma-sakerhetsskal"
+
+[[variable]]
+native_id = "258.18030"
+slug = "ej-internet-hemma-andra-skal"
+
+[[variable]]
+native_id = "258.18031"
+slug = "myndighetskontakt-hamtat-info"
+
+[[variable]]
+native_id = "258.18032"
+slug = "myndighetskontakt-laddat-blanketter"
+
+[[variable]]
+native_id = "258.18033"
+slug = "ej-internet-hemma-behover-ej"
+
+[[variable]]
+native_id = "258.18036"
+slug = "myndighetskontakt-lamnat-uppgifter"
+
+[[variable]]
+native_id = "258.18037"
+slug = "eget-domannamn"
+
+[[variable]]
+native_id = "258.18051"
+slug = "fritid-internet-ladda-musik"
+
+[[variable]]
+native_id = "258.18054"
+slug = "fritid-internet-podradio"
+
+[[variable]]
+native_id = "258.18055"
+slug = "fritid-internet-ladda-dataspel"
+
+[[variable]]
+native_id = "258.18071"
+slug = "internet-istallet-webbradio"
+
+[[variable]]
+native_id = "258.18073"
+slug = "mobil-skicka-foton-videoklipp"
+
+[[variable]]
+native_id = "258.18075"
+slug = "mobil-prenumerera-informationstjanst"
+
+[[variable]]
+native_id = "258.18076"
+slug = "mobil-surfa-internet"
+
+[[variable]]
+native_id = "258.18077"
+slug = "mobil-lasa-epost"
+
+[[variable]]
+native_id = "258.18078"
+slug = "mobil-tv-video"
+
+[[variable]]
+native_id = "258.18079"
+slug = "mobil-betala-varor-tjanster"
+
+[[variable]]
+native_id = "258.18082"
+slug = "fast-pris-internet-mobil"
+
+[[variable]]
+native_id = "258.18087"
+slug = "kopt-varor-tjanster-fran-sverige"
+
+[[variable]]
+native_id = "258.18088"
+slug = "kopt-varor-tjanster-fran-eu"
+
+[[variable]]
+native_id = "258.18089"
+slug = "kopt-varor-tjanster-utanfor-eu"
+
+[[variable]]
+native_id = "258.18090"
+slug = "kopt-varor-tjanster-okant-land"
+
+[[variable]]
+native_id = "258.19120"
+slug = "ehandel-bestallningar-webb-varlden"
+
+[[variable]]
+native_id = "258.19132"
+slug = "sysselsatta-utanfor-foretaget"
+
+[[variable]]
+native_id = "258.19139"
+slug = "miljopolicy-it-energianvandning"
+
+[[variable]]
+native_id = "258.21091"
+slug = "ej-internet-tillgang-annanstans"
+
+[[variable]]
+native_id = "258.21093"
+slug = "ej-internet-andra-skal"
+
+[[variable]]
+native_id = "258.21094"
+slug = "ej-internet-funktionshinder"
+
+[[variable]]
+native_id = "258.21095"
+slug = "ej-internet-dyr-utrustning"
+
+[[variable]]
+native_id = "258.21096"
+slug = "ej-internet-dyr-uppkoppling"
+
+[[variable]]
+native_id = "258.21103"
+slug = "internetansl-mobiltelefon"
+
+[[variable]]
+native_id = "258.21104"
+slug = "anvant-webbradio-webbtv"
+
+[[variable]]
+native_id = "258.21105"
+slug = "ladda-upp-eget-material-internet"
+
+[[variable]]
+native_id = "258.21111"
+slug = "internet-telefon-videosamtal"
+
+[[variable]]
+native_id = "258.21112"
+slug = "internet-snabbmeddelanden"
+
+[[variable]]
+native_id = "258.21113"
+slug = "sokt-varuinfo-anvand-vid-kop"
+
+[[variable]]
+native_id = "258.21114"
+slug = "sokt-varuinfo-handlat-internet"
+
+[[variable]]
+native_id = "258.21118"
+slug = "kopt-tjanster-tv-bredband-telefoni"
+
+[[variable]]
+native_id = "258.21119"
+slug = "kopt-bestallt-semesterinkvartering"
+
+[[variable]]
+native_id = "258.21120"
+slug = "kopt-researrangemang-fardbiljetter"
+
+[[variable]]
+native_id = "258.21121"
+slug = "nedladdad-film-musik-istallet-post"
+
+[[variable]]
+native_id = "258.21125"
+slug = "antal-internetkop-senaste-3-man"
+
+[[variable]]
+native_id = "258.21127"
+slug = "betalning-kreditkort-internet"
+
+[[variable]]
+native_id = "258.21129"
+slug = "betalning-betaltjanst-internet"
+
+[[variable]]
+native_id = "258.21130"
+slug = "betalning-internetbank"
+
+[[variable]]
+native_id = "258.21131"
+slug = "betalning-annat-satt"
+
+[[variable]]
+native_id = "258.21133"
+slug = "problem-info-garantier-kop"
+
+[[variable]]
+native_id = "258.21139"
+slug = "problem-annat-vid-internetkop"
+
+[[variable]]
+native_id = "258.21141"
+slug = "betydelse-lagre-priser-internetkop"
+
+[[variable]]
+native_id = "258.21155"
+slug = "ej-kopt-internet-sakerhetsskal"
+
+[[variable]]
+native_id = "258.21156"
+slug = "ej-kopt-internet-ej-kunna-returnera"
+
+[[variable]]
+native_id = "258.21167"
+slug = "eget-domannamn-annan"
+
+[[variable]]
+native_id = "258.21168"
+slug = "planerar-registrera-domannamn"
+
+[[variable]]
+native_id = "258.21169"
+slug = "datoranv-kopiera-flytta-fil"
+
+[[variable]]
+native_id = "258.21170"
+slug = "datoranv-kopiera-klistra-dokument"
+
+[[variable]]
+native_id = "258.21171"
+slug = "anvant-formler-i-ett-kalkylark"
+
+[[variable]]
+native_id = "258.21172"
+slug = "datoranv-komprimera-filer"
+
+[[variable]]
+native_id = "258.21173"
+slug = "installerat-en-ny-utrustning"
+
+[[variable]]
+native_id = "258.21174"
+slug = "programmerat"
+
+[[variable]]
+native_id = "258.21175"
+slug = "kopt-filmer-musik-internet"
+
+[[variable]]
+native_id = "258.21176"
+slug = "kopt-video-dataspel-internet"
+
+[[variable]]
+native_id = "258.21177"
+slug = "kopt-andra-programvaror-internet"
+
+[[variable]]
+native_id = "258.21195"
+slug = "antal-ar-grundutbildning"
+
+[[variable]]
+native_id = "258.23254"
+slug = "drabbats-virus-datorinfektion"
+
+[[variable]]
+native_id = "258.23256"
+slug = "drabbats-missbruk-personlig-info"
+
+[[variable]]
+native_id = "258.23258"
+slug = "drabbats-forlora-pengar-kortbedragerier"
+
+[[variable]]
+native_id = "258.23259"
+slug = "drabbats-barn-olampliga-sidor"
+
+[[variable]]
+native_id = "258.23260"
+slug = "ej-kopt-varor-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23261"
+slug = "ej-bankarenden-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23262"
+slug = "ej-personlig-info-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23263"
+slug = "ej-myndigheter-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23264"
+slug = "ej-laddat-mjukvara-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23265"
+slug = "ej-mobil-internet-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23267"
+slug = "anvander-viruskontroll-antispyware"
+
+[[variable]]
+native_id = "258.23268"
+slug = "anvander-brandvagg"
+
+[[variable]]
+native_id = "258.23269"
+slug = "anvander-spamfilter"
+
+[[variable]]
+native_id = "258.23270"
+slug = "foraldrakontroll-webbfiltrering"
+
+[[variable]]
+native_id = "258.23271"
+slug = "skyddar-dator-annan-metod"
+
+[[variable]]
+native_id = "258.23272"
+slug = "anvander-sakerhetsprogram-vet-ej"
+
+[[variable]]
+native_id = "258.23280"
+slug = "har-redan-anvant-sokmotor"
+
+[[variable]]
+native_id = "258.23281"
+slug = "skickat-epost-bifogade-filer"
+
+[[variable]]
+native_id = "258.23282"
+slug = "skickat-meddelanden-chattrum"
+
+[[variable]]
+native_id = "258.23283"
+slug = "har-anvant-internet-for-att-ringa"
+
+[[variable]]
+native_id = "258.23284"
+slug = "anvant-fildelning-filmer-musik"
+
+[[variable]]
+native_id = "258.23285"
+slug = "har-skapat-en-hemsida"
+
+[[variable]]
+native_id = "258.23287"
+slug = "utbildningsniva-grov"
+
+[[variable]]
+native_id = "258.23388"
+slug = "inte-internet-pga-vill-inte-ha"
+
+[[variable]]
+native_id = "258.23389"
+slug = "inte-internet-pga-behover-inte-internet"
+
+[[variable]]
+native_id = "258.23391"
+slug = "inte-internet-saknar-kunskaper"
+
+[[variable]]
+native_id = "258.23392"
+slug = "inte-internet-pga-sakerhetsskal"
+
+[[variable]]
+native_id = "258.23393"
+slug = "mobiluppkoppling-3g-4g"
+
+[[variable]]
+native_id = "258.23395"
+slug = "anvant-annan-mobil-uppkoppling"
+
+[[variable]]
+native_id = "258.23396"
+slug = "anvant-internet-sokvaror-tjanster"
+
+[[variable]]
+native_id = "258.23397"
+slug = "kopt-el-bestallt-datorbaserade-laromedel"
+
+[[variable]]
+native_id = "258.23398"
+slug = "laddat-ned-ebocker-istallet-post"
+
+[[variable]]
+native_id = "258.23399"
+slug = "antal-16-ar-eller-mer-hushallet"
+
+[[variable]]
+native_id = "258.23403"
+slug = "internetanslutning-mobilt-bredband"
+
+[[variable]]
+native_id = "258.23404"
+slug = "internetanslutning-via-mobiltelefon"
+
+[[variable]]
+native_id = "258.23406"
+slug = "antal-svarande-stratum-referensmanad-2"
+
+[[variable]]
+native_id = "258.23477"
+slug = "yrke"
+
+[[variable]]
+native_id = "258.25333"
+slug = "anvander-mobilt-bredband-3g-4g"
+
+[[variable]]
+native_id = "258.26864"
+slug = "webbplats-bestallning-bokning"
+
+[[variable]]
+native_id = "258.26879"
+slug = "anbud-elektronisk-upphandling-eu"
+
+[[variable]]
+native_id = "258.26891"
+slug = "andel-omsattning-fran-edi"
+
+[[variable]]
+native_id = "258.26892"
+slug = "edi-bestallningar-fran-sverige"
+
+[[variable]]
+native_id = "258.26893"
+slug = "edi-bestallningar-fran-ovriga-eu"
+
+[[variable]]
+native_id = "258.26894"
+slug = "edi-bestallningar-fran-resten-varlden"
+
+[[variable]]
+native_id = "258.26899"
+slug = "anvander-rfid-produktions-servicekedjan"
+
+[[variable]]
+native_id = "258.26900"
+slug = "anvander-rfid-for-produktidentifiering"
+
+[[variable]]
+native_id = "258.26901"
+slug = "skickar-e-fakturor-processas-auto"
+
+[[variable]]
+native_id = "258.26902"
+slug = "skickar-e-fakturor-ej-processas-auto"
+
+[[variable]]
+native_id = "258.26903"
+slug = "tar-emot-e-fakturor-processas-auto"
+
+[[variable]]
+native_id = "258.27281"
+slug = "ej-internet-bredband-saknas-omradet"
+
+[[variable]]
+native_id = "258.27978"
+slug = "delta-pa-sociala-natverkssajter"
+
+[[variable]]
+native_id = "258.27979"
+slug = "anvant-internet-medborgerliga-asikter"
+
+[[variable]]
+native_id = "258.27984"
+slug = "rostat-webbenkater-politiska-fragor"
+
+[[variable]]
+native_id = "258.27985"
+slug = "sokt-wikipedia-wiki-webbplatser"
+
+[[variable]]
+native_id = "258.27986"
+slug = "deltagit-professionella-natverk"
+
+[[variable]]
+native_id = "258.27994"
+slug = "flyttat-filer-dator-annan-enhet"
+
+[[variable]]
+native_id = "258.27995"
+slug = "skapat-elektroniska-presentationer"
+
+[[variable]]
+native_id = "258.27996"
+slug = "installerat-uppgraderat-operativsystem"
+
+[[variable]]
+native_id = "258.27997"
+slug = "laddat-upp-media-pa-webbsidor"
+
+[[variable]]
+native_id = "258.27998"
+slug = "andrat-sakerhetsinstallningar-internet"
+
+[[variable]]
+native_id = "258.28013"
+slug = "datd2a-2"
+
+[[variable]]
+native_id = "258.28014"
+slug = "datd2b-2"
+
+[[variable]]
+native_id = "258.28015"
+slug = "myndighet-tekniskt-fel-blankett"
+
+[[variable]]
+native_id = "258.28804"
+slug = "delar-lagertillgang-elektroniskt"
+
+[[variable]]
+native_id = "258.28811"
+slug = "anvander-erp-affarssystem"
+
+[[variable]]
+native_id = "258.28822"
+slug = "andel-anstallda-barbara-enheter-mobil"
+
+[[variable]]
+native_id = "258.28860"
+slug = "fast-bredband-vet-ej-typ"
+
+[[variable]]
+native_id = "258.28861"
+slug = "anvant-internet-skicka-ta-emot-epost"
+
+[[variable]]
+native_id = "258.28866"
+slug = "anvant-internet-boka-tid-lakare"
+
+[[variable]]
+native_id = "258.28867"
+slug = "mobil-internet-barbar-dator-surfplatta"
+
+[[variable]]
+native_id = "258.28868"
+slug = "mobil-internet-mobiltelefonnatet-barbar"
+
+[[variable]]
+native_id = "258.28890"
+slug = "mobil-internet-andra-problem"
+
+[[variable]]
+native_id = "258.28897"
+slug = "mobil-internet-via-mobiltelefon"
+
+[[variable]]
+native_id = "258.28898"
+slug = "mobil-internet-annan-enhet"
+
+[[variable]]
+native_id = "258.28900"
+slug = "mobil-internet-mobiltelefon-tradlost"
+
+[[variable]]
+native_id = "258.28901"
+slug = "mobiltelefon-tradlost-natverk-val"
+
+[[variable]]
+native_id = "258.28922"
+slug = "internetanslutning-ej-mobilt-bredband"
+
+[[variable]]
+native_id = "258.29967"
+slug = "andel-webb-forsaljning-konsumenter"
+
+[[variable]]
+native_id = "258.29976"
+slug = "anvander-sociala-natverk"
+
+[[variable]]
+native_id = "258.29977"
+slug = "anvander-bloggar-microbloggar"
+
+[[variable]]
+native_id = "258.29978"
+slug = "anvander-webbplatser-dela-multimedia"
+
+[[variable]]
+native_id = "258.29979"
+slug = "anvander-wiki-verktyg-kunskapsutbyte"
+
+[[variable]]
+native_id = "258.29988"
+slug = "andel-webb-forsaljning-foretag-offentlig"
+
+[[variable]]
+native_id = "258.30000"
+slug = "bestallde-varor-tjanster-webb-app"
+
+[[variable]]
+native_id = "258.30091"
+slug = "myndighetskontakter-tekniska-problem"
+
+[[variable]]
+native_id = "258.30094"
+slug = "myndighetskontakter-andra-problem"
+
+[[variable]]
+native_id = "258.30113"
+slug = "myndighet-nagon-annan-skickade-blankett"
+
+[[variable]]
+native_id = "258.30121"
+slug = "svarigheter-dator-internet-funktionsned"
+
+[[variable]]
+native_id = "258.30695"
+slug = "internet-via-mobiltelefon-smartphone"
+
+[[variable]]
+native_id = "258.30696"
+slug = "internet-via-smartphone-mobil-enhet"
+
+[[variable]]
+native_id = "258.30698"
+slug = "internetsakerhet-lamnat-betalningsuppg"
+
+[[variable]]
+native_id = "258.30699"
+slug = "internetsakerhet-lamnat-personlig-info"
+
+[[variable]]
+native_id = "258.30724"
+slug = "andel-skickade-e-fakturor-processas-auto"
+
+[[variable]]
+native_id = "258.30725"
+slug = "skickade-fakturor-foretag-offentlig"
+
+[[variable]]
+native_id = "258.30733"
+slug = "internetsakerhet-cookies"
+
+[[variable]]
+native_id = "258.30734"
+slug = "internetsakerhet-skraddarsydd-reklam"
+
+[[variable]]
+native_id = "258.30735"
+slug = "internetsakerhet-forhindrat-cookies"
+
+[[variable]]
+native_id = "258.30747"
+slug = "molntjanster-delar-inte-filer"
+
+[[variable]]
+native_id = "258.30776"
+slug = "koper-fillagring-som-molntjanst"
+
+[[variable]]
+native_id = "258.30782"
+slug = "webbplats-mojlighet-lamna-klagomal"
+
+[[variable]]
+native_id = "258.31024"
+slug = "urvalsvikt-individ"
+
+[[variable]]
+native_id = "258.31026"
+slug = "urvalsvikt-for-bostadshushall"
+
+[[variable]]
+native_id = "258.34082"
+slug = "tidpunkt-it-sakerhetspolicy-uppdaterad"
+
+[[variable]]
+native_id = "258.34106"
+slug = "webb-bestallningar-fran-sverige"
+
+[[variable]]
+native_id = "258.34107"
+slug = "tog-emot-edi-bestallningar-varlden"
+
+[[variable]]
+native_id = "258.34108"
+slug = "tog-emot-edi-bestallningar-eu"
+
+[[variable]]
+native_id = "258.34109"
+slug = "tog-emot-edi-bestallningar-sverige"
+
+[[variable]]
+native_id = "258.34110"
+slug = "webb-bestallningar-fran-varlden"
+
+[[variable]]
+native_id = "258.35480"
+slug = "big-data-platsdata-barbara-enheter"
+
+[[variable]]
+native_id = "258.35485"
+slug = "big-data-andra-kallor"
+
+[[variable]]
+native_id = "258.35487"
+slug = "big-data-sociala-medier"
+
+[[variable]]
+native_id = "258.35490"
+slug = "andel-mottagna-fakturor-ej-processas"
+
+[[variable]]
+native_id = "258.35491"
+slug = "andel-mottagna-e-fakturor-processas"
+
+[[variable]]
+native_id = "258.35509"
+slug = "mobilt-bredband-3g-4g"
+
+[[variable]]
+native_id = "258.35514"
+slug = "ansl-surfplatta"
+
+[[variable]]
+native_id = "258.35516"
+slug = "annan-mobil-enhet"
+
+[[variable]]
+native_id = "258.35519"
+slug = "kop-av-varor-over-internet"
+
+[[variable]]
+native_id = "258.35520"
+slug = "kop-belopp-internet"
+
+[[variable]]
+native_id = "258.35525"
+slug = "spelat-eller-laddat-ner-spel"
+
+[[variable]]
+native_id = "258.35526"
+slug = "lyssnat-pa-musik"
+
+[[variable]]
+native_id = "258.35530"
+slug = "anvant-ordbehandling"
+
+[[variable]]
+native_id = "258.35534"
+slug = "anvant-redigera-media"
+
+[[variable]]
+native_id = "258.35540"
+slug = "problem-utland-aterfors"
+
+[[variable]]
+native_id = "258.35541"
+slug = "problem-ovriga-vid-internetkop"
+
+[[variable]]
+native_id = "258.35548"
+slug = "deltagit-i-kurs-pa-natet"
+
+[[variable]]
+native_id = "258.35549"
+slug = "sokt-halsoinformation"
+
+[[variable]]
+native_id = "258.35551"
+slug = "studiematerial-natet"
+
+[[variable]]
+native_id = "258.35552"
+slug = "bokat-tid-lakare"
+
+[[variable]]
+native_id = "258.35554"
+slug = "kommunicerat-larare"
+
+[[variable]]
+native_id = "258.35557"
+slug = "andra-utbildn-internet"
+
+[[variable]]
+native_id = "258.35559"
+slug = "utbildn-annan-vilken"
+
+[[variable]]
+native_id = "258.35562"
+slug = "lagringsutrymme-internet"
+
+[[variable]]
+native_id = "258.35567"
+slug = "internet-mobilt-bredband"
+
+[[variable]]
+native_id = "258.35574"
+slug = "internet-via-smart-tv"
+
+[[variable]]
+native_id = "258.36886"
+slug = "regionindelning-nuts2"
+
+[[variable]]
+native_id = "258.36906"
+slug = "reserelaterade-tjanster"
+
+[[variable]]
+native_id = "258.36916"
+slug = "biltransport-privat-webb"
+
+[[variable]]
+native_id = "258.36918"
+slug = "biltransport-annan-app"
+
+[[variable]]
+native_id = "258.36992"
+slug = "ej-internet-hemma-dyrt"
+
+[[variable]]
+native_id = "258.36993"
+slug = "ej-internet-annan-text"
+
+[[variable]]
+native_id = "258.36994"
+slug = "anvant-dator"
+
+[[variable]]
+native_id = "258.36995"
+slug = "anvant-dator-3-man"
+
+[[variable]]
+native_id = "258.36996"
+slug = "barbar-dator-utanfor"
+
+[[variable]]
+native_id = "258.36998"
+slug = "ansl-annan-enhet"
+
+[[variable]]
+native_id = "258.36999"
+slug = "ansl-ej-via-mobil"
+
+[[variable]]
+native_id = "258.37000"
+slug = "telefon-videosamtal"
+
+[[variable]]
+native_id = "258.37001"
+slug = "laddat-upp-eget-material"
+
+[[variable]]
+native_id = "258.37002"
+slug = "postat-asikter-politik"
+
+[[variable]]
+native_id = "258.37006"
+slug = "professionella-natverk"
+
+[[variable]]
+native_id = "258.37007"
+slug = "myndigh-blankett-ej-text"
+
+[[variable]]
+native_id = "258.37011"
+slug = "kopt-film-musik-direkt"
+
+[[variable]]
+native_id = "258.37012"
+slug = "kopt-e-bocker-direkt"
+
+[[variable]]
+native_id = "258.37013"
+slug = "kopt-magasin-direkt"
+
+[[variable]]
+native_id = "258.37014"
+slug = "kopt-programvara-direkt"
+
+[[variable]]
+native_id = "258.37015"
+slug = "kopt-fysiskt-utland"
+
+[[variable]]
+native_id = "258.37016"
+slug = "kopt-nedladdat-utland"
+
+[[variable]]
+native_id = "258.37017"
+slug = "kopt-resor-utland"
+
+[[variable]]
+native_id = "258.37018"
+slug = "kopt-tjanster-utland"
+
+[[variable]]
+native_id = "258.37019"
+slug = "problem-info-garantier"
+
+[[variable]]
+native_id = "258.37020"
+slug = "kopt-salt-aktier"
+
+[[variable]]
+native_id = "258.37021"
+slug = "kopt-fornyat-forsakring"
+
+[[variable]]
+native_id = "258.37022"
+slug = "ansokt-lan-internet"
+
+[[variable]]
+native_id = "258.37023"
+slug = "ej-kop-shoppa-fysiskt"
+
+[[variable]]
+native_id = "258.37024"
+slug = "ej-kop-vet-ej-hur"
+
+[[variable]]
+native_id = "258.37025"
+slug = "ej-kop-leveransproblem"
+
+[[variable]]
+native_id = "258.37026"
+slug = "ej-kop-oro-betalning"
+
+[[variable]]
+native_id = "258.37027"
+slug = "ej-kop-farhagor-leverans"
+
+[[variable]]
+native_id = "258.37028"
+slug = "ej-kop-inget-betalkort"
+
+[[variable]]
+native_id = "258.37029"
+slug = "ej-kop-andra-skal"
+
+[[variable]]
+native_id = "258.37030"
+slug = "installerat-programvara"
+
+[[variable]]
+native_id = "258.37031"
+slug = "andrat-installningar"
+
+[[variable]]
+native_id = "258.37032"
+slug = "skapat-presentationer"
+
+[[variable]]
+native_id = "258.37033"
+slug = "anvant-kalkylprogram"
+
+[[variable]]
+native_id = "258.37034"
+slug = "kalkylprogram-avancerat"
+
+[[variable]]
+native_id = "258.37036"
+slug = "tillgang-dator-hemma"
+
+[[variable]]
+native_id = "258.37804"
+slug = "kopfrekvens-internet"
+
+[[variable]]
+native_id = "258.37806"
+slug = "ej-kop-aterfors-utlandet"
+
+[[variable]]
+native_id = "258.37832"
+slug = "molntjanster-lagra-annat"
+
+[[variable]]
+native_id = "258.38261"
+slug = "internet-dagligen-flera"
+
+[[variable]]
+native_id = "258.38264"
+slug = "titta-streamat-tv"
+
+[[variable]]
+native_id = "258.38266"
+slug = "titta-filmer-serier"
+
+[[variable]]
+native_id = "258.38267"
+slug = "spela-ladda-ner-spel"
+
+[[variable]]
+native_id = "258.38268"
+slug = "titta-klipp-streaming"
+
+[[variable]]
+native_id = "258.38273"
+slug = "ej-hyrt-semester-privat"
+
+[[variable]]
+native_id = "258.38275"
+slug = "hyrt-semester-annan-app"
+
+[[variable]]
+native_id = "258.38276"
+slug = "ej-biltransport-privat"
+
+[[variable]]
+native_id = "258.38277"
+slug = "skaffat-tillfalligt-jobb"
+
+[[variable]]
+native_id = "258.38282"
+slug = "e-leg-via-sociala-medier"
+
+[[variable]]
+native_id = "258.38285"
+slug = "smartphone-privat-bruk"
+
+[[variable]]
+native_id = "258.38295"
+slug = "smartphone-inbyggt-sak"
+
+[[variable]]
+native_id = "258.38299"
+slug = "smartphone-sak-inst"
+
+[[variable]]
+native_id = "258.38300"
+slug = "smartphone-utan-sak"
+
+[[variable]]
+native_id = "258.38301"
+slug = "smartphone-sak-vet-ej"
+
+[[variable]]
+native_id = "258.38302"
+slug = "smartphone-forlorat-data"
+
+[[variable]]
+native_id = "258.38304"
+slug = "app-ej-begransat-uppg"
+
+[[variable]]
+native_id = "258.38306"
+slug = "app-kant-ej-begransning"
+
+[[variable]]
+native_id = "258.38307"
+slug = "anvander-ej-appar"
+
+[[variable]]
+native_id = "258.38325"
+slug = "leverans-returkostnader"
+
+[[variable]]
+native_id = "258.38326"
+slug = "svar-losa-klagomal-rekl"
+
+[[variable]]
+native_id = "258.38327"
+slug = "anpassa-produktmarkning"
+
+[[variable]]
+native_id = "258.38329"
+slug = "brist-sprakkunskap"
+
+[[variable]]
+native_id = "258.38330"
+slug = "partner-restriktioner-eu"
+
+[[variable]]
+native_id = "258.38331"
+slug = "miljopolicy-energi-it"
+
+[[variable]]
+native_id = "258.38332"
+slug = "anstallda-distansarbete"
+
+[[variable]]
+native_id = "258.38333"
+slug = "energibesparande-it"
+
+[[variable]]
+native_id = "258.38335"
+slug = "faktura-ej-autoprocess"
+
+[[variable]]
+native_id = "258.38393"
+slug = "egna-3d-skrivare"
+
+[[variable]]
+native_id = "258.38394"
+slug = "externa-3d-utskrift"
+
+[[variable]]
+native_id = "258.38435"
+slug = "lamnat-personnr-internet"
+
+[[variable]]
+native_id = "258.39464"
+slug = "it-sakrutin-uppdaterad"
+
+[[variable]]
+native_id = "258.39472"
+slug = "kopt-e-bocker-nedladdade"
+
+[[variable]]
+native_id = "258.39474"
+slug = "kopt-programvara-spel"
+
+[[variable]]
+native_id = "258.39476"
+slug = "kopt-film-musik-nedl"
+
+[[variable]]
+native_id = "258.39477"
+slug = "kopt-digitala-magasin-nedladdade"
+
+[[variable]]
+native_id = "258.39488"
+slug = "internet-annan-utbildning"
+
+[[variable]]
+native_id = "258.39489"
+slug = "tagit-nagon-kurs-pa-internet"
+
+[[variable]]
+native_id = "258.39517"
+slug = "digitala-fardigheter-installerat-app"
+
+[[variable]]
+native_id = "258.39518"
+slug = "internetsakerhet-kortbedragerier"
+
+[[variable]]
+native_id = "258.39519"
+slug = "internetsakerhet-data-virus"
+
+[[variable]]
+native_id = "258.39520"
+slug = "internetsakerhet-missbruk-info"
+
+[[variable]]
+native_id = "258.39521"
+slug = "internetsakerhet-hackat-konto"
+
+[[variable]]
+native_id = "258.39522"
+slug = "internetsakerhet-identitetsstold"
+
+[[variable]]
+native_id = "258.39523"
+slug = "internetsakerhet-phishing"
+
+[[variable]]
+native_id = "258.39524"
+slug = "internetsakerhet-pharming"
+
+[[variable]]
+native_id = "258.39528"
+slug = "sakerhetskopior-privata-filer"
+
+[[variable]]
+native_id = "258.39536"
+slug = "skrivit-kod-i-programmeringssprak"
+
+[[variable]]
+native_id = "258.40408"
+slug = "internetsakerhet-kontaktuppgifter"
+
+[[variable]]
+native_id = "258.40736"
+slug = "kopt-semesterboende"
+
+[[variable]]
+native_id = "258.41634"
+slug = "anvant-internet-halsovard-annan"
+
+[[variable]]
+native_id = "258.41635"
+slug = "internet-halsojournal-natet"
+
+[[variable]]
+native_id = "258.41678"
+slug = "ej-utbildningsaktiviteter"
+
+[[variable]]
+native_id = "258.41680"
+slug = "iot-energihantering-hemmet"
+
+[[variable]]
+native_id = "258.41681"
+slug = "iot-sakerhetssystem-hemmet"
+
+[[variable]]
+native_id = "258.41682"
+slug = "iot-hushallsapparater"
+
+[[variable]]
+native_id = "258.41683"
+slug = "iot-virtuell-assistent"
+
+[[variable]]
+native_id = "258.41684"
+slug = "iot-orsak-visste-ej"
+
+[[variable]]
+native_id = "258.41685"
+slug = "iot-orsak-ingen-anvandning"
+
+[[variable]]
+native_id = "258.41686"
+slug = "iot-orsak-for-dyrt"
+
+[[variable]]
+native_id = "258.41687"
+slug = "iot-orsak-inkompatibelt"
+
+[[variable]]
+native_id = "258.41688"
+slug = "iot-orsak-vet-inte-hur"
+
+[[variable]]
+native_id = "258.41689"
+slug = "iot-orsak-oro-integritet"
+
+[[variable]]
+native_id = "258.41690"
+slug = "iot-orsak-oro-it-sakerhet"
+
+[[variable]]
+native_id = "258.41691"
+slug = "iot-orsak-oro-halsoproblem"
+
+[[variable]]
+native_id = "258.41692"
+slug = "iot-barbar-teknik"
+
+[[variable]]
+native_id = "258.41693"
+slug = "iot-overvakning-halsa"
+
+[[variable]]
+native_id = "258.41694"
+slug = "iot-leksaker-dockor-robotleksaker"
+
+[[variable]]
+native_id = "258.41695"
+slug = "iot-bil-tradlos-uppkoppling"
+
+[[variable]]
+native_id = "258.41696"
+slug = "iot-internetansluten-tv"
+
+[[variable]]
+native_id = "258.41697"
+slug = "iot-internetansluten-spelkonsol"
+
+[[variable]]
+native_id = "258.41698"
+slug = "iot-ljudsystem-smarta-hogtalare"
+
+[[variable]]
+native_id = "258.41723"
+slug = "kopt-sportartiklar"
+
+[[variable]]
+native_id = "258.41724"
+slug = "kopt-klader-skor-accessoarer"
+
+[[variable]]
+native_id = "258.41725"
+slug = "kopt-barnleksaker-eller-barnartiklar"
+
+[[variable]]
+native_id = "258.41726"
+slug = "kopt-mobler-inredning-tradgard"
+
+[[variable]]
+native_id = "258.41727"
+slug = "kopt-cd-eller-vinylskivor"
+
+[[variable]]
+native_id = "258.41728"
+slug = "kopt-filmer-eller-serier"
+
+[[variable]]
+native_id = "258.41729"
+slug = "kopt-tryckta-bocker-tidningar"
+
+[[variable]]
+native_id = "258.41730"
+slug = "kopt-datorer-surfplattor-mobiler"
+
+[[variable]]
+native_id = "258.41731"
+slug = "kopt-hushallsapparater-eller-vitvaror"
+
+[[variable]]
+native_id = "258.41732"
+slug = "kopt-lakemedel-eller-kosttillskott"
+
+[[variable]]
+native_id = "258.41733"
+slug = "kopt-leveranser-fran-restauranger"
+
+[[variable]]
+native_id = "258.41734"
+slug = "kopt-mat-eller-dryck"
+
+[[variable]]
+native_id = "258.41735"
+slug = "kopt-kosmetik-skonhet"
+
+[[variable]]
+native_id = "258.41736"
+slug = "kopt-rengoring-hygienprodukter"
+
+[[variable]]
+native_id = "258.41737"
+slug = "kopt-cyklar-mopeder-bilar"
+
+[[variable]]
+native_id = "258.41738"
+slug = "kopt-andra-fysiska-varor"
+
+[[variable]]
+native_id = "258.41739"
+slug = "kopt-varor-fran-privatperson"
+
+[[variable]]
+native_id = "258.41740"
+slug = "betalat-musik-streaming"
+
+[[variable]]
+native_id = "258.41741"
+slug = "betalat-filmer-serier-streaming"
+
+[[variable]]
+native_id = "258.41742"
+slug = "kopt-natet-fran-sverige"
+
+[[variable]]
+native_id = "258.41743"
+slug = "kopt-natet-fran-eu"
+
+[[variable]]
+native_id = "258.41744"
+slug = "kopt-natet-fran-utanfor-eu"
+
+[[variable]]
+native_id = "258.41745"
+slug = "kopt-natet-fran-okant-land"
+
+[[variable]]
+native_id = "258.41746"
+slug = "betalat-ebocker-digitala-medier"
+
+[[variable]]
+native_id = "258.41747"
+slug = "betalat-spel-internet"
+
+[[variable]]
+native_id = "258.41748"
+slug = "betalat-programvara-nedladdning"
+
+[[variable]]
+native_id = "258.41749"
+slug = "betalat-appar-halsa-fitness"
+
+[[variable]]
+native_id = "258.41750"
+slug = "betalat-for-andra-appar"
+
+[[variable]]
+native_id = "258.41751"
+slug = "kopt-biljetter-sportevenemang"
+
+[[variable]]
+native_id = "258.41752"
+slug = "kopt-biljetter-kultur"
+
+[[variable]]
+native_id = "258.41753"
+slug = "kopt-abonnemang-internet-mobil"
+
+[[variable]]
+native_id = "258.41754"
+slug = "kopt-abonnemang-el-vatten-varme"
+
+[[variable]]
+native_id = "258.41755"
+slug = "kopt-hushallstjanster"
+
+[[variable]]
+native_id = "258.41757"
+slug = "kopt-transporttjanst-foretag"
+
+[[variable]]
+native_id = "258.41758"
+slug = "kopt-transport-privatperson"
+
+[[variable]]
+native_id = "258.41759"
+slug = "har-inte-kopt-nagon-transporttjanst"
+
+[[variable]]
+native_id = "258.41760"
+slug = "hyrt-semesterboende-foretag"
+
+[[variable]]
+native_id = "258.41761"
+slug = "hyrt-semesterboende-privatperson"
+
+[[variable]]
+native_id = "258.41762"
+slug = "har-inte-hyrt-nagot-semesterboende"
+
+[[variable]]
+native_id = "258.41763"
+slug = "kopt-andra-tjanster-privat"
+
+[[variable]]
+native_id = "258.41764"
+slug = "kopt-forsakringar-inkl-reseforsakring"
+
+[[variable]]
+native_id = "258.41765"
+slug = "tagit-ett-lan-eller-kredit"
+
+[[variable]]
+native_id = "258.41766"
+slug = "kopt-salt-aktier-fonder"
+
+[[variable]]
+native_id = "258.41769"
+slug = "e-sakerhet-last-sekretesspolicy"
+
+[[variable]]
+native_id = "258.41770"
+slug = "e-sakerhet-geografisk-plats"
+
+[[variable]]
+native_id = "258.41771"
+slug = "e-sakerhet-profil-natverk"
+
+[[variable]]
+native_id = "258.41772"
+slug = "e-sakerhet-nekat-reklam"
+
+[[variable]]
+native_id = "258.41773"
+slug = "e-sakerhet-saker-webbplats"
+
+[[variable]]
+native_id = "258.41777"
+slug = "e-sakerhet-begart-egna-data"
+
+[[variable]]
+native_id = "258.41778"
+slug = "e-sakerhet-visste-om-kakor"
+
+[[variable]]
+native_id = "258.41779"
+slug = "e-sakerhet-installningar-kakor"
+
+[[variable]]
+native_id = "258.41780"
+slug = "e-sakerhet-orolig-reklam"
+
+[[variable]]
+native_id = "258.41781"
+slug = "e-sakerhet-programvara-spaning"
+
+[[variable]]
+native_id = "258.41793"
+slug = "e-legitimering-losenord"
+
+[[variable]]
+native_id = "258.41794"
+slug = "e-legitimering-via-sociala-medier"
+
+[[variable]]
+native_id = "258.41795"
+slug = "e-legitimering-digipass"
+
+[[variable]]
+native_id = "258.41796"
+slug = "e-legitimering-bankid"
+
+[[variable]]
+native_id = "258.41807"
+slug = "e-legitimering-kod-till-mobil"
+
+[[variable]]
+native_id = "258.41808"
+slug = "e-legitimering-pinkod-skraplista"
+
+[[variable]]
+native_id = "258.41809"
+slug = "e-legitimering-annan"
+
+[[variable]]
+native_id = "258.41812"
+slug = "e-sakerhet-data-smartphone"
+
+[[variable]]
+native_id = "258.41949"
+slug = "andel-anstallda-anvander-dator"
+
+[[variable]]
+native_id = "258.44638"
+slug = "anvant-internet-asikter-politik"
+
+[[variable]]
+native_id = "258.44639"
+slug = "aktivt-delta-politisk-diskussion"
+
+[[variable]]
+native_id = "258.44640"
+slug = "inga-problem-vid-internetkop"
+
+[[variable]]
+native_id = "258.44678"
+slug = "sett-falsk-info-pa-internet"
+
+[[variable]]
+native_id = "258.44679"
+slug = "kontrollerat-info-via-kallor"
+
+[[variable]]
+native_id = "258.44680"
+slug = "kontrollerat-info-via-diskussion"
+
+[[variable]]
+native_id = "258.44681"
+slug = "kontrollerat-falsk-info-offline"
+
+[[variable]]
+native_id = "258.44683"
+slug = "inte-kontrollerat-visste-redan"
+
+[[variable]]
+native_id = "258.44684"
+slug = "inte-kontrollerat-saknade-kunskap"
+
+[[variable]]
+native_id = "258.44685"
+slug = "inte-kontrollerat-andra-skal"
+
+[[variable]]
+native_id = "258.44707"
+slug = "skapat-filer-dokument-bild-video"
+
+[[variable]]
+native_id = "258.44708"
+slug = "kopierat-flyttat-filer-moln"
+
+[[variable]]
+native_id = "258.44709"
+slug = "laddat-ner-programvara"
+
+[[variable]]
+native_id = "258.44710"
+slug = "andrat-installningar-programvara"
+
+[[variable]]
+native_id = "258.44734"
+slug = "ai-anvands-for-it-sakerhet"
+
+[[variable]]
+native_id = "258.44739"
+slug = "ai-anvands-for-marknadsforing"
+
+[[variable]]
+native_id = "258.44742"
+slug = "ai-forvarv-kommersiell-modifierad"
+
+[[variable]]
+native_id = "258.44743"
+slug = "ai-anvands-kommersiell-modifierad"
+
+[[variable]]
+native_id = "258.44747"
+slug = "ai-hinder-brist-expertis"
+
+[[variable]]
+native_id = "258.44748"
+slug = "ai-hinder-datatillgang"
+
+[[variable]]
+native_id = "258.44749"
+slug = "ai-hinder-dataskydd"
+
+[[variable]]
+native_id = "258.44750"
+slug = "ai-hinder-etik"
+
+[[variable]]
+native_id = "258.44751"
+slug = "ai-hinder-inkompabilitet"
+
+[[variable]]
+native_id = "258.44752"
+slug = "ai-hinder-hog-kostnad"
+
+[[variable]]
+native_id = "258.44753"
+slug = "ai-hinder-rattslig-klarhet"
+
+[[variable]]
+native_id = "258.44754"
+slug = "ai-hinder-ej-anvandbar"
+
+[[variable]]
+native_id = "258.45765"
+slug = "sakerhetsinc-data-forstord-malware"
+
+[[variable]]
+native_id = "258.45767"
+slug = "sakerhetsinc-konfdata-rojd-yttre"
+
+[[variable]]
+native_id = "258.45813"
+slug = "ej-ansokt-dokument-annan-orsak"
+
+[[variable]]
+native_id = "258.45818"
+slug = "iot-ej-anvand-andra-orsaker"
+
+[[variable]]
+native_id = "258.45819"
+slug = "iot-sakerhets-eller-integritetsproblem"
+
+[[variable]]
+native_id = "258.45820"
+slug = "iot-sakerhets-eller-halsoproblem"
+
+[[variable]]
+native_id = "258.45821"
+slug = "iot-svarigheter-med-att-anvanda"
+
+[[variable]]
+native_id = "258.45822"
+slug = "iot-annat-problem"
+
+[[variable]]
+native_id = "258.45824"
+slug = "gron-it-mobil-smartphone"
+
+[[variable]]
+native_id = "258.45825"
+slug = "gron-it-barbar-dator"
+
+[[variable]]
+native_id = "258.45826"
+slug = "gron-it-stationar-dator"
+
+[[variable]]
+native_id = "258.45828"
+slug = "gron-it-kop-harddiskegenskaper"
+
+[[variable]]
+native_id = "258.45829"
+slug = "gron-it-kop-ekodesign"
+
+[[variable]]
+native_id = "258.45830"
+slug = "gron-it-kop-forlang-livslangd"
+
+[[variable]]
+native_id = "258.45831"
+slug = "gron-it-kop-energieffektivitet"
+
+[[variable]]
+native_id = "258.45832"
+slug = "gron-it-kop-atertagningssystem"
+
+[[variable]]
+native_id = "258.45833"
+slug = "gron-it-kop-andra-egenskaper"
+
+[[variable]]
+native_id = "258.45834"
+slug = "gron-it-kop-aldrig-kopt"
+
+[[variable]]
+native_id = "258.46777"
+slug = "e-leg-ej-anvand-saknar-e-leg"
+
+[[variable]]
+native_id = "258.46778"
+slug = "e-leg-ej-anvand-it-sakerhet"
+
+[[variable]]
+native_id = "258.46779"
+slug = "e-leg-ej-anvand-ej-behovt"
+
+[[variable]]
+native_id = "258.46780"
+slug = "e-leg-ej-anvand-visste-ej"
+
+[[variable]]
+native_id = "258.46790"
+slug = "foretaget-anvander-erp-system"
+
+[[variable]]
+native_id = "258.46794"
+slug = "delar-data-leverantor"
+
+[[variable]]
+native_id = "258.46796"
+slug = "kontrollerat-falsk-info-pa-internet"
+
+[[variable]]
+native_id = "258.46805"
+slug = "sett-hotfullt-inlagg-personliga"
+
+[[variable]]
+native_id = "258.46822"
+slug = "webbplats-varubeskrivning-pris"
+
+[[variable]]
+native_id = "258.46823"
+slug = "webbplats-avgransa-sokning"
+
+[[variable]]
+native_id = "258.46824"
+slug = "webbplats-kund-igenkanning"
+
+[[variable]]
+native_id = "258.46828"
+slug = "ai-ej-brist-expertis"
+
+[[variable]]
+native_id = "258.46829"
+slug = "ai-ej-hog-kostnad"
+
+[[variable]]
+native_id = "258.46830"
+slug = "ai-ej-anvandbar"
+
+[[variable]]
+native_id = "258.46831"
+slug = "ai-ej-rattslig-klarhet"
+
+[[variable]]
+native_id = "258.46832"
+slug = "ai-ej-etik"
+
+[[variable]]
+native_id = "258.46833"
+slug = "ai-ej-dataskydd"
+
+[[variable]]
+native_id = "258.46834"
+slug = "ai-ej-inkompabilitet"
+
+[[variable]]
+native_id = "258.46835"
+slug = "ai-ej-datatillgang"
+
+[[variable]]
+native_id = "258.47998"
+slug = "anvant-generativa-ai-verktyg"
+
+[[variable]]
+native_id = "258.47999"
+slug = "gen-ai-syfte-formell-utbildning"
+
+[[variable]]
+native_id = "258.48000"
+slug = "gen-ai-syfte-professionell"
+
+[[variable]]
+native_id = "258.48003"
+slug = "gen-ai-syfte-privat"
+
+[[variable]]
+native_id = "258.48005"
+slug = "gen-ai-orsak-ej-anvand"
+
+[[variable]]
+native_id = "258.48010"
+slug = "skapat-konto-gratis-app"
+
+[[variable]]
+native_id = "258.48011"
+slug = "raderat-konto-gratis-app"
+
+[[variable]]
+native_id = "258.48015"
+slug = "problem-radera-konto-app"
+
+[[variable]]
+native_id = "258.48018"
+slug = "kopt-biljetter-sport-kulturell"
+
+[[variable]]
+native_id = "258.48019"
+slug = "kopt-e-bocker-eller-ljudbocker"
+
+[[variable]]
+native_id = "258.48020"
+slug = "kopt-nedladdad-programvara-uppdatering"
+
+[[variable]]
+native_id = "258.48021"
+slug = "kopt-dataspel-nedladdad-online"
+
+[[variable]]
+native_id = "258.48030"
+slug = "prenumererat-digital-tidning"
+
+[[variable]]
+native_id = "258.48031"
+slug = "betalat-dataspel-streaming"
+
+[[variable]]
+native_id = "258.48353"
+slug = "sakerhetsinc-konfdata-rojd-personal"
+
+[[variable]]
+native_id = "258.48354"
+slug = "sakerhetsinc-konfdata-rojd-malware"
+
+[[variable]]
+native_id = "258.49943"
+slug = "it-losning-minska-energiforbrukning"
+
+[[variable]]
+native_id = "258.49944"
+slug = "it-losning-energiforbrukning-stor"
+
+# register 259 (foretagens-utgifter-it)
+
+[[variable]]
+native_id = "258.28818.gsoloth"
+slug = "gsoloth-upphandling-ovriga-eu"
+
+[[variable]]
+native_id = "258.28818.igov2preu"
+slug = "igov2preu-upphandling-ovriga-eu"
+
+[[variable]]
+native_id = "258.779.h7-1"
+slug = "utbildningsniva-1-position"
+
+# Y-211 (maintainer decision 2026-09-19): IT-anvandning sequential column
+# renames as tracked literal ownership (diagnostic v17 rename-worklist-258,
+# `sequential` rows only, full worklist per ticket revision 4). Each chain below
+# is non-overlapping delivery years on one native variable, so every spelling is
+# owned by a single split whose key discriminator reuses the family slug string
+# unchanged. Y-219: each split also pins that same family slug (the family slug
+# row itself is untouched); the loader allows exactly this own-base reuse for a
+# `columns`-carrying split. Overlapping rows need a partition decision and
+# case-only twins belong to Y-210: neither is decided here.
+
+[[variable]]
+native_id = "258.15.civilstand"
+slug = "civilstand"
+
+[[variable]]
+native_id = "258.509.hussyk2"
+slug = "hussyk2"
+
+[[variable]]
+native_id = "258.785.utbildningsinriktning-1-position"
+slug = "utbildningsinriktning-1-position"
+
+[[variable]]
+native_id = "258.7367.civilstand-aku-aldre"
+slug = "civilstand-aku-aldre"
+
+[[variable]]
+native_id = "258.12944.sjukskriven"
+slug = "sjukskriven"
+
+[[variable]]
+native_id = "258.15889.dator-hemma"
+slug = "dator-hemma"
+
+[[variable]]
+native_id = "258.15892.tillgang-internet-hemma"
+slug = "tillgang-internet-hemma"
+
+[[variable]]
+native_id = "258.15893.internet-stationar-dator"
+slug = "internet-stationar-dator"
+
+[[variable]]
+native_id = "258.15894.internet-via-barbar-dator"
+slug = "internet-via-barbar-dator"
+
+[[variable]]
+native_id = "258.15895.internet-via-tv-mottagare"
+slug = "internet-via-tv-mottagare"
+
+[[variable]]
+native_id = "258.15896.internet-via-spelkonsol"
+slug = "internet-via-spelkonsol"
+
+[[variable]]
+native_id = "258.15897.internet-pa-annat-satt"
+slug = "internet-pa-annat-satt"
+
+[[variable]]
+native_id = "258.15898.internet-via-mobiltelefon"
+slug = "internet-via-mobiltelefon"
+
+[[variable]]
+native_id = "258.15899.internet-via-handdator"
+slug = "internet-via-handdator"
+
+[[variable]]
+native_id = "258.15900.anslutning-modem-isdn"
+slug = "anslutning-modem-isdn"
+
+[[variable]]
+native_id = "258.15901.anslutning-dsl-fiber"
+slug = "anslutning-dsl-fiber"
+
+[[variable]]
+native_id = "258.15903.anslutning-gsm"
+slug = "anslutning-gsm"
+
+[[variable]]
+native_id = "258.15904.anslutning-satellit-wifi"
+slug = "anslutning-satellit-wifi"
+
+[[variable]]
+native_id = "258.15909.datb1"
+slug = "datb1"
+
+[[variable]]
+native_id = "258.15910.datb2"
+slug = "datb2"
+
+[[variable]]
+native_id = "258.15917.mobiltelefon"
+slug = "mobiltelefon"
+
+[[variable]]
+native_id = "258.15919.datc2"
+slug = "datc2"
+
+[[variable]]
+native_id = "258.15920.anvant-internet-hemma"
+slug = "anvant-internet-hemma"
+
+[[variable]]
+native_id = "258.15921.anvant-internet-pa-arbetsplats"
+slug = "anvant-internet-pa-arbetsplats"
+
+[[variable]]
+native_id = "258.15922.anvant-internet-pa-annan-plats"
+slug = "anvant-internet-pa-annan-plats"
+
+[[variable]]
+native_id = "258.15923.anvant-internet-pa-bibliotek"
+slug = "anvant-internet-pa-bibliotek"
+
+[[variable]]
+native_id = "258.15943.anvant-internet-i-skolan"
+slug = "anvant-internet-i-skolan"
+
+[[variable]]
+native_id = "258.15944.anvant-internet-annans-hem"
+slug = "anvant-internet-annans-hem"
+
+[[variable]]
+native_id = "258.15945.anvant-internet-hos-myndighet"
+slug = "anvant-internet-hos-myndighet"
+
+[[variable]]
+native_id = "258.15946.anvant-internet-fritidscenter"
+slug = "anvant-internet-fritidscenter"
+
+[[variable]]
+native_id = "258.15947.anvant-internet-pa-internetcafe"
+slug = "anvant-internet-pa-internetcafe"
+
+[[variable]]
+native_id = "258.15948.anvant-internet-pa-hotspot"
+slug = "anvant-internet-pa-hotspot"
+
+[[variable]]
+native_id = "258.15950.mobiluppkoppling-gprs"
+slug = "mobiluppkoppling-gprs"
+
+[[variable]]
+native_id = "258.15951.mobiluppkoppling-3g"
+slug = "mobiluppkoppling-3g"
+
+[[variable]]
+native_id = "258.15952.anvander-internet-handdator"
+slug = "anvander-internet-handdator"
+
+[[variable]]
+native_id = "258.15953.internet-barbar-tradlost"
+slug = "internet-barbar-tradlost"
+
+[[variable]]
+native_id = "258.15955.anvant-internet-for-e-post"
+slug = "anvant-internet-for-e-post"
+
+[[variable]]
+native_id = "258.15964.prenumererat-nyheter-internet"
+slug = "prenumererat-nyheter-internet"
+
+[[variable]]
+native_id = "258.15965.anvant-internet-for-soka-jobb"
+slug = "anvant-internet-for-soka-jobb"
+
+[[variable]]
+native_id = "258.15973.anvant-internet-utbildningsinfo"
+slug = "anvant-internet-utbildningsinfo"
+
+[[variable]]
+native_id = "258.15974.anvant-internet-kurser"
+slug = "anvant-internet-kurser"
+
+[[variable]]
+native_id = "258.15975.anvant-internet-kunskap-utbildning"
+slug = "anvant-internet-kunskap-utbildning"
+
+[[variable]]
+native_id = "258.16003.kopt-programvara-eller-dataspel"
+slug = "kopt-programvara-eller-dataspel"
+
+[[variable]]
+native_id = "258.16006.kopt-aktier-eller-forsakringar"
+slug = "kopt-aktier-eller-forsakringar"
+
+[[variable]]
+native_id = "258.16007.kopt-resor-eller-logi"
+slug = "kopt-resor-eller-logi"
+
+[[variable]]
+native_id = "258.16009.tips-lotto-eller-vadslagning"
+slug = "tips-lotto-eller-vadslagning"
+
+[[variable]]
+native_id = "258.16012.nedladdad-programvara-istallet-post"
+slug = "nedladdad-programvara-istallet-post"
+
+[[variable]]
+native_id = "258.16013.kopt-datorbaserade-laromedel"
+slug = "kopt-datorbaserade-laromedel"
+
+[[variable]]
+native_id = "258.16014.senast-datakurs"
+slug = "senast-datakurs"
+
+[[variable]]
+native_id = "258.16025.har-flyttat-eller-kopierat-filer"
+slug = "har-flyttat-eller-kopierat-filer"
+
+[[variable]]
+native_id = "258.16026.kopierat-klistrat-i-dokument"
+slug = "kopierat-klistrat-i-dokument"
+
+[[variable]]
+native_id = "258.16027.anvant-dator-berakningar"
+slug = "anvant-dator-berakningar"
+
+[[variable]]
+native_id = "258.16028.komprimerat-eller-zippat-filer"
+slug = "komprimerat-eller-zippat-filer"
+
+[[variable]]
+native_id = "258.16029.installerat-tillbehor"
+slug = "installerat-tillbehor"
+
+[[variable]]
+native_id = "258.16030.skrivit-datorprogram"
+slug = "skrivit-datorprogram"
+
+[[variable]]
+native_id = "258.16044.anvant-internet-sokmotor"
+slug = "anvant-internet-sokmotor"
+
+[[variable]]
+native_id = "258.16045.anvant-epost-bifogade-filer"
+slug = "anvant-epost-bifogade-filer"
+
+[[variable]]
+native_id = "258.16049.anvant-internet-skapat-webbsida"
+slug = "anvant-internet-skapat-webbsida"
+
+[[variable]]
+native_id = "258.16084.datakunskaper-bytajobb"
+slug = "datakunskaper-bytajobb"
+
+[[variable]]
+native_id = "258.16086.antal-vuxna-hushall-16-74ar"
+slug = "antal-vuxna-hushall-16-74ar"
+
+[[variable]]
+native_id = "258.16089.hushallets-nettoinkomst"
+slug = "hushallets-nettoinkomst"
+
+[[variable]]
+native_id = "258.16815.max-hastighet-internet"
+slug = "max-hastighet-internet"
+
+[[variable]]
+native_id = "258.16832.anvander-internet-internetbank"
+slug = "anvander-internet-internetbank"
+
+[[variable]]
+native_id = "258.17408.har-du-funktionshinder"
+slug = "har-du-funktionshinder"
+
+[[variable]]
+native_id = "258.17514.bor-ensam-eller-med-andra"
+slug = "bor-ensam-eller-med-andra"
+
+[[variable]]
+native_id = "258.17579.it-sakerhet-styrandedokument"
+slug = "it-sakerhet-styrandedokument"
+
+[[variable]]
+native_id = "258.17590.antal-vuxna-16-85-ar"
+slug = "antal-vuxna-16-85-ar"
+
+[[variable]]
+native_id = "258.17593.gruppering-av-alder-och-kon"
+slug = "gruppering-av-alder-och-kon"
+
+[[variable]]
+native_id = "258.17641.andel-arsverken-programvaruutv-extern"
+slug = "andel-arsverken-programvaruutv-extern"
+
+[[variable]]
+native_id = "258.17642.arsverken-programvaruutv-ovriga"
+slug = "arsverken-programvaruutv-ovriga"
+
+[[variable]]
+native_id = "258.18023.ej-internet-hemma-annanstans"
+slug = "ej-internet-hemma-annanstans"
+
+[[variable]]
+native_id = "258.18025.ej-internet-hemma-dyr-utrustning"
+slug = "ej-internet-hemma-dyr-utrustning"
+
+[[variable]]
+native_id = "258.18026.ej-internet-hemma-dyr-uppkoppling"
+slug = "ej-internet-hemma-dyr-uppkoppling"
+
+[[variable]]
+native_id = "258.18027.ej-internet-hemma-saknar-kunskaper"
+slug = "ej-internet-hemma-saknar-kunskaper"
+
+[[variable]]
+native_id = "258.18028.ej-internet-hemma-sakerhetsskal"
+slug = "ej-internet-hemma-sakerhetsskal"
+
+[[variable]]
+native_id = "258.18030.ej-internet-hemma-andra-skal"
+slug = "ej-internet-hemma-andra-skal"
+
+[[variable]]
+native_id = "258.18033.ej-internet-hemma-behover-ej"
+slug = "ej-internet-hemma-behover-ej"
+
+[[variable]]
+native_id = "258.18037.eget-domannamn"
+slug = "eget-domannamn"
+
+[[variable]]
+native_id = "258.18054.fritid-internet-podradio"
+slug = "fritid-internet-podradio"
+
+[[variable]]
+native_id = "258.18055.fritid-internet-ladda-dataspel"
+slug = "fritid-internet-ladda-dataspel"
+
+[[variable]]
+native_id = "258.19119.awshm"
+slug = "awshm"
+
+[[variable]]
+native_id = "258.19120.ehandel-bestallningar-webb-varlden"
+slug = "ehandel-bestallningar-webb-varlden"
+
+[[variable]]
+native_id = "258.19121.awsww"
+slug = "awsww"
+
+[[variable]]
+native_id = "258.21091.ej-internet-tillgang-annanstans"
+slug = "ej-internet-tillgang-annanstans"
+
+[[variable]]
+native_id = "258.21093.ej-internet-andra-skal"
+slug = "ej-internet-andra-skal"
+
+[[variable]]
+native_id = "258.21094.ej-internet-funktionshinder"
+slug = "ej-internet-funktionshinder"
+
+[[variable]]
+native_id = "258.21095.ej-internet-dyr-utrustning"
+slug = "ej-internet-dyr-utrustning"
+
+[[variable]]
+native_id = "258.21096.ej-internet-dyr-uppkoppling"
+slug = "ej-internet-dyr-uppkoppling"
+
+[[variable]]
+native_id = "258.21103.internetansl-mobiltelefon"
+slug = "internetansl-mobiltelefon"
+
+[[variable]]
+native_id = "258.21104.anvant-webbradio-webbtv"
+slug = "anvant-webbradio-webbtv"
+
+[[variable]]
+native_id = "258.21111.internet-telefon-videosamtal"
+slug = "internet-telefon-videosamtal"
+
+[[variable]]
+native_id = "258.21118.kopt-tjanster-tv-bredband-telefoni"
+slug = "kopt-tjanster-tv-bredband-telefoni"
+
+[[variable]]
+native_id = "258.21119.kopt-bestallt-semesterinkvartering"
+slug = "kopt-bestallt-semesterinkvartering"
+
+[[variable]]
+native_id = "258.21125.antal-internetkop-senaste-3-man"
+slug = "antal-internetkop-senaste-3-man"
+
+[[variable]]
+native_id = "258.21127.betalning-kreditkort-internet"
+slug = "betalning-kreditkort-internet"
+
+[[variable]]
+native_id = "258.21129.betalning-betaltjanst-internet"
+slug = "betalning-betaltjanst-internet"
+
+[[variable]]
+native_id = "258.21130.betalning-internetbank"
+slug = "betalning-internetbank"
+
+[[variable]]
+native_id = "258.21132.datd9a"
+slug = "datd9a"
+
+[[variable]]
+native_id = "258.21133.problem-info-garantier-kop"
+slug = "problem-info-garantier-kop"
+
+[[variable]]
+native_id = "258.21134.datd9c"
+slug = "datd9c"
+
+[[variable]]
+native_id = "258.21135.datd9d"
+slug = "datd9d"
+
+[[variable]]
+native_id = "258.21136.datd9e"
+slug = "datd9e"
+
+[[variable]]
+native_id = "258.21137.datd9f"
+slug = "datd9f"
+
+[[variable]]
+native_id = "258.21138.datd9g"
+slug = "datd9g"
+
+[[variable]]
+native_id = "258.21139.problem-annat-vid-internetkop"
+slug = "problem-annat-vid-internetkop"
+
+[[variable]]
+native_id = "258.21155.ej-kopt-internet-sakerhetsskal"
+slug = "ej-kopt-internet-sakerhetsskal"
+
+[[variable]]
+native_id = "258.21156.ej-kopt-internet-ej-kunna-returnera"
+slug = "ej-kopt-internet-ej-kunna-returnera"
+
+[[variable]]
+native_id = "258.21167.eget-domannamn-annan"
+slug = "eget-domannamn-annan"
+
+[[variable]]
+native_id = "258.21168.planerar-registrera-domannamn"
+slug = "planerar-registrera-domannamn"
+
+[[variable]]
+native_id = "258.21169.datoranv-kopiera-flytta-fil"
+slug = "datoranv-kopiera-flytta-fil"
+
+[[variable]]
+native_id = "258.21170.datoranv-kopiera-klistra-dokument"
+slug = "datoranv-kopiera-klistra-dokument"
+
+[[variable]]
+native_id = "258.21171.anvant-formler-i-ett-kalkylark"
+slug = "anvant-formler-i-ett-kalkylark"
+
+[[variable]]
+native_id = "258.21172.datoranv-komprimera-filer"
+slug = "datoranv-komprimera-filer"
+
+[[variable]]
+native_id = "258.21173.installerat-en-ny-utrustning"
+slug = "installerat-en-ny-utrustning"
+
+[[variable]]
+native_id = "258.21174.programmerat"
+slug = "programmerat"
+
+[[variable]]
+native_id = "258.21177.kopt-andra-programvaror-internet"
+slug = "kopt-andra-programvaror-internet"
+
+[[variable]]
+native_id = "258.23254.drabbats-virus-datorinfektion"
+slug = "drabbats-virus-datorinfektion"
+
+[[variable]]
+native_id = "258.23256.drabbats-missbruk-personlig-info"
+slug = "drabbats-missbruk-personlig-info"
+
+[[variable]]
+native_id = "258.23258.drabbats-forlora-pengar-kortbedragerier"
+slug = "drabbats-forlora-pengar-kortbedragerier"
+
+[[variable]]
+native_id = "258.23259.drabbats-barn-olampliga-sidor"
+slug = "drabbats-barn-olampliga-sidor"
+
+[[variable]]
+native_id = "258.23260.ej-kopt-varor-sakerhetsbekymmer"
+slug = "ej-kopt-varor-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23261.ej-bankarenden-sakerhetsbekymmer"
+slug = "ej-bankarenden-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23262.ej-personlig-info-sakerhetsbekymmer"
+slug = "ej-personlig-info-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23263.ej-myndigheter-sakerhetsbekymmer"
+slug = "ej-myndigheter-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23264.ej-laddat-mjukvara-sakerhetsbekymmer"
+slug = "ej-laddat-mjukvara-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23265.ej-mobil-internet-sakerhetsbekymmer"
+slug = "ej-mobil-internet-sakerhetsbekymmer"
+
+[[variable]]
+native_id = "258.23280.har-redan-anvant-sokmotor"
+slug = "har-redan-anvant-sokmotor"
+
+[[variable]]
+native_id = "258.23281.skickat-epost-bifogade-filer"
+slug = "skickat-epost-bifogade-filer"
+
+[[variable]]
+native_id = "258.23282.skickat-meddelanden-chattrum"
+slug = "skickat-meddelanden-chattrum"
+
+[[variable]]
+native_id = "258.23283.har-anvant-internet-for-att-ringa"
+slug = "har-anvant-internet-for-att-ringa"
+
+[[variable]]
+native_id = "258.23284.anvant-fildelning-filmer-musik"
+slug = "anvant-fildelning-filmer-musik"
+
+[[variable]]
+native_id = "258.23285.har-skapat-en-hemsida"
+slug = "har-skapat-en-hemsida"
+
+[[variable]]
+native_id = "258.23287.utbildningsniva-grov"
+slug = "utbildningsniva-grov"
+
+[[variable]]
+native_id = "258.23389.inte-internet-pga-behover-inte-internet"
+slug = "inte-internet-pga-behover-inte-internet"
+
+[[variable]]
+native_id = "258.23391.inte-internet-saknar-kunskaper"
+slug = "inte-internet-saknar-kunskaper"
+
+[[variable]]
+native_id = "258.23392.inte-internet-pga-sakerhetsskal"
+slug = "inte-internet-pga-sakerhetsskal"
+
+[[variable]]
+native_id = "258.23395.anvant-annan-mobil-uppkoppling"
+slug = "anvant-annan-mobil-uppkoppling"
+
+[[variable]]
+native_id = "258.23398.laddat-ned-ebocker-istallet-post"
+slug = "laddat-ned-ebocker-istallet-post"
+
+[[variable]]
+native_id = "258.23403.internetanslutning-mobilt-bredband"
+slug = "internetanslutning-mobilt-bredband"
+
+[[variable]]
+native_id = "258.23404.internetanslutning-via-mobiltelefon"
+slug = "internetanslutning-via-mobiltelefon"
+
+[[variable]]
+native_id = "258.23405.data4c5"
+slug = "data4c5"
+
+[[variable]]
+native_id = "258.25333.anvander-mobilt-bredband-3g-4g"
+slug = "anvander-mobilt-bredband-3g-4g"
+
+[[variable]]
+native_id = "258.26901.skickar-e-fakturor-processas-auto"
+slug = "skickar-e-fakturor-processas-auto"
+
+[[variable]]
+native_id = "258.26902.skickar-e-fakturor-ej-processas-auto"
+slug = "skickar-e-fakturor-ej-processas-auto"
+
+[[variable]]
+native_id = "258.26903.tar-emot-e-fakturor-processas-auto"
+slug = "tar-emot-e-fakturor-processas-auto"
+
+[[variable]]
+native_id = "258.27281.ej-internet-bredband-saknas-omradet"
+slug = "ej-internet-bredband-saknas-omradet"
+
+[[variable]]
+native_id = "258.27984.rostat-webbenkater-politiska-fragor"
+slug = "rostat-webbenkater-politiska-fragor"
+
+[[variable]]
+native_id = "258.27985.sokt-wikipedia-wiki-webbplatser"
+slug = "sokt-wikipedia-wiki-webbplatser"
+
+[[variable]]
+native_id = "258.27995.skapat-elektroniska-presentationer"
+slug = "skapat-elektroniska-presentationer"
+
+[[variable]]
+native_id = "258.27996.installerat-uppgraderat-operativsystem"
+slug = "installerat-uppgraderat-operativsystem"
+
+[[variable]]
+native_id = "258.27997.laddat-upp-media-pa-webbsidor"
+slug = "laddat-upp-media-pa-webbsidor"
+
+[[variable]]
+native_id = "258.27998.andrat-sakerhetsinstallningar-internet"
+slug = "andrat-sakerhetsinstallningar-internet"
+
+[[variable]]
+native_id = "258.28015.myndighet-tekniskt-fel-blankett"
+slug = "myndighet-tekniskt-fel-blankett"
+
+[[variable]]
+native_id = "258.28822.andel-anstallda-barbara-enheter-mobil"
+slug = "andel-anstallda-barbara-enheter-mobil"
+
+[[variable]]
+native_id = "258.28860.fast-bredband-vet-ej-typ"
+slug = "fast-bredband-vet-ej-typ"
+
+[[variable]]
+native_id = "258.28863.iuupl"
+slug = "iuupl"
+
+[[variable]]
+native_id = "258.28866.anvant-internet-boka-tid-lakare"
+slug = "anvant-internet-boka-tid-lakare"
+
+[[variable]]
+native_id = "258.28867.mobil-internet-barbar-dator-surfplatta"
+slug = "mobil-internet-barbar-dator-surfplatta"
+
+[[variable]]
+native_id = "258.28868.mobil-internet-mobiltelefonnatet-barbar"
+slug = "mobil-internet-mobiltelefonnatet-barbar"
+
+[[variable]]
+native_id = "258.28890.mobil-internet-andra-problem"
+slug = "mobil-internet-andra-problem"
+
+[[variable]]
+native_id = "258.28897.mobil-internet-via-mobiltelefon"
+slug = "mobil-internet-via-mobiltelefon"
+
+[[variable]]
+native_id = "258.28898.mobil-internet-annan-enhet"
+slug = "mobil-internet-annan-enhet"
+
+[[variable]]
+native_id = "258.28900.mobil-internet-mobiltelefon-tradlost"
+slug = "mobil-internet-mobiltelefon-tradlost"
+
+[[variable]]
+native_id = "258.28901.mobiltelefon-tradlost-natverk-val"
+slug = "mobiltelefon-tradlost-natverk-val"
+
+[[variable]]
+native_id = "258.29976.anvander-sociala-natverk"
+slug = "anvander-sociala-natverk"
+
+[[variable]]
+native_id = "258.29977.anvander-bloggar-microbloggar"
+slug = "anvander-bloggar-microbloggar"
+
+[[variable]]
+native_id = "258.29978.anvander-webbplatser-dela-multimedia"
+slug = "anvander-webbplatser-dela-multimedia"
+
+[[variable]]
+native_id = "258.29979.anvander-wiki-verktyg-kunskapsutbyte"
+slug = "anvander-wiki-verktyg-kunskapsutbyte"
+
+[[variable]]
+native_id = "258.30000.bestallde-varor-tjanster-webb-app"
+slug = "bestallde-varor-tjanster-webb-app"
+
+[[variable]]
+native_id = "258.30091.myndighetskontakter-tekniska-problem"
+slug = "myndighetskontakter-tekniska-problem"
+
+[[variable]]
+native_id = "258.30094.myndighetskontakter-andra-problem"
+slug = "myndighetskontakter-andra-problem"
+
+[[variable]]
+native_id = "258.30121.svarigheter-dator-internet-funktionsned"
+slug = "svarigheter-dator-internet-funktionsned"
+
+[[variable]]
+native_id = "258.30695.internet-via-mobiltelefon-smartphone"
+slug = "internet-via-mobiltelefon-smartphone"
+
+[[variable]]
+native_id = "258.30696.internet-via-smartphone-mobil-enhet"
+slug = "internet-via-smartphone-mobil-enhet"
+
+[[variable]]
+native_id = "258.30724.andel-skickade-e-fakturor-processas-auto"
+slug = "andel-skickade-e-fakturor-processas-auto"
+
+[[variable]]
+native_id = "258.30733.internetsakerhet-cookies"
+slug = "internetsakerhet-cookies"
+
+[[variable]]
+native_id = "258.30735.internetsakerhet-forhindrat-cookies"
+slug = "internetsakerhet-forhindrat-cookies"
+
+[[variable]]
+native_id = "258.31024.urvalsvikt-individ"
+slug = "urvalsvikt-individ"
+
+[[variable]]
+native_id = "258.31026.urvalsvikt-for-bostadshushall"
+slug = "urvalsvikt-for-bostadshushall"
+
+[[variable]]
+native_id = "258.35480.big-data-platsdata-barbara-enheter"
+slug = "big-data-platsdata-barbara-enheter"
+
+[[variable]]
+native_id = "258.35485.big-data-andra-kallor"
+slug = "big-data-andra-kallor"
+
+[[variable]]
+native_id = "258.35487.big-data-sociala-medier"
+slug = "big-data-sociala-medier"
+
+[[variable]]
+native_id = "258.35491.andel-mottagna-e-fakturor-processas"
+slug = "andel-mottagna-e-fakturor-processas"
+
+[[variable]]
+native_id = "258.35514.ansl-surfplatta"
+slug = "ansl-surfplatta"
+
+[[variable]]
+native_id = "258.35516.annan-mobil-enhet"
+slug = "annan-mobil-enhet"
+
+[[variable]]
+native_id = "258.35519.kop-av-varor-over-internet"
+slug = "kop-av-varor-over-internet"
+
+[[variable]]
+native_id = "258.35525.spelat-eller-laddat-ner-spel"
+slug = "spelat-eller-laddat-ner-spel"
+
+[[variable]]
+native_id = "258.35526.lyssnat-pa-musik"
+slug = "lyssnat-pa-musik"
+
+[[variable]]
+native_id = "258.35529.e8a"
+slug = "e8a"
+
+[[variable]]
+native_id = "258.35531.e8c"
+slug = "e8c"
+
+[[variable]]
+native_id = "258.35532.e8d"
+slug = "e8d"
+
+[[variable]]
+native_id = "258.35534.anvant-redigera-media"
+slug = "anvant-redigera-media"
+
+[[variable]]
+native_id = "258.35535.e8e"
+slug = "e8e"
+
+[[variable]]
+native_id = "258.35536.e8f"
+slug = "e8f"
+
+[[variable]]
+native_id = "258.35538.e8g"
+slug = "e8g"
+
+[[variable]]
+native_id = "258.35540.problem-utland-aterfors"
+slug = "problem-utland-aterfors"
+
+[[variable]]
+native_id = "258.35541.problem-ovriga-vid-internetkop"
+slug = "problem-ovriga-vid-internetkop"
+
+[[variable]]
+native_id = "258.35548.deltagit-i-kurs-pa-natet"
+slug = "deltagit-i-kurs-pa-natet"
+
+[[variable]]
+native_id = "258.35549.sokt-halsoinformation"
+slug = "sokt-halsoinformation"
+
+[[variable]]
+native_id = "258.35552.bokat-tid-lakare"
+slug = "bokat-tid-lakare"
+
+[[variable]]
+native_id = "258.35559.utbildn-annan-vilken"
+slug = "utbildn-annan-vilken"
+
+[[variable]]
+native_id = "258.35567.internet-mobilt-bredband"
+slug = "internet-mobilt-bredband"
+
+[[variable]]
+native_id = "258.35574.internet-via-smart-tv"
+slug = "internet-via-smart-tv"
+
+[[variable]]
+native_id = "258.36906.reserelaterade-tjanster"
+slug = "reserelaterade-tjanster"
+
+[[variable]]
+native_id = "258.36916.biltransport-privat-webb"
+slug = "biltransport-privat-webb"
+
+[[variable]]
+native_id = "258.36918.biltransport-annan-app"
+slug = "biltransport-annan-app"
+
+[[variable]]
+native_id = "258.36992.ej-internet-hemma-dyrt"
+slug = "ej-internet-hemma-dyrt"
+
+[[variable]]
+native_id = "258.36993.ej-internet-annan-text"
+slug = "ej-internet-annan-text"
+
+[[variable]]
+native_id = "258.36994.anvant-dator"
+slug = "anvant-dator"
+
+[[variable]]
+native_id = "258.36995.anvant-dator-3-man"
+slug = "anvant-dator-3-man"
+
+[[variable]]
+native_id = "258.36996.barbar-dator-utanfor"
+slug = "barbar-dator-utanfor"
+
+[[variable]]
+native_id = "258.36998.ansl-annan-enhet"
+slug = "ansl-annan-enhet"
+
+[[variable]]
+native_id = "258.36999.ansl-ej-via-mobil"
+slug = "ansl-ej-via-mobil"
+
+[[variable]]
+native_id = "258.37001.laddat-upp-eget-material"
+slug = "laddat-upp-eget-material"
+
+[[variable]]
+native_id = "258.37002.postat-asikter-politik"
+slug = "postat-asikter-politik"
+
+[[variable]]
+native_id = "258.37006.professionella-natverk"
+slug = "professionella-natverk"
+
+[[variable]]
+native_id = "258.37007.myndigh-blankett-ej-text"
+slug = "myndigh-blankett-ej-text"
+
+[[variable]]
+native_id = "258.37019.problem-info-garantier"
+slug = "problem-info-garantier"
+
+[[variable]]
+native_id = "258.37020.kopt-salt-aktier"
+slug = "kopt-salt-aktier"
+
+[[variable]]
+native_id = "258.37021.kopt-fornyat-forsakring"
+slug = "kopt-fornyat-forsakring"
+
+[[variable]]
+native_id = "258.37022.ansokt-lan-internet"
+slug = "ansokt-lan-internet"
+
+[[variable]]
+native_id = "258.37023.ej-kop-shoppa-fysiskt"
+slug = "ej-kop-shoppa-fysiskt"
+
+[[variable]]
+native_id = "258.37024.ej-kop-vet-ej-hur"
+slug = "ej-kop-vet-ej-hur"
+
+[[variable]]
+native_id = "258.37025.ej-kop-leveransproblem"
+slug = "ej-kop-leveransproblem"
+
+[[variable]]
+native_id = "258.37026.ej-kop-oro-betalning"
+slug = "ej-kop-oro-betalning"
+
+[[variable]]
+native_id = "258.37027.ej-kop-farhagor-leverans"
+slug = "ej-kop-farhagor-leverans"
+
+[[variable]]
+native_id = "258.37028.ej-kop-inget-betalkort"
+slug = "ej-kop-inget-betalkort"
+
+[[variable]]
+native_id = "258.37029.ej-kop-andra-skal"
+slug = "ej-kop-andra-skal"
+
+[[variable]]
+native_id = "258.37034.kalkylprogram-avancerat"
+slug = "kalkylprogram-avancerat"
+
+[[variable]]
+native_id = "258.37036.tillgang-dator-hemma"
+slug = "tillgang-dator-hemma"
+
+[[variable]]
+native_id = "258.37806.ej-kop-aterfors-utlandet"
+slug = "ej-kop-aterfors-utlandet"
+
+[[variable]]
+native_id = "258.38254.b4-2"
+slug = "b4-2"
+
+[[variable]]
+native_id = "258.38261.internet-dagligen-flera"
+slug = "internet-dagligen-flera"
+
+[[variable]]
+native_id = "258.38264.titta-streamat-tv"
+slug = "titta-streamat-tv"
+
+[[variable]]
+native_id = "258.38266.titta-filmer-serier"
+slug = "titta-filmer-serier"
+
+[[variable]]
+native_id = "258.38267.spela-ladda-ner-spel"
+slug = "spela-ladda-ner-spel"
+
+[[variable]]
+native_id = "258.38268.titta-klipp-streaming"
+slug = "titta-klipp-streaming"
+
+[[variable]]
+native_id = "258.38273.ej-hyrt-semester-privat"
+slug = "ej-hyrt-semester-privat"
+
+[[variable]]
+native_id = "258.38275.hyrt-semester-annan-app"
+slug = "hyrt-semester-annan-app"
+
+[[variable]]
+native_id = "258.38276.ej-biltransport-privat"
+slug = "ej-biltransport-privat"
+
+[[variable]]
+native_id = "258.38277.skaffat-tillfalligt-jobb"
+slug = "skaffat-tillfalligt-jobb"
+
+[[variable]]
+native_id = "258.38285.smartphone-privat-bruk"
+slug = "smartphone-privat-bruk"
+
+[[variable]]
+native_id = "258.38325.leverans-returkostnader"
+slug = "leverans-returkostnader"
+
+[[variable]]
+native_id = "258.38326.svar-losa-klagomal-rekl"
+slug = "svar-losa-klagomal-rekl"
+
+[[variable]]
+native_id = "258.38327.anpassa-produktmarkning"
+slug = "anpassa-produktmarkning"
+
+[[variable]]
+native_id = "258.38329.brist-sprakkunskap"
+slug = "brist-sprakkunskap"
+
+[[variable]]
+native_id = "258.38330.partner-restriktioner-eu"
+slug = "partner-restriktioner-eu"
+
+[[variable]]
+native_id = "258.38393.egna-3d-skrivare"
+slug = "egna-3d-skrivare"
+
+[[variable]]
+native_id = "258.38394.externa-3d-utskrift"
+slug = "externa-3d-utskrift"
+
+[[variable]]
+native_id = "258.39488.internet-annan-utbildning"
+slug = "internet-annan-utbildning"
+
+[[variable]]
+native_id = "258.39536.skrivit-kod-i-programmeringssprak"
+slug = "skrivit-kod-i-programmeringssprak"
+
+[[variable]]
+native_id = "258.41634.anvant-internet-halsovard-annan"
+slug = "anvant-internet-halsovard-annan"
+
+[[variable]]
+native_id = "258.41635.internet-halsojournal-natet"
+slug = "internet-halsojournal-natet"
+
+[[variable]]
+native_id = "258.41680.iot-energihantering-hemmet"
+slug = "iot-energihantering-hemmet"
+
+[[variable]]
+native_id = "258.41681.iot-sakerhetssystem-hemmet"
+slug = "iot-sakerhetssystem-hemmet"
+
+[[variable]]
+native_id = "258.41682.iot-hushallsapparater"
+slug = "iot-hushallsapparater"
+
+[[variable]]
+native_id = "258.41683.iot-virtuell-assistent"
+slug = "iot-virtuell-assistent"
+
+[[variable]]
+native_id = "258.41684.iot-orsak-visste-ej"
+slug = "iot-orsak-visste-ej"
+
+[[variable]]
+native_id = "258.41685.iot-orsak-ingen-anvandning"
+slug = "iot-orsak-ingen-anvandning"
+
+[[variable]]
+native_id = "258.41686.iot-orsak-for-dyrt"
+slug = "iot-orsak-for-dyrt"
+
+[[variable]]
+native_id = "258.41687.iot-orsak-inkompatibelt"
+slug = "iot-orsak-inkompatibelt"
+
+[[variable]]
+native_id = "258.41688.iot-orsak-vet-inte-hur"
+slug = "iot-orsak-vet-inte-hur"
+
+[[variable]]
+native_id = "258.41689.iot-orsak-oro-integritet"
+slug = "iot-orsak-oro-integritet"
+
+[[variable]]
+native_id = "258.41690.iot-orsak-oro-it-sakerhet"
+slug = "iot-orsak-oro-it-sakerhet"
+
+[[variable]]
+native_id = "258.41691.iot-orsak-oro-halsoproblem"
+slug = "iot-orsak-oro-halsoproblem"
+
+[[variable]]
+native_id = "258.41692.iot-barbar-teknik"
+slug = "iot-barbar-teknik"
+
+[[variable]]
+native_id = "258.41693.iot-overvakning-halsa"
+slug = "iot-overvakning-halsa"
+
+[[variable]]
+native_id = "258.41694.iot-leksaker-dockor-robotleksaker"
+slug = "iot-leksaker-dockor-robotleksaker"
+
+[[variable]]
+native_id = "258.41695.iot-bil-tradlos-uppkoppling"
+slug = "iot-bil-tradlos-uppkoppling"
+
+[[variable]]
+native_id = "258.41696.iot-internetansluten-tv"
+slug = "iot-internetansluten-tv"
+
+[[variable]]
+native_id = "258.41697.iot-internetansluten-spelkonsol"
+slug = "iot-internetansluten-spelkonsol"
+
+[[variable]]
+native_id = "258.41698.iot-ljudsystem-smarta-hogtalare"
+slug = "iot-ljudsystem-smarta-hogtalare"
+
+[[variable]]
+native_id = "258.41728.kopt-filmer-eller-serier"
+slug = "kopt-filmer-eller-serier"
+
+[[variable]]
+native_id = "258.41739.kopt-varor-fran-privatperson"
+slug = "kopt-varor-fran-privatperson"
+
+[[variable]]
+native_id = "258.41742.kopt-natet-fran-sverige"
+slug = "kopt-natet-fran-sverige"
+
+[[variable]]
+native_id = "258.41743.kopt-natet-fran-eu"
+slug = "kopt-natet-fran-eu"
+
+[[variable]]
+native_id = "258.41744.kopt-natet-fran-utanfor-eu"
+slug = "kopt-natet-fran-utanfor-eu"
+
+[[variable]]
+native_id = "258.41745.kopt-natet-fran-okant-land"
+slug = "kopt-natet-fran-okant-land"
+
+[[variable]]
+native_id = "258.41746.betalat-ebocker-digitala-medier"
+slug = "betalat-ebocker-digitala-medier"
+
+[[variable]]
+native_id = "258.41747.betalat-spel-internet"
+slug = "betalat-spel-internet"
+
+[[variable]]
+native_id = "258.41748.betalat-programvara-nedladdning"
+slug = "betalat-programvara-nedladdning"
+
+[[variable]]
+native_id = "258.41749.betalat-appar-halsa-fitness"
+slug = "betalat-appar-halsa-fitness"
+
+[[variable]]
+native_id = "258.41750.betalat-for-andra-appar"
+slug = "betalat-for-andra-appar"
+
+[[variable]]
+native_id = "258.41751.kopt-biljetter-sportevenemang"
+slug = "kopt-biljetter-sportevenemang"
+
+[[variable]]
+native_id = "258.41752.kopt-biljetter-kultur"
+slug = "kopt-biljetter-kultur"
+
+[[variable]]
+native_id = "258.41753.kopt-abonnemang-internet-mobil"
+slug = "kopt-abonnemang-internet-mobil"
+
+[[variable]]
+native_id = "258.41754.kopt-abonnemang-el-vatten-varme"
+slug = "kopt-abonnemang-el-vatten-varme"
+
+[[variable]]
+native_id = "258.41755.kopt-hushallstjanster"
+slug = "kopt-hushallstjanster"
+
+[[variable]]
+native_id = "258.41757.kopt-transporttjanst-foretag"
+slug = "kopt-transporttjanst-foretag"
+
+[[variable]]
+native_id = "258.41758.kopt-transport-privatperson"
+slug = "kopt-transport-privatperson"
+
+[[variable]]
+native_id = "258.41759.har-inte-kopt-nagon-transporttjanst"
+slug = "har-inte-kopt-nagon-transporttjanst"
+
+[[variable]]
+native_id = "258.41760.hyrt-semesterboende-foretag"
+slug = "hyrt-semesterboende-foretag"
+
+[[variable]]
+native_id = "258.41761.hyrt-semesterboende-privatperson"
+slug = "hyrt-semesterboende-privatperson"
+
+[[variable]]
+native_id = "258.41762.har-inte-hyrt-nagot-semesterboende"
+slug = "har-inte-hyrt-nagot-semesterboende"
+
+[[variable]]
+native_id = "258.41763.kopt-andra-tjanster-privat"
+slug = "kopt-andra-tjanster-privat"
+
+[[variable]]
+native_id = "258.41764.kopt-forsakringar-inkl-reseforsakring"
+slug = "kopt-forsakringar-inkl-reseforsakring"
+
+[[variable]]
+native_id = "258.41765.tagit-ett-lan-eller-kredit"
+slug = "tagit-ett-lan-eller-kredit"
+
+[[variable]]
+native_id = "258.41766.kopt-salt-aktier-fonder"
+slug = "kopt-salt-aktier-fonder"
+
+[[variable]]
+native_id = "258.41769.e-sakerhet-last-sekretesspolicy"
+slug = "e-sakerhet-last-sekretesspolicy"
+
+[[variable]]
+native_id = "258.41770.e-sakerhet-geografisk-plats"
+slug = "e-sakerhet-geografisk-plats"
+
+[[variable]]
+native_id = "258.41771.e-sakerhet-profil-natverk"
+slug = "e-sakerhet-profil-natverk"
+
+[[variable]]
+native_id = "258.41772.e-sakerhet-nekat-reklam"
+slug = "e-sakerhet-nekat-reklam"
+
+[[variable]]
+native_id = "258.41773.e-sakerhet-saker-webbplats"
+slug = "e-sakerhet-saker-webbplats"
+
+[[variable]]
+native_id = "258.41777.e-sakerhet-begart-egna-data"
+slug = "e-sakerhet-begart-egna-data"
+
+[[variable]]
+native_id = "258.41778.e-sakerhet-visste-om-kakor"
+slug = "e-sakerhet-visste-om-kakor"
+
+[[variable]]
+native_id = "258.41779.e-sakerhet-installningar-kakor"
+slug = "e-sakerhet-installningar-kakor"
+
+[[variable]]
+native_id = "258.41780.e-sakerhet-orolig-reklam"
+slug = "e-sakerhet-orolig-reklam"
+
+[[variable]]
+native_id = "258.41781.e-sakerhet-programvara-spaning"
+slug = "e-sakerhet-programvara-spaning"
+
+[[variable]]
+native_id = "258.44640.inga-problem-vid-internetkop"
+slug = "inga-problem-vid-internetkop"
+
+[[variable]]
+native_id = "258.44678.sett-falsk-info-pa-internet"
+slug = "sett-falsk-info-pa-internet"
+
+[[variable]]
+native_id = "258.44679.kontrollerat-info-via-kallor"
+slug = "kontrollerat-info-via-kallor"
+
+[[variable]]
+native_id = "258.44680.kontrollerat-info-via-diskussion"
+slug = "kontrollerat-info-via-diskussion"
+
+[[variable]]
+native_id = "258.44681.kontrollerat-falsk-info-offline"
+slug = "kontrollerat-falsk-info-offline"
+
+[[variable]]
+native_id = "258.44683.inte-kontrollerat-visste-redan"
+slug = "inte-kontrollerat-visste-redan"
+
+[[variable]]
+native_id = "258.44684.inte-kontrollerat-saknade-kunskap"
+slug = "inte-kontrollerat-saknade-kunskap"
+
+[[variable]]
+native_id = "258.44685.inte-kontrollerat-andra-skal"
+slug = "inte-kontrollerat-andra-skal"
+
+[[variable]]
+native_id = "258.44707.skapat-filer-dokument-bild-video"
+slug = "skapat-filer-dokument-bild-video"
+
+[[variable]]
+native_id = "258.44708.kopierat-flyttat-filer-moln"
+slug = "kopierat-flyttat-filer-moln"
+
+[[variable]]
+native_id = "258.44709.laddat-ner-programvara"
+slug = "laddat-ner-programvara"
+
+[[variable]]
+native_id = "258.44710.andrat-installningar-programvara"
+slug = "andrat-installningar-programvara"
+
+[[variable]]
+native_id = "258.44734.ai-anvands-for-it-sakerhet"
+slug = "ai-anvands-for-it-sakerhet"
+
+[[variable]]
+native_id = "258.44739.ai-anvands-for-marknadsforing"
+slug = "ai-anvands-for-marknadsforing"
+
+[[variable]]
+native_id = "258.45813.ej-ansokt-dokument-annan-orsak"
+slug = "ej-ansokt-dokument-annan-orsak"
+
+[[variable]]
+native_id = "258.45828.gron-it-kop-harddiskegenskaper"
+slug = "gron-it-kop-harddiskegenskaper"
+
+[[variable]]
+native_id = "258.45829.gron-it-kop-ekodesign"
+slug = "gron-it-kop-ekodesign"
+
+[[variable]]
+native_id = "258.45830.gron-it-kop-forlang-livslangd"
+slug = "gron-it-kop-forlang-livslangd"
+
+[[variable]]
+native_id = "258.45831.gron-it-kop-energieffektivitet"
+slug = "gron-it-kop-energieffektivitet"
+
+[[variable]]
+native_id = "258.45832.gron-it-kop-atertagningssystem"
+slug = "gron-it-kop-atertagningssystem"
+
+[[variable]]
+native_id = "258.45833.gron-it-kop-andra-egenskaper"
+slug = "gron-it-kop-andra-egenskaper"
+
+[[variable]]
+native_id = "258.45834.gron-it-kop-aldrig-kopt"
+slug = "gron-it-kop-aldrig-kopt"
+
+[[variable]]
+native_id = "258.46805.sett-hotfullt-inlagg-personliga"
+slug = "sett-hotfullt-inlagg-personliga"
+
+[[variable]]
+native_id = "258.47998.anvant-generativa-ai-verktyg"
+slug = "anvant-generativa-ai-verktyg"
+
+[[variable]]
+native_id = "258.47999.gen-ai-syfte-formell-utbildning"
+slug = "gen-ai-syfte-formell-utbildning"
+
+[[variable]]
+native_id = "258.48000.gen-ai-syfte-professionell"
+slug = "gen-ai-syfte-professionell"
+
+[[variable]]
+native_id = "258.48003.gen-ai-syfte-privat"
+slug = "gen-ai-syfte-privat"
+
+[[variable]]
+native_id = "258.48005.gen-ai-orsak-ej-anvand"
+slug = "gen-ai-orsak-ej-anvand"
+
+[[variable]]
+native_id = "258.48010.skapat-konto-gratis-app"
+slug = "skapat-konto-gratis-app"
+
+[[variable]]
+native_id = "258.48011.raderat-konto-gratis-app"
+slug = "raderat-konto-gratis-app"
+
+[[variable]]
+native_id = "258.48015.problem-radera-konto-app"
+slug = "problem-radera-konto-app"
+
+[[variable]]
+native_id = "258.48018.kopt-biljetter-sport-kulturell"
+slug = "kopt-biljetter-sport-kulturell"
+
+[[variable]]
+native_id = "258.48019.kopt-e-bocker-eller-ljudbocker"
+slug = "kopt-e-bocker-eller-ljudbocker"
+
+[[variable]]
+native_id = "258.48020.kopt-nedladdad-programvara-uppdatering"
+slug = "kopt-nedladdad-programvara-uppdatering"
+
+[[variable]]
+native_id = "258.48021.kopt-dataspel-nedladdad-online"
+slug = "kopt-dataspel-nedladdad-online"
+
+[[variable]]
+native_id = "258.48030.prenumererat-digital-tidning"
+slug = "prenumererat-digital-tidning"
+
+[[variable]]
+native_id = "258.48031.betalat-dataspel-streaming"
+slug = "betalat-dataspel-streaming"
+
+# register 26 (rams)
+
+[[variable]]
+native_id = "258.28863"
+slug = "iuupl"
+
+[[variable]]
+native_id = "258.16388"
+slug = "uppgiftslamnarens-personnr"
+
+[[variable]]
+native_id = "258.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "258.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "258.511"
+slug = "ssyk4-huvud"
+
+[[variable]]
+native_id = "258.544"
+slug = "sektor-i-huvudsysslan"
+
+[[variable]]
+native_id = "258.3881"
+slug = "sei-i-huvudsysslan"
+
+[[variable]]
+native_id = "258.4256"
+slug = "nettoomsattning"
+
+[[variable]]
+native_id = "258.4540"
+slug = "anstalld"
+
+[[variable]]
+native_id = "258.4613"
+slug = "populationsstorlek-per-stratum"
+
+[[variable]]
+native_id = "258.4677"
+slug = "sysselsattningsstatus"
+
+[[variable]]
+native_id = "258.5068"
+slug = "huvudsaklig-sysselsattning"
+
+[[variable]]
+native_id = "258.5582"
+slug = "antal-barn-under-16-ar"
+
+[[variable]]
+native_id = "258.6375"
+slug = "arbetskraftsstatus-aldre"
+
+[[variable]]
+native_id = "258.6508"
+slug = "antal-anstallda-arbetsplatsen"
+
+[[variable]]
+native_id = "258.6545"
+slug = "facklig-centralorganisation"
+
+[[variable]]
+native_id = "258.6837"
+slug = "antal-personer-stratum-urval"
+
+[[variable]]
+native_id = "258.6840"
+slug = "studier"
+
+[[variable]]
+native_id = "258.6910"
+slug = "undersysselsattning"
+
+[[variable]]
+native_id = "258.7077"
+slug = "barnantal-1-2-ar"
+
+[[variable]]
+native_id = "258.7079"
+slug = "barnantal-17-18-ar"
+
+[[variable]]
+native_id = "258.7080"
+slug = "barnantal-3-6-ar"
+
+[[variable]]
+native_id = "258.7081"
+slug = "barnantal-7-10-ar"
+
+[[variable]]
+native_id = "258.7450"
+slug = "matmanad"
+
+[[variable]]
+native_id = "258.7608"
+slug = "antal-barn-0-ar"
+
+[[variable]]
+native_id = "258.7809"
+slug = "anknytningsgrad-aku"
+
+[[variable]]
+native_id = "258.13492"
+slug = "telefonera-via-datorn"
+
+[[variable]]
+native_id = "258.17587"
+slug = "fodelseland-grupp"
+
+[[variable]]
+native_id = "258.17589"
+slug = "gruppering-av-alder"
+
+[[variable]]
+native_id = "258.19538"
+slug = "upprakningsfaktor"
+
+[[variable]]
+native_id = "258.22307"
+slug = "disponibel-inkomst-exkl-kapitalvinst"
+
+[[variable]]
+native_id = "258.30138"
+slug = "studier-eftergymnasial-niva"
+
+[[variable]]
+native_id = "258.35125"
+slug = "sokt-utbildningsinfo"
+
+[[variable]]
+native_id = "258.36336"
+slug = "funktionsnedsattning-annan"
+
+[[variable]]
+native_id = "258.36571"
+slug = "funktionsnedsattning"
+
+[[variable]]
+native_id = "258.40275"
+slug = "inkomstkvintiler-andel"
+
+# register 259

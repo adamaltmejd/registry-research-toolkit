@@ -1,0 +1,63 @@
+[register]
+provider = "fk"
+slug = "assistansersattning"
+native_id = "5301353483611203358"
+
+[[variant]]
+native_id = "5301353483611203358.8082812782473033108"
+slug = "pagaende-beslut-1994-2001"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5301353483611203358.9122333370064831819"
+slug = "pagaende-beslut-2002-201809"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5301353483611203358.8349704866364345844"
+slug = "pagaende-beslut-201810"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5301353483611203358.8104491224819817108"
+slug = "beviljanden"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5301353483611203358.5293102147601684719"
+slug = "avslag"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5301353483611203358.4901572278486996155"
+slug = "fattade-beslut"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+# Bilstöd
+
+[[variable]]
+native_id = "5301353483611203358.Lopnr"
+slug = "lopnr"

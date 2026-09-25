@@ -87,3 +87,599 @@ variable = "2.57"
 columns = { PNR = "2.57.pnr", PersonNr = "2.57.personnr", PersonNrAnkn = "2.57.personnrankn", PersonNrMor = "2.57.personnrmor", PersonNrSamh = "2.57.personnrsamh", PersonNrsamh = "2.57.personnrsamh" }
 unassigned_columns = ["Personnr"]
 columns_ref = "curation/relations.toml replaced_by edge scb/rtb/pnr -> scb/rtb/personnr (PNR -> PersonNr, 1998); fqid_slugs/scb.toml comment on 2.57.personnr: PersonNrSamh/PersonNrsamh is case-wobble of one column. Personnr has no ownership declaration."
+
+[[variable]]
+native_id = "2.57.personnr"
+slug = "personnr"
+
+
+[[variant]]
+native_id = "2.53"
+slug = "folkbokforda-personer"
+display_group = "Folkbokförda personer"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.54"
+slug = "familjer-fran-1998"
+display_group = "Familjer från 1998-"
+panel_entity_key = "familjeidentitet-rtb"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.56"
+slug = "civilstandsandringar"
+display_group = "Civilståndsändringar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.57"
+slug = "doda"
+display_group = "Döda"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.59"
+slug = "dodfodda"
+display_group = "Dödfödda"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.60"
+slug = "utvandringar"
+display_group = "Utvandringar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.61"
+slug = "fodda"
+display_group = "Födda"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.62"
+slug = "invandringar"
+display_group = "Invandringar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.63"
+slug = "inrikes-flyttningar"
+display_group = "Inrikes flyttningar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.64"
+slug = "medborgarskapsandringar"
+display_group = "Medborgarskapsändringar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.66"
+slug = "grund-bosattning"
+display_group = "Grund för bosättning för immigranter"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.1028"
+slug = "asylsokande-i-sverige"
+display_group = "Asylsökande i Sverige"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: the RTB-family identity has no states here; the bostadshushåll is keyed
+# by its dwelling — Lägenhetsnyckel (RNPLGH_RIDLGH), as in bostadsbestand.
+
+[[variant]]
+native_id = "2.1080"
+slug = "hushall"
+display_group = "Hushåll"
+panel_entity_key = "lagenhetsnyckel"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.1495"
+slug = "flyttningar-1968-1997"
+display_group = "In- och utvandringar 1968-1997"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "2.1524"
+slug = "familjer-1990-1997"
+display_group = "Familjer 1990-1997"
+panel_entity_key = "familjeidentitet-rtb"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Fastighetstaxering (FTR)
+
+[[variable]]
+native_id = "2.372"
+slug = "familjeidentitet-rtb"
+
+
+[[variable]]
+native_id = "2.29828.rnplgh-ridlgh"
+slug = "lagenhetsnyckel"
+
+
+[[variable]]
+native_id = "2.19"
+slug = "a-region"
+
+[[variable]]
+native_id = "2.24"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "2.25"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "2.243"
+slug = "alder-vid-handelsen-relationsperson"
+
+[[variable]]
+native_id = "2.245"
+slug = "civilstandsdatum"
+
+[[variable]]
+native_id = "2.246"
+slug = "civilstandsdatum-tidigare"
+
+[[variable]]
+native_id = "2.250"
+slug = "civildat-tidigare-rel"
+
+[[variable]]
+native_id = "2.251"
+slug = "civilstand-tidigare"
+
+[[variable]]
+native_id = "2.267"
+slug = "kon-relationsperson"
+
+[[variable]]
+native_id = "2.272"
+slug = "civilstand-tidigare-varaktighet"
+
+[[variable]]
+native_id = "2.275"
+slug = "personnr-relationsperson"
+
+[[variable]]
+native_id = "2.279"
+slug = "alder-vid-handelsen"
+
+[[variable]]
+native_id = "2.283"
+slug = "dodsdatum"
+
+[[variable]]
+native_id = "2.292"
+slug = "antal-fodda"
+
+[[variable]]
+native_id = "2.293"
+slug = "antal-dodfodda"
+
+[[variable]]
+native_id = "2.297"
+slug = "civilstandsdatum-mor"
+
+[[variable]]
+native_id = "2.302"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "2.322"
+slug = "ordningsnummer-dodfodd-mor"
+
+[[variable]]
+native_id = "2.324"
+slug = "personnr-mor-2"
+
+[[variable]]
+native_id = "2.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "2.339"
+slug = "flyttningsgrans"
+
+[[variable]]
+native_id = "2.346"
+slug = "ordningsnummer-mor"
+
+[[variable]]
+native_id = "2.353"
+slug = "forsamling-tidigare"
+
+[[variable]]
+native_id = "2.355"
+slug = "kommun-tidigare"
+
+[[variable]]
+native_id = "2.356"
+slug = "lan-tidigare"
+
+[[variable]]
+native_id = "2.3195"
+slug = "h-region"
+
+[[variable]]
+native_id = "2.8180"
+slug = "grund-for-bosattning"
+
+[[variable]]
+native_id = "2.15724"
+slug = "grund-for-bosattning-grupperad"
+
+[[variable]]
+native_id = "2.16234"
+slug = "fodelseland-eller-lan"
+
+[[variable]]
+native_id = "2.24851"
+slug = "gfb-klassgruppering-ffb"
+
+[[variable]]
+native_id = "2.24852"
+slug = "gfb-klassgruppering-efb"
+
+[[variable]]
+native_id = "2.29236"
+slug = "antal-uppehallstillstand"
+
+[[variable]]
+native_id = "2.29579"
+slug = "antal-asylsokande-man"
+
+[[variable]]
+native_id = "2.29591"
+slug = "antal-asylsokande-kvinnor"
+
+[[variable]]
+native_id = "2.29592"
+slug = "antal-asylsokande-barn"
+
+[[variable]]
+native_id = "2.40255"
+slug = "bearbetningsvecka"
+
+[[variable]]
+native_id = "2.40288"
+slug = "storstadsomrade"
+
+[[variable]]
+native_id = "2.46109"
+slug = "antal-massflyktssokande"
+
+# register 7 (ftr)
+
+[[variable]]
+native_id = "2.271.medblandggrupp-eu"
+slug = "medborgarskapsland-gg-eu"
+
+[[variable]]
+native_id = "2.271.medblandgrupp-eu"
+slug = "medborgarskapsland-grupp-eu"
+
+[[variable]]
+native_id = "2.27132.ssyk"
+slug = "yrke-vid-arbetstillstand"
+
+[[variable]]
+native_id = "2.42676.medblandgrupp-eu"
+slug = "medborgarskapsland-eu"
+
+[[variable]]
+native_id = "2.48621.medblandggrupp-eu"
+slug = "medborgarskapsland-tidigare-eu"
+
+[[variable]]
+native_id = "2.57.personnrmor"
+slug = "personnr-mor"
+
+# register 200 (arlig-energistatistik)
+
+[[variable]]
+native_id = "2.135.fnrfar"
+slug = "fnr-far"
+
+[[variable]]
+native_id = "2.135.fnrg"
+slug = "fnr-g"
+
+[[variable]]
+native_id = "2.135.fnrmor"
+slug = "fnr-mor"
+
+[[variable]]
+native_id = "2.135.fnrrel"
+slug = "fnr-rel"
+
+[[variable]]
+native_id = "2.57.personnrankn"
+slug = "personnr-ankn"
+
+[[variable]]
+native_id = "2.57.personnrsamh"
+slug = "personnr-samhorighet"
+
+[[variable]]
+native_id = "2.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "2.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "2.242"
+slug = "alder-31-12-relationsperson"
+
+[[variable]]
+native_id = "2.254"
+slug = "folkbokforingsdatum"
+
+[[variable]]
+native_id = "2.264"
+slug = "icke-territoriell-forsamling"
+
+[[variable]]
+native_id = "2.269"
+slug = "medborgarskapsdatum"
+
+[[variable]]
+native_id = "2.296"
+slug = "civilstandsdatum-far"
+
+[[variable]]
+native_id = "2.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "2.327"
+slug = "efternamn"
+
+[[variable]]
+native_id = "2.350"
+slug = "utvandringsland"
+
+[[variable]]
+native_id = "2.351"
+slug = "fastighetsbeteckning-tidigare"
+
+[[variable]]
+native_id = "2.366"
+slug = "datum-adoptivfar"
+
+[[variable]]
+native_id = "2.367"
+slug = "datum-adoptivmor"
+
+[[variable]]
+native_id = "2.379"
+slug = "personnr-adoptivfar"
+
+[[variable]]
+native_id = "2.380"
+slug = "personnr-adoptivmor"
+
+[[variable]]
+native_id = "2.383"
+slug = "personnr-make-partner"
+
+[[variable]]
+native_id = "2.384"
+slug = "personnr-sambo"
+
+[[variable]]
+native_id = "2.388"
+slug = "antal-barn"
+
+[[variable]]
+native_id = "2.389"
+slug = "antal-barn-under-18-ar"
+
+[[variable]]
+native_id = "2.390"
+slug = "antal-barn-under-22-ar"
+
+[[variable]]
+native_id = "2.391"
+slug = "antal-barn-under-6-ar"
+
+[[variable]]
+native_id = "2.398"
+slug = "fornamn"
+
+[[variable]]
+native_id = "2.418"
+slug = "utdelningsadress"
+
+[[variable]]
+native_id = "2.1573"
+slug = "aldersgruppering-31-12"
+
+[[variable]]
+native_id = "2.3410"
+slug = "utvandringsdatum"
+
+[[variable]]
+native_id = "2.27129"
+slug = "grund-for-bosattning-klassgrupp"
+
+[[variable]]
+native_id = "2.27158"
+slug = "boendeland"
+
+[[variable]]
+native_id = "2.29339"
+slug = "hushallstyp-bostadshushall"
+
+[[variable]]
+native_id = "2.29832"
+slug = "lopnummer-bostadshushall"
+
+[[variable]]
+native_id = "2.30353"
+slug = "familjeidentitet"
+
+[[variable]]
+native_id = "2.30883"
+slug = "ssyk-version-arbetstillstand"
+
+[[variable]]
+native_id = "2.39460"
+slug = "aktenskapsnr"
+
+# register 7
+
+[[variable]]
+native_id = "2.15.civil"
+slug = "civilstand"
+
+[[variable]]
+native_id = "2.15.tidcivil"
+slug = "tidpunkt-civilstand"
+
+[[variable]]
+native_id = "2.22864.fastnr"
+slug = "fastighetens-officiella-nr"
+
+[[variable]]
+native_id = "2.241.alder"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "2.241.aldersamh"
+slug = "alder-samhorighet"
+
+[[variable]]
+native_id = "2.257.fodelselandnamn"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "2.271.medblandnamn"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "2.27132.ssyk2012"
+slug = "yrke-vid-arbetstillstand-2"
+
+[[variable]]
+native_id = "2.29828.rnplgh-ridlghfar"
+slug = "lagenhetsnyckel-far"
+
+[[variable]]
+native_id = "2.29828.rnplgh-ridlghmor"
+slug = "lagenhetsnyckel-mor"
+
+[[variable]]
+native_id = "2.29828.rnplgh-ridlghrel"
+slug = "lagenhetsnyckel-rel"
+
+[[variable]]
+native_id = "2.305.fodelselandnamnmor"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "2.305.fodelselandnamnmor-eu"
+slug = "fodelseland-mor-eu"
+
+[[variable]]
+native_id = "2.31.mantfors"
+slug = "mantalsskrivningsforsamling"
+
+[[variable]]
+native_id = "2.36.mantkommun"
+slug = "mantalsskrivningskommun"
+
+[[variable]]
+native_id = "2.3730.uuid-fast"
+slug = "fastighetens-identitetsnummer"
+
+[[variable]]
+native_id = "2.3730.uuid-fastfar"
+slug = "fastighetens-id-far"
+
+[[variable]]
+native_id = "2.3730.uuid-fastmor"
+slug = "fastighetens-id-mor"
+
+[[variable]]
+native_id = "2.3730.uuid-fastrel"
+slug = "fastighetens-id-relationsperson"
+
+[[variable]]
+native_id = "2.39371.taxdist"
+slug = "taxeringsdistrikt"
+
+[[variable]]
+native_id = "2.39371.taxdistr"
+slug = "taxeringsdistrikt-2"
+
+[[variable]]
+native_id = "2.39371.taxdistrikt"
+slug = "taxeringsdistrikt-3"
+
+[[variable]]
+native_id = "2.39375.uuid-lghfar"
+slug = "uuid-lgh-far"
+
+[[variable]]
+native_id = "2.39375.uuid-lghmor"
+slug = "uuid-lgh-mor"
+
+[[variable]]
+native_id = "2.39375.uuid-lghrel"
+slug = "uuid-lgh-rel"
+
+[[variable]]
+native_id = "2.44.konsamh"
+slug = "kon-samhorighet"
+
+[[variable]]
+native_id = "2.5144.inkomdatum"
+slug = "inkommandedatum"
+
+# register 200

@@ -1,0 +1,57 @@
+[register]
+provider = "scb"
+slug = "laps"
+native_id = "179"
+
+[[variant]]
+native_id = "179.247"
+slug = "_default"
+display_group = "Lönesummor, arbetsgivaravgifter och preliminär A-skatt"
+panel_entity_key = "person-orgnr"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
+
+# Riksbankens finansmarknadsstatistik (FMR)
+
+[[variable]]
+native_id = "179.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "179.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "179.36"
+slug = "lan-kommun-kod"
+
+[[variable]]
+native_id = "179.1794"
+slug = "antal-skattedeklarationer"
+
+[[variable]]
+native_id = "179.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "179.4055"
+slug = "kostnadsavdrag"
+
+[[variable]]
+native_id = "179.4056"
+slug = "arbetsgivaravgift-summa"
+
+[[variable]]
+native_id = "179.4067"
+slug = "prelim-a-skatt-inkl-soc"
+
+[[variable]]
+native_id = "179.19052"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "179.21757"
+slug = "avdrag-regionalt-stod"
+
+# register 182

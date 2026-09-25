@@ -1,0 +1,91 @@
+[register]
+provider = "scb"
+slug = "energi-lokaler"
+native_id = "140"
+
+[[variant]]
+native_id = "140.206"
+slug = "_default"
+display_group = "Energistatistik för lokaler"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Månatlig bränsle-, gas och lagerstatistik (MABRA)
+
+[[variable]]
+native_id = "140.26"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "140.145"
+slug = "fastbet-id"
+
+[[variable]]
+native_id = "140.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "140.7838"
+slug = "graddagar"
+
+[[variable]]
+native_id = "140.7860"
+slug = "taxeringsid"
+
+[[variable]]
+native_id = "140.7865"
+slug = "franluftsvarmepump"
+
+[[variable]]
+native_id = "140.7868"
+slug = "utevarmepump"
+
+[[variable]]
+native_id = "140.7869"
+slug = "bergvarmepump"
+
+[[variable]]
+native_id = "140.7891"
+slug = "elvvarme-inkl-varmvatten"
+
+[[variable]]
+native_id = "140.7900"
+slug = "byggnadsar"
+
+[[variable]]
+native_id = "140.7998"
+slug = "varmvattenforbrukning"
+
+[[variable]]
+native_id = "140.8162"
+slug = "antal-svarande-enheter"
+
+[[variable]]
+native_id = "140.19574"
+slug = "installationsar-luft-luftvarmepump"
+
+[[variable]]
+native_id = "140.19575"
+slug = "installationsar-franluft-varmepump"
+
+[[variable]]
+native_id = "140.19576"
+slug = "installationsar-bergvarmepump"
+
+[[variable]]
+native_id = "140.21246"
+slug = "avregistreringskod-lokaler"
+
+[[variable]]
+native_id = "140.21260"
+slug = "nutsregion"
+
+# register 141
+
+[[variable]]
+native_id = "140.49.lansnamn"
+slug = "lan-2"
+
+# register 142

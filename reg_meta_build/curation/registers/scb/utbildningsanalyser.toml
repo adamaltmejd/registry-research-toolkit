@@ -26,3 +26,1531 @@ register = "scb/utbildningsanalyser"
 variable = "vt-veckor-termin"
 description = "Terminens längd"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[variant]]
+native_id = "366.1320"
+slug = "internationell-rorlighet"
+display_group = "Internationell rörlighet för utbildning bland unga i Sverige"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "366.1350"
+slug = "ungdomar-utan-fullfoljd-gymnasieutbildning"
+display_group = "Ungdomar utan fullföljd gymnasieutbildning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "366.1351"
+slug = "sjukskoterskor-utanfor-yrket"
+display_group = "Sjuksköterskor utanför yrket"
+panel_entity_key = "eget-personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "366.1439"
+slug = "doktorsexaminerades-villkor"
+display_group = "Doktorsexaminerades villkor"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "366.1525"
+slug = "hogskoleutbildning-utan-examen"
+display_group = "Högskoleutbildning utan examen"
+
+
+[[variant]]
+native_id = "366.1527"
+slug = "forskollararforsorjningen"
+display_group = "Förskollärarförsörjningen"
+
+
+[[variant]]
+native_id = "366.1528"
+slug = "lararforsorjningen-icke-aktiva"
+display_group = "Lärarförsörjningen, icke aktiva lärare"
+
+
+[[variant]]
+native_id = "366.1533"
+slug = "lararforsorjningen"
+display_group = "Lärarförsörjningen, aktiva lärare"
+
+
+[[variant]]
+native_id = "366.1545"
+slug = "folkhogskoleuppfoljningen"
+display_group = "Folkhögskoleuppföljningen"
+panel_entity_key = "skolkod"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# (keep) Swedish definite inflection: grundskola vs grundskolan; auto-slug
+# rule strips the definite -an ending, not a truncation.
+
+[[variant]]
+native_id = "366.1648"
+slug = "distansundervisning-grundskola"
+display_group = "Distansundervisning under pandemin, grundskolan"
+panel_entity_key = "skolkod-distans"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "366.1649"
+slug = "distansundervisning-gymnasieskolan"
+display_group = "Distansundervisning under pandemin, gymnasieskolan"
+panel_entity_key = "skolkod-distans"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Tidsanvändningsundersökningen
+
+[[variable]]
+native_id = "366.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "366.104"
+slug = "skolkod"
+
+
+[[variable]]
+native_id = "366.4544"
+slug = "eget-personnr"
+
+
+[[variable]]
+native_id = "366.45133"
+slug = "skolkod-distans"
+
+
+[[variable]]
+native_id = "366.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "366.65"
+slug = "utbildningsinriktning"
+
+[[variable]]
+native_id = "366.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "366.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "366.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "366.1545"
+slug = "utbildningsinriktning-3-positioner"
+
+[[variable]]
+native_id = "366.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "366.3126"
+slug = "faktisk-tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "366.3235"
+slug = "antal-terminer-i-utbildning"
+
+[[variable]]
+native_id = "366.3271"
+slug = "upprakningsvikt"
+
+[[variable]]
+native_id = "366.3614"
+slug = "meritvarde"
+
+[[variable]]
+native_id = "366.4028"
+slug = "storan"
+
+[[variable]]
+native_id = "366.4030"
+slug = "lillan"
+
+[[variable]]
+native_id = "366.4613"
+slug = "populationsstorlek-per-stratum"
+
+[[variable]]
+native_id = "366.4614"
+slug = "urvalsstorlek-per-stratum"
+
+[[variable]]
+native_id = "366.4655"
+slug = "avregkod"
+
+[[variable]]
+native_id = "366.4656"
+slug = "insamlingsmetod"
+
+[[variable]]
+native_id = "366.4697"
+slug = "gymnasiebetyg"
+
+[[variable]]
+native_id = "366.4736"
+slug = "vikt"
+
+[[variable]]
+native_id = "366.5043"
+slug = "aktivt-sokt-arbete"
+
+[[variable]]
+native_id = "366.5078"
+slug = "arbete"
+
+[[variable]]
+native_id = "366.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "366.5090"
+slug = "arbetsmarknadssektor"
+
+[[variable]]
+native_id = "366.5118"
+slug = "verksamhetsomrade"
+
+[[variable]]
+native_id = "366.5124"
+slug = "tillracklig-utbildningsniva"
+
+[[variable]]
+native_id = "366.5125"
+slug = "tid-lara-arbetsuppgifterna"
+
+[[variable]]
+native_id = "366.5664"
+slug = "befattningskod"
+
+[[variable]]
+native_id = "366.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "366.5697"
+slug = "lilla-n-per-stratum"
+
+[[variable]]
+native_id = "366.6181"
+slug = "utbildning-bidragit-fa-arbete"
+
+[[variable]]
+native_id = "366.6211"
+slug = "svarande-per-stratum"
+
+[[variable]]
+native_id = "366.6212"
+slug = "vikt-ht"
+
+[[variable]]
+native_id = "366.6290"
+slug = "nuts"
+
+[[variable]]
+native_id = "366.6306"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "366.6418"
+slug = "befattningskod-pedagogisk"
+
+[[variable]]
+native_id = "366.7914"
+slug = "arskurs"
+
+[[variable]]
+native_id = "366.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "366.8773"
+slug = "typ-av-anstallning"
+
+[[variable]]
+native_id = "366.15053"
+slug = "utbildningsniva-sun2000"
+
+[[variable]]
+native_id = "366.15677"
+slug = "storan-ungdejfullf"
+
+[[variable]]
+native_id = "366.15678"
+slug = "lillan-ungdejfullf"
+
+[[variable]]
+native_id = "366.15694"
+slug = "huvudsaklig-avbrottsorsak"
+
+[[variable]]
+native_id = "366.15696"
+slug = "avbrottsorsak-fick-barn"
+
+[[variable]]
+native_id = "366.15697"
+slug = "avbrottsorsak-fick-arbete"
+
+[[variable]]
+native_id = "366.15700"
+slug = "avbrottsorsak-svara-studier"
+
+[[variable]]
+native_id = "366.15704"
+slug = "avbrottsorsak-skoltrott"
+
+[[variable]]
+native_id = "366.15712"
+slug = "stodundervisning"
+
+[[variable]]
+native_id = "366.15713"
+slug = "uteblivit-undervisningen"
+
+[[variable]]
+native_id = "366.15719"
+slug = "angrar"
+
+[[variable]]
+native_id = "366.15722"
+slug = "arbete-efter-gymnasieskolan"
+
+[[variable]]
+native_id = "366.15764"
+slug = "manader-forsta-arbete-eftergy"
+
+[[variable]]
+native_id = "366.15765"
+slug = "arbetslos-efter-gymnasieskolan"
+
+[[variable]]
+native_id = "366.15767"
+slug = "antal-ganger-arbetslos-eftergy"
+
+[[variable]]
+native_id = "366.15768"
+slug = "verksamhet-matveckan"
+
+[[variable]]
+native_id = "366.15830"
+slug = "erbjuden-svartjobb"
+
+[[variable]]
+native_id = "366.15832"
+slug = "arbetstid-per-vecka"
+
+[[variable]]
+native_id = "366.15833"
+slug = "arbeta-mer-eller-mindre"
+
+[[variable]]
+native_id = "366.15835"
+slug = "syn-pa-arbetet-fortsatta-yrket"
+
+[[variable]]
+native_id = "366.15837"
+slug = "syn-pa-arbetet-till-annat-arbete"
+
+[[variable]]
+native_id = "366.15838"
+slug = "syn-pa-arbetet-obekvama-tider"
+
+[[variable]]
+native_id = "366.15839"
+slug = "syn-pa-arbetet-till-utbildning"
+
+[[variable]]
+native_id = "366.15840"
+slug = "syn-pa-arbetet-erfarenhet"
+
+[[variable]]
+native_id = "366.15874"
+slug = "framtiden-for-egen-del"
+
+[[variable]]
+native_id = "366.16341"
+slug = "antal-gymnasiepoang"
+
+[[variable]]
+native_id = "366.17446"
+slug = "inskriven-arbetsformedlingen"
+
+[[variable]]
+native_id = "366.17589"
+slug = "gruppering-av-alder"
+
+[[variable]]
+native_id = "366.25154"
+slug = "nojd-med-avslutad-utbildning"
+
+[[variable]]
+native_id = "366.28679"
+slug = "sysselsattning-aktivitet"
+
+[[variable]]
+native_id = "366.30675"
+slug = "arbete-minst-6-manader-gymnasiet"
+
+[[variable]]
+native_id = "366.30809"
+slug = "anstallningsform-annan"
+
+[[variable]]
+native_id = "366.30824"
+slug = "minst-en-timmes-arbete-under-matveckan"
+
+[[variable]]
+native_id = "366.32454"
+slug = "foraldrarnas-utbildningsniva"
+
+[[variable]]
+native_id = "366.35122"
+slug = "samboforhallande"
+
+[[variable]]
+native_id = "366.35964"
+slug = "heltid-deltid-forvarvsarbetande"
+
+[[variable]]
+native_id = "366.36081"
+slug = "anstalld-aktuellt-yrke-bransch"
+
+[[variable]]
+native_id = "366.36083"
+slug = "avslutsar-senaste-anstallning"
+
+[[variable]]
+native_id = "366.36085"
+slug = "antal-ar-yrket-branschen"
+
+[[variable]]
+native_id = "366.36087"
+slug = "skal-utbilda-yrket-annat"
+
+[[variable]]
+native_id = "366.36088"
+slug = "utbildningen-forberedde-yrket"
+
+[[variable]]
+native_id = "366.36089"
+slug = "utbildningens-nytta-arbetet"
+
+[[variable]]
+native_id = "366.36090"
+slug = "nytta-yrkeserfarenhet-arbetet"
+
+[[variable]]
+native_id = "366.36094"
+slug = "loneforandring-yrkesbyte"
+
+[[variable]]
+native_id = "366.36095"
+slug = "tjanstgoringsomfattning-skal-lamna-yrket"
+
+[[variable]]
+native_id = "366.36097"
+slug = "sannolikhet-aterganga-yrket"
+
+[[variable]]
+native_id = "366.36099"
+slug = "andra-faktorer-aterganga-yrket"
+
+[[variable]]
+native_id = "366.36100"
+slug = "hemmavarande-barn-12-ar-aldre"
+
+[[variable]]
+native_id = "366.36121"
+slug = "yrkesbytet-annan-anledning-txt"
+
+[[variable]]
+native_id = "366.36122"
+slug = "yrkesbyte-skal-admin-uppgifter"
+
+[[variable]]
+native_id = "366.36124"
+slug = "yrkesbyte-skal-arbetsbelastning"
+
+[[variable]]
+native_id = "366.36125"
+slug = "yrkesbyte-skal-kompetensutv"
+
+[[variable]]
+native_id = "366.36126"
+slug = "yrkesbyte-skal-karriar"
+
+[[variable]]
+native_id = "366.36128"
+slug = "yrkesbyte-skal-psykiskt-kravande"
+
+[[variable]]
+native_id = "366.36129"
+slug = "yrkesbyte-skal-styra-arbetet"
+
+[[variable]]
+native_id = "366.36130"
+slug = "yrkesbyte-skal-ledarskap"
+
+[[variable]]
+native_id = "366.36136"
+slug = "lon-skal-yrkesbyte-annat"
+
+[[variable]]
+native_id = "366.36137"
+slug = "lon-skal-yrkesbyte-annat-txt"
+
+[[variable]]
+native_id = "366.36153"
+slug = "aterganga-yrket-andra-skal-txt"
+
+[[variable]]
+native_id = "366.36155"
+slug = "aterganga-yrket-hogre-lon"
+
+[[variable]]
+native_id = "366.36156"
+slug = "aterganga-yrket-karriar"
+
+[[variable]]
+native_id = "366.36157"
+slug = "aterganga-yrket-kompetensutv"
+
+[[variable]]
+native_id = "366.36158"
+slug = "aterganga-yrket-arbetsbelastning"
+
+[[variable]]
+native_id = "366.36159"
+slug = "faktorer-komma-tillbaka-styra"
+
+[[variable]]
+native_id = "366.36165"
+slug = "skal-till-yrkesbytet-annan-anledning"
+
+[[variable]]
+native_id = "366.36166"
+slug = "hemmavarande-barn-11-ar-eller-yngre"
+
+[[variable]]
+native_id = "366.36167"
+slug = "inga-hemmavarande-barn"
+
+[[variable]]
+native_id = "366.36199"
+slug = "studiedeltagande-eftergy-minst-2ar"
+
+[[variable]]
+native_id = "366.36200"
+slug = "utlandsvistelse-eftergy-minst-2ar"
+
+[[variable]]
+native_id = "366.36315"
+slug = "paborjat-gymnasieskolan-eller-inte"
+
+[[variable]]
+native_id = "366.36317"
+slug = "avhopp-fran-gymnasieskolan"
+
+[[variable]]
+native_id = "366.36338"
+slug = "skolpersonal-hjalp-fullfolja-gy"
+
+[[variable]]
+native_id = "366.36347"
+slug = "hur-kontakterna-har-fungerat"
+
+[[variable]]
+native_id = "366.36371"
+slug = "sysselsattning-aktivitet-annan"
+
+[[variable]]
+native_id = "366.36373"
+slug = "hur-man-fatt-arbetet"
+
+[[variable]]
+native_id = "366.37237"
+slug = "tjanstgorande-larare"
+
+[[variable]]
+native_id = "366.37594"
+slug = "skal-utbilda-yrket-intresse-halsa"
+
+[[variable]]
+native_id = "366.37595"
+slug = "skal-utbilda-yrket-arbeta-manniskor"
+
+[[variable]]
+native_id = "366.37716"
+slug = "skal-yrkesbyte-patientkontakter"
+
+[[variable]]
+native_id = "366.37717"
+slug = "yrkesbyte-skal-uppgifter-ej-yrket"
+
+[[variable]]
+native_id = "366.37718"
+slug = "skal-yrkesbyte-fysiskt-kravande"
+
+[[variable]]
+native_id = "366.38782"
+slug = "intryck-forskarutbildningen"
+
+[[variable]]
+native_id = "366.38783"
+slug = "forskarutb-forberett-arbetslivet"
+
+[[variable]]
+native_id = "366.38784"
+slug = "onskemal-om-arbetsplats"
+
+[[variable]]
+native_id = "366.38919"
+slug = "uppmarksammat-negativ-sarbehandling"
+
+[[variable]]
+native_id = "366.38924"
+slug = "uppmarksammat-sexuellt-krankande"
+
+[[variable]]
+native_id = "366.38925"
+slug = "stod-vid-sexuellt-krankande"
+
+[[variable]]
+native_id = "366.38926"
+slug = "stod-vid-negativ-sarbehandling"
+
+[[variable]]
+native_id = "366.38929"
+slug = "arbete-sysselsattning-efter-utbildningen"
+
+[[variable]]
+native_id = "366.38930"
+slug = "arbetat-utomlands-forsta-ar"
+
+[[variable]]
+native_id = "366.38931"
+slug = "huvudsaklig-sysselsattning-forsta-ar"
+
+[[variable]]
+native_id = "366.38941"
+slug = "arbete-inom-amnesomradet-postdoktor"
+
+[[variable]]
+native_id = "366.38942"
+slug = "arbete-amnesomradet-forskarassistent"
+
+[[variable]]
+native_id = "366.38943"
+slug = "arbete-amnesomradet-bitradande-lektor"
+
+[[variable]]
+native_id = "366.38944"
+slug = "tid-examen-till-arbete-amnesomradet"
+
+[[variable]]
+native_id = "366.38945"
+slug = "latt-svart-fa-arbete-amnesomradet"
+
+[[variable]]
+native_id = "366.38948"
+slug = "anknytning-arbetsmarknaden-postdoktor"
+
+[[variable]]
+native_id = "366.38949"
+slug = "anknytning-arbetsmarknaden-stipendium"
+
+[[variable]]
+native_id = "366.41114"
+slug = "behorighet-till-tjansten"
+
+[[variable]]
+native_id = "366.41118"
+slug = "behorighet-till-senaste-tjansten"
+
+[[variable]]
+native_id = "366.41119"
+slug = "behorighet-i-amnen"
+
+[[variable]]
+native_id = "366.41120"
+slug = "huvudman-senast"
+
+[[variable]]
+native_id = "366.41126"
+slug = "arbete-idag"
+
+[[variable]]
+native_id = "366.41131"
+slug = "risk-for-omplacering"
+
+[[variable]]
+native_id = "366.41132"
+slug = "risk-for-entledigande-eller-arbetsloshet"
+
+[[variable]]
+native_id = "366.41134"
+slug = "nytta-lararutb-nuvarande-arbete"
+
+[[variable]]
+native_id = "366.41135"
+slug = "nytta-larare-erfarenhet-arbete"
+
+[[variable]]
+native_id = "366.41137"
+slug = "soka-anstallning-som-larare"
+
+[[variable]]
+native_id = "366.41141"
+slug = "lararexamen"
+
+[[variable]]
+native_id = "366.41142"
+slug = "antal-terminer-till-lararexamen"
+
+[[variable]]
+native_id = "366.41143"
+slug = "skaffa-lararexamen"
+
+[[variable]]
+native_id = "366.41144"
+slug = "komplettera-utbildning"
+
+[[variable]]
+native_id = "366.41145"
+slug = "antal-terminer-for-komplettering"
+
+[[variable]]
+native_id = "366.41939"
+slug = "antal-terminer-till-komplett-lararexamen"
+
+[[variable]]
+native_id = "366.41967"
+slug = "behorighet-som-larare-skolledare"
+
+[[variable]]
+native_id = "366.44869"
+slug = "kontrolleras-narvaro"
+
+[[variable]]
+native_id = "366.44878"
+slug = "grad-lararleddhet-distans"
+
+[[variable]]
+native_id = "366.44885"
+slug = "metod-narvarokontroll-upprop-borjan"
+
+[[variable]]
+native_id = "366.44932"
+slug = "paverkan-tekniska-problem-undervisning"
+
+[[variable]]
+native_id = "366.44933"
+slug = "paverkan-ovana-teknik-undervisning"
+
+[[variable]]
+native_id = "366.44988"
+slug = "andel-undervisning-distans-ht"
+
+[[variable]]
+native_id = "366.44989"
+slug = "distans-organisering-ht"
+
+[[variable]]
+native_id = "366.44991"
+slug = "andel-undervisning-distans-vt"
+
+[[variable]]
+native_id = "366.44992"
+slug = "distans-organisering-vt"
+
+[[variable]]
+native_id = "366.44995"
+slug = "undantag-distans-extra-anpassningar-vt"
+
+[[variable]]
+native_id = "366.44996"
+slug = "undantag-distans-sarskilt-stod-vt"
+
+[[variable]]
+native_id = "366.44999"
+slug = "undantag-distans-extra-anpassningar-ht"
+
+[[variable]]
+native_id = "366.45000"
+slug = "undantag-distans-sarskilt-stod-ht"
+
+[[variable]]
+native_id = "366.45005"
+slug = "larares-undervisning-hemifran-vt"
+
+[[variable]]
+native_id = "366.45007"
+slug = "larares-undervisning-hemifran-ht"
+
+[[variable]]
+native_id = "366.45008"
+slug = "distansundervisning-via-motesverktyg-ht"
+
+[[variable]]
+native_id = "366.45009"
+slug = "distansundervisning-via-motesverktyg-vt"
+
+[[variable]]
+native_id = "366.45091"
+slug = "stod-bedomning-nationella-prov-vet-inte"
+
+[[variable]]
+native_id = "366.45093"
+slug = "metod-narvarokontroll-upprop-flera"
+
+[[variable]]
+native_id = "366.45095"
+slug = "metod-narvarokontroll-kamera-borjan"
+
+[[variable]]
+native_id = "366.45096"
+slug = "metod-narvarokontroll-kamera-hel"
+
+[[variable]]
+native_id = "366.45097"
+slug = "metod-narvarokontroll-inlamning"
+
+[[variable]]
+native_id = "366.45098"
+slug = "metod-narvarokontroll-annat"
+
+[[variable]]
+native_id = "366.45099"
+slug = "metod-narvarokontroll-vet-inte"
+
+[[variable]]
+native_id = "366.45109"
+slug = "distans-nettoveckor-ht-grupp"
+
+[[variable]]
+native_id = "366.45110"
+slug = "distans-nettoveckor-vt-grupp"
+
+[[variable]]
+native_id = "366.45112"
+slug = "distans-bruttoveckor-ht"
+
+[[variable]]
+native_id = "366.45113"
+slug = "distans-bruttoveckor-vt"
+
+[[variable]]
+native_id = "366.45114"
+slug = "distans-bruttoveckor-lasar"
+
+[[variable]]
+native_id = "366.45115"
+slug = "distans-nettoveckor-ht"
+
+[[variable]]
+native_id = "366.45116"
+slug = "distans-nettoveckor-vt"
+
+[[variable]]
+native_id = "366.45119"
+slug = "arskurs-grundskolan"
+
+[[variable]]
+native_id = "366.45122"
+slug = "huvudman-distans"
+
+[[variable]]
+native_id = "366.45123"
+slug = "hjalpvariabel-1-distans"
+
+[[variable]]
+native_id = "366.45124"
+slug = "hjalpvariabel-2-distans"
+
+[[variable]]
+native_id = "366.45126"
+slug = "hjalpvariabel-4-distans"
+
+[[variable]]
+native_id = "366.45127"
+slug = "vikt-distans"
+
+[[variable]]
+native_id = "366.45128"
+slug = "skolstorlek-gymnasieskolan"
+
+[[variable]]
+native_id = "366.45141"
+slug = "skolstorlek-grundskolan"
+
+[[variable]]
+native_id = "366.45961"
+slug = "larares-franvaro-pandemi-anstallt-fler"
+
+[[variable]]
+native_id = "366.45962"
+slug = "larares-franvaro-pandemi-underv-distans"
+
+[[variable]]
+native_id = "366.45963"
+slug = "larares-franvaro-pandemi-andra-losningar"
+
+[[variable]]
+native_id = "366.45964"
+slug = "larares-franvaro-pandemi-annan-personal"
+
+[[variable]]
+native_id = "366.45965"
+slug = "larares-franvaro-pandemi-behoriga-vik"
+
+[[variable]]
+native_id = "366.45966"
+slug = "larares-franvaro-pandemi-larare-beh"
+
+[[variable]]
+native_id = "366.45967"
+slug = "larares-franvaro-pandemi-larare-obeh"
+
+[[variable]]
+native_id = "366.45968"
+slug = "larares-franvaro-pandemi-obehoriga-vik"
+
+[[variable]]
+native_id = "366.45969"
+slug = "pandemi-franvaro-uppskjuten"
+
+[[variable]]
+native_id = "366.45970"
+slug = "pandemi-franvaro-uteblev"
+
+[[variable]]
+native_id = "366.46043"
+slug = "erbjuden-distansundervisning-ht"
+
+[[variable]]
+native_id = "366.46044"
+slug = "erbjuden-distansundervisning-vt"
+
+[[variable]]
+native_id = "366.46048"
+slug = "fortbildning-digitala-verktyg"
+
+[[variable]]
+native_id = "366.46053"
+slug = "skola-bredband-elever"
+
+[[variable]]
+native_id = "366.46071"
+slug = "hjalpvariabel-5-distans"
+
+# register 367 (tidsanvandning)
+
+[[variable]]
+native_id = "366.11327.f1"
+slug = "hogsta-avslutade-utbildning"
+
+[[variable]]
+native_id = "366.15766.f13"
+slug = "antal-manader-arbetslos-gymnasiet"
+
+[[variable]]
+native_id = "366.1996.f12"
+slug = "skolform"
+
+[[variable]]
+native_id = "366.1996.f2"
+slug = "skolform-2"
+
+[[variable]]
+native_id = "366.1996.skolform"
+slug = "skolform-3"
+
+[[variable]]
+native_id = "366.23477.f25"
+slug = "yrke"
+
+[[variable]]
+native_id = "366.25052.f19"
+slug = "tillracklig-utbildningsniva-arbete"
+
+[[variable]]
+native_id = "366.25054.arbete"
+slug = "arbete-under-matveckan"
+
+[[variable]]
+native_id = "366.30623.f18"
+slug = "skiftarbete-2"
+
+[[variable]]
+native_id = "366.30810.f14"
+slug = "arbetat-eller-studerat-utomlands"
+
+[[variable]]
+native_id = "366.30810.f21"
+slug = "arbetat-eller-studerat-utomlands-2"
+
+[[variable]]
+native_id = "366.30816.f32a-07"
+slug = "framtidsplaner-studera-hogskola-yh"
+
+[[variable]]
+native_id = "366.30816.f32b-05"
+slug = "framtidsplaner-studera-hogskola-yh-2"
+
+[[variable]]
+native_id = "366.35963.f31"
+slug = "veckoarbetstid-forvarvsarbetande"
+
+[[variable]]
+native_id = "366.36084.f3"
+slug = "arbetsomrade-senaste"
+
+[[variable]]
+native_id = "366.36194.f3"
+slug = "utlandsvistelse-utbildning"
+
+[[variable]]
+native_id = "366.36197.f5"
+slug = "plats-utomlands-gymn-yrkesutb"
+
+[[variable]]
+native_id = "366.36197.f5-txt"
+slug = "plats-utomlands-gymn-yrkesutb-txt"
+
+[[variable]]
+native_id = "366.36198.f8"
+slug = "plats-utomlands-gr-gy-eftergy"
+
+[[variable]]
+native_id = "366.36198.f8-txt"
+slug = "plats-utomlands-gr-gy-eftergy-txt"
+
+[[variable]]
+native_id = "366.36203.f13"
+slug = "utlandsvistelse-icke-formellt"
+
+[[variable]]
+native_id = "366.36204.f14-txt"
+slug = "utlandsvistelse-informell-typ"
+
+[[variable]]
+native_id = "366.36205.f11"
+slug = "vistelsetid-utomlands"
+
+[[variable]]
+native_id = "366.36205.f15"
+slug = "vistelsetid-utomlands-2"
+
+[[variable]]
+native_id = "366.36205.f4"
+slug = "vistelsetid-utomlands-3"
+
+[[variable]]
+native_id = "366.36205.f7"
+slug = "vistelsetid-utomlands-4"
+
+[[variable]]
+native_id = "366.36331.f20-01"
+slug = "funktionsnedsattning-sprak"
+
+[[variable]]
+native_id = "366.36332.f20-02"
+slug = "funktionsnedsattning-neuropsykiatrisk"
+
+[[variable]]
+native_id = "366.36333.f20-03"
+slug = "funktionsnedsattning-syn"
+
+[[variable]]
+native_id = "366.36336.f5-txt"
+slug = "funktionsnedsattning-annan"
+
+[[variable]]
+native_id = "366.36337.f6a"
+slug = "vagledning-stod-gymnasiet"
+
+[[variable]]
+native_id = "366.36337.f6b"
+slug = "vagledning-stod-gymnasiet-2"
+
+[[variable]]
+native_id = "366.36339.f8"
+slug = "kontakt-avhopp-gymnasiet"
+
+[[variable]]
+native_id = "366.36339.f9a"
+slug = "kontakt-avhopp-gymnasiet-2"
+
+[[variable]]
+native_id = "366.36339.f9b"
+slug = "kontakt-avhopp-gymnasiet-3"
+
+[[variable]]
+native_id = "366.38908.f5"
+slug = "stod-fran-institutionen"
+
+[[variable]]
+native_id = "366.38908.f6"
+slug = "stod-fran-institutionen-2"
+
+[[variable]]
+native_id = "366.38918.f8-txt"
+slug = "negativ-sarbehandling-utbildning"
+
+[[variable]]
+native_id = "366.38920.f11"
+slug = "ej-uppmarksammat-sarbehandling"
+
+[[variable]]
+native_id = "366.38920.f11-txt"
+slug = "ej-uppmarksammat-sarbehandling-txt"
+
+[[variable]]
+native_id = "366.38927.f15"
+slug = "ej-uppmarksammat-sexuellt-krankande"
+
+[[variable]]
+native_id = "366.38927.f15-txt"
+slug = "ej-uppmarksammat-sexuellt-krankande-txt"
+
+[[variable]]
+native_id = "366.38947.f24-01"
+slug = "anknytning-arbetsmarknaden-fast"
+
+[[variable]]
+native_id = "366.39305.f2"
+slug = "fullfoljd-yrkesutbildning"
+
+[[variable]]
+native_id = "366.40780.f14"
+slug = "formell-tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "366.40780.f7"
+slug = "formell-tjanstgoringsomfattning-2"
+
+[[variable]]
+native_id = "366.41124.f15"
+slug = "onskad-omfattning"
+
+[[variable]]
+native_id = "366.41124.f8"
+slug = "onskad-omfattning-2"
+
+[[variable]]
+native_id = "366.41125.f9a"
+slug = "skal-lamna-skolvasendet"
+
+[[variable]]
+native_id = "366.41125.f9b"
+slug = "skal-lamna-skolvasendet-2"
+
+[[variable]]
+native_id = "366.41136.f20b"
+slug = "arbete-jamfort-skola"
+
+[[variable]]
+native_id = "366.41136.f20c"
+slug = "arbete-jamfort-skola-2"
+
+[[variable]]
+native_id = "366.41136.f20d"
+slug = "arbete-jamfort-skola-3"
+
+[[variable]]
+native_id = "366.41136.f20e"
+slug = "arbete-jamfort-skola-4"
+
+[[variable]]
+native_id = "366.41138.f22a"
+slug = "forandringar-soka-larare"
+
+[[variable]]
+native_id = "366.41138.f22b"
+slug = "forandringar-soka-larare-2"
+
+[[variable]]
+native_id = "366.41138.f22c"
+slug = "forandringar-soka-larare-3"
+
+[[variable]]
+native_id = "366.41138.f22d"
+slug = "forandringar-soka-larare-4"
+
+[[variable]]
+native_id = "366.41138.f22e"
+slug = "forandringar-soka-larare-5"
+
+[[variable]]
+native_id = "366.41146.f26a"
+slug = "overvaga-lararexamen"
+
+[[variable]]
+native_id = "366.41146.f26b"
+slug = "overvaga-lararexamen-2"
+
+[[variable]]
+native_id = "366.41146.f26c"
+slug = "overvaga-lararexamen-3"
+
+[[variable]]
+native_id = "366.41146.f26d"
+slug = "overvaga-lararexamen-4"
+
+[[variable]]
+native_id = "366.41146.f26e"
+slug = "overvaga-lararexamen-5"
+
+[[variable]]
+native_id = "366.42256.f19"
+slug = "missnojd-arbetstider"
+
+[[variable]]
+native_id = "366.42256.f20"
+slug = "missnojd-arbetstider-2"
+
+[[variable]]
+native_id = "366.462.help1"
+slug = "stratum"
+
+[[variable]]
+native_id = "366.462.stratum"
+slug = "stratum-2"
+
+[[variable]]
+native_id = "366.5068.f11"
+slug = "huvudsaklig-sysselsattning"
+
+[[variable]]
+native_id = "366.5068.f23"
+slug = "huvudsaklig-sysselsattning-2"
+
+[[variable]]
+native_id = "366.5068.f5"
+slug = "huvudsaklig-sysselsattning-3"
+
+[[variable]]
+native_id = "366.5068.f5-txt"
+slug = "huvudsaklig-sysselsattning-4"
+
+[[variable]]
+native_id = "366.6267.alderslut"
+slug = "alderslut"
+
+[[variable]]
+native_id = "366.66.help2"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "366.66.sun2000niva"
+slug = "utbildningsniva-2"
+
+[[variable]]
+native_id = "366.67.help5"
+slug = "utlsvbakg"
+
+# register 367 (tidsanvandning)
+
+[[variable]]
+native_id = "366.46054"
+slug = "f19"
+
+[[variable]]
+native_id = "366.109.f30-1"
+slug = "f30"
+
+# === END #471 SCB slug curation overrides ===
+
+# === BEGIN #471 entity-key/identifier canonicalization (generated) ===
+# 108 new overrides for previously-uncurated identifier vars
+# canonicalized to match their entity-key siblings (#471 entity-key pass).
+
+[[variable]]
+native_id = "366.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "366.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "366.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "366.763"
+slug = "kallkod"
+
+[[variable]]
+native_id = "366.1266"
+slug = "indatamedium"
+
+[[variable]]
+native_id = "366.1396"
+slug = "lasar"
+
+[[variable]]
+native_id = "366.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "366.1665"
+slug = "registreringsdatum"
+
+[[variable]]
+native_id = "366.1719"
+slug = "svarsdatum"
+
+[[variable]]
+native_id = "366.1937"
+slug = "kommentar"
+
+[[variable]]
+native_id = "366.3195"
+slug = "h-region"
+
+[[variable]]
+native_id = "366.3225"
+slug = "hushallets-disponibla-inkomst"
+
+[[variable]]
+native_id = "366.5063"
+slug = "arbete-utomlands"
+
+[[variable]]
+native_id = "366.5768"
+slug = "manadsloneintervall"
+
+[[variable]]
+native_id = "366.6133"
+slug = "fullfoljt-utbildning"
+
+[[variable]]
+native_id = "366.6141"
+slug = "grundlaggande-behorighet-hogskola"
+
+[[variable]]
+native_id = "366.6145"
+slug = "studerat-pa-distans"
+
+[[variable]]
+native_id = "366.6172"
+slug = "lopnummer-for-individ"
+
+[[variable]]
+native_id = "366.6178"
+slug = "utlsvbakgalt"
+
+[[variable]]
+native_id = "366.6192"
+slug = "studerat-pa-hogskola"
+
+[[variable]]
+native_id = "366.6416"
+slug = "utbildningsgrupp"
+
+[[variable]]
+native_id = "366.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "366.8187"
+slug = "utlandsk-bakgrund"
+
+[[variable]]
+native_id = "366.8617"
+slug = "kursinriktning"
+
+[[variable]]
+native_id = "366.8619"
+slug = "kursniva-folkhogskolan"
+
+[[variable]]
+native_id = "366.8622"
+slug = "omfattning-folkhogskolan"
+
+[[variable]]
+native_id = "366.8635"
+slug = "kurstyp-folkhogskolan"
+
+[[variable]]
+native_id = "366.8770"
+slug = "senaste-aktivt-ar"
+
+[[variable]]
+native_id = "366.13330"
+slug = "studieavbrott"
+
+[[variable]]
+native_id = "366.15846"
+slug = "forsorjning-egna-sparade-pengar"
+
+[[variable]]
+native_id = "366.15867"
+slug = "plan-lasa-pa-komvux"
+
+[[variable]]
+native_id = "366.19568"
+slug = "loneink"
+
+[[variable]]
+native_id = "366.21781"
+slug = "behorighet-fran-grundskola"
+
+[[variable]]
+native_id = "366.24763"
+slug = "antal-svarande-personer"
+
+[[variable]]
+native_id = "366.24949"
+slug = "examensbevis-utbildningsbevis"
+
+[[variable]]
+native_id = "366.25135"
+slug = "arbetes-overensstammelse"
+
+[[variable]]
+native_id = "366.27262"
+slug = "svarsstatus"
+
+[[variable]]
+native_id = "366.28505"
+slug = "inflodeskod"
+
+[[variable]]
+native_id = "366.30574"
+slug = "arbetsuppgifter"
+
+[[variable]]
+native_id = "366.30812"
+slug = "framtidsplaner-fortsatta-nuvarande-jobb"
+
+[[variable]]
+native_id = "366.30813"
+slug = "framtidsplaner-skaffa-ett-nytt-jobb"
+
+[[variable]]
+native_id = "366.32788"
+slug = "alder-avslutad-utbildning"
+
+[[variable]]
+native_id = "366.37047"
+slug = "foraldrapenning-antal-bruttodagar"
+
+[[variable]]
+native_id = "366.37468"
+slug = "typ-av-kurs"
+
+[[variable]]
+native_id = "366.37828"
+slug = "huvudsaklig-inkomstkalla"
+
+[[variable]]
+native_id = "366.38974"
+slug = "arbets-overensstammelse-forskning"
+
+[[variable]]
+native_id = "366.41084"
+slug = "orsak-ej-examensbevis"
+
+# register 367
+
+[[variable]]
+native_id = "366.14850.astkommungrupp-namn"
+slug = "kommungrupp-namn"
+
+[[variable]]
+native_id = "366.14850.kommungr"
+slug = "kommungrupp"
+
+[[variable]]
+native_id = "366.1573.agegroup"
+slug = "aldersgruppering-31-12"
+
+[[variable]]
+native_id = "366.25052.f33"
+slug = "tillracklig-utbildningsniva-arbete-2"
+
+[[variable]]
+native_id = "366.30623.arbetstider"
+slug = "skiftarbete"
+
+[[variable]]
+native_id = "366.30676.f17a"
+slug = "antal-manader-forsta-arbete-min6man"
+
+[[variable]]
+native_id = "366.30814.f32a-03"
+slug = "framtidsplaner-skaffa-ett-jobb"
+
+[[variable]]
+native_id = "366.30814.f32b-01"
+slug = "framtidsplaner-skaffa-ett-jobb-2"
+
+[[variable]]
+native_id = "366.30815.f32a-04"
+slug = "framtidsplaner-starta-eget-foretag"
+
+[[variable]]
+native_id = "366.30815.f32b-02"
+slug = "framtidsplaner-starta-eget-foretag-2"
+
+[[variable]]
+native_id = "366.30817.f32a-05"
+slug = "framtidsplaner-andra-studier-komvux"
+
+[[variable]]
+native_id = "366.30817.f32b-03"
+slug = "framtidsplaner-andra-studier-komvux-2"
+
+[[variable]]
+native_id = "366.30819.f32a-09"
+slug = "framtidsplaner-annat"
+
+[[variable]]
+native_id = "366.30819.f32a-txt"
+slug = "framtidsplaner-annat-txt"
+
+[[variable]]
+native_id = "366.30819.f32b-07"
+slug = "framtidsplaner-annat-2"
+
+[[variable]]
+native_id = "366.30819.f32b-txt"
+slug = "framtidsplaner-annat-txt-2"
+
+[[variable]]
+native_id = "366.30820.f32a-10"
+slug = "framtidsplaner-vet-inte"
+
+[[variable]]
+native_id = "366.30820.f32b-08"
+slug = "framtidsplaner-vet-inte-2"
+
+[[variable]]
+native_id = "366.35963.f41"
+slug = "veckoarbetstid-forvarvsarbetande-2"
+
+# register 367

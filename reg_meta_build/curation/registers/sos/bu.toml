@@ -21,3 +21,69 @@ parts = [
   { data_type = "date", owner = "7550156225339591583.FOD_DATUMN.fod-datumn" },      # bu_plac; slug barn-fodelsedatum
   { data_type = "integer", owner = "7550156225339591583.FOD_DATUMN.fod-datumn-1" }, # bu_insats; slug fodelsedatum
 ]
+
+[[variant]]
+native_id = "7550156225339591583.6478131538792493195"
+slug = "_default"
+display_group = "_default"
+panel_entity_key = "personnr"
+panel_time_key = "insats-beslut-datumn"
+panel_time_grain = "row"
+
+# Medicinska födelseregistret (MFR)
+
+[[variable]]
+native_id = "7550156225339591583.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "7550156225339591583.FOD_DATUMN.fod-datumn"
+slug = "barn-fodelsedatum"
+
+[[variable]]
+native_id = "7550156225339591583.FOD_DATUMN.fod-datumn-1"
+slug = "fodelsedatum"
+
+# === END #471 SOS slug curation overrides ===
+
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 1086 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 5028920659479690770
+
+[[variable]]
+native_id = "7550156225339591583.FODDATN"
+slug = "fodelsedatum-numerisk"
+
+[[variable]]
+native_id = "7550156225339591583.FODELSELANDNAMN"
+slug = "fodelseland-namn"
+
+[[variable]]
+native_id = "7550156225339591583.FODLAND"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "7550156225339591583.LK"
+slug = "kommun"
+
+[[variable]]
+native_id = "7550156225339591583.PLACDAT1"
+slug = "datum-start-placering"
+
+[[variable]]
+native_id = "7550156225339591583.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "7550156225339591583.SENAR"
+slug = "senaste-ar-med-insats"
+
+[[variable]]
+native_id = "7550156225339591583.SPEC"
+slug = "specifikation-insatsen"
+# register 7661979173609203267

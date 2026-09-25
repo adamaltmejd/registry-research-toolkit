@@ -1,0 +1,50 @@
+[register]
+provider = "fk"
+slug = "merkostnadsersattning"
+native_id = "7493079423846267575"
+
+[[variant]]
+native_id = "7493079423846267575.5086889710066742540"
+slug = "mottagare"
+display_group = "Merkostnadsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7493079423846267575.5703128771691645425"
+slug = "barn"
+display_group = "Merkostnadsersättning"
+panel_entity_key = ["lopnr", "lopnr-barn"]
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7493079423846267575.8958889425760040105"
+slug = "beviljanden"
+display_group = "Merkostnadsersättning"
+panel_entity_key = ["lopnr", "lopnr-barn"]
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "7493079423846267575.6966641877688731962"
+slug = "avslag"
+display_group = "Merkostnadsersättning"
+panel_entity_key = ["lopnr", "lopnr-barn"]
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+# Omvårdnadsbidrag
+
+[[variable]]
+native_id = "7493079423846267575.Lopnr"
+slug = "lopnr"
+
+
+[[variable]]
+native_id = "7493079423846267575.Lopnr_barn"
+slug = "lopnr-barn"

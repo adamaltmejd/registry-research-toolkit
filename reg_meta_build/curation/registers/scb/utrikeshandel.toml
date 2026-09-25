@@ -28,3 +28,118 @@ register = "scb/utrikeshandel"
 variable = "vikt-kg"
 description = "Statistiskt värde i Kilo"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[variant]]
+native_id = "188.258"
+slug = "varu-landfordelat-intrastat"
+display_group = "Varu- och landfördelad i löpande priser, Intrastat"
+
+
+[[variant]]
+native_id = "188.259"
+slug = "volymutveckling"
+display_group = "Volymutveckling i fasta priser"
+
+
+[[variant]]
+native_id = "188.393"
+slug = "landfordelad-extrastat"
+display_group = "Varu- och landfördelad i löpande priser, Extrastat"
+
+# Utrikeshandel med tjänster — canonical-SCB content (#444), curated onto the scb
+# provider with a low-band mint_canonical_scb id (the tjänster sibling of the goods
+# register 188; absent from SCB's machine export).
+
+[[variable]]
+native_id = "188.45"
+slug = "land"
+
+[[variable]]
+native_id = "188.50"
+slug = "manad"
+
+[[variable]]
+native_id = "188.119"
+slug = "varukod-kn"
+
+[[variable]]
+native_id = "188.18337"
+slug = "flode"
+
+[[variable]]
+native_id = "188.18378"
+slug = "transaktionstyp"
+
+[[variable]]
+native_id = "188.18951"
+slug = "flode-extrastat"
+
+[[variable]]
+native_id = "188.19078"
+slug = "flode-volym"
+
+[[variable]]
+native_id = "188.19312"
+slug = "landskod-utrikeshandel"
+
+[[variable]]
+native_id = "188.19317"
+slug = "statistiskt-varde"
+
+[[variable]]
+native_id = "188.19318"
+slug = "fakturerat-varde"
+
+[[variable]]
+native_id = "188.19451"
+slug = "sitc"
+
+[[variable]]
+native_id = "188.19458"
+slug = "volymindex-ar-2000-100"
+
+[[variable]]
+native_id = "188.20638"
+slug = "manad-extrastat"
+
+[[variable]]
+native_id = "188.20670"
+slug = "manad-intrastat"
+
+[[variable]]
+native_id = "188.36000"
+slug = "volymindex-ar-2015-100"
+
+[[variable]]
+native_id = "188.36001"
+slug = "produktgrupp-spin-2007"
+
+[[variable]]
+native_id = "188.36003"
+slug = "varugrupp-sitc-rev3-rev4"
+
+[[variable]]
+native_id = "188.36005"
+slug = "varugrupp-kn"
+
+# register 189 (grundskola-ak9)
+
+[[variable]]
+native_id = "188.19455.spin2007"
+slug = "spin"
+
+# register 189 (grundskola-ak9)
+
+[[variable]]
+native_id = "188.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "188.18331"
+slug = "vikt-kg"
+
+[[variable]]
+native_id = "188.19079"
+slug = "kvartal-period"
+
+# register 189

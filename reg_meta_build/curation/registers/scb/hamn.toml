@@ -1,0 +1,33 @@
+[register]
+provider = "scb"
+slug = "hamn"
+native_id = "161"
+
+[[variant]]
+native_id = "161.232"
+slug = "_default"
+display_group = "Utrikes och inrikes trafik med fartyg"
+panel_entity_key = "imo"
+panel_time_key = "datum"
+panel_time_grain = "row"
+
+# Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar
+
+[[variable]]
+native_id = "161.2312"
+slug = "imo"
+
+
+[[variable]]
+native_id = "161.2262"
+slug = "fartygets-namn"
+
+[[variable]]
+native_id = "161.2857"
+slug = "redovisningsmanad"
+
+[[variable]]
+native_id = "161.3081"
+slug = "imputering"
+
+# register 162

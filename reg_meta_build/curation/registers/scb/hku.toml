@@ -1,0 +1,45 @@
+[register]
+provider = "scb"
+slug = "hku"
+native_id = "166"
+
+[[variant]]
+native_id = "166.239"
+slug = "_default"
+display_group = "Företagens utländska handelskrediter"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Konkurser och offentliga ackord
+
+[[variable]]
+native_id = "166.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "166.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "166.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "166.814"
+slug = "faxnummer"
+
+[[variable]]
+native_id = "166.2846"
+slug = "lopnummer-urvalsenheter"
+
+[[variable]]
+native_id = "166.2974"
+slug = "epost-uppgiftslamnare"
+
+[[variable]]
+native_id = "166.3575"
+slug = "foretagets-namn"
+
+# register 167

@@ -1,0 +1,83 @@
+[register]
+provider = "scb"
+slug = "tjansteforetagens-forbrukning"
+native_id = "312"
+
+[[variant]]
+native_id = "312.883"
+slug = "_default"
+display_group = "Tjänsteföretagens förbrukning"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Deltagare i svenskundervisning för invandrare (sfi)
+
+[[variable]]
+native_id = "312.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "312.1724"
+slug = "e-postadress-kontaktperson"
+
+[[variable]]
+native_id = "312.3752"
+slug = "kontaktperson"
+
+# register 318 (produktionsindex-naringsliv)
+
+[[variable]]
+native_id = "312.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "312.666"
+slug = "anstallda-storleksklass"
+
+[[variable]]
+native_id = "312.941"
+slug = "antal-ve"
+
+[[variable]]
+native_id = "312.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "312.1723"
+slug = "inkommen-blankett-datum"
+
+[[variable]]
+native_id = "312.2643"
+slug = "verksamhetsenhet-benamning"
+
+[[variable]]
+native_id = "312.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "312.16373"
+slug = "rakenskapsarets-borjan"
+
+[[variable]]
+native_id = "312.16377"
+slug = "rakenskapsarets-slut"
+
+[[variable]]
+native_id = "312.16965"
+slug = "antal-manader-bokslut"
+
+[[variable]]
+native_id = "312.19052"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "312.19754"
+slug = "telefonnummer-till-kontaktperson"
+
+[[variable]]
+native_id = "312.31997"
+slug = "typ-av-uppgift"
+
+# register 315

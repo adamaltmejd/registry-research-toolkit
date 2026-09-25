@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "halsorakenskaper"
+native_id = "311"
+
+[[variant]]
+native_id = "311.882"
+slug = "_default"
+display_group = "Hälsoräkenskaper"
+
+# Tjänsteföretagens förbrukning
+
+[[variable]]
+native_id = "311.25334"
+slug = "varde-lopande-pris-ar"
+
+[[variable]]
+native_id = "311.25347"
+slug = "andel-andamal-hushallssektor"
+
+[[variable]]
+native_id = "311.25355"
+slug = "andel-andamal-offentlig-sektor"
+
+# register 312 (tjansteforetagens-forbrukning)

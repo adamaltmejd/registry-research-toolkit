@@ -1,0 +1,4891 @@
+[register]
+provider = "scb"
+slug = "ulf"
+native_id = "237"
+
+[[variant]]
+native_id = "237.448"
+slug = "individer-16-74-ar-ulf"
+display_group = "Individer 16-74 år (ULF)"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "237.457"
+slug = "individer-16-84-ar-ulf"
+display_group = "Individer 16-84 år (ULF)"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "237.458"
+slug = "individer-16plus-ulf"
+display_group = "Individer 16 år och uppåt (ULF)"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "237.1657"
+slug = "ulf-2021"
+display_group = "ULF från och med 2021"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Allmänna val, nominerade och valda
+
+[[variable]]
+native_id = "237.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "237.22856"
+slug = "pnr"
+
+
+[[variable]]
+native_id = "237.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "237.1286"
+slug = "antal-barn-0-17-ar"
+
+[[variable]]
+native_id = "237.3225"
+slug = "hushallets-disponibla-inkomst"
+
+[[variable]]
+native_id = "237.4493"
+slug = "disp-inkomst-konsumtionsenhet"
+
+[[variable]]
+native_id = "237.4544"
+slug = "eget-personnr"
+
+[[variable]]
+native_id = "237.4691"
+slug = "antal-barn-0-17-ar-ulf"
+
+[[variable]]
+native_id = "237.5092"
+slug = "hustyp"
+
+[[variable]]
+native_id = "237.6249"
+slug = "ovrigt"
+
+[[variable]]
+native_id = "237.7565"
+slug = "riksomrade"
+
+[[variable]]
+native_id = "237.7589"
+slug = "resultatkod"
+
+[[variable]]
+native_id = "237.8804"
+slug = "aktiv-annan-forening"
+
+[[variable]]
+native_id = "237.8811"
+slug = "aktiv-fackforening"
+
+[[variable]]
+native_id = "237.8851"
+slug = "aktiv-politiskt-parti"
+
+[[variable]]
+native_id = "237.8901"
+slug = "allergiska-besvar-1"
+
+[[variable]]
+native_id = "237.8906"
+slug = "allmant-halsotillstand"
+
+[[variable]]
+native_id = "237.8933"
+slug = "anmalt-annan-arbetsskada"
+
+[[variable]]
+native_id = "237.8934"
+slug = "anmalt-olycksfall"
+
+[[variable]]
+native_id = "237.8988"
+slug = "annan-stold"
+
+[[variable]]
+native_id = "237.9033"
+slug = "ansokt-om-fardtjanst"
+
+[[variable]]
+native_id = "237.9035"
+slug = "ansokt-hjalp-kommunen"
+
+[[variable]]
+native_id = "237.9058"
+slug = "antal-barn-0-15ar"
+
+[[variable]]
+native_id = "237.9065"
+slug = "antal-barn-19-w-ar"
+
+[[variable]]
+native_id = "237.9117"
+slug = "sjuknarvaro-antal-dagar"
+
+[[variable]]
+native_id = "237.9135"
+slug = "antal-internutbildning"
+
+[[variable]]
+native_id = "237.9139"
+slug = "antal-i-karnfamiljen"
+
+[[variable]]
+native_id = "237.9140"
+slug = "antal-i-lagenheten"
+
+[[variable]]
+native_id = "237.9143"
+slug = "antal-invanare-1-jan"
+
+[[variable]]
+native_id = "237.9144"
+slug = "antal-invanare-31-dec"
+
+[[variable]]
+native_id = "237.9147"
+slug = "antal-langvariga-sjukdomar"
+
+[[variable]]
+native_id = "237.9154"
+slug = "antal-med-kod-01-i-tablan"
+
+[[variable]]
+native_id = "237.9155"
+slug = "antal-med-kod-02-i-tablan"
+
+[[variable]]
+native_id = "237.9156"
+slug = "antal-med-kod-03-i-tablan"
+
+[[variable]]
+native_id = "237.9157"
+slug = "antal-med-kod-04-i-tablan"
+
+[[variable]]
+native_id = "237.9158"
+slug = "antal-med-kod-05-i-tablan"
+
+[[variable]]
+native_id = "237.9159"
+slug = "antal-med-kod-06-i-tablan"
+
+[[variable]]
+native_id = "237.9160"
+slug = "antal-med-kod-07-i-tablan"
+
+[[variable]]
+native_id = "237.9161"
+slug = "antal-med-kod-08-i-tablan"
+
+[[variable]]
+native_id = "237.9162"
+slug = "antal-med-kod-09-i-tablan"
+
+[[variable]]
+native_id = "237.9163"
+slug = "antal-med-kod-10-i-tablan"
+
+[[variable]]
+native_id = "237.9164"
+slug = "antal-med-kod-11-i-tablan"
+
+[[variable]]
+native_id = "237.9165"
+slug = "antal-med-kod-12-i-tablan"
+
+[[variable]]
+native_id = "237.9166"
+slug = "antal-med-kod-13-i-tablan"
+
+[[variable]]
+native_id = "237.9167"
+slug = "antal-med-kod-14-i-tablan"
+
+[[variable]]
+native_id = "237.9168"
+slug = "antal-med-kod-15-i-tablan"
+
+[[variable]]
+native_id = "237.9169"
+slug = "antal-med-kod-16-i-tablan"
+
+[[variable]]
+native_id = "237.9171"
+slug = "internutbildning-manader"
+
+[[variable]]
+native_id = "237.9186"
+slug = "fardtjanst-resor-manad"
+
+[[variable]]
+native_id = "237.9187"
+slug = "antal-rum-exkl-kok"
+
+[[variable]]
+native_id = "237.9213"
+slug = "arbete-hemmet-timmar"
+
+[[variable]]
+native_id = "237.9290"
+slug = "antal-ar-i-sverige"
+
+[[variable]]
+native_id = "237.9307"
+slug = "arskurser-gymnasium"
+
+[[variable]]
+native_id = "237.9327"
+slug = "anvant-dator-pa-fritiden"
+
+[[variable]]
+native_id = "237.9355"
+slug = "arbetar-helger"
+
+[[variable]]
+native_id = "237.9361"
+slug = "arbete-bostaden-annat"
+
+[[variable]]
+native_id = "237.9363"
+slug = "arbete-bostaden-forberedelse"
+
+[[variable]]
+native_id = "237.9364"
+slug = "arbete-bostaden-inlasning"
+
+[[variable]]
+native_id = "237.9365"
+slug = "arbete-bostaden-jour"
+
+[[variable]]
+native_id = "237.9366"
+slug = "arbete-bostaden-kundkontakt"
+
+[[variable]]
+native_id = "237.9368"
+slug = "arbete-bostaden-skrivarbete"
+
+[[variable]]
+native_id = "237.9369"
+slug = "arbete-i-hemmet"
+
+[[variable]]
+native_id = "237.9376"
+slug = "arbete-utanfor-arbetsplatsen"
+
+[[variable]]
+native_id = "237.9377"
+slug = "arbetet-kraver-for-mycket"
+
+[[variable]]
+native_id = "237.9378"
+slug = "arbetet-kraver-hart-jobb"
+
+[[variable]]
+native_id = "237.9393"
+slug = "arbetsgivare-sektor"
+
+[[variable]]
+native_id = "237.9412"
+slug = "arbetsloshetstillfallen"
+
+[[variable]]
+native_id = "237.9442"
+slug = "arv-gavobelopp"
+
+[[variable]]
+native_id = "237.9443"
+slug = "arv-gavor"
+
+[[variable]]
+native_id = "237.9444"
+slug = "astma"
+
+[[variable]]
+native_id = "237.9445"
+slug = "astma-allergi"
+
+[[variable]]
+native_id = "237.9465"
+slug = "av-och-pakladning"
+
+[[variable]]
+native_id = "237.9499"
+slug = "avstand-fritidsbostad"
+
+[[variable]]
+native_id = "237.9518"
+slug = "avstand-till-gronomrade"
+
+[[variable]]
+native_id = "237.9521"
+slug = "avstand-livsmedelsbutik"
+
+[[variable]]
+native_id = "237.9524"
+slug = "avstand-narmaste-granne"
+
+[[variable]]
+native_id = "237.9525"
+slug = "avstand-till-postkontor"
+
+[[variable]]
+native_id = "237.9539"
+slug = "bad"
+
+[[variable]]
+native_id = "237.9549"
+slug = "badutflykt-friluftsbad"
+
+[[variable]]
+native_id = "237.9554"
+slug = "barn-1-bor"
+
+[[variable]]
+native_id = "237.9559"
+slug = "barn-1-foraldrar"
+
+[[variable]]
+native_id = "237.9578"
+slug = "barn-2-bor"
+
+[[variable]]
+native_id = "237.9583"
+slug = "barn-2-foraldrar"
+
+[[variable]]
+native_id = "237.9601"
+slug = "barn-3-bor"
+
+[[variable]]
+native_id = "237.9606"
+slug = "barn-3-foraldrar"
+
+[[variable]]
+native_id = "237.9624"
+slug = "barn-4-bor"
+
+[[variable]]
+native_id = "237.9629"
+slug = "barn-4-foraldrar"
+
+[[variable]]
+native_id = "237.9643"
+slug = "barn-5-bor"
+
+[[variable]]
+native_id = "237.9647"
+slug = "barn-5-foraldrar"
+
+[[variable]]
+native_id = "237.9658"
+slug = "barn-6-bor"
+
+[[variable]]
+native_id = "237.9662"
+slug = "barn-6-foraldrar"
+
+[[variable]]
+native_id = "237.9673"
+slug = "barn-7-bor"
+
+[[variable]]
+native_id = "237.9683"
+slug = "barn-7-fodelsear"
+
+[[variable]]
+native_id = "237.9687"
+slug = "barn-8-utom-hushallet-fodelsear"
+
+[[variable]]
+native_id = "237.9694"
+slug = "barn-1-langvarig-diagnos"
+
+[[variable]]
+native_id = "237.9695"
+slug = "barn-langvarig-fodelsear"
+
+[[variable]]
+native_id = "237.9696"
+slug = "barn-medicin-diagnos"
+
+[[variable]]
+native_id = "237.9699"
+slug = "barn-sjuk-diagnos"
+
+[[variable]]
+native_id = "237.9708"
+slug = "barn-utanfor-hushallet"
+
+[[variable]]
+native_id = "237.9739"
+slug = "barntillsynskostnad-manad"
+
+[[variable]]
+native_id = "237.9753"
+slug = "behov-av-fardtjanst"
+
+[[variable]]
+native_id = "237.9770"
+slug = "besittningsform"
+
+[[variable]]
+native_id = "237.9782"
+slug = "besvar-av-trafikbuller"
+
+[[variable]]
+native_id = "237.9787"
+slug = "besvar-med-somnen"
+
+[[variable]]
+native_id = "237.9802"
+slug = "besvar-svarighetsgrad-2"
+
+[[variable]]
+native_id = "237.9803"
+slug = "besvar-svarighetsgrad-3"
+
+[[variable]]
+native_id = "237.9805"
+slug = "besvar-svarighetsgrad-5"
+
+[[variable]]
+native_id = "237.9806"
+slug = "besvar-svarighetsgrad-6"
+
+[[variable]]
+native_id = "237.9818"
+slug = "biblioteksbesok"
+
+[[variable]]
+native_id = "237.9823"
+slug = "bidragsforskott"
+
+[[variable]]
+native_id = "237.9830"
+slug = "bildskarmsarbete"
+
+[[variable]]
+native_id = "237.9832"
+slug = "bilforsakring"
+
+[[variable]]
+native_id = "237.9835"
+slug = "bilutflykter"
+
+[[variable]]
+native_id = "237.9841"
+slug = "bio"
+
+[[variable]]
+native_id = "237.9857"
+slug = "blodtryckssankande-medicin"
+
+[[variable]]
+native_id = "237.9885"
+slug = "bostadshushallsvikt"
+
+[[variable]]
+native_id = "237.9886"
+slug = "bostadshushallsvikt-nya"
+
+[[variable]]
+native_id = "237.9902"
+slug = "brandfarliga-amnen"
+
+[[variable]]
+native_id = "237.9925"
+slug = "brak-pa-arbetet"
+
+[[variable]]
+native_id = "237.9932"
+slug = "byggar-for-huset"
+
+[[variable]]
+native_id = "237.9995"
+slug = "deltagandets-syfte"
+
+[[variable]]
+native_id = "237.10035"
+slug = "diabetes-fraga"
+
+[[variable]]
+native_id = "237.10128"
+slug = "egna-tander"
+
+[[variable]]
+native_id = "237.10147"
+slug = "ej-institutionsboende"
+
+[[variable]]
+native_id = "237.10155"
+slug = "ej-sova-ostort"
+
+[[variable]]
+native_id = "237.10193"
+slug = "enformigt"
+
+[[variable]]
+native_id = "237.10196"
+slug = "ensam-och-overgiven"
+
+[[variable]]
+native_id = "237.10202"
+slug = "examen-universitet"
+
+[[variable]]
+native_id = "237.10222"
+slug = "fackskola"
+
+[[variable]]
+native_id = "237.10232"
+slug = "faders-nationalitet"
+
+[[variable]]
+native_id = "237.10243"
+slug = "familjehushallsvikt"
+
+[[variable]]
+native_id = "237.10244"
+slug = "familjehushallsvikt-nya"
+
+[[variable]]
+native_id = "237.10401"
+slug = "familjetyp-barn-18ar"
+
+[[variable]]
+native_id = "237.10406"
+slug = "fast-lakare"
+
+[[variable]]
+native_id = "237.10449"
+slug = "finns-hiss-vid-flerfamhus"
+
+[[variable]]
+native_id = "237.10470"
+slug = "fler-uppdrag-organisation-1"
+
+[[variable]]
+native_id = "237.10471"
+slug = "fler-uppdrag-organisation-2"
+
+[[variable]]
+native_id = "237.10472"
+slug = "fler-uppdrag-organisation-3"
+
+[[variable]]
+native_id = "237.10473"
+slug = "fler-uppdrag-organisation-4"
+
+[[variable]]
+native_id = "237.10477"
+slug = "flickskola"
+
+[[variable]]
+native_id = "237.10483"
+slug = "folkhogskola"
+
+[[variable]]
+native_id = "237.10555"
+slug = "fritidsbostad"
+
+[[variable]]
+native_id = "237.10558"
+slug = "fritidsbatsutflykter"
+
+[[variable]]
+native_id = "237.10559"
+slug = "fritidsfiskat"
+
+[[variable]]
+native_id = "237.10560"
+slug = "fritidsgard-barn-1"
+
+[[variable]]
+native_id = "237.10561"
+slug = "fritidsgard-barn-2"
+
+[[variable]]
+native_id = "237.10562"
+slug = "fritidsgard-barn-3"
+
+[[variable]]
+native_id = "237.10582"
+slug = "fullfoljd-kommunal-vuxenutbildning"
+
+[[variable]]
+native_id = "237.10659"
+slug = "fardmedel-vid-inkop"
+
+[[variable]]
+native_id = "237.10665"
+slug = "fardsatt-skola"
+
+[[variable]]
+native_id = "237.10671"
+slug = "fardsatt-till-arbetet"
+
+[[variable]]
+native_id = "237.10680"
+slug = "fodd-var"
+
+[[variable]]
+native_id = "237.10681"
+slug = "fodelseland-alfabetiskt"
+
+[[variable]]
+native_id = "237.10682"
+slug = "fodelseland-numeriskt"
+
+[[variable]]
+native_id = "237.10683"
+slug = "fodelseland-make-maka-alfa"
+
+[[variable]]
+native_id = "237.10684"
+slug = "fodelseland-make-maka-num"
+
+[[variable]]
+native_id = "237.10694"
+slug = "fodelsear-barn-6"
+
+[[variable]]
+native_id = "237.10696"
+slug = "fodelsear-for-barn-6"
+
+[[variable]]
+native_id = "237.10697"
+slug = "fodelsear-for-barn-nummer-7"
+
+[[variable]]
+native_id = "237.10709"
+slug = "for-mycket-arbete-vid-bildskarm"
+
+[[variable]]
+native_id = "237.10714"
+slug = "fordel-arbete-i-bostaden-1"
+
+[[variable]]
+native_id = "237.10715"
+slug = "fordel-arbete-i-bostaden-2"
+
+[[variable]]
+native_id = "237.10716"
+slug = "fordel-arbete-i-bostaden-3"
+
+[[variable]]
+native_id = "237.10717"
+slug = "fordel-arbete-i-bostaden-4"
+
+[[variable]]
+native_id = "237.10718"
+slug = "fordel-arbete-i-bostaden-5"
+
+[[variable]]
+native_id = "237.10719"
+slug = "fordel-arbete-i-bostaden-6"
+
+[[variable]]
+native_id = "237.10720"
+slug = "fordel-arbete-i-bostaden-7"
+
+[[variable]]
+native_id = "237.10724"
+slug = "forekomst-av-make-maka"
+
+[[variable]]
+native_id = "237.10725"
+slug = "forekomst-av-samboende"
+
+[[variable]]
+native_id = "237.10739"
+slug = "formaga-att-overklaga"
+
+[[variable]]
+native_id = "237.10806"
+slug = "foralder-utlandsk-medborgare"
+
+[[variable]]
+native_id = "237.10828"
+slug = "foraldrar-till-up-sambo"
+
+[[variable]]
+native_id = "237.10834"
+slug = "foraldrars-hogsta-utbildning"
+
+[[variable]]
+native_id = "237.10855"
+slug = "gripsvarigheter"
+
+[[variable]]
+native_id = "237.10872"
+slug = "gymnasium"
+
+[[variable]]
+native_id = "237.10876"
+slug = "gymnasium-artal"
+
+[[variable]]
+native_id = "237.10878"
+slug = "ga-i-trappor"
+
+[[variable]]
+native_id = "237.10880"
+slug = "gar-det-buss-pa-eftermiddagen"
+
+[[variable]]
+native_id = "237.10881"
+slug = "gar-det-buss-pa-formiddagen"
+
+[[variable]]
+native_id = "237.10882"
+slug = "gar-det-buss-pa-kvallen"
+
+[[variable]]
+native_id = "237.10884"
+slug = "gar-det-buss-pa-natten"
+
+[[variable]]
+native_id = "237.10893"
+slug = "gar-i-skola-barn-7"
+
+[[variable]]
+native_id = "237.10912"
+slug = "hade-ej-far-fosterfar"
+
+[[variable]]
+native_id = "237.10913"
+slug = "hade-ej-mor-fostermor"
+
+[[variable]]
+native_id = "237.10924"
+slug = "handlar-pa-vag-fran-arbetet"
+
+[[variable]]
+native_id = "237.10968"
+slug = "hemforsakring-for-bostaden"
+
+[[variable]]
+native_id = "237.10980"
+slug = "hinder-lutning"
+
+[[variable]]
+native_id = "237.10981"
+slug = "hinder-trappor"
+
+[[variable]]
+native_id = "237.10982"
+slug = "hinder-vag"
+
+[[variable]]
+native_id = "237.10991"
+slug = "hjalp-av-annan"
+
+[[variable]]
+native_id = "237.10992"
+slug = "hjalp-av-annan-hushallsmedlem"
+
+[[variable]]
+native_id = "237.10994"
+slug = "hjalp-av-nagon-utanfor-hushallet"
+
+[[variable]]
+native_id = "237.11002"
+slug = "hjalp-av-hemvardare"
+
+[[variable]]
+native_id = "237.11003"
+slug = "hjalp-av-hushallsmedlem"
+
+[[variable]]
+native_id = "237.11007"
+slug = "hjalp-av-nagon-inom-bostaden"
+
+[[variable]]
+native_id = "237.11008"
+slug = "hjalp-av-nagon-utom-bostaden"
+
+[[variable]]
+native_id = "237.11010"
+slug = "hjalp-av-personal"
+
+[[variable]]
+native_id = "237.11012"
+slug = "hjalp-av-slakting"
+
+[[variable]]
+native_id = "237.11033"
+slug = "hjalp-i-forsta-hand-vid-sanglage"
+
+[[variable]]
+native_id = "237.11036"
+slug = "hjalp-med-annat"
+
+[[variable]]
+native_id = "237.11037"
+slug = "hjalp-med-dagliga-sysslor"
+
+[[variable]]
+native_id = "237.11040"
+slug = "hjalp-pga-sjukdom"
+
+[[variable]]
+native_id = "237.11043"
+slug = "hjalp-overklaga-1"
+
+[[variable]]
+native_id = "237.11058"
+slug = "vem-up-hjalper"
+
+[[variable]]
+native_id = "237.11060"
+slug = "hjalpmedel"
+
+[[variable]]
+native_id = "237.11062"
+slug = "hjalpmedel-inom-bostaden"
+
+[[variable]]
+native_id = "237.11063"
+slug = "hjalpmedel-inomhus"
+
+[[variable]]
+native_id = "237.11065"
+slug = "hjalpmedel-utom-bostaden"
+
+[[variable]]
+native_id = "237.11067"
+slug = "hjartmedicin"
+
+[[variable]]
+native_id = "237.11078"
+slug = "hostmedicin-nasdroppar"
+
+[[variable]]
+native_id = "237.11096"
+slug = "fritidsbostad-disposition"
+
+[[variable]]
+native_id = "237.11114"
+slug = "hur-ofta-alkohol"
+
+[[variable]]
+native_id = "237.11115"
+slug = "hur-ofta-traffa-andra"
+
+[[variable]]
+native_id = "237.11118"
+slug = "hur-ofta-traffa-barn"
+
+[[variable]]
+native_id = "237.11128"
+slug = "hur-ofta-besvar-1"
+
+[[variable]]
+native_id = "237.11129"
+slug = "hur-ofta-besvar-2"
+
+[[variable]]
+native_id = "237.11130"
+slug = "hur-ofta-besvar-3"
+
+[[variable]]
+native_id = "237.11131"
+slug = "hur-ofta-besvar-4"
+
+[[variable]]
+native_id = "237.11132"
+slug = "hur-ofta-besvar-5"
+
+[[variable]]
+native_id = "237.11133"
+slug = "hur-ofta-besvar-6"
+
+[[variable]]
+native_id = "237.11146"
+slug = "hur-ofta-traffa-foraldrar"
+
+[[variable]]
+native_id = "237.11148"
+slug = "bussfrekvens-morgon"
+
+[[variable]]
+native_id = "237.11158"
+slug = "hur-ofta-starkt-buller"
+
+[[variable]]
+native_id = "237.11164"
+slug = "hur-ofta-traffa-syskon"
+
+[[variable]]
+native_id = "237.11167"
+slug = "hur-ofta-telefon-barn"
+
+[[variable]]
+native_id = "237.11168"
+slug = "hur-ofta-telefon-foraldrar"
+
+[[variable]]
+native_id = "237.11205"
+slug = "huvudsaklig-tillsyn-barn-1"
+
+[[variable]]
+native_id = "237.11206"
+slug = "huvudsaklig-tillsyn-barn-2"
+
+[[variable]]
+native_id = "237.11207"
+slug = "huvudsaklig-tillsyn-barn-3"
+
+[[variable]]
+native_id = "237.11208"
+slug = "huvudsaklig-tillsyn-barn-4"
+
+[[variable]]
+native_id = "237.11209"
+slug = "huvudsaklig-tillsyn-barn-5"
+
+[[variable]]
+native_id = "237.11215"
+slug = "huvud-skal-ej-arbeta"
+
+[[variable]]
+native_id = "237.11216"
+slug = "huvudsakligt-skal-ej-arbeta"
+
+[[variable]]
+native_id = "237.11263"
+slug = "handelse-1-garningsman"
+
+[[variable]]
+native_id = "237.11267"
+slug = "handelse-1-polisanmalan"
+
+[[variable]]
+native_id = "237.11269"
+slug = "handelse-1-sjukskriven-dagar"
+
+[[variable]]
+native_id = "237.11271"
+slug = "handelse-1-vapenhot"
+
+[[variable]]
+native_id = "237.11272"
+slug = "handelse-1-var"
+
+[[variable]]
+native_id = "237.11273"
+slug = "handelse-2-garningsman"
+
+[[variable]]
+native_id = "237.11277"
+slug = "handelse-2-polisanmalan"
+
+[[variable]]
+native_id = "237.11278"
+slug = "handelse-2-sjukskriven"
+
+[[variable]]
+native_id = "237.11279"
+slug = "handelse-2-sjukskriven-dagar"
+
+[[variable]]
+native_id = "237.11281"
+slug = "handelse-2-vapenhot"
+
+[[variable]]
+native_id = "237.11282"
+slug = "handelse-2-var"
+
+[[variable]]
+native_id = "237.11283"
+slug = "handelse-3-garningsman"
+
+[[variable]]
+native_id = "237.11287"
+slug = "handelse-3-polisanmalan"
+
+[[variable]]
+native_id = "237.11288"
+slug = "handelse-3-sjukskriven"
+
+[[variable]]
+native_id = "237.11289"
+slug = "handelse-3-sjukskriven-dagar"
+
+[[variable]]
+native_id = "237.11291"
+slug = "handelse-3-vapenhot"
+
+[[variable]]
+native_id = "237.11292"
+slug = "handelse-3-var"
+
+[[variable]]
+native_id = "237.11293"
+slug = "handelse-4-garningsman"
+
+[[variable]]
+native_id = "237.11297"
+slug = "handelse-4-polisanmalan"
+
+[[variable]]
+native_id = "237.11298"
+slug = "handelse-4-sjukskriven"
+
+[[variable]]
+native_id = "237.11299"
+slug = "handelse-4-sjukskriven-dagar"
+
+[[variable]]
+native_id = "237.11301"
+slug = "handelse-4-vapenhot"
+
+[[variable]]
+native_id = "237.11302"
+slug = "handelse-4-var"
+
+[[variable]]
+native_id = "237.11303"
+slug = "handelse-5-garningsman"
+
+[[variable]]
+native_id = "237.11307"
+slug = "handelse-5-polisanmalan"
+
+[[variable]]
+native_id = "237.11308"
+slug = "handelse-5-sjukskriven"
+
+[[variable]]
+native_id = "237.11309"
+slug = "handelse-5-sjukskriven-dagar"
+
+[[variable]]
+native_id = "237.11311"
+slug = "handelse-5-vapenhot"
+
+[[variable]]
+native_id = "237.11312"
+slug = "handelse-5-var"
+
+[[variable]]
+native_id = "237.11313"
+slug = "handelse-6-garningsman"
+
+[[variable]]
+native_id = "237.11317"
+slug = "handelse-6-polisanmalan"
+
+[[variable]]
+native_id = "237.11318"
+slug = "handelse-6-sjukskriven"
+
+[[variable]]
+native_id = "237.11319"
+slug = "handelse-6-sjukskriven-dagar"
+
+[[variable]]
+native_id = "237.11321"
+slug = "handelse-6-vapenhot"
+
+[[variable]]
+native_id = "237.11322"
+slug = "handelse-6-var"
+
+[[variable]]
+native_id = "237.11327"
+slug = "hogsta-avslutade-utbildning"
+
+[[variable]]
+native_id = "237.11335"
+slug = "hogsta-utbildning-jamforelse"
+
+[[variable]]
+native_id = "237.11345"
+slug = "horapparat"
+
+[[variable]]
+native_id = "237.11355"
+slug = "i-arbetskraften"
+
+[[variable]]
+native_id = "237.11361"
+slug = "idrott-barn-1"
+
+[[variable]]
+native_id = "237.11362"
+slug = "idrott-barn-2"
+
+[[variable]]
+native_id = "237.11363"
+slug = "idrott-barn-3"
+
+[[variable]]
+native_id = "237.11368"
+slug = "idrott-som-askadare"
+
+[[variable]]
+native_id = "237.11393"
+slug = "individvikt"
+
+[[variable]]
+native_id = "237.11436"
+slug = "inkop-av-livsmedel"
+
+[[variable]]
+native_id = "237.11442"
+slug = "institution"
+
+[[variable]]
+native_id = "237.11457"
+slug = "intervju-med-vem"
+
+[[variable]]
+native_id = "237.11458"
+slug = "intervjudatum"
+
+[[variable]]
+native_id = "237.11487"
+slug = "jagat"
+
+[[variable]]
+native_id = "237.11489"
+slug = "jaktigt"
+
+[[variable]]
+native_id = "237.11491"
+slug = "jarnmedicin"
+
+[[variable]]
+native_id = "237.11499"
+slug = "kiropraktor-mm"
+
+[[variable]]
+native_id = "237.11500"
+slug = "klarar-sig-sjalv-barn-1"
+
+[[variable]]
+native_id = "237.11501"
+slug = "klarar-sig-sjalv-barn-2"
+
+[[variable]]
+native_id = "237.11502"
+slug = "klarar-sig-sjalv-barn-3"
+
+[[variable]]
+native_id = "237.11503"
+slug = "klarar-sig-sjalv-barn-4"
+
+[[variable]]
+native_id = "237.11504"
+slug = "klarar-sig-sjalv-barn-5"
+
+[[variable]]
+native_id = "237.11507"
+slug = "intervju-starttid"
+
+[[variable]]
+native_id = "237.11508"
+slug = "intervju-sluttid"
+
+[[variable]]
+native_id = "237.11534"
+slug = "kommer-overens-chefer"
+
+[[variable]]
+native_id = "237.11543"
+slug = "kommunal-utdebitering"
+
+[[variable]]
+native_id = "237.11544"
+slug = "kommunal-vuxenutbildning"
+
+[[variable]]
+native_id = "237.11553"
+slug = "kommunstorlek-ulf"
+
+[[variable]]
+native_id = "237.11554"
+slug = "kommunstorlek-1-dec"
+
+[[variable]]
+native_id = "237.11566"
+slug = "komvux-grundvux-typ-1"
+
+[[variable]]
+native_id = "237.11580"
+slug = "lakarkontakt-sjukdom"
+
+[[variable]]
+native_id = "237.11590"
+slug = "foralder-kontakt-barn-2"
+
+[[variable]]
+native_id = "237.11592"
+slug = "foralder-kontakt-barn-3"
+
+[[variable]]
+native_id = "237.11594"
+slug = "foralder-kontakt-barn-4"
+
+[[variable]]
+native_id = "237.11609"
+slug = "kontakt-ansvarig-forening"
+
+[[variable]]
+native_id = "237.11622"
+slug = "kontantmarginal-2"
+
+[[variable]]
+native_id = "237.11644"
+slug = "kritiska-synpunkter"
+
+[[variable]]
+native_id = "237.11650"
+slug = "kundkontakter"
+
+[[variable]]
+native_id = "237.11685"
+slug = "kursarrangor-kurs-1"
+
+[[variable]]
+native_id = "237.11686"
+slug = "kursarrangor-kurs-2"
+
+[[variable]]
+native_id = "237.11687"
+slug = "kursarrangor-kurs-3"
+
+[[variable]]
+native_id = "237.11688"
+slug = "kursarrangor-kurs-4"
+
+[[variable]]
+native_id = "237.11689"
+slug = "kursdeltagande"
+
+[[variable]]
+native_id = "237.11694"
+slug = "kvalitetsgrupp"
+
+[[variable]]
+native_id = "237.11696"
+slug = "kvallsarbete"
+
+[[variable]]
+native_id = "237.11697"
+slug = "kvallsarbete-jobb-2"
+
+[[variable]]
+native_id = "237.11714"
+slug = "kansla-otillracklighet"
+
+[[variable]]
+native_id = "237.11715"
+slug = "kansla-pa-vag-jobbet"
+
+[[variable]]
+native_id = "237.11717"
+slug = "kok-kokvra-annat-stalle"
+
+[[variable]]
+native_id = "237.11727"
+slug = "kon-person-1"
+
+[[variable]]
+native_id = "237.11728"
+slug = "kon-person-10"
+
+[[variable]]
+native_id = "237.11731"
+slug = "kon-person-2"
+
+[[variable]]
+native_id = "237.11732"
+slug = "kon-person-3"
+
+[[variable]]
+native_id = "237.11733"
+slug = "kon-person-4"
+
+[[variable]]
+native_id = "237.11734"
+slug = "kon-person-5"
+
+[[variable]]
+native_id = "237.11735"
+slug = "kon-person-6"
+
+[[variable]]
+native_id = "237.11736"
+slug = "kon-person-7"
+
+[[variable]]
+native_id = "237.11737"
+slug = "kon-person-8"
+
+[[variable]]
+native_id = "237.11738"
+slug = "kon-person-9"
+
+[[variable]]
+native_id = "237.11763"
+slug = "konsfordelning"
+
+[[variable]]
+native_id = "237.11777"
+slug = "laxermedel"
+
+[[variable]]
+native_id = "237.11787"
+slug = "legat-pa-sjukhus"
+
+[[variable]]
+native_id = "237.11788"
+slug = "legat-pa-sjukhus-sjukhem"
+
+[[variable]]
+native_id = "237.11793"
+slug = "linje-gymnasium"
+
+[[variable]]
+native_id = "237.11807"
+slug = "lokalradio"
+
+[[variable]]
+native_id = "237.11839"
+slug = "langvarig-sjukdom"
+
+[[variable]]
+native_id = "237.11854"
+slug = "lakarbesok-barn-1"
+
+[[variable]]
+native_id = "237.11855"
+slug = "lakarbesok-barn-2"
+
+[[variable]]
+native_id = "237.11856"
+slug = "lakarbesok-barn-3"
+
+[[variable]]
+native_id = "237.11857"
+slug = "lakarbesok-barn-4"
+
+[[variable]]
+native_id = "237.11858"
+slug = "lakarbesok-barn-5"
+
+[[variable]]
+native_id = "237.11859"
+slug = "lakarbesok-barn-6"
+
+[[variable]]
+native_id = "237.11894"
+slug = "lara-nya-saker-i-arbetet"
+
+[[variable]]
+native_id = "237.11903"
+slug = "last-bocker"
+
+[[variable]]
+native_id = "237.11905"
+slug = "last-veckotidningar"
+
+[[variable]]
+native_id = "237.11938"
+slug = "lordagsarbete"
+
+[[variable]]
+native_id = "237.11950"
+slug = "make-i-arbetskraften"
+
+[[variable]]
+native_id = "237.11968"
+slug = "matlagning"
+
+[[variable]]
+native_id = "237.12008"
+slug = "medlem-hyresgastforening"
+
+[[variable]]
+native_id = "237.12039"
+slug = "medlem-idrottsforening"
+
+[[variable]]
+native_id = "237.12153"
+slug = "moders-nationalitet"
+
+[[variable]]
+native_id = "237.12160"
+slug = "modersmal-annat-sprak"
+
+[[variable]]
+native_id = "237.12161"
+slug = "modersmal-finska"
+
+[[variable]]
+native_id = "237.12167"
+slug = "morgonarbete"
+
+[[variable]]
+native_id = "237.12168"
+slug = "morgonarbete-jobb-2"
+
+[[variable]]
+native_id = "237.12169"
+slug = "motion"
+
+[[variable]]
+native_id = "237.12175"
+slug = "motstridiga-krav"
+
+[[variable]]
+native_id = "237.12228"
+slug = "mycket-information-huvud"
+
+[[variable]]
+native_id = "237.12252"
+slug = "mojligt-timmar-hemmet"
+
+[[variable]]
+native_id = "237.12253"
+slug = "mojligt-arbeta-hemmet"
+
+[[variable]]
+native_id = "237.12259"
+slug = "hemarbete-nackdel-1"
+
+[[variable]]
+native_id = "237.12261"
+slug = "hemarbete-nackdel-3"
+
+[[variable]]
+native_id = "237.12262"
+slug = "hemarbete-nackdel-4"
+
+[[variable]]
+native_id = "237.12263"
+slug = "hemarbete-nackdel-5"
+
+[[variable]]
+native_id = "237.12264"
+slug = "hemarbete-nackdel-6"
+
+[[variable]]
+native_id = "237.12265"
+slug = "hemarbete-nackdel-7"
+
+[[variable]]
+native_id = "237.12269"
+slug = "nationalitet-enligt-rtb"
+
+[[variable]]
+native_id = "237.12273"
+slug = "nattarbete-jobb-2"
+
+[[variable]]
+native_id = "237.12274"
+slug = "nattarbete-varje-dag"
+
+[[variable]]
+native_id = "237.12275"
+slug = "naturlakemedel"
+
+[[variable]]
+native_id = "237.12278"
+slug = "nedsatt-horsel"
+
+[[variable]]
+native_id = "237.12285"
+slug = "nedsatt-rorelseformaga"
+
+[[variable]]
+native_id = "237.12333"
+slug = "ny-ny-bostadshushallsvikt"
+
+[[variable]]
+native_id = "237.12334"
+slug = "ny-ny-familjehushallsvikt"
+
+[[variable]]
+native_id = "237.12335"
+slug = "ny-nyvikt"
+
+[[variable]]
+native_id = "237.12336"
+slug = "ny-vikt"
+
+[[variable]]
+native_id = "237.12338"
+slug = "nyheter-tv"
+
+[[variable]]
+native_id = "237.12372"
+slug = "nagot-vald-egna-bostaden"
+
+[[variable]]
+native_id = "237.12392"
+slug = "nojd-med-barnsakerhet"
+
+[[variable]]
+native_id = "237.12395"
+slug = "nojd-med-boendekostnad"
+
+[[variable]]
+native_id = "237.12399"
+slug = "nojd-fritidssysselsattning"
+
+[[variable]]
+native_id = "237.12400"
+slug = "nojd-forvaringsutrymmen"
+
+[[variable]]
+native_id = "237.12401"
+slug = "nojd-med-grannkontakt"
+
+[[variable]]
+native_id = "237.12403"
+slug = "nojd-med-hus-utemiljo"
+
+[[variable]]
+native_id = "237.12404"
+slug = "nojd-med-hygienutrymmen"
+
+[[variable]]
+native_id = "237.12405"
+slug = "nojd-inbrottssakerhet"
+
+[[variable]]
+native_id = "237.12407"
+slug = "nojd-kollektivtrafiken"
+
+[[variable]]
+native_id = "237.12408"
+slug = "nojd-med-kok"
+
+[[variable]]
+native_id = "237.12409"
+slug = "nojd-lekmojligheter-barn"
+
+[[variable]]
+native_id = "237.12411"
+slug = "nojd-med-ljudisolering"
+
+[[variable]]
+native_id = "237.12415"
+slug = "nojd-med-planlosning"
+
+[[variable]]
+native_id = "237.12416"
+slug = "nojd-med-renhallning"
+
+[[variable]]
+native_id = "237.12417"
+slug = "nojd-skotsel-gronomrade"
+
+[[variable]]
+native_id = "237.12419"
+slug = "nojd-med-underhall"
+
+[[variable]]
+native_id = "237.12420"
+slug = "nojd-underhall-hus"
+
+[[variable]]
+native_id = "237.12421"
+slug = "nojd-med-utomhusluften"
+
+[[variable]]
+native_id = "237.12422"
+slug = "nojd-med-utsikt"
+
+[[variable]]
+native_id = "237.12423"
+slug = "nojd-med-ventilation"
+
+[[variable]]
+native_id = "237.12424"
+slug = "nojd-med-varme"
+
+[[variable]]
+native_id = "237.12425"
+slug = "nojes-motionspromenader"
+
+[[variable]]
+native_id = "237.12428"
+slug = "obetald-hyra"
+
+[[variable]]
+native_id = "237.12438"
+slug = "olampliga-arbetsstallningar"
+
+[[variable]]
+native_id = "237.12444"
+slug = "orgnr-uppdrag-1"
+
+[[variable]]
+native_id = "237.12445"
+slug = "orgnr-uppdrag-2"
+
+[[variable]]
+native_id = "237.12446"
+slug = "orgnr-uppdrag-3"
+
+[[variable]]
+native_id = "237.12447"
+slug = "orgnr-uppdrag-4"
+
+[[variable]]
+native_id = "237.12483"
+slug = "orsak-ej-bada-foraldrar"
+
+[[variable]]
+native_id = "237.12504"
+slug = "partners-fodelsear"
+
+[[variable]]
+native_id = "237.12546"
+slug = "person-1-fodelsear"
+
+[[variable]]
+native_id = "237.12548"
+slug = "person-10-fodelsear"
+
+[[variable]]
+native_id = "237.12552"
+slug = "person-2-fodelsear"
+
+[[variable]]
+native_id = "237.12554"
+slug = "person-3-fodelsear"
+
+[[variable]]
+native_id = "237.12555"
+slug = "person-4-fodelsear"
+
+[[variable]]
+native_id = "237.12556"
+slug = "person-5-fodelsear"
+
+[[variable]]
+native_id = "237.12557"
+slug = "person-6-fodelsear"
+
+[[variable]]
+native_id = "237.12558"
+slug = "person-7-fodelsear"
+
+[[variable]]
+native_id = "237.12559"
+slug = "person-8-fodelsear"
+
+[[variable]]
+native_id = "237.12560"
+slug = "person-9-fodelsear"
+
+[[variable]]
+native_id = "237.12576"
+slug = "poliskontakt-handelse-1"
+
+[[variable]]
+native_id = "237.12577"
+slug = "poliskontakt-handelse-2"
+
+[[variable]]
+native_id = "237.12578"
+slug = "poliskontakt-handelse-3"
+
+[[variable]]
+native_id = "237.12579"
+slug = "poliskontakt-handelse-4"
+
+[[variable]]
+native_id = "237.12580"
+slug = "poliskontakt-handelse-5"
+
+[[variable]]
+native_id = "237.12581"
+slug = "poliskontakt-handelse-6"
+
+[[variable]]
+native_id = "237.12639"
+slug = "preventivtabletter"
+
+[[variable]]
+native_id = "237.12648"
+slug = "promenad-i-rask-takt"
+
+[[variable]]
+native_id = "237.12649"
+slug = "promenera-100-meter"
+
+[[variable]]
+native_id = "237.12658"
+slug = "psykisk-anstrangning"
+
+[[variable]]
+native_id = "237.12667"
+slug = "pagaende-vuxenutbildning"
+
+[[variable]]
+native_id = "237.12678"
+slug = "realskola"
+
+[[variable]]
+native_id = "237.12695"
+slug = "medicinsk-behandling-1"
+
+[[variable]]
+native_id = "237.12696"
+slug = "medicinsk-behandling-2"
+
+[[variable]]
+native_id = "237.12697"
+slug = "medicinsk-behandling-3"
+
+[[variable]]
+native_id = "237.12698"
+slug = "medicinsk-behandling-4"
+
+[[variable]]
+native_id = "237.12699"
+slug = "medicinsk-behandling-5"
+
+[[variable]]
+native_id = "237.12700"
+slug = "medicinsk-behandling-6"
+
+[[variable]]
+native_id = "237.12701"
+slug = "relation-1-1994"
+
+[[variable]]
+native_id = "237.12702"
+slug = "relation-10-1994"
+
+[[variable]]
+native_id = "237.12703"
+slug = "relation-11-1994"
+
+[[variable]]
+native_id = "237.12705"
+slug = "relation-2-1994"
+
+[[variable]]
+native_id = "237.12706"
+slug = "relation-3-1994"
+
+[[variable]]
+native_id = "237.12707"
+slug = "relation-4-1994"
+
+[[variable]]
+native_id = "237.12708"
+slug = "relation-5-1994"
+
+[[variable]]
+native_id = "237.12709"
+slug = "relation-6-1994"
+
+[[variable]]
+native_id = "237.12710"
+slug = "relation-7-1994"
+
+[[variable]]
+native_id = "237.12711"
+slug = "relation-8-1994"
+
+[[variable]]
+native_id = "237.12712"
+slug = "relation-9-1994"
+
+[[variable]]
+native_id = "237.12715"
+slug = "relativt-halsotillstand"
+
+[[variable]]
+native_id = "237.12732"
+slug = "resa-sig-fran-koksstol"
+
+[[variable]]
+native_id = "237.12743"
+slug = "restaurangbesok"
+
+[[variable]]
+native_id = "237.12744"
+slug = "restid-arbetet-kollektivt"
+
+[[variable]]
+native_id = "237.12749"
+slug = "restid-till-arbete"
+
+[[variable]]
+native_id = "237.12751"
+slug = "restid-tillsyn-barn-1"
+
+[[variable]]
+native_id = "237.12752"
+slug = "restid-tillsyn-barn-2"
+
+[[variable]]
+native_id = "237.12753"
+slug = "restid-tillsyn-barn-3"
+
+[[variable]]
+native_id = "237.12754"
+slug = "restid-tillsyn-barn-4"
+
+[[variable]]
+native_id = "237.12755"
+slug = "restid-tillsyn-barn-5"
+
+[[variable]]
+native_id = "237.12760"
+slug = "rullstol-svart-i-bostad"
+
+[[variable]]
+native_id = "237.12766"
+slug = "rymlig-och-modern-bostad"
+
+[[variable]]
+native_id = "237.12778"
+slug = "rorelseformaga-2"
+
+[[variable]]
+native_id = "237.12780"
+slug = "rorelsehindrade"
+
+[[variable]]
+native_id = "237.12786"
+slug = "salvor-liniment"
+
+[[variable]]
+native_id = "237.12788"
+slug = "sambo-gift"
+
+[[variable]]
+native_id = "237.12789"
+slug = "samhallsprogram"
+
+[[variable]]
+native_id = "237.12805"
+slug = "sammanlagd-semester"
+
+[[variable]]
+native_id = "237.12821"
+slug = "lakarkonsultationer-totalt"
+
+[[variable]]
+native_id = "237.12838"
+slug = "semesterresa-1-vecka"
+
+[[variable]]
+native_id = "237.12850"
+slug = "senast-hos-tandlakare"
+
+[[variable]]
+native_id = "237.12862"
+slug = "senaste-invandringsar-ip"
+
+[[variable]]
+native_id = "237.12863"
+slug = "senaste-invandringsar-make"
+
+[[variable]]
+native_id = "237.12901"
+slug = "sista-arskurs-gymnasium"
+
+[[variable]]
+native_id = "237.12970"
+slug = "skakningar-vibrationer"
+
+[[variable]]
+native_id = "237.13050"
+slug = "skal-ej-soka-lakarvard"
+
+[[variable]]
+native_id = "237.13062"
+slug = "skal-ej-poliskontakt-1"
+
+[[variable]]
+native_id = "237.13063"
+slug = "skal-ej-poliskontakt-2"
+
+[[variable]]
+native_id = "237.13064"
+slug = "skal-ej-poliskontakt-3"
+
+[[variable]]
+native_id = "237.13065"
+slug = "skal-ej-poliskontakt-4"
+
+[[variable]]
+native_id = "237.13066"
+slug = "skal-ej-poliskontakt-5"
+
+[[variable]]
+native_id = "237.13067"
+slug = "skal-ej-poliskontakt-6"
+
+[[variable]]
+native_id = "237.13144"
+slug = "slag-av-handelse-1"
+
+[[variable]]
+native_id = "237.13145"
+slug = "slag-av-handelse-2"
+
+[[variable]]
+native_id = "237.13146"
+slug = "slag-av-handelse-3"
+
+[[variable]]
+native_id = "237.13147"
+slug = "slag-av-handelse-4"
+
+[[variable]]
+native_id = "237.13148"
+slug = "slag-av-handelse-5"
+
+[[variable]]
+native_id = "237.13149"
+slug = "slag-av-handelse-6"
+
+[[variable]]
+native_id = "237.13179"
+slug = "smartstillande-med-recept"
+
+[[variable]]
+native_id = "237.13181"
+slug = "smartstillande-utan-recept"
+
+[[variable]]
+native_id = "237.13233"
+slug = "sparande"
+
+[[variable]]
+native_id = "237.13240"
+slug = "sportprogram"
+
+[[variable]]
+native_id = "237.13241"
+slug = "springa-kortare-stracka"
+
+[[variable]]
+native_id = "237.13257"
+slug = "starka-kanslor"
+
+[[variable]]
+native_id = "237.13308"
+slug = "stiga-upp"
+
+[[variable]]
+native_id = "237.13325"
+slug = "strovat-i-skog-och-mark"
+
+[[variable]]
+native_id = "237.13333"
+slug = "studiecirklar-och-kurser"
+
+[[variable]]
+native_id = "237.13335"
+slug = "studiestod-kurs-1"
+
+[[variable]]
+native_id = "237.13336"
+slug = "studiestod-kurs-2"
+
+[[variable]]
+native_id = "237.13337"
+slug = "studiestod-kurs-3"
+
+[[variable]]
+native_id = "237.13338"
+slug = "studiestod-kurs-4"
+
+[[variable]]
+native_id = "237.13343"
+slug = "stadning"
+
+[[variable]]
+native_id = "237.13359"
+slug = "stold-av-bil"
+
+[[variable]]
+native_id = "237.13360"
+slug = "stold-av-cykel"
+
+[[variable]]
+native_id = "237.13367"
+slug = "stold-fran-bil"
+
+[[variable]]
+native_id = "237.13368"
+slug = "stold-i-bostad"
+
+[[variable]]
+native_id = "237.13369"
+slug = "stold-i-fritidsbostad"
+
+[[variable]]
+native_id = "237.13370"
+slug = "stold-pa-vind"
+
+[[variable]]
+native_id = "237.13380"
+slug = "sulfa-penicillin-mm"
+
+[[variable]]
+native_id = "237.13384"
+slug = "svettigt"
+
+[[variable]]
+native_id = "237.13387"
+slug = "svara-besvar-plaga"
+
+[[variable]]
+native_id = "237.13405"
+slug = "syn-3"
+
+[[variable]]
+native_id = "237.13427"
+slug = "syror-fratande-amnen"
+
+[[variable]]
+native_id = "237.13433"
+slug = "sysselsatt"
+
+[[variable]]
+native_id = "237.13451"
+slug = "sokt-kommunal-hjalp"
+
+[[variable]]
+native_id = "237.13463"
+slug = "sondagsarbete"
+
+[[variable]]
+native_id = "237.13468"
+slug = "talat-pa-mote"
+
+[[variable]]
+native_id = "237.13487"
+slug = "teater-eller-konserter"
+
+[[variable]]
+native_id = "237.13489"
+slug = "tekniskt-gymnasium"
+
+[[variable]]
+native_id = "237.13569"
+slug = "tillgang-dusch-bad"
+
+[[variable]]
+native_id = "237.13585"
+slug = "tillgang-tv"
+
+[[variable]]
+native_id = "237.13598"
+slug = "tillgang-lantbrevbarare"
+
+[[variable]]
+native_id = "237.13604"
+slug = "tillganglighet-bostad"
+
+[[variable]]
+native_id = "237.13606"
+slug = "tillracklig-kommunal-hjalp"
+
+[[variable]]
+native_id = "237.13607"
+slug = "tillracklig-fardtjanst"
+
+[[variable]]
+native_id = "237.13609"
+slug = "tillsyn-1-barn-1"
+
+[[variable]]
+native_id = "237.13610"
+slug = "tillsyn-1-barn-2"
+
+[[variable]]
+native_id = "237.13611"
+slug = "tillsyn-1-barn-3"
+
+[[variable]]
+native_id = "237.13612"
+slug = "tillsyn-1-barn-4"
+
+[[variable]]
+native_id = "237.13613"
+slug = "tillsyn-1-barn-5"
+
+[[variable]]
+native_id = "237.13614"
+slug = "tillsyn-1-barn-6"
+
+[[variable]]
+native_id = "237.13615"
+slug = "tillsyn-1-barn-7"
+
+[[variable]]
+native_id = "237.13616"
+slug = "tillsyn-1-skolbarn-1"
+
+[[variable]]
+native_id = "237.13617"
+slug = "tillsyn-1-skolbarn-2"
+
+[[variable]]
+native_id = "237.13618"
+slug = "tillsyn-1-skolbarn-3"
+
+[[variable]]
+native_id = "237.13619"
+slug = "tillsyn-1-skolbarn-4"
+
+[[variable]]
+native_id = "237.13620"
+slug = "tillsyn-1-skolbarn-5"
+
+[[variable]]
+native_id = "237.13621"
+slug = "tillsyn-2-barn-1"
+
+[[variable]]
+native_id = "237.13622"
+slug = "tillsyn-2-barn-2"
+
+[[variable]]
+native_id = "237.13623"
+slug = "tillsyn-2-barn-3"
+
+[[variable]]
+native_id = "237.13624"
+slug = "tillsyn-2-barn-4"
+
+[[variable]]
+native_id = "237.13625"
+slug = "tillsyn-2-barn-5"
+
+[[variable]]
+native_id = "237.13627"
+slug = "tillsyn-2-skolbarn-1"
+
+[[variable]]
+native_id = "237.13628"
+slug = "tillsyn-2-skolbarn-2"
+
+[[variable]]
+native_id = "237.13629"
+slug = "tillsyn-2-skolbarn-3"
+
+[[variable]]
+native_id = "237.13630"
+slug = "tillsyn-2-skolbarn-4"
+
+[[variable]]
+native_id = "237.13631"
+slug = "tillsyn-2-skolbarn-5"
+
+[[variable]]
+native_id = "237.13632"
+slug = "tillsyn-3-barn-1"
+
+[[variable]]
+native_id = "237.13633"
+slug = "tillsyn-3-barn-2"
+
+[[variable]]
+native_id = "237.13634"
+slug = "tillsyn-3-barn-3"
+
+[[variable]]
+native_id = "237.13635"
+slug = "tillsyn-3-barn-4"
+
+[[variable]]
+native_id = "237.13636"
+slug = "tillsyn-3-barn-5"
+
+[[variable]]
+native_id = "237.13638"
+slug = "tillsyn-3-skolbarn-1"
+
+[[variable]]
+native_id = "237.13639"
+slug = "tillsyn-3-skolbarn-2"
+
+[[variable]]
+native_id = "237.13640"
+slug = "tillsyn-3-skolbarn-3"
+
+[[variable]]
+native_id = "237.13641"
+slug = "tillsyn-3-skolbarn-4"
+
+[[variable]]
+native_id = "237.13642"
+slug = "tillsyn-3-skolbarn-5"
+
+[[variable]]
+native_id = "237.13650"
+slug = "timmar-bildskarmsarbete"
+
+[[variable]]
+native_id = "237.13734"
+slug = "tradgardsarbete"
+
+[[variable]]
+native_id = "237.13744"
+slug = "trott"
+
+[[variable]]
+native_id = "237.13745"
+slug = "trott-dagar"
+
+[[variable]]
+native_id = "237.13748"
+slug = "trott-kvallar"
+
+[[variable]]
+native_id = "237.13749"
+slug = "trott-morgnar"
+
+[[variable]]
+native_id = "237.13751"
+slug = "tuggformaga"
+
+[[variable]]
+native_id = "237.13764"
+slug = "tvatt"
+
+[[variable]]
+native_id = "237.13779"
+slug = "typ-av-pension"
+
+[[variable]]
+native_id = "237.13794"
+slug = "typ-av-pension-maka"
+
+[[variable]]
+native_id = "237.13861"
+slug = "universitet"
+
+[[variable]]
+native_id = "237.13908"
+slug = "upprepade-rorelser"
+
+[[variable]]
+native_id = "237.13919"
+slug = "uppvaxtort"
+
+[[variable]]
+native_id = "237.13929"
+slug = "utbildning-1-fullbordad"
+
+[[variable]]
+native_id = "237.13933"
+slug = "utbildning-1-titel"
+
+[[variable]]
+native_id = "237.13939"
+slug = "utbildning-2-fullbordad"
+
+[[variable]]
+native_id = "237.13943"
+slug = "utbildning-2-titel"
+
+[[variable]]
+native_id = "237.13948"
+slug = "utbildning-3-fullbordad"
+
+[[variable]]
+native_id = "237.13952"
+slug = "utbildning-3-titel"
+
+[[variable]]
+native_id = "237.13984"
+slug = "utbildning-huvudgrupp"
+
+[[variable]]
+native_id = "237.13993"
+slug = "utbyte-av-tjanster"
+
+[[variable]]
+native_id = "237.14003"
+slug = "utgift-fardtjanst-manad"
+
+[[variable]]
+native_id = "237.14045"
+slug = "vanliga-lakarbesok"
+
+[[variable]]
+native_id = "237.14046"
+slug = "vanligt-med-skadegorelse"
+
+[[variable]]
+native_id = "237.14108"
+slug = "veckor-fritidsbostad"
+
+[[variable]]
+native_id = "237.14231"
+slug = "vikt-i-kg"
+
+[[variable]]
+native_id = "237.14241"
+slug = "vilken-vaning-bor-up"
+
+[[variable]]
+native_id = "237.14249"
+slug = "vitaminer-starkande-medicin"
+
+[[variable]]
+native_id = "237.14251"
+slug = "vuxenstudiestod-foregaende-ar"
+
+[[variable]]
+native_id = "237.14269"
+slug = "vald-synliga-marken"
+
+[[variable]]
+native_id = "237.14284"
+slug = "vardnad-barn-2"
+
+[[variable]]
+native_id = "237.14286"
+slug = "vardnad-barn-3"
+
+[[variable]]
+native_id = "237.14288"
+slug = "vardnad-barn-4"
+
+[[variable]]
+native_id = "237.14297"
+slug = "vark-i-skuldror"
+
+[[variable]]
+native_id = "237.14298"
+slug = "vark-extremiteter"
+
+[[variable]]
+native_id = "237.14301"
+slug = "yrke-far"
+
+[[variable]]
+native_id = "237.14302"
+slug = "yrke-mor"
+
+[[variable]]
+native_id = "237.14307"
+slug = "yrkeskod-fob80-nyk-arbetslosa-pof"
+
+[[variable]]
+native_id = "237.14314"
+slug = "yrkeskod-fob85-arbetslosa"
+
+[[variable]]
+native_id = "237.14329"
+slug = "ytterligare-utbildning"
+
+[[variable]]
+native_id = "237.14388"
+slug = "artal-pof"
+
+[[variable]]
+native_id = "237.14402"
+slug = "artal-examen-hogskola"
+
+[[variable]]
+native_id = "237.14418"
+slug = "artal-person-1"
+
+[[variable]]
+native_id = "237.14419"
+slug = "artal-person-10"
+
+[[variable]]
+native_id = "237.14420"
+slug = "artal-person-11"
+
+[[variable]]
+native_id = "237.14422"
+slug = "artal-person-2"
+
+[[variable]]
+native_id = "237.14423"
+slug = "artal-person-3"
+
+[[variable]]
+native_id = "237.14424"
+slug = "artal-person-4"
+
+[[variable]]
+native_id = "237.14425"
+slug = "artal-person-5"
+
+[[variable]]
+native_id = "237.14426"
+slug = "artal-person-6"
+
+[[variable]]
+native_id = "237.14427"
+slug = "artal-person-7"
+
+[[variable]]
+native_id = "237.14428"
+slug = "artal-person-8"
+
+[[variable]]
+native_id = "237.14429"
+slug = "artal-person-9"
+
+[[variable]]
+native_id = "237.14520"
+slug = "overklaga-myndighetsbeslut"
+
+[[variable]]
+native_id = "237.14523"
+slug = "overtid-beordrad"
+
+[[variable]]
+native_id = "237.14538"
+slug = "ovrigt-maka"
+
+[[variable]]
+native_id = "237.14574"
+slug = "medlem-i-annan-forening"
+
+[[variable]]
+native_id = "237.15052"
+slug = "pagaende-studier-3"
+
+[[variable]]
+native_id = "237.16312"
+slug = "folkbokforingsforsamling"
+
+[[variable]]
+native_id = "237.17403"
+slug = "langd-i-cm"
+
+[[variable]]
+native_id = "237.17946"
+slug = "allergiska-besvar-2-2"
+
+[[variable]]
+native_id = "237.17947"
+slug = "allergiska-besvar-2"
+
+[[variable]]
+native_id = "237.18400"
+slug = "lantbrevbarare"
+
+[[variable]]
+native_id = "237.18401"
+slug = "onskat-timmar-veckoarbetstid"
+
+[[variable]]
+native_id = "237.18410"
+slug = "barn-2-sjukdom-fodelsear"
+
+[[variable]]
+native_id = "237.18621"
+slug = "barn-1-tillsammans"
+
+[[variable]]
+native_id = "237.18622"
+slug = "barn-2-tillsammans"
+
+[[variable]]
+native_id = "237.18623"
+slug = "barn-3-tillsammans"
+
+[[variable]]
+native_id = "237.18624"
+slug = "barn-4-tillsammans"
+
+[[variable]]
+native_id = "237.18625"
+slug = "barn-5-tillsammans"
+
+[[variable]]
+native_id = "237.18626"
+slug = "barn-6-tillsammans"
+
+[[variable]]
+native_id = "237.18742"
+slug = "morgonarbete-varje-dag"
+
+[[variable]]
+native_id = "237.18744"
+slug = "nattarbete"
+
+[[variable]]
+native_id = "237.18747"
+slug = "kvallsarbete-varje-dag"
+
+[[variable]]
+native_id = "237.18780"
+slug = "poliskontakt-1-tr0012"
+
+[[variable]]
+native_id = "237.18781"
+slug = "poliskontakt-2-tr0012"
+
+[[variable]]
+native_id = "237.18782"
+slug = "poliskontakt-3-tr0012"
+
+[[variable]]
+native_id = "237.18783"
+slug = "poliskontakt-4-tr0012"
+
+[[variable]]
+native_id = "237.18784"
+slug = "poliskontakt-5-tr0012"
+
+[[variable]]
+native_id = "237.18785"
+slug = "poliskontakt-6-tr0012"
+
+[[variable]]
+native_id = "237.18792"
+slug = "skal-ej-poliskontakt-1-tr0012"
+
+[[variable]]
+native_id = "237.18793"
+slug = "skal-ej-poliskontakt-2-tr0012"
+
+[[variable]]
+native_id = "237.18794"
+slug = "skal-ej-poliskontakt-3-tr0012"
+
+[[variable]]
+native_id = "237.18795"
+slug = "skal-ej-poliskontakt-4-tr0012"
+
+[[variable]]
+native_id = "237.18796"
+slug = "skal-ej-poliskontakt-5-tr0012"
+
+[[variable]]
+native_id = "237.18797"
+slug = "skal-ej-poliskontakt-6-tr0012"
+
+[[variable]]
+native_id = "237.18800"
+slug = "poliskontakt-1-tr0013"
+
+[[variable]]
+native_id = "237.18801"
+slug = "poliskontakt-2-tr0013"
+
+[[variable]]
+native_id = "237.18802"
+slug = "poliskontakt-3-tr0013"
+
+[[variable]]
+native_id = "237.18803"
+slug = "poliskontakt-4-tr0013"
+
+[[variable]]
+native_id = "237.18804"
+slug = "poliskontakt-5-tr0013"
+
+[[variable]]
+native_id = "237.18805"
+slug = "poliskontakt-6-tr0013"
+
+[[variable]]
+native_id = "237.18812"
+slug = "skal-ej-poliskontakt-1-tr0013"
+
+[[variable]]
+native_id = "237.18813"
+slug = "skal-ej-poliskontakt-2-tr0013"
+
+[[variable]]
+native_id = "237.18814"
+slug = "skal-ej-poliskontakt-3-tr0013"
+
+[[variable]]
+native_id = "237.18815"
+slug = "skal-ej-poliskontakt-4-tr0013"
+
+[[variable]]
+native_id = "237.18816"
+slug = "skal-ej-poliskontakt-5-tr0013"
+
+[[variable]]
+native_id = "237.18817"
+slug = "skal-ej-poliskontakt-6-tr0013"
+
+[[variable]]
+native_id = "237.18836"
+slug = "sjukskriven-1-tr0011"
+
+[[variable]]
+native_id = "237.18837"
+slug = "sjukskriven-2-tr0011"
+
+[[variable]]
+native_id = "237.18838"
+slug = "sjukskriven-3-tr0011"
+
+[[variable]]
+native_id = "237.18839"
+slug = "sjukskriven-4-tr0011"
+
+[[variable]]
+native_id = "237.18840"
+slug = "sjukskriven-5-tr0011"
+
+[[variable]]
+native_id = "237.18841"
+slug = "sjukskriven-6-tr0011"
+
+[[variable]]
+native_id = "237.18859"
+slug = "sjukskriven-1-tr0012"
+
+[[variable]]
+native_id = "237.18866"
+slug = "sjukskriven-1-tr0013"
+
+[[variable]]
+native_id = "237.18867"
+slug = "sjukskriven-2-tr0013"
+
+[[variable]]
+native_id = "237.18868"
+slug = "sjukskriven-3-tr0013"
+
+[[variable]]
+native_id = "237.18869"
+slug = "sjukskriven-4-tr0013"
+
+[[variable]]
+native_id = "237.18870"
+slug = "sjukskriven-5-tr0013"
+
+[[variable]]
+native_id = "237.18871"
+slug = "sjukskriven-6-tr0013"
+
+[[variable]]
+native_id = "237.18891"
+slug = "skal-ej-poliskontakt-1-tr0014"
+
+[[variable]]
+native_id = "237.18892"
+slug = "skal-ej-poliskontakt-2-tr0014"
+
+[[variable]]
+native_id = "237.18893"
+slug = "skal-ej-poliskontakt-3-tr0014"
+
+[[variable]]
+native_id = "237.18894"
+slug = "skal-ej-poliskontakt-4-tr0014"
+
+[[variable]]
+native_id = "237.18895"
+slug = "skal-ej-poliskontakt-5-tr0014"
+
+[[variable]]
+native_id = "237.18896"
+slug = "skal-ej-poliskontakt-6-tr0014"
+
+[[variable]]
+native_id = "237.18961"
+slug = "forlaggning-av-arbetstid"
+
+[[variable]]
+native_id = "237.19019"
+slug = "syn"
+
+[[variable]]
+native_id = "237.19786"
+slug = "fardtjanst"
+
+[[variable]]
+native_id = "237.19944"
+slug = "antal-barn-0-15-ar"
+
+[[variable]]
+native_id = "237.19968"
+slug = "teater-konsert-museum"
+
+[[variable]]
+native_id = "237.19978"
+slug = "medlem-i-boendeforening"
+
+[[variable]]
+native_id = "237.19979"
+slug = "aktiv-i-boendeforening"
+
+[[variable]]
+native_id = "237.20076"
+slug = "sjukskriven-vald-1-vard"
+
+[[variable]]
+native_id = "237.20077"
+slug = "sjukskriven-vald-2-vard"
+
+[[variable]]
+native_id = "237.20079"
+slug = "sjukskriven-vald-3-vard"
+
+[[variable]]
+native_id = "237.20081"
+slug = "sjukskriven-vald-4-vard"
+
+[[variable]]
+native_id = "237.20083"
+slug = "sjukskriven-vald-5-vard"
+
+[[variable]]
+native_id = "237.20084"
+slug = "sjukskriven-vald-6-vard"
+
+[[variable]]
+native_id = "237.20141"
+slug = "poliskontakt-1-ej-vard"
+
+[[variable]]
+native_id = "237.20142"
+slug = "poliskontakt-2-ej-vard"
+
+[[variable]]
+native_id = "237.20143"
+slug = "poliskontakt-3-ej-vard"
+
+[[variable]]
+native_id = "237.20144"
+slug = "poliskontakt-4-ej-vard"
+
+[[variable]]
+native_id = "237.20145"
+slug = "poliskontakt-5-ej-vard"
+
+[[variable]]
+native_id = "237.20146"
+slug = "poliskontakt-6-ej-vard"
+
+[[variable]]
+native_id = "237.20148"
+slug = "skal-ej-poliskontakt-1-ej-vard"
+
+[[variable]]
+native_id = "237.20149"
+slug = "skal-ej-poliskontakt-2-ej-vard"
+
+[[variable]]
+native_id = "237.20150"
+slug = "skal-ej-poliskontakt-3-ej-vard"
+
+[[variable]]
+native_id = "237.20151"
+slug = "skal-ej-poliskontakt-4-ej-vard"
+
+[[variable]]
+native_id = "237.20152"
+slug = "skal-ej-poliskontakt-5-ej-vard"
+
+[[variable]]
+native_id = "237.20153"
+slug = "skal-ej-poliskontakt-6-ej-vard"
+
+[[variable]]
+native_id = "237.20160"
+slug = "sjukskriven-vald-1-ej-vard"
+
+[[variable]]
+native_id = "237.20200"
+slug = "poliskontakt-1-utan-marken"
+
+[[variable]]
+native_id = "237.20201"
+slug = "poliskontakt-2-utan-marken"
+
+[[variable]]
+native_id = "237.20202"
+slug = "poliskontakt-3-utan-marken"
+
+[[variable]]
+native_id = "237.20203"
+slug = "poliskontakt-4-utan-marken"
+
+[[variable]]
+native_id = "237.20204"
+slug = "poliskontakt-5-utan-marken"
+
+[[variable]]
+native_id = "237.20205"
+slug = "poliskontakt-6-utan-marken"
+
+[[variable]]
+native_id = "237.20206"
+slug = "skal-ej-poliskontakt-1-utan-marken"
+
+[[variable]]
+native_id = "237.20207"
+slug = "skal-ej-poliskontakt-2-utan-marken"
+
+[[variable]]
+native_id = "237.20208"
+slug = "skal-ej-poliskontakt-3-utan-marken"
+
+[[variable]]
+native_id = "237.20209"
+slug = "skal-ej-poliskontakt-4-utan-marken"
+
+[[variable]]
+native_id = "237.20210"
+slug = "skal-ej-poliskontakt-5-utan-marken"
+
+[[variable]]
+native_id = "237.20211"
+slug = "skal-ej-poliskontakt-6-utan-marken"
+
+[[variable]]
+native_id = "237.20258"
+slug = "sjukskriven-skador-1-utan-marken"
+
+[[variable]]
+native_id = "237.20260"
+slug = "sjukskriven-skador-2-utan-marken"
+
+[[variable]]
+native_id = "237.20263"
+slug = "sjukskriven-skador-3-utan-marken"
+
+[[variable]]
+native_id = "237.20264"
+slug = "sjukskriven-skador-4-utan-marken"
+
+[[variable]]
+native_id = "237.20265"
+slug = "sjukskriven-skador-5-utan-marken"
+
+[[variable]]
+native_id = "237.20267"
+slug = "sjukskriven-skador-6-utan-marken"
+
+[[variable]]
+native_id = "237.20394"
+slug = "skal-ej-poliskontakt-1-hot"
+
+[[variable]]
+native_id = "237.20431"
+slug = "skal-ej-poliskontakt-2-hot"
+
+[[variable]]
+native_id = "237.20432"
+slug = "skal-ej-poliskontakt-3-hot"
+
+[[variable]]
+native_id = "237.20433"
+slug = "skal-ej-poliskontakt-4-hot"
+
+[[variable]]
+native_id = "237.20434"
+slug = "skal-ej-poliskontakt-5-hot"
+
+[[variable]]
+native_id = "237.20436"
+slug = "skal-ej-poliskontakt-6-hot"
+
+[[variable]]
+native_id = "237.21959"
+slug = "mer-an-ett-arbete"
+
+[[variable]]
+native_id = "237.22327"
+slug = "lan-kommun-forsamling"
+
+[[variable]]
+native_id = "237.23623"
+slug = "svettig-av-kroppsanstrangning"
+
+[[variable]]
+native_id = "237.23669"
+slug = "sokt-jobb-senaste-4-veckor"
+
+[[variable]]
+native_id = "237.23901"
+slug = "kan-borja-jobba-inom-2-veckor"
+
+[[variable]]
+native_id = "237.23966"
+slug = "mer-an-ett-arbete-up"
+
+[[variable]]
+native_id = "237.23990"
+slug = "sektor-forvarvsarbetande"
+
+[[variable]]
+native_id = "237.24008"
+slug = "arbete-dagtid"
+
+[[variable]]
+native_id = "237.24009"
+slug = "skift-eller-schema"
+
+[[variable]]
+native_id = "237.24013"
+slug = "arbete-nattid"
+
+[[variable]]
+native_id = "237.24090"
+slug = "kortare-langre-veckoarbetstid"
+
+[[variable]]
+native_id = "237.24840"
+slug = "jaktigt-arbete"
+
+[[variable]]
+native_id = "237.24843"
+slug = "passiv-rokning-pa-arbetsplats"
+
+[[variable]]
+native_id = "237.24861"
+slug = "fysisk-belastning"
+
+[[variable]]
+native_id = "237.24903"
+slug = "arbete-kvallstid"
+
+[[variable]]
+native_id = "237.24988"
+slug = "restid-till-fran-jobb"
+
+[[variable]]
+native_id = "237.29163"
+slug = "medlem-i-politiskt-parti"
+
+[[variable]]
+native_id = "237.29174"
+slug = "aktiv-kultur-musik-dansforening"
+
+[[variable]]
+native_id = "237.29184"
+slug = "politiska-diskussioner"
+
+[[variable]]
+native_id = "237.29185"
+slug = "niva-pagaende-studier"
+
+[[variable]]
+native_id = "237.29188"
+slug = "hogsta-avslutade-utbildningen"
+
+[[variable]]
+native_id = "237.29456"
+slug = "tillgang-till-dator"
+
+[[variable]]
+native_id = "237.29482"
+slug = "hemforsakring"
+
+[[variable]]
+native_id = "237.30639"
+slug = "mottaget-underhallsbidrag"
+
+[[variable]]
+native_id = "237.31024"
+slug = "urvalsvikt-individ"
+
+[[variable]]
+native_id = "237.31033"
+slug = "socioekonomisk-grupp-up"
+
+[[variable]]
+native_id = "237.31034"
+slug = "socioekonomisk-grupp-make"
+
+[[variable]]
+native_id = "237.31035"
+slug = "socioekonomisk-grupp-hushall"
+
+[[variable]]
+native_id = "237.31059"
+slug = "forestallning-teater-konsert"
+
+[[variable]]
+native_id = "237.31060"
+slug = "socialt-natverk-internet"
+
+[[variable]]
+native_id = "237.31064"
+slug = "ryggvark-eller-hoftsmartor"
+
+[[variable]]
+native_id = "237.31068"
+slug = "vark-armar-hander-fotter"
+
+[[variable]]
+native_id = "237.31070"
+slug = "vark-skuldror-nacke-axlar"
+
+[[variable]]
+native_id = "237.31072"
+slug = "har-somnbesvar"
+
+[[variable]]
+native_id = "237.31087"
+slug = "glasogon-kontaktlinser"
+
+[[variable]]
+native_id = "237.31088"
+slug = "nedsatt-aktivitetsformaga"
+
+[[variable]]
+native_id = "237.31090"
+slug = "avstatt-tandlakarbesok"
+
+[[variable]]
+native_id = "237.31091"
+slug = "avstatt-lakarbesok"
+
+[[variable]]
+native_id = "237.31112"
+slug = "anvander-horapparat"
+
+[[variable]]
+native_id = "237.31113"
+slug = "framsta-skal-ej-tandvard"
+
+[[variable]]
+native_id = "237.31114"
+slug = "framsta-skal-ej-lakarbesok"
+
+[[variable]]
+native_id = "237.31127"
+slug = "roker-varje-dag"
+
+[[variable]]
+native_id = "237.31128"
+slug = "snusar-dagligen"
+
+[[variable]]
+native_id = "237.31130"
+slug = "neuropsykiatrisk-diagnos"
+
+[[variable]]
+native_id = "237.31134"
+slug = "besvar-angslan-oro-angest"
+
+[[variable]]
+native_id = "237.31135"
+slug = "svar-angslan-oro-angest"
+
+[[variable]]
+native_id = "237.31140"
+slug = "langvarig-sjukdom-halsoproblem"
+
+[[variable]]
+native_id = "237.31144"
+slug = "sysselsattning-16-ar"
+
+[[variable]]
+native_id = "237.31147"
+slug = "heltid-deltid"
+
+[[variable]]
+native_id = "237.31148"
+slug = "yrkesstallning-up"
+
+[[variable]]
+native_id = "237.31149"
+slug = "fast-eller-tidsbegransad"
+
+[[variable]]
+native_id = "237.31154"
+slug = "sysselsattning-make-harledd"
+
+[[variable]]
+native_id = "237.31156"
+slug = "sysselsattning-make-maka-sambo"
+
+[[variable]]
+native_id = "237.31159"
+slug = "heltid-deltid-make-maka-sambo"
+
+[[variable]]
+native_id = "237.31160"
+slug = "yrkesstallning-make-maka-sambo"
+
+[[variable]]
+native_id = "237.35758"
+slug = "boendeform-harledd"
+
+[[variable]]
+native_id = "237.35763"
+slug = "kok-eller-kokvra"
+
+[[variable]]
+native_id = "237.35766"
+slug = "trangbodd-enligt-norm-2"
+
+[[variable]]
+native_id = "237.35767"
+slug = "trangbodd-enligt-norm-3"
+
+[[variable]]
+native_id = "237.35770"
+slug = "familjetyp-barn-under-18-ar"
+
+[[variable]]
+native_id = "237.35773"
+slug = "bostadshushall"
+
+[[variable]]
+native_id = "237.35783"
+slug = "internet-i-bostaden"
+
+[[variable]]
+native_id = "237.35794"
+slug = "kontantmarginal-inom-en-manad"
+
+[[variable]]
+native_id = "237.35795"
+slug = "ekonomiska-problem"
+
+[[variable]]
+native_id = "237.35814"
+slug = "tillgang-till-bil"
+
+[[variable]]
+native_id = "237.35817"
+slug = "barntillsynskostnader-manad"
+
+[[variable]]
+native_id = "237.35846"
+slug = "fa-ekonomin-att-ga-ihop"
+
+[[variable]]
+native_id = "237.35850"
+slug = "nojd-med-arbetet"
+
+[[variable]]
+native_id = "237.35851"
+slug = "inflytande-arbetstempo"
+
+[[variable]]
+native_id = "237.35853"
+slug = "buller-i-arbetet"
+
+[[variable]]
+native_id = "237.35854"
+slug = "tidspress-i-arbetet"
+
+[[variable]]
+native_id = "237.35855"
+slug = "enformigt-arbete"
+
+[[variable]]
+native_id = "237.35856"
+slug = "psykiskt-anstrangande-arbete"
+
+[[variable]]
+native_id = "237.35857"
+slug = "upprepade-ensidiga-rorelser"
+
+[[variable]]
+native_id = "237.35858"
+slug = "kraftiga-skakningar-arbetet"
+
+[[variable]]
+native_id = "237.35859"
+slug = "stillasittande-arbete"
+
+[[variable]]
+native_id = "237.35860"
+slug = "tunga-lyft-i-arbetet"
+
+[[variable]]
+native_id = "237.35861"
+slug = "tunga-lyft-hur-ofta"
+
+[[variable]]
+native_id = "237.35862"
+slug = "stod-av-arbetskamraterna"
+
+[[variable]]
+native_id = "237.35863"
+slug = "tunga-lyft-harledd"
+
+[[variable]]
+native_id = "237.35865"
+slug = "stod-av-chefen"
+
+[[variable]]
+native_id = "237.35868"
+slug = "svart-koppla-bort-arbetet"
+
+[[variable]]
+native_id = "237.35869"
+slug = "kroppsligt-anstrangande-arbete"
+
+[[variable]]
+native_id = "237.35881"
+slug = "utsatt-for-hot-eller-vald"
+
+[[variable]]
+native_id = "237.35882"
+slug = "utsatt-for-hot"
+
+[[variable]]
+native_id = "237.35883"
+slug = "utsatt-for-vald"
+
+[[variable]]
+native_id = "237.35884"
+slug = "utsatt-for-vald-som-kravde-vard"
+
+[[variable]]
+native_id = "237.35885"
+slug = "utsatt-for-vald-som-ej-kravde-vard"
+
+[[variable]]
+native_id = "237.35886"
+slug = "hot-eller-vald-i-egna-bostaden"
+
+[[variable]]
+native_id = "237.35888"
+slug = "hot-eller-vald-i-annans-bostad"
+
+[[variable]]
+native_id = "237.35889"
+slug = "hot-eller-vald-arbetsplatsen"
+
+[[variable]]
+native_id = "237.35890"
+slug = "hot-eller-vald-pa-tag-buss-station"
+
+[[variable]]
+native_id = "237.35892"
+slug = "hot-eller-vald-pa-restaurang-nojesstalle"
+
+[[variable]]
+native_id = "237.35893"
+slug = "hot-eller-vald-pa-gata-eller-torg"
+
+[[variable]]
+native_id = "237.35894"
+slug = "utsatt-for-hot-eller-vald-antal-ganger"
+
+[[variable]]
+native_id = "237.35895"
+slug = "utsatt-for-hot-antal-ggr"
+
+[[variable]]
+native_id = "237.35896"
+slug = "utsatt-for-vald-antal-ganger"
+
+[[variable]]
+native_id = "237.35897"
+slug = "vald-ej-kravde-vard-antal-ganger"
+
+[[variable]]
+native_id = "237.35900"
+slug = "avstatt-fran-att-ga-ut-p-g-a-oro"
+
+[[variable]]
+native_id = "237.35903"
+slug = "plats-vald-som-kravde-vard-handelse-1"
+
+[[variable]]
+native_id = "237.35904"
+slug = "plats-vald-som-ej-kravde-vard-handelse-1"
+
+[[variable]]
+native_id = "237.35905"
+slug = "plats-hot-handelse-1"
+
+[[variable]]
+native_id = "237.35962"
+slug = "typ-av-anstallning-anstallda"
+
+[[variable]]
+native_id = "237.35964"
+slug = "heltid-deltid-forvarvsarbetande"
+
+[[variable]]
+native_id = "237.35978"
+slug = "veckoarbetstid-extra-arbete"
+
+[[variable]]
+native_id = "237.36886"
+slug = "regionindelning-nuts2"
+
+[[variable]]
+native_id = "237.37490"
+slug = "hjalp-av-nagon-annan"
+
+[[variable]]
+native_id = "237.37872"
+slug = "inkomst-efter-skatt-up"
+
+[[variable]]
+native_id = "237.38249"
+slug = "fodd-i-sverige-eller-utomlands"
+
+[[variable]]
+native_id = "237.38548"
+slug = "fackforening-medlem"
+
+[[variable]]
+native_id = "237.38551"
+slug = "fackforening-vilken"
+
+[[variable]]
+native_id = "237.38558"
+slug = "medlem-i-idrotts-eller-friluftsforening"
+
+[[variable]]
+native_id = "237.38562"
+slug = "medlem-i-pensionarsforening"
+
+[[variable]]
+native_id = "237.38563"
+slug = "aktiv-i-pensionarsforening"
+
+[[variable]]
+native_id = "237.38568"
+slug = "fackforbund-centralorganisation"
+
+[[variable]]
+native_id = "237.38658"
+slug = "varit-ute-i-skog-och-mark"
+
+[[variable]]
+native_id = "237.38664"
+slug = "lyssnat-pa-ljudbocker"
+
+[[variable]]
+native_id = "237.38665"
+slug = "anvant-internet-pa-fritiden"
+
+[[variable]]
+native_id = "237.40275"
+slug = "inkomstkvintiler-andel"
+
+[[variable]]
+native_id = "237.40297"
+slug = "antal-barn-0-18-ar"
+
+[[variable]]
+native_id = "237.40298"
+slug = "antal-barn-0-24-ar"
+
+[[variable]]
+native_id = "237.41317"
+slug = "lopnummer-individ"
+
+[[variable]]
+native_id = "237.41341"
+slug = "disponibel-inkomst-up"
+
+[[variable]]
+native_id = "237.41342"
+slug = "disponibel-inkomst-make-maka-sambo"
+
+[[variable]]
+native_id = "237.41442"
+slug = "individvikt-kalibrerad"
+
+[[variable]]
+native_id = "237.41456"
+slug = "sysselsattning-ovrigt"
+
+[[variable]]
+native_id = "237.41457"
+slug = "sysselsattning-ovrigt-maka-make"
+
+[[variable]]
+native_id = "237.41458"
+slug = "poststratum"
+
+[[variable]]
+native_id = "237.41459"
+slug = "panel"
+
+[[variable]]
+native_id = "237.41461"
+slug = "kalibrering-utrikes-inrikes-fodd"
+
+[[variable]]
+native_id = "237.41462"
+slug = "kalibrering-alder-kon"
+
+[[variable]]
+native_id = "237.41464"
+slug = "kalibrering-civilstand"
+
+[[variable]]
+native_id = "237.41465"
+slug = "kalibrering-disponibel-inkomst"
+
+[[variable]]
+native_id = "237.41473"
+slug = "kalibrering-kommungrupper"
+
+[[variable]]
+native_id = "237.41884"
+slug = "stratum-antal-svar"
+
+[[variable]]
+native_id = "237.42032"
+slug = "kommunstorlek-1-dec-2"
+
+[[variable]]
+native_id = "237.42846"
+slug = "vald-kravde-vard-antal-ganger"
+
+[[variable]]
+native_id = "237.42855"
+slug = "fodelsear-barn-6-2"
+
+[[variable]]
+native_id = "237.42862"
+slug = "klarar-sig-sjalv-efter-skolan-barn-1"
+
+[[variable]]
+native_id = "237.42863"
+slug = "klarar-sig-sjalv-efter-skolan-barn-2"
+
+[[variable]]
+native_id = "237.42864"
+slug = "klarar-sig-sjalv-efter-skolan-barn-3"
+
+[[variable]]
+native_id = "237.42865"
+slug = "klarar-sig-sjalv-efter-skolan-barn-4"
+
+[[variable]]
+native_id = "237.42871"
+slug = "gar-i-skola-barn-6"
+
+[[variable]]
+native_id = "237.42872"
+slug = "kalibrering-utbildning"
+
+[[variable]]
+native_id = "237.42931"
+slug = "barn-6-tillsammans-t-o-m-ar"
+
+[[variable]]
+native_id = "237.42932"
+slug = "barn-5-tillsammans-t-o-m-ar"
+
+[[variable]]
+native_id = "237.42933"
+slug = "barn-4-tillsammans-t-o-m-ar"
+
+[[variable]]
+native_id = "237.42934"
+slug = "barn-3-tillsammans-t-o-m-ar"
+
+[[variable]]
+native_id = "237.42935"
+slug = "barn-2-tillsammans-t-o-m-ar"
+
+[[variable]]
+native_id = "237.42936"
+slug = "barn-1-tillsammans-t-o-m-ar"
+
+[[variable]]
+native_id = "237.42992"
+slug = "medborgarskap-enligt-rtb"
+
+[[variable]]
+native_id = "237.44826"
+slug = "yrke-tillfalligt-arbete"
+
+[[variable]]
+native_id = "237.44828"
+slug = "tillfalligt-arbete-i-bostaden"
+
+[[variable]]
+native_id = "237.44830"
+slug = "arbete-i-bostaden-dator"
+
+[[variable]]
+native_id = "237.44831"
+slug = "datorhjalpmedel-i-bostaden"
+
+[[variable]]
+native_id = "237.45011"
+slug = "utbildningsniva-aggregerad"
+
+[[variable]]
+native_id = "237.45012"
+slug = "kommungrupper-9-grupper"
+
+[[variable]]
+native_id = "237.45028"
+slug = "har-funktionsnedsattning"
+
+[[variable]]
+native_id = "237.45029"
+slug = "svarigheter-funktionsnedsattning"
+
+[[variable]]
+native_id = "237.45174"
+slug = "plats-hot-handelse-2"
+
+[[variable]]
+native_id = "237.45175"
+slug = "plats-hot-handelse-3"
+
+[[variable]]
+native_id = "237.45176"
+slug = "plats-hot-handelse-4"
+
+[[variable]]
+native_id = "237.45177"
+slug = "plats-hot-handelse-5"
+
+[[variable]]
+native_id = "237.45178"
+slug = "plats-hot-handelse-6"
+
+[[variable]]
+native_id = "237.45179"
+slug = "plats-vald-som-ej-kravde-vard-handelse-2"
+
+[[variable]]
+native_id = "237.45180"
+slug = "plats-vald-som-ej-kravde-vard-handelse-3"
+
+[[variable]]
+native_id = "237.45181"
+slug = "plats-vald-som-ej-kravde-vard-handelse-4"
+
+[[variable]]
+native_id = "237.45182"
+slug = "plats-vald-som-ej-kravde-vard-handelse-5"
+
+[[variable]]
+native_id = "237.45183"
+slug = "plats-vald-som-ej-kravde-vard-handelse-6"
+
+[[variable]]
+native_id = "237.45184"
+slug = "plats-vald-som-kravde-vard-handelse-2"
+
+[[variable]]
+native_id = "237.45185"
+slug = "plats-vald-som-kravde-vard-handelse-4"
+
+[[variable]]
+native_id = "237.45186"
+slug = "plats-vald-som-kravde-vard-handelse-3"
+
+[[variable]]
+native_id = "237.45189"
+slug = "plats-vald-som-kravde-vard-handelse-5"
+
+[[variable]]
+native_id = "237.45190"
+slug = "plats-vald-som-kravde-vard-handelse-6"
+
+[[variable]]
+native_id = "237.45204"
+slug = "fodelselandnamnfar"
+
+[[variable]]
+native_id = "237.45205"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "237.45282"
+slug = "bakgrund-berakning-antal-individer"
+
+[[variable]]
+native_id = "237.45284"
+slug = "bakgrund-vid-berakning-stratum"
+
+[[variable]]
+native_id = "237.45309"
+slug = "panel-nr"
+
+[[variable]]
+native_id = "237.45314"
+slug = "disponibel-inkomst-individ"
+
+[[variable]]
+native_id = "237.45635"
+slug = "konsumtionsenhetsvikt"
+
+[[variable]]
+native_id = "237.45658"
+slug = "mottaget-underhallsbidrag-netto"
+
+[[variable]]
+native_id = "237.45992"
+slug = "betalda-kontanttransfereringar"
+
+[[variable]]
+native_id = "237.45993"
+slug = "kontanttransfereringar-netto"
+
+[[variable]]
+native_id = "237.46040"
+slug = "kant-sig-ensam"
+
+[[variable]]
+native_id = "237.46077"
+slug = "insamlingsdatum"
+
+[[variable]]
+native_id = "237.46311"
+slug = "naringsgren-3-siffrig"
+
+[[variable]]
+native_id = "237.46371"
+slug = "arbetare-tjansteman"
+
+[[variable]]
+native_id = "237.46373"
+slug = "hustyp-villa-radhus-flerbostadshus"
+
+[[variable]]
+native_id = "237.46374"
+slug = "tillgang-till-bad-dusch"
+
+[[variable]]
+native_id = "237.46375"
+slug = "foraldrar-i-hushallet"
+
+[[variable]]
+native_id = "237.46376"
+slug = "antal-personer-i-karnfamiljen"
+
+[[variable]]
+native_id = "237.46377"
+slug = "antal-personer-i-bostaden"
+
+[[variable]]
+native_id = "237.46378"
+slug = "disponibel-inkomst-hushallet"
+
+[[variable]]
+native_id = "237.46385"
+slug = "stratum-tidsjamforelse"
+
+[[variable]]
+native_id = "237.46948"
+slug = "sokt-arbete-startat-foretag"
+
+[[variable]]
+native_id = "237.46950"
+slug = "tillganglig-for-arbete"
+
+[[variable]]
+native_id = "237.46960"
+slug = "medlem-kultur-musik-dansforening"
+
+[[variable]]
+native_id = "237.46965"
+slug = "mote-fackforening-foretagarorganisation"
+
+[[variable]]
+native_id = "237.46966"
+slug = "mote-med-annan-forening"
+
+[[variable]]
+native_id = "237.47243"
+slug = "antal-barn-med-horselnedsattning"
+
+[[variable]]
+native_id = "237.47244"
+slug = "antal-barn-med-synnedsattning"
+
+[[variable]]
+native_id = "237.47250"
+slug = "disponibel-inkomst-for-up"
+
+[[variable]]
+native_id = "237.47253"
+slug = "fritidsbostad-harledd"
+
+[[variable]]
+native_id = "237.47258"
+slug = "semesterresa-1-vecka-harledd"
+
+[[variable]]
+native_id = "237.47263"
+slug = "barn-8-fodelsear"
+
+[[variable]]
+native_id = "237.47270"
+slug = "klarar-sig-sjalv-efter-skolan-barn-5"
+
+[[variable]]
+native_id = "237.47271"
+slug = "aktiv-i-annan-forening"
+
+[[variable]]
+native_id = "237.47376"
+slug = "fodelsear-barn-7"
+
+[[variable]]
+native_id = "237.47637"
+slug = "kommungrupper-10-grupper"
+
+[[variable]]
+native_id = "237.47785"
+slug = "eftersatt-hyra-avgift"
+
+[[variable]]
+native_id = "237.47788"
+slug = "gar-i-skola-barn-7-2"
+
+[[variable]]
+native_id = "237.47806"
+slug = "inkomst-efter-skatt-make-sambo"
+
+[[variable]]
+native_id = "237.47817"
+slug = "antal-invanare-i-kommun-1-jan"
+
+[[variable]]
+native_id = "237.47818"
+slug = "antal-invanare-kommun-31-dec"
+
+[[variable]]
+native_id = "237.47819"
+slug = "artal-sedan-up-bott-med-person-8"
+
+[[variable]]
+native_id = "237.47820"
+slug = "artal-sedan-up-bott-med-person-1"
+
+[[variable]]
+native_id = "237.47821"
+slug = "artal-sedan-up-bott-med-person-3"
+
+[[variable]]
+native_id = "237.47822"
+slug = "artal-sedan-up-bott-med-person-2"
+
+[[variable]]
+native_id = "237.47823"
+slug = "artal-sedan-up-bott-med-person-7"
+
+[[variable]]
+native_id = "237.47824"
+slug = "artal-sedan-up-bott-med-person-6"
+
+[[variable]]
+native_id = "237.47825"
+slug = "artal-sedan-up-bott-med-person-5"
+
+[[variable]]
+native_id = "237.47826"
+slug = "artal-sedan-up-bott-med-person-4"
+
+[[variable]]
+native_id = "237.47827"
+slug = "partners-fodelsear-maka-make"
+
+[[variable]]
+native_id = "237.47828"
+slug = "person-1-fodelsear-2"
+
+[[variable]]
+native_id = "237.47829"
+slug = "person-2-fodelsear-2"
+
+[[variable]]
+native_id = "237.47830"
+slug = "person-3-fodelsear-2"
+
+[[variable]]
+native_id = "237.47831"
+slug = "person-4-fodelsear-2"
+
+[[variable]]
+native_id = "237.47832"
+slug = "person-5-fodelsear-2"
+
+[[variable]]
+native_id = "237.47833"
+slug = "person-6-fodelsear-2"
+
+[[variable]]
+native_id = "237.47834"
+slug = "person-7-fodelsear-2"
+
+[[variable]]
+native_id = "237.47835"
+slug = "person-8-fodelsear-2"
+
+[[variable]]
+native_id = "237.47837"
+slug = "relation-person-1"
+
+[[variable]]
+native_id = "237.47838"
+slug = "relation-person-2"
+
+[[variable]]
+native_id = "237.47839"
+slug = "relation-person-3"
+
+[[variable]]
+native_id = "237.47840"
+slug = "relation-person-4"
+
+[[variable]]
+native_id = "237.47841"
+slug = "relation-person-5"
+
+[[variable]]
+native_id = "237.47842"
+slug = "relation-person-6"
+
+[[variable]]
+native_id = "237.47843"
+slug = "relation-person-7"
+
+[[variable]]
+native_id = "237.47844"
+slug = "relation-person-8"
+
+[[variable]]
+native_id = "237.47846"
+slug = "kon-person-1-2"
+
+[[variable]]
+native_id = "237.47847"
+slug = "kon-person-2-2"
+
+[[variable]]
+native_id = "237.47848"
+slug = "kon-person-3-2"
+
+[[variable]]
+native_id = "237.47849"
+slug = "kon-person-4-2"
+
+[[variable]]
+native_id = "237.47850"
+slug = "kon-person-5-2"
+
+[[variable]]
+native_id = "237.47851"
+slug = "kon-person-6-2"
+
+[[variable]]
+native_id = "237.47852"
+slug = "kon-person-7-2"
+
+[[variable]]
+native_id = "237.47853"
+slug = "kon-person-8-2"
+
+[[variable]]
+native_id = "237.47855"
+slug = "fodelseland-alfabetisk-kod"
+
+[[variable]]
+native_id = "237.47856"
+slug = "fodelseland-numerisk-kod"
+
+[[variable]]
+native_id = "237.47857"
+slug = "senaste-invandringsar-up"
+
+[[variable]]
+native_id = "237.47858"
+slug = "senaste-invandringsar-maka-make"
+
+[[variable]]
+native_id = "237.47859"
+slug = "ursprung-bakgrund"
+
+[[variable]]
+native_id = "237.47860"
+slug = "antal-med-kod-1-i-hushallet"
+
+[[variable]]
+native_id = "237.47861"
+slug = "antal-med-kod-2-i-hushallet"
+
+[[variable]]
+native_id = "237.47862"
+slug = "antal-med-kod-3-i-hushallet"
+
+[[variable]]
+native_id = "237.47863"
+slug = "antal-med-kod-4-i-hushallet"
+
+[[variable]]
+native_id = "237.47864"
+slug = "antal-med-kod-5-i-hushallet"
+
+[[variable]]
+native_id = "237.47865"
+slug = "antal-med-kod-6-i-hushallet"
+
+[[variable]]
+native_id = "237.47866"
+slug = "antal-med-kod-7-i-hushallet"
+
+[[variable]]
+native_id = "237.47867"
+slug = "antal-med-kod-8-i-hushallet"
+
+[[variable]]
+native_id = "237.47868"
+slug = "antal-med-kod-9-i-hushallet"
+
+[[variable]]
+native_id = "237.47869"
+slug = "antal-med-kod-10-i-hushallet"
+
+[[variable]]
+native_id = "237.47870"
+slug = "antal-med-kod-11-i-hushallet"
+
+[[variable]]
+native_id = "237.47871"
+slug = "antal-med-kod-12-i-hushallet"
+
+[[variable]]
+native_id = "237.47872"
+slug = "antal-med-kod-13-i-hushallet"
+
+[[variable]]
+native_id = "237.47873"
+slug = "antal-med-kod-15-i-hushallet"
+
+[[variable]]
+native_id = "237.47874"
+slug = "antal-med-kod-16-i-hushallet"
+
+[[variable]]
+native_id = "237.47893"
+slug = "fodelseland-maka-make-alfa"
+
+[[variable]]
+native_id = "237.47895"
+slug = "fodelseland-maka-make-num"
+
+[[variable]]
+native_id = "237.47896"
+slug = "kon-person-9-2"
+
+[[variable]]
+native_id = "237.47897"
+slug = "person-9-fodelsear-2"
+
+[[variable]]
+native_id = "237.47898"
+slug = "relation-person-9"
+
+[[variable]]
+native_id = "237.47899"
+slug = "relation-person-10"
+
+[[variable]]
+native_id = "237.47902"
+slug = "forekomst-make-maka"
+
+[[variable]]
+native_id = "237.47904"
+slug = "forekomst-av-sambo"
+
+[[variable]]
+native_id = "237.47911"
+slug = "urvalsstratum-for-enkelar"
+
+[[variable]]
+native_id = "237.47912"
+slug = "utbildningsniva-3-nivaer"
+
+[[variable]]
+native_id = "237.47913"
+slug = "personunikt-lopnummer"
+
+[[variable]]
+native_id = "237.47933"
+slug = "buller-harledd"
+
+[[variable]]
+native_id = "237.47934"
+slug = "buller-pa-arbete-hela-tiden-ibland"
+
+[[variable]]
+native_id = "237.47935"
+slug = "buller-pa-arbetet-oronbedovande"
+
+[[variable]]
+native_id = "237.47936"
+slug = "olycksfall-arbetet-12-man"
+
+[[variable]]
+native_id = "237.47938"
+slug = "utflyttning-av-verksamhet"
+
+[[variable]]
+native_id = "237.47939"
+slug = "annan-nedskarning-inskrankning"
+
+[[variable]]
+native_id = "237.47940"
+slug = "omorganisation-pa-arbetsplatsen"
+
+[[variable]]
+native_id = "237.47941"
+slug = "foraldrar-fodda-i-annat-land"
+
+[[variable]]
+native_id = "237.47942"
+slug = "hade-ingen-pappa-fosterpappa"
+
+[[variable]]
+native_id = "237.47943"
+slug = "hade-ingen-mamma-fostermamma"
+
+[[variable]]
+native_id = "237.47950"
+slug = "socioekonomisk-grupp-hela-bef"
+
+[[variable]]
+native_id = "237.47954"
+slug = "socioekonomisk-grupp-maka-make"
+
+[[variable]]
+native_id = "237.47962"
+slug = "kon-person-10-2"
+
+[[variable]]
+native_id = "237.47963"
+slug = "artal-sedan-up-bott-med-person-10"
+
+[[variable]]
+native_id = "237.47964"
+slug = "artal-sedan-up-bott-med-person-9"
+
+[[variable]]
+native_id = "237.47979"
+slug = "antal-barn-fam-minst-en-mediciner"
+
+[[variable]]
+native_id = "237.47980"
+slug = "antal-barn-fam-minst-tva-mediciner"
+
+[[variable]]
+native_id = "237.47981"
+slug = "antal-barn-fam-minst-tre-mediciner"
+
+[[variable]]
+native_id = "237.47982"
+slug = "antal-barn-fam-minst-fyra-mediciner"
+
+[[variable]]
+native_id = "237.47983"
+slug = "antal-barn-fam-minst-fem-mediciner"
+
+[[variable]]
+native_id = "237.47987"
+slug = "tillganglighet-till-bostad"
+
+[[variable]]
+native_id = "237.47994"
+slug = "langvarig-kronisk-sjukdom"
+
+[[variable]]
+native_id = "237.47996"
+slug = "langvarig-kronisk-sjukdom-antal"
+
+[[variable]]
+native_id = "237.47997"
+slug = "langvarig-kronisk-sjukdom-svara-besvar"
+
+[[variable]]
+native_id = "237.48012"
+slug = "hjalp-pga-sjukdom-2"
+
+[[variable]]
+native_id = "237.48013"
+slug = "syn-ledsyn"
+
+[[variable]]
+native_id = "237.48023"
+slug = "rorelseformaga-i-vilken-grad"
+
+[[variable]]
+native_id = "237.48027"
+slug = "egna-tander-2"
+
+[[variable]]
+native_id = "237.48032"
+slug = "tuggformaga-harda-saker"
+
+[[variable]]
+native_id = "237.48033"
+slug = "trott-dagarna"
+
+[[variable]]
+native_id = "237.48034"
+slug = "trott-kvallarna"
+
+[[variable]]
+native_id = "237.48035"
+slug = "trott-morgnarna"
+
+[[variable]]
+native_id = "237.48036"
+slug = "besvar-med-somn"
+
+[[variable]]
+native_id = "237.48042"
+slug = "halsotillstand-allmant"
+
+[[variable]]
+native_id = "237.48044"
+slug = "halsotillstand-allmant-aggregerad"
+
+[[variable]]
+native_id = "237.48045"
+slug = "halsotillstand-relativt"
+
+[[variable]]
+native_id = "237.48062"
+slug = "hur-ofta-besvar-av-sjukdom-1"
+
+[[variable]]
+native_id = "237.48063"
+slug = "hur-ofta-besvar-av-sjukdom-2"
+
+[[variable]]
+native_id = "237.48064"
+slug = "hur-ofta-besvar-av-sjukdom-3"
+
+[[variable]]
+native_id = "237.48065"
+slug = "hur-ofta-besvar-av-sjukdom-4"
+
+[[variable]]
+native_id = "237.48066"
+slug = "hur-ofta-besvar-av-sjukdom-5"
+
+[[variable]]
+native_id = "237.48067"
+slug = "hur-ofta-besvar-av-sjukdom-6"
+
+[[variable]]
+native_id = "237.48074"
+slug = "regelbunden-medicinering-1"
+
+[[variable]]
+native_id = "237.48075"
+slug = "regelbunden-medicinering-2"
+
+[[variable]]
+native_id = "237.48076"
+slug = "regelbunden-medicinering-3"
+
+[[variable]]
+native_id = "237.48077"
+slug = "regelbunden-medicinering-4"
+
+[[variable]]
+native_id = "237.48078"
+slug = "regelbunden-medicinering-5"
+
+[[variable]]
+native_id = "237.48079"
+slug = "regelbunden-medicinering-6"
+
+[[variable]]
+native_id = "237.48080"
+slug = "kan-springa-kortare-stracka"
+
+[[variable]]
+native_id = "237.48081"
+slug = "ga-i-trappor-utan-besvar"
+
+[[variable]]
+native_id = "237.48083"
+slug = "promenera-i-rask-takt"
+
+[[variable]]
+native_id = "237.48084"
+slug = "promenera-ca-100-meter"
+
+[[variable]]
+native_id = "237.48086"
+slug = "hjalp-av-nagon-inomhus"
+
+[[variable]]
+native_id = "237.48087"
+slug = "hjalp-av-nagon-utomhus"
+
+[[variable]]
+native_id = "237.48088"
+slug = "hjalpmedel-rorelse"
+
+[[variable]]
+native_id = "237.48089"
+slug = "vark-i-skuldror-nacke-eller-axlar"
+
+[[variable]]
+native_id = "237.48091"
+slug = "vark-i-hander-armbagar-ben-knan"
+
+[[variable]]
+native_id = "237.48131"
+slug = "fardtjanst-tillracklig"
+
+[[variable]]
+native_id = "237.48134"
+slug = "hjalp-fran-kommunen-tillracklig"
+
+[[variable]]
+native_id = "237.48153"
+slug = "rullstol-i-bostad"
+
+[[variable]]
+native_id = "237.48175"
+slug = "rorelsehindrad"
+
+[[variable]]
+native_id = "237.48333"
+slug = "vanligt-med-skadegorelse-i-bostadsomrade"
+
+[[variable]]
+native_id = "237.48409"
+slug = "ej-springa-kortare-stracka"
+
+[[variable]]
+native_id = "237.48877"
+slug = "kurs-eller-utbildning-under-arbetstid"
+
+[[variable]]
+native_id = "237.48883"
+slug = "person-10-fodelsear-2"
+
+[[variable]]
+native_id = "237.49072"
+slug = "hogsta-utbildning-jamforelse-2"
+
+[[variable]]
+native_id = "237.49073"
+slug = "kursdeltagande-senaste-tva-terminerna"
+
+[[variable]]
+native_id = "237.49132"
+slug = "riksomraden"
+
+[[variable]]
+native_id = "237.49133"
+slug = "kommunal-utdebitering-skattesats"
+
+[[variable]]
+native_id = "237.49134"
+slug = "klockan-intervju-borjar"
+
+[[variable]]
+native_id = "237.49135"
+slug = "klockan-intervju-slutar"
+
+[[variable]]
+native_id = "237.49136"
+slug = "kontantmarginal-tva-manader"
+
+[[variable]]
+native_id = "237.49137"
+slug = "arv-eller-gavor"
+
+[[variable]]
+native_id = "237.49138"
+slug = "arv-eller-gavor-belopp"
+
+[[variable]]
+native_id = "237.49146"
+slug = "trott-ofta"
+
+[[variable]]
+native_id = "237.49174"
+slug = "astma-allergi-2"
+
+[[variable]]
+native_id = "237.49209"
+slug = "overklaga-beslut"
+
+[[variable]]
+native_id = "237.49210"
+slug = "hjalp-att-overklaga-1"
+
+[[variable]]
+native_id = "237.49212"
+slug = "formaga-att-overklaga-harledd"
+
+[[variable]]
+native_id = "237.49240"
+slug = "oro-hushallets-ekonomi-harledd"
+
+[[variable]]
+native_id = "237.49241"
+slug = "oro-for-arbetsloshet-harledd"
+
+[[variable]]
+native_id = "237.49252"
+slug = "typ-av-pagaende-studier"
+
+[[variable]]
+native_id = "237.49379"
+slug = "individvikt-1980-2009"
+
+[[variable]]
+native_id = "237.49380"
+slug = "individvikt-1986-2009"
+
+[[variable]]
+native_id = "237.49381"
+slug = "individvikt-1998-2009"
+
+[[variable]]
+native_id = "237.49617"
+slug = "universitetsstudier"
+
+[[variable]]
+native_id = "237.49618"
+slug = "examen-universitet-hogskola"
+
+[[variable]]
+native_id = "237.49620"
+slug = "examen-universitet-hogskola-artal"
+
+[[variable]]
+native_id = "237.49621"
+slug = "komvux-grundvux-typ-utbildning"
+
+[[variable]]
+native_id = "237.49626"
+slug = "utbildning-1-gick-klart"
+
+[[variable]]
+native_id = "237.49627"
+slug = "utbildning-2-gick-klart"
+
+[[variable]]
+native_id = "237.49628"
+slug = "utbildning-3-gick-klart"
+
+[[variable]]
+native_id = "237.49664"
+slug = "bostadshushallsvikt-1998-2008"
+
+[[variable]]
+native_id = "237.49670"
+slug = "familjehushallsvikt-1998-2008"
+
+[[variable]]
+native_id = "237.49671"
+slug = "bostadshushallsvikt-1980-2008"
+
+[[variable]]
+native_id = "237.49672"
+slug = "familjehushallsvikt-1980-2008"
+
+[[variable]]
+native_id = "237.49673"
+slug = "bostadshushallsvikt-1996-2008"
+
+[[variable]]
+native_id = "237.49674"
+slug = "familjehushallsvikt-1996-2008"
+
+[[variable]]
+native_id = "237.49675"
+slug = "kommunstorlek-1-jan"
+
+[[variable]]
+native_id = "237.49676"
+slug = "kommunstorlek-31-dec"
+
+[[variable]]
+native_id = "237.49688"
+slug = "barn-1-langvarig-sjukdom-diagnos"
+
+[[variable]]
+native_id = "237.49689"
+slug = "barn-1-langvarig-fodelsear"
+
+[[variable]]
+native_id = "237.49715"
+slug = "barn-1-medicin-diagnos"
+
+[[variable]]
+native_id = "237.49726"
+slug = "barn-2-langvarig-fodelsear"
+
+[[variable]]
+native_id = "237.49730"
+slug = "bildskarm-dator"
+
+[[variable]]
+native_id = "237.49731"
+slug = "bildskarm-dator-timmar"
+
+[[variable]]
+native_id = "237.49732"
+slug = "bildskarm-dator-besvar"
+
+[[variable]]
+native_id = "237.49734"
+slug = "restid-till-arbetet"
+
+[[variable]]
+native_id = "237.49737"
+slug = "barn-1-sjuk-diagnos"
+
+[[variable]]
+native_id = "237.49740"
+slug = "antal-med-kod-14-i-hushallet"
+
+[[variable]]
+native_id = "237.49956"
+slug = "nagot-vald-hot-bostaden"
+
+[[variable]]
+native_id = "237.49966"
+slug = "yrkeskod-fob80-nyk-arbetslosa"
+
+[[variable]]
+native_id = "237.50101"
+slug = "artal-sedan-up-bott-med-person-11"
+
+[[variable]]
+native_id = "237.50102"
+slug = "relation-person-11"
+
+[[variable]]
+native_id = "237.50115"
+slug = "sjuk-aktivitetsersattning-make"
+
+# register 239 (allmanna-val-nominerade)
+
+[[variable]]
+native_id = "237.11460.hb130"
+slug = "intervjumetod"
+
+[[variable]]
+native_id = "237.11460.pb270"
+slug = "intervjumetod-2"
+
+[[variable]]
+native_id = "237.31041.zp0010"
+slug = "statistikens-artal"
+
+[[variable]]
+native_id = "237.35901.tr0051m"
+slug = "oro-hushallets-ekonomi"
+
+[[variable]]
+native_id = "237.35902.tr0053m"
+slug = "oro-for-arbetsloshet"
+
+[[variable]]
+native_id = "237.45243.iscoup"
+slug = "yrke-isco-4-siffrig"
+
+[[variable]]
+native_id = "237.45283.nresp-t"
+slug = "antal-svarande"
+
+[[variable]]
+native_id = "237.45663.hy130g"
+slug = "betalt-underhallsbidrag"
+
+[[variable]]
+native_id = "237.45664.hy130n"
+slug = "betalt-underhallsbidrag-netto"
+
+[[variable]]
+native_id = "237.4656.hb130"
+slug = "insamlingsmetod"
+
+[[variable]]
+native_id = "237.4656.pb270"
+slug = "insamlingsmetod-2"
+
+# register 239 (allmanna-val-nominerade)
+
+[[variable]]
+native_id = "237.22857"
+slug = "personnr-2"
+
+[[variable]]
+native_id = "237.19"
+slug = "a-region"
+
+[[variable]]
+native_id = "237.75"
+slug = "arbetsinkomst"
+
+[[variable]]
+native_id = "237.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "237.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "237.462"
+slug = "stratum"
+
+[[variable]]
+native_id = "237.1159"
+slug = "inkomstranta-utdelning-kapital"
+
+[[variable]]
+native_id = "237.1198"
+slug = "loneinkomst"
+
+[[variable]]
+native_id = "237.1248"
+slug = "hogskolekod"
+
+[[variable]]
+native_id = "237.1484"
+slug = "allman-pension-inklusive-delpension"
+
+[[variable]]
+native_id = "237.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "237.1623"
+slug = "aktivitetsersattning-garantiersattning"
+
+[[variable]]
+native_id = "237.1837"
+slug = "naturaformaner"
+
+[[variable]]
+native_id = "237.2299"
+slug = "lagenhetstyp"
+
+[[variable]]
+native_id = "237.2679"
+slug = "forvarvsarbetande"
+
+[[variable]]
+native_id = "237.3195"
+slug = "h-region"
+
+[[variable]]
+native_id = "237.3835"
+slug = "antal-understallda"
+
+[[variable]]
+native_id = "237.3854"
+slug = "overtid-frekvens"
+
+[[variable]]
+native_id = "237.3889"
+slug = "sjuknarvaro"
+
+[[variable]]
+native_id = "237.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "237.4423"
+slug = "akassa-ersattning"
+
+[[variable]]
+native_id = "237.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "237.4539"
+slug = "kvarboende"
+
+[[variable]]
+native_id = "237.4540"
+slug = "anstalld"
+
+[[variable]]
+native_id = "237.4866"
+slug = "studiestod"
+
+[[variable]]
+native_id = "237.5068"
+slug = "huvudsaklig-sysselsattning"
+
+[[variable]]
+native_id = "237.5639"
+slug = "posttyp"
+
+[[variable]]
+native_id = "237.6087"
+slug = "bilforman"
+
+[[variable]]
+native_id = "237.8484"
+slug = "gymnasieskola"
+
+[[variable]]
+native_id = "237.9020"
+slug = "anstalld-heltid"
+
+[[variable]]
+native_id = "237.9060"
+slug = "antal-barn-0-3-ar"
+
+[[variable]]
+native_id = "237.9061"
+slug = "antal-barn-0-6-ar"
+
+[[variable]]
+native_id = "237.9063"
+slug = "antal-barn-13-18-ar"
+
+[[variable]]
+native_id = "237.9067"
+slug = "antal-barn-4-6-ar"
+
+[[variable]]
+native_id = "237.9072"
+slug = "antal-barn-7-18-ar"
+
+[[variable]]
+native_id = "237.9288"
+slug = "antal-ar-gymnasium"
+
+[[variable]]
+native_id = "237.9735"
+slug = "barnpension"
+
+[[variable]]
+native_id = "237.10599"
+slug = "fullfoljt-komvux"
+
+[[variable]]
+native_id = "237.11185"
+slug = "arlig-bostadskostnad"
+
+[[variable]]
+native_id = "237.11193"
+slug = "hushallsvikt"
+
+[[variable]]
+native_id = "237.11766"
+slug = "korkort-bil"
+
+[[variable]]
+native_id = "237.11957"
+slug = "mantalsskrivningslan-kommun-fors"
+
+[[variable]]
+native_id = "237.12535"
+slug = "pensionarer"
+
+[[variable]]
+native_id = "237.12944"
+slug = "sjukskriven"
+
+[[variable]]
+native_id = "237.13053"
+slug = "skal-att-flytta-till-sverige"
+
+[[variable]]
+native_id = "237.13330"
+slug = "studieavbrott"
+
+[[variable]]
+native_id = "237.13492"
+slug = "telefonera-via-datorn"
+
+[[variable]]
+native_id = "237.13564"
+slug = "cd-spelare"
+
+[[variable]]
+native_id = "237.13568"
+slug = "diskmaskin"
+
+[[variable]]
+native_id = "237.13573"
+slug = "frys"
+
+[[variable]]
+native_id = "237.13575"
+slug = "forradsutrymme"
+
+[[variable]]
+native_id = "237.13596"
+slug = "husvagn"
+
+[[variable]]
+native_id = "237.13671"
+slug = "tjanstledig"
+
+[[variable]]
+native_id = "237.14386"
+slug = "arsinkomst-ip"
+
+[[variable]]
+native_id = "237.14591"
+slug = "typ-av-utbildning"
+
+[[variable]]
+native_id = "237.14720"
+slug = "urvalskod"
+
+[[variable]]
+native_id = "237.15045"
+slug = "tvattmaskin"
+
+[[variable]]
+native_id = "237.15053"
+slug = "sun2000niva"
+
+[[variable]]
+native_id = "237.15062"
+slug = "utbildningsniva-sun73"
+
+[[variable]]
+native_id = "237.15523"
+slug = "pensionssparande"
+
+[[variable]]
+native_id = "237.15546"
+slug = "inkomst-enskild-naringsverksamhet"
+
+[[variable]]
+native_id = "237.17351"
+slug = "medborgarskap"
+
+[[variable]]
+native_id = "237.29428"
+slug = "total-hushallsinkomst"
+
+[[variable]]
+native_id = "237.29826"
+slug = "hushallsstorlek"
+
+[[variable]]
+native_id = "237.31026"
+slug = "urvalsvikt-for-bostadshushall"
+
+[[variable]]
+native_id = "237.31030"
+slug = "bakgrund-utlandsk-svensk"
+
+[[variable]]
+native_id = "237.35669"
+slug = "inneboende-finns"
+
+[[variable]]
+native_id = "237.35963"
+slug = "veckoarbetstid-forvarvsarbetande"
+
+[[variable]]
+native_id = "237.42991"
+slug = "civilstand-enligt-rtb"
+
+[[variable]]
+native_id = "237.45244"
+slug = "ssyk4"
+
+[[variable]]
+native_id = "237.45245"
+slug = "ssyk2"
+
+[[variable]]
+native_id = "237.45313"
+slug = "merkostnadsersattning"
+
+[[variable]]
+native_id = "237.45317"
+slug = "alder-insamlingsdagen"
+
+[[variable]]
+native_id = "237.45318"
+slug = "fodelsedag-passerad"
+
+[[variable]]
+native_id = "237.49122"
+slug = "overtid-forra-veckan"
+
+[[variable]]
+native_id = "237.49123"
+slug = "overtid-antal-timmar"
+
+# register 239
+
+[[variable]]
+native_id = "237.10191.ba0060"
+slug = "insamling-direkt-indirekt"
+
+[[variable]]
+native_id = "237.10191.ba0061"
+slug = "insamling-direkt-indirekt-2"
+
+[[variable]]
+native_id = "237.10191.pb260"
+slug = "insamling-direkt-indirekt-3"
+
+[[variable]]
+native_id = "237.10685.fu1399"
+slug = "fodelsear-barn-1"
+
+[[variable]]
+native_id = "237.10686.fu1499"
+slug = "fodelsear-barn-2"
+
+[[variable]]
+native_id = "237.10688.fu1599"
+slug = "fodelsear-barn-3"
+
+[[variable]]
+native_id = "237.15.ba0021"
+slug = "civilstand"
+
+[[variable]]
+native_id = "237.3188.hb110"
+slug = "hushallstyp"
+
+[[variable]]
+native_id = "237.35581.info"
+slug = "relation-till-urvalsperson"
+
+[[variable]]
+native_id = "237.6258.hy060g"
+slug = "ekonomiskt-bistand"
+
+# register 239

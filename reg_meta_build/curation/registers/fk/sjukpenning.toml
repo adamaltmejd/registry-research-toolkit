@@ -1,0 +1,77 @@
+[register]
+provider = "fk"
+slug = "sjukpenning"
+native_id = "8881065292063230279"
+
+[[variant]]
+native_id = "8881065292063230279.4739195128977886243"
+slug = "fall-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "8881065292063230279.7521274023055426126"
+slug = "delfall-1-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "8881065292063230279.5507715832563318729"
+slug = "delfall-2-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "8881065292063230279.9184404571588539037"
+slug = "delfall-3-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "8881065292063230279.6060610150443815866"
+slug = "delfall-4-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+# Merkostnadsersättning
+
+[[variable]]
+native_id = "8881065292063230279.Lopnr"
+slug = "lopnr"
+
+
+[[variable]]
+native_id = "8881065292063230279.Askp"
+slug = "arbetsskadesjukpenning"
+
+[[variable]]
+native_id = "8881065292063230279.Fall_from_datum2"
+slug = "sjukfall-startdatum"
+
+[[variable]]
+native_id = "8881065292063230279.Sig_a"
+slug = "sjukpenning-a-inkomst"
+
+[[variable]]
+native_id = "8881065292063230279.Sig_b"
+slug = "sjukpenning-b-inkomst"
+
+[[variable]]
+native_id = "8881065292063230279.Sjp"
+slug = "sjukpenning"
+
+# === END #760 non-SCB concept-slug curation ===

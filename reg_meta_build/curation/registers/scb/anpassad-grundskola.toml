@@ -10,3 +10,138 @@ label = "scb/anpassad-grundskola/huvudman-namn"
 [[code_label_pair]]
 code = "scb/anpassad-grundskola/skolenhetskod"
 label = "scb/anpassad-grundskola/skolenhetens-namn"
+
+[[variant]]
+native_id = "231.1529"
+slug = "elever"
+display_group = "Elever"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Registret över pedagogisk personal (Lärarregistret)
+
+[[variable]]
+native_id = "231.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "231.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "231.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "231.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "231.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "231.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "231.1554"
+slug = "ar-termin-aktiviteten"
+
+[[variable]]
+native_id = "231.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "231.4642"
+slug = "faderns-fodelseland"
+
+[[variable]]
+native_id = "231.4643"
+slug = "moderns-fodelseland"
+
+[[variable]]
+native_id = "231.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "231.7814"
+slug = "atgardsprogram"
+
+[[variable]]
+native_id = "231.7816"
+slug = "anpassad-studigang"
+
+[[variable]]
+native_id = "231.7817"
+slug = "deltagit-sva"
+
+[[variable]]
+native_id = "231.15712"
+slug = "stodundervisning"
+
+[[variable]]
+native_id = "231.23867"
+slug = "klassbeteckning"
+
+[[variable]]
+native_id = "231.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "231.30654"
+slug = "skolenhetens-namn"
+
+[[variable]]
+native_id = "231.32721"
+slug = "distansundervisning"
+
+[[variable]]
+native_id = "231.35887"
+slug = "nyligen-invandrad"
+
+[[variable]]
+native_id = "231.40103"
+slug = "utbildningsform"
+
+[[variable]]
+native_id = "231.40833"
+slug = "central-insamlingsenhet"
+
+[[variable]]
+native_id = "231.40835"
+slug = "integrerad-sarskolelev"
+
+[[variable]]
+native_id = "231.48467"
+slug = "anpassad-grundskola-kursplan"
+
+# register 232
+
+[[variable]]
+native_id = "231.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "231.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "231.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "231.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "231.8137.hman"
+slug = "huvudman"
+
+[[variable]]
+native_id = "231.8137.hmannamn"
+slug = "huvudman-namn"
+
+# register 232

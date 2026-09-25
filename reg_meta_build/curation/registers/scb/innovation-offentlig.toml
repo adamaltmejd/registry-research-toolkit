@@ -1,0 +1,467 @@
+[register]
+provider = "scb"
+slug = "innovation-offentlig"
+native_id = "407"
+
+[[variant]]
+native_id = "407.1702"
+slug = "innovation-arbetsstalleenheter"
+display_group = "Innovation i offentlig sektor - Arbetsställeenheter"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: id-inst (Organisationsnummer) lives only in the arbetsställe variant; the
+# juridiska-enhet id here is SCBID (Person-/organisationsnummer).
+
+[[variant]]
+native_id = "407.1706"
+slug = "innovation-juridiska"
+display_group = "Innovation i offentlig sektor - Juridiska enheter"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Anställningar (ANST)
+
+[[variable]]
+native_id = "407.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "407.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "407.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "407.5531"
+slug = "storleksklass-pa-arbetsstallet"
+
+[[variable]]
+native_id = "407.46509"
+slug = "innovationsaktiv"
+
+[[variable]]
+native_id = "407.46510"
+slug = "innovativ"
+
+[[variable]]
+native_id = "407.46511"
+slug = "produktinnovativ"
+
+[[variable]]
+native_id = "407.46512"
+slug = "processinnovativ"
+
+[[variable]]
+native_id = "407.46513"
+slug = "endast-produktinnovativ"
+
+[[variable]]
+native_id = "407.46514"
+slug = "endast-processinnovativ"
+
+[[variable]]
+native_id = "407.46515"
+slug = "miljoinnovativ"
+
+[[variable]]
+native_id = "407.46516"
+slug = "systematiskt-innovationsarbete"
+
+[[variable]]
+native_id = "407.46517"
+slug = "central-funktion-innovationsarbete"
+
+[[variable]]
+native_id = "407.46520"
+slug = "besparingar"
+
+[[variable]]
+native_id = "407.46521"
+slug = "effekter-innovation-andra"
+
+[[variable]]
+native_id = "407.46523"
+slug = "effekter-innovation-lagefterlevnad"
+
+[[variable]]
+native_id = "407.46524"
+slug = "effekter-innovation-samhallsutmaningar"
+
+[[variable]]
+native_id = "407.46525"
+slug = "effekter-innovation-okad-kvalitet"
+
+[[variable]]
+native_id = "407.46526"
+slug = "effekter-innovation-effektivitet"
+
+[[variable]]
+native_id = "407.46527"
+slug = "effekter-innovation-nojdare-medarbetare"
+
+[[variable]]
+native_id = "407.46528"
+slug = "effekter-innovation-nojdare-anvandare"
+
+[[variable]]
+native_id = "407.46529"
+slug = "nyhetsslag"
+
+[[variable]]
+native_id = "407.46530"
+slug = "typ-av-forandring"
+
+[[variable]]
+native_id = "407.46531"
+slug = "innovationsaktiviteter-ideer"
+
+[[variable]]
+native_id = "407.46532"
+slug = "innovationsaktiviteter-underlag"
+
+[[variable]]
+native_id = "407.46533"
+slug = "innovationsaktiviteter-starka-ledarskap"
+
+[[variable]]
+native_id = "407.46534"
+slug = "innovationsaktiviteter-samarbete"
+
+[[variable]]
+native_id = "407.46535"
+slug = "innovationsaktiviteter-infrastruktur"
+
+[[variable]]
+native_id = "407.46536"
+slug = "innovationsaktiviteter-prototyper"
+
+[[variable]]
+native_id = "407.46537"
+slug = "innovationsaktiviteter-efterfraga-inkop"
+
+[[variable]]
+native_id = "407.46538"
+slug = "innovationsaktiviteter-bedriva-fou"
+
+[[variable]]
+native_id = "407.46539"
+slug = "innovationsaktiviteter-sprida-resultat"
+
+[[variable]]
+native_id = "407.46540"
+slug = "innovationsaktiviteter-folja-upp"
+
+[[variable]]
+native_id = "407.46541"
+slug = "innovationsaktiviteter-immateriella"
+
+[[variable]]
+native_id = "407.46542"
+slug = "drivkraft-innovation-ny-teknik"
+
+[[variable]]
+native_id = "407.46543"
+slug = "drivkraft-innovation-ny-lagstiftning"
+
+[[variable]]
+native_id = "407.46544"
+slug = "drivkraft-innovation-samhallsutmaningar"
+
+[[variable]]
+native_id = "407.46545"
+slug = "drivkraft-innovation-effektiviseringar"
+
+[[variable]]
+native_id = "407.46546"
+slug = "drivkraft-innovation-anvandarbehov"
+
+[[variable]]
+native_id = "407.46547"
+slug = "miljoinnovation-genom-upphandling"
+
+[[variable]]
+native_id = "407.46548"
+slug = "innovationssamarbete-internationella-org"
+
+[[variable]]
+native_id = "407.46549"
+slug = "innovationssamarbete-ideella-utlandet"
+
+[[variable]]
+native_id = "407.46550"
+slug = "innovationssamarbete-foretag-i-utlandet"
+
+[[variable]]
+native_id = "407.46551"
+slug = "innovationssamarbete-priv-inst-utlandet"
+
+[[variable]]
+native_id = "407.46552"
+slug = "innovationssamarbete-statl-inst-utlandet"
+
+[[variable]]
+native_id = "407.46553"
+slug = "innovationssamarbete-hogskolor-utlandet"
+
+[[variable]]
+native_id = "407.46554"
+slug = "innovationssamarbete-statl-enheter-utl"
+
+[[variable]]
+native_id = "407.46555"
+slug = "innovationssamarbete-privata-ideella"
+
+[[variable]]
+native_id = "407.46556"
+slug = "innovationssamarbete-foretag-upphandling"
+
+[[variable]]
+native_id = "407.46557"
+slug = "innovationssamarbete-foretag"
+
+[[variable]]
+native_id = "407.46558"
+slug = "innovationssamarbete-priv-inst"
+
+[[variable]]
+native_id = "407.46559"
+slug = "innovationssamarbete-statl-inst"
+
+[[variable]]
+native_id = "407.46560"
+slug = "innovationssamarbete-hogskolor"
+
+[[variable]]
+native_id = "407.46561"
+slug = "innovationssamarbete-statl-myndigheter"
+
+[[variable]]
+native_id = "407.46562"
+slug = "innovationssamarbete-kommuner-regioner"
+
+[[variable]]
+native_id = "407.46563"
+slug = "innovationssamarbete-andra-inom-org"
+
+[[variable]]
+native_id = "407.46564"
+slug = "anledning-inga-innovationsakt"
+
+[[variable]]
+native_id = "407.46565"
+slug = "anledning-inte-fler-innovationsakt"
+
+[[variable]]
+native_id = "407.46566"
+slug = "innovationsutgifter-egen-personal"
+
+[[variable]]
+native_id = "407.46567"
+slug = "innovationsutgifter-totala-utgifter"
+
+[[variable]]
+native_id = "407.46568"
+slug = "innovationsutgifter-ovriga-utgifter"
+
+[[variable]]
+native_id = "407.46569"
+slug = "innovationsutgifter-kapitalvaror"
+
+[[variable]]
+native_id = "407.46570"
+slug = "innovationsutgifter-tjanster-material"
+
+[[variable]]
+native_id = "407.46571"
+slug = "innovationsaktiviteter-slutforda"
+
+[[variable]]
+native_id = "407.46572"
+slug = "innovationsaktiviteter-avbrutna"
+
+[[variable]]
+native_id = "407.46573"
+slug = "innovationsaktiviteter-pagaende"
+
+[[variable]]
+native_id = "407.46574"
+slug = "processinnovation-produktion-tjanster"
+
+[[variable]]
+native_id = "407.46575"
+slug = "processinnovation-upphandling"
+
+[[variable]]
+native_id = "407.46576"
+slug = "processinnovation-administration-org"
+
+[[variable]]
+native_id = "407.46651"
+slug = "processinnovation-it-system"
+
+[[variable]]
+native_id = "407.46652"
+slug = "processinnovation-marknadsforing-extern"
+
+[[variable]]
+native_id = "407.46653"
+slug = "processinnovation-leveranser-logistik"
+
+[[variable]]
+native_id = "407.46655"
+slug = "produktinnovation-varor"
+
+[[variable]]
+native_id = "407.46656"
+slug = "nyhetsslag-originell"
+
+[[variable]]
+native_id = "407.46657"
+slug = "nyhetsslag-identisk"
+
+[[variable]]
+native_id = "407.46658"
+slug = "produktinnovation-tjanster"
+
+[[variable]]
+native_id = "407.46659"
+slug = "innovationsaktiviteter-finansiering"
+
+[[variable]]
+native_id = "407.46660"
+slug = "innovationsaktiviteter-upphandling"
+
+[[variable]]
+native_id = "407.46667"
+slug = "drivkraft-innovarbete-ny-teknik"
+
+[[variable]]
+native_id = "407.46668"
+slug = "drivkraft-innovarbete-lagefterlevnad"
+
+[[variable]]
+native_id = "407.46669"
+slug = "drivkraft-innovarbete-samhallsutmaningar"
+
+[[variable]]
+native_id = "407.46670"
+slug = "drivkraft-innovarbete-kvalitet"
+
+[[variable]]
+native_id = "407.46671"
+slug = "drivkraft-innovarbete-effektiviseringar"
+
+[[variable]]
+native_id = "407.46672"
+slug = "drivkraft-innovarbete-anvandarbehov"
+
+[[variable]]
+native_id = "407.46673"
+slug = "drivkraft-innovarbete-vara-attraktiv"
+
+[[variable]]
+native_id = "407.46687"
+slug = "storleksklass-antal-anstallda"
+
+[[variable]]
+native_id = "407.46690"
+slug = "miljoinnovation-reducerad-material"
+
+[[variable]]
+native_id = "407.46691"
+slug = "miljoinnovation-reducerad-energi"
+
+[[variable]]
+native_id = "407.46692"
+slug = "miljoinnovation-reducerad-fororening"
+
+[[variable]]
+native_id = "407.46693"
+slug = "miljoinnovation-ersatt-substitut"
+
+[[variable]]
+native_id = "407.46694"
+slug = "miljoinnovation-ersatt-fossila-branslen"
+
+[[variable]]
+native_id = "407.46695"
+slug = "miljoinnovation-atervunnit-avfall"
+
+[[variable]]
+native_id = "407.46696"
+slug = "miljoinnovation-biologisk-mangfald"
+
+# register 408 (anst)
+
+[[variable]]
+native_id = "407.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "407.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "407.49"
+slug = "lan"
+
+[[variable]]
+native_id = "407.462"
+slug = "stratum"
+
+[[variable]]
+native_id = "407.690"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "407.3271"
+slug = "upprakningsvikt"
+
+[[variable]]
+native_id = "407.3312"
+slug = "naringsgrensgruppering"
+
+[[variable]]
+native_id = "407.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "407.5016"
+slug = "bortfallskod"
+
+[[variable]]
+native_id = "407.6404"
+slug = "arbstallnamn"
+
+[[variable]]
+native_id = "407.28808"
+slug = "referensperiod"
+
+[[variable]]
+native_id = "407.37573"
+slug = "huvudarbetsstalle"
+
+[[variable]]
+native_id = "407.41247"
+slug = "institutionell-enhet"
+
+[[variable]]
+native_id = "407.46474"
+slug = "variabelnamn"
+
+[[variable]]
+native_id = "407.46661"
+slug = "antal-rampopulation-per-stratum"
+
+[[variable]]
+native_id = "407.46663"
+slug = "antal-svarande-per-stratum"
+
+# register 408

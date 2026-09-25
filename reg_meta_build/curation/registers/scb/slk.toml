@@ -1,0 +1,207 @@
+[register]
+provider = "scb"
+slug = "slk"
+native_id = "130"
+
+[[variable]]
+native_id = "130.57"
+slug = "personnr"
+
+
+[[variant]]
+native_id = "130.169"
+slug = "_default"
+display_group = "Lönestrukturstatistik, kommuner"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Inrikeshandelsregistret
+
+[[variable]]
+native_id = "130.65"
+slug = "utbildningsinriktning"
+
+[[variable]]
+native_id = "130.66"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "130.511"
+slug = "ssyk4-huvud"
+
+[[variable]]
+native_id = "130.1315"
+slug = "utbildnings-inriktning-sun-2000"
+
+[[variable]]
+native_id = "130.1846"
+slug = "tjanstledighet"
+
+[[variable]]
+native_id = "130.2686"
+slug = "manadslon"
+
+[[variable]]
+native_id = "130.3113"
+slug = "tillagg-for-overtid"
+
+[[variable]]
+native_id = "130.3118"
+slug = "sjuklon-1"
+
+[[variable]]
+native_id = "130.3119"
+slug = "sjuklon-2"
+
+[[variable]]
+native_id = "130.3125"
+slug = "tjanstledighetskod-scb"
+
+[[variable]]
+native_id = "130.6416"
+slug = "utbildningsgrupp"
+
+[[variable]]
+native_id = "130.14806"
+slug = "manadslon-exkl-natura"
+
+[[variable]]
+native_id = "130.36036"
+slug = "sjuklon-forsta-period"
+
+[[variable]]
+native_id = "130.36037"
+slug = "sjuklon-andra-period"
+
+# register 131 (ireg)
+
+[[variable]]
+native_id = "130.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "130.120"
+slug = "yrkesuppgift"
+
+[[variable]]
+native_id = "130.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "130.801"
+slug = "utbildningsgrupp-enl-sun-2000"
+
+[[variable]]
+native_id = "130.1822"
+slug = "fasta-lonetillagg"
+
+[[variable]]
+native_id = "130.1834"
+slug = "lonepopulation"
+
+[[variable]]
+native_id = "130.1844"
+slug = "rorliga-lonetillagg"
+
+[[variable]]
+native_id = "130.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "130.2519"
+slug = "lopnummer-anstallningar"
+
+[[variable]]
+native_id = "130.2524"
+slug = "antal-arbetade-timmar-timavlonade"
+
+[[variable]]
+native_id = "130.3098"
+slug = "faktiskt-arbetad-tid"
+
+[[variable]]
+native_id = "130.3102"
+slug = "avtalsomrade"
+
+[[variable]]
+native_id = "130.3105"
+slug = "fast-kontant-lon"
+
+[[variable]]
+native_id = "130.3108"
+slug = "sysselsattningsgrad-faktisk"
+
+[[variable]]
+native_id = "130.3110"
+slug = "obekvamtidstillagg"
+
+[[variable]]
+native_id = "130.3112"
+slug = "sysselsattningsgrad-manadsavlonade"
+
+[[variable]]
+native_id = "130.3117"
+slug = "personalkategori"
+
+[[variable]]
+native_id = "130.3126"
+slug = "faktisk-tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "130.3129"
+slug = "avtalsenlig-veckoarbetstid"
+
+[[variable]]
+native_id = "130.3134"
+slug = "beredskapstillagg"
+
+[[variable]]
+native_id = "130.5025"
+slug = "arbetare-tjansteman"
+
+[[variable]]
+native_id = "130.5032"
+slug = "jourtillagg"
+
+[[variable]]
+native_id = "130.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "130.5118"
+slug = "verksamhetsomrade"
+
+[[variable]]
+native_id = "130.5717"
+slug = "overenskommen-sysselsattningsgrad"
+
+[[variable]]
+native_id = "130.5719"
+slug = "antal-overtidstimmar"
+
+[[variable]]
+native_id = "130.5768"
+slug = "manadsloneintervall"
+
+[[variable]]
+native_id = "130.5784"
+slug = "anstallningsform-hel-del-ovrig"
+
+[[variable]]
+native_id = "130.8189"
+slug = "utbildningens-niva-och-inriktning"
+
+[[variable]]
+native_id = "130.19066"
+slug = "arsarbetstid"
+
+[[variable]]
+native_id = "130.27263"
+slug = "avtalad-grundlon"
+
+[[variable]]
+native_id = "130.31094"
+slug = "antal-semesterdagar"
+
+# register 131

@@ -1,0 +1,211 @@
+[register]
+provider = "scb"
+slug = "kust-strander-oar"
+native_id = "219"
+
+[[variant]]
+native_id = "219.320"
+slug = "basinformation-kust-strander-oar"
+display_group = "Basinformation om kust, stränder och öar"
+
+
+[[variant]]
+native_id = "219.1193"
+slug = "befolkning-oar"
+display_group = "Befolkning på öar"
+
+
+[[variant]]
+native_id = "219.1194"
+slug = "strandnara-befolkning"
+display_group = "Strandnära befolkning"
+
+
+[[variant]]
+native_id = "219.1494"
+slug = "befolkade-oar-utan-fastlandsforbindelse"
+display_group = "Befolkade öar utan fastlandsförbindelse"
+
+# Arbetsplatsområden utanför tätort
+
+[[variable]]
+native_id = "219.44"
+slug = "kon"
+
+[[variable]]
+native_id = "219.64"
+slug = "tatort-tom-2010"
+
+[[variable]]
+native_id = "219.66"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "219.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "219.392"
+slug = "antal-personer"
+
+[[variable]]
+native_id = "219.2679"
+slug = "forvarvsarbetande"
+
+[[variable]]
+native_id = "219.2879"
+slug = "langd-pa-kust"
+
+[[variable]]
+native_id = "219.2880"
+slug = "langd-pa-strand"
+
+[[variable]]
+native_id = "219.2881"
+slug = "omkrets"
+
+[[variable]]
+native_id = "219.2882"
+slug = "antal-oar"
+
+[[variable]]
+native_id = "219.2883"
+slug = "befolkning-oar-2000"
+
+[[variable]]
+native_id = "219.2886"
+slug = "antal-oar-fast-befolkning"
+
+[[variable]]
+native_id = "219.2891"
+slug = "de-femtio-storsta-oarna"
+
+[[variable]]
+native_id = "219.16343"
+slug = "havso"
+
+[[variable]]
+native_id = "219.16345"
+slug = "havsvatten"
+
+[[variable]]
+native_id = "219.17810"
+slug = "nordlig-koordinat-sweref"
+
+[[variable]]
+native_id = "219.17812"
+slug = "ostlig-koordinat-sweref"
+
+[[variable]]
+native_id = "219.19073"
+slug = "befolkning-oar-2005"
+
+[[variable]]
+native_id = "219.19074"
+slug = "befolkning-oar-2008"
+
+[[variable]]
+native_id = "219.19075"
+slug = "landareal-oar"
+
+[[variable]]
+native_id = "219.19076"
+slug = "antal-tatorter-per-o"
+
+[[variable]]
+native_id = "219.19077"
+slug = "befolkningsforandring-oar"
+
+[[variable]]
+native_id = "219.29323"
+slug = "andel-kust-strandlangd-riket"
+
+[[variable]]
+native_id = "219.29324"
+slug = "andel-fastlandskust-stracka-havsoar"
+
+[[variable]]
+native_id = "219.30420"
+slug = "strandnara-befolkning"
+
+[[variable]]
+native_id = "219.30421"
+slug = "alder-befolkning"
+
+[[variable]]
+native_id = "219.30786"
+slug = "antal-havsoar"
+
+[[variable]]
+native_id = "219.30787"
+slug = "landareal-havsoar"
+
+[[variable]]
+native_id = "219.30788"
+slug = "omkrets-havsoar"
+
+[[variable]]
+native_id = "219.30789"
+slug = "antal-invanare-pa-oar"
+
+[[variable]]
+native_id = "219.30790"
+slug = "oar-utan-landforbindelse-namn"
+
+[[variable]]
+native_id = "219.30791"
+slug = "antal-oar-med-byggnader"
+
+[[variable]]
+native_id = "219.30792"
+slug = "antal-oar-med-bostader"
+
+[[variable]]
+native_id = "219.30793"
+slug = "antal-byggnader-pa-oar"
+
+[[variable]]
+native_id = "219.30794"
+slug = "antal-bostader-pa-oar"
+
+[[variable]]
+native_id = "219.39462"
+slug = "objekt-id"
+
+# register 221 (arbetsplatsomraden-utanfor-tatort)
+
+[[variable]]
+native_id = "219.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "219.25836"
+slug = "antal-byggnader"
+
+[[variable]]
+native_id = "219.29559"
+slug = "gallandedatum"
+
+[[variable]]
+native_id = "219.35327"
+slug = "area-ha"
+
+[[variable]]
+native_id = "219.39596"
+slug = "antal-bostader"
+
+[[variable]]
+native_id = "219.39597"
+slug = "namn-pa-geografiskt-objekt"
+
+# register 223
+
+[[variable]]
+native_id = "219.39461.metod"
+slug = "datatyp-for-geometri"
+
+[[variable]]
+native_id = "219.39461.sp-geometry"
+slug = "datatyp-for-geometri-2"
+
+# register 225

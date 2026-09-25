@@ -1,0 +1,91 @@
+[register]
+provider = "scb"
+slug = "industrins-miljoskyddskostnader"
+native_id = "156"
+
+[[variant]]
+native_id = "156.223"
+slug = "_default"
+display_group = "Industrins miljöskyddskostnader"
+panel_entity_key = "identitet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Småorter
+
+[[variable]]
+native_id = "156.145"
+slug = "identitet"
+
+
+[[variable]]
+native_id = "156.412"
+slug = "postort"
+
+[[variable]]
+native_id = "156.453"
+slug = "namn-kontaktperson"
+
+[[variable]]
+native_id = "156.1666"
+slug = "antal-anstallda-foretag"
+
+[[variable]]
+native_id = "156.6331"
+slug = "miljoskyddsinvestering-allt"
+
+[[variable]]
+native_id = "156.6335"
+slug = "lopande-externa-drift"
+
+[[variable]]
+native_id = "156.15937"
+slug = "datum-for-svar"
+
+[[variable]]
+native_id = "156.15938"
+slug = "foretagets-verksamhet"
+
+[[variable]]
+native_id = "156.28430"
+slug = "miljoskyddsinvestering-beskrivning"
+
+# register 158 (skyddad-natur)
+
+[[variable]]
+native_id = "156.6345.hus113b"
+slug = "hushallsinvestering"
+
+# register 168 (fek)
+
+[[variable]]
+native_id = "156.58"
+slug = "postnromrade"
+
+[[variable]]
+native_id = "156.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "156.814"
+slug = "faxnummer"
+
+[[variable]]
+native_id = "156.1724"
+slug = "e-postadress-kontaktperson"
+
+[[variable]]
+native_id = "156.2014"
+slug = "foretagsnamn"
+
+# register 157
+
+[[variable]]
+native_id = "156.4989.adress"
+slug = "foretagets-adress"
+
+[[variable]]
+native_id = "156.4989.gatunr"
+slug = "gata-2"
+
+# register 164

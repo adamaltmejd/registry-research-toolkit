@@ -1,0 +1,26 @@
+[register]
+provider = "scb"
+slug = "sjalvforsorjning"
+native_id = "414"
+
+[[variant]]
+native_id = "414.1757"
+slug = "sjalvforsorjning-20-65-ar"
+display_group = "Självförsörjning 20-65 år"
+panel_entity_key = "eget-personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #539: entity-key slug pins (slug-space drift reslug fallout). Measuring #143
+# drift as COUNT(DISTINCT variable_slug(...)) instead of raw delivery columns
+# reslugged ~1,265 SCB variables from verbose name-fallbacks to their stable
+# delivery-column basis (an improvement). For these 31 entity-key variables the
+# reslug collided with a register sibling and dropped the stable identifier slug
+# a curated `panel_entity_key` (or classification_links) ref depends on, so pin
+# each back to the slug its ref expects (same mechanism as the #526/#528 pins).
+# Generated + verified collision-free against a real-seed build; see #539.
+
+
+[[variable]]
+native_id = "414.4544"
+slug = "eget-personnr"

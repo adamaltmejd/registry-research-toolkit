@@ -1,0 +1,532 @@
+[register]
+provider = "scb"
+slug = "pin"
+native_id = "382"
+
+[[variant]]
+native_id = "382.372"
+slug = "industrins-kapacitetsutnyttjande"
+display_group = "Industrins kapacitetsutnyttjande"
+panel_entity_key = "orgnr-12"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "382.1429"
+slug = "omsattning-tjanstesektorn-tom2014"
+display_group = "Omsättning inom tjänstesektorn t.o.m. 2014"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "382.1473"
+slug = "industriproduktionsindex"
+display_group = "Industriproduktionsindex (IPI)  fr.o.m. 2015"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "382.1481"
+slug = "produktionsvardeindex-pvi"
+display_group = "Produktionsvärdeindex (PVI)"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "382.1559"
+slug = "tjansteproduktionsindex"
+display_group = "Tjänsteproduktionsindex (TjPI)  fr.o.m. 2015"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "382.1563"
+slug = "industrins-orderingang"
+display_group = "Industrins orderingång och omsättning fr.o.m 2015"
+panel_entity_key = "orgnr-12"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "382.1564"
+slug = "omsattning-tjanstesektorn-2015"
+display_group = "Omsättning inom tjänstesektorn fr.o.m. 2015"
+panel_entity_key = "orgnr-12"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+# Utförarregistret
+
+[[variable]]
+native_id = "382.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "382.3578"
+slug = "orgnr-12"
+
+
+[[variable]]
+native_id = "382.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "382.73"
+slug = "ar"
+
+[[variable]]
+native_id = "382.87"
+slug = "foradlingsvarde"
+
+[[variable]]
+native_id = "382.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "382.865"
+slug = "anvandaridentitet-uppgiftsnotering"
+
+[[variable]]
+native_id = "382.887"
+slug = "procent-tid-omsattning"
+
+[[variable]]
+native_id = "382.1454"
+slug = "venr"
+
+[[variable]]
+native_id = "382.2005"
+slug = "anvandaridentitet"
+
+[[variable]]
+native_id = "382.2642"
+slug = "antal-anstallda-verksamhetsenhet"
+
+[[variable]]
+native_id = "382.2643"
+slug = "verksamhetsenhet-benamning"
+
+[[variable]]
+native_id = "382.2686"
+slug = "manadslon"
+
+[[variable]]
+native_id = "382.2846"
+slug = "lopnummer-urvalsenheter"
+
+[[variable]]
+native_id = "382.2913"
+slug = "annan-orsak-kapacitetsutnyttjande"
+
+[[variable]]
+native_id = "382.2914"
+slug = "brist-pa-kvalificerad-arbetskraft"
+
+[[variable]]
+native_id = "382.2915"
+slug = "brist-pa-okvalificerad-arbetskraft"
+
+[[variable]]
+native_id = "382.2916"
+slug = "granskning"
+
+[[variable]]
+native_id = "382.2918"
+slug = "observationsnummer"
+
+[[variable]]
+native_id = "382.2919"
+slug = "otillracklig-efterfragan"
+
+[[variable]]
+native_id = "382.2920"
+slug = "produktionsstorning"
+
+[[variable]]
+native_id = "382.2921"
+slug = "urvalsar"
+
+[[variable]]
+native_id = "382.2923"
+slug = "andrad"
+
+[[variable]]
+native_id = "382.2924"
+slug = "beskrivning-av-orsak"
+
+[[variable]]
+native_id = "382.2925"
+slug = "brist-pa-insatsvaror"
+
+[[variable]]
+native_id = "382.3310"
+slug = "branschgrupp"
+
+[[variable]]
+native_id = "382.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "382.4028"
+slug = "stratum-storlek"
+
+[[variable]]
+native_id = "382.4030"
+slug = "lillan"
+
+[[variable]]
+native_id = "382.4042"
+slug = "firmanamn"
+
+[[variable]]
+native_id = "382.4066"
+slug = "storleksgrupp"
+
+[[variable]]
+native_id = "382.4081"
+slug = "period"
+
+[[variable]]
+native_id = "382.4256"
+slug = "nettoomsattning"
+
+[[variable]]
+native_id = "382.4262"
+slug = "kostnader-handelsvaror"
+
+[[variable]]
+native_id = "382.4266"
+slug = "kostnader-for-ravaror"
+
+[[variable]]
+native_id = "382.4269"
+slug = "summa-kostnader-ravaror-handelsvaror"
+
+[[variable]]
+native_id = "382.4820"
+slug = "intakter-av-handel"
+
+[[variable]]
+native_id = "382.4821"
+slug = "intakter-av-industri"
+
+[[variable]]
+native_id = "382.4822"
+slug = "intakter-av-ovrigt"
+
+[[variable]]
+native_id = "382.4903"
+slug = "ar-och-kvartal"
+
+[[variable]]
+native_id = "382.4969"
+slug = "kvantitetsenhet"
+
+[[variable]]
+native_id = "382.5072"
+slug = "moms"
+
+[[variable]]
+native_id = "382.5137"
+slug = "hanteringskod-kapacitetsutnyttjande"
+
+[[variable]]
+native_id = "382.5138"
+slug = "hanteringskod-brist-yrkesutbildad"
+
+[[variable]]
+native_id = "382.5139"
+slug = "hanteringskod-brist-ovrig-personal"
+
+[[variable]]
+native_id = "382.5140"
+slug = "hanteringskod-brist-insatsvaror"
+
+[[variable]]
+native_id = "382.5141"
+slug = "hanteringskod-otillracklig-efterfragan"
+
+[[variable]]
+native_id = "382.5142"
+slug = "hanteringskod-produktionsstorning"
+
+[[variable]]
+native_id = "382.5143"
+slug = "hanteringskod-annan-orsak"
+
+[[variable]]
+native_id = "382.5144"
+slug = "inkommandedatum"
+
+[[variable]]
+native_id = "382.5146"
+slug = "observationsenhetsstatus-kvartal"
+
+[[variable]]
+native_id = "382.5147"
+slug = "uppskovsdatum"
+
+[[variable]]
+native_id = "382.5148"
+slug = "vardestatus-kapacitetsutnyttjande"
+
+[[variable]]
+native_id = "382.5151"
+slug = "blankettstatus-kvartal"
+
+[[variable]]
+native_id = "382.5179"
+slug = "aktivt-organisationsnummer"
+
+[[variable]]
+native_id = "382.5181"
+slug = "urvalsstorlek"
+
+[[variable]]
+native_id = "382.6306"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "382.6392"
+slug = "antal-sysselsatta"
+
+[[variable]]
+native_id = "382.7782"
+slug = "fardigstallda-hus"
+
+[[variable]]
+native_id = "382.17357"
+slug = "timlon"
+
+[[variable]]
+native_id = "382.18952"
+slug = "lagerutveckling"
+
+[[variable]]
+native_id = "382.21317"
+slug = "produktionsvolymer"
+
+[[variable]]
+native_id = "382.25033"
+slug = "kapacitetsutnyttjandet"
+
+[[variable]]
+native_id = "382.29270"
+slug = "prisindex"
+
+[[variable]]
+native_id = "382.33064"
+slug = "handelsmarginal"
+
+[[variable]]
+native_id = "382.37037"
+slug = "nettoomsattning-export"
+
+[[variable]]
+native_id = "382.37038"
+slug = "nettoomsattning-hemma"
+
+[[variable]]
+native_id = "382.37039"
+slug = "industriomsattning-export"
+
+[[variable]]
+native_id = "382.37040"
+slug = "industriomsattning-hemma"
+
+[[variable]]
+native_id = "382.37756"
+slug = "industriomsattning"
+
+[[variable]]
+native_id = "382.37757"
+slug = "handelsomsattning"
+
+[[variable]]
+native_id = "382.37758"
+slug = "tjansteomsattning"
+
+[[variable]]
+native_id = "382.41603"
+slug = "temperatur"
+
+[[variable]]
+native_id = "382.41615"
+slug = "tjansteomsattning-hemmamarknad"
+
+[[variable]]
+native_id = "382.41616"
+slug = "tjansteomsattning-exportmarknad"
+
+[[variable]]
+native_id = "382.41617"
+slug = "handelsomsattning-hemmamarknad"
+
+[[variable]]
+native_id = "382.41618"
+slug = "handelsomsattning-exportmarknad"
+
+[[variable]]
+native_id = "382.41622"
+slug = "antal-landningar"
+
+[[variable]]
+native_id = "382.41623"
+slug = "passagerare-luftfart"
+
+[[variable]]
+native_id = "382.41625"
+slug = "farledsavgifter"
+
+[[variable]]
+native_id = "382.41626"
+slug = "antal-lotsningar"
+
+[[variable]]
+native_id = "382.41627"
+slug = "lotsavgifter"
+
+[[variable]]
+native_id = "382.50024"
+slug = "referensmanad-pin"
+
+[[variable]]
+native_id = "382.50025"
+slug = "referensar-pin"
+
+[[variable]]
+native_id = "382.50042"
+slug = "scbid-pin"
+
+[[variable]]
+native_id = "382.50049"
+slug = "variabel-kod-pin"
+
+[[variable]]
+native_id = "382.50053"
+slug = "variabelklass-kod-pin"
+
+[[variable]]
+native_id = "382.50055"
+slug = "referenskvartal-pin"
+
+[[variable]]
+native_id = "382.50056"
+slug = "nettoomsattning-modellskattad-pin"
+
+[[variable]]
+native_id = "382.50078"
+slug = "omsattning-moms-hemma-blankett"
+
+[[variable]]
+native_id = "382.50079"
+slug = "omsattning-moms-hemma-momsreg"
+
+[[variable]]
+native_id = "382.50083"
+slug = "imputerat-varde-flagga"
+
+[[variable]]
+native_id = "382.50216"
+slug = "referensmanad-obs-pin"
+
+# register 389 (kkv)
+
+[[variable]]
+native_id = "382.55"
+slug = "omsattning-enligt-moms"
+
+[[variable]]
+native_id = "382.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "382.814"
+slug = "faxnummer"
+
+[[variable]]
+native_id = "382.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "382.1795"
+slug = "blankettnummer"
+
+[[variable]]
+native_id = "382.2956"
+slug = "orderingang-exportmarknad"
+
+[[variable]]
+native_id = "382.2957"
+slug = "orderingang-hemmamarknad"
+
+[[variable]]
+native_id = "382.2958"
+slug = "total-orderingang"
+
+[[variable]]
+native_id = "382.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "382.4040"
+slug = "foretagsenhetens-startar"
+
+[[variable]]
+native_id = "382.4045"
+slug = "koncernmarkering"
+
+[[variable]]
+native_id = "382.4079"
+slug = "omsattningsvarde"
+
+[[variable]]
+native_id = "382.5084"
+slug = "inrikes-omsattning"
+
+[[variable]]
+native_id = "382.28064"
+slug = "imputeringsstatus"
+
+[[variable]]
+native_id = "382.31002"
+slug = "urvalsversion"
+
+[[variable]]
+native_id = "382.38045"
+slug = "naringsgren-sni-5-siffer"
+
+# register 383
+
+[[variable]]
+native_id = "382.1654.mobil"
+slug = "kontaktperson-mobilnr"
+
+[[variable]]
+native_id = "382.1724.epost"
+slug = "e-postadress-kontaktperson"
+
+[[variable]]
+native_id = "382.1724.epostuppg"
+slug = "e-postadress-kontaktperson-2"
+
+[[variable]]
+native_id = "382.4053.sni2007upp"
+slug = "bransch-enligt-uppgiftslamnaren"
+
+[[variable]]
+native_id = "382.4053.sni92upp"
+slug = "bransch-enligt-uppgiftslamnaren-2"
+
+# register 389

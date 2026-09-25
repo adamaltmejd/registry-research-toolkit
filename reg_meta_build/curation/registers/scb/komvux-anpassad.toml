@@ -6,3 +6,185 @@ native_id = "250"
 [[code_label_pair]]
 code = "scb/komvux-anpassad/gymnasieforbund-id"
 label = "scb/komvux-anpassad/gymnasieforbundets-namn"
+
+[[variant]]
+native_id = "250.499"
+slug = "elever"
+display_group = "Elever"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "250.1021"
+slug = "grupper"
+display_group = "Grupper"
+
+
+[[variant]]
+native_id = "250.1758"
+slug = "kursdeltagare"
+display_group = "Kursdeltagare i anpassad kommunal vuxenutbildning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Nationellt centrum för flexibelt lärande (CFL)
+
+[[variable]]
+native_id = "250.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "250.66"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "250.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "250.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "250.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "250.8552"
+slug = "gymnasieforbund-id"
+
+[[variable]]
+native_id = "250.14687"
+slug = "studieniva-sarvux"
+
+[[variable]]
+native_id = "250.29427"
+slug = "gymnasieforbundets-namn"
+
+[[variable]]
+native_id = "250.35635"
+slug = "studieniva-anpassad"
+
+# register 251 (cfl)
+
+[[variable]]
+native_id = "250.14815.skolkommun"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "250.36.hemkommun"
+slug = "hemkommun"
+
+[[variable]]
+native_id = "250.36.skolkommun"
+slug = "skolkommun-kod"
+
+# register 258 (it-anvandning)
+
+[[variable]]
+native_id = "250.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "250.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "250.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "250.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "250.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "250.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "250.8006"
+slug = "verksamhetsform-skolvasendet"
+
+[[variable]]
+native_id = "250.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "250.8557"
+slug = "utbildningsanordnare"
+
+[[variable]]
+native_id = "250.8701"
+slug = "kopt-utbildning-i-komvux"
+
+[[variable]]
+native_id = "250.14642"
+slug = "niva-vuxenutbildning"
+
+[[variable]]
+native_id = "250.14653"
+slug = "kurs-i-komvux"
+
+[[variable]]
+native_id = "250.14655"
+slug = "kursstart"
+
+[[variable]]
+native_id = "250.14656"
+slug = "kursslut"
+
+[[variable]]
+native_id = "250.14657"
+slug = "datumavbrott"
+
+[[variable]]
+native_id = "250.14658"
+slug = "typ-av-undervisning"
+
+[[variable]]
+native_id = "250.32756"
+slug = "nyinskriven-elev"
+
+[[variable]]
+native_id = "250.32757"
+slug = "poangomfattning-grundlaggande"
+
+[[variable]]
+native_id = "250.32758"
+slug = "poangomfattning-gymnasial"
+
+[[variable]]
+native_id = "250.36646"
+slug = "orsak-ej-inrapporterat-betyg"
+
+[[variable]]
+native_id = "250.39842"
+slug = "ar-for-komvuxutbildning"
+
+[[variable]]
+native_id = "250.40049"
+slug = "avslutad-kurs"
+
+# register 251
+
+[[variable]]
+native_id = "250.32738.slan"
+slug = "skollan-2"
+
+[[variable]]
+native_id = "250.32738.slan-text"
+slug = "skollan-text-2"
+
+[[variable]]
+native_id = "250.8534.komgrupp17"
+slug = "kommungrupp-kod"
+
+# register 26

@@ -59,6 +59,7 @@ def test_catalog_overlays_share_one_directory() -> None:
         "lineage.toml",
         "relations.toml",
         "tags.toml",
+        "slug_state.toml",
     }
     assert {path.name for path in _CURATION.glob("*.toml")} == names
     assert all(repo_curation_path(name) == _CURATION / name for name in names)
@@ -467,7 +468,7 @@ def test_repo_relations_parses() -> None:
 
 def test_repo_scb_errata_parses() -> None:
     # Register-file `[[errata.*]]` tables (Y-114/Y-116) are the upstream-error log; every entry
-    # resolves its `register`/`variant` slugs against the curated fqid_slugs/scb.toml
+    # resolves its `register`/`variant` slugs against the register tree
     # the build reads, so a stale slug is a load-time failure here rather than a
     # maintainer-build surprise. The remaining half (the version is documented, the
     # column has / has not a real row) needs the real export and stays build-only.
@@ -579,7 +580,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for partition in register.identity.partition
     ]
     assert len(partitions) == 356
-    assert len(tree.registers) == 84
+    assert len(tree.registers) == 289
     assert (
         sum(len(register.identity.route) for register in tree.registers),
         sum(len(register.identity.split) for register in tree.registers),

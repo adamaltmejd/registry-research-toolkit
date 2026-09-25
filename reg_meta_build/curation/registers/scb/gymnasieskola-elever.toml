@@ -58,3 +58,180 @@ label = "scb/gymnasieskola-elever/gymnasieforbundets-namn"
 [[code_label_pair]]
 code = "scb/gymnasieskola-elever/skolenhetskod"
 label = "scb/gymnasieskola-elever/skolenhetens-namn"
+
+[[variant]]
+native_id = "233.403"
+slug = "_default"
+display_group = "Elever per 15 oktober"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Labour Cost Survey (LCS)
+
+[[variable]]
+native_id = "233.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "233.49"
+slug = "lan"
+
+[[variable]]
+native_id = "233.16303"
+slug = "programbidrag"
+
+[[variable]]
+native_id = "233.23867"
+slug = "klassbeteckning"
+
+# register 234 (lcs)
+
+[[variable]]
+native_id = "233.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "233.31"
+slug = "forsamling"
+
+[[variable]]
+native_id = "233.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "233.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "233.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "233.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "233.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "233.1994"
+slug = "rektorsomrades-id"
+
+[[variable]]
+native_id = "233.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "233.4693"
+slug = "gymnasieprogram"
+
+[[variable]]
+native_id = "233.26963"
+slug = "inriktning-fristaende-gr"
+
+[[variable]]
+native_id = "233.27049"
+slug = "studiernas-omfattning"
+
+[[variable]]
+native_id = "233.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "233.29427"
+slug = "gymnasieforbundets-namn"
+
+[[variable]]
+native_id = "233.30410"
+slug = "varldsdelsgruppering-mor"
+
+[[variable]]
+native_id = "233.30411"
+slug = "varldsdelsgruppering-far"
+
+[[variable]]
+native_id = "233.30471"
+slug = "direktovergang"
+
+[[variable]]
+native_id = "233.30654"
+slug = "skolenhetens-namn"
+
+[[variable]]
+native_id = "233.35887"
+slug = "nyligen-invandrad"
+
+[[variable]]
+native_id = "233.36587"
+slug = "termin-arskurs-start"
+
+# register 234
+
+[[variable]]
+native_id = "233.1536.stvkod"
+slug = "studievag-gymnasieskolan"
+
+[[variable]]
+native_id = "233.1993.skolid"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "233.30392.beh-ehs-ak9"
+slug = "behorighet-gy-ehs-ak9"
+
+[[variable]]
+native_id = "233.30392.beh-est-ak9"
+slug = "behorighet-gy-est-ak9"
+
+[[variable]]
+native_id = "233.30392.beh-impro-ak9"
+slug = "behorighet-gy-impro-ak9"
+
+[[variable]]
+native_id = "233.30392.beh-nt-ak9"
+slug = "behorighet-gy-nt-ak9"
+
+[[variable]]
+native_id = "233.30392.beh-yrk-ak9"
+slug = "behorighet-gy-yrk-ak9"
+
+[[variable]]
+native_id = "233.30907.larl-ers"
+slug = "larlingsersattning"
+
+[[variable]]
+native_id = "233.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "233.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "233.8073.sun2000niva3-mor"
+slug = "sun-niva-3-mor"
+
+[[variable]]
+native_id = "233.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "233.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "233.8074.sun2000niva3-far"
+slug = "sun2000niva-3-far"
+
+[[variable]]
+native_id = "233.8137.hman"
+slug = "huvudman"
+
+[[variable]]
+native_id = "233.8552.gyfid"
+slug = "gymnasieforbund-id"
+
+# register 234

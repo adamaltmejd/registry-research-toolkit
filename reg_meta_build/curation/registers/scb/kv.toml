@@ -1,0 +1,55 @@
+[register]
+provider = "scb"
+slug = "kv"
+native_id = "127"
+
+[[variant]]
+native_id = "127.149"
+slug = "privat-offentlig"
+display_group = "Privat och offentlig sektor"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Registerbaserad lönesummestatistik (LSUM)
+
+[[variable]]
+native_id = "127.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "127.43"
+slug = "kvartal"
+
+[[variable]]
+native_id = "127.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "127.4903"
+slug = "ar-och-kvartal"
+
+# register 128 (lsum)
+
+[[variable]]
+native_id = "127.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "127.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "127.4973"
+slug = "lediga-jobb-obemannade"
+
+[[variable]]
+native_id = "127.4982"
+slug = "lediga-jobb-arbetsstalle"
+
+[[variable]]
+native_id = "127.4983"
+slug = "lediga-jobb-vikarie"
+
+# register 128

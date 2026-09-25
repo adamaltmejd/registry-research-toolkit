@@ -1,0 +1,41 @@
+[register]
+provider = "scb"
+slug = "jordbrukets-vattenanvandning"
+native_id = "289"
+
+[[variant]]
+native_id = "289.773"
+slug = "_default"
+display_group = "Jordbrukets vattenanvändning"
+
+# Kvartalsutfall för kommuner och regioner
+
+[[variable]]
+native_id = "289.46"
+slug = "lantbruk-foretags-id"
+
+[[variable]]
+native_id = "289.49"
+slug = "lan"
+
+[[variable]]
+native_id = "289.21428"
+slug = "bevattnad-areal"
+
+[[variable]]
+native_id = "289.21442"
+slug = "bevattning"
+
+[[variable]]
+native_id = "289.21443"
+slug = "andel-bevattnad-areal"
+
+[[variable]]
+native_id = "289.21444"
+slug = "odlad-groda"
+
+[[variable]]
+native_id = "289.21475"
+slug = "vattendistrikt"
+
+# register 290 (kvartalsutfall)

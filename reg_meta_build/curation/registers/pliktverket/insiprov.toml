@@ -1,0 +1,40 @@
+[register]
+provider = "pliktverket"
+slug = "insiprov"
+native_id = "8006336455308083750"
+
+[[variant]]
+native_id = "8006336455308083750.6194374819318977043"
+slug = "_default"
+display_group = "Inskrivningsprov"
+panel_entity_key = "personnr"
+panel_time_key = "pkapdat"
+panel_time_grain = "row"
+
+# Diagnoser
+
+[[variable]]
+native_id = "8006336455308083750.penr"
+slug = "personnr"
+
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 58 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 6636188647364956026
+
+[[variable]]
+native_id = "8006336455308083750.gckap"
+slug = "verbal-formaga"
+
+[[variable]]
+native_id = "8006336455308083750.gkap"
+slug = "g-faktor"
+
+[[variable]]
+native_id = "8006336455308083750.gvkap"
+slug = "spatial-formaga"
+
+# === END #760 non-SCB concept-slug curation ===

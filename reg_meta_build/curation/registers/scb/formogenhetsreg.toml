@@ -1,0 +1,381 @@
+[register]
+provider = "scb"
+slug = "formogenhetsreg"
+native_id = "228"
+
+[[variant]]
+native_id = "228.388"
+slug = "individ"
+display_group = "Individ"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "228.389"
+slug = "hushall"
+display_group = "Hushåll"
+panel_entity_key = "bidnrh"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Personalutbildningsstatistik
+
+[[variable]]
+native_id = "228.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "228.4855"
+slug = "bidnrh"
+
+
+[[variable]]
+native_id = "228.44"
+slug = "kon"
+
+[[variable]]
+native_id = "228.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "228.3288"
+slug = "kapitalvinst-annan-fond-rantefond"
+
+[[variable]]
+native_id = "228.3289"
+slug = "kapitalforlust-annan-fond-rantefond"
+
+[[variable]]
+native_id = "228.3292"
+slug = "avyttring-andel-vardepappersfond"
+
+[[variable]]
+native_id = "228.15525"
+slug = "obligationer-fordran"
+
+[[variable]]
+native_id = "228.15526"
+slug = "aktier-a-listan-deklarationsvarde"
+
+[[variable]]
+native_id = "228.15527"
+slug = "aktier-a-listan-marknadsvarde"
+
+[[variable]]
+native_id = "228.15528"
+slug = "aktier-o-listan-deklarationsvarde"
+
+[[variable]]
+native_id = "228.15557"
+slug = "aktier-o-listan-marknadsvarde"
+
+[[variable]]
+native_id = "228.24791"
+slug = "inregistrerade-aktier-deklarationsvarde"
+
+[[variable]]
+native_id = "228.24792"
+slug = "inregistrerade-aktier-marknadsvarde"
+
+[[variable]]
+native_id = "228.24793"
+slug = "noterade-aktier-marknadsvarde"
+
+[[variable]]
+native_id = "228.24794"
+slug = "noterade-aktier-deklarationsvarde"
+
+[[variable]]
+native_id = "228.36009"
+slug = "kapitalforlust-aktiefond"
+
+[[variable]]
+native_id = "228.36018"
+slug = "kapitalvinst-aktiefond"
+
+# register 229 (personalutbildningsstatistik)
+
+[[variable]]
+native_id = "228.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "228.372"
+slug = "familjeidentitet-rtb"
+
+[[variable]]
+native_id = "228.24"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "228.25"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "228.31"
+slug = "forsamling"
+
+[[variable]]
+native_id = "228.389"
+slug = "antal-barn-under-18-ar"
+
+[[variable]]
+native_id = "228.626"
+slug = "underlag-fastighetsskatt-hyreshus-025-2"
+
+[[variable]]
+native_id = "228.627"
+slug = "underlag-fastighetsskatt-hyreshus-05-2"
+
+[[variable]]
+native_id = "228.628"
+slug = "fastighetsskatt-hyreshus-lokal"
+
+[[variable]]
+native_id = "228.629"
+slug = "fastighetsskatt-industri"
+
+[[variable]]
+native_id = "228.682"
+slug = "underlag-fastighetsskatt-smahus-05"
+
+[[variable]]
+native_id = "228.683"
+slug = "underlag-fastighetsskatt-smahus-10"
+
+[[variable]]
+native_id = "228.684"
+slug = "underlag-fastighetsskatt-smahus-utland"
+
+[[variable]]
+native_id = "228.1060"
+slug = "sokpersonens-personnr"
+
+[[variable]]
+native_id = "228.1389"
+slug = "ackumulerad-studieskuld"
+
+[[variable]]
+native_id = "228.2550"
+slug = "beskattningsbar-formogenhet-skuld"
+
+[[variable]]
+native_id = "228.2557"
+slug = "tomtrattsavgald"
+
+[[variable]]
+native_id = "228.2709"
+slug = "markering-traff-rtb"
+
+[[variable]]
+native_id = "228.3199"
+slug = "bostadsratt-del-overlaten"
+
+[[variable]]
+native_id = "228.3208"
+slug = "bostadsratt-overlaten-andel"
+
+[[variable]]
+native_id = "228.3212"
+slug = "bostadsratt-typ-av-overlatelse"
+
+[[variable]]
+native_id = "228.3215"
+slug = "bostadsratt-forvarvad-andel"
+
+[[variable]]
+native_id = "228.3217"
+slug = "skatt-pa-inkomstranta"
+
+[[variable]]
+native_id = "228.3218"
+slug = "inkomstranta"
+
+[[variable]]
+native_id = "228.3224"
+slug = "hushallets-vikt"
+
+[[variable]]
+native_id = "228.3225"
+slug = "hushallets-disponibla-inkomst"
+
+[[variable]]
+native_id = "228.3276"
+slug = "utbetalt-belopp-obligationer-mm"
+
+[[variable]]
+native_id = "228.3277"
+slug = "sammanlagd-skuld-kontrolluppgift"
+
+[[variable]]
+native_id = "228.3279"
+slug = "skatt-pa-utdelning-delagarratter"
+
+[[variable]]
+native_id = "228.3280"
+slug = "utlandsk-skatt-pa-utdelning-delagare"
+
+[[variable]]
+native_id = "228.3284"
+slug = "ersattning-slutford-terminsaffar"
+
+[[variable]]
+native_id = "228.3285"
+slug = "betalning-avyttrade-terminskontrakt"
+
+[[variable]]
+native_id = "228.3286"
+slug = "kapitalvinst-fonder"
+
+[[variable]]
+native_id = "228.3287"
+slug = "kapitalforlust-fonder"
+
+[[variable]]
+native_id = "228.3290"
+slug = "kapitalvinst-rantefond"
+
+[[variable]]
+native_id = "228.3291"
+slug = "kapitalforlust-rantefond"
+
+[[variable]]
+native_id = "228.3297"
+slug = "utlandsk-forsakring-foregaende-ar"
+
+[[variable]]
+native_id = "228.3299"
+slug = "bostadsratt-overlatelsepris"
+
+[[variable]]
+native_id = "228.3300"
+slug = "bostadsratt-overlatelse-reparationsfond"
+
+[[variable]]
+native_id = "228.3301"
+slug = "bostadsratt-forvarvspris"
+
+[[variable]]
+native_id = "228.3302"
+slug = "bostadsratt-forvarv-reparationsfond"
+
+[[variable]]
+native_id = "228.3319"
+slug = "fackforeningsavgift"
+
+[[variable]]
+native_id = "228.3327"
+slug = "avgift-arbetsloshetskassa"
+
+[[variable]]
+native_id = "228.4630"
+slug = "fritidshus-taxeringsvarde"
+
+[[variable]]
+native_id = "228.5557"
+slug = "underlag-fastighetsskatt-hyreshus-0"
+
+[[variable]]
+native_id = "228.5570"
+slug = "underlag-fastighetsskatt-smahus-075"
+
+[[variable]]
+native_id = "228.5572"
+slug = "underlag-fastighetsskatt-utland-15"
+
+[[variable]]
+native_id = "228.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "228.5697"
+slug = "lilla-n-per-stratum"
+
+[[variable]]
+native_id = "228.15523"
+slug = "pensionssparande"
+
+[[variable]]
+native_id = "228.15558"
+slug = "ovriga-vardepapper-deklvarde"
+
+[[variable]]
+native_id = "228.15564"
+slug = "rantefonder-deklarationsvarde"
+
+[[variable]]
+native_id = "228.15566"
+slug = "rantefonder-marknadsvarde"
+
+[[variable]]
+native_id = "228.15573"
+slug = "premieobligationer"
+
+[[variable]]
+native_id = "228.15588"
+slug = "smahus-marknadsvarde"
+
+[[variable]]
+native_id = "228.15591"
+slug = "fritidshus-marknadsvarde"
+
+[[variable]]
+native_id = "228.15592"
+slug = "tomter-smahus-mv"
+
+[[variable]]
+native_id = "228.15594"
+slug = "tomter-fritidshus-mv"
+
+[[variable]]
+native_id = "228.15645"
+slug = "taxeringsvarde-fastighet-utland"
+
+[[variable]]
+native_id = "228.15771"
+slug = "bostadsratt-marknadsvarde"
+
+[[variable]]
+native_id = "228.16530"
+slug = "andel-smahus-lantbruk"
+
+[[variable]]
+native_id = "228.16536"
+slug = "taxeringsunderlag-smahus-eget-hem"
+
+[[variable]]
+native_id = "228.16542"
+slug = "smahus-taxeringsvarde"
+
+[[variable]]
+native_id = "228.22273"
+slug = "disponibel-inkomst-kosthushall-2004"
+
+[[variable]]
+native_id = "228.24447"
+slug = "upprakningsfaktor-ordinarie"
+
+[[variable]]
+native_id = "228.24449"
+slug = "populationsmarkering-hek"
+
+[[variable]]
+native_id = "228.29408"
+slug = "hushallstyp-kosthushall"
+
+[[variable]]
+native_id = "228.30866"
+slug = "underlag-fastighetsskatt-smahus-0"
+
+[[variable]]
+native_id = "228.30879"
+slug = "summa-skuldbelopp-formogenhet"
+
+[[variable]]
+native_id = "228.35471"
+slug = "rantebidrag-smahus-hyresfastigheter"
+
+# register 229

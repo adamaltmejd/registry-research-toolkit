@@ -23,3 +23,138 @@ variant = "adresser-fastigheter"
 name = "2024-01-01"
 evidence = "SWECOV holds GDB_Skolor2024 (columns DeSO_2018, DeSO_2025, Kommun, P1105_Lopnr_skolenhetskod, Skolform) and GDB_Ind2024 for edition 2024; SCB's Registerinformation export documents adresser-fastigheter through 2023-01-01 only. Named in the variant's own YYYY-01-01 token convention."
 noted = "2026-09-12"
+
+[[variant]]
+native_id = "70.227"
+slug = "fastigheter"
+display_group = "Fastigheter"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: uuid-adr lives only in adresser-fastigheter; the address entity here
+# is Riksnyckel (RIDADRPL, the adressplats riksnyckel).
+
+[[variant]]
+native_id = "70.249"
+slug = "adresser"
+display_group = "Adresser"
+panel_entity_key = "riksnyckel"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "70.1380"
+slug = "adresser-fastigheter"
+display_group = "Adresser, fastigheter och koordinater"
+panel_entity_key = "uuid-adr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Fastighetspriser och lagfarter
+
+[[variable]]
+native_id = "70.26"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "70.19653"
+slug = "riksnyckel"
+
+
+[[variable]]
+native_id = "70.29378.uuid-adr"
+slug = "uuid-adr"
+
+
+[[variable]]
+native_id = "70.7"
+slug = "adressomrade"
+
+[[variable]]
+native_id = "70.8"
+slug = "adressplats"
+
+[[variable]]
+native_id = "70.12"
+slug = "popularnamn"
+
+[[variable]]
+native_id = "70.13"
+slug = "geografisk-kommundel"
+
+[[variable]]
+native_id = "70.39"
+slug = "fastighet-nordkoord"
+
+[[variable]]
+native_id = "70.42"
+slug = "fastighet-ostkoord"
+
+[[variable]]
+native_id = "70.62"
+slug = "smaort"
+
+[[variable]]
+native_id = "70.64"
+slug = "tatort-tom-2010"
+
+[[variable]]
+native_id = "70.135"
+slug = "fnr"
+
+[[variable]]
+native_id = "70.485"
+slug = "fastighetens-status"
+
+[[variable]]
+native_id = "70.487"
+slug = "postnummeromrade-gammalt"
+
+[[variable]]
+native_id = "70.558"
+slug = "forsamling-stockholm"
+
+[[variable]]
+native_id = "70.1918"
+slug = "kod-for-postnummeromrade"
+
+[[variable]]
+native_id = "70.18967"
+slug = "status"
+
+[[variable]]
+native_id = "70.19683"
+slug = "adressplatstyp"
+
+[[variable]]
+native_id = "70.19684"
+slug = "adressomradestyp"
+
+[[variable]]
+native_id = "70.35321"
+slug = "tatort"
+
+[[variable]]
+native_id = "70.35609"
+slug = "smaort-kod"
+
+# register 71 (fastighetspriser)
+
+[[variable]]
+native_id = "70.21549"
+slug = "objekttyp"
+
+# register 71
+
+[[variable]]
+native_id = "70.17810.xkoord-adr"
+slug = "nordlig-koordinat-sweref-adr"
+
+[[variable]]
+native_id = "70.17810.xkoord-fst"
+slug = "nordlig-koordinat-sweref-fst"
+
+# register 73

@@ -1,0 +1,53 @@
+[register]
+provider = "scb"
+slug = "arbetsplatsomraden-utanfor-tatort"
+native_id = "221"
+
+[[variant]]
+native_id = "221.322"
+slug = "_default"
+display_group = "Arbetsplatsområden utanför tätort"
+
+# Industrins vattenanvändning
+
+[[variable]]
+native_id = "221.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "221.2189"
+slug = "landareal"
+
+[[variable]]
+native_id = "221.2871"
+slug = "arbetsplatsomrade-utanfor-tatort"
+
+[[variable]]
+native_id = "221.2872"
+slug = "ostlig-mittpunktskoordinat"
+
+[[variable]]
+native_id = "221.2873"
+slug = "nordlig-mittpunktskoordinat"
+
+[[variable]]
+native_id = "221.6392"
+slug = "antal-sysselsatta"
+
+[[variable]]
+native_id = "221.15169"
+slug = "bransch"
+
+[[variable]]
+native_id = "221.17484"
+slug = "antal-arbetsstallen"
+
+[[variable]]
+native_id = "221.17810"
+slug = "nordlig-koordinat-sweref"
+
+[[variable]]
+native_id = "221.17812"
+slug = "ostlig-koordinat-sweref"
+
+# register 223 (industrins-vattenanvandning)

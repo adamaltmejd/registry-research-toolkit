@@ -1,0 +1,65 @@
+[register]
+provider = "scb"
+slug = "nystartade-foretag-kvartal"
+native_id = "361"
+
+[[variant]]
+native_id = "361.1292"
+slug = "_default"
+display_group = "Nystartade företag"
+panel_entity_key = "person-orgnr"
+panel_time_key = ["registreringsar", "kvartal-period"]
+panel_time_grain = "row"
+
+# Analyser och statistik om befolkningens utbildning
+
+[[variable]]
+native_id = "361.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "361.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "361.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "361.267"
+slug = "kon-relationsperson"
+
+[[variable]]
+native_id = "361.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "361.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "361.2187"
+slug = "agarkategori"
+
+[[variable]]
+native_id = "361.4903"
+slug = "ar-och-kvartal"
+
+[[variable]]
+native_id = "361.6392"
+slug = "antal-sysselsatta"
+
+[[variable]]
+native_id = "361.19052"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "361.19079"
+slug = "kvartal-period"
+
+[[variable]]
+native_id = "361.35979"
+slug = "registreringsar"
+
+# register 366

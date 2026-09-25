@@ -1,0 +1,51 @@
+[register]
+provider = "scb"
+slug = "esf"
+native_id = "376"
+
+[[variant]]
+native_id = "376.1376"
+slug = "deltagare-i-esf-projekt"
+display_group = "Deltagare i ESF-projekt"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Yrkeshögskolan
+
+[[variable]]
+native_id = "376.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "376.38234"
+slug = "antal-timmar-i-projektet"
+
+[[variable]]
+native_id = "376.48575"
+slug = "antal-timmar-i-projekt"
+
+# register 377 (yrkeshogskolan)
+
+[[variable]]
+native_id = "376.67"
+slug = "utlsvbakg"
+
+[[variable]]
+native_id = "376.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "376.25118"
+slug = "arbetsomfattning"
+
+[[variable]]
+native_id = "376.45149"
+slug = "arbetsmarknadsstatus"
+
+[[variable]]
+native_id = "376.47931"
+slug = "region-eu"
+
+# register 377

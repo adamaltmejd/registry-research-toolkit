@@ -406,3 +406,903 @@ delivery_column = "Utdelning"
 register = "scb/fek"
 variable = "varulager"
 delivery_column = "Varulager"
+
+[[variant]]
+native_id = "168.241"
+slug = "fek-slutdata"
+display_group = "FEK Slutdata (företagsenhet)"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: panel keys removed — velopnr lives only in fek-blankettvariabler-ve; this variant
+# registers no VE id (fenr identifies the parent företagsenhet, the wrong grain).
+
+[[variant]]
+native_id = "168.282"
+slug = "fek-slutdata-verksamhetsenhet"
+display_group = "FEK Slutdata (verksamhetsenhet)"
+
+
+[[variant]]
+native_id = "168.283"
+slug = "fek-slutdata-lokal"
+display_group = "FEK Slutdata (lokal verksamhetsenhet)"
+panel_entity_key = "lvenr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "168.284"
+slug = "fek-slutdata-kommun"
+display_group = "FEK Slutdata (Kommun)"
+
+
+[[variant]]
+native_id = "168.433"
+slug = "fek-slutdata-investeringar-per-kommun"
+display_group = "FEK Slutdata (Investeringar per kommun)"
+
+
+[[variant]]
+native_id = "168.897"
+slug = "fek-preliminara-data-fe"
+display_group = "FEK Preliminära data (FE)"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "168.1317"
+slug = "fek-blankettvariabler-ve"
+display_group = "FEK blankettvariabler (VE)"
+panel_entity_key = "velopnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Livsmedelsförsäljning fördelad på varugrupper
+
+[[variable]]
+native_id = "168.48"
+slug = "lvenr"
+
+
+[[variable]]
+native_id = "168.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "168.4810"
+slug = "velopnr"
+
+
+[[variable]]
+native_id = "168.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "168.87"
+slug = "foradlingsvarde"
+
+[[variable]]
+native_id = "168.680"
+slug = "antal-anstallda-statistiskt-matt"
+
+[[variable]]
+native_id = "168.690"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "168.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "168.1054"
+slug = "sateskommun"
+
+[[variable]]
+native_id = "168.4072"
+slug = "bruttoinvesteringar-mark"
+
+[[variable]]
+native_id = "168.4080"
+slug = "summa-nettoinvesteringar"
+
+[[variable]]
+native_id = "168.4083"
+slug = "nettoinvesteringar-flygplan"
+
+[[variable]]
+native_id = "168.4085"
+slug = "nettoinvesteringar-fartyg"
+
+[[variable]]
+native_id = "168.4087"
+slug = "nettoinvesteringar-ralsfordon"
+
+[[variable]]
+native_id = "168.4088"
+slug = "nettoinvesteringar-byggnader-markanl"
+
+[[variable]]
+native_id = "168.4094"
+slug = "nettoinvesteringar-mark"
+
+[[variable]]
+native_id = "168.4098"
+slug = "medelantal-anstallda"
+
+[[variable]]
+native_id = "168.4104"
+slug = "bruttoinvesteringar-maskiner-inventarier"
+
+[[variable]]
+native_id = "168.4175"
+slug = "summa-bruttoinvesteringar"
+
+[[variable]]
+native_id = "168.4177"
+slug = "bruttoinvesteringar-ralsfordon"
+
+[[variable]]
+native_id = "168.4178"
+slug = "bruttoinvesteringar-byggnader"
+
+[[variable]]
+native_id = "168.4180"
+slug = "bruttoinvesteringar-bostader"
+
+[[variable]]
+native_id = "168.4181"
+slug = "bruttoinvesteringar-kopta-byggnader"
+
+[[variable]]
+native_id = "168.4203"
+slug = "andra-finansiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "168.4215"
+slug = "varulager"
+
+[[variable]]
+native_id = "168.4224"
+slug = "summa-eget-kapital"
+
+[[variable]]
+native_id = "168.4255"
+slug = "forandring-lager-pagaende-arbete"
+
+[[variable]]
+native_id = "168.4256"
+slug = "nettoomsattning"
+
+[[variable]]
+native_id = "168.4257"
+slug = "ovriga-rorelseintakter"
+
+[[variable]]
+native_id = "168.4262"
+slug = "kostnader-handelsvaror"
+
+[[variable]]
+native_id = "168.4263"
+slug = "kostnader-loner-ersattningar"
+
+[[variable]]
+native_id = "168.4266"
+slug = "kostnader-for-ravaror"
+
+[[variable]]
+native_id = "168.4268"
+slug = "pensionskostnader"
+
+[[variable]]
+native_id = "168.4269"
+slug = "summa-kostnader-ravaror-handelsvaror"
+
+[[variable]]
+native_id = "168.4272"
+slug = "ovriga-externa-kostnader"
+
+[[variable]]
+native_id = "168.4273"
+slug = "ovriga-personalkostnader"
+
+[[variable]]
+native_id = "168.4275"
+slug = "utdelning"
+
+[[variable]]
+native_id = "168.4276"
+slug = "aktieagartillskott-eget-kapital"
+
+[[variable]]
+native_id = "168.4277"
+slug = "koncernbidrag-eget-kapital"
+
+[[variable]]
+native_id = "168.4278"
+slug = "rorelseresultat-fore-avskrivningar"
+
+[[variable]]
+native_id = "168.4279"
+slug = "rorelseresultat"
+
+[[variable]]
+native_id = "168.4292"
+slug = "kostnader-ovriga-sociala-avgifter"
+
+[[variable]]
+native_id = "168.4294"
+slug = "bruttoinvesteringar-fartyg"
+
+[[variable]]
+native_id = "168.4295"
+slug = "bruttoinvesteringar-flygplan"
+
+[[variable]]
+native_id = "168.4298"
+slug = "intakter-kommissionarsverksamhet"
+
+[[variable]]
+native_id = "168.4299"
+slug = "intakter-hjalpverksamhet-holdingbolag"
+
+[[variable]]
+native_id = "168.4303"
+slug = "fordringar-koncern-intresseforetag"
+
+[[variable]]
+native_id = "168.4313"
+slug = "aktiverat-arbete-for-egen-rakning"
+
+[[variable]]
+native_id = "168.4314"
+slug = "vinst-avyttring-anlaggningstillgangar"
+
+[[variable]]
+native_id = "168.4315"
+slug = "forlust-avyttring-anlaggningstillgangar"
+
+[[variable]]
+native_id = "168.4318"
+slug = "bidrag-for-verksamheten"
+
+[[variable]]
+native_id = "168.4320"
+slug = "nyemission-inkl-overkurs"
+
+[[variable]]
+native_id = "168.4321"
+slug = "fondemission"
+
+[[variable]]
+native_id = "168.4322"
+slug = "nedskrivning-mot-uppskrivningsfond"
+
+[[variable]]
+native_id = "168.4323"
+slug = "nedsattning-aktiekapital"
+
+[[variable]]
+native_id = "168.4324"
+slug = "egna-insattningar-hb-kb"
+
+[[variable]]
+native_id = "168.4325"
+slug = "egna-uttag-hb-kb"
+
+[[variable]]
+native_id = "168.4326"
+slug = "oforklarade-forandringar-eget-kapital"
+
+[[variable]]
+native_id = "168.4819"
+slug = "ovriga-kostnader"
+
+[[variable]]
+native_id = "168.4820"
+slug = "intakter-av-handel"
+
+[[variable]]
+native_id = "168.4821"
+slug = "intakter-av-industri"
+
+[[variable]]
+native_id = "168.4822"
+slug = "intakter-av-ovrigt"
+
+[[variable]]
+native_id = "168.4823"
+slug = "intakter-fran-provision"
+
+[[variable]]
+native_id = "168.4826"
+slug = "internleveranser-ravaror-halvfabrikat"
+
+[[variable]]
+native_id = "168.4827"
+slug = "internleveranser-egenproducerade-varor"
+
+[[variable]]
+native_id = "168.4828"
+slug = "internleveranser-handelsvaror-tjanster"
+
+[[variable]]
+native_id = "168.4829"
+slug = "interna-kop-av-ravaror"
+
+[[variable]]
+native_id = "168.4830"
+slug = "interna-kop-egenproducerade-varor"
+
+[[variable]]
+native_id = "168.4831"
+slug = "interna-kop-handelsvaror"
+
+[[variable]]
+native_id = "168.4832"
+slug = "intakter-fran-fardiga-varor-annan"
+
+[[variable]]
+native_id = "168.4833"
+slug = "interna-kop-av-tjanster"
+
+[[variable]]
+native_id = "168.4834"
+slug = "nettoinvesteringar-maskiner-inventarier"
+
+[[variable]]
+native_id = "168.4836"
+slug = "personalkostnader"
+
+[[variable]]
+native_id = "168.4872"
+slug = "forbrukningsvarde"
+
+[[variable]]
+native_id = "168.4873"
+slug = "produktionsvarde"
+
+[[variable]]
+native_id = "168.5024"
+slug = "totala-kostnader"
+
+[[variable]]
+native_id = "168.5028"
+slug = "nettoomsattning-justerad-merchanting"
+
+[[variable]]
+native_id = "168.5487"
+slug = "sysselsatta-rams"
+
+[[variable]]
+native_id = "168.5616"
+slug = "totala-intakter-mm"
+
+[[variable]]
+native_id = "168.5619"
+slug = "summa-ravaror-handelsvaror-merchanting"
+
+[[variable]]
+native_id = "168.6392"
+slug = "antal-sysselsatta"
+
+[[variable]]
+native_id = "168.15169"
+slug = "bransch"
+
+[[variable]]
+native_id = "168.16443"
+slug = "legoarbeten-underentreprenorer"
+
+[[variable]]
+native_id = "168.16558"
+slug = "kostnader-handelsvaror-merchanting"
+
+[[variable]]
+native_id = "168.19656"
+slug = "sociala-kostnader-personalkostnader"
+
+[[variable]]
+native_id = "168.19657"
+slug = "ovriga-rorelsekostnader"
+
+[[variable]]
+native_id = "168.19658"
+slug = "summa-av-och-nedskrivningar"
+
+[[variable]]
+native_id = "168.19951"
+slug = "bruttoinvesteringar-byggnader-mark"
+
+[[variable]]
+native_id = "168.19953"
+slug = "bruttoinvesteringar-kopta-byggnader-mark"
+
+[[variable]]
+native_id = "168.19954"
+slug = "nettoinvesteringar-byggnader-mark"
+
+[[variable]]
+native_id = "168.30117"
+slug = "langfristiga-fordringar-koncern"
+
+[[variable]]
+native_id = "168.36104"
+slug = "ovriga-kostnader-2"
+
+# register 176 (livsmedelsforsaljning)
+
+[[variable]]
+native_id = "168.19052.ngs-ej-aktuell"
+slug = "naringsgren-statistiken"
+
+[[variable]]
+native_id = "168.4027.nglve"
+slug = "naringsgren-3"
+
+[[variable]]
+native_id = "168.4027.ngs-ej-aktuell"
+slug = "naringsgren-2"
+
+# register 176 (livsmedelsforsaljning)
+
+[[variable]]
+native_id = "168.14"
+slug = "cfar-nummer"
+
+[[variable]]
+native_id = "168.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "168.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "168.666"
+slug = "anstallda-storleksklass"
+
+[[variable]]
+native_id = "168.834"
+slug = "antal-lokala-ve"
+
+[[variable]]
+native_id = "168.919"
+slug = "foretagsenhetens-status"
+
+[[variable]]
+native_id = "168.925"
+slug = "antal-juridiska-enheter"
+
+[[variable]]
+native_id = "168.941"
+slug = "antal-ve"
+
+[[variable]]
+native_id = "168.971"
+slug = "aktiekapital"
+
+[[variable]]
+native_id = "168.1133"
+slug = "privat-publikt-foretag"
+
+[[variable]]
+native_id = "168.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "168.1810"
+slug = "imputerad"
+
+[[variable]]
+native_id = "168.4065"
+slug = "maskiner-och-inventarier"
+
+[[variable]]
+native_id = "168.4157"
+slug = "nettoinvesteringar-i-aktier"
+
+[[variable]]
+native_id = "168.4179"
+slug = "bruttoinv-ny-ombygg-byggnader-mark"
+
+[[variable]]
+native_id = "168.4204"
+slug = "forutbetalda-kostnader-upplupna-intakter"
+
+[[variable]]
+native_id = "168.4205"
+slug = "kassa-och-bank"
+
+[[variable]]
+native_id = "168.4206"
+slug = "kundfordringar"
+
+[[variable]]
+native_id = "168.4207"
+slug = "anlaggningstillgangar"
+
+[[variable]]
+native_id = "168.4208"
+slug = "finansiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "168.4209"
+slug = "summa-immateriella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "168.4210"
+slug = "summa-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "168.4211"
+slug = "summa-kortfristiga-placeringar"
+
+[[variable]]
+native_id = "168.4212"
+slug = "summa-materiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "168.4213"
+slug = "summa-omsattningstillgangar"
+
+[[variable]]
+native_id = "168.4214"
+slug = "summa-tillgangar"
+
+[[variable]]
+native_id = "168.4216"
+slug = "ovriga-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "168.4217"
+slug = "ovriga-kortfristiga-placeringar"
+
+[[variable]]
+native_id = "168.4218"
+slug = "forskott-anlaggningstillgangar"
+
+[[variable]]
+native_id = "168.4225"
+slug = "avsattningar-for-garantier"
+
+[[variable]]
+native_id = "168.4226"
+slug = "avsattningar-for-pensioner"
+
+[[variable]]
+native_id = "168.4227"
+slug = "forskott-fran-kunder"
+
+[[variable]]
+native_id = "168.4228"
+slug = "leverantorsskulder"
+
+[[variable]]
+native_id = "168.4229"
+slug = "skatteskulder"
+
+[[variable]]
+native_id = "168.4230"
+slug = "avsattningar"
+
+[[variable]]
+native_id = "168.4231"
+slug = "uppskrivningsfond"
+
+[[variable]]
+native_id = "168.4232"
+slug = "overkursfond"
+
+[[variable]]
+native_id = "168.4233"
+slug = "ovrigt-bundet-eget-kapital"
+
+[[variable]]
+native_id = "168.4234"
+slug = "ovrigt-fritt-eget-kapital"
+
+[[variable]]
+native_id = "168.4243"
+slug = "ovriga-avsattningar"
+
+[[variable]]
+native_id = "168.4244"
+slug = "ovriga-kortfristiga-skulder"
+
+[[variable]]
+native_id = "168.4245"
+slug = "ovriga-obeskattade-reserver"
+
+[[variable]]
+native_id = "168.4247"
+slug = "eget-kapital-och-skulder"
+
+[[variable]]
+native_id = "168.4248"
+slug = "summa-kortfristiga-skulder"
+
+[[variable]]
+native_id = "168.4249"
+slug = "summa-langfristiga-skulder"
+
+[[variable]]
+native_id = "168.4250"
+slug = "summa-obeskattade-reserver"
+
+[[variable]]
+native_id = "168.4251"
+slug = "upplupna-kostnader-forutbetalda-intakter"
+
+[[variable]]
+native_id = "168.4258"
+slug = "avskrivningar-byggnader-fast-egendom"
+
+[[variable]]
+native_id = "168.4259"
+slug = "avskrivningar-immateriella-tillgangar"
+
+[[variable]]
+native_id = "168.4260"
+slug = "avskrivningar-maskiner-inventarier"
+
+[[variable]]
+native_id = "168.4270"
+slug = "summa-personalkostnader"
+
+[[variable]]
+native_id = "168.4280"
+slug = "resultat-efter-finansiella-poster"
+
+[[variable]]
+native_id = "168.4282"
+slug = "utdelning-aktier-andelar-ovriga-foretag"
+
+[[variable]]
+native_id = "168.4283"
+slug = "valutakursvinster"
+
+[[variable]]
+native_id = "168.4284"
+slug = "valutakursforluster"
+
+[[variable]]
+native_id = "168.4285"
+slug = "ranteintakter-fran-ovriga"
+
+[[variable]]
+native_id = "168.4286"
+slug = "rantekostnader-till-ovriga"
+
+[[variable]]
+native_id = "168.4288"
+slug = "forandring-periodiseringsfond"
+
+[[variable]]
+native_id = "168.4289"
+slug = "koncernbidrag-bokslutsdispositioner"
+
+[[variable]]
+native_id = "168.4290"
+slug = "aktieagartillskott-bokslutsdispositioner"
+
+[[variable]]
+native_id = "168.4291"
+slug = "ovriga-bokslutsdispositioner"
+
+[[variable]]
+native_id = "168.4293"
+slug = "eget-kapital-hb-kb"
+
+[[variable]]
+native_id = "168.4296"
+slug = "mark"
+
+[[variable]]
+native_id = "168.4297"
+slug = "byggnader"
+
+[[variable]]
+native_id = "168.4300"
+slug = "utdelning-aktier-andelar-koncern"
+
+[[variable]]
+native_id = "168.4301"
+slug = "aktier-svenska-koncern-intresse"
+
+[[variable]]
+native_id = "168.4302"
+slug = "aktier-utlandska-koncern-intresse"
+
+[[variable]]
+native_id = "168.4304"
+slug = "ranteintakter-koncernforetag"
+
+[[variable]]
+native_id = "168.4305"
+slug = "rantekostnader-koncernforetag"
+
+[[variable]]
+native_id = "168.4306"
+slug = "ovriga-finansiella-intakter"
+
+[[variable]]
+native_id = "168.4307"
+slug = "ovriga-finansiella-kostnader"
+
+[[variable]]
+native_id = "168.4309"
+slug = "aktier-och-andelar"
+
+[[variable]]
+native_id = "168.4310"
+slug = "ackumulerade-overavskrivningar"
+
+[[variable]]
+native_id = "168.4317"
+slug = "skattekostnader"
+
+[[variable]]
+native_id = "168.4327"
+slug = "redovisat-resultat"
+
+[[variable]]
+native_id = "168.4339"
+slug = "imputerat-varde-kostnader-ravaror"
+
+[[variable]]
+native_id = "168.4843"
+slug = "loner-och-andra-ersattningar"
+
+[[variable]]
+native_id = "168.4863"
+slug = "summa-ravaror-handelsvaror"
+
+[[variable]]
+native_id = "168.5021"
+slug = "avsattningar-for-skatter"
+
+[[variable]]
+native_id = "168.5635"
+slug = "ovriga-intakter"
+
+[[variable]]
+native_id = "168.16523"
+slug = "rantekostnader"
+
+[[variable]]
+native_id = "168.16965"
+slug = "antal-manader-bokslut"
+
+[[variable]]
+native_id = "168.18732"
+slug = "ranteintakter"
+
+[[variable]]
+native_id = "168.19556"
+slug = "extraordinara-intakter"
+
+[[variable]]
+native_id = "168.19558"
+slug = "extraordinara-kostnader"
+
+[[variable]]
+native_id = "168.19560"
+slug = "bokslutsdispositioner"
+
+[[variable]]
+native_id = "168.19918"
+slug = "andelar-koncernforetag"
+
+[[variable]]
+native_id = "168.19919"
+slug = "andelar-intresseforetag"
+
+[[variable]]
+native_id = "168.19939"
+slug = "byggnader-mark-markanlaggningar"
+
+[[variable]]
+native_id = "168.19945"
+slug = "andra-langfristiga-fordringar"
+
+[[variable]]
+native_id = "168.19948"
+slug = "resultat-fran-andelar-i-intresseforetag"
+
+[[variable]]
+native_id = "168.19952"
+slug = "fga1411"
+
+[[variable]]
+native_id = "168.20902"
+slug = "bundet-eget-kapital"
+
+[[variable]]
+native_id = "168.30116"
+slug = "kortfristiga-fordringar-koncern"
+
+[[variable]]
+native_id = "168.30118"
+slug = "ovriga-langfristiga-skulder"
+
+[[variable]]
+native_id = "168.31997"
+slug = "typ-av-uppgift"
+
+[[variable]]
+native_id = "168.36445"
+slug = "inkop-varor-tjanster-totalt"
+
+# register 176
+
+[[variable]]
+native_id = "168.19052.ngs"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "168.4027.ng"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "168.KassaOchBank"
+slug = "kassa-och-bank-2"
+
+[[variable]]
+native_id = "168.Leverantorsskulder"
+slug = "leverantorsskulder-2"
+
+[[variable]]
+native_id = "168.MaskinerOchInventarier"
+slug = "maskiner-och-inventarier-2"
+
+[[variable]]
+native_id = "168.RedovisatResultat"
+slug = "redovisat-arsresultat"
+
+[[variable]]
+native_id = "168.Skattekostnader"
+slug = "skatt"
+
+[[variable]]
+native_id = "168.SummaKortfristigaFordringar"
+slug = "summa-kortfristiga-fordringar-2"
+
+[[variable]]
+native_id = "168.SummaKortfristigaPlaceringar"
+slug = "summa-kortfristiga-placeringar-2"
+
+[[variable]]
+native_id = "168.SummaKortfristigaSkulder"
+slug = "summa-kortfristiga-skulder-2"
+
+[[variable]]
+native_id = "168.SummaLangfristigaSkulder"
+slug = "summa-langfristiga-skulder-2"
+
+[[variable]]
+native_id = "168.SummaMateriellaAnlaggningstillgangar"
+slug = "summa-materiella-anlaggningstillgangar-2"
+
+[[variable]]
+native_id = "168.SummaObeskattadeReserver"
+slug = "summa-obeskattade-reserver-2"
+
+[[variable]]
+native_id = "168.SummaOmsattningstillgangar"
+slug = "summa-omsattningstillgangar-2"
+
+[[variable]]
+native_id = "168.SummaPersonalkostnader"
+slug = "summa-personalkostnader-2"
+
+[[variable]]
+native_id = "168.SummaTillgangar"
+slug = "summa-tillgangar-2"
+
+# register 176

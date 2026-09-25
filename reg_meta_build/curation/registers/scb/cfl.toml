@@ -1,0 +1,112 @@
+[register]
+provider = "scb"
+slug = "cfl"
+native_id = "251"
+
+[[variant]]
+native_id = "251.501"
+slug = "kursdeltagare"
+display_group = "Kursdeltagare"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "251.1507"
+slug = "elever"
+display_group = "Elever"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Skörd av potatis
+
+[[variable]]
+native_id = "251.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "251.14642"
+slug = "niva-vuxenutbildning"
+
+[[variable]]
+native_id = "251.14652"
+slug = "utbildningsatgard-vux"
+
+[[variable]]
+native_id = "251.40093"
+slug = "niva-cfl"
+
+[[variable]]
+native_id = "251.40094"
+slug = "utbildningsatgard-cfl"
+
+# register 253 (rakenskapssammandrag)
+
+[[variable]]
+native_id = "251.73"
+slug = "ar"
+
+[[variable]]
+native_id = "251.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "251.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "251.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "251.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "251.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "251.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "251.8557"
+slug = "utbildningsanordnare"
+
+[[variable]]
+native_id = "251.14651"
+slug = "avklarade-undervisningstimmar"
+
+[[variable]]
+native_id = "251.14655"
+slug = "kursstart"
+
+[[variable]]
+native_id = "251.14656"
+slug = "kursslut"
+
+[[variable]]
+native_id = "251.14657"
+slug = "datumavbrott"
+
+[[variable]]
+native_id = "251.14658"
+slug = "typ-av-undervisning"
+
+[[variable]]
+native_id = "251.32756"
+slug = "nyinskriven-elev"
+
+[[variable]]
+native_id = "251.40049"
+slug = "avslutad-kurs"
+
+[[variable]]
+native_id = "251.40103"
+slug = "utbildningsform"
+
+# register 252

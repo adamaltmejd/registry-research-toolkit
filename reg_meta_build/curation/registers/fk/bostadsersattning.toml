@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "bostadsersattning"
+native_id = "6540524901503254771"
+
+[[variant]]
+native_id = "6540524901503254771.5937192435242425286"
+slug = "_default"
+display_group = "Bostadsersättning"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Bostadstillägg
+
+[[variable]]
+native_id = "6540524901503254771.personnummer"
+slug = "lopnr-personnr"

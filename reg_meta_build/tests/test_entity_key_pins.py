@@ -12,6 +12,7 @@ slug dir under tmp_path; never reads the shipped fqid_slugs TOMLs."""
 from __future__ import annotations
 
 import json
+import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -27,10 +28,8 @@ from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
     EntityKeyPin,
-    _curated_variable_slugs,
     infer_entity_key_pins,
     iter_entity_key_variables,
-    load_provider_toml,
     populate_variable_slugs,
     render_entity_key_pins_toml,
     write_entity_key_pins,
@@ -38,6 +37,26 @@ from reg_meta_build.fqid_slugs import (
 
 if TYPE_CHECKING:
     import sqlite3
+
+
+def _global_pin_file(
+    root: Path, provider: str, register: str, native_id: str, body: str
+) -> Path:
+    path = root / "registers" / provider / f"{register}.toml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        f'[register]\nprovider = "{provider}"\nslug = "{register}"\nnative_id = "{native_id}"\n'
+        + body,
+        encoding="utf-8",
+    )
+    return path
+
+
+def _pin_values(path: Path) -> dict[str, str]:
+    return {
+        row["native_id"]: row["slug"]
+        for row in tomllib.loads(path.read_text())["variable"]
+    }
 
 
 def _db_with_entity_key(entity_key: str | list[str]) -> sqlite3.Connection:
@@ -302,10 +321,8 @@ class TestGenerator:
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
         toml = render_entity_key_pins_toml(pins)
         reparse_dir = tmp_path / "reparse"
-        reparse_dir.mkdir()
-        (reparse_dir / "scb.toml").write_text(toml, encoding="utf-8")
-        curated = _curated_variable_slugs(load_provider_toml(reparse_dir / "scb.toml"))
-        assert curated == {("scb", "1.44"): "kon", ("scb", "1.99"): "ar"}
+        path = _global_pin_file(reparse_dir, "scb", "lisa", "1", toml)
+        assert _pin_values(path) == {"1.44": "kon", "1.99": "ar"}
 
     def test_emitted_toml_populates_variable_slug(self, tmp_path: Path):
         """End-to-end round-trip: the rendered pin, loaded back, makes
@@ -322,8 +339,7 @@ class TestGenerator:
         fresh.execute("UPDATE variable SET slug = NULL")
         fresh.commit()
         slug_dir = tmp_path / "apply"
-        slug_dir.mkdir()
-        (slug_dir / "scb.toml").write_text(toml, encoding="utf-8")
+        _global_pin_file(slug_dir, "scb", "lisa", "1", toml)
         populate_variable_slugs(fresh, slug_dir)
         kon = fresh.execute(
             "SELECT slug FROM variable WHERE register_id = 1 AND provider_key = '44'"
@@ -355,8 +371,7 @@ class TestGenerator:
         # to `lopnr`, leaving its `kon` sibling untouched.
         fresh = _db_with_split_sibling_entity_key(entity_key_slug=None)
         slug_dir = tmp_path / "apply"
-        slug_dir.mkdir()
-        (slug_dir / "scb.toml").write_text(toml, encoding="utf-8")
+        _global_pin_file(slug_dir, "scb", "lisa", "1", toml)
         populate_variable_slugs(fresh, slug_dir)
         slugs = dict(
             fresh.execute(
@@ -412,7 +427,7 @@ class TestGenerator:
         assert "(#546, #554)" in default
         assert "Scope: ALL" in default
         assert "--out-dir /tmp/pins/" in default
-        assert "into fqid_slugs/<provider>.toml" in default
+        assert "matching register file" in default
         # ...and the steward-only markers are absent from the global header.
         assert "--flavored" not in default
         assert "fqid_slugs/<steward>/" not in default
@@ -715,12 +730,14 @@ class TestGenerator:
         )
         assert code == 0
         assert data["counts"] == {"scb": 1, "sos": 1}
-        assert set(data["files"]) == {"scb", "sos"}
+        assert set(data["files"]) == {"scb/lisa", "sos/dors"}
         # Each file re-parses to exactly its own provider's pin.
-        scb_curated = _curated_variable_slugs(load_provider_toml(out_dir / "scb.toml"))
-        sos_curated = _curated_variable_slugs(load_provider_toml(out_dir / "sos.toml"))
-        assert scb_curated == {("scb", "1.44"): "kon"}
-        assert sos_curated == {("sos", "500.LOPNR"): "lopnr"}
+        assert _pin_values(out_dir / "registers" / "scb" / "lisa.toml") == {
+            "1.44": "kon"
+        }
+        assert _pin_values(out_dir / "registers" / "sos" / "dors.toml") == {
+            "500.LOPNR": "lopnr"
+        }
 
     def test_counts_present_in_no_target_and_output_toml_modes(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -786,11 +803,14 @@ class TestGenerator:
         ]
         out_dir = tmp_path / "pins"
         written = write_entity_key_pins(pins, out_dir)
-        assert set(written) == {"scb", "sos"}
-        scb_curated = _curated_variable_slugs(load_provider_toml(out_dir / "scb.toml"))
-        sos_curated = _curated_variable_slugs(load_provider_toml(out_dir / "sos.toml"))
-        assert scb_curated == {("scb", "1.44"): "kon", ("scb", "1.99"): "ar"}
-        assert sos_curated == {("sos", "500.LOPNR"): "lopnr"}
+        assert set(written) == {"scb/lisa", "sos/dors"}
+        assert _pin_values(out_dir / "registers" / "scb" / "lisa.toml") == {
+            "1.44": "kon",
+            "1.99": "ar",
+        }
+        assert _pin_values(out_dir / "registers" / "sos" / "dors.toml") == {
+            "500.LOPNR": "lopnr"
+        }
 
     def test_overwrite_guard_refuses_without_force(self, tmp_path: Path):
         """A non-empty `out_dir` (any `*.toml`) refuses without `force`, then
@@ -811,9 +831,10 @@ class TestGenerator:
         assert exc.value.code == "entity_key_pins_would_overwrite"
 
         written = write_entity_key_pins([pin], out_dir, force=True)
-        assert set(written) == {"scb"}
-        curated = _curated_variable_slugs(load_provider_toml(out_dir / "scb.toml"))
-        assert curated == {("scb", "1.44"): "kon"}
+        assert set(written) == {"scb/lisa"}
+        assert _pin_values(out_dir / "registers" / "scb" / "lisa.toml") == {
+            "1.44": "kon"
+        }
 
     def test_out_dir_and_output_toml_mutually_exclusive(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

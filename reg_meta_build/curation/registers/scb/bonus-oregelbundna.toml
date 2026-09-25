@@ -1,0 +1,119 @@
+[register]
+provider = "scb"
+slug = "bonus-oregelbundna"
+native_id = "269"
+
+[[variant]]
+native_id = "269.637"
+slug = "_default"
+display_group = "Bonus och andra oregelbundna ersättningar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Förtroendevalda i kommuner och landsting
+
+[[variable]]
+native_id = "269.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "269.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "269.462"
+slug = "stratum"
+
+[[variable]]
+native_id = "269.1839"
+slug = "orgnr"
+
+# register 270 (fortroendevalda)
+
+[[variable]]
+native_id = "269.120"
+slug = "yrkesuppgift"
+
+[[variable]]
+native_id = "269.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "269.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "269.905"
+slug = "lon-enligt-kontrolluppgifterna"
+
+[[variable]]
+native_id = "269.2688"
+slug = "prestationslon"
+
+[[variable]]
+native_id = "269.3098"
+slug = "faktiskt-arbetad-tid"
+
+[[variable]]
+native_id = "269.3117"
+slug = "personalkategori"
+
+[[variable]]
+native_id = "269.3582"
+slug = "stora-n"
+
+[[variable]]
+native_id = "269.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "269.4031"
+slug = "storleksklass-pa-foretag"
+
+[[variable]]
+native_id = "269.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "269.4614"
+slug = "urvalsstorlek-per-stratum"
+
+[[variable]]
+native_id = "269.5543"
+slug = "lopnummer"
+
+[[variable]]
+native_id = "269.5614"
+slug = "lonesumma-jour-beredskap"
+
+[[variable]]
+native_id = "269.5622"
+slug = "lonesumma-skift-ob"
+
+[[variable]]
+native_id = "269.5719"
+slug = "antal-overtidstimmar"
+
+[[variable]]
+native_id = "269.7146"
+slug = "bonusar"
+
+[[variable]]
+native_id = "269.8160"
+slug = "styrkod-observation"
+
+[[variable]]
+native_id = "269.8162"
+slug = "antal-svarande-enheter"
+
+[[variable]]
+native_id = "269.16335"
+slug = "overtidsersattning"
+
+[[variable]]
+native_id = "269.16336"
+slug = "organisationsidentitet"
+
+# register 270

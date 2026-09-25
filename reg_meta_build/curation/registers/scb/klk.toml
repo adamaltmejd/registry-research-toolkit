@@ -6,3 +6,74 @@ native_id = "89"
 [[code_label_pair]]
 code = "scb/klk/kommun"
 label = "scb/klk/kommunnamn"
+
+[[variant]]
+native_id = "89.164"
+slug = "_default"
+display_group = "Konjunkturstatistik, löner för kommuner"
+panel_entity_key = "orgnr"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+# Konjunkturstatistik, löner för regioner (KLR)
+
+[[variable]]
+native_id = "89.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "89.2533"
+slug = "kod-insandningssatt"
+
+[[variable]]
+native_id = "89.19066"
+slug = "arsarbetstid"
+
+# register 90 (klr)
+
+[[variable]]
+native_id = "89.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "89.446"
+slug = "kommunnamn"
+
+[[variable]]
+native_id = "89.2522"
+slug = "antal-arbetade-timmar-manadsavlonade"
+
+[[variable]]
+native_id = "89.2524"
+slug = "antal-arbetade-timmar-timavlonade"
+
+[[variable]]
+native_id = "89.2525"
+slug = "anstallningsavtal"
+
+[[variable]]
+native_id = "89.3081"
+slug = "imputering"
+
+[[variable]]
+native_id = "89.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "89.5061"
+slug = "antal-heltidsanstallda"
+
+[[variable]]
+native_id = "89.5071"
+slug = "antal-deltidsanstallda"
+
+[[variable]]
+native_id = "89.5074"
+slug = "antal-timanstallda"
+
+[[variable]]
+native_id = "89.5735"
+slug = "avtalad-veckoarbetstid"
+
+# register 90

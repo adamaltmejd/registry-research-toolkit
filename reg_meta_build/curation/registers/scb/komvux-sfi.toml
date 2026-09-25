@@ -10,3 +10,231 @@ label = "scb/komvux-sfi/kommunalforbund-namn"
 [[code_label_pair]]
 code = "scb/komvux-sfi/kommunalforbund-id-2"
 label = "scb/komvux-sfi/kommunalforbund-namn-2"
+
+[[variant]]
+native_id = "248.496"
+slug = "kursdeltagare"
+display_group = "Kursdeltagare och utbildningsresultat"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "248.994"
+slug = "nationella-prov-resultat"
+display_group = "Nationella prov: resultat"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Kommunal vuxenutbildning
+
+[[variable]]
+native_id = "248.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "248.49"
+slug = "lan"
+
+[[variable]]
+native_id = "248.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "248.66"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "248.73"
+slug = "ar"
+
+[[variable]]
+native_id = "248.104"
+slug = "skolkod"
+
+[[variable]]
+native_id = "248.1396"
+slug = "lasar"
+
+[[variable]]
+native_id = "248.8006"
+slug = "verksamhetsform-skolvasendet"
+
+[[variable]]
+native_id = "248.8557"
+slug = "utbildningsanordnare"
+
+[[variable]]
+native_id = "248.14672"
+slug = "kurs"
+
+[[variable]]
+native_id = "248.14677"
+slug = "antal-timmar-i-praktik"
+
+[[variable]]
+native_id = "248.15724"
+slug = "grund-for-bosattning-grupperad"
+
+[[variable]]
+native_id = "248.17221"
+slug = "provtyp"
+
+[[variable]]
+native_id = "248.28321"
+slug = "antal-veckor-i-praktik"
+
+[[variable]]
+native_id = "248.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "248.29437"
+slug = "provtyp-enligt-skollagen"
+
+[[variable]]
+native_id = "248.32756"
+slug = "nyinskriven-elev"
+
+[[variable]]
+native_id = "248.37468"
+slug = "typ-av-kurs"
+
+[[variable]]
+native_id = "248.48201"
+slug = "nyinskriven"
+
+# register 249 (komvux)
+
+[[variable]]
+native_id = "248.14815.skolkommun"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "248.29140.beth"
+slug = "sfi-prov-betyg-hor"
+
+[[variable]]
+native_id = "248.29140.betl"
+slug = "sfi-prov-betyg-las"
+
+[[variable]]
+native_id = "248.29140.bets"
+slug = "sfi-prov-betyg-skrift"
+
+[[variable]]
+native_id = "248.29140.bett"
+slug = "sfi-prov-betyg-tal"
+
+[[variable]]
+native_id = "248.36.skolkommun"
+slug = "skolenhet-kommun"
+
+[[variable]]
+native_id = "248.49446.beth"
+slug = "sfi-prov-poang-hor"
+
+[[variable]]
+native_id = "248.49446.betl"
+slug = "sfi-prov-poang-las"
+
+[[variable]]
+native_id = "248.49446.bets"
+slug = "sfi-prov-poang-skrift"
+
+[[variable]]
+native_id = "248.49446.bett"
+slug = "sfi-prov-poang-tal"
+
+# register 249 (komvux)
+
+[[variable]]
+native_id = "248.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "248.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "248.254"
+slug = "folkbokforingsdatum"
+
+[[variable]]
+native_id = "248.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "248.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "248.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "248.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "248.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "248.14671"
+slug = "studievag-sfi"
+
+[[variable]]
+native_id = "248.14673"
+slug = "undervisningstimmar-sfi"
+
+[[variable]]
+native_id = "248.14674"
+slug = "orsak-kursavbrott-sfi"
+
+[[variable]]
+native_id = "248.14678"
+slug = "typ-av-invandring"
+
+[[variable]]
+native_id = "248.29141"
+slug = "provversion"
+
+[[variable]]
+native_id = "248.32721"
+slug = "distansundervisning"
+
+[[variable]]
+native_id = "248.39039"
+slug = "personens-namn"
+
+# register 249
+
+[[variable]]
+native_id = "248.257.fodelselandnamn"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "248.38417.gyfid"
+slug = "kommunalforbund-id"
+
+[[variable]]
+native_id = "248.38417.gyfnamn"
+slug = "kommunalforbund-namn"
+
+[[variable]]
+native_id = "248.38417.kfid"
+slug = "kommunalforbund-id-2"
+
+[[variable]]
+native_id = "248.38417.kfnamn"
+slug = "kommunalforbund-namn-2"
+
+[[variable]]
+native_id = "248.8534.komgrupp17"
+slug = "kommungrupp-kod"
+
+# register 249

@@ -11,3 +11,218 @@ key = "personnrf"
 label = "Personnummer förälder"
 axis = "ordinal"
 members = [{ variable = "personnrf1", value = "1", label = "1" }, { variable = "personnrf2", value = "2", label = "2" }]
+
+[[variant]]
+native_id = "349.1177"
+slug = "folkbokforda-biologiska"
+display_group = "Folkbokförda personer med kopplingar till biologiska föräldrar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "349.1178"
+slug = "folkbokforda-adoptivforaldrar"
+display_group = "Folkbokförda personer med kopplingar till adoptivföräldrar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "349.1179"
+slug = "barns-ordningsnummer"
+display_group = "Barns ordningsnummer"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: personnummer has no states here; the row entity is the biological parent
+# pair (personnrfar, personnrmor).
+
+[[variant]]
+native_id = "349.1180"
+slug = "antal-barn"
+display_group = "Antal barn"
+panel_entity_key = ["personnr-far", "personnr-mor"]
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "349.1482"
+slug = "personakter-avlidna"
+display_group = "Personakter för avlidna personer"
+panel_entity_key = "personnr-avliden"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "349.1483"
+slug = "personakt-aktenskap"
+display_group = "Personakt - Äktenskap"
+panel_entity_key = "personnr-avliden"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "349.1484"
+slug = "personakt-barn"
+display_group = "Personakt - Barn"
+panel_entity_key = "personnr-barn"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: panel keys removed — personnummer has no states here; the personakt rows
+# register no person id (only Omg/Postnr).
+
+[[variant]]
+native_id = "349.1485"
+slug = "personakt-flyttning"
+display_group = "Personakt - Flyttning"
+
+# Grönytor i och omkring tätorter
+
+[[variable]]
+native_id = "349.323"
+slug = "personnr-far"
+
+
+[[variable]]
+native_id = "349.324"
+slug = "personnr-mor"
+
+
+[[variable]]
+native_id = "349.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "349.39445"
+slug = "personnr-avliden"
+
+
+[[variable]]
+native_id = "349.39481"
+slug = "personnr-barn"
+
+
+[[variable]]
+native_id = "349.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "349.304"
+slug = "fodelselandnamnfar"
+
+[[variable]]
+native_id = "349.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "349.327"
+slug = "efternamn"
+
+[[variable]]
+native_id = "349.398"
+slug = "fornamn"
+
+[[variable]]
+native_id = "349.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "349.21766"
+slug = "antal-biologiska-barn-mor"
+
+[[variable]]
+native_id = "349.21780"
+slug = "syskonordnr-far"
+
+[[variable]]
+native_id = "349.24372"
+slug = "syskonordnr-mor"
+
+[[variable]]
+native_id = "349.31003"
+slug = "antal-biologiska-barn-far"
+
+[[variable]]
+native_id = "349.39419"
+slug = "fodelseort"
+
+[[variable]]
+native_id = "349.39457"
+slug = "efternamn-maka-make"
+
+[[variable]]
+native_id = "349.39458"
+slug = "fornamn-maka-make"
+
+[[variable]]
+native_id = "349.39459"
+slug = "fodelseort-maka-make"
+
+[[variable]]
+native_id = "349.39483"
+slug = "fodelseland-barn"
+
+[[variable]]
+native_id = "349.39494"
+slug = "fornamn-barn"
+
+[[variable]]
+native_id = "349.39495"
+slug = "efternamn-barn"
+
+[[variable]]
+native_id = "349.39506"
+slug = "fodelseland-mor-personakt"
+
+[[variable]]
+native_id = "349.39507"
+slug = "fodelseland-far-personakt"
+
+# register 350 (gronytor-tatorter)
+
+[[variable]]
+native_id = "349.366"
+slug = "datum-adoptivfar"
+
+[[variable]]
+native_id = "349.367"
+slug = "datum-adoptivmor"
+
+[[variable]]
+native_id = "349.379"
+slug = "personnr-adoptivfar"
+
+[[variable]]
+native_id = "349.380"
+slug = "personnr-adoptivmor"
+
+[[variable]]
+native_id = "349.8002"
+slug = "ateranvant-personnr"
+
+[[variable]]
+native_id = "349.14610"
+slug = "adopterad"
+
+[[variable]]
+native_id = "349.23477"
+slug = "yrke"
+
+[[variable]]
+native_id = "349.29578"
+slug = "medborgarskap"
+
+[[variable]]
+native_id = "349.39448"
+slug = "utvandringsland-personakt"
+
+# register 350

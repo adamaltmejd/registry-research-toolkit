@@ -1,0 +1,63 @@
+[register]
+provider = "scb"
+slug = "aktieagarstatistik"
+native_id = "330"
+
+[[variant]]
+native_id = "330.1070"
+slug = "_default"
+display_group = "Aktieägarstatistik"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Barnregistret
+
+[[variable]]
+native_id = "330.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "330.27200"
+slug = "agandetyp"
+
+[[variable]]
+native_id = "330.27405"
+slug = "emitterade-vardepapper"
+
+# register 333 (breg)
+
+[[variable]]
+native_id = "330.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "330.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "330.26047"
+slug = "antal-aktier"
+
+[[variable]]
+native_id = "330.26911"
+slug = "markering-borslista"
+
+[[variable]]
+native_id = "330.28744"
+slug = "vardepapperstyp"
+
+[[variable]]
+native_id = "330.28808"
+slug = "referensperiod"
+
+[[variable]]
+native_id = "330.28852"
+slug = "marknadspris"
+
+[[variable]]
+native_id = "330.41711"
+slug = "foretagets-bransch-naringsgren"
+
+# register 333

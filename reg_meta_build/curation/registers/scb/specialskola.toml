@@ -14,3 +14,287 @@ label = "scb/specialskola/skolenhetens-namn"
 [[code_label_pair]]
 code = "scb/specialskola/skolkod"
 label = "scb/specialskola/skolans-namn"
+
+[[variant]]
+native_id = "344.1143"
+slug = "betyg-ak10"
+display_group = "Betyg åk 10"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "344.1145"
+slug = "elever"
+display_group = "Elever"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Hushållens boende
+
+[[variable]]
+native_id = "344.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "344.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "344.304"
+slug = "fodelselandnamnfar"
+
+[[variable]]
+native_id = "344.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "344.1554"
+slug = "ar-termin-aktiviteten"
+
+[[variable]]
+native_id = "344.1579"
+slug = "termin"
+
+[[variable]]
+native_id = "344.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "344.3592"
+slug = "antal-amnen-godkand"
+
+[[variable]]
+native_id = "344.3626"
+slug = "sva"
+
+[[variable]]
+native_id = "344.4642"
+slug = "faderns-fodelseland"
+
+[[variable]]
+native_id = "344.4643"
+slug = "moderns-fodelseland"
+
+[[variable]]
+native_id = "344.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "344.7817"
+slug = "deltagit-sva"
+
+[[variable]]
+native_id = "344.7914"
+slug = "arskurs"
+
+[[variable]]
+native_id = "344.30654"
+slug = "skolenhetens-namn"
+
+[[variable]]
+native_id = "344.35887"
+slug = "nyligen-invandrad"
+
+[[variable]]
+native_id = "344.39019"
+slug = "nyinvandring"
+
+[[variable]]
+native_id = "344.40842"
+slug = "kursplan-grundsarskola"
+
+[[variable]]
+native_id = "344.48467"
+slug = "anpassad-grundskola-kursplan"
+
+# register 349 (flergenreg)
+
+[[variable]]
+native_id = "344.30653.antal-ettor"
+slug = "minst-ett-godkant-betyg"
+
+[[variable]]
+native_id = "344.3594.antal-ettor"
+slug = "antal-ettor"
+
+# register 351 (piaac)
+
+[[variable]]
+native_id = "344.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "344.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "344.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "344.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "344.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "344.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "344.3599"
+slug = "betyg-bild"
+
+[[variable]]
+native_id = "344.3619"
+slug = "blockbetyg-no-amnen"
+
+[[variable]]
+native_id = "344.3620"
+slug = "betyg-religion"
+
+[[variable]]
+native_id = "344.3621"
+slug = "betyg-samhallskunskap"
+
+[[variable]]
+native_id = "344.3622"
+slug = "betyg-slojd"
+
+[[variable]]
+native_id = "344.3624"
+slug = "blockbetyg-so-amnen"
+
+[[variable]]
+native_id = "344.3627"
+slug = "betyg-teknik"
+
+[[variable]]
+native_id = "344.3635"
+slug = "skolans-namn"
+
+[[variable]]
+native_id = "344.7814"
+slug = "atgardsprogram"
+
+[[variable]]
+native_id = "344.7816"
+slug = "anpassad-studigang"
+
+[[variable]]
+native_id = "344.15712"
+slug = "stodundervisning"
+
+[[variable]]
+native_id = "344.23867"
+slug = "klassbeteckning"
+
+[[variable]]
+native_id = "344.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "344.32721"
+slug = "distansundervisning"
+
+[[variable]]
+native_id = "344.40833"
+slug = "central-insamlingsenhet"
+
+[[variable]]
+native_id = "344.40841"
+slug = "elevens-boendeform"
+
+# register 346
+
+[[variable]]
+native_id = "344.25186.mspr1-betyg"
+slug = "moderna-sprak-elevens-val-betyg"
+
+[[variable]]
+native_id = "344.25186.mspr1-sprak"
+slug = "moderna-sprak-elevens-val-sprak"
+
+[[variable]]
+native_id = "344.30392.beht-ehs"
+slug = "behorighet-gy-ehs"
+
+[[variable]]
+native_id = "344.30392.beht-est"
+slug = "behorighet-gy-est"
+
+[[variable]]
+native_id = "344.30392.beht-nt"
+slug = "behorighet-gy-nt"
+
+[[variable]]
+native_id = "344.30392.beht-yrk"
+slug = "behorighet-gy-yrk"
+
+[[variable]]
+native_id = "344.30653.betyg"
+slug = "minst-ett-godkant-betyg-2"
+
+[[variable]]
+native_id = "344.34103.mspr2-betyg"
+slug = "moderna-sprak-sprakval-betyg"
+
+[[variable]]
+native_id = "344.34103.mspr2-sprak"
+slug = "moderna-sprak-sprakval"
+
+[[variable]]
+native_id = "344.3594.antal-f"
+slug = "antal-amnen-ej-natt"
+
+[[variable]]
+native_id = "344.3625.sv"
+slug = "betyg-svenska"
+
+[[variable]]
+native_id = "344.3629.tn"
+slug = "betyg-teckensprak"
+
+[[variable]]
+native_id = "344.8073.sun2000niva-1-mor"
+slug = "sun-niva-1-mor"
+
+[[variable]]
+native_id = "344.8073.sun2000niva-mor"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "344.8073.sun2000niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad"
+
+[[variable]]
+native_id = "344.8073.sun2000niva-old-mor"
+slug = "sun-niva-old-mor"
+
+[[variable]]
+native_id = "344.8073.sun2000niva-sv-mor"
+slug = "sun-niva-sv-mor"
+
+[[variable]]
+native_id = "344.8073.sun2020niva-mor"
+slug = "sun-niva-mor-2"
+
+[[variable]]
+native_id = "344.8073.sun2020niva-mor-grupperad"
+slug = "sun-niva-mor-grupperad-2"
+
+[[variable]]
+native_id = "344.8137.hman"
+slug = "huvudman"
+
+[[variable]]
+native_id = "344.8137.hmannamn"
+slug = "huvudman-namn"
+
+# register 351

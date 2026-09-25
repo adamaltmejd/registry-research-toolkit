@@ -1,0 +1,33 @@
+[register]
+provider = "scb"
+slug = "bpi"
+native_id = "77"
+
+[[variant]]
+native_id = "77.189"
+slug = "_default"
+display_group = "Byggnadsprisindex"
+
+# Hushållens utgifter (HUT)
+
+[[variable]]
+native_id = "77.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "77.5092"
+slug = "hustyp"
+
+[[variable]]
+native_id = "77.15195"
+slug = "redovisningsar"
+
+[[variable]]
+native_id = "77.17046"
+slug = "antal-lagenheter-totalt"
+
+[[variable]]
+native_id = "77.21087"
+slug = "hiss"
+
+# register 86

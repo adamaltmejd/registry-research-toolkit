@@ -1,0 +1,53 @@
+[register]
+provider = "scb"
+slug = "manel"
+native_id = "142"
+
+[[variant]]
+native_id = "142.208"
+slug = "_default"
+display_group = "Register över månatlig elstatistik"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Outhyrda bostadslägenheter i flerbostadshus (OHA)
+
+[[variable]]
+native_id = "142.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "142.2620"
+slug = "adress-redovisningsenhet"
+
+[[variable]]
+native_id = "142.2622"
+slug = "benamning-redovisningsenhet"
+
+[[variable]]
+native_id = "142.7578"
+slug = "redovisningsmanad"
+
+# register 143 (oha)
+
+[[variable]]
+native_id = "142.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "142.2617"
+slug = "orgnr-redovisningsenheten"
+
+[[variable]]
+native_id = "142.2634"
+slug = "postort-redovisningsenhet"
+
+# register 143
+
+[[variable]]
+native_id = "142.1641.ng2007"
+slug = "naringsgren-arbetsstalle"
+
+# register 145

@@ -1,0 +1,92 @@
+[register]
+provider = "scb"
+slug = "ssv"
+native_id = "391"
+
+[[variant]]
+native_id = "391.1508"
+slug = "kursdeltagare"
+display_group = "Kursdeltagare"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "391.1509"
+slug = "elever"
+display_group = "Elever"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Arbetsgivardeklarationer på individnivå (AGI)
+
+[[variable]]
+native_id = "391.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "391.14642"
+slug = "niva-vuxenutbildning"
+
+[[variable]]
+native_id = "391.14652"
+slug = "utbildningsatgard-vux"
+
+[[variable]]
+native_id = "391.40090"
+slug = "niva-ssv"
+
+[[variable]]
+native_id = "391.40092"
+slug = "utbildningsatgard-ssv"
+
+# register 395 (kapitalvinster)
+
+[[variable]]
+native_id = "391.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "391.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "391.1993"
+slug = "skolans-identitetsnummer"
+
+[[variable]]
+native_id = "391.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "391.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "391.8557"
+slug = "utbildningsanordnare"
+
+[[variable]]
+native_id = "391.14651"
+slug = "avklarade-undervisningstimmar"
+
+[[variable]]
+native_id = "391.14655"
+slug = "kursstart"
+
+[[variable]]
+native_id = "391.14656"
+slug = "kursslut"
+
+[[variable]]
+native_id = "391.14657"
+slug = "datumavbrott"
+
+[[variable]]
+native_id = "391.14658"
+slug = "typ-av-undervisning"
+
+# register 392

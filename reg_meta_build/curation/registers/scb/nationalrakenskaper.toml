@@ -1,0 +1,127 @@
+[register]
+provider = "scb"
+slug = "nationalrakenskaper"
+native_id = "285"
+
+[[variant]]
+native_id = "285.732"
+slug = "nationalrakenskaper"
+display_group = "Nationalräkenskaper"
+
+
+[[variant]]
+native_id = "285.845"
+slug = "regionalrakenskaper"
+display_group = "Regionalräkenskaper"
+
+
+[[variant]]
+native_id = "285.914"
+slug = "esspros"
+display_group = "Det europeiska systemet för integrerad statistik över socialt skydd (ESSPROS)"
+
+# (keep) Swedish inflection: offentlig/forvaltning/budget (slug) vs
+# offentliga/förvaltningens/budgetuppgifter (display) — not truncations.
+
+[[variant]]
+native_id = "285.1221"
+slug = "offentlig-forvaltning-budget"
+display_group = "Offentliga förvaltningens budgetuppgifter och tillägg till EU:s konvergenskriterier"
+
+
+[[variant]]
+native_id = "285.1783"
+slug = "offentliga-finanser"
+display_group = "Offentliga finanser och dess tillägg till EU:s konvergenskriterier"
+
+# Europaparlamentsval, nominerade och valda
+
+[[variable]]
+native_id = "285.457"
+slug = "varde"
+
+[[variable]]
+native_id = "285.24443"
+slug = "varde-fast-pris-ar"
+
+[[variable]]
+native_id = "285.24638"
+slug = "varde-kvartal-1"
+
+[[variable]]
+native_id = "285.24975"
+slug = "varde-lopande-pris-ar"
+
+[[variable]]
+native_id = "285.24977"
+slug = "varde-kvartal-2"
+
+[[variable]]
+native_id = "285.24978"
+slug = "varde-kvartal-3"
+
+[[variable]]
+native_id = "285.24979"
+slug = "varde-kvartal-4"
+
+[[variable]]
+native_id = "285.25285"
+slug = "statliga-inkomster-redovisning"
+
+[[variable]]
+native_id = "285.25286"
+slug = "statliga-utgifter-redovisning"
+
+[[variable]]
+native_id = "285.25413"
+slug = "kommunala-inkomster-redovisning"
+
+[[variable]]
+native_id = "285.25414"
+slug = "kommunala-utgifter-redovisning"
+
+[[variable]]
+native_id = "285.25415"
+slug = "regionskommunala-inkomster-redovisning"
+
+[[variable]]
+native_id = "285.25416"
+slug = "regionskommunala-utgifter-redovisning"
+
+[[variable]]
+native_id = "285.25417"
+slug = "privata-utgifter-redovisning"
+
+[[variable]]
+native_id = "285.25418"
+slug = "privata-inkomster-redovisning"
+
+[[variable]]
+native_id = "285.32800"
+slug = "offentliga-budgetuppgifter"
+
+[[variable]]
+native_id = "285.32801"
+slug = "offentliga-garantier"
+
+[[variable]]
+native_id = "285.32802"
+slug = "offentliga-bolags-skulder"
+
+[[variable]]
+native_id = "285.32803"
+slug = "offentliga-agarandelar"
+
+[[variable]]
+native_id = "285.32804"
+slug = "offentliga-ppp"
+
+[[variable]]
+native_id = "285.32805"
+slug = "offentliga-nodlidande-lan"
+
+[[variable]]
+native_id = "285.50149"
+slug = "offentliga-inkomster-utgifter-sparande"
+
+# register 286 (ep-val-nominerade)

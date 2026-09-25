@@ -8,3 +8,466 @@ register = "scb/bas"
 family_stem = "jobbink"
 label = "Löne- eller företagarinkomst per månad"
 slug = "lone-eller-foretagarinkomst-manad"
+
+[[variant]]
+native_id = "404.1663"
+slug = "preliminara-manadsuppgifter"
+display_group = "Preliminära månadsuppgifter"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "404.1707"
+slug = "slutliga-manadsuppgifter"
+display_group = "Slutliga månadsuppgifter"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "404.1708"
+slug = "arsuppgifter"
+display_group = "Årsuppgifter"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "404.1721"
+slug = "arsuppgifter-jobb"
+display_group = "Årsuppgifter - Jobb"
+panel_entity_key = "person-samordningsnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "404.1722"
+slug = "arsuppgifter-arbetsstallen"
+display_group = "Årsuppgifter - Arbetsställen"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Levnadsförhållanden för barn (Barn-ULF)
+
+[[variable]]
+native_id = "404.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "404.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "404.47187"
+slug = "person-samordningsnummer"
+
+
+[[variable]]
+native_id = "404.1197"
+slug = "vardbidrag"
+
+[[variable]]
+native_id = "404.1390"
+slug = "aldreforsorjningsstod"
+
+[[variable]]
+native_id = "404.1398"
+slug = "bostadsbidrag-barnfamiljer-mfl"
+
+[[variable]]
+native_id = "404.1400"
+slug = "bostadstillagg-pensionarer"
+
+[[variable]]
+native_id = "404.1508"
+slug = "garantipension"
+
+[[variable]]
+native_id = "404.1516"
+slug = "inkomstpension"
+
+[[variable]]
+native_id = "404.1523"
+slug = "premiepension"
+
+[[variable]]
+native_id = "404.1613"
+slug = "rehabiliteringsersattning"
+
+[[variable]]
+native_id = "404.1616"
+slug = "narstaendepenning"
+
+[[variable]]
+native_id = "404.1625"
+slug = "foraldrapenning-vab"
+
+[[variable]]
+native_id = "404.1626"
+slug = "foraldrapenning-barns-fodelse"
+
+[[variable]]
+native_id = "404.1641"
+slug = "naringsgren-arbetsstalle"
+
+[[variable]]
+native_id = "404.2507"
+slug = "sarskilt-pensionstillagg"
+
+[[variable]]
+native_id = "404.2509"
+slug = "tillaggspension"
+
+[[variable]]
+native_id = "404.6258"
+slug = "ekonomiskt-bistand"
+
+[[variable]]
+native_id = "404.19054"
+slug = "naringsgren-statistik-huvud"
+
+[[variable]]
+native_id = "404.21520"
+slug = "studiemedel-bidrag"
+
+[[variable]]
+native_id = "404.21701"
+slug = "studiemedel-lan-m-m"
+
+[[variable]]
+native_id = "404.24195"
+slug = "bostadstillagg-sjuk-aktivitet"
+
+[[variable]]
+native_id = "404.24196"
+slug = "sarskilt-bostadstillagg-pensionarer"
+
+[[variable]]
+native_id = "404.25301"
+slug = "graviditetsersattning"
+
+[[variable]]
+native_id = "404.25306"
+slug = "sjukpenning"
+
+[[variable]]
+native_id = "404.25617"
+slug = "smittbararpenning"
+
+[[variable]]
+native_id = "404.28161"
+slug = "bostadsersattning"
+
+[[variable]]
+native_id = "404.29506"
+slug = "boendetillagg"
+
+[[variable]]
+native_id = "404.31656"
+slug = "sjukersattning"
+
+[[variable]]
+native_id = "404.31820"
+slug = "aktivitetsersattning"
+
+[[variable]]
+native_id = "404.37894"
+slug = "deso"
+
+[[variable]]
+native_id = "404.38220"
+slug = "studiestartsstod"
+
+[[variable]]
+native_id = "404.42407"
+slug = "omvardnadsbidrag"
+
+[[variable]]
+native_id = "404.43099"
+slug = "regso"
+
+[[variable]]
+native_id = "404.44458"
+slug = "ersattning-for-karens"
+
+[[variable]]
+native_id = "404.44459"
+slug = "ersattning-riskgrupper"
+
+[[variable]]
+native_id = "404.45893"
+slug = "agi-astnr-justering"
+
+[[variable]]
+native_id = "404.45923"
+slug = "inkomstpensionstillagg"
+
+[[variable]]
+native_id = "404.46228"
+slug = "studiehjalp"
+
+[[variable]]
+native_id = "404.46233"
+slug = "omstallningsstudiestod"
+
+[[variable]]
+native_id = "404.46234"
+slug = "ersattning-forlangd-skolgang"
+
+[[variable]]
+native_id = "404.46243"
+slug = "arbetsskadesjukpenning"
+
+[[variable]]
+native_id = "404.46265"
+slug = "ovrig-ersattning-sjukdom"
+
+# register 405 (barn-ulf)
+
+[[variable]]
+native_id = "404.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "404.17"
+slug = "arbetsstallenummer"
+
+[[variable]]
+native_id = "404.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "404.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "404.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "404.97"
+slug = "referensmanad"
+
+[[variable]]
+native_id = "404.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "404.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "404.781"
+slug = "benamning"
+
+[[variable]]
+native_id = "404.799"
+slug = "belagenhetsadress-gata"
+
+[[variable]]
+native_id = "404.803"
+slug = "belagenhetsadress-postnr"
+
+[[variable]]
+native_id = "404.804"
+slug = "besokspostort"
+
+[[variable]]
+native_id = "404.1172"
+slug = "kontant-bruttolon"
+
+[[variable]]
+native_id = "404.1177"
+slug = "ersattning-inkomst-anstallning"
+
+[[variable]]
+native_id = "404.1187"
+slug = "akassa-arbetsloshet"
+
+[[variable]]
+native_id = "404.1198"
+slug = "loneinkomst"
+
+[[variable]]
+native_id = "404.1821"
+slug = "yrkesstallning"
+
+[[variable]]
+native_id = "404.3575"
+slug = "foretagets-namn"
+
+[[variable]]
+native_id = "404.4963"
+slug = "typ-av-foretag"
+
+[[variable]]
+native_id = "404.15530"
+slug = "arbetsstalle-populationstyp"
+
+[[variable]]
+native_id = "404.16323"
+slug = "naringsgren-foretag"
+
+[[variable]]
+native_id = "404.17732"
+slug = "enskild-naringsverksamhet-overskott"
+
+[[variable]]
+native_id = "404.17733"
+slug = "enskild-naringsverksamhet-underskott"
+
+[[variable]]
+native_id = "404.19568"
+slug = "loneink"
+
+[[variable]]
+native_id = "404.21468"
+slug = "ersattning-amprogram-skattefri"
+
+[[variable]]
+native_id = "404.21469"
+slug = "ersattning-amprogram-skattepliktig"
+
+[[variable]]
+native_id = "404.28159"
+slug = "etableringsersattning"
+
+[[variable]]
+native_id = "404.37707"
+slug = "utdelning-famansforetag"
+
+[[variable]]
+native_id = "404.41952"
+slug = "tillfalligt-franvarande"
+
+[[variable]]
+native_id = "404.42951"
+slug = "antal-manader-loneutbetalning"
+
+[[variable]]
+native_id = "404.42953"
+slug = "markering-lonegaranti"
+
+[[variable]]
+native_id = "404.44791"
+slug = "pensioner-utlandskt-beskattade"
+
+[[variable]]
+native_id = "404.46235"
+slug = "ersattning-for-arbete"
+
+[[variable]]
+native_id = "404.46236"
+slug = "ersattning-vid-arbetsloshet"
+
+[[variable]]
+native_id = "404.46237"
+slug = "ersattning-studier"
+
+[[variable]]
+native_id = "404.46238"
+slug = "pension"
+
+[[variable]]
+native_id = "404.46239"
+slug = "ersattning-nedsatt-arbetsformaga"
+
+[[variable]]
+native_id = "404.46240"
+slug = "ersattning-vid-sjukdom"
+
+[[variable]]
+native_id = "404.46241"
+slug = "ersattning-foraldraledighet"
+
+[[variable]]
+native_id = "404.46242"
+slug = "ekonomiskt-stod"
+
+[[variable]]
+native_id = "404.46252"
+slug = "andel-inkomst-fran-arbete"
+
+[[variable]]
+native_id = "404.46253"
+slug = "andel-ink-pension"
+
+[[variable]]
+native_id = "404.46254"
+slug = "andel-ink-nedsatt-arbetsformaga"
+
+[[variable]]
+native_id = "404.46255"
+slug = "andel-ink-sjukdom"
+
+[[variable]]
+native_id = "404.46256"
+slug = "andel-ink-ekonomiskt-stod"
+
+[[variable]]
+native_id = "404.46257"
+slug = "andel-ink-foraldraledighet"
+
+[[variable]]
+native_id = "404.46258"
+slug = "andel-ink-studier"
+
+[[variable]]
+native_id = "404.46259"
+slug = "andel-ink-arbetsloshet"
+
+# register 405
+
+[[variable]]
+native_id = "404.37828.huvinkkalla"
+slug = "huvudsaklig-inkomstkalla"
+
+[[variable]]
+native_id = "404.37828.huvinkkalla12m"
+slug = "huvudsaklig-inkomstkalla-12m"
+
+[[variable]]
+native_id = "404.37828.huvinkkalla1m"
+slug = "huvudsaklig-inkomstkalla-1m"
+
+[[variable]]
+native_id = "404.45144.bsyssstat"
+slug = "klassificerad-sysselsatt"
+
+[[variable]]
+native_id = "404.45149.bas"
+slug = "arbetsmarknadsstatus"
+
+[[variable]]
+native_id = "404.45149.bas-fel"
+slug = "arbetsmarknadsstatus-fel"
+
+[[variable]]
+native_id = "404.45149.basalt"
+slug = "arbetsmarknadsstatus-alt"
+
+[[variable]]
+native_id = "404.45150.bnordink"
+slug = "sysselsatt-nordisk-inkomst"
+
+[[variable]]
+native_id = "404.46222.arbinkniva"
+slug = "arbetsrelaterad-inkomstniva"
+
+[[variable]]
+native_id = "404.46222.arbinkniva12m"
+slug = "arbetsrelaterad-inkomstniva-12m"
+
+[[variable]]
+native_id = "404.46222.arbinkniva1m"
+slug = "arbetsrelaterad-inkomstniva-1m"
+
+# register 408

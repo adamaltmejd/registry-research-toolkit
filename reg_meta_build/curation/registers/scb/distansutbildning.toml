@@ -6,3 +6,126 @@ native_id = "322"
 [[code_label_pair]]
 code = "scb/distansutbildning/hogskolekod"
 label = "scb/distansutbildning/hogskolenamn"
+
+[[variant]]
+native_id = "322.1002"
+slug = "_default"
+display_group = "Distansutbildning i högskolan"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Emitterade värdepapper (SVDB)
+
+[[variable]]
+native_id = "322.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "322.28537"
+slug = "distansorsak-9"
+
+[[variable]]
+native_id = "322.28538"
+slug = "studietid"
+
+# register 323 (svdb)
+
+[[variable]]
+native_id = "322.3"
+slug = "hogskolekod"
+
+[[variable]]
+native_id = "322.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "322.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "322.1248"
+slug = "hogskolenamn"
+
+[[variable]]
+native_id = "322.1259"
+slug = "utbildningsomrade"
+
+[[variable]]
+native_id = "322.1460"
+slug = "kurstakt"
+
+[[variable]]
+native_id = "322.1910"
+slug = "hogskolanyborjare"
+
+[[variable]]
+native_id = "322.3270"
+slug = "sysselsattningstyp"
+
+[[variable]]
+native_id = "322.15329"
+slug = "distansstudier-natuniversitet"
+
+[[variable]]
+native_id = "322.15443"
+slug = "forsorjning-studiemedel-lan-och-bidrag"
+
+[[variable]]
+native_id = "322.15444"
+slug = "forsorjning-studiemedel-bidrag"
+
+[[variable]]
+native_id = "322.15446"
+slug = "forsorjning-lon"
+
+[[variable]]
+native_id = "322.15448"
+slug = "forsorjning-foraldrapenning"
+
+[[variable]]
+native_id = "322.15449"
+slug = "forsorjning-barnbidrag"
+
+[[variable]]
+native_id = "322.15450"
+slug = "forsorjning-bostadsbidrag"
+
+[[variable]]
+native_id = "322.15451"
+slug = "forsorjning-sjukpenning"
+
+[[variable]]
+native_id = "322.15452"
+slug = "forsorjning-stod-sambo-make"
+
+[[variable]]
+native_id = "322.15846"
+slug = "forsorjning-egna-sparade-pengar"
+
+[[variable]]
+native_id = "322.15940"
+slug = "avklarade-hogskolepoang-pa-kurs"
+
+[[variable]]
+native_id = "322.17473"
+slug = "kalibreringsvikt"
+
+[[variable]]
+native_id = "322.17587"
+slug = "fodelseland-grupp"
+
+[[variable]]
+native_id = "322.19552"
+slug = "utbildningsniva-hogskola"
+
+[[variable]]
+native_id = "322.28176"
+slug = "utbildningstyp"
+
+[[variable]]
+native_id = "322.28498"
+slug = "slutfort-kurs"
+
+# register 323

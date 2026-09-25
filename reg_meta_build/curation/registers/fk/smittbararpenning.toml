@@ -1,0 +1,18 @@
+[register]
+provider = "fk"
+slug = "smittbararpenning"
+native_id = "7588615323625434168"
+
+[[variant]]
+native_id = "7588615323625434168.6987757354346637054"
+slug = "_default"
+display_group = "Smittbärarpenning"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Utvecklingsersättning
+
+[[variable]]
+native_id = "7588615323625434168.personnummer"
+slug = "lopnr-personnr"

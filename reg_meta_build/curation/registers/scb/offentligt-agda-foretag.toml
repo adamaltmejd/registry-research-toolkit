@@ -1,0 +1,223 @@
+[register]
+provider = "scb"
+slug = "offentligt-agda-foretag"
+native_id = "114"
+
+[[variant]]
+native_id = "114.129"
+slug = "_default"
+display_group = "Offentligt ägda företag"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Kommunalskatter
+
+[[variable]]
+native_id = "114.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "114.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "114.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "114.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "114.3577"
+slug = "orgnr-10"
+
+[[variable]]
+native_id = "114.4210"
+slug = "summa-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "114.4247"
+slug = "eget-kapital-och-skulder"
+
+[[variable]]
+native_id = "114.4279"
+slug = "rorelseresultat"
+
+[[variable]]
+native_id = "114.5056"
+slug = "landstingskod"
+
+[[variable]]
+native_id = "114.19572"
+slug = "kortfristiga-fordringar"
+
+[[variable]]
+native_id = "114.19693"
+slug = "region-landsting"
+
+# register 115 (kommunalskatter)
+
+[[variable]]
+native_id = "114.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "114.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "114.1047"
+slug = "je-foretagsstatus"
+
+[[variable]]
+native_id = "114.1052"
+slug = "je-status"
+
+[[variable]]
+native_id = "114.1054"
+slug = "sateskommun"
+
+[[variable]]
+native_id = "114.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "114.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "114.4065"
+slug = "maskiner-och-inventarier"
+
+[[variable]]
+native_id = "114.4205"
+slug = "kassa-och-bank"
+
+[[variable]]
+native_id = "114.4207"
+slug = "anlaggningstillgangar"
+
+[[variable]]
+native_id = "114.4208"
+slug = "finansiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "114.4209"
+slug = "summa-immateriella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "114.4211"
+slug = "summa-kortfristiga-placeringar"
+
+[[variable]]
+native_id = "114.4212"
+slug = "summa-materiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "114.4213"
+slug = "summa-omsattningstillgangar"
+
+[[variable]]
+native_id = "114.4214"
+slug = "summa-tillgangar"
+
+[[variable]]
+native_id = "114.4215"
+slug = "varulager"
+
+[[variable]]
+native_id = "114.4216"
+slug = "ovriga-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "114.4223"
+slug = "eget-kapital"
+
+[[variable]]
+native_id = "114.4224"
+slug = "summa-eget-kapital"
+
+[[variable]]
+native_id = "114.4226"
+slug = "avsattningar-for-pensioner"
+
+[[variable]]
+native_id = "114.4228"
+slug = "leverantorsskulder"
+
+[[variable]]
+native_id = "114.4230"
+slug = "avsattningar"
+
+[[variable]]
+native_id = "114.4243"
+slug = "ovriga-avsattningar"
+
+[[variable]]
+native_id = "114.4244"
+slug = "ovriga-kortfristiga-skulder"
+
+[[variable]]
+native_id = "114.4248"
+slug = "summa-kortfristiga-skulder"
+
+[[variable]]
+native_id = "114.4249"
+slug = "summa-langfristiga-skulder"
+
+[[variable]]
+native_id = "114.4250"
+slug = "summa-obeskattade-reserver"
+
+[[variable]]
+native_id = "114.4256"
+slug = "nettoomsattning"
+
+[[variable]]
+native_id = "114.4257"
+slug = "ovriga-rorelseintakter"
+
+[[variable]]
+native_id = "114.4280"
+slug = "resultat-efter-finansiella-poster"
+
+[[variable]]
+native_id = "114.4327"
+slug = "redovisat-resultat"
+
+[[variable]]
+native_id = "114.19551"
+slug = "avskrivningar"
+
+[[variable]]
+native_id = "114.19556"
+slug = "extraordinara-intakter"
+
+[[variable]]
+native_id = "114.19558"
+slug = "extraordinara-kostnader"
+
+[[variable]]
+native_id = "114.19560"
+slug = "bokslutsdispositioner"
+
+[[variable]]
+native_id = "114.19566"
+slug = "byggnader-och-mark"
+
+[[variable]]
+native_id = "114.19571"
+slug = "langfristiga-fordringar"
+
+[[variable]]
+native_id = "114.19573"
+slug = "obeskattade-reserver"
+
+[[variable]]
+native_id = "114.19689"
+slug = "koncernniva"
+
+# register 115

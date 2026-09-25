@@ -1,0 +1,55 @@
+[register]
+provider = "scb"
+slug = "lagenhetsreg"
+native_id = "339"
+
+[[variant]]
+native_id = "339.1111"
+slug = "_default"
+display_group = "Lägenhetsregistret"
+panel_entity_key = "lagenhetsnyckel"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Grundskolan: betyg årskurs 6
+
+[[variable]]
+native_id = "339.29828"
+slug = "lagenhetsnyckel"
+
+
+[[variable]]
+native_id = "339.7"
+slug = "adressomrade"
+
+[[variable]]
+native_id = "339.8"
+slug = "adressplats"
+
+[[variable]]
+native_id = "339.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "339.2224"
+slug = "typkod"
+
+[[variable]]
+native_id = "339.2299"
+slug = "lagenhetstyp"
+
+[[variable]]
+native_id = "339.30120"
+slug = "bostadskategori"
+
+[[variable]]
+native_id = "339.30770"
+slug = "agarkategori-bostad"
+
+# register 340
+
+[[variable]]
+native_id = "339.22523.byggtyp"
+slug = "byggnadstyp"
+
+# register 34

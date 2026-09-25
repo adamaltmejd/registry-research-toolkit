@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "krita"
+native_id = "387"
+
+[[variant]]
+native_id = "387.1463"
+slug = "_default"
+display_group = "Riksbankens kreditdatabas (KRITA)"
+panel_entity_key = "institutioncode"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Konst- och kulturutbildningar och vissa andra utbildningar
+
+[[variable]]
+native_id = "387.49985"
+slug = "institutioncode"

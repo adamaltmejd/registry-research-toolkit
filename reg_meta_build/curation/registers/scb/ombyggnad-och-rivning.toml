@@ -1,0 +1,104 @@
+[register]
+provider = "scb"
+slug = "ombyggnad-och-rivning"
+native_id = "72"
+
+[[variant]]
+native_id = "72.198"
+slug = "ombyggnad-flerbostadshus"
+display_group = "Ombyggnad av flerbostadshus"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "72.199"
+slug = "rivning-av-flerbostadshus"
+display_group = "Rivning av flerbostadshus"
+panel_entity_key = "fastighetsbeteckning"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Priser för nyproducerade bostäder
+
+[[variable]]
+native_id = "72.26"
+slug = "fastighetsbeteckning"
+
+
+[[variable]]
+native_id = "72.2187"
+slug = "agarkategori"
+
+[[variable]]
+native_id = "72.2298"
+slug = "ursprunglig-byggnadsperiod"
+
+[[variable]]
+native_id = "72.2299"
+slug = "lagenhetstyp"
+
+[[variable]]
+native_id = "72.17040"
+slug = "ombyggnads-id"
+
+[[variable]]
+native_id = "72.17046"
+slug = "antal-lagenheter-totalt"
+
+[[variable]]
+native_id = "72.17415"
+slug = "ombyggnation-paborjande"
+
+[[variable]]
+native_id = "72.17421"
+slug = "ombyggnation-fardigstallande"
+
+[[variable]]
+native_id = "72.17427"
+slug = "bostadsarea-fore"
+
+[[variable]]
+native_id = "72.17428"
+slug = "bostadsarea-tillkommande"
+
+[[variable]]
+native_id = "72.17429"
+slug = "bostadsarea-utgaende"
+
+[[variable]]
+native_id = "72.17487"
+slug = "rivnings-id"
+
+[[variable]]
+native_id = "72.17488"
+slug = "rivning-paborjande"
+
+[[variable]]
+native_id = "72.17489"
+slug = "rivning-paborjande-prel"
+
+[[variable]]
+native_id = "72.17490"
+slug = "rivningsorsak"
+
+# register 73 (priser-nyproducerade-bostader)
+
+[[variable]]
+native_id = "72.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "72.5092"
+slug = "hustyp"
+
+[[variable]]
+native_id = "72.17413"
+slug = "husbeteckning"
+
+[[variable]]
+native_id = "72.21429"
+slug = "totalbostadsarea"
+
+# register 73

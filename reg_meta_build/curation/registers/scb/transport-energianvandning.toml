@@ -1,0 +1,29 @@
+[register]
+provider = "scb"
+slug = "transport-energianvandning"
+native_id = "393"
+
+[[variant]]
+native_id = "393.1522"
+slug = "_default"
+display_group = "Transportsektorns energianvändning (inrikes sjöfart)"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Kapitalvinster och kapitalförluster
+
+[[variable]]
+native_id = "393.4600"
+slug = "scbid"
+
+
+[[variable]]
+native_id = "393.1721"
+slug = "bransleforbrukning"
+
+[[variable]]
+native_id = "393.2262"
+slug = "fartygets-namn"
+
+# register 395

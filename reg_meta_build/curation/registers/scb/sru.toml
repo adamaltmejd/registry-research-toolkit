@@ -1,0 +1,1686 @@
+[register]
+provider = "scb"
+slug = "sru"
+native_id = "264"
+
+[[variant]]
+native_id = "264.607"
+slug = "register"
+display_group = "Register för inkomstblanketter INK2 och INK4"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.610"
+slug = "deklarationsbilaga-n1"
+display_group = "Deklarationsbilaga N1"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.613"
+slug = "deklarationsbilaga-n2"
+display_group = "Deklarationsbilaga N2"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.666"
+slug = "deklarationsbilaga-k10"
+display_group = "Deklarationsbilaga K10"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.667"
+slug = "deklarationsbilaga-n6"
+display_group = "Deklarationsbilaga N6"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.668"
+slug = "deklarationsbilaga-n3a"
+display_group = "Deklarationsbilaga N3A"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.669"
+slug = "deklarationsbilaga-n3b"
+display_group = "Deklarationsbilaga N3B"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.671"
+slug = "register-for-inkomstblanketter-ink3"
+display_group = "Register för inkomstblanketter INK3"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.672"
+slug = "bilaga-n4"
+display_group = "Bilaga N4"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.729"
+slug = "deklarationsbilaga-ne"
+display_group = "Deklarationsbilaga NE"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.730"
+slug = "deklarationsbilaga-nea"
+display_group = "Deklarationsbilaga NEA"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.731"
+slug = "register-for-inkomstblanketter-ink2"
+display_group = "Register för inkomstblanketter INK2"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "264.747"
+slug = "deklarationsblankett"
+display_group = "Deklarationsblankett INK4 fr 2007"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Bonus och andra oregelbundna ersättningar
+
+[[variable]]
+native_id = "264.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "264.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "264.4065"
+slug = "maskiner-och-inventarier"
+
+[[variable]]
+native_id = "264.4204"
+slug = "forutbetalda-kostnader-upplupna-intakter"
+
+[[variable]]
+native_id = "264.4205"
+slug = "kassa-och-bank"
+
+[[variable]]
+native_id = "264.4206"
+slug = "kundfordringar"
+
+[[variable]]
+native_id = "264.4208"
+slug = "finansiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.4209"
+slug = "summa-immateriella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.4210"
+slug = "summa-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "264.4215"
+slug = "varulager"
+
+[[variable]]
+native_id = "264.4216"
+slug = "ovriga-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "264.4220"
+slug = "langfristiga-skulder"
+
+[[variable]]
+native_id = "264.4226"
+slug = "avsattningar-for-pensioner"
+
+[[variable]]
+native_id = "264.4227"
+slug = "forskott-fran-kunder"
+
+[[variable]]
+native_id = "264.4228"
+slug = "leverantorsskulder"
+
+[[variable]]
+native_id = "264.4229"
+slug = "skatteskulder"
+
+[[variable]]
+native_id = "264.4234"
+slug = "ovrigt-fritt-eget-kapital"
+
+[[variable]]
+native_id = "264.4243"
+slug = "ovriga-avsattningar"
+
+[[variable]]
+native_id = "264.4244"
+slug = "ovriga-kortfristiga-skulder"
+
+[[variable]]
+native_id = "264.4245"
+slug = "ovriga-obeskattade-reserver"
+
+[[variable]]
+native_id = "264.4251"
+slug = "upplupna-kostnader-forutbetalda-intakter"
+
+[[variable]]
+native_id = "264.4256"
+slug = "nettoomsattning"
+
+[[variable]]
+native_id = "264.4257"
+slug = "ovriga-rorelseintakter"
+
+[[variable]]
+native_id = "264.4258"
+slug = "avskrivningar-byggnader-fast-egendom"
+
+[[variable]]
+native_id = "264.4260"
+slug = "avskrivningar-maskiner-inventarier"
+
+[[variable]]
+native_id = "264.4268"
+slug = "pensionskostnader"
+
+[[variable]]
+native_id = "264.4272"
+slug = "ovriga-externa-kostnader"
+
+[[variable]]
+native_id = "264.4285"
+slug = "ranteintakter-fran-ovriga"
+
+[[variable]]
+native_id = "264.4286"
+slug = "rantekostnader-till-ovriga"
+
+[[variable]]
+native_id = "264.4296"
+slug = "mark"
+
+[[variable]]
+native_id = "264.4303"
+slug = "fordringar-koncern-intresseforetag"
+
+[[variable]]
+native_id = "264.4310"
+slug = "ackumulerade-overavskrivningar"
+
+[[variable]]
+native_id = "264.4313"
+slug = "aktiverat-arbete-for-egen-rakning"
+
+[[variable]]
+native_id = "264.4317"
+slug = "skattekostnader"
+
+[[variable]]
+native_id = "264.4836"
+slug = "personalkostnader"
+
+[[variable]]
+native_id = "264.15211"
+slug = "utgaende-moms-6"
+
+[[variable]]
+native_id = "264.15212"
+slug = "utgaende-moms-12"
+
+[[variable]]
+native_id = "264.15215"
+slug = "utgaende-moms-25"
+
+[[variable]]
+native_id = "264.15230"
+slug = "momsfri-omsattning"
+
+[[variable]]
+native_id = "264.15231"
+slug = "momspl-uttag-fastighetsforvaltning"
+
+[[variable]]
+native_id = "264.16275"
+slug = "taxeringsar"
+
+[[variable]]
+native_id = "264.16373"
+slug = "rakenskapsarets-borjan"
+
+[[variable]]
+native_id = "264.16376"
+slug = "utgaende-moms-25-ink"
+
+[[variable]]
+native_id = "264.16377"
+slug = "rakenskapsarets-slut"
+
+[[variable]]
+native_id = "264.16382"
+slug = "utgaende-moms-12-ink"
+
+[[variable]]
+native_id = "264.16383"
+slug = "utgaende-moms-6-ink"
+
+[[variable]]
+native_id = "264.16385"
+slug = "verksamhetens-art"
+
+[[variable]]
+native_id = "264.16386"
+slug = "antal-egna-arbetstimmar"
+
+[[variable]]
+native_id = "264.16388"
+slug = "uppgiftslamnarens-personnr"
+
+[[variable]]
+native_id = "264.16390"
+slug = "naringsverksamheten-bedrivs-aktivt"
+
+[[variable]]
+native_id = "264.16391"
+slug = "verksamhet-bedrivs-i-utlandet"
+
+[[variable]]
+native_id = "264.16401"
+slug = "arets-resultat-vinst"
+
+[[variable]]
+native_id = "264.16402"
+slug = "arets-resultat-forlust"
+
+[[variable]]
+native_id = "264.16404"
+slug = "kontanta-uttag-hb-kb"
+
+[[variable]]
+native_id = "264.16406"
+slug = "kontanta-tillskott-hb-kb"
+
+[[variable]]
+native_id = "264.16435"
+slug = "ovriga-skatteskulder"
+
+[[variable]]
+native_id = "264.16440"
+slug = "lagerforandring-okning"
+
+[[variable]]
+native_id = "264.16441"
+slug = "lagerforandring-minskning"
+
+[[variable]]
+native_id = "264.16550"
+slug = "loner-och-andra-ersattningar-sru"
+
+[[variable]]
+native_id = "264.16646"
+slug = "redovisad-vinst-enligt-bokforingen"
+
+[[variable]]
+native_id = "264.16710"
+slug = "summa-utgaende-moms"
+
+[[variable]]
+native_id = "264.16712"
+slug = "omsattning-av-varor-utanfor-eg-export"
+
+[[variable]]
+native_id = "264.16719"
+slug = "overforing-av-varor-till-eg-land"
+
+[[variable]]
+native_id = "264.16750"
+slug = "periodiseringsfond-2003-taxering"
+
+[[variable]]
+native_id = "264.16752"
+slug = "periodiseringsfond-2004-taxering"
+
+[[variable]]
+native_id = "264.16753"
+slug = "periodiseringsfond-2005-taxering"
+
+[[variable]]
+native_id = "264.16759"
+slug = "bilagebeteckning"
+
+[[variable]]
+native_id = "264.16765"
+slug = "andra-intakter-ej-bokforda"
+
+[[variable]]
+native_id = "264.16766"
+slug = "andra-kostnader-ej-bokforda"
+
+[[variable]]
+native_id = "264.16767"
+slug = "bokforda-intakter-ej-tas-upp"
+
+[[variable]]
+native_id = "264.16768"
+slug = "bokforda-kostnader-ej-avdrag"
+
+[[variable]]
+native_id = "264.16773"
+slug = "aterforing-vardeminskning-forsaljning"
+
+[[variable]]
+native_id = "264.16774"
+slug = "skogsavdrag-substansminskningsavdrag"
+
+[[variable]]
+native_id = "264.16776"
+slug = "resultat-skattemassiga-justeringar"
+
+[[variable]]
+native_id = "264.16781"
+slug = "avgar-annans-resultatandel"
+
+[[variable]]
+native_id = "264.16782"
+slug = "min-andel-av-resultatet"
+
+[[variable]]
+native_id = "264.16783"
+slug = "formansvardet-av-fri-bil"
+
+[[variable]]
+native_id = "264.16784"
+slug = "hyresvarde-bostad-ovriga-formaner"
+
+[[variable]]
+native_id = "264.16785"
+slug = "uttag-skogs-skogsskade-upphovsmannakonto"
+
+[[variable]]
+native_id = "264.16786"
+slug = "tillkommer-annan-verksamhet-overskott"
+
+[[variable]]
+native_id = "264.16787"
+slug = "avgar-annan-verksamhet-underskott"
+
+[[variable]]
+native_id = "264.16789"
+slug = "inkomstfordelning-makar-avgar"
+
+[[variable]]
+native_id = "264.16790"
+slug = "inkomstfordelning-makar-tillkommer"
+
+[[variable]]
+native_id = "264.16791"
+slug = "outnyttjat-underskott-fran-tidigare-ar"
+
+[[variable]]
+native_id = "264.16792"
+slug = "resekostnader-bostad-arbetsplats"
+
+[[variable]]
+native_id = "264.16793"
+slug = "inbetalning-skogsskade-upphovsmannakonto"
+
+[[variable]]
+native_id = "264.16794"
+slug = "positiv-rantefordelning-n6"
+
+[[variable]]
+native_id = "264.16795"
+slug = "negativ-rantefordelning-berakning"
+
+[[variable]]
+native_id = "264.16796"
+slug = "aterforing-fran-periodiseringsfond"
+
+[[variable]]
+native_id = "264.16859"
+slug = "avsattning-periodiseringsfond-30"
+
+[[variable]]
+native_id = "264.16860"
+slug = "okning-av-expansionsfond-blankett-n6"
+
+[[variable]]
+native_id = "264.16861"
+slug = "minskning-av-expansionsfond-sru"
+
+[[variable]]
+native_id = "264.16862"
+slug = "egen-pensionsforsakringspremie"
+
+[[variable]]
+native_id = "264.16863"
+slug = "beraknad-sarskild-loneskatt-pension"
+
+[[variable]]
+native_id = "264.16864"
+slug = "avdrag-egenavgifter-2005-taxering"
+
+[[variable]]
+native_id = "264.16865"
+slug = "paforda-egenavgifter-sarskild-loneskatt"
+
+[[variable]]
+native_id = "264.16866"
+slug = "arets-beraknade-avdrag-egenavgifter"
+
+[[variable]]
+native_id = "264.16867"
+slug = "sjukpenning-naringsverksamhet"
+
+[[variable]]
+native_id = "264.16868"
+slug = "utnyttjat-underskott-konstnarlig"
+
+[[variable]]
+native_id = "264.16869"
+slug = "overskott-till-ink1"
+
+[[variable]]
+native_id = "264.16870"
+slug = "kvarvarande-underskott"
+
+[[variable]]
+native_id = "264.16885"
+slug = "avskrivningsunderlag-markanlaggningar"
+
+[[variable]]
+native_id = "264.16907"
+slug = "anskaffningsvarde-markanlaggningar"
+
+[[variable]]
+native_id = "264.16908"
+slug = "anskaffningar-markanlaggningar"
+
+[[variable]]
+native_id = "264.16909"
+slug = "ianspraktagna-fonder-markanlaggningar"
+
+[[variable]]
+native_id = "264.16910"
+slug = "avskrivning-markanlaggningar"
+
+[[variable]]
+native_id = "264.16911"
+slug = "avskrivningar-ack-markanlaggningar"
+
+[[variable]]
+native_id = "264.16968"
+slug = "ersattning-avyttrade-inventarier-fonder"
+
+[[variable]]
+native_id = "264.17001"
+slug = "storleken-ersattningsfonder-utgang"
+
+[[variable]]
+native_id = "264.17140"
+slug = "markering-rorelseresultatet-rattat"
+
+[[variable]]
+native_id = "264.17141"
+slug = "markering-balansrakningen-rattad"
+
+[[variable]]
+native_id = "264.17154"
+slug = "periodiseringsfond-2006-taxering"
+
+[[variable]]
+native_id = "264.17174"
+slug = "oavskrivet-varde-markanlaggningar"
+
+[[variable]]
+native_id = "264.17178"
+slug = "redovisad-forlust-enligt-bokforingen"
+
+[[variable]]
+native_id = "264.17200"
+slug = "lopnummer-blankett-n2a"
+
+[[variable]]
+native_id = "264.17203"
+slug = "moms-summa-utgaende"
+
+[[variable]]
+native_id = "264.17206"
+slug = "moms-uttag-fastighetsforvaltning"
+
+[[variable]]
+native_id = "264.17209"
+slug = "moms-export-varor"
+
+[[variable]]
+native_id = "264.17212"
+slug = "moms-overforing-eg-land"
+
+[[variable]]
+native_id = "264.17264"
+slug = "varde-uttagna-varor-tjanster"
+
+[[variable]]
+native_id = "264.17265"
+slug = "varor-och-material-m-m"
+
+[[variable]]
+native_id = "264.17266"
+slug = "anstalld-personal"
+
+[[variable]]
+native_id = "264.17267"
+slug = "bilutgifter-inkl-billeasing"
+
+[[variable]]
+native_id = "264.17269"
+slug = "reparation-underhall-mark-byggnader"
+
+[[variable]]
+native_id = "264.17270"
+slug = "ranteutgifter"
+
+[[variable]]
+native_id = "264.17271"
+slug = "ovriga-avdragsgilla-utgifter"
+
+[[variable]]
+native_id = "264.17272"
+slug = "ovriga-lokal-och-fastighetsutgifter"
+
+[[variable]]
+native_id = "264.17349"
+slug = "resultat-av-verksamheten"
+
+[[variable]]
+native_id = "264.17352"
+slug = "varde-fri-bil-fri-bostad"
+
+[[variable]]
+native_id = "264.17353"
+slug = "overskott-n1a-n2a-medhjalpande-make"
+
+[[variable]]
+native_id = "264.17354"
+slug = "underskott-n1a-n2a-medhjalpande-make"
+
+[[variable]]
+native_id = "264.17355"
+slug = "reseavdrag-bostad-arbetsplats"
+
+[[variable]]
+native_id = "264.17390"
+slug = "ersattningsfonder-utgang"
+
+[[variable]]
+native_id = "264.17391"
+slug = "anskaffningsvarde-maskinell-mark"
+
+[[variable]]
+native_id = "264.17392"
+slug = "anskaffningar-maskinell-mark"
+
+[[variable]]
+native_id = "264.17393"
+slug = "avskrivningsunderlag-maskinell-mark"
+
+[[variable]]
+native_id = "264.17394"
+slug = "ianspraktagna-fonder-maskinell-mark"
+
+[[variable]]
+native_id = "264.17395"
+slug = "avskrivning-maskinell-mark"
+
+[[variable]]
+native_id = "264.17396"
+slug = "avskrivningar-ack-maskinell-mark"
+
+[[variable]]
+native_id = "264.17397"
+slug = "oavskrivet-varde-maskinell-mark"
+
+[[variable]]
+native_id = "264.17419"
+slug = "lopnummer-deklarationsblanketter-typ"
+
+[[variable]]
+native_id = "264.17420"
+slug = "taxeringsar-sru"
+
+[[variable]]
+native_id = "264.17433"
+slug = "ingaende-upplupna-kostnader"
+
+[[variable]]
+native_id = "264.17562"
+slug = "periodiseringsfond-vid-2007-ars-taxering"
+
+[[variable]]
+native_id = "264.17747"
+slug = "lan-fran-aktieagare"
+
+[[variable]]
+native_id = "264.17750"
+slug = "avsattning-till-periodiseringsfond-sru"
+
+[[variable]]
+native_id = "264.17751"
+slug = "aterforing-fran-periodiseringsfond-sru"
+
+[[variable]]
+native_id = "264.17752"
+slug = "bokforda-kostnader-svenska-skatter"
+
+[[variable]]
+native_id = "264.17753"
+slug = "bokforda-kostnader-nedskrivning"
+
+[[variable]]
+native_id = "264.17758"
+slug = "avyttring-delagarratter-bokford-vinst"
+
+[[variable]]
+native_id = "264.17759"
+slug = "avyttring-delagarratter-kapitalvinst"
+
+[[variable]]
+native_id = "264.17760"
+slug = "avyttring-delagarratter-bokford-forlust"
+
+[[variable]]
+native_id = "264.17762"
+slug = "avyttring-delagarratter-aterfort-uppskov"
+
+[[variable]]
+native_id = "264.17764"
+slug = "avyttring-delagarratter-kapitalforlust"
+
+[[variable]]
+native_id = "264.17772"
+slug = "reduktion-underskott-ackord"
+
+[[variable]]
+native_id = "264.17773"
+slug = "bokforda-intakter-ej-tas-upp-ackord"
+
+[[variable]]
+native_id = "264.17788"
+slug = "mottaget-koncernbidrag"
+
+[[variable]]
+native_id = "264.17789"
+slug = "lamnat-koncernbidrag"
+
+[[variable]]
+native_id = "264.17822"
+slug = "min-andel-av-bolagets-overskott-826"
+
+[[variable]]
+native_id = "264.17823"
+slug = "min-andel-av-bolagets-underskott-827"
+
+[[variable]]
+native_id = "264.17824"
+slug = "formansvardet-fri-bil"
+
+[[variable]]
+native_id = "264.17825"
+slug = "hyresvardet-fri-bostad-formaner"
+
+[[variable]]
+native_id = "264.17826"
+slug = "avyttring-fastighet-bokford-vinst"
+
+[[variable]]
+native_id = "264.17827"
+slug = "avyttring-fastighet-bokford-forlust"
+
+[[variable]]
+native_id = "264.17828"
+slug = "avyttring-vardepapper-kapitalvinst"
+
+[[variable]]
+native_id = "264.17829"
+slug = "avyttring-vardepapper-kapitalforlust"
+
+[[variable]]
+native_id = "264.17832"
+slug = "uppskov-kapitalvinst-n4"
+
+[[variable]]
+native_id = "264.17833"
+slug = "aterfort-uppskov-kapitalvinst-n4"
+
+[[variable]]
+native_id = "264.17835"
+slug = "resekostnader-bostad-arbetsplats-bolag"
+
+[[variable]]
+native_id = "264.17839"
+slug = "okning-expansionsfond"
+
+[[variable]]
+native_id = "264.17842"
+slug = "egen-pensionsforsakringspremie-820"
+
+[[variable]]
+native_id = "264.17844"
+slug = "avdrag-egenavgifter-fg-ar"
+
+[[variable]]
+native_id = "264.17848"
+slug = "resultat-overskott-829"
+
+[[variable]]
+native_id = "264.17849"
+slug = "resultat-underskott-850"
+
+[[variable]]
+native_id = "264.17858"
+slug = "sparat-fordelningsbelopp-fg-ar-863"
+
+[[variable]]
+native_id = "264.17859"
+slug = "positivt-kapitalunderlag-843"
+
+[[variable]]
+native_id = "264.17860"
+slug = "negativt-kapitalunderlag-860"
+
+[[variable]]
+native_id = "264.17863"
+slug = "fordelningsbelopp-negativt-862"
+
+[[variable]]
+native_id = "264.17864"
+slug = "fordelningsbelopp-positivt-861"
+
+[[variable]]
+native_id = "264.17865"
+slug = "utnyttjat-positivt-fordelningsbelopp"
+
+[[variable]]
+native_id = "264.17866"
+slug = "sparat-rantefordelningsbelopp"
+
+[[variable]]
+native_id = "264.17870"
+slug = "kapitalunderlag-expansionsfond-868"
+
+[[variable]]
+native_id = "264.17875"
+slug = "delagarens-tillskott"
+
+[[variable]]
+native_id = "264.17888"
+slug = "justerad-anskaffningsutgift-883"
+
+[[variable]]
+native_id = "264.17889"
+slug = "justerad-anskaffningsutgift-negativ"
+
+[[variable]]
+native_id = "264.17913"
+slug = "avyttring-fastighet-kapitalvinst"
+
+[[variable]]
+native_id = "264.17914"
+slug = "avyttring-fastighet-kapitalforlust"
+
+[[variable]]
+native_id = "264.17915"
+slug = "ej-utnyttjat-underskott-fg-ar"
+
+[[variable]]
+native_id = "264.17916"
+slug = "underskott-sparas-efterfoljande-ar"
+
+[[variable]]
+native_id = "264.17917"
+slug = "avsattning-periodiseringsfond-skilda-ar"
+
+[[variable]]
+native_id = "264.17919"
+slug = "justerad-anskaffningsutgift-fg-ar"
+
+[[variable]]
+native_id = "264.17920"
+slug = "overskott-paverkar-anskaffningsutgiften"
+
+[[variable]]
+native_id = "264.17921"
+slug = "delagarens-uttag-hb"
+
+[[variable]]
+native_id = "264.17922"
+slug = "underskott-paverkar-anskaffningsutgiften"
+
+[[variable]]
+native_id = "264.17923"
+slug = "begransat-ansvar-kommanditdelagare"
+
+[[variable]]
+native_id = "264.17948"
+slug = "gransbelopp-aktier-andelar"
+
+[[variable]]
+native_id = "264.17949"
+slug = "lattnadsbelopp-aktier-andelar"
+
+[[variable]]
+native_id = "264.17950"
+slug = "gransbelopp-annan-delagarratt"
+
+[[variable]]
+native_id = "264.17964"
+slug = "sparat-lattnadsutrymme"
+
+[[variable]]
+native_id = "264.18084"
+slug = "periodiseringsfond-2008-taxering"
+
+[[variable]]
+native_id = "264.18085"
+slug = "handelsbolagets-organisationsnummer"
+
+[[variable]]
+native_id = "264.18101"
+slug = "bostadsratt-anskaffningsutgift-923"
+
+[[variable]]
+native_id = "264.18103"
+slug = "ovriga-tillgangar-924"
+
+[[variable]]
+native_id = "264.18106"
+slug = "periodiseringsfonder-ingang"
+
+[[variable]]
+native_id = "264.18112"
+slug = "sarskild-post-929"
+
+[[variable]]
+native_id = "264.18149"
+slug = "sparat-fordelningsbelopp-fg-ar-934"
+
+[[variable]]
+native_id = "264.18153"
+slug = "positivt-rantefordelningsbelopp"
+
+[[variable]]
+native_id = "264.18154"
+slug = "negativt-rantefordelningsbelopp"
+
+[[variable]]
+native_id = "264.18155"
+slug = "positivt-fordelningsbelopp-861"
+
+[[variable]]
+native_id = "264.18156"
+slug = "negativt-fordelningsbelopp-862"
+
+[[variable]]
+native_id = "264.18157"
+slug = "utnyttjat-fordelningsbelopp-877"
+
+[[variable]]
+native_id = "264.18158"
+slug = "kvarvarande-rantefordelningsbelopp"
+
+[[variable]]
+native_id = "264.18167"
+slug = "positivt-kapitalunderlag-utgang"
+
+[[variable]]
+native_id = "264.18184"
+slug = "kapitalintakter-903"
+
+[[variable]]
+native_id = "264.18186"
+slug = "kapitalvinst-904"
+
+[[variable]]
+native_id = "264.18187"
+slug = "skuldranta-m-m"
+
+[[variable]]
+native_id = "264.18190"
+slug = "kostnad-for-kapitalforvaltning-906"
+
+[[variable]]
+native_id = "264.18191"
+slug = "kapitalforlust-m-m-907"
+
+[[variable]]
+native_id = "264.18192"
+slug = "resultat-n1-n2-n3b-overskott-908"
+
+[[variable]]
+native_id = "264.18198"
+slug = "resultat-n1-n2-n3b-underskott-909"
+
+[[variable]]
+native_id = "264.18200"
+slug = "lamnade-koncernbidrag-och-uppskov-974"
+
+[[variable]]
+native_id = "264.18201"
+slug = "erhallna-koncernbidrag-uppskov-975"
+
+[[variable]]
+native_id = "264.18206"
+slug = "outnyttjat-underskott-910"
+
+[[variable]]
+native_id = "264.18209"
+slug = "avsattning-till-periodiseringsfond-953"
+
+[[variable]]
+native_id = "264.18225"
+slug = "overskott-av-naringsverksamhet-966"
+
+[[variable]]
+native_id = "264.18229"
+slug = "underskott-av-naringsverksamhet-968"
+
+[[variable]]
+native_id = "264.18233"
+slug = "allmanna-avdrag-979"
+
+[[variable]]
+native_id = "264.18237"
+slug = "begart-uppskov-andelsbyten-139"
+
+[[variable]]
+native_id = "264.18238"
+slug = "begart-uppskov-min-andel-harav-148"
+
+[[variable]]
+native_id = "264.18239"
+slug = "uppskov-att-ta-upp-som-intakt-837"
+
+[[variable]]
+native_id = "264.18240"
+slug = "begart-uppskov-kapitalvinst-186"
+
+[[variable]]
+native_id = "264.18242"
+slug = "uppskov-att-ta-upp-som-intakt-838"
+
+[[variable]]
+native_id = "264.19556"
+slug = "extraordinara-intakter"
+
+[[variable]]
+native_id = "264.19558"
+slug = "extraordinara-kostnader"
+
+[[variable]]
+native_id = "264.19566"
+slug = "byggnader-och-mark"
+
+[[variable]]
+native_id = "264.20700"
+slug = "forenklat-arsbokslut-har-inte-tillampats"
+
+[[variable]]
+native_id = "264.20701"
+slug = "ovriga-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.20723"
+slug = "lopnummer-deklarationsblanketter"
+
+[[variable]]
+native_id = "264.20724"
+slug = "varor-och-legoarbeten"
+
+[[variable]]
+native_id = "264.20733"
+slug = "aterforda-belopp-restvardeavskrivning"
+
+[[variable]]
+native_id = "264.20735"
+slug = "ej-aterforda-vardeminskning-byggnader"
+
+[[variable]]
+native_id = "264.20736"
+slug = "ej-aterforda-markanlaggningar"
+
+[[variable]]
+native_id = "264.20796"
+slug = "korrigeringsvarde-skatteredovisningen"
+
+[[variable]]
+native_id = "264.20797"
+slug = "antal-delagare"
+
+[[variable]]
+native_id = "264.20799"
+slug = "forenklat-arsbokslut"
+
+[[variable]]
+native_id = "264.20854"
+slug = "nedskrivning-finansiella-tillgangar"
+
+[[variable]]
+native_id = "264.20859"
+slug = "stiftelsens-kapitalavkastning-fg-ar"
+
+[[variable]]
+native_id = "264.20863"
+slug = "skattefria-hyresinkomster"
+
+[[variable]]
+native_id = "264.20866"
+slug = "avdragsgilla-kostnader-ej-bokforda"
+
+[[variable]]
+native_id = "264.20867"
+slug = "schablonintakt-periodiseringsfonder"
+
+[[variable]]
+native_id = "264.20988"
+slug = "kapitalavkastning"
+
+[[variable]]
+native_id = "264.23674"
+slug = "tillgodoford-expansionsfondsskatt"
+
+[[variable]]
+native_id = "264.23709"
+slug = "markering-hur-balansrakningen-ar-rattad"
+
+[[variable]]
+native_id = "264.23710"
+slug = "markering-hur-resultatrakningen-rattad"
+
+# register 269 (bonus-oregelbundna)
+
+[[variable]]
+native_id = "264.4203"
+slug = "andra-finansiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.4211"
+slug = "summa-kortfristiga-placeringar"
+
+[[variable]]
+native_id = "264.4214"
+slug = "summa-tillgangar"
+
+[[variable]]
+native_id = "264.4217"
+slug = "ovriga-kortfristiga-placeringar"
+
+[[variable]]
+native_id = "264.4218"
+slug = "forskott-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.4223"
+slug = "eget-kapital"
+
+[[variable]]
+native_id = "264.4225"
+slug = "avsattningar-for-garantier"
+
+[[variable]]
+native_id = "264.4233"
+slug = "ovrigt-bundet-eget-kapital"
+
+[[variable]]
+native_id = "264.4247"
+slug = "eget-kapital-och-skulder"
+
+[[variable]]
+native_id = "264.4249"
+slug = "summa-langfristiga-skulder"
+
+[[variable]]
+native_id = "264.4259"
+slug = "avskrivningar-immateriella-tillgangar"
+
+[[variable]]
+native_id = "264.4262"
+slug = "kostnader-handelsvaror"
+
+[[variable]]
+native_id = "264.4266"
+slug = "kostnader-for-ravaror"
+
+[[variable]]
+native_id = "264.4273"
+slug = "ovriga-personalkostnader"
+
+[[variable]]
+native_id = "264.4282"
+slug = "utdelning-aktier-andelar-ovriga-foretag"
+
+[[variable]]
+native_id = "264.4283"
+slug = "valutakursvinster"
+
+[[variable]]
+native_id = "264.4284"
+slug = "valutakursforluster"
+
+[[variable]]
+native_id = "264.4288"
+slug = "forandring-periodiseringsfond"
+
+[[variable]]
+native_id = "264.4291"
+slug = "ovriga-bokslutsdispositioner"
+
+[[variable]]
+native_id = "264.4292"
+slug = "kostnader-ovriga-sociala-avgifter"
+
+[[variable]]
+native_id = "264.4293"
+slug = "eget-kapital-hb-kb"
+
+[[variable]]
+native_id = "264.4297"
+slug = "byggnader"
+
+[[variable]]
+native_id = "264.4300"
+slug = "utdelning-aktier-andelar-koncern"
+
+[[variable]]
+native_id = "264.4301"
+slug = "aktier-svenska-koncern-intresse"
+
+[[variable]]
+native_id = "264.4302"
+slug = "aktier-utlandska-koncern-intresse"
+
+[[variable]]
+native_id = "264.4304"
+slug = "ranteintakter-koncernforetag"
+
+[[variable]]
+native_id = "264.4305"
+slug = "rantekostnader-koncernforetag"
+
+[[variable]]
+native_id = "264.4306"
+slug = "ovriga-finansiella-intakter"
+
+[[variable]]
+native_id = "264.4307"
+slug = "ovriga-finansiella-kostnader"
+
+[[variable]]
+native_id = "264.4309"
+slug = "aktier-och-andelar"
+
+[[variable]]
+native_id = "264.4314"
+slug = "vinst-avyttring-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.4315"
+slug = "forlust-avyttring-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.4327"
+slug = "redovisat-resultat"
+
+[[variable]]
+native_id = "264.8101"
+slug = "externa-kostnader-vatten-avlopp"
+
+[[variable]]
+native_id = "264.16394"
+slug = "momsfordran"
+
+[[variable]]
+native_id = "264.16434"
+slug = "momsskuld"
+
+[[variable]]
+native_id = "264.16443"
+slug = "legoarbeten-underentreprenorer"
+
+[[variable]]
+native_id = "264.16523"
+slug = "rantekostnader"
+
+[[variable]]
+native_id = "264.16567"
+slug = "forlust-avyttring-vardepapper"
+
+[[variable]]
+native_id = "264.16769"
+slug = "korrigering-avskrivning-plus"
+
+[[variable]]
+native_id = "264.16771"
+slug = "korrigering-avskrivning-byggnader"
+
+[[variable]]
+native_id = "264.16788"
+slug = "inkomst-av-verksamheten"
+
+[[variable]]
+native_id = "264.16953"
+slug = "ersattning-avyttrade-inventarier"
+
+[[variable]]
+native_id = "264.16959"
+slug = "aterstaende-avdragsutrymme-skogsavdrag"
+
+[[variable]]
+native_id = "264.16977"
+slug = "kvarvarande-restvarde"
+
+[[variable]]
+native_id = "264.16996"
+slug = "kundfordringar-under-nominellt"
+
+[[variable]]
+native_id = "264.17000"
+slug = "anskaffningsvarde-pagaende-arbeten"
+
+[[variable]]
+native_id = "264.17185"
+slug = "resultat-verksamheten-underskott"
+
+[[variable]]
+native_id = "264.17187"
+slug = "resultat-verksamheten-overskott"
+
+[[variable]]
+native_id = "264.17791"
+slug = "fastighet-utomlands-innehafts"
+
+[[variable]]
+native_id = "264.17792"
+slug = "ekonomisk-intressegemenskap-utland"
+
+[[variable]]
+native_id = "264.17793"
+slug = "andel-utlandsk-jur-person"
+
+[[variable]]
+native_id = "264.17800"
+slug = "skattemassiga-justeringar-overskott"
+
+[[variable]]
+native_id = "264.17801"
+slug = "skattemassiga-justeringar-underskott"
+
+[[variable]]
+native_id = "264.17802"
+slug = "dubbla-taxeringar-forsta-ar"
+
+[[variable]]
+native_id = "264.17803"
+slug = "dubbla-taxeringar-andra-ar"
+
+[[variable]]
+native_id = "264.17830"
+slug = "overlatelsevinst-handelsbolag"
+
+[[variable]]
+native_id = "264.17831"
+slug = "outnyttat-underskott-paverkar"
+
+[[variable]]
+native_id = "264.17834"
+slug = "outnyttat-underskott-ej-paverkar"
+
+[[variable]]
+native_id = "264.17836"
+slug = "positiv-rantefordelning-hb"
+
+[[variable]]
+native_id = "264.17837"
+slug = "negativ-rantefordelning-punkt-44"
+
+[[variable]]
+native_id = "264.17838"
+slug = "aterforing-fran-periodiseringsfond-875"
+
+[[variable]]
+native_id = "264.17840"
+slug = "avsattning-periodiseringsfond-30pct"
+
+[[variable]]
+native_id = "264.17841"
+slug = "minskning-av-expansionsfond-878"
+
+[[variable]]
+native_id = "264.17843"
+slug = "loneskatt-pensionsforsakringspremie"
+
+[[variable]]
+native_id = "264.17845"
+slug = "paford-egenavgift-fg-ar"
+
+[[variable]]
+native_id = "264.17846"
+slug = "avdrag-egenavgifter-beraknat"
+
+[[variable]]
+native_id = "264.17847"
+slug = "sjukpenning-hanforlig-naringsv"
+
+[[variable]]
+native_id = "264.17850"
+slug = "utnyttjat-underskott-nystartad"
+
+[[variable]]
+native_id = "264.17851"
+slug = "kvarvarande-underskott-854"
+
+[[variable]]
+native_id = "264.17853"
+slug = "positivt-justerad-anskaffningsutgift"
+
+[[variable]]
+native_id = "264.17854"
+slug = "negativt-justerad-anskaffningsutgift"
+
+[[variable]]
+native_id = "264.17856"
+slug = "ranteformanligt-lan-handelsbolaget"
+
+[[variable]]
+native_id = "264.17857"
+slug = "standig-overgangspost-1995"
+
+[[variable]]
+native_id = "264.17861"
+slug = "sparat-fordelningsbelopp-fg-ar-885"
+
+[[variable]]
+native_id = "264.17874"
+slug = "delagarens-inkomst-overskott"
+
+[[variable]]
+native_id = "264.17876"
+slug = "delagarens-uttag-formaner"
+
+[[variable]]
+native_id = "264.17877"
+slug = "delagarens-ovriga-uttag"
+
+[[variable]]
+native_id = "264.17878"
+slug = "arets-avsattning-periodiseringsfond"
+
+[[variable]]
+native_id = "264.17879"
+slug = "arets-aterforing-periodiseringsfond"
+
+[[variable]]
+native_id = "264.17880"
+slug = "utnyttjat-underskott-786"
+
+[[variable]]
+native_id = "264.17881"
+slug = "kapitalvinst-fastighet-bostadsratt"
+
+[[variable]]
+native_id = "264.17882"
+slug = "kapitalforlust-fastighet-bostadsratt"
+
+[[variable]]
+native_id = "264.17883"
+slug = "justerad-anskaffningsutgift-812"
+
+[[variable]]
+native_id = "264.17884"
+slug = "okning-av-expansionsfond-794"
+
+[[variable]]
+native_id = "264.17885"
+slug = "expansionsfondsskatt-att-betala"
+
+[[variable]]
+native_id = "264.17886"
+slug = "minskning-av-expansionsfond-796"
+
+[[variable]]
+native_id = "264.17887"
+slug = "expansionsfondsskatt-tillgodoforas"
+
+[[variable]]
+native_id = "264.17891"
+slug = "expansionsfond-vid-arets-ingang"
+
+[[variable]]
+native_id = "264.17892"
+slug = "okning-av-expansionsfond-879"
+
+[[variable]]
+native_id = "264.17893"
+slug = "minskning-av-expansionsfond-864"
+
+[[variable]]
+native_id = "264.17894"
+slug = "expansionsfond-vid-arets-utgang"
+
+[[variable]]
+native_id = "264.17957"
+slug = "utdelning-om-saldot-ar-negativt-928"
+
+[[variable]]
+native_id = "264.17968"
+slug = "total-kapitalforlust"
+
+[[variable]]
+native_id = "264.18098"
+slug = "rantefordelning-skogskonto-920"
+
+[[variable]]
+native_id = "264.18099"
+slug = "rantefordelning-andel-naringsvinst"
+
+[[variable]]
+native_id = "264.18100"
+slug = "varde-av-fastighet"
+
+[[variable]]
+native_id = "264.18108"
+slug = "outnyttjat-underskott-naringsverksamhet"
+
+[[variable]]
+native_id = "264.19551"
+slug = "avskrivningar"
+
+[[variable]]
+native_id = "264.19571"
+slug = "langfristiga-fordringar"
+
+[[variable]]
+native_id = "264.19573"
+slug = "obeskattade-reserver"
+
+[[variable]]
+native_id = "264.19657"
+slug = "ovriga-rorelsekostnader"
+
+[[variable]]
+native_id = "264.19918"
+slug = "andelar-koncernforetag"
+
+[[variable]]
+native_id = "264.19919"
+slug = "andelar-intresseforetag"
+
+[[variable]]
+native_id = "264.20725"
+slug = "avdrag-egenavgifter-fgar"
+
+[[variable]]
+native_id = "264.20726"
+slug = "underskott-utnyttjat-i-kapital"
+
+[[variable]]
+native_id = "264.20739"
+slug = "negativt-kapitalunderlag-rantefordelning"
+
+[[variable]]
+native_id = "264.20741"
+slug = "positivt-kapitalunderlag-expansionsfond"
+
+[[variable]]
+native_id = "264.20871"
+slug = "skattemassigt-resultat-overskott"
+
+[[variable]]
+native_id = "264.20872"
+slug = "skattemassigt-resultat-underskott"
+
+[[variable]]
+native_id = "264.20883"
+slug = "overskott-av-naringsverksamhet"
+
+[[variable]]
+native_id = "264.20886"
+slug = "immateriella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.20888"
+slug = "forskott-immateriella-anlaggning"
+
+[[variable]]
+native_id = "264.20889"
+slug = "forbattringsutgifter-pa-annans-fastighet"
+
+[[variable]]
+native_id = "264.20891"
+slug = "lan-till-delagare"
+
+[[variable]]
+native_id = "264.20894"
+slug = "ravaror-fornodenheter"
+
+[[variable]]
+native_id = "264.20897"
+slug = "pagaende-arbeten-for-annans-rakning"
+
+[[variable]]
+native_id = "264.20898"
+slug = "forskott-till-leverantorer"
+
+[[variable]]
+native_id = "264.20902"
+slug = "bundet-eget-kapital"
+
+[[variable]]
+native_id = "264.20903"
+slug = "avsattningar-pensioner-liknande"
+
+[[variable]]
+native_id = "264.20906"
+slug = "skulder-till-kreditinstitut"
+
+[[variable]]
+native_id = "264.20907"
+slug = "skulder-till-koncern-och-intresseforetag"
+
+[[variable]]
+native_id = "264.20910"
+slug = "vaxelskulder"
+
+[[variable]]
+native_id = "264.20913"
+slug = "av-nedskrivning-anlaggningstillgangar"
+
+[[variable]]
+native_id = "264.20916"
+slug = "resultat-fran-andelar-i-intresseforetag"
+
+[[variable]]
+native_id = "264.20917"
+slug = "resultat-andelar-intresseforetag-neg"
+
+[[variable]]
+native_id = "264.20918"
+slug = "ovriga-ranteintakter-och-liknande"
+
+[[variable]]
+native_id = "264.20919"
+slug = "lamnade-koncernbidrag"
+
+[[variable]]
+native_id = "264.20927"
+slug = "skattemassiga-justeringar-minskning"
+
+[[variable]]
+native_id = "264.20985"
+slug = "ovriga-ej-bokforda-kostnader"
+
+# register 269
+
+[[variable]]
+native_id = "264.20868.v7655"
+slug = "ovriga-intakter-skall-tas-upp"
+
+[[variable]]
+native_id = "264.20868.v8689"
+slug = "ovriga-intakter-skall-tas-upp-2"
+
+[[variable]]
+native_id = "264.4819.v0530"
+slug = "ovriga-kostnader"
+
+[[variable]]
+native_id = "264.4819.v7501"
+slug = "ovriga-kostnader-2"
+
+[[variable]]
+native_id = "264.4819.v8754"
+slug = "ovriga-kostnader-3"
+
+# register 270

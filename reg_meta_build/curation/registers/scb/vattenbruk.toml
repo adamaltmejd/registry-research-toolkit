@@ -1,0 +1,198 @@
+[register]
+provider = "scb"
+slug = "vattenbruk"
+native_id = "215"
+
+[[variant]]
+native_id = "215.316"
+slug = "vattenbruk"
+display_group = "Vattenbruk"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "215.1538"
+slug = "kostnadsenkaten"
+display_group = "Kostnadsenkäten"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Fritidshusområden
+
+[[variable]]
+native_id = "215.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "215.39818"
+slug = "produktion-av-musslor"
+
+[[variable]]
+native_id = "215.39820"
+slug = "produktion-av-ostron"
+
+[[variable]]
+native_id = "215.39923"
+slug = "forsaljning-av-musslor"
+
+[[variable]]
+native_id = "215.39925"
+slug = "forsaljning-av-ostron"
+
+[[variable]]
+native_id = "215.39955"
+slug = "musselodling-pa-band-nat-langd"
+
+[[variable]]
+native_id = "215.39956"
+slug = "musselodling-band-nat-vattenareal"
+
+[[variable]]
+native_id = "215.39957"
+slug = "musselodling-pa-flottar-langd"
+
+[[variable]]
+native_id = "215.39958"
+slug = "musselodling-flottar-vattenareal"
+
+[[variable]]
+native_id = "215.39959"
+slug = "bottenodling-musslor-vattenareal"
+
+[[variable]]
+native_id = "215.39961"
+slug = "odling-av-ostron"
+
+[[variable]]
+native_id = "215.41185"
+slug = "forsaljning-av-signalkraftor-utsattning"
+
+[[variable]]
+native_id = "215.41186"
+slug = "produktion-av-signalkraftor-konsumtion"
+
+[[variable]]
+native_id = "215.41235"
+slug = "bottenodling-musslor-antal-enheter"
+
+[[variable]]
+native_id = "215.41238"
+slug = "inkop-vattenbruksorganismer-mangd"
+
+[[variable]]
+native_id = "215.41239"
+slug = "inkop-vattenbruksorganismer-kostnad"
+
+# register 216 (fritidshusomraden)
+
+[[variable]]
+native_id = "215.37409.av-arb-k"
+slug = "antal-sysselsatta-pa-foretaget"
+
+[[variable]]
+native_id = "215.37409.avlon-k"
+slug = "antal-avlonade-pa-foretaget"
+
+[[variable]]
+native_id = "215.39822.srblf"
+slug = "produktion-av-regnbage-for-utsattning"
+
+[[variable]]
+native_id = "215.39822.srblf-salt"
+slug = "produktion-av-regnbage-utsattning-salt"
+
+[[variable]]
+native_id = "215.39824.srodp-salt"
+slug = "produktion-av-oring-for-utsattning"
+
+[[variable]]
+native_id = "215.39826.srodp-salt"
+slug = "produktion-av-roding-for-utsattning"
+
+[[variable]]
+native_id = "215.39927.srblf"
+slug = "forsaljning-av-regnbage-for-utsattning"
+
+[[variable]]
+native_id = "215.39927.srblf-salt"
+slug = "forsaljning-av-regnbage-utsattning-salt"
+
+[[variable]]
+native_id = "215.39935.ryovrf"
+slug = "forsaljning-av-oring-rom-eller-yngel"
+
+[[variable]]
+native_id = "215.39935.ryovrf-salt"
+slug = "forsaljning-av-oring-rom-yngel-salt"
+
+[[variable]]
+native_id = "215.40018.ryovrf"
+slug = "forsaljning-av-rom-yngel-ovrig-art-1"
+
+[[variable]]
+native_id = "215.40018.ryovrf-salt"
+slug = "forsaljning-rom-yngel-ovrig-art-1-salt"
+
+[[variable]]
+native_id = "215.41234.lan1"
+slug = "antal-odlingar-lan"
+
+[[variable]]
+native_id = "215.49.lan1"
+slug = "lan3"
+
+[[variable]]
+native_id = "215.6306.av-arb-k"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "215.6306.avlon-k"
+slug = "antal-arbetade-timmar-avlonade"
+
+# register 225 (land-och-vattenarealer)
+
+[[variable]]
+native_id = "215.400"
+slug = "adress"
+
+[[variable]]
+native_id = "215.412"
+slug = "postort"
+
+[[variable]]
+native_id = "215.537"
+slug = "postnr"
+
+[[variable]]
+native_id = "215.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "215.3752"
+slug = "kontaktperson"
+
+[[variable]]
+native_id = "215.16507"
+slug = "driftskostnader-ovrigt"
+
+[[variable]]
+native_id = "215.19556"
+slug = "extraordinara-intakter"
+
+[[variable]]
+native_id = "215.19558"
+slug = "extraordinara-kostnader"
+
+[[variable]]
+native_id = "215.28064"
+slug = "imputeringsstatus"
+
+[[variable]]
+native_id = "215.38074"
+slug = "energikostnader"
+
+# register 216

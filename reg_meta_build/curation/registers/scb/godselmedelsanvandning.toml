@@ -1,0 +1,111 @@
+[register]
+provider = "scb"
+slug = "godselmedelsanvandning"
+native_id = "147"
+
+[[variant]]
+native_id = "147.214"
+slug = "godselmedelsanvandning"
+display_group = "Gödselmedelsanvändning i jordbruket 2007-2013"
+panel_entity_key = "foretagsidentitet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "147.1339"
+slug = "godselmedelsanvandning-2016"
+display_group = "Gödselmedelsanvändning i jordbruket fr o m 2016"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Försäljning av mineralgödsel för jord- och trädgårdsbruk
+
+[[variable]]
+native_id = "147.7550"
+slug = "foretagsidentitet"
+
+
+[[variable]]
+native_id = "147.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "147.7003"
+slug = "antal-djur"
+
+[[variable]]
+native_id = "147.19861"
+slug = "objektkod"
+
+[[variable]]
+native_id = "147.20639"
+slug = "objektkod-2"
+
+[[variable]]
+native_id = "147.22538"
+slug = "betesperiod-mjolkkor"
+
+[[variable]]
+native_id = "147.22539"
+slug = "betesperiod-am-dikor"
+
+[[variable]]
+native_id = "147.22540"
+slug = "betesperiod-kalvar"
+
+[[variable]]
+native_id = "147.22541"
+slug = "betesperiod-kvigor"
+
+[[variable]]
+native_id = "147.22542"
+slug = "betesperiod-stutar-tjurar"
+
+[[variable]]
+native_id = "147.22624"
+slug = "mjolkkors-nattvistelse"
+
+# register 151 (inkvarteringsstatistik)
+
+[[variable]]
+native_id = "147.1728.bortfall"
+slug = "blankettens-statuskod"
+
+[[variable]]
+native_id = "147.1728.resultatkod"
+slug = "blankettens-resultatkod"
+
+# register 151 (inkvarteringsstatistik)
+
+[[variable]]
+native_id = "147.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "147.4613"
+slug = "populationsstorlek-per-stratum"
+
+[[variable]]
+native_id = "147.4614"
+slug = "urvalsstorlek-per-stratum"
+
+[[variable]]
+native_id = "147.8162"
+slug = "antal-svarande-enheter"
+
+[[variable]]
+native_id = "147.22623"
+slug = "jordbruksforetag-lantbrukare-namn"
+
+[[variable]]
+native_id = "147.22627"
+slug = "areal-av-grodan"
+
+[[variable]]
+native_id = "147.37402"
+slug = "riksomrade-ro"
+
+# register 151

@@ -1,0 +1,195 @@
+[register]
+provider = "scb"
+slug = "energi-smahus"
+native_id = "74"
+
+[[variant]]
+native_id = "74.211"
+slug = "energi-i-smahus"
+display_group = "Energi i småhus"
+panel_entity_key = "identitet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Energistatistik för flerbostadshus
+
+[[variable]]
+native_id = "74.145"
+slug = "identitet"
+
+
+[[variable]]
+native_id = "74.31"
+slug = "forsamling"
+
+[[variable]]
+native_id = "74.2276"
+slug = "annan-installation"
+
+[[variable]]
+native_id = "74.2282"
+slug = "upprakningsfaktor-smahus"
+
+[[variable]]
+native_id = "74.2288"
+slug = "bytt-fran-uppvarmningssatt"
+
+[[variable]]
+native_id = "74.2289"
+slug = "bytt-till-uppvarmningssatt"
+
+[[variable]]
+native_id = "74.2290"
+slug = "bytt-uppvarmningssatt-kod"
+
+[[variable]]
+native_id = "74.2293"
+slug = "kylfrys-kod"
+
+[[variable]]
+native_id = "74.2307"
+slug = "uppvarmningssatt-berg-jord-sjovarme"
+
+[[variable]]
+native_id = "74.2308"
+slug = "uppvarmningssatt-franluft-luftvarmepump"
+
+[[variable]]
+native_id = "74.2313"
+slug = "uppvarmningssatt-annat"
+
+[[variable]]
+native_id = "74.2315"
+slug = "uppvarmningssatt-olja"
+
+[[variable]]
+native_id = "74.2316"
+slug = "uppvarmningssatt-ved"
+
+[[variable]]
+native_id = "74.2317"
+slug = "uppvarmningssatt-flis-span-pellets"
+
+[[variable]]
+native_id = "74.2318"
+slug = "uppvarmningssatt-naturgas-stadsgas"
+
+[[variable]]
+native_id = "74.2320"
+slug = "uppvarmningssatt-fjarrvarme"
+
+[[variable]]
+native_id = "74.2321"
+slug = "uppvarmningssatt-panncentral-narvarme"
+
+[[variable]]
+native_id = "74.2322"
+slug = "uppvarmningssatt-direktverkande-el"
+
+[[variable]]
+native_id = "74.2324"
+slug = "uppvarmningssatt-luftburen-el"
+
+[[variable]]
+native_id = "74.2329"
+slug = "flis-spananvandning"
+
+[[variable]]
+native_id = "74.2330"
+slug = "vedanvandning"
+
+[[variable]]
+native_id = "74.2331"
+slug = "pelletsanvandning"
+
+[[variable]]
+native_id = "74.2332"
+slug = "elanvandning"
+
+[[variable]]
+native_id = "74.2340"
+slug = "oljeanvandning"
+
+[[variable]]
+native_id = "74.3407"
+slug = "biutrymmesyta-i-smahus"
+
+[[variable]]
+native_id = "74.3408"
+slug = "bostadsyta-i-smahus"
+
+[[variable]]
+native_id = "74.3747"
+slug = "total-bostadsyta-smahus"
+
+[[variable]]
+native_id = "74.3808"
+slug = "biutrymmesyta-klassificerat"
+
+[[variable]]
+native_id = "74.4018"
+slug = "ackumulatortank"
+
+[[variable]]
+native_id = "74.4189"
+slug = "fjarrvarmeanvandning"
+
+[[variable]]
+native_id = "74.4235"
+slug = "gasanvandning"
+
+[[variable]]
+native_id = "74.4236"
+slug = "total-uppvarmd-yta-smahus"
+
+[[variable]]
+native_id = "74.4237"
+slug = "total-energianvandning-kwh"
+
+# register 75 (energi-flerbostad)
+
+[[variable]]
+native_id = "74.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "74.635"
+slug = "byggnadsar"
+
+[[variable]]
+native_id = "74.2301"
+slug = "uppvarmningssatt-vattenburen-el"
+
+[[variable]]
+native_id = "74.4019"
+slug = "anvant-uppvarmningssatt"
+
+[[variable]]
+native_id = "74.17990"
+slug = "uppvarmningssatt-luft-luftvarmepump"
+
+[[variable]]
+native_id = "74.19574"
+slug = "installationsar-luft-luftvarmepump"
+
+[[variable]]
+native_id = "74.19575"
+slug = "installationsar-franluft-varmepump"
+
+[[variable]]
+native_id = "74.19576"
+slug = "installationsar-bergvarmepump"
+
+[[variable]]
+native_id = "74.19579"
+slug = "varmeeffekt-luft-luftvarmepump"
+
+[[variable]]
+native_id = "74.19580"
+slug = "varmeeffekt-franluft-vattenvarmepump"
+
+[[variable]]
+native_id = "74.19581"
+slug = "varmeeffekt-berg-jord-sjovarmepump"
+
+# register 75

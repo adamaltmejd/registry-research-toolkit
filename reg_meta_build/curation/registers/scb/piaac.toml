@@ -1,0 +1,65 @@
+[register]
+provider = "scb"
+slug = "piaac"
+native_id = "351"
+
+[[variant]]
+native_id = "351.1205"
+slug = "_default"
+display_group = "Den internationella undersökningen av vuxnas färdigheter (PIAAC)"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Gymnasial yrkesutbildning
+
+[[variable]]
+native_id = "351.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "351.32906.d-q12c"
+slug = "utbildningsniva-krav"
+
+[[variable]]
+native_id = "351.32908.d-q12c"
+slug = "arbetsplats-larande"
+
+# register 355 (tradbransle-torv)
+
+[[variable]]
+native_id = "351.44"
+slug = "kon"
+
+[[variable]]
+native_id = "351.45"
+slug = "land"
+
+[[variable]]
+native_id = "351.753"
+slug = "examensar"
+
+[[variable]]
+native_id = "351.6267"
+slug = "alder"
+
+[[variable]]
+native_id = "351.17328"
+slug = "individnyckel"
+
+[[variable]]
+native_id = "351.32788"
+slug = "alder-avslutad-utbildning"
+
+# register 352
+
+[[variable]]
+native_id = "351.5726.b-q01a"
+slug = "utbildningens-niva"
+
+[[variable]]
+native_id = "351.5726.b-q01a-t"
+slug = "utbildningens-niva-2"
+
+# register 353

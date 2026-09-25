@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "forsakring-arsredogorelse"
+native_id = "334"
+
+[[variant]]
+native_id = "334.1089"
+slug = "forsakring-arsredogorelse-indata"
+display_group = "Indata"
+
+# Transportinfrastrukturens markanvändning
+
+[[variable]]
+native_id = "334.29231"
+slug = "vardevariabel-finansiell-aktivitet"
+
+# register 335 (transportinfrastruktur-markanvandning)

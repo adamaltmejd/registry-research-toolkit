@@ -1,0 +1,181 @@
+[register]
+provider = "scb"
+slug = "psu"
+native_id = "164"
+
+[[variant]]
+native_id = "164.235"
+slug = "_default"
+display_group = "Partisympatiundersökningen"
+panel_entity_key = "uppgiftslamnarens-personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Företagens kortperiodiska tillgångar och skulder (BAST)
+
+[[variable]]
+native_id = "164.16388"
+slug = "uppgiftslamnarens-personnr"
+
+
+[[variable]]
+native_id = "164.335"
+slug = "forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "164.6406"
+slug = "eu-sympati"
+
+[[variable]]
+native_id = "164.7204"
+slug = "forvarvsarbete-tom-2010"
+
+[[variable]]
+native_id = "164.7602"
+slug = "euro-sympati"
+
+[[variable]]
+native_id = "164.7771"
+slug = "partival-riksdagsval-forrforra"
+
+[[variable]]
+native_id = "164.7772"
+slug = "partiblockval-riksdagsval-forrforra"
+
+[[variable]]
+native_id = "164.7773"
+slug = "partival-riksdagsval-idag-forrforra"
+
+[[variable]]
+native_id = "164.7774"
+slug = "partiblockval-riksdagsval-idag-forrforra"
+
+[[variable]]
+native_id = "164.15114"
+slug = "forvarvs-kapitalinkomst-make"
+
+[[variable]]
+native_id = "164.20681"
+slug = "rostat-europaparlamentsval"
+
+[[variable]]
+native_id = "164.25242"
+slug = "valdeltagande-regionval-vastra-gotaland"
+
+[[variable]]
+native_id = "164.25243"
+slug = "partival-regionfullmaktigeval"
+
+[[variable]]
+native_id = "164.25455"
+slug = "partier-overvager-riksdagsval-idag"
+
+[[variable]]
+native_id = "164.25456"
+slug = "partier-tvekar-riksdagsval-idag"
+
+[[variable]]
+native_id = "164.25458"
+slug = "partier-overvager-annat-parti"
+
+[[variable]]
+native_id = "164.25459"
+slug = "deltagande-europaparlamentsval"
+
+[[variable]]
+native_id = "164.26832"
+slug = "forvarvsarbete-from-2011"
+
+[[variable]]
+native_id = "164.30687"
+slug = "nojd-med-valresultatet"
+
+[[variable]]
+native_id = "164.30688"
+slug = "modepreferens"
+
+[[variable]]
+native_id = "164.30689"
+slug = "modepreferens-epostfraga"
+
+[[variable]]
+native_id = "164.41629"
+slug = "svarighetsgrad-rostningsbeslut"
+
+[[variable]]
+native_id = "164.41630"
+slug = "tidpunkt-for-beslut"
+
+# register 165 (bast)
+
+[[variable]]
+native_id = "164.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "164.389"
+slug = "antal-barn-under-18-ar"
+
+[[variable]]
+native_id = "164.690"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "164.775"
+slug = "utbildningsniva-aggregat-grov"
+
+[[variable]]
+native_id = "164.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "164.1719"
+slug = "svarsdatum"
+
+[[variable]]
+native_id = "164.1781"
+slug = "aldg"
+
+[[variable]]
+native_id = "164.3881"
+slug = "sei-i-huvudsysslan"
+
+[[variable]]
+native_id = "164.6172"
+slug = "lopnummer-for-individ"
+
+[[variable]]
+native_id = "164.7546"
+slug = "dispositionsform-bostad"
+
+[[variable]]
+native_id = "164.7589"
+slug = "resultatkod"
+
+[[variable]]
+native_id = "164.7916"
+slug = "forvarvsinkomst-kvintilgrupp"
+
+[[variable]]
+native_id = "164.14775"
+slug = "riksdagsvalkrets-kod"
+
+[[variable]]
+native_id = "164.14850"
+slug = "kommungrupp"
+
+[[variable]]
+native_id = "164.30690"
+slug = "epost"
+
+# register 165
+
+[[variable]]
+native_id = "164.15.civilst"
+slug = "civilstand"
+
+[[variable]]
+native_id = "164.2768.bostt"
+slug = "bostadstyp"
+
+# register 168

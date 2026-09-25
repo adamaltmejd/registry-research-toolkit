@@ -1,0 +1,32 @@
+[register]
+provider = "fk"
+slug = "bilstod"
+native_id = "5488356780395367498"
+
+[[variant]]
+native_id = "5488356780395367498.8025025971550859246"
+slug = "utbetalningar"
+display_group = "Bilstöd"
+panel_entity_key = ["lopnr-sokande", "lopnr-barn"]
+panel_time_key = "utbetalningsdatum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5488356780395367498.7315139012955295030"
+slug = "ansokningar-beslut"
+display_group = "Bilstöd"
+panel_entity_key = ["lopnr-sokande", "lopnr-barn"]
+panel_time_key = "ansokningsdatum"
+panel_time_grain = "row"
+
+# Föräldrapenning
+
+[[variable]]
+native_id = "5488356780395367498.Lopnr_barn"
+slug = "lopnr-barn"
+
+
+[[variable]]
+native_id = "5488356780395367498.Lopnr_sokande"
+slug = "lopnr-sokande"

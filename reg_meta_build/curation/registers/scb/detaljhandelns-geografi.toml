@@ -1,0 +1,37 @@
+[register]
+provider = "scb"
+slug = "detaljhandelns-geografi"
+native_id = "226"
+
+[[variant]]
+native_id = "226.1432"
+slug = "handelsomraden"
+display_group = "Handelsområden"
+
+# Industrins förbrukning av inköpta varor (tidigare Industrins förbrukning av inköpta varor och tjänster)
+
+[[variable]]
+native_id = "226.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "226.49"
+slug = "lan"
+
+[[variable]]
+native_id = "226.2189"
+slug = "landareal"
+
+[[variable]]
+native_id = "226.25365"
+slug = "handelsomrade"
+
+[[variable]]
+native_id = "226.25366"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "226.25367"
+slug = "antal-arbetsstallen"
+
+# register 228 (formogenhetsreg)

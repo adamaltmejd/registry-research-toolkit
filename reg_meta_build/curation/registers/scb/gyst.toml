@@ -1,0 +1,463 @@
+[register]
+provider = "scb"
+slug = "gyst"
+native_id = "108"
+
+[[variant]]
+native_id = "108.120"
+slug = "_default"
+display_group = "Gymnasieungdomars studieintresse"
+panel_entity_key = "personnr-urval"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Högutbildade utrikes födda
+
+[[variable]]
+native_id = "108.7020"
+slug = "personnr-urval"
+
+
+[[variable]]
+native_id = "108.462"
+slug = "stratum"
+
+[[variable]]
+native_id = "108.1248"
+slug = "hogskolekod"
+
+[[variable]]
+native_id = "108.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "108.2179"
+slug = "lopnummer"
+
+[[variable]]
+native_id = "108.2302"
+slug = "kommungruppering-regioner"
+
+[[variable]]
+native_id = "108.4655"
+slug = "avregkod"
+
+[[variable]]
+native_id = "108.4656"
+slug = "insamlingsmetod"
+
+[[variable]]
+native_id = "108.6267"
+slug = "alder"
+
+[[variable]]
+native_id = "108.6290"
+slug = "nuts"
+
+[[variable]]
+native_id = "108.14650"
+slug = "intresse-hogskolestudier"
+
+[[variable]]
+native_id = "108.14699"
+slug = "ointresse-orsak"
+
+[[variable]]
+native_id = "108.14700"
+slug = "typ-av-hogskolestudier"
+
+[[variable]]
+native_id = "108.14702"
+slug = "hogskolestudiernas-langd"
+
+[[variable]]
+native_id = "108.14703"
+slug = "viss-hogskola-utbildning"
+
+[[variable]]
+native_id = "108.14705"
+slug = "forstahandsval-amnesomrade"
+
+[[variable]]
+native_id = "108.14706"
+slug = "andrahandsval-amnesomrade"
+
+[[variable]]
+native_id = "108.14707"
+slug = "anledning-hogskola"
+
+[[variable]]
+native_id = "108.14708"
+slug = "larosatesorsak-nara-bostaden"
+
+[[variable]]
+native_id = "108.14709"
+slug = "larosatesorsak-brett-utbud"
+
+[[variable]]
+native_id = "108.14710"
+slug = "larosatesorsak-utb-finns-dar"
+
+[[variable]]
+native_id = "108.14711"
+slug = "larosatesorsak-bra-utbildning"
+
+[[variable]]
+native_id = "108.14712"
+slug = "larosatesorsak-studentlivet"
+
+[[variable]]
+native_id = "108.14713"
+slug = "larosatesorsak-trevlig-stad"
+
+[[variable]]
+native_id = "108.14714"
+slug = "larosatesorsak-latt-komma-in"
+
+[[variable]]
+native_id = "108.14715"
+slug = "larosatesorsak-gott-rykte"
+
+[[variable]]
+native_id = "108.14716"
+slug = "larosatesorsak-annat"
+
+[[variable]]
+native_id = "108.14717"
+slug = "viktigaste-anledning-hogskola"
+
+[[variable]]
+native_id = "108.14718"
+slug = "distansstudier"
+
+[[variable]]
+native_id = "108.14719"
+slug = "hogskolestudier-utomlands"
+
+[[variable]]
+native_id = "108.14724"
+slug = "infokalla-studera-nu"
+
+[[variable]]
+native_id = "108.14725"
+slug = "infokalla-studenthandboken"
+
+[[variable]]
+native_id = "108.14727"
+slug = "infokalla-larare-gymnasiet"
+
+[[variable]]
+native_id = "108.14728"
+slug = "infokalla-informatorer-hogskola"
+
+[[variable]]
+native_id = "108.14729"
+slug = "infokalla-studiebesok-hogskola"
+
+[[variable]]
+native_id = "108.14730"
+slug = "infokalla-foraldrar-kamrater"
+
+[[variable]]
+native_id = "108.14731"
+slug = "infokalla-massmedia"
+
+[[variable]]
+native_id = "108.14732"
+slug = "infokalla-hogskola-webbplatser"
+
+[[variable]]
+native_id = "108.14733"
+slug = "infokalla-utbildningsmassor"
+
+[[variable]]
+native_id = "108.14734"
+slug = "infokalla-material-hogskola"
+
+[[variable]]
+native_id = "108.26806"
+slug = "infokalla-kamrater"
+
+[[variable]]
+native_id = "108.26807"
+slug = "infokalla-foraldrar-anhoriga"
+
+[[variable]]
+native_id = "108.26808"
+slug = "infokalla-sociala-medier"
+
+[[variable]]
+native_id = "108.26809"
+slug = "viktigaste-orsak-ej-vidare"
+
+[[variable]]
+native_id = "108.26810"
+slug = "saker-amnesomrade-forstahand"
+
+[[variable]]
+native_id = "108.26811"
+slug = "saker-amnesomrade-andrahand"
+
+[[variable]]
+native_id = "108.26812"
+slug = "kombinera-arbete-studier"
+
+[[variable]]
+native_id = "108.27210"
+slug = "ointresse-orsak-lasa-framtiden"
+
+[[variable]]
+native_id = "108.27211"
+slug = "ointresse-orsak-kravs-ej"
+
+[[variable]]
+native_id = "108.27212"
+slug = "ointresse-orsak-annan-utb"
+
+[[variable]]
+native_id = "108.27213"
+slug = "ointresse-orsak-skoltrott"
+
+[[variable]]
+native_id = "108.27214"
+slug = "ointresse-orsak-klarar-ej"
+
+[[variable]]
+native_id = "108.27215"
+slug = "ointresse-orsak-andra-saker"
+
+[[variable]]
+native_id = "108.27216"
+slug = "ointresse-orsak-vill-arbeta"
+
+[[variable]]
+native_id = "108.27217"
+slug = "ointresse-orsak-kanner-ingen"
+
+[[variable]]
+native_id = "108.27218"
+slug = "ointresse-orsak-vill-ej-flytta"
+
+[[variable]]
+native_id = "108.27219"
+slug = "ointresse-orsak-lonar-ej"
+
+[[variable]]
+native_id = "108.27220"
+slug = "ointresse-orsak-saknar-info"
+
+[[variable]]
+native_id = "108.27221"
+slug = "ointresse-orsak-trakigt"
+
+[[variable]]
+native_id = "108.27222"
+slug = "ointresse-orsak-annat"
+
+[[variable]]
+native_id = "108.27238"
+slug = "studieanledning-kravs-yrke"
+
+[[variable]]
+native_id = "108.27239"
+slug = "studieanledning-arbetsmarknad"
+
+[[variable]]
+native_id = "108.27240"
+slug = "studieanledning-intressant-jobb"
+
+[[variable]]
+native_id = "108.27241"
+slug = "studieanledning-arbete-utomlands"
+
+[[variable]]
+native_id = "108.27242"
+slug = "studieanledning-svart-fa-arbete"
+
+[[variable]]
+native_id = "108.27243"
+slug = "studieanledning-hog-lon"
+
+[[variable]]
+native_id = "108.27244"
+slug = "studieanledning-oka-kunskaper"
+
+[[variable]]
+native_id = "108.27246"
+slug = "studieanledning-talang"
+
+[[variable]]
+native_id = "108.27247"
+slug = "studieanledning-roligt"
+
+[[variable]]
+native_id = "108.27248"
+slug = "studieanledning-akademisk-karriar"
+
+[[variable]]
+native_id = "108.27250"
+slug = "studieanledning-studentlivet"
+
+[[variable]]
+native_id = "108.27251"
+slug = "studieanledning-familjetradition"
+
+[[variable]]
+native_id = "108.27253"
+slug = "studieanledning-kanner-manga"
+
+[[variable]]
+native_id = "108.27254"
+slug = "studieanledning-annat"
+
+[[variable]]
+native_id = "108.27256"
+slug = "viktigaste-anledning-larosate"
+
+[[variable]]
+native_id = "108.27259"
+slug = "heltid-eller-deltid"
+
+[[variable]]
+native_id = "108.30350"
+slug = "ointresse-orsak-ej-behorig"
+
+[[variable]]
+native_id = "108.30351"
+slug = "ointresse-orsak-familjetradition"
+
+[[variable]]
+native_id = "108.30361"
+slug = "larosatesorsak-latt-fa-bostad"
+
+[[variable]]
+native_id = "108.30362"
+slug = "studieanledning-hellre-studera"
+
+[[variable]]
+native_id = "108.30363"
+slug = "studieanledning-lika-garna"
+
+[[variable]]
+native_id = "108.30364"
+slug = "yrkesprogram-pa-gymnasieskolan"
+
+[[variable]]
+native_id = "108.30365"
+slug = "erbjuden-kurser-behorighet"
+
+[[variable]]
+native_id = "108.30367"
+slug = "viktigaste-informationskallan"
+
+[[variable]]
+native_id = "108.32962"
+slug = "studiemedel-fran-csn"
+
+[[variable]]
+native_id = "108.32963"
+slug = "infokalla-infomaterial-hogskola"
+
+[[variable]]
+native_id = "108.32964"
+slug = "infokalla-material-syv-larare"
+
+[[variable]]
+native_id = "108.40325"
+slug = "larosatesorsak-hemstad"
+
+[[variable]]
+native_id = "108.40403"
+slug = "kannedom-studielan-aterbetalning"
+
+[[variable]]
+native_id = "108.40405"
+slug = "rad-studielan-vanner"
+
+[[variable]]
+native_id = "108.40406"
+slug = "rad-studielan-foraldrar"
+
+[[variable]]
+native_id = "108.40407"
+slug = "infokalla-oppna-hus"
+
+[[variable]]
+native_id = "108.41215"
+slug = "infokalla-andra-webbtjanster"
+
+[[variable]]
+native_id = "108.45033"
+slug = "distansundervisning-fungerat"
+
+[[variable]]
+native_id = "108.45131"
+slug = "lust-att-lara-mer"
+
+[[variable]]
+native_id = "108.45132"
+slug = "nytta-av-studierna"
+
+# register 110 (hogutbildade-utrikes-fodda)
+
+[[variable]]
+native_id = "108.14645.typpgm"
+slug = "gymnasieprogram-grupperat"
+
+[[variable]]
+native_id = "108.30348.pgm"
+slug = "typ-av-gymnasieprogram"
+
+[[variable]]
+native_id = "108.30348.program"
+slug = "typ-av-gymnasieprogram-program"
+
+[[variable]]
+native_id = "108.30348.typpgm"
+slug = "typ-av-gymnasieprogram-typpgm"
+
+[[variable]]
+native_id = "108.4693.pgm"
+slug = "gymnasieprogram"
+
+[[variable]]
+native_id = "108.4693.program"
+slug = "gymnasieprogram-program"
+
+# register 110 (hogutbildade-utrikes-fodda)
+
+[[variable]]
+native_id = "108.2628"
+slug = "insamlingsdatum"
+
+[[variable]]
+native_id = "108.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "108.8137"
+slug = "huvudman"
+
+[[variable]]
+native_id = "108.8193"
+slug = "arskurs3"
+
+[[variable]]
+native_id = "108.14815"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "108.17587"
+slug = "fodelseland-grupp"
+
+[[variable]]
+native_id = "108.32454"
+slug = "foraldrarnas-utbildningsniva"
+
+# register 110
+
+[[variable]]
+native_id = "108.5697.lillan"
+slug = "lilla-n-per-stratum"
+
+# register 111

@@ -1,0 +1,97 @@
+[register]
+provider = "scb"
+slug = "hostsadda-arealer"
+native_id = "145"
+
+[[variant]]
+native_id = "145.212"
+slug = "_default"
+display_group = "Höstsådda arealer"
+panel_entity_key = "addid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Gödselmedelsanvändning i jordbruket
+
+[[variable]]
+native_id = "145.20010"
+slug = "addid"
+
+
+[[variable]]
+native_id = "145.48538"
+slug = "hostsadd-areal-hostkorn"
+
+[[variable]]
+native_id = "145.48539"
+slug = "hostsadd-areal-hostvete"
+
+[[variable]]
+native_id = "145.48540"
+slug = "hostsadd-areal-hostraps"
+
+[[variable]]
+native_id = "145.48541"
+slug = "hostsadd-areal-hostrybs"
+
+[[variable]]
+native_id = "145.48542"
+slug = "hostsadd-areal-hostdinkel-speltvete"
+
+[[variable]]
+native_id = "145.48543"
+slug = "hostsadd-areal-hostrag"
+
+[[variable]]
+native_id = "145.48544"
+slug = "hostsadd-areal-hostragvete"
+
+[[variable]]
+native_id = "145.48568"
+slug = "ekologisk-hostsadd-areal-hostvete"
+
+[[variable]]
+native_id = "145.48569"
+slug = "ekologisk-hostsadd-areal-hostraps"
+
+[[variable]]
+native_id = "145.48570"
+slug = "ekologisk-hostsadd-areal-hostrag"
+
+[[variable]]
+native_id = "145.48571"
+slug = "ekologisk-hostsadd-areal-hostkorn"
+
+[[variable]]
+native_id = "145.48572"
+slug = "ekologisk-hostsadd-areal-hostrybs"
+
+[[variable]]
+native_id = "145.48573"
+slug = "ekologisk-hostsadd-hostdinkel-speltvete"
+
+[[variable]]
+native_id = "145.48574"
+slug = "ekologisk-hostsadd-areal-hostragvete"
+
+[[variable]]
+native_id = "145.48609"
+slug = "hostsadd-areal-hostdinkel"
+
+[[variable]]
+native_id = "145.48610"
+slug = "ekologisk-hostsadd-areal-hostdinkel"
+
+# register 147 (godselmedelsanvandning)
+
+[[variable]]
+native_id = "145.48558"
+slug = "namn-pa-foretaget"
+
+# register 147
+
+[[variable]]
+native_id = "145.2437.ordsko"
+slug = "skordeomrade"
+
+# register 156

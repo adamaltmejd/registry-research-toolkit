@@ -1,6 +1,7 @@
 """Slug TOML loading, validation, population, seeding, and snapshot.
 
-Curated slugs live in per-provider TOML files at ``reg_meta_build/fqid_slugs/``.
+Global slugs live in register files under ``reg_meta_build/curation/registers/``.
+Steward slugs remain in per-provider files under ``reg_meta_build/fqid_slugs/``.
 This module parses them against the FQID grammar (see reg_meta/DESIGN.md → FQID
 grammar and DESIGN.md → Slug curation),
 writes the slug columns during build, and ships the seed/precheck/snapshot
@@ -122,15 +123,13 @@ class SlugEntry:
 
 
 def repo_slug_dir() -> Path | None:
-    """Return ``reg_meta_build/fqid_slugs/`` from a repo checkout, or ``None``.
+    """Return the global curation tree from a repo checkout, or ``None``.
 
     Wheel installs do not ship the slug TOMLs — they are maintainer artifacts
     consumed by the build, alongside the catalog overlays under ``curation/``
     and ``docs/``.
     """
-    pkg_dir = Path(__file__).resolve().parent
-    candidate = pkg_dir.parent.parent / "fqid_slugs"
-    return candidate if candidate.is_dir() else None
+    return repo_curation_dir()
 
 
 def slug_dir_curates_canonical_scb(slug_dir: Path) -> bool:
@@ -153,10 +152,9 @@ def slug_dir_curates_canonical_scb(slug_dir: Path) -> bool:
     treating them as a requirement would false-positive the preflight and block
     a legitimate canonical-free synthetic/custom build.
     """
-    scb_toml = slug_dir / f"scb{PROVIDER_FILE_SUFFIX}"
-    if not scb_toml.is_file():
-        return False
-    for entry in load_provider_toml(scb_toml):
+    for entry in iter_curated_provider_entries(slug_dir):
+        if entry.provider != "scb":
+            continue
         if entry.deprecated or entry.slug is None:
             continue
         reg_id = _parse_canonical_int(entry.source_id.partition(".")[0])
@@ -708,6 +706,18 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
 # absent file OR an unlisted zone ⇒ "churning" (today's UNFROZEN-present behavior).
 SlugFreezeState = Literal["churning", "curating", "frozen"]
 FREEZE_STATE_FILE = "freeze.toml"
+GLOBAL_FREEZE_STATE_FILE = "slug_state.toml"
+GLOBAL_SNAPSHOT_FILENAME = ".slug_snapshot.json"
+
+
+def snapshot_path(slug_dir: Path) -> Path:
+    return slug_dir / (
+        GLOBAL_SNAPSHOT_FILENAME
+        if (slug_dir / "registers").is_dir()
+        else SNAPSHOT_FILENAME
+    )
+
+
 _FREEZE_STATES: frozenset[str] = frozenset(get_args(SlugFreezeState))
 
 
@@ -717,6 +727,10 @@ def _known_provider_stems(slug_dir: Path) -> frozenset[str]:
     Excludes ``freeze.toml`` itself and the build-generated ``*.auto.toml`` (its
     provider is already covered by the curated companion).
     """
+    if (slug_dir / "registers").is_dir():
+        return frozenset(
+            p.name for p in (slug_dir / "registers").iterdir() if p.is_dir()
+        )
     stems: set[str] = set()
     for path in slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"):
         if path.name == FREEZE_STATE_FILE or path.name.endswith(AUTO_FILE_SUFFIX):
@@ -734,7 +748,11 @@ def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
     typo (a dropped/renamed provider TOML) is caught rather than silently treated
     as churning.
     """
-    path = slug_dir / FREEZE_STATE_FILE
+    path = slug_dir / (
+        GLOBAL_FREEZE_STATE_FILE
+        if (slug_dir / "registers").is_dir()
+        else FREEZE_STATE_FILE
+    )
     if not path.is_file():
         return {}
     data = _parse_toml(path)
@@ -801,6 +819,8 @@ def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
             "Create the directory or pass --slug-dir.",
         )
     states = load_freeze_states(slug_dir)
+    if (slug_dir / "registers").is_dir():
+        return _load_register_slug_tree(slug_dir, states=states)
     entries: list[SlugEntry] = []
     for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
         if path.name == FREEZE_STATE_FILE:
@@ -810,6 +830,186 @@ def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
                 entries.extend(load_provider_toml(path))
         else:
             entries.extend(load_provider_toml(path))
+    return entries
+
+
+def _load_register_slug_tree(
+    root: Path,
+    *,
+    states: Mapping[str, SlugFreezeState] | None = None,
+    authored_only: bool = False,
+) -> list[SlugEntry]:
+    """Read register-owned slugs, with generated pins beside each register."""
+    from .curation_tree import load_register_files
+
+    states = states if states is not None else load_freeze_states(root)
+    entries: list[SlugEntry] = []
+    source_owners: dict[tuple[str, str, str], str] = {}
+    slug_owners: dict[tuple[str, ...], tuple[SlugEntry, str]] = {}
+    for register in load_register_files(root):
+        identity = register.register_info
+        file = register.source_file
+        if identity.native_id is None:
+            raise _err(
+                "slug_toml_invalid",
+                f"{file} [register]: missing native_id.",
+                "Set the source register id.",
+            )
+        provider, reg_id = identity.provider, identity.native_id
+        authored: list[tuple[EntityKind, str, dict[str, Any], str]] = [
+            ("register", reg_id, {"slug": identity.slug}, "[register]")
+        ]
+        authored.extend(
+            (
+                "register_variant",
+                row.native_id,
+                row.model_dump(exclude={"native_id"}, exclude_none=True),
+                f"[[variant]] entry {i}",
+            )
+            for i, row in enumerate(register.variant, 1)
+        )
+        authored.extend(
+            (
+                "variable",
+                row.native_id,
+                row.model_dump(exclude={"native_id"}, exclude_none=True),
+                f"[[variable]] entry {i}",
+            )
+            for i, row in enumerate(register.variable, 1)
+        )
+        local: list[SlugEntry] = []
+        for kind, source_id, raw, location in authored:
+            if source_id.partition(".")[0] != reg_id:
+                raise _err(
+                    "slug_toml_invalid",
+                    f"{file} {location}: native_id {source_id!r} does not belong to register {reg_id!r}.",
+                    "Use this register's native id prefix.",
+                )
+            try:
+                entry = _validate_entry(kind, source_id, raw, provider=provider)
+            except RegMetaError as exc:
+                raise _err(
+                    exc.code, f"{file} {location}: {exc.message}", exc.remediation
+                ) from exc
+            key = (provider, kind, source_id)
+            if key in source_owners:
+                raise _err(
+                    "slug_toml_invalid",
+                    f"{file} {location}: duplicate native_id {source_id!r}; first in {source_owners[key]}.",
+                    "Keep one authored entry per native id.",
+                )
+            source_owners[key] = f"{file} {location}"
+            if entry.slug is not None:
+                slug_key = (
+                    (provider, kind, entry.slug)
+                    if kind == "register"
+                    else (provider, kind, reg_id, entry.slug)
+                )
+                previous = slug_owners.get(slug_key)
+                if previous is not None:
+                    other, other_file = previous
+                    split_pair = kind == "variable" and _is_split_base_pair(
+                        other, entry
+                    )
+                    partitioned = split_pair and any(
+                        p.variable == reg_id + "." + source_id.split(".")[1]
+                        for p in register.identity.partition
+                    )
+                    if not partitioned:
+                        raise _err(
+                            "slug_toml_invalid",
+                            f"{file} {location}: slug {entry.slug!r} reused by {other_file} ({other.source_id!r}).",
+                            "Use a unique slug within the register/provider.",
+                        )
+                slug_owners[slug_key] = (entry, f"{file} {location}")
+            local.append(entry)
+        _resolve_replaced_by(local, scope=file)
+        if authored_only or freeze_state(states, provider) == "churning":
+            entries.extend(local)
+            continue
+        auto_path = root / "registers" / provider / f"{identity.slug}{AUTO_FILE_SUFFIX}"
+        if not auto_path.is_file():
+            entries.extend(local)
+            continue
+        auto_entries = _load_register_auto_file(auto_path, provider, reg_id)
+        effective: dict[str, tuple[SlugEntry, str]] = {
+            entry.source_id: (entry, f"{auto_path} [[variable]] entry {index}")
+            for index, entry in enumerate(auto_entries, 1)
+        }
+        for entry in local:
+            if entry.kind == "variable" and entry.slug is not None:
+                effective[entry.source_id] = (
+                    entry,
+                    source_owners[(provider, "variable", entry.source_id)],
+                )
+        by_slug: dict[str, tuple[SlugEntry, str]] = {}
+        for entry, location in effective.values():
+            if entry.slug is None:
+                continue
+            previous = by_slug.get(entry.slug)
+            if previous is not None:
+                other, other_location = previous
+                pair = _is_split_base_pair(other, entry)
+                family = min(
+                    (other, entry), key=lambda item: len(item.source_id)
+                ).source_id
+                if not pair or not any(
+                    p.variable == family for p in register.identity.partition
+                ):
+                    raise _err(
+                        "slug_toml_invalid",
+                        f"{location}: variable slug {entry.slug!r} reused by {other_location} ({other.source_id!r}).",
+                        "Give variables distinct slugs within this register.",
+                    )
+            by_slug[entry.slug] = (entry, location)
+        entries.extend(auto_entries)
+        entries.extend(local)
+    return entries
+
+
+def _load_register_auto_file(path: Path, provider: str, reg_id: str) -> list[SlugEntry]:
+    from pydantic import ValidationError
+
+    from .curation_tree import RegisterVariableSlug
+
+    data = _parse_toml(path)
+    if set(data) - {"variable"} or not isinstance(data.get("variable", []), list):
+        raise _err(
+            "slug_toml_invalid",
+            f"{path}: expected only [[variable]] entries.",
+            "Regenerate the machine-owned pin file.",
+        )
+    entries: list[SlugEntry] = []
+    seen: set[str] = set()
+    for i, raw in enumerate(data.get("variable", []), 1):
+        try:
+            row = RegisterVariableSlug.model_validate(raw)
+            entry = _validate_entry(
+                "variable",
+                row.native_id,
+                row.model_dump(exclude={"native_id"}, exclude_none=True),
+                provider=provider,
+            )
+        except (ValidationError, RegMetaError) as exc:
+            raise _err(
+                "slug_toml_invalid",
+                f"{path} [[variable]] entry {i}: {exc}",
+                "Regenerate the pin file.",
+            ) from exc
+        if entry.source_id.partition(".")[0] != reg_id or entry.slug is None:
+            raise _err(
+                "slug_toml_invalid",
+                f"{path} [[variable]] entry {i}: invalid native_id or missing slug.",
+                "Keep pins with their owning register.",
+            )
+        if entry.source_id in seen:
+            raise _err(
+                "slug_toml_invalid",
+                f"{path} [[variable]] entry {i}: duplicate native_id {entry.source_id!r}.",
+                "Keep one generated pin per native id.",
+            )
+        seen.add(entry.source_id)
+        entries.append(entry)
     return entries
 
 
@@ -1114,6 +1314,8 @@ def iter_curated_provider_entries(slug_dir: Path) -> list[SlugEntry]:
     ``*.auto.toml`` files are excluded. The single source of the curated-file
     glob shared by `populate_variable_slugs` and `_entity_key_curation_basis`
     (which backs the entity-key generator + gate)."""
+    if (slug_dir / "registers").is_dir():
+        return _load_register_slug_tree(slug_dir, authored_only=True)
     return [
         e
         for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
@@ -1327,7 +1529,7 @@ def write_auto_toml(
         "# Auto-derived variable slugs: one entry per (register, var)",
         "# pair, slug folded from the latest kolumnnamn on first sight and",
         "# never recomputed. Curator overrides belong in the hand-curated",
-        f"# {provider}.toml; an override there shadows the entry here.",
+        f"# {path.name.removesuffix(AUTO_FILE_SUFFIX) + '.toml' if path.parent.parent.name == 'registers' else provider + '.toml'}; an override there shadows the entry here.",
         "# The `# source:` comment after each slug records its derivation class",
         "# (A4.4a) for the name-fallback curation seam; tomllib ignores it.",
         "",
@@ -1344,8 +1546,12 @@ def write_auto_toml(
         return (1, 0, 0, source_id)
 
     derivation = derivation or {}
+    register_owned = path.parent.parent.name == "registers"
     for source_id in sorted(slugs, key=_sort_key):
-        lines.append(f"[variable.{_toml_str(source_id)}]")
+        if register_owned:
+            lines.extend(("[[variable]]", f"native_id = {_toml_str(source_id)}"))
+        else:
+            lines.append(f"[variable.{_toml_str(source_id)}]")
         slug_line = f"slug = {_toml_str(slugs[source_id])}"
         kind = derivation.get(source_id)
         if kind is not None:
@@ -1675,18 +1881,21 @@ def render_entity_key_pins_toml(
             "#",
             "# Regenerate after onboarding/repointing a panel: run",
             "#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/",
-            "# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml",
-            "# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —",
+            "# and fold the NON-duplicate entries from each /tmp/pins/registers/",
+            "# <provider>/<register>.toml into the matching register file.",
             "# pins reproduce the slug the variable already carries).",
             f"# {len(pins)} pin(s).",
             "",
         ]
     lines = list(header)
     for p in pins:
-        lines.append(
-            f"[variable.{_toml_str(p.source_id)}]  "
-            f"# {p.register_slug}: panel_entity_key = {p.variable_slug!r}"
-        )
+        if flavored:
+            lines.append(
+                f"[variable.{_toml_str(p.source_id)}]  "
+                f"# {p.register_slug}: panel_entity_key = {p.variable_slug!r}"
+            )
+        else:
+            lines.extend(("[[variable]]", f"native_id = {_toml_str(p.source_id)}"))
         lines.append(f"slug = {_toml_str(p.slug)}")
         lines.append("")
     return "\n".join(lines) + "\n"
@@ -1712,24 +1921,31 @@ def write_entity_key_pins(
     `render_entity_key_pins_toml` so each written block carries the steward-flow
     header (steward dir + ``--flavored`` regenerate command) when generating
     flavored pins."""
-    if out_dir.exists() and any(out_dir.glob("*.toml")) and not force:
+    if out_dir.exists() and any(out_dir.rglob("*.toml")) and not force:
         raise _err(
             "entity_key_pins_would_overwrite",
             f"{out_dir} already contains TOMLs; refusing to overwrite.",
             "Pass --force to overwrite, or point --out-dir at an empty "
             "directory for hand-review.",
         )
-    by_provider: dict[str, list[EntityKeyPin]] = defaultdict(list)
+    by_provider: dict[tuple[str, str], list[EntityKeyPin]] = defaultdict(list)
     for pin in pins:
-        by_provider[pin.provider_slug].append(pin)
+        by_provider[(pin.provider_slug, "" if flavored else pin.register_slug)].append(
+            pin
+        )
     out_dir.mkdir(parents=True, exist_ok=True)
     written: dict[str, str] = {}
-    for provider, group in by_provider.items():
-        path = out_dir / f"{provider}.toml"
+    for (provider, register_slug), group in by_provider.items():
+        path = (
+            out_dir / f"{provider}.toml"
+            if flavored
+            else out_dir / "registers" / provider / f"{register_slug}.toml"
+        )
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(
             render_entity_key_pins_toml(group, flavored=flavored), encoding="utf-8"
         )
-        written[provider] = str(path)
+        written[provider if flavored else f"{provider}/{register_slug}"] = str(path)
     return written
 
 
@@ -1738,6 +1954,7 @@ def write_entity_key_pins(
 # provenance round-trips through a small line scanner instead — the marker is the
 # single source of truth the precheck worklist reads (no re-derivation).
 _AUTO_VAR_HEADER_RE = re.compile(r'^\[variable\."(?P<source_id>[^"]+)"\]\s*$')
+_AUTO_NATIVE_ID_RE = re.compile(r'^native_id\s*=\s*"(?P<source_id>[^"]+)"\s*$')
 _AUTO_SOURCE_COMMENT_RE = re.compile(r"#\s*source:\s*(?P<kind>\S+)\s*$")
 
 
@@ -1762,6 +1979,13 @@ def read_auto_derivations(path: Path) -> dict[str, str]:
         header = _AUTO_VAR_HEADER_RE.match(raw_line.strip())
         if header is not None:
             current = header.group("source_id")
+            continue
+        if raw_line.strip() == "[[variable]]":
+            current = None
+            continue
+        native_id = _AUTO_NATIVE_ID_RE.match(raw_line.strip())
+        if native_id is not None:
+            current = native_id.group("source_id")
             continue
         # `"slug "` (with the trailing space the writer always emits) — not bare
         # `"slug"` — so a hypothetical `slugfoo = …` key can't consume the slot.
@@ -2186,6 +2410,21 @@ def populate_variable_slugs(
     # and never recomputed. Loaded once; the steward overlay (incremental=True)
     # uses the same gate — steward zones default churning.
     states = load_freeze_states(slug_dir)
+    register_owned = (slug_dir / "registers").is_dir()
+    global_auto_paths: dict[str, dict[str, Path]] = defaultdict(dict)
+    if register_owned:
+        for entry in curated_entries:
+            if (
+                entry.kind == "register"
+                and entry.provider is not None
+                and entry.slug is not None
+            ):
+                global_auto_paths[entry.provider][entry.source_id] = (
+                    slug_dir
+                    / "registers"
+                    / entry.provider
+                    / f"{entry.slug}{AUTO_FILE_SUFFIX}"
+                )
 
     # #786 frozen-fallback gate: a `frozen` provider's auto slugs are immutable,
     # so a NEW (first-sight) variable whose slug derives from a fragile basis
@@ -2200,6 +2439,11 @@ def populate_variable_slugs(
 
     for provider_slug in provider_slugs:
         auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
+        auto_paths = (
+            list(global_auto_paths[provider_slug].items())
+            if register_owned
+            else [("", auto_path)]
+        )
         auto: dict[str, str] = {}
         # A4.4a: source_id → derivation class — the `# source:` comment basis for
         # the rewritten auto.toml + the name-fallback worklist. Seeded from the
@@ -2222,21 +2466,45 @@ def populate_variable_slugs(
             # superset of providers with variable rows, so an EXISTS check keeps
             # a variable-less provider from false-flagging (the file is only
             # required because there are slugs to pin).
-            if not auto_path.is_file() and _provider_has_variables(conn, provider_slug):
+            missing_auto = (
+                [
+                    path
+                    for reg_id, path in global_auto_paths[provider_slug].items()
+                    if not path.is_file()
+                    and conn.execute(
+                        "SELECT 1 FROM variable WHERE register_id = ? LIMIT 1",
+                        (int(reg_id),),
+                    ).fetchone()
+                    is not None
+                ]
+                if register_owned
+                else (
+                    [auto_path]
+                    if not auto_path.is_file()
+                    and _provider_has_variables(conn, provider_slug)
+                    else []
+                )
+            )
+            if missing_auto:
                 raise _err(
                     "slug_freeze_auto_missing",
                     f"Provider {provider_slug!r} is {state!r} but its committed "
-                    f"{auto_path.name} is missing. A pinned provider reads its slugs "
+                    f"{missing_auto[0]} is missing. A pinned provider reads its slugs "
                     "back from that file; without it the slugs would silently "
                     "re-derive and the pin would fail.",
-                    f"Force-add the generated file "
-                    f"(git add -f reg_meta_build/fqid_slugs/{auto_path.name}) or add a "
-                    f"per-provider .gitignore negation "
-                    f"(!reg_meta_build/fqid_slugs/{auto_path.name}).",
+                    f"Generate and commit {missing_auto[0]} (use git add -f if ignored).",
                 )
-            if auto_path.is_file():
-                auto = _auto_variable_slugs(load_provider_toml(auto_path))
-                auto_derivation.update(read_auto_derivations(auto_path))
+            for reg_id, path in auto_paths:
+                if path.is_file():
+                    if register_owned:
+                        auto.update(
+                            _auto_variable_slugs(
+                                _load_register_auto_file(path, provider_slug, reg_id)
+                            )
+                        )
+                    else:
+                        auto.update(_auto_variable_slugs(load_provider_toml(path)))
+                    auto_derivation.update(read_auto_derivations(path))
         # variable_state.delivery_column_name is the coalesced per-era column
         # (not raw variable_alias) — stays correct after A2.7 drops
         # variable_instance. "Latest" = highest valid_to, lexically smallest on
@@ -2555,7 +2823,19 @@ def populate_variable_slugs(
                 auto_dirty = True
 
         if auto_dirty:
-            write_auto_toml(auto_path, provider_slug, auto, auto_derivation)
+            if register_owned:
+                for reg_id, path in global_auto_paths[provider_slug].items():
+                    register_auto = {
+                        sid: slug
+                        for sid, slug in auto.items()
+                        if sid.partition(".")[0] == reg_id
+                    }
+                    if register_auto or path.is_file():
+                        write_auto_toml(
+                            path, provider_slug, register_auto, auto_derivation
+                        )
+            else:
+                write_auto_toml(auto_path, provider_slug, auto, auto_derivation)
 
     # Typo guard: every non-deprecated hand-curated [variable] override must have
     # matched a live variable above; an unmatched one is a stale/typo'd source
@@ -3115,23 +3395,37 @@ def seed_provider_toml(
     return "\n".join(lines)
 
 
-def seed_all(
-    conn: sqlite3.Connection, out_dir: Path, *, propose_panel: bool = False
-) -> dict[str, Path]:
-    """Write a starter TOML for every distinct provider.
-
-    ``propose_panel`` (A4.4c-ii) threads through to ``seed_provider_toml`` so
-    each register_variant gains proposed panel-shape starter lines.
-    """
+def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
+    """Write only machine-owned variable pin files beside each register."""
     out_dir.mkdir(parents=True, exist_ok=True)
     written: dict[str, Path] = {}
-    for provider_slug in _live_providers(conn):
-        path = out_dir / f"{provider_slug}.toml"
-        path.write_text(
-            seed_provider_toml(conn, provider_slug, propose_panel=propose_panel),
-            encoding="utf-8",
-        )
-        written[path.name] = path
+    rows = conn.execute(
+        "SELECT p.slug, r.register_id, r.slug FROM register r "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "ORDER BY p.slug, r.slug"
+    )
+    for provider, register_id, register_slug in rows:
+        if not register_slug:
+            continue
+        source_ids = _variable_source_ids(conn, register_id)
+        slugs = {
+            source_ids[var_id]: slug
+            for var_id, slug in conn.execute(
+                "SELECT variable_id, slug FROM variable WHERE register_id = ? AND slug IS NOT NULL",
+                (register_id,),
+            )
+        }
+        path = out_dir / "registers" / provider / f"{register_slug}{AUTO_FILE_SUFFIX}"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        derivation = read_auto_derivations(path)
+        if path.is_file():
+            existing = _auto_variable_slugs(
+                _load_register_auto_file(path, provider, str(register_id))
+            )
+            # Generated pins retain retired rows and their first-sight spelling.
+            slugs = {**slugs, **existing}
+        write_auto_toml(path, provider, slugs, derivation)
+        written[path.relative_to(out_dir).as_posix()] = path
     return written
 
 
@@ -3335,6 +3629,12 @@ def _raw_variable_table(path: Path) -> dict[str, Any] | None:
         table = _parse_toml(path).get("variable")
     except RegMetaError:
         return None
+    if isinstance(table, list):
+        return {
+            row["native_id"]: row
+            for row in table
+            if isinstance(row, dict) and isinstance(row.get("native_id"), str)
+        }
     return table if isinstance(table, dict) else None
 
 
@@ -3363,35 +3663,53 @@ def _name_fallback_variables(
     provider rather than raising.
     """
     out: list[tuple[str, str, str, str]] = []
+    register_owned = (slug_dir / "registers").is_dir()
+    curated = (
+        _curated_variable_slugs(iter_curated_provider_entries(slug_dir))
+        if register_owned
+        else {}
+    )
     for provider_slug in _live_providers(conn):
-        auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
-        auto_vars = _raw_variable_table(auto_path)
-        if auto_vars is None:
-            continue
-        slugs = {
-            sid: tbl["slug"]
-            for sid, tbl in auto_vars.items()
-            if isinstance(tbl, dict) and isinstance(tbl.get("slug"), str)
-        }
+        paths = (
+            sorted(
+                (slug_dir / "registers" / provider_slug).glob(f"*{AUTO_FILE_SUFFIX}")
+            )
+            if register_owned
+            else [slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"]
+        )
         # Only a string `slug` override RESOLVES the auto slug — drop those from
         # the backlog even though their frozen auto entry + marker linger. A
         # metadata-only entry (`same_as` / `replaced_by` / `deprecated` with NO
         # slug) leaves the auto slug unchanged (a deprecated variable stays slugged
         # so old references resolve), so it still needs curation and stays backlog.
-        curated_table = _raw_variable_table(slug_dir / f"{provider_slug}.toml") or {}
-        resolved = {
-            sid
-            for sid, tbl in curated_table.items()
-            if isinstance(tbl, dict) and isinstance(tbl.get("slug"), str)
-        }
-        derivations = read_auto_derivations(auto_path)
-        for source_id, kind in derivations.items():
-            if (
-                source_id in slugs
-                and source_id not in resolved
-                and _is_name_fallback_derivation(kind)
-            ):
-                out.append((provider_slug, source_id, slugs[source_id], kind))
+        resolved = (
+            {sid for prov, sid in curated if prov == provider_slug}
+            if register_owned
+            else {
+                sid
+                for sid, tbl in (
+                    _raw_variable_table(slug_dir / f"{provider_slug}.toml") or {}
+                ).items()
+                if isinstance(tbl, dict) and isinstance(tbl.get("slug"), str)
+            }
+        )
+        for auto_path in paths:
+            auto_vars = _raw_variable_table(auto_path)
+            if auto_vars is None:
+                continue
+            slugs = {
+                sid: tbl["slug"]
+                for sid, tbl in auto_vars.items()
+                if isinstance(tbl, dict) and isinstance(tbl.get("slug"), str)
+            }
+            derivations = read_auto_derivations(auto_path)
+            for source_id, kind in derivations.items():
+                if (
+                    source_id in slugs
+                    and source_id not in resolved
+                    and _is_name_fallback_derivation(kind)
+                ):
+                    out.append((provider_slug, source_id, slugs[source_id], kind))
     out.sort(key=lambda row: (row[0], _auto_source_sort_key(row[1])))
     return tuple(out)
 

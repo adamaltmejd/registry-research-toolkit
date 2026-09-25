@@ -1,0 +1,23 @@
+[register]
+provider = "scb"
+slug = "produktionsindex-naringsliv"
+native_id = "318"
+
+[[variant]]
+native_id = "318.983"
+slug = "_default"
+display_group = "Produktionsindex över näringslivet"
+
+# Byggproduktionsindex
+
+[[variable]]
+native_id = "318.28762"
+slug = "arsmanadslank-fast-kal"
+
+# register 320 (grundskola-prov-ak6)
+
+[[variable]]
+native_id = "318.17112"
+slug = "periodindikator"
+
+# register 320

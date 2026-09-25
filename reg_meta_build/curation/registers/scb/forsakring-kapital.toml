@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "forsakring-kapital"
+native_id = "325"
+
+[[variant]]
+native_id = "325.1027"
+slug = "forsakring-kapital-indata"
+display_group = "Indata"
+
+# Kompletterande utbildning
+
+[[variable]]
+native_id = "325.29231"
+slug = "vardevariabel-finansiell-aktivitet"
+
+# register 326 (kompletterande-utbildning)

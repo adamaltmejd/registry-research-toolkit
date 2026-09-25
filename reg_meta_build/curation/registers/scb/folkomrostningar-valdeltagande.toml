@@ -10,3 +10,134 @@ label = "scb/folkomrostningar-valdeltagande/fodelselandvdnamn"
 [[code_label_pair]]
 code = "scb/folkomrostningar-valdeltagande/medborgarland-varldsdel"
 label = "scb/folkomrostningar-valdeltagande/medborgarland-varldsdel-namn"
+
+[[variant]]
+native_id = "241.470"
+slug = "_default"
+display_group = "Valdeltagande"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Allmänna val, valdeltagandeundersökningen
+
+[[variable]]
+native_id = "241.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "241.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "241.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "241.125"
+slug = "sammanraknad-forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "241.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "241.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "241.269"
+slug = "medborgarskapsdatum"
+
+[[variable]]
+native_id = "241.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "241.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "241.544"
+slug = "sektor-i-huvudsysslan"
+
+[[variable]]
+native_id = "241.775"
+slug = "utbildningsniva-aggregat-grov"
+
+[[variable]]
+native_id = "241.1305"
+slug = "disponibel-inkomst-familj"
+
+[[variable]]
+native_id = "241.3582"
+slug = "stora-n"
+
+[[variable]]
+native_id = "241.3881"
+slug = "sei-i-huvudsysslan"
+
+[[variable]]
+native_id = "241.6375"
+slug = "arbetskraftsstatus-aldre"
+
+[[variable]]
+native_id = "241.6545"
+slug = "facklig-centralorganisation"
+
+[[variable]]
+native_id = "241.6840"
+slug = "studier"
+
+[[variable]]
+native_id = "241.6845"
+slug = "studier-hel-eller-deltid"
+
+[[variable]]
+native_id = "241.7008"
+slug = "gift-sambo-ensamstaende"
+
+[[variable]]
+native_id = "241.7809"
+slug = "anknytningsgrad-aku"
+
+[[variable]]
+native_id = "241.7911"
+slug = "forstagangsvaljare-allmanna-val"
+
+[[variable]]
+native_id = "241.7916"
+slug = "forvarvsinkomst-kvintilgrupp"
+
+[[variable]]
+native_id = "241.15298"
+slug = "arbetskraftsstatus"
+
+[[variable]]
+native_id = "241.21876"
+slug = "forstagangsvaljare-europaparlamentsval"
+
+# register 242
+
+[[variable]]
+native_id = "241.6556.fodelselandvd"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "241.6818.medborgarlandvd"
+slug = "medborgarland-varldsdel"
+
+[[variable]]
+native_id = "241.6818.medborgarlandvdnamn"
+slug = "medborgarland-varldsdel-namn"
+
+[[variable]]
+native_id = "241.8534.kgruppnamn"
+slug = "kommungrupp-namn"
+
+[[variable]]
+native_id = "241.8534.kgruppnr"
+slug = "kommungrupp-kod"
+
+# register 242

@@ -1,0 +1,63 @@
+[register]
+provider = "fk"
+slug = "sjuk-aktivitetsersattning"
+native_id = "5597417723181852215"
+
+[[variant]]
+native_id = "5597417723181852215.6330066145803678545"
+slug = "fall-1"
+display_group = "Sjuk- och aktivitetsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5597417723181852215.6093759863560621400"
+slug = "fall-2"
+display_group = "Sjuk- och aktivitetsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5597417723181852215.6020698618216972271"
+slug = "delfall-1-1"
+display_group = "Sjuk- och aktivitetsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "5597417723181852215.5460191306533415219"
+slug = "delfall-2-1"
+display_group = "Sjuk- och aktivitetsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+# Sjukpenning och rehabiliteringspenning
+
+[[variable]]
+native_id = "5597417723181852215.Lopnr"
+slug = "lopnr"
+
+
+[[variable]]
+native_id = "5597417723181852215.A"
+slug = "har-aktivitetsersattning"
+
+[[variable]]
+native_id = "5597417723181852215.Ftp"
+slug = "fortidspension"
+
+[[variable]]
+native_id = "5597417723181852215.S"
+slug = "sjukersattning"
+
+[[variable]]
+native_id = "5597417723181852215.Sjb"
+slug = "sjukbidrag"
+# register 6486633934264544358

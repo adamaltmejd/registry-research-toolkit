@@ -427,3 +427,1279 @@ register = "scb/aku"
 variable = "verks1"
 description = "Vad betraktar du dig huvudsakligen som?"
 provenance = "P1105_Variabellista 2022.xlsx"
+
+[[variant]]
+native_id = "122.142"
+slug = "aku-april-2005-dec-2020"
+display_group = "AKU april 2005 - dec 2020"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "122.278"
+slug = "aku-1987-mars-2005"
+display_group = "AKU 1987 - mars 2005"
+panel_entity_key = "personnr-urval"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "122.1628"
+slug = "aku-januari-2021"
+display_group = "AKU fr.o.m. januari 2021"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Arbetsmiljöundersökningen
+
+[[variable]]
+native_id = "122.7020"
+slug = "personnr-urval"
+
+
+[[variable]]
+native_id = "122.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "122.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "122.49"
+slug = "lan"
+
+[[variable]]
+native_id = "122.279"
+slug = "alder-vid-handelsen"
+
+[[variable]]
+native_id = "122.511"
+slug = "ssyk4-huvud"
+
+[[variable]]
+native_id = "122.517"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "122.529"
+slug = "bissyk3"
+
+[[variable]]
+native_id = "122.530"
+slug = "bissyk4"
+
+[[variable]]
+native_id = "122.544"
+slug = "sektor-i-huvudsysslan"
+
+[[variable]]
+native_id = "122.784"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "122.3200"
+slug = "alder-for-barn-1"
+
+[[variable]]
+native_id = "122.3201"
+slug = "alder-for-barn-2"
+
+[[variable]]
+native_id = "122.3202"
+slug = "alder-for-barn-3"
+
+[[variable]]
+native_id = "122.3203"
+slug = "alder-for-barn-4"
+
+[[variable]]
+native_id = "122.3204"
+slug = "alder-for-barn-5"
+
+[[variable]]
+native_id = "122.3205"
+slug = "alder-for-barn-6"
+
+[[variable]]
+native_id = "122.3811"
+slug = "uarbland"
+
+[[variable]]
+native_id = "122.3881"
+slug = "sei-i-huvudsysslan"
+
+[[variable]]
+native_id = "122.3882"
+slug = "husni92"
+
+[[variable]]
+native_id = "122.4011"
+slug = "huforetag"
+
+[[variable]]
+native_id = "122.4012"
+slug = "hufrandelv"
+
+[[variable]]
+native_id = "122.4015"
+slug = "hufranhelv"
+
+[[variable]]
+native_id = "122.4021"
+slug = "bifakttim"
+
+[[variable]]
+native_id = "122.6448"
+slug = "barnets-fodelsedatum-yngsta"
+
+[[variable]]
+native_id = "122.6450"
+slug = "barnets-fodelsedatum-nast-yngsta"
+
+[[variable]]
+native_id = "122.6451"
+slug = "barnets-fodelsedatum-3e-yngsta"
+
+[[variable]]
+native_id = "122.6452"
+slug = "barnets-fodelsedatum-4e-yngsta"
+
+[[variable]]
+native_id = "122.6453"
+slug = "barnets-fodelsedatum-5e-yngsta"
+
+[[variable]]
+native_id = "122.6454"
+slug = "barnets-fodelsedatum-6e-yngsta"
+
+[[variable]]
+native_id = "122.6458"
+slug = "antal-hemmaboende-barn"
+
+[[variable]]
+native_id = "122.6459"
+slug = "mer-an-ett-arbete"
+
+[[variable]]
+native_id = "122.6460"
+slug = "hemmaboende-barn"
+
+[[variable]]
+native_id = "122.6461"
+slug = "mer-an-ett-arbete-franvaro"
+
+[[variable]]
+native_id = "122.6462"
+slug = "bi-anstalld-foretagare"
+
+[[variable]]
+native_id = "122.6471"
+slug = "bicfarnr"
+
+[[variable]]
+native_id = "122.6472"
+slug = "hsstartarbman"
+
+[[variable]]
+native_id = "122.6475"
+slug = "bimanskift"
+
+[[variable]]
+native_id = "122.6480"
+slug = "sektor-i-bisysslan"
+
+[[variable]]
+native_id = "122.6491"
+slug = "bisyssla"
+
+[[variable]]
+native_id = "122.6492"
+slug = "bivanltim"
+
+[[variable]]
+native_id = "122.6496"
+slug = "yrkesstallning-i-bisysslan"
+
+[[variable]]
+native_id = "122.6504"
+slug = "huadress"
+
+[[variable]]
+native_id = "122.6507"
+slug = "huansttyp"
+
+[[variable]]
+native_id = "122.6508"
+slug = "antal-anstallda-arbetsplatsen"
+
+[[variable]]
+native_id = "122.6512"
+slug = "huarbhemant"
+
+[[variable]]
+native_id = "122.6514"
+slug = "kvallsarbete-frekvens"
+
+[[variable]]
+native_id = "122.6515"
+slug = "lan-arbetsplats-huvudsyssla"
+
+[[variable]]
+native_id = "122.6517"
+slug = "huarbled"
+
+[[variable]]
+native_id = "122.6519"
+slug = "huarblorant"
+
+[[variable]]
+native_id = "122.6520"
+slug = "huarblorok"
+
+[[variable]]
+native_id = "122.6522"
+slug = "nattarbete-frekvens"
+
+[[variable]]
+native_id = "122.6526"
+slug = "huarbsonant"
+
+[[variable]]
+native_id = "122.6536"
+slug = "fackansl"
+
+[[variable]]
+native_id = "122.6560"
+slug = "huarbuppg"
+
+[[variable]]
+native_id = "122.6572"
+slug = "hubenamn"
+
+[[variable]]
+native_id = "122.6574"
+slug = "hubol"
+
+[[variable]]
+native_id = "122.6576"
+slug = "hudelproc"
+
+[[variable]]
+native_id = "122.6580"
+slug = "hufastbott"
+
+[[variable]]
+native_id = "122.6586"
+slug = "anknytningsgrad"
+
+[[variable]]
+native_id = "122.6587"
+slug = "anstallningsar-huvudsysslan"
+
+[[variable]]
+native_id = "122.6590"
+slug = "hussyk3"
+
+[[variable]]
+native_id = "122.6599"
+slug = "hutafaonsk"
+
+[[variable]]
+native_id = "122.6602"
+slug = "tidsbegransad-anstallningstyp"
+
+[[variable]]
+native_id = "122.6604"
+slug = "vanligen-arbetad-tid-huvudsysslan"
+
+[[variable]]
+native_id = "122.6605"
+slug = "huverks"
+
+[[variable]]
+native_id = "122.6609"
+slug = "huyrkstall"
+
+[[variable]]
+native_id = "122.6618"
+slug = "hufrantimtot"
+
+[[variable]]
+native_id = "122.6637"
+slug = "kbi1a"
+
+[[variable]]
+native_id = "122.6678"
+slug = "syshamerarb"
+
+[[variable]]
+native_id = "122.6680"
+slug = "syshamindrearb"
+
+[[variable]]
+native_id = "122.6709"
+slug = "syssoksatt88"
+
+[[variable]]
+native_id = "122.6717"
+slug = "syssokt1"
+
+[[variable]]
+native_id = "122.6744"
+slug = "uarbsoktyrkstall"
+
+[[variable]]
+native_id = "122.6745"
+slug = "uarbsokveckor"
+
+[[variable]]
+native_id = "122.6754"
+slug = "yrkesstallning-senaste-uarb"
+
+[[variable]]
+native_id = "122.6757"
+slug = "hufranveck"
+
+[[variable]]
+native_id = "122.6760"
+slug = "arbetsland-huvudsysslan"
+
+[[variable]]
+native_id = "122.6761"
+slug = "hu-manskift-forekomst"
+
+[[variable]]
+native_id = "122.6762"
+slug = "humanskifttim"
+
+[[variable]]
+native_id = "122.6763"
+slug = "huoktim"
+
+[[variable]]
+native_id = "122.6768"
+slug = "huort"
+
+[[variable]]
+native_id = "122.6769"
+slug = "huotejers"
+
+[[variable]]
+native_id = "122.6772"
+slug = "huoterstim"
+
+[[variable]]
+native_id = "122.6775"
+slug = "overtidstimmar-totalt-huvudsyssla"
+
+[[variable]]
+native_id = "122.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "122.6812"
+slug = "latent-arbetssokande"
+
+[[variable]]
+native_id = "122.6836"
+slug = "sokvslut"
+
+[[variable]]
+native_id = "122.6842"
+slug = "studbettim"
+
+[[variable]]
+native_id = "122.6844"
+slug = "studfrittim"
+
+[[variable]]
+native_id = "122.6848"
+slug = "sokt-extraarbete"
+
+[[variable]]
+native_id = "122.6854"
+slug = "sysvillforand"
+
+[[variable]]
+native_id = "122.6855"
+slug = "tarb1aak"
+
+[[variable]]
+native_id = "122.6856"
+slug = "totfakttim"
+
+[[variable]]
+native_id = "122.6858"
+slug = "totvanltim"
+
+[[variable]]
+native_id = "122.6891"
+slug = "viktvfat"
+
+[[variable]]
+native_id = "122.6910"
+slug = "undersysselsattning"
+
+[[variable]]
+native_id = "122.6911"
+slug = "upprakar"
+
+[[variable]]
+native_id = "122.6912"
+slug = "upprakkvart"
+
+[[variable]]
+native_id = "122.6913"
+slug = "upprakman"
+
+[[variable]]
+native_id = "122.7008"
+slug = "gift-sambo-ensamstaende"
+
+[[variable]]
+native_id = "122.7018"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "122.7019"
+slug = "alder"
+
+[[variable]]
+native_id = "122.7073"
+slug = "alder-for-yngsta-barnet"
+
+[[variable]]
+native_id = "122.7074"
+slug = "kvallsarbete-harledd"
+
+[[variable]]
+native_id = "122.7077"
+slug = "barnantal-1-2-ar"
+
+[[variable]]
+native_id = "122.7078"
+slug = "barnantal-11-16-ar"
+
+[[variable]]
+native_id = "122.7079"
+slug = "barnantal-17-18-ar"
+
+[[variable]]
+native_id = "122.7080"
+slug = "barnantal-3-6-ar"
+
+[[variable]]
+native_id = "122.7081"
+slug = "barnantal-7-10-ar"
+
+[[variable]]
+native_id = "122.7090"
+slug = "barn1-alder"
+
+[[variable]]
+native_id = "122.7091"
+slug = "barn2-alder"
+
+[[variable]]
+native_id = "122.7092"
+slug = "barn3-alder"
+
+[[variable]]
+native_id = "122.7093"
+slug = "barn4-alder"
+
+[[variable]]
+native_id = "122.7094"
+slug = "barn5-alder"
+
+[[variable]]
+native_id = "122.7095"
+slug = "barn6-alder"
+
+[[variable]]
+native_id = "122.7102"
+slug = "lordagsarbete-i-huvudsysslan-harledd"
+
+[[variable]]
+native_id = "122.7103"
+slug = "nattarbete-harledd"
+
+[[variable]]
+native_id = "122.7105"
+slug = "sondagsarbete-i-huvudsysslan-harledd"
+
+[[variable]]
+native_id = "122.7107"
+slug = "faktisk-tid-huvud-harledd"
+
+[[variable]]
+native_id = "122.7179"
+slug = "arbete-enbart-vardagar"
+
+[[variable]]
+native_id = "122.7340"
+slug = "bisyssla-aku-aldre"
+
+[[variable]]
+native_id = "122.7345"
+slug = "arbetsstallenummer-i-huvudsysslan"
+
+[[variable]]
+native_id = "122.7362"
+slug = "vanligen-tid-huvud-aldre"
+
+[[variable]]
+native_id = "122.7365"
+slug = "yrkesstallning-i-huvudsysslan-aku-aldre"
+
+[[variable]]
+native_id = "122.7366"
+slug = "yrkesstallning-i-bisysslan-aku-aldre"
+
+[[variable]]
+native_id = "122.7367"
+slug = "civilstand-aku-aldre"
+
+[[variable]]
+native_id = "122.7383"
+slug = "grad-aku-aldre"
+
+[[variable]]
+native_id = "122.7389"
+slug = "arbloshetsveckor-avslutad"
+
+[[variable]]
+native_id = "122.7390"
+slug = "studier-aku-aldre"
+
+[[variable]]
+native_id = "122.7391"
+slug = "studier-hel-eller-deltid-aku-aldre"
+
+[[variable]]
+native_id = "122.7392"
+slug = "studietimmar-under-matveckan"
+
+[[variable]]
+native_id = "122.7397"
+slug = "sokt-arbete-pa-annat-satt-arbetslosa"
+
+[[variable]]
+native_id = "122.7404"
+slug = "barnantal-0-ar-aku-aldre"
+
+[[variable]]
+native_id = "122.7405"
+slug = "barnantal-1-2-ar-aku-aldre"
+
+[[variable]]
+native_id = "122.7406"
+slug = "barnantal-11-16-ar-aku-aldre"
+
+[[variable]]
+native_id = "122.7407"
+slug = "barnantal-3-6-ar-aku-aldre"
+
+[[variable]]
+native_id = "122.7408"
+slug = "barnantal-7-10-ar-aku-aldre"
+
+[[variable]]
+native_id = "122.7414"
+slug = "barnets-fodelsedatum-yngsta-aldre"
+
+[[variable]]
+native_id = "122.7415"
+slug = "barnets-fodelsedatum-nast-yngsta-aldre"
+
+[[variable]]
+native_id = "122.7416"
+slug = "barnets-fodelsedatum-3e-yngsta-aldre"
+
+[[variable]]
+native_id = "122.7418"
+slug = "typ-av-anstallning-huvud-aldre"
+
+[[variable]]
+native_id = "122.7420"
+slug = "fackanslutning-aku-aldre"
+
+[[variable]]
+native_id = "122.7421"
+slug = "facklig-centralorganisation-aku-aldre"
+
+[[variable]]
+native_id = "122.7422"
+slug = "fackforbund-aku-aldre"
+
+[[variable]]
+native_id = "122.7424"
+slug = "alder-pa-yngsta-barnet-aku-aldre"
+
+[[variable]]
+native_id = "122.7426"
+slug = "barnets-fodelsedatum-4e-yngsta-aldre"
+
+[[variable]]
+native_id = "122.7427"
+slug = "barnets-fodelsedatum-5e-yngsta-aldre"
+
+[[variable]]
+native_id = "122.7428"
+slug = "barnets-fodelsedatum-6e-yngsta-aldre"
+
+[[variable]]
+native_id = "122.7429"
+slug = "barn-antal-hemmavarande-aku-aldre"
+
+[[variable]]
+native_id = "122.7430"
+slug = "hemmavarande-barn-aku-aldre"
+
+[[variable]]
+native_id = "122.7433"
+slug = "faktiskt-arbetad-tid-bisyssla-aldre"
+
+[[variable]]
+native_id = "122.7438"
+slug = "sektor-i-bisysslan-aku-aldre"
+
+[[variable]]
+native_id = "122.7442"
+slug = "vanligen-tid-bisyssla-aldre"
+
+[[variable]]
+native_id = "122.7447"
+slug = "lan-aku-aldre"
+
+[[variable]]
+native_id = "122.7448"
+slug = "latent-arbetssokande-aku-aldre"
+
+[[variable]]
+native_id = "122.7449"
+slug = "heltidsstuderande-arbl-aldre"
+
+[[variable]]
+native_id = "122.7457"
+slug = "faktisk-arbetstid-totalt"
+
+[[variable]]
+native_id = "122.7461"
+slug = "onskad-okad-arbetstid-sysselsatta"
+
+[[variable]]
+native_id = "122.7462"
+slug = "vanligen-arbetad-tid-totalt"
+
+[[variable]]
+native_id = "122.7464"
+slug = "undersysselsattning-aku-aldre"
+
+[[variable]]
+native_id = "122.7487"
+slug = "senaste-invandringsar-aku-aldre"
+
+[[variable]]
+native_id = "122.7608"
+slug = "antal-barn-0-ar"
+
+[[variable]]
+native_id = "122.7627"
+slug = "arbetsland-for-ett-ar-sedan-rotgr-2-7"
+
+[[variable]]
+native_id = "122.7804"
+slug = "anstallda-foretag-ett-ar-sedan"
+
+[[variable]]
+native_id = "122.7807"
+slug = "facklig-centralorg-aug-2007"
+
+[[variable]]
+native_id = "122.7808"
+slug = "fackforbund-aug-2007"
+
+[[variable]]
+native_id = "122.7809"
+slug = "anknytningsgrad-aku"
+
+[[variable]]
+native_id = "122.7829"
+slug = "studietimmar-formella-betald"
+
+[[variable]]
+native_id = "122.7832"
+slug = "utbildning-fritid-tim-refvecka"
+
+[[variable]]
+native_id = "122.15298"
+slug = "arbetskraftsstatus-2"
+
+[[variable]]
+native_id = "122.17678"
+slug = "kommun-for-bostaden"
+
+[[variable]]
+native_id = "122.17908"
+slug = "hel-deltid-huvud-aku2008"
+
+[[variable]]
+native_id = "122.18003"
+slug = "arbete-hemifran-bostaden-huvud"
+
+[[variable]]
+native_id = "122.18005"
+slug = "heltid-deltid-huvudsysslan"
+
+[[variable]]
+native_id = "122.18006"
+slug = "skiftarbete-anstallda-huvudsyssla"
+
+[[variable]]
+native_id = "122.18007"
+slug = "sni2007-1bokstav"
+
+[[variable]]
+native_id = "122.18008"
+slug = "sni2007-2siffror"
+
+[[variable]]
+native_id = "122.18009"
+slug = "sni2007-3siffror"
+
+[[variable]]
+native_id = "122.18010"
+slug = "sni2007-4siffror"
+
+[[variable]]
+native_id = "122.18011"
+slug = "sni2007-5siffror"
+
+[[variable]]
+native_id = "122.21191"
+slug = "sun2020-niva-kompl"
+
+[[variable]]
+native_id = "122.21192"
+slug = "sun2020-inr-tot"
+
+[[variable]]
+native_id = "122.21193"
+slug = "sun2020-inr-kompl"
+
+[[variable]]
+native_id = "122.21194"
+slug = "sun2020-niva-tot"
+
+[[variable]]
+native_id = "122.21681"
+slug = "huvudsaklig-verksamhet-2010"
+
+[[variable]]
+native_id = "122.21682"
+slug = "arbl-heltidsstuderande-2010"
+
+[[variable]]
+native_id = "122.21683"
+slug = "formella-studier-ampp-2010"
+
+[[variable]]
+native_id = "122.21684"
+slug = "studier-heldel-2010"
+
+[[variable]]
+native_id = "122.21687"
+slug = "antal-timmar-for-formella-studier"
+
+[[variable]]
+native_id = "122.21688"
+slug = "typ-av-studier-med-andring-inford-2010"
+
+[[variable]]
+native_id = "122.21689"
+slug = "typ-av-studier-utvidgad-2010"
+
+[[variable]]
+native_id = "122.22991"
+slug = "huvudsysslans-yrkeskod-pa-1-sifferniva"
+
+[[variable]]
+native_id = "122.22992"
+slug = "huvudsysslans-yrkeskod-pa-2-sifferniva"
+
+[[variable]]
+native_id = "122.22993"
+slug = "huvudsysslans-yrkeskod-pa-3-sifferniva"
+
+[[variable]]
+native_id = "122.22994"
+slug = "huvudsysslans-yrkeskod-pa-4-sifferniva"
+
+[[variable]]
+native_id = "122.25611"
+slug = "upprakningstal-arsvikt"
+
+[[variable]]
+native_id = "122.25612"
+slug = "upprakningstal-kvartalsvikt"
+
+[[variable]]
+native_id = "122.25613"
+slug = "upprakningstal-manadsvikt"
+
+[[variable]]
+native_id = "122.25692"
+slug = "onskad-arbetstid-tot-aldre"
+
+[[variable]]
+native_id = "122.25700"
+slug = "studier-typ-av"
+
+[[variable]]
+native_id = "122.25729"
+slug = "timmar-over-manadsskiftet-i-bisysslan"
+
+[[variable]]
+native_id = "122.25733"
+slug = "vikttal-veckovis-upprakning-arbetstimmar"
+
+[[variable]]
+native_id = "122.25735"
+slug = "alssyk2"
+
+[[variable]]
+native_id = "122.25742"
+slug = "bissyk2-aku-aldre"
+
+[[variable]]
+native_id = "122.25743"
+slug = "bissyk3-aku-aldre"
+
+[[variable]]
+native_id = "122.25744"
+slug = "bissyk4-aku-aldre"
+
+[[variable]]
+native_id = "122.25749"
+slug = "hussyk2-aku-aldre"
+
+[[variable]]
+native_id = "122.25750"
+slug = "hussyk3-aku-aldre"
+
+[[variable]]
+native_id = "122.25751"
+slug = "hussyk4-aku-aldre"
+
+[[variable]]
+native_id = "122.25785"
+slug = "barnantal-17-18-ar-aku-aldre"
+
+[[variable]]
+native_id = "122.25787"
+slug = "sysselsatt-enligt-rams-aku-aldre"
+
+[[variable]]
+native_id = "122.25802"
+slug = "naringsgren-hu-sni2002"
+
+[[variable]]
+native_id = "122.25803"
+slug = "naringsgren-bi-sni2002"
+
+[[variable]]
+native_id = "122.25804"
+slug = "alsni2002"
+
+[[variable]]
+native_id = "122.27172"
+slug = "externrekryteringsfraga-4-fri-text"
+
+[[variable]]
+native_id = "122.27173"
+slug = "fackforbund-fritext-anst-uarb"
+
+[[variable]]
+native_id = "122.27175"
+slug = "fackforbund-fritext-uarb"
+
+[[variable]]
+native_id = "122.27176"
+slug = "hudelskal-fritext"
+
+[[variable]]
+native_id = "122.27180"
+slug = "hutatyp-fritext"
+
+[[variable]]
+native_id = "122.30145"
+slug = "hogsta-utb-ej-utbreg"
+
+[[variable]]
+native_id = "122.30146"
+slug = "hogsta-utb-aktivt-stud"
+
+[[variable]]
+native_id = "122.30425"
+slug = "gymnasieprogram-studerande"
+
+[[variable]]
+native_id = "122.30427"
+slug = "typ-av-gymnasieprogram-studerande"
+
+[[variable]]
+native_id = "122.30428"
+slug = "studtyp-gymnasie"
+
+[[variable]]
+native_id = "122.30504"
+slug = "niva-pa-ovrig-utbildning"
+
+[[variable]]
+native_id = "122.30505"
+slug = "niva-utb-univ-hogsk"
+
+[[variable]]
+native_id = "122.30506"
+slug = "studniva-folkhogsk-utl"
+
+[[variable]]
+native_id = "122.30507"
+slug = "niva-pa-vuxenutbildning"
+
+[[variable]]
+native_id = "122.30529"
+slug = "yrkesstallning-i-senaste-arbetet"
+
+[[variable]]
+native_id = "122.30531"
+slug = "anstallda-i-foretaget-for-ett-ar-sedan"
+
+[[variable]]
+native_id = "122.30538"
+slug = "land-for-arbetet-for-ett-ar-sedan"
+
+[[variable]]
+native_id = "122.30539"
+slug = "ar-hu-verksamhet"
+
+[[variable]]
+native_id = "122.30556"
+slug = "typ-av-tidigare-arbete"
+
+[[variable]]
+native_id = "122.30623"
+slug = "skiftarbete"
+
+[[variable]]
+native_id = "122.31220"
+slug = "grad"
+
+[[variable]]
+native_id = "122.31232"
+slug = "fackforbund-ovrigt-anstallda"
+
+[[variable]]
+native_id = "122.31233"
+slug = "fackforbund-ovrigt-personer-utan-arbete"
+
+[[variable]]
+native_id = "122.31238"
+slug = "arbetar-lordagar-i-huvudsysslan"
+
+[[variable]]
+native_id = "122.31240"
+slug = "arbetar-sondagar-i-huvudsysslan"
+
+[[variable]]
+native_id = "122.31241"
+slug = "overtid-utan-ersattning"
+
+[[variable]]
+native_id = "122.31247"
+slug = "onskemal-om-mer-arbete"
+
+[[variable]]
+native_id = "122.31248"
+slug = "onskemal-om-mindre-arbete"
+
+[[variable]]
+native_id = "122.31249"
+slug = "sokt-annat-arbete-vet-ej-sysselsatta"
+
+[[variable]]
+native_id = "122.31250"
+slug = "vill-forandra-antalet-arbetade-timmar"
+
+[[variable]]
+native_id = "122.31251"
+slug = "yrkesstallning-senaste-arbetet"
+
+[[variable]]
+native_id = "122.31256"
+slug = "overtid-utan-ersattning-anstallda"
+
+[[variable]]
+native_id = "122.31258"
+slug = "huvudsyssla-for-ett-ar-sedan"
+
+[[variable]]
+native_id = "122.31260"
+slug = "lararledd-fritidsaktivitet"
+
+[[variable]]
+native_id = "122.31262"
+slug = "yrkesstallning-personer-utan-arbete"
+
+[[variable]]
+native_id = "122.31264"
+slug = "fackforbund-anstallda-fri-text"
+
+[[variable]]
+native_id = "122.39235"
+slug = "arbetsland-senaste-uarb"
+
+[[variable]]
+native_id = "122.42163"
+slug = "arbetskraftsstatus"
+
+[[variable]]
+native_id = "122.44425"
+slug = "uppnadd-alder-15-89-ar"
+
+[[variable]]
+native_id = "122.46272"
+slug = "yrkesstallning-i-bisysslan-from-2021"
+
+[[variable]]
+native_id = "122.46275"
+slug = "sokveckor-uarb-from-2021"
+
+[[variable]]
+native_id = "122.46364"
+slug = "bi-vanltim-2021"
+
+[[variable]]
+native_id = "122.46368"
+slug = "studtyp-yrkesinr"
+
+[[variable]]
+native_id = "122.46380"
+slug = "huvudsaklig-verksamhet"
+
+[[variable]]
+native_id = "122.46903"
+slug = "typ-av-studier-utvidgad"
+
+[[variable]]
+native_id = "122.47281"
+slug = "studier-referensveckan"
+
+[[variable]]
+native_id = "122.47439"
+slug = "bisyssla-om-fler-an-ett-arbete"
+
+[[variable]]
+native_id = "122.47440"
+slug = "bisyssla-om-ett-eller-flera-extraarbeten"
+
+[[variable]]
+native_id = "122.47456"
+slug = "sokt-arbete-nuv-arbetsgivare"
+
+[[variable]]
+native_id = "122.47568"
+slug = "bisyssla-kvar-extrarb"
+
+[[variable]]
+native_id = "122.47582"
+slug = "bi-yrkstall"
+
+[[variable]]
+native_id = "122.48182"
+slug = "anledning-till-tidsbegransad-anstallning"
+
+[[variable]]
+native_id = "122.48183"
+slug = "arb-under-utbildning"
+
+[[variable]]
+native_id = "122.48184"
+slug = "ickeform-kurs-12man"
+
+[[variable]]
+native_id = "122.48185"
+slug = "ickeform-frit-12man"
+
+[[variable]]
+native_id = "122.48186"
+slug = "sok-tillganglighet"
+
+# register 123 (arbetsmiljoundersokningen)
+
+[[variable]]
+native_id = "122.18004.huarbhemant"
+slug = "huarbhem-frekvens"
+
+[[variable]]
+native_id = "122.21673.studfrit"
+slug = "studfrit-refvecka"
+
+[[variable]]
+native_id = "122.21673.studfrittim"
+slug = "studfrittim-refvecka"
+
+[[variable]]
+native_id = "122.30514.studheldel"
+slug = "studier-pa-hel-eller-deltid"
+
+[[variable]]
+native_id = "122.6770.huotejers"
+slug = "hu-overtidstim-ejers"
+
+[[variable]]
+native_id = "122.6850.syssoksatt88"
+slug = "vet-ej-om-sokt-annat-arbete-sysselsatta"
+
+# register 123 (arbetsmiljoundersokningen)
+
+[[variable]]
+native_id = "122.25696"
+slug = "alnyk83"
+
+[[variable]]
+native_id = "122.19"
+slug = "a-region"
+
+[[variable]]
+native_id = "122.778"
+slug = "utbildningsniva-3-positioner-2"
+
+[[variable]]
+native_id = "122.1315"
+slug = "utbildnings-inriktning-sun-2000"
+
+[[variable]]
+native_id = "122.5726"
+slug = "utbildningens-niva"
+
+[[variable]]
+native_id = "122.6375"
+slug = "arbetskraftsstatus-aldre"
+
+[[variable]]
+native_id = "122.6439"
+slug = "hjalp-arbetssokande-ams"
+
+[[variable]]
+native_id = "122.6440"
+slug = "hjalp-alder-kon"
+
+[[variable]]
+native_id = "122.6442"
+slug = "hjalp-fodelseland"
+
+[[variable]]
+native_id = "122.6443"
+slug = "hjalp-region"
+
+[[variable]]
+native_id = "122.6444"
+slug = "hjalp-naringsgren-sysselsatta"
+
+[[variable]]
+native_id = "122.6498"
+slug = "kvallsarbete-i-huvudsysslan"
+
+[[variable]]
+native_id = "122.6499"
+slug = "nattarbete-huvudsysslan"
+
+[[variable]]
+native_id = "122.6500"
+slug = "lordagsarbete-i-huvudsysslan"
+
+[[variable]]
+native_id = "122.6549"
+slug = "fodelseland-klartext"
+
+[[variable]]
+native_id = "122.6550"
+slug = "fodelseland-iso"
+
+[[variable]]
+native_id = "122.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "122.6771"
+slug = "overtid-med-ersattning"
+
+[[variable]]
+native_id = "122.6776"
+slug = "overtid-totalt"
+
+[[variable]]
+native_id = "122.6815"
+slug = "antal-svarande-stratum-referensmanad"
+
+[[variable]]
+native_id = "122.6818"
+slug = "medborgarland-varldsdel"
+
+[[variable]]
+native_id = "122.6837"
+slug = "antal-personer-stratum-urval"
+
+[[variable]]
+native_id = "122.7112"
+slug = "anstallningsar-harledd"
+
+[[variable]]
+native_id = "122.7450"
+slug = "matmanad"
+
+[[variable]]
+native_id = "122.7465"
+slug = "utbildnings-inriktning-sun-siffra-1"
+
+[[variable]]
+native_id = "122.18002"
+slug = "arbete-enbart-dagtid"
+
+[[variable]]
+native_id = "122.21195"
+slug = "antal-ar-grundutbildning"
+
+[[variable]]
+native_id = "122.27077"
+slug = "typ-av-telefonnummer"
+
+[[variable]]
+native_id = "122.30138"
+slug = "studier-eftergymnasial-niva"
+
+[[variable]]
+native_id = "122.30142"
+slug = "antal-hogskolepoang"
+
+[[variable]]
+native_id = "122.30435"
+slug = "utbildningsniva-isced2011"
+
+[[variable]]
+native_id = "122.30516"
+slug = "typ-av-utbildning"
+
+[[variable]]
+native_id = "122.30845"
+slug = "yrkesbenamning-huvud"
+
+# register 123

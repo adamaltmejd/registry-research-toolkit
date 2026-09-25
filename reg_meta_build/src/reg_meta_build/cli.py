@@ -414,10 +414,9 @@ def _build_parser() -> argparse.ArgumentParser:
         "seed-slugs",
         help="Emit starter slug TOMLs from the current DB (maintainer-only).",
         description=(
-            "Generate hand-review starter TOMLs at <out-dir>/<provider>.toml,\n"
-            "mirroring DESIGN.md → Slug curation. Slugs are auto-derived from\n"
-            "register.name / register_variant.name and need maintainer review before\n"
-            "commit.\n\n"
+            "Generate machine-owned variable pins at <out-dir>/registers/<provider>/\n"
+            "<register>.auto.toml. Curated register and variant names live in the\n"
+            "matching register file.\n\n"
             "Examples:\n"
             "  reg-meta-build seed-slugs\n"
             "  reg-meta-build seed-slugs --out-dir /tmp/slugs/"
@@ -428,8 +427,8 @@ def _build_parser() -> argparse.ArgumentParser:
         "--out-dir",
         default=None,
         help=(
-            "Where to write the TOMLs (default: reg_meta_build/fqid_slugs/ in a repo "
-            "checkout, else CWD/fqid_slugs/)."
+            "Where to write generated pins (default: reg_meta_build/curation/ in a repo "
+            "checkout, else CWD/curation/)."
         ),
     )
     seed_slugs_p.add_argument(
@@ -444,17 +443,6 @@ def _build_parser() -> argparse.ArgumentParser:
             "Show every `_default` candidate in the stderr hint block instead "
             "of the default ~5-row preview. Pass the global -q/--quiet to "
             "suppress the hint block entirely."
-        ),
-    )
-    seed_slugs_p.add_argument(
-        "--propose-panel",
-        action="store_true",
-        help=(
-            "Also emit proposed panel-shape starter lines (panel_entity_key / "
-            "panel_time_key / panel_time_grain) on each register_variant (A4.4c-ii). "
-            "Entity-key proposals come from variable.is_identifier (falling back to "
-            "ID-kolumner join keys); time key/grain default to the delivery-aligned "
-            "majority. These are starter hints — a curator reviews them in A4.4d."
         ),
     )
 
@@ -476,7 +464,7 @@ def _build_parser() -> argparse.ArgumentParser:
     precheck_p.add_argument(
         "--slug-dir",
         default=None,
-        help="Directory of slug TOMLs (default: reg_meta_build/fqid_slugs/).",
+        help="Curation root (default: reg_meta_build/curation/).",
     )
     precheck_p.add_argument(
         "--update-snapshot",
@@ -599,17 +587,17 @@ def _build_parser() -> argparse.ArgumentParser:
             "committed emits nothing. Reads a built DB; never mutates it. The\n"
             "emitted block is dbdiff-identical (each pin reproduces the slug the\n"
             "variable already carries).\n\n"
-            "Output: --out-dir writes one DIR/<provider>.toml per provider (the\n"
-            "curation shape — fold each into fqid_slugs/<provider>.toml); --output-toml\n"
+            "Output: --out-dir writes one DIR/registers/<provider>/<register>.toml\n"
+            "per register for the global build (steward output stays per-provider); --output-toml\n"
             "writes ALL providers' pins to a single file (for inspection). The two are\n"
             "mutually exclusive. With neither, the JSON payload carries the combined\n"
             "TOML and per-provider counts.\n\n"
-            "Curation flow: run with --out-dir, then fold each NON-duplicate\n"
-            "<provider>.toml block into reg_meta_build/fqid_slugs/<provider>.toml.\n"
+            "Curation flow: fold each NON-duplicate global block into its matching\n"
+            "reg_meta_build/curation/registers/<provider>/<register>.toml.\n"
             "(Chicken-and-egg: the first gated build of a new entity-key var fails —\n"
             "generate via a --no-validate build, commit the pins, then rebuild with\n"
             "validation.)\n\n"
-            "The curated slug dir (--slug-dir; default: the repo's fqid_slugs/) is\n"
+            "The curated slug dir (--slug-dir; default: the repo's curation/) is\n"
             "read to skip already-pinned variables.\n\n"
             "Examples:\n"
             "  reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/\n"
@@ -623,8 +611,8 @@ def _build_parser() -> argparse.ArgumentParser:
         "--out-dir",
         default=None,
         help=(
-            "Write one <provider>.toml pin block per provider into this directory "
-            "(the curation shape). Mutually exclusive with --output-toml."
+            "Write register-scoped global pin blocks into this directory "
+            "(steward pins remain provider-scoped). Mutually exclusive with --output-toml."
         ),
     )
     entity_key_pins_p.add_argument(
@@ -647,7 +635,7 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Directory of curated slug TOMLs to read for already-pinned variables "
-            "(default: reg_meta_build/fqid_slugs/ when run from a repo checkout)."
+            "(default: reg_meta_build/curation/ when run from a repo checkout)."
         ),
     )
     entity_key_pins_p.add_argument(
@@ -1401,7 +1389,7 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
             error_class="configuration",
             message=(
                 "Slug TOMLs not found. Pass --slug-dir or run from a reg_meta "
-                "checkout containing reg_meta_build/fqid_slugs/."
+                "checkout containing reg_meta_build/curation/."
             ),
             remediation=(
                 "Run from a repo checkout, or `reg-meta-build seed-slugs` "
@@ -1417,8 +1405,8 @@ def _cmd_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.out_dir:
         out_dir = Path(args.out_dir).expanduser().resolve()
     else:
-        out_dir = repo_slug_dir() or (Path.cwd() / "fqid_slugs").resolve()
-    if out_dir.exists() and any(out_dir.glob("*.toml")) and not args.force:
+        out_dir = repo_slug_dir() or (Path.cwd() / "curation").resolve()
+    if out_dir.exists() and any(out_dir.rglob("*.auto.toml")) and not args.force:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
             code="slug_seed_would_overwrite",
@@ -1434,7 +1422,7 @@ def _cmd_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     # than a raw `OperationalError`.
     conn = open_db(db)
     try:
-        written = seed_all(conn, out_dir, propose_panel=args.propose_panel)
+        written = seed_all(conn, out_dir)
         # reg-meta-build always emits JSON on stdout, so hints (stderr) are
         # independent of format and only suppressed by --quiet / env.
         suppress_hints = args.quiet or os.environ.get("REG_META_QUIET") == "1"
@@ -1454,7 +1442,6 @@ def _cmd_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "out_dir": str(out_dir),
             "force": args.force,
             "all_hints": args.all_hints,
-            "propose_panel": args.propose_panel,
             "quiet": args.quiet,
         },
         db_info=None,
@@ -1471,7 +1458,11 @@ def _cmd_precheck_slugs(
 ) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     slug_dir = _resolve_slug_dir(args.slug_dir)
-    snapshot_path = slug_dir / SNAPSHOT_FILENAME
+    snapshot_path = slug_dir / (
+        ".slug_snapshot.json"
+        if (slug_dir / "registers").is_dir()
+        else SNAPSHOT_FILENAME
+    )
     # Per-provider slug-freeze model (#470): only `frozen` zones gate
     # rename/removal; `churning`/`curating` zones still write through.
     states = load_freeze_states(slug_dir)
@@ -2183,7 +2174,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Rebuild the doc DB from markdown files.",
     ),
     (
-        "seed-slugs [--out-dir DIR] [--force] [--all-hints] [--propose-panel]",
+        "seed-slugs [--out-dir DIR] [--force] [--all-hints]",
         "Emit starter slug TOMLs from the current DB.",
     ),
     (

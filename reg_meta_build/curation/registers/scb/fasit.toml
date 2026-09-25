@@ -1,0 +1,3174 @@
+[register]
+provider = "scb"
+slug = "fasit"
+native_id = "371"
+
+[[variant]]
+native_id = "371.1344"
+slug = "individregister"
+display_group = "Individregister"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1345"
+slug = "bostadshushallsregister"
+display_group = "Bostadshushållsregister"
+panel_entity_key = "hushallsid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1357"
+slug = "arbetsloshetsregister"
+display_group = "Arbetslöshetsregister"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1358"
+slug = "fastighetsregister"
+display_group = "Fastighetsregister"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1359"
+slug = "register-k5-k6"
+display_group = "Register över K5/K6"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1360"
+slug = "register-k10"
+display_group = "Register över K10"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1361"
+slug = "register-k10a"
+display_group = "Register över K10A"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1362"
+slug = "enskilda-naringsidkare"
+display_group = "Enskilda näringsidkare"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1363"
+slug = "delagare-i-handelsbolag"
+display_group = "Delägare i handelsbolag"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1381"
+slug = "sjukpenningsregister"
+display_group = "Sjukpenningsregister"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1382"
+slug = "familjehushallsregister"
+display_group = "Familjehushållsregister"
+panel_entity_key = "familjehushallsidentitet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1385"
+slug = "foraldrapenningsregister"
+display_group = "Föräldrapenningsregister"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1386"
+slug = "barnregister"
+display_group = "Barnregister"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "371.1404"
+slug = "tandvardsregister"
+display_group = "Tandvårdsregister"
+panel_entity_key = "scbid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: panel keys removed — bidnrhb has states in 14 sibling FASIT variants but not
+# here; no household id is registered for this variant's delivery.
+
+[[variant]]
+native_id = "371.1438"
+slug = "kosthushallsregister"
+display_group = "Kosthushållsregister"
+
+# SCB:s företagsregister
+
+[[variable]]
+native_id = "371.4600"
+slug = "scbid"
+
+
+[[variable]]
+native_id = "371.30360"
+slug = "hushallsid"
+
+
+[[variable]]
+native_id = "371.37435"
+slug = "familjehushallsidentitet"
+
+
+[[variable]]
+native_id = "371.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "371.44"
+slug = "kon"
+
+[[variable]]
+native_id = "371.47"
+slug = "lokala-arbetsmarknader"
+
+[[variable]]
+native_id = "371.66"
+slug = "sunniva"
+
+[[variable]]
+native_id = "371.75"
+slug = "arbetsinkomst"
+
+[[variable]]
+native_id = "371.93"
+slug = "pension-skattefri"
+
+[[variable]]
+native_id = "371.105"
+slug = "slutlig-skatt"
+
+[[variable]]
+native_id = "371.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "371.388"
+slug = "antal-barn"
+
+[[variable]]
+native_id = "371.594"
+slug = "privat-pensionsforsakring-livranta"
+
+[[variable]]
+native_id = "371.595"
+slug = "allman-pension-tjanstepension-summa"
+
+[[variable]]
+native_id = "371.596"
+slug = "tjanstepension"
+
+[[variable]]
+native_id = "371.610"
+slug = "fastighetsskatt"
+
+[[variable]]
+native_id = "371.774"
+slug = "utbildningsniva-aggregat-old"
+
+[[variable]]
+native_id = "371.1075"
+slug = "naringsinkomst"
+
+[[variable]]
+native_id = "371.1110"
+slug = "inkomst-av-kapital"
+
+[[variable]]
+native_id = "371.1160"
+slug = "bankrantor"
+
+[[variable]]
+native_id = "371.1163"
+slug = "skattefri-utdelning-k10"
+
+[[variable]]
+native_id = "371.1192"
+slug = "ovriga-kostnadsersattningar"
+
+[[variable]]
+native_id = "371.1193"
+slug = "ersattning-grund-egenavgifter-tjanst"
+
+[[variable]]
+native_id = "371.1194"
+slug = "kontant-bruttolon-mm"
+
+[[variable]]
+native_id = "371.1195"
+slug = "skattepliktiga-formaner-ej-lon"
+
+[[variable]]
+native_id = "371.1196"
+slug = "ovriga-skattepliktiga-ers-tjanst"
+
+[[variable]]
+native_id = "371.1390"
+slug = "aldreforsorjningsstod"
+
+[[variable]]
+native_id = "371.1400"
+slug = "bostadstillagg-till-pensionarer"
+
+[[variable]]
+native_id = "371.1821"
+slug = "yrkesstallning"
+
+[[variable]]
+native_id = "371.2698"
+slug = "naringsgren-enskild-naringsidkare"
+
+[[variable]]
+native_id = "371.2714"
+slug = "hogsta-utbildning-niva"
+
+[[variable]]
+native_id = "371.2767"
+slug = "boyta-i-kvadratmeter"
+
+[[variable]]
+native_id = "371.3195"
+slug = "h-region"
+
+[[variable]]
+native_id = "371.3197"
+slug = "antal-barn-0-19-ar"
+
+[[variable]]
+native_id = "371.3198"
+slug = "helarshushall"
+
+[[variable]]
+native_id = "371.3210"
+slug = "boendeform"
+
+[[variable]]
+native_id = "371.3218"
+slug = "inkomstranta"
+
+[[variable]]
+native_id = "371.3284"
+slug = "ersattning-slutford-terminsaffar"
+
+[[variable]]
+native_id = "371.4386"
+slug = "pension-och-livranta-skattefri"
+
+[[variable]]
+native_id = "371.4502"
+slug = "foretagarinkomst"
+
+[[variable]]
+native_id = "371.4584"
+slug = "hyra-avgift-per-manad"
+
+[[variable]]
+native_id = "371.6093"
+slug = "hyresersattning"
+
+[[variable]]
+native_id = "371.6258"
+slug = "ekonomiskt-bistand"
+
+[[variable]]
+native_id = "371.7465"
+slug = "utbildnings-inriktning-sun-siffra-1"
+
+[[variable]]
+native_id = "371.8534"
+slug = "kommungrupp"
+
+[[variable]]
+native_id = "371.16791"
+slug = "outnyttjat-underskott-fran-tidigare-ar"
+
+[[variable]]
+native_id = "371.19805"
+slug = "underlag-arbetsmarknadsavgift-forar"
+
+[[variable]]
+native_id = "371.19807"
+slug = "underlag-fastighetsavgift-0375-smahus"
+
+[[variable]]
+native_id = "371.19810"
+slug = "underlag-fastighetsavgift-075-smahus"
+
+[[variable]]
+native_id = "371.19822"
+slug = "underlag-allman-loneavgift-forar"
+
+[[variable]]
+native_id = "371.21209"
+slug = "underlag-skattereduktion-rut-forman"
+
+[[variable]]
+native_id = "371.21231"
+slug = "studiehjalp-manader-studiebidrag"
+
+[[variable]]
+native_id = "371.21242"
+slug = "konsumtionsenhet-2004"
+
+[[variable]]
+native_id = "371.21466"
+slug = "anstalld-antal-manader"
+
+[[variable]]
+native_id = "371.21515"
+slug = "delkomponent-disponibel-inkomst-2004"
+
+[[variable]]
+native_id = "371.21523"
+slug = "vissa-ej-skattepliktiga-ersattningar"
+
+[[variable]]
+native_id = "371.21785"
+slug = "summa-skattefritt-skattepliktigt"
+
+[[variable]]
+native_id = "371.21797"
+slug = "ersattningskod-420-skattefri-del"
+
+[[variable]]
+native_id = "371.21798"
+slug = "ersattningskod-421-skattefri-del"
+
+[[variable]]
+native_id = "371.21799"
+slug = "ersattningskod-423-skattefri-del"
+
+[[variable]]
+native_id = "371.21800"
+slug = "ersattningskod-426-skattefri-del"
+
+[[variable]]
+native_id = "371.21801"
+slug = "ersattningskod-429-skattefri-del"
+
+[[variable]]
+native_id = "371.21802"
+slug = "ersattningskod-420-skattepliktig-del"
+
+[[variable]]
+native_id = "371.21803"
+slug = "ersattningskod-421-skattepliktig-del"
+
+[[variable]]
+native_id = "371.21804"
+slug = "ersattningskod-423-skattepliktig-del"
+
+[[variable]]
+native_id = "371.21805"
+slug = "ersattningskod-429-skattepliktig-del"
+
+[[variable]]
+native_id = "371.21806"
+slug = "ersattningskod-426-skattepliktig-del"
+
+[[variable]]
+native_id = "371.21816"
+slug = "avdragen-preliminar-a-skatt-arbetsgivare"
+
+[[variable]]
+native_id = "371.21829"
+slug = "avdrag"
+
+[[variable]]
+native_id = "371.21830"
+slug = "bilforman-utom-drivmedel"
+
+[[variable]]
+native_id = "371.21831"
+slug = "drivmedel-vid-bilforman"
+
+[[variable]]
+native_id = "371.21864"
+slug = "ranta"
+
+[[variable]]
+native_id = "371.21879"
+slug = "skattepliktiga-ersattningar-ej-sociala"
+
+[[variable]]
+native_id = "371.22306"
+slug = "disponibel-inkomst-exkl-kapvinst-2004"
+
+[[variable]]
+native_id = "371.24169"
+slug = "underlag-skattereduktion-rot-forman"
+
+[[variable]]
+native_id = "371.24175"
+slug = "andel-grad-sjukersattning-vilande"
+
+[[variable]]
+native_id = "371.24193"
+slug = "andel-grad-aktivitetsersattning-vilande"
+
+[[variable]]
+native_id = "371.24195"
+slug = "bostadstillagg-sjuk-aktivitet"
+
+[[variable]]
+native_id = "371.24196"
+slug = "sarskilt-bostadstillagg-pensionarer"
+
+[[variable]]
+native_id = "371.24197"
+slug = "sarskilt-bostadstillagg-sjuk-akt"
+
+[[variable]]
+native_id = "371.24198"
+slug = "aterford-expansionsfondskatt"
+
+[[variable]]
+native_id = "371.24204"
+slug = "sjukersattning-vilande"
+
+[[variable]]
+native_id = "371.24208"
+slug = "aktivitetsersattning-vilande"
+
+[[variable]]
+native_id = "371.24584"
+slug = "disponibel-inkomst-individ-2004"
+
+[[variable]]
+native_id = "371.24930"
+slug = "summa-bostadstillagg"
+
+[[variable]]
+native_id = "371.24931"
+slug = "summa-sarskilt-bostadstillagg"
+
+[[variable]]
+native_id = "371.26640"
+slug = "sparat-utdelningsutrymme-forar-uppraknat"
+
+[[variable]]
+native_id = "371.26655"
+slug = "omkostnadsbelopp-punkt-2-2"
+
+[[variable]]
+native_id = "371.26659"
+slug = "gransbelopp-overlatna-andelar-avyttring"
+
+[[variable]]
+native_id = "371.26662"
+slug = "utdelningsutrymme-overlatna-andel-p-1-9"
+
+[[variable]]
+native_id = "371.26663"
+slug = "gransbelopp-p-1-4-ranta-efter-avyttring"
+
+[[variable]]
+native_id = "371.26674"
+slug = "verkligt-omkostnadsbelopp"
+
+[[variable]]
+native_id = "371.26700"
+slug = "loneunderlag-v0436"
+
+[[variable]]
+native_id = "371.26712"
+slug = "sparat-utd-delavyttring-efter-utdel"
+
+[[variable]]
+native_id = "371.26716"
+slug = "gransbelopp-avyttring-fore-utdelning"
+
+[[variable]]
+native_id = "371.26718"
+slug = "sparat-utd-avyttring-fore-utdelning"
+
+[[variable]]
+native_id = "371.26731"
+slug = "omkostnadsbelopp-punkt-3-6"
+
+[[variable]]
+native_id = "371.26732"
+slug = "sparat-utdelningsutrymme-vid-utdelning"
+
+[[variable]]
+native_id = "371.26733"
+slug = "gransbelopp-utdelning-efter-avyttring"
+
+[[variable]]
+native_id = "371.27004"
+slug = "antal-manader-i-sverige"
+
+[[variable]]
+native_id = "371.27032"
+slug = "karenstid-sjukforsakringsavgift"
+
+[[variable]]
+native_id = "371.27038"
+slug = "skattefri-restpension"
+
+[[variable]]
+native_id = "371.27058"
+slug = "ovriga-skattefria-transfereringar"
+
+[[variable]]
+native_id = "371.27069"
+slug = "lon-famansbolag-ku"
+
+[[variable]]
+native_id = "371.28094"
+slug = "underlag-efterlevande-pension-forar"
+
+[[variable]]
+native_id = "371.28159"
+slug = "etableringsersattning"
+
+[[variable]]
+native_id = "371.28837"
+slug = "kommungruppsindelning-2011"
+
+[[variable]]
+native_id = "371.29339"
+slug = "hushallstyp-bostadshushall"
+
+[[variable]]
+native_id = "371.29587"
+slug = "skattereduktion-gava"
+
+[[variable]]
+native_id = "371.29589"
+slug = "mottaget-gavobelopp"
+
+[[variable]]
+native_id = "371.31572"
+slug = "antal-dagar-arbetsloshet"
+
+[[variable]]
+native_id = "371.32957"
+slug = "kommunkod"
+
+[[variable]]
+native_id = "371.35335"
+slug = "regionindelning"
+
+[[variable]]
+native_id = "371.35992"
+slug = "antal-rum"
+
+[[variable]]
+native_id = "371.36886"
+slug = "regionindelning-nuts2"
+
+[[variable]]
+native_id = "371.36887"
+slug = "antal-man-underhallsstod-givet"
+
+[[variable]]
+native_id = "371.36888"
+slug = "antal-man-underhallsstod-mottaget"
+
+[[variable]]
+native_id = "371.36978"
+slug = "uppskovsavdrag-nytillkomna"
+
+[[variable]]
+native_id = "371.37444"
+slug = "avsattning-privat-pensionssparande"
+
+[[variable]]
+native_id = "371.37445"
+slug = "skulder-boendet"
+
+[[variable]]
+native_id = "371.37454"
+slug = "inkomstranta-utdelning-2-ar"
+
+[[variable]]
+native_id = "371.37455"
+slug = "positiv-rantefordelning-2-ar"
+
+[[variable]]
+native_id = "371.37456"
+slug = "inkomst-kapital-delbelopp-2-ar-gamla"
+
+[[variable]]
+native_id = "371.37457"
+slug = "uthyrning-privatbostad"
+
+[[variable]]
+native_id = "371.37458"
+slug = "aterforing-uppskovsavdrag-tom-2013"
+
+[[variable]]
+native_id = "371.37459"
+slug = "aterforing-uppskov-nytillkomna-2014"
+
+[[variable]]
+native_id = "371.37460"
+slug = "kapitalvinst-2-ar-gamla"
+
+[[variable]]
+native_id = "371.37465"
+slug = "inkomst-naringsverksamhet-2-ar-gamla"
+
+[[variable]]
+native_id = "371.37466"
+slug = "minskning-expansionsmedel-2-ar-gamla"
+
+[[variable]]
+native_id = "371.37467"
+slug = "aterforing-periodiseringsfond-2-ar"
+
+[[variable]]
+native_id = "371.37469"
+slug = "avsattning-expansionsmedel-2-ar"
+
+[[variable]]
+native_id = "371.37470"
+slug = "pensionsforsakringspremie-2-ar-gamla"
+
+[[variable]]
+native_id = "371.37471"
+slug = "avsattning-periodiseringsfond-2-ar"
+
+[[variable]]
+native_id = "371.37473"
+slug = "avtalsenlig-sjuklon-sjukpenning"
+
+[[variable]]
+native_id = "371.37539"
+slug = "avtalsenlig-sjuklon-sjuklone"
+
+[[variable]]
+native_id = "371.37543"
+slug = "underlag-skattereduktion-rot"
+
+[[variable]]
+native_id = "371.37547"
+slug = "traffvariabel-iot2015hb"
+
+[[variable]]
+native_id = "371.37549"
+slug = "renodlad-foretagare"
+
+[[variable]]
+native_id = "371.37554"
+slug = "storlek-mottaget-underhallsstod"
+
+[[variable]]
+native_id = "371.37555"
+slug = "storlek-givet-underhallsstod"
+
+[[variable]]
+native_id = "371.37588"
+slug = "aktieutdelning-skattefri-k10"
+
+[[variable]]
+native_id = "371.37592"
+slug = "skattepliktiga-formaner-inkl-drivmedel"
+
+[[variable]]
+native_id = "371.37611"
+slug = "taxeringsvarde-hyreshus-lokaler-t2"
+
+[[variable]]
+native_id = "371.37612"
+slug = "taxeringsvarde-hyreshus-lokaler-t1"
+
+[[variable]]
+native_id = "371.37616"
+slug = "taxeringsvarde-byggnad-t2"
+
+[[variable]]
+native_id = "371.37617"
+slug = "taxeringsvarde-byggnad-t3"
+
+[[variable]]
+native_id = "371.37618"
+slug = "taxeringsvarde-mark-t3"
+
+[[variable]]
+native_id = "371.37619"
+slug = "taxeringsvarde-mark-t2"
+
+[[variable]]
+native_id = "371.37622"
+slug = "taxeringsvarde-mark-byggnad-t3"
+
+[[variable]]
+native_id = "371.37623"
+slug = "taxeringsvarde-mark-byggnad-t2"
+
+[[variable]]
+native_id = "371.37635"
+slug = "inkomst-tjanst-2-ar-gamla"
+
+[[variable]]
+native_id = "371.37703"
+slug = "gransbelopp-overlatna-andelar"
+
+[[variable]]
+native_id = "371.37704"
+slug = "ku-ersattning-ab-dotterbolag-foregaende"
+
+[[variable]]
+native_id = "371.37708"
+slug = "sparat-utdelningsutrymme"
+
+[[variable]]
+native_id = "371.37729"
+slug = "livranta-skattepliktig-428"
+
+[[variable]]
+native_id = "371.37739"
+slug = "inkomst-fore-rantefordelning"
+
+[[variable]]
+native_id = "371.37740"
+slug = "inkomst-fore-periodiseringsfond"
+
+[[variable]]
+native_id = "371.37747"
+slug = "over-underskott-fore-periodiseringsfond"
+
+[[variable]]
+native_id = "371.37748"
+slug = "over-underskott-fore-expansionsfond"
+
+[[variable]]
+native_id = "371.37759"
+slug = "klimatzon"
+
+[[variable]]
+native_id = "371.37763"
+slug = "traffvariabel-iot2016hb"
+
+[[variable]]
+native_id = "371.37844"
+slug = "studiemedel-studiebidrag-2-ar"
+
+[[variable]]
+native_id = "371.37848"
+slug = "funktionella-analysregioner"
+
+[[variable]]
+native_id = "371.37919"
+slug = "ersattningsgrundande-daglon"
+
+[[variable]]
+native_id = "371.37936"
+slug = "sjukpenningdagar-sjukfallet"
+
+[[variable]]
+native_id = "371.37951"
+slug = "hemmavarande-barn-studiehjalp"
+
+[[variable]]
+native_id = "371.37956"
+slug = "manader-forskola-barn-1"
+
+[[variable]]
+native_id = "371.37957"
+slug = "manader-forskola-barn-2"
+
+[[variable]]
+native_id = "371.37958"
+slug = "manader-forskola-barn-3"
+
+[[variable]]
+native_id = "371.37959"
+slug = "manader-forskola-barn-4"
+
+[[variable]]
+native_id = "371.37960"
+slug = "manader-forskola-barn-5"
+
+[[variable]]
+native_id = "371.37966"
+slug = "manader-omsorg-barn-1"
+
+[[variable]]
+native_id = "371.37967"
+slug = "manader-omsorg-barn-2"
+
+[[variable]]
+native_id = "371.37968"
+slug = "manader-omsorg-barn-3"
+
+[[variable]]
+native_id = "371.37969"
+slug = "manader-omsorg-barn-4"
+
+[[variable]]
+native_id = "371.37970"
+slug = "manader-omsorg-barn-5"
+
+[[variable]]
+native_id = "371.38482"
+slug = "typ-mottaget-underhallstod"
+
+[[variable]]
+native_id = "371.38483"
+slug = "typ-givet-underhallstod"
+
+[[variable]]
+native_id = "371.38508"
+slug = "uppskovsavdrag-prel-nytillkomna-2016"
+
+[[variable]]
+native_id = "371.38509"
+slug = "uppskovsavdrag-nytillkomna-2016"
+
+[[variable]]
+native_id = "371.38515"
+slug = "taxeringsvarde-2017-boendet-smahus"
+
+[[variable]]
+native_id = "371.38516"
+slug = "taxeringsvarde-2018-boendet-smahus"
+
+[[variable]]
+native_id = "371.38517"
+slug = "taxeringsvarde-2017-smahus"
+
+[[variable]]
+native_id = "371.38518"
+slug = "taxeringsvarde-2018-smahus"
+
+[[variable]]
+native_id = "371.38520"
+slug = "aterforing-uppskov-nytillkomna-2016"
+
+[[variable]]
+native_id = "371.38521"
+slug = "aterforing-uppskovsavdrag-tom-2016"
+
+[[variable]]
+native_id = "371.38570"
+slug = "regionindelning-h-region"
+
+[[variable]]
+native_id = "371.38625"
+slug = "summerat-pensionssparande"
+
+[[variable]]
+native_id = "371.38650"
+slug = "antal-dagar-aktivitetsstod"
+
+[[variable]]
+native_id = "371.38708"
+slug = "aterforing-uppskovsavdrag-tom-2010"
+
+[[variable]]
+native_id = "371.38710"
+slug = "uppskovsavdrag-tom-2010"
+
+[[variable]]
+native_id = "371.38736"
+slug = "uppskovsavdrag-nytillkomna-2010"
+
+[[variable]]
+native_id = "371.38742"
+slug = "kapitalinkomst-delbelopp"
+
+[[variable]]
+native_id = "371.38743"
+slug = "aterforing-uppskov-nytillkomna-2010"
+
+[[variable]]
+native_id = "371.38793"
+slug = "manader-kommunal-familjedaghem-barn-1"
+
+[[variable]]
+native_id = "371.38794"
+slug = "manader-kommunal-familjedaghem-barn-2"
+
+[[variable]]
+native_id = "371.38795"
+slug = "manader-kommunal-familjedaghem-barn-3"
+
+[[variable]]
+native_id = "371.38796"
+slug = "manader-kommunal-familjedaghem-barn-4"
+
+[[variable]]
+native_id = "371.38797"
+slug = "manader-kommunal-familjedaghem-barn-5"
+
+[[variable]]
+native_id = "371.38819"
+slug = "manader-kommunal-omsorg-barn-1"
+
+[[variable]]
+native_id = "371.38820"
+slug = "manader-kommunal-omsorg-barn-2"
+
+[[variable]]
+native_id = "371.38821"
+slug = "manader-kommunal-omsorg-barn-3"
+
+[[variable]]
+native_id = "371.38822"
+slug = "manader-kommunal-omsorg-barn-4"
+
+[[variable]]
+native_id = "371.38823"
+slug = "manader-med-kommunal-omsorg-barn-5"
+
+[[variable]]
+native_id = "371.38859"
+slug = "lan-kommun-forsamling"
+
+[[variable]]
+native_id = "371.39147"
+slug = "civilstand-foregaende-ar"
+
+[[variable]]
+native_id = "371.39163"
+slug = "sammanlagt-taxeringsvarde-ar-t-1"
+
+[[variable]]
+native_id = "371.40286"
+slug = "beraknad-avtalsersattning-som-lon"
+
+[[variable]]
+native_id = "371.41149"
+slug = "markering-for-hojd-pensionalder"
+
+[[variable]]
+native_id = "371.41150"
+slug = "beraknad-sjuklon-sjukloneperioden"
+
+[[variable]]
+native_id = "371.41151"
+slug = "ranta-fran-pensionsmyndigheten"
+
+[[variable]]
+native_id = "371.42258"
+slug = "vaxelvist-boende-barn"
+
+[[variable]]
+native_id = "371.42265"
+slug = "funktionella-analysregioner-grov"
+
+[[variable]]
+native_id = "371.43099"
+slug = "regso"
+
+[[variable]]
+native_id = "371.44483"
+slug = "antal-vaxelvis-boende-barn-0-19-ar"
+
+[[variable]]
+native_id = "371.44498"
+slug = "uppskovsavdrag-fore-inkomstaret"
+
+[[variable]]
+native_id = "371.44499"
+slug = "uppskovsavdrag-nytillkomna-brutto"
+
+[[variable]]
+native_id = "371.44500"
+slug = "uppskovsavdrag-nytillkomna-prel"
+
+[[variable]]
+native_id = "371.44501"
+slug = "aterforing-uppskovsavdrag-nytillkomna"
+
+[[variable]]
+native_id = "371.44502"
+slug = "aterforing-uppskovsavdrag-fore-ar"
+
+[[variable]]
+native_id = "371.44579"
+slug = "underlag-skattereduktion-hushallsarbete"
+
+[[variable]]
+native_id = "371.44600"
+slug = "ersattning-avyttring-terminskontrakt"
+
+[[variable]]
+native_id = "371.45312"
+slug = "hushall-med-kvarboende"
+
+[[variable]]
+native_id = "371.45742"
+slug = "smahus-eget-hem-taxeringsvarde-t-plus-1"
+
+[[variable]]
+native_id = "371.45743"
+slug = "smahusbyggnader-taxeringsvarde-t-plus-1"
+
+[[variable]]
+native_id = "371.47176"
+slug = "omradestyp"
+
+[[variable]]
+native_id = "371.47217"
+slug = "bostadstillagg-pen-sjukakt-vaxelvis-hh"
+
+[[variable]]
+native_id = "371.47222"
+slug = "elstod-2023"
+
+[[variable]]
+native_id = "371.49157"
+slug = "fa-region-grupperad-3"
+
+[[variable]]
+native_id = "371.49158"
+slug = "fa-region-grupperad-6"
+
+[[variable]]
+native_id = "371.49498"
+slug = "hushall-ersattning-statlig-assistans"
+
+[[variable]]
+native_id = "371.49500"
+slug = "hushall-insats-hemtjanst-yngre"
+
+[[variable]]
+native_id = "371.49501"
+slug = "hushall-insats-funktionsnedsattning"
+
+[[variable]]
+native_id = "371.49502"
+slug = "hushall-insats-lss-boende"
+
+[[variable]]
+native_id = "371.49503"
+slug = "hushall-insats-lss-ovrigt"
+
+[[variable]]
+native_id = "371.49504"
+slug = "hushall-merkostnadsersattning"
+
+# register 372 (foretagsreg)
+
+[[variable]]
+native_id = "371.1210.aamavgx"
+slug = "underlag-arbetsmarknadsavgift"
+
+[[variable]]
+native_id = "371.1213.aepavgx"
+slug = "underlag-efterlevande-pensionsavgift-x"
+
+[[variable]]
+native_id = "371.1487.prestsf"
+slug = "skattefri-del-livranta-pension-2"
+
+[[variable]]
+native_id = "371.26646.zspardel"
+slug = "sparat-utdelningsutrymme-overlatna-2"
+
+[[variable]]
+native_id = "371.3188.bhtyphb"
+slug = "hushallstyp-hb"
+
+[[variable]]
+native_id = "371.36.bkommun"
+slug = "folkbokford-kommun"
+
+[[variable]]
+native_id = "371.661.alonex"
+slug = "underlag-loneavgift"
+
+# register 375 (foretagsstatistik)
+
+[[variable]]
+native_id = "371.22"
+slug = "disponibel-inkomst"
+
+[[variable]]
+native_id = "371.24"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "371.25"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "371.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "371.88"
+slug = "foraldrapenning-skattepliktig"
+
+[[variable]]
+native_id = "371.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "371.101"
+slug = "sjuk-och-aktivitetsersattning"
+
+[[variable]]
+native_id = "371.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "371.120"
+slug = "yrkesuppgift"
+
+[[variable]]
+native_id = "371.245"
+slug = "civilstandsdatum"
+
+[[variable]]
+native_id = "371.254"
+slug = "folkbokforingsdatum"
+
+[[variable]]
+native_id = "371.256"
+slug = "fodelselan"
+
+[[variable]]
+native_id = "371.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "371.264"
+slug = "icke-territoriell-forsamling"
+
+[[variable]]
+native_id = "371.304"
+slug = "fodelselandnamnfar"
+
+[[variable]]
+native_id = "371.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "371.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "371.335"
+slug = "forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "371.480"
+slug = "sekvenssiffra"
+
+[[variable]]
+native_id = "371.580"
+slug = "pensionsavgift-allman-anstallning"
+
+[[variable]]
+native_id = "371.583"
+slug = "arbetsskadelivranta-samordnad"
+
+[[variable]]
+native_id = "371.584"
+slug = "barnpension-skattepliktig"
+
+[[variable]]
+native_id = "371.588"
+slug = "allman-pension-folkpension-atp"
+
+[[variable]]
+native_id = "371.589"
+slug = "tjanstepension-itp"
+
+[[variable]]
+native_id = "371.590"
+slug = "tjanstepension-kpa"
+
+[[variable]]
+native_id = "371.591"
+slug = "tjanstepension-tjanst"
+
+[[variable]]
+native_id = "371.598"
+slug = "statlig-tjanstepension"
+
+[[variable]]
+native_id = "371.601"
+slug = "livranta"
+
+[[variable]]
+native_id = "371.605"
+slug = "ovriga-tillaggspensioner"
+
+[[variable]]
+native_id = "371.608"
+slug = "avkastningsskatt"
+
+[[variable]]
+native_id = "371.612"
+slug = "forseningsavgift"
+
+[[variable]]
+native_id = "371.618"
+slug = "skattetillagg"
+
+[[variable]]
+native_id = "371.628"
+slug = "fastighetsskatt-hyreshus-lokal"
+
+[[variable]]
+native_id = "371.629"
+slug = "fastighetsskatt-industri"
+
+[[variable]]
+native_id = "371.630"
+slug = "underlag-allman-pensionsavgift"
+
+[[variable]]
+native_id = "371.631"
+slug = "underlag-allman-pensionsavgift-annat"
+
+[[variable]]
+native_id = "371.641"
+slug = "pensionsforsakringspremie"
+
+[[variable]]
+native_id = "371.642"
+slug = "avsattning-periodiseringsfond"
+
+[[variable]]
+native_id = "371.644"
+slug = "underskott-aktiv-naringsverksamhet-hb"
+
+[[variable]]
+native_id = "371.645"
+slug = "underskott-aktiv-naringsverksamhet"
+
+[[variable]]
+native_id = "371.646"
+slug = "underskott-naringsverksamhet"
+
+[[variable]]
+native_id = "371.650"
+slug = "underskott-passiv-naringsverksamhet"
+
+[[variable]]
+native_id = "371.652"
+slug = "underskott-passiv-naringsverksamhet-hb"
+
+[[variable]]
+native_id = "371.653"
+slug = "minskning-expansionsmedel"
+
+[[variable]]
+native_id = "371.658"
+slug = "kommunalskattesats"
+
+[[variable]]
+native_id = "371.660"
+slug = "landstingsskattesats"
+
+[[variable]]
+native_id = "371.670"
+slug = "sarskild-loneskatt-pensionskostnad"
+
+[[variable]]
+native_id = "371.672"
+slug = "sarskild-loneskatt-egna-pension"
+
+[[variable]]
+native_id = "371.681"
+slug = "sarskild-loneskatt-pensionskostnader"
+
+[[variable]]
+native_id = "371.682"
+slug = "underlag-fastighetsskatt-smahus-05"
+
+[[variable]]
+native_id = "371.683"
+slug = "underlag-fastighetsskatt-smahus-10"
+
+[[variable]]
+native_id = "371.684"
+slug = "underlag-fastighetsskatt-smahus-utland"
+
+[[variable]]
+native_id = "371.685"
+slug = "nedsattning-avkastningsskatt-avtal"
+
+[[variable]]
+native_id = "371.697"
+slug = "markeringskod-arbetsinkomst"
+
+[[variable]]
+native_id = "371.699"
+slug = "allmant-avdrag-pension-periodiskt"
+
+[[variable]]
+native_id = "371.700"
+slug = "allmant-avdrag-underskott-aktiv"
+
+[[variable]]
+native_id = "371.705"
+slug = "bostadsforman-ej-smahusfastighet"
+
+[[variable]]
+native_id = "371.706"
+slug = "bostadsforman-smahusfastighet"
+
+[[variable]]
+native_id = "371.712"
+slug = "skattereduktion-allman-pensionsavgift"
+
+[[variable]]
+native_id = "371.714"
+slug = "medgiven-skattereduktion-sjoinkomst"
+
+[[variable]]
+native_id = "371.715"
+slug = "underlag-skattereduktion-akassa-avgift"
+
+[[variable]]
+native_id = "371.724"
+slug = "tjanstepension-stp"
+
+[[variable]]
+native_id = "371.726"
+slug = "regional-ersattning-egenavgifter"
+
+[[variable]]
+native_id = "371.729"
+slug = "mervardesskatt-netto"
+
+[[variable]]
+native_id = "371.730"
+slug = "allman-pensionsavgift-anstallning"
+
+[[variable]]
+native_id = "371.731"
+slug = "allman-pensionsavgift-forvarvsarbete"
+
+[[variable]]
+native_id = "371.732"
+slug = "allman-pensionsavgift"
+
+[[variable]]
+native_id = "371.735"
+slug = "statlig-inkomstskatt-forvarv"
+
+[[variable]]
+native_id = "371.736"
+slug = "sarskild-loneskatt-forvarvsinkomster"
+
+[[variable]]
+native_id = "371.742"
+slug = "antal-manader-grundavdrag"
+
+[[variable]]
+native_id = "371.744"
+slug = "antal-km-milersattning"
+
+[[variable]]
+native_id = "371.1064"
+slug = "taxeringskod"
+
+[[variable]]
+native_id = "371.1066"
+slug = "bilkod"
+
+[[variable]]
+native_id = "371.1068"
+slug = "antal-manader-med-bilforman"
+
+[[variable]]
+native_id = "371.1069"
+slug = "objekttyp-langdtillhorighet"
+
+[[variable]]
+native_id = "371.1078"
+slug = "rantor-utdelningar-exkl-rantebidrag"
+
+[[variable]]
+native_id = "371.1080"
+slug = "blandad-inkomst"
+
+[[variable]]
+native_id = "371.1081"
+slug = "pgi-annat-forvarvsarbete"
+
+[[variable]]
+native_id = "371.1082"
+slug = "pgi-anstallning"
+
+[[variable]]
+native_id = "371.1095"
+slug = "primarinkomst"
+
+[[variable]]
+native_id = "371.1101"
+slug = "avdrag-forvaltningskostnad-kapital"
+
+[[variable]]
+native_id = "371.1106"
+slug = "avdrag-skuldranta-kapital"
+
+[[variable]]
+native_id = "371.1107"
+slug = "beskattningsbar-kapitalinkomst"
+
+[[variable]]
+native_id = "371.1108"
+slug = "avdrag-realisationsforlust-kapital"
+
+[[variable]]
+native_id = "371.1111"
+slug = "statlig-taxerad-kapitalinkomst"
+
+[[variable]]
+native_id = "371.1158"
+slug = "pensionsforsakring-inbetalt"
+
+[[variable]]
+native_id = "371.1159"
+slug = "inkomstranta-utdelning-kapital"
+
+[[variable]]
+native_id = "371.1161"
+slug = "aktieutdelning"
+
+[[variable]]
+native_id = "371.1162"
+slug = "vardepapperrantor"
+
+[[variable]]
+native_id = "371.1165"
+slug = "inkomst-aktiv-enskild-naringsverksamhet"
+
+[[variable]]
+native_id = "371.1167"
+slug = "inkomst-passiv-enskild-naringsverksam"
+
+[[variable]]
+native_id = "371.1169"
+slug = "inkomst-av-naringsverksamhet"
+
+[[variable]]
+native_id = "371.1170"
+slug = "vuxenstudiestod"
+
+[[variable]]
+native_id = "371.1171"
+slug = "utbildningsbidrag-doktorander"
+
+[[variable]]
+native_id = "371.1172"
+slug = "kontant-bruttolon"
+
+[[variable]]
+native_id = "371.1173"
+slug = "inkomst-av-tjanst"
+
+[[variable]]
+native_id = "371.1175"
+slug = "skatt-hek"
+
+[[variable]]
+native_id = "371.1176"
+slug = "avdrag-dubbel-bosattning-tjanst"
+
+[[variable]]
+native_id = "371.1177"
+slug = "ersattning-inkomst-anstallning"
+
+[[variable]]
+native_id = "371.1178"
+slug = "ovriga-kostnadsavdrag-over-1000-kr"
+
+[[variable]]
+native_id = "371.1179"
+slug = "avdrag-resor-till-fran-arbetet"
+
+[[variable]]
+native_id = "371.1180"
+slug = "avdrag-tjansteresor"
+
+[[variable]]
+native_id = "371.1182"
+slug = "ersattning-forsakringskassa-anstallning"
+
+[[variable]]
+native_id = "371.1183"
+slug = "inkomst-fran-famansforetag"
+
+[[variable]]
+native_id = "371.1186"
+slug = "ovriga-inkomster-egenavgifter"
+
+[[variable]]
+native_id = "371.1187"
+slug = "akassa-arbetsloshet"
+
+[[variable]]
+native_id = "371.1188"
+slug = "kostnadsersattning-tjanst"
+
+[[variable]]
+native_id = "371.1198"
+slug = "loneinkomst"
+
+[[variable]]
+native_id = "371.1203"
+slug = "allman-pension-tillaggspension-tjanst"
+
+[[variable]]
+native_id = "371.1204"
+slug = "privat-pensionsforsakring-sparkonto"
+
+[[variable]]
+native_id = "371.1205"
+slug = "privat-pensionsforsakring-tjanst"
+
+[[variable]]
+native_id = "371.1206"
+slug = "rehabpenning-och-aktivitetsstod"
+
+[[variable]]
+native_id = "371.1207"
+slug = "sociala-formaner-tjanst"
+
+[[variable]]
+native_id = "371.1208"
+slug = "betald-kyrkoavgift"
+
+[[variable]]
+native_id = "371.1211"
+slug = "underlag-alderspensionsavgift"
+
+[[variable]]
+native_id = "371.1212"
+slug = "avkastningsskatt-innevarande-ar"
+
+[[variable]]
+native_id = "371.1214"
+slug = "underlag-skattereduktion-bredband"
+
+[[variable]]
+native_id = "371.1218"
+slug = "sjukforsakringsavg-lag-inkomst"
+
+[[variable]]
+native_id = "371.1219"
+slug = "sjukforsakringsavg-hog-inkomst"
+
+[[variable]]
+native_id = "371.1220"
+slug = "underlag-arbetsskadeavgift"
+
+[[variable]]
+native_id = "371.1221"
+slug = "sarskild-loneskatt-forvarvsinkomst"
+
+[[variable]]
+native_id = "371.1228"
+slug = "nolltaxering"
+
+[[variable]]
+native_id = "371.1234"
+slug = "pensionsdebiteringskod"
+
+[[variable]]
+native_id = "371.1237"
+slug = "deklarationsforekomst"
+
+[[variable]]
+native_id = "371.1243"
+slug = "arbetsmarknadsavgift-fore-nedsattning"
+
+[[variable]]
+native_id = "371.1244"
+slug = "alderspensionsavgift-fore-nedsattning"
+
+[[variable]]
+native_id = "371.1245"
+slug = "arbetsskadeavgift-fore-nedsattning"
+
+[[variable]]
+native_id = "371.1246"
+slug = "efterlevandepensionsavgift-nedsattning"
+
+[[variable]]
+native_id = "371.1253"
+slug = "foraldraforsakringsavgift-brutto"
+
+[[variable]]
+native_id = "371.1255"
+slug = "medgiven-skattereduktion-fastighetsskatt"
+
+[[variable]]
+native_id = "371.1283"
+slug = "ekonomiskt-bistand-uppdelat"
+
+[[variable]]
+native_id = "371.1287"
+slug = "ersattning-forsakringskassa-ku"
+
+[[variable]]
+native_id = "371.1289"
+slug = "summa-lon-formaner-ku"
+
+[[variable]]
+native_id = "371.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "371.1389"
+slug = "ackumulerad-studieskuld"
+
+[[variable]]
+native_id = "371.1393"
+slug = "barnbidrag-forlangt-flerbarnstillagg"
+
+[[variable]]
+native_id = "371.1395"
+slug = "mottaget-bidragsforskott"
+
+[[variable]]
+native_id = "371.1403"
+slug = "handikappersattning"
+
+[[variable]]
+native_id = "371.1408"
+slug = "rekryteringsbidrag"
+
+[[variable]]
+native_id = "371.1410"
+slug = "studiehjalp-studiebidrag"
+
+[[variable]]
+native_id = "371.1411"
+slug = "studiehjalp-extra-tillagg"
+
+[[variable]]
+native_id = "371.1413"
+slug = "studiemedel-studiebidrag"
+
+[[variable]]
+native_id = "371.1429"
+slug = "studiemedel-lan"
+
+[[variable]]
+native_id = "371.1430"
+slug = "studiemedel-studiehjalp-lan-och-bidrag"
+
+[[variable]]
+native_id = "371.1481"
+slug = "kapitalinkomster-bank-aktier"
+
+[[variable]]
+native_id = "371.1482"
+slug = "ankepension"
+
+[[variable]]
+native_id = "371.1490"
+slug = "barntillagg"
+
+[[variable]]
+native_id = "371.1491"
+slug = "tjanstepension-statliga-bolag"
+
+[[variable]]
+native_id = "371.1493"
+slug = "efterlevandepension-till-barn"
+
+[[variable]]
+native_id = "371.1497"
+slug = "forlangd-omstallningspension"
+
+[[variable]]
+native_id = "371.1500"
+slug = "frivillig-pension-skattefri"
+
+[[variable]]
+native_id = "371.1501"
+slug = "frivillig-pension-skattepliktig"
+
+[[variable]]
+native_id = "371.1508"
+slug = "garantipension"
+
+[[variable]]
+native_id = "371.1514"
+slug = "omstallningspension"
+
+[[variable]]
+native_id = "371.1516"
+slug = "inkomstpension"
+
+[[variable]]
+native_id = "371.1523"
+slug = "premiepension"
+
+[[variable]]
+native_id = "371.1594"
+slug = "arbetsskadeersattning"
+
+[[variable]]
+native_id = "371.1605"
+slug = "aterbetalt-studielan"
+
+[[variable]]
+native_id = "371.1607"
+slug = "givet-underhallsbidrag-aterbetalt"
+
+[[variable]]
+native_id = "371.1613"
+slug = "rehabiliteringsersattning"
+
+[[variable]]
+native_id = "371.1616"
+slug = "narstaendepenning"
+
+[[variable]]
+native_id = "371.1617"
+slug = "dagersattning-repetitionsutbildning"
+
+[[variable]]
+native_id = "371.1623"
+slug = "aktivitetsersattning-garantiersattning"
+
+[[variable]]
+native_id = "371.1625"
+slug = "foraldrapenning-vab"
+
+[[variable]]
+native_id = "371.1626"
+slug = "foraldrapenning-barns-fodelse"
+
+[[variable]]
+native_id = "371.1630"
+slug = "totalt-arbetsmarknadsstod"
+
+[[variable]]
+native_id = "371.1831"
+slug = "traktamente-utom-riket"
+
+[[variable]]
+native_id = "371.1833"
+slug = "traktamente-inom-riket"
+
+[[variable]]
+native_id = "371.2224"
+slug = "typkod"
+
+[[variable]]
+native_id = "371.2507"
+slug = "sarskilt-pensionstillagg"
+
+[[variable]]
+native_id = "371.2508"
+slug = "statlig-tjanstepension-inkl-kapan"
+
+[[variable]]
+native_id = "371.2509"
+slug = "tillaggspension"
+
+[[variable]]
+native_id = "371.2547"
+slug = "formogenhetsskattepliktiga-forsakringar"
+
+[[variable]]
+native_id = "371.2548"
+slug = "fordran-pa-bankmedel"
+
+[[variable]]
+native_id = "371.2549"
+slug = "fordran-pa-vardepapper"
+
+[[variable]]
+native_id = "371.2556"
+slug = "positiv-rantefordelning-kapital"
+
+[[variable]]
+native_id = "371.2558"
+slug = "realisationsvinst-kapital"
+
+[[variable]]
+native_id = "371.2560"
+slug = "omsattning"
+
+[[variable]]
+native_id = "371.2564"
+slug = "minskning-av-expansionsmedel"
+
+[[variable]]
+native_id = "371.2565"
+slug = "aterforing-periodiseringsfond"
+
+[[variable]]
+native_id = "371.2567"
+slug = "fk-ersattning-annat-forvarvsarbete"
+
+[[variable]]
+native_id = "371.2569"
+slug = "avsattning-expansionsmedel"
+
+[[variable]]
+native_id = "371.2648"
+slug = "medgivet-grundavdrag"
+
+[[variable]]
+native_id = "371.2650"
+slug = "handlaggande-skattemyndighet"
+
+[[variable]]
+native_id = "371.2655"
+slug = "aktivitetsersattning-garanti"
+
+[[variable]]
+native_id = "371.2661"
+slug = "andel-inkomstpension"
+
+[[variable]]
+native_id = "371.2662"
+slug = "aktivitetsersattning-inkomst"
+
+[[variable]]
+native_id = "371.2664"
+slug = "studiemedel-lan-och-bidrag-familj"
+
+[[variable]]
+native_id = "371.2666"
+slug = "ersattning-varnpliktiga-totalt"
+
+[[variable]]
+native_id = "371.2686"
+slug = "manadslon"
+
+[[variable]]
+native_id = "371.2691"
+slug = "andel-sjukersattning-inkomstrelaterad"
+
+[[variable]]
+native_id = "371.2706"
+slug = "andel-premiepension"
+
+[[variable]]
+native_id = "371.2711"
+slug = "antal-manader-med-socialbidrag"
+
+[[variable]]
+native_id = "371.2712"
+slug = "hogsta-utbildning-avslutningsar"
+
+[[variable]]
+native_id = "371.2721"
+slug = "socialbidrag-inkl-introduktion"
+
+[[variable]]
+native_id = "371.2736"
+slug = "sektor"
+
+[[variable]]
+native_id = "371.2751"
+slug = "dagsersattning-varnpliktiga"
+
+[[variable]]
+native_id = "371.2754"
+slug = "introduktionsersattning-flyktingar"
+
+[[variable]]
+native_id = "371.2762"
+slug = "antrum"
+
+[[variable]]
+native_id = "371.2764"
+slug = "antal-hemmavarande-barn"
+
+[[variable]]
+native_id = "371.2768"
+slug = "bostadstyp"
+
+[[variable]]
+native_id = "371.3200"
+slug = "alder-for-barn-1"
+
+[[variable]]
+native_id = "371.3201"
+slug = "alder-for-barn-2"
+
+[[variable]]
+native_id = "371.3202"
+slug = "alder-for-barn-3"
+
+[[variable]]
+native_id = "371.3203"
+slug = "alder-for-barn-4"
+
+[[variable]]
+native_id = "371.3204"
+slug = "alder-for-barn-5"
+
+[[variable]]
+native_id = "371.3205"
+slug = "alder-for-barn-6"
+
+[[variable]]
+native_id = "371.3206"
+slug = "alder-for-barn-7"
+
+[[variable]]
+native_id = "371.3207"
+slug = "alder-for-barn-8"
+
+[[variable]]
+native_id = "371.3274"
+slug = "total-bostadsyta"
+
+[[variable]]
+native_id = "371.3285"
+slug = "betalning-avyttrade-terminskontrakt"
+
+[[variable]]
+native_id = "371.3286"
+slug = "kapitalvinst-fonder"
+
+[[variable]]
+native_id = "371.3287"
+slug = "kapitalforlust-fonder"
+
+[[variable]]
+native_id = "371.3288"
+slug = "kapitalvinst-annan-fond-rantefond"
+
+[[variable]]
+native_id = "371.3289"
+slug = "kapitalforlust-annan-fond-rantefond"
+
+[[variable]]
+native_id = "371.3290"
+slug = "kapitalvinst-rantefond"
+
+[[variable]]
+native_id = "371.3291"
+slug = "kapitalforlust-rantefond"
+
+[[variable]]
+native_id = "371.3292"
+slug = "avyttring-andel-vardepappersfond"
+
+[[variable]]
+native_id = "371.3297"
+slug = "utlandsk-forsakring-foregaende-ar"
+
+[[variable]]
+native_id = "371.3327"
+slug = "avgift-arbetsloshetskassa"
+
+[[variable]]
+native_id = "371.3413"
+slug = "vardear"
+
+[[variable]]
+native_id = "371.3741"
+slug = "taxeringsvarde-for-smahusbyggnader"
+
+[[variable]]
+native_id = "371.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "371.4268"
+slug = "pensionskostnader"
+
+[[variable]]
+native_id = "371.4380"
+slug = "barnbidrag"
+
+[[variable]]
+native_id = "371.4387"
+slug = "pension-och-livranta-skattepliktig"
+
+[[variable]]
+native_id = "371.4539"
+slug = "kvarboende"
+
+[[variable]]
+native_id = "371.4555"
+slug = "bostadsyta"
+
+[[variable]]
+native_id = "371.4648"
+slug = "bostadsrattens-formogenhetsvarde"
+
+[[variable]]
+native_id = "371.4649"
+slug = "sammanlagd-skuld-vid-arets-slut"
+
+[[variable]]
+native_id = "371.4661"
+slug = "studiemedel-studiehjalp-summering"
+
+[[variable]]
+native_id = "371.4784"
+slug = "skattepliktiga-transfereringar-hushall"
+
+[[variable]]
+native_id = "371.4866"
+slug = "studiestod"
+
+[[variable]]
+native_id = "371.4884"
+slug = "artal-for-utbetalning"
+
+[[variable]]
+native_id = "371.4886"
+slug = "bostadsratt-overlaten-del"
+
+[[variable]]
+native_id = "371.5577"
+slug = "folkbokforing-andringsar"
+
+[[variable]]
+native_id = "371.5582"
+slug = "antal-barn-under-16-ar"
+
+[[variable]]
+native_id = "371.5584"
+slug = "civilstand-inkomstar"
+
+[[variable]]
+native_id = "371.5585"
+slug = "senast-kanda-civilstand"
+
+[[variable]]
+native_id = "371.5591"
+slug = "avtalstyp-exempt-progressionsupprakning"
+
+[[variable]]
+native_id = "371.5593"
+slug = "fodelsemanad"
+
+[[variable]]
+native_id = "371.5610"
+slug = "kyrkoavgift-inklusive-begravningsavgift"
+
+[[variable]]
+native_id = "371.5639"
+slug = "posttyp"
+
+[[variable]]
+native_id = "371.5655"
+slug = "betald-begravningsavgift"
+
+[[variable]]
+native_id = "371.6056"
+slug = "anstalld-fran-manad"
+
+[[variable]]
+native_id = "371.6057"
+slug = "anstalld-till-manad"
+
+[[variable]]
+native_id = "371.6089"
+slug = "delagare-i-famansbolag"
+
+[[variable]]
+native_id = "371.6095"
+slug = "kostforman"
+
+[[variable]]
+native_id = "371.6097"
+slug = "logiersattning"
+
+[[variable]]
+native_id = "371.6549"
+slug = "fodelseland-klartext"
+
+[[variable]]
+native_id = "371.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "371.8180"
+slug = "grund-for-bosattning"
+
+[[variable]]
+native_id = "371.8274"
+slug = "kommunal-inkomstskatt-forvarvsinkomst"
+
+[[variable]]
+native_id = "371.8285"
+slug = "skattereduktion-avgift-akassa"
+
+[[variable]]
+native_id = "371.8286"
+slug = "skattereduktion-for-fackforeningsavgift"
+
+[[variable]]
+native_id = "371.8297"
+slug = "skattereduktion-underskott-kapital"
+
+[[variable]]
+native_id = "371.8299"
+slug = "statlig-inkomstskatt-kapitalinkomster"
+
+[[variable]]
+native_id = "371.8357"
+slug = "underlag-fastighetsskatt-lokaler-10"
+
+[[variable]]
+native_id = "371.8376"
+slug = "sjoinkomstavdrag"
+
+[[variable]]
+native_id = "371.12269"
+slug = "nationalitet-enligt-rtb"
+
+[[variable]]
+native_id = "371.15166"
+slug = "antal-vardnadshavare"
+
+[[variable]]
+native_id = "371.15299"
+slug = "slutlig-skatt-exkl-egenavgifter"
+
+[[variable]]
+native_id = "371.15320"
+slug = "underlag-fastighetsskatt-vattenkraft-17"
+
+[[variable]]
+native_id = "371.15525"
+slug = "obligationer-fordran"
+
+[[variable]]
+native_id = "371.15558"
+slug = "ovriga-vardepapper-deklvarde"
+
+[[variable]]
+native_id = "371.15564"
+slug = "rantefonder-deklarationsvarde"
+
+[[variable]]
+native_id = "371.15573"
+slug = "premieobligationer"
+
+[[variable]]
+native_id = "371.15645"
+slug = "taxeringsvarde-fastighet-utland"
+
+[[variable]]
+native_id = "371.16075"
+slug = "hushallsforestandare"
+
+[[variable]]
+native_id = "371.16183"
+slug = "underlag-fastighetsskatt-hyreshus-02"
+
+[[variable]]
+native_id = "371.16184"
+slug = "underlag-fastighetsskatt-hyreshus-04"
+
+[[variable]]
+native_id = "371.16185"
+slug = "underlag-fastighetsskatt-vindkraft-02"
+
+[[variable]]
+native_id = "371.16225"
+slug = "ssyk4"
+
+[[variable]]
+native_id = "371.16275"
+slug = "taxeringsar"
+
+[[variable]]
+native_id = "371.16411"
+slug = "fri-parkering"
+
+[[variable]]
+native_id = "371.16542"
+slug = "smahus-taxeringsvarde"
+
+[[variable]]
+native_id = "371.16794"
+slug = "positiv-rantefordelning-n6"
+
+[[variable]]
+native_id = "371.16796"
+slug = "aterforing-fran-periodiseringsfond"
+
+[[variable]]
+native_id = "371.16859"
+slug = "avsattning-periodiseringsfond-30"
+
+[[variable]]
+native_id = "371.16861"
+slug = "minskning-av-expansionsfond-sru"
+
+[[variable]]
+native_id = "371.16865"
+slug = "paforda-egenavgifter-sarskild-loneskatt"
+
+[[variable]]
+native_id = "371.16866"
+slug = "arets-beraknade-avdrag-egenavgifter"
+
+[[variable]]
+native_id = "371.16867"
+slug = "sjukpenning-naringsverksamhet"
+
+[[variable]]
+native_id = "371.16868"
+slug = "utnyttjat-underskott-konstnarlig"
+
+[[variable]]
+native_id = "371.17678"
+slug = "kommun-for-bostaden"
+
+[[variable]]
+native_id = "371.17831"
+slug = "outnyttat-underskott-paverkar"
+
+[[variable]]
+native_id = "371.17834"
+slug = "outnyttat-underskott-ej-paverkar"
+
+[[variable]]
+native_id = "371.17838"
+slug = "aterforing-fran-periodiseringsfond-875"
+
+[[variable]]
+native_id = "371.17840"
+slug = "avsattning-periodiseringsfond-30pct"
+
+[[variable]]
+native_id = "371.17841"
+slug = "minskning-av-expansionsfond-878"
+
+[[variable]]
+native_id = "371.17842"
+slug = "egen-pensionsforsakringspremie-820"
+
+[[variable]]
+native_id = "371.17844"
+slug = "avdrag-egenavgifter-fg-ar"
+
+[[variable]]
+native_id = "371.17845"
+slug = "paford-egenavgift-fg-ar"
+
+[[variable]]
+native_id = "371.17846"
+slug = "avdrag-egenavgifter-beraknat"
+
+[[variable]]
+native_id = "371.17847"
+slug = "sjukpenning-hanforlig-naringsv"
+
+[[variable]]
+native_id = "371.17850"
+slug = "utnyttjat-underskott-nystartad"
+
+[[variable]]
+native_id = "371.17861"
+slug = "sparat-fordelningsbelopp-fg-ar-885"
+
+[[variable]]
+native_id = "371.17864"
+slug = "fordelningsbelopp-positivt-861"
+
+[[variable]]
+native_id = "371.17865"
+slug = "utnyttjat-positivt-fordelningsbelopp"
+
+[[variable]]
+native_id = "371.17870"
+slug = "kapitalunderlag-expansionsfond-868"
+
+[[variable]]
+native_id = "371.18011"
+slug = "sni2007-5siffror"
+
+[[variable]]
+native_id = "371.19089"
+slug = "antal-lagenheter-hyreshus"
+
+[[variable]]
+native_id = "371.19592"
+slug = "inkomst-naringsverksamhet-utanfor-eu"
+
+[[variable]]
+native_id = "371.19593"
+slug = "utgaende-mervardesskatt"
+
+[[variable]]
+native_id = "371.19808"
+slug = "underlag-fastighetsavgift"
+
+[[variable]]
+native_id = "371.19814"
+slug = "underlag-fastighetsskatt-tomt-smahus"
+
+[[variable]]
+native_id = "371.19830"
+slug = "sjukforsakringsavgift-foregaende-ar"
+
+[[variable]]
+native_id = "371.19838"
+slug = "underlag-fastighetsskatt-vindkraft"
+
+[[variable]]
+native_id = "371.19848"
+slug = "forvarvad-andel-av-bostadsratt"
+
+[[variable]]
+native_id = "371.19850"
+slug = "overlaten-andel-delagare"
+
+[[variable]]
+native_id = "371.19852"
+slug = "overlatelsetidpunkt"
+
+[[variable]]
+native_id = "371.19853"
+slug = "typ-overlatelse-arv-gava"
+
+[[variable]]
+native_id = "371.19872"
+slug = "underlag-fastighetsskatt-vattenkraft-22"
+
+[[variable]]
+native_id = "371.19874"
+slug = "underlag-fastighetsskatt-tomt-hyr-04"
+
+[[variable]]
+native_id = "371.19875"
+slug = "underlag-fastighetsskatt-tomt-sma-10"
+
+[[variable]]
+native_id = "371.19878"
+slug = "underlag-fastighetsavgift-smahus-0375"
+
+[[variable]]
+native_id = "371.20725"
+slug = "avdrag-egenavgifter-fgar"
+
+[[variable]]
+native_id = "371.20726"
+slug = "underskott-utnyttjat-i-kapital"
+
+[[variable]]
+native_id = "371.20739"
+slug = "negativt-kapitalunderlag-rantefordelning"
+
+[[variable]]
+native_id = "371.20741"
+slug = "positivt-kapitalunderlag-expansionsfond"
+
+[[variable]]
+native_id = "371.21210"
+slug = "underlag-fastighetsskatt-tomt-hyreshus"
+
+[[variable]]
+native_id = "371.21230"
+slug = "studiehjalp-manader-extra-tillagg"
+
+[[variable]]
+native_id = "371.21240"
+slug = "studiemedel-utland-veckor-lan"
+
+[[variable]]
+native_id = "371.21241"
+slug = "tillaggsbidrag-studiemedel-veckor"
+
+[[variable]]
+native_id = "371.21468"
+slug = "ersattning-amprogram-skattefri"
+
+[[variable]]
+native_id = "371.21469"
+slug = "ersattning-amprogram-skattepliktig"
+
+[[variable]]
+native_id = "371.21503"
+slug = "rekryteringsbidrag-antal-veckor"
+
+[[variable]]
+native_id = "371.21513"
+slug = "utdelning-delagare-samfallighet"
+
+[[variable]]
+native_id = "371.21516"
+slug = "disponibel-inkomst-per-ke-familj-2004"
+
+[[variable]]
+native_id = "371.21518"
+slug = "faktorinkomst-individ-2004"
+
+[[variable]]
+native_id = "371.21520"
+slug = "studiemedel-bidrag"
+
+[[variable]]
+native_id = "371.21701"
+slug = "studiemedel-lan-m-m"
+
+[[variable]]
+native_id = "371.21704"
+slug = "tillaggsbidrag-studiemedel"
+
+[[variable]]
+native_id = "371.21706"
+slug = "forvarvspris-bostadsratt"
+
+[[variable]]
+native_id = "371.21707"
+slug = "forvarv-reparationsfond"
+
+[[variable]]
+native_id = "371.21708"
+slug = "overlatelsepris-bostadsratt"
+
+[[variable]]
+native_id = "371.21709"
+slug = "overlatelse-reparationsfond"
+
+[[variable]]
+native_id = "371.21725"
+slug = "samfallighet-kapitalavkastning"
+
+[[variable]]
+native_id = "371.21726"
+slug = "utbetalt-belopp-obligationer"
+
+[[variable]]
+native_id = "371.21809"
+slug = "avkastningsskatt-kapitalforsakring"
+
+[[variable]]
+native_id = "371.21810"
+slug = "avkastningsskatt-pensionsforsakring"
+
+[[variable]]
+native_id = "371.21811"
+slug = "expansionsfondskatt-positiv"
+
+[[variable]]
+native_id = "371.21812"
+slug = "tillgodoraknad-expansionsfondskatt"
+
+[[variable]]
+native_id = "371.21814"
+slug = "fastighetsavgift"
+
+[[variable]]
+native_id = "371.21817"
+slug = "skatt-pa-inkomstranta-konto"
+
+[[variable]]
+native_id = "371.21818"
+slug = "preliminar-a-skatt-pension-forsakring"
+
+[[variable]]
+native_id = "371.21819"
+slug = "skatt-utdelning-delagarratter-ku31"
+
+[[variable]]
+native_id = "371.21820"
+slug = "utlandsk-skatt-delagarratter-ku31"
+
+[[variable]]
+native_id = "371.21822"
+slug = "ingaende-mervardesskatt"
+
+[[variable]]
+native_id = "371.21824"
+slug = "skattereduktion-for-arbetsinkomst"
+
+[[variable]]
+native_id = "371.21832"
+slug = "summa-skattepliktiga-formaner"
+
+[[variable]]
+native_id = "371.21833"
+slug = "bruttoinkomst-av-norsk-pension"
+
+[[variable]]
+native_id = "371.21837"
+slug = "underlag-fastighetsskatt-vattenkraft"
+
+[[variable]]
+native_id = "371.21861"
+slug = "omstallningspension-skapad"
+
+[[variable]]
+native_id = "371.21862"
+slug = "pension-livranta-skattepliktig-skattefri"
+
+[[variable]]
+native_id = "371.21878"
+slug = "debiterad-utlandsk-skatt"
+
+[[variable]]
+native_id = "371.22173"
+slug = "andel-grad-sjukersattning-garanti"
+
+[[variable]]
+native_id = "371.22241"
+slug = "extra-tillagg-studiemedel-bidrag"
+
+[[variable]]
+native_id = "371.22242"
+slug = "studiehjalp-bidrag"
+
+[[variable]]
+native_id = "371.22244"
+slug = "tillaggsbidrag-rekryteringsbidrag-veckor"
+
+[[variable]]
+native_id = "371.22249"
+slug = "ankepension-skapad"
+
+[[variable]]
+native_id = "371.22251"
+slug = "forman-som-pension"
+
+[[variable]]
+native_id = "371.22253"
+slug = "barnpension-skattefri-del"
+
+[[variable]]
+native_id = "371.22307"
+slug = "disponibel-inkomst-exkl-kapitalvinst"
+
+[[variable]]
+native_id = "371.22329"
+slug = "samgranskning-famansbolag-kod"
+
+[[variable]]
+native_id = "371.22335"
+slug = "konsumtionsenhetsvikt-2004"
+
+[[variable]]
+native_id = "371.22444"
+slug = "underhallsbidrag-belopp"
+
+[[variable]]
+native_id = "371.22447"
+slug = "underhallsbidrag-givet-belopp"
+
+[[variable]]
+native_id = "371.22679"
+slug = "skattereduktion-husarbete"
+
+[[variable]]
+native_id = "371.23618"
+slug = "forlangd-omstallningspension-summerad"
+
+[[variable]]
+native_id = "371.24180"
+slug = "bostadstillagg-andel-sjuk-aktiv"
+
+[[variable]]
+native_id = "371.24192"
+slug = "sarskilt-bostadstillagg-andel-sjuk"
+
+[[variable]]
+native_id = "371.24449"
+slug = "populationsmarkering-hek"
+
+[[variable]]
+native_id = "371.24757"
+slug = "inkomst-aktiv-naringsverksamhet"
+
+[[variable]]
+native_id = "371.24791"
+slug = "inregistrerade-aktier-deklarationsvarde"
+
+[[variable]]
+native_id = "371.24794"
+slug = "noterade-aktier-deklarationsvarde"
+
+[[variable]]
+native_id = "371.25291"
+slug = "artal-for-mantalsskrivning"
+
+[[variable]]
+native_id = "371.25293"
+slug = "inkomst-aktiv-naringsverksamhet-utland"
+
+[[variable]]
+native_id = "371.25298"
+slug = "skattereduktion-husarbete-utgifter"
+
+[[variable]]
+native_id = "371.25299"
+slug = "nedsattning-egenavgifter-narings"
+
+[[variable]]
+native_id = "371.25301"
+slug = "graviditetsersattning"
+
+[[variable]]
+native_id = "371.25306"
+slug = "sjukpenning"
+
+[[variable]]
+native_id = "371.25617"
+slug = "smittbararpenning"
+
+[[variable]]
+native_id = "371.26642"
+slug = "ranta-mm-tjanst-punkt-1-6"
+
+[[variable]]
+native_id = "371.26654"
+slug = "ersattning-minus-avyttringskostn"
+
+[[variable]]
+native_id = "371.26687"
+slug = "sparat-utd-delavyttring-efter-utdelning"
+
+[[variable]]
+native_id = "371.26691"
+slug = "lattnadsutrymme-v0426"
+
+[[variable]]
+native_id = "371.26698"
+slug = "ersattning-arbetstagare-agd-andel"
+
+[[variable]]
+native_id = "371.26699"
+slug = "kontant-ersattning-agd-andel"
+
+[[variable]]
+native_id = "371.26702"
+slug = "loneunderlag-andel-agd-2014"
+
+[[variable]]
+native_id = "371.26714"
+slug = "ersattning-minus-avyttring-p3-1"
+
+[[variable]]
+native_id = "371.26722"
+slug = "lattnadsutrymme-v0645"
+
+[[variable]]
+native_id = "371.26729"
+slug = "forlust-i-p-3-4a-x-2-3-punkt-3-4b"
+
+[[variable]]
+native_id = "371.26739"
+slug = "lattnadsutrymme-overlatna-andelar"
+
+[[variable]]
+native_id = "371.26745"
+slug = "delagarens-kontanta-ersattning-foretag"
+
+[[variable]]
+native_id = "371.26746"
+slug = "sammanlagd-kontant-ersattning-foretag"
+
+[[variable]]
+native_id = "371.26747"
+slug = "kontant-ersattning-i-foretaget"
+
+[[variable]]
+native_id = "371.26749"
+slug = "kontant-ersattning-foretag-2008"
+
+[[variable]]
+native_id = "371.26752"
+slug = "vinst-tas-upp-inkomstslaget-kapital"
+
+[[variable]]
+native_id = "371.26933"
+slug = "allmant-avdrag-konst-eller-nystart"
+
+[[variable]]
+native_id = "371.26957"
+slug = "skattereduktion-husarbete-hushallsarbete"
+
+[[variable]]
+native_id = "371.26973"
+slug = "utgaende-skuld-31-dec-foregaende-ar-al"
+
+[[variable]]
+native_id = "371.26974"
+slug = "inackorderingsbidrag"
+
+[[variable]]
+native_id = "371.26984"
+slug = "utgaende-skuld-31-dec-foregaende-ar-sl"
+
+[[variable]]
+native_id = "371.26987"
+slug = "antal-barntillagg"
+
+[[variable]]
+native_id = "371.27008"
+slug = "antal-ar-pensionspoang"
+
+[[variable]]
+native_id = "371.27012"
+slug = "avdrag-yrkesskadelivranta"
+
+[[variable]]
+native_id = "371.27016"
+slug = "beraknad-premiepensionsbehallning"
+
+[[variable]]
+native_id = "371.27023"
+slug = "from-tidpunkt-for-barn-fp"
+
+[[variable]]
+native_id = "371.27024"
+slug = "beraknad-pensionsbehallning"
+
+[[variable]]
+native_id = "371.27025"
+slug = "from-tidpunkt-folkpens-op"
+
+[[variable]]
+native_id = "371.27041"
+slug = "storlek-pa-lopande-vb"
+
+[[variable]]
+native_id = "371.27046"
+slug = "sgi-fran-fk"
+
+[[variable]]
+native_id = "371.27048"
+slug = "tomtratt"
+
+[[variable]]
+native_id = "371.27049"
+slug = "studiernas-omfattning"
+
+[[variable]]
+native_id = "371.27054"
+slug = "ar-for-dodsfall-for-ankepension"
+
+[[variable]]
+native_id = "371.27059"
+slug = "bruttoinkomst-enl-def-2004"
+
+[[variable]]
+native_id = "371.27066"
+slug = "skattefri-ranta-konvertibler-mm-bl-k10a"
+
+[[variable]]
+native_id = "371.27108"
+slug = "okning-av-expansionsfond-skattejustering"
+
+[[variable]]
+native_id = "371.27110"
+slug = "kapitalunderlag-expansionsfond"
+
+[[variable]]
+native_id = "371.27151"
+slug = "vardnadsbidrag-utbetalt-belopp"
+
+[[variable]]
+native_id = "371.28093"
+slug = "sfi-bonus-belopp"
+
+[[variable]]
+native_id = "371.28161"
+slug = "bostadsersattning"
+
+[[variable]]
+native_id = "371.28875"
+slug = "militar-utbildning-ersattning"
+
+[[variable]]
+native_id = "371.28886"
+slug = "underlag-fastighetsskatt-vattenkraft-2-8"
+
+[[variable]]
+native_id = "371.29133"
+slug = "totalt-underlag-husarbete"
+
+[[variable]]
+native_id = "371.29408"
+slug = "hushallstyp-kosthushall"
+
+[[variable]]
+native_id = "371.29428"
+slug = "total-hushallsinkomst"
+
+[[variable]]
+native_id = "371.29506"
+slug = "boendetillagg"
+
+[[variable]]
+native_id = "371.29580"
+slug = "schablonintakt-investeringsfond"
+
+[[variable]]
+native_id = "371.29581"
+slug = "schablonintakt-isk-ku"
+
+[[variable]]
+native_id = "371.29582"
+slug = "schablonintakt-andelar-fond"
+
+[[variable]]
+native_id = "371.29583"
+slug = "schablonintakt-isk-innehav"
+
+[[variable]]
+native_id = "371.29595"
+slug = "utokat-rekryteringsbidrag-veckor"
+
+[[variable]]
+native_id = "371.29626"
+slug = "okning-av-expansionsfond-hogst-overskott"
+
+[[variable]]
+native_id = "371.29827"
+slug = "hushallsstallning"
+
+[[variable]]
+native_id = "371.29960"
+slug = "yrkesbaserad-seg"
+
+[[variable]]
+native_id = "371.29998"
+slug = "hemvarn-ersattning"
+
+[[variable]]
+native_id = "371.30639"
+slug = "mottaget-underhallsbidrag"
+
+[[variable]]
+native_id = "371.30640"
+slug = "givet-underhallsbidrag"
+
+[[variable]]
+native_id = "371.30838"
+slug = "stodomrade-a-kod"
+
+[[variable]]
+native_id = "371.30907"
+slug = "larlingsersattning"
+
+[[variable]]
+native_id = "371.31839"
+slug = "disponibel-inkomst-individ-familj-2004"
+
+[[variable]]
+native_id = "371.32790"
+slug = "larlingsersattning-antal-manader"
+
+[[variable]]
+native_id = "371.32959"
+slug = "distriktskod"
+
+[[variable]]
+native_id = "371.35848"
+slug = "eseg"
+
+[[variable]]
+native_id = "371.36303"
+slug = "antal-barn-under-7-ar"
+
+[[variable]]
+native_id = "371.36637"
+slug = "bruttoinkomst-definition-2015"
+
+[[variable]]
+native_id = "371.36682"
+slug = "kontant-ersattning-dotterforetag"
+
+[[variable]]
+native_id = "371.36683"
+slug = "kontant-ersattning-arbetstagare"
+
+[[variable]]
+native_id = "371.36684"
+slug = "lonekravet-eget-loneuttag"
+
+[[variable]]
+native_id = "371.36703"
+slug = "kapitalunderlag"
+
+[[variable]]
+native_id = "371.36876"
+slug = "sysselsattningsgrad-imputerad"
+
+[[variable]]
+native_id = "371.36949"
+slug = "barn-familjehushall-0-19-ar"
+
+[[variable]]
+native_id = "371.36976"
+slug = "medelpoang-ankepension"
+
+[[variable]]
+native_id = "371.36979"
+slug = "uppskovsavdrag-tom-2014"
+
+[[variable]]
+native_id = "371.37464"
+slug = "utdelning-underskott-tidigare-ar"
+
+[[variable]]
+native_id = "371.37541"
+slug = "givet-underhallsstod"
+
+[[variable]]
+native_id = "371.37548"
+slug = "medelpoang-tp-egen"
+
+[[variable]]
+native_id = "371.37562"
+slug = "taxeringsvarde-2016-smahus"
+
+[[variable]]
+native_id = "371.37563"
+slug = "taxeringsvarde-2016-boendet-smahus"
+
+[[variable]]
+native_id = "371.37707"
+slug = "utdelning-famansforetag"
+
+[[variable]]
+native_id = "371.37711"
+slug = "antal-k10"
+
+[[variable]]
+native_id = "371.37730"
+slug = "naringsgrenskod-sni-2007-2-stallig"
+
+[[variable]]
+native_id = "371.37742"
+slug = "sparat-fordelningsbelopp-fg-ar"
+
+[[variable]]
+native_id = "371.37928"
+slug = "fran-och-med-datum"
+
+[[variable]]
+native_id = "371.37949"
+slug = "hushallsforestandarens-alder"
+
+[[variable]]
+native_id = "371.37982"
+slug = "barnets-invandringsdatum"
+
+[[variable]]
+native_id = "371.37984"
+slug = "barnets-alder"
+
+[[variable]]
+native_id = "371.38219"
+slug = "utbildningsbidrag-kompl-ped"
+
+[[variable]]
+native_id = "371.38220"
+slug = "studiestartsstod"
+
+[[variable]]
+native_id = "371.38738"
+slug = "naringsgrenskod-sni-2002"
+
+[[variable]]
+native_id = "371.39337"
+slug = "skattereduktion-sjuk-aktivitet"
+
+[[variable]]
+native_id = "371.40313"
+slug = "folkpensionskod"
+
+[[variable]]
+native_id = "371.40326"
+slug = "forsaljningspris-bostadsratt"
+
+[[variable]]
+native_id = "371.42254"
+slug = "public-service-avgift"
+
+[[variable]]
+native_id = "371.42407"
+slug = "omvardnadsbidrag"
+
+[[variable]]
+native_id = "371.42408"
+slug = "omvardnads-och-ferieomvardnadsbidrag"
+
+[[variable]]
+native_id = "371.42411"
+slug = "merkostnadsersattning-vuxen"
+
+[[variable]]
+native_id = "371.42412"
+slug = "merkostnadsersattning"
+
+[[variable]]
+native_id = "371.42413"
+slug = "merkostnadsersattning-barn"
+
+[[variable]]
+native_id = "371.42415"
+slug = "skattefri-ersattning-forsvar"
+
+[[variable]]
+native_id = "371.42467"
+slug = "forlust-forsaljning-onoterade-andelar"
+
+[[variable]]
+native_id = "371.42468"
+slug = "forlust-onoterade-aktier"
+
+[[variable]]
+native_id = "371.42470"
+slug = "vinst-onoterade-andelar"
+
+[[variable]]
+native_id = "371.42471"
+slug = "vinst-onoterade-aktier"
+
+[[variable]]
+native_id = "371.42992"
+slug = "medborgarskap-enligt-rtb"
+
+[[variable]]
+native_id = "371.44457"
+slug = "tillaggsbelopp-bostadsbidrag"
+
+[[variable]]
+native_id = "371.44459"
+slug = "ersattning-riskgrupper"
+
+[[variable]]
+native_id = "371.44462"
+slug = "stipendium-skattefritt"
+
+[[variable]]
+native_id = "371.44791"
+slug = "pensioner-utlandskt-beskattade"
+
+[[variable]]
+native_id = "371.44792"
+slug = "skatt-utlandsk"
+
+[[variable]]
+native_id = "371.45159"
+slug = "karensers-belopp"
+
+[[variable]]
+native_id = "371.45160"
+slug = "karensers-bdag"
+
+[[variable]]
+native_id = "371.45162"
+slug = "karensers-anst-belopp"
+
+[[variable]]
+native_id = "371.45163"
+slug = "karensers-anst-bdag"
+
+[[variable]]
+native_id = "371.45164"
+slug = "karensers-egf-belopp"
+
+[[variable]]
+native_id = "371.45165"
+slug = "karensers-egf-bdag"
+
+[[variable]]
+native_id = "371.45446"
+slug = "naringsgrenskod-sni-2007-5-stallig"
+
+[[variable]]
+native_id = "371.45919"
+slug = "tillfallig-skattereduktion-arbete"
+
+[[variable]]
+native_id = "371.45923"
+slug = "inkomstpensionstillagg"
+
+# register 372
+
+[[variable]]
+native_id = "371.1213.aepavg"
+slug = "underlag-efterlevande-pensionsavgift"
+
+[[variable]]
+native_id = "371.1398.ibostb"
+slug = "bostadsbidrag-barnfamiljer-mfl"
+
+[[variable]]
+native_id = "371.1487.pkuslsf"
+slug = "skattefri-del-livranta-pension"
+
+[[variable]]
+native_id = "371.1487.pslsf"
+slug = "skattefri-del-livranta-pension-3"
+
+[[variable]]
+native_id = "371.2506.pigrsep"
+slug = "sarskild-efterlevandepension"
+
+[[variable]]
+native_id = "371.26646.z4923"
+slug = "sparat-utdelningsutrymme-overlatna"
+
+[[variable]]
+native_id = "371.2692.binst"
+slug = "institutionell-sektorkod"
+
+[[variable]]
+native_id = "371.2742.bumgbrn"
+slug = "barn-med-umgangesratt"
+
+[[variable]]
+native_id = "371.2750.ibostvp"
+slug = "bostadsbidrag-varnpliktiga"
+
+[[variable]]
+native_id = "371.2752.ifamvp"
+slug = "familjebidrag-varnpliktiga"
+
+[[variable]]
+native_id = "371.28160.ietabt"
+slug = "etableringstillagg"
+
+[[variable]]
+native_id = "371.716.ufack"
+slug = "underlag-skattereduktion-fackavgift"
+
+# register 372

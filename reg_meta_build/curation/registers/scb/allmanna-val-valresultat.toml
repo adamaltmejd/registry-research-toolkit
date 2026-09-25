@@ -10,3 +10,288 @@ label = "scb/allmanna-val-valresultat/partinamn"
 [[code_label_pair]]
 code = "scb/allmanna-val-valresultat/riksdagsvalkrets-kod"
 label = "scb/allmanna-val-valresultat/riksdagsvalkrets-namn"
+
+[[variant]]
+native_id = "243.472"
+slug = "kommunfullmaktigeval"
+display_group = "Kommunfullmäktigeval"
+
+
+[[variant]]
+native_id = "243.493"
+slug = "regionfullmaktigeval"
+display_group = "Regionfullmäktige- /landstingsfullmäktigeval"
+
+
+[[variant]]
+native_id = "243.494"
+slug = "riksdagsval"
+display_group = "Riksdagsval"
+
+
+[[variant]]
+native_id = "243.1000"
+slug = "rostberattigade"
+display_group = "Röstberättigade i allmänna val"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Folkomröstningar, valresultat
+
+[[variable]]
+native_id = "243.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "243.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "243.2651"
+slug = "valdistriktskod"
+
+[[variable]]
+native_id = "243.5059"
+slug = "landstingets-namn"
+
+[[variable]]
+native_id = "243.14781"
+slug = "antal-ogiltiga-roster"
+
+[[variable]]
+native_id = "243.15123"
+slug = "antal-mandat-riksdagsparti"
+
+[[variable]]
+native_id = "243.15143"
+slug = "antal-valda-personer"
+
+[[variable]]
+native_id = "243.24262"
+slug = "antal-giltiga-roster-vansterpartiet"
+
+[[variable]]
+native_id = "243.24265"
+slug = "antal-giltiga-roster-folkpartiet"
+
+[[variable]]
+native_id = "243.24267"
+slug = "antal-giltiga-roster-kristdemokraterna"
+
+[[variable]]
+native_id = "243.25471"
+slug = "antal-mandat-folkpartiet"
+
+[[variable]]
+native_id = "243.25478"
+slug = "antal-mandat-ovriga"
+
+[[variable]]
+native_id = "243.37393"
+slug = "landsting"
+
+[[variable]]
+native_id = "243.38432"
+slug = "antal-mandat-liberalerna"
+
+[[variable]]
+native_id = "243.38433"
+slug = "antal-giltiga-roster-liberalerna"
+
+[[variable]]
+native_id = "243.41789"
+slug = "antal-giltiga-roster-apk"
+
+# register 245 (ep-val-deltagande)
+
+[[variable]]
+native_id = "243.16238.lt-valkretskod"
+slug = "landstingsvalkrets-kod"
+
+[[variable]]
+native_id = "243.16238.lt-valkretsnamn"
+slug = "landstingsvalkrets-namn"
+
+[[variable]]
+native_id = "243.16238.ovr-antmand"
+slug = "landstingsvalkrets-ovr-antmand"
+
+[[variable]]
+native_id = "243.16238.valkretsnamn"
+slug = "lt-valkretsnamn"
+
+[[variable]]
+native_id = "243.22871.lt-valkretskod"
+slug = "regionvalkrets-kod"
+
+[[variable]]
+native_id = "243.22871.lt-valkretsnamn"
+slug = "regionvalkrets-namn"
+
+[[variable]]
+native_id = "243.22871.valkretsnamn"
+slug = "regionvalkrets-valkretsnamn"
+
+[[variable]]
+native_id = "243.2907.lk"
+slug = "region"
+
+[[variable]]
+native_id = "243.2907.lk-1"
+slug = "region-alt"
+
+[[variable]]
+native_id = "243.49.ll"
+slug = "lan-2"
+
+[[variable]]
+native_id = "243.5056.lk"
+slug = "landstingskod"
+
+[[variable]]
+native_id = "243.5056.lk-1"
+slug = "landstingskod-alt"
+
+[[variable]]
+native_id = "243.5056.ll"
+slug = "landstingskod-lan"
+
+[[variable]]
+native_id = "243.69.llkkdddd"
+slug = "valdistrikt"
+
+# register 248 (komvux-sfi)
+
+[[variable]]
+native_id = "243.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "243.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "243.269"
+slug = "medborgarskapsdatum"
+
+[[variable]]
+native_id = "243.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "243.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "243.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "243.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "243.6818"
+slug = "medborgarland-varldsdel"
+
+[[variable]]
+native_id = "243.7916"
+slug = "forvarvsinkomst-kvintilgrupp"
+
+[[variable]]
+native_id = "243.22348"
+slug = "boende-disponibel-inkomst"
+
+[[variable]]
+native_id = "243.25238"
+slug = "antal-avgivna-roster"
+
+[[variable]]
+native_id = "243.28836"
+slug = "nummer-i-rostlangden"
+
+# register 244
+
+[[variable]]
+native_id = "243.14775.ri-valkretskod"
+slug = "riksdagsvalkrets-kod"
+
+[[variable]]
+native_id = "243.14775.ri-valkretsnamn"
+slug = "riksdagsvalkrets-namn"
+
+[[variable]]
+native_id = "243.15053.sun2020niva"
+slug = "sun2000niva-2"
+
+[[variable]]
+native_id = "243.15053.sun2020nivatext"
+slug = "sun2000nivatext-2"
+
+[[variable]]
+native_id = "243.15145.rostbrsv"
+slug = "rostberattigade-svenska"
+
+[[variable]]
+native_id = "243.15145.tottot-antrostbr"
+slug = "antal-rostberattigade"
+
+[[variable]]
+native_id = "243.16239.ko-valkretskod"
+slug = "kommunvalkrets-kod"
+
+[[variable]]
+native_id = "243.16239.ko-valkretsnamn"
+slug = "kommunvalkrets-namn"
+
+[[variable]]
+native_id = "243.23287.sun2000nivagrov"
+slug = "utbildningsniva-grov"
+
+[[variable]]
+native_id = "243.23287.sun2000nivagrov-text"
+slug = "utbildningsniva-grov-text"
+
+[[variable]]
+native_id = "243.49.lansnamn"
+slug = "lan"
+
+[[variable]]
+native_id = "243.69.valdistnamn"
+slug = "valdistriktsnamn"
+
+[[variable]]
+native_id = "243.69.vdnamn"
+slug = "valdistriktsnamn-2"
+
+[[variable]]
+native_id = "243.775.sun2000niva-grov"
+slug = "utbildningsniva-aggregat-grov"
+
+[[variable]]
+native_id = "243.775.sun2000niva-grov-text"
+slug = "utbildningsniva-aggregat-grov-text"
+
+[[variable]]
+native_id = "243.775.sun2020niva-grov"
+slug = "utbildningsniva-aggregat-grov-2"
+
+[[variable]]
+native_id = "243.775.sun2020niva-grov-text"
+slug = "utbildningsniva-aggregat-grov-text-2"
+
+[[variable]]
+native_id = "243.8529.ant-persrost-kv"
+slug = "personroster-kvinnor"
+
+[[variable]]
+native_id = "243.8529.ant-persrost-ma"
+slug = "personroster-man"
+
+[[variable]]
+native_id = "243.8529.tot-ant-persrost"
+slug = "personroster-totalt"
+
+# register 245

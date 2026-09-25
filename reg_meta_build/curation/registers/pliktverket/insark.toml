@@ -1,0 +1,228 @@
+[register]
+provider = "pliktverket"
+slug = "insark"
+native_id = "7137015638745956087"
+
+[[variant]]
+native_id = "7137015638745956087.5842664909372042601"
+slug = "_default"
+display_group = "Mönstringsregister"
+panel_entity_key = "personnr"
+panel_time_key = "mofdag"
+panel_time_grain = "row"
+
+# Inskrivningsprov
+
+[[variable]]
+native_id = "7137015638745956087.penr"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "7137015638745956087.apul"
+slug = "arbetspuls"
+
+[[variable]]
+native_id = "7137015638745956087.befl"
+slug = "befalslamplighet"
+
+[[variable]]
+native_id = "7137015638745956087.btkd"
+slug = "befattningskod-efter-monstring"
+
+[[variable]]
+native_id = "7137015638745956087.cylh"
+slug = "cylinder-hoger-oga"
+
+[[variable]]
+native_id = "7137015638745956087.cylv"
+slug = "cylinder-vanster-oga"
+
+[[variable]]
+native_id = "7137015638745956087.dias"
+slug = "diastoliskt-blodtryck"
+
+[[variable]]
+native_id = "7137015638745956087.fingh"
+slug = "fingerrakning-hoger-oga"
+
+[[variable]]
+native_id = "7137015638745956087.fingv"
+slug = "fingerrakning-vanster-oga"
+
+[[variable]]
+native_id = "7137015638745956087.hals"
+slug = "halsotillstandskod"
+
+[[variable]]
+native_id = "7137015638745956087.inrar"
+slug = "inryckningsar"
+
+[[variable]]
+native_id = "7137015638745956087.inrk"
+slug = "inskrivande-regionkontor"
+
+[[variable]]
+native_id = "7137015638745956087.lkf"
+slug = "forsamlingskod"
+
+[[variable]]
+native_id = "7137015638745956087.lngd"
+slug = "langd"
+
+[[variable]]
+native_id = "7137015638745956087.mass"
+slug = "kroppsvikt"
+
+[[variable]]
+native_id = "7137015638745956087.mufak"
+slug = "muskelfaktor"
+
+[[variable]]
+native_id = "7137015638745956087.orh1"
+slug = "matfrekvens-250hz-hoger-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orh2"
+slug = "matfrekvens-500hz-hoger-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orh3"
+slug = "matfrekvens-1000hz-hoger-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orh4"
+slug = "matfrekvens-2000hz-hoger-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orh5"
+slug = "matfrekvens-3000hz-hoger-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orh6"
+slug = "matfrekvens-4000hz-hoger-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orh7"
+slug = "matfrekvens-6000hz-hoger-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orh8"
+slug = "matfrekvens-8000hz-hoger-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orv1"
+slug = "matfrekvens-250hz-vanster-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orv2"
+slug = "matfrekvens-500hz-vanster-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orv3"
+slug = "matfrekvens-1000hz-vanster-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orv4"
+slug = "matfrekvens-2000hz-vanster-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orv5"
+slug = "matfrekvens-3000hz-vanster-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orv6"
+slug = "matfrekvens-4000hz-vanster-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orv7"
+slug = "matfrekvens-6000hz-vanster-ora"
+
+[[variable]]
+native_id = "7137015638745956087.orv8"
+slug = "matfrekvens-8000hz-vanster-ora"
+
+[[variable]]
+native_id = "7137015638745956087.psyf"
+slug = "psykisk-funktionsformaga"
+
+[[variable]]
+native_id = "7137015638745956087.refh"
+slug = "sfarisk-korrektion-hoger-oga"
+
+[[variable]]
+native_id = "7137015638745956087.refv"
+slug = "sfarisk-korrektion-vanster-oga"
+
+[[variable]]
+native_id = "7137015638745956087.rerk"
+slug = "redovisande-regionkontor"
+
+[[variable]]
+native_id = "7137015638745956087.spul"
+slug = "slutpuls"
+
+[[variable]]
+native_id = "7137015638745956087.statu"
+slug = "monstringstatus"
+
+[[variable]]
+native_id = "7137015638745956087.steph"
+slug = "stegtest-hoger-ben"
+
+[[variable]]
+native_id = "7137015638745956087.stepv"
+slug = "stegtest-vanster-ben"
+
+[[variable]]
+native_id = "7137015638745956087.sykh"
+slug = "korrigerad-synskarpa-hoger-oga"
+
+[[variable]]
+native_id = "7137015638745956087.sykv"
+slug = "korrigerad-synskarpa-vanster-oga"
+
+[[variable]]
+native_id = "7137015638745956087.syoh"
+slug = "synskarpa-hoger-oga"
+
+[[variable]]
+native_id = "7137015638745956087.syov"
+slug = "synskarpa-vanster-oga"
+
+[[variable]]
+native_id = "7137015638745956087.syst"
+slug = "systoliskt-blodtryck"
+
+[[variable]]
+native_id = "7137015638745956087.tavl"
+slug = "antal-fellasta-tavlor"
+
+[[variable]]
+native_id = "7137015638745956087.upprh"
+slug = "uppresning-hoger-ben-jagartest"
+
+[[variable]]
+native_id = "7137015638745956087.upprv"
+slug = "uppresning-vanster-ben-jagartest"
+
+[[variable]]
+native_id = "7137015638745956087.utan"
+slug = "utbildningsansvarig-enhet"
+
+[[variable]]
+native_id = "7137015638745956087.vilja"
+slug = "vilja-varnplikt"
+
+[[variable]]
+native_id = "7137015638745956087.vpfri"
+slug = "vapenfri"
+
+[[variable]]
+native_id = "7137015638745956087.vpul"
+slug = "vilopuls"
+
+[[variable]]
+native_id = "7137015638745956087.wmax"
+slug = "maximal-effekt-cykelprov"
+# register 8006336455308083750

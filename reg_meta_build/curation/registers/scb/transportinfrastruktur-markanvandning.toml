@@ -1,0 +1,121 @@
+[register]
+provider = "scb"
+slug = "transportinfrastruktur-markanvandning"
+native_id = "335"
+
+[[variant]]
+native_id = "335.1100"
+slug = "_default"
+display_group = "Transportinfrastrukturens markanvändning"
+
+# Utländska doktorander
+
+[[variable]]
+native_id = "335.36"
+slug = "kommun"
+
+[[variable]]
+native_id = "335.49"
+slug = "lan"
+
+[[variable]]
+native_id = "335.2189"
+slug = "landareal"
+
+[[variable]]
+native_id = "335.16818"
+slug = "befolkningstathet"
+
+[[variable]]
+native_id = "335.29924"
+slug = "andel-av-landareal"
+
+[[variable]]
+native_id = "335.29925"
+slug = "andel-av-bebyggd-mark"
+
+[[variable]]
+native_id = "335.29926"
+slug = "markareal-transport"
+
+[[variable]]
+native_id = "335.29931"
+slug = "transportslag"
+
+[[variable]]
+native_id = "335.29933"
+slug = "vaglangd"
+
+[[variable]]
+native_id = "335.29934"
+slug = "vaglangd-i-tunnel"
+
+[[variable]]
+native_id = "335.29935"
+slug = "andel-vag-i-tatort"
+
+[[variable]]
+native_id = "335.29936"
+slug = "andel-vag-utanfor-tatort"
+
+[[variable]]
+native_id = "335.29937"
+slug = "vagbana"
+
+[[variable]]
+native_id = "335.29938"
+slug = "vagbana-i-tunnel"
+
+[[variable]]
+native_id = "335.29939"
+slug = "vagomrade"
+
+[[variable]]
+native_id = "335.29940"
+slug = "vaghallare"
+
+[[variable]]
+native_id = "335.29941"
+slug = "cirkulationsplatser-antal"
+
+[[variable]]
+native_id = "335.29942"
+slug = "rondellareal"
+
+[[variable]]
+native_id = "335.29943"
+slug = "forandringsfaktor"
+
+[[variable]]
+native_id = "335.29944"
+slug = "cirkulationsplats-tathet"
+
+[[variable]]
+native_id = "335.29945"
+slug = "vagkategori"
+
+[[variable]]
+native_id = "335.29946"
+slug = "jarnvagslangd"
+
+[[variable]]
+native_id = "335.29947"
+slug = "jarnvagslangd-i-tunnel"
+
+[[variable]]
+native_id = "335.29956"
+slug = "jarnvagsareal"
+
+[[variable]]
+native_id = "335.29957"
+slug = "jarnvagsareal-i-tunnel"
+
+[[variable]]
+native_id = "335.29958"
+slug = "jarnvag-i-vagomrade"
+
+[[variable]]
+native_id = "335.29959"
+slug = "jarnvagens-totala-markyta"
+
+# register 336 (utlandska-doktorander)

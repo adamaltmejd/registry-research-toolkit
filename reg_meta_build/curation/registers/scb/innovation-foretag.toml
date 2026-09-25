@@ -6672,3 +6672,550 @@ key = "cis2016-cooperation-partner-by-location"
 label = "Typ av samarbetspartner geografiskt fördelat"
 axes = [{ axis = "partner", label = "Cooperation partner" }, { axis = "response", label = "Location or response" }]
 members = [{ variable = "cis2016-cooperation-group-enterprises-sweden", coords = [{ axis = "partner", value = "group_enterprises", label = "Other group enterprises" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-group-enterprises-other-europe", coords = [{ axis = "partner", value = "group_enterprises", label = "Other group enterprises" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-group-enterprises-usa", coords = [{ axis = "partner", value = "group_enterprises", label = "Other group enterprises" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-group-enterprises-china-india", coords = [{ axis = "partner", value = "group_enterprises", label = "Other group enterprises" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-group-enterprises-other-countries", coords = [{ axis = "partner", value = "group_enterprises", label = "Other group enterprises" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-group-enterprises-not-applicable", coords = [{ axis = "partner", value = "group_enterprises", label = "Other group enterprises" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }, { variable = "cis2016-cooperation-suppliers-sweden", coords = [{ axis = "partner", value = "suppliers", label = "Equipment suppliers" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-suppliers-other-europe", coords = [{ axis = "partner", value = "suppliers", label = "Equipment suppliers" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-suppliers-usa", coords = [{ axis = "partner", value = "suppliers", label = "Equipment suppliers" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-suppliers-china-india", coords = [{ axis = "partner", value = "suppliers", label = "Equipment suppliers" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-suppliers-other-countries", coords = [{ axis = "partner", value = "suppliers", label = "Equipment suppliers" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-suppliers-not-applicable", coords = [{ axis = "partner", value = "suppliers", label = "Equipment suppliers" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }, { variable = "cis2016-cooperation-private-customers-sweden", coords = [{ axis = "partner", value = "private_customers", label = "Private-sector customers" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-private-customers-other-europe", coords = [{ axis = "partner", value = "private_customers", label = "Private-sector customers" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-private-customers-usa", coords = [{ axis = "partner", value = "private_customers", label = "Private-sector customers" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-private-customers-china-india", coords = [{ axis = "partner", value = "private_customers", label = "Private-sector customers" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-private-customers-other-countries", coords = [{ axis = "partner", value = "private_customers", label = "Private-sector customers" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-private-customers-not-applicable", coords = [{ axis = "partner", value = "private_customers", label = "Private-sector customers" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }, { variable = "cis2016-cooperation-public-customers-sweden", coords = [{ axis = "partner", value = "public_customers", label = "Public-sector customers" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-public-customers-other-europe", coords = [{ axis = "partner", value = "public_customers", label = "Public-sector customers" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-public-customers-usa", coords = [{ axis = "partner", value = "public_customers", label = "Public-sector customers" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-public-customers-china-india", coords = [{ axis = "partner", value = "public_customers", label = "Public-sector customers" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-public-customers-other-countries", coords = [{ axis = "partner", value = "public_customers", label = "Public-sector customers" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-public-customers-not-applicable", coords = [{ axis = "partner", value = "public_customers", label = "Public-sector customers" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }, { variable = "cis2016-cooperation-competitors-sweden", coords = [{ axis = "partner", value = "competitors", label = "Competitors" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-competitors-other-europe", coords = [{ axis = "partner", value = "competitors", label = "Competitors" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-competitors-usa", coords = [{ axis = "partner", value = "competitors", label = "Competitors" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-competitors-china-india", coords = [{ axis = "partner", value = "competitors", label = "Competitors" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-competitors-other-countries", coords = [{ axis = "partner", value = "competitors", label = "Competitors" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-competitors-not-applicable", coords = [{ axis = "partner", value = "competitors", label = "Competitors" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }, { variable = "cis2016-cooperation-consultants-sweden", coords = [{ axis = "partner", value = "consultants", label = "Consultants" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-consultants-other-europe", coords = [{ axis = "partner", value = "consultants", label = "Consultants" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-consultants-usa", coords = [{ axis = "partner", value = "consultants", label = "Consultants" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-consultants-china-india", coords = [{ axis = "partner", value = "consultants", label = "Consultants" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-consultants-other-countries", coords = [{ axis = "partner", value = "consultants", label = "Consultants" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-consultants-not-applicable", coords = [{ axis = "partner", value = "consultants", label = "Consultants" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }, { variable = "cis2016-cooperation-universities-sweden", coords = [{ axis = "partner", value = "universities", label = "Universities and higher education" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-universities-other-europe", coords = [{ axis = "partner", value = "universities", label = "Universities and higher education" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-universities-usa", coords = [{ axis = "partner", value = "universities", label = "Universities and higher education" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-universities-china-india", coords = [{ axis = "partner", value = "universities", label = "Universities and higher education" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-universities-other-countries", coords = [{ axis = "partner", value = "universities", label = "Universities and higher education" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-universities-not-applicable", coords = [{ axis = "partner", value = "universities", label = "Universities and higher education" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }, { variable = "cis2016-cooperation-private-research-sweden", coords = [{ axis = "partner", value = "private_research", label = "Private research institutes" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-private-research-other-europe", coords = [{ axis = "partner", value = "private_research", label = "Private research institutes" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-private-research-usa", coords = [{ axis = "partner", value = "private_research", label = "Private research institutes" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-private-research-china-india", coords = [{ axis = "partner", value = "private_research", label = "Private research institutes" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-private-research-other-countries", coords = [{ axis = "partner", value = "private_research", label = "Private research institutes" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-private-research-not-applicable", coords = [{ axis = "partner", value = "private_research", label = "Private research institutes" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }, { variable = "cis2016-cooperation-public-research-sweden", coords = [{ axis = "partner", value = "public_research", label = "Public research institutes" }, { axis = "response", value = "sweden", label = "Sweden" }] }, { variable = "cis2016-cooperation-public-research-other-europe", coords = [{ axis = "partner", value = "public_research", label = "Public research institutes" }, { axis = "response", value = "other_europe", label = "Other Europe" }] }, { variable = "cis2016-cooperation-public-research-usa", coords = [{ axis = "partner", value = "public_research", label = "Public research institutes" }, { axis = "response", value = "usa", label = "USA" }] }, { variable = "cis2016-cooperation-public-research-china-india", coords = [{ axis = "partner", value = "public_research", label = "Public research institutes" }, { axis = "response", value = "china_india", label = "China or India" }] }, { variable = "cis2016-cooperation-public-research-other-countries", coords = [{ axis = "partner", value = "public_research", label = "Public research institutes" }, { axis = "response", value = "other_countries", label = "Other countries" }] }, { variable = "cis2016-cooperation-public-research-not-applicable", coords = [{ axis = "partner", value = "public_research", label = "Public research institutes" }, { axis = "response", value = "not_applicable", label = "Not applicable" }] }]
+
+[[variant]]
+native_id = "257.553"
+slug = "_default"
+display_group = "Innovation i företagssektorn"
+panel_entity_key = "orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# IT-användning
+
+[[variable]]
+native_id = "257.1839"
+slug = "orgnr"
+
+
+[[variable]]
+native_id = "257.29"
+slug = "fenr"
+
+[[variable]]
+native_id = "257.73"
+slug = "ar"
+
+[[variable]]
+native_id = "257.462"
+slug = "stratum"
+
+[[variable]]
+native_id = "257.690"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "257.2468"
+slug = "outlier"
+
+[[variable]]
+native_id = "257.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "257.4032"
+slug = "antal-anstallda-foretaget"
+
+[[variable]]
+native_id = "257.4045"
+slug = "koncernmarkering"
+
+[[variable]]
+native_id = "257.4256"
+slug = "nettoomsattning"
+
+[[variable]]
+native_id = "257.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "257.5697"
+slug = "lilla-n-per-stratum"
+
+[[variable]]
+native_id = "257.6211"
+slug = "svarande-per-stratum"
+
+[[variable]]
+native_id = "257.7705"
+slug = "utgifter-for-egen-fou"
+
+[[variable]]
+native_id = "257.7708"
+slug = "utgifter-for-utlagd-fou"
+
+[[variable]]
+native_id = "257.15555"
+slug = "geografisk-marknad-nationellt"
+
+[[variable]]
+native_id = "257.15556"
+slug = "geografisk-marknad-eu-efta"
+
+[[variable]]
+native_id = "257.15559"
+slug = "geografisk-marknad-ovriga-lander"
+
+[[variable]]
+native_id = "257.15562"
+slug = "produktinnovation-ny-for-marknad"
+
+[[variable]]
+native_id = "257.15563"
+slug = "produktinnovation-ny-for-foretaget"
+
+[[variable]]
+native_id = "257.15568"
+slug = "omsattningsandel-inno-ny-for-marknad"
+
+[[variable]]
+native_id = "257.15569"
+slug = "omsattningsandel-inno-ny-for-foretaget"
+
+[[variable]]
+native_id = "257.15570"
+slug = "omsattningsandel-oforandrade-varor"
+
+[[variable]]
+native_id = "257.15571"
+slug = "introduktion-av-produktionsmetoder"
+
+[[variable]]
+native_id = "257.15578"
+slug = "introduktion-av-leveransmetoder"
+
+[[variable]]
+native_id = "257.15579"
+slug = "introduktion-av-stodverksamheter"
+
+[[variable]]
+native_id = "257.15580"
+slug = "utvecklare-av-processinnovationer"
+
+[[variable]]
+native_id = "257.15582"
+slug = "introduktion-av-varor"
+
+[[variable]]
+native_id = "257.15583"
+slug = "introduktion-av-tjanster"
+
+[[variable]]
+native_id = "257.15584"
+slug = "utvecklare-av-produktinnovationer"
+
+[[variable]]
+native_id = "257.15593"
+slug = "huvudkontoret-belaget"
+
+[[variable]]
+native_id = "257.15600"
+slug = "innovationssamarbete"
+
+[[variable]]
+native_id = "257.15612"
+slug = "utgifter-forvarv-maskiner-programvara"
+
+[[variable]]
+native_id = "257.15613"
+slug = "utgifter-forvarv-existerande-kunskap"
+
+[[variable]]
+native_id = "257.15614"
+slug = "inna-egen-fou"
+
+[[variable]]
+native_id = "257.15616"
+slug = "inna-utlagd-fou"
+
+[[variable]]
+native_id = "257.15617"
+slug = "inna-forvarv-maskiner"
+
+[[variable]]
+native_id = "257.15618"
+slug = "inna-forvarv-existerande-kunskap"
+
+[[variable]]
+native_id = "257.15619"
+slug = "inna-utbildning"
+
+[[variable]]
+native_id = "257.15620"
+slug = "inna-marknadsintroduktion"
+
+[[variable]]
+native_id = "257.15621"
+slug = "inna-andra-forberedelser"
+
+[[variable]]
+native_id = "257.15642"
+slug = "geografisk-marknad-regional-lokal"
+
+[[variable]]
+native_id = "257.15643"
+slug = "totala-innovationsutgifter"
+
+[[variable]]
+native_id = "257.15665"
+slug = "mest-vardefull-samarbetspartner"
+
+[[variable]]
+native_id = "257.17402"
+slug = "koncerntillhorighet"
+
+[[variable]]
+native_id = "257.20900"
+slug = "avbruten-innovationsaktivitet"
+
+[[variable]]
+native_id = "257.20901"
+slug = "pagaende-innovationsaktivitet"
+
+[[variable]]
+native_id = "257.20940"
+slug = "introduktion-av-nya-affarsmetoder"
+
+[[variable]]
+native_id = "257.20941"
+slug = "introduktion-metoder-ansvar-beslut"
+
+[[variable]]
+native_id = "257.20942"
+slug = "introduktion-metoder-externa-relationer"
+
+[[variable]]
+native_id = "257.20948"
+slug = "introduktion-forandringar-utformning"
+
+[[variable]]
+native_id = "257.20949"
+slug = "introduktion-metoder-marknadsforing"
+
+[[variable]]
+native_id = "257.20950"
+slug = "introduktion-metoder-produktplacering"
+
+[[variable]]
+native_id = "257.20951"
+slug = "introduktion-metoder-prissattning"
+
+[[variable]]
+native_id = "257.20955"
+slug = "miljoinnovation-minskad-materialatgang"
+
+[[variable]]
+native_id = "257.20958"
+slug = "miljoinnovation-materialersattning"
+
+[[variable]]
+native_id = "257.20959"
+slug = "miljoinnovation-fororeningar-foretaget"
+
+[[variable]]
+native_id = "257.20960"
+slug = "miljoinnovation-atervinning-avfall"
+
+[[variable]]
+native_id = "257.20962"
+slug = "miljoinno-fororeningar-slutkonsumtion"
+
+[[variable]]
+native_id = "257.28037"
+slug = "syfte-inno-marknadsandelar"
+
+[[variable]]
+native_id = "257.28038"
+slug = "syfte-inno-miljo"
+
+[[variable]]
+native_id = "257.28039"
+slug = "syfte-inno-material-energikostnad"
+
+[[variable]]
+native_id = "257.28047"
+slug = "kreativitet-brainstorming"
+
+[[variable]]
+native_id = "257.28048"
+slug = "kreativitet-sektorovergripande-team"
+
+[[variable]]
+native_id = "257.28049"
+slug = "kreativitet-rotation-personal"
+
+[[variable]]
+native_id = "257.28050"
+slug = "kreativitet-ekonomiska-incitament"
+
+[[variable]]
+native_id = "257.28051"
+slug = "kreativitet-icke-ekonomiska-incitament"
+
+[[variable]]
+native_id = "257.28052"
+slug = "kreativitet-utbilda-personal"
+
+[[variable]]
+native_id = "257.28053"
+slug = "finansieringskalla-innovationsutgifter"
+
+[[variable]]
+native_id = "257.28057"
+slug = "kompetens-i-foretaget"
+
+[[variable]]
+native_id = "257.29913"
+slug = "utgifter-ovrig-innovationsverksamhet"
+
+[[variable]]
+native_id = "257.29914"
+slug = "stod-for-innovationsverksamhet-kommun"
+
+[[variable]]
+native_id = "257.29916"
+slug = "informationskallor-produktinnovation"
+
+[[variable]]
+native_id = "257.30126"
+slug = "foretagssammanslagningar"
+
+[[variable]]
+native_id = "257.30128"
+slug = "foretagets-konkurrenskraft"
+
+[[variable]]
+native_id = "257.30132"
+slug = "strategier-hinder-foretagets-mal"
+
+[[variable]]
+native_id = "257.30134"
+slug = "strategier-for-foretagets-mal"
+
+[[variable]]
+native_id = "257.30135"
+slug = "hinder-for-foretagets-mal"
+
+[[variable]]
+native_id = "257.32713"
+slug = "ipr-patent"
+
+[[variable]]
+native_id = "257.32715"
+slug = "ej-inno-lag-efterfragan"
+
+[[variable]]
+native_id = "257.32717"
+slug = "miljovinster-slutkonsumtion"
+
+[[variable]]
+native_id = "257.32718"
+slug = "miljovinster-inom-foretaget"
+
+[[variable]]
+native_id = "257.32719"
+slug = "miljovinst-fran-typ-av-innovation"
+
+[[variable]]
+native_id = "257.32720"
+slug = "faktorer-innovationer-miljovinster"
+
+[[variable]]
+native_id = "257.32722"
+slug = "rutiner-minska-miljopaverkan"
+
+[[variable]]
+native_id = "257.32723"
+slug = "rutiner-minska-miljopaverkan-fore-2012"
+
+[[variable]]
+native_id = "257.32725"
+slug = "rutiner-minska-miljopaverkan-2012-2014"
+
+[[variable]]
+native_id = "257.36983"
+slug = "stod-for-innovationsverksamhet-staten"
+
+[[variable]]
+native_id = "257.36984"
+slug = "stod-for-innovationsverksamhet-eu"
+
+[[variable]]
+native_id = "257.37076"
+slug = "ipr-monsterskydd"
+
+[[variable]]
+native_id = "257.37077"
+slug = "ipr-varumarke"
+
+[[variable]]
+native_id = "257.37078"
+slug = "ipr-salt"
+
+[[variable]]
+native_id = "257.37079"
+slug = "ipr-kopt"
+
+[[variable]]
+native_id = "257.39088"
+slug = "innovationsutgifter-forvarv-material"
+
+[[variable]]
+native_id = "257.39090"
+slug = "finansieringskalla-aktiefinansiering"
+
+[[variable]]
+native_id = "257.39092"
+slug = "finansieringskalla-lanefinansiering"
+
+[[variable]]
+native_id = "257.39094"
+slug = "stod-innovationsaktiviteter-eu-h2020"
+
+[[variable]]
+native_id = "257.39096"
+slug = "stod-fran-eu-h2020"
+
+[[variable]]
+native_id = "257.39101"
+slug = "innosamarbete-konsulter-se"
+
+[[variable]]
+native_id = "257.39102"
+slug = "samarbete-inom-ovriga-aktiviteter"
+
+[[variable]]
+native_id = "257.39104"
+slug = "innosamarbete-konsulter-eu"
+
+[[variable]]
+native_id = "257.39126"
+slug = "coop-pub-clcu-neu-nefta"
+
+[[variable]]
+native_id = "257.44660"
+slug = "env-engra-kort"
+
+[[variable]]
+native_id = "257.44661"
+slug = "env-endem-kort"
+
+[[variable]]
+native_id = "257.44667"
+slug = "clim-cust-medvetenhet"
+
+[[variable]]
+native_id = "257.46476"
+slug = "env-endem"
+
+[[variable]]
+native_id = "257.46478"
+slug = "env-engra"
+
+[[variable]]
+native_id = "257.46481"
+slug = "miljoinno-livscykel"
+
+[[variable]]
+native_id = "257.46482"
+slug = "miljoinno-atervinning"
+
+[[variable]]
+native_id = "257.46484"
+slug = "miljoinno-mangfald-kons"
+
+[[variable]]
+native_id = "257.46485"
+slug = "miljoinno-mangfald-intern"
+
+[[variable]]
+native_id = "257.46492"
+slug = "miljoinno-fossila"
+
+[[variable]]
+native_id = "257.46493"
+slug = "clim-cust-efterfragan"
+
+[[variable]]
+native_id = "257.46499"
+slug = "fund-debt-succ"
+
+[[variable]]
+native_id = "257.46502"
+slug = "fund-equit-succ"
+
+[[variable]]
+native_id = "257.46586"
+slug = "reas-ninn-nneed"
+
+[[variable]]
+native_id = "257.46587"
+slug = "reas-ninn-oth"
+
+[[variable]]
+native_id = "257.46588"
+slug = "reas-ninn-resc"
+
+[[variable]]
+native_id = "257.46589"
+slug = "reas-aktiva-nneed"
+
+[[variable]]
+native_id = "257.46590"
+slug = "reas-nminn-oth"
+
+[[variable]]
+native_id = "257.46591"
+slug = "reas-nminn-resc"
+
+[[variable]]
+native_id = "257.46595"
+slug = "innovationsutgifter-tjanster-material"
+
+[[variable]]
+native_id = "257.46650"
+slug = "turpop"
+
+[[variable]]
+native_id = "257.46654"
+slug = "turresp"
+
+[[variable]]
+native_id = "257.46665"
+slug = "tur-prd-inn-andel"
+
+[[variable]]
+native_id = "257.49574"
+slug = "tur-prd-inn"
+
+[[variable]]
+native_id = "257.49581"
+slug = "risks-depe-neu"
+
+[[variable]]
+native_id = "257.49589"
+slug = "risks-depe-miti-neu"
+
+# register 258 (it-anvandning)
+
+[[variable]]
+native_id = "257.3578"
+slug = "orgnr-12"
+
+[[variable]]
+native_id = "257.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "257.1054"
+slug = "sateskommun"
+
+[[variable]]
+native_id = "257.27731"
+slug = "koncernforetag"
+
+[[variable]]
+native_id = "257.39089"
+slug = "innovationsutgifter-kapitalvaror"
+
+# register 258

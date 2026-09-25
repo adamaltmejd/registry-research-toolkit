@@ -1,0 +1,93 @@
+[register]
+provider = "scb"
+slug = "skord-spannmal"
+native_id = "208"
+
+[[variant]]
+native_id = "208.309"
+slug = "_default"
+display_group = "Skörd av spannmål, trindsäd och oljeväxter"
+panel_entity_key = "foretagsidentitet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Normskördar
+
+[[variable]]
+native_id = "208.7550"
+slug = "foretagsidentitet"
+
+
+[[variable]]
+native_id = "208.44275.karnfrohektarskord-dar-22"
+slug = "hostrybs-hektarskord"
+
+[[variable]]
+native_id = "208.44293.karnfrohektarskord-dar-22"
+slug = "troskad-areal-hostrybs"
+
+[[variable]]
+native_id = "208.44294.karnfrotroskadareal-dar-23"
+slug = "troskad-areal-varrybs"
+
+[[variable]]
+native_id = "208.44296.karnfroobargadareal-dar-9"
+slug = "troskad-areal-majs"
+
+[[variable]]
+native_id = "208.44312.karnfrotroskadareal-dar-23"
+slug = "obargad-areal-varrybs"
+
+[[variable]]
+native_id = "208.44314.karnfroobargadareal-dar-9"
+slug = "obargad-areal-majs"
+
+# register 215 (vattenbruk)
+
+[[variable]]
+native_id = "208.2351"
+slug = "regionkod"
+
+[[variable]]
+native_id = "208.3021"
+slug = "namn-uppgiftslamnare"
+
+[[variable]]
+native_id = "208.41860"
+slug = "areal-akermark"
+
+# register 211
+
+[[variable]]
+native_id = "208.2437.ordsko"
+slug = "skordeomrade"
+
+[[variable]]
+native_id = "208.44244.karnfrototalskord-5"
+slug = "varvete"
+
+[[variable]]
+native_id = "208.44245.karnfrototalskord-8"
+slug = "rag"
+
+[[variable]]
+native_id = "208.44246.karnfrototalskord-2"
+slug = "varkorn"
+
+[[variable]]
+native_id = "208.44250.karnfrototalskord-30"
+slug = "skord-arter-ej-konserv"
+
+[[variable]]
+native_id = "208.44252.karnfrototalskord-20"
+slug = "hostraps"
+
+[[variable]]
+native_id = "208.44254.karnfrototalskord-21"
+slug = "varraps"
+
+[[variable]]
+native_id = "208.44256.karnfrototalskord-40"
+slug = "oljelin"
+
+# register 217

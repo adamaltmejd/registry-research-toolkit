@@ -1,0 +1,131 @@
+[register]
+provider = "scb"
+slug = "gronytor-tatorter"
+native_id = "350"
+
+[[variant]]
+native_id = "350.1191"
+slug = "markanvandning-i-tatorter"
+display_group = "Markanvändning i tätorter"
+
+
+[[variant]]
+native_id = "350.1192"
+slug = "gronomraden-hoplagda"
+display_group = "Grönområden, hoplagda grönytor"
+
+
+[[variant]]
+native_id = "350.1214"
+slug = "forandringar-gronytor"
+display_group = "Förändringar grönytor"
+
+# Den internationella undersökningen av vuxnas färdigheter (PIAAC)
+
+[[variable]]
+native_id = "350.44"
+slug = "kon"
+
+[[variable]]
+native_id = "350.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "350.108"
+slug = "taxeringsenhet-typkod"
+
+[[variable]]
+native_id = "350.135"
+slug = "fnr"
+
+[[variable]]
+native_id = "350.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "350.2188"
+slug = "folkmangd"
+
+[[variable]]
+native_id = "350.22831"
+slug = "grundklassning-vegetation"
+
+[[variable]]
+native_id = "350.22834"
+slug = "grupperad-6klasser"
+
+[[variable]]
+native_id = "350.22836"
+slug = "benamning-omrade"
+
+[[variable]]
+native_id = "350.22837"
+slug = "gronomraden"
+
+[[variable]]
+native_id = "350.22838"
+slug = "forandring-gronytor-id"
+
+[[variable]]
+native_id = "350.22839"
+slug = "forandringsomrade-klass"
+
+[[variable]]
+native_id = "350.22840"
+slug = "overlagring-kartytor-mask"
+
+[[variable]]
+native_id = "350.22841"
+slug = "omkrets-forandringsyta"
+
+[[variable]]
+native_id = "350.22842"
+slug = "forandringsyta-gronomrade"
+
+[[variable]]
+native_id = "350.22843"
+slug = "saker-forandringsyta"
+
+[[variable]]
+native_id = "350.22907"
+slug = "gronyta-per-person"
+
+[[variable]]
+native_id = "350.22908"
+slug = "befolkning-gronomraden-300m"
+
+[[variable]]
+native_id = "350.22909"
+slug = "forandring-vegetationsgrad"
+
+[[variable]]
+native_id = "350.22913"
+slug = "befolkningstathet-tatorter"
+
+[[variable]]
+native_id = "350.31224"
+slug = "befolkningens-narhet-gronyta"
+
+[[variable]]
+native_id = "350.31225"
+slug = "markklassning-fin"
+
+[[variable]]
+native_id = "350.31281"
+slug = "markklassning-aggregerad"
+
+[[variable]]
+native_id = "350.31286"
+slug = "tatorter-30000-inv-visby"
+
+[[variable]]
+native_id = "350.31287"
+slug = "inom-tatort"
+
+# register 353 (anpassad-gymnasieskola)
+
+[[variable]]
+native_id = "350.39461"
+slug = "datatyp-for-geometri"
+
+# register 351

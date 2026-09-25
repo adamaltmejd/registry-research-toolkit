@@ -41,8 +41,6 @@ from ._curation import (
 )
 from ._resolved_common import _require_trimmed
 from .fqid_slugs import (
-    _is_split_base_pair,
-    iter_curated_provider_entries,
     load_lineage_config,
 )
 from .normalization import normalize_text
@@ -165,6 +163,24 @@ class RegisterIdentity(_CurationModel):
     def _valid_slug(cls, value: str) -> str:
         validate_slug(value, "register")
         return value
+
+
+class RegisterVariantSlug(_CurationModel):
+    native_id: str
+    slug: str
+    display_group: str | None = None
+    panel_entity_key: str | list[str] | None = None
+    panel_time_key: str | list[str] | None = None
+    panel_time_grain: str | None = None
+    deprecated: bool = False
+    replaced_by: str | None = None
+
+
+class RegisterVariableSlug(_CurationModel):
+    native_id: str
+    slug: str | None = None
+    replaced_by: str | None = None
+    deprecated: bool = False
 
 
 class ErrataVersionEntry(_CurationModel):
@@ -577,6 +593,8 @@ class RegisterCuration(_CurationModel):
     """One register file with a closed, typed table set."""
 
     register_info: RegisterIdentity = Field(validation_alias="register")
+    variant: list[RegisterVariantSlug] = Field(default_factory=list)
+    variable: list[RegisterVariableSlug] = Field(default_factory=list)
     errata: ErrataCuration = Field(default_factory=ErrataCuration)
     enrichment: EnrichmentCuration = Field(default_factory=EnrichmentCuration)
     group: list[RegisterGroupEntry] = Field(default_factory=list)
@@ -786,7 +804,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
             _CODE,
             f"{file} [register]: native_id must be a decimal string for "
             f"{identity.provider!r}, got {identity.native_id!r}.",
-            "Copy the source native id from fqid_slugs/<provider>.toml.",
+            "Set the register's source native id in this file.",
         )
 
     for table, rows in _register_arrays(entry):
@@ -907,6 +925,8 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
     owners: dict[tuple[str, str], str] = {}
     native_ids: dict[tuple[str, str], str] = {}
     for path in sorted(directory.rglob("*.toml")):
+        if path.name.endswith(".auto.toml"):
+            continue
         if not path.is_file():
             raise curation_error(
                 _CODE,
@@ -937,74 +957,6 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
                 )
             native_ids[native_key] = rel
         entries.append(entry)
-    slug_dir = root.parent / "fqid_slugs"
-    if slug_dir.is_dir():
-        source_ids: dict[tuple[str, str], list[str]] = {}
-        slug_entries_by_provider: dict[str, list] = {}
-        for slug_entry in iter_curated_provider_entries(slug_dir):
-            provider = slug_entry.provider
-            if provider is None:
-                continue
-            slug_entries_by_provider.setdefault(provider, []).append(slug_entry)
-            if slug_entry.kind == "register" and slug_entry.slug is not None:
-                source_ids.setdefault((provider, slug_entry.slug), []).append(
-                    slug_entry.source_id
-                )
-        for entry in entries:
-            identity = entry.register_info
-            if identity.provider not in {"scb", "sos"}:
-                continue
-            file = entry.source_file
-            matching = source_ids.get((identity.provider, identity.slug), [])
-            if len(matching) != 1 or matching[0] != identity.native_id:
-                raise curation_error(
-                    _CODE,
-                    f"{file} [register]: native_id {identity.native_id!r} does not "
-                    f"match fqid_slugs/{identity.provider}.toml for "
-                    f"{identity.provider}/{identity.slug} ({matching}).",
-                    "Copy the register's source id from its [register] slug entry.",
-                )
-        register_by_native_id = {
-            (item.register_info.provider, item.register_info.native_id): item
-            for item in entries
-            if item.register_info.native_id is not None
-        }
-        for provider, slug_entries in sorted(slug_entries_by_provider.items()):
-            slug_holders: dict[tuple[str, str], list] = {}
-            for slug_entry in slug_entries:
-                if slug_entry.kind != "variable" or slug_entry.slug is None:
-                    continue
-                native_id = slug_entry.source_id.split(".", 1)[0]
-                slug_holders.setdefault((native_id, slug_entry.slug), []).append(
-                    slug_entry
-                )
-            for (native_id, slug), holders in slug_holders.items():
-                if len(holders) < 2:
-                    continue
-                pair = len(holders) == 2 and _is_split_base_pair(*holders)
-                register = register_by_native_id.get((provider, native_id))
-                family = next(
-                    (item for item in holders if len(item.source_id.split(".")) == 2),
-                    None,
-                )
-                if (
-                    pair
-                    and family is not None
-                    and register is not None
-                    and any(
-                        partition.variable == family.source_id
-                        for partition in register.identity.partition
-                    )
-                ):
-                    continue
-                raise curation_error(
-                    "slug_toml_invalid",
-                    f"fqid_slugs/{provider}.toml: slug {slug!r} reused by "
-                    f"split/base entries in register {native_id!r} without a "
-                    f"matching [[identity.partition]] in "
-                    f"{register.source_file if register is not None else f'curation/registers/{provider}/{slug}.toml'}.",
-                    "Keep split/base slug reuse only when the register file declares ownership for that native family.",
-                )
     return tuple(entries)
 
 

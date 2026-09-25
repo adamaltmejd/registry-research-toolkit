@@ -1,0 +1,89 @@
+[register]
+provider = "scb"
+slug = "civila-samhallet"
+native_id = "409"
+
+[[variant]]
+native_id = "409.1720"
+slug = "_default"
+display_group = "Civila samhället"
+panel_entity_key = "person-samordnings-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Ekonomisk statistik på kvartal (ESK)
+
+[[variable]]
+native_id = "409.22865"
+slug = "person-samordnings-orgnr"
+
+
+[[variable]]
+native_id = "409.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "409.55"
+slug = "omsattning-enligt-moms"
+
+[[variable]]
+native_id = "409.74"
+slug = "agarkontroll"
+
+[[variable]]
+native_id = "409.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "409.1047"
+slug = "je-foretagsstatus"
+
+[[variable]]
+native_id = "409.1052"
+slug = "je-status"
+
+[[variable]]
+native_id = "409.1058"
+slug = "sateslan"
+
+[[variable]]
+native_id = "409.1141"
+slug = "sektortillhorighet"
+
+[[variable]]
+native_id = "409.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "409.4056"
+slug = "arbetsgivaravgift-summa"
+
+[[variable]]
+native_id = "409.4067"
+slug = "prelim-a-skatt-inkl-soc"
+
+[[variable]]
+native_id = "409.4975"
+slug = "antal-kvinnor-arbetsstallet"
+
+[[variable]]
+native_id = "409.4988"
+slug = "antal-man-pa-arbetsstallet"
+
+[[variable]]
+native_id = "409.5617"
+slug = "lonesumma-totalt"
+
+[[variable]]
+native_id = "409.15532"
+slug = "antal-sysselsatta-ast"
+
+[[variable]]
+native_id = "409.19689"
+slug = "koncernniva"
+
+[[variable]]
+native_id = "409.41711"
+slug = "foretagets-bransch-naringsgren"
+
+# register 410

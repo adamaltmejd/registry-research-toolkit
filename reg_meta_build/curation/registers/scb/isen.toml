@@ -1,0 +1,233 @@
+[register]
+provider = "scb"
+slug = "isen"
+native_id = "132"
+
+[[variant]]
+native_id = "132.178"
+slug = "_default"
+display_group = "Industrins energianvändning"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Regional omsättningsstatistik (REGO)
+
+[[variable]]
+native_id = "132.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "132.18"
+slug = "arbetsstallestatus"
+
+[[variable]]
+native_id = "132.83"
+slug = "bransleslag"
+
+[[variable]]
+native_id = "132.326"
+slug = "namn"
+
+[[variable]]
+native_id = "132.803"
+slug = "belagenhetsadress-postnr"
+
+[[variable]]
+native_id = "132.1639"
+slug = "anstallda-arbetsstallet"
+
+[[variable]]
+native_id = "132.1653"
+slug = "kommentar-uppgiftslamnare"
+
+[[variable]]
+native_id = "132.2581"
+slug = "bransleslaget-i-klartext"
+
+[[variable]]
+native_id = "132.2595"
+slug = "bransle-maxvarde"
+
+[[variable]]
+native_id = "132.2598"
+slug = "bransleslag-varmevarden"
+
+[[variable]]
+native_id = "132.2602"
+slug = "enheten-naturliga-mattet"
+
+[[variable]]
+native_id = "132.2605"
+slug = "elanvandning-mwh"
+
+[[variable]]
+native_id = "132.2609"
+slug = "statuskod-fdb"
+
+[[variable]]
+native_id = "132.2617"
+slug = "orgnr-redovisningsenheten"
+
+[[variable]]
+native_id = "132.2620"
+slug = "adress-redovisningsenhet"
+
+[[variable]]
+native_id = "132.2622"
+slug = "benamning-redovisningsenhet"
+
+[[variable]]
+native_id = "132.2624"
+slug = "epost-redovisningsenheten"
+
+[[variable]]
+native_id = "132.2629"
+slug = "scb-kommentar-redovisningsenh"
+
+[[variable]]
+native_id = "132.2630"
+slug = "kommentar-paverkar-resultat"
+
+[[variable]]
+native_id = "132.2635"
+slug = "postnr-redovisningsenheten"
+
+[[variable]]
+native_id = "132.2636"
+slug = "kontrollnr-redovisningsenh"
+
+[[variable]]
+native_id = "132.2639"
+slug = "panneffekt-redovisningsenheten"
+
+[[variable]]
+native_id = "132.3575"
+slug = "foretagets-namn"
+
+[[variable]]
+native_id = "132.7844"
+slug = "bransleanvandning-transport"
+
+[[variable]]
+native_id = "132.16314"
+slug = "antal-anstallda-arbetsstallet"
+
+[[variable]]
+native_id = "132.16315"
+slug = "cfar-nummer-arbetsstalle"
+
+[[variable]]
+native_id = "132.16328"
+slug = "benamning-arbetsstallet"
+
+[[variable]]
+native_id = "132.16413"
+slug = "bransleanvandning-ovrigt"
+
+[[variable]]
+native_id = "132.16414"
+slug = "bransleslaget-varmevarden"
+
+[[variable]]
+native_id = "132.16415"
+slug = "bransle-maxpris"
+
+[[variable]]
+native_id = "132.16416"
+slug = "bransleslaget-enhet"
+
+[[variable]]
+native_id = "132.16417"
+slug = "epost-arbetsstallet"
+
+[[variable]]
+native_id = "132.16418"
+slug = "inkopsvarde-kvantitet"
+
+[[variable]]
+native_id = "132.16419"
+slug = "blankett-indatum"
+
+[[variable]]
+native_id = "132.16420"
+slug = "kommentar-uppgiftslamnaren"
+
+[[variable]]
+native_id = "132.16421"
+slug = "scb-kommentar-granskning"
+
+[[variable]]
+native_id = "132.16422"
+slug = "kontrollnr-arbetsstallet"
+
+[[variable]]
+native_id = "132.16423"
+slug = "orgnr-foretaget"
+
+[[variable]]
+native_id = "132.16424"
+slug = "statuskod-scb-granskning"
+
+[[variable]]
+native_id = "132.16425"
+slug = "telefon-direktnr-kontaktperson"
+
+[[variable]]
+native_id = "132.16427"
+slug = "adress-till-arbetsstallet"
+
+[[variable]]
+native_id = "132.16428"
+slug = "postort-for-arbetsstallet"
+
+[[variable]]
+native_id = "132.16429"
+slug = "postnummer-arbetsstallet"
+
+[[variable]]
+native_id = "132.16432"
+slug = "inkopsvarde-av-el"
+
+[[variable]]
+native_id = "132.16437"
+slug = "panneffekt-arbetsstallet"
+
+[[variable]]
+native_id = "132.19754"
+slug = "telefonnummer-till-kontaktperson"
+
+[[variable]]
+native_id = "132.22805"
+slug = "inkopsvarde-av-elenergi"
+
+# register 133 (rego)
+
+[[variable]]
+native_id = "132.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "132.2604"
+slug = "inkopt-kvantitet"
+
+[[variable]]
+native_id = "132.2628"
+slug = "insamlingsdatum"
+
+[[variable]]
+native_id = "132.2634"
+slug = "postort-redovisningsenhet"
+
+[[variable]]
+native_id = "132.2855"
+slug = "kontaktperson2"
+
+# register 133
+
+[[variable]]
+native_id = "132.1641.ng2002"
+slug = "naringsgren-arbetsstalle"
+
+# register 135

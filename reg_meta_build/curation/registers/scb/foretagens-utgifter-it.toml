@@ -1,0 +1,91 @@
+[register]
+provider = "scb"
+slug = "foretagens-utgifter-it"
+native_id = "259"
+
+[[variant]]
+native_id = "259.530"
+slug = "_default"
+display_group = "Företagens utgifter för IT"
+panel_entity_key = "orgnr-12"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Gymnasieskola: sökande och antagna
+
+[[variable]]
+native_id = "259.3578"
+slug = "orgnr-12"
+
+
+[[variable]]
+native_id = "259.98"
+slug = "referensar"
+
+[[variable]]
+native_id = "259.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "259.2014"
+slug = "foretagsnamn"
+
+[[variable]]
+native_id = "259.3575"
+slug = "foretagets-namn"
+
+[[variable]]
+native_id = "259.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "259.14832"
+slug = "finansiell-leasing"
+
+[[variable]]
+native_id = "259.19052"
+slug = "naringsgren-for-statistiken"
+
+[[variable]]
+native_id = "259.21895"
+slug = "datautrustning-utg"
+
+[[variable]]
+native_id = "259.21897"
+slug = "teleutrustning-utg"
+
+[[variable]]
+native_id = "259.21899"
+slug = "mjukvara-utg"
+
+[[variable]]
+native_id = "259.21900"
+slug = "mjukvara-invest"
+
+[[variable]]
+native_id = "259.45974"
+slug = "mjukvara-inkop-invest"
+
+# register 260 (gymnasieskola-sokande)
+
+[[variable]]
+native_id = "259.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "259.87"
+slug = "foradlingsvarde"
+
+[[variable]]
+native_id = "259.4038"
+slug = "antal-anstallda-enligt-fdb"
+
+[[variable]]
+native_id = "259.6212"
+slug = "vikt-ht"
+
+[[variable]]
+native_id = "259.17642"
+slug = "arsverken-programvaruutv-ovriga"
+
+# register 260

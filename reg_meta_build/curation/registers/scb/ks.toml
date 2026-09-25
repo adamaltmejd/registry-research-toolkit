@@ -1,0 +1,127 @@
+[register]
+provider = "scb"
+slug = "ks"
+native_id = "134"
+
+[[variant]]
+native_id = "134.185"
+slug = "_default"
+display_group = "Kortperiodisk sysselsättningsstatistik (KS)"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Industrins varuproduktion (IVP)
+
+[[variable]]
+native_id = "134.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "134.33"
+slug = "institutionell-sektor"
+
+[[variable]]
+native_id = "134.50"
+slug = "manad"
+
+[[variable]]
+native_id = "134.972"
+slug = "aktuellt-antal-anstallda"
+
+[[variable]]
+native_id = "134.3089"
+slug = "avgangna-tillsvid-kv"
+
+[[variable]]
+native_id = "134.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "134.4894"
+slug = "avgangna-tillsvid-man"
+
+[[variable]]
+native_id = "134.4895"
+slug = "avgangna-visstid-kv"
+
+[[variable]]
+native_id = "134.4896"
+slug = "avgangna-visstid-man"
+
+[[variable]]
+native_id = "134.4898"
+slug = "tillsvid-kv"
+
+[[variable]]
+native_id = "134.4899"
+slug = "tillsvid-man"
+
+[[variable]]
+native_id = "134.4900"
+slug = "foretagare-kv"
+
+[[variable]]
+native_id = "134.4901"
+slug = "foretagare-man"
+
+[[variable]]
+native_id = "134.4909"
+slug = "nyanstallda-tillsvid-kv"
+
+[[variable]]
+native_id = "134.4918"
+slug = "nyanstallda-tillsvid-man"
+
+[[variable]]
+native_id = "134.4922"
+slug = "nyanstallda-visstid-kv"
+
+[[variable]]
+native_id = "134.4925"
+slug = "nyanstallda-visstid-man"
+
+[[variable]]
+native_id = "134.4949"
+slug = "visstid-kv"
+
+[[variable]]
+native_id = "134.4950"
+slug = "visstid-man"
+
+[[variable]]
+native_id = "134.5007"
+slug = "ovrig-franvaro-kv"
+
+[[variable]]
+native_id = "134.5008"
+slug = "ovrig-franvaro-man"
+
+[[variable]]
+native_id = "134.5009"
+slug = "semester-kv"
+
+[[variable]]
+native_id = "134.5010"
+slug = "semester-man"
+
+[[variable]]
+native_id = "134.5011"
+slug = "sjukfranvaro-kv"
+
+[[variable]]
+native_id = "134.5012"
+slug = "sjukfranvaro-man"
+
+# register 135 (ivp)
+
+[[variable]]
+native_id = "134.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "134.473"
+slug = "lan-arbetsstalle"
+
+# register 135

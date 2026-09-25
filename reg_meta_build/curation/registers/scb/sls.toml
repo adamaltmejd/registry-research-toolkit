@@ -1,0 +1,127 @@
+[register]
+provider = "scb"
+slug = "sls"
+native_id = "52"
+
+[[variant]]
+native_id = "52.174"
+slug = "_default"
+display_group = "Lönestrukturstatistik, statlig sektor"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Yrkesregistret med yrkesstatistik (YrkesReg)
+
+[[variable]]
+native_id = "52.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "52.65"
+slug = "utbildningsinriktning"
+
+[[variable]]
+native_id = "52.120"
+slug = "yrkesuppgift"
+
+[[variable]]
+native_id = "52.778"
+slug = "utbildningsniva-3-positioner"
+
+[[variable]]
+native_id = "52.1846"
+slug = "tjanstledighet"
+
+[[variable]]
+native_id = "52.2499"
+slug = "myndighet"
+
+[[variable]]
+native_id = "52.2519"
+slug = "lopnummer-anstallningar"
+
+[[variable]]
+native_id = "52.2684"
+slug = "tim-dag-och-veckolon"
+
+[[variable]]
+native_id = "52.15936"
+slug = "lon-exklusive-tillagg-ojusterad"
+
+[[variable]]
+native_id = "52.36015"
+slug = "tim-dag-och-veckolon-ny"
+
+# register 55 (yrkesreg)
+
+[[variable]]
+native_id = "52.1839"
+slug = "orgnr"
+
+[[variable]]
+native_id = "52.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "52.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "52.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "52.784"
+slug = "utbildningsinriktning-4-positioner"
+
+[[variable]]
+native_id = "52.1822"
+slug = "fasta-lonetillagg"
+
+[[variable]]
+native_id = "52.1832"
+slug = "lonebeteckning"
+
+[[variable]]
+native_id = "52.1834"
+slug = "lonepopulation"
+
+[[variable]]
+native_id = "52.1837"
+slug = "naturaformaner"
+
+[[variable]]
+native_id = "52.1838"
+slug = "overtidstillagg"
+
+[[variable]]
+native_id = "52.1847"
+slug = "avtal"
+
+[[variable]]
+native_id = "52.1852"
+slug = "tjanstebenamning"
+
+[[variable]]
+native_id = "52.2686"
+slug = "manadslon"
+
+[[variable]]
+native_id = "52.2688"
+slug = "prestationslon"
+
+[[variable]]
+native_id = "52.6349"
+slug = "rorliga-lonetillagg-uppraknade"
+
+[[variable]]
+native_id = "52.8189"
+slug = "utbildningens-niva-och-inriktning"
+
+[[variable]]
+native_id = "52.27263"
+slug = "avtalad-grundlon"
+
+# register 55

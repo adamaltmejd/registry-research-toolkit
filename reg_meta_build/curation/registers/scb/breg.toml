@@ -19,3 +19,537 @@ key = "personnrap"
 label = "Personnummer annan person"
 axis = "ordinal"
 members = [{ variable = "personnrap1", value = "1", label = "1" }, { variable = "personnrap2", value = "2", label = "2" }]
+
+[[variant]]
+native_id = "333.1077"
+slug = "barn"
+display_group = "Barn"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "333.1078"
+slug = "barn-uppfoljning"
+display_group = "Barn, uppföljning"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "333.1079"
+slug = "familjer"
+display_group = "Familjer"
+panel_entity_key = "familjeidentitet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Försäkringsföretagens årsredogörelse
+
+[[variable]]
+native_id = "333.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "333.30353"
+slug = "familjeidentitet"
+
+
+[[variable]]
+native_id = "333.15"
+slug = "civilstand"
+
+[[variable]]
+native_id = "333.24"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "333.304"
+slug = "fodelselandnamnfar"
+
+[[variable]]
+native_id = "333.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "333.323"
+slug = "personnr-far"
+
+[[variable]]
+native_id = "333.324"
+slug = "personnr-mor"
+
+[[variable]]
+native_id = "333.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "333.390"
+slug = "antal-barn-under-22-ar"
+
+[[variable]]
+native_id = "333.393"
+slug = "yngstabarn"
+
+[[variable]]
+native_id = "333.7644"
+slug = "personnr-bomor"
+
+[[variable]]
+native_id = "333.7645"
+slug = "personnr-bofar"
+
+[[variable]]
+native_id = "333.14603"
+slug = "fodelselandskod-admor"
+
+[[variable]]
+native_id = "333.14604"
+slug = "fodelselandskod-adfar"
+
+[[variable]]
+native_id = "333.14605"
+slug = "fodelselandskod-bomor"
+
+[[variable]]
+native_id = "333.14606"
+slug = "fodelselandskod-bofar"
+
+[[variable]]
+native_id = "333.15154"
+slug = "foraldrar-doda"
+
+[[variable]]
+native_id = "333.15158"
+slug = "alder-31-12-adoptivfar"
+
+[[variable]]
+native_id = "333.15159"
+slug = "alder-31-12-adoptivmor"
+
+[[variable]]
+native_id = "333.15160"
+slug = "alder-31-12-biologisk-far"
+
+[[variable]]
+native_id = "333.15161"
+slug = "alder-31-12-biologisk-mor"
+
+[[variable]]
+native_id = "333.15162"
+slug = "alder-31-12-bofar"
+
+[[variable]]
+native_id = "333.15163"
+slug = "alder-31-12-bomor"
+
+[[variable]]
+native_id = "333.15167"
+slug = "bakgrund-bioforaldrar"
+
+[[variable]]
+native_id = "333.15168"
+slug = "bakgrund-boforaldrar"
+
+[[variable]]
+native_id = "333.19547"
+slug = "avstand-barn-mor"
+
+[[variable]]
+native_id = "333.19548"
+slug = "avstand-barn-far"
+
+[[variable]]
+native_id = "333.19643"
+slug = "familjetyp-12-senare"
+
+[[variable]]
+native_id = "333.19644"
+slug = "familjestallning-12-senare"
+
+[[variable]]
+native_id = "333.19645"
+slug = "forsamling-12-senare"
+
+[[variable]]
+native_id = "333.19646"
+slug = "fastbet-12-senare"
+
+[[variable]]
+native_id = "333.19651"
+slug = "grund-separation"
+
+[[variable]]
+native_id = "333.19862"
+slug = "vardnadshavare1-15-senare"
+
+[[variable]]
+native_id = "333.19863"
+slug = "antal-vardnadshavare-15-senare"
+
+[[variable]]
+native_id = "333.19864"
+slug = "vardnadshavare2-12-senare"
+
+[[variable]]
+native_id = "333.19865"
+slug = "familjesituation-12-senare"
+
+[[variable]]
+native_id = "333.19899"
+slug = "vardnadshavare2-15-senare"
+
+[[variable]]
+native_id = "333.20056"
+slug = "fodelselandskod-mor"
+
+[[variable]]
+native_id = "333.20057"
+slug = "fodelselandskod-far"
+
+[[variable]]
+native_id = "333.29139"
+slug = "vardnadshavare1-12-senare"
+
+[[variable]]
+native_id = "333.30410"
+slug = "varldsdelsgruppering-mor"
+
+[[variable]]
+native_id = "333.30411"
+slug = "varldsdelsgruppering-far"
+
+[[variable]]
+native_id = "333.37982"
+slug = "barnets-invandringsdatum"
+
+[[variable]]
+native_id = "333.40466"
+slug = "barnets-botyp"
+
+# register 334 (forsakring-arsredogorelse)
+
+[[variable]]
+native_id = "333.19901.civil"
+slug = "civilstand-15-senare"
+
+[[variable]]
+native_id = "333.241.yngstabarn"
+slug = "alder-yngstabarn"
+
+[[variable]]
+native_id = "333.66.sun2020niva-grov-adfar"
+slug = "sun2020niva-grov-adfar"
+
+[[variable]]
+native_id = "333.66.sun2020niva-grov-admor"
+slug = "sun2020niva-grov-admor"
+
+[[variable]]
+native_id = "333.66.sun2020niva-grov-bofar"
+slug = "sun2020niva-grov-bofar"
+
+[[variable]]
+native_id = "333.66.sun2020niva-grov-bomor"
+slug = "sun2020niva-grov-bomor"
+
+[[variable]]
+native_id = "333.66.sun2020niva-grov-far"
+slug = "sun2020niva-grov-far"
+
+[[variable]]
+native_id = "333.66.sun2020niva-grov-mor"
+slug = "sun2020niva-grov-mor"
+
+[[variable]]
+native_id = "333.66.utbniva-foraldrar"
+slug = "sun2020niva-grov-foraldrar"
+
+[[variable]]
+native_id = "333.775.sun2020niva-grov-adfar"
+slug = "utbildningsniva-grov-adfar-2"
+
+[[variable]]
+native_id = "333.775.sun2020niva-grov-admor"
+slug = "utbildningsniva-grov-admor-2"
+
+[[variable]]
+native_id = "333.775.sun2020niva-grov-bofar"
+slug = "utbildningsniva-grov-bofar-2"
+
+[[variable]]
+native_id = "333.775.sun2020niva-grov-bomor"
+slug = "utbildningsniva-grov-bomor-2"
+
+[[variable]]
+native_id = "333.775.sun2020niva-grov-far"
+slug = "utbildningsniva-grov-far-2"
+
+[[variable]]
+native_id = "333.775.sun2020niva-grov-mor"
+slug = "utbildningsniva-grov-mor-2"
+
+[[variable]]
+native_id = "333.775.utbniva-foraldrar"
+slug = "utbildningsniva-grov-foraldrar"
+
+# register 336 (utlandska-doktorander)
+
+[[variable]]
+native_id = "333.372"
+slug = "familjeidentitet-rtb"
+
+[[variable]]
+native_id = "333.22"
+slug = "disponibel-inkomst"
+
+[[variable]]
+native_id = "333.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "333.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "333.298"
+slug = "civilfar"
+
+[[variable]]
+native_id = "333.299"
+slug = "civilmor"
+
+[[variable]]
+native_id = "333.366"
+slug = "datum-adoptivfar"
+
+[[variable]]
+native_id = "333.367"
+slug = "datum-adoptivmor"
+
+[[variable]]
+native_id = "333.379"
+slug = "personnr-adoptivfar"
+
+[[variable]]
+native_id = "333.380"
+slug = "personnr-adoptivmor"
+
+[[variable]]
+native_id = "333.388"
+slug = "antal-barn"
+
+[[variable]]
+native_id = "333.389"
+slug = "antal-barn-under-18-ar"
+
+[[variable]]
+native_id = "333.391"
+slug = "antal-barn-under-6-ar"
+
+[[variable]]
+native_id = "333.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "333.1393"
+slug = "barnbidrag-forlangt-flerbarnstillagg"
+
+[[variable]]
+native_id = "333.2872"
+slug = "ostlig-mittpunktskoordinat"
+
+[[variable]]
+native_id = "333.2873"
+slug = "nordlig-mittpunktskoordinat"
+
+[[variable]]
+native_id = "333.4499"
+slug = "familjestod-totalt"
+
+[[variable]]
+native_id = "333.6460"
+slug = "hemmaboende-barn"
+
+[[variable]]
+native_id = "333.7608"
+slug = "antal-barn-0-ar"
+
+[[variable]]
+native_id = "333.7609"
+slug = "antal-barn-10-ar"
+
+[[variable]]
+native_id = "333.7610"
+slug = "antal-barn-2-ar"
+
+[[variable]]
+native_id = "333.7611"
+slug = "antal-barn-3-ar"
+
+[[variable]]
+native_id = "333.7612"
+slug = "antal-barn-4-ar"
+
+[[variable]]
+native_id = "333.7613"
+slug = "antal-barn-5-ar"
+
+[[variable]]
+native_id = "333.7614"
+slug = "antal-barn-6-ar"
+
+[[variable]]
+native_id = "333.7615"
+slug = "antal-barn-7-ar"
+
+[[variable]]
+native_id = "333.7616"
+slug = "antal-barn-8-ar"
+
+[[variable]]
+native_id = "333.7617"
+slug = "antal-barn-9-ar"
+
+[[variable]]
+native_id = "333.7618"
+slug = "antal-barn-1-ar"
+
+[[variable]]
+native_id = "333.7619"
+slug = "antal-barn-11-ar"
+
+[[variable]]
+native_id = "333.7620"
+slug = "antal-barn-12-ar"
+
+[[variable]]
+native_id = "333.7621"
+slug = "antal-barn-13-ar"
+
+[[variable]]
+native_id = "333.7622"
+slug = "antal-barn-14-ar"
+
+[[variable]]
+native_id = "333.7623"
+slug = "antal-barn-15-ar"
+
+[[variable]]
+native_id = "333.7650"
+slug = "varldsdelkod"
+
+[[variable]]
+native_id = "333.8180"
+slug = "grund-for-bosattning"
+
+[[variable]]
+native_id = "333.15166"
+slug = "antal-vardnadshavare"
+
+[[variable]]
+native_id = "333.19616"
+slug = "antal-barn-17-ar"
+
+[[variable]]
+native_id = "333.19617"
+slug = "antal-barn-16-ar"
+
+[[variable]]
+native_id = "333.19618"
+slug = "antal-barn-18-ar"
+
+[[variable]]
+native_id = "333.19619"
+slug = "antal-barn-19-ar"
+
+[[variable]]
+native_id = "333.19620"
+slug = "antal-barn-20-ar"
+
+[[variable]]
+native_id = "333.19621"
+slug = "antal-barn-21-ar"
+
+[[variable]]
+native_id = "333.22349"
+slug = "ekonomiskt-bistand-socialbidrag"
+
+[[variable]]
+native_id = "333.29828"
+slug = "lagenhetsnyckel"
+
+[[variable]]
+native_id = "333.30120"
+slug = "bostadskategori"
+
+[[variable]]
+native_id = "333.30639"
+slug = "mottaget-underhallsbidrag"
+
+# register 336
+
+[[variable]]
+native_id = "333.18541.grundbofar"
+slug = "grund-for-bosattning-far"
+
+[[variable]]
+native_id = "333.18542.grundbomor"
+slug = "grund-for-bosattning-mor"
+
+[[variable]]
+native_id = "333.241.alderslut"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "333.241.aldstabarn"
+slug = "alder-aldstabarn"
+
+[[variable]]
+native_id = "333.25.famtyp"
+slug = "familjetyp"
+
+[[variable]]
+native_id = "333.45149.bas-bofar"
+slug = "arbetsmarknadsstatus-bofar"
+
+[[variable]]
+native_id = "333.45149.bas-bofar-uppf"
+slug = "arbetsmarknadsstatus-bofar-uppf"
+
+[[variable]]
+native_id = "333.45149.bas-bomor"
+slug = "arbetsmarknadsstatus-bomor"
+
+[[variable]]
+native_id = "333.45149.bas-bomor-uppf"
+slug = "arbetsmarknadsstatus-bomor-uppf"
+
+[[variable]]
+native_id = "333.775.sun2000niva-grov-adfar"
+slug = "utbildningsniva-grov-adfar"
+
+[[variable]]
+native_id = "333.775.sun2000niva-grov-admor"
+slug = "utbildningsniva-grov-admor"
+
+[[variable]]
+native_id = "333.775.sun2000niva-grov-bofar"
+slug = "utbildningsniva-grov-bofar"
+
+[[variable]]
+native_id = "333.775.sun2000niva-grov-bomor"
+slug = "utbildningsniva-grov-bomor"
+
+[[variable]]
+native_id = "333.775.sun2000niva-grov-far"
+slug = "utbildningsniva-grov-far"
+
+[[variable]]
+native_id = "333.775.sun2000niva-grov-mor"
+slug = "utbildningsniva-grov-mor"
+
+# register 339

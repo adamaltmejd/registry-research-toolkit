@@ -1,0 +1,97 @@
+[register]
+provider = "scb"
+slug = "utlandska-doktorander"
+native_id = "336"
+
+[[variant]]
+native_id = "336.1108"
+slug = "_default"
+display_group = "Utländska doktorander"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Lägenhetsregistret
+
+[[variable]]
+native_id = "336.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "336.30019"
+slug = "konkurrenskraftig-ersattningsniva"
+
+[[variable]]
+native_id = "336.30020"
+slug = "tillracklig-inkomstniva"
+
+[[variable]]
+native_id = "336.30026"
+slug = "erbjudande-annat-land"
+
+[[variable]]
+native_id = "336.30034"
+slug = "motiv-forskarutbildning"
+
+[[variable]]
+native_id = "336.30035"
+slug = "avklarade-forskarstudier"
+
+# register 342 (gymnasieskola-prov)
+
+[[variable]]
+native_id = "336.30021.f13"
+slug = "behorighet-forskarniva"
+
+# register 344 (specialskola)
+
+[[variable]]
+native_id = "336.3"
+slug = "hogskolekod"
+
+[[variable]]
+native_id = "336.44"
+slug = "kon"
+
+[[variable]]
+native_id = "336.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "336.3235"
+slug = "antal-terminer-i-utbildning"
+
+[[variable]]
+native_id = "336.3573"
+slug = "lilla-n"
+
+[[variable]]
+native_id = "336.3582"
+slug = "stora-n"
+
+[[variable]]
+native_id = "336.6818"
+slug = "medborgarland-varldsdel-namn"
+
+[[variable]]
+native_id = "336.16740"
+slug = "antal-barn-i-hushallet"
+
+[[variable]]
+native_id = "336.17260"
+slug = "forskningsamne-1"
+
+[[variable]]
+native_id = "336.17473"
+slug = "kalibreringsvikt"
+
+[[variable]]
+native_id = "336.30008"
+slug = "forsorjningssituation-doktorand"
+
+[[variable]]
+native_id = "336.30036"
+slug = "utbildning-3-manader-i-annat-land"
+
+# register 339

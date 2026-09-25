@@ -6,3 +6,164 @@ native_id = "240"
 [[code_label_pair]]
 code = "scb/ep-val-resultat/partikod"
 label = "scb/ep-val-resultat/partinamn"
+
+[[variant]]
+native_id = "240.467"
+slug = "valresultat"
+display_group = "Valresultat"
+
+
+[[variant]]
+native_id = "240.1061"
+slug = "rostberattigade"
+display_group = "Röstberättigade"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Folkomröstningar, valdeltagandeundersökningen
+
+[[variable]]
+native_id = "240.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "240.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "240.2651"
+slug = "valdistriktskod"
+
+[[variable]]
+native_id = "240.15143"
+slug = "antal-valda-personer"
+
+[[variable]]
+native_id = "240.24265"
+slug = "antal-giltiga-roster-folkpartiet"
+
+[[variable]]
+native_id = "240.24267"
+slug = "antal-giltiga-roster-kristdemokraterna"
+
+[[variable]]
+native_id = "240.38433"
+slug = "antal-giltiga-roster-liberalerna"
+
+# register 242 (allmanna-val-valdeltagande)
+
+[[variable]]
+native_id = "240.15145.x"
+slug = "antal-rostberattigade"
+
+[[variable]]
+native_id = "240.69.llkkdddd"
+slug = "valdistrikt"
+
+# register 243 (allmanna-val-valresultat)
+
+[[variable]]
+native_id = "240.99"
+slug = "sammanraknad-forvarvsinkomst"
+
+[[variable]]
+native_id = "240.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "240.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "240.335"
+slug = "forvarvs-och-kapitalinkomst"
+
+[[variable]]
+native_id = "240.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "240.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "240.6818"
+slug = "medborgarland-varldsdel"
+
+[[variable]]
+native_id = "240.7916"
+slug = "forvarvsinkomst-kvintilgrupp"
+
+[[variable]]
+native_id = "240.14781"
+slug = "antal-ogiltiga-roster"
+
+[[variable]]
+native_id = "240.22348"
+slug = "boende-disponibel-inkomst"
+
+[[variable]]
+native_id = "240.24262"
+slug = "antal-giltiga-roster-vansterpartiet"
+
+[[variable]]
+native_id = "240.25238"
+slug = "antal-avgivna-roster"
+
+[[variable]]
+native_id = "240.28836"
+slug = "nummer-i-rostlangden"
+
+# register 241
+
+[[variable]]
+native_id = "240.14775.ri-valkretskod"
+slug = "riksdagsvalkrets-kod"
+
+[[variable]]
+native_id = "240.14775.valkretsnamn"
+slug = "riksdagsvalkrets-namn"
+
+[[variable]]
+native_id = "240.15145.rostbrutl"
+slug = "rostberattigade-utlandska"
+
+[[variable]]
+native_id = "240.23287.sun2000nivagrov"
+slug = "utbildningsniva-grov"
+
+[[variable]]
+native_id = "240.23287.sun2000nivagrov-text"
+slug = "utbildningsniva-grov-text"
+
+[[variable]]
+native_id = "240.23287.sun2020niva-grov"
+slug = "utbildningsniva-grov-2"
+
+[[variable]]
+native_id = "240.49.lansnamn"
+slug = "lan"
+
+[[variable]]
+native_id = "240.69.valdistnamn"
+slug = "valdistriktsnamn"
+
+[[variable]]
+native_id = "240.69.vdnamn"
+slug = "valdistriktsnamn-2"
+
+[[variable]]
+native_id = "240.8529.ant-persrost-kv"
+slug = "personroster-kvinnor"
+
+[[variable]]
+native_id = "240.8529.ant-persrost-ma"
+slug = "personroster-man"
+
+[[variable]]
+native_id = "240.8529.tot-ant-persrost"
+slug = "personroster-totalt"
+
+# register 241

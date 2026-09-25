@@ -1,0 +1,214 @@
+[register]
+provider = "scb"
+slug = "yrkeshogskolan"
+native_id = "377"
+
+[[variant]]
+native_id = "377.1395"
+slug = "sokande"
+display_group = "Sökande"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "377.1397"
+slug = "studerande"
+display_group = "Studerande och examinerade"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "377.1774"
+slug = "studerande-kurser"
+display_group = "Studerande kurser"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "377.1777"
+slug = "avklarade-poang"
+display_group = "Avklarade poäng"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Förskoleklass
+
+[[variable]]
+native_id = "377.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "377.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "377.1569"
+slug = "fodelseland"
+
+[[variable]]
+native_id = "377.6267"
+slug = "alder"
+
+[[variable]]
+native_id = "377.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "377.38237"
+slug = "studerande-utbildningsform"
+
+[[variable]]
+native_id = "377.38240"
+slug = "antagen-paborjat-studier-startar"
+
+[[variable]]
+native_id = "377.38651"
+slug = "examinerad-fran-yrkeshogskolan"
+
+[[variable]]
+native_id = "377.49709"
+slug = "startar-manad"
+
+[[variable]]
+native_id = "377.49716"
+slug = "startar"
+
+[[variable]]
+native_id = "377.49718"
+slug = "avslutsar-manad"
+
+[[variable]]
+native_id = "377.49719"
+slug = "avslutsar"
+
+[[variable]]
+native_id = "377.49786"
+slug = "studerande-yh"
+
+[[variable]]
+native_id = "377.49914"
+slug = "utbildningspoang-yh"
+
+[[variable]]
+native_id = "377.49984"
+slug = "antagen-som-bedriver-studier"
+
+[[variable]]
+native_id = "377.50084"
+slug = "examen"
+
+# register 378 (forskoleklass)
+
+[[variable]]
+native_id = "377.241.alder"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "377.241.aldersgrupp"
+slug = "aldersgrupp-31-12"
+
+# register 378 (forskoleklass)
+
+[[variable]]
+native_id = "377.25139"
+slug = "startdatum-kurs"
+
+[[variable]]
+native_id = "377.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "377.866"
+slug = "fodd-i-sverige-utomlands"
+
+[[variable]]
+native_id = "377.1810"
+slug = "imputerad"
+
+[[variable]]
+native_id = "377.7062"
+slug = "folkbokforingslan"
+
+[[variable]]
+native_id = "377.25146"
+slug = "slutdatum"
+
+[[variable]]
+native_id = "377.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "377.38135"
+slug = "utbildningsnummer"
+
+[[variable]]
+native_id = "377.38155"
+slug = "utbildningsomrade-inom-yrkeshogskolan"
+
+[[variable]]
+native_id = "377.38249"
+slug = "fodd-i-sverige-eller-utomlands"
+
+[[variable]]
+native_id = "377.39555"
+slug = "studieform"
+
+[[variable]]
+native_id = "377.39842"
+slug = "ar-for-komvuxutbildning"
+
+[[variable]]
+native_id = "377.39845"
+slug = "startdatum-utbildningsomgang"
+
+[[variable]]
+native_id = "377.40103"
+slug = "utbildningsform"
+
+[[variable]]
+native_id = "377.40375"
+slug = "namn-utbildningsanordnare"
+
+# register 378
+
+[[variable]]
+native_id = "377.39556.studietakt-utb"
+slug = "studietakt"
+
+[[variable]]
+native_id = "377.39556.studietaktklartext-utb"
+slug = "studietakt-klartext"
+
+[[variable]]
+native_id = "377.6556.fodelseland-gruppering"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "377.6556.fodelseland-varldsdel"
+slug = "fodelseland-varldsdel-2"
+
+[[variable]]
+native_id = "377.66.sun2000niva-old"
+slug = "sun2000niva-2"
+
+[[variable]]
+native_id = "377.66.utbildningsniva-grov"
+slug = "utbildningsniva"
+
+[[variable]]
+native_id = "377.8073.sun2000niva-old-mor"
+slug = "sun-niva-old-mor"
+
+[[variable]]
+native_id = "377.8073.sun2020niva-old-mor"
+slug = "sun-niva-old-mor-2"
+
+# register 378

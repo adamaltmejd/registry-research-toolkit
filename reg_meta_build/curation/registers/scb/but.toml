@@ -1,0 +1,201 @@
+[register]
+provider = "scb"
+slug = "but"
+native_id = "357"
+
+[[variable]]
+native_id = "357.4544"
+slug = "eget-personnr"
+
+
+[[variant]]
+native_id = "357.1267"
+slug = "hushall"
+display_group = "Hushåll"
+panel_entity_key = "hushallsid"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "357.1268"
+slug = "individer"
+display_group = "Individer"
+panel_entity_key = "eget-personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Produktion av oförädlade trädbränslen
+
+[[variable]]
+native_id = "357.30360"
+slug = "hushallsid"
+
+
+[[variable]]
+native_id = "357.44"
+slug = "kon"
+
+[[variable]]
+native_id = "357.241"
+slug = "alder-31-12"
+
+# register 358 (tradbransle-produktion)
+
+[[variable]]
+native_id = "357.22"
+slug = "disponibel-inkomst"
+
+[[variable]]
+native_id = "357.462"
+slug = "stratum"
+
+[[variable]]
+native_id = "357.2299"
+slug = "lagenhetstyp"
+
+[[variable]]
+native_id = "357.3197"
+slug = "antal-barn-0-19-ar"
+
+[[variable]]
+native_id = "357.3210"
+slug = "boendeform"
+
+[[variable]]
+native_id = "357.3413"
+slug = "vardear"
+
+[[variable]]
+native_id = "357.4454"
+slug = "individ-hushallsid"
+
+[[variable]]
+native_id = "357.4472"
+slug = "upplatelseform"
+
+[[variable]]
+native_id = "357.4543"
+slug = "kvarboende-18-29-ar"
+
+[[variable]]
+native_id = "357.5696"
+slug = "stora-n-per-stratum"
+
+[[variable]]
+native_id = "357.8167"
+slug = "antal-svarande-objekt"
+
+[[variable]]
+native_id = "357.15397"
+slug = "hyreskontrakt"
+
+[[variable]]
+native_id = "357.16297"
+slug = "nybyggnadsar"
+
+[[variable]]
+native_id = "357.17270"
+slug = "ranteutgifter"
+
+[[variable]]
+native_id = "357.17411"
+slug = "boarea"
+
+[[variable]]
+native_id = "357.21370"
+slug = "helarsboende"
+
+[[variable]]
+native_id = "357.22273"
+slug = "disponibel-inkomst-kosthushall-2004"
+
+[[variable]]
+native_id = "357.22328"
+slug = "region-fyra-delar"
+
+[[variable]]
+native_id = "357.22335"
+slug = "konsumtionsenhetsvikt-2004"
+
+[[variable]]
+native_id = "357.22336"
+slug = "konsumtionsenhetsvikt"
+
+[[variable]]
+native_id = "357.25493"
+slug = "skattereduktion-underhall-reparation"
+
+[[variable]]
+native_id = "357.30120"
+slug = "bostadskategori"
+
+[[variable]]
+native_id = "357.30781"
+slug = "koktyp"
+
+[[variable]]
+native_id = "357.30828"
+slug = "bostadsbidrag-och-bostadstillagg"
+
+[[variable]]
+native_id = "357.35579"
+slug = "hushallsforestandaren"
+
+[[variable]]
+native_id = "357.35581"
+slug = "relation-till-urvalsperson"
+
+[[variable]]
+native_id = "357.35669"
+slug = "inneboende-finns"
+
+[[variable]]
+native_id = "357.35704"
+slug = "hushallsvikt-kalibrerad"
+
+[[variable]]
+native_id = "357.35743"
+slug = "hushallsvikt-okalibrerad"
+
+[[variable]]
+native_id = "357.35992"
+slug = "antal-rum"
+
+[[variable]]
+native_id = "357.36030"
+slug = "uppvarmningsutgift-annat-bransle"
+
+[[variable]]
+native_id = "357.36031"
+slug = "uppvarmningsutgift-el"
+
+[[variable]]
+native_id = "357.36032"
+slug = "uppvarmningsutgift-fjarrvarme"
+
+[[variable]]
+native_id = "357.36033"
+slug = "uppvarmningsutgift-olja"
+
+[[variable]]
+native_id = "357.36034"
+slug = "uppvarmningsutgift-biobransle"
+
+[[variable]]
+native_id = "357.36035"
+slug = "uppvarmningsutgift-totalt"
+
+[[variable]]
+native_id = "357.36047"
+slug = "underhall-och-reparation"
+
+[[variable]]
+native_id = "357.36170"
+slug = "arshyra"
+
+[[variable]]
+native_id = "357.45856"
+slug = "urvalskvartal"
+
+# register 358

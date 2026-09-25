@@ -1,0 +1,59 @@
+[register]
+provider = "scb"
+slug = "industrins-vattenanvandning"
+native_id = "223"
+
+[[variant]]
+native_id = "223.324"
+slug = "_default"
+display_group = "Industrins vattenanvändning"
+panel_entity_key = "cfar-nummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Land- och vattenarealer
+
+[[variable]]
+native_id = "223.14"
+slug = "cfar-nummer"
+
+
+[[variable]]
+native_id = "223.400"
+slug = "adress"
+
+[[variable]]
+native_id = "223.467"
+slug = "telefonnummer"
+
+[[variable]]
+native_id = "223.2865"
+slug = "anvandning-eget-vatten"
+
+[[variable]]
+native_id = "223.2868"
+slug = "vattenutslapp"
+
+[[variable]]
+native_id = "223.3174"
+slug = "kostnad-inkopt-vatten-avlopp"
+
+# register 225 (land-och-vattenarealer)
+
+[[variable]]
+native_id = "223.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "223.667"
+slug = "kommun-for-arbetsstalle"
+
+[[variable]]
+native_id = "223.1639"
+slug = "anstallda-arbetsstallet"
+
+[[variable]]
+native_id = "223.4027"
+slug = "naringsgren"
+
+# register 225

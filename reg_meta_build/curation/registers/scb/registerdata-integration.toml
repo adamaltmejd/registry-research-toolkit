@@ -1,0 +1,37 @@
+[register]
+provider = "scb"
+slug = "registerdata-integration"
+native_id = "396"
+
+[[variant]]
+native_id = "396.1531"
+slug = "_default"
+display_group = "Registerdata för integration"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Studieförbundsstatistik
+
+[[variable]]
+native_id = "396.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "396.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "396.1573"
+slug = "aldersgruppering-31-12"
+
+[[variable]]
+native_id = "396.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "396.17256"
+slug = "vistelsetid"
+
+# register 397

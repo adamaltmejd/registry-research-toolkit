@@ -378,3 +378,673 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 [[code_label_pair]]
 code = "scb/hreg/anknytande-hogskola"
 label = "scb/hreg/hogskolenamn"
+
+[[variant]]
+native_id = "47.1"
+slug = "antagna-forskarniva"
+display_group = "Antagna till högskoleutbildning på forskarnivå"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# (keep) SCB idiom: 'grund' / 'avancerad' are the standard short-forms for
+# 'grundnivå' (undergraduate) / 'avancerad nivå' (graduate); not truncations.
+
+[[variant]]
+native_id = "47.2"
+slug = "sokande-grund-avancerad"
+display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.3"
+slug = "grundutbildning-1977"
+display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1977 års studieordning"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.4"
+slug = "grundutbildning-examina"
+display_group = "Examina inom grundläggande högskoleutbildning"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.5"
+slug = "grundutbildning-examina-aldre"
+display_group = "Äldre examina inom grundläggande högskoleutbildning"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.10"
+slug = "doktorander-aktivitet"
+display_group = "Doktorander inom högskoleutbildning på forskarnivå, aktivitet"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.11"
+slug = "doktorander-forsorjning"
+display_group = "Doktorander inom högskoleutbildning på forskarnivå, försörjning"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.15"
+slug = "doktorander-examina"
+display_group = "Doktorander inom högskoleutbildning på forskarnivå, examina"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.17"
+slug = "grundutbildning-poang"
+display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - avklarade poäng"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.104"
+slug = "personal-vid-universitet"
+display_group = "Personal vid universitet och högskolor 2001–"
+panel_entity_key = "personnr-samord"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.264"
+slug = "grundutbildning-1993"
+display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.960"
+slug = "personal-1995-2000"
+display_group = "Personal vid universitet och högskola, september 1995-2000"
+panel_entity_key = "personnr-samord"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.1389"
+slug = "doktorander-mobilitet"
+display_group = "Doktorander inom högskoleutbildning på forskarnivå, mobilitet"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.1390"
+slug = "doktorander-forskarskolor"
+display_group = "Doktorander inom högskoleutbildning på forskarnivå, forskarskolor lärare"
+panel_entity_key = "personnr-motsvarande"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.1391"
+slug = "doktorander-anknytande-hogskolor"
+display_group = "Doktorander inom högskoleutbildning på forskarnivå, anknytande högskolor"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.1466"
+slug = "studiemedel-utlandsstudier"
+display_group = "Studiemedel för utlandsstudier på grundnivå och avancerad nivå"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.1506"
+slug = "forskarutbildning-tillgodoraknande"
+display_group = "Forskarutbildning, beslut om tillgodoräknande"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.1623"
+slug = "sokande-sommarkurser"
+display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "47.1624"
+slug = "sokande-snabbstatistik"
+display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik"
+
+
+[[variant]]
+native_id = "47.1625"
+slug = "sokande-internationella-omgangar"
+display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar"
+panel_entity_key = "personnr-motsvarande-2"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Lönestrukturstatistik, privat sektor (SLP)
+
+[[variable]]
+native_id = "47.3636"
+slug = "personnr-samord"
+
+
+[[variable]]
+native_id = "47.1346.fspersonnr"
+slug = "personnr-motsvarande"
+
+
+[[variable]]
+native_id = "47.1346.personnr"
+slug = "personnr-motsvarande-2"
+
+
+[[variable]]
+native_id = "47.45"
+slug = "land"
+
+[[variable]]
+native_id = "47.73"
+slug = "ar"
+
+[[variable]]
+native_id = "47.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "47.326"
+slug = "namn"
+
+[[variable]]
+native_id = "47.748"
+slug = "ar-for-avlagda-poang"
+
+[[variable]]
+native_id = "47.1254"
+slug = "termin-avklarade-poang"
+
+[[variable]]
+native_id = "47.1264"
+slug = "utbildningsprogram-examen"
+
+[[variable]]
+native_id = "47.1270"
+slug = "hogskoleamne"
+
+[[variable]]
+native_id = "47.1274"
+slug = "utbytesland"
+
+[[variable]]
+native_id = "47.1277"
+slug = "studentens-namn"
+
+[[variable]]
+native_id = "47.1279"
+slug = "forkunskapsniva-kurs"
+
+[[variable]]
+native_id = "47.1280"
+slug = "poangomfattning"
+
+[[variable]]
+native_id = "47.1299"
+slug = "prioritet-for-kurs"
+
+[[variable]]
+native_id = "47.1306"
+slug = "termin-ansokan-program"
+
+[[variable]]
+native_id = "47.1307"
+slug = "urvalsresultat-kurs"
+
+[[variable]]
+native_id = "47.1308"
+slug = "ar-ansokan-program"
+
+[[variable]]
+native_id = "47.1312"
+slug = "hemortslan"
+
+[[variable]]
+native_id = "47.1314"
+slug = "sokalternativ-kurs"
+
+[[variable]]
+native_id = "47.1316"
+slug = "utbildningslangd-sun2000"
+
+[[variable]]
+native_id = "47.1375"
+slug = "examensdatum"
+
+[[variable]]
+native_id = "47.1386"
+slug = "amne-for-examen"
+
+[[variable]]
+native_id = "47.1428"
+slug = "ar-for-registreringen"
+
+[[variable]]
+native_id = "47.1429"
+slug = "studiemedel-lan"
+
+[[variable]]
+native_id = "47.1445"
+slug = "termin-registreringen"
+
+[[variable]]
+native_id = "47.1465"
+slug = "utbytesstudier"
+
+[[variable]]
+native_id = "47.1537"
+slug = "ar-for-examensbevis"
+
+[[variable]]
+native_id = "47.1542"
+slug = "scb-grundkod-for-examen"
+
+[[variable]]
+native_id = "47.1554"
+slug = "ar-termin-aktiviteten"
+
+[[variable]]
+native_id = "47.1556"
+slug = "termin-examensbevis"
+
+[[variable]]
+native_id = "47.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "47.1560"
+slug = "aktiv"
+
+[[variable]]
+native_id = "47.1565"
+slug = "datum-for-studieavbrott"
+
+[[variable]]
+native_id = "47.1579"
+slug = "termin"
+
+[[variable]]
+native_id = "47.1713"
+slug = "ar-termin-antagningen"
+
+[[variable]]
+native_id = "47.1714"
+slug = "ar-termin-forsorjning"
+
+[[variable]]
+native_id = "47.1715"
+slug = "ar-och-termin-for-examen"
+
+[[variable]]
+native_id = "47.1768"
+slug = "examenstyp"
+
+[[variable]]
+native_id = "47.1852"
+slug = "tjanstebenamning"
+
+[[variable]]
+native_id = "47.1924"
+slug = "yrkesexamen-1993"
+
+[[variable]]
+native_id = "47.4884"
+slug = "artal-for-utbetalning"
+
+[[variable]]
+native_id = "47.5726"
+slug = "utbildningens-niva"
+
+[[variable]]
+native_id = "47.7591"
+slug = "larosate"
+
+[[variable]]
+native_id = "47.14635"
+slug = "examen-aldre-grundniva"
+
+[[variable]]
+native_id = "47.19344"
+slug = "ar-for-antagningen"
+
+[[variable]]
+native_id = "47.19345"
+slug = "termin-for-antagningen"
+
+[[variable]]
+native_id = "47.19346"
+slug = "ar-for-examen"
+
+[[variable]]
+native_id = "47.19347"
+slug = "ar-for-aktiviteten"
+
+[[variable]]
+native_id = "47.19348"
+slug = "termin-for-aktiviteten"
+
+[[variable]]
+native_id = "47.19349"
+slug = "ar-for-forsorjningen"
+
+[[variable]]
+native_id = "47.19350"
+slug = "termin-for-forsorjningen"
+
+[[variable]]
+native_id = "47.19351"
+slug = "termin-for-examen"
+
+[[variable]]
+native_id = "47.19552"
+slug = "utbildningsniva-hogskola"
+
+[[variable]]
+native_id = "47.24951"
+slug = "utbildningsland"
+
+[[variable]]
+native_id = "47.25047"
+slug = "namn-person"
+
+[[variable]]
+native_id = "47.25809"
+slug = "prioritet-for-program"
+
+[[variable]]
+native_id = "47.25811"
+slug = "sokalternativ-program"
+
+[[variable]]
+native_id = "47.25812"
+slug = "termin-ansokan-kurs"
+
+[[variable]]
+native_id = "47.25822"
+slug = "urvalsresultat-program"
+
+[[variable]]
+native_id = "47.25823"
+slug = "ar-for-ansokan-till-kurs"
+
+[[variable]]
+native_id = "47.25824"
+slug = "larosate-ansokan-program"
+
+[[variable]]
+native_id = "47.25825"
+slug = "larosate-ansokan-kurs"
+
+[[variable]]
+native_id = "47.25826"
+slug = "ar-for-ansokan"
+
+[[variable]]
+native_id = "47.25828"
+slug = "termin-for-ansokan"
+
+[[variable]]
+native_id = "47.29830"
+slug = "avgiftsskyldighet"
+
+[[variable]]
+native_id = "47.29874"
+slug = "programinriktning"
+
+[[variable]]
+native_id = "47.35989"
+slug = "imputerat"
+
+[[variable]]
+native_id = "47.38113"
+slug = "aktiv-inom-forskarskola"
+
+[[variable]]
+native_id = "47.38118"
+slug = "medverkande-hogskola"
+
+[[variable]]
+native_id = "47.38119"
+slug = "anknytande-hogskola"
+
+[[variable]]
+native_id = "47.39023"
+slug = "anstallningsbenamning"
+
+[[variable]]
+native_id = "47.39310"
+slug = "antagningsomgang"
+
+[[variable]]
+native_id = "47.39311"
+slug = "antagningsomgang-program"
+
+[[variable]]
+native_id = "47.39312"
+slug = "antagningsomgang-kurs"
+
+[[variable]]
+native_id = "47.40078"
+slug = "ar-termin-tillgodoraknande"
+
+# register 50 (slp)
+
+[[variable]]
+native_id = "47.1248.hskod"
+slug = "hogskolekod"
+
+[[variable]]
+native_id = "47.1810.hskod-imp"
+slug = "imputerad"
+
+[[variable]]
+native_id = "47.66.sunniva3"
+slug = "utbildningsniva"
+
+# register 50 (slp)
+
+[[variable]]
+native_id = "47.109"
+slug = "tjanstgoringsomfattning"
+
+[[variable]]
+native_id = "47.1259"
+slug = "utbildningsomrade"
+
+[[variable]]
+native_id = "47.1311"
+slug = "hemortskommun"
+
+[[variable]]
+native_id = "47.1315"
+slug = "utbildnings-inriktning-sun-2000"
+
+[[variable]]
+native_id = "47.1378"
+slug = "fodelsear"
+
+[[variable]]
+native_id = "47.1460"
+slug = "kurstakt"
+
+[[variable]]
+native_id = "47.1529"
+slug = "ar-avslutad-gymnasieutbildning"
+
+[[variable]]
+native_id = "47.1536"
+slug = "studievag-gymnasieskolan"
+
+[[variable]]
+native_id = "47.1543"
+slug = "examens-omfattning-poang"
+
+[[variable]]
+native_id = "47.1573"
+slug = "aldersgruppering-31-12"
+
+[[variable]]
+native_id = "47.1908"
+slug = "hogskolans-huvudman"
+
+[[variable]]
+native_id = "47.1909"
+slug = "hogskolekategori"
+
+[[variable]]
+native_id = "47.1910"
+slug = "hogskolanyborjare"
+
+[[variable]]
+native_id = "47.1917"
+slug = "amnesomrade"
+
+[[variable]]
+native_id = "47.2499"
+slug = "myndighet"
+
+[[variable]]
+native_id = "47.4362"
+slug = "ar-behorighetsgivande-utb"
+
+[[variable]]
+native_id = "47.5083"
+slug = "anstallningsform"
+
+[[variable]]
+native_id = "47.5118"
+slug = "verksamhetsomrade"
+
+[[variable]]
+native_id = "47.5249"
+slug = "niva-pa-utlandsstudier"
+
+[[variable]]
+native_id = "47.5976"
+slug = "tjanstledighetsomfattning"
+
+[[variable]]
+native_id = "47.7650"
+slug = "varldsdelkod"
+
+[[variable]]
+native_id = "47.15940"
+slug = "avklarade-hogskolepoang-pa-kurs"
+
+[[variable]]
+native_id = "47.16894"
+slug = "laddningsdatum"
+
+[[variable]]
+native_id = "47.21520"
+slug = "studiemedel-bidrag"
+
+[[variable]]
+native_id = "47.29252"
+slug = "forskningsamnesgrupp"
+
+[[variable]]
+native_id = "47.29507"
+slug = "anstallningskategori"
+
+[[variable]]
+native_id = "47.30008"
+slug = "forsorjningssituation-doktorand"
+
+[[variable]]
+native_id = "47.30036"
+slug = "utbildning-3-manader-i-annat-land"
+
+[[variable]]
+native_id = "47.35421"
+slug = "utbildningsgrupp-csn"
+
+[[variable]]
+native_id = "47.37532"
+slug = "utbildningens-startar"
+
+[[variable]]
+native_id = "47.39021"
+slug = "forskningsamnesomrade"
+
+[[variable]]
+native_id = "47.43117"
+slug = "meritvarde-urval"
+
+# register 50
+
+[[variable]]
+native_id = "47.1248.hsnamn"
+slug = "hogskolenamn"
+
+[[variable]]
+native_id = "47.1396.lar"
+slug = "lasar"
+
+[[variable]]
+native_id = "47.1396.lasar"
+slug = "lasar-2"
+
+[[variable]]
+native_id = "47.17260.fos1siff"
+slug = "forskningsamne-1"
+
+[[variable]]
+native_id = "47.17260.fos3siff"
+slug = "forskningsamne-3"
+
+[[variable]]
+native_id = "47.17260.fos5siff"
+slug = "forskningsamne-5"
+
+[[variable]]
+native_id = "47.29561.natamne"
+slug = "nationellt-forskningsamne"
+
+[[variable]]
+native_id = "47.benamning"
+slug = "examensbenamning-namnare"
+
+# register 55

@@ -1,0 +1,133 @@
+[register]
+provider = "scb"
+slug = "kommunernas-aktivitetsansvar"
+native_id = "368"
+
+[[variant]]
+native_id = "368.1325"
+slug = "_default"
+display_group = "Kommunernas aktivitetsansvar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Internationella företag
+
+[[variable]]
+native_id = "368.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "368.8073"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "368.8074"
+slug = "faderns-utbildningsniva"
+
+[[variable]]
+native_id = "368.32454"
+slug = "foraldrarnas-utbildningsniva"
+
+[[variable]]
+native_id = "368.36648"
+slug = "sysselsattning-registrering"
+
+[[variable]]
+native_id = "368.36653"
+slug = "orsak-upphort-aktivitetsansvar"
+
+[[variable]]
+native_id = "368.36654"
+slug = "orsak-avslutad-aktivitetsatgard"
+
+[[variable]]
+native_id = "368.37581"
+slug = "orsak-registrering"
+
+# register 369 (internationella-foretag)
+
+[[variable]]
+native_id = "368.25139"
+slug = "startdatum"
+
+[[variable]]
+native_id = "368.67"
+slug = "utlbakgr"
+
+[[variable]]
+native_id = "368.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "368.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "368.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "368.1428"
+slug = "ar-for-registreringen"
+
+[[variable]]
+native_id = "368.1445"
+slug = "termin-registreringen"
+
+[[variable]]
+native_id = "368.1465"
+slug = "utbytesstudier"
+
+[[variable]]
+native_id = "368.1529"
+slug = "ar-avslutad-gymnasieutbildning"
+
+[[variable]]
+native_id = "368.6556"
+slug = "fodelseland-varldsdel"
+
+[[variable]]
+native_id = "368.18509"
+slug = "gymnasieskola-arskurs"
+
+[[variable]]
+native_id = "368.19346"
+slug = "ar-for-examen"
+
+[[variable]]
+native_id = "368.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "368.35887"
+slug = "nyligen-invandrad"
+
+# register 369
+
+[[variable]]
+native_id = "368.29960.yseg-far"
+slug = "yrkesbaserad-seg-far"
+
+[[variable]]
+native_id = "368.29960.yseg-mor"
+slug = "yrkesbaserad-seg-mor"
+
+[[variable]]
+native_id = "368.45149.bas-far"
+slug = "arbetsmarknadsstatus-far"
+
+[[variable]]
+native_id = "368.45149.bas-mor"
+slug = "arbetsmarknadsstatus-mor"
+
+[[variable]]
+native_id = "368.63.syssstat-far"
+slug = "sysselsattningsstatus-november-far"
+
+[[variable]]
+native_id = "368.63.syssstat-mor"
+slug = "sysselsattningsstatus-november-mor"
+
+# register 371

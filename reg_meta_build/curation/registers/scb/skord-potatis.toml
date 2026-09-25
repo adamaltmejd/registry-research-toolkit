@@ -1,0 +1,37 @@
+[register]
+provider = "scb"
+slug = "skord-potatis"
+native_id = "252"
+
+[[variant]]
+native_id = "252.531"
+slug = "_default"
+display_group = "Skörd av potatis"
+panel_entity_key = "foretagsidentitet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Räkenskapssammandrag för kommuner och landsting
+
+[[variable]]
+native_id = "252.7550"
+slug = "foretagsidentitet"
+
+
+[[variable]]
+native_id = "252.2351"
+slug = "regionkod"
+
+[[variable]]
+native_id = "252.15082"
+slug = "reduceringstal"
+
+[[variable]]
+native_id = "252.36886"
+slug = "regionindelning-nuts2"
+
+[[variable]]
+native_id = "252.41860"
+slug = "areal-akermark"
+
+# register 257

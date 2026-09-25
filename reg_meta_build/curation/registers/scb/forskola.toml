@@ -6,3 +6,145 @@ native_id = "307"
 [[code_label_pair]]
 code = "scb/forskola/huvudman"
 label = "scb/forskola/huvudman-namn"
+
+[[variant]]
+native_id = "307.1195"
+slug = "barn-individ"
+display_group = "Barn - individ"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "307.1196"
+slug = "personal-individ"
+display_group = "Personal - individ"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Befolkningsframskrivningar
+
+[[variable]]
+native_id = "307.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "307.49"
+slug = "lan"
+
+[[variable]]
+native_id = "307.473"
+slug = "lan-arbetsstalle"
+
+[[variable]]
+native_id = "307.8073"
+slug = "sun-niva-mor"
+
+[[variable]]
+native_id = "307.8074"
+slug = "faderns-utbildningsniva"
+
+[[variable]]
+native_id = "307.30657"
+slug = "avdelningsbeteckning"
+
+[[variable]]
+native_id = "307.31266"
+slug = "smabarnsavdelning"
+
+[[variable]]
+native_id = "307.32454"
+slug = "foraldrarnas-utbildningsniva"
+
+[[variable]]
+native_id = "307.38230"
+slug = "storbarnsavdelning"
+
+# register 310 (befolkningsframskrivningar)
+
+[[variable]]
+native_id = "307.14"
+slug = "cfar-nummer"
+
+[[variable]]
+native_id = "307.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "307.25139.inskrdat"
+slug = "startdatum-inskr"
+
+[[variable]]
+native_id = "307.25139.startdat"
+slug = "startdatum"
+
+[[variable]]
+native_id = "307.34"
+slug = "juridisk-form"
+
+[[variable]]
+native_id = "307.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "307.305"
+slug = "fodelseland-mor"
+
+[[variable]]
+native_id = "307.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "307.412"
+slug = "postort"
+
+[[variable]]
+native_id = "307.799"
+slug = "belagenhetsadress-gata"
+
+[[variable]]
+native_id = "307.1996"
+slug = "skolform"
+
+[[variable]]
+native_id = "307.6809"
+slug = "folkbokforingskommun"
+
+[[variable]]
+native_id = "307.8773"
+slug = "typ-av-anstallning"
+
+[[variable]]
+native_id = "307.13671"
+slug = "tjanstledig"
+
+[[variable]]
+native_id = "307.29426"
+slug = "tidigaste-invandringsdatum"
+
+[[variable]]
+native_id = "307.35887"
+slug = "nyligen-invandrad"
+
+# register 312
+
+[[variable]]
+native_id = "307.36.komgrupp"
+slug = "kommun"
+
+[[variable]]
+native_id = "307.36.verkkom"
+slug = "verksamhetskommun"
+
+[[variable]]
+native_id = "307.8137.hman"
+slug = "huvudman"
+
+[[variable]]
+native_id = "307.8137.hmannamn"
+slug = "huvudman-namn"
+
+# register 3084667015646526536

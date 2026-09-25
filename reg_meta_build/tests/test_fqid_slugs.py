@@ -587,8 +587,13 @@ class TestProviderToml:
     def test_split_without_partition_cannot_reuse_base_slug(self, tmp_path: Path):
         slug_path, curation = self._write_partition(tmp_path, "")
         assert load_provider_toml(slug_path)
+        register = curation / "registers" / "scb" / "lisa.toml"
+        register.write_text(
+            register.read_text()
+            + '[[variable]]\nnative_id = "34.4"\nslug = "kon"\n[[variable]]\nnative_id = "34.4.kon"\nslug = "kon"\n'
+        )
         with pytest.raises(RegMetaError) as exc:
-            load_register_files(curation)
+            load_slug_dir(curation)
         assert exc.value.code == "slug_toml_invalid"
 
     @pytest.mark.parametrize(
@@ -674,6 +679,63 @@ class TestProviderToml:
                 curation_dir=curation,
             )
         assert "duplicate [[identity.partition]]" in exc.value.message
+
+
+def test_register_slug_reused_across_files_fails(tmp_path: Path):
+    root = tmp_path / "curation" / "registers" / "scb"
+    (root / "family").mkdir(parents=True)
+    (root / "lisa.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
+    )
+    (root / "family" / "lisa.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "2"\n'
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_slug_dir(tmp_path / "curation")
+    assert "duplicate register" in exc.value.message
+
+
+def test_variant_slug_reused_within_register_fails(tmp_path: Path):
+    root = tmp_path / "curation" / "registers" / "scb"
+    root.mkdir(parents=True)
+    (root / "lisa.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
+        '[[variant]]\nnative_id = "1.10"\nslug = "same"\n'
+        '[[variant]]\nnative_id = "1.11"\nslug = "same"\n'
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_slug_dir(tmp_path / "curation")
+    assert "slug 'same' reused" in exc.value.message
+
+
+def test_pinned_register_requires_its_auto_file(tmp_path: Path):
+    root = tmp_path / "curation"
+    directory = root / "registers" / "scb"
+    directory.mkdir(parents=True)
+    (directory / "lisa.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
+    )
+    (root / "slug_state.toml").write_text('scb = "curating"\n')
+    with pytest.raises(RegMetaError) as exc:
+        populate_variable_slugs(build_slugged_db(), root)
+    assert exc.value.code == "slug_freeze_auto_missing"
+
+
+def test_variable_slug_reused_across_authored_and_auto_fails(tmp_path: Path):
+    root = tmp_path / "curation"
+    directory = root / "registers" / "scb"
+    directory.mkdir(parents=True)
+    (directory / "lisa.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
+        '[[variable]]\nnative_id = "1.44"\nslug = "same"\n'
+    )
+    (directory / "lisa.auto.toml").write_text(
+        '[[variable]]\nnative_id = "1.45"\nslug = "same"\n'
+    )
+    (root / "slug_state.toml").write_text('scb = "curating"\n')
+    with pytest.raises(RegMetaError) as exc:
+        load_slug_dir(root)
+    assert "variable slug 'same' reused" in exc.value.message
 
 
 class TestLoadSlugDir:
@@ -865,16 +927,28 @@ class TestPopulateSlugs:
 
 
 class TestSeedSlugs:
-    def test_writes_provider_files_only(self, tmp_path: Path):
+    def test_writes_only_register_auto_files(self, tmp_path: Path):
         conn = build_slugged_db()
         out = tmp_path / "out"
         written = seed_all(conn, out)
-        assert "scb.toml" in written
-        assert "classifications.toml" not in written
-        scb_body = (out / "scb.toml").read_text()
-        assert '[register."1"]' in scb_body
-        assert 'slug = "lisa"' in scb_body
-        assert '[register_variant."1.10"]' in scb_body
+        assert set(written) == {"registers/scb/lisa.auto.toml"}
+        body = written["registers/scb/lisa.auto.toml"].read_text()
+        assert "[[variable]]" in body
+        assert 'native_id = "1.44"' in body
+        assert "[register]" not in body
+        assert not (out / "registers" / "scb" / "lisa.toml").exists()
+
+    def test_existing_generated_pins_are_grow_only(self, tmp_path: Path):
+        conn = build_slugged_db()
+        out = tmp_path / "out"
+        seed_all(conn, out)
+        path = out / "registers" / "scb" / "lisa.auto.toml"
+        conn.execute("UPDATE variable SET slug = 'changed' WHERE provider_key = '44'")
+        seed_all(conn, out)
+        from reg_meta_build.fqid_slugs import _load_register_auto_file
+
+        entries = _load_register_auto_file(path, "scb", "1")
+        assert {entry.source_id: entry.slug for entry in entries}["1.44"] == "kon"
 
     def test_omits_register_version_from_seed(self):
         # A2.6: register_version is not seeded at all (version left the FQID
@@ -952,44 +1026,15 @@ class TestProposePanel:
         conn.commit()
         assert propose_panel_entity_key(conn, 1, 10) == ("kon", "lopnr")
 
-    def test_seed_emits_round_trippable_panel(self, tmp_path: Path):
-        # End-to-end: seed with propose_panel, then the emitted TOML must load +
-        # validate without error and carry the proposed panel fields.
-        conn = build_slugged_db()
-        _flag_identifier(conn, register_id=1, var_id=44)
-        out = tmp_path / "out"
-        seed_all(conn, out, propose_panel=True)
-        entries = load_provider_toml(out / "scb.toml")
-        variant = next(e for e in entries if e.kind == "register_variant")
-        assert variant.panel_entity_key == "kon"
-        assert variant.panel_time_key == "period"
-        assert variant.panel_time_grain == "delivery"
-
-    def test_seed_without_flag_omits_panel(self, tmp_path: Path):
-        # Default seed (no --propose-panel) emits no panel lines.
+    def test_seed_never_writes_authored_panel_metadata(self, tmp_path: Path):
         conn = build_slugged_db()
         _flag_identifier(conn, register_id=1, var_id=44)
         out = tmp_path / "out"
         seed_all(conn, out)
-        body = (out / "scb.toml").read_text()
+        body = (out / "registers" / "scb" / "lisa.auto.toml").read_text()
         assert "panel_entity_key" not in body
         assert "panel_time_key" not in body
-
-    def test_seed_sos_shaped_variant_proposes_no_entity_key(self, tmp_path: Path):
-        # A variant with no is_identifier / join-key signal: the seed emits the
-        # time-key/grain defaults plus a curation comment, NO panel_entity_key,
-        # and still round-trips.
-        conn = build_slugged_db()  # no identifier flagged
-        out = tmp_path / "out"
-        seed_all(conn, out, propose_panel=True)
-        body = (out / "scb.toml").read_text()
-        assert "panel_entity_key =" not in body
-        assert "# panel_entity_key:" in body
-        entries = load_provider_toml(out / "scb.toml")
-        variant = next(e for e in entries if e.kind == "register_variant")
-        assert variant.panel_entity_key is None
-        assert variant.panel_time_key == "period"
-        assert variant.panel_time_grain == "delivery"
+        assert not (out / "registers" / "scb" / "lisa.toml").exists()
 
 
 # ---------------------------------------------------------------------------
@@ -2742,31 +2787,18 @@ class TestDisplayGroupTyped:
 
 
 class TestSeedPopulateRoundTrip:
-    """Seed a TOML from a fully-slugged DB, replay it via populate_slugs into
-    a freshly-cleared DB, and assert the slug columns match. Locks in the
-    promise that seed output is directly consumable by populate_slugs."""
+    """Generated pins remain parseable and scoped to their register."""
 
     def test_round_trip(self, tmp_path: Path):
-        # 1) Seed from a fully slugged DB.
-        seeded = build_slugged_db()
+        conn = build_slugged_db()
         out_dir = tmp_path / "slugs"
-        seed_all(seeded, out_dir)
-        seeded.close()
+        seed_all(conn, out_dir)
+        from reg_meta_build.fqid_slugs import _load_register_auto_file
 
-        # 2) Replay into a cleared DB.
-        target = build_slugged_db()
-        target.execute("UPDATE register SET slug = NULL")
-        target.execute("UPDATE register_variant SET slug = NULL")
-        target.commit()
-
-        counts = populate_slugs(target, out_dir, strict=True)
-        assert counts == {"register": 1, "register_variant": 1}
-        assert (
-            target.execute(
-                "SELECT slug FROM register WHERE register_id = 1"
-            ).fetchone()[0]
-            == "lisa"
+        entries = _load_register_auto_file(
+            out_dir / "registers" / "scb" / "lisa.auto.toml", "scb", "1"
         )
+        assert {entry.source_id: entry.slug for entry in entries} == {"1.44": "kon"}
 
 
 class TestCuratedDefaultVariantRoundTrip:
@@ -2818,7 +2850,7 @@ class TestRepoSlugDir:
         result = repo_slug_dir()
         assert result is not None
         assert result.is_dir()
-        assert (result / "scb.toml").is_file()
+        assert (result / "registers" / "scb" / "lisa.toml").is_file()
 
 
 class TestPrecheckCli:
@@ -3896,7 +3928,9 @@ class TestSeedSlugsCli:
         assert "_default" in captured.err
         assert "scb/42.124" in captured.err
         # The hint never leaks into the curated TOML files.
-        scb_body = (out_dir / "scb.toml").read_text(encoding="utf-8")
+        scb_body = (out_dir / "registers" / "scb" / "lisa.auto.toml").read_text(
+            encoding="utf-8"
+        )
         assert "Hint:" not in scb_body
         assert "_default" not in scb_body  # heuristic isn't auto-applied
 
@@ -3945,8 +3979,8 @@ class TestSeedSlugsCli:
         cli._cmd_seed_slugs(
             _ns(out_dir=str(out_loud), force=True, all_hints=True, quiet=False, db=None)
         )
-        assert (out_quiet / "scb.toml").read_bytes() == (
-            out_loud / "scb.toml"
+        assert (out_quiet / "registers" / "scb" / "lisa.auto.toml").read_bytes() == (
+            out_loud / "registers" / "scb" / "lisa.auto.toml"
         ).read_bytes()
 
 

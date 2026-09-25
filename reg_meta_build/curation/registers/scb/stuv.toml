@@ -1,0 +1,103 @@
+[register]
+provider = "scb"
+slug = "stuv"
+native_id = "397"
+
+[[variant]]
+native_id = "397.1558"
+slug = "studieforbund-stuv-2012"
+display_group = "Studieförbund (STUV) 2012 - 2019"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "397.1572"
+slug = "deltagare"
+display_group = "Deltagare i studieförbundens verksamhet"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "397.1633"
+slug = "studieforbund-stuv-2020"
+display_group = "Studieförbund (STUV) 2020 -"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Regionala befolkningsprognoser (Statund)
+
+[[variable]]
+native_id = "397.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "397.44"
+slug = "kon"
+
+[[variable]]
+native_id = "397.6145"
+slug = "studerat-pa-distans"
+
+[[variable]]
+native_id = "397.32721"
+slug = "distansundervisning"
+
+# register 404 (bas)
+
+[[variable]]
+native_id = "397.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "397.66"
+slug = "sun2000niva"
+
+[[variable]]
+native_id = "397.241"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "397.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "397.271"
+slug = "medborgarskapsland"
+
+[[variable]]
+native_id = "397.332"
+slug = "senaste-invandringsdatum"
+
+[[variable]]
+native_id = "397.749"
+slug = "aldersgrupp"
+
+[[variable]]
+native_id = "397.866"
+slug = "fodd-i-sverige-utomlands"
+
+[[variable]]
+native_id = "397.1557"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "397.2628"
+slug = "insamlingsdatum"
+
+[[variable]]
+native_id = "397.6556"
+slug = "fodelseland-varldsdel"
+
+# register 400
+
+[[variable]]
+native_id = "397.36.lankom"
+slug = "lan-kommun-kod"
+
+# register 400

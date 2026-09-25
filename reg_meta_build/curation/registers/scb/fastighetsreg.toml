@@ -6,3 +6,224 @@ native_id = "276"
 [[code_label_pair]]
 code = "scb/fastighetsreg/distriktskod"
 label = "scb/fastighetsreg/distriktsnamn"
+
+[[variant]]
+native_id = "276.969"
+slug = "fastighetsinformation"
+display_group = "Fastighetsinformation"
+panel_entity_key = "afnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: afnr (Fastighetsnyckel) lives only in fastighetsinformation; the building
+# entity here is its official UUID (UUIDREGBYG).
+
+[[variant]]
+native_id = "276.971"
+slug = "byggnadsinformation"
+display_group = "Byggnadsinformation"
+panel_entity_key = "uuidregbyg"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "276.972"
+slug = "adressplatsinformation"
+display_group = "Adressplatsinformation"
+panel_entity_key = "ridadrpl"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "276.1256"
+slug = "distriktsinformation"
+display_group = "Distriktsinformation"
+
+# #287: afnr lives only in fastighetsinformation; the property key in this
+# variant is FNR (Fastighetsnyckel).
+
+[[variant]]
+native_id = "276.1257"
+slug = "inskrivningsinformation"
+display_group = "Inskrivningsinformation"
+panel_entity_key = "fnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: afnr lives only in fastighetsinformation; the property key in this
+# variant is PFNR (Fastighetsnyckel).
+
+[[variant]]
+native_id = "276.1258"
+slug = "planinformation"
+display_group = "Planinformation"
+panel_entity_key = "pfnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Bostadsbestånd
+
+[[variable]]
+native_id = "276.135.afnr"
+slug = "afnr"
+
+
+[[variable]]
+native_id = "276.135.fnr"
+slug = "fnr"
+
+
+[[variable]]
+native_id = "276.135.pfnr"
+slug = "pfnr"
+
+
+[[variable]]
+native_id = "276.24177.ridadrpl"
+slug = "ridadrpl"
+
+
+[[variable]]
+native_id = "276.29378.uuidregbyg"
+slug = "uuidregbyg"
+
+
+[[variable]]
+native_id = "276.412"
+slug = "postort"
+
+[[variable]]
+native_id = "276.428"
+slug = "postort-utland"
+
+[[variable]]
+native_id = "276.17810"
+slug = "nordlig-koordinat-sweref"
+
+[[variable]]
+native_id = "276.17812"
+slug = "ostlig-koordinat-sweref"
+
+[[variable]]
+native_id = "276.18972"
+slug = "tredimensionellt-omrade"
+
+[[variable]]
+native_id = "276.18978"
+slug = "tredimensionell-urholkning"
+
+[[variable]]
+native_id = "276.29379"
+slug = "versionsnr-fastighetsreg"
+
+[[variable]]
+native_id = "276.35349"
+slug = "planforkortning"
+
+[[variable]]
+native_id = "276.35356"
+slug = "planforkortning-naturvard"
+
+# register 282 (bostadsbestand)
+
+[[variable]]
+native_id = "276.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "276.135.tillhfnr"
+slug = "fnr-tillh"
+
+[[variable]]
+native_id = "276.7"
+slug = "adressomrade"
+
+[[variable]]
+native_id = "276.8"
+slug = "adressplats"
+
+[[variable]]
+native_id = "276.12"
+slug = "popularnamn"
+
+[[variable]]
+native_id = "276.49"
+slug = "lan"
+
+[[variable]]
+native_id = "276.1086"
+slug = "namn-juridiska-enheten"
+
+[[variable]]
+native_id = "276.2189"
+slug = "landareal"
+
+[[variable]]
+native_id = "276.2888"
+slug = "totalareal"
+
+[[variable]]
+native_id = "276.3144"
+slug = "vattenareal"
+
+[[variable]]
+native_id = "276.4656"
+slug = "insamlingsmetod"
+
+[[variable]]
+native_id = "276.16384"
+slug = "tilltalsnamn"
+
+[[variable]]
+native_id = "276.18378"
+slug = "transaktionstyp"
+
+[[variable]]
+native_id = "276.19640"
+slug = "avregistreringsorsak"
+
+[[variable]]
+native_id = "276.19683"
+slug = "adressplatstyp"
+
+[[variable]]
+native_id = "276.19684"
+slug = "adressomradestyp"
+
+[[variable]]
+native_id = "276.21097"
+slug = "lokalarea-totalt"
+
+[[variable]]
+native_id = "276.21549"
+slug = "objekttyp"
+
+[[variable]]
+native_id = "276.29559"
+slug = "gallandedatum"
+
+[[variable]]
+native_id = "276.39461"
+slug = "datatyp-for-geometri"
+
+# register 282
+
+[[variable]]
+native_id = "276.16297.byggar"
+slug = "nybyggnadsar"
+
+[[variable]]
+native_id = "276.16511.avgaldavgiftsumma"
+slug = "tomtrattsavgald-och-arrendeavgifter"
+
+[[variable]]
+native_id = "276.2224.scb-typkod"
+slug = "typkod"
+
+[[variable]]
+native_id = "276.22523.byggtyp"
+slug = "byggnadstyp"
+
+# register 282

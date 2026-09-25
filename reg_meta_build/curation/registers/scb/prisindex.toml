@@ -6,3 +6,241 @@ native_id = "296"
 [[code_label_pair]]
 code = "scb/prisindex/produktgrupp-sju-tpi"
 label = "scb/prisindex/prodnamn"
+
+[[variant]]
+native_id = "296.828"
+slug = "konsumentprisindex-kpi"
+display_group = "Konsumentprisindex (KPI)"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+
+[[variant]]
+native_id = "296.980"
+slug = "tjansteprisindex-tpi"
+display_group = "Tjänsteprisindex (TPI)"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# #287: peorgnr lives only in the KPI/TPI siblings; the PPI company panel id is
+# Företagsidentitet (Fo_id, 'företagets unika företagsnummer').
+
+[[variant]]
+native_id = "296.1085"
+slug = "ppi"
+display_group = "Prisindex i producent- och importled (PPI)"
+panel_entity_key = "foretagsidentitet"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Finansräkenskaper
+
+[[variable]]
+native_id = "296.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "296.7550"
+slug = "foretagsidentitet"
+
+
+[[variable]]
+native_id = "296.73"
+slug = "ar"
+
+[[variable]]
+native_id = "296.1814"
+slug = "coicop"
+
+[[variable]]
+native_id = "296.7561"
+slug = "baspris"
+
+[[variable]]
+native_id = "296.7714"
+slug = "kvantitet"
+
+[[variable]]
+native_id = "296.7792"
+slug = "rapporteringsvaluta"
+
+[[variable]]
+native_id = "296.23452"
+slug = "beraknat-pris"
+
+[[variable]]
+native_id = "296.23453"
+slug = "omraknat-baspris"
+
+[[variable]]
+native_id = "296.23455"
+slug = "kvalitetsriktning"
+
+[[variable]]
+native_id = "296.23597"
+slug = "observerat-pris"
+
+[[variable]]
+native_id = "296.23598"
+slug = "observerad-kvantitet"
+
+[[variable]]
+native_id = "296.23603"
+slug = "produktgruppsvikt"
+
+[[variable]]
+native_id = "296.23605"
+slug = "kvalitetsjusteringsmetod"
+
+[[variable]]
+native_id = "296.23606"
+slug = "ordinarie-pris"
+
+[[variable]]
+native_id = "296.23610"
+slug = "branschproduktgruppsvikt"
+
+[[variable]]
+native_id = "296.23611"
+slug = "konsumtionsprodukt"
+
+[[variable]]
+native_id = "296.23613"
+slug = "produktid"
+
+[[variable]]
+native_id = "296.23614"
+slug = "produktgrupp"
+
+[[variable]]
+native_id = "296.23688"
+slug = "period2"
+
+[[variable]]
+native_id = "296.24675"
+slug = "index-dec-foregaende-ar"
+
+[[variable]]
+native_id = "296.25047"
+slug = "namn-person"
+
+[[variable]]
+native_id = "296.27203"
+slug = "arsforandring-tpi"
+
+[[variable]]
+native_id = "296.27318"
+slug = "berakningsperiod"
+
+[[variable]]
+native_id = "296.27326"
+slug = "indexbas2005"
+
+[[variable]]
+native_id = "296.27358"
+slug = "produkterbjudande"
+
+[[variable]]
+native_id = "296.28085"
+slug = "formular-titel"
+
+[[variable]]
+native_id = "296.28086"
+slug = "frage-titel"
+
+[[variable]]
+native_id = "296.28087"
+slug = "inmatningsfaltets-titel"
+
+[[variable]]
+native_id = "296.28088"
+slug = "inmatningsgruppdef-titel"
+
+[[variable]]
+native_id = "296.29259"
+slug = "index-med-bas-2005"
+
+[[variable]]
+native_id = "296.29270"
+slug = "prisindex"
+
+[[variable]]
+native_id = "296.29392"
+slug = "period-ppi"
+
+[[variable]]
+native_id = "296.30808"
+slug = "prissignal"
+
+[[variable]]
+native_id = "296.30830"
+slug = "produktgruppsnamn"
+
+[[variable]]
+native_id = "296.30837"
+slug = "index-foregaende-ar"
+
+[[variable]]
+native_id = "296.35935"
+slug = "period-tpi"
+
+[[variable]]
+native_id = "296.35949"
+slug = "indexbas"
+
+[[variable]]
+native_id = "296.35951"
+slug = "arsforandring"
+
+[[variable]]
+native_id = "296.45489"
+slug = "index-bas-foregaende-ar"
+
+# register 299 (finansrakenskaper)
+
+[[variable]]
+native_id = "296.45455.namn"
+slug = "produktgrupp-sammanvagda"
+
+[[variable]]
+native_id = "296.47652.prodkod"
+slug = "produktgrupp-sju-tpi"
+
+# register 301 (aes)
+
+[[variable]]
+native_id = "296.14"
+slug = "cfar-nummer"
+
+[[variable]]
+native_id = "296.145"
+slug = "identitet"
+
+[[variable]]
+native_id = "296.45"
+slug = "land"
+
+[[variable]]
+native_id = "296.3081"
+slug = "imputering"
+
+[[variable]]
+native_id = "296.6415"
+slug = "urvalssannolikhet"
+
+[[variable]]
+native_id = "296.6784"
+slug = "naringsgren-sni2002-5siffer"
+
+[[variable]]
+native_id = "296.7719"
+slug = "marknadskod"
+
+[[variable]]
+native_id = "296.23599"
+slug = "versionsnummer"
+
+# register 300

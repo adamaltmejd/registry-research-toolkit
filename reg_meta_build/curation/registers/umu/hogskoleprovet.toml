@@ -1,0 +1,96 @@
+[register]
+provider = "umu"
+slug = "hogskoleprovet"
+native_id = "5444831050852607094"
+
+[[variant]]
+native_id = "5444831050852607094.5876203108261893022"
+slug = "_default"
+display_group = "Högskoleprovet (provresultat)"
+panel_entity_key = "lopnr-personnr"
+panel_time_key = "tillfalle"
+panel_time_grain = "row"
+
+
+# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546, #554).
+#
+# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
+# (the default freeze zone re-derives it). These pins freeze the slug each
+# entity-key ref depends on so a reslug can't dangle the ref. The build-side
+# curation gate (validate._check_entity_key_vars_curated) makes the pin
+# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL
+# global providers (#554).
+#
+# Regenerate after onboarding/repointing a panel: run
+#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/
+# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml
+# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —
+# pins reproduce the slug the variable already carries).
+# 1 pin(s).
+
+
+[[variable]]
+native_id = "5444831050852607094.Personnummer"
+slug = "lopnr-personnr"
+
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 13 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 5444831050852607094
+
+[[variable]]
+native_id = "5444831050852607094.AO"
+slug = "allman-orientering"
+
+[[variable]]
+native_id = "5444831050852607094.DTK"
+slug = "diagram-tabeller-kartor"
+
+[[variable]]
+native_id = "5444831050852607094.ELF"
+slug = "engelsk-lasforstelse"
+
+[[variable]]
+native_id = "5444831050852607094.KVA"
+slug = "kvantitativa-jamforelser"
+
+[[variable]]
+native_id = "5444831050852607094.Kvant"
+slug = "kvantitativ-delsumma"
+
+[[variable]]
+native_id = "5444831050852607094.LÄS"
+slug = "lasforstelse"
+
+[[variable]]
+native_id = "5444831050852607094.MEK"
+slug = "meningskomplettering"
+
+[[variable]]
+native_id = "5444831050852607094.NOG"
+slug = "kvantitativa-resonemang"
+
+[[variable]]
+native_id = "5444831050852607094.Norm"
+slug = "normerat-resultat"
+
+[[variable]]
+native_id = "5444831050852607094.ORD"
+slug = "ordforstelse"
+
+[[variable]]
+native_id = "5444831050852607094.STUF"
+slug = "studietekniska-fardigheter"
+
+[[variable]]
+native_id = "5444831050852607094.Verb"
+slug = "verbal-delsumma"
+
+[[variable]]
+native_id = "5444831050852607094.XYZ"
+slug = "matematisk-problemlosning"
+
+# === END #760 non-SCB concept-slug curation ===

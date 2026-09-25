@@ -6,3 +6,100 @@ native_id = "282"
 [[code_label_pair]]
 code = "scb/bostadsbestand/distriktskod"
 label = "scb/bostadsbestand/distriktsnamn"
+
+[[variant]]
+native_id = "282.704"
+slug = "bostadsbestand-kalkylerat"
+display_group = "Bostadsbestånd (kalkylerat)"
+
+# (keep) Actual bostadsbestånd data; sibling 282.704 is the calculated
+# (kalkylerat) estimate variant.
+
+[[variant]]
+native_id = "282.1159"
+slug = "bostadsbestand"
+display_group = "Bostadsbestånd"
+panel_entity_key = "lagenhetsnyckel"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Elpriser och elavtal
+
+[[variable]]
+native_id = "282.29828"
+slug = "lagenhetsnyckel"
+
+
+[[variable]]
+native_id = "282.52"
+slug = "nyko"
+
+[[variable]]
+native_id = "282.64"
+slug = "tatort-tom-2010"
+
+[[variable]]
+native_id = "282.5092"
+slug = "hustyp"
+
+[[variable]]
+native_id = "282.6294"
+slug = "nyko-variabler"
+
+[[variable]]
+native_id = "282.19086"
+slug = "antal-lagenheter"
+
+[[variable]]
+native_id = "282.35321"
+slug = "tatort"
+
+[[variable]]
+native_id = "282.40422"
+slug = "tatort-2018"
+
+# register 284 (natpriser-naturgas)
+
+[[variable]]
+native_id = "282.7"
+slug = "adressomrade"
+
+[[variable]]
+native_id = "282.8"
+slug = "adressplats"
+
+[[variable]]
+native_id = "282.26"
+slug = "fastighetsbeteckning"
+
+[[variable]]
+native_id = "282.558"
+slug = "forsamling-stockholm"
+
+[[variable]]
+native_id = "282.2224"
+slug = "typkod"
+
+[[variable]]
+native_id = "282.2299"
+slug = "lagenhetstyp"
+
+[[variable]]
+native_id = "282.30120"
+slug = "bostadskategori"
+
+[[variable]]
+native_id = "282.30344"
+slug = "byggnadsperiod"
+
+[[variable]]
+native_id = "282.30770"
+slug = "agarkategori-bostad"
+
+# register 283
+
+[[variable]]
+native_id = "282.22523.byggtyp"
+slug = "byggnadstyp"
+
+# register 286

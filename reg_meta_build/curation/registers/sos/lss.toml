@@ -1,0 +1,152 @@
+[register]
+provider = "sos"
+slug = "lss"
+native_id = "5028920659479690770"
+
+[[variant]]
+native_id = "5028920659479690770.5751215697700503870"
+slug = "_default"
+display_group = "_default"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Registret över insatser inom den kommunala hälso- och sjukvården (HSL)
+
+[[variable]]
+native_id = "5028920659479690770.PNR"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "5028920659479690770.BKOMM"
+slug = "boendekommun"
+
+[[variable]]
+native_id = "5028920659479690770.DYGN6"
+slug = "antal-dygn-man-lss-6"
+
+[[variable]]
+native_id = "5028920659479690770.FODDAT"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "5028920659479690770.LK"
+slug = "rapporterande-kommun"
+
+[[variable]]
+native_id = "5028920659479690770.LSS10"
+slug = "daglig-verksamhet-lss-10"
+
+[[variable]]
+native_id = "5028920659479690770.LSS2"
+slug = "personlig-assistans-9-2-lss"
+
+[[variable]]
+native_id = "5028920659479690770.LSS3"
+slug = "ledsagarservice"
+
+[[variable]]
+native_id = "5028920659479690770.LSS4"
+slug = "kontaktperson-lss"
+
+[[variable]]
+native_id = "5028920659479690770.LSS5"
+slug = "avlosarservice"
+
+[[variable]]
+native_id = "5028920659479690770.LSS6"
+slug = "korttidsvistelse"
+
+[[variable]]
+native_id = "5028920659479690770.LSS7"
+slug = "korttidstillsyn"
+
+[[variable]]
+native_id = "5028920659479690770.LSS81"
+slug = "familjehem-barn-ungdomar-lss"
+
+[[variable]]
+native_id = "5028920659479690770.LSS82"
+slug = "bostad-sarskild-service-barn-lss-8"
+
+[[variable]]
+native_id = "5028920659479690770.LSS9"
+slug = "boende-vuxna-lss-9-9"
+
+[[variable]]
+native_id = "5028920659479690770.LSS91"
+slug = "bostad-sarskild-service-vuxna-lss-9"
+
+[[variable]]
+native_id = "5028920659479690770.LSS92"
+slug = "sarskilt-anpassad-bostad-vuxna-lss-9"
+
+[[variable]]
+native_id = "5028920659479690770.PKRETS"
+slug = "personkrets"
+
+[[variable]]
+native_id = "5028920659479690770.PNRQ"
+slug = "personnummerkvalitet"
+
+[[variable]]
+native_id = "5028920659479690770.TIM2"
+slug = "antal-timmar-man-lss-2"
+
+[[variable]]
+native_id = "5028920659479690770.TIM3"
+slug = "antal-timmar-man-lss-3"
+
+[[variable]]
+native_id = "5028920659479690770.TIM5"
+slug = "antal-timmar-man-lss-5"
+
+[[variable]]
+native_id = "5028920659479690770.UK10"
+slug = "utforande-kommun-lss-9-10"
+
+[[variable]]
+native_id = "5028920659479690770.UK2"
+slug = "utforande-kommun-lss-9-2"
+
+[[variable]]
+native_id = "5028920659479690770.UK3"
+slug = "utforande-kommun-lss-9-3"
+
+[[variable]]
+native_id = "5028920659479690770.UK4"
+slug = "utforande-kommun-lss-9-4"
+
+[[variable]]
+native_id = "5028920659479690770.UK5"
+slug = "utforande-kommun-lss-9-5"
+
+[[variable]]
+native_id = "5028920659479690770.UK6"
+slug = "utforande-kommun-lss-9-6"
+
+[[variable]]
+native_id = "5028920659479690770.UK7"
+slug = "utforande-kommun-lss-9-7"
+
+[[variable]]
+native_id = "5028920659479690770.UK81"
+slug = "utforande-kommun-lss-9-8-familjehem"
+
+[[variable]]
+native_id = "5028920659479690770.UK82"
+slug = "utforande-kommun-lss-9-8-sarskild"
+
+[[variable]]
+native_id = "5028920659479690770.UK9"
+slug = "utforande-kommun-lss-9-9-vuxna"
+
+[[variable]]
+native_id = "5028920659479690770.UK91"
+slug = "utforande-kommun-lss-9-9-sarskild"
+
+[[variable]]
+native_id = "5028920659479690770.UK92"
+slug = "utforande-kommun-lss-9-9-bostad"
+# register 5352018376318353790

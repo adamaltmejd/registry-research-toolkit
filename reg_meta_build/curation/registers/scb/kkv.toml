@@ -1,0 +1,89 @@
+[register]
+provider = "scb"
+slug = "kkv"
+native_id = "389"
+
+[[variant]]
+native_id = "389.1475"
+slug = "_default"
+display_group = "Konst- och kulturutbildningar och vissa andra utbildningar"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Fritidsfiske
+
+[[variable]]
+native_id = "389.57"
+slug = "personnr"
+
+
+[[variable]]
+native_id = "389.257"
+slug = "fodelseland-rtb"
+
+[[variable]]
+native_id = "389.8073"
+slug = "sun-niva-old-mor"
+
+[[variable]]
+native_id = "389.8074"
+slug = "faderns-utbildningsniva"
+
+[[variable]]
+native_id = "389.32454"
+slug = "foraldrarnas-utbildningsniva"
+
+# register 390 (fritidsfiske)
+
+[[variable]]
+native_id = "389.5726"
+slug = "utbildningens-niva"
+
+[[variable]]
+native_id = "389.8534"
+slug = "kommungrupp"
+
+[[variable]]
+native_id = "389.14815"
+slug = "skolkommun"
+
+[[variable]]
+native_id = "389.28498"
+slug = "slutfort-kurs"
+
+[[variable]]
+native_id = "389.38135"
+slug = "utbildningsnummer"
+
+[[variable]]
+native_id = "389.38240"
+slug = "antagen-paborjat-studier-startar"
+
+[[variable]]
+native_id = "389.39843"
+slug = "utbildningstyp-eftergymnasial"
+
+[[variable]]
+native_id = "389.39845"
+slug = "startdatum-utbildningsomgang"
+
+[[variable]]
+native_id = "389.39846"
+slug = "omgang-slutdatum"
+
+# register 390
+
+[[variable]]
+native_id = "389.241.alder"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "389.241.aldersgrupp"
+slug = "aldersgrupp-31-12"
+
+[[variable]]
+native_id = "389.38237.studerande"
+slug = "studerande-utbildningsform"
+
+# register 390

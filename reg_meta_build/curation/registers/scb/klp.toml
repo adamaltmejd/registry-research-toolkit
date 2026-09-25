@@ -1,0 +1,63 @@
+[register]
+provider = "scb"
+slug = "klp"
+native_id = "91"
+
+[[variant]]
+native_id = "91.166"
+slug = "_default"
+display_group = "Konjunkturstatistik, löner för privat sektor"
+panel_entity_key = "person-orgnr"
+panel_time_key = ["undersokningsar", "undersokningsmanad"]
+panel_time_grain = "row"
+
+# Hushållens ekonomi (HEK)
+
+[[variable]]
+native_id = "91.56"
+slug = "person-orgnr"
+
+
+[[variable]]
+native_id = "91.3781"
+slug = "sjuklon-2-21-arbetare"
+
+[[variable]]
+native_id = "91.3795"
+slug = "sjuklon-2-21-tjansteman"
+
+[[variable]]
+native_id = "91.4029"
+slug = "undersokningsmanad"
+
+[[variable]]
+native_id = "91.16387"
+slug = "sjuklon-2-14-arbetare"
+
+[[variable]]
+native_id = "91.16389"
+slug = "sjuklon-2-14-tjansteman"
+
+# register 97 (hek)
+
+[[variable]]
+native_id = "91.14"
+slug = "cfar-nummer"
+
+[[variable]]
+native_id = "91.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "91.4031"
+slug = "storleksklass-pa-foretag"
+
+[[variable]]
+native_id = "91.4032"
+slug = "antal-anstallda-foretaget"
+
+[[variable]]
+native_id = "91.21009"
+slug = "undersokningsar"
+
+# register 97

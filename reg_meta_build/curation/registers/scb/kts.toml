@@ -1,0 +1,1197 @@
+[register]
+provider = "scb"
+slug = "kts"
+native_id = "116"
+
+[[variant]]
+native_id = "116.131"
+slug = "_default"
+display_group = "Kommunernas och regionernas finansiella tillgångar och skulder"
+# Sub-annual aggregate time series (#730, follow-up to #577): year (ar) × quarter
+# (kvartal), grain = "row". MIXED population (Codex review): this variant covers BOTH
+# kommuner AND regioner/landsting (separate kommun `116.36` and landsting `116.5059`
+# columns), so no single panel_entity_key identifies every row — left unkeyed, a time
+# series over a mixed aggregate (like byggproduktionsindex). The kvartalsutfall
+# kommuner/regioner panels below ARE keyed because each is split to one population.
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
+
+# Kommunalekonomisk utjämning och utjämning av LSS-kostnader mellan kommuner
+
+[[variable]]
+native_id = "116.4206"
+slug = "kundfordringar"
+
+[[variable]]
+native_id = "116.4208"
+slug = "finansiella-anlaggningstillgangar"
+
+[[variable]]
+native_id = "116.4228"
+slug = "leverantorsskulder"
+
+[[variable]]
+native_id = "116.4244"
+slug = "ovriga-kortfristiga-skulder"
+
+[[variable]]
+native_id = "116.4249"
+slug = "summa-langfristiga-skulder"
+
+[[variable]]
+native_id = "116.5059"
+slug = "landstingets-namn"
+
+[[variable]]
+native_id = "116.16801"
+slug = "typ-av-finansiell-tillgang-skuld"
+
+[[variable]]
+native_id = "116.18254"
+slug = "langfristiga-aktier-summa"
+
+[[variable]]
+native_id = "116.18255"
+slug = "langfristiga-aktier-borsnoterade"
+
+[[variable]]
+native_id = "116.18256"
+slug = "langfristiga-aktier-exkl-borsnoterade"
+
+[[variable]]
+native_id = "116.18257"
+slug = "langfristiga-aktier-kommunagda"
+
+[[variable]]
+native_id = "116.18258"
+slug = "langfristiga-aktier-utlandska"
+
+[[variable]]
+native_id = "116.18259"
+slug = "langfristiga-obligationer-summa"
+
+[[variable]]
+native_id = "116.18260"
+slug = "langfristiga-obligationer-staten"
+
+[[variable]]
+native_id = "116.18261"
+slug = "langfristiga-obligationer-kommuner"
+
+[[variable]]
+native_id = "116.18262"
+slug = "langfristiga-obligationer-banker"
+
+[[variable]]
+native_id = "116.18263"
+slug = "langfristiga-obligationer-bostad"
+
+[[variable]]
+native_id = "116.18264"
+slug = "langfristiga-obligationer-finansiella"
+
+[[variable]]
+native_id = "116.18265"
+slug = "langfristiga-obligationer-icke-finans"
+
+[[variable]]
+native_id = "116.18266"
+slug = "langfristiga-obligationer-utlandet"
+
+[[variable]]
+native_id = "116.18267"
+slug = "langfristiga-fordringar-summa"
+
+[[variable]]
+native_id = "116.18268"
+slug = "langfristiga-fordringar-kommuner"
+
+[[variable]]
+native_id = "116.18269"
+slug = "langfristiga-fordringar-hushall"
+
+[[variable]]
+native_id = "116.18270"
+slug = "langfristiga-fordringar-bostadsforetag"
+
+[[variable]]
+native_id = "116.18271"
+slug = "langfristiga-fordringar-kommunagda"
+
+[[variable]]
+native_id = "116.18273"
+slug = "langfristiga-fordringar-finansiella"
+
+[[variable]]
+native_id = "116.18274"
+slug = "langfristiga-fordringar-icke-finansiella"
+
+[[variable]]
+native_id = "116.18275"
+slug = "langfristig-tillgang-grundfondskapital"
+
+[[variable]]
+native_id = "116.18280"
+slug = "summa-diverse-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "116.18281"
+slug = "kortfristiga-fordringar-hos-anstallda"
+
+[[variable]]
+native_id = "116.18282"
+slug = "kortfristiga-fordringar-hos-leverantorer"
+
+[[variable]]
+native_id = "116.18283"
+slug = "kortfristig-del-langfristiga-fordringar"
+
+[[variable]]
+native_id = "116.18285"
+slug = "summa-upplupna-ranteintakter"
+
+[[variable]]
+native_id = "116.18286"
+slug = "upplupna-ranteintakter-aktier-bostad"
+
+[[variable]]
+native_id = "116.18287"
+slug = "upplupna-ranteintakter-obligationer"
+
+[[variable]]
+native_id = "116.18288"
+slug = "upplupna-ranteintakter-av-certifikat"
+
+[[variable]]
+native_id = "116.18289"
+slug = "upplupna-ranteintakter-langfristiga"
+
+[[variable]]
+native_id = "116.18290"
+slug = "upplupna-ranteintakter-av-kundfordringar"
+
+[[variable]]
+native_id = "116.18291"
+slug = "upplupna-ranteintakter-kortfristiga"
+
+[[variable]]
+native_id = "116.18292"
+slug = "ovriga-forutbetalda-kostnader"
+
+[[variable]]
+native_id = "116.18293"
+slug = "summa-forutbetalda-kostnader"
+
+[[variable]]
+native_id = "116.18294"
+slug = "kortfristiga-aktier-summa"
+
+[[variable]]
+native_id = "116.18295"
+slug = "kortfristiga-aktier-borsnoterade"
+
+[[variable]]
+native_id = "116.18296"
+slug = "kortfristiga-aktier-exkl-borsnoterade"
+
+[[variable]]
+native_id = "116.18297"
+slug = "kortfristiga-aktier-kommunagda"
+
+[[variable]]
+native_id = "116.18298"
+slug = "kortfristiga-aktier-utlandska"
+
+[[variable]]
+native_id = "116.18299"
+slug = "kortfristiga-certifikat-summa"
+
+[[variable]]
+native_id = "116.18300"
+slug = "kortfristiga-certifikat-staten"
+
+[[variable]]
+native_id = "116.18301"
+slug = "kortfristiga-certifikat-kommuner"
+
+[[variable]]
+native_id = "116.18302"
+slug = "kortfristiga-certifikat-banker"
+
+[[variable]]
+native_id = "116.18303"
+slug = "kortfristiga-certifikat-bostad"
+
+[[variable]]
+native_id = "116.18304"
+slug = "kortfristiga-certifikat-finansiella"
+
+[[variable]]
+native_id = "116.18305"
+slug = "kortfristiga-certifikat-icke-finans"
+
+[[variable]]
+native_id = "116.18306"
+slug = "kortfristiga-certifikat-utlandet"
+
+[[variable]]
+native_id = "116.18307"
+slug = "kortfristiga-obligationer-summa"
+
+[[variable]]
+native_id = "116.18308"
+slug = "kortfristiga-obligationer-staten"
+
+[[variable]]
+native_id = "116.18309"
+slug = "kortfristiga-obligationer-kommuner"
+
+[[variable]]
+native_id = "116.18310"
+slug = "kortfristiga-obligationer-banker"
+
+[[variable]]
+native_id = "116.18311"
+slug = "kortfristiga-obligationer-bostad"
+
+[[variable]]
+native_id = "116.18312"
+slug = "kortfristiga-obligationer-finansiella"
+
+[[variable]]
+native_id = "116.18313"
+slug = "kortfristiga-obligationer-icke-finans"
+
+[[variable]]
+native_id = "116.18314"
+slug = "kortfristiga-obligationer-utlandet"
+
+[[variable]]
+native_id = "116.18315"
+slug = "kortfristiga-certifikat-obl-summa"
+
+[[variable]]
+native_id = "116.18316"
+slug = "nedskrivning-av-kortfristiga-placeringar"
+
+[[variable]]
+native_id = "116.18317"
+slug = "summa-kortfristiga-placeringar"
+
+[[variable]]
+native_id = "116.18318"
+slug = "summa-kassa-och-bank"
+
+[[variable]]
+native_id = "116.18319"
+slug = "kortfristiga-tillgangar-kassa"
+
+[[variable]]
+native_id = "116.18320"
+slug = "kortfristiga-tillgangar-plusgiro-bank"
+
+[[variable]]
+native_id = "116.18321"
+slug = "summa-finansiella-tillgangar"
+
+[[variable]]
+native_id = "116.18323"
+slug = "langfristiga-skulder-kommuncertifikat"
+
+[[variable]]
+native_id = "116.18324"
+slug = "langfristiga-obligationslan-summa"
+
+[[variable]]
+native_id = "116.18325"
+slug = "langfristiga-obligationslan-sverige"
+
+[[variable]]
+native_id = "116.18326"
+slug = "langfristiga-obligationslan-utlandet"
+
+[[variable]]
+native_id = "116.18327"
+slug = "langfristiga-skulder-lan-svenska"
+
+[[variable]]
+native_id = "116.18328"
+slug = "langfristiga-skulder-lan-svenska-valuta"
+
+[[variable]]
+native_id = "116.18329"
+slug = "langfristiga-skulder-lan-staten"
+
+[[variable]]
+native_id = "116.18330"
+slug = "langfristiga-lan-socialforsakring"
+
+[[variable]]
+native_id = "116.18332"
+slug = "langfristiga-skulder-lan-kommun"
+
+[[variable]]
+native_id = "116.18333"
+slug = "langfristiga-skulder-lan-hushall"
+
+[[variable]]
+native_id = "116.18334"
+slug = "langfristiga-skulder-lan-kommunagda"
+
+[[variable]]
+native_id = "116.18336"
+slug = "langfristiga-skulder-lan-banker"
+
+[[variable]]
+native_id = "116.18338"
+slug = "langfristiga-skulder-lan-finansiella"
+
+[[variable]]
+native_id = "116.18339"
+slug = "langfristiga-skulder-lan-icke-finans"
+
+[[variable]]
+native_id = "116.18340"
+slug = "langfristiga-skulder-lan-utlandska"
+
+[[variable]]
+native_id = "116.18342"
+slug = "langfristig-finansiell-leasingskuld"
+
+[[variable]]
+native_id = "116.18343"
+slug = "kortfristiga-skulder-kommuncertifikat"
+
+[[variable]]
+native_id = "116.18344"
+slug = "kortfristiga-obligationslan-summa"
+
+[[variable]]
+native_id = "116.18345"
+slug = "kortfristiga-obligationslan-sverige"
+
+[[variable]]
+native_id = "116.18346"
+slug = "kortfristiga-obligationslan-utlandet"
+
+[[variable]]
+native_id = "116.18347"
+slug = "kortfristiga-skulder-lan-svenska"
+
+[[variable]]
+native_id = "116.18348"
+slug = "kortfristiga-skulder-lan-svenska-staten"
+
+[[variable]]
+native_id = "116.18349"
+slug = "kortfristiga-skulder-lan-svenska-valuta"
+
+[[variable]]
+native_id = "116.18350"
+slug = "kortfristiga-lan-socialforsakring"
+
+[[variable]]
+native_id = "116.18351"
+slug = "kortfristiga-skulder-lan-kommuner"
+
+[[variable]]
+native_id = "116.18352"
+slug = "kortfristiga-skulder-lan-hushall"
+
+[[variable]]
+native_id = "116.18353"
+slug = "kortfristiga-skulder-lan-kommunagda"
+
+[[variable]]
+native_id = "116.18354"
+slug = "kortfristiga-skulder-lan-banker"
+
+[[variable]]
+native_id = "116.18355"
+slug = "kortfristiga-skulder-lan-finansiella"
+
+[[variable]]
+native_id = "116.18356"
+slug = "kortfristiga-skulder-lan-icke-finans"
+
+[[variable]]
+native_id = "116.18357"
+slug = "kortfristiga-skulder-lan-utlandska"
+
+[[variable]]
+native_id = "116.18360"
+slug = "summa-upplupna-rantekostnader"
+
+[[variable]]
+native_id = "116.18362"
+slug = "rantekostnad-finansiell-leasing"
+
+[[variable]]
+native_id = "116.18363"
+slug = "upplupna-rantekostnader-obligationer"
+
+[[variable]]
+native_id = "116.18364"
+slug = "upplupna-rantekostnader-certifikat"
+
+[[variable]]
+native_id = "116.18365"
+slug = "rantekostnad-langfristiga-skulder"
+
+[[variable]]
+native_id = "116.18366"
+slug = "rantekostnad-leverantorsskulder"
+
+[[variable]]
+native_id = "116.18367"
+slug = "rantekostnad-ovriga-kortfristiga-skulder"
+
+[[variable]]
+native_id = "116.18368"
+slug = "summa-upplupna-kostnader-forutbetalda"
+
+[[variable]]
+native_id = "116.18369"
+slug = "upplupna-pensionskostnad-avgiftsbestamd"
+
+[[variable]]
+native_id = "116.18370"
+slug = "ovriga-upplupna-kostnader-forutbetalda"
+
+[[variable]]
+native_id = "116.18372"
+slug = "summa-finansiella-skulder"
+
+[[variable]]
+native_id = "116.18503"
+slug = "kundfordringar-kommunen"
+
+[[variable]]
+native_id = "116.18732"
+slug = "ranteintakter"
+
+[[variable]]
+native_id = "116.19457"
+slug = "fordringar-leverantorer-darav-kommunagda"
+
+[[variable]]
+native_id = "116.19459"
+slug = "kortfristiga-fordringar-hos-staten"
+
+[[variable]]
+native_id = "116.19460"
+slug = "fordran-ingaende-mervardesskatt"
+
+[[variable]]
+native_id = "116.19461"
+slug = "fordran-mervardesskatt-redovisningskonto"
+
+[[variable]]
+native_id = "116.19463"
+slug = "vardereglering-kortfristiga-fordringar"
+
+[[variable]]
+native_id = "116.19464"
+slug = "kortfristiga-del-langfristiga-kommunagda"
+
+[[variable]]
+native_id = "116.19465"
+slug = "kortfristiga-fordringar-ovriga"
+
+[[variable]]
+native_id = "116.19467"
+slug = "fordringar-ovriga-darav-kommunagda"
+
+[[variable]]
+native_id = "116.19468"
+slug = "tillgangsderivat-sv-banker-bokfort"
+
+[[variable]]
+native_id = "116.19469"
+slug = "tillgangsderivat-sv-ovriga-bokfort"
+
+[[variable]]
+native_id = "116.19470"
+slug = "tillgangsderivat-utlandsk-bokfort"
+
+[[variable]]
+native_id = "116.19472"
+slug = "tillgangsderivat-sv-banker-marknadsvarde"
+
+[[variable]]
+native_id = "116.19473"
+slug = "tillgangsderivat-sv-ovriga-marknadsvarde"
+
+[[variable]]
+native_id = "116.19474"
+slug = "tillgangsderivat-utlandsk-marknadsvarde"
+
+[[variable]]
+native_id = "116.19475"
+slug = "tillgangsderivat-sv-banker-premie"
+
+[[variable]]
+native_id = "116.19476"
+slug = "tillgangsderivat-sv-ovriga-premie"
+
+[[variable]]
+native_id = "116.19477"
+slug = "tillgangsderivat-utlandsk-premie"
+
+[[variable]]
+native_id = "116.19478"
+slug = "tillgangsderivat-sv-banker-betalningar"
+
+[[variable]]
+native_id = "116.19479"
+slug = "tillgangsderivat-sv-ovriga-betalningar"
+
+[[variable]]
+native_id = "116.19480"
+slug = "tillgangsderivat-utlandsk-betalningar"
+
+[[variable]]
+native_id = "116.19481"
+slug = "skuldderivat-sv-banker-bokfort"
+
+[[variable]]
+native_id = "116.19482"
+slug = "skuldderivat-sv-ovriga-bokfort"
+
+[[variable]]
+native_id = "116.19483"
+slug = "skuldderivat-utlandsk-bokfort"
+
+[[variable]]
+native_id = "116.19484"
+slug = "skuldderivat-sv-banker-marknadsvarde"
+
+[[variable]]
+native_id = "116.19485"
+slug = "skuldderivat-sv-ovriga-marknadsvarde"
+
+[[variable]]
+native_id = "116.19486"
+slug = "skuldderivat-utlandsk-marknadsvarde"
+
+[[variable]]
+native_id = "116.19487"
+slug = "skuldderivat-sv-banker-premie"
+
+[[variable]]
+native_id = "116.19488"
+slug = "skuldderivat-sv-ovriga-premie"
+
+[[variable]]
+native_id = "116.19489"
+slug = "skuldderivat-utlandsk-premie"
+
+[[variable]]
+native_id = "116.19490"
+slug = "skuldderivat-sv-banker-erhallna-erlagda"
+
+[[variable]]
+native_id = "116.19491"
+slug = "skuldderivat-sv-ovriga-erhallna-erlagda"
+
+[[variable]]
+native_id = "116.19492"
+slug = "skuldderivat-utlandsk-erhallna-erlagda"
+
+[[variable]]
+native_id = "116.20449"
+slug = "spec-sv-borsaktier-bokfort-kop"
+
+[[variable]]
+native_id = "116.20450"
+slug = "spec-sv-borsaktier-bokfort-forsaljning"
+
+[[variable]]
+native_id = "116.20451"
+slug = "spec-sv-borsaktier-uppnedskrivning"
+
+[[variable]]
+native_id = "116.20453"
+slug = "spec-sv-borsaktier-marknadsvarde-kop"
+
+[[variable]]
+native_id = "116.20455"
+slug = "spec-sv-borsaktier-marknadsvarde-kvt"
+
+[[variable]]
+native_id = "116.20456"
+slug = "spec-sv-borsaktier-forsalj-marknadsvarde"
+
+[[variable]]
+native_id = "116.20458"
+slug = "nominellt-kommuncertifikat-loptid"
+
+[[variable]]
+native_id = "116.20459"
+slug = "nominellt-langfristiga-obligationer"
+
+[[variable]]
+native_id = "116.20460"
+slug = "nominellt-kortfristiga-kommuncertifikat"
+
+[[variable]]
+native_id = "116.20461"
+slug = "nominellt-kortfristiga-obligationslan"
+
+[[variable]]
+native_id = "116.20462"
+slug = "spec-obliglan-sverige-upplaning"
+
+[[variable]]
+native_id = "116.20463"
+slug = "spec-obliglan-sverige-amorterat"
+
+[[variable]]
+native_id = "116.20464"
+slug = "spec-obliglan-sverige-kursvinst"
+
+[[variable]]
+native_id = "116.20465"
+slug = "spec-obliglan-sverige-kursforlust"
+
+[[variable]]
+native_id = "116.20466"
+slug = "spec-obliglan-utlandet-upplaning"
+
+[[variable]]
+native_id = "116.20467"
+slug = "spec-obliglan-utlandet-amorterat"
+
+[[variable]]
+native_id = "116.20468"
+slug = "spec-obliglan-utlandet-kursvinst"
+
+[[variable]]
+native_id = "116.20469"
+slug = "spec-obliglan-utlandet-kursforlust"
+
+[[variable]]
+native_id = "116.20470"
+slug = "spec-lan-utlandska-langivare-upplaning"
+
+[[variable]]
+native_id = "116.20471"
+slug = "spec-lan-utlandska-langivare-amorterat"
+
+[[variable]]
+native_id = "116.20472"
+slug = "spec-lan-utlandska-langivare-kursvinst"
+
+[[variable]]
+native_id = "116.20473"
+slug = "spec-lan-utlandska-langivare-kursforlust"
+
+[[variable]]
+native_id = "116.21822"
+slug = "ingaende-mervardesskatt"
+
+[[variable]]
+native_id = "116.21854"
+slug = "kortfristiga-skulder-kreditinstitut"
+
+[[variable]]
+native_id = "116.21855"
+slug = "kortfristiga-skulder-sv-kortfristig-del"
+
+[[variable]]
+native_id = "116.21856"
+slug = "spec-sv-borsaktier-vardeforandring"
+
+[[variable]]
+native_id = "116.25171"
+slug = "tillgangsderivat-sv-banker-erhallna"
+
+[[variable]]
+native_id = "116.25172"
+slug = "tillgangsderivat-sv-banker-erlagda"
+
+[[variable]]
+native_id = "116.25173"
+slug = "tillgangsderivat-sv-ovriga-erhallna"
+
+[[variable]]
+native_id = "116.25174"
+slug = "tillgangsderivat-sv-ovriga-erlagda"
+
+[[variable]]
+native_id = "116.25175"
+slug = "tillgangsderivat-utlandsk-erhallna"
+
+[[variable]]
+native_id = "116.25176"
+slug = "tillgangsderivat-utlandsk-erlagda"
+
+[[variable]]
+native_id = "116.25177"
+slug = "skuldderivat-sv-banker-erhallna"
+
+[[variable]]
+native_id = "116.25179"
+slug = "skuldderivat-sv-banker-erlagda"
+
+[[variable]]
+native_id = "116.25180"
+slug = "skuldderivat-sv-ovriga-erhallna"
+
+[[variable]]
+native_id = "116.25181"
+slug = "skuldderivat-sv-ovriga-erlagda"
+
+[[variable]]
+native_id = "116.25182"
+slug = "skuldderivat-utlandsk-erhallna"
+
+[[variable]]
+native_id = "116.25183"
+slug = "skuldderivat-utlandsk-erlagda"
+
+[[variable]]
+native_id = "116.28310"
+slug = "upplupna-skatteintakter"
+
+[[variable]]
+native_id = "116.32743"
+slug = "bidrag-till-infrastruktur"
+
+[[variable]]
+native_id = "116.32862"
+slug = "placering-vardereglering-obligationer"
+
+[[variable]]
+native_id = "116.32863"
+slug = "placering-vardereglering-aktier-andelar"
+
+[[variable]]
+native_id = "116.32864"
+slug = "langfristiga-fordringar-vardereglering"
+
+[[variable]]
+native_id = "116.32865"
+slug = "vardereglering-kundfordringar"
+
+[[variable]]
+native_id = "116.32866"
+slug = "aterforing-av-nedskrivning"
+
+[[variable]]
+native_id = "116.32867"
+slug = "nedskrivningar-aktier-fordringar-lan"
+
+[[variable]]
+native_id = "116.32966"
+slug = "spec-kommunagda-foretag-kop-nyteckning"
+
+[[variable]]
+native_id = "116.32967"
+slug = "spec-kommunagda-foretag-forsaljning"
+
+[[variable]]
+native_id = "116.32968"
+slug = "spec-kommunagda-foretag-reavinst"
+
+[[variable]]
+native_id = "116.32969"
+slug = "spec-kommunagda-foretag-reaforlust"
+
+[[variable]]
+native_id = "116.32970"
+slug = "spec-kommunagda-foretag-nedskrivning"
+
+[[variable]]
+native_id = "116.32971"
+slug = "spec-kommunagda-omklassificering-pos"
+
+[[variable]]
+native_id = "116.32972"
+slug = "spec-kommunagda-aterforing-nedskrivning"
+
+[[variable]]
+native_id = "116.32973"
+slug = "spec-kommunagda-omklassificering-neg"
+
+[[variable]]
+native_id = "116.32974"
+slug = "spec-kommunagda-ovriga-forandringar-neg"
+
+[[variable]]
+native_id = "116.32975"
+slug = "plac-kommunagt-bokfort-ovriga-pos"
+
+[[variable]]
+native_id = "116.32976"
+slug = "plac-kommunagt-varde-kop"
+
+[[variable]]
+native_id = "116.32977"
+slug = "plac-kommunagt-varde-forsaljningspris"
+
+[[variable]]
+native_id = "116.32978"
+slug = "plac-kommunagt-varde-reavinst"
+
+[[variable]]
+native_id = "116.32979"
+slug = "plac-kommunagt-varde-reaforlust"
+
+[[variable]]
+native_id = "116.32980"
+slug = "plac-kommunagt-varde-nedskrivning"
+
+[[variable]]
+native_id = "116.32981"
+slug = "plac-kommunagt-varde-aterforing"
+
+[[variable]]
+native_id = "116.32982"
+slug = "plac-kommunagt-varde-omklassif-pos"
+
+[[variable]]
+native_id = "116.32983"
+slug = "plac-kommunagt-varde-omklassif-neg"
+
+[[variable]]
+native_id = "116.32984"
+slug = "plac-kommunagt-varde-ovriga-pos"
+
+[[variable]]
+native_id = "116.32985"
+slug = "plac-kommunagt-varde-ovriga-neg"
+
+[[variable]]
+native_id = "116.32986"
+slug = "plac-kommunagt-bokfort-redovisat-fg-ar"
+
+[[variable]]
+native_id = "116.32987"
+slug = "plac-kommunagt-varde-redovisat-fg-ar"
+
+[[variable]]
+native_id = "116.32988"
+slug = "plac-kommunagt-varde-redovisat"
+
+[[variable]]
+native_id = "116.32989"
+slug = "plac-kommunagt-bokfort-redovisat"
+
+[[variable]]
+native_id = "116.32990"
+slug = "spec-lf-fordringar-redovisat-fg-ar"
+
+[[variable]]
+native_id = "116.32992"
+slug = "spec-lf-fordringar-nyutlaning"
+
+[[variable]]
+native_id = "116.32993"
+slug = "spec-lf-fordringar-amortering"
+
+[[variable]]
+native_id = "116.32994"
+slug = "spec-lf-fordringar-nedskrivningar"
+
+[[variable]]
+native_id = "116.32995"
+slug = "spec-lf-fordringar-aterforing"
+
+[[variable]]
+native_id = "116.32996"
+slug = "spec-lf-fordringar-omklassif-pos"
+
+[[variable]]
+native_id = "116.32997"
+slug = "spec-lf-fordringar-omklassif-neg"
+
+[[variable]]
+native_id = "116.32998"
+slug = "spec-lf-fordringar-efterskankning"
+
+[[variable]]
+native_id = "116.32999"
+slug = "spec-lf-fordringar-ovriga-pos"
+
+[[variable]]
+native_id = "116.33000"
+slug = "spec-lf-fordringar-ovriga-neg"
+
+[[variable]]
+native_id = "116.33001"
+slug = "spec-lf-fordringar-redovisat"
+
+[[variable]]
+native_id = "116.33015"
+slug = "kf-fordringar-kommunagt-redovisat-fg-ar"
+
+[[variable]]
+native_id = "116.33016"
+slug = "kf-fordringar-kommunagt-nyutlaning"
+
+[[variable]]
+native_id = "116.33017"
+slug = "kf-fordringar-kommunagt-amortering"
+
+[[variable]]
+native_id = "116.33018"
+slug = "kf-fordringar-kommunagt-nedskrivning"
+
+[[variable]]
+native_id = "116.33019"
+slug = "kf-fordringar-kommunagt-aterforing"
+
+[[variable]]
+native_id = "116.33020"
+slug = "kf-fordringar-kommunagt-omklassif-pos"
+
+[[variable]]
+native_id = "116.33021"
+slug = "kf-fordringar-kommunagt-omklassif-neg"
+
+[[variable]]
+native_id = "116.33022"
+slug = "kf-fordringar-kommunagt-efterskankning"
+
+[[variable]]
+native_id = "116.33023"
+slug = "kf-fordringar-kommunagt-ovriga-pos"
+
+[[variable]]
+native_id = "116.33024"
+slug = "kf-fordringar-kommunagt-ovriga-neg"
+
+[[variable]]
+native_id = "116.33025"
+slug = "kf-fordringar-kommunagt-redovisat"
+
+[[variable]]
+native_id = "116.33027"
+slug = "lf-skulder-summa-svenska-overtagen"
+
+[[variable]]
+native_id = "116.33028"
+slug = "lf-skulder-kostnadsersattning-invbidrag"
+
+[[variable]]
+native_id = "116.33029"
+slug = "kf-lan-svenska-kortfristig-del-lf-skuld"
+
+[[variable]]
+native_id = "116.33030"
+slug = "summa-kf-lan-svenska-overtagen-skuld"
+
+[[variable]]
+native_id = "116.33031"
+slug = "moms-sarskilda-punktskatter"
+
+[[variable]]
+native_id = "116.33032"
+slug = "personal-skatter-avgifter-loneavdrag"
+
+[[variable]]
+native_id = "116.33035"
+slug = "forutbetalda-skatteintakter"
+
+[[variable]]
+native_id = "116.33036"
+slug = "nominella-varden-certif-oblig-utstaende"
+
+[[variable]]
+native_id = "116.33037"
+slug = "nominella-varden-certif-oblig-overkurs"
+
+[[variable]]
+native_id = "116.33038"
+slug = "nominella-varden-certif-oblig-underkurs"
+
+[[variable]]
+native_id = "116.33039"
+slug = "obligationslan-sverige-overkurs"
+
+[[variable]]
+native_id = "116.33041"
+slug = "obligationslan-sverige-underkurs"
+
+[[variable]]
+native_id = "116.33044"
+slug = "tillgangsderivat-swappar-marknadsvarde"
+
+[[variable]]
+native_id = "116.33045"
+slug = "tillgangsderivat-ovriga-marknadsvarde"
+
+[[variable]]
+native_id = "116.33046"
+slug = "tillgangsderivat-swappar-erhallen-ranta"
+
+[[variable]]
+native_id = "116.33047"
+slug = "tillgangsderivat-swappar-erlagd-ranta"
+
+[[variable]]
+native_id = "116.33048"
+slug = "tillgangsderivat-ovriga-erhallen"
+
+[[variable]]
+native_id = "116.33049"
+slug = "tillgangsderivat-ovriga-erlagd"
+
+[[variable]]
+native_id = "116.33050"
+slug = "tillgangsderivat-positivt-marknadsvarde"
+
+[[variable]]
+native_id = "116.33051"
+slug = "derivat-swappar-eller-andra-derivat"
+
+[[variable]]
+native_id = "116.33052"
+slug = "tillgangsderivat-negativt-marknadsvarde"
+
+[[variable]]
+native_id = "116.33053"
+slug = "skuldderivat-swappar-marknadsvarde"
+
+[[variable]]
+native_id = "116.33054"
+slug = "skuldderivat-ovriga-marknadsvarde"
+
+[[variable]]
+native_id = "116.33055"
+slug = "skuldderivat-swappar-erhallen-ranta"
+
+[[variable]]
+native_id = "116.33056"
+slug = "skuldderivat-swappar-erlagd-ranta"
+
+[[variable]]
+native_id = "116.33057"
+slug = "skuldderivat-ovriga-erlagd-ranta"
+
+[[variable]]
+native_id = "116.33058"
+slug = "skuldderivat-ovriga-erhallen-betalning"
+
+[[variable]]
+native_id = "116.33059"
+slug = "arets-totala-rantekostnader-for-kommunen"
+
+[[variable]]
+native_id = "116.33060"
+slug = "arets-rantekostnader-exkl-swappaverkan"
+
+[[variable]]
+native_id = "116.33061"
+slug = "arets-rantekostnader-inkl-swappaverkan"
+
+[[variable]]
+native_id = "116.37731"
+slug = "arets-ranteintakter-inkl-swappaverkan"
+
+[[variable]]
+native_id = "116.37768"
+slug = "arets-ranteintakter-exkl-swappaverkan"
+
+[[variable]]
+native_id = "116.37769"
+slug = "forvantas-marknadsmassig-avkastning"
+
+[[variable]]
+native_id = "116.37770"
+slug = "omstrukturering-kommunalt-foretag"
+
+[[variable]]
+native_id = "116.37771"
+slug = "beskrivning-omstrukturering-kommunalt"
+
+[[variable]]
+native_id = "116.37772"
+slug = "delinlosen-av-pensionsskulden"
+
+[[variable]]
+native_id = "116.37773"
+slug = "belopp-delinlosen-av-pensionsskulden"
+
+[[variable]]
+native_id = "116.37775"
+slug = "obligationslan-emitterade-i-utlandet-usd"
+
+[[variable]]
+native_id = "116.37776"
+slug = "obligationslan-emitterade-i-utlandet-eur"
+
+[[variable]]
+native_id = "116.37777"
+slug = "lan-fran-svenska-langivare-usd"
+
+[[variable]]
+native_id = "116.37778"
+slug = "lan-fran-svenska-langivare-eur"
+
+[[variable]]
+native_id = "116.37779"
+slug = "lan-fran-svenska-langivare-ovrig-valuta"
+
+[[variable]]
+native_id = "116.37780"
+slug = "lf-lan-utlandska-langivare-usd"
+
+[[variable]]
+native_id = "116.37781"
+slug = "lf-lan-utlandska-langivare-eur"
+
+[[variable]]
+native_id = "116.37782"
+slug = "lf-lan-utlandska-langivare-sek"
+
+[[variable]]
+native_id = "116.37783"
+slug = "lf-lan-utlandska-langivare-ovrig-valuta"
+
+[[variable]]
+native_id = "116.37784"
+slug = "obligationslan-sverige-usd"
+
+[[variable]]
+native_id = "116.37785"
+slug = "obligationslan-sverige-eur"
+
+[[variable]]
+native_id = "116.37786"
+slug = "obligationslan-sverige-sek"
+
+[[variable]]
+native_id = "116.37787"
+slug = "obligationslan-sverige-ovrig-valuta"
+
+[[variable]]
+native_id = "116.37788"
+slug = "kf-lan-svenska-langivare-usd"
+
+[[variable]]
+native_id = "116.37789"
+slug = "kf-lan-svenska-langivare-ovrig-valuta"
+
+[[variable]]
+native_id = "116.37790"
+slug = "kf-lan-svenska-langivare-eur"
+
+[[variable]]
+native_id = "116.37791"
+slug = "kf-lan-utlandska-langivare-usd"
+
+[[variable]]
+native_id = "116.37792"
+slug = "kf-lan-utlandska-langivare-eur"
+
+[[variable]]
+native_id = "116.37793"
+slug = "kf-lan-utlandska-langivare-sek"
+
+[[variable]]
+native_id = "116.37794"
+slug = "kf-lan-utlandska-langivare-ovrig-valuta"
+
+# register 117 (kommunalekonomisk-utjamning)

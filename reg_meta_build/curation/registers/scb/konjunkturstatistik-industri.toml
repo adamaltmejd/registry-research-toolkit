@@ -1,0 +1,339 @@
+[register]
+provider = "scb"
+slug = "konjunkturstatistik-industri"
+native_id = "187"
+
+[[variant]]
+native_id = "187.369"
+slug = "industriproduktionsindex"
+display_group = "Industriproduktionsindex"
+panel_entity_key = "venr"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "187.370"
+slug = "industrins-leverans-orderlage"
+display_group = "Industrins leverans- och orderläge"
+panel_entity_key = "venr"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "187.371"
+slug = "industrins-lager"
+display_group = "Industrins lager"
+panel_entity_key = "venr"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "187.1115"
+slug = "industrins-orderingang"
+display_group = "Industrins orderingång och omsättning"
+panel_entity_key = "venr"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
+
+
+[[variant]]
+native_id = "187.1523"
+slug = "industrins-lager-2015"
+display_group = "Industrins lager 2015-"
+panel_entity_key = "venr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# Utrikeshandel med varor
+
+[[variable]]
+native_id = "187.1454"
+slug = "venr"
+
+
+[[variable]]
+native_id = "187.50"
+slug = "manad"
+
+[[variable]]
+native_id = "187.73"
+slug = "ar"
+
+[[variable]]
+native_id = "187.466"
+slug = "upprakningstal"
+
+[[variable]]
+native_id = "187.865"
+slug = "anvandaridentitet-uppgiftsnotering"
+
+[[variable]]
+native_id = "187.2005"
+slug = "anvandaridentitet"
+
+[[variable]]
+native_id = "187.2642"
+slug = "antal-anstallda-verksamhetsenhet"
+
+[[variable]]
+native_id = "187.2643"
+slug = "verksamhetsenhet-benamning"
+
+[[variable]]
+native_id = "187.2916"
+slug = "granskning"
+
+[[variable]]
+native_id = "187.2918"
+slug = "observationsnummer"
+
+[[variable]]
+native_id = "187.2921"
+slug = "urvalsar"
+
+[[variable]]
+native_id = "187.2928"
+slug = "anskaffningsvarde-frammande"
+
+[[variable]]
+native_id = "187.2929"
+slug = "anskaffningsvarde-insats"
+
+[[variable]]
+native_id = "187.2930"
+slug = "forsaljningsvarde-fardiga-produkter"
+
+[[variable]]
+native_id = "187.2941"
+slug = "forsaljningsvarde-produkter-arbete"
+
+[[variable]]
+native_id = "187.2952"
+slug = "fran-och-meddatum"
+
+[[variable]]
+native_id = "187.2953"
+slug = "leveranser-hemmamarknad"
+
+[[variable]]
+native_id = "187.2954"
+slug = "interna-leveranser"
+
+[[variable]]
+native_id = "187.2955"
+slug = "totala-leveranser"
+
+[[variable]]
+native_id = "187.2956"
+slug = "orderingang-exportmarknad"
+
+[[variable]]
+native_id = "187.2957"
+slug = "orderingang-hemmamarknad"
+
+[[variable]]
+native_id = "187.2958"
+slug = "total-orderingang"
+
+[[variable]]
+native_id = "187.2959"
+slug = "orderstock-exportmarknad"
+
+[[variable]]
+native_id = "187.2960"
+slug = "orderstock-hemmamarknad"
+
+[[variable]]
+native_id = "187.2961"
+slug = "total-orderstock"
+
+[[variable]]
+native_id = "187.2962"
+slug = "tilldatum"
+
+[[variable]]
+native_id = "187.3310"
+slug = "branschgrupp"
+
+[[variable]]
+native_id = "187.3578"
+slug = "orgnr-12"
+
+[[variable]]
+native_id = "187.4027"
+slug = "naringsgren"
+
+[[variable]]
+native_id = "187.4042"
+slug = "firmanamn"
+
+[[variable]]
+native_id = "187.5144"
+slug = "inkommandedatum"
+
+[[variable]]
+native_id = "187.5147"
+slug = "uppskovsdatum"
+
+[[variable]]
+native_id = "187.5160"
+slug = "blankettstatus-manad"
+
+[[variable]]
+native_id = "187.5161"
+slug = "driftstyp-produktion-manad"
+
+[[variable]]
+native_id = "187.5162"
+slug = "hanteringskod-driftsdagar-kalendermanad"
+
+[[variable]]
+native_id = "187.5163"
+slug = "hanteringskod-driftsdagar-rapportperiod"
+
+[[variable]]
+native_id = "187.5164"
+slug = "hanteringskod-produktion"
+
+[[variable]]
+native_id = "187.5165"
+slug = "hanteringskod-leveranser-hemmamarknad"
+
+[[variable]]
+native_id = "187.5166"
+slug = "hanteringskod-leveranser-exportmarknad"
+
+[[variable]]
+native_id = "187.5167"
+slug = "hanteringskod-interna-leveranser"
+
+[[variable]]
+native_id = "187.5168"
+slug = "hanteringskod-totala-leveranser"
+
+[[variable]]
+native_id = "187.5169"
+slug = "hanteringskod-orderingang-hemmamarknad"
+
+[[variable]]
+native_id = "187.5170"
+slug = "hanteringskod-orderingang-exportmarknad"
+
+[[variable]]
+native_id = "187.5171"
+slug = "hanteringskod-total-orderingang"
+
+[[variable]]
+native_id = "187.5172"
+slug = "hanteringskod-orderstock-hemmamarknad"
+
+[[variable]]
+native_id = "187.5173"
+slug = "hanteringskod-orderstock-exportmarknad"
+
+[[variable]]
+native_id = "187.5174"
+slug = "hanteringskod-total-orderstock"
+
+[[variable]]
+native_id = "187.5176"
+slug = "observationsenhetsstatus-manad"
+
+[[variable]]
+native_id = "187.5177"
+slug = "vardestatus-leveranser-och-order"
+
+[[variable]]
+native_id = "187.5178"
+slug = "vardestatus-produktion"
+
+[[variable]]
+native_id = "187.5179"
+slug = "aktivt-organisationsnummer"
+
+[[variable]]
+native_id = "187.5181"
+slug = "urvalsstorlek"
+
+[[variable]]
+native_id = "187.6306"
+slug = "antal-arbetade-timmar"
+
+[[variable]]
+native_id = "187.14636"
+slug = "leveranser-exportmarknad"
+
+[[variable]]
+native_id = "187.19538"
+slug = "upprakningsfaktor"
+
+[[variable]]
+native_id = "187.21317"
+slug = "produktionsvolymer"
+
+[[variable]]
+native_id = "187.28064"
+slug = "imputeringsstatus"
+
+# register 188 (utrikeshandel)
+
+[[variable]]
+native_id = "187.2923.al2undu"
+slug = "andrad"
+
+[[variable]]
+native_id = "187.2923.al3undeju"
+slug = "andrad-al3"
+
+[[variable]]
+native_id = "187.2923.andrad"
+slug = "andrad-kol"
+
+# register 188 (utrikeshandel)
+
+[[variable]]
+native_id = "187.56"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "187.2846"
+slug = "lopnummer-urvalsenheter"
+
+[[variable]]
+native_id = "187.2936"
+slug = "ingaende-lager"
+
+[[variable]]
+native_id = "187.4028"
+slug = "storan"
+
+[[variable]]
+native_id = "187.4030"
+slug = "lillan"
+
+[[variable]]
+native_id = "187.4066"
+slug = "storleksgrupp"
+
+[[variable]]
+native_id = "187.15169"
+slug = "bransch"
+
+[[variable]]
+native_id = "187.23859"
+slug = "kvartal-och-ar"
+
+[[variable]]
+native_id = "187.31002"
+slug = "urvalsversion"
+
+# register 188
+
+[[variable]]
+native_id = "187.4873.prodvarde"
+slug = "produktionsvarde"
+
+# register 189
