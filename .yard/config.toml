@@ -25,15 +25,17 @@ dockerfile = ".yard/Dockerfile"
 
 # Agents hold harness/model/session settings. Jobs below hold access,
 # instructions and timeouts; workflows select an implementation agent.
-# Opus 5.5 implements, plans and resolves conflicts; Sonnet handles light work;
-# GPT-6 Sol reviews (see [review.reviewers.*]).
+# GPT-6 Sol implements (default and heavy); Opus 5.5 plans and resolves
+# conflicts; Sonnet handles light work. Implementation moved off Opus on
+# 2026-09-25 to save Claude tokens. A GPT-6 Luna trial (Y-229) cost more and
+# needed more operator nudges than Opus, so it ended. DeepSeek reviews Sol's
+# work (see [review.reviewers.*]) so implementer and reviewer never share a
+# provider.
 [agents.implementation]
-harness = "claude"
-model = "claude-opus-5-5"
-effort = "xhigh"
+harness = "codex"
+model = "gpt-6-sol"
+effort = "high"
 tools = { subagents = true }
-context_limit_tokens = 300000
-compaction_threshold_share = 0.7
 
 [agents.planning]
 harness = "claude"
@@ -58,21 +60,10 @@ model = "claude-sonnet-5"
 effort = "xhigh"
 tools = { subagents = false }
 
-# Opus at high effort for design-heavy tickets, selected by the heavy workflow.
+# Sol at xhigh effort for design-heavy tickets, selected by the heavy workflow.
 [agents.heavy]
-harness = "claude"
-model = "claude-opus-5-5"
-effort = "high"
-tools = { subagents = true }
-context_limit_tokens = 300000
-compaction_threshold_share = 0.7
-
-# GPT-6 Luna on the codex harness, on trial as a cheaper implementer
-# (2026-09-24). The trial workflow has it reviewed by the Muse seat so review and
-# implementation never share a provider.
-[agents.luna]
 harness = "codex"
-model = "gpt-6-luna"
+model = "gpt-6-sol"
 effort = "xhigh"
 tools = { subagents = true }
 
@@ -92,11 +83,11 @@ tools = { subagents = false }
 # light-ui leaves rendered evidence to gates.
 [workflows.default]
 implementer = "implementation"
-review = ["codex"]
+review = ["deepseek"]
 access = "writable"
 inactivity_timeout_minutes = 0
 total_work_timeout_minutes = 360
-instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead. If the ticket changes rendered reg_webapp frontend UI: load the repo skill reg-webapp-frontend-design before authoring (if the Skill tool does not list it, read .claude/skills/reg-webapp-frontend-design/SKILL.md), and, when subagents are enabled, before declaring the candidate run reg-webapp-design-reviewer (.claude/skills/reg-webapp-design-reviewer/SKILL.md) in a clean subagent and fix or explicitly dismiss what it finds. On light-ui, do not run that reviewer or render screenshots yourself: the flow gates retain the pictures and the operator judges them."
+instructions = "Smallest safe change, in the ticket's scope only. Follow the repo ladder (no change > existing capability > stdlib > installed dep > minimal new code > new dep) and prefer deletion to addition: pre-v1 with no external users, break and delete freely — no compat shims, migration code, deprecation wrappers, or speculative options/abstractions no ticket asked for. Never simplify away the load-bearing guards: PII/MONA confinement, k-anonymity/disclosure control, determinism/byte-identity, JSON-contract validation, fail-fast. If the work grows past the ticket, do less and file a proposal instead. Before handing off, run the full test suite of every package you touched plus `uv run ruff check` and `uv run ruff format --check` over the repo; a focused run is not enough. Import, unused-import and formatter-only edits to existing tests that your change caused are authorized, including during a gate repair; changing an assertion still needs the ticket or the operator. If the ticket changes rendered reg_webapp frontend UI: load the repo skill reg-webapp-frontend-design before authoring (if the Skill tool does not list it, read .claude/skills/reg-webapp-frontend-design/SKILL.md), and, when subagents are enabled, before declaring the candidate run reg-webapp-design-reviewer (.claude/skills/reg-webapp-design-reviewer/SKILL.md) in a clean subagent and fix or explicitly dismiss what it finds. On light-ui, do not run that reviewer or render screenshots yourself: the flow gates retain the pictures and the operator judges them."
 
 [planning]
 agent = "planning"
@@ -364,16 +355,8 @@ max_priority = "P3"
 # needs TYPESAFE_API_KEY in operator.env, which this machine does not carry. A
 # daemon without the key runs the whole panel, which is what an unanswered
 # question always selects.
-# autoreview runs seats on the host's codex CLI, not the vendored worker pin:
-# gpt-6-sol needs codex >= 0.156 there (0.153 refuses it on a ChatGPT session).
-[review.reviewers.codex]
-engine = "codex"
-model = "gpt-6-sol"
-effort = "high"
-speed = "fast"
-
-# A DeepSeek seat reviews the trial workflow, so its implementer (OpenAI) and
-# reviewer (DeepSeek) come from different providers. Muse was tried first
+# The DeepSeek seat reviews every implementation workflow, so a Sol (OpenAI)
+# implementer and its reviewer come from different providers. Muse was tried first
 # (2026-09-25) and dropped: it answers autoreview's overall_correctness with a
 # boolean instead of the verdict string, so every review errors.
 [review.reviewers.deepseek]
@@ -381,6 +364,9 @@ engine = "pi"
 model = "openrouter/deepseek/deepseek-v4.1-flash"
 effort = "high"
 
+# autoreview runs codex seats on the host's codex CLI, not the vendored worker
+# pin: gpt-6-sol needs codex >= 0.156 there (0.153 refuses it on a ChatGPT
+# session).
 # The design seat judges source against the supplied design contracts. Rendered
 # checks belong to workers and gates; the operator judges their visual evidence.
 # Context is the reviewer skill plus the frontend design language
@@ -417,7 +403,7 @@ instructions = "Review this reg_webapp frontend candidate using only the diff an
 # approved on the worker's own render; see .yard/OPERATOR.md "UI approval
 # evidence".
 [workflows.ui]
-review = ["codex", "design"]
+review = ["deepseek", "design"]
 
 # The light workflow is the everyday lane for simple work, selected one ticket
 # at a time: a cheaper agent and no review. Skipping the review panel is its one
@@ -451,16 +437,9 @@ review = "none"
 [workflows.muse]
 implementer = "muse"
 
-# heavy: Opus at high effort for design-heavy tickets, with the default review.
+# heavy: Sol at xhigh effort for design-heavy tickets, with the default review.
 [workflows.heavy]
 implementer = "heavy"
-
-# trial: evaluates a candidate replacement for the default implementer
-# (2026-09-24: GPT-6 Luna, reviewed by DeepSeek). If the trial holds, its agent
-# and review move into [workflows.default] and this workflow is deleted.
-[workflows.trial]
-implementer = "luna"
-review = ["deepseek"]
 
 # build_artifacts names the directories ordinary build activity fills with
 # output your .gitignore already covers -- target, node_modules, dist, and
