@@ -10,6 +10,7 @@ import hashlib
 import json
 import re
 import tomllib
+from calendar import monthrange
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
@@ -21,9 +22,15 @@ from reg_meta.fqid import FqidKind, derive_variable_slug, parse as parse_fqid
 
 from ._curation import SentinelCode
 from ._resolved_common import covers_window
-from .concept_groups import CodeLabelPair
+from .cis2016_matrix import (
+    Cis2014Matrix,
+    convert_matrix,
+    load_cis2014_matrix,
+    load_cis2016_matrix,
+)
+from .concept_groups import CodeLabelPair, _MONTH_TOKENS
 from .convert_errata import capture_expectations
-from .fqid_slugs import EntityKind, _load_register_auto_file, _validate_entry
+from .fqid_slugs import EntityKind, SlugEntry, _load_register_auto_file, _validate_entry
 from .normalization import normalize_token
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
 from .resolved_metadata import (
@@ -55,25 +62,29 @@ from .source_coordinates import (
 )
 from .source_curation import (
     AcknowledgeDecision,
+    AliasWindowDecision,
     CheckedFieldChange,
     CheckedIdentityChange,
     CheckedSourceUse,
     CheckedVariantAssignment,
     CodingDecision,
+    ColumnRepresentation,
     CuratedOccurrenceAddition,
     CurationCase,
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
+    RepresentationDecision,
     ResolutionDiagnostic,
     SourceRecordRef,
 )
 from .source_effects import record_ref
-from .source_intervals import coding_scope_bounds
+from .source_intervals import coding_scope_bounds, scope_bounds
 from .source_naming import (
     AcceptedNamingEntry,
     LegacyNamingBinding,
     NamingAmbiguity,
+    NamingDeclaration,
     NamingFreezeSetting,
     NamingSelection,
     NativeNamingTarget,
@@ -145,14 +156,11 @@ FAMILIES: dict[str, Family] = {
         naming_shapes=("declared-column",),
         unapplied_datasets=("curation/scb_errata.toml",),
     ),
-    "matrix": Family(
+    "matrix_repr": Family(
         case_ids=("accepted-cis2014-answers", "accepted-cis2016-answers"),
-        naming_shapes=("accepted-matrix",),
-        unapplied_datasets=("curation/cis",),
-    ),
-    "representation": Family(
         case_prefixes=("accepted-period-family:", "accepted-alias-window:"),
-        naming_shapes=("period-family",),
+        naming_shapes=("accepted-matrix", "period-family"),
+        unapplied_datasets=("curation/cis",),
     ),
     "coding": Family(
         case_prefixes=("accepted-coding:", "accepted-codeless:"),
@@ -204,6 +212,7 @@ COMPILED = frozenset(
         "naming",
         "sos_thin",
         "partition",
+        "matrix_repr",
     }
 )
 
@@ -306,8 +315,8 @@ def _naming_family(target: Any) -> str:
     markers = {
         "accepted-partition": "partition",
         "declared-column": "errata",
-        "accepted-matrix": "matrix",
-        "period-family": "representation",
+        "accepted-matrix": "matrix_repr",
+        "period-family": "matrix_repr",
         "accepted-shape": "partition",
         "accepted-name": "partition",
         "thin-provider": "sos_thin",
@@ -1059,6 +1068,485 @@ def _stale_partition(ref: str, subject: str, detail: str) -> ResolutionDiagnosti
         subject=subject,
         detail=f"{ref}: {detail}",
         withheld_output=(ref,),
+    )
+
+
+def _matrix_repr_guard(record: SourceRecord, case_id: str) -> PeerGuard:
+    ref = record_ref(record)
+    return PeerGuard(
+        guard_id=f"{case_id}:{'/'.join(ref.semantic_record_key)}",
+        source=record.source,
+        native=record.subject.native,
+        expected_members=(ref,),
+    )
+
+
+def _curation_year(record: SourceRecord) -> int | None:
+    bounds = scope_bounds(record.edition_scope)
+    if bounds is None or len(bounds) != 1:
+        return None
+    lo, hi = bounds[0]
+    start, end = date.fromordinal(lo), date.fromordinal(hi)
+    return start.year if start.year == end.year else None
+
+
+def _edition_label(record: SourceRecord) -> str | None:
+    labels = {
+        parent.coordinate.name
+        for parent in record.parent_facts
+        if parent.kind == "edition" and parent.coordinate.name
+    }
+    return next(iter(labels)) if len(labels) == 1 else None
+
+
+def compile_period_families(
+    register: RegisterCuration,
+    records: tuple[SourceRecord, ...],
+) -> tuple[
+    tuple[CurationCase, ...],
+    tuple[NamingDeclaration, ...],
+    tuple[tuple[tuple[str | int, ...], str], ...],
+    tuple[ResolutionDiagnostic, ...],
+]:
+    """Compile complete calendar-month groups from one original SCB register."""
+    cases: list[CurationCase] = []
+    names: list[NamingDeclaration] = []
+    keys = []
+    diagnostics = []
+    for index, entry in enumerate(register.representation.period_family, 1):
+        ref = f"{register.source_file}#/representation.period_family/{index}"
+        stem = derive_variable_slug(entry.family_stem)
+        groups: dict[
+            tuple[tuple[str | int, ...], int], dict[int, list[SourceRecord]]
+        ] = defaultdict(lambda: defaultdict(list))
+        for record in records:
+            column = _literal_field(record, "column_name")
+            variant = native_variant_key(record)
+            year = _curation_year(record)
+            if column is None or variant is None or year is None:
+                continue
+            slug = derive_variable_slug(column)
+            for token, month in _MONTH_TOKENS.items():
+                if slug == stem + token or slug == stem + "-" + token:
+                    groups[variant, year][month].append(record)
+                    break
+        if not groups:
+            diagnostics.append(
+                _stale_partition(ref, entry.family_stem, "no month members")
+            )
+            continue
+        family_key = (
+            "curation",
+            "period-family",
+            register.register_info.provider,
+            register.register_info.slug,
+            entry.family_stem,
+        )
+        named_members = []
+        for (variant, year), months in sorted(
+            groups.items(), key=lambda item: repr(item[0])
+        ):
+            if set(months) != set(range(1, 13)) or any(
+                len({_literal_field(r, "column_name") for r in members}) != 1
+                for members in months.values()
+            ):
+                diagnostics.append(
+                    _stale_partition(
+                        ref,
+                        entry.family_stem,
+                        f"{variant!r} {year} lacks one exact column per month",
+                    )
+                )
+                continue
+            members = tuple(
+                record for month in range(1, 13) for record in months[month]
+            )
+            named_members.extend(members)
+            identity_id = f"{ref}:{variant[-1]}:{year}:identity"
+            representation_id = f"{ref}:{variant[-1]}:{year}:representations"
+            expected = capture_expectations(
+                members,
+                fields=(
+                    "column_name",
+                    "data_type",
+                    "data_length",
+                    "operational_definition",
+                    "name",
+                ),
+                coding=True,
+            )
+            guards = tuple(
+                _matrix_repr_guard(record, identity_id) for record in members
+            )
+            effects = tuple(
+                effect
+                for record in members
+                for effect in (
+                    CheckedIdentityChange(
+                        ref=record_ref(record), variable_key=family_key
+                    ),
+                    CheckedFieldChange(
+                        ref=record_ref(record),
+                        replacement=FieldExpectation(
+                            name="name", status="value", value=entry.label
+                        ),
+                    ),
+                )
+            )
+            cases.append(
+                CurationCase(
+                    case_id=identity_id,
+                    targets=expected,
+                    peer_guards=guards,
+                    decision=OccurrenceCorrectionDecision(
+                        reviewed=True,
+                        effects=effects,
+                        reason="Reviewed month columns form one period family.",
+                        provenance=ref,
+                    ),
+                )
+            )
+            cases.append(
+                CurationCase(
+                    case_id=representation_id,
+                    targets=expected,
+                    peer_guards=guards,
+                    decision=RepresentationDecision(
+                        reviewed=True,
+                        variable_key=family_key,
+                        variant_key=variant,
+                        valid_from=f"{year}-01-01",
+                        valid_to=f"{year}-12-31",
+                        columns=tuple(
+                            ColumnRepresentation(
+                                column=cast(
+                                    str,
+                                    _literal_field(months[month][0], "column_name"),
+                                ),
+                                valid_from=f"{year}-{month:02}-01",
+                                valid_to=f"{year}-{month:02}-{monthrange(year, month)[1]:02}",
+                            )
+                            for month in range(1, 13)
+                        ),
+                        reason="Reviewed month columns provide the exact calendar windows.",
+                        provenance=ref,
+                    ),
+                )
+            )
+        if named_members:
+            expected = capture_expectations(
+                tuple(named_members), fields=("column_name",)
+            )
+            names.append(
+                NamingDeclaration(
+                    target=NativeNamingTarget(
+                        kind="variable",
+                        provider=register.register_info.provider,
+                        source_key=family_key,
+                        register_key=source_register_key(named_members[0]),
+                        expectations=expected,
+                        peer_guards=tuple(
+                            _matrix_repr_guard(record, ref) for record in named_members
+                        ),
+                    ),
+                    naming=SlugEntry(
+                        kind="variable",
+                        provider=register.register_info.provider,
+                        source_id=ref,
+                        slug=entry.slug or stem,
+                    ),
+                    contributors=(),
+                )
+            )
+            keys.append(
+                (
+                    family_key,
+                    f"period-family:{register.register_info.slug}:{entry.family_stem}",
+                )
+            )
+    return tuple(cases), tuple(names), tuple(keys), tuple(diagnostics)
+
+
+def compile_alias_windows(
+    register: RegisterCuration,
+    records: tuple[SourceRecord, ...],
+    naming: tuple[NamingDeclaration, ...],
+) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
+    """Resolve authored FQIDs against the names compiled for this register."""
+    cases = []
+    diagnostics = []
+    provider = register.register_info.provider
+    register_name = register.register_info.slug
+    register_keys = {
+        name.target.source_key
+        for name in naming
+        if name.target.kind == "register"
+        and name.naming.provider == provider
+        and name.naming.slug == register_name
+    }
+    for index, entry in enumerate(register.representation.alias_window, 1):
+        ref = f"{register.source_file}#/representation.alias_window/{index}"
+        parts = entry.variable.split("/")
+        variable_names = [
+            name
+            for name in naming
+            if name.target.kind == "variable"
+            and name.target.register_key in register_keys
+            and name.naming.slug == parts[-1]
+            and name.naming.provider == provider
+        ]
+        variant_names = [
+            name
+            for name in naming
+            if name.target.kind == "register_variant"
+            and name.target.register_key in register_keys
+            and name.naming.slug == entry.variant
+            and name.naming.provider == provider
+        ]
+        if (
+            len(parts) != 3
+            or parts[:2] != [provider, register_name]
+            or len(variable_names) != 1
+            or len(variant_names) != 1
+        ):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.variable,
+                    "variable FQID or variant slug does not resolve to exactly one compiled key",
+                )
+            )
+            continue
+        variable_name = variable_names[0]
+        variable_key = variable_name.target.source_key
+        variant_key = variant_names[0].target.source_key
+        expected_refs = {item.ref for item in variable_name.target.expectations}
+        selected = tuple(
+            record
+            for record in records
+            if native_variant_key(record) == variant_key
+            and _edition_label(record) in entry.source_editions
+            and (
+                record_ref(record) in expected_refs
+                if expected_refs
+                else native_variable_key(record) == variable_key
+            )
+        )
+        if not selected or {_edition_label(record) for record in selected} != set(
+            entry.source_editions
+        ):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.variable,
+                    "source editions have no exact compiled variable members",
+                )
+            )
+            continue
+        years = {_curation_year(record) for record in selected}
+        if None in years or len(years) != len(entry.source_editions):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.variable,
+                    "source editions do not establish distinct annual windows",
+                )
+            )
+            continue
+        years = sorted(cast(set[int], years))
+        if years != list(range(years[0], years[-1] + 1)):
+            diagnostics.append(
+                _stale_partition(
+                    ref, entry.variable, "source edition windows are not contiguous"
+                )
+            )
+            continue
+        expected = capture_expectations(selected, fields=("column_name",), coding=True)
+        cases.append(
+            CurationCase(
+                case_id=ref,
+                targets=expected,
+                peer_guards=tuple(
+                    _matrix_repr_guard(record, ref) for record in selected
+                ),
+                decision=AliasWindowDecision(
+                    reviewed=True,
+                    variable_key=variable_key,
+                    variant_key=variant_key,
+                    column=entry.column,
+                    valid_from=f"{years[0]}-01-01",
+                    valid_to=f"{years[-1]}-12-31",
+                    reason=entry.evidence,
+                    provenance=ref,
+                ),
+            )
+        )
+    return tuple(cases), tuple(diagnostics)
+
+
+def compile_matrix_repr(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[ScopeDeclarations, ...],
+    naming: dict[Any, tuple[NamingDeclaration, ...]],
+) -> tuple[
+    dict[Any, tuple[CurationCase, ...]],
+    dict[Any, tuple[NamingDeclaration, ...]],
+    dict[Any, tuple[tuple[tuple[str | int, ...], str], ...]],
+    tuple[ResolutionDiagnostic, ...],
+]:
+    """Replace the final stored cases with tracked, checked declarations."""
+    registers = {
+        f"{item.register_info.provider}/{item.register_info.slug}": item
+        for item in tree.registers
+    }
+    if not any(
+        name in registers
+        and (
+            registers[name].representation.period_family
+            or registers[name].representation.alias_window
+            or name == "scb/innovation-foretag"
+        )
+        for scope in scopes
+        for name, _ in _scope_registers(scope)
+    ):
+        return {}, {}, {}, ()
+    cases: dict[Any, list[CurationCase]] = defaultdict(list)
+    names: dict[Any, list[NamingDeclaration]] = defaultdict(list)
+    keys: dict[Any, list[tuple[tuple[str | int, ...], str]]] = defaultdict(list)
+    diagnostics = []
+    matrices = (
+        load_cis2014_matrix(
+            tree.root
+            / "registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json"
+        ),
+        load_cis2016_matrix(
+            tree.root
+            / "registers/scb/innovation-foretag/cis2016-matrix-meaning-evidence.json"
+        ),
+    )
+    with open_value_bindings(prepared.value_sources) as sessions:
+        for scope in sorted(
+            scopes, key=lambda item: (item.source, repr(item.register_key))
+        ):
+            scope_key = scope.source, scope.register_key
+            selected_registers = tuple(
+                (registers[name], native)
+                for name, native in _scope_registers(scope)
+                if name in registers
+                and (
+                    registers[name].representation.period_family
+                    or registers[name].representation.alias_window
+                    or name == "scb/innovation-foretag"
+                )
+            )
+            if not selected_registers:
+                continue
+            wanted = {native for _, native in selected_registers}
+            if scope.register_key is None:
+                grouped: dict[tuple[str | int, ...], list[SourceRecord]] = defaultdict(
+                    list
+                )
+                for record in prepared.records.iter_records(source=scope.source):
+                    if (key := source_register_key(record)) in wanted:
+                        grouped[key].append(record)
+                by_register = {key: tuple(value) for key, value in grouped.items()}
+            else:
+                by_register = dict(
+                    prepared.records.iter_register_slices(scope.source, wanted)
+                )
+            for register, native in selected_registers:
+                records = by_register.get(native, ())
+                period_cases, period_names, period_keys, issues = (
+                    compile_period_families(register, records)
+                )
+                cases[scope_key].extend(period_cases)
+                names[scope_key].extend(period_names)
+                keys[scope_key].extend(period_keys)
+                diagnostics.extend(issues)
+                if (
+                    register.register_info.slug == "innovation-foretag"
+                    and register.register_info.provider == "scb"
+                ):
+                    for matrix in matrices:
+                        if matrix is None:
+                            continue
+                        ref = (
+                            f"{register.source_file}#/matrix/{matrix.selector.edition}"
+                        )
+                        if native[-1] != matrix.selector.register_id:
+                            diagnostics.append(
+                                _stale_partition(
+                                    ref,
+                                    matrix.selector.edition,
+                                    "matrix register selector changed",
+                                )
+                            )
+                            continue
+                        coding = None
+                        if isinstance(matrix, Cis2014Matrix):
+                            donors = tuple(
+                                record
+                                for record in records
+                                if record.subject.native.edition_id
+                                == matrix.selector.regver_id
+                                and record.subject.native.variable_id
+                                == matrix.selector.var_id
+                                and record.subject.native.member_id
+                                == matrix.selector.cvid
+                            )
+                            if len({record_ref(record) for record in donors}) != 1:
+                                diagnostics.append(
+                                    _stale_partition(
+                                        ref,
+                                        matrix.selector.edition,
+                                        "blank matrix has no unique semantic donor",
+                                    )
+                                )
+                                continue
+                            bound = bind_code_lists(donors[0], sessions)
+                            if (
+                                bound.issues
+                                or len(bound.claims) != 1
+                                or not bound.claims[0].members
+                            ):
+                                diagnostics.append(
+                                    _stale_partition(
+                                        ref,
+                                        matrix.selector.edition,
+                                        "blank matrix donor lacks one complete list",
+                                    )
+                                )
+                                continue
+                            coding = {record_ref(donors[0]): bound.claims}
+                        try:
+                            converted = convert_matrix(
+                                matrix,
+                                records,
+                                case_id=ref,
+                                provenance=ref,
+                                coding=coding,
+                            )
+                        except ValueError as exc:
+                            diagnostics.append(
+                                _stale_partition(ref, matrix.selector.edition, str(exc))
+                            )
+                            continue
+                        cases[scope_key].append(converted.case)
+                        names[scope_key].extend(converted.naming)
+                        keys[scope_key].extend(converted.provider_keys.items())
+                alias_cases, alias_issues = compile_alias_windows(
+                    register,
+                    records,
+                    (*naming.get(scope_key, ()), *names[scope_key]),
+                )
+                cases[scope_key].extend(alias_cases)
+                diagnostics.extend(alias_issues)
+    return (
+        {key: tuple(value) for key, value in cases.items()},
+        {key: tuple(value) for key, value in names.items()},
+        {key: tuple(value) for key, value in keys.items()},
+        tuple(diagnostics),
     )
 
 
@@ -2805,6 +3293,18 @@ def compile_curation(
         + partition_keys.get(key, ())
         for key, values in provider_keys.items()
     }
+    matrix_cases, matrix_names, matrix_keys, matrix_diagnostics = compile_matrix_repr(
+        tree, prepared, scopes, naming
+    )
+    for key, values in matrix_cases.items():
+        cases[key].extend(values)
+    naming = {
+        key: (*values, *matrix_names.get(key, ())) for key, values in naming.items()
+    }
+    provider_keys = {
+        key: (*values, *matrix_keys.get(key, ()))
+        for key, values in provider_keys.items()
+    }
     for register, statuses in naming_report.items():
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
@@ -2835,6 +3335,7 @@ def compile_curation(
             *diagnostics,
             *naming_diagnostics,
             *partition_diagnostics,
+            *matrix_diagnostics,
             *thin_diagnostics,
         ),
         naming=naming,

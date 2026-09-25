@@ -19,7 +19,6 @@ from reg_meta_build.resolved_catalog import (
     ResolvedAliasWindow,
     ResolvedState,
 )
-from reg_meta_build.source_coding_choices import coding_expectations
 from reg_meta_build.source_coordinates import column_identity
 from reg_meta_build.source_curation import (
     CurationCase,
@@ -90,39 +89,8 @@ def resolve_representation_cases(
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
         assert isinstance(decision, RepresentationDecision)
-        coding_changed = [
-            column.column
-            for column in decision.columns
-            if set(
-                coding_expectations(
-                    coding[
-                        column_identity(
-                            decision.variable_key, decision.variant_key, column.column
-                        )
-                    ].claims,
-                    decision.valid_from,
-                    decision.valid_to,
-                )
-            )
-            != set(column.expected_codings)
-        ]
-        if evaluation.status == "applicable" and not coding_changed:
+        if evaluation.status == "applicable":
             applicable.append(case)
-        elif evaluation.status == "applicable":
-            diagnostics.append(
-                ResolutionDiagnostic(
-                    code="representation_coding_changed",
-                    severity="error",
-                    case_id=case.case_id,
-                    subject=repr(decision.variable_key),
-                    detail=f"Original coding evidence changed for columns {coding_changed!r}; the representation decision was not applied.",
-                    refs=tuple(t.ref for t in (*case.targets, *case.support)),
-                    fields=("coding",),
-                    valid_from=decision.valid_from,
-                    valid_to=decision.valid_to,
-                    withheld_output=("representations",),
-                )
-            )
         for issue in evaluation.issues:
             diagnostics.append(
                 ResolutionDiagnostic(

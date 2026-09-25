@@ -6,8 +6,7 @@ import json
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
-from reg_meta_build.cis2016_matrix import Cis2014Matrix, Cis2016Matrix
-from reg_meta_build.convert_matrix import convert_matrix
+from reg_meta_build.cis2016_matrix import Cis2014Matrix, Cis2016Matrix, convert_matrix
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
@@ -137,7 +136,7 @@ def test_blank_source_is_retained_and_only_declared_answers_are_added() -> None:
             (CodeMembershipClaim("1", "Yes", records[0].edition_scope),),
         ),
     )
-    with pytest.raises(ValueError, match="original bound donor coding"):
+    with pytest.raises(ValueError, match="one complete bound coding list"):
         convert_matrix(
             matrix, records, case_id="accepted-blank", provenance="pinned input"
         )
@@ -148,6 +147,14 @@ def test_blank_source_is_retained_and_only_declared_answers_are_added() -> None:
         provenance="pinned input",
         coding={donor: claims},
     )
+    with pytest.raises(ValueError, match="one complete bound coding list"):
+        convert_matrix(
+            matrix,
+            records,
+            case_id="accepted-blank",
+            provenance="pinned input",
+            coding={donor: (claims[0], claims[0])},
+        )
     witness = {(donor, records[0].edition_period_scope): claims}
     result = apply_occurrence_cases(records, (converted.case,), coding=witness)
     assert not result.diagnostics

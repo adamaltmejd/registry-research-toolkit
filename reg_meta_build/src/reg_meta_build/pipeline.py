@@ -238,9 +238,17 @@ def _read_scope(
     payload = _member(root, file.path).read_bytes()
     if hashlib.sha256(payload).hexdigest() != file.sha256:
         raise ValueError(f"curation file changed: {file.path}")
-    scope = ScopeDeclarations.model_validate_json(
-        gzip.decompress(payload) if file.path.endswith(".gz") else payload
-    )
+    raw = json.loads(gzip.decompress(payload) if file.path.endswith(".gz") else payload)
+    # The pinned transitional selection still carries empty period coding pins.
+    # Its matrix_repr cases are replaced before resolution; strip only that retired
+    # field so the current strict model validates every retained declaration.
+    for case in raw.get("cases", ()):
+        if case.get("case_id", "").startswith("accepted-period-family:"):
+            for column in case.get("decision", {}).get("columns", ()):
+                if column.get("expected_codings", ()) != []:
+                    raise ValueError("stored period-family coding pin is not empty")
+                column.pop("expected_codings", None)
+    scope = ScopeDeclarations.model_validate_json(json.dumps(raw))
     if (scope.source, scope.register_key) != key:
         raise ValueError("scope file identifies another source scope")
     return scope

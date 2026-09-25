@@ -748,7 +748,7 @@ def test_stored_split_naming_is_replaced_by_compiled_partition():
     assert merged.provider_keys == ()
 
 
-def test_stored_period_family_provider_key_survives_compiled_native_merge():
+def test_stored_period_family_provider_key_is_removed_by_compiled_merge():
     parent = _scope().naming[0]
     native_key = (*parent.target.source_key, "variable", "native-int", 5)
     native = NamingDeclaration(
@@ -795,8 +795,8 @@ def test_stored_period_family_provider_key_survives_compiled_native_merge():
         variants={(scope.source, scope.register_key): ()},
     )
     merged = merge_scope(scope, compiled)
-    assert merged.naming == (period, parent, native)
-    assert merged.provider_keys == ((period_key, "period-value"),)
+    assert merged.naming == (parent, native)
+    assert merged.provider_keys == ()
 
 
 def test_tree_hash_covers_curation_and_transitional_slug_files(tmp_path):
@@ -840,6 +840,7 @@ def test_stored_case_with_unowned_prefix_fails(tmp_path):
 def test_stored_v18b_case_and_gap_families_are_owned():
     assert "classification_bindings" in COMPILED
     assert "sos_thin" in COMPILED
+    assert "matrix_repr" in COMPILED
     assert (
         _naming_family(
             NativeNamingTarget(
@@ -869,7 +870,7 @@ def test_stored_v18b_case_and_gap_families_are_owned():
     cases = {
         "accepted-column-partitions:scb-registerinformation:1.2": "partition",
         "accepted-coding:46:0": "coding",
-        "accepted-alias-window:5:identity": "representation",
+        "accepted-alias-window:5:identity": "matrix_repr",
         f"accepted-classification-seed:{'a' * 64}": "classification_bindings",
         "scb_errata.toml/column/1": "errata",
         "accepted-errata:sos-declared-flags": "errata",
@@ -880,13 +881,56 @@ def test_stored_v18b_case_and_gap_families_are_owned():
         "accepted-classification-override:1:0": "classification_bindings",
         "accepted-codeless:46:0": "coding",
         "delivery_enrichment.generated.toml/alias/1": "annotations",
-        "accepted-period-family:5:identity": "representation",
+        "accepted-period-family:5:identity": "matrix_repr",
         "accepted-sos-identity:bu:FOD_DATUMN": "partition",
-        "accepted-cis2014-answers": "matrix",
-        "accepted-cis2016-answers": "matrix",
+        "accepted-cis2014-answers": "matrix_repr",
+        "accepted-cis2016-answers": "matrix_repr",
         "existing-source-use:Socialstyrelsen/Metadata_Förteckning legitimerade": "sos_thin",
     }
     assert {case_id: _case_family(case_id) for case_id in cases} == cases
+    assert (
+        _naming_family(
+            NativeNamingTarget(
+                kind="variable",
+                provider="scb",
+                source_key=(
+                    "scb-registerinformation",
+                    "scb",
+                    "register",
+                    "native-int",
+                    257,
+                    "accepted-matrix",
+                    "case",
+                    "answer",
+                ),
+                register_key=(
+                    "scb-registerinformation",
+                    "scb",
+                    "register",
+                    "native-int",
+                    257,
+                ),
+            )
+        )
+        == "matrix_repr"
+    )
+    assert (
+        _naming_family(
+            NativeNamingTarget(
+                kind="variable",
+                provider="scb",
+                source_key=("curation", "period-family", "scb", "lisa", "lonfink"),
+                register_key=(
+                    "scb-registerinformation",
+                    "scb",
+                    "register",
+                    "native-int",
+                    34,
+                ),
+            )
+        )
+        == "matrix_repr"
+    )
     gaps = {
         "curation/delivery_enrichment.generated.toml": "annotations",
         "curation/classifications.toml": "classification_bindings",

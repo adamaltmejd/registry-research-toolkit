@@ -555,8 +555,6 @@ class ColumnRepresentation(FiniteCurationWindow):
     """One exact physical representation within a reviewed metadata window."""
 
     column: str = Field(min_length=1)
-    # Checked over the enclosing metadata window, not this alias's subperiod.
-    expected_codings: tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...]
 
     @field_validator("column")
     @classmethod

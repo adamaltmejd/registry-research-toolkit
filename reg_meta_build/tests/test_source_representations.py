@@ -22,7 +22,6 @@ from reg_meta_build.source_coding import (
     CodeMembershipClaim,
     resolve_code_membership,
 )
-from reg_meta_build.source_coding_choices import coding_expectations
 from reg_meta_build.source_coordinates import column_identity
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
@@ -165,11 +164,6 @@ def _setup(records=None, claims=None):
                     column=column,
                     valid_from=start,
                     valid_to=end,
-                    expected_codings=coding_expectations(
-                        coding[column_identity(KEY, variant_key, column)].claims,
-                        "2020-01-01",
-                        "2020-12-31",
-                    ),
                 )
                 for column, start, end in (
                     ("First", "2020-01-01", "2020-06-30"),
@@ -328,9 +322,7 @@ def _claim(name, code, year=2020):
     )
 
 
-def test_coding_disagreement_is_withheld_and_new_coding_invalidates_old_decision() -> (
-    None
-):
+def test_coding_disagreement_is_withheld_without_a_representation_coding_pin() -> None:
     setup = _setup(
         claims={"First": (_claim("first", "01"),), "Second": (_claim("second", "02"),)}
     )
@@ -346,10 +338,7 @@ def test_coding_disagreement_is_withheld_and_new_coding_invalidates_old_decision
         (_claim("new", "01"),)
     )
     proof = resolve_representation_cases(records, (case,), coding=changed)
-    assert (
-        proof.cases == ()
-        and proof.diagnostics[0].code == "representation_coding_changed"
-    )
+    assert proof.cases == (case,) and proof.diagnostics == ()
     changed[column_identity(KEY, variant_key, "First")] = resolve_code_membership(
         (_claim("future", "01", 2021),)
     )
@@ -439,13 +428,11 @@ def test_conflicting_decision_withholds_only_its_intersection() -> None:
                 column="First",
                 valid_from="2020-07-01",
                 valid_to="2020-09-30",
-                expected_codings=(),
             ),
             ColumnRepresentation(
                 column="Second",
                 valid_from="2020-10-01",
                 valid_to="2020-12-31",
-                expected_codings=(),
             ),
         ),
         reason="Competing finite interpretation",
