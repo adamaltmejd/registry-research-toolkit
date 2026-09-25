@@ -1116,6 +1116,13 @@ def compile_period_families(
     for index, entry in enumerate(register.representation.period_family, 1):
         ref = f"{register.source_file}#/representation.period_family/{index}"
         stem = derive_variable_slug(entry.family_stem)
+        if stem is None:
+            diagnostics.append(
+                _stale_partition(
+                    ref, entry.family_stem, "family stem has no variable slug"
+                )
+            )
+            continue
         groups: dict[
             tuple[tuple[str | int, ...], int], dict[int, list[SourceRecord]]
         ] = defaultdict(lambda: defaultdict(list))
