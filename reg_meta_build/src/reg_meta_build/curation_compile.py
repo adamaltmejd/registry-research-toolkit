@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -53,6 +54,7 @@ if TYPE_CHECKING:
 @dataclass(frozen=True)
 class Family:
     case_prefixes: tuple[str, ...] = ()
+    case_ids: tuple[str, ...] = ()
     naming_shapes: tuple[str, ...] = ()
     selection_fields: tuple[str, ...] = ()
     unapplied_datasets: tuple[str, ...] = ()
@@ -73,35 +75,62 @@ FAMILIES: dict[str, Family] = {
     "event_sources": Family(selection_fields=("event_sources",)),
     "acknowledge": Family(case_prefixes=("curation/registers/",)),
     "identity": Family(
-        case_prefixes=("accepted-column-partitions:", "accepted-partitions:"),
+        case_prefixes=(
+            "accepted-column-partitions:",
+            "accepted-sos-routes:",
+            "accepted-sos-identity:",
+            "existing-source-use:",
+        ),
         naming_shapes=("accepted-partition",),
         unapplied_datasets=("fqid_slugs/",),
     ),
     "errata": Family(
-        case_prefixes=("scb-errata:", "sos-errata:", "accepted-errata:"),
+        case_prefixes=(
+            "scb_errata.toml/column/",
+            "scb_errata.toml/delivered/",
+            "accepted-errata:",
+        ),
         naming_shapes=("declared-column",),
-        unapplied_datasets=("curation/scb_errata",),
+        unapplied_datasets=("curation/scb_errata.toml",),
     ),
     "matrix": Family(
-        case_prefixes=("accepted-matrix:",),
+        case_ids=("accepted-cis2014-answers", "accepted-cis2016-answers"),
         naming_shapes=("accepted-matrix",),
         unapplied_datasets=("curation/cis",),
     ),
     "representation": Family(
-        case_prefixes=("accepted-representation:", "accepted-alias-window:"),
+        case_prefixes=("accepted-period-family:", "accepted-alias-window:"),
         naming_shapes=("period-family",),
     ),
-    "coding": Family(case_prefixes=("accepted-coding:",)),
-    "classification_bindings": Family(case_prefixes=("accepted-classification:",)),
+    "coding": Family(
+        case_prefixes=("accepted-coding:", "accepted-codeless:"),
+        unapplied_datasets=("curation/codeless_overlap.toml",),
+    ),
+    "classification_bindings": Family(
+        case_prefixes=(
+            "accepted-classification-seed:",
+            "accepted-classification-override:",
+        ),
+        unapplied_datasets=("curation/classifications.toml",),
+    ),
     "annotations": Family(
-        case_prefixes=("accepted-annotation:",),
-        unapplied_datasets=("scb-registerinformation", "sos-"),
+        case_prefixes=(
+            "delivery_enrichment.generated.toml/description/",
+            "delivery_enrichment.generated.toml/alias/",
+        ),
+        unapplied_datasets=(
+            "scb-registerinformation",
+            "sos-",
+            "curation/delivery_enrichment.generated.toml",
+        ),
     ),
     "naming": Family(
         naming_shapes=("accepted-shape", "accepted-name", "native"),
         scope_fields=("naming_ambiguities", "provider_keys", "variants"),
     ),
-    "thin_provider": Family(naming_shapes=("thin-provider",)),
+    "thin_provider": Family(
+        case_prefixes=("accepted-authored:",), naming_shapes=("thin-provider",)
+    ),
 }
 COMPILED = frozenset(
     {
@@ -180,9 +209,12 @@ def _case_family(case_id: str) -> str:
     owners = [
         name
         for name, family in FAMILIES.items()
-        for prefix in family.case_prefixes
-        if case_id.startswith(prefix)
-        and ("#/acknowledge/" in case_id if name == "acknowledge" else True)
+        if case_id in family.case_ids
+        or any(
+            case_id.startswith(prefix)
+            and ("#/acknowledge/" in case_id if name == "acknowledge" else True)
+            for prefix in family.case_prefixes
+        )
     ]
     if len(owners) != 1:
         raise ValueError(f"stored case has an unowned or ambiguous prefix: {case_id}")
@@ -751,6 +783,19 @@ def compile_curation(
                         ),
                     )
                 )
+    variable_matches: Counter[str] = Counter()
+    for scope in scopes:
+        registers = {
+            native_key: register for register, native_key in _scope_registers(scope)
+        }
+        for name in scope.naming:
+            if (
+                name.target.kind == "variable"
+                and name.naming.slug is not None
+                and (register := registers.get(name.target.register_key)) is not None
+            ):
+                variable_matches[f"{register}/{name.naming.slug}"] += 1
+    selected_providers = {register.split("/", 1)[0] for register in selected}
     classification_report = {
         key: []
         for key in (
@@ -768,12 +813,45 @@ def compile_curation(
         for index, _ in enumerate(entry.binding.value_set_labels, 1):
             ref = f"{base}#/binding/value_set_labels/{index}"
             classification_report["entries_read"].append(ref)
-            classification_report["not_evaluated_in_subset"].append(ref)
+            # The binding family is still stored. Its source labels can only be
+            # known to lie outside a subset when their provider is absent.
+            if (
+                subset
+                and (entry.binding.label_source or "scb") not in selected_providers
+            ):
+                classification_report["not_evaluated_in_subset"].append(ref)
         for index, bound in enumerate(entry.binding.variable, 1):
             ref = f"{base}#/binding/variable/{index}"
             classification_report["entries_read"].append(ref)
             if _register(bound.variable) not in selected:
-                classification_report["not_evaluated_in_subset"].append(ref)
+                if subset:
+                    classification_report["not_evaluated_in_subset"].append(ref)
+                    continue
+                status = "stale"
+            else:
+                matches = variable_matches[bound.variable]
+                status = (
+                    "entries_matched"
+                    if matches == 1
+                    else "over_broad"
+                    if matches > 1
+                    else "stale"
+                )
+            classification_report[status].append(ref)
+            if status != "entries_matched":
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code=(
+                            "overbroad_curation_entry"
+                            if status == "over_broad"
+                            else "stale_curation_entry"
+                        ),
+                        severity="error",
+                        subject=bound.variable,
+                        detail=f"{ref} matches {variable_matches[bound.variable]} selected variable declarations",
+                        withheld_output=(ref,),
+                    )
+                )
     report["_classifications"] = classification_report
     report["_subset"] = {"dropped": sorted(dropped)}
     if not subset:

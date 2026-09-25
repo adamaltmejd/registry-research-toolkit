@@ -11,6 +11,8 @@ import pytest
 from reg_meta_build.curation_compile import (
     COMPILED,
     FAMILIES,
+    _case_family,
+    _gap_family,
     compile_curation,
     merge_scope,
     merge_selection,
@@ -48,10 +50,11 @@ def _tree(root: Path):
             f'[classification]\nshort_name = "{short}"\nslug = "{slug}"\n'
             f'name = "{short}"\ncodes_file = "{slug}.csv"\n'
             + (
-                '[binding]\nvalue_set_labels = ["Unmatched label"]\n'
+                '[binding]\nlabel_source = "sos"\n'
+                'value_set_labels = ["Unmatched label"]\n'
                 '[[binding.variable]]\nvariable = "scb/other/one"\n'
                 if short == "BETA"
-                else ""
+                else '[binding]\nvalue_set_labels = ["Selected provider label"]\n'
             ),
             encoding="utf-8",
         )
@@ -151,7 +154,7 @@ def _bytes(compiled) -> bytes:
 
 def test_global_families_and_manifest_wiring_compile_for_subset(tmp_path):
     tree = _tree(tmp_path / "curation")
-    result = compile_curation(tree, _prepared(), (_scope(),))
+    result = compile_curation(tree, _prepared(), (_scope(),), subset=True)
     assert FAMILIES.keys() >= COMPILED
     assert [book.metadata["slug"] for book in result.fields["classifications"]] == [
         "alpha",
@@ -178,6 +181,12 @@ def test_global_families_and_manifest_wiring_compile_for_subset(tmp_path):
     )
     assert any("same_as" in item for item in result.report["_subset"]["dropped"])
     assert len(result.report["_classifications"]["not_evaluated_in_subset"]) == 2
+    assert (
+        "classifications/ALPHA.toml#/binding/value_set_labels/1"
+        not in result.report["_classifications"]["not_evaluated_in_subset"]
+    )
+    full = compile_curation(tree, _prepared(), (_scope(),))
+    assert full.report["_classifications"]["not_evaluated_in_subset"] == []
     stored = PipelineSelection(
         prepared_path="prepared",
         prepared_commit="0" * 40,
@@ -249,6 +258,78 @@ def test_stored_case_with_unowned_prefix_fails(tmp_path):
     )
     with pytest.raises(ValueError, match="unowned or ambiguous prefix"):
         merge_scope(scope, compiled)
+
+
+def test_stored_v18b_case_and_gap_families_are_owned():
+    cases = {
+        "accepted-column-partitions:scb-registerinformation:1.2": "identity",
+        "accepted-coding:46:0": "coding",
+        "accepted-alias-window:5:identity": "representation",
+        f"accepted-classification-seed:{'a' * 64}": "classification_bindings",
+        "scb_errata.toml/column/1": "errata",
+        "accepted-errata:sos-declared-flags": "errata",
+        "accepted-authored:Folkhalsomyndigheten/fohm.toml:nvr:dosnummer": "thin_provider",
+        "delivery_enrichment.generated.toml/description/1": "annotations",
+        "accepted-sos-routes:lss:ALDER": "identity",
+        "scb_errata.toml/delivered/1": "errata",
+        "accepted-classification-override:1:0": "classification_bindings",
+        "accepted-codeless:46:0": "coding",
+        "delivery_enrichment.generated.toml/alias/1": "annotations",
+        "accepted-period-family:5:identity": "representation",
+        "accepted-sos-identity:bu:FOD_DATUMN": "identity",
+        "accepted-cis2014-answers": "matrix",
+        "accepted-cis2016-answers": "matrix",
+        "existing-source-use:Socialstyrelsen/Metadata_Förteckning legitimerade": "identity",
+    }
+    assert {case_id: _case_family(case_id) for case_id in cases} == cases
+    gaps = {
+        "curation/delivery_enrichment.generated.toml": "annotations",
+        "curation/classifications.toml": "classification_bindings",
+        "curation/codeless_overlap.toml": "coding",
+    }
+    assert {
+        dataset: _gap_family(
+            SimpleNamespace(revision=SimpleNamespace(dataset=dataset), pointer="/1")
+        )
+        for dataset in gaps
+    } == gaps
+    with pytest.raises(ValueError, match="unowned or ambiguous prefix"):
+        _case_family("accepted-cis2014-answers-extra")
+
+
+def test_selected_classification_variable_binding_has_exact_status(tmp_path):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "classifications" / "BETA.toml"
+    path.write_text(path.read_text().replace("scb/other/one", "scb/sample/one"))
+    tree = load_curation_tree(root)
+    scope = _scope()
+    ref = "classifications/BETA.toml#/binding/variable/1"
+    stale = compile_curation(tree, _prepared(), (scope,), subset=True)
+    assert stale.report["_classifications"]["stale"] == [ref]
+    assert [issue.code for issue in stale.diagnostics] == ["stale_curation_entry"]
+    register = scope.naming[0].target.source_key
+    variable = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=(*register, "variable", 1),
+            register_key=register,
+            identity_revision=_revision(scope.source),
+        ),
+        naming=SlugEntry(kind="variable", provider="scb", source_id="1.1", slug="one"),
+        contributors=(),
+    )
+    named = scope.model_copy(update={"naming": (*scope.naming, variable)})
+    matched = compile_curation(tree, _prepared(), (named,), subset=True)
+    assert matched.report["_classifications"]["entries_matched"][-1] == ref
+    assert not matched.diagnostics
+    duplicate = named.model_copy(update={"source": "other"})
+    overbroad = compile_curation(tree, _prepared(), (named, duplicate), subset=True)
+    assert overbroad.report["_classifications"]["over_broad"] == [ref]
+    assert [issue.code for issue in overbroad.diagnostics] == [
+        "overbroad_curation_entry"
+    ]
 
 
 def test_unmatched_global_entry_is_stale_only_in_complete_build(tmp_path):
