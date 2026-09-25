@@ -1,7 +1,7 @@
 """One prepared-source → common resolution → direct catalog build path.
 
-Selection files contain declarations, never executable conversion code. Scope files
-are read one register at a time so the complete curation corpus need not be resident.
+Selection files contain declarations, never executable conversion code. Hybrid
+builds validate the stored scopes and merge tracked curation before resolution.
 Original observations and physical locators remain in the selected prepared store.
 """
 
@@ -18,9 +18,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
+from pydantic import BaseModel, ConfigDict, Field
 
-from reg_meta_build._curation import SentinelCode
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
     CoverageObligation,
@@ -34,6 +33,15 @@ from reg_meta_build.catalog_dependencies import (
 )
 from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
+from reg_meta_build.curation_compile import (
+    compile_curation,
+    merge_scope,
+    merge_selection,
+    source_event_id,
+    tree_sha256,
+    validate_sentinels,
+)
+from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
@@ -197,33 +205,6 @@ def _unique_pairs[K, V](items: tuple[tuple[K, V], ...], description: str) -> dic
     return result
 
 
-_SELECTION_SENTINELS = TypeAdapter(list[SentinelCode])
-
-
-def _selection_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ...]:
-    """Validate a selection's raw `sentinel_codes` metadata into resolved form.
-
-    The JSON list cannot coerce into the resolved tuple under the strict
-    selection contract, so it is popped from the metadata mapping and checked
-    here: `{code, meaning}` tables only, no duplicates. A malformed selection
-    is a `ValueError` like every other selection-shape refusal below."""
-    if raw is None:
-        return ()
-    try:
-        sentinels = _SELECTION_SENTINELS.validate_python(raw)
-    except ValidationError as exc:
-        raise ValueError(
-            f"classification {subject!r} sentinel_codes must be a list of "
-            f"{{code, meaning}} tables with exact-string codes: {exc.errors(include_url=False)[0]['msg']}."
-        ) from exc
-    codes = [sentinel.code for sentinel in sentinels]
-    if len(codes) != len(set(codes)):
-        raise ValueError(
-            f"classification {subject!r} lists a sentinel code more than once."
-        )
-    return tuple(sentinels)
-
-
 def _selected_scopes(
     keys: Iterable[tuple[str, NativeKey | None]], specs: tuple[str, ...]
 ) -> set[tuple[str, NativeKey | None]]:
@@ -269,6 +250,8 @@ def build_selected_catalog(
     *,
     diagnostic: bool = False,
     registers: tuple[str, ...] = (),
+    curation_dir: Path | None = None,
+    dump_decisions: Path | None = None,
 ) -> dict[str, object]:
     """Build the full declared selection; failures never replace an active catalog.
 
@@ -288,16 +271,41 @@ def build_selected_catalog(
     selected = PipelineSelection.model_validate_json(selection_bytes)
     root = selection_path.parent
     output, report_dir = output.resolve(), report_dir.resolve()
+    if curation_dir is None:
+        from reg_meta_build._curation import repo_curation_dir
+
+        curation_dir = repo_curation_dir()
+        if curation_dir is None:
+            raise ValueError("--curation-dir is required outside a checkout")
+    curation_dir = curation_dir.resolve()
+    if not curation_dir.is_dir():
+        raise ValueError(f"curation directory does not exist: {curation_dir}")
+    dump_decisions = dump_decisions.resolve() if dump_decisions is not None else None
     prepared_path = Path(selected.prepared_path)
     if not prepared_path.is_absolute():
         prepared_path = root / prepared_path
     prepared_path = prepared_path.resolve()
     input_paths = {selection_path, *(_member(root, s.path) for s in selected.scopes)}
     output_paths = {output, Path(str(output) + ".prev")}
+    protected_dirs = (root, prepared_path, curation_dir)
+    if dump_decisions is not None and (
+        dump_decisions.exists()
+        or any(
+            dump_decisions.is_relative_to(path) or path.is_relative_to(dump_decisions)
+            for path in (*protected_dirs, report_dir, output, *output_paths)
+        )
+    ):
+        raise ValueError(
+            "--dump-decisions must be a new directory separate from inputs and outputs"
+        )
     if (
         output_paths & input_paths
-        or any(path.is_relative_to(root) for path in output_paths)
+        or any(
+            path.is_relative_to(root) or path.is_relative_to(curation_dir)
+            for path in output_paths
+        )
         or report_dir.is_relative_to(root)
+        or report_dir.is_relative_to(curation_dir)
         or any(path.is_relative_to(prepared_path) for path in output_paths)
         or report_dir.is_relative_to(prepared_path)
         or any(path.is_relative_to(report_dir) for path in input_paths)
@@ -328,6 +336,76 @@ def build_selected_catalog(
         input_commit=selected.prepared_commit,
         expected_sha256=selected.prepared_sha256,
     )
+    occurrence_sources = {
+        entry.revision.dataset
+        for entry in prepared.manifest.inputs
+        if entry.record_usage == "occurrence" and entry.revision is not None
+    }
+    if (
+        registers
+        and not {scope.source for scope in selected.scopes} <= occurrence_sources
+    ):
+        raise ValueError(
+            "curation scopes name a source outside the prepared occurrence-source selection"
+        )
+    tree = load_curation_tree(curation_dir)
+    stored_scopes = {
+        key: _read_scope(root, key, file) for key, file in scope_files.items()
+    }
+    compiled = compile_curation(
+        tree,
+        prepared,
+        tuple(stored_scopes[key] for key in sorted(visit, key=repr)),
+        subset=bool(registers),
+    )
+    selected = merge_selection(selected, compiled)
+    scopes = {key: merge_scope(scope, compiled) for key, scope in stored_scopes.items()}
+    curation_hash = tree_sha256(curation_dir)
+    if dump_decisions is not None:
+        dump_decisions.mkdir()
+        for index, key in enumerate(sorted(visit, key=repr)):
+            (dump_decisions / f"scope-{index:05d}.json").write_text(
+                json.dumps(
+                    {
+                        "source": key[0],
+                        "register_key": key[1],
+                        "cases": [
+                            case.model_dump(mode="json")
+                            for case in compiled.cases.get(key, ())
+                        ],
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+        (dump_decisions / "global.json").write_text(
+            json.dumps(
+                compiled.fields,
+                default=lambda item: (
+                    item.model_dump(mode="json")
+                    if hasattr(item, "model_dump")
+                    else item.__dict__
+                ),
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        (dump_decisions / "compile-report.json").write_text(
+            json.dumps(
+                compiled.report,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "\n",
+            encoding="utf-8",
+        )
     # The accepted preparation's immutable commit dates the catalog vintage;
     # rebuild wall time would make identical selected inputs produce new bytes.
     import_date = (
@@ -430,6 +508,9 @@ def build_selected_catalog(
                 counts["deferred_references"] += 1
             event("issue", value.model_dump(mode="json"))
 
+        for compile_issue in compiled.diagnostics:
+            issue(compile_issue)
+
         try:
             for entry in prepared.manifest.inputs:
                 event("input", entry.model_dump(mode="json"))
@@ -474,7 +555,12 @@ def build_selected_catalog(
                 )
                 counts["prepared_evidence"] += 1
             event_bindings = SourceEventBindings(
-                (d for d in declarations if isinstance(d, SourceEventDeclaration)),
+                (
+                    d
+                    for d in declarations
+                    if isinstance(d, SourceEventDeclaration)
+                    and d.revision.dataset in event_sources
+                ),
                 event_sources,
             )
             exports = resolve_export_metadata(declarations)
@@ -518,7 +604,7 @@ def build_selected_catalog(
                     {
                         **metadata,
                         "codes": resolved.codes,
-                        "sentinel_codes": _selection_sentinels(
+                        "sentinel_codes": validate_sentinels(
                             metadata.pop("sentinel_codes", None),
                             subject=str(declaration.metadata.get("slug")),
                         ),
@@ -635,7 +721,7 @@ def build_selected_catalog(
                 for register, originals in slices:
                     scope_started = time.perf_counter()
                     scope_key = source, register
-                    scope = _read_scope(root, scope_key, scope_files[scope_key])
+                    scope = scopes[scope_key]
                     resolution_started = time.perf_counter()
                     result = resolve_source_scope(
                         originals,
@@ -934,6 +1020,23 @@ def build_selected_catalog(
                 }
             )
             source_events = event_bindings.resolve(metadata)
+            if event_bindings.skipped_events:
+                dropped = compiled.report["_subset"]["dropped"]
+                dropped.extend(
+                    source_event_id(ref) for ref in event_bindings.skipped_events
+                )
+                dropped.sort()
+                if dump_decisions is not None:
+                    (dump_decisions / "compile-report.json").write_text(
+                        json.dumps(
+                            compiled.report,
+                            ensure_ascii=False,
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        )
+                        + "\n",
+                        encoding="utf-8",
+                    )
             for value in source_events.diagnostics:
                 issue(value)
             resolved_metadata = resolve_metadata_dependencies(
@@ -994,6 +1097,7 @@ def build_selected_catalog(
                     "variables": len(panel.variables),
                     "states": sum(len(v.states) for v in panel.variables),
                     "database": None,
+                    "curation_tree_sha256": curation_hash,
                 }
             )
             if registers:
@@ -1016,6 +1120,7 @@ def build_selected_catalog(
                         "curation_selection_sha256": hashlib.sha256(
                             selection_bytes
                         ).hexdigest(),
+                        "curation_tree_sha256": curation_hash,
                     },
                     parent_registers=panel.registers,
                     parent_variants=panel.variants,

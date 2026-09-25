@@ -993,7 +993,7 @@ def test_a_stale_acknowledgement_is_an_error():
     assert result.variables[key] is not None
     (stale,) = result.diagnostics
     assert (stale.code, stale.severity, stale.case_id) == (
-        "stale_acknowledgement",
+        "stale_curation_entry",
         "error",
         "acknowledged",
     )
@@ -1007,7 +1007,7 @@ def test_a_stale_acknowledgement_is_an_error():
     )
     assert [(d.code, d.severity) for d in result.diagnostics] == [
         ("unresolved_catalog_identity", "error"),
-        ("stale_acknowledgement", "error"),
+        ("stale_curation_entry", "error"),
     ]
 
 
@@ -1035,7 +1035,7 @@ def test_an_overbroad_acknowledgement_is_an_error_and_acknowledges_nothing():
         d.severity for d in result.diagnostics if d.code == "conflicting_variable_fact"
     ] == ["error", "error"]
     (overbroad,) = (
-        d for d in result.diagnostics if d.code == "overbroad_acknowledgement"
+        d for d in result.diagnostics if d.code == "overbroad_curation_entry"
     )
     assert (overbroad.severity, overbroad.case_id) == ("error", "acknowledged")
     assert result.acknowledged == {}

@@ -76,6 +76,30 @@ name = "R"
     assert {w.delivery_column_name for w in windows} == {"AMOUNT_SEK", "Amount-SEK"}
 
 
+def test_classification_reference_uses_supplied_books(tmp_path: Path) -> None:
+    src = tmp_path / "providers"
+    src.mkdir()
+    (src / "private.toml").write_text(
+        '[provider]\nname = "Private"\nsource_label = "fixture"\n'
+        '[[register]]\nkey = "r"\nname = "R"\n'
+        '[[register.variant]]\nkey = "a"\nname = "A"\n'
+        '[[register.variable]]\nkey = "v"\nname = "V"\n'
+        'classification = "NEW-BOOK"\nvariants = ["a"]\n'
+        '[[register.variable.state]]\ncolumn = "V"\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as exc:
+        list(CuratedAdapter("private", steward="swecov").emit(src))
+    assert "NEW-BOOK" in exc.value.message
+    assert list(
+        CuratedAdapter(
+            "private",
+            steward="swecov",
+            classification_short_names=frozenset({"NEW-BOOK"}),
+        ).emit(src)
+    )
+
+
 @pytest.mark.parametrize(
     "body, expected",
     [

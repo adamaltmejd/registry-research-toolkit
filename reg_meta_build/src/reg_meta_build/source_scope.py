@@ -590,9 +590,7 @@ def resolve_source_scope(
             record(issue)
         record(
             ResolutionDiagnostic(
-                code="overbroad_acknowledgement"
-                if matched
-                else "stale_acknowledgement",
+                code="overbroad_curation_entry" if matched else "stale_curation_entry",
                 severity="error",
                 case_id=case.case_id,
                 subject=decision.subject,
