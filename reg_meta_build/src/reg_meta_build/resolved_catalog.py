@@ -56,6 +56,9 @@ from reg_meta_build.resolved_metadata import (
 )
 from reg_meta_build.validate import column_state_overlap_failure, validate_built_db
 
+CURATION_SELECTION_SHA256_KEY = "curation_selection_sha256"
+CURATION_TREE_SHA256_KEY = "curation_tree_sha256"
+
 
 class ResolvedRegister(_ResolvedModel):
     provider: str
@@ -841,6 +844,11 @@ def write_resolved_catalog(
         classifications,
     )
     import_metadata = TypeAdapter(dict[str, str]).validate_python(manifest, strict=True)
+    for key in (CURATION_SELECTION_SHA256_KEY, CURATION_TREE_SHA256_KEY):
+        if (value := import_metadata.get(key)) is not None and (
+            len(value) != 64 or any(char not in "0123456789abcdef" for char in value)
+        ):
+            raise ValueError(f"manifest {key} must be a lowercase SHA-256 digest")
     for key, value in {
         "schema_version": SCHEMA_VERSION,
         "catalog_artifact_kind": "diagnostic" if diagnostic else "catalog",

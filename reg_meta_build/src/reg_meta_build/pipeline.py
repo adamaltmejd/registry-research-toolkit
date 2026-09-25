@@ -49,6 +49,8 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
 )
 from reg_meta_build.resolved_catalog import (
+    CURATION_SELECTION_SHA256_KEY,
+    CURATION_TREE_SHA256_KEY,
     ResolvedClassification,
     ResolvedClassificationSuccession,
     ResolvedVariant,
@@ -1117,10 +1119,10 @@ def build_selected_catalog(
                         "import_date": import_date,
                         "prepared_commit": selected.prepared_commit,
                         "prepared_manifest_sha256": selected.prepared_sha256,
-                        "curation_selection_sha256": hashlib.sha256(
+                        CURATION_SELECTION_SHA256_KEY: hashlib.sha256(
                             selection_bytes
                         ).hexdigest(),
-                        "curation_tree_sha256": curation_hash,
+                        CURATION_TREE_SHA256_KEY: curation_hash,
                     },
                     parent_registers=panel.registers,
                     parent_variants=panel.variants,
