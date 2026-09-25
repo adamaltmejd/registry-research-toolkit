@@ -25,7 +25,7 @@ from .cis2016_matrix import (
 )
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import EnrichmentAliasEntry, EnrichmentDescriptionEntry
-from .fqid_slugs import SlugEntry
+from .fqid_slugs import SlugEntry, freeze_state, load_freeze_states
 from .normalization import normalize_token
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
 from .resolved_metadata import (
@@ -1338,6 +1338,7 @@ def compile_partitions(
     tuple[ResolutionDiagnostic, ...],
 ]:
     """Convert accepted native splits and SOS shape/name decisions."""
+    states = load_freeze_states(tree.root)
     scope_map = {(scope.source, scope.register_key): scope for scope in scopes}
     registers = {}
     entries_by_register = {}
@@ -1737,7 +1738,9 @@ def compile_partitions(
                 files=(),
                 entries=entries,
                 freeze=tuple(
-                    NamingFreezeSetting(zone=provider, state="curating")
+                    NamingFreezeSetting(
+                        zone=provider, state=freeze_state(states, provider)
+                    )
                     for provider in sorted(
                         {str(item.entry.provider) for item in entries}
                     )
@@ -1807,6 +1810,7 @@ def compile_native_naming(
     dict[str, dict[str, list[str]]],
 ]:
     """Bind tracked register slugs to exact native families and parent facts."""
+    states = load_freeze_states(tree.root)
     scope_map = {(scope.source, scope.register_key): scope for scope in scopes}
     bindings: dict[Any, list[LegacyNamingBinding]] = {key: [] for key in scope_map}
     for source in sorted({scope.source for scope in scopes}):
@@ -2088,7 +2092,9 @@ def compile_native_naming(
                 files=(),
                 entries=tuple(matched),
                 freeze=tuple(
-                    NamingFreezeSetting(zone=provider, state="curating")
+                    NamingFreezeSetting(
+                        zone=provider, state=freeze_state(states, provider)
+                    )
                     for provider in sorted(
                         {str(entry.entry.provider) for entry in matched}
                     )

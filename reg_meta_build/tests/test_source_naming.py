@@ -142,6 +142,7 @@ def test_reader_uses_tracked_register_files_and_relative_provenance(
     register = root / "registers" / "scb"
     register.mkdir(parents=True)
     (root / "classifications").mkdir()
+    (root / "slug_state.toml").write_text('scb = "curating"\n', encoding="utf-8")
     path = register / "sample.toml"
     path.write_text(
         '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
@@ -179,6 +180,55 @@ def test_reader_uses_tracked_register_files_and_relative_provenance(
     assert any(
         entry.entry.slug == "modified"
         for entry in read_naming_selection(load_curation_tree(root)).entries
+    )
+
+
+def test_reader_uses_tracked_freeze_state_for_generated_names(tmp_path: Path) -> None:
+    root = tmp_path / "curation"
+    register = root / "registers" / "scb"
+    register.mkdir(parents=True)
+    (root / "registers" / "fk").mkdir()
+    (root / "classifications").mkdir()
+    (register / "sample.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n',
+        encoding="utf-8",
+    )
+    (register / "sample.auto.toml").write_text(
+        '[[variable]]\nnative_id = "1.101"\nslug = "generated"\n',
+        encoding="utf-8",
+    )
+    state_file = root / "slug_state.toml"
+    state_file.write_text('fk = "curating"\n', encoding="utf-8")
+    selection = read_naming_selection(load_curation_tree(root))
+    generated = next(
+        entry for entry in selection.entries if entry.origin == "generated"
+    )
+    assert selection.freeze == (NamingFreezeSetting(zone="scb", state="churning"),)
+    churning = convert_naming(selection, (_binding(generated),))
+    assert not churning.declarations
+    assert (
+        next(
+            row.status
+            for row in churning.dispositions
+            if row.entry_id == generated.entry_id
+        )
+        == "inactive_generated"
+    )
+
+    state_file.write_text('fk = "curating"\nscb = "curating"\n', encoding="utf-8")
+    selection = read_naming_selection(load_curation_tree(root))
+    assert selection.freeze == (NamingFreezeSetting(zone="scb", state="curating"),)
+    curating = convert_naming(selection, (_binding(generated),))
+    assert [declaration.naming.slug for declaration in curating.declarations] == [
+        "generated"
+    ]
+    assert (
+        next(
+            row.status
+            for row in curating.dispositions
+            if row.entry_id == generated.entry_id
+        )
+        == "bound"
     )
 
 
@@ -256,6 +306,9 @@ def _declaration_selection(tmp_path: Path) -> tuple[NamingSelection, Path]:
     """Read tracked split names beside their register ownership declaration."""
     curation_dir = write_fdb_partition_curation(tmp_path / "curation")
     (curation_dir / "classifications").mkdir()
+    (curation_dir / "slug_state.toml").write_text(
+        'scb = "curating"\n', encoding="utf-8"
+    )
     register = curation_dir / "registers" / "scb" / "fdb.toml"
     register.write_text(
         register.read_text(encoding="utf-8")

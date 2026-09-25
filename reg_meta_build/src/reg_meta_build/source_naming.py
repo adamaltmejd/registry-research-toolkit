@@ -22,6 +22,8 @@ from reg_meta_build.fqid_slugs import (
     _parse_variable_id,
     _parse_variant_id,
     _validate_entry,
+    freeze_state,
+    load_freeze_states,
 )
 from reg_meta_build.id import mint, mint_canonical_scb
 from reg_meta_build.source_coordinates import native_parent_key, source_register_key
@@ -419,6 +421,7 @@ def _register_naming_entries(tree: CurationTree, register: RegisterCuration):
 
 def read_naming_selection(tree: CurationTree) -> NamingSelection:
     """Read naming entries from the tracked curation tree."""
+    states = load_freeze_states(tree.root)
     entries = tuple(
         entry
         for register in sorted(tree.registers, key=lambda item: item.source_file)
@@ -438,7 +441,7 @@ def read_naming_selection(tree: CurationTree) -> NamingSelection:
         ),
         entries=entries,
         freeze=tuple(
-            NamingFreezeSetting(zone=provider, state="curating")
+            NamingFreezeSetting(zone=provider, state=freeze_state(states, provider))
             for provider in sorted(
                 {entry.entry.provider for entry in entries if entry.entry.provider}
             )

@@ -241,9 +241,10 @@ def build_catalog(
     curation_dir = curation_dir.resolve()
     if not curation_dir.is_dir():
         raise ValueError(f"curation directory does not exist: {curation_dir}")
+    slug_dir = (curation_dir.parent / "fqid_slugs").resolve()
     dump_decisions = dump_decisions.resolve() if dump_decisions is not None else None
     output_paths = {output, Path(str(output) + ".prev")}
-    protected_dirs = (prepared_path, curation_dir)
+    protected_dirs = (prepared_path, curation_dir, slug_dir)
     if dump_decisions is not None and (
         dump_decisions.exists()
         or any(
@@ -255,16 +256,18 @@ def build_catalog(
             "--dump-decisions must be a new directory separate from inputs and outputs"
         )
     if (
-        any(path.is_relative_to(curation_dir) for path in output_paths)
-        or report_dir.is_relative_to(curation_dir)
-        or any(path.is_relative_to(prepared_path) for path in output_paths)
-        or report_dir.is_relative_to(prepared_path)
+        any(
+            path.is_relative_to(directory) or directory.is_relative_to(path)
+            for path in (*output_paths, report_dir)
+            for directory in protected_dirs
+        )
+        or (slug_dir.is_dir() and slug_dir.is_relative_to(output.parent))
         or output.is_relative_to(report_dir)
         or (not publishable and output.exists())
         or (output.exists() and not output.is_file())
     ):
         raise ValueError(
-            "build outputs must be separate from prepared inputs and each other"
+            "build outputs must be separate from build inputs and each other"
         )
     prepared = open_prepared_catalog_sources(
         prepared_path,

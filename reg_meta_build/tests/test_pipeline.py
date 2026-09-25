@@ -320,6 +320,47 @@ def test_strict_full_build_can_publish_clean_compiled_tree(
     assert _manifest(tmp_path / "full.db")["catalog_publishable"] == "true"
 
 
+def test_native_compiler_respects_tracked_slug_freeze_state(
+    catalog: CatalogFixture,
+) -> None:
+    from reg_meta_build.curation_compile import compile_native_naming
+    from reg_meta_build.curation_tree import load_curation_tree
+    from reg_meta_build.pipeline import CompiledScope
+    from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+
+    register = catalog.curation / "registers/scb/sample.toml"
+    register.write_text(
+        register.read_text(encoding="utf-8").split("[[variable]]", 1)[0],
+        encoding="utf-8",
+    )
+    register.with_name("sample.auto.toml").write_text(
+        '[[variable]]\nnative_id = "1.101"\nslug = "value"\n',
+        encoding="utf-8",
+    )
+    prepared = open_prepared_catalog_sources(
+        catalog.prepared, expected_sha256=catalog.digest, input_commit=catalog.commit
+    )
+    source = "scb-registerinformation"
+    register_key = prepared.records.register_coordinates(source)[0][0]
+    scope = CompiledScope(source=source, register_key=register_key)
+
+    def variable_slugs() -> list[str | None]:
+        naming, _, _, _, _ = compile_native_naming(
+            load_curation_tree(catalog.curation), prepared, (scope,), subset=True
+        )
+        return [
+            declaration.naming.slug
+            for declaration in naming[source, register_key]
+            if declaration.target.kind == "variable"
+        ]
+
+    assert variable_slugs() == []
+    (catalog.curation / "slug_state.toml").write_text(
+        'scb = "curating"\n', encoding="utf-8"
+    )
+    assert variable_slugs() == ["value"]
+
+
 @pytest.mark.parametrize("where", ["prepared", "curation", "report", "dump"])
 def test_outputs_cannot_alias_inputs_or_each_other(
     catalog: CatalogFixture, tmp_path: Path, where: str
@@ -337,6 +378,46 @@ def test_outputs_cannot_alias_inputs_or_each_other(
         kwargs["dump_decisions"] = catalog.prepared
     with pytest.raises(ValueError, match="separate|new directory"):
         catalog.build(output, report, **kwargs)
+
+
+@pytest.mark.parametrize(
+    "where",
+    (
+        "output_inside",
+        "output_dir_contains",
+        "report_equal",
+        "report_inside",
+        "report_contains",
+        "dump_inside",
+    ),
+)
+def test_outputs_cannot_overlap_slug_tree(
+    catalog: CatalogFixture, tmp_path: Path, where: str
+) -> None:
+    slug_dir = catalog.curation.parent / "fqid_slugs"
+    slug_dir.mkdir()
+    marker = slug_dir / "keep.toml"
+    marker.write_bytes(b"tracked slug input")
+    outside = tmp_path.parent / f"{tmp_path.name}-outside"
+    outside.mkdir()
+    output, report = outside / "catalog.db", outside / "report"
+    kwargs = {"registers": ("1",)}
+    if where == "output_inside":
+        output = slug_dir / "catalog.db"
+    elif where == "output_dir_contains":
+        output = tmp_path / "catalog.db"
+    elif where == "report_equal":
+        report = slug_dir
+    elif where == "report_inside":
+        report = slug_dir / "report"
+    elif where == "report_contains":
+        report = tmp_path
+    else:
+        kwargs["dump_decisions"] = slug_dir / "decisions"
+    with pytest.raises(ValueError, match="separate|new directory"):
+        catalog.build(output, report, **kwargs)
+    assert marker.read_bytes() == b"tracked slug input"
+    assert not output.exists()
 
 
 def test_prepared_pins_are_checked(catalog: CatalogFixture, tmp_path: Path) -> None:
