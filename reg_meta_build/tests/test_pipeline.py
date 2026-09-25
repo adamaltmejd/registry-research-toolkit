@@ -1115,6 +1115,10 @@ def test_hybrid_compiler_preserves_stored_global_selection(
     )
     assert result["status"] == "complete"
     assert result["curation_tree_sha256"] == tree_sha256(tmp_path / "curation")
+    with sqlite3.connect(compiled) as conn:
+        assert conn.execute(
+            "SELECT value FROM import_manifest WHERE key = 'curation_tree_sha256'"
+        ).fetchone() == (result["curation_tree_sha256"],)
     assert diff_catalog_semantics(baseline, compiled).identical
     declarations = json.loads((dump / "global.json").read_text())
     assert declarations["classifications"] == [
