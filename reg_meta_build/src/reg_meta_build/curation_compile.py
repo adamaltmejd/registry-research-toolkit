@@ -104,6 +104,7 @@ from .source_naming import (
 )
 from .source_occurrences import source_occurrence
 from .source_records import (
+    NativeCoordinates,
     ScopeInterval,
     SourceFields,
     SourceRevision,
@@ -3592,6 +3593,7 @@ def compile_enrichment(
                         or f"Accepted delivery description for {target_name}",
                         provenance=row.provenance or f"curation:{case_id}",
                     )
+                    peer_guards = ()
                 else:
                     assert isinstance(row, EnrichmentAliasEntry)
                     variant_keys = {
@@ -3618,10 +3620,37 @@ def compile_enrichment(
                             )
                         )
                         continue
-                    expectations = (
-                        capture_expectations(chosen, fields=())
-                        if chosen
-                        else target.target.expectations
+                    anchor_refs = {item.ref for item in target.target.expectations}
+                    alias_records = chosen or tuple(
+                        record
+                        for record in all_records
+                        if record_ref(record) in anchor_refs
+                    )
+                    if not alias_records:
+                        statuses["stale"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                subject,
+                                "target has no checked source records",
+                                refs=register_anchor(name),
+                            )
+                        )
+                        continue
+                    expectations = capture_expectations(
+                        alias_records, fields=("column_name",)
+                    )
+                    anchor = alias_records[0]
+                    peer_guards = target.target.peer_guards or (
+                        PeerGuard(
+                            guard_id=f"{case_id}:variable",
+                            source=anchor.source,
+                            native=NativeCoordinates(
+                                register_id=anchor.subject.native.register_id,
+                                variable_id=anchor.subject.native.variable_id,
+                            ),
+                            expected_members=tuple(item.ref for item in expectations),
+                        ),
                     )
                     decision = SearchAliasDecision(
                         reviewed=True,
@@ -3634,7 +3663,10 @@ def compile_enrichment(
                     )
                 cases[scope_key].append(
                     CurationCase(
-                        case_id=case_id, targets=expectations, decision=decision
+                        case_id=case_id,
+                        targets=expectations,
+                        peer_guards=peer_guards,
+                        decision=decision,
                     )
                 )
                 statuses["entries_matched"].append(case_id)

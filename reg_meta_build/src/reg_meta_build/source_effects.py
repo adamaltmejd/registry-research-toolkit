@@ -61,16 +61,20 @@ class OccurrenceCorrections:
     diagnostics: tuple[ResolutionDiagnostic, ...]
 
 
-def _require_checked(expected: RecordExpectation, fields: tuple[str, ...] = ()) -> None:
+def _require_checked(
+    expected: RecordExpectation, fields: tuple[str, ...] = (), *, case_id: str
+) -> None:
     shape = expected.alternatives[0]
-    if (
-        shape.subject is None
-        or shape.edition_scope is None
-        or shape.edition_period_scope is None
-        or set(fields) - {field.name for field in shape.fields}
-    ):
+    missing = [
+        name
+        for name in ("subject", "edition_scope", "edition_period_scope")
+        if getattr(shape, name) is None
+    ]
+    missing.extend(sorted(set(fields) - {field.name for field in shape.fields}))
+    if missing:
         raise ValueError(
-            "occurrence effects require checked subject, both scopes and every changed/copied field"
+            f"{case_id}: occurrence effects require checked subject, both scopes and "
+            f"every changed/copied field for {expected.ref}; missing {', '.join(missing)}"
         )
 
 
@@ -90,7 +94,9 @@ def _check_contract(case: CurationCase) -> None:
                 raise ValueError("addition evidence must be checked targets or support")
             for ref in effect.evidence:
                 _require_checked(
-                    checked[ref], effect.copied_fields if ref == effect.donor else ()
+                    checked[ref],
+                    effect.copied_fields if ref == effect.donor else (),
+                    case_id=case.case_id,
                 )
             scope = effect.edition_period_scope
             if scope.kind == "not_applicable":
@@ -152,6 +158,7 @@ def _check_contract(case: CurationCase) -> None:
                 else ("column_name", *(field.name for field in effect.when))
                 if isinstance(effect, CheckedIdentityChange)
                 else (),
+                case_id=case.case_id,
             )
 
 

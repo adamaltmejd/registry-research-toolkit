@@ -34,6 +34,7 @@ from reg_meta_build.id import mint
 from reg_meta_build.pipeline import PipelineSelection, ScopeDeclarations
 from reg_meta_build.resolved_catalog import ResolvedVariant
 from reg_meta_build.scb_errata import ErrataVersion, edition_bindings
+from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_coding import CodeListClaim, copied_coding_fingerprints
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_curation import (
@@ -48,6 +49,7 @@ from reg_meta_build.source_curation import (
     capture_expectations,
 )
 from reg_meta_build.source_effects import (
+    _require_checked,
     apply_occurrence_cases,
     record_ref,
 )
@@ -1438,6 +1440,10 @@ def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):
     case = cases[(scope.source, scope.register_key)][0]
     assert isinstance(case.decision.effects[0], CuratedOccurrenceAddition)
     assert case.decision.effects[0].edition_key == source_occurrence(other).edition_key
+    assert (
+        apply_occurrence_cases((donor, other), (case,)).accounting[0].disposition
+        == "applied"
+    )
 
     blank = _errata_record(column="", year="2021", member=22)
     tree, prepared, scope = _errata_fixture(
@@ -1447,9 +1453,11 @@ def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):
         tree, prepared, (scope,), {}, subset=False
     )
     assert diagnostics == ()
-    assert isinstance(
-        cases[(scope.source, scope.register_key)][0].decision.effects[0],
-        CheckedFieldChange,
+    case = cases[(scope.source, scope.register_key)][0]
+    assert isinstance(case.decision.effects[0], CheckedFieldChange)
+    assert (
+        apply_occurrence_cases((donor, blank), (case,)).accounting[0].disposition
+        == "applied"
     )
 
 
@@ -1600,6 +1608,10 @@ def test_compiled_errata_column_placements_and_declared_flags(
     )
     assert merged.provider_keys == keys[key]
     assert merged.cases == cases[key]
+    assert (
+        apply_occurrence_cases((record,), (cases[key][0],)).accounting[0].disposition
+        == "applied"
+    )
 
 
 def test_compiled_errata_declared_edition_uses_variant_support(tmp_path: Path):
@@ -1702,6 +1714,21 @@ def test_compiled_enrichment_description_alias_and_staleness(tmp_path: Path):
     assert isinstance(description.decision.effects[0], CheckedFieldChange)
     assert description.decision.effects[0].replacement.value == "Accepted prose"
     assert isinstance(alias.decision, SearchAliasDecision)
+    assert (
+        apply_occurrence_cases((record, second), (description,))
+        .accounting[0]
+        .disposition
+        == "applied"
+    )
+    for target in alias.targets:
+        _require_checked(target, ("column_name",), case_id=alias.case_id)
+        assert any(target.ref in guard.expected_members for guard in alias.peer_guards)
+    apply_alias_cases(
+        (record, second),
+        (alias,),
+        variables={alias.decision.variable_key: None},
+        variants=dict.fromkeys(alias.decision.variant_keys),
+    )
     assert set(alias.decision.variant_keys) == {
         source_occurrence(record).variant_key,
         source_occurrence(second).variant_key,
@@ -1745,7 +1772,7 @@ def test_compiled_enrichment_split_uses_partition_records(tmp_path: Path):
         ),
     )
     tree, prepared, scope, naming = _enrichment_fixture(
-        tmp_path, (first, second), _DESCRIPTION, target=split
+        tmp_path, (first, second), _DESCRIPTION + _ALIAS, target=split
     )
     cases, diagnostics, _ = compile_enrichment(
         tree, prepared, (scope,), naming, {}, subset=False
@@ -1754,6 +1781,40 @@ def test_compiled_enrichment_split_uses_partition_records(tmp_path: Path):
     assert cases[(scope.source, scope.register_key)][0].targets[0].ref == record_ref(
         second
     )
+    alias = cases[(scope.source, scope.register_key)][1]
+    assert alias.targets[0].ref == record_ref(second)
+    _require_checked(alias.targets[0], ("column_name",), case_id=alias.case_id)
+    assert alias.targets[0].ref in alias.peer_guards[0].expected_members
+
+
+def test_compiled_alias_for_declared_column_has_checked_anchor(tmp_path: Path):
+    record = _errata_record(column="A", year="2020")
+    fragment = (
+        '\n[[errata.column]]\nvariant = "people"\ncolumn = "NewCol"\n'
+        'name = "New column"\ndefinition = "Documented"\n'
+        'source = "steward-holdings"\nevidence = "held"\n'
+        'noted = "2026-09-25"\nall_versions = true\n'
+        + _ALIAS.replace('variable = "a"', 'variable = "new-col"')
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, (record,), fragment)
+    errata_cases, naming, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert diagnostics == ()
+    cases, diagnostics, _ = compile_enrichment(
+        tree, prepared, (scope,), naming, errata_cases, subset=False
+    )
+    assert diagnostics == ()
+    alias = cases[(scope.source, scope.register_key)][0]
+    assert isinstance(alias.decision, SearchAliasDecision)
+    assert alias.decision.variant_keys == (
+        errata_cases[(scope.source, scope.register_key)][0]
+        .decision.effects[0]
+        .variant_key,
+    )
+    assert alias.targets[0].ref == record_ref(record)
+    _require_checked(alias.targets[0], ("column_name",), case_id=alias.case_id)
+    assert alias.targets[0].ref in alias.peer_guards[0].expected_members
 
 
 def _scb_partition_tree(root: Path, extra: str):

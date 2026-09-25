@@ -76,6 +76,7 @@ def resolve_representation_cases(
             _require_checked(
                 target,
                 ("column_name", "data_type", "data_length", "operational_definition"),
+                case_id=case.case_id,
             )
             if target.ref not in guarded or any(
                 p.code_set_references is None for p in target.alternatives

@@ -278,7 +278,7 @@ def apply_classification_cases(
             raise ValueError("classification cases must compose in one application")
         guarded = {ref for guard in case.peer_guards for ref in guard.expected_members}
         for target in (*case.targets, *case.support):
-            _require_checked(target, ("column_name",))
+            _require_checked(target, ("column_name",), case_id=case.case_id)
             if target.ref not in guarded or any(
                 projection.code_set_references is None
                 for projection in target.alternatives

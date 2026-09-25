@@ -101,7 +101,7 @@ def apply_alias_cases(
             raise ValueError("alias has an unconverted variable or variant identity")
         guarded = {ref for guard in case.peer_guards for ref in guard.expected_members}
         for target in (*case.targets, *case.support):
-            _require_checked(target, ("column_name",))
+            _require_checked(target, ("column_name",), case_id=case.case_id)
             if target.ref not in guarded:
                 raise ValueError("search aliases require guarded original membership")
     evaluations = evaluate_cases(ordered, records)

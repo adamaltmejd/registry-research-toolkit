@@ -326,6 +326,17 @@ def test_authored_coverage_does_not_require_a_fabricated_delivery_edition() -> N
     assert declared.support_records == (record,)
 
 
+def test_occurrence_contract_names_case_and_uncaptured_changed_field() -> None:
+    record = _record(column="VALUE")
+    case = _case(
+        record,
+        _field(record, "description", "Accepted prose"),
+        name="description/missing-field",
+    ).model_copy(update={"targets": capture_expectations((record,), fields=())})
+    with pytest.raises(ValueError, match="description/missing-field.*description"):
+        apply_occurrence_cases((record,), (case,))
+
+
 def test_added_occurrence_copies_coding_only_with_explicit_checked_declaration() -> (
     None
 ):
