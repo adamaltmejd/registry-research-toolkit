@@ -205,26 +205,28 @@ def _label_rule_bindings(
                     key=repr,
                 )
             )
+            if not refs:
+                continue
             segment_labels = set()
             for claim_id in segment.claim_ids:
                 claim = claims.get(claim_id)
                 if claim is not None and claim.version_label is not None:
                     segment_labels.add(normalize_text(claim.version_label))
+            slug_labels = {}
             for label in sorted(segment_labels):
                 if label in labels:
-                    if not refs:
-                        raise ValueError("label rule requires occurrence evidence")
-                    slug = labels[label]
-                    selected[key].append(
-                        _Binding(
-                            segment.valid_from,
-                            segment.valid_to,
-                            slug,
-                            refs,
-                            (f"label rule: {label!r} -> {slug}",),
-                            rule=True,
-                        )
+                    slug_labels.setdefault(labels[label], label)
+            for slug, label in sorted(slug_labels.items()):
+                selected[key].append(
+                    _Binding(
+                        segment.valid_from,
+                        segment.valid_to,
+                        slug,
+                        refs,
+                        (f"label rule: {label!r} -> {slug}",),
+                        rule=True,
                     )
+                )
     return selected
 
 

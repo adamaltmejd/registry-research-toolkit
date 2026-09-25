@@ -578,6 +578,44 @@ def test_label_rule_normalizes_claims_and_preserves_occurrence_evidence():
     assert changed.coding[key].segments[0].classification == "fixture"
 
 
+def test_label_rule_skips_segment_without_catalog_occurrence():
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    claim = replace(original.claims[0], version_label="Listed")
+    coding = {key: resolve_code_membership((claim,))}
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding=coding,
+        classifications=setup[3],
+        occurrences=(),
+        label_rules={"Listed": "fixture"},
+    )
+    assert result.coding == coding
+    assert result.diagnostics == ()
+
+
+def test_two_labels_for_one_book_make_one_rule_binding():
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    first = replace(original.claims[0], version_label="First")
+    second = replace(first, claim_id="other", version_label="Second")
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding={key: resolve_code_membership((first, second))},
+        classifications=setup[3],
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules={"First": "fixture", "Second": "fixture"},
+    )
+    segment = result.coding[key].segments[0]
+    assert segment.classification == "fixture"
+    assert segment.provenance == (
+        "label rule: 'First' -> fixture (classifications/FIX.toml)",
+    )
+    assert result.diagnostics == ()
+
+
 def test_label_rule_omits_state_and_conflicts_on_two_distinct_books():
     setup = _setup()
     key, original = next(iter(setup[2].items()))
