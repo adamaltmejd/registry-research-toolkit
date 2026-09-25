@@ -345,18 +345,16 @@ def _edge_registers(refs: tuple[str, ...], selected: set[str] | None) -> bool:
 def compile_declared_metadata(
     tree: CurationTree,
     *,
-    selected: set[str] | None = None,
-    dropped: list[str] | None = None,
+    selected: set[str],
+    unmatched: list[str],
 ) -> tuple[ResolvedMetadata, tuple[ResolvedClassificationSuccession, ...]]:
-    """Translate each tracked global edge exactly once into resolved declarations."""
-    dropped = dropped if dropped is not None else []
+    """Translate every tracked global edge; record unmatched entries without dropping them."""
     books = {entry.classification.slug for entry in tree.classifications}
     groups = []
     for register in sorted(tree.registers, key=lambda item: item.source_file):
         for index, group in enumerate(register.group, 1):
             if not _edge_registers((group.register_fqid,), selected):
-                dropped.append(f"{register.source_file}#/group/{index}")
-                continue
+                unmatched.append(f"{register.source_file}#/group/{index}")
             axes = (
                 tuple(
                     ResolvedGroupAxis(axis=axis.axis, ordinal=i, label=axis.label)
@@ -447,8 +445,7 @@ def compile_declared_metadata(
                 if x is not None
             )
             if not _edge_registers((target,), selected):
-                dropped.append(f"tags.toml#/tag/{tag.slug}/member/{target}")
-                continue
+                unmatched.append(f"tags.toml#/tag/{tag.slug}/member/{target}")
             members.append(
                 ResolvedTagMember(
                     target=target,
@@ -478,10 +475,9 @@ def compile_declared_metadata(
             raise ValueError(
                 f"same_as must have variable binding endpoints: {edge.a_fqid()}"
             )
-        if _edge_registers((edge.a_fqid(), edge.b_fqid()), selected):
-            same_as.append(ResolvedVariableSameAs(a=edge.a_fqid(), b=edge.b_fqid()))
-        else:
-            dropped.append(f"relations.toml#/same_as/{edge.a_fqid()}/{edge.b_fqid()}")
+        if not _edge_registers((edge.a_fqid(), edge.b_fqid()), selected):
+            unmatched.append(f"relations.toml#/same_as/{edge.a_fqid()}/{edge.b_fqid()}")
+        same_as.append(ResolvedVariableSameAs(a=edge.a_fqid(), b=edge.b_fqid()))
     for edge in tree.relations.replaced_by:
         a, b = str(edge.predecessor), str(edge.successor)
         if edge.predecessor.kind == FqidKind.CLASSIFICATION:
@@ -500,8 +496,7 @@ def compile_declared_metadata(
             )
             continue
         if not _edge_registers((a, b), selected):
-            dropped.append(f"relations.toml#/replaced_by/{a}/{b}")
-            continue
+            unmatched.append(f"relations.toml#/replaced_by/{a}/{b}")
         common = {
             "effective_year": edge.effective_year,
             "note": "curated:slug_toml",
@@ -591,9 +586,9 @@ def compile_curation(
     from .pipeline import CodebookDeclaration
 
     selected = {register for scope in scopes for register, _ in _scope_registers(scope)}
-    dropped: list[str] = []
+    unmatched: list[str] = []
     metadata, class_successions = compile_declared_metadata(
-        tree, selected=selected, dropped=dropped
+        tree, selected=selected, unmatched=unmatched
     )
     books = tuple(
         CodebookDeclaration(
@@ -634,8 +629,7 @@ def compile_curation(
                 raise ValueError(f"{case_id}: duplicate code/label pair")
             seen_pairs.add((pair.code, pair.label))
             if not _edge_registers((pair.code, pair.label), selected):
-                dropped.append(case_id)
-                continue
+                unmatched.append(case_id)
             code, label = pair.code.split("/"), pair.label.split("/")
             if code == label:
                 raise ValueError(f"{case_id}: identical endpoints")
@@ -652,10 +646,9 @@ def compile_curation(
     defaults = []
     for key, variant in sorted(tree.lineage.defaults.items()):
         ref = "/".join(key)
-        if _edge_registers((ref,), selected):
-            defaults.append((ref, variant))
-        else:
-            dropped.append(f"lineage.toml#/lineage_defaults/{ref}")
+        if not _edge_registers((ref,), selected):
+            unmatched.append(f"lineage.toml#/lineage_defaults/{ref}")
+        defaults.append((ref, variant))
     inputs = prepared.manifest.inputs
     identifiers = tuple(
         e.revision.dataset
@@ -679,36 +672,6 @@ def compile_curation(
         and entry.revision is not None
         if (key := _snapshot_key(entry)) in event_targets
     )
-    selected_sources = {scope.source for scope in scopes}
-    events = tuple(item for item in all_events if item[1] in selected_sources)
-    dropped.extend(
-        f"prepared://{source}->{target}"
-        for source, target in all_events
-        if target not in selected_sources
-    )
-    skipped_event_sources = {
-        source for source, target in all_events if target not in selected_sources
-    }
-    if skipped_event_sources:
-        from .prepared_catalog import ReferenceEvidence
-        from .source_reference_records import SourceEventDeclaration
-
-        for evidence in prepared.iter_evidence():
-            if not isinstance(evidence, ReferenceEvidence) or not isinstance(
-                evidence.declaration, SourceEventDeclaration
-            ):
-                continue
-            declaration = evidence.declaration
-            if declaration.revision.dataset not in skipped_event_sources:
-                continue
-            dropped.append(
-                source_event_id(
-                    SourceRecordRef(
-                        source=declaration.revision.dataset,
-                        semantic_record_key=declaration.locator.semantic_record_key,
-                    )
-                )
-            )
     cases: dict[tuple[str, tuple[str | int, ...] | None], list[CurationCase]] = {
         (scope.source, scope.register_key): [] for scope in scopes
     }
@@ -745,7 +708,7 @@ def compile_curation(
             for index, _ in enumerate(entries, 1):
                 entry_id = f"{register.source_file}#/{table}/{index}"
                 statuses["entries_read"].append(entry_id)
-                if name in selected and entry_id not in dropped:
+                if name in selected and (subset or entry_id not in unmatched):
                     statuses["entries_matched"].append(entry_id)
                 elif subset:
                     statuses["not_evaluated_in_subset"].append(entry_id)
@@ -879,7 +842,8 @@ def compile_curation(
                     )
                 )
     report["_classifications"] = classification_report
-    report["_subset"] = {"dropped": sorted(dropped)}
+    # The scoped resolver records what it actually skipped in this list.
+    report["_subset"] = {"dropped": []}
     if not subset:
         diagnostics.extend(
             ResolutionDiagnostic(
@@ -889,7 +853,7 @@ def compile_curation(
                 detail=f"{entry_id} matches no selected register",
                 withheld_output=(entry_id,),
             )
-            for entry_id in sorted(dropped)
+            for entry_id in sorted(unmatched)
         )
     return CompiledCuration(
         fields={
@@ -899,7 +863,7 @@ def compile_curation(
             "code_label_pairs": tuple(pairs),
             "lineage_defaults": tuple(defaults),
             "identifier_sources": identifiers,
-            "event_sources": events,
+            "event_sources": all_events,
         },
         cases={
             key: tuple(sorted(value, key=lambda item: item.case_id))

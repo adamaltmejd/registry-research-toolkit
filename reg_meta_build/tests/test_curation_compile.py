@@ -177,15 +177,21 @@ def test_global_families_and_manifest_wiring_compile_for_subset(tmp_path):
     assert len(metadata.classification_groups) == 1
     assert len(metadata.classification_derivations) == 1
     assert len(metadata.successions) == 1
-    assert metadata.variable_same_as == ()
-    assert [member.target for member in metadata.tags[0].members] == ["scb/sample/one"]
+    assert len(metadata.variable_same_as) == 1
+    assert [member.target for member in metadata.tags[0].members] == [
+        "scb/sample/one",
+        "scb/other/one",
+    ]
     assert len(result.fields["code_label_pairs"]) == 1
-    assert result.fields["lineage_defaults"] == (("scb/sample", "people"),)
+    assert result.fields["lineage_defaults"] == (
+        ("scb/other", "people"),
+        ("scb/sample", "people"),
+    )
     assert result.fields["identifier_sources"] == ("scb-identifierare",)
     assert result.fields["event_sources"] == (
         ("scb-timeseries", "scb-registerinformation"),
     )
-    assert any("same_as" in item for item in result.report["_subset"]["dropped"])
+    assert result.report["_subset"]["dropped"] == []
     assert len(result.report["_classifications"]["not_evaluated_in_subset"]) == 2
     assert (
         "classifications/ALPHA.toml#/binding/value_set_labels/1"
@@ -216,16 +222,12 @@ def test_compilation_is_byte_identical_with_shuffled_register_order(tmp_path):
     assert _bytes(first) == _bytes(second) == _bytes(shuffled)
 
 
-def test_source_event_without_selected_target_is_reported(tmp_path):
+def test_source_event_without_selected_target_reaches_scoped_resolver(tmp_path):
     result = compile_curation(_tree(tmp_path / "curation"), _prepared(), ())
-    assert result.fields["event_sources"] == ()
-    assert result.report["_subset"]["dropped"] == sorted(
-        result.report["_subset"]["dropped"]
+    assert result.fields["event_sources"] == (
+        ("scb-timeseries", "scb-registerinformation"),
     )
-    assert (
-        "prepared://scb-timeseries->scb-registerinformation"
-        in result.report["_subset"]["dropped"]
-    )
+    assert result.report["_subset"]["dropped"] == []
 
 
 def test_event_sources_pair_within_same_snapshot_revision(tmp_path):

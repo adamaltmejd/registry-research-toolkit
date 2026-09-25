@@ -1155,33 +1155,74 @@ def test_dump_decisions_refuses_input_and_output_aliases(selection, tmp_path):
 
 
 @pytest.mark.parametrize("selection", ["register_scoped"], indirect=True)
-def test_hybrid_subset_filters_global_relations_and_tag_members(
+def test_hybrid_subset_preserves_dependency_diagnostics_and_tag_rows(
     selection, tmp_path, monkeypatch
 ):
     from reg_meta_build.curation_compile import compile_curation
 
     from reg_meta_build import pipeline
 
-    monkeypatch.setattr(pipeline, "compile_curation", compile_curation)
-    dump = tmp_path / "subset-decisions"
+    raw = json.loads(selection.read_bytes())
+    path = "scope-0.json.gz"
+    scope = ScopeDeclarations.model_validate_json(
+        gzip.decompress((selection.parent / path).read_bytes())
+    )
+    variable_key = next(key for key, _ in scope.provider_keys)
+    pinned = next(item for item in raw["scopes"] if item["path"] == path)
+    pinned.update(
+        _scope_file(
+            selection.parent,
+            path,
+            scope.model_copy(update={"provider_keys": ((variable_key, None),)}),
+        ).model_dump(mode="json")
+    )
+    selection.write_text(json.dumps(raw))
+    stored_db = tmp_path / "stored.db"
+    stored_report = tmp_path / "stored-report"
     build_selected_catalog(
         selection,
-        tmp_path / "subset.db",
-        tmp_path / "subset-report",
+        stored_db,
+        stored_report,
+        diagnostic=True,
+        registers=("1",),
+    )
+    monkeypatch.setattr(pipeline, "compile_curation", compile_curation)
+    dump = tmp_path / "subset-decisions"
+    compiled_db = tmp_path / "compiled.db"
+    compiled_report = tmp_path / "compiled-report"
+    build_selected_catalog(
+        selection,
+        compiled_db,
+        compiled_report,
         diagnostic=True,
         registers=("1",),
         dump_decisions=dump,
     )
+    stored_issues = _issues(stored_report)
+    assert {"deferred_out_of_slice_reference", "withheld_catalog_dependency"} <= {
+        item["code"] for item in stored_issues
+    }
+    assert _issues(compiled_report) == stored_issues
+    for table in ("tag", "tag_member"):
+        with (
+            sqlite3.connect(stored_db) as stored,
+            sqlite3.connect(compiled_db) as compiled,
+        ):
+            assert compiled.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall() == (
+                stored.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall()
+            )
+    with sqlite3.connect(compiled_db) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM tag").fetchone() == (0,)
     globals_ = json.loads((dump / "global.json").read_text())
-    assert globals_["metadata"]["variable_same_as"] == []
-    assert globals_["metadata"]["tags"][0]["members"] == []
+    assert len(globals_["metadata"]["variable_same_as"]) == 1
+    assert len(globals_["metadata"]["tags"][0]["members"]) == 1
     report = json.loads((dump / "compile-report.json").read_text())
-    assert any("same_as" in entry for entry in report["_subset"]["dropped"])
-    assert any("tag" in entry for entry in report["_subset"]["dropped"])
+    assert not any("same_as" in entry for entry in report["_subset"]["dropped"])
+    assert not any("tag" in entry for entry in report["_subset"]["dropped"])
 
 
 @pytest.mark.parametrize("selection", ["source_event_sos"], indirect=True)
-def test_hybrid_subset_drops_event_source_without_selected_target(
+def test_hybrid_subset_keeps_event_binding_for_scoped_resolver(
     selection, tmp_path, monkeypatch
 ):
     from reg_meta_build.curation_compile import compile_curation
@@ -1206,10 +1247,9 @@ def test_hybrid_subset_drops_event_source_without_selected_target(
     )
     assert result["status"] == "diagnostic_complete"
     globals_ = json.loads((dump / "global.json").read_text())
-    assert globals_["event_sources"] == []
+    assert globals_["event_sources"] == [list(pair) for pair in selected.event_sources]
     report = json.loads((dump / "compile-report.json").read_text())
-    assert any("scb-timeseries" in item for item in report["_subset"]["dropped"])
-    assert any("#/event/" in item for item in report["_subset"]["dropped"])
+    assert report["_subset"]["dropped"] == []
 
 
 @pytest.mark.parametrize("selection", ["events_outside"], indirect=True)
