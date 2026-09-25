@@ -11,7 +11,7 @@ from _curation_fixtures import write_fdb_partition_curation
 from _prepared_fixtures import accept_prepared
 from reg_meta.db import open_db
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
-from reg_meta_build.convert_identity import convert_declared_partitions
+from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.prepared_sources import (
     open_prepared_source_records,
     prepare_source_records,
@@ -54,7 +54,7 @@ from reg_meta_build.source_records import (
     value_field,
 )
 
-from reg_meta_build.fqid_slugs import load_provider_toml
+from reg_meta_build.fqid_slugs import declared_column_ownership, load_provider_toml
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -466,13 +466,18 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
         _fdb_record(2020, column="PGaturest", variant=424),
         _fdb_record(2025, column="PGaturest", variant=427),
     )
-    converted = convert_declared_partitions(
-        records,
-        entries=load_provider_toml(declaration),
+    ownership = declared_column_ownership(
+        load_provider_toml(declaration),
         provider="scb",
         source_id="1.830",
-        split_ids=("1.830.gaturest", "1.830.pgaturest"),
         curation_dir=curation_dir,
+    )
+    converted = convert_column_partitions(
+        records,
+        source_id="1.830",
+        split_ids=("1.830.gaturest", "1.830.pgaturest"),
+        declared_columns=dict(ownership.declared_columns),
+        declaration_reference=ownership.declaration_reference,
     )
     assert converted.case is not None and converted.diagnostics == ()
     assert converted.case.decision.provenance.endswith(

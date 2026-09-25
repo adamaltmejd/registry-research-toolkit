@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, Literal, cast
 
 import pytest
+from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_compile import (
     COMPILED,
@@ -20,6 +21,7 @@ from reg_meta_build.curation_compile import (
     _naming_family,
     compile_curation,
     compile_native_naming,
+    compile_partitions,
     finalize_classification_bindings,
     merge_scope,
     merge_selection,
@@ -38,6 +40,7 @@ from reg_meta_build.source_curation import (
     CurationCase,
     OccurrenceCorrectionDecision,
 )
+from reg_meta_build.source_effects import apply_occurrence_cases
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import (
     DeliveredCell,
@@ -53,6 +56,7 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
+from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
@@ -211,6 +215,10 @@ def _bytes(compiled) -> bytes:
             "provider_keys": {
                 repr(key): value
                 for key, value in (compiled.provider_keys or {}).items()
+            },
+            "naming_ambiguities": {
+                repr(key): value
+                for key, value in (compiled.naming_ambiguities or {}).items()
             },
             "variants": {
                 repr(key): value for key, value in (compiled.variants or {}).items()
@@ -420,7 +428,7 @@ def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
     )
 
 
-def test_null_partition_base_provider_key_survives_hybrid_merge(tmp_path):
+def test_compiled_partition_replaces_stored_null_base_provider_key(tmp_path):
     partition_base = (
         "scb-registerinformation",
         "scb",
@@ -435,7 +443,7 @@ def test_null_partition_base_provider_key_survives_hybrid_merge(tmp_path):
     compiled = compile_curation(
         _tree(tmp_path / "curation"), _prepared(), (scope,), subset=True
     )
-    assert merge_scope(scope, compiled).provider_keys == ((partition_base, None),)
+    assert merge_scope(scope, compiled).provider_keys == ()
 
 
 def test_native_names_overlay_and_unnamed_provider_keys_compile(tmp_path):
@@ -696,7 +704,7 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
     )
 
 
-def test_stored_split_naming_survives_compiled_native_merge():
+def test_stored_split_naming_is_replaced_by_compiled_partition():
     parent = _scope().naming[0]
     native = (
         "scb-registerinformation",
@@ -736,8 +744,8 @@ def test_stored_split_naming_survives_compiled_native_merge():
         variants={(scope.source, scope.register_key): ()},
     )
     merged = merge_scope(scope, compiled)
-    assert merged.naming == (split, parent)
-    assert merged.provider_keys == ((split_key, "5.first"),)
+    assert merged.naming == (parent,)
+    assert merged.provider_keys == ()
 
 
 def test_stored_period_family_provider_key_survives_compiled_native_merge():
@@ -859,7 +867,7 @@ def test_stored_v18b_case_and_gap_families_are_owned():
         == "sos_thin"
     )
     cases = {
-        "accepted-column-partitions:scb-registerinformation:1.2": "identity",
+        "accepted-column-partitions:scb-registerinformation:1.2": "partition",
         "accepted-coding:46:0": "coding",
         "accepted-alias-window:5:identity": "representation",
         f"accepted-classification-seed:{'a' * 64}": "classification_bindings",
@@ -873,7 +881,7 @@ def test_stored_v18b_case_and_gap_families_are_owned():
         "accepted-codeless:46:0": "coding",
         "delivery_enrichment.generated.toml/alias/1": "annotations",
         "accepted-period-family:5:identity": "representation",
-        "accepted-sos-identity:bu:FOD_DATUMN": "identity",
+        "accepted-sos-identity:bu:FOD_DATUMN": "partition",
         "accepted-cis2014-answers": "matrix",
         "accepted-cis2016-answers": "matrix",
         "existing-source-use:Socialstyrelsen/Metadata_Förteckning legitimerade": "sos_thin",
@@ -1226,6 +1234,322 @@ def test_thin_copies_coding_from_its_own_declared_list(monkeypatch):
     assert addition.expected_codings == copied_coding_fingerprints((claim,))
     assert addition.fields.value_set_declared is not None
     assert addition.fields.value_set_declared.value == "own-list"
+
+
+def _partition_scope(records: tuple[SourceRecord, ...]) -> ScopeDeclarations:
+    first = records[0]
+    register = source_register_key(first)
+    assert register is not None
+    provider = first.subject.provider
+    register_id = "1" if provider == "scb" else "5891427617861710725"
+    slug = "sample" if provider == "scb" else "par"
+    return ScopeDeclarations(
+        source=first.source,
+        register_key=None,
+        naming=(
+            NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind="register",
+                    provider=provider,
+                    source_key=register,
+                ),
+                naming=SlugEntry(
+                    kind="register",
+                    provider=provider,
+                    source_id=register_id,
+                    slug=slug,
+                ),
+                contributors=(),
+            ),
+        ),
+    )
+
+
+def _compile_partition_fixture(
+    root: Path, records: tuple[SourceRecord, ...], *, shuffled: bool = False
+):
+    native = native_variable_key(records[0])
+    assert native is not None
+    reader = SimpleNamespace(
+        iter_native_families=lambda source: iter(((native, records),))
+    )
+    scope = _partition_scope(records)
+    tree = load_curation_tree(root)
+    if shuffled:
+        tree = replace(tree, registers=tuple(reversed(tree.registers)))
+    return (
+        compile_partitions(
+            tree,
+            cast("Any", SimpleNamespace(records=reader)),
+            (scope,),
+        ),
+        (scope.source, None),
+        native,
+    )
+
+
+def _scb_partition_records(
+    columns: tuple[str, ...], *, variants: tuple[int, ...] | None = None
+):
+    header = REGISTERINFORMATION_HEADER.split("|")
+    revision = _revision("scb-registerinformation")
+    records = []
+    for index, column in enumerate(columns, 1):
+        row = _var_row(
+            cvid=20 + index,
+            var_id=5,
+            colname=column,
+            register=("TEST", 1, (variants or (2,) * len(columns))[index - 1]),
+        ).split("|")
+        cells = {
+            name: (True, value, value) for name, value in zip(header, row, strict=True)
+        }
+        records.append(clean_scb_row(header, index, cells, revision).record)
+    return tuple(records)
+
+
+def _scb_partition_tree(root: Path, extra: str):
+    tree = _tree(root)
+    path = root / "registers" / "scb" / "sample.toml"
+    path.write_text(path.read_text() + extra, encoding="utf-8")
+    return tree
+
+
+@pytest.mark.parametrize(
+    "columns,expected_stale",
+    [
+        (("ANSWER", "OTHER"), False),
+        (("ANSWER", "OTHER", "MISSING"), True),
+        (("ANSWER",), True),
+    ],
+)
+def test_tracked_partition_map_checks_every_literal(
+    tmp_path: Path,
+    columns: tuple[str, ...],
+    expected_stale: bool,
+):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+        '[[variable]]\nnative_id = "1.5.other"\nslug = "other"\n'
+        '[[identity.partition]]\nvariable = "1.5"\n'
+        'columns = { ANSWER = "1.5.answer", OTHER = "1.5.other" }\n'
+        'columns_ref = "fixture literal map"\n',
+    )
+    records = _scb_partition_records(columns)
+    compiled, key, native = _compile_partition_fixture(root, records)
+    cases, naming, keys, ambiguities, bases, issues = compiled
+    assert native in bases[key]
+    assert (
+        any(issue.code == "stale_curation_entry" for issue in issues) == expected_stale
+    )
+    assert bool(cases.get(key)) != expected_stale
+    assert bool(naming[key]) != expected_stale
+    assert (
+        (native, None) in keys[key]
+        if expected_stale
+        else (native, None) not in keys[key]
+    )
+    assert bool(ambiguities.get(key)) == expected_stale
+
+
+def test_unassigned_and_partial_suffix_keep_base_identity(tmp_path: Path):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+        '[[identity.partition]]\nvariable = "1.5"\n'
+        'columns = { ANSWER = "1.5.answer" }\n'
+        'unassigned_columns = ["LEFT"]\ncolumns_ref = "fixture map"\n',
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"))
+    compiled, key, native = _compile_partition_fixture(root, records)
+    cases, _, keys, _, _, _ = compiled
+    assert (native, None) in keys[key]
+    corrected = apply_occurrence_cases(records, cases[key]).occurrences
+    assert corrected[0].variable_key != native
+    assert corrected[1].variable_key == native
+
+    path = root / "registers" / "scb" / "sample.toml"
+    path.write_text(
+        path.read_text().split("[[identity.partition]]")[0]
+        + '[[variable]]\nnative_id = "1.5.unknown"\nslug = "unknown"\n',
+        encoding="utf-8",
+    )
+    compiled, key, native = _compile_partition_fixture(root, records)
+    cases, naming, keys, ambiguities, _, _ = compiled
+    assert {item.naming.source_id for item in naming[key]} == {"1.5.answer"}
+    assert (native, None) in keys[key]
+    assert len(ambiguities[key]) == 1
+    assert ambiguities[key][0].candidate_columns == (("1.5.answer", "ANSWER"),)
+    assert (
+        apply_occurrence_cases(records, cases[key]).occurrences[1].variable_key
+        == native
+    )
+
+
+def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "ANSWER"\nowner = "1.5.answer"\nref = "fixture variant"\n',
+    )
+    records = _scb_partition_records(("ANSWER", "ANSWER"), variants=(2, 3))
+    compiled, key, native = _compile_partition_fixture(root, records)
+    cases, _, keys, _, _, _ = compiled
+    assert (native, None) in keys[key]
+    corrected = apply_occurrence_cases(records, cases[key]).occurrences
+    assert corrected[0].variable_key != native
+    assert corrected[1].variable_key == native
+
+
+def _sos_partition_records(*, rename: bool = False) -> tuple[SourceRecord, ...]:
+    source = "Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx"
+    revision = _revision(source)
+    register = SourceCoordinate(status="value", name="Patientregistret")
+    variant = SourceCoordinate(status="value", name="PAR_OV")
+    variable = SourceCoordinate(
+        status="value", native_id="INVARN8" if rename else "ATC"
+    )
+    types = ("integer",) if rename else ("integer", "text")
+    records = []
+    for index, data_type in enumerate(types, 1):
+        subject = SourceSubject(
+            provider="sos",
+            register=register,
+            variant=variant,
+            population=SourceCoordinate(status="not_applicable"),
+            variable=variable,
+            member=SourceCoordinate(status="value", native_id=str(index)),
+            native=NativeCoordinates(),
+        )
+        locator = RecordLocator(
+            semantic_record_key=(f"member:{index}",),
+            physical_file="fixture.xlsx",
+            physical_table="PAR_OV",
+            physical_record=str(index),
+            physical_cells=(),
+        )
+        records.append(
+            SourceRecord.create(
+                revision=revision,
+                locators=(locator,),
+                subject=subject,
+                edition_scope=TemporalScope(kind="not_applicable"),
+                edition_period_scope=TemporalScope(kind="not_applicable"),
+                fields=SourceFields(
+                    column_name=value_field("INVARN8" if rename else "ATC"),
+                    name=value_field("target" if rename else "ATC"),
+                    data_type=value_field(data_type),
+                ),
+            )
+        )
+    return tuple(records)
+
+
+@pytest.mark.parametrize("rename", [False, True])
+def test_sos_type_split_and_name_rename(tmp_path: Path, rename: bool):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers" / "sos" / "par.toml"
+    path.parent.mkdir(parents=True)
+    base = '[register]\nprovider = "sos"\nslug = "par"\nnative_id = "5891427617861710725"\nname = "Patientregistret"\n'
+    if rename:
+        extra = (
+            '[[identity.rename]]\ndeldatamangd = "PAR_OV"\nvariable = "INVARN8"\n'
+            'name = "target"\ncolumn = "INVARN9"\n'
+            '[[variable]]\nnative_id = "5891427617861710725.INVARN9"\nslug = "new-name"\n'
+        )
+    else:
+        extra = (
+            '[[identity.split]]\nvariable = "ATC"\nby = "data_type"\n'
+            'parts = [{ data_type = "integer", owner = "5891427617861710725.ATC.atc" }, '
+            '{ data_type = "text", owner = "5891427617861710725.ATC.atc-1" }]\n'
+            '[[variable]]\nnative_id = "5891427617861710725.ATC.atc"\nslug = "atc"\n'
+            '[[variable]]\nnative_id = "5891427617861710725.ATC.atc-1"\nslug = "atc-1"\n'
+        )
+    path.write_text(base + extra, encoding="utf-8")
+    records = _sos_partition_records(rename=rename)
+    compiled, key, native = _compile_partition_fixture(root, records)
+    cases, naming, keys, _, bases, issues = compiled
+    assert not issues
+    assert len(cases[key]) == 1
+    assert len(naming[key]) == (1 if rename else 2)
+    assert native not in bases[key] if rename else native in bases[key]
+    corrected = apply_occurrence_cases(records, cases[key]).occurrences
+    assert all(item.variable_key != native for item in corrected)
+    if rename:
+        assert corrected[0].fields.column_name.value == "INVARN9"
+    else:
+        assert corrected[0].variable_key != corrected[1].variable_key
+    assert all(value is not None for _, value in keys[key])
+
+
+def test_partition_compile_is_byte_identical_on_rerun(tmp_path: Path):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root, '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"))
+    first = _compile_partition_fixture(root, records)[0]
+    second = _compile_partition_fixture(root, records)[0]
+    shuffled = _compile_partition_fixture(root, records, shuffled=True)[0]
+
+    def encode(value):
+        cases, naming, keys, ambiguities, bases, diagnostics = value
+        compiled = CompiledCuration(
+            fields={},
+            cases=cases,
+            report={},
+            naming=naming,
+            provider_keys=keys,
+            naming_ambiguities=ambiguities,
+            diagnostics=diagnostics,
+        )
+        return _bytes(compiled), bases
+
+    assert encode(first) == encode(second) == encode(shuffled)
+
+
+def test_partition_replaces_stored_scope_declarations_in_compiled_selection(
+    tmp_path: Path,
+):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root, '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"))
+    scope = _partition_scope(records)
+    native = native_variable_key(records[0])
+    assert native is not None
+    prepared = _prepared()
+
+    class Reader:
+        def iter_native_families(self, source):
+            return iter(((native, records),))
+
+        def iter_records(self, *, source):
+            return iter(records)
+
+        def iter_register_slices(self, source, registers):
+            return iter(((None, records),))
+
+    prepared.records = Reader()
+    compiled = compile_curation(
+        load_curation_tree(root), prepared, (scope,), subset=True
+    )
+    merged = merge_scope(scope, compiled)
+    assert len(merged.cases) == 1
+    assert {
+        item.naming.source_id
+        for item in merged.naming
+        if item.target.kind == "variable"
+    } == {"1.5.answer"}
+    assert (native, None) in merged.provider_keys
+    assert len(merged.naming_ambiguities) == 0
 
 
 def test_compiled_classification_family_drops_both_stored_case_prefixes(tmp_path):

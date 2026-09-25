@@ -16,10 +16,7 @@ from reg_meta_build.convert_errata import (
     convert_column_entry,
     convert_delivered_entry,
 )
-from reg_meta_build.convert_identity import (
-    convert_column_partitions,
-    convert_declared_partitions,
-)
+from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
@@ -66,6 +63,7 @@ from reg_meta_build.source_records import (
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import (
+    declared_column_ownership,
     load_provider_toml,
     load_slug_dir,
     repo_slug_dir,
@@ -800,21 +798,22 @@ def test_existing_column_discriminators_convert_into_exact_guarded_partitions() 
     )
 
 
-def test_existing_shape_split_or_rename_cluster_is_not_guessed_from_discriminator() -> (
-    None
-):
+def test_unique_suffix_binds_while_unmatched_siblings_stay_unresolved() -> None:
     record = _record(column="ANSWER")
     converted = convert_column_partitions(
         (record,), source_id="1.5", split_ids=("1.5.answer", "1.5.answer-1")
     )
-    assert converted.case is None and converted.bindings == ()
+    assert converted.case is not None
+    assert tuple(item.source_id for item in converted.bindings) == ("1.5.answer",)
     assert converted.diagnostics[0].code == "split_identity_conversion_pending"
     assert "answer-1" in converted.diagnostics[0].detail
     renamed = _record(cvid=21, column="ANSWER_NEW")
     converted = convert_column_partitions(
         (record, renamed), source_id="1.5", split_ids=("1.5.answer",)
     )
-    assert converted.case is None
+    assert converted.case is not None
+    assert tuple(item.source_id for item in converted.bindings) == ("1.5.answer",)
+    assert tuple(item.ref for item in converted.case.support) == (record_ref(renamed),)
 
 
 def test_ambiguous_split_withholds_only_its_own_partition() -> None:
@@ -1136,13 +1135,18 @@ def _fdb_convert(
 ):
     # The production entry point: the tracked declaration is loaded from the
     # complete entry set, never hand-plumbed.
-    return convert_declared_partitions(
-        records,
-        entries=_fdb_entries(tmp_path, body),
+    ownership = declared_column_ownership(
+        _fdb_entries(tmp_path, body),
         provider="scb",
         source_id="1.830",
-        split_ids=split_ids,
         curation_dir=tmp_path / "curation",
+    )
+    return convert_column_partitions(
+        records,
+        source_id="1.830",
+        split_ids=split_ids,
+        declared_columns=dict(ownership.declared_columns),
+        declaration_reference=ownership.declaration_reference,
     )
 
 
@@ -1185,12 +1189,15 @@ def test_fdb_committed_declaration_converts_through_the_production_entry() -> No
     slug_dir = repo_slug_dir()
     assert slug_dir is not None
     records = _fdb_family()
-    converted = convert_declared_partitions(
+    ownership = declared_column_ownership(
+        load_slug_dir(slug_dir), provider="scb", source_id="1.830"
+    )
+    converted = convert_column_partitions(
         records,
-        entries=load_slug_dir(slug_dir),
-        provider="scb",
         source_id="1.830",
         split_ids=("1.830.gaturest", "1.830.pgaturest"),
+        declared_columns=dict(ownership.declared_columns),
+        declaration_reference=ownership.declaration_reference,
     )
     assert converted.case is not None and converted.diagnostics == ()
     assert [b.source_id for b in converted.bindings] == [

@@ -17,6 +17,7 @@ from reg_meta_build.catalog_dependencies import (
     variable_dependency_keys,
 )
 from reg_meta_build.convert_errata import capture_expectations
+from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.prepared_values import (
     open_prepared_source_values,
     prepare_source_values,
@@ -458,6 +459,17 @@ def test_ambiguous_names_preserve_authored_precedence_and_reject_malformed_evide
 )
 def test_ambiguous_name_candidates_must_match_names_and_original_columns(columns):
     pending = ambiguity((record(),))
+    if not columns:
+        assert (
+            NamingAmbiguity(
+                family=pending.family,
+                entries=pending.entries,
+                candidate_columns=(),
+                reason=pending.reason,
+            ).candidate_columns
+            == ()
+        )
+        return
     with pytest.raises(ValueError, match="candidate"):
         NamingAmbiguity(
             family=pending.family,
@@ -850,6 +862,57 @@ def test_coding_is_checked_despite_unresolved_catalog_identity():
     ]
     assert result.variables == {native_variable_key(item): None}
     assert [d.code for d in result.diagnostics] == ["unresolved_catalog_identity"]
+
+
+def test_native_coding_column_key_follows_checked_partition():
+    item = record(column="VALUE")
+    native = native_variable_key(item)
+    column = native_column_key(item)
+    assert native is not None and column is not None
+    partition = convert_column_partitions(
+        (item,), source_id="1.5", split_ids=("1.5.value",)
+    )
+    assert partition.case is not None
+    split = partition.bindings[0].target.source_key
+    coding = CurationCase(
+        case_id="accepted-uncoded-base-key",
+        targets=capture_expectations((item,), fields=("column_name",)),
+        peer_guards=(guard(item),),
+        decision=CodingDecision(
+            reviewed=True,
+            column_key=column,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            expected_codings=(),
+            selection="uncoded",
+            reason="Accepted uncoded period",
+            provenance="Fixture decision",
+        ),
+    )
+    split_name = NamingDeclaration(
+        target=partition.bindings[0].target,
+        naming=SlugEntry(
+            kind="variable",
+            provider="scb",
+            source_id="1.5.value",
+            slug="value",
+        ),
+        contributors=(),
+    )
+    naming = tuple(
+        item for item in names((item,)) if item.target.kind != "variable"
+    ) + (split_name,)
+    result = resolve(
+        (item,),
+        cases=(partition.case, coding),
+        naming=naming,
+        provider_keys={split: "5.value"},
+    )
+    assert {item.case_id: item.status for item in result.evaluations} == {
+        partition.case.case_id: "applicable",
+        coding.case_id: "applicable",
+    }
+    assert split in result.variables
 
 
 def test_stale_partition_case_withholds_unsplit_family_in_diagnostic_mode():

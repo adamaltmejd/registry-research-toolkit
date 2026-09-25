@@ -18,7 +18,11 @@ from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_classification_bindings import apply_classification_cases
 from reg_meta_build.source_coding_choices import apply_coding_choices
-from reg_meta_build.source_coordinates import native_variable_key, source_register_key
+from reg_meta_build.source_coordinates import (
+    native_column_key,
+    native_variable_key,
+    source_register_key,
+)
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
     CheckedIdentityChange,
@@ -312,11 +316,15 @@ def resolve_source_scope(
 
     groups: dict[NativeKey, list[EffectiveOccurrence]] = defaultdict(list)
     column_owners = {}
+    original_columns: dict[NativeKey, set[NativeKey]] = defaultdict(set)
     for occurrence in corrected.occurrences:
         if occurrence.use != "catalog" or occurrence.variable_key is None:
             continue
         groups[occurrence.variable_key].append(occurrence)
         if occurrence.column_key is not None:
+            for source_record in occurrence.source_records:
+                if (original := native_column_key(source_record)) is not None:
+                    original_columns[original].add(occurrence.column_key)
             owner = column_owners.setdefault(
                 occurrence.column_key, occurrence.variable_key
             )
@@ -418,7 +426,19 @@ def resolve_source_scope(
             aliases.append(case)
             continue
         if isinstance(case.decision, (CodingDecision, ClassificationDecision)):
-            key = column_owners.get(case.decision.column_key)
+            column_key = case.decision.column_key
+            if column_key not in column_owners:
+                replacements = original_columns.get(column_key, set())
+                if len(replacements) == 1:
+                    column_key = next(iter(replacements))
+                    case = case.model_copy(
+                        update={
+                            "decision": case.decision.model_copy(
+                                update={"column_key": column_key}
+                            )
+                        }
+                    )
+            key = column_owners.get(column_key)
         else:
             assert isinstance(case.decision, RepresentationDecision)
             key = case.decision.variable_key
@@ -798,9 +818,7 @@ def _attribute_unresolved_names(
                 )
             )
             if not pending:
-                raise ValueError(
-                    f"ambiguous name has no unresolved candidate observations: {fqid}"
-                )
+                continue
             affected: dict[DependencyKey, set[SourceRecordRef]] = defaultdict(set)
             for occurrence in pending:
                 refs = {record_ref(r) for r in occurrence.evidence}

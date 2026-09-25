@@ -9,7 +9,7 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from _curation_fixtures import write_fdb_partition_curation
 from pydantic import ValidationError
-from reg_meta_build.convert_identity import convert_declared_partitions
+from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.id import mint, mint_canonical_scb
 from reg_meta_build.source_coordinates import (
     native_parent_key,
@@ -366,13 +366,18 @@ def test_naming_selection_entries_feed_declared_partition_conversion(
         return clean_scb_row(header, cvid, cells, _revision()).record
 
     records = (record("GatuRest", 20), record("Gaturest", 21), record("PGaturest", 22))
-    converted = convert_declared_partitions(
-        records,
-        entries=[entry.entry for entry in selection.entries],
+    ownership = declared_column_ownership(
+        [entry.entry for entry in selection.entries],
         provider="scb",
         source_id="1.830",
-        split_ids=_Y167_SPLITS,
         curation_dir=curation_dir,
+    )
+    converted = convert_column_partitions(
+        records,
+        source_id="1.830",
+        split_ids=_Y167_SPLITS,
+        declared_columns=dict(ownership.declared_columns),
+        declaration_reference=ownership.declaration_reference,
     )
     assert converted.case is not None and converted.diagnostics == ()
     assert [binding.source_id for binding in converted.bindings] == list(_Y167_SPLITS)

@@ -10,13 +10,14 @@ import hashlib
 import json
 import re
 import tomllib
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pydantic import TypeAdapter, ValidationError
-from reg_meta.fqid import FqidKind, parse as parse_fqid
+from reg_meta.fqid import FqidKind, derive_variable_slug, parse as parse_fqid
 
 from ._curation import SentinelCode
 from ._resolved_common import covers_window
@@ -54,6 +55,8 @@ from .source_coordinates import (
 )
 from .source_curation import (
     AcknowledgeDecision,
+    CheckedFieldChange,
+    CheckedIdentityChange,
     CheckedSourceUse,
     CheckedVariantAssignment,
     CodingDecision,
@@ -70,6 +73,7 @@ from .source_intervals import coding_scope_bounds
 from .source_naming import (
     AcceptedNamingEntry,
     LegacyNamingBinding,
+    NamingAmbiguity,
     NamingFreezeSetting,
     NamingSelection,
     NativeNamingTarget,
@@ -90,7 +94,12 @@ from .source_value_bindings import bind_code_lists, open_value_bindings
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from .curation_tree import CurationTree, RegisterCuration
+    from .curation_tree import (
+        CurationTree,
+        IdentityRenameEntry,
+        IdentitySplitEntry,
+        RegisterCuration,
+    )
     from .pipeline import ScopeDeclarations
     from .prepared_catalog import PreparedCatalogSources
     from .source_coding import CodeListClaim
@@ -121,13 +130,10 @@ FAMILIES: dict[str, Family] = {
     "identifier_sources": Family(selection_fields=("identifier_sources",)),
     "event_sources": Family(selection_fields=("event_sources",)),
     "acknowledge": Family(case_prefixes=("curation/registers/",)),
-    "identity": Family(
-        case_prefixes=(
-            "accepted-column-partitions:",
-            "accepted-sos-identity:",
-        ),
+    "identity": Family(unapplied_datasets=("fqid_slugs/",)),
+    "partition": Family(
+        case_prefixes=("accepted-column-partitions:", "accepted-sos-identity:"),
         naming_shapes=("accepted-partition", "accepted-shape", "accepted-name"),
-        unapplied_datasets=("fqid_slugs/",),
         scope_fields=("naming_ambiguities",),
     ),
     "errata": Family(
@@ -197,6 +203,7 @@ COMPILED = frozenset(
         "coding",
         "naming",
         "sos_thin",
+        "partition",
     }
 )
 
@@ -215,6 +222,10 @@ class CompiledCuration:
     )
     provider_keys: (
         dict[tuple[str, tuple[str | int, ...] | None], tuple[Any, ...]] | None
+    ) = None
+    naming_ambiguities: (
+        dict[tuple[str, tuple[str | int, ...] | None], tuple[NamingAmbiguity, ...]]
+        | None
     ) = None
 
 
@@ -290,12 +301,12 @@ def _naming_family(target: Any) -> str:
     if target.provider not in {"scb", "sos"}:
         return "sos_thin"
     markers = {
-        "accepted-partition": "identity",
+        "accepted-partition": "partition",
         "declared-column": "errata",
         "accepted-matrix": "matrix",
         "period-family": "representation",
-        "accepted-shape": "identity",
-        "accepted-name": "identity",
+        "accepted-shape": "partition",
+        "accepted-name": "partition",
         "thin-provider": "sos_thin",
     }
     for part in source_key:
@@ -347,7 +358,7 @@ def merge_scope(
         gap for gap in scope.unapplied_curation if _gap_family(gap) not in COMPILED
     )
     # A null key is the unsplit base of a partitioned identity. It has no naming
-    # declaration, but remains stored until identity is compiled.
+    # declaration, but remains stored until partition is compiled.
     naming_owners = {
         item.target.source_key: _naming_family(item.target) for item in scope.naming
     }
@@ -358,7 +369,7 @@ def merge_scope(
     provider_keys = []
     for item in scope.provider_keys:
         source_key, value = item
-        owner = "identity" if value is None else naming_owners.get(source_key)
+        owner = "partition" if value is None else naming_owners.get(source_key)
         if owner is None:
             raise ValueError(
                 f"provider key has no converted catalog naming: {source_key!r}"
@@ -369,7 +380,11 @@ def merge_scope(
         update={
             "cases": (*cases, *compiled.cases.get(key, ())),
             "naming": (*naming, *(compiled.naming or {}).get(key, ())),
-            "provider_keys": tuple(provider_keys),
+            "provider_keys": (
+                *provider_keys,
+                *(compiled.provider_keys or {}).get(key, ()),
+            ),
+            "naming_ambiguities": (compiled.naming_ambiguities or {}).get(key, ()),
             "variants": (compiled.variants or {}).get(key, ()),
             "unapplied_curation": gaps,
         }
@@ -776,6 +791,733 @@ def _register_naming_entries(tree: CurationTree, register: RegisterCuration):
                 )
             )
     return tuple(entries)
+
+
+@dataclass(frozen=True)
+class ColumnPartitionConversion:
+    bindings: tuple[LegacyNamingBinding, ...]
+    case: CurationCase | None
+    diagnostics: tuple[ResolutionDiagnostic, ...]
+
+
+def convert_column_partitions(
+    records: tuple[SourceRecord, ...],
+    *,
+    source_id: str,
+    split_ids: tuple[str, ...],
+    declared_columns: Mapping[str, str | None] | None = None,
+    declaration_reference: str | None = None,
+    scoped_owners: Mapping[SourceRecordRef, str] | None = None,
+) -> ColumnPartitionConversion:
+    """Check a complete family and bind independently identifiable accepted splits.
+
+    ``split_ids`` must include every active split key for this native family. Blank
+    source columns remain original evidence; they are not assigned to a sibling.
+    New members or changed relevant facts invalidate the entire checked decision.
+    ``declared_columns`` is a complete literal column-to-split-key map already
+    asserted by accepted curation, with its original declaration reference. This
+    converter verifies its coverage; it never discovers column equivalence. An
+    explicit None records an unassigned original column, not an identity claim
+    or a curation waiver. Such rows retain their native unresolved identity while
+    independently declared ownership is converted and guarded by the whole family.
+    """
+    keys = {native_variable_key(record) for record in records}
+    if not records or None in keys or len(keys) != 1:
+        raise ValueError("partition conversion requires one complete native family")
+    if (
+        len(set(split_ids)) != len(split_ids)
+        or not split_ids
+        or any(
+            not key.startswith(source_id + ".") or not key[len(source_id) + 1 :]
+            for key in split_ids
+        )
+    ):
+        raise ValueError("split keys must uniquely discriminate this source identity")
+    columns: dict[str, list[SourceRecord]] = defaultdict(list)
+    for record in records:
+        column = record.fields.column_name
+        if column is not None and column.status == "value" and column.value:
+            assert isinstance(column.value, str)
+            columns[column.value].append(record)
+    scoped_owners = scoped_owners or {}
+    scoped_columns = {
+        record.fields.column_name.value
+        for record in records
+        if record_ref(record) in scoped_owners
+        and record.fields.column_name is not None
+        and record.fields.column_name.status == "value"
+    }
+    if set(scoped_owners.values()) - set(split_ids):
+        raise ValueError("scoped owner names a split outside this family")
+    candidates: dict[str, list[str]] = defaultdict(list)
+    for column in columns:
+        if column not in scoped_columns:
+            candidates[derive_variable_slug(column) or "x"].append(column)
+    suffixes = {key[len(source_id) + 1 :] for key in split_ids}
+    diagnostics = ()
+    if declared_columns is not None:
+        if not declaration_reference or not declaration_reference.strip():
+            raise ValueError(
+                "explicit column ownership needs its declaration reference"
+            )
+        if set(declared_columns) != set(columns) or {
+            owner for owner in declared_columns.values() if owner is not None
+        } != set(split_ids):
+            missing = sorted(set(columns) - set(declared_columns))
+            absent = sorted(set(declared_columns) - set(columns))
+            owners = {owner for owner in declared_columns.values() if owner is not None}
+            raise ValueError(
+                "explicit column ownership must cover the complete columns and split keys; "
+                f"uncovered literals={missing!r}; absent literals={absent!r}; "
+                f"unnamed owners={sorted(owners - set(split_ids))!r}; "
+                f"unowned splits={sorted(set(split_ids) - owners)!r}"
+            )
+        partition_columns = {
+            key: tuple(
+                sorted(
+                    column for column, owner in declared_columns.items() if owner == key
+                )
+            )
+            for key in split_ids
+        }
+        unassigned = tuple(
+            sorted(
+                column for column, owner in declared_columns.items() if owner is None
+            )
+        )
+        if unassigned:
+            diagnostics = (
+                ResolutionDiagnostic(
+                    code="unassigned_original_columns",
+                    severity="error",
+                    subject=source_id,
+                    detail="Accepted literal ownership covers only part of the original family. "
+                    f"Unassigned original columns={unassigned!r}; their identity remains unresolved.",
+                    refs=tuple(
+                        sorted(
+                            {
+                                record_ref(record)
+                                for column in unassigned
+                                for record in columns[column]
+                            },
+                            key=str,
+                        )
+                    ),
+                    fields=("identity", "column_name"),
+                    withheld_output=(source_id,),
+                ),
+            )
+    elif declaration_reference is not None:
+        raise ValueError("a declaration reference requires explicit column ownership")
+    else:
+        partition_columns = {
+            key: tuple(candidates[key[len(source_id) + 1 :]])
+            for key in split_ids
+            if len(candidates[key[len(source_id) + 1 :]]) == 1
+        }
+        unresolved = (
+            set(split_ids) - partition_columns.keys() - set(scoped_owners.values())
+        )
+        if unresolved:
+            diagnostics = (
+                ResolutionDiagnostic(
+                    code="split_identity_conversion_pending",
+                    severity="error",
+                    subject=source_id,
+                    detail=(
+                        "Some accepted naming discriminators do not identify unique literal column partitions. "
+                        f"Unresolved split keys={sorted(unresolved)!r}; "
+                        f"independently bound keys={sorted(partition_columns)!r}. "
+                        f"Accepted suffixes={sorted(suffixes)!r}; source columns={dict(candidates)!r}. "
+                        "Convert the existing rename/shape/identity decision; do not guess from column similarity."
+                    ),
+                    refs=tuple(
+                        sorted({record_ref(record) for record in records}, key=str)
+                    ),
+                    fields=("identity", "column_name"),
+                    withheld_output=tuple(sorted(unresolved)),
+                ),
+            )
+    if not partition_columns and not scoped_owners:
+        return ColumnPartitionConversion((), None, diagnostics)
+    first = records[0]
+    native = native_variable_key(first)
+    register = source_register_key(first)
+    assert native is not None and register is not None
+    expectations = capture_expectations(records, fields=("column_name",))
+    guard = PeerGuard(
+        guard_id=f"accepted-partitions:{first.source}:{source_id}",
+        source=first.source,
+        coordinates=(
+            ("register", first.subject.register_name),
+            ("variable", first.subject.variable),
+        ),
+        expected_members=tuple(item.ref for item in expectations),
+    )
+    effects = {}
+    bindings = []
+    for split_id in sorted(set(partition_columns) | set(scoped_owners.values())):
+        key = (*native, "accepted-partition", split_id)
+        for column in partition_columns.get(split_id, ()):
+            for record in columns[column]:
+                ref = record_ref(record)
+                if ref in scoped_owners:
+                    continue
+                effect = CheckedIdentityChange(
+                    ref=ref,
+                    variable_key=key,
+                    when=(
+                        FieldExpectation(
+                            name="column_name", status="value", value=column
+                        ),
+                    ),
+                )
+                effects[ref, column] = effect
+        for record in records:
+            ref = record_ref(record)
+            if scoped_owners.get(ref) != split_id:
+                continue
+            column = record.fields.column_name
+            assert column is not None and column.status == "value"
+            effects[ref, column.value] = CheckedIdentityChange(
+                ref=ref,
+                variable_key=key,
+                when=(
+                    FieldExpectation(
+                        name="column_name", status="value", value=column.value
+                    ),
+                ),
+            )
+        bindings.append(
+            LegacyNamingBinding(
+                kind="variable",
+                provider=first.subject.provider,
+                source_id=split_id,
+                target=NativeNamingTarget(
+                    kind="variable",
+                    provider=first.subject.provider,
+                    source_key=key,
+                    register_key=register,
+                    expectations=expectations,
+                    peer_guards=(guard,),
+                ),
+            )
+        )
+    selected = {ref for ref, _column in effects}
+    case = CurationCase(
+        case_id=f"accepted-column-partitions:{first.source}:{source_id}",
+        targets=tuple(item for item in expectations if item.ref in selected),
+        support=tuple(item for item in expectations if item.ref not in selected),
+        peer_guards=(guard,),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            effects=tuple(effects[ref] for ref in sorted(effects, key=str)),
+            reason="Preserve the exact column partitions already named by the accepted split entries.",
+            provenance=(
+                "existing naming entries: "
+                + ", ".join(
+                    sorted(set(partition_columns) | set(scoped_owners.values()))
+                )
+                + (
+                    "; column ownership: " + declaration_reference
+                    if declaration_reference
+                    else ""
+                )
+            ),
+        ),
+    )
+    return ColumnPartitionConversion(tuple(bindings), case, diagnostics)
+
+
+def _stale_partition(ref: str, subject: str, detail: str) -> ResolutionDiagnostic:
+    return ResolutionDiagnostic(
+        code="stale_curation_entry",
+        severity="error",
+        case_id=ref,
+        subject=subject,
+        detail=f"{ref}: {detail}",
+        withheld_output=(ref,),
+    )
+
+
+def _literal_field(record: SourceRecord, name: str) -> str | None:
+    field = getattr(record.fields, name)
+    return (
+        field.value
+        if field is not None
+        and field.status == "value"
+        and isinstance(field.value, str)
+        else None
+    )
+
+
+def compile_partitions(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[ScopeDeclarations, ...],
+) -> tuple[
+    dict[Any, tuple[CurationCase, ...]],
+    dict[Any, tuple[Any, ...]],
+    dict[Any, tuple[Any, ...]],
+    dict[Any, tuple[NamingAmbiguity, ...]],
+    dict[Any, set[tuple[str | int, ...]]],
+    tuple[ResolutionDiagnostic, ...],
+]:
+    """Convert accepted native splits and SOS shape/name decisions."""
+    scope_map = {(scope.source, scope.register_key): scope for scope in scopes}
+    registers = {}
+    entries_by_register = {}
+    all_entries_by_register = {}
+    for scope_key, scope in scope_map.items():
+        for name, native_register in _scope_registers(scope):
+            register = next(
+                (
+                    item
+                    for item in tree.registers
+                    if name
+                    == f"{item.register_info.provider}/{item.register_info.slug}"
+                ),
+                None,
+            )
+            if register is None:
+                continue
+            registers[scope.source, native_register] = scope_key, register
+            all_entries_by_register[scope.source, native_register] = tuple(
+                item
+                for item, _ in _register_naming_entries(tree, register)
+                if item.entry.kind == "variable"
+            )
+            entries_by_register[scope.source, native_register] = tuple(
+                item
+                for item in all_entries_by_register[scope.source, native_register]
+                if len(item.entry.source_id.split(".")) == 3
+            )
+    cases = defaultdict(list)
+    bindings = defaultdict(list)
+    bound_entries = defaultdict(list)
+    ambiguities = defaultdict(list)
+    split_bases = defaultdict(set)
+    null_bases = defaultdict(set)
+    diagnostics = []
+    seen = set()
+    named_rename_owners = set()
+    for source in sorted({scope.source for scope in scopes}):
+        for native, records in prepared.records.iter_native_families(source):
+            location = registers.get((source, native[:5]))
+            if location is None:
+                continue
+            scope_key, register = location
+            source_id = f"{register.register_info.native_id}.{native[-1]}"
+            entries = tuple(
+                item
+                for item in entries_by_register[source, native[:5]]
+                if item.entry.source_id.startswith(source_id + ".")
+            )
+            partitions = [
+                (i, item)
+                for i, item in enumerate(register.identity.partition, 1)
+                if item.variable == source_id
+            ]
+            scoped_entries = [
+                (i, item)
+                for i, item in enumerate(register.identity.column_owner, 1)
+                if item.variable == source_id
+            ]
+            sos_splits = [
+                (i, item)
+                for i, item in enumerate(register.identity.split, 1)
+                if item.variable == str(native[-1])
+            ]
+            sos_renames = [
+                (i, item)
+                for i, item in enumerate(register.identity.rename, 1)
+                if item.variable == str(native[-1])
+            ]
+            if not (
+                entries or partitions or scoped_entries or sos_splits or sos_renames
+            ):
+                continue
+            seen.add((source, native[:5], source_id))
+            expectations = capture_expectations(
+                records, fields=("column_name", "name", "data_type")
+            )
+            guard = PeerGuard(
+                guard_id=f"accepted-partitions:{source}:{source_id}",
+                source=source,
+                coordinates=(
+                    ("register", records[0].subject.register_name),
+                    ("variable", records[0].subject.variable),
+                ),
+                expected_members=tuple(item.ref for item in expectations),
+            )
+            if native[1] == "scb":
+                if not entries:
+                    for i, _ in partitions:
+                        diagnostics.append(
+                            _stale_partition(
+                                f"{register.source_file}#/identity.partition/{i}",
+                                source_id,
+                                "partition has no active split naming",
+                            )
+                        )
+                    for i, _ in scoped_entries:
+                        diagnostics.append(
+                            _stale_partition(
+                                f"{register.source_file}#/identity.column_owner/{i}",
+                                source_id,
+                                "column owner has no active split naming",
+                            )
+                        )
+                    continue
+                split_bases[scope_key].add(native)
+                split_ids = tuple(sorted({item.entry.source_id for item in entries}))
+                scoped = {}
+                for i, owner in scoped_entries:
+                    ref = f"{register.source_file}#/identity.column_owner/{i}"
+                    matched = tuple(
+                        record
+                        for record in records
+                        if f"{register.register_info.native_id}.{record.subject.variant.native_id}"
+                        == owner.variant
+                        and record.fields.column_name is not None
+                        and record.fields.column_name.status == "value"
+                        and record.fields.column_name.value == owner.column
+                    )
+                    if not matched or owner.owner not in split_ids:
+                        diagnostics.append(
+                            _stale_partition(
+                                ref, source_id, "owner matches no named split member"
+                            )
+                        )
+                    else:
+                        scoped.update(
+                            {record_ref(record): owner.owner for record in matched}
+                        )
+                if len(partitions) > 1:
+                    raise ValueError(
+                        f"{register.source_file}: duplicate partition map for {source_id}"
+                    )
+                declared = None
+                reference = None
+                if partitions:
+                    declaration = partitions[0][1]
+                    declared = {
+                        **declaration.columns,
+                        **dict.fromkeys(declaration.unassigned_columns),
+                    }
+                    reference = declaration.columns_ref
+                try:
+                    converted = convert_column_partitions(
+                        records,
+                        source_id=source_id,
+                        split_ids=split_ids,
+                        declared_columns=declared,
+                        declaration_reference=reference,
+                        scoped_owners=scoped,
+                    )
+                except ValueError as exc:
+                    ref = (
+                        f"{register.source_file}#/identity.partition/{partitions[0][0]}"
+                        if partitions
+                        else register.source_file
+                    )
+                    diagnostics.append(_stale_partition(ref, source_id, str(exc)))
+                    null_bases[scope_key].add(native)
+                    converted = ColumnPartitionConversion((), None, ())
+                if partitions:
+                    diagnostics.extend(converted.diagnostics)
+                if converted.case is not None:
+                    cases[scope_key].append(converted.case)
+                    if converted.case.support:
+                        null_bases[scope_key].add(native)
+                else:
+                    null_bases[scope_key].add(native)
+                bindings[scope_key].extend(converted.bindings)
+                bound = {item.source_id for item in converted.bindings}
+                bound_entries[scope_key].extend(
+                    item for item in entries if item.entry.source_id in bound
+                )
+                if bound != set(split_ids):
+                    columns = {
+                        column
+                        for record in records
+                        if (column := _literal_field(record, "column_name")) is not None
+                    }
+                    candidates = tuple(
+                        sorted(
+                            (split, column)
+                            for split in split_ids
+                            for column in columns
+                            if derive_variable_slug(column) == split.rsplit(".", 1)[1]
+                        )
+                    )
+                    ambiguities[scope_key].append(
+                        NamingAmbiguity(
+                            family=NativeNamingTarget(
+                                kind="variable",
+                                provider="scb",
+                                source_key=native,
+                                register_key=native[:5],
+                                expectations=expectations,
+                                peer_guards=(guard,),
+                            ),
+                            entries=entries,
+                            candidate_columns=candidates,
+                            reason="Some accepted split keys lack exact literal ownership.",
+                        )
+                    )
+            elif native[1] == "sos":
+                if len(sos_splits) + len(sos_renames) != 1:
+                    raise ValueError(
+                        f"{register.source_file}: expected one SOS identity declaration for {source_id}"
+                    )
+                is_split = bool(sos_splits)
+                i, declaration = (sos_splits or sos_renames)[0]
+                ref = f"{register.source_file}#/identity.{'split' if is_split else 'rename'}/{i}"
+                if is_split:
+                    declaration = cast("IdentitySplitEntry", declaration)
+                    split_bases[scope_key].add(native)
+                    owners = {part.data_type: part.owner for part in declaration.parts}
+                    actual = {
+                        value
+                        for record in records
+                        if (value := _literal_field(record, "data_type")) is not None
+                    }
+                    if (
+                        actual != set(owners)
+                        or len(owners) != len(declaration.parts)
+                        or any(
+                            _literal_field(record, "data_type") is None
+                            for record in records
+                        )
+                    ):
+                        diagnostics.append(
+                            _stale_partition(
+                                ref,
+                                source_id,
+                                f"data types {sorted(actual)!r} do not equal declared {sorted(owners)!r}",
+                            )
+                        )
+                        null_bases[scope_key].add(native)
+                        continue
+                    effects = tuple(
+                        CheckedIdentityChange(
+                            ref=record_ref(record),
+                            variable_key=(
+                                *native,
+                                "accepted-shape",
+                                cast("str", _literal_field(record, "data_type")),
+                            ),
+                            when=(
+                                FieldExpectation(
+                                    name="data_type",
+                                    status="value",
+                                    value=cast(
+                                        "str", _literal_field(record, "data_type")
+                                    ),
+                                ),
+                            ),
+                        )
+                        for record in records
+                    )
+                else:
+                    declaration = cast("IdentityRenameEntry", declaration)
+                    owners = {
+                        declaration.column: f"{register.register_info.native_id}.{declaration.column}"
+                    }
+                    named_rename_owners.add(
+                        (source, native[:5], next(iter(owners.values())))
+                    )
+                    selected = tuple(
+                        record
+                        for record in records
+                        if record.subject.variant.name == declaration.deldatamangd
+                        and record.fields.name is not None
+                        and record.fields.name.status == "value"
+                        and record.fields.name.value == declaration.name
+                    )
+                    if not selected:
+                        diagnostics.append(
+                            _stale_partition(
+                                ref, source_id, "rename matches no declared subset name"
+                            )
+                        )
+                        continue
+                    condition = (
+                        FieldExpectation(
+                            name="name", status="value", value=declaration.name
+                        ),
+                    )
+                    effects = tuple(
+                        effect
+                        for record in selected
+                        for effect in (
+                            CheckedFieldChange(
+                                ref=record_ref(record),
+                                replacement=FieldExpectation(
+                                    name="column_name",
+                                    status="value",
+                                    value=declaration.column,
+                                ),
+                                when=condition,
+                            ),
+                            CheckedIdentityChange(
+                                ref=record_ref(record),
+                                variable_key=(
+                                    *native,
+                                    "accepted-name",
+                                    declaration.column,
+                                ),
+                                when=condition,
+                            ),
+                        )
+                    )
+                owner_entries = tuple(
+                    item
+                    for item in all_entries_by_register[source, native[:5]]
+                    if item.entry.source_id in owners.values()
+                )
+                if set(owners.values()) - {
+                    item.entry.source_id for item in owner_entries
+                }:
+                    diagnostics.append(
+                        _stale_partition(
+                            ref, source_id, "declared owner lacks a tracked split name"
+                        )
+                    )
+                    if is_split:
+                        null_bases[scope_key].add(native)
+                    continue
+                selected_refs = {effect.ref for effect in effects}
+                cases[scope_key].append(
+                    CurationCase(
+                        case_id=f"accepted-sos-identity:{register.register_info.slug}:{native[-1]}",
+                        targets=tuple(
+                            item for item in expectations if item.ref in selected_refs
+                        ),
+                        support=tuple(
+                            item
+                            for item in expectations
+                            if item.ref not in selected_refs
+                        ),
+                        peer_guards=(guard,),
+                        decision=OccurrenceCorrectionDecision(
+                            reviewed=True,
+                            effects=effects,
+                            reason="Preserve the accepted SOS identity decision.",
+                            provenance=ref,
+                        ),
+                    )
+                )
+                for value, owner in sorted(owners.items()):
+                    key = (
+                        *native,
+                        "accepted-shape" if is_split else "accepted-name",
+                        value,
+                    )
+                    bindings[scope_key].append(
+                        LegacyNamingBinding(
+                            kind="variable",
+                            provider="sos",
+                            source_id=owner,
+                            target=NativeNamingTarget(
+                                kind="variable",
+                                provider="sos",
+                                source_key=key,
+                                register_key=native[:5],
+                                expectations=expectations,
+                                peer_guards=(guard,),
+                            ),
+                        )
+                    )
+                    bound_entries[scope_key].extend(
+                        item for item in owner_entries if item.entry.source_id == owner
+                    )
+    for (source, register_key), entries in entries_by_register.items():
+        for source_id in sorted(
+            {item.entry.source_id.rsplit(".", 1)[0] for item in entries}
+        ):
+            if (source, register_key, source_id) not in seen and (
+                source,
+                register_key,
+                source_id,
+            ) not in named_rename_owners:
+                diagnostics.append(
+                    _stale_partition(
+                        next(
+                            item.entry_id
+                            for item in entries
+                            if item.entry.source_id.startswith(source_id + ".")
+                        ),
+                        source_id,
+                        "split naming matches no native family",
+                    )
+                )
+    for (source, register_key), (_scope_key, register) in registers.items():
+        for table, items in (
+            ("identity.partition", register.identity.partition),
+            ("identity.column_owner", register.identity.column_owner),
+            ("identity.split", register.identity.split),
+            ("identity.rename", register.identity.rename),
+        ):
+            for index, item in enumerate(items, 1):
+                source_id = (
+                    item.variable
+                    if table in {"identity.partition", "identity.column_owner"}
+                    else f"{register.register_info.native_id}.{item.variable}"
+                )
+                if (source, register_key, source_id) not in seen:
+                    diagnostics.append(
+                        _stale_partition(
+                            f"{register.source_file}#/{table}/{index}",
+                            source_id,
+                            "identity declaration matches no native family",
+                        )
+                    )
+    naming = {}
+    provider_keys = {}
+    for scope_key in scope_map:
+        entries = tuple(bound_entries[scope_key])
+        conversion = convert_naming(
+            NamingSelection(
+                files=(),
+                entries=entries,
+                freeze=tuple(
+                    NamingFreezeSetting(zone=provider, state="curating")
+                    for provider in sorted(
+                        {str(item.entry.provider) for item in entries}
+                    )
+                ),
+            ),
+            bindings[scope_key],
+        )
+        diagnostics.extend(conversion.diagnostics)
+        naming[scope_key] = tuple(
+            sorted(
+                conversion.declarations,
+                key=lambda item: (item.target.kind, repr(item.target.source_key)),
+            )
+        )
+        keys = {
+            item.target.source_key: item.naming.source_id.split(".", 1)[1]
+            for item in conversion.declarations
+            if item.target.kind == "variable"
+        }
+        keys.update(dict.fromkeys(null_bases[scope_key]))
+        provider_keys[scope_key] = tuple(
+            sorted(keys.items(), key=lambda item: repr(item[0]))
+        )
+    return (
+        {
+            key: tuple(sorted(value, key=lambda item: item.case_id))
+            for key, value in cases.items()
+        },
+        naming,
+        provider_keys,
+        {key: tuple(value) for key, value in ambiguities.items()},
+        split_bases,
+        tuple(diagnostics),
+    )
 
 
 def compile_native_naming(
@@ -1994,6 +2736,32 @@ def compile_curation(
     naming, variants, provider_keys, naming_diagnostics, naming_report = (
         compile_native_naming(tree, prepared, scopes, subset=subset)
     )
+    (
+        partition_cases,
+        partition_naming,
+        partition_keys,
+        ambiguities,
+        split_bases,
+        partition_diagnostics,
+    ) = compile_partitions(tree, prepared, scopes)
+    for key, extra in partition_cases.items():
+        cases[key].extend(extra)
+    naming = {
+        key: tuple(
+            item
+            for item in values
+            if item.target.source_key not in split_bases.get(key, set())
+        )
+        + partition_naming.get(key, ())
+        for key, values in naming.items()
+    }
+    provider_keys = {
+        key: tuple(
+            item for item in values if item[0] not in split_bases.get(key, set())
+        )
+        + partition_keys.get(key, ())
+        for key, values in provider_keys.items()
+    }
     for register, statuses in naming_report.items():
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
@@ -2020,10 +2788,16 @@ def compile_curation(
             for key, value in cases.items()
         },
         report=report,
-        diagnostics=(*diagnostics, *naming_diagnostics, *thin_diagnostics),
+        diagnostics=(
+            *diagnostics,
+            *naming_diagnostics,
+            *partition_diagnostics,
+            *thin_diagnostics,
+        ),
         naming=naming,
         variants=variants,
         provider_keys=provider_keys,
+        naming_ambiguities=ambiguities,
     )
 
 

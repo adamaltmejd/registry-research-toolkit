@@ -241,13 +241,13 @@ class NamingAmbiguity(_NamingModel):
         ):
             raise ValueError("ambiguous names need distinct effective slugs")
         if (
-            {key for key, _ in self.candidate_columns} != {n.source_id for n in names}
+            not {key for key, _ in self.candidate_columns}.issubset(
+                {n.source_id for n in names}
+            )
             or len(set(self.candidate_columns)) != len(self.candidate_columns)
             or any(not column.strip() for _, column in self.candidate_columns)
         ):
-            raise ValueError(
-                "each ambiguous name needs unique literal column candidates"
-            )
+            raise ValueError("ambiguous names need unique literal column candidates")
         observed = {
             field.value
             for expectation in self.family.expectations
