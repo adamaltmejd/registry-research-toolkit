@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -16,7 +17,9 @@ from pydantic import TypeAdapter, ValidationError
 from reg_meta.fqid import FqidKind, parse as parse_fqid
 
 from ._curation import SentinelCode
+from ._resolved_common import covers_window
 from .concept_groups import CodeLabelPair
+from .convert_errata import capture_expectations
 from .normalization import normalize_token
 from .resolved_catalog import ResolvedClassificationSuccession
 from .resolved_metadata import (
@@ -37,17 +40,28 @@ from .resolved_metadata import (
     ResolvedVariantRef,
     ResolvedVariantSuccession,
 )
+from .source_coding_choices import coding_expectations, compile_coding_selection
+from .source_coordinates import column_identity
 from .source_curation import (
     AcknowledgeDecision,
+    CodingDecision,
     CurationCase,
+    FieldExpectation,
+    PeerGuard,
     ResolutionDiagnostic,
     SourceRecordRef,
 )
+from .source_intervals import coding_scope_bounds
 
 if TYPE_CHECKING:
-    from .curation_tree import CurationTree
+    from collections.abc import Mapping
+
+    from .curation_tree import CurationTree, RegisterCuration
     from .pipeline import ScopeDeclarations
     from .prepared_catalog import PreparedCatalogSources
+    from .source_coding import CodeListClaim
+    from .source_coordinates import NativeKey
+    from .source_records import SourceRecord
 
 
 @dataclass(frozen=True)
@@ -565,6 +579,144 @@ def _scope_registers(
         and item.naming.provider is not None
         and item.naming.slug is not None
     )
+
+
+def compile_coding_register(
+    register: RegisterCuration,
+    scope: ScopeDeclarations,
+    *,
+    columns: Mapping[NativeKey, tuple[SourceRecord, ...]],
+    coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
+) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
+    """Compile one register's coding from established scope identities and claims.
+
+    The caller supplies the same effective column groups and original claims that
+    source resolution uses. This family remains outside COMPILED in this slice.
+    """
+    register_fqid = f"{register.register_info.provider}/{register.register_info.slug}"
+    register_keys = {
+        key for name, key in _scope_registers(scope) if name == register_fqid
+    }
+    cases = []
+    diagnostics = []
+    for kind, entries in (
+        ("choice", register.coding.choice),
+        ("uncoded", register.coding.uncoded),
+        ("omit", register.coding.omit),
+        ("extend", register.coding.extend),
+    ):
+        for index, entry in enumerate(entries, 1):
+            ref = f"{register.source_file}#/coding.{kind}/{index}"
+            variables = {
+                item.target.source_key
+                for item in scope.naming
+                if item.target.kind == "variable"
+                and item.target.register_key in register_keys
+                and item.naming.source_id == entry.variable
+            }
+            variants = {
+                item.target.source_key
+                for item in scope.naming
+                if item.target.kind == "register_variant"
+                and item.target.register_key in register_keys
+                and entry.variant in {item.naming.source_id, item.naming.slug}
+            }
+            matches = {
+                key
+                for variable in variables
+                for variant in variants
+                if (key := column_identity(variable, variant, entry.column)) in columns
+            }
+            if len(matches) != 1:
+                status = "overbroad" if len(matches) > 1 else "stale"
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code=f"{status}_curation_entry",
+                        severity="error",
+                        case_id=ref,
+                        subject=entry.variable,
+                        detail=f"{ref} resolves to {len(matches)} column keys; expected one",
+                        withheld_output=(ref,),
+                    )
+                )
+                continue
+            column = next(iter(matches))
+            records = columns[column]
+            claims = coding.get(column, ())
+            for period_index, (start, end) in enumerate(entry.periods, 1):
+                case_id = f"{ref}/period/{period_index}"
+                source_windows = (
+                    (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
+                    for record in records
+                    for lo, hi in (
+                        coding_scope_bounds(
+                            record.edition_period_scope
+                            if record.edition_period_scope.kind != "not_applicable"
+                            else record.edition_scope
+                        )
+                        or ()
+                    )
+                )
+                used = covers_window(source_windows, start, end)
+                selection, status, detail = compile_coding_selection(
+                    entry, kind, claims, start, end
+                )
+                if not used:
+                    status, detail = "stale", "period has no column occurrence"
+                if status != "matched":
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code=(
+                                "overbroad_curation_entry"
+                                if status == "over_broad"
+                                else "stale_curation_entry"
+                            ),
+                            severity="error",
+                            case_id=case_id,
+                            subject=entry.variable,
+                            detail=f"{case_id}: {detail}",
+                            valid_from=start,
+                            valid_to=end,
+                            withheld_output=(case_id,),
+                        )
+                    )
+                    continue
+                assert selection is not None
+                targets = capture_expectations(records, fields=("column_name",))
+                first = records[0]
+                guard = PeerGuard(
+                    guard_id=case_id,
+                    source=scope.source,
+                    coordinates=(
+                        ("register", first.subject.register_name),
+                        ("variant", first.subject.variant),
+                        ("variable", first.subject.variable),
+                    ),
+                    fields=(
+                        FieldExpectation(
+                            name="column_name", status="value", value=entry.column
+                        ),
+                    ),
+                    expected_members=tuple(target.ref for target in targets),
+                )
+                cases.append(
+                    CurationCase(
+                        case_id=case_id,
+                        targets=targets,
+                        peer_guards=(guard,),
+                        decision=CodingDecision(
+                            reviewed=True,
+                            column_key=column,
+                            valid_from=start,
+                            valid_to=end,
+                            expected_codings=coding_expectations(claims, start, end),
+                            selection=selection,
+                            reason=entry.reason,
+                            provenance=entry.source,
+                        ),
+                    )
+                )
+    return tuple(sorted(cases, key=lambda item: item.case_id)), tuple(diagnostics)
 
 
 def _snapshot_key(entry: Any) -> tuple[str, str]:

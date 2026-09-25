@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
 import pytest
+from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_compile import (
     COMPILED,
     FAMILIES,
@@ -221,6 +222,90 @@ def test_compilation_is_byte_identical_with_shuffled_register_order(tmp_path):
         (_scope(),),
     )
     assert _bytes(first) == _bytes(second) == _bytes(shuffled)
+
+
+def test_coding_register_tables_load_with_finite_periods(tmp_path):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers" / "scb" / "sample.toml"
+    path.write_text(
+        path.read_text()
+        + '\n[[coding.choice]]\nvariable = "1.5"\nvariant = "people"\n'
+        + 'column = "VALUE"\nperiods = [["2020-01-01", "2020-06-30"], '
+        + '["2020-07-01", "2020-12-31"]]\n'
+        + 'keep = "kept"\nkeep_members = [["01", "Label"]]\n'
+        + 'over = ["other"]\nreason = "Reviewed"\nsource = "fixture"\n'
+        + '\n[[coding.uncoded]]\nvariable = "1.5"\nvariant = "people"\n'
+        + 'column = "VALUE"\nperiods = [["2019-01-01", "2019-12-31"]]\n'
+        + 'reason = "Reviewed"\nsource = "fixture"\n'
+        + '\n[[coding.omit]]\nvariable = "1.5"\nvariant = "people"\n'
+        + 'column = "VALUE"\nperiods = [["2018-01-01", "2018-12-31"]]\n'
+        + 'reason = "Reviewed"\nsource = "fixture"\n'
+        + '\n[[coding.extend]]\nvariable = "1.5"\nvariant = "people"\n'
+        + 'column = "VALUE"\nperiods = [["2017-01-01", "2017-12-31"]]\n'
+        + 'list = "kept"\nlist_members = [["01", "Label"]]\n'
+        + 'witness = ["2020-01-01", "2020-06-30"]\n'
+        + 'reason = "Reviewed"\nsource = "fixture"\n',
+        encoding="utf-8",
+    )
+    register = next(
+        entry
+        for entry in load_curation_tree(root).registers
+        if entry.register_info.slug == "sample"
+    )
+    assert len(register.coding.choice[0].periods) == 2
+    assert (
+        len(register.coding.uncoded)
+        == len(register.coding.omit)
+        == len(register.coding.extend)
+        == 1
+    )
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        "unexpected = true\n",
+        'periods = [["2020-13-01", "2020-12-31"]]\n',
+        'periods = [["2020-12-31", "2020-01-01"]]\n',
+    ],
+)
+def test_coding_register_invalid_entry_names_file_and_index(tmp_path, extra):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers" / "scb" / "sample.toml"
+    path.write_text(
+        path.read_text()
+        + '\n[[coding.choice]]\nvariable = "1.5"\nvariant = "people"\n'
+        + 'column = "VALUE"\nkeep = "kept"\nover = ["other"]\n'
+        + 'reason = "Reviewed"\nsource = "fixture"\n'
+        + (
+            'periods = [["2020-01-01", "2020-12-31"]]\n'
+            if "periods" not in extra
+            else ""
+        )
+        + extra,
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_curation_tree(root)
+    assert "curation/registers/scb/sample.toml [[coding.choice." in exc.value.message
+    assert "entry 1" in exc.value.message
+
+
+def test_coding_register_rejects_duplicate_entry(tmp_path):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers" / "scb" / "sample.toml"
+    block = (
+        '\n[[coding.uncoded]]\nvariable = "1.5"\nvariant = "people"\n'
+        'column = "VALUE"\nperiods = [["2020-01-01", "2020-12-31"]]\n'
+        'reason = "Reviewed"\nsource = "fixture"\n'
+    )
+    path.write_text(path.read_text() + block + block, encoding="utf-8")
+    with pytest.raises(RegMetaError) as exc:
+        load_curation_tree(root)
+    assert "[[coding.uncoded]] entry 2: duplicate entry" in exc.value.message
 
 
 def test_source_event_without_selected_target_reaches_scoped_resolver(tmp_path):

@@ -11,7 +11,7 @@ from collections import defaultdict
 from dataclasses import dataclass, replace
 from datetime import date
 from itertools import pairwise
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, cast
 
 from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.source_coding import (
@@ -37,6 +37,11 @@ from reg_meta_build.source_records import ScopeInterval, TemporalScope
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
 
+    from reg_meta_build.curation_tree import (
+        CodingChoiceEntry,
+        CodingEntry,
+        CodingExtendEntry,
+    )
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_curation import CaseEvaluation
     from reg_meta_build.source_records import SourceRecord
@@ -206,6 +211,130 @@ def coding_expectations(
     """Capture exact observed alternatives, including known empty/unknown lists."""
     return coding_observation_fingerprints(
         coding_for_period(claims, valid_from, valid_to)
+    )
+
+
+def _complete_lists(
+    claims: tuple[CodeListClaim, ...], start: str, end: str
+) -> tuple[tuple[str, str, frozenset[tuple[str, str]] | None], ...]:
+    """Complete nonempty lists in one window, deduplicated by semantic content."""
+    found = {}
+    for claim in coding_for_period(claims, start, end):
+        digest = coding_content_sha256(claim)
+        if digest is None:
+            continue
+        resolved = resolve_code_membership((claim,))
+        if not _covers(resolved, start, end):
+            continue
+        member_sets = {
+            frozenset(segment.code_set.members)
+            for segment in resolved.segments
+            if segment.code_set is not None and segment.code_set.members
+        }
+        if not member_sets or any(
+            segment.code_set is None or not segment.code_set.members
+            for segment in resolved.segments
+        ):
+            continue
+        found[digest] = (
+            claim.version_label or "",
+            next(iter(member_sets)) if len(member_sets) == 1 else None,
+        )
+    return tuple((digest, *found[digest]) for digest in sorted(found))
+
+
+def compile_coding_selection(
+    entry: CodingEntry | CodingChoiceEntry | CodingExtendEntry,
+    kind: str,
+    claims: tuple[CodeListClaim, ...],
+    start: str,
+    end: str,
+) -> tuple[CodingSelection | Literal["uncoded", "omit_state"] | None, str, str]:
+    """Check a literal coding declaration against the current scope's claims."""
+    complete = _complete_lists(claims, start, end)
+    if kind in {"uncoded", "omit"}:
+        if complete:
+            return None, "stale", "period has a complete nonempty list"
+        return ("uncoded" if kind == "uncoded" else "omit_state"), "matched", ""
+    if kind == "choice":
+        choice = cast("CodingChoiceEntry", entry)
+        if len(complete) <= 1:
+            return None, "stale", "period is no longer contested by complete lists"
+        keep = choice.keep
+        members = (
+            frozenset(map(tuple, choice.keep_members))
+            if choice.keep_members is not None
+            else None
+        )
+        chosen = [
+            digest
+            for digest, label, claim_members in complete
+            if label == keep and (members is None or members == claim_members)
+        ]
+        if not chosen:
+            return None, "stale", "kept list no longer matches a complete list"
+        if len(chosen) != 1:
+            return None, "over_broad", "kept label matches multiple complete lists"
+        others = {label for digest, label, _ in complete if digest != chosen[0]}
+        if others != set(choice.over):
+            return None, "stale", "competing list labels differ from over"
+        return (
+            CodingSelection(
+                valid_from=start,
+                valid_to=end,
+                expected_codings=coding_expectations(claims, start, end),
+                selected_coding=chosen[0],
+            ),
+            "matched",
+            "",
+        )
+    assert kind == "extend"
+    extension = cast("CodingExtendEntry", entry)
+    members = (
+        frozenset(map(tuple, extension.list_members))
+        if extension.list_members is not None
+        else None
+    )
+    all_sets = set()
+    for claim in claims:
+        if claim.version_label != extension.list:
+            continue
+        resolved = resolve_code_membership((claim,))
+        if resolved.issues:
+            continue
+        all_sets.update(
+            frozenset(segment.code_set.members)
+            for segment in resolved.segments
+            if segment.code_set is not None and segment.code_set.members
+        )
+    matching = {item for item in all_sets if members is None or item == members}
+    if not matching:
+        return None, "stale", "extended list has no complete member set"
+    if len(matching) != 1:
+        return None, "over_broad", "extended label matches multiple member sets"
+    witness_from, witness_to = extension.witness
+    witness = [
+        digest
+        for digest, label, claim_members in _complete_lists(
+            claims, witness_from, witness_to
+        )
+        if label == extension.list and claim_members in matching
+    ]
+    if not witness:
+        return None, "stale", "witness no longer carries the extended list"
+    if len(witness) != 1:
+        return None, "over_broad", "witness matches multiple complete lists"
+    if complete:
+        return None, "stale", "extension period has a complete nonempty list"
+    return (
+        CodingSelection(
+            valid_from=witness_from,
+            valid_to=witness_to,
+            expected_codings=coding_expectations(claims, witness_from, witness_to),
+            selected_coding=witness[0],
+        ),
+        "matched",
+        "",
     )
 
 

@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import tomllib
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Annotated, Literal
 
@@ -451,6 +452,110 @@ class RepresentationCuration(_CurationModel):
     alias_window: list[AliasWindowEntry] = Field(default_factory=list)
 
 
+class CodingEntry(_CurationModel):
+    variable: str
+    variant: str
+    column: str
+    periods: list[list[str]]
+    reason: str
+    source: str
+
+    _trimmed = field_validator("variant", "column", "reason", "source")(
+        _require_trimmed
+    )
+
+    @field_validator("variable")
+    @classmethod
+    def _variable_id(cls, value: str) -> str:
+        from .fqid_slugs import _parse_variable_id
+
+        try:
+            _parse_variable_id(value)
+        except RegMetaError as exc:
+            raise ValueError(exc.message) from exc
+        return value
+
+    @field_validator("periods")
+    @classmethod
+    def _periods(cls, value: list[list[str]]) -> list[list[str]]:
+        if not value:
+            raise ValueError("periods must contain at least one finite window")
+        for window in value:
+            _coding_window(window)
+        return value
+
+
+def _coding_window(window: list[str]) -> None:
+    if len(window) != 2:
+        raise ValueError("coding window must be [from, to]")
+    for bound in window:
+        if len(bound) != 10 or bound[4] != "-" or bound[7] != "-":
+            raise ValueError("coding window bounds must be ISO yyyy-mm-dd dates")
+        try:
+            date.fromisoformat(bound)
+        except ValueError as exc:
+            raise ValueError("coding window bounds must be valid ISO dates") from exc
+    if window[0] > window[1]:
+        raise ValueError("coding window bounds are reversed")
+
+
+def _coding_members(value: list[list[str]]) -> list[list[str]]:
+    if not value or any(len(pair) != 2 for pair in value):
+        raise ValueError("members must be nonempty [code, label] pairs")
+    if any(not code or not label for code, label in value):
+        raise ValueError("member codes and labels must be nonempty")
+    if len({tuple(pair) for pair in value}) != len(value):
+        raise ValueError("members must be unique")
+    return value
+
+
+class CodingChoiceEntry(CodingEntry):
+    keep: str
+    keep_members: list[list[str]] | None = None
+    over: list[str]
+
+    _keep = field_validator("keep")(_require_trimmed)
+
+    @field_validator("keep_members")
+    @classmethod
+    def _members(cls, value: list[list[str]] | None) -> list[list[str]] | None:
+        return None if value is None else _coding_members(value)
+
+    @field_validator("over")
+    @classmethod
+    def _over(cls, value: list[str]) -> list[str]:
+        trimmed = [_require_trimmed(label) for label in value]
+        if not trimmed or len(set(trimmed)) != len(trimmed):
+            raise ValueError("over must name distinct competing labels")
+        return trimmed
+
+
+class CodingExtendEntry(CodingEntry):
+    list: str
+    list_members: list[list[str]] | None = None
+    witness: list[str]
+
+    _list = field_validator("list")(_require_trimmed)
+
+    @field_validator("list_members")
+    @classmethod
+    def _members(cls, value: list[list[str]] | None) -> list[list[str]] | None:
+        return None if value is None else _coding_members(value)
+
+    @field_validator("witness")
+    @classmethod
+    def _witness(cls, value: list[str]) -> list[str]:
+        _coding_window(value)
+        return value
+
+
+class CodingCuration(_CurationModel):
+    choice: list[CodingChoiceEntry] = Field(default_factory=list)
+    uncoded: list[CodingEntry] = Field(default_factory=list)
+    omit: list[CodingEntry] = Field(default_factory=list)
+    extend: list[CodingExtendEntry] = Field(default_factory=list)
+
+
 class AcknowledgeEntry(_CurationModel):
     code: str
     subject: str
@@ -480,6 +585,7 @@ class RegisterCuration(_CurationModel):
         default_factory=RepresentationCuration
     )
     identity: IdentityCuration = Field(default_factory=IdentityCuration)
+    coding: CodingCuration = Field(default_factory=CodingCuration)
     acknowledge: list[AcknowledgeEntry] = Field(default_factory=list)
 
     _source_file: str = PrivateAttr(default="")
@@ -629,6 +735,10 @@ def _register_arrays(
         ("identity.route", entry.identity.route),
         ("identity.split", entry.identity.split),
         ("identity.rename", entry.identity.rename),
+        ("coding.choice", entry.coding.choice),
+        ("coding.uncoded", entry.coding.uncoded),
+        ("coding.omit", entry.coding.omit),
+        ("coding.extend", entry.coding.extend),
         ("acknowledge", entry.acknowledge),
     )
 
@@ -702,7 +812,9 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 _check_register_ref(
                     value, expected=expected, file=file, table=table, index=index
                 )
-            if isinstance(row, (IdentityPartitionEntry, IdentityColumnOwnerEntry)):
+            if isinstance(
+                row, (IdentityPartitionEntry, IdentityColumnOwnerEntry, CodingEntry)
+            ):
                 native_id = identity.native_id
                 if native_id is not None and not row.variable.startswith(
                     native_id + "."

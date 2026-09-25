@@ -352,9 +352,15 @@ A curation entry carries no pin by default. It names literal source coordinates:
 register, variant, column and edition labels. The compile checks every entry against the
 complete source scope; an entry that matches nothing, or more than it names, is stale,
 which is an error. Unrelated later editions, layout changes and deliveries elsewhere
-therefore never stale it. Evidence fingerprints remain only for decisions that choose
-between competing lists that cannot be named literally: a `CodingDecision` and a copied
-coding (below).
+therefore never stale it. Transitional stored `CodingDecision` cases and copied coding
+still carry evidence fingerprints (below).
+
+Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision
+is window-grained. The compiler checks each window against that column's complete
+source lists; optional `keep_members` and `list_members` are literal `[code, label]`
+pairs when one list label has multiple meanings. It captures coding fingerprints in
+memory. Neither the fingerprints nor source-member pins are stored in tracked coding
+tables.
 
 Transitional: `source_curation.py` evaluates cases converted offline into scope files.
 Each case pins exact members, finite periods, fields and expected facts (`expected_*`)

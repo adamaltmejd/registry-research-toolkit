@@ -8,6 +8,9 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
 from reg_meta_build.convert_errata import capture_expectations
+from reg_meta_build.curation_compile import compile_coding_register
+from reg_meta_build.curation_tree import RegisterCuration
+from reg_meta_build.pipeline import ScopeDeclarations
 from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
 from reg_meta_build.source_coding import (
     CodeListClaim,
@@ -16,6 +19,7 @@ from reg_meta_build.source_coding import (
     resolve_code_membership,
 )
 from reg_meta_build.source_coding_choices import apply_coding_choices, coding_for_period
+from reg_meta_build.source_coordinates import column_identity, source_register_key
 from reg_meta_build.source_curation import (
     CodingDecision,
     CodingSelection,
@@ -24,6 +28,7 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_formation import form_native_variable
+from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,
@@ -35,6 +40,8 @@ from reg_meta_build.source_records import (
     value_field,
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
+
+from reg_meta_build.fqid_slugs import SlugEntry
 
 
 def _record(year: int = 2020, column: str = "VALUE") -> SourceRecord:
@@ -134,6 +141,313 @@ def _apply(
     key = source_occurrence(record).column_key
     assert key is not None
     return apply_coding_choices((record,), cases, coding={key: claims})
+
+
+def _compile_entry(
+    kind: str,
+    values: dict,
+    claims: tuple[CodeListClaim, ...],
+    *,
+    record: SourceRecord | None = None,
+    split: bool = False,
+):
+    record = record or _record()
+    register_key = source_register_key(record)
+    occurrence = source_occurrence(record)
+    assert register_key is not None
+    assert occurrence.variable_key is not None and occurrence.variant_key is not None
+    variable = (
+        (*occurrence.variable_key, "accepted-partition", "1.5.part")
+        if split
+        else occurrence.variable_key
+    )
+    column = column_identity(variable, occurrence.variant_key, "VALUE")
+    scope = ScopeDeclarations(
+        source=record.source,
+        register_key=register_key,
+        naming=(
+            NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind="register",
+                    provider="scb",
+                    source_key=register_key,
+                    identity_revision=SourceRevision.create(
+                        dataset=record.source,
+                        publisher="SCB",
+                        purpose="fixture",
+                        upstream_revision="1",
+                        artifact_path="records.csv",
+                        artifact_size=1,
+                        artifact_sha256="a" * 64,
+                    ),
+                ),
+                naming=SlugEntry("register", "1", "sample", "scb"),
+                contributors=(),
+            ),
+            NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind="register_variant",
+                    provider="scb",
+                    source_key=occurrence.variant_key,
+                    register_key=register_key,
+                    identity_revision=SourceRevision.create(
+                        dataset=record.source,
+                        publisher="SCB",
+                        purpose="fixture",
+                        upstream_revision="1",
+                        artifact_path="records.csv",
+                        artifact_size=1,
+                        artifact_sha256="a" * 64,
+                    ),
+                ),
+                naming=SlugEntry("register_variant", "1.2", "people", "scb"),
+                contributors=(),
+            ),
+            NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind="variable",
+                    provider="scb",
+                    source_key=variable,
+                    register_key=register_key,
+                ),
+                naming=SlugEntry(
+                    "variable", "1.5.part" if split else "1.5", "value", "scb"
+                ),
+                contributors=(),
+            ),
+        ),
+    )
+    register = RegisterCuration.model_validate(
+        {
+            "register": {"provider": "scb", "slug": "sample", "native_id": "1"},
+            "coding": {
+                kind: [
+                    {
+                        "variable": "1.5.part" if split else "1.5",
+                        "variant": "people",
+                        "column": "VALUE",
+                        "periods": [["2020-01-01", "2020-12-31"]],
+                        "reason": "Reviewed coding",
+                        "source": "fixture",
+                        **values,
+                    }
+                ]
+            },
+        }
+    )
+    register._source_file = "curation/registers/scb/sample.toml"
+    columns = {column: (record,)}
+    cases, diagnostics = compile_coding_register(
+        register, scope, columns=columns, coding={column: claims}
+    )
+    return cases, diagnostics, register, scope, columns, column
+
+
+def test_pin_free_choice_compiles_and_applies_from_literal_labels() -> None:
+    record = _record()
+    claims = (_claim("keep", "01"), _claim("other", "02"))
+    cases, diagnostics, _, _, _, _ = _compile_entry(
+        "choice", {"keep": "keep", "over": ["other"]}, claims
+    )
+    assert len(cases) == 1 and not diagnostics
+    assert cases[0].decision.expected_codings
+    assert _apply(record, claims, *cases).accounting[0].status == "applied"
+    assert "/coding.choice/1/period/1" in cases[0].case_id
+
+
+def test_pin_free_uncoded_and_omit_compile_without_nonempty_lists() -> None:
+    empty = replace(_claim("empty", "01"), members=())
+    for kind, selection in (("uncoded", "uncoded"), ("omit", "omit_state")):
+        cases, diagnostics, _, _, _, _ = _compile_entry(kind, {}, (empty,))
+        assert not diagnostics and cases[0].decision.selection == selection
+        assert _apply(_record(), (empty,), *cases).accounting[0].status == "applied"
+
+
+def test_pin_free_extend_compiles_from_finite_witness() -> None:
+    claims = (_claim("list", "01", "2020-05-01", "2020-06-30"),)
+    cases, diagnostics, _, _, _, _ = _compile_entry(
+        "extend",
+        {
+            "list": "list",
+            "list_members": [["01", "Label"]],
+            "witness": ["2020-05-01", "2020-06-30"],
+            "periods": [["2020-01-01", "2020-02-29"]],
+        },
+        claims,
+    )
+    assert not diagnostics and len(cases) == 1
+    assert _apply(_record(), claims, *cases).accounting[0].status == "applied"
+
+
+@pytest.mark.parametrize(
+    ("kind", "values", "claims", "code"),
+    [
+        (
+            "choice",
+            {"keep": "missing", "over": ["other"]},
+            (_claim("keep", "01"), _claim("other", "02")),
+            "stale_curation_entry",
+        ),
+        (
+            "choice",
+            {"keep": "keep", "over": ["gone"]},
+            (_claim("keep", "01"), _claim("other", "02")),
+            "stale_curation_entry",
+        ),
+        (
+            "choice",
+            {"keep": "keep", "over": ["other"]},
+            (_claim("keep", "01"),),
+            "stale_curation_entry",
+        ),
+        (
+            "choice",
+            {"keep": "keep", "keep_members": [["99", "Label"]], "over": ["other"]},
+            (_claim("keep", "01"), _claim("other", "02")),
+            "stale_curation_entry",
+        ),
+        (
+            "choice",
+            {"keep": "keep", "over": ["other"]},
+            (_claim("keep", "01"), _claim("keep", "03"), _claim("other", "02")),
+            "overbroad_curation_entry",
+        ),
+        ("uncoded", {}, (_claim("coded", "01"),), "stale_curation_entry"),
+        ("omit", {}, (_claim("coded", "01"),), "stale_curation_entry"),
+        (
+            "extend",
+            {"list": "gone", "witness": ["2020-05-01", "2020-06-30"]},
+            (_claim("list", "01", "2020-05-01", "2020-06-30"),),
+            "stale_curation_entry",
+        ),
+        (
+            "extend",
+            {"list": "list", "witness": ["2020-07-01", "2020-08-31"]},
+            (_claim("list", "01", "2020-05-01", "2020-06-30"),),
+            "stale_curation_entry",
+        ),
+        (
+            "extend",
+            {"list": "list", "witness": ["2020-05-01", "2020-06-30"]},
+            (_claim("list", "01"),),
+            "stale_curation_entry",
+        ),
+        (
+            "extend",
+            {
+                "list": "list",
+                "list_members": [["99", "Label"]],
+                "witness": ["2020-05-01", "2020-06-30"],
+            },
+            (_claim("list", "01", "2020-05-01", "2020-06-30"),),
+            "stale_curation_entry",
+        ),
+        (
+            "extend",
+            {"list": "list", "witness": ["2020-05-01", "2020-06-30"]},
+            (
+                _claim("list", "01", "2020-05-01", "2020-06-30"),
+                _claim("list", "02", "2020-05-01", "2020-06-30"),
+            ),
+            "overbroad_curation_entry",
+        ),
+    ],
+)
+def test_pin_free_coding_staleness(kind, values, claims, code) -> None:
+    cases, diagnostics, _, _, _, _ = _compile_entry(kind, values, claims)
+    assert not cases and [item.code for item in diagnostics] == [code]
+
+
+def test_pin_free_choice_member_disambiguation_and_split_key() -> None:
+    claims = (_claim("keep", "01"), _claim("keep", "03"), _claim("other", "02"))
+    cases, diagnostics, _, _, _, column = _compile_entry(
+        "choice",
+        {"keep": "keep", "keep_members": [["01", "Label"]], "over": ["keep", "other"]},
+        claims,
+        split=True,
+    )
+    assert not diagnostics and cases[0].decision.column_key == column
+    assert "accepted-partition" in column
+
+
+def test_pin_free_coding_period_and_column_cardinality_are_checked() -> None:
+    values = {"keep": "keep", "over": ["other"]}
+    claims = (_claim("keep", "01"), _claim("other", "02"))
+    cases, diagnostics, _, _, _, _ = _compile_entry(
+        "choice", {**values, "periods": [["2021-01-01", "2021-12-31"]]}, claims
+    )
+    assert not cases and diagnostics[0].code == "stale_curation_entry"
+
+    cases, diagnostics, _, _, _, _ = _compile_entry(
+        "choice",
+        {
+            **values,
+            "periods": [
+                ["2020-01-01", "2020-12-31"],
+                ["2021-01-01", "2021-12-31"],
+            ],
+        },
+        claims,
+    )
+    assert len(cases) == 1 and len(diagnostics) == 1
+    assert diagnostics[0].case_id.endswith("/period/2")
+    cases, diagnostics, _, _, _, _ = _compile_entry(
+        "choice", {**values, "column": "MISSING"}, claims
+    )
+    assert not cases and diagnostics[0].code == "stale_curation_entry"
+
+
+def test_pin_free_coding_rejects_ambiguous_column_identity() -> None:
+    record = _record()
+    claims = (_claim("keep", "01"), _claim("other", "02"))
+    _, _, register, scope, columns, column = _compile_entry(
+        "choice", {"keep": "keep", "over": ["other"]}, claims
+    )
+    occurrence = source_occurrence(record)
+    assert occurrence.variable_key is not None and occurrence.variant_key is not None
+    split = (*occurrence.variable_key, "accepted-partition", "1.5.part")
+    second = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="variable",
+            provider="scb",
+            source_key=split,
+            register_key=source_register_key(record),
+        ),
+        naming=SlugEntry("variable", "1.5", "other", "scb"),
+        contributors=(),
+    )
+    other_column = column_identity(split, occurrence.variant_key, "VALUE")
+    ambiguous = scope.model_copy(update={"naming": (*scope.naming, second)})
+    cases, diagnostics = compile_coding_register(
+        register,
+        ambiguous,
+        columns={other_column: (record,), column: columns[column]},
+        coding={column: claims, other_column: claims},
+    )
+    assert not cases and diagnostics[0].code == "overbroad_curation_entry"
+
+
+def test_pin_free_coding_compile_is_byte_identical() -> None:
+    claims = (_claim("keep", "01"), _claim("other", "02"))
+    args = ("choice", {"keep": "keep", "over": ["other"]}, claims)
+    first = _compile_entry(*args)
+    second = _compile_entry(*args)
+    assert [case.model_dump_json() for case in first[0]] == [
+        case.model_dump_json() for case in second[0]
+    ]
+    _, _, register, scope, columns, column = first
+    unrelated = (*column[:-1], "OTHER")
+    other_record = _record(column="OTHER")
+    shuffled, diagnostics = compile_coding_register(
+        register,
+        scope,
+        columns={unrelated: (other_record,), column: columns[column]},
+        coding={unrelated: (), column: claims},
+    )
+    assert not diagnostics
+    assert [case.model_dump_json() for case in shuffled] == [
+        case.model_dump_json() for case in first[0]
+    ]
 
 
 def test_choice_changes_only_checked_window_and_feeds_ordinary_formation() -> None:
