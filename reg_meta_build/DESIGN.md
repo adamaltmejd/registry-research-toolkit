@@ -745,13 +745,13 @@ reg-meta-build build-docs ...
 `--db DIR` and other global output flags precede the subcommand. Per-command `--help`
 describes paths and pins. A `--registers` SPEC names a prepared scope: an SCB register
 by its register id (`258`), or an SOS workbook or thin-provider register by its register
-name (`Patientregistret`, `aktivitetsstod`). A name or id naming scopes in more than
-one source is refused; `SOURCE:ID` (`scb-registerinformation:258`) picks one. It also
+name (`Patientregistret`, `aktivitetsstod`). A name or id naming scopes in more than one
+source is refused; `SOURCE:ID` (`scb-registerinformation:258`) picks one. It also
 combines with `--diagnostic --diagnostic-db-path NEW.db`. A strict subset needs an
 explicit new `--db` directory: it never replaces the active catalog. Naming,
-classification, group,
-succession, same-as, split-sibling and document-coverage worklist commands produce
-review material; they do not approve or apply new curation during a build.
+classification, group, succession, same-as, split-sibling and document-coverage worklist
+commands produce review material; they do not approve or apply new curation during a
+build.
 
 ## Steward extension
 
