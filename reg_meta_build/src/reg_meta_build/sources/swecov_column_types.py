@@ -185,10 +185,12 @@ def infer_steward_column_type(
         for sql_type in by_table.values()
         if isinstance(sql_type, str)
     } - {None}
-    if "text" in classes:
+    if "date" in classes and classes & {"integer", "decimal"}:
+        inferred = None
+    elif "text" in classes:
         inferred = "text"
     elif "date" in classes:
-        inferred = None if classes - {"date"} else "date"
+        inferred = "date"
     else:
         inferred = next(
             (kind for kind in reversed(_CLASS_ORDER) if kind in classes), None

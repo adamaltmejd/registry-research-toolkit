@@ -192,3 +192,27 @@ def test_date_numeric_mixture_retains_sorted_evidence(tmp_path: Path) -> None:
     inferred, evidence = infer_steward_column_type("A", ("CIS",), declarations)
     assert inferred is None
     assert evidence is not None and evidence.endswith("CIS2002=int, CIS2004=date")
+
+
+def test_date_numeric_text_mixture_stays_untyped(tmp_path: Path) -> None:
+    declarations = index_swecov_column_types(
+        _read(
+            tmp_path,
+            _csv(
+                [
+                    ("CIS2016", "A", "varchar", "VIEW"),
+                    ("CIS2004", "a", "date", "BASE TABLE"),
+                    ("CIS2002", "A", "int", "VIEW"),
+                ]
+            ),
+        ).declarations
+    )
+    inferred, evidence = infer_steward_column_type("a", ("CIS",), declarations)
+    assert inferred is None
+    assert evidence is not None and evidence.endswith(
+        "CIS2002=int, CIS2004=date, CIS2016=varchar"
+    )
+    assert (
+        infer_steward_column_type("a", ("CIS2004", "CIS2016"), declarations)[0]
+        == "text"
+    )
