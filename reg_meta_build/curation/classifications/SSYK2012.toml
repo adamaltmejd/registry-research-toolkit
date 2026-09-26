@@ -1,6 +1,7 @@
 [classification]
 short_name = "SSYK2012"
 slug = "ssyk2012"
+family = "ssyk"
 name = "Standard för svensk yrkesklassificering 2012"
 name_en = "Swedish Standard Classification of Occupations 2012"
 publisher = "SCB"

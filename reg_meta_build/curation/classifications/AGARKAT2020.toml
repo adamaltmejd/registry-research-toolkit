@@ -1,6 +1,7 @@
 [classification]
 short_name = "AGARKAT2020"
 slug = "agarkat2020"
+family = "agarkat"
 name = "Standard för indelning efter ägarkategori 2020"
 name_en = "Swedish Standard Classification by Owner Category 2020"
 publisher = "SCB"

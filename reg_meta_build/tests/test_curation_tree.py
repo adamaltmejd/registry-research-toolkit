@@ -60,28 +60,26 @@ def test_reads_files_in_sorted_order(tmp_path: Path) -> None:
 def test_aliases_and_family_members_are_strict_curated_data(tmp_path: Path) -> None:
     _write(
         tmp_path,
-        A=_book("A", "a", extra='aliases = ["Source A"]\n'),
-        B=_book("B", "b"),
-    )
-    (tmp_path / "classification_families.toml").write_text(
-        '[[family]]\nkey = "pair"\nmembers = ["a", "b"]\naliases = ["Source family"]\n',
-        encoding="utf-8",
+        A=_book(
+            "A",
+            "a",
+            extra='aliases = ["Source A"]\nfamily = "pair"\n'
+            'family_aliases = ["Source family"]\n',
+        ),
+        B=_book("B", "b", extra='family = "pair"\n'),
     )
     books = load_classifications(tmp_path)
     assert books[0].classification.aliases == ("Source A",)
-    assert load_classification_families(tmp_path, books).family[0].members == ("a", "b")
+    families = load_classification_families(books).family
+    assert families[0].members == ("a", "b")
+    assert families[0].aliases == ("Source family",)
 
 
-def test_unknown_family_member_fails(tmp_path: Path) -> None:
-    _write(tmp_path, A=_book("A", "a"))
-    (tmp_path / "classification_families.toml").write_text(
-        '[[family]]\nkey = "pair"\nmembers = ["a", "missing"]\n'
-        'aliases = ["Source family"]\n',
-        encoding="utf-8",
-    )
+def test_single_member_family_fails(tmp_path: Path) -> None:
+    _write(tmp_path, A=_book("A", "a", extra='family = "pair"\n'))
     with pytest.raises(RegMetaError) as excinfo:
-        load_classification_families(tmp_path, load_classifications(tmp_path))
-    assert "unknown slugs" in excinfo.value.message
+        load_classification_families(load_classifications(tmp_path))
+    assert "at least two distinct slugs" in excinfo.value.message
 
 
 def test_duplicate_alias_in_one_classification_fails(tmp_path: Path) -> None:

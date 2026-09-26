@@ -1,6 +1,11 @@
 [classification]
 short_name = "SSYK96"
 slug = "ssyk1996"
+family = "ssyk"
+family_aliases = [
+  "Standard för svensk yrkesklassificering (SSYK)",
+  "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/",
+]
 name = "Standard för svensk yrkesklassificering 1996"
 name_en = "Swedish Standard Classification of Occupations 1996"
 publisher = "SCB"

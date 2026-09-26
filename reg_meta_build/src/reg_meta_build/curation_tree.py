@@ -3,7 +3,7 @@
 ``classifications/<short_name>.toml`` holds one classification: its metadata and
 sentinels in ``[classification]``, and in ``[binding]`` the value-set labels behind
 the label binding rule plus the curated ``[[binding.variable]]`` bindings.
-``classification_families.toml`` groups edition slugs behind exact family aliases.
+Family names and exact family aliases are curated with each member's metadata.
 ``registers/<provider>/<slug>.toml`` (or one family directory below the provider)
 owns register-scoped declarations. ``classification_groups.toml``,
 ``relations.toml``, ``tags.toml`` and ``lineage.toml`` stay at the root as global
@@ -69,6 +69,8 @@ class ClassificationMetadata(_CurationModel):
 
     short_name: str
     aliases: Annotated[tuple[str, ...], Field(strict=False)] = ()
+    family: str | None = None
+    family_aliases: Annotated[tuple[str, ...], Field(strict=False)] = ()
     slug: str
     name: str
     name_en: str | None = None
@@ -83,7 +85,7 @@ class ClassificationMetadata(_CurationModel):
 
     _names = field_validator("short_name", "name")(_require_trimmed)
 
-    @field_validator("aliases")
+    @field_validator("aliases", "family_aliases")
     @classmethod
     def _aliases(cls, aliases: tuple[str, ...]) -> tuple[str, ...]:
         if any(
@@ -94,6 +96,19 @@ class ClassificationMetadata(_CurationModel):
         if len(aliases) != len(set(aliases)):
             raise ValueError("classification aliases must be unique")
         return aliases
+
+    @field_validator("family")
+    @classmethod
+    def _family(cls, family: str | None) -> str | None:
+        if family is not None:
+            validate_slug(family, "classification family")
+        return family
+
+    @model_validator(mode="after")
+    def _family_alias_ownership(self) -> ClassificationMetadata:
+        if self.family_aliases and self.family is None:
+            raise ValueError("family aliases require a family")
+        return self
 
     @field_validator("slug")
     @classmethod
@@ -800,48 +815,34 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
 
 
 def load_classification_families(
-    root: Path, classifications: tuple[CuratedClassification, ...]
+    classifications: tuple[CuratedClassification, ...],
 ) -> ClassificationFamilies:
-    """Read exact family references and validate their curated member slugs."""
-    path = root / "classification_families.toml"
-    if not path.is_file():
-        return ClassificationFamilies()
-    file = "classification_families.toml"
-    try:
-        data = tomllib.loads(path.read_text(encoding="utf-8"))
-        families = ClassificationFamilies.model_validate(data)
-    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
-        raise curation_error(
-            _CODE, f"{file}: {exc}.", "Fix the classification family table."
-        ) from exc
-    except ValidationError as exc:
-        error = exc.errors(include_url=False)[0]
-        location = error["loc"]
-        index = next((part + 1 for part in location if isinstance(part, int)), None)
-        where = f" [[family]] entry {index}" if index is not None else ""
-        raise curation_error(
-            _CODE,
-            f"{file}{where}: {error['msg']}.",
-            "Fix the classification family table.",
-        ) from exc
-    slugs = {entry.classification.slug for entry in classifications}
-    keys: set[str] = set()
-    for index, family in enumerate(families.family, start=1):
-        if family.key in keys:
+    """Group edition slugs and exact aliases from their validated metadata."""
+    grouped: dict[str, list[ClassificationMetadata]] = {}
+    for entry in classifications:
+        metadata = entry.classification
+        if metadata.family is not None:
+            grouped.setdefault(metadata.family, []).append(metadata)
+    families = []
+    for key, members in sorted(grouped.items()):
+        try:
+            families.append(
+                ClassificationFamily(
+                    key=key,
+                    members=tuple(member.slug for member in members),
+                    aliases=tuple(
+                        alias for member in members for alias in member.family_aliases
+                    ),
+                )
+            )
+        except ValidationError as exc:
             raise curation_error(
                 _CODE,
-                f"{file} [[family]] entry {index}: duplicate family {family.key!r}.",
-                "Declare each family once.",
-            )
-        keys.add(family.key)
-        if missing := sorted(set(family.members) - slugs):
-            raise curation_error(
-                _CODE,
-                f"{file} [[family]] entry {index}: family {family.key!r} "
-                f"names unknown slugs {missing!r}.",
-                "Use classification slugs declared in this curation tree.",
-            )
-    return families
+                f"classifications/{members[0].short_name}.toml: "
+                f"invalid family {key!r}: {exc.errors(include_url=False)[0]['msg']}.",
+                "Curate at least two editions per family with unique aliases.",
+            ) from exc
+    return ClassificationFamilies(family=tuple(families))
 
 
 def _register_arrays(
@@ -1117,7 +1118,7 @@ def load_curation_tree(root: Path) -> CurationTree:
     classifications = load_classifications(root)
     return CurationTree(
         classifications=classifications,
-        classification_families=load_classification_families(root, classifications),
+        classification_families=load_classification_families(classifications),
         registers=load_register_files(root),
         classification_groups=load_classification_groups(root),
         relations=load_relations(root / "relations.toml"),
