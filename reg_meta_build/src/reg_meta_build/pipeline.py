@@ -1136,6 +1136,11 @@ def build_catalog(
                 withheld=withheld,
                 unselected=unselected,
                 unselected_names=unselected_names,
+                source_labels={
+                    f"{register.register_info.provider}/{register.register_info.slug}": register.register_info.source_labels
+                    for register in tree.registers
+                    if register.register_info.source_labels
+                },
                 slice_registers=slice_registers,
             )
             for value in lineage.diagnostics:

@@ -116,6 +116,24 @@ def test_specific_register_name_wins_over_shared_abbreviation(source_label):
     assert len(result.metadata.state_lineage) == 1
 
 
+def test_curated_register_source_label_resolves_shared_abbreviation_by_prefix():
+    variables, options = fixture(
+        shared_abbreviation=True,
+        source_label="Former source (ORIG) : People",
+    )
+    ambiguous = resolve_catalog_lineage(variables, **options)
+    assert ambiguous.variables[0].source_register is None
+    assert [issue.code for issue in ambiguous.diagnostics] == [
+        "ambiguous_source_register"
+    ]
+
+    options["source_labels"] = {"scb/origin": ("Former source (ORIG)",)}
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.diagnostics
+    assert result.variables[0].source_register.slug == "origin"
+    assert len(result.metadata.state_lineage) == 1
+
+
 def test_abbreviation_resolves_when_full_name_and_prefix_do_not_match():
     variables, options = fixture(source_label="External source (ORIG) : People")
     result = resolve_catalog_lineage(variables, **options)
