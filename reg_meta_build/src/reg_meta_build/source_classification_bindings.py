@@ -53,6 +53,7 @@ class _Binding:
 def _source_bindings(
     occurrences: Iterable[EffectiveOccurrence],
     references: Mapping[str, str] | None,
+    family_references: Mapping[str, tuple[str, ...]],
     coding: Mapping[NativeKey, CodingResolution],
     classifications: Mapping[str, ResolvedClassification],
 ) -> tuple[dict[NativeKey, list[_Binding]], list[ResolutionDiagnostic]]:
@@ -102,6 +103,31 @@ def _source_bindings(
                     "source classification requires an explicit reference dictionary"
                 )
             slug = references.get(field.value)
+            if slug is None and field.value in family_references:
+                members = family_references[field.value]
+                if any(member not in classifications for member in members):
+                    raise ValueError(
+                        "classification family has an unconverted codebook"
+                    )
+                covering = [
+                    member
+                    for member in members
+                    if all(
+                        (
+                            classifications[member].valid_from is None
+                            or date.fromordinal(lo).year
+                            >= classifications[member].valid_from
+                        )
+                        and (
+                            classifications[member].valid_to is None
+                            or date.fromordinal(hi).year
+                            <= classifications[member].valid_to
+                        )
+                        for lo, hi in bounds
+                    )
+                ]
+                if len(covering) == 1:
+                    slug = covering[0]
             if slug is None:
                 code = "unresolved_classification_reference"
             elif slug not in classifications or classifications[slug].slug != slug:
@@ -238,6 +264,7 @@ def apply_classification_cases(
     classifications: Mapping[str, ResolvedClassification],
     occurrences: Iterable[EffectiveOccurrence] = (),
     references: Mapping[str, str] | None = None,
+    family_references: Mapping[str, tuple[str, ...]] = {},
     label_rules: Mapping[str, str] = {},
     override: tuple[str, str] | None = None,
     matched_labels: set[str] | None = None,
@@ -288,7 +315,7 @@ def apply_classification_cases(
                 )
     evaluations = evaluate_cases(ordered, records)
     selected, diagnostics = _source_bindings(
-        occurrences, references, coding, classifications
+        occurrences, references, family_references, coding, classifications
     )
     rule_bindings = _label_rule_bindings(coding, occurrences, label_rules)
     for key, bindings in rule_bindings.items():

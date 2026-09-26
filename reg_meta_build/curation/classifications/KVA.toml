@@ -11,6 +11,10 @@
 
 [classification]
 short_name = "KVA"
+aliases = [
+  "Klassifikation av vårdåtgärder (KVÅ) - Socialstyrelsen",
+  "https://www.socialstyrelsen.se/statistik-och-data/klassifikationer-och-koder/kva/",
+]
 slug = "kva"
 name = "Klassifikation av vårdåtgärder (KVÅ)"
 name_en = "Swedish Classification of Health Interventions (KVÅ)"

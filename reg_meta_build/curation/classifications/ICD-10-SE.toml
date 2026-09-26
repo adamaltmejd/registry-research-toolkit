@@ -1,5 +1,6 @@
 [classification]
 short_name = "ICD-10-SE"
+aliases = ["https://www.socialstyrelsen.se/statistik-och-data/klassifikationer-och-koder/icd-10/"]
 slug = "icd-10-se"
 name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version (ICD-10-SE)"
 name_en = "International Statistical Classification of Diseases, Swedish version (ICD-10-SE)"

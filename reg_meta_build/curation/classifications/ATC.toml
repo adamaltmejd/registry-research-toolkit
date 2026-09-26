@@ -1,5 +1,6 @@
 [classification]
 short_name = "ATC"
+aliases = ["https://www.fass.se/LIF/atcregister?userType=0"]
 slug = "atc"
 name = "Anatomisk Terapeutisk Kemisk klassifikation (ATC)"
 name_en = "Anatomical Therapeutic Chemical classification (ATC)"

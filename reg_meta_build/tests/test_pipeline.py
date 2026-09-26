@@ -7,7 +7,8 @@ import hashlib
 import json
 import sqlite3
 from dataclasses import dataclass, replace
-from typing import TYPE_CHECKING
+from types import SimpleNamespace
+from typing import TYPE_CHECKING, cast
 
 import pytest
 from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
@@ -16,7 +17,13 @@ from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
 from reg_meta.errors import EXIT_USAGE
 from reg_meta_build.catalog_dependencies import CatalogDependencyError
 from reg_meta_build.cli import run
-from reg_meta_build.pipeline import build_catalog
+from reg_meta_build.curation_tree import (
+    ClassificationFamilies,
+    ClassificationFamily,
+    ClassificationMetadata,
+    CuratedClassification,
+)
+from reg_meta_build.pipeline import _classification_references, build_catalog
 from reg_meta_build.prepared_catalog import prepare_catalog_sources
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_naming import authored_naming_id
@@ -24,6 +31,8 @@ from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    from reg_meta_build.curation_tree import CurationTree
 
 
 @dataclass(frozen=True)
@@ -183,6 +192,53 @@ def _issues(report: Path) -> list[dict]:
 def _manifest(path: Path) -> dict[str, str]:
     with sqlite3.connect(path) as conn:
         return dict(conn.execute("SELECT key, value FROM import_manifest"))
+
+
+def test_exact_classification_aliases_and_family_references() -> None:
+    def book(
+        name: str, slug: str, aliases: tuple[str, ...] = ()
+    ) -> CuratedClassification:
+        return CuratedClassification(
+            classification=ClassificationMetadata(
+                short_name=name,
+                slug=slug,
+                name=name,
+                codes_file=f"{slug}.csv",
+                aliases=aliases,
+            )
+        )
+
+    first = book("A", "a", ("Source A",))
+    second = book("B", "b")
+
+    def references(
+        books: tuple[CuratedClassification, ...], alias: str
+    ) -> tuple[dict[str, str], dict[str, tuple[str, ...]]]:
+        tree = cast(
+            "CurationTree",
+            SimpleNamespace(
+                classifications=books,
+                classification_families=ClassificationFamilies(
+                    family=(
+                        ClassificationFamily(
+                            key="pair", members=("a", "b"), aliases=(alias,)
+                        ),
+                    )
+                ),
+            ),
+        )
+        return _classification_references(tree)
+
+    assert references((first, second), "Source pair") == (
+        {"A": "a", "Source A": "a", "B": "b"},
+        {"Source pair": ("a", "b")},
+    )
+    with pytest.raises(ValueError, match="duplicate classification reference"):
+        references((first, book("B", "b", ("Source A",))), "Source pair")
+    with pytest.raises(
+        ValueError, match="duplicate classification reference and family alias"
+    ):
+        references((first, second), "A")
 
 
 def test_build_uses_tracked_tree_and_writes_no_selection_hash(

@@ -1,5 +1,6 @@
 [classification]
 short_name = "SNI2007"
+aliases = ["https://www.scb.se/contentassets/d43b798da37140999abf883e206d0545/sni2007.xlsx"]
 slug = "sni2007"
 name = "Svensk standard för näringsgrensindelning 2007"
 name_en = "Swedish Standard Industrial Classification 2007"

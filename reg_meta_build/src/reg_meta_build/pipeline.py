@@ -85,6 +85,8 @@ from reg_meta_build.validate import validate_built_db
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
+    from reg_meta_build.curation_tree import CurationTree
+
 
 class CompletedArtifactError(Exception):
     """Report finalization failed after the catalog reached its destination."""
@@ -172,6 +174,30 @@ def _unique_pairs[K, V](items: tuple[tuple[K, V], ...], description: str) -> dic
     if len(result) != len(items):
         raise ValueError(f"duplicate {description}")
     return result
+
+
+def _classification_references(
+    tree: CurationTree,
+) -> tuple[dict[str, str], dict[str, tuple[str, ...]]]:
+    references = _unique_pairs(
+        tuple(
+            (name, entry.classification.slug)
+            for entry in tree.classifications
+            for name in (entry.classification.short_name, *entry.classification.aliases)
+        ),
+        "classification reference",
+    )
+    families = _unique_pairs(
+        tuple(
+            (alias, family.members)
+            for family in tree.classification_families.family
+            for alias in family.aliases
+        ),
+        "classification family alias",
+    )
+    if set(references) & set(families):
+        raise ValueError("duplicate classification reference and family alias")
+    return references, families
 
 
 def _selected_scopes(
@@ -297,6 +323,7 @@ def build_catalog(
             "curation scopes name a source outside the prepared occurrence-source selection"
         )
     tree = load_curation_tree(curation_dir)
+    references, family_references = _classification_references(tree)
     label_rules = {
         label: entry.classification.slug
         for entry in tree.classifications
@@ -627,10 +654,6 @@ def build_catalog(
                         "classification": book.slug,
                     },
                 )
-            references = _unique_pairs(
-                tuple((b.short_name, b.slug) for b in books.values()),
-                "classification reference",
-            )
             support = SourceSupportBindings(
                 prepared.manifest.support_joins,
                 (
@@ -781,6 +804,7 @@ def build_catalog(
                         support=support,
                         classifications=books,
                         classification_references=references,
+                        classification_family_references=family_references,
                         label_rules=label_rules,
                         classification_overrides=classification_overrides,
                         matched_labels=matched_labels,

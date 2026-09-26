@@ -3498,7 +3498,7 @@ def compile_curation(
             descriptor=normalize_token(Path(entry.classification.codes_file).stem),
             metadata={
                 **entry.classification.model_dump(
-                    mode="json", exclude={"codes_file", "sentinel_codes"}
+                    mode="json", exclude={"aliases", "codes_file", "sentinel_codes"}
                 ),
                 "sentinel_codes": [
                     s.model_dump(mode="json")

@@ -3,6 +3,7 @@
 ``classifications/<short_name>.toml`` holds one classification: its metadata and
 sentinels in ``[classification]``, and in ``[binding]`` the value-set labels behind
 the label binding rule plus the curated ``[[binding.variable]]`` bindings.
+``classifications/_families.toml`` groups edition slugs behind exact family aliases.
 ``registers/<provider>/<slug>.toml`` (or one family directory below the provider)
 owns register-scoped declarations. ``classification_groups.toml``,
 ``relations.toml``, ``tags.toml`` and ``lineage.toml`` stay at the root as global
@@ -67,6 +68,7 @@ class ClassificationMetadata(_CurationModel):
     """``[classification]``: one codebook and its canonical code CSV."""
 
     short_name: str
+    aliases: Annotated[tuple[str, ...], Field(strict=False)] = ()
     slug: str
     name: str
     name_en: str | None = None
@@ -80,6 +82,18 @@ class ClassificationMetadata(_CurationModel):
     sentinel_codes: tuple[SentinelCode, ...] = ()
 
     _names = field_validator("short_name", "name")(_require_trimmed)
+
+    @field_validator("aliases")
+    @classmethod
+    def _aliases(cls, aliases: tuple[str, ...]) -> tuple[str, ...]:
+        if any(
+            not alias or alias != normalize_text(alias, multiline=True)
+            for alias in aliases
+        ):
+            raise ValueError("classification aliases must be non-empty normalized text")
+        if len(aliases) != len(set(aliases)):
+            raise ValueError("classification aliases must be unique")
+        return aliases
 
     @field_validator("slug")
     @classmethod
@@ -143,6 +157,33 @@ class CuratedClassification(_CurationModel):
 
     classification: ClassificationMetadata
     binding: ClassificationBinding = ClassificationBinding()
+
+
+class ClassificationFamily(_CurationModel):
+    key: str
+    members: Annotated[tuple[str, ...], Field(strict=False)]
+    aliases: Annotated[tuple[str, ...], Field(strict=False)] = ()
+
+    _key = field_validator("key")(_require_trimmed)
+
+    @model_validator(mode="after")
+    def _valid(self) -> ClassificationFamily:
+        if len(self.members) < 2 or len(self.members) != len(set(self.members)):
+            raise ValueError("family members must name at least two distinct slugs")
+        for member in self.members:
+            validate_slug(member, "classification")
+        if len(self.aliases) != len(set(self.aliases)):
+            raise ValueError("family aliases must be unique")
+        if any(
+            not alias or alias != normalize_text(alias, multiline=True)
+            for alias in self.aliases
+        ):
+            raise ValueError("family aliases must be non-empty normalized text")
+        return self
+
+
+class ClassificationFamilies(_CurationModel):
+    family: Annotated[tuple[ClassificationFamily, ...], Field(strict=False)] = ()
 
 
 class RegisterIdentity(_CurationModel):
@@ -667,6 +708,7 @@ class CurationTree:
     """The classification, register, and global curation files."""
 
     classifications: tuple[CuratedClassification, ...]
+    classification_families: ClassificationFamilies
     registers: tuple[RegisterCuration, ...]
     classification_groups: ClassificationGroups
     relations: CuratedRelations
@@ -738,6 +780,8 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
                 f"{file} is not a classification TOML file.",
                 "Keep only <short_name>.toml files in curation/classifications/.",
             )
+        if path.name == "_families.toml":
+            continue
         entry = _load_classification(path, file)
         claims = [
             ("slug", entry.classification.slug),
@@ -755,6 +799,51 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
             owners[kind, value] = file
         entries.append(entry)
     return tuple(entries)
+
+
+def load_classification_families(
+    root: Path, classifications: tuple[CuratedClassification, ...]
+) -> ClassificationFamilies:
+    """Read exact family references and validate their curated member slugs."""
+    path = root / CLASSIFICATIONS_DIR / "_families.toml"
+    if not path.is_file():
+        return ClassificationFamilies()
+    file = f"{CLASSIFICATIONS_DIR}/_families.toml"
+    try:
+        data = tomllib.loads(path.read_text(encoding="utf-8"))
+        families = ClassificationFamilies.model_validate(data)
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+        raise curation_error(
+            _CODE, f"{file}: {exc}.", "Fix the classification family table."
+        ) from exc
+    except ValidationError as exc:
+        error = exc.errors(include_url=False)[0]
+        location = error["loc"]
+        index = next((part + 1 for part in location if isinstance(part, int)), None)
+        where = f" [[family]] entry {index}" if index is not None else ""
+        raise curation_error(
+            _CODE,
+            f"{file}{where}: {error['msg']}.",
+            "Fix the classification family table.",
+        ) from exc
+    slugs = {entry.classification.slug for entry in classifications}
+    keys: set[str] = set()
+    for index, family in enumerate(families.family, start=1):
+        if family.key in keys:
+            raise curation_error(
+                _CODE,
+                f"{file} [[family]] entry {index}: duplicate family {family.key!r}.",
+                "Declare each family once.",
+            )
+        keys.add(family.key)
+        if missing := sorted(set(family.members) - slugs):
+            raise curation_error(
+                _CODE,
+                f"{file} [[family]] entry {index}: family {family.key!r} "
+                f"names unknown slugs {missing!r}.",
+                "Use classification slugs declared in this curation tree.",
+            )
+    return families
 
 
 def _register_arrays(
@@ -1027,8 +1116,10 @@ def load_curation_tree(root: Path) -> CurationTree:
             'lineage.toml: per-variable [lineage."…"] overrides have no consumer.',
             'Remove the [lineage."…"] tables; keep [lineage_defaults] only.',
         )
+    classifications = load_classifications(root)
     return CurationTree(
-        classifications=load_classifications(root),
+        classifications=classifications,
+        classification_families=load_classification_families(root, classifications),
         registers=load_register_files(root),
         classification_groups=load_classification_groups(root),
         relations=load_relations(root / "relations.toml"),

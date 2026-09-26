@@ -6,7 +6,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.errors import RegMetaError
-from reg_meta_build.curation_tree import load_classifications, load_curation_tree
+from reg_meta_build.curation_tree import (
+    load_classification_families,
+    load_classifications,
+    load_curation_tree,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -51,6 +55,38 @@ def test_reads_files_in_sorted_order(tmp_path: Path) -> None:
     assert [code.code for code in entries[0].classification.sentinel_codes] == ["99"]
     assert [bound.variable for bound in entries[0].binding.variable] == ["scb/ulf/kod"]
     assert entries[1].binding.value_set_labels == ("Bee",)
+
+
+def test_aliases_and_family_members_are_strict_curated_data(tmp_path: Path) -> None:
+    _write(
+        tmp_path,
+        A=_book("A", "a", extra='aliases = ["Source A"]\n'),
+        B=_book("B", "b"),
+    )
+    (tmp_path / "classifications" / "_families.toml").write_text(
+        '[[family]]\nkey = "pair"\nmembers = ["a", "b"]\naliases = ["Source family"]\n',
+        encoding="utf-8",
+    )
+    books = load_classifications(tmp_path)
+    assert books[0].classification.aliases == ("Source A",)
+    assert load_classification_families(tmp_path, books).family[0].members == ("a", "b")
+
+
+def test_unknown_family_member_fails(tmp_path: Path) -> None:
+    _write(tmp_path, A=_book("A", "a"))
+    (tmp_path / "classifications" / "_families.toml").write_text(
+        '[[family]]\nkey = "pair"\nmembers = ["a", "missing"]\n'
+        'aliases = ["Source family"]\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_classification_families(tmp_path, load_classifications(tmp_path))
+    assert "unknown slugs" in excinfo.value.message
+
+
+def test_duplicate_alias_in_one_classification_fails(tmp_path: Path) -> None:
+    _write(tmp_path, A=_book("A", "a", extra='aliases = ["same", "same"]\n'))
+    assert "classification.aliases" in _error(tmp_path).message
 
 
 def test_unknown_key_names_file_and_key(tmp_path: Path) -> None:

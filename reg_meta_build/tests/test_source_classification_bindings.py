@@ -417,6 +417,78 @@ def test_source_declaration_preserves_explicit_open_scope_without_adding_codes()
     assert "Source classification declaration" in segment.provenance[0]
 
 
+def test_source_declaration_resolves_exact_alias():
+    setup = _setup(inline=False)
+    result = _declared(
+        setup,
+        (_declaration(setup, value_field("Source title")),),
+        references={"FIX": "fixture", "Source title": "fixture"},
+    )
+    assert result.diagnostics == ()
+    assert next(iter(result.coding.values())).segments[0].classification == "fixture"
+
+
+def test_family_reference_requires_one_edition_to_cover_whole_occurrence():
+    setup = _setup(inline=False)
+    first = setup[3]["fixture"].model_copy(
+        update={"valid_from": 2000, "valid_to": 2020}
+    )
+    second = first.model_copy(
+        update={
+            "slug": "second",
+            "short_name": "SECOND",
+            "valid_from": 2021,
+            "valid_to": None,
+        }
+    )
+    options = {
+        "classifications": {"fixture": first, "second": second},
+        "family_references": {"Family": ("fixture", "second")},
+    }
+
+    def occurrence(start: str, end: str):
+        return replace(
+            _declaration(setup, value_field("Family")),
+            edition_period_scope=TemporalScope(
+                kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
+            ),
+        )
+
+    result = _declared(setup, (occurrence("2020", "2020"),), **options)
+    assert result.diagnostics == ()
+    assert next(iter(result.coding.values())).segments[0].classification == "fixture"
+    shifted = {
+        **options,
+        "classifications": {
+            "fixture": first.model_copy(update={"valid_to": 2019}),
+            "second": second.model_copy(update={"valid_from": 2020}),
+        },
+    }
+    result = _declared(setup, (occurrence("2020", "2020"),), **shifted)
+    assert result.diagnostics == ()
+    assert next(iter(result.coding.values())).segments[0].classification == "second"
+    result = _declared(setup, (occurrence("2019", "2021"),), **options)
+    assert [d.code for d in result.diagnostics] == [
+        "unresolved_classification_reference"
+    ]
+    overlapping = second.model_copy(update={"valid_from": 2020})
+    result = _declared(
+        setup,
+        (occurrence("2020", "2020"),),
+        **{**options, "classifications": {"fixture": first, "second": overlapping}},
+    )
+    assert [d.code for d in result.diagnostics] == [
+        "unresolved_classification_reference"
+    ]
+    result = _declared(setup, (occurrence("1990", "1991"),), **options)
+    assert [d.code for d in result.diagnostics] == [
+        "unresolved_classification_reference"
+    ]
+    direct = _declared(setup, (_declaration(setup),), **options)
+    assert direct.diagnostics == ()
+    assert next(iter(direct.coding.values())).segments[0].classification == "fixture"
+
+
 def test_source_and_case_bindings_compose_together_and_check_conformance():
     setup = _setup(code="outside")
     result = _declared(setup, (_declaration(setup),), cases=(setup[1],))

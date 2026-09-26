@@ -1,5 +1,6 @@
 [classification]
 short_name = "DRG"
+aliases = ["https://www.socialstyrelsen.se/statistik-och-data/klassifikationer-och-koder/drg/drg-koder-och-definitioner/"]
 slug = "drg"
 name = "NordDRG — diagnosrelaterade grupper"
 name_en = "NordDRG — diagnosis-related groups"

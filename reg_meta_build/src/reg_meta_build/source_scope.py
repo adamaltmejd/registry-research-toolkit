@@ -142,6 +142,7 @@ def resolve_source_scope(
     support: SourceSupportBindings,
     classifications: Mapping[str, ResolvedClassification],
     classification_references: Mapping[str, str],
+    classification_family_references: Mapping[str, tuple[str, ...]] = {},
     label_rules: Mapping[str, str] = {},
     classification_overrides: Mapping[str, tuple[str, str]] = {},
     matched_labels: set[str] | None = None,
@@ -515,6 +516,7 @@ def resolve_source_scope(
             classifications=classifications,
             occurrences=occurrences,
             references=classification_references,
+            family_references=classification_family_references,
             label_rules=label_rules,
             override=(
                 classification_overrides.get(fqid)
