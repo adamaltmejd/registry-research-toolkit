@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "innovation-foretag"
 native_id = "257"
+steward_table_prefixes = ["CIS"]
 
 # CIS matrix columns CO11..CO85 are intentionally absent: SCB reuses VarId
 # 15662 across five alias-less CVIDs in 2002–2012, so pooled holdings cannot

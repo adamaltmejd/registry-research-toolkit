@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "konkurser"
 native_id = "167"
+steward_table_prefixes = ["Konkurs_"]
 
 # SWECOV existing-register holdings for scb/konkurser use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in

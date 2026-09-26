@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "fek"
 native_id = "168"
+steward_table_prefixes = ["FE19", "FE20"]
 
 # SWECOV existing-register holdings for scb/fek use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in

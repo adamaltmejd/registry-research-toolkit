@@ -79,6 +79,7 @@ from reg_meta_build.source_scope import (
 )
 from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_bindings import open_value_bindings
+from reg_meta_build.sources.swecov_column_types import SWECOV_COLUMN_TYPES_PATH
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
@@ -524,8 +525,13 @@ def build_catalog(
                         | SourceEventDeclaration
                         | SourceJoinKeyDeclaration,
                     ):
-                        declarations.append(declaration)
-                        disposition = "literal_metadata"
+                        if not (
+                            isinstance(declaration, SourceColumnTypeDeclaration)
+                            and declaration.revision.artifact_path
+                            == SWECOV_COLUMN_TYPES_PATH
+                        ):
+                            declarations.append(declaration)
+                            disposition = "literal_metadata"
                     else:
                         disposition = "unbound_relationship"
                         issue(

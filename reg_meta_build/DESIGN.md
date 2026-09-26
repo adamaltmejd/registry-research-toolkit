@@ -100,6 +100,12 @@ Authority depends on the fact and scope, rather than a universal file ordering:
   that a variable uses that classification.
 - SWECOV holdings establish possession by that project. Multi-year tables do not
   establish per-year column availability.
+- SWECOV's MONA storage-schema export supplies type evidence for steward-held columns
+  absent from SCB documentation. Each register selects its tables by literal prefixes;
+  folded column names join waves. Integer widens to decimal, and any text wave widens
+  the variable to text. Date-only waves yield date; date mixed with a numeric class
+  leaves the type unresolved with the per-table storage types in the diagnostic. Storage
+  metadata never establishes per-year availability or row content.
 - Agents can investigate official handbooks separately and author structured curation
   with document/page references. Neither preparation nor a build extracts or interprets
   PDFs or calls an LLM.

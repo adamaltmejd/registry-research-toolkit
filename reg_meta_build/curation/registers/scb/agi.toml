@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "agi"
 native_id = "392"
+steward_table_prefixes = ["Arb_AGIIndivid"]
 
 [[errata.delivered]]
 variant = "individuppgifter-agi"

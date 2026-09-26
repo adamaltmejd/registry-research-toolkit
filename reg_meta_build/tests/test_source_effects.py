@@ -53,6 +53,7 @@ from reg_meta_build.source_intervals import resolve_occurrence_intervals
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,
+    RecordLocator,
     ScopeInterval,
     SourceField,
     SourceFields,
@@ -61,7 +62,9 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
+from reg_meta_build.source_reference_records import SourceColumnTypeDeclaration
 from reg_meta_build.sources.scb_records import clean_scb_row
+from reg_meta_build.sources.swecov_column_types import index_swecov_column_types
 
 from reg_meta_build.fqid_slugs import (
     declared_column_ownership,
@@ -565,6 +568,139 @@ def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
                 "SELECT valid_from, valid_to, pooled FROM variable_state"
             ).fetchone()
         ) == ("2002-01-01", "2020-12-31", 1)
+
+
+def _storage_columns(
+    *pairs: tuple[str, str],
+) -> dict[tuple[str, str], SourceColumnTypeDeclaration]:
+    return index_swecov_column_types(
+        SourceColumnTypeDeclaration(
+            revision=_REVISION,
+            locator=RecordLocator(
+                semantic_record_key=("storage", table, "missing"),
+                physical_file="fixture.csv",
+                physical_table=table,
+                physical_record=f"row:{index}",
+                physical_cells=(),
+            ),
+            delivered_cells=(),
+            table_name=value_field(table),
+            column_name=value_field("MISSING"),
+            data_type=value_field(sql_type),
+            declared_width=SourceField(status="unknown"),
+            nullable=SourceField(status="unknown"),
+        )
+        for index, (table, sql_type) in enumerate(pairs, start=1)
+    )
+
+
+def test_steward_storage_type_and_flags_preserve_curated_identifier() -> None:
+    record = _record(column="OTHER")
+    original = source_occurrence(record)
+    assert original.edition_key is not None
+    entry = ErrataColumn(
+        register_id=1,
+        register_variant_id=2,
+        column="MISSING",
+        name="Held column",
+        definition="Held by SWECOV",
+        data_type=None,
+        classification=None,
+        is_identifier=True,
+        is_sensitive=False,
+        versions=("2020",),
+        holdings_period=None,
+        source="steward-holdings",
+        provenance="errata:steward-holdings\nHeld by SWECOV",
+    )
+    binding = ErrataEditionBinding(
+        key=original.edition_key,
+        name="2020",
+        edition_scope=record.edition_scope,
+        edition_period_scope=record.edition_period_scope,
+        support=(record_ref(record),),
+        native_id=2020,
+    )
+    columns = _storage_columns(("CIS2004", "smallint"), ("CIS2012", "float"))
+    result = convert_column_entry(
+        entry,
+        case_id="column-storage",
+        records=(record,),
+        editions=(binding,),
+        declared_flags=frozenset({"is_identifier"}),
+        steward_table_prefixes=("CIS",),
+        storage_columns=columns,
+    )
+    assert result.case is not None
+    assert isinstance(result.case.decision, OccurrenceCorrectionDecision)
+    (effect,) = result.case.decision.effects
+    assert isinstance(effect, CuratedOccurrenceAddition)
+    assert effect.fields.data_type == value_field("decimal")
+    assert effect.fields.identifier == value_field(True)
+    assert effect.fields.sensitivity == value_field(False)
+    assert "CIS2004=smallint, CIS2012=float" in result.case.decision.provenance
+
+    missing = convert_column_entry(
+        entry,
+        case_id="column-storage",
+        records=(record,),
+        editions=(binding,),
+        declared_flags=frozenset({"is_identifier"}),
+        steward_table_prefixes=("NONE",),
+        storage_columns=columns,
+    )
+    assert missing.case is not None
+    assert isinstance(missing.case.decision, OccurrenceCorrectionDecision)
+    (effect,) = missing.case.decision.effects
+    assert isinstance(effect, CuratedOccurrenceAddition)
+    assert effect.fields.data_type is None
+
+    curated = convert_column_entry(
+        replace(entry, data_type="integer"),
+        case_id="column-storage",
+        records=(record,),
+        editions=(binding,),
+        declared_flags=frozenset({"is_identifier"}),
+        steward_table_prefixes=("CIS",),
+        storage_columns=_storage_columns(("CIS2016", "varchar")),
+    )
+    assert curated.case is not None
+    assert isinstance(curated.case.decision, OccurrenceCorrectionDecision)
+    (effect,) = curated.case.decision.effects
+    assert isinstance(effect, CuratedOccurrenceAddition)
+    assert effect.fields.data_type == value_field("integer")
+
+    mixed = convert_column_entry(
+        entry,
+        case_id="column-storage",
+        records=(record,),
+        editions=(binding,),
+        declared_flags=frozenset({"is_identifier"}),
+        steward_table_prefixes=("CIS",),
+        storage_columns=_storage_columns(("CIS2004", "date"), ("CIS2012", "int")),
+    )
+    assert mixed.case is not None
+    applied = apply_occurrence_cases((record,), (mixed.case,))
+    addition = next(item for item in applied.occurrences if item.occurrence_key)
+    assert addition.fields.data_type is None
+    intervals = resolve_occurrence_intervals((addition,))
+    assert intervals.segments
+    formed = form_native_variable(
+        (addition,),
+        register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
+        variants={addition.variant_key: ResolvedVariant(slug="people", name="People")},
+        slug="missing",
+        provider_key="2.missing",
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(True)
+        ),
+        coding={addition.column_key: resolve_code_membership(())},
+    )
+    assert any(
+        issue.code == "unknown_data_type"
+        and "CIS2004=date, CIS2012=int" in issue.detail
+        for issue in formed.diagnostics
+    )
 
 
 def test_checked_variant_routing_retains_unknown_scope_and_physical_evidence() -> None:
