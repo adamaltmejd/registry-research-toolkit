@@ -1,7 +1,9 @@
 # Yard project configuration. Unknown keys are errors.
 
-# max_lanes limits how many ready tickets run at once.
-max_lanes = 2
+# max_lanes limits how many ready tickets run at once. Raised to 4 for the slice
+# rules/curation stage (2026-09-26): lanes awaiting the operator's host slice proof hold
+# their slot, so 2 left the queue idle during proofs.
+max_lanes = 4
 
 # approve says whether a clean candidate needs an operator to enqueue it.
 # "manual" (the default) raises approval-needed for every clean candidate;
@@ -28,9 +30,8 @@ dockerfile = ".yard/Dockerfile"
 # GPT-6 Sol implements (default and heavy); Opus 5.5 plans and resolves
 # conflicts; Sonnet handles light work. Implementation moved off Opus on
 # 2026-09-25 to save Claude tokens. A GPT-6 Luna trial (Y-229) cost more and
-# needed more operator nudges than Opus, so it ended. DeepSeek reviews Sol's
-# work (see [review.reviewers.*]) so implementer and reviewer never share a
-# provider.
+# needed more operator nudges than Opus, so it ended. Review is a Sol seat too
+# (see [review.reviewers.sol] for why).
 [agents.implementation]
 harness = "codex"
 model = "gpt-6-sol"
