@@ -519,18 +519,19 @@ def build_catalog(
                 disposition = "source_context"
                 if isinstance(item, ReferenceEvidence):
                     declaration = item.declaration
-                    if (
-                        isinstance(
-                            declaration,
-                            SourceColumnTypeDeclaration
-                            | SourceEventDeclaration
-                            | SourceJoinKeyDeclaration,
-                        )
-                        and declaration.revision.artifact_path
-                        != SWECOV_COLUMN_TYPES_PATH
+                    if isinstance(
+                        declaration,
+                        SourceColumnTypeDeclaration
+                        | SourceEventDeclaration
+                        | SourceJoinKeyDeclaration,
                     ):
-                        declarations.append(declaration)
-                        disposition = "literal_metadata"
+                        if not (
+                            isinstance(declaration, SourceColumnTypeDeclaration)
+                            and declaration.revision.artifact_path
+                            == SWECOV_COLUMN_TYPES_PATH
+                        ):
+                            declarations.append(declaration)
+                            disposition = "literal_metadata"
                     else:
                         disposition = "unbound_relationship"
                         issue(

@@ -3,14 +3,18 @@
 from __future__ import annotations
 
 import csv
+import gzip
 import hashlib
 import io
+import json
+import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import write_input_bundle, write_scb_input
+from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
 from reg_meta_build.input_snapshot import _validate_bundle_contract
+from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
@@ -100,17 +104,27 @@ def test_reader_contract_and_json_roundtrip(tmp_path: Path) -> None:
 
 def test_selected_csv_is_prepared_as_typed_reference_evidence(tmp_path: Path) -> None:
     source = tmp_path / "source"
-    write_scb_input(source)
+    write_scb_input(
+        source,
+        registerinformation_rows=[
+            _var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")
+        ],
+        unika_rows=[
+            "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
+        ],
+        include=("registerinformation", "unika"),
+    )
     csv_path = source / "swecov/derived/swecov_column_types.csv"
     csv_path.parent.mkdir(parents=True)
     csv_path.write_bytes(_csv([("CIS2004", "CO11", "smallint", "BASE TABLE")]))
     selection = write_input_bundle(tmp_path / "accepted", source)
     destination = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(selection, destination)
+    commit = accept_prepared(destination)
     prepared = open_prepared_catalog_sources(
         destination,
         expected_sha256=manifest.sha256,
-        input_commit=accept_prepared(destination),
+        input_commit=commit,
     )
     entry = next(
         item
@@ -127,6 +141,40 @@ def test_selected_csv_is_prepared_as_typed_reference_evidence(tmp_path: Path) ->
         and item.revision_id == entry.revision.revision_id
     ]
     assert index_swecov_column_types(declarations).keys() == {("CIS2004", "co11")}
+
+    curation = tmp_path / "curation"
+    register = curation / "registers/scb/sample.toml"
+    register.parent.mkdir(parents=True)
+    (curation / "classifications").mkdir()
+    register.write_text(
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+        '[[variant]]\nnative_id = "1.10"\nslug = "people"\n'
+        '[[variable]]\nnative_id = "1.101"\nslug = "value"\n',
+        encoding="utf-8",
+    )
+    output, report = tmp_path / "catalog.db", tmp_path / "report"
+    build_catalog(
+        destination,
+        commit,
+        manifest.sha256,
+        output,
+        report,
+        curation_dir=curation,
+        registers=("1",),
+    )
+    with gzip.open(report / "events.jsonl.gz", "rt", encoding="utf-8") as stream:
+        events = [json.loads(line) for line in stream]
+    assert not any(event["kind"] == "issue" for event in events)
+    assert any(
+        event["kind"] == "prepared_evidence"
+        and event["revision_id"] == entry.revision.revision_id
+        and event["disposition"] == "source_context"
+        for event in events
+    )
+    with sqlite3.connect(output) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM source_column_type").fetchone() == (
+            0,
+        )
 
 
 @pytest.mark.parametrize(
