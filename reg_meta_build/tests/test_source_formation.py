@@ -31,7 +31,7 @@ from reg_meta_build.source_coordinates import (
     native_variable_key,
     native_variant_key,
 )
-from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
+from reg_meta_build.source_effects import apply_occurrence_cases
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import (
     AppliedCorrection,
@@ -544,6 +544,32 @@ def test_canonical_text_conflict_preserves_states_and_withholds_only_that_fact()
     ]
 
 
+@pytest.mark.parametrize(
+    "field", ["name", "definition", "description", "measurement_unit"]
+)
+def test_variable_grain_canonical_conflict_fields_are_unchanged(field: str) -> None:
+    first = _record(2020)
+    second = _record(2021)
+    first = first.model_copy(
+        update={
+            "fields": first.fields.model_copy(update={field: value_field("First text")})
+        }
+    )
+    second = second.model_copy(
+        update={
+            "fields": second.fields.model_copy(
+                update={field: value_field("Conflicting text")}
+            )
+        }
+    )
+    result = _form((first, second))
+    assert [
+        (d.fields, d.withheld_output)
+        for d in result.diagnostics
+        if d.code == "conflicting_variable_fact"
+    ] == [((field,), (f"variable.{field}",))]
+
+
 def test_state_grain_texts_vary_by_period_without_a_variable_fact_conflict(
     tmp_path: Path,
 ) -> None:
@@ -636,7 +662,7 @@ def test_stable_state_grain_texts_still_summarize_the_variable() -> None:
 
 
 @pytest.mark.parametrize("field", ["operational_definition", "source_attribution"])
-def test_competing_same_period_texts_still_withhold_that_occurrence_fact(
+def test_competing_same_period_texts_resolve_to_unknown_without_diagnostic(
     field: str,
 ) -> None:
     def competing(text: str, row: str) -> SourceRecord:
@@ -650,17 +676,7 @@ def test_competing_same_period_texts_still_withhold_that_occurrence_fact(
     first, second = competing("First text", ""), competing("Second text", "b")
     result = _form((first, second))
     assert result.variable is not None
-    assert [
-        (d.code, d.fields, d.valid_from, d.valid_to, d.refs) for d in result.diagnostics
-    ] == [
-        (
-            "conflicting_occurrence_facts",
-            (field,),
-            "2020-01-01",
-            "2020-12-31",
-            (record_ref(first), record_ref(second)),
-        )
-    ]
+    assert result.diagnostics == ()
     assert [
         (state.operational_definition, state.source_register_text)
         for state in result.variable.states

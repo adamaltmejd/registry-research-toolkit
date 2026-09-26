@@ -171,6 +171,12 @@ _POOLED_MERGE_FIELDS = (
     "availability",
 )
 
+# These state-grain texts can drift between overlapping source editions without
+# establishing a conflicting occurrence fact. Reconciliation still marks them unknown.
+_ABSORBED_OCCURRENCE_CONFLICT_FIELDS = frozenset(
+    {"source_attribution", "operational_definition"}
+)
+
 
 def _ordered_union[T](first: tuple[T, ...], second: tuple[T, ...]) -> tuple[T, ...]:
     """Set-union preserving order: every contributor appears exactly once."""
@@ -418,17 +424,22 @@ def resolve_occurrence_intervals(
                         ("column_segment",),
                     )
                 )
-            if conflicts:
+            diagnostic_conflicts = tuple(
+                name
+                for name in conflicts
+                if name not in _ABSORBED_OCCURRENCE_CONFLICT_FIELDS
+            )
+            if diagnostic_conflicts:
                 issues.append(
                     OccurrenceIssue(
                         "conflicting_occurrence_facts",
-                        conflicts,
+                        diagnostic_conflicts,
                         occurrences,
                         lower,
                         upper,
                         ("column_segment",)
-                        if "availability" in conflicts
-                        else conflicts,
+                        if "availability" in diagnostic_conflicts
+                        else diagnostic_conflicts,
                     )
                 )
             availability = fields.availability

@@ -29,6 +29,8 @@ def _record(
     column: str | None = "Column",
     column_negative: bool = False,
     data_type: str | None = "integer",
+    operational_definition: str | None = None,
+    source_attribution: str | None = None,
     negative: bool = False,
     scope: TemporalScope | None = None,
     population: SourceCoordinate | None = None,
@@ -79,6 +81,12 @@ def _record(
             if data_type
             else SourceField(status="unknown"),
             definition=value_field("Common definition"),
+            operational_definition=value_field(operational_definition)
+            if operational_definition
+            else None,
+            source_attribution=value_field(source_attribution)
+            if source_attribution
+            else None,
         ),
     )
 
@@ -112,6 +120,45 @@ def test_conflicting_field_is_unknown_only_on_exact_intersection() -> None:
     assert all(
         s.fields.definition == SourceField(status="value", value="Common definition")
         for s in result.segments
+    )
+
+
+@pytest.mark.parametrize("field", ["source_attribution", "operational_definition"])
+def test_descriptive_text_disagreement_is_unknown_without_occurrence_issue(
+    field: str,
+) -> None:
+    first = _record(1, **{field: "First text"})
+    second = _record(2, **{field: "Second text"})
+    result = resolve_occurrence_intervals((first, second))
+    assert result.issues == result.unsupported_occurrences == ()
+    assert len(result.segments) == 1
+    segment = result.segments[0]
+    assert getattr(segment.fields, field) == SourceField(status="unknown")
+    assert segment.occurrences == (first, second)
+
+
+def test_data_type_conflict_still_reports_when_source_attribution_also_differs() -> (
+    None
+):
+    first = _record(1, source_attribution="Fråga 1")
+    second = _record(2, data_type="text", source_attribution="Fråga 2")
+    result = resolve_occurrence_intervals((first, second))
+    assert len(result.segments) == 1
+    segment = result.segments[0]
+    assert segment.fields.data_type == SourceField(status="unknown")
+    assert segment.fields.source_attribution == SourceField(status="unknown")
+    assert [(issue.code, issue.fields, issue.withheld) for issue in result.issues] == [
+        ("conflicting_occurrence_facts", ("data_type",), ("data_type",))
+    ]
+
+
+def test_unanimous_source_attribution_resolves_normally() -> None:
+    first = _record(1, source_attribution="Fråga 1")
+    second = _record(2, source_attribution="Fråga 1")
+    result = resolve_occurrence_intervals((first, second))
+    assert result.issues == result.unsupported_occurrences == ()
+    assert result.segments[0].fields.source_attribution == SourceField(
+        status="value", value="Fråga 1"
     )
 
 
