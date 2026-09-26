@@ -63,7 +63,7 @@ def test_aliases_and_family_members_are_strict_curated_data(tmp_path: Path) -> N
         A=_book("A", "a", extra='aliases = ["Source A"]\n'),
         B=_book("B", "b"),
     )
-    (tmp_path / "classifications" / "_families.toml").write_text(
+    (tmp_path / "classification_families.toml").write_text(
         '[[family]]\nkey = "pair"\nmembers = ["a", "b"]\naliases = ["Source family"]\n',
         encoding="utf-8",
     )
@@ -74,7 +74,7 @@ def test_aliases_and_family_members_are_strict_curated_data(tmp_path: Path) -> N
 
 def test_unknown_family_member_fails(tmp_path: Path) -> None:
     _write(tmp_path, A=_book("A", "a"))
-    (tmp_path / "classifications" / "_families.toml").write_text(
+    (tmp_path / "classification_families.toml").write_text(
         '[[family]]\nkey = "pair"\nmembers = ["a", "missing"]\n'
         'aliases = ["Source family"]\n',
         encoding="utf-8",

@@ -3,7 +3,7 @@
 ``classifications/<short_name>.toml`` holds one classification: its metadata and
 sentinels in ``[classification]``, and in ``[binding]`` the value-set labels behind
 the label binding rule plus the curated ``[[binding.variable]]`` bindings.
-``classifications/_families.toml`` groups edition slugs behind exact family aliases.
+``classification_families.toml`` groups edition slugs behind exact family aliases.
 ``registers/<provider>/<slug>.toml`` (or one family directory below the provider)
 owns register-scoped declarations. ``classification_groups.toml``,
 ``relations.toml``, ``tags.toml`` and ``lineage.toml`` stay at the root as global
@@ -780,8 +780,6 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
                 f"{file} is not a classification TOML file.",
                 "Keep only <short_name>.toml files in curation/classifications/.",
             )
-        if path.name == "_families.toml":
-            continue
         entry = _load_classification(path, file)
         claims = [
             ("slug", entry.classification.slug),
@@ -805,10 +803,10 @@ def load_classification_families(
     root: Path, classifications: tuple[CuratedClassification, ...]
 ) -> ClassificationFamilies:
     """Read exact family references and validate their curated member slugs."""
-    path = root / CLASSIFICATIONS_DIR / "_families.toml"
+    path = root / "classification_families.toml"
     if not path.is_file():
         return ClassificationFamilies()
-    file = f"{CLASSIFICATIONS_DIR}/_families.toml"
+    file = "classification_families.toml"
     try:
         data = tomllib.loads(path.read_text(encoding="utf-8"))
         families = ClassificationFamilies.model_validate(data)
