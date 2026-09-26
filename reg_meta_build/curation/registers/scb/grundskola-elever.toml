@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "grundskola-elever"
 native_id = "193"
+steward_table_prefixes = ["Grund_Fkl_Fth_"]
 
 # SWECOV existing-register holdings for scb/grundskola-elever use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in

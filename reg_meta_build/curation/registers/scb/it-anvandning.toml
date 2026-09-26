@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "it-anvandning"
 native_id = "258"
+steward_table_prefixes = ["ITftg_"]
 
 # scb/it-anvandning [[errata.delivered]] candidates were computed 2026-09-12
 # against SCB's raw Registerinformation export; folded duplicate columns

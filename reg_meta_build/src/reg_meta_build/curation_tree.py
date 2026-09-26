@@ -152,11 +152,26 @@ class RegisterIdentity(_CurationModel):
     slug: str
     native_id: str | None = None
     name: str | None = None
+    steward_table_prefixes: tuple[str, ...] = ()
 
     _provider = field_validator("provider")(_require_trimmed)
     _slug = field_validator("slug")(_require_trimmed)
     _native_id = field_validator("native_id")(_require_trimmed)
     _name = field_validator("name")(_require_trimmed)
+
+    @field_validator("steward_table_prefixes", mode="before")
+    @classmethod
+    def _prefix_list(cls, value: object) -> object:
+        return tuple(value) if isinstance(value, list) else value
+
+    @field_validator("steward_table_prefixes")
+    @classmethod
+    def _literal_prefixes(cls, value: tuple[str, ...]) -> tuple[str, ...]:
+        if any(not prefix or prefix != prefix.strip() for prefix in value):
+            raise ValueError("steward table prefixes must be non-empty literal names")
+        if len(value) != len(set(value)):
+            raise ValueError("steward table prefixes must be unique")
+        return value
 
     @field_validator("slug")
     @classmethod

@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "hreg"
 native_id = "47"
+steward_table_prefixes = ["Hreg_Examina", "Hreg_Reg"]
 
 # Y-113..Y-120 HREG evidence comes from the SWECOV inventory and SCB's
 # 2026-03-09 Registerinformation export. KursOrt, ProgOrt and YProg are excluded:

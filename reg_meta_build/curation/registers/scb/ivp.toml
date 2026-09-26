@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "ivp"
 native_id = "135"
+steward_table_prefixes = ["IVP_"]
 
 # SWECOV existing-register holdings for scb/ivp use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in

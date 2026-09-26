@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "aku"
 native_id = "122"
+steward_table_prefixes = ["AKU_"]
 
 [[errata.delivered]]
 variant = "aku-april-2005-dec-2020"

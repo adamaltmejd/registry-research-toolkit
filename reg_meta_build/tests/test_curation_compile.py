@@ -1096,7 +1096,11 @@ def _errata_fixture(tmp_path: Path, records: tuple[SourceRecord, ...], fragment:
     reader = SimpleNamespace(
         iter_register_slices=lambda source, registers: iter(((native, records),))
     )
-    return load_curation_tree(root), cast("Any", SimpleNamespace(records=reader)), scope
+    return (
+        load_curation_tree(root),
+        cast("Any", SimpleNamespace(records=reader, iter_evidence=lambda: iter(()))),
+        scope,
+    )
 
 
 _DELIVERED = (
@@ -1272,8 +1276,8 @@ def test_compiled_errata_column_placements_and_declared_flags(
     assert isinstance(addition, CuratedOccurrenceAddition)
     assert addition.edition_scope.kind == kind
     assert (addition.edition_key is not None) == (edition_name is not None)
-    assert addition.fields.identifier is None
-    assert addition.fields.sensitivity is None
+    assert addition.fields.identifier == value_field(False)
+    assert addition.fields.sensitivity == value_field(False)
     assert keys[key][0][1] == "NewCol"
     assert naming[key][0].naming.source_id == "1.NewCol"
     assert (

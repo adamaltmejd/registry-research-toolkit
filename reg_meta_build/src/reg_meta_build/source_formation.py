@@ -675,9 +675,23 @@ def form_native_variable(
                 states.extend(new_states)
                 diagnostics.extend(new_issues)
                 if new_states and _text(segment.fields, "data_type") is None:
+                    storage_details = sorted(
+                        {
+                            line
+                            for occurrence in segment.effective_occurrences
+                            for correction in occurrence.corrections
+                            for line in correction.provenance.splitlines()
+                            if line.startswith("SWECOV storage ")
+                        }
+                    )
                     issue(
                         "unknown_data_type",
-                        "The occurrence has no unambiguous documented data type.",
+                        (
+                            "The occurrence has no unambiguous data type. "
+                            + "; ".join(storage_details)
+                            if storage_details
+                            else "The occurrence has no unambiguous documented data type."
+                        ),
                         ("data_type",),
                         ("state.data_type",),
                         segment.occurrences,

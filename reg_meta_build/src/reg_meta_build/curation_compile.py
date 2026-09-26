@@ -27,6 +27,7 @@ from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import EnrichmentAliasEntry, EnrichmentDescriptionEntry
 from .fqid_slugs import SlugEntry, freeze_state, load_freeze_states
 from .normalization import normalize_token
+from .prepared_catalog import ReferenceEvidence
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
 from .resolved_metadata import (
     ResolvedClassificationDerivation,
@@ -105,7 +106,12 @@ from .source_records import (
     TemporalScope,
     canonical_sha256,
 )
+from .source_reference_records import SourceColumnTypeDeclaration
 from .source_value_bindings import bind_code_lists, open_value_bindings
+from .sources.swecov_column_types import (
+    SWECOV_COLUMN_TYPES_PATH,
+    index_swecov_column_types,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -2836,6 +2842,13 @@ def compile_errata(
 
     if not loaded:
         return {}, {}, {}, (), {}
+    storage_columns = index_swecov_column_types(
+        item.declaration
+        for item in prepared.iter_evidence()
+        if isinstance(item, ReferenceEvidence)
+        and isinstance(item.declaration, SourceColumnTypeDeclaration)
+        and item.declaration.revision.artifact_path == SWECOV_COLUMN_TYPES_PATH
+    )
     partition_members = _partition_memberships(partition_cases)
     locations: dict[int, list[tuple[Any, tuple[str | int, ...]]]] = defaultdict(list)
     for scope in scopes:
@@ -2873,6 +2886,11 @@ def compile_errata(
         register_id = int(native_id)
         name = f"scb/{register.register_info.slug}"
         statuses = _family_status(report, name)
+        register_storage_columns = {
+            key: declaration
+            for key, declaration in storage_columns.items()
+            if key[0].startswith(register.register_info.steward_table_prefixes)
+        }
         accepted_names = {
             item.entry.source_id: item
             for item, _ in reversed(_register_naming_entries(tree, register))
@@ -2986,6 +3004,8 @@ def compile_errata(
                         editions=editions,
                         declared_flags=frozenset(row.model_fields_set)
                         & {"is_identifier", "is_sensitive"},
+                        steward_table_prefixes=register.register_info.steward_table_prefixes,
+                        storage_columns=register_storage_columns,
                     )
                     blockers, converted = result.blockers, result.case
                 if converted is None:

@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "fou"
 native_id = "182"
+steward_table_prefixes = ["FTG_FOU_"]
 
 # scb/fou [[errata.delivered]] candidates were computed 2026-09-12 against
 # SCB's raw Registerinformation export; folded duplicate columns are merged

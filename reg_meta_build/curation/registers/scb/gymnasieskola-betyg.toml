@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "gymnasieskola-betyg"
 native_id = "102"
+steward_table_prefixes = ["GymnasieskolaAvg_Individ_"]
 
 # SWECOV existing-register holdings for scb/gymnasieskola-betyg use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in

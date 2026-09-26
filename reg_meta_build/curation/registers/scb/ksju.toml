@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "ksju"
 native_id = "195"
+steward_table_prefixes = ["KSju_"]
 
 # SWECOV existing-register holdings for scb/ksju use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in

@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "fdb"
 native_id = "1"
+steward_table_prefixes = ["FDB_AE_"]
 
 # SWECOV existing-register holdings for scb/fdb use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in

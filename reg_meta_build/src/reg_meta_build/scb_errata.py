@@ -49,6 +49,7 @@ from .source_records import (
     canonical_sha256,
     value_field,
 )
+from .sources.swecov_column_types import infer_steward_column_type
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -58,6 +59,7 @@ if TYPE_CHECKING:
     from .source_coordinates import NativeKey
     from .source_curation import OccurrenceEffect, SourceRecordRef
     from .source_records import SourceRecord
+    from .source_reference_records import SourceColumnTypeDeclaration
 
 _FILE_NAME = "curation/registers/scb/<slug>.toml"
 _CODE = "scb_errata_invalid"
@@ -993,8 +995,10 @@ def convert_column_entry(
     records: tuple[SourceRecord, ...],
     editions: tuple[ErrataEditionBinding, ...],
     declared_flags: frozenset[str],
+    steward_table_prefixes: tuple[str, ...] = (),
+    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> ErrataConversion:
-    """Retain supplied column facts without legacy flags or coverage defaults.
+    """Retain supplied facts; infer only uncurated steward-held storage types.
 
     The old ``all_versions`` interpretation of undated holdings supplies no annual
     evidence. Retain one undated occurrence, not a claim for each existing edition.
@@ -1002,7 +1006,8 @@ def convert_column_entry(
     pooled-range occurrence over the whole range — the delivery list says the
     column is held somewhere inside it, never that it exists in every wave.
     ``declared_flags`` names the keys actually present in the original TOML, since
-    the legacy loader has already replaced omitted flags with false.
+    the legacy loader has already replaced omitted flags with false. Steward-held
+    columns use false for missing flags; curated values still win.
     Classification references remain declarations for common binding; canonical
     code memberships are never copied into these occurrences.
     """
@@ -1055,20 +1060,41 @@ def convert_column_entry(
     variant = native_variant_key(records[0])
     assert register is not None and variant is not None
     variable = (*register, "declared-column", fold_column(entry.column))
+    inferred_type = None
+    storage_evidence = None
+    if (
+        entry.source == "steward-holdings"
+        and entry.data_type is None
+        and storage_columns
+    ):
+        inferred_type, storage_evidence = infer_steward_column_type(
+            entry.column, steward_table_prefixes, storage_columns
+        )
+    provenance = (
+        f"{entry.provenance}\n{storage_evidence}"
+        if storage_evidence is not None
+        else entry.provenance
+    )
     fields = SourceFields(
         availability=value_field(True),
         column_name=value_field(entry.column),
         name=value_field(normalize_text(entry.name)),
         description=value_field(normalize_text(entry.definition, multiline=True)),
-        data_type=value_field(entry.data_type) if entry.data_type is not None else None,
+        data_type=(
+            value_field(entry.data_type)
+            if entry.data_type is not None
+            else value_field(inferred_type)
+            if inferred_type is not None
+            else None
+        ),
         classification_declared=value_field(entry.classification)
         if entry.classification is not None
         else None,
         identifier=value_field(entry.is_identifier)
-        if "is_identifier" in declared_flags
+        if "is_identifier" in declared_flags or entry.source == "steward-holdings"
         else None,
         sensitivity=value_field(entry.is_sensitive)
-        if "is_sensitive" in declared_flags
+        if "is_sensitive" in declared_flags or entry.source == "steward-holdings"
         else None,
     )
     effects: tuple[OccurrenceEffect, ...] = tuple(
@@ -1130,8 +1156,8 @@ def convert_column_entry(
         decision=OccurrenceCorrectionDecision(
             reviewed=True,
             effects=effects,
-            reason=entry.provenance,
-            provenance=entry.provenance,
+            reason=provenance,
+            provenance=provenance,
         ),
     )
     return ErrataConversion(case, (), ())

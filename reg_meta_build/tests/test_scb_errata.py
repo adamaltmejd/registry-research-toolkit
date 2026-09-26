@@ -177,6 +177,14 @@ class TestDeliveredEntry:
 
 
 class TestColumnEntry:
+    def test_curated_identifier_is_retained(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        (entry,) = _load(
+            tmp_path, slug_dir, _toml(source='"steward-holdings"', is_identifier="true")
+        ).columns
+        assert entry.is_identifier is True
+
     def test_absent_file_is_empty(self, slug_dir: Path) -> None:
         errata = load_scb_errata(None, slug_dir)
         assert not errata

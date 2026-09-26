@@ -2598,6 +2598,7 @@ def _classification_csvs(catalog: Path) -> list[Path]:
 _FIXED_CATALOG_SOURCES = (
     "SCB/Tabelldefinitioner.sql",
     "SCB/ID-kolumner.xlsx",
+    "swecov/derived/swecov_column_types.csv",
     "scb_canonical/scb_canonical.toml",
     *(f"{directory}/{provider}.toml" for provider, directory in _CURATED_PROVIDERS),
 )
@@ -2769,6 +2770,7 @@ def _validate_bundle_contract(root: Path) -> None:
         read_scb_join_keys,
     )
     from .sources.sos import parse_directory
+    from .sources.swecov_column_types import read_swecov_column_types
 
     catalog = root / "catalog"
     for path in _classification_csvs(catalog):
@@ -2804,6 +2806,12 @@ def _validate_bundle_contract(root: Path) -> None:
     xlsx_path = scb / "ID-kolumner.xlsx"
     if xlsx_path.is_file():
         read_scb_join_keys(xlsx_path, _bundle_source_revision(xlsx_path, root))
+
+    swecov_path = catalog / "swecov/derived/swecov_column_types.csv"
+    if swecov_path.is_file():
+        read_swecov_column_types(
+            swecov_path, _bundle_source_revision(swecov_path, root)
+        )
 
     manifest_path = root / BUNDLE_MANIFEST_NAME
     if manifest_path.is_file():
