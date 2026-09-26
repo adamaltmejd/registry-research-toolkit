@@ -7,6 +7,7 @@ deldatamängd, group same-name rows, choose a code list, or assign catalog ident
 from __future__ import annotations
 
 import re
+from collections import Counter
 from dataclasses import dataclass, replace
 from datetime import date, datetime
 from types import MappingProxyType
@@ -459,6 +460,7 @@ def _metadata_record(
     *,
     kind: str,
     language: Literal["sv", "en"] | None = None,
+    duplicate_subsets: frozenset[str] = frozenset(),
 ) -> SourceRecord:
     register_name = _register_name(register)
     subset = _cell(evidence, "name") if kind == "subsets" else None
@@ -467,10 +469,26 @@ def _metadata_record(
         if subset and subset.display_value
         else None
     )
+    subset_label = _text_field(_cell(evidence, "label"))
+    if subset_name in duplicate_subsets:
+        if (
+            subset_label is None
+            or subset_label.status != "value"
+            or not isinstance(subset_label.value, str)
+        ):
+            raise ValueError(
+                f"SOS subset {subset_name!r} has repeated names without a label"
+            )
+        variant_name = f"{subset_name} / {subset_label.value}"
+        label_key = (f"subset-label:{subset_label.value}",)
+    else:
+        variant_name = subset_name
+        label_key = ()
     semantic_key = (
         f"register:{register_name or '<unknown>'}",
         f"metadata:{kind}",
         f"subset:{subset_name or '<not applicable>'}",
+        *label_key,
         f"fields:{','.join(sorted(fields))}",
         f"language:{language or '<not declared>'}",
     )
@@ -480,8 +498,8 @@ def _metadata_record(
         else SourceCoordinate(status="unknown")
     )
     variant_coordinate = (
-        SourceCoordinate(status="value", name=subset_name)
-        if subset_name
+        SourceCoordinate(status="value", name=variant_name)
+        if variant_name
         else SourceCoordinate(
             status="unknown" if kind == "subsets" else "not_applicable"
         )
@@ -539,6 +557,18 @@ def iter_sos_metadata_records(
             else "name"
         ),
     }
+    subset_names = [
+        normalize_token(cell.display_value)
+        for sheet in register.source_sheets
+        if sheet.kind == "subsets"
+        for row in sheet.rows
+        if row.role == "subset"
+        for cell in row.source_evidence.cells
+        if cell.field_name == "name" and cell.display_value
+    ]
+    duplicate_subsets = frozenset(
+        name for name, count in Counter(subset_names).items() if count > 1
+    )
     for sheet in register.source_sheets:
         if sheet.kind not in {"general", "dcat", "subsets"}:
             continue
@@ -594,6 +624,7 @@ def iter_sos_metadata_records(
                         fields,
                         tuple(field_cells),
                         kind=sheet.kind,
+                        duplicate_subsets=duplicate_subsets,
                     )
 
 
