@@ -502,8 +502,8 @@ def form_native_variable(
     canonical, conflicts = reconcile_source_fields(effective)
     # operational_definition and source_attribution are state-grain, so varying
     # texts are no variable-level conflict; their summary below stays populated
-    # only while reconciliation yields one stable value, and contradictions on
-    # one overlapping column period remain conflicting_occurrence_facts.
+    # only while reconciliation yields one stable value. Occurrence reconciliation
+    # also absorbs disagreements in these two fields while retaining provenance.
     canonical_fields = {
         "name",
         "definition",
