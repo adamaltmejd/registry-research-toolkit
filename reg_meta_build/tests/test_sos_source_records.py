@@ -927,25 +927,100 @@ def test_lova_repeated_subset_token_keys_labels_separately(tmp_path: Path) -> No
     )
 
 
-@pytest.mark.parametrize("code", ["PAR", "MFR", "DORS"])
-def test_unique_subset_token_keeps_existing_record_key(
-    tmp_path: Path, code: str
+@pytest.mark.parametrize(
+    ("code", "register_name", "sheet_name", "headers", "rows", "fields"),
+    [
+        (
+            "PAR",
+            "Patientregistret",
+            "Deldatamängder och datavyer",
+            ("Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"),
+            (("PAR_OV", "Öppenvård", 2001, 2020), ("PAR_SV", "Slutenvård", 1987, 2020)),
+            "coverage_from,coverage_to,name",
+        ),
+        (
+            "MFR",
+            "Medicinska födelseregistret",
+            "Deldatamängder",
+            (
+                "Deldatamängdsnamn",
+                "Deldatamängdsetikett",
+                "Deldatamängdsbeskrivning",
+                "Aggregeringsnivå",
+            ),
+            (("MFR_BARN", "Barn", "Uppgifter om barn", "Individ"),),
+            "aggregation_level,description,name",
+        ),
+        (
+            "DORS",
+            "Dödsorsaksregistret",
+            "Deldatamängder och datavyer",
+            ("Deldatamängdsetikett", "Deldatamängdsnamn", "Uppdateringsfrekvens"),
+            (
+                ("Dödsorsaker", "DORS", "Årligen"),
+                ("Covid-19 Hermes", "COV_DORS_HERMES", "Månadsvis"),
+            ),
+            "name,update_frequency",
+        ),
+    ],
+)
+def test_other_sos_workbooks_keep_token_only_subset_keys(
+    tmp_path: Path,
+    code: str,
+    register_name: str,
+    sheet_name: str,
+    headers: tuple[str, ...],
+    rows: tuple[tuple[str | int, ...], ...],
+    fields: str,
 ) -> None:
+    import openpyxl
+
     path = tmp_path / f"Metadata {code} ({code}).xlsx"
-    _write_complete_workbook(path)
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Generell information"]["C2"] = register_name
+    subsets = workbook.create_sheet(sheet_name)
+    subsets.append(headers)
+    for row in rows:
+        subsets.append(row)
+    workbook.save(path)
+    workbook.close()
+
     records = clean_sos_source(parse_register_file(path), _revision(path)).records
-    parent = next(
+    parents = [
         record
         for record in records
         if any(fact.kind == "variant" for fact in record.parent_facts)
-    )
-    assert record_ref(parent).semantic_record_key == (
-        "register:Patientregistret källa",
-        "metadata:subsets",
-        "subset:PAR_OV",
-        "fields:coverage_from,coverage_to,name",
-        "language:<not declared>",
-    )
+    ]
+    name_index = headers.index("Deldatamängdsnamn")
+    tokens = tuple(str(row[name_index]) for row in rows)
+    assert len(parents) == len(tokens)
+    assert {record_ref(parent).semantic_record_key for parent in parents} == {
+        (
+            f"register:{register_name}",
+            "metadata:subsets",
+            f"subset:{token}",
+            f"fields:{fields}",
+            "language:<not declared>",
+        )
+        for token in tokens
+    }
+    assert {
+        native_parent_key(parent.source, "sos", parent.parent_facts[0])
+        for parent in parents
+    } == {
+        (
+            "sos-metadata",
+            "sos",
+            "register",
+            "name",
+            register_name,
+            "variant",
+            "name",
+            token,
+        )
+        for token in tokens
+    }
 
 
 def test_styrtabell_parent_keeps_both_lookup_signals(tmp_path: Path) -> None:
