@@ -388,7 +388,10 @@ class ValueBindingSession:
                     tuple(members),
                     version_label=descriptor.version,
                 )
-                if declared_identifier and has_unknown_code_membership(claim):
+                if declared_identifier and (
+                    ("unknown_code_validity", descriptor_key) in issues
+                    or has_unknown_code_membership(claim)
+                ):
                     claim_id = None
                     issues.pop(("unknown_code_validity", descriptor_key), None)
                 else:

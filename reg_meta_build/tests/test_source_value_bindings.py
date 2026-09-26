@@ -47,7 +47,7 @@ from reg_meta_build.source_values import (
     SourceValueWindow,
 )
 
-from reg_meta_build import prepared_values
+from reg_meta_build import prepared_values, source_value_bindings
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -555,6 +555,28 @@ def test_declared_identifier_drops_unknown_membership(
         bound = bind_code_lists(_record(identifier=value_field(True)), sessions)
     assert bound.claims == bound.issues == ()
     assert bound.bindings[0].claim_id is None
+
+
+def test_declared_identifier_drops_validity_error_with_complete_membership(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = _prepare(tmp_path / "values", join=_join())
+    monkeypatch.setattr(
+        source_value_bindings,
+        "_member_scope",
+        lambda *_args, **_kwargs: (
+            TemporalScope(kind="year_independent"),
+            "unknown_code_validity",
+        ),
+    )
+    with open_value_bindings((source,)) as sessions:
+        declared = bind_code_lists(_record(identifier=value_field(True)), sessions)
+        undeclared = bind_code_lists(_record(identifier=value_field(False)), sessions)
+    assert declared.claims == declared.issues == ()
+    assert declared.bindings[0].claim_id is None
+    assert len(undeclared.claims) == 1
+    assert [issue.code for issue in undeclared.issues] == ["unknown_code_validity"]
+    assert resolve_code_membership(undeclared.claims).issues == ()
 
 
 def test_mixed_identifier_declarations_affect_only_their_own_records(
