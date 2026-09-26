@@ -9,7 +9,14 @@ from reg_meta_build.source_curation import SourceRecordRef
 from test_catalog_dependencies import _variable
 
 
-def fixture(*, same_as=True, duplicate_name=False, second_variant=False):
+def fixture(
+    *,
+    same_as=True,
+    duplicate_name=False,
+    shared_abbreviation=False,
+    second_variant=False,
+    source_label="Original register (ORIG) : People",
+):
     consumer = _variable(ResolvedVariant(slug="people", name="People"))
     origin = ResolvedRegister(
         provider="scb", slug="origin", name="Original register (ORIG)"
@@ -17,11 +24,9 @@ def fixture(*, same_as=True, duplicate_name=False, second_variant=False):
     source = consumer.model_copy(update={"register_ref": origin})
     consumer = consumer.model_copy(
         update={
-            "source_register_text": "Original register (ORIG) : People",
+            "source_register_text": source_label,
             "states": tuple(
-                s.model_copy(
-                    update={"source_register_text": "Original register (ORIG) : People"}
-                )
+                s.model_copy(update={"source_register_text": source_label})
                 for s in consumer.states
             ),
         }
@@ -40,6 +45,12 @@ def fixture(*, same_as=True, duplicate_name=False, second_variant=False):
     registers = (consumer.register_ref, origin)
     if duplicate_name:
         registers += (origin.model_copy(update={"slug": "duplicate"}),)
+    if shared_abbreviation:
+        registers += (
+            origin.model_copy(
+                update={"slug": "other", "name": "Other register (ORIG)"}
+            ),
+        )
     metadata = ResolvedMetadata(
         variable_same_as=(
             ResolvedVariableSameAs(a="scb/example/value", b="scb/origin/value"),
@@ -91,6 +102,36 @@ def test_ambiguous_register_label_does_not_pick_input_order():
     assert not result.metadata.state_lineage
     assert result.diagnostics[0].code == "ambiguous_source_register"
     assert result.diagnostics[0].severity == "error"
+
+
+@pytest.mark.parametrize(
+    "source_label",
+    ("Original register (ORIG)", "Original register (ORIG) : People"),
+)
+def test_specific_register_name_wins_over_shared_abbreviation(source_label):
+    variables, options = fixture(shared_abbreviation=True, source_label=source_label)
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.diagnostics
+    assert result.variables[0].source_register.slug == "origin"
+    assert len(result.metadata.state_lineage) == 1
+
+
+def test_abbreviation_resolves_when_full_name_and_prefix_do_not_match():
+    variables, options = fixture(source_label="External source (ORIG) : People")
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.diagnostics
+    assert result.variables[0].source_register.slug == "origin"
+    assert len(result.metadata.state_lineage) == 1
+
+
+def test_unknown_source_label_remains_unresolved():
+    source_label = "External source (MISSING) : People"
+    variables, options = fixture(source_label=source_label)
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.diagnostics
+    assert result.variables[0].source_register is None
+    assert result.variables[0].source_label == source_label
+    assert not result.metadata.state_lineage
 
 
 def test_variant_default_resolves_ambiguity_and_unused_dangling_pin_fails():

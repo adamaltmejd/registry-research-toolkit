@@ -139,12 +139,15 @@ def resolve_catalog_lineage(
         ):
             provider = variable.register_ref.provider
             candidates = set(names.get((provider, text.casefold()), ()))
-            prefix = text.split(" : ", 1)[0].strip().casefold()
-            candidates.update(names.get((provider, prefix), ()))
-            if match := re.search(r"\(([^)]+)\)", text):
-                token = match[1].strip().casefold()
-                candidates.update(abbreviations.get((provider, token), ()))
-                candidates.update(names.get((provider, token), ()))
+            if len(candidates) != 1:
+                prefix = text.split(" : ", 1)[0].strip().casefold()
+                prefix_candidates = set(names.get((provider, prefix), ()))
+                if len(prefix_candidates) == 1 or not candidates:
+                    candidates = prefix_candidates
+                if not candidates and (match := re.search(r"\(([^)]+)\)", text)):
+                    token = match[1].strip().casefold()
+                    candidates.update(abbreviations.get((provider, token), ()))
+                    candidates.update(names.get((provider, token), ()))
             only = next(iter(candidates)) if len(candidates) == 1 else None
             matches[text] = by_register.get(only) if only else None
             if ("register", only) in unselected:
