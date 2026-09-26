@@ -109,23 +109,16 @@ def _source_bindings(
                     raise ValueError(
                         "classification family has an unconverted codebook"
                     )
-                covering = [
-                    member
-                    for member in members
+                covering = []
+                for member in members:
+                    book = classifications[member]
+                    valid_from, valid_to = book.valid_from, book.valid_to
                     if all(
-                        (
-                            classifications[member].valid_from is None
-                            or date.fromordinal(lo).year
-                            >= classifications[member].valid_from
-                        )
-                        and (
-                            classifications[member].valid_to is None
-                            or date.fromordinal(hi).year
-                            <= classifications[member].valid_to
-                        )
+                        (valid_from is None or date.fromordinal(lo).year >= valid_from)
+                        and (valid_to is None or date.fromordinal(hi).year <= valid_to)
                         for lo, hi in bounds
-                    )
-                ]
+                    ):
+                        covering.append(member)
                 if len(covering) == 1:
                     slug = covering[0]
             if slug is None:
