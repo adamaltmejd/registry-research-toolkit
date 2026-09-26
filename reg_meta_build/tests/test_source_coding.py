@@ -10,6 +10,7 @@ from reg_meta_build.source_coding import (
     CodeMembershipClaim,
     coding_content_sha256,
     coding_observation_fingerprints,
+    has_unknown_code_membership,
     resolve_code_membership,
 )
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
@@ -189,6 +190,18 @@ def test_missing_code_or_label_withholds_complete_list_only_where_member_applies
         "2020-05-01",
         "2020-05-02",
     )
+
+
+def test_unknown_membership_check_matches_missing_values_and_scopes() -> None:
+    assert has_unknown_code_membership(_claim("missing-code", _member(None)))
+    assert has_unknown_code_membership(_claim("missing-label", _member("1", None)))
+    assert has_unknown_code_membership(
+        _claim(
+            "unknown-scope",
+            _member("1", scope=TemporalScope(kind="unknown", label="undated")),
+        )
+    )
+    assert not has_unknown_code_membership(_claim("clean", _member("1")))
 
 
 @pytest.mark.parametrize("kind", ["unknown", "pooled"])

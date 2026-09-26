@@ -15,7 +15,11 @@ from datetime import date
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-from reg_meta_build.source_coding import CodeListClaim, CodeMembershipClaim
+from reg_meta_build.source_coding import (
+    CodeListClaim,
+    CodeMembershipClaim,
+    has_unknown_code_membership,
+)
 from reg_meta_build.source_curation import (
     CuratedOccurrenceAddition,
     CurationCase,
@@ -164,7 +168,7 @@ class ValueBindingSession:
         self.session = session
         self.source = session.source.manifest.revision.dataset
         self.join = session.source.manifest.join
-        self._last_native_key: tuple[str, int, TemporalScope] | None = None
+        self._last_native_key: tuple[str, int, TemporalScope, bool] | None = None
         self._last_native_result: ValueBindingResult | None = None
         # Native stores have thousands of descriptors but need none until selected.
         # Named-list stores have finite declared dictionaries; rows remain indexed.
@@ -223,6 +227,12 @@ class ValueBindingSession:
             scope = record.edition_period_scope
             if scope.kind == "not_applicable":
                 scope = record.edition_scope
+        identifier = record.fields.identifier
+        declared_identifier = (
+            identifier is not None
+            and identifier.status == "value"
+            and identifier.value is True
+        )
         groups: dict[str, list[SourceValueAssociation]] = defaultdict(list)
         # Group as evidence arrives: repeated validity errors need one shared
         # context, while every physical association locator remains ordered.
@@ -242,7 +252,7 @@ class ValueBindingSession:
                         ),
                     ),
                 )
-            native_key = (record.source, member, scope)
+            native_key = (record.source, member, scope, declared_identifier)
             if native_key == self._last_native_key:
                 cached = self._last_native_result
                 assert cached is not None
@@ -372,14 +382,17 @@ class ValueBindingSession:
                     )
                 )
             if len(non_membership) != len(associations):
-                claims.append(
-                    CodeListClaim(
-                        claim_id,
-                        scope,
-                        tuple(members),
-                        version_label=descriptor.version,
-                    )
+                claim = CodeListClaim(
+                    claim_id,
+                    scope,
+                    tuple(members),
+                    version_label=descriptor.version,
                 )
+                if declared_identifier and has_unknown_code_membership(claim):
+                    claim_id = None
+                    issues.pop(("unknown_code_validity", descriptor_key), None)
+                else:
+                    claims.append(claim)
             else:
                 claim_id = None
             bindings.append(

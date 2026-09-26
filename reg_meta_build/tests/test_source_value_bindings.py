@@ -23,6 +23,7 @@ from reg_meta_build.source_records import (
     RecordLocator,
     ScopeInterval,
     SourceCoordinate,
+    SourceField,
     SourceFields,
     SourceRecord,
     SourceRevision,
@@ -70,6 +71,7 @@ def _record(
     member: int | str = 1001,
     declared: str | None = None,
     description: str = "first",
+    identifier: SourceField | None = None,
 ) -> SourceRecord:
     return SourceRecord.create(
         revision=_revision(source),
@@ -103,6 +105,7 @@ def _record(
             column_name=value_field("column"),
             description=value_field(description),
             value_set_declared=value_field(declared) if declared else None,
+            identifier=identifier,
         ),
     )
 
@@ -491,6 +494,91 @@ def test_missing_file_unknown_window_and_unlisted_item_are_distinct(
     assert [issue.code for issue in result.issues] == ([expected] if expected else [])
     resolved = resolve_code_membership(result.claims)
     assert (resolved.segments[0].code_set is None) == (expected is not None)
+
+
+@pytest.mark.parametrize(
+    "identifier",
+    (value_field(False), SourceField(status="unknown"), None),
+)
+def test_unresolved_non_identifier_list_keeps_both_errors(
+    tmp_path: Path, identifier: SourceField | None
+) -> None:
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(missing="unknown"),
+        validity_present=False,
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(_record(identifier=identifier), sessions)
+    assert len(bound.claims) == 1
+    assert [issue.code for issue in bound.issues] == ["unknown_code_validity"]
+    assert [issue.code for issue in resolve_code_membership(bound.claims).issues] == [
+        "unknown_code_membership"
+    ]
+
+
+def test_declared_identifier_drops_unresolvable_list_but_keeps_clean_list(
+    tmp_path: Path,
+) -> None:
+    unresolved = _prepare(
+        tmp_path / "unresolved",
+        join=_join(missing="unknown"),
+        validity_present=False,
+    )
+    clean = _prepare(tmp_path / "clean", join=_join())
+    record = _record(identifier=value_field(True))
+    with open_value_bindings((unresolved, clean)) as sessions:
+        bound = bind_code_lists(record, sessions)
+    assert len(bound.claims) == 1
+    assert bound.issues == ()
+    assert len(bound.bindings) == 2
+    assert {binding.claim_id for binding in bound.bindings} == {
+        None,
+        bound.claims[0].claim_id,
+    }
+    resolved = resolve_code_membership(bound.claims)
+    assert resolved.issues == ()
+    assert resolved.segments[0].code_set is not None
+    assert resolved.segments[0].code_set.members == (("01", "One"),)
+
+
+@pytest.mark.parametrize("code,label", ((None, "One"), ("01", None)))
+def test_declared_identifier_drops_unknown_membership(
+    tmp_path: Path, code: str | None, label: str | None
+) -> None:
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(),
+        values=(SourceValue("a", code, label),),
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(_record(identifier=value_field(True)), sessions)
+    assert bound.claims == bound.issues == ()
+    assert bound.bindings[0].claim_id is None
+
+
+def test_mixed_identifier_declarations_affect_only_their_own_records(
+    tmp_path: Path,
+) -> None:
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(missing="unknown"),
+        validity_present=False,
+    )
+    with open_value_bindings((source,)) as sessions:
+        declared = bind_code_lists(
+            _record(member=1001, identifier=value_field(True)), sessions
+        )
+        undeclared = bind_code_lists(
+            _record(member=1001, identifier=value_field(False)), sessions
+        )
+    assert declared.claims == declared.issues == ()
+    assert declared.bindings[0].claim_id is None
+    assert len(undeclared.claims) == 1
+    assert [issue.code for issue in undeclared.issues] == ["unknown_code_validity"]
+    assert [
+        issue.code for issue in resolve_code_membership(undeclared.claims).issues
+    ] == ["unknown_code_membership"]
 
 
 def test_repeated_binding_errors_share_context_but_keep_all_original_associations(

@@ -84,6 +84,19 @@ class CodingResolution:
     claims: tuple[CodeListClaim, ...]
 
 
+def has_unknown_code_membership(claim: CodeListClaim) -> bool:
+    """Whether a source list contains membership the resolver cannot place."""
+    return any(
+        member.code is None
+        or member.label is None
+        or (
+            member.scope.kind not in {"not_applicable", "year_independent"}
+            and coding_scope_bounds(member.scope) is None
+        )
+        for member in claim.members
+    )
+
+
 def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResolution:
     """Keep an agreed complete coding or withhold only contested coding periods.
 
