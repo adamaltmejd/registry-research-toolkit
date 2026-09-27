@@ -609,7 +609,12 @@ Optional unspecified metadata may remain unknown with a diagnostic; an unsupport
 parser or missing implementation cannot be reclassified as curation. Unknown
 sensitivity/identifier flags cannot be represented faithfully in the current Boolean DB
 contract, so the variable and dependent output are withheld instead of substituting
-false.
+false. Sensitivity follows a disclosure-control ratchet across declarations: any
+sensitive or sometimes-sensitive claim makes `is_sensitive` true, even when another
+range says false. It is false only when the supplied claims say false and none says
+sometimes sensitive; without a claim it stays unknown except for source-specific
+defaults. A checked sensitivity correction takes precedence over source claims. The
+original records remain attached so a curator can audit every contributing declaration.
 
 A curation `[[acknowledge]]` entry names one exact issue code, its target coordinates
 (the subject and refs the diagnostic carries), a reason and evidence. Once its scope is

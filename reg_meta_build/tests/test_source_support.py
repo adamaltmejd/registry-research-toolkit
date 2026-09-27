@@ -204,6 +204,47 @@ def test_conflicting_flag_declarations_are_preserved_without_boolean_or() -> Non
     assert tuple(m.record for m in matches) == records
 
 
+@pytest.mark.parametrize(
+    ("first", "second", "expected"),
+    [(True, False, True), (False, False, False), ("conditional", False, True)],
+)
+def test_unika_sensitivity_declarations_ratchet_up_and_keep_evidence(
+    first: bool | str, second: bool, expected: bool
+) -> None:
+    target = _record("delivery", edition="2003")
+    source = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"sensitivity": value_field(sensitivity)}
+                )
+            }
+        )
+        for record, sensitivity in (
+            (_record("summary", coverage=("1990", "2009")), first),
+            (_record("summary", row=2, coverage=("2010", "2023")), second),
+        )
+    )
+    index = SourceSupportBindings(_joins(), source)
+    index.observe(target)
+    index.seal()
+    matches = index.bind(target)
+    fields, conflicts = reconcile_source_fields(
+        (target,), support=tuple(match.fields for match in matches)
+    )
+
+    assert fields.sensitivity is not None
+    assert fields.sensitivity.status == "value"
+    assert fields.sensitivity.value is expected
+    assert conflicts == ()
+    assert tuple(match.record for match in matches) == source
+    reverse, reverse_conflicts = reconcile_source_fields(
+        (target,), support=tuple(match.fields for match in reversed(matches))
+    )
+    assert reverse == fields
+    assert reverse_conflicts == conflicts
+
+
 def test_incomplete_scan_missing_adapter_and_unobserved_variable_are_contract_errors() -> (
     None
 ):

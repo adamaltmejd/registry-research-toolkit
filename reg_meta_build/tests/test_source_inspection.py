@@ -253,7 +253,7 @@ def test_lisa_reader_preserves_four_layouts_sections_periods_and_occurrences(
         if _field_text(record, "column_name") == "KU2YrkStalln"
     )
     assert ku2.fields.sensitivity == SourceField(
-        status="value", value="conditional", raw_value="I vissa fall"
+        status="value", value=True, raw_value="I vissa fall"
     )
     assert ku2.context[-2:] == (
         (
@@ -2292,6 +2292,6 @@ def test_lisa_cleaning_uses_shared_text_rules_without_changing_code_spelling(
     assert record.fields.description.value == "Åtgärd\n\n  - Förklaring"
     # The workbook XML reader normalizes CRLF before returning the cell text.
     assert record.fields.description.raw_value == raw_description.replace("\r\n", "\n")
-    assert record.fields.sensitivity.value == "conditional"
+    assert record.fields.sensitivity.value is True
     assert record.fields.sensitivity.raw_value == " I\u00a0  vissa\tfall "
     assert record.fields.base_register.value == "Arbets förmedlingen"
