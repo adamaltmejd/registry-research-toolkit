@@ -312,6 +312,38 @@ def test_numeric_storage_caps_only_all_numeric_waves(
     )
 
 
+@pytest.mark.parametrize("lengths", [("18", "18"), ("18", "53")])
+def test_storage_cap_discards_length_within_one_documented_class(
+    lengths: tuple[str, str],
+) -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"data_length": value_field(length)}
+                )
+            }
+        )
+        for record, length in zip(
+            (_record(1, data_type="varchar"), _record(2, data_type="text")),
+            lengths,
+        )
+    )
+    storage = {
+        "column": StewardColumnStorage(
+            classes=frozenset({"integer", "decimal"}),
+            provenance="SWECOV storage csv: CIS2018=int, CIS2020=float",
+        )
+    }
+    for ordered in (records, records[::-1]):
+        result = resolve_occurrence_intervals(ordered, storage=storage)
+        (segment,) = result.segments
+        assert segment.fields.data_type is not None
+        assert segment.fields.data_type.value == "decimal"
+        assert segment.fields.data_length == SourceField(status="unknown")
+        assert result.issues == ()
+
+
 def test_single_declared_type_is_not_rewritten_by_storage() -> None:
     storage = {
         "column": StewardColumnStorage(

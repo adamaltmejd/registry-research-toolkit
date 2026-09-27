@@ -283,6 +283,7 @@ def reconcile_source_fields(
     resolved = {}
     conflicts = []
     widened_classes: frozenset[str] | None = None
+    storage_capped = False
     field_sources = (*(record.fields for record in records), *support)
     checked_sensitivity = tuple(
         record.fields.sensitivity
@@ -370,6 +371,7 @@ def reconcile_source_fields(
                         if kind is not None and kind in {"integer", "decimal"}
                     )
                     assert widened is not None
+                    storage_capped = True
                 resolved[name] = SourceField(
                     status="value", value=widened, raw_value=provenance
                 )
@@ -380,7 +382,7 @@ def reconcile_source_fields(
         elif (
             name == "data_length"
             and widened_classes is not None
-            and len(widened_classes) > 1
+            and (len(widened_classes) > 1 or storage_capped)
         ):
             resolved[name] = SourceField(status="unknown")
         elif (
