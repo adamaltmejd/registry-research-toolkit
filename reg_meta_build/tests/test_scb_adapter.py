@@ -3,15 +3,11 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
 
 # The pre-flip `_reparent_variable_alias` projection (the function A4.3a
 # deleted) — used to prove the IR-carried IRVariableAlias rows are row-identical.
@@ -109,6 +105,13 @@ def _cis2014_payload() -> dict:
             "cvid": 400684,
         },
         "source_mode": "documented_blank",
+        "answer_facts": {
+            "data_type": "decimal",
+            "data_type_evidence": "SWECOV CIS2014=float",
+            "is_identifier": False,
+            "is_sensitive": False,
+            "flag_evidence": "SCB adjacent wave declares both flags 0",
+        },
         "evidence": {
             "document": "Synthetic CIS2014 concordance",
             "url": "https://example.test/cis2014.pdf#page=23",
@@ -145,6 +148,41 @@ def _cis2014_payload() -> dict:
 
 
 class TestCis2014MatrixProjection:
+    @pytest.mark.parametrize(
+        "mutate",
+        (
+            lambda payload: payload.pop("answer_facts"),
+            lambda payload: payload["answer_facts"].update(data_type="float"),
+            lambda payload: payload["answer_facts"].update(is_identifier=0),
+            lambda payload: payload["answer_facts"].update(is_sensitive="false"),
+            lambda payload: payload["answer_facts"].update(data_type_evidence=" "),
+            lambda payload: payload["answer_facts"].update(flag_evidence=""),
+            lambda payload: payload["answer_facts"].update(unreviewed=True),
+        ),
+    )
+    def test_answer_facts_are_required_and_strict(self, tmp_path: Path, mutate) -> None:
+        payload = _cis2014_payload()
+        mutate(payload)
+        path = tmp_path / "invalid-answer-facts.json"
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_cis2014_matrix(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "cis2014_matrix_invalid"
+
+    def test_repo_evidence_loads(self) -> None:
+        path = (
+            Path(__file__).resolve().parents[1]
+            / "curation/registers/scb/innovation-foretag/"
+            / "cis2014-matrix-meaning-evidence.json"
+        )
+        matrix = load_cis2014_matrix(path)
+        assert matrix is not None
+        assert len(matrix.answers) == 45
+        assert matrix.answer_facts.data_type == "decimal"
+        assert matrix.answer_facts.is_identifier is False
+        assert matrix.answer_facts.is_sensitive is False
+
     def test_invalid_mode_selector_and_answer_coordinates_fail_config(
         self, tmp_path: Path
     ) -> None:
@@ -170,6 +208,16 @@ class TestCis2014MatrixProjection:
 
 
 class TestCis2016MatrixProjection:
+    def test_rejects_blank_answer_facts(self, tmp_path: Path) -> None:
+        payload = _cis2016_payload()
+        payload["answer_facts"] = _cis2014_payload()["answer_facts"]
+        path = tmp_path / "cis2016-answer-facts.json"
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_cis2016_matrix(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "cis2016_matrix_invalid"
+
     def test_duplicate_and_conflicting_answer_selectors_fail_config(
         self, tmp_path: Path
     ) -> None:
