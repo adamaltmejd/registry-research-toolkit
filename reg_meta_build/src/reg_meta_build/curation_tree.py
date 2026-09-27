@@ -274,6 +274,7 @@ class ErrataDeliveredEntry(_CurationModel):
     evidence: str
     noted: str
     upstream: str | None = None
+    native_variable_id: int | None = None
 
 
 class ErrataColumnEntry(_CurationModel):

@@ -100,6 +100,18 @@ class TestVersionEntry:
 
 
 class TestDeliveredEntry:
+    def test_native_variable_anchor_resolves_from_tracked_entry(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        body = (
+            "[[errata.delivered]]\n"
+            'variant = "individer-15plus"\ncolumn = "Kon"\n'
+            'versions = ["2010"]\nnative_variable_id = 39310\n'
+            'evidence = "The steward holds it."\nnoted = "2026-09-12"\n'
+        )
+        (entry,) = _load(tmp_path, slug_dir, body).delivered
+        assert entry.native_variable_id == 39310
+
     def test_evidence_and_default_class_form_provenance(
         self, tmp_path: Path, slug_dir: Path
     ) -> None:
@@ -110,6 +122,7 @@ class TestDeliveredEntry:
             'noted = "2026-09-12"\n'
         )
         (entry,) = _load(tmp_path, slug_dir, body).delivered
+        assert entry.native_variable_id is None
         assert entry.provenance == (
             "errata:omitted-column-in-version\nThe steward holds it."
         )

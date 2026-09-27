@@ -1645,7 +1645,12 @@ def test_cases_roundtrip_through_the_shared_checked_contract() -> None:
     assert CurationCase.model_validate_json(case.model_dump_json()) == case
 
 
-def _convert_delivered(records: tuple[SourceRecord, ...], target_edition: SourceRecord):
+def _convert_delivered(
+    records: tuple[SourceRecord, ...],
+    target_edition: SourceRecord,
+    *,
+    native_variable_id: int | None = None,
+):
     assert target_edition.original_period_text is not None
     target = source_occurrence(target_edition)
     assert target.edition_key is not None
@@ -1656,6 +1661,7 @@ def _convert_delivered(records: tuple[SourceRecord, ...], target_edition: Source
             column="VALUE",
             versions=(target_edition.original_period_text,),
             provenance="errata:accepted\nExisting evidence",
+            native_variable_id=native_variable_id,
         ),
         case_id="accepted/delivered/0",
         records=records,
@@ -1733,6 +1739,31 @@ def test_delivery_statement_cannot_choose_between_reused_column_identities() -> 
     result = _convert_delivered((before, after, edition), edition)
     assert result.case is None
     assert result.blockers == ("ambiguous_documented_column_identity",)
+    assert set(result.identity_refs) == {record_ref(before), record_ref(after)}
+
+
+def test_delivered_anchor_selects_one_reused_column_identity() -> None:
+    before = _record(cvid=10, column="VALUE", year="2018")
+    after = _record(cvid=20, variable=6, column="VALUE", year="2022")
+    edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
+    records = before, after, edition
+    result = _convert_delivered(records, edition, native_variable_id=5)
+    assert result.case is not None and result.blockers == ()
+    assert result.identity_refs == (record_ref(before),)
+    applied = apply_occurrence_cases(records, (result.case,))
+    assert applied.diagnostics == ()
+    assert applied.occurrences[-1].variable_key == source_occurrence(before).variable_key
+
+
+def test_delivered_anchor_missing_under_column_is_stale() -> None:
+    before = _record(cvid=10, column="VALUE", year="2018")
+    after = _record(cvid=20, variable=6, column="VALUE", year="2022")
+    edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
+    result = _convert_delivered(
+        (before, after, edition), edition, native_variable_id=99
+    )
+    assert result.case is None
+    assert result.blockers == ("native_variable_id_not_documented_for_column",)
     assert set(result.identity_refs) == {record_ref(before), record_ref(after)}
 
 

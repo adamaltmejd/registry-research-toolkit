@@ -293,8 +293,12 @@ adds an undocumented register edition and requires a year-bearing SCB version na
 Version era order follows the maximum year the edition claims, so adding a historical
 edition cannot replace a newer documented edition's latest spelling or type.
 `[[errata.delivered]]` carries `variant`, literal `column`, existing `versions`,
-`evidence`, `noted`, and optional `upstream`; it adds omitted rows for a column
-documented elsewhere on the variant and names edition tokens verbatim.
+`evidence`, `noted`, and optional `upstream` and `native_variable_id`; it adds omitted
+rows for a column documented elsewhere on the variant and names edition tokens
+verbatim. The native-variable anchor selects one documented identity when the same
+column literal belongs to multiple variables in the variant's history. An anchor must
+occur under that column; without one, the column must identify exactly one variable
+across the complete variant history.
 `[[errata.column]]` carries the variable identity (`name` and `definition`), a source
 and evidence, plus either named versions, bounded `holdings_period`, or the legacy
 undated `all_versions = true`; it mints a variable for a column SCB documents nowhere on
