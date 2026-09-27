@@ -14,6 +14,10 @@ from _sos_fixtures import (
     BU_SPEC_ONE_LINE,
     BU_SPEC_WRAPPED,
 )
+from reg_meta_build.catalog_resolution import resolve_parents
+from reg_meta_build.source_coordinates import native_parent_key, source_register_key
+from reg_meta_build.source_curation import record_ref
+from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
@@ -37,6 +41,8 @@ from reg_meta_build.sources.sos_records import (
     clean_sos_variable,
     iter_sos_variable_records,
 )
+
+from reg_meta_build.fqid_slugs import SlugEntry
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -813,6 +819,208 @@ def _write_complete_workbook(path: Path) -> None:
     raw.append(["Klinik", "Gatan 1"])
     workbook.save(path)
     workbook.close()
+
+
+def test_lova_repeated_subset_token_keys_labels_separately(tmp_path: Path) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata LOVA (LOVA).xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    subsets = workbook.create_sheet("Deldatamängder och datavyer")
+    subsets.append(
+        [
+            "Deldatamängdsetikett",
+            "Deldatamängdsnamn",
+            "Deldatamängdsbeskrivning",
+            "Data från",
+            "Data till",
+            "Uppdateringsfrekvens",
+            "Aggregeringsnivå",
+            "Kommentar",
+        ]
+    )
+    labels = (
+        "Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation",
+        "Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus",
+    )
+    subsets.append(
+        [
+            labels[0],
+            "LOVA",
+            "Arbetsmarknadsstatus och vissa ekomoniska uppgifter",
+            1995,
+            None,
+            None,
+            "Individ",
+            None,
+        ]
+    )
+    for _ in range(12):
+        subsets.append([None] * 8)
+    subsets.append(
+        [
+            labels[1],
+            "LOVA",
+            "Uppgifter om innehavare",
+            1995,
+            None,
+            None,
+            "Individ",
+            "Huvudtabell som samanställer uppgifter från flera källar",
+        ]
+    )
+    workbook.save(path)
+    workbook.close()
+
+    records = clean_sos_source(parse_register_file(path), _revision(path)).records
+    parents = [
+        record
+        for record in records
+        if any(fact.kind == "variant" for fact in record.parent_facts)
+    ]
+    assert len(parents) == 2
+    assert {record.locators[0].physical_record for record in parents} == {
+        "row:2",
+        "row:15",
+    }
+    assert len({record_ref(record) for record in parents}) == 2
+    assert {record.subject.variant.name for record in parents} == {
+        f"LOVA / {label}" for label in labels
+    }
+
+    names = []
+    seen = set()
+    for record in records:
+        for parent in record.parent_facts:
+            if parent.kind not in {"register", "variant"}:
+                continue
+            key = native_parent_key(record.source, "sos", parent)
+            assert key is not None
+            if key in seen:
+                continue
+            seen.add(key)
+            kind = "register" if parent.kind == "register" else "register_variant"
+            names.append(
+                NamingDeclaration(
+                    target=NativeNamingTarget(
+                        kind=kind,
+                        provider="sos",
+                        source_key=key,
+                        register_key=source_register_key(record)
+                        if parent.kind == "variant"
+                        else None,
+                    ),
+                    naming=SlugEntry(
+                        kind=kind,
+                        provider="sos",
+                        source_id="1" if kind == "register" else f"1.{len(names)}",
+                        slug="lova" if kind == "register" else f"view-{len(names)}",
+                    ),
+                    contributors=(),
+                )
+            )
+    resolved = resolve_parents(records, tuple(names))
+    assert len(resolved.variants) == 2
+    assert not any(
+        issue.code == "unknown_parent_name" for issue in resolved.diagnostics
+    )
+
+
+@pytest.mark.parametrize(
+    ("code", "register_name", "sheet_name", "headers", "rows", "fields"),
+    [
+        (
+            "PAR",
+            "Patientregistret",
+            "Deldatamängder och datavyer",
+            ("Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"),
+            (("PAR_OV", "Öppenvård", 2001, 2020), ("PAR_SV", "Slutenvård", 1987, 2020)),
+            "coverage_from,coverage_to,name",
+        ),
+        (
+            "MFR",
+            "Medicinska födelseregistret",
+            "Deldatamängder",
+            (
+                "Deldatamängdsnamn",
+                "Deldatamängdsetikett",
+                "Deldatamängdsbeskrivning",
+                "Aggregeringsnivå",
+            ),
+            (("MFR_BARN", "Barn", "Uppgifter om barn", "Individ"),),
+            "aggregation_level,description,name",
+        ),
+        (
+            "DORS",
+            "Dödsorsaksregistret",
+            "Deldatamängder och datavyer",
+            ("Deldatamängdsetikett", "Deldatamängdsnamn", "Uppdateringsfrekvens"),
+            (
+                ("Dödsorsaker", "DORS", "Årligen"),
+                ("Covid-19 Hermes", "COV_DORS_HERMES", "Månadsvis"),
+            ),
+            "name,update_frequency",
+        ),
+    ],
+)
+def test_other_sos_workbooks_keep_token_only_subset_keys(
+    tmp_path: Path,
+    code: str,
+    register_name: str,
+    sheet_name: str,
+    headers: tuple[str, ...],
+    rows: tuple[tuple[str | int, ...], ...],
+    fields: str,
+) -> None:
+    import openpyxl
+
+    path = tmp_path / f"Metadata {code} ({code}).xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Generell information"]["C2"] = register_name
+    subsets = workbook.create_sheet(sheet_name)
+    subsets.append(headers)
+    for row in rows:
+        subsets.append(row)
+    workbook.save(path)
+    workbook.close()
+
+    records = clean_sos_source(parse_register_file(path), _revision(path)).records
+    parents = [
+        record
+        for record in records
+        if any(fact.kind == "variant" for fact in record.parent_facts)
+    ]
+    name_index = headers.index("Deldatamängdsnamn")
+    tokens = tuple(str(row[name_index]) for row in rows)
+    assert len(parents) == len(tokens)
+    assert {record_ref(parent).semantic_record_key for parent in parents} == {
+        (
+            f"register:{register_name}",
+            "metadata:subsets",
+            f"subset:{token}",
+            f"fields:{fields}",
+            "language:<not declared>",
+        )
+        for token in tokens
+    }
+    assert {
+        native_parent_key(parent.source, "sos", parent.parent_facts[0])
+        for parent in parents
+    } == {
+        (
+            "sos-metadata",
+            "sos",
+            "register",
+            "name",
+            register_name,
+            "variant",
+            "name",
+            token,
+        )
+        for token in tokens
+    }
 
 
 def test_styrtabell_parent_keeps_both_lookup_signals(tmp_path: Path) -> None:

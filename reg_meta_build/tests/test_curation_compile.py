@@ -51,7 +51,11 @@ from reg_meta_build.source_effects import (
     record_ref,
 )
 from reg_meta_build.source_formation import form_native_variable
-from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
+from reg_meta_build.source_naming import (
+    NamingDeclaration,
+    NativeNamingTarget,
+    authored_naming_id,
+)
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     DeliveredCell,
@@ -844,6 +848,66 @@ def test_sos_token_routes_to_two_native_parents_and_unmatched_route_is_stale():
     assert {key[-1] for key in effect.variant_keys} == {"A", "B"}
     assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
     assert statuses["stale"] == ["curation/registers/sos/sample.toml#/identity.route/2"]
+
+
+def test_lova_routes_choose_distinct_labeled_rows_and_stale() -> None:
+    import tomllib
+    from pathlib import Path
+
+    source = Path(__file__).resolve().parents[1] / "curation/registers/sos/lova.toml"
+    curated = tomllib.loads(source.read_text(encoding="utf-8"))
+    routes = curated["identity"]["route"]
+    selected = {entry["deldatamangd"]: tuple(entry["variants"]) for entry in routes}
+    row2 = "LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation"
+    row15 = "LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus"
+    assert selected["A_LOVA"] == (row15,)
+    assert selected["A_LOVA_LISA"] == (row2,)
+    variant_ids = {entry["native_id"] for entry in curated["variant"]}
+    assert {
+        authored_naming_id(
+            "register_variant", provider="sos", register_key="lova", member_key=name
+        )
+        for name in (row2, row15)
+    } <= variant_ids
+
+    parents = tuple(
+        _case_record(
+            provider="sos",
+            register="LOVA",
+            variant=name,
+            parent="variant",
+            fields=SourceFields(name=value_field(name.removeprefix("LOVA / "))),
+        )
+        for name in (row2, row15)
+    )
+    variables = tuple(
+        _case_record(provider="sos", register="LOVA", variant=token, variable=token)
+        for token in ("A_LOVA", "A_LOVA_LISA")
+    )
+    register = _route_register(
+        *((token, selected[token]) for token in ("A_LOVA", "A_LOVA_LISA"))
+    )
+    cases, diagnostics, _ = _compile_sos_register(register, (*parents, *variables))
+    assert diagnostics == ()
+    assignments = {
+        effect.ref.semantic_record_key[1]: effect.variant_keys[0][-1]
+        for case in cases
+        if isinstance(case.decision, OccurrenceCorrectionDecision)
+        for effect in case.decision.effects
+        if isinstance(effect, CheckedVariantAssignment)
+    }
+    assert assignments == {"variant:A_LOVA": row15, "variant:A_LOVA_LISA": row2}
+
+    renamed = _case_record(
+        provider="sos",
+        register="LOVA",
+        variant=f"{row2} renamed",
+        parent="variant",
+        fields=SourceFields(name=value_field("Renamed")),
+    )
+    for remaining in (parents[1:], (parents[0],), (renamed, parents[1])):
+        _, stale, _ = _compile_sos_register(register, (*remaining, *variables))
+        assert [issue.code for issue in stale] == ["stale_curation_entry"]
 
 
 def test_sos_styrtabell_requires_both_lookup_signals():

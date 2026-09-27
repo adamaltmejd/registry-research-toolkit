@@ -70,11 +70,11 @@ members = [{ variable = "utvandringsdatum-1-numerisk", value = "1", label = "1:a
 
 [[identity.route]]
 deldatamangd = "A_LOVA"
-variants = ["LOVA"] # v18: 43 rows
+variants = ["LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus"] # Huvudtabell, row 15: 43 rows
 
 [[identity.route]]
 deldatamangd = "A_LOVA_LISA"
-variants = ["LOVA"] # v18: 30 rows; the workbook's second 'LOVA' row (LISA-derived ekonomi subset)
+variants = ["LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation"] # row 2: 30 LISA-derived rows
 
 [[identity.route]]
 deldatamangd = "A_LOVA_EXAMEN"
@@ -151,8 +151,16 @@ column = "INVARN9"
 # silenced a same-name data_type warning; the merge was the default. No v18 case.
 
 [[variant]]
-native_id = "7847722537922273761.6625693372895183876"
+native_id = "7847722537922273761.4795487256388705735"
 slug = "lova"
+display_group = "LOVA"
+panel_entity_key = "lopnr"
+panel_time_key = "ar"
+panel_time_grain = "row"
+
+[[variant]]
+native_id = "7847722537922273761.6745658477858156910"
+slug = "lova-ekonomi-arbetsmarknad"
 display_group = "LOVA"
 panel_entity_key = "lopnr"
 panel_time_key = "ar"
