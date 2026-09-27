@@ -1837,16 +1837,18 @@ def _register_parent_records(cleaned) -> list:
 
 
 @pytest.mark.parametrize(
-    "general_contact",
+    ("general_contact", "expected_contact"),
     [
-        "Rela@x.se",
-        "Kontakt: Rela@x.se",
-        "Kontakt:Rela@x.se",
-        "mailto:Rela@x.se",
+        ("Rela@x.se", "rela@x.se"),
+        ("Kontakt: Rela@x.se", "Kontakt: Rela@x.se"),
+        ("Kontakt:Rela@x.se", "Kontakt:Rela@x.se"),
+        ("mailto:Rela@x.se", "mailto:Rela@x.se"),
+        ("Åsa@socialstyrelsen.se", "åsa@socialstyrelsen.se"),
+        ("O'Neil@socialstyrelsen.se", "o'neil@socialstyrelsen.se"),
     ],
 )
 def test_contact_casefolds_only_single_email_and_retains_raw_cells(
-    tmp_path: Path, general_contact: str
+    tmp_path: Path, general_contact: str, expected_contact: str
 ) -> None:
     import openpyxl
 
@@ -1869,15 +1871,13 @@ def test_contact_casefolds_only_single_email_and_retains_raw_cells(
     ]
     assert len(contacts) == 2
     general = next(item for item in contacts if item[0].language is None)
-    assert general[1].value == (
-        "rela@x.se" if general_contact == "Rela@x.se" else general_contact
-    )
+    assert general[1].value == expected_contact
     assert general[1].raw_value == general_contact
     assert any(cell.raw_value == general_contact for cell in general[0].delivered_cells)
     fields, conflicts = reconcile_source_fields(
         tuple(record.parent_facts[0] for record, _ in contacts)
     )
-    assert ("contact" in conflicts) is (general_contact != "Rela@x.se")
+    assert ("contact" in conflicts) is (expected_contact != "rela@x.se")
     if "contact" not in conflicts:
         assert fields.contact.value == "rela@x.se"
 
