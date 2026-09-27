@@ -2010,12 +2010,15 @@ def compile_native_naming(
                     or not register.identity.edition_split
                 ):
                     continue
+                native_id = register.register_info.native_id
+                assert native_id is not None  # Validated for SCB register files at load.
+                native_register_id = int(native_id)
                 matching = tuple(
                     record
                     for record in records
                     if record.subject.provider == "scb"
                     and (native_register := source_register_key(record)) is not None
-                    and native_register[-1] == int(register.register_info.native_id)
+                    and native_register[-1] == native_register_id
                 )
                 if not matching:
                     continue
