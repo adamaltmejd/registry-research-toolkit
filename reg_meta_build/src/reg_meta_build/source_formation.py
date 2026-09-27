@@ -45,6 +45,7 @@ if TYPE_CHECKING:
         SourceFields,
         SourceRecord,
     )
+    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
 
 
 def _refs(
@@ -186,6 +187,12 @@ def _coded_states(
                             for correction in occurrence.corrections
                         }
                         | set(matched.provenance if matched else ())
+                        | (
+                            {segment.fields.data_type.raw_value}
+                            if segment.fields.data_type is not None
+                            and isinstance(segment.fields.data_type.raw_value, str)
+                            else set()
+                        )
                     )
                 )
                 or None,
@@ -363,6 +370,7 @@ def form_native_variable(
     coding: Mapping[NativeKey, CodingResolution],
     representations: tuple[CurationCase, ...] = (),
     diagnostic: bool = False,
+    storage: Mapping[str, StewardColumnStorage] | None = None,
 ) -> VariableFormation:
     """Form one ordinary native identity; return unsafe aspects as explicit issues.
 
@@ -568,7 +576,7 @@ def form_native_variable(
     for key, members in sorted(by_variant.items(), key=lambda item: repr(item[0])):
         variant = variants[key]
         assert variant is not None
-        resolution = resolve_occurrence_intervals(members)
+        resolution = resolve_occurrence_intervals(members, storage=storage)
         intervals.append(resolution)
         variant_issues = []
         for problem in resolution.issues:
@@ -686,6 +694,14 @@ def form_native_variable(
                             )
                         }
                     )
+                    reconciled_detail = (
+                        segment.fields.data_type.raw_value
+                        if segment.fields.data_type is not None
+                        and isinstance(segment.fields.data_type.raw_value, str)
+                        else None
+                    )
+                    if reconciled_detail is not None:
+                        storage_details.append(reconciled_detail)
                     issue(
                         "unknown_data_type",
                         (

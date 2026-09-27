@@ -53,6 +53,7 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
+from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
 
 from reg_meta_build.fqid_slugs import declared_column_ownership, load_provider_toml
 
@@ -137,6 +138,7 @@ def _form(
     *,
     flags: SourceFields = _FLAGS,
     claims: tuple[CodeListClaim, ...] = (),
+    storage: dict[str, StewardColumnStorage] | None = None,
 ):
     variants = {}
     coding = {}
@@ -154,6 +156,73 @@ def _form(
         provider_key="4",
         flags=flags,
         coding=coding,
+        storage=storage,
+    )
+
+
+def test_widened_segment_records_documented_and_storage_provenance() -> None:
+    records = tuple(
+        _record(2020, row=label).model_copy(
+            update={
+                "fields": _record(2020, row=label).fields.model_copy(
+                    update={
+                        "data_type": value_field(kind),
+                        "data_length": value_field(length),
+                    }
+                )
+            }
+        )
+        for label, kind, length in (("a", "varchar", "18"), ("b", "float", "53"))
+    )
+    storage = {
+        "value": StewardColumnStorage(
+            classes=frozenset({"integer", "decimal"}),
+            provenance="SWECOV storage csv: CIS2018=int, CIS2020=float",
+        )
+    }
+    result = _form(records, storage=storage)
+    assert result.variable is not None
+    (state,) = result.variable.states
+    assert (state.data_type, state.data_length) == ("decimal", None)
+    assert state.provenance is not None
+    assert "Documented Datatyp: float, varchar" in state.provenance
+    assert "CIS2018=int, CIS2020=float" in state.provenance
+    assert not any(
+        item.code in {"unknown_data_type", "conflicting_occurrence_facts"}
+        for item in result.diagnostics
+    )
+
+
+def test_incompatible_documented_types_retain_detail_and_conflict() -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"data_type": value_field(kind)}
+                )
+            }
+        )
+        for record, kind in zip(
+            (_record(2020, row="a"), _record(2020, row="b")),
+            ("date", "integer"),
+        )
+    )
+    result = _form(
+        records,
+        storage={
+            "value": StewardColumnStorage(
+                classes=frozenset({"integer"}),
+                provenance="SWECOV storage csv: CIS2020=int",
+            )
+        },
+    )
+    (unknown,) = (
+        item for item in result.diagnostics if item.code == "unknown_data_type"
+    )
+    assert "Documented Datatyp: date, integer" in unknown.detail
+    assert "CIS2020=int" in unknown.detail
+    assert any(
+        item.code == "conflicting_occurrence_facts" for item in result.diagnostics
     )
 
 

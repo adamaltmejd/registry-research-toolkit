@@ -19,6 +19,7 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
+from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
 
 
 def _record(
@@ -102,21 +103,19 @@ def test_agreement_retains_physical_duplicates_and_optional_unknowns() -> None:
     assert segment.fields.data_length is None
 
 
-def test_conflicting_field_is_unknown_only_on_exact_intersection() -> None:
+def test_conflicting_type_widens_only_on_exact_intersection() -> None:
     first = _record(1, "2021-02-02", "2021-03-14")
     rival = _record(2, "2021-02-23", "2021-02-28", data_type="text")
     result = resolve_occurrence_intervals((first, rival))
     assert [
-        (s.valid_from, s.valid_to, s.fields.data_type) for s in result.segments
+        (s.valid_from, s.valid_to, s.fields.data_type.value) for s in result.segments
     ] == [
-        ("2021-02-02", "2021-02-22", SourceField(status="value", value="integer")),
-        ("2021-02-23", "2021-02-28", SourceField(status="unknown")),
-        ("2021-03-01", "2021-03-14", SourceField(status="value", value="integer")),
+        ("2021-02-02", "2021-02-22", "integer"),
+        ("2021-02-23", "2021-02-28", "text"),
+        ("2021-03-01", "2021-03-14", "integer"),
     ]
-    assert len(result.issues) == 1
-    issue = result.issues[0]
-    assert issue.fields == issue.withheld == ("data_type",)
-    assert issue.occurrences == (first, rival)
+    assert result.issues == ()
+    assert result.segments[1].occurrences == (first, rival)
     assert all(
         s.fields.definition == SourceField(status="value", value="Common definition")
         for s in result.segments
@@ -215,13 +214,16 @@ def test_unlisted_unit_sets_remain_occurrence_conflicts(units: tuple[str, ...]) 
     ("types", "lengths", "expected_length", "expected_fields"),
     [
         (("varchar", "varchar"), ("5", "6"), "6", ()),
-        (("varchar", "float"), ("18", "53"), None, ("data_length", "data_type")),
+        (("varchar", "float"), ("18", "53"), None, ()),
+        (("float", "numeric"), ("53", "18"), "53", ()),
+        (("float", "numeric"), ("05", "18"), None, ("data_length",)),
+        (("date", "integer"), ("18", "53"), None, ("data_length", "data_type")),
         (("varchar", "varchar"), ("5", "8,2"), None, ("data_length",)),
         (("varchar", None), ("5", "6"), None, ("data_length",)),
         (("varchar", "varchar"), ("05", "6"), None, ("data_length",)),
     ],
 )
-def test_length_maximum_requires_one_declared_type_and_canonical_integers(
+def test_length_maximum_with_type_widening_and_canonical_integers(
     types: tuple[str | None, str | None],
     lengths: tuple[str, str],
     expected_length: str | None,
@@ -254,19 +256,118 @@ def test_length_maximum_requires_one_declared_type_and_canonical_integers(
         )
 
 
-def test_data_type_conflict_still_reports_when_source_attribution_also_differs() -> (
-    None
-):
+@pytest.mark.parametrize(
+    ("types", "expected", "conflict"),
+    [
+        (("float", "integer"), "decimal", False),
+        (("integer", "text"), "text", False),
+        (("date", "integer"), None, True),
+        (("uniqueidentifier", "integer"), None, True),
+    ],
+)
+def test_declared_type_widening(
+    types: tuple[str, str], expected: str | None, conflict: bool
+) -> None:
+    records = (_record(1, data_type=types[0]), _record(2, data_type=types[1]))
+    for ordered in (records, records[::-1]):
+        result = resolve_occurrence_intervals(ordered)
+        field = result.segments[0].fields.data_type
+        assert field is not None
+        assert field.value == expected
+        assert field.raw_value == "Documented Datatyp: " + ", ".join(sorted(types))
+        assert [issue.fields for issue in result.issues] == (
+            [("data_type",)] if conflict else []
+        )
+
+
+@pytest.mark.parametrize(
+    ("classes", "expected"),
+    [
+        (frozenset({"integer", "decimal"}), "decimal"),
+        (frozenset({"integer", "text"}), "text"),
+        (frozenset({"integer", None}), "text"),
+        (frozenset(), "text"),
+    ],
+)
+def test_numeric_storage_caps_only_all_numeric_waves(
+    classes: frozenset[str | None], expected: str
+) -> None:
+    records = (_record(1, data_type="varchar"), _record(2, data_type="float"))
+    storage = {
+        "column": StewardColumnStorage(
+            classes=classes,
+            provenance="SWECOV storage csv: CIS2018=int, CIS2020=float",
+        )
+    }
+    for ordered in (records, records[::-1]):
+        result = resolve_occurrence_intervals(ordered, storage=storage)
+        field = result.segments[0].fields.data_type
+        assert field is not None and field.value == expected
+        assert result.issues == ()
+        assert "Documented Datatyp: float, varchar" in field.raw_value
+        assert "CIS2018=int" in field.raw_value
+    assert (
+        resolve_occurrence_intervals(records).segments[0].fields.data_type.value
+        == "text"
+    )
+
+
+@pytest.mark.parametrize("lengths", [("18", "18"), ("18", "53")])
+def test_storage_cap_discards_length_within_one_documented_class(
+    lengths: tuple[str, str],
+) -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"data_length": value_field(length)}
+                )
+            }
+        )
+        for record, length in zip(
+            (_record(1, data_type="varchar"), _record(2, data_type="text")),
+            lengths,
+        )
+    )
+    storage = {
+        "column": StewardColumnStorage(
+            classes=frozenset({"integer", "decimal"}),
+            provenance="SWECOV storage csv: CIS2018=int, CIS2020=float",
+        )
+    }
+    for ordered in (records, records[::-1]):
+        result = resolve_occurrence_intervals(ordered, storage=storage)
+        (segment,) = result.segments
+        assert segment.fields.data_type is not None
+        assert segment.fields.data_type.value == "decimal"
+        assert segment.fields.data_length == SourceField(status="unknown")
+        assert result.issues == ()
+
+
+def test_single_declared_type_is_not_rewritten_by_storage() -> None:
+    storage = {
+        "column": StewardColumnStorage(
+            classes=frozenset({"integer"}), provenance="SWECOV storage: CIS=int"
+        )
+    }
+    field = (
+        resolve_occurrence_intervals((_record(1, data_type="float"),), storage=storage)
+        .segments[0]
+        .fields.data_type
+    )
+    assert field == SourceField(status="value", value="float")
+
+
+def test_data_type_widening_absorbs_source_attribution_disagreement() -> None:
     first = _record(1, source_attribution="Fråga 1")
     second = _record(2, data_type="text", source_attribution="Fråga 2")
     result = resolve_occurrence_intervals((first, second))
     assert len(result.segments) == 1
     segment = result.segments[0]
-    assert segment.fields.data_type == SourceField(status="unknown")
+    assert segment.fields.data_type is not None
+    assert segment.fields.data_type.value == "text"
     assert segment.fields.source_attribution == SourceField(status="unknown")
-    assert [(issue.code, issue.fields, issue.withheld) for issue in result.issues] == [
-        ("conflicting_occurrence_facts", ("data_type",), ("data_type",))
-    ]
+    assert result.issues == ()
 
 
 def test_unanimous_source_attribution_resolves_normally() -> None:
@@ -622,7 +723,7 @@ def test_overlapping_pooled_editions_with_differing_facts_stay_split() -> None:
     ]
     assert [s.fields.data_type.value for s in result.segments] == [
         "integer",
-        None,
+        "text",
         "text",
     ]
 

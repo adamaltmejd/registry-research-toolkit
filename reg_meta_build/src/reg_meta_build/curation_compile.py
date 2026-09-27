@@ -113,6 +113,7 @@ from .source_value_bindings import bind_code_lists, open_value_bindings
 from .sources.swecov_column_types import (
     SWECOV_COLUMN_TYPES_PATH,
     index_swecov_column_types,
+    steward_column_types,
 )
 
 if TYPE_CHECKING:
@@ -3036,11 +3037,9 @@ def compile_errata(
         register_id = int(native_id)
         name = f"scb/{register.register_info.slug}"
         statuses = _family_status(report, name)
-        register_storage_columns = {
-            key: declaration
-            for key, declaration in storage_columns.items()
-            if key[0].startswith(register.register_info.steward_table_prefixes)
-        }
+        register_storage_columns = steward_column_types(
+            register.register_info.steward_table_prefixes, storage_columns
+        )
         accepted_names = {
             item.entry.source_id: item
             for item, _ in reversed(_register_naming_entries(tree, register))

@@ -79,7 +79,11 @@ from reg_meta_build.source_scope import (
 )
 from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_bindings import open_value_bindings
-from reg_meta_build.sources.swecov_column_types import SWECOV_COLUMN_TYPES_PATH
+from reg_meta_build.sources.swecov_column_types import (
+    SWECOV_COLUMN_TYPES_PATH,
+    index_steward_column_storage,
+    index_swecov_column_types,
+)
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
@@ -542,6 +546,7 @@ def build_catalog(
             for entry in prepared.manifest.inputs:
                 event("input", entry.model_dump(mode="json"))
             declarations = []
+            storage_declarations = []
             for index, item in enumerate(prepared.iter_evidence()):
                 disposition = "source_context"
                 if isinstance(item, ReferenceEvidence):
@@ -552,11 +557,13 @@ def build_catalog(
                         | SourceEventDeclaration
                         | SourceJoinKeyDeclaration,
                     ):
-                        if not (
+                        if (
                             isinstance(declaration, SourceColumnTypeDeclaration)
                             and declaration.revision.artifact_path
                             == SWECOV_COLUMN_TYPES_PATH
                         ):
+                            storage_declarations.append(declaration)
+                        else:
                             declarations.append(declaration)
                             disposition = "literal_metadata"
                     else:
@@ -586,6 +593,14 @@ def build_catalog(
                     },
                 )
                 counts["prepared_evidence"] += 1
+            storage_columns = index_swecov_column_types(storage_declarations)
+            storage_by_register = {
+                f"{register.register_info.provider}/{register.register_info.slug}": index_steward_column_storage(
+                    register.register_info.steward_table_prefixes, storage_columns
+                )
+                for register in tree.registers
+                if register.register_info.steward_table_prefixes
+            }
             event_bindings = SourceEventBindings(
                 (
                     d
@@ -816,6 +831,7 @@ def build_catalog(
                         diagnostic=diagnostic,
                         coding_scope=scope,
                         coding_registers=scope_coding,
+                        storage_by_register=storage_by_register,
                         on_coding_compiled=record_coding_compilation,
                     )
                     _emit_timing(f"pipeline: resolve {scope_key!r}", resolution_started)

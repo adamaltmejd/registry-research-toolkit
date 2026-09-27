@@ -25,6 +25,7 @@ from reg_meta_build.source_records import SourceRevision
 from reg_meta_build.source_reference_records import SourceColumnTypeDeclaration
 from reg_meta_build.sources.swecov_column_types import (
     SwecovColumnTypesError,
+    index_steward_column_storage,
     index_swecov_column_types,
     infer_steward_column_type,
     read_swecov_column_types,
@@ -141,6 +142,32 @@ def test_reader_contract_and_json_roundtrip(tmp_path: Path) -> None:
         revision_id=parsed.revision.revision_id, declaration=declaration
     )
     assert ReferenceEvidence.model_validate_json(evidence.model_dump_json()) == evidence
+
+
+def test_steward_storage_index_filters_register_tables_and_keeps_all_waves(
+    tmp_path: Path,
+) -> None:
+    parsed = _read(
+        tmp_path,
+        _csv(
+            [
+                ("CIS2018", "CO11", "int", "BASE TABLE"),
+                ("CIS2020", "co11", "float", "BASE TABLE"),
+                ("OTHER", "CO11", "varchar", "BASE TABLE"),
+            ]
+        ),
+    )
+    indexed = index_swecov_column_types(parsed.declarations)
+    reversed_index = index_swecov_column_types(reversed(parsed.declarations))
+    assert index_steward_column_storage((), indexed) == {}
+    selected = index_steward_column_storage(("CIS",), indexed)
+    assert selected == index_steward_column_storage(("CIS",), reversed_index)
+    assert selected["co11"].classes == frozenset({"integer", "decimal"})
+    assert "CIS2018=int, CIS2020=float" in selected["co11"].provenance
+    assert "OTHER" not in selected["co11"].provenance
+    assert index_steward_column_storage(("OTHER",), indexed)[
+        "co11"
+    ].classes == frozenset({"text"})
 
 
 def test_selected_csv_is_prepared_as_typed_reference_evidence(tmp_path: Path) -> None:
