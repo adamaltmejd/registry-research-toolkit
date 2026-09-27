@@ -267,6 +267,34 @@ class ErrataVersionEntry(_CurationModel):
     noted: str
 
 
+class ErrataEditionPeriodEntry(_CurationModel):
+    variant: str
+    name: str
+    valid_from: str
+    valid_to: str
+    evidence: str
+    noted: str
+
+    @model_validator(mode="after")
+    def _valid_period(self) -> ErrataEditionPeriodEntry:
+        for field in ("variant", "name", "evidence"):
+            if not getattr(self, field).strip():
+                raise ValueError(f"{field} must not be blank")
+        for field in ("valid_from", "valid_to", "noted"):
+            value = getattr(self, field)
+            try:
+                parsed = date.fromisoformat(value)
+            except ValueError as exc:
+                raise ValueError(f"{field} must be an ISO date") from exc
+            if parsed.isoformat() != value or (
+                field != "noted" and parsed.year == 9999
+            ):
+                raise ValueError(f"{field} must be a canonical finite ISO date")
+        if self.valid_to < self.valid_from:
+            raise ValueError("valid_to must not precede valid_from")
+        return self
+
+
 class ErrataDeliveredEntry(_CurationModel):
     variant: str
     column: str
@@ -298,6 +326,7 @@ class ErrataCuration(_CurationModel):
     delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
     column: list[ErrataColumnEntry] = Field(default_factory=list)
     version: list[ErrataVersionEntry] = Field(default_factory=list)
+    edition_period: list[ErrataEditionPeriodEntry] = Field(default_factory=list)
 
 
 class EnrichmentDescriptionEntry(_CurationModel):
@@ -874,6 +903,7 @@ def _register_arrays(
         ("errata.delivered", entry.errata.delivered),
         ("errata.column", entry.errata.column),
         ("errata.version", entry.errata.version),
+        ("errata.edition_period", entry.errata.edition_period),
         ("enrichment.description", entry.enrichment.description),
         ("enrichment.alias", entry.enrichment.alias),
         ("group", entry.group),
@@ -941,6 +971,16 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
 
     for table, rows in _register_arrays(entry):
         for index, row in enumerate(rows, start=1):
+            if isinstance(row, ErrataEditionPeriodEntry) and (
+                identity.provider != "scb"
+                or row.variant not in {variant.slug for variant in entry.variant}
+            ):
+                raise curation_error(
+                    _CODE,
+                    f"{file} [[{table}]] entry {index}: variant {row.variant!r} "
+                    "must name a variant of an SCB register.",
+                    "Use a [[variant]] slug in the owning SCB register file.",
+                )
             register_refs: list[str] = []
             if isinstance(
                 row,
@@ -1034,7 +1074,18 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
     _validate_register_scope(entry, file)
     for table, rows in _register_arrays(entry):
         seen: set[str] = set()
+        edition_period_keys: set[tuple[str, str]] = set()
         for index, row in enumerate(rows, start=1):
+            if isinstance(row, ErrataEditionPeriodEntry):
+                coordinate = (row.variant, row.name)
+                if coordinate in edition_period_keys:
+                    raise curation_error(
+                        _CODE,
+                        f"{file} [[{table}]] entry {index}: duplicate edition period "
+                        f"for {coordinate!r}.",
+                        "Keep one period per variant and edition name.",
+                    )
+                edition_period_keys.add(coordinate)
             key = json.dumps(
                 row.model_dump(mode="json"), ensure_ascii=False, sort_keys=True
             )

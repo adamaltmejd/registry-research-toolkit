@@ -67,6 +67,7 @@ from .source_curation import (
     AliasWindowDecision,
     CheckedFieldChange,
     CheckedIdentityChange,
+    CheckedPeriodChange,
     CheckedSourceUse,
     CheckedVariantAssignment,
     CodingDecision,
@@ -99,6 +100,7 @@ from .source_naming import (
     native_scb_naming_id,
 )
 from .source_occurrences import source_occurrence
+from .source_periods import source_scopes
 from .source_records import (
     NativeCoordinates,
     ScopeInterval,
@@ -2846,7 +2848,9 @@ def compile_errata(
         ),
     )
 
-    if not loaded:
+    if not loaded and not any(
+        register.errata.edition_period for register in tree.registers
+    ):
         return {}, {}, {}, (), {}
     storage_columns = index_swecov_column_types(
         item.declaration
@@ -2882,6 +2886,7 @@ def compile_errata(
     for register in sorted(tree.registers, key=lambda item: item.source_file):
         if register.register_info.provider != "scb" or not (
             register.errata.version
+            or register.errata.edition_period
             or register.errata.delivered
             or register.errata.column
         ):
@@ -2945,6 +2950,69 @@ def compile_errata(
                         "declared edition has no native variant records",
                     )
                 )
+        for index, row in enumerate(register.errata.edition_period, 1):
+            case_id = f"{register.source_file}#/errata.edition_period/{index}"
+            statuses["entries_read"].append(case_id)
+            subject = f"{name}/{row.variant}/{row.name}"
+            variant_id = variant_ids[row.variant]
+            matching = tuple(
+                record
+                for record in by_variant.get(variant_id, ())
+                if record.original_period_text == row.name
+                and record.subject.native.edition_id is not None
+            )
+            edition_ids = {record.subject.native.edition_id for record in matching}
+            if not matches and subset:
+                statuses["not_evaluated_in_subset"].append(case_id)
+                continue
+            if len(matches) != 1 or len(edition_ids) != 1:
+                overbroad = len(matches) > 1 or len(edition_ids) > 1
+                statuses["over_broad" if overbroad else "stale"].append(case_id)
+                diagnostics.append(
+                    _family_diagnostic(
+                        case_id,
+                        subject,
+                        f"matches {len(edition_ids)} native editions in "
+                        f"{len(matches)} register scopes; expected one",
+                        overbroad=overbroad,
+                    )
+                )
+                continue
+            if source_scopes(row.name)[2] != "unparseable_period" or any(
+                record.edition_period_scope.kind != "unknown" for record in matching
+            ):
+                statuses["stale"].append(case_id)
+                diagnostics.append(
+                    _family_diagnostic(
+                        case_id, subject, "named edition already has a parsed period"
+                    )
+                )
+                continue
+            interval = TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start=row.valid_from, end=row.valid_to),),
+            )
+            expectations = capture_expectations(matching, fields=())
+            cases[scope_key].append(
+                CurationCase(
+                    case_id=case_id,
+                    targets=expectations,
+                    decision=OccurrenceCorrectionDecision(
+                        reviewed=True,
+                        effects=tuple(
+                            CheckedPeriodChange(
+                                ref=item.ref,
+                                edition_scope=interval,
+                                edition_period_scope=interval,
+                            )
+                            for item in expectations
+                        ),
+                        reason=row.evidence,
+                        provenance=f"{case_id}: {row.evidence}",
+                    ),
+                )
+            )
+            statuses["entries_matched"].append(case_id)
         for table, entries in (
             ("delivered", register.errata.delivered),
             ("column", register.errata.column),
