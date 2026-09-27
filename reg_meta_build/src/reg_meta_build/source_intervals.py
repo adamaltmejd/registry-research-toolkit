@@ -351,9 +351,11 @@ def reconcile_source_fields(
                 and fields.data_length.status == "value"
             )
         ):
-            resolved[name] = SourceField(
-                status="value", value=str(max(int(value) for _, value in values))
-            )
+            lengths = []
+            for _, value in values:
+                assert isinstance(value, str)
+                lengths.append(int(value))
+            resolved[name] = SourceField(status="value", value=str(max(lengths)))
         elif len(values) > 1 or explicitly_withheld:
             conflicts.append(name)
             resolved[name] = SourceField(status="unknown")
