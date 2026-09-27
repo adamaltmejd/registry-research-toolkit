@@ -880,6 +880,90 @@ def test_coding_is_checked_despite_unresolved_catalog_identity():
     assert [d.code for d in result.diagnostics] == ["unresolved_catalog_identity"]
 
 
+def test_columnless_only_remainder_warns_with_original_refs():
+    items = tuple(
+        item.model_copy(
+            update={
+                "fields": item.fields.model_copy(
+                    update={"column_name": SourceField(status="negative", raw_value="")}
+                )
+            }
+        )
+        for item in (record(1), record(2, year="2021"))
+    )
+    key = native_variable_key(items[0])
+    naming = tuple(name for name in names(items) if name.target.kind != "variable")
+    result = resolve(items, naming=naming, provider_keys={key: None})
+    assert result.variables[key] is None
+    assert [(issue.code, issue.severity) for issue in result.diagnostics] == [
+        ("omitted_columnless_occurrence", "warning")
+    ]
+    assert set(result.diagnostics[0].refs) == {record_ref(item) for item in items}
+
+
+def test_unknown_column_keeps_remainder_identity_error():
+    first = record()
+    second = record(2, year="2021")
+    columnless = first.model_copy(
+        update={
+            "fields": first.fields.model_copy(
+                update={"column_name": SourceField(status="negative", raw_value="")}
+            )
+        }
+    )
+    unknown = second.model_copy(
+        update={
+            "fields": second.fields.model_copy(
+                update={"column_name": SourceField(status="unknown")}
+            )
+        }
+    )
+    key = native_variable_key(columnless)
+    naming = tuple(
+        name for name in names((columnless, unknown)) if name.target.kind != "variable"
+    )
+    result = resolve((columnless, unknown), naming=naming, provider_keys={key: None})
+    assert [(issue.code, issue.severity) for issue in result.diagnostics] == [
+        ("unresolved_catalog_identity", "error")
+    ]
+
+
+def test_withheld_naming_keeps_columnless_identity_error():
+    original = record()
+    columnless = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={"column_name": SourceField(status="negative", raw_value="")}
+            )
+        }
+    )
+    key = native_variable_key(columnless)
+    naming = tuple(
+        name.model_copy(
+            update={
+                "target": name.target.model_copy(
+                    update={
+                        "expectations": capture_expectations(
+                            (original,), fields=("column_name",)
+                        ),
+                        "peer_guards": (guard(original),),
+                    }
+                )
+            }
+        )
+        if name.target.kind == "variable"
+        else name
+        for name in names((original,))
+    )
+    result = resolve((columnless,), naming=naming, provider_keys={key: None})
+    assert any(
+        issue.code == "unresolved_catalog_identity" for issue in result.diagnostics
+    )
+    assert not any(
+        issue.code == "omitted_columnless_occurrence" for issue in result.diagnostics
+    )
+
+
 @pytest.mark.parametrize("register_id", [1, 258])
 def test_native_coding_column_key_follows_checked_partition(register_id: int):
     item = record(column="VALUE", register_id=register_id)

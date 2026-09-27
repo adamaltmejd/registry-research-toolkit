@@ -496,6 +496,24 @@ class ColumnPartitionConversion:
     diagnostics: tuple[ResolutionDiagnostic, ...]
 
 
+def _bindable_split_literals(
+    literals: tuple[str, ...], columns: dict[str, list[SourceRecord]]
+) -> bool:
+    if len(literals) == 1:
+        return True
+    if not literals or len({fold_column(column) for column in literals}) != 1:
+        return False
+    delivered: dict[tuple[Any, Any], set[str]] = defaultdict(set)
+    for column in literals:
+        for record in columns[column]:
+            occurrence = source_occurrence(record)
+            if occurrence.identity_checked:
+                continue
+            if occurrence.edition_key is not None:
+                delivered[occurrence.variant_key, occurrence.edition_key].add(column)
+    return all(len(spellings) == 1 for spellings in delivered.values())
+
+
 def convert_column_partitions(
     records: tuple[SourceRecord, ...],
     *,
@@ -546,7 +564,7 @@ def convert_column_partitions(
     if set(scoped_owners.values()) - set(split_ids):
         raise ValueError("scoped owner names a split outside this family")
     candidates: dict[str, list[str]] = defaultdict(list)
-    for column in columns:
+    for column in sorted(columns):
         if column not in scoped_columns:
             candidates[derive_variable_slug(column) or "x"].append(column)
     suffixes = {key[len(source_id) + 1 :] for key in split_ids}
@@ -607,9 +625,11 @@ def convert_column_partitions(
         raise ValueError("a declaration reference requires explicit column ownership")
     else:
         partition_columns = {
-            key: tuple(candidates[key[len(source_id) + 1 :]])
+            key: tuple(sorted(candidates[key[len(source_id) + 1 :]]))
             for key in split_ids
-            if len(candidates[key[len(source_id) + 1 :]]) == 1
+            if _bindable_split_literals(
+                tuple(candidates[key[len(source_id) + 1 :]]), columns
+            )
         }
         unresolved = (
             set(split_ids) - partition_columns.keys() - set(scoped_owners.values())
@@ -1303,13 +1323,25 @@ def _partition_ambiguity(
     records: tuple[SourceRecord, ...],
     entries: tuple[AcceptedNamingEntry, ...],
     split_ids: tuple[str, ...],
+    bound: set[str],
     expectations: tuple[Any, ...],
     guard: PeerGuard,
 ) -> NamingAmbiguity:
-    columns = {
-        column
-        for record in records
-        if (column := _literal_field(record, "column_name")) is not None
+    columns: dict[str, list[SourceRecord]] = defaultdict(list)
+    for record in records:
+        if (column := _literal_field(record, "column_name")) is not None:
+            columns[column].append(record)
+    candidates: dict[str, list[str]] = defaultdict(list)
+    for column in columns:
+        if suffix := derive_variable_slug(column):
+            candidates[suffix].append(column)
+    bound_suffixes = {split.rsplit(".", 1)[1] for split in bound}
+    ambiguous_candidates = {
+        suffix: literals
+        for suffix, literals in candidates.items()
+        if len(literals) == 1
+        or not _bindable_split_literals(tuple(literals), columns)
+        or suffix not in bound_suffixes
     }
     return NamingAmbiguity(
         family=NativeNamingTarget(
@@ -1325,8 +1357,7 @@ def _partition_ambiguity(
             sorted(
                 (split, column)
                 for split in split_ids
-                for column in columns
-                if derive_variable_slug(column) == split.rsplit(".", 1)[1]
+                for column in ambiguous_candidates.get(split.rsplit(".", 1)[1], ())
             )
         ),
         reason="Some accepted split keys lack exact literal ownership.",
@@ -1526,7 +1557,13 @@ def compile_partitions(
                 if bound != set(split_ids):
                     ambiguities[scope_key].append(
                         _partition_ambiguity(
-                            native, records, entries, split_ids, expectations, guard
+                            native,
+                            records,
+                            entries,
+                            split_ids,
+                            bound,
+                            expectations,
+                            guard,
                         )
                     )
             elif native[1] == "sos":

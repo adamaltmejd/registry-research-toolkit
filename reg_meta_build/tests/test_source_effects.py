@@ -1047,27 +1047,35 @@ def test_unique_suffix_binds_while_unmatched_siblings_stay_unresolved() -> None:
     assert tuple(item.ref for item in converted.case.support) == (record_ref(renamed),)
 
 
-def test_ambiguous_split_withholds_only_its_own_partition() -> None:
+@pytest.mark.parametrize("twin_year", ("2020", "2021"))
+def test_ambiguous_split_withholds_only_its_own_partition(twin_year: str) -> None:
     records = (
         _record(column="ANSWER", year="2020"),
-        _record(cvid=21, column="Answer", year="2021"),
+        _record(cvid=21, column="Answer", year=twin_year),
         _record(cvid=22, column="OTHER", year="2021"),
     )
     converted = convert_column_partitions(
         records, source_id="1.5", split_ids=("1.5.answer", "1.5.other")
     )
     assert converted.case is not None
-    assert tuple(b.source_id for b in converted.bindings) == ("1.5.other",)
-    assert converted.diagnostics[0].withheld_output == ("1.5.answer",)
+    assert tuple(b.source_id for b in converted.bindings) == (
+        ("1.5.other",) if twin_year == "2020" else ("1.5.answer", "1.5.other")
+    )
+    assert tuple(d.withheld_output for d in converted.diagnostics) == (
+        (("1.5.answer",),) if twin_year == "2020" else ()
+    )
     result = apply_occurrence_cases(records, (converted.case,))
     assert not result.diagnostics
-    assert (
-        result.occurrences[0].variable_key == source_occurrence(records[0]).variable_key
+    answer_key = (
+        source_occurrence(records[0]).variable_key
+        if twin_year == "2020"
+        else converted.bindings[0].target.source_key
     )
+    assert result.occurrences[0].variable_key == answer_key
+    assert result.occurrences[1].variable_key == answer_key
     assert (
-        result.occurrences[1].variable_key == source_occurrence(records[1]).variable_key
+        result.occurrences[2].variable_key == converted.bindings[-1].target.source_key
     )
-    assert result.occurrences[2].variable_key == converted.bindings[0].target.source_key
     assert all(
         o.fields == r.fields for o, r in zip(result.occurrences, records, strict=True)
     )
@@ -1291,8 +1299,14 @@ def test_naming_pin_does_not_establish_identity_for_distinct_column_spellings(
         source_id="1.5",
         split_ids=(f"1.5.{suffix}",),
     )
-    assert converted.case is None
-    assert converted.diagnostics[0].code == "split_identity_conversion_pending"
+    binds = (first, year) in {("ANSWER", "2021"), ("Kön", "2021")}
+    assert (converted.case is not None) == binds
+    assert tuple(d.code for d in converted.diagnostics) == (
+        () if binds else ("split_identity_conversion_pending",)
+    )
+    assert tuple(b.source_id for b in converted.bindings) == (
+        (f"1.5.{suffix}",) if binds else ()
+    )
 
 
 # Y-167: FDB VarId 830 literal column ownership. GatuRest/Gaturest share one
