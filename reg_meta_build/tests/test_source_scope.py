@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import replace
+from types import SimpleNamespace
+from typing import Any, cast
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
@@ -16,7 +18,11 @@ from reg_meta_build.catalog_dependencies import (
     resolve_panel_dependencies,
     variable_dependency_keys,
 )
-from reg_meta_build.curation_compile import convert_column_partitions
+from reg_meta_build.curation_compile import (
+    compile_scb_preliminary,
+    convert_column_partitions,
+)
+from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.prepared_values import (
     open_prepared_source_values,
     prepare_source_values,
@@ -104,6 +110,9 @@ def record(
     column="VALUE",
     year="2020",
     register_id=1,
+    edition_name=None,
+    edition_id=None,
+    data_length="1",
 ):
     header = REGISTERINFORMATION_HEADER.split("|")
     values = _var_row(
@@ -111,7 +120,9 @@ def record(
         var_id=variable,
         colname=column,
         register=("TEST", register_id, variant),
-        regver_id=int(year),
+        versionname=edition_name,
+        regver_id=int(year) if edition_id is None else edition_id,
+        data_length=data_length,
         year=year,
     ).split("|")
     result = clean_scb_row(
@@ -503,6 +514,44 @@ def test_ordinary_scope_forms_variables_with_literal_provider_keys():
     assert {v.provider_key for v in result.variables.values()} == {"5", "6"}
     assert sum(len(v.states) for v in result.variables.values()) == 2
     assert len(result.corrections.occurrences) == 2
+
+
+def test_superseded_scb_preliminary_is_support_and_final_alone_forms_state():
+    preliminary = record(
+        edition_name="2020, preliminär version", edition_id=10, data_length="2"
+    )
+    preliminary_only = record(
+        2,
+        variable=6,
+        column="OTHER",
+        edition_name="2020, preliminär version",
+        edition_id=10,
+    )
+    final = record(3, edition_name="2020, slutlig version", edition_id=11)
+    records = (preliminary, preliminary_only, final)
+    prepared = SimpleNamespace(
+        records=SimpleNamespace(iter_records=lambda *, source: iter(records))
+    )
+    scope = CompiledScope(
+        source=preliminary.source, register_key=None, naming=names(records)
+    )
+    (case,) = compile_scb_preliminary(cast("Any", prepared), (scope,))[
+        preliminary.source, None
+    ]
+    result = resolve(records, cases=(case,))
+    assert result.corrections.accounting[0].disposition == "applied"
+    assert [item.use for item in result.corrections.occurrences] == [
+        "support",
+        "catalog",
+        "catalog",
+    ]
+    assert result.corrections.occurrences[0].source_records == (preliminary,)
+    shared = result.variables[native_variable_key(final)]
+    exclusive = result.variables[native_variable_key(preliminary_only)]
+    assert shared is not None and exclusive is not None
+    assert len(shared.states) == len(exclusive.states) == 1
+    assert shared.states[0].data_length == "1"
+    assert exclusive.states[0].delivery_column_name == "OTHER"
 
 
 def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(

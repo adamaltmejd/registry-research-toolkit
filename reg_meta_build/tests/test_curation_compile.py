@@ -19,6 +19,7 @@ from reg_meta_build.curation_compile import (
     compile_errata,
     compile_native_naming,
     compile_partitions,
+    compile_scb_preliminary,
     convert_column_partitions,
     finalize_classification_bindings,
     tree_sha256,
@@ -187,6 +188,7 @@ def _prepared():
             register = SourceCoordinate(status="value", native_id=1)
             return SimpleNamespace(
                 source=source,
+                context=(),
                 subject=SimpleNamespace(
                     provider="scb",
                     register_name=register,
@@ -1140,6 +1142,121 @@ def _errata_record(
     return clean_scb_row(
         header, member, cells, _revision("scb-registerinformation")
     ).record
+
+
+def _edition_record(
+    *,
+    name: str,
+    edition_id: int,
+    member: int,
+    variable: int = 5,
+    variant: int = 2,
+    column: str = "VALUE",
+) -> SourceRecord:
+    header = REGISTERINFORMATION_HEADER.split("|")
+    row = _var_row(
+        colname=column,
+        cvid=member,
+        var_id=variable,
+        year="2020",
+        versionname=name,
+        regver_id=edition_id,
+        register=("TEST", 1, variant),
+    ).split("|")
+    return clean_scb_row(
+        header,
+        member,
+        {field: (True, value, value) for field, value in zip(header, row, strict=True)},
+        _revision("scb-registerinformation"),
+    ).record
+
+
+def _preliminary_cases(records: tuple[SourceRecord, ...]):
+    first = records[0]
+    prepared = SimpleNamespace(
+        records=SimpleNamespace(iter_records=lambda *, source: iter(records))
+    )
+    return compile_scb_preliminary(cast("Any", prepared), (_partition_scope(records),))[
+        first.source, None
+    ]
+
+
+def test_scb_final_supersedes_only_shared_native_variables():
+    preliminary = _edition_record(
+        name=" 2020, preliminär version ", edition_id=10, member=1
+    )
+    preliminary_only = _edition_record(
+        name="2020, preliminär version", edition_id=10, member=2, variable=6
+    )
+    final = _edition_record(name="2020, slutlig version", edition_id=11, member=3)
+    records = (preliminary, preliminary_only, final)
+    assert preliminary.context[2] == "2020, preliminär version"
+    assert preliminary.original_period_text == " 2020, preliminär version "
+    (case,) = _preliminary_cases(records)
+    assert case.case_id == "superseded-preliminary:1:2:2020"
+    assert {target.ref for target in case.targets} == {record_ref(preliminary)}
+    assert set(case.peer_guards[0].expected_members) == {
+        record_ref(record) for record in records
+    }
+    corrected = apply_occurrence_cases(records, (case,))
+    assert corrected.accounting[0].disposition == "applied"
+    assert [item.use for item in corrected.occurrences] == [
+        "support",
+        "catalog",
+        "catalog",
+    ]
+    added = _edition_record(
+        name="2020, slutlig version", edition_id=11, member=4, variable=7
+    )
+    stale = apply_occurrence_cases((*records, added), (case,))
+    assert stale.accounting[0].disposition == "stale"
+    assert any(issue.code == "peer_membership_changed" for issue in stale.diagnostics)
+    assert _preliminary_cases(tuple(reversed(records))) == (case,)
+
+
+@pytest.mark.parametrize(
+    "preliminary_name,final_name,final_variant",
+    [
+        ("2010 preliminär", "2010, slutlig version", 2),
+        ("2020, preliminär version", "2020, slutlig version", 3),
+        ("2020, preliminär version", "2019, slutlig version", 2),
+        ("2020, Preliminär version", "2020, slutlig version", 2),
+        ("2020,  preliminär version", "2020, slutlig version", 2),
+    ],
+)
+def test_scb_preliminary_requires_exact_same_variant_final_partner(
+    preliminary_name: str, final_name: str, final_variant: int
+):
+    preliminary = _edition_record(name=preliminary_name, edition_id=10, member=1)
+    other_variant = _edition_record(
+        name=final_name, edition_id=11, member=2, variant=final_variant
+    )
+    prepared = SimpleNamespace(
+        records=SimpleNamespace(
+            iter_records=lambda *, source: iter((preliminary, other_variant))
+        )
+    )
+    assert (
+        compile_scb_preliminary(
+            cast("Any", prepared), (_partition_scope((preliminary,)),)
+        )
+        == {}
+    )
+
+
+def test_scb_unpaired_preliminary_is_untouched():
+    preliminary = _edition_record(
+        name="2020, preliminär version", edition_id=10, member=1
+    )
+    prepared = SimpleNamespace(
+        records=SimpleNamespace(iter_records=lambda *, source: iter((preliminary,)))
+    )
+    assert (
+        compile_scb_preliminary(
+            cast("Any", prepared), (_partition_scope((preliminary,)),)
+        )
+        == {}
+    )
 
 
 def _errata_fixture(tmp_path: Path, records: tuple[SourceRecord, ...], fragment: str):
