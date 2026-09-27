@@ -10,6 +10,7 @@ from reg_meta_build.curation_tree import (
     load_classification_families,
     load_classifications,
     load_curation_tree,
+    load_register_files,
 )
 
 if TYPE_CHECKING:
@@ -161,3 +162,31 @@ def test_lineage_override_fails(tmp_path: Path) -> None:
     with pytest.raises(RegMetaError) as excinfo:
         load_curation_tree(tmp_path)
     assert excinfo.value.code == "lineage_invalid"
+
+
+@pytest.mark.parametrize(
+    "by, part",
+    [
+        ("deldatamangd", 'data_type = "text", deldatamangd = "PAR_OV"'),
+        ("deldatamangd", ""),
+        ("deldatamangd", 'data_type = "text"'),
+        ("data_type", 'deldatamangd = "PAR_OV"'),
+    ],
+)
+def test_identity_split_part_requires_matching_discriminator(
+    tmp_path: Path, by: str, part: str
+) -> None:
+    path = tmp_path / "registers/sos/par.toml"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        '[register]\nprovider = "sos"\nslug = "par"\n'
+        'native_id = "5891427617861710725"\nname = "Patientregistret"\n'
+        f'[[identity.split]]\nvariable = "ATC"\nby = "{by}"\n'
+        f"parts = [{{ {part}{', ' if part else ''}"
+        'owner = "5891427617861710725.ATC.atc" }]\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert "registers/sos/par.toml" in excinfo.value.message
+    assert "identity.split" in excinfo.value.message
