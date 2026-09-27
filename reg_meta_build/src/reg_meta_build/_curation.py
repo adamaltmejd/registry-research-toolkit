@@ -39,9 +39,8 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build._resolved_common import _require_trimmed
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
-
     import sqlite3
+    from collections.abc import Iterable
 
 
 class SentinelCode(BaseModel):
