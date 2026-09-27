@@ -515,7 +515,7 @@ def test_open_requires_accepted_exact_commit_and_manifest(tmp_path: Path) -> Non
         )
     path = root / "manifest.json"
     document = json.loads(path.read_bytes())
-    document["schema_version"] = 999
+    document["schema_version"] = 14
     payload = json.dumps(document).encode()
     path.write_bytes(payload)
     commit = accept_prepared(root)

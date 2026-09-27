@@ -57,9 +57,9 @@ if TYPE_CHECKING:
     from reg_meta_build.source_support import SourceSupportJoin
 
 _FORMAT = "reg-meta-prepared-source-records"
-# Y-265: exact RTB quarterly-from labels now carry explicit open intervals;
-# schema-13 artifacts must be re-prepared.
-_SCHEMA_VERSION = 14
+# Y-264: SCB Okänd units become unknown and SQL data types use shared classes;
+# schema-14 artifacts must be re-prepared.
+_SCHEMA_VERSION = 15
 _MANIFEST = "manifest.json"
 _DATABASE = "files/records.sqlite"
 _HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
@@ -76,7 +76,7 @@ class _PreparedModel(BaseModel):
 
 class _ManifestDocument(_PreparedModel):
     format: Literal["reg-meta-prepared-source-records"] = _FORMAT
-    schema_version: Literal[14] = _SCHEMA_VERSION
+    schema_version: Literal[15] = _SCHEMA_VERSION
     scope: str
     partial: Literal[True] = True
     record_count: int
@@ -152,7 +152,7 @@ def _manifest(payload: bytes) -> PreparedSourceManifest:
 
 
 _DDL = """
-PRAGMA user_version=14;
+PRAGMA user_version=15;
 CREATE TABLE payload (
     id INTEGER PRIMARY KEY,
     kind TEXT NOT NULL,

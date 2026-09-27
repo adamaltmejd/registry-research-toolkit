@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
+from reg_meta_build._curation import data_type_class
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_periods import SourcePeriodIssue, source_scopes
 from reg_meta_build.source_records import (
@@ -157,12 +158,8 @@ def _data_type_field(cell: tuple[bool, str | None, str]) -> SourceField | None:
     field = _cell_field(cell)
     if field is None or field.status != "value" or not isinstance(field.value, str):
         return field
-    declared = field.value.casefold()
-    if declared in {"tinyint", "smallint", "int", "integer", "bigint"}:
-        kind = "integer"
-    elif declared in {"char", "varchar", "nchar", "nvarchar", "text", "ntext"}:
-        kind = "text"
-    else:
+    kind = data_type_class(field.value)
+    if kind is None:
         return field
     return SourceField(status="value", value=kind, raw_value=field.raw_value)
 
@@ -426,8 +423,12 @@ def clean_scb_row(
                 text("VariabelRegister_Källa"),
                 multiline=True,
             ),
-            measurement_unit=_optional_text_field(
-                interpreted.measurement_unit, text("Mattenhet")
+            measurement_unit=(
+                SourceField(status="unknown", raw_value=cells["Mattenhet"][1])
+                if interpreted.measurement_unit == "Okänd"
+                else _optional_text_field(
+                    interpreted.measurement_unit, text("Mattenhet")
+                )
             ),
         ),
         parent_facts=_parent_facts(

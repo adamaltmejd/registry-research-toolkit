@@ -272,7 +272,7 @@ def test_scb_observations_share_coordinates_and_stripped_fields_without_losing_c
         "Source system", raw=" Source system "
     )
     assert first.record.fields.measurement_unit == value_field("count", raw=" count ")
-    assert first.record.fields.data_type == value_field("numeric", raw=" numeric ")
+    assert first.record.fields.data_type == value_field("decimal", raw=" numeric ")
     assert first.record.fields.data_length == value_field("0", raw="0")
     assert first.record.edition_scope.kind == "pooled"
     assert first.issue is not None and first.issue.kind == "pooled_period"
@@ -403,10 +403,17 @@ def _clean_row(*, reference_period: str | None = "", **changes: object) -> Sourc
         (" NVARCHAR ", "text"),
         ("text", "text"),
         ("ntext", "text"),
-        ("numeric", "numeric"),
+        ("numeric", "decimal"),
         ("decimal", "decimal"),
-        ("float", "float"),
+        ("Decimal", "decimal"),
+        ("float", "decimal"),
+        ("real", "decimal"),
+        ("money", "decimal"),
+        ("bit", "integer"),
         ("date", "date"),
+        ("datetime", "date"),
+        ("uniqueidentifier", "uniqueidentifier"),
+        ("Datum och klockslag", "Datum och klockslag"),
         ("unrecognized declaration", "unrecognized declaration"),
     ],
 )
@@ -420,6 +427,25 @@ def test_scb_storage_types_normalize_without_discarding_declaration_or_width(
     delivered = next(cell for cell in record.delivered_cells if cell.name == "Datatyp")
     assert delivered.raw_value == declared
     assert delivered.interpreted_value == declared
+
+
+@pytest.mark.parametrize(
+    ("unit", "expected"),
+    [
+        (" Okänd ", SourceField(status="unknown", raw_value=" Okänd ")),
+        ("okänd", value_field("okänd", raw="okänd")),
+        ("Okänd enhet", value_field("Okänd enhet", raw="Okänd enhet")),
+    ],
+)
+def test_scb_unknown_measurement_unit_matches_exact_stripped_token(
+    unit: str, expected: SourceField
+) -> None:
+    record = _clean_row(unit=unit)
+
+    assert record.fields.measurement_unit == expected
+    delivered = next(cell for cell in record.delivered_cells if cell.name == "Mattenhet")
+    assert delivered.raw_value == unit
+    assert delivered.interpreted_value == unit
 
 
 def test_scb_normalization_retains_distinct_observations_and_substantive_types() -> (
