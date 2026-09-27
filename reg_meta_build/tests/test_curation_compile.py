@@ -1542,6 +1542,37 @@ def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):
     )
 
 
+def test_compiled_errata_with_declared_split_uses_native_variant(tmp_path: Path):
+    donor = _errata_record(column="A", year="2020")
+    stock = _errata_record(
+        column="B",
+        year="2021",
+        variable=6,
+        member=21,
+        edition_name="2021-12-31",
+    )
+    fragment = (
+        '\n[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
+        '[[identity.edition_split]]\nvariant = "1.2"\nsplit = "1.2.stock"\n'
+        'editions = ["2021-12-31"]\nevidence = "SCB stock population"\n'
+        'noted = "2026-09-27"\n'
+        + _DELIVERED.replace('versions = ["2021"]', 'versions = ["2021-12-31"]')
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, (donor, stock), fragment)
+    cases, _, _, diagnostics, report = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert diagnostics == ()
+    assert len(report["scb/sample"]["entries_matched"]) == 1
+    case = cases[(scope.source, scope.register_key)][0]
+    assert isinstance(case.decision.effects[0], CuratedOccurrenceAddition)
+    assert case.decision.effects[0].edition_key == source_occurrence(stock).edition_key
+    assert (
+        apply_occurrence_cases((donor, stock), (case,)).accounting[0].disposition
+        == "applied"
+    )
+
+
 @pytest.mark.parametrize(
     "records,code",
     [

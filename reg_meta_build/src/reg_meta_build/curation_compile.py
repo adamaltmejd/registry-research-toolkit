@@ -25,7 +25,7 @@ from .cis2016_matrix import (
 )
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import EnrichmentAliasEntry, EnrichmentDescriptionEntry
-from .fqid_slugs import SlugEntry, freeze_state, load_freeze_states
+from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
 from .normalization import normalize_token
 from .prepared_catalog import ReferenceEvidence
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
@@ -3269,8 +3269,13 @@ def compile_errata(
                 for record in members
             )
         by_variant: dict[int, tuple[SourceRecord, ...]] = {}
+        variant_ids: dict[str, int] = {}
         for variant in register.variant:
-            variant_id = int(variant.native_id.split(".")[-1])
+            parsed = _parse_variant_id(variant.native_id)
+            if len(parsed) == 3:
+                continue  # Errata targets native records before edition rebind.
+            _, variant_id = parsed
+            variant_ids[variant.slug] = variant_id
             by_variant[variant_id] = tuple(
                 r for r in records if r.subject.native.register_variant_id == variant_id
             )
@@ -3280,9 +3285,6 @@ def compile_errata(
                 bound_editions[variant_id] = edition_bindings(
                     members, tuple(versions.get(variant_id, ()))
                 )
-        variant_ids = {
-            item.slug: int(item.native_id.split(".")[-1]) for item in register.variant
-        }
         for index, row in enumerate(register.errata.version, 1):
             case_id = f"{register.source_file}#/errata.version/{index}"
             statuses["entries_read"].append(case_id)

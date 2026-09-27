@@ -221,6 +221,20 @@ def test_edition_split_requires_declared_native_split_and_unique_names(
     assert "three-part key under variant" in exc.value.message
 
 
+def test_edition_period_errata_requires_native_variant(tmp_path: Path) -> None:
+    root = tmp_path / "curation"
+    _write_register(
+        root,
+        '[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
+        '[[errata.edition_period]]\nvariant = "stock"\nname = "Edition"\n'
+        'valid_from = "2020-01-01"\nvalid_to = "2020-12-31"\n'
+        'evidence = "SCB source text"\nnoted = "2026-09-27"\n',
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert "must name a native variant" in exc.value.message
+
+
 @pytest.mark.parametrize(("table", "body", "wrong_register"), _TABLES)
 def test_each_register_table_rejects_unknown_keys(
     tmp_path: Path, table: str, body: str, wrong_register: tuple[str, str] | None

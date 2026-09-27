@@ -1036,10 +1036,17 @@ def _check_register_ref(
 
 
 def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
+    from .fqid_slugs import _parse_variant_id
+
     identity = entry.register_info
     expected = f"{identity.provider}/{identity.slug}"
     edition_owners: set[tuple[str, str]] = set()
     variant_ids = {variant.native_id for variant in entry.variant}
+    native_variant_slugs = {
+        variant.slug
+        for variant in entry.variant
+        if len(_parse_variant_id(variant.native_id)) == 2
+    }
     for index, split in enumerate(entry.identity.edition_split, 1):
         where = f"{file} [[identity.edition_split]] entry {index}"
         if identity.provider != "scb" or not split.variant.startswith(
@@ -1078,14 +1085,13 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
     for table, rows in _register_arrays(entry):
         for index, row in enumerate(rows, start=1):
             if isinstance(row, ErrataEditionPeriodEntry) and (
-                identity.provider != "scb"
-                or row.variant not in {variant.slug for variant in entry.variant}
+                identity.provider != "scb" or row.variant not in native_variant_slugs
             ):
                 raise curation_error(
                     _CODE,
                     f"{file} [[{table}]] entry {index}: variant {row.variant!r} "
-                    "must name a variant of an SCB register.",
-                    "Use a [[variant]] slug in the owning SCB register file.",
+                    "must name a native variant of an SCB register.",
+                    "Use a native [[variant]] slug in the owning SCB register file.",
                 )
             register_refs: list[str] = []
             if isinstance(
