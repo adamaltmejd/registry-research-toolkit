@@ -389,8 +389,13 @@ delivered side by side in one edition of one variant are two columns, so the fol
 applies only when no single edition co-delivers two spellings of one fold key. An
 accepted name alone cannot establish a partition across ambiguous column spellings. A
 partition, rename or parallel-column family requires checked ownership and complete
-relevant membership. Related but different variables remain connected through groups; a
-shared stem or suffix is not evidence that they are one variable.
+relevant membership. An implicit split suffix binds case or diacritic twin literals
+only when their folded column key matches and no variant edition co-delivers them. A
+one-owner partition may list a spelling that recurs after an intervening rename
+(A→B→A); a literal claimed by two native variables in the same edition needs a split
+or `native_variable_id`, never a fold into one owner. Related but different variables
+remain connected through groups; a shared stem or suffix is not evidence that they are
+one variable.
 
 Audited naming ambiguities can connect an existing catalog name to an exact unresolved
 source identity. These are error attributions, not new identities or waivers. They must
@@ -442,7 +447,8 @@ member has no physical column (aggregate-statistics registers), so the reader ca
 as an explicit negative column claim and reconciliation omits the occurrence on purpose,
 reporting it once as an `omitted_columnless_occurrence` warning. A variable whose every
 occurrence is columnless is not materialized; its `no_supported_states` outcome is a
-warning for this cause alone. An undelivered cell, or a delivered cell that is not
+warning for this cause alone. A columnless-only remainder left after checked splits
+likewise warns and is omitted. An undelivered cell, or a delivered cell that is not
 literally blank, stays unknown and keeps the error path. A gap between supported periods
 stays a gap.
 

@@ -1937,6 +1937,84 @@ def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path)
     assert native in generated[4][key]
 
 
+def test_implicit_partition_binds_non_co_delivered_case_twins(tmp_path: Path):
+    records = (
+        _errata_record(column="Kon", year="2020", member=20),
+        _errata_record(column="KON", year="2021", member=21),
+    )
+    forward = convert_column_partitions(
+        records, source_id="1.5", split_ids=("1.5.kon",)
+    )
+    reverse = convert_column_partitions(
+        records[::-1], source_id="1.5", split_ids=("1.5.kon",)
+    )
+    assert forward == reverse
+    assert forward.diagnostics == ()
+    assert forward.case is not None
+    assert {effect.ref for effect in forward.case.decision.effects} == {
+        record_ref(record) for record in records
+    }
+    assert {effect.when[0].value for effect in forward.case.decision.effects} == {
+        "Kon",
+        "KON",
+    }
+
+    root = tmp_path / "curation"
+    _scb_partition_tree(root, '\n[[variable]]\nnative_id = "1.5.kon"\nslug = "kon"\n')
+    compiled, key, _ = _compile_partition_fixture(root, records)
+    assert len(compiled[0][key]) == 1
+    assert not compiled[3].get(key)
+
+
+def test_bound_twins_are_not_ambiguous_when_another_split_is_pending(tmp_path: Path):
+    records = (
+        _errata_record(column="Kon", year="2020", member=20),
+        _errata_record(column="KON", year="2021", member=21),
+        _errata_record(column="LEFT", year="2021", member=22),
+    )
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.kon"\nslug = "kon"\n'
+        '[[variable]]\nnative_id = "1.5.other"\nslug = "other"\n',
+    )
+    compiled, key, _ = _compile_partition_fixture(root, records)
+    assert compiled[3][key][0].candidate_columns == ()
+    assert {
+        binding.source_id
+        for binding in convert_column_partitions(
+            records,
+            source_id="1.5",
+            split_ids=("1.5.kon", "1.5.other"),
+        ).bindings
+    } == {"1.5.kon"}
+
+
+@pytest.mark.parametrize(
+    "columns,years",
+    [
+        (("Kon", "KON"), ("2020", "2020")),
+        (("A_B", "A-B"), ("2020", "2021")),
+    ],
+)
+def test_implicit_partition_refuses_unsafe_slug_twins(columns, years):
+    records = tuple(
+        _errata_record(column=column, year=year, member=20 + index)
+        for index, (column, year) in enumerate(zip(columns, years, strict=True))
+    )
+    suffix = "kon" if columns[0] == "Kon" else "a-b"
+    converted = convert_column_partitions(
+        records, source_id="1.5", split_ids=(f"1.5.{suffix}",)
+    )
+    assert converted == convert_column_partitions(
+        records[::-1], source_id="1.5", split_ids=(f"1.5.{suffix}",)
+    )
+    assert converted.case is None
+    assert [issue.code for issue in converted.diagnostics] == [
+        "split_identity_conversion_pending"
+    ]
+
+
 def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
     root = tmp_path / "curation"
     _scb_partition_tree(

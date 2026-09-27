@@ -571,17 +571,37 @@ def resolve_source_scope(
         )
         variables[key] = None
         if provider_key is None or key in withheld_naming or register is None:
-            issue = ResolutionDiagnostic(
-                code="unresolved_catalog_identity"
-                if provider_key is None or key in withheld_naming
-                else "withheld_register_dependency",
-                severity="error",
-                subject=repr(key),
-                detail="Catalog formation is withheld; source-level decisions were still evaluated against the complete original scope.",
-                refs=refs,
-                fields=("identity",),
-                withheld_output=("variable",),
-            )
+            if (
+                provider_key is None
+                and key not in withheld_naming
+                and all(
+                    occurrence.fields.column_name is not None
+                    and occurrence.fields.column_name.status == "negative"
+                    for occurrence in occurrences
+                )
+            ):
+                issue = ResolutionDiagnostic(
+                    code="omitted_columnless_occurrence",
+                    severity="warning",
+                    subject=repr(key),
+                    detail="The source states the member has no physical column; "
+                    "the occurrence is omitted on purpose.",
+                    refs=refs,
+                    fields=("column_name",),
+                    withheld_output=("occurrence",),
+                )
+            else:
+                issue = ResolutionDiagnostic(
+                    code="unresolved_catalog_identity"
+                    if provider_key is None or key in withheld_naming
+                    else "withheld_register_dependency",
+                    severity="error",
+                    subject=repr(key),
+                    detail="Catalog formation is withheld; source-level decisions were still evaluated against the complete original scope.",
+                    refs=refs,
+                    fields=("identity",),
+                    withheld_output=("variable",),
+                )
             emit(issue)
             if fqid is not None:
                 withheld["variable", fqid].append(issue)
