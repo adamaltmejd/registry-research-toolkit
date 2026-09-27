@@ -263,12 +263,27 @@ def reconcile_source_fields(
     resolved = {}
     conflicts = []
     field_sources = (*(record.fields for record in records), *support)
+    checked_sensitivity = tuple(
+        record.fields.sensitivity
+        for record in records
+        if isinstance(record, EffectiveOccurrence)
+        and "sensitivity" in record.checked_fields
+    )
     for name in SourceFields.model_fields:
-        observations = tuple(
-            value
-            for fields in field_sources
-            if (value := getattr(fields, name)) is not None
-        )
+        # A checked sensitivity choice outranks raw and support declarations;
+        # those records remain attached to the effective occurrence as evidence.
+        if name == "sensitivity" and checked_sensitivity:
+            observations = tuple(
+                value for value in checked_sensitivity if value is not None
+            )
+        elif name == "conditional_sensitivity" and checked_sensitivity:
+            observations = ()
+        else:
+            observations = tuple(
+                value
+                for fields in field_sources
+                if (value := getattr(fields, name)) is not None
+            )
         values = {
             (value.status, value.value)
             for value in observations
@@ -278,7 +293,11 @@ def reconcile_source_fields(
             isinstance(record, EffectiveOccurrence) and name in record.withheld_fields
             for record in records
         )
-        if len(values) > 1 or explicitly_withheld:
+        if name == "sensitivity" and not explicitly_withheld and (
+            ("value", True) in values or ("value", "conditional") in values
+        ):
+            resolved[name] = SourceField(status="value", value=True)
+        elif len(values) > 1 or explicitly_withheld:
             conflicts.append(name)
             resolved[name] = SourceField(status="unknown")
         elif values:
@@ -306,8 +325,9 @@ def resolve_occurrence_intervals(
     strict publication. An occurrence whose column claim is negative (a delivered
     blank column: the member has no physical column) is omitted on purpose and
     reported as an `omitted_columnless_occurrence` warning; formation aggregates
-    one warning per variable. Competing field values become unknown on their intersection;
-    positive versus negative availability withholds that column segment entirely.
+    one warning per variable. Competing fields other than sensitivity become unknown
+    on their intersection; sensitivity ratchets to true for a true or conditional claim.
+    Positive versus negative availability withholds that column segment entirely.
     Unknown optional observations do not contradict a supplied concrete fact.
     """
     by_column: dict[str, list[tuple[int, int, int]]] = defaultdict(list)

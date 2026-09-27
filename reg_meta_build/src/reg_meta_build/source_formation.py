@@ -843,7 +843,7 @@ def form_native_variable(
     if conditional is not None and (
         conditional.status != "value" or conditional.value is not False
     ):
-        flag_values["is_sensitive"] = None
+        flag_values["is_sensitive"] = True
     variable = ResolvedVariable(
         register=register,
         slug=slug,

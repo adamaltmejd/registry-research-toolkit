@@ -710,21 +710,56 @@ def test_unknown_flags_withhold_unsupported_entity_without_defaulting_false() ->
     assert len(result.intervals[0].segments) == 1
 
 
-@pytest.mark.parametrize("sensitivity", [False, True])
-def test_conditional_sensitivity_cannot_be_reduced_to_a_boolean(
-    sensitivity: bool,
+@pytest.mark.parametrize(
+    ("sensitivity", "conditional", "expected"),
+    [
+        (False, True, True),
+        (True, True, True),
+        (None, True, True),
+        (False, False, False),
+        (True, False, True),
+    ],
+)
+def test_conditional_sensitivity_ratchets_up_without_changing_plain_values(
+    sensitivity: bool | None, conditional: bool, expected: bool
 ) -> None:
+    declaration = value_field(sensitivity) if sensitivity is not None else None
     result = _form(
         (_record(2020),),
         flags=SourceFields(
-            sensitivity=value_field(sensitivity),
+            sensitivity=declaration,
             identifier=value_field(False),
-            conditional_sensitivity=value_field(True),
+            conditional_sensitivity=value_field(conditional),
+        ),
+    )
+    assert result.variable is not None
+    assert result.variable.is_sensitive is expected
+    assert result.diagnostics == ()
+
+
+def test_conditional_false_alone_does_not_supply_sensitivity() -> None:
+    result = _form(
+        (_record(2020),),
+        flags=SourceFields(
+            identifier=value_field(False), conditional_sensitivity=value_field(False)
         ),
     )
     assert result.variable is None
     assert result.diagnostics[0].code == "unresolved_flag"
     assert result.diagnostics[0].fields == ("is_sensitive",)
+
+
+def test_unknown_conditional_declaration_ratchets_to_sensitive() -> None:
+    result = _form(
+        (_record(2020),),
+        flags=SourceFields(
+            sensitivity=value_field(False),
+            identifier=value_field(False),
+            conditional_sensitivity=SourceField(status="unknown", raw_value="unclear"),
+        ),
+    )
+    assert result.variable is not None
+    assert result.variable.is_sensitive is True
 
 
 def test_bound_code_validity_splits_ordinary_state_and_retains_version_label() -> None:
