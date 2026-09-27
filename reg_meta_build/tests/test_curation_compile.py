@@ -1979,7 +1979,7 @@ def test_sos_subdataset_split_requires_exact_partition(
         '[register]\nprovider = "sos"\nslug = "par"\n'
         'native_id = "5891427617861710725"\nname = "Patientregistret"\n'
         '[[identity.split]]\nvariable = "ATC"\nby = "deldatamangd"\n'
-        + "parts = ["
+        "parts = ["
         + ", ".join(
             f'{{ deldatamangd = "{subset}", owner = "5891427617861710725.ATC.{slugs[subset]}" }}'
             for subset in declared
