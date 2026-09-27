@@ -174,11 +174,7 @@ class TestClassifyValueSetText:
             "0=giltigt pnr; 4=samordningsnummer; strängen är tom",  # trailing prose (mixed =)
             "1;5,6;7;8",  # comma inside a code
             "1;2;1",  # duplicate code
-            "01=till moder  02=till fader",  # multi-space (single segment, embedded =)
             "1= ; 2=nej",  # whitespace-only label -> rejected (empty after strip)
-            # The BU `SPEC` cell with no newline at all: one segment, so this is
-            # free text under the delivered format, exactly as before.
-            normalize_text(BU_SPEC_ONE_LINE, multiline=True),
         ],
     )
     def test_messy_cells_rejected(self, text: str) -> None:
@@ -219,11 +215,6 @@ class TestClassifyValueSetText:
     @pytest.mark.parametrize(
         "text",
         [
-            # The wrapped BU `SPEC` cell: its last two assignments share one line,
-            # separated by nothing but a long run of plain spaces. Accepting it
-            # would emit codes 2 and 3 and bury `4 = ...` in code 3's label.
-            normalize_text(BU_SPEC_WRAPPED, multiline=True),
-            "1=ja; 2=nej  3=kanske",  # the narrowest gap that is still one
             # SOL `POMVTRYGG`: this cell separates its members with `;`, but its
             # first segment carries a second complete assignment behind a comma.
             "0=(ogitligt), 1=enbart trygghetslarm; 2=trygghetslarm som delinsats",
@@ -233,6 +224,40 @@ class TestClassifyValueSetText:
         # Not silent: a delivered list whose members cannot be separated states
         # no members AND is distinguishable from free text (`(None, False)`).
         assert _classify_value_set_text(text) == (None, True)
+
+    @pytest.mark.parametrize(
+        ("text", "pairs"),
+        [
+            (
+                "01=till moder  02=till fader",
+                [("01", "till moder"), ("02", "till fader")],
+            ),
+            (
+                normalize_text(BU_SPEC_ONE_LINE, multiline=True),
+                [
+                    ("2", "brister i hemmilljön 2 § LVU"),
+                    ("3", "barnets/den ungas beteende (3 § LVU)"),
+                    ("4", "både miljö och beteende 2-3 §§ LVU."),
+                ],
+            ),
+            (
+                normalize_text(BU_SPEC_WRAPPED, multiline=True),
+                [
+                    ("2", "brister i hemmilljön 2 § LVU"),
+                    ("3", "barnets/den ungas beteende (3 § LVU)"),
+                    ("4", "både miljö och beteende 2-3 §§ LVU."),
+                ],
+            ),
+            (
+                "1=ja; 2=nej  3=kanske",
+                [("1", "ja"), ("2", "nej"), ("3", "kanske")],
+            ),
+        ],
+    )
+    def test_alignment_gaps_separate_complete_assignments(
+        self, text: str, pairs: list[tuple[str, str]]
+    ) -> None:
+        assert _classify_value_set_text(text) == (pairs, False)
 
 
 def test_check_minted_id_bands_fails_on_unminted_sos() -> None:
