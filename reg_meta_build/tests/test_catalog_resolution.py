@@ -18,8 +18,14 @@ from reg_meta_build.source_coordinates import (
     native_variant_key,
     source_register_key,
 )
-from reg_meta_build.source_curation import capture_expectations
-from reg_meta_build.source_effects import record_ref
+from reg_meta_build.source_curation import (
+    CheckedEditionRebind,
+    CurationCase,
+    OccurrenceCorrectionDecision,
+    PeerGuard,
+    capture_expectations,
+)
+from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_naming import (
     NamingDeclaration,
@@ -137,6 +143,78 @@ def test_explicit_rebind_roots_variant_edition_and_population_parents() -> None:
     assert any(
         key[: len(split)] == split and "population" in key for key in parents.fields
     )
+
+
+def test_moved_occurrence_population_key_resolves_to_parent() -> None:
+    record = _record(Registerversionnamn="2007-12-31", RegVerID="2")
+    population = next(
+        parent for parent in record.parent_facts if parent.kind == "population"
+    )
+    record = record.model_copy(
+        update={
+            "subject": record.subject.model_copy(
+                update={"population": population.coordinate}
+            )
+        }
+    )
+    native = native_variant_key(record)
+    assert native is not None
+    split = (*native, "edition-split", "stock")
+    ref = record_ref(record)
+    case = CurationCase(
+        case_id="stock-population",
+        targets=capture_expectations((record,), fields=()),
+        peer_guards=(
+            PeerGuard(
+                guard_id="stock-population",
+                source=record.source,
+                coordinates=(
+                    ("register", record.subject.register_name),
+                    ("variant", record.subject.variant),
+                ),
+                expected_members=(ref,),
+            ),
+        ),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            effects=(CheckedEditionRebind(ref=ref, variant_key=split),),
+            reason="SCB population distinguishes stock",
+            provenance="fixture",
+        ),
+    )
+    (moved,) = apply_occurrence_cases((record,), (case,)).occurrences
+    native_parent = native_parent_key(
+        record.source, record.subject.provider, population
+    )
+    assert native_parent is not None
+    expected = (*split, *native_parent[len(native) :])
+    assert moved.population_key == expected
+
+    split_name = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="register_variant",
+            provider="scb",
+            source_key=split,
+            register_key=source_register_key(record),
+        ),
+        naming=SlugEntry(
+            kind="register_variant",
+            provider="scb",
+            source_id="1.10.stock",
+            slug="stock",
+        ),
+        contributors=(),
+    )
+    register_name = next(
+        name for name in _names(record) if name.target.kind == "register"
+    )
+    parents = resolve_parents(
+        (moved,), (register_name, split_name), rebinds={ref: split}
+    )
+    assert expected in parents.fields
+    name = parents.fields[expected].name
+    assert name is not None
+    assert name.value == population.coordinate.name
 
 
 def test_parent_facts_feed_ordinary_formation_and_direct_catalog(

@@ -457,6 +457,11 @@ def apply_occurrence_cases(
             if split is not None:
                 if occurrence.edition_key is None or occurrence.variant_key is None:
                     raise ValueError("edition rebind needs a native edition")
+                native_population_key = (
+                    (*occurrence.edition_key, "population", *occurrence.population_key)
+                    if occurrence.population_key is not None
+                    else None
+                )
                 corrected = replace(
                     corrected,
                     variant_key=split,
@@ -465,8 +470,11 @@ def apply_occurrence_cases(
                         *occurrence.edition_key[len(occurrence.variant_key) :],
                     ),
                     population_key=(
-                        (*split, "population", *occurrence.population_key)
-                        if occurrence.population_key is not None
+                        (
+                            *split,
+                            *native_population_key[len(occurrence.variant_key) :],
+                        )
+                        if native_population_key is not None
                         else None
                     ),
                 )
