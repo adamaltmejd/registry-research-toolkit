@@ -1869,21 +1869,27 @@ def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
     assert corrected[1].variable_key == native
 
 
-def _sos_partition_records(*, rename: bool = False) -> tuple[SourceRecord, ...]:
+def _sos_partition_records(
+    *, rename: bool = False, subsets: tuple[str, ...] | None = None
+) -> tuple[SourceRecord, ...]:
     source = "Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx"
     revision = _revision(source)
     register = SourceCoordinate(status="value", name="Patientregistret")
-    variant = SourceCoordinate(status="value", name="PAR_OV")
     variable = SourceCoordinate(
         status="value", native_id="INVARN8" if rename else "ATC"
     )
-    types = ("integer",) if rename else ("integer", "text")
+    types = (
+        ("text",) * len(subsets)
+        if subsets is not None
+        else (("integer",) if rename else ("integer", "text"))
+    )
     records = []
     for index, data_type in enumerate(types, 1):
+        subset = subsets[index - 1] if subsets is not None else "PAR_OV"
         subject = SourceSubject(
             provider="sos",
             register=register,
-            variant=variant,
+            variant=SourceCoordinate(status="value", name=subset),
             population=SourceCoordinate(status="not_applicable"),
             variable=variable,
             member=SourceCoordinate(status="value", native_id=str(index)),
@@ -1892,7 +1898,7 @@ def _sos_partition_records(*, rename: bool = False) -> tuple[SourceRecord, ...]:
         locator = RecordLocator(
             semantic_record_key=(f"member:{index}",),
             physical_file="fixture.xlsx",
-            physical_table="PAR_OV",
+            physical_table=subset,
             physical_record=str(index),
             physical_cells=(),
         )
@@ -1964,6 +1970,104 @@ def test_sos_type_split_and_name_rename(tmp_path: Path, rename: bool):
     else:
         assert corrected[0].variable_key != corrected[1].variable_key
     assert all(value is not None for _, value in keys[key])
+
+
+def test_sos_subdataset_split_routes_same_type_occurrences(tmp_path: Path):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/sos/par.toml"
+    path.parent.mkdir(parents=True)
+    base = (
+        '[register]\nprovider = "sos"\nslug = "par"\n'
+        'native_id = "5891427617861710725"\nname = "Patientregistret"\n'
+        '[[identity.split]]\nvariable = "ATC"\nby = "deldatamangd"\n'
+    )
+    parts = (
+        '{ deldatamangd = "PAR_OV", owner = "5891427617861710725.ATC.outpatient" }',
+        '{ deldatamangd = "PAR_SV", owner = "5891427617861710725.ATC.inpatient" }',
+    )
+    names = (
+        '[[variable]]\nnative_id = "5891427617861710725.ATC.outpatient"\n'
+        'slug = "outpatient"\n'
+        '[[variable]]\nnative_id = "5891427617861710725.ATC.inpatient"\n'
+        'slug = "inpatient"\n'
+    )
+    records = _sos_partition_records(subsets=("PAR_OV", "PAR_SV"))
+    expected = {
+        "PAR_OV": "outpatient",
+        "PAR_SV": "inpatient",
+    }
+    first = None
+    for ordered_parts in (parts, parts[::-1]):
+        path.write_text(
+            base + f"parts = [{', '.join(ordered_parts)}]\n" + names,
+            encoding="utf-8",
+        )
+        compiled, key, native = _compile_partition_fixture(root, records)
+        if first is None:
+            first = compiled
+        else:
+            assert compiled == first
+        cases, naming, keys, _, bases, issues = compiled
+        assert not issues
+        assert len(cases[key]) == 1
+        assert len(naming[key]) == 2
+        assert native in bases[key]
+        corrected = apply_occurrence_cases(records, cases[key]).occurrences
+        assert {
+            record.subject.variant.name: occurrence.variable_key[-1]
+            for record, occurrence in zip(records, corrected, strict=True)
+        } == {subset: subset for subset in expected}
+        assert {
+            item.target.source_key[-1]: item.naming.slug for item in naming[key]
+        } == expected
+        assert all(value is not None for _, value in keys[key])
+
+
+@pytest.mark.parametrize(
+    "subsets, declared",
+    [
+        (("PAR_OV",), ("PAR_OV", "PAR_SV")),
+        (("PAR_OV", "PAR_TV"), ("PAR_OV", "PAR_SV")),
+    ],
+)
+def test_sos_subdataset_split_requires_exact_partition(
+    tmp_path: Path, subsets: tuple[str, ...], declared: tuple[str, ...]
+):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/sos/par.toml"
+    path.parent.mkdir(parents=True)
+    slugs = {"PAR_OV": "outpatient", "PAR_SV": "inpatient"}
+    path.write_text(
+        '[register]\nprovider = "sos"\nslug = "par"\n'
+        'native_id = "5891427617861710725"\nname = "Patientregistret"\n'
+        '[[identity.split]]\nvariable = "ATC"\nby = "deldatamangd"\n'
+        "parts = ["
+        + ", ".join(
+            f'{{ deldatamangd = "{subset}", owner = "5891427617861710725.ATC.{slugs[subset]}" }}'
+            for subset in declared
+        )
+        + "]\n"
+        + "".join(
+            f'[[variable]]\nnative_id = "5891427617861710725.ATC.{slugs[subset]}"\n'
+            f'slug = "{slugs[subset]}"\n'
+            for subset in declared
+        ),
+        encoding="utf-8",
+    )
+    records = _sos_partition_records(subsets=subsets)
+    compiled, key, native = _compile_partition_fixture(root, records)
+    cases, _, _, _, bases, issues = compiled
+    assert not cases.get(key)
+    assert native in bases[key]
+    assert [issue.code for issue in issues] == ["stale_curation_entry"]
+    assert all(
+        occurrence.variable_key == native
+        for occurrence in apply_occurrence_cases(
+            records, cases.get(key, ())
+        ).occurrences
+    )
 
 
 def test_partition_compile_is_byte_identical_on_rerun(tmp_path: Path):

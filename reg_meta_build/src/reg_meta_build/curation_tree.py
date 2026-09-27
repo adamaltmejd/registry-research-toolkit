@@ -496,10 +496,19 @@ class IdentityRouteEntry(_CurationModel):
 
 
 class IdentitySplitPart(_CurationModel):
-    data_type: str
+    data_type: str | None = None
+    deldatamangd: str | None = None
     owner: str
 
-    _trimmed = field_validator("data_type")(_require_trimmed)
+    _trimmed = field_validator("data_type", "deldatamangd")(_require_trimmed)
+
+    @model_validator(mode="after")
+    def _one_discriminator(self) -> IdentitySplitPart:
+        if (self.data_type is None) == (self.deldatamangd is None):
+            raise ValueError(
+                "split part needs exactly one of data_type or deldatamangd"
+            )
+        return self
 
     @field_validator("owner")
     @classmethod
@@ -521,10 +530,16 @@ class IdentitySplitPart(_CurationModel):
 
 class IdentitySplitEntry(_CurationModel):
     variable: str
-    by: Literal["data_type"]
+    by: Literal["data_type", "deldatamangd"]
     parts: list[IdentitySplitPart]
 
     _variable = field_validator("variable")(_require_trimmed)
+
+    @model_validator(mode="after")
+    def _matching_discriminator(self) -> IdentitySplitEntry:
+        if any(getattr(part, self.by) is None for part in self.parts):
+            raise ValueError(f"split parts must use {self.by} when by = {self.by!r}")
+        return self
 
 
 class IdentityRenameEntry(_CurationModel):

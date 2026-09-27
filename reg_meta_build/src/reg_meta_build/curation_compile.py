@@ -1538,25 +1538,33 @@ def compile_partitions(
                 if is_split:
                     declaration = cast("IdentitySplitEntry", declaration)
                     split_bases[scope_key].add(native)
-                    owners = {part.data_type: part.owner for part in declaration.parts}
-                    actual = {
-                        value
-                        for record in records
-                        if (value := _literal_field(record, "data_type")) is not None
+                    by = declaration.by
+                    owners = {
+                        cast("str", getattr(part, by)): part.owner
+                        for part in declaration.parts
                     }
+                    values = tuple(
+                        _literal_field(record, "data_type")
+                        if by == "data_type"
+                        else (
+                            record.subject.variant.name
+                            if record.subject.variant.status == "value"
+                            else None
+                        )
+                        for record in records
+                    )
+                    actual = {value for value in values if value is not None}
                     if (
                         actual != set(owners)
                         or len(owners) != len(declaration.parts)
-                        or any(
-                            _literal_field(record, "data_type") is None
-                            for record in records
-                        )
+                        or None in values
                     ):
                         diagnostics.append(
                             _stale_partition(
                                 ref,
                                 source_id,
-                                f"data types {sorted(actual)!r} do not equal declared {sorted(owners)!r}",
+                                f"{'data types' if by == 'data_type' else 'deldatamangd values'} "
+                                f"{sorted(actual)!r} do not equal declared {sorted(owners)!r}",
                             )
                         )
                         null_bases[scope_key].add(native)
@@ -1567,19 +1575,17 @@ def compile_partitions(
                             variable_key=(
                                 *native,
                                 "accepted-shape",
-                                cast("str", _literal_field(record, "data_type")),
+                                cast("str", value),
                             ),
                             when=(
                                 FieldExpectation(
-                                    name="data_type",
-                                    status="value",
-                                    value=cast(
-                                        "str", _literal_field(record, "data_type")
-                                    ),
+                                    name="data_type", status="value", value=value
                                 ),
-                            ),
+                            )
+                            if by == "data_type"
+                            else (),
                         )
-                        for record in records
+                        for record, value in zip(records, values, strict=True)
                     )
                 else:
                     declaration = cast("IdentityRenameEntry", declaration)
