@@ -36,6 +36,7 @@ from reg_meta_build.source_value_bindings import (
     bind_occurrence_code_lists,
     open_value_bindings,
 )
+from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_periods import value_period, value_window
 from reg_meta_build.source_values import (
     SourceMemberHint,
@@ -45,6 +46,10 @@ from reg_meta_build.source_values import (
     SourceValueJoin,
     SourceValueValidity,
     SourceValueWindow,
+)
+from reg_meta_build.sources.scb_auxiliary import (
+    clean_identifier_row,
+    scb_support_joins,
 )
 
 from reg_meta_build import prepared_values, source_value_bindings
@@ -72,6 +77,7 @@ def _record(
     declared: str | None = None,
     description: str = "first",
     identifier: SourceField | None = None,
+    provider: str = "test",
 ) -> SourceRecord:
     return SourceRecord.create(
         revision=_revision(source),
@@ -85,7 +91,7 @@ def _record(
             ),
         ),
         subject=SourceSubject(
-            provider="test",
+            provider=provider,
             register=SourceCoordinate(status="value", native_id=1),
             variant=SourceCoordinate(status="value", native_id=2),
             population=SourceCoordinate(status="unknown"),
@@ -540,6 +546,50 @@ def test_declared_identifier_drops_unresolvable_list_but_keeps_clean_list(
     assert resolved.issues == ()
     assert resolved.segments[0].code_set is not None
     assert resolved.segments[0].code_set.members == (("01", "One"),)
+
+
+def test_identifierare_join_drops_unresolvable_scb_record_coding(
+    tmp_path: Path,
+) -> None:
+    record = _record(source="scb-registerinformation", provider="scb")
+    assert record.fields.identifier is None
+    cells = {
+        "VarID": (True, "3", "3"),
+        "Variabelnamn": (True, "Variable", "Variable"),
+        "Variabeldefinition": (True, "Definition", "Definition"),
+    }
+    identifier = clean_identifier_row(
+        tuple(cells), 2, cells, _revision("scb-identifierare")
+    )
+    support = SourceSupportBindings(
+        scb_support_joins(
+            {
+                "Registerinformation.csv": "scb-registerinformation",
+                "Identifierare.csv": "scb-identifierare",
+            }
+        ),
+        (identifier,),
+    )
+    support.observe(record)
+    support.seal()
+    assert support.bind(record)[0].fields.identifier == value_field(True)
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(source="scb-registerinformation", missing="unknown"),
+        validity_present=False,
+    )
+    with open_value_bindings((source,)) as sessions:
+        unjoined = bind_occurrence_code_lists(source_occurrence(record), sessions)
+        joined = bind_occurrence_code_lists(
+            source_occurrence(record), sessions, support=support
+        )
+    assert len(unjoined.claims) == 1
+    assert [issue.code for issue in unjoined.issues] == ["unknown_code_validity"]
+    assert [
+        issue.code for issue in resolve_code_membership(unjoined.claims).issues
+    ] == ["unknown_code_membership"]
+    assert joined.claims == joined.issues == ()
+    assert joined.bindings[0].claim_id is None
 
 
 @pytest.mark.parametrize("code,label", ((None, "One"), ("01", None)))

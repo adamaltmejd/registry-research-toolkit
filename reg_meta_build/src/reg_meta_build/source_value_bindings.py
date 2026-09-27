@@ -28,7 +28,10 @@ from reg_meta_build.source_curation import (
     SourceRecordRef,
 )
 from reg_meta_build.source_effects import copied_coding_key
-from reg_meta_build.source_intervals import coding_scope_bounds
+from reg_meta_build.source_intervals import (
+    coding_scope_bounds,
+    reconcile_source_fields,
+)
 from reg_meta_build.source_records import (
     ScopeInterval,
     SourceFields,
@@ -47,6 +50,7 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.source_occurrences import EffectiveOccurrence
     from reg_meta_build.source_records import RecordLocator
+    from reg_meta_build.source_support import SourceSupportBindings
     from reg_meta_build.source_values import SourceValueAssociation
 
 
@@ -227,7 +231,7 @@ class ValueBindingSession:
             scope = record.edition_period_scope
             if scope.kind == "not_applicable":
                 scope = record.edition_scope
-        identifier = record.fields.identifier
+        identifier = (record.fields if fields is None else fields).identifier
         declared_identifier = (
             identifier is not None
             and identifier.status == "value"
@@ -497,26 +501,36 @@ def bind_code_lists(
 def bind_occurrence_code_lists(
     occurrence: EffectiveOccurrence,
     sessions: Iterable[ValueBindingSession],
+    *,
+    support: SourceSupportBindings | None = None,
 ) -> ValueBindingResult:
     """Bind original or explicitly copied coding at the resolved occurrence scope.
 
     Supporting metadata alone never provides coding for an added occurrence.
     Multiple source alternatives remain competing claims for the coding resolver.
+    A sealed support join supplies each record's identifier declaration for coding.
     """
     records = occurrence.source_records or occurrence.coding_records
     scope = occurrence.edition_period_scope
     if scope.kind == "not_applicable":
         scope = occurrence.edition_scope
     sessions = tuple(sessions)
-    results = tuple(
-        bind_code_lists(
-            record,
-            sessions,
-            scope=scope,
-            fields=occurrence.fields if occurrence.source_records else None,
+    results = []
+    for record in {record.record_id: record for record in records}.values():
+        fields = occurrence.fields if occurrence.source_records else record.fields
+        if support is not None:
+            joined, _ = reconcile_source_fields(
+                (record,), support=tuple(match.fields for match in support.bind(record))
+            )
+            fields = fields.model_copy(update={"identifier": joined.identifier})
+        results.append(
+            bind_code_lists(
+                record,
+                sessions,
+                scope=scope,
+                fields=fields,
+            )
         )
-        for record in {record.record_id: record for record in records}.values()
-    )
     return ValueBindingResult(
         tuple(claim for result in results for claim in result.claims),
         tuple(binding for result in results for binding in result.bindings),
