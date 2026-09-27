@@ -12,7 +12,7 @@ import json
 import re
 from dataclasses import dataclass, fields
 from datetime import date
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from ._curation import (
     curation_error,
@@ -473,7 +473,7 @@ def load_scb_errata(
                 column,
                 named,
                 _state_provenance(upstream, evidence),
-                values.get("native_variable_id"),
+                cast("int | None", values.get("native_variable_id")),
             )
         )
 
