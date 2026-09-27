@@ -71,11 +71,11 @@ if TYPE_CHECKING:
     from reg_meta_build.source_occurrences import EffectiveOccurrence
     from reg_meta_build.source_records import SourceRecord
     from reg_meta_build.source_support import SourceSupportBindings
-    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
     from reg_meta_build.source_value_bindings import (
         ValueBindingResult,
         ValueBindingSession,
     )
+    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
 
 
 @dataclass(frozen=True)
