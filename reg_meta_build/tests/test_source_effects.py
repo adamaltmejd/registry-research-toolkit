@@ -304,9 +304,7 @@ def test_checked_sensitivity_overrides_raw_and_conditional_support_claims() -> N
     )
     correction = CheckedFieldChange(
         ref=record_ref(original),
-        replacement=FieldExpectation(
-            name="sensitivity", status="value", value=False
-        ),
+        replacement=FieldExpectation(name="sensitivity", status="value", value=False),
     )
     result = apply_occurrence_cases((original,), (_case(original, correction),))
     assert result.diagnostics == ()
@@ -333,9 +331,7 @@ def test_checked_sensitivity_overrides_raw_and_conditional_support_claims() -> N
     formed = form_native_variable(
         (effective,),
         register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
-        variants={
-            effective.variant_key: ResolvedVariant(slug="people", name="People")
-        },
+        variants={effective.variant_key: ResolvedVariant(slug="people", name="People")},
         slug="value",
         provider_key="5",
         flags=fields.model_copy(update={"identifier": value_field(False)}),

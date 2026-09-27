@@ -293,8 +293,10 @@ def reconcile_source_fields(
             isinstance(record, EffectiveOccurrence) and name in record.withheld_fields
             for record in records
         )
-        if name == "sensitivity" and not explicitly_withheld and (
-            ("value", True) in values or ("value", "conditional") in values
+        if (
+            name == "sensitivity"
+            and not explicitly_withheld
+            and (("value", True) in values or ("value", "conditional") in values)
         ):
             resolved[name] = SourceField(status="value", value=True)
         elif len(values) > 1 or explicitly_withheld:
