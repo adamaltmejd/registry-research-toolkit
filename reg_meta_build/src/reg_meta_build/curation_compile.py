@@ -2222,6 +2222,108 @@ def _source_text(field: Any) -> str | None:
     )
 
 
+def compile_scb_preliminary(
+    prepared: PreparedCatalogSources,
+    scopes: tuple[CompiledScope, ...],
+) -> dict[Any, tuple[CurationCase, ...]]:
+    """Retain paired preliminary editions as support for final native variables."""
+    cases: dict[Any, tuple[CurationCase, ...]] = {}
+    for scope in sorted(
+        scopes, key=lambda item: (item.source, repr(item.register_key))
+    ):
+        if scope.register_key is None:
+            records = prepared.records.iter_records(source=scope.source)
+        else:
+            records = (
+                record
+                for _, members in prepared.records.iter_register_slices(
+                    scope.source, (scope.register_key,)
+                )
+                for record in members
+            )
+        editions: dict[tuple[Any, str, str], list[SourceRecord]] = defaultdict(list)
+        for record in records:
+            if record.subject.provider != "scb" or len(record.context) < 3:
+                continue
+            match = re.fullmatch(
+                r"(\d{4}), (preliminär|slutlig) version", record.context[2]
+            )
+            variant = native_variant_key(record)
+            if match is None or variant is None:
+                continue
+            editions[variant, match[1], match[2]].append(record)
+        selected = []
+        for (variant, year, kind), preliminary in sorted(
+            editions.items(), key=lambda item: repr(item[0])
+        ):
+            if kind != "preliminär" or not (
+                final := editions.get((variant, year, "slutlig"))
+            ):
+                continue
+            final_variables = {
+                record.subject.native.variable_id
+                for record in final
+                if record.subject.native.variable_id is not None
+            }
+            superseded = tuple(
+                record
+                for record in preliminary
+                if record.subject.native.variable_id in final_variables
+            )
+            if not superseded:
+                continue
+            members = (*preliminary, *final)
+            first = preliminary[0]
+            register_id = first.subject.native.register_id
+            variant_id = first.subject.native.register_variant_id
+            case_id = f"superseded-preliminary:{register_id}:{variant_id}:{year}"
+            targets = capture_expectations(superseded, fields=())
+            selected.append(
+                CurationCase(
+                    case_id=case_id,
+                    targets=targets,
+                    # Source-use effects require a guard within this build.
+                    peer_guards=(
+                        PeerGuard(
+                            guard_id=case_id,
+                            source=first.source,
+                            coordinates=(
+                                ("register", first.subject.register_name),
+                                ("variant", first.subject.variant),
+                            ),
+                            edition_scopes=tuple(
+                                scope
+                                for _, scope in sorted(
+                                    {
+                                        record.edition_scope.model_dump_json(): record.edition_scope
+                                        for record in members
+                                    }.items()
+                                )
+                            ),
+                            expected_members=tuple(
+                                sorted(
+                                    {record_ref(record) for record in members}, key=str
+                                )
+                            ),
+                        ),
+                    ),
+                    decision=OccurrenceCorrectionDecision(
+                        reviewed=True,
+                        effects=tuple(
+                            CheckedSourceUse(ref=target.ref) for target in targets
+                        ),
+                        reason="The final SCB edition supersedes this native variable's preliminary delivery.",
+                        provenance="SCB edition-name rule",
+                    ),
+                )
+            )
+        if selected:
+            cases[scope.source, scope.register_key] = tuple(
+                sorted(selected, key=lambda case: case.case_id)
+            )
+    return cases
+
+
 def compile_sos_thin(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -3886,6 +3988,8 @@ def compile_curation(
             current.setdefault(key, []).extend(values)
     thin_cases, thin_diagnostics, thin_report = compile_sos_thin(tree, prepared, scopes)
     for key, new_cases in thin_cases.items():
+        cases[key].extend(new_cases)
+    for key, new_cases in compile_scb_preliminary(prepared, scopes).items():
         cases[key].extend(new_cases)
     for register, statuses in thin_report.items():
         current = report.setdefault(register, {key: [] for key in statuses})

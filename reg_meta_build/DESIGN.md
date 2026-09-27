@@ -143,8 +143,10 @@ never replaces the original cells:
   June of the last. A `Deklarationsår YYYY (beskattningsår ZZZZ)` with ZZZZ one below
   YYYY is the income year 1 January to 31 December. Other multi-year periods remain
   pooled. The edition label and a variable's declared measurement/reference period are
-  separate observations. A pooled scope carries its whole-range bounds (Y-202): the
-  exact interval's endpoints for a multi-year exact range, else the first claim's start
+  separate observations. An SCB `YYYY, slutlig version` edition supersedes the same
+  variant's `YYYY, preliminär version` per native variable, retaining its records as
+  support evidence. A pooled scope carries its whole-range bounds (Y-202): the exact
+  interval's endpoints for a multi-year exact range, else the first claim's start
   through the last claim's end — but only when every claim is a whole calendar year.
   Other term edges (Komvux HT/VT) and forecast-register ranges carry no range. A pooled
   scope without both bounds stays unresolvable downstream — the range is carried
