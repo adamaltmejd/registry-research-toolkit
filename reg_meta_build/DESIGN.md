@@ -191,8 +191,8 @@ classification names when the sheet names a variable or has no named variable an
 cell anchor. An unnamed list can bind through an unanchored variable pointer; a pointer
 to a sheet naming another variable adds no binding. An anchored pointer to an unnamed
 list stays unresolved. Inline `Värdemängd` assignments also separate at a run of spaces
-before a valid `code =` token; malformed lists remain unresolved. A contact consisting
-of one email address is casefolded while its original cell remains evidence.
+before a valid `code =` token; malformed lists remain unresolved. SOS contact cells stay
+as delivered evidence without a parent metadata field.
 
 Authored thin-provider TOMLs use `sources/curated_records.py`. They are machine-readable
 source declarations with publisher and transcription provenance. Reading them does not

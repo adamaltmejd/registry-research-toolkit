@@ -60,8 +60,6 @@ class SosDcatAp:
     update_frequency_en: str | None = None
     publisher_sv: str | None = None
     publisher_en: str | None = None
-    contact_sv: str | None = None
-    contact_en: str | None = None
     documentation_url_sv: str | None = None
     documentation_url_en: str | None = None
     landing_page_sv: str | None = None
@@ -255,7 +253,6 @@ class SosRegister:
     dataset_date: date | None
     template_version: str | None
     template_date: date | None
-    contact_email: str | None
     dcat_ap: SosDcatAp
     deldatamangder: tuple[SosDeldatamangd, ...]
     variables: tuple[SosVariable, ...]
@@ -502,7 +499,6 @@ def parse_register_file(path: Path | str) -> SosRegister:
             dataset_date=gen.get("dataset_date"),
             template_version=gen.get("template_version"),
             template_date=gen.get("template_date"),
-            contact_email=gen.get("contact_email"),
             dcat_ap=dcat_ap,
             deldatamangder=deldatamangder,
             variables=variables,
@@ -792,9 +788,6 @@ def _parse_generell(ws: Any) -> tuple[dict[str, Any], SosSheetEvidence]:
         elif section == "dataset" and low.startswith("datum"):
             field_name = "dataset_date"
             out[field_name] = _as_date(raw_value)
-        elif "e-post" in low or low == "e-post:":
-            field_name = "contact_email"
-            out[field_name] = value
         evidence_rows.append(
             SosEvidenceRow(
                 role="metadata",
@@ -827,7 +820,6 @@ _DCAT_MAP = {
     "population": "population",
     "uppdateringsfrekvens": "update_frequency",
     "utgivare": "publisher",
-    "kontaktuppgift": "contact",
     "dokumentation": "documentation_url",
     "ingångssida": "landing_page",
     "webbadress för åtkomst": "access_url",

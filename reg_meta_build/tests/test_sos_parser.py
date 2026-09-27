@@ -340,7 +340,12 @@ def test_synthetic_generell_fields(tmp_path: Path) -> None:
     assert reg.template_version == "2.1"
     assert reg.dataset_name == "Patientregistret-syntet"
     assert reg.dataset_version == "2024:2"
-    assert reg.contact_email == "kontakt@example.se"
+    general = next(sheet for sheet in reg.source_sheets if sheet.kind == "general")
+    assert any(
+        cell.raw_value == "kontakt@example.se"
+        for row in general.rows
+        for cell in row.source_evidence.cells
+    )
 
 
 def test_synthetic_dcat_ap_field_map(tmp_path: Path) -> None:

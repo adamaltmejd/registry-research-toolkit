@@ -57,7 +57,7 @@ if TYPE_CHECKING:
     from reg_meta_build.source_support import SourceSupportJoin
 
 _FORMAT = "reg-meta-prepared-source-records"
-# Y-262: SOS sheet pointers and email contact cleaning change source records;
+# Y-262: SOS sheet pointers and removal of unused contact change source records;
 # schema-12 artifacts must be re-prepared.
 _SCHEMA_VERSION = 13
 _MANIFEST = "manifest.json"

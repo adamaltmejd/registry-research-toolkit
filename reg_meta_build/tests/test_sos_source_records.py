@@ -17,7 +17,6 @@ from _sos_fixtures import (
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.source_coordinates import native_parent_key, source_register_key
 from reg_meta_build.source_curation import record_ref
-from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import (
     DeliveredCell,
@@ -1836,50 +1835,27 @@ def _register_parent_records(cleaned) -> list:
     ]
 
 
-@pytest.mark.parametrize(
-    ("general_contact", "expected_contact"),
-    [
-        ("Rela@x.se", "rela@x.se"),
-        ("Kontakt: Rela@x.se", "Kontakt: Rela@x.se"),
-        ("Kontakt:Rela@x.se", "Kontakt:Rela@x.se"),
-        ("mailto:Rela@x.se", "mailto:Rela@x.se"),
-        ("Åsa@socialstyrelsen.se", "åsa@socialstyrelsen.se"),
-        ("O'Neil@socialstyrelsen.se", "o'neil@socialstyrelsen.se"),
-    ],
-)
-def test_contact_casefolds_only_single_email_and_retains_raw_cells(
-    tmp_path: Path, general_contact: str, expected_contact: str
-) -> None:
+def test_sos_contact_cells_remain_evidence_without_parent_field(tmp_path: Path) -> None:
     import openpyxl
 
     path = tmp_path / "Metadata Test.xlsx"
     _write_source_workbook(path)
     workbook = openpyxl.load_workbook(path)
-    workbook["Generell information"].append([None, "E-post", general_contact])
+    workbook["Generell information"].append([None, "E-post", "Rela@x.se"])
     dcat = workbook.create_sheet("Metadata-Datamängd (DCAT-AP)")
     dcat.append(["Attribut", "Definition", "Svenska", "Engelska"])
     dcat.append(["Titel", None, "Patientregistret", None])
-    dcat.append(["Kontaktuppgift", None, "rela@x.se", None])
+    dcat.append(["Kontaktuppgift", None, "ReLa@x.se", None])
     workbook.save(path)
 
     cleaned = clean_sos_source(parse_register_file(path), _revision(path))
-    contacts = [
-        (record, record.parent_facts[0].fields.contact)
-        for record in _register_parent_records(cleaned)
-        if record.parent_facts[0].fields.contact is not None
-        and record.parent_facts[0].fields.contact.status == "value"
-    ]
-    assert len(contacts) == 2
-    general = next(item for item in contacts if item[0].language is None)
-    assert general[1].value == expected_contact
-    assert general[1].raw_value == general_contact
-    assert any(cell.raw_value == general_contact for cell in general[0].delivered_cells)
-    fields, conflicts = reconcile_source_fields(
-        tuple(record.parent_facts[0] for record, _ in contacts)
-    )
-    assert ("contact" in conflicts) is (expected_contact != "rela@x.se")
-    if "contact" not in conflicts:
-        assert fields.contact.value == "rela@x.se"
+    assert "contact" not in SourceFields.model_fields
+    for table_name, raw in (
+        ("Generell information", "Rela@x.se"),
+        ("Metadata-Datamängd (DCAT-AP)", "ReLa@x.se"),
+    ):
+        table = next(table for table in cleaned.tables if table.name == table_name)
+        assert any(cell.raw_value == raw for row in table.rows for cell in row.cells)
 
 
 def test_sos_register_name_prefers_dcat_title_over_dataset_label(

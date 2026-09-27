@@ -129,20 +129,6 @@ def _text_field(
     return value_field(normalized, raw=raw)
 
 
-def _contact_field(cell: SosCellEvidence) -> SourceField:
-    field = _text_field(cell)
-    if (
-        field.status == "value"
-        and isinstance(field.value, str)
-        and isinstance(field.raw_value, str)
-        and field.raw_value.count("@") == 1
-        and ":" not in field.raw_value
-        and not any(char.isspace() for char in field.raw_value)
-    ):
-        return value_field(field.value.casefold(), raw=field.raw_value)
-    return field
-
-
 def _sheet_pointer(
     register: SosRegister, variable: SosVariable
 ) -> tuple[str, bool, frozenset[str]] | None:
@@ -480,7 +466,6 @@ def iter_sos_variable_records(
 _GENERAL_FIELDS = {
     "dataset_version": "source_version",
     "dataset_date": "source_date",
-    "contact_email": "contact",
 }
 # The general sheet's Datamängd cell maps separately; see
 # iter_sos_metadata_records.
@@ -492,7 +477,6 @@ _DCAT_FIELDS = {
     "population": "population_definition",
     "update_frequency": "update_frequency",
     "publisher": "source_attribution",
-    "contact": "contact",
     "documentation_url": "documentation_url",
     "landing_page": "landing_page",
     "access_url": "access_url",
@@ -643,11 +627,7 @@ def iter_sos_metadata_records(
                     field = _DCAT_FIELDS.get(stem)
                     if field is None:
                         continue
-                    cleaned = (
-                        _contact_field(cell)
-                        if field == "contact"
-                        else _text_field(cell, multiline=field in _PARAGRAPH_FIELDS)
-                    )
+                    cleaned = _text_field(cell, multiline=field in _PARAGRAPH_FIELDS)
                     if cleaned is not None:
                         yield _metadata_record(
                             register,
@@ -672,13 +652,9 @@ def iter_sos_metadata_records(
                         None,
                     )
                     if position is not None:
-                        fields[field] = (
-                            _contact_field(evidence.cells[position])
-                            if field == "contact"
-                            else _text_field(
-                                evidence.cells[position],
-                                multiline=field in _PARAGRAPH_FIELDS,
-                            )
+                        fields[field] = _text_field(
+                            evidence.cells[position],
+                            multiline=field in _PARAGRAPH_FIELDS,
                         )
                         field_cells.append(
                             SourceFieldCells(field=field, positions=(position,))
