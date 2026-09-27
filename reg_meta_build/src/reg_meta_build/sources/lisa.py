@@ -403,10 +403,10 @@ def _sensitivity_field(value: Any, coordinate: str) -> SourceField | None:
     if text is None:
         return None
     normalized = normalize_text(text)
-    values: dict[str, bool | str] = {
+    values: dict[str, bool] = {
         "Ja": True,
         "Nej": False,
-        "I vissa fall": "conditional",
+        "I vissa fall": True,
     }
     if normalized not in values:
         raise LisaWorkbookError(
@@ -673,6 +673,11 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                     if sheet_name == "Individ"
                     else None
                 )
+                if sensitivity is None and spec.table_key in (
+                    "individual",
+                    "individual-year-independent",
+                ):
+                    sensitivity = value_field(True)
                 base_register = _optional_text_field(values[-1])
                 records.append(
                     SourceRecord.create(
