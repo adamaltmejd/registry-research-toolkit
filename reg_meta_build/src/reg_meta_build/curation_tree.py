@@ -209,6 +209,7 @@ class RegisterIdentity(_CurationModel):
     native_id: str | None = None
     name: str | None = None
     steward_table_prefixes: tuple[str, ...] = ()
+    source_labels: list[str] = Field(default_factory=list)
 
     _provider = field_validator("provider")(_require_trimmed)
     _slug = field_validator("slug")(_require_trimmed)
@@ -228,6 +229,11 @@ class RegisterIdentity(_CurationModel):
         if len(value) != len(set(value)):
             raise ValueError("steward table prefixes must be unique")
         return value
+
+    @field_validator("source_labels")
+    @classmethod
+    def _source_labels(cls, labels: list[str]) -> list[str]:
+        return [_require_trimmed(label) for label in labels]
 
     @field_validator("slug")
     @classmethod
@@ -1034,6 +1040,7 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
     entries: list[RegisterCuration] = []
     owners: dict[tuple[str, str], str] = {}
     native_ids: dict[tuple[str, str], str] = {}
+    label_owners: dict[tuple[str, str], tuple[str, str]] = {}
     for path in sorted(directory.rglob("*.toml")):
         if path.name.endswith(".auto.toml"):
             continue
@@ -1055,6 +1062,18 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
                 "Keep one file per provider/register.",
             )
         owners[key] = rel
+        for label in identity.source_labels:
+            label_key = identity.provider, label.casefold()
+            if (prior := label_owners.get(label_key)) and prior[0] != identity.slug:
+                raise curation_error(
+                    _CODE,
+                    f"curation/{rel} [register].source_labels: duplicate source "
+                    f"label {label!r} for {identity.provider}/{identity.slug}; "
+                    f"also declared by {identity.provider}/{prior[0]} in "
+                    f"curation/{prior[1]}.",
+                    "Keep each provider's source label on one register.",
+                )
+            label_owners[label_key] = identity.slug, rel
         if identity.native_id is not None:
             native_key = (identity.provider, identity.native_id)
             if native_key in native_ids:

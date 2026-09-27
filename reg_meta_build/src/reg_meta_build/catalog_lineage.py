@@ -48,6 +48,7 @@ def resolve_catalog_lineage(
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
     unselected: Collection[DependencyKey] = (),
     unselected_names: Mapping[str, Collection[str]] | None = None,
+    source_labels: Mapping[str, Collection[str]] | None = None,
     slice_registers: Collection[str] | None = None,
 ) -> LineageResolution:
     """Match literal source names and follow accepted variable identity edges.
@@ -66,6 +67,7 @@ def resolve_catalog_lineage(
     if metadata.state_lineage or metadata.lineage_warnings:
         raise ValueError("lineage must be resolved once from current catalog states")
     unselected_names = unselected_names or {}
+    source_labels = source_labels or {}
     by_register = {f"{r.provider}/{r.slug}": r for r in registers}
     names, abbreviations = defaultdict(set), defaultdict(set)
     for fqid, labels in {
@@ -77,6 +79,8 @@ def resolve_catalog_lineage(
             names[provider, name.casefold()].add(fqid)
             if match := re.search(r"\(([^)]+)\)", name):
                 abbreviations[provider, match[1].strip().casefold()].add(fqid)
+        for label in source_labels.get(fqid, ()):
+            names[provider, label.casefold()].add(fqid)
     available: set[DependencyKey] = {("register", fqid) for fqid in by_register}
     available.update(("variant", f"{r.provider}/{r.slug}", v.slug) for r, v in variants)
     dependencies = CatalogDependencies(available, withheld, unselected, slice_registers)
@@ -139,12 +143,15 @@ def resolve_catalog_lineage(
         ):
             provider = variable.register_ref.provider
             candidates = set(names.get((provider, text.casefold()), ()))
-            prefix = text.split(" : ", 1)[0].strip().casefold()
-            candidates.update(names.get((provider, prefix), ()))
-            if match := re.search(r"\(([^)]+)\)", text):
-                token = match[1].strip().casefold()
-                candidates.update(abbreviations.get((provider, token), ()))
-                candidates.update(names.get((provider, token), ()))
+            if len(candidates) != 1:
+                prefix = text.split(" : ", 1)[0].strip().casefold()
+                prefix_candidates = set(names.get((provider, prefix), ()))
+                if len(prefix_candidates) == 1 or not candidates:
+                    candidates = prefix_candidates
+                if not candidates and (match := re.search(r"\(([^)]+)\)", text)):
+                    token = match[1].strip().casefold()
+                    candidates.update(abbreviations.get((provider, token), ()))
+                    candidates.update(names.get((provider, token), ()))
             only = next(iter(candidates)) if len(candidates) == 1 else None
             matches[text] = by_register.get(only) if only else None
             if ("register", only) in unselected:

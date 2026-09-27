@@ -107,12 +107,17 @@ _TABLES = (
 
 
 def _write_register(
-    root: Path, body: str, *, slug: str = "test", provider: str = "scb"
+    root: Path,
+    body: str,
+    *,
+    slug: str = "test",
+    provider: str = "scb",
+    native_id: str = "1",
 ) -> Path:
     path = root / "registers" / provider / f"{slug}.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        f'[register]\nprovider = "{provider}"\nslug = "{slug}"\nnative_id = "1"\n\n'
+        f'[register]\nprovider = "{provider}"\nslug = "{slug}"\nnative_id = "{native_id}"\n\n'
         + body,
         encoding="utf-8",
     )
@@ -214,6 +219,30 @@ def test_duplicate_native_id_fails(tmp_path: Path) -> None:
     with pytest.raises(RegMetaError) as exc:
         load_register_files(root)
     assert "duplicate native_id '1'" in exc.value.message
+
+
+def test_register_source_labels_load(tmp_path: Path) -> None:
+    root = tmp_path / "curation"
+    _write_register(root, 'source_labels = ["Former register name (AGI)"]\n')
+    (entry,) = load_register_files(root)
+    assert entry.register_info.source_labels == ["Former register name (AGI)"]
+
+
+def test_duplicate_source_labels_across_registers_fail(tmp_path: Path) -> None:
+    root = tmp_path / "curation"
+    _write_register(root, 'source_labels = ["Shared source (AGI)"]\n', slug="first")
+    _write_register(
+        root,
+        'source_labels = ["shared source (agi)"]\n',
+        slug="second",
+        native_id="2",
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert "duplicate source label" in exc.value.message
+    assert "registers/scb/first.toml" in exc.value.message
+    assert "registers/scb/second.toml" in exc.value.message
 
 
 def test_unknown_top_level_table_fails(tmp_path: Path) -> None:
