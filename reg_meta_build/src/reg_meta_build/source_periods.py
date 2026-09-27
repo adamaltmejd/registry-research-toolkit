@@ -57,6 +57,7 @@ _DEKLARATIONSÅR_RE = re.compile(
     rf"deklarationsår\s*({_YEAR})\s*\(\s*beskattningsår\s*({_YEAR})\s*\)",
     re.IGNORECASE,
 )
+_QUARTER_FROM_RE = re.compile(r"Kvartal 1-3 fr\.o\.m\.? (\d{4})")
 
 
 def _exact_interval(value: str) -> tuple[tuple[str, str] | None, bool]:
@@ -128,8 +129,10 @@ def source_scopes(
     YYYY-MM` month range are each one period; a `Läsåren A/A+1 - C/C+1` hull is
     one pooled range over 1 July of the first year to 30 June of the last. A
     `Deklarationsår YYYY (beskattningsår YYYY-1)` naming its income year is the
-    income year's one period. Remaining multi-year claims stay pooled because
-    the stage-one record cannot safely assert independent annual availability.
+    income year's one period. Exact `Kvartal 1-3 fr.o.m. YYYY` labels are open
+    quarterly delivery lines from that year's start. Remaining multi-year claims
+    stay pooled because the stage-one record cannot safely assert independent
+    annual availability.
     """
     label = normalize_text(version_name) or "<blank Registerversionnamn>"
     exact_interval, date_shaped = _exact_interval(label)
@@ -218,6 +221,13 @@ def source_scopes(
     if "deklarationsår" in label.casefold():
         scope = TemporalScope(kind="unknown", label=label)
         return scope, scope, "unparseable_period"
+
+    if match := _QUARTER_FROM_RE.fullmatch(label):
+        scope = TemporalScope(
+            kind="intervals",
+            intervals=(ScopeInterval(start=f"{match.group(1)}-01-01", end=None),),
+        )
+        return scope, scope, None
 
     claims = edition_claims(label)
     # A single fallback claim beside another disconnected year is ambiguous. The

@@ -99,15 +99,47 @@ def test_repo_rtb_named_edition_splits_load() -> None:
         register for register in tree.registers if register.register_info.slug == "rtb"
     )
     splits = {entry.variant: entry for entry in rtb.identity.edition_split}
+    quarterly = {
+        "2.53": ("folkbokforda-personer-kvartal", "Kvartal 1-3 fr.o.m. 2009", 58),
+        "2.56": ("civilstandsandringar-kvartal", "Kvartal 1-3 fr.o.m. 2010", 33),
+        "2.57": ("doda-kvartal", "Kvartal 1-3 fr.o.m. 2010", 58),
+        "2.60": ("utvandringar-kvartal", "Kvartal 1-3 fr.o.m. 2010", 28),
+        "2.61": ("fodda-kvartal", "Kvartal 1-3 fr.o.m. 2010", 29),
+        "2.62": ("invandringar-kvartal", "Kvartal 1-3 fr.o.m 2010", 28),
+        "2.63": ("inrikes-flyttningar-kvartal", "Kvartal 1-3 fr.o.m 2010", 58),
+        "2.64": ("medborgarskapsandringar-kvartal", "Kvartal 1-3 fr.o.m. 2010", 58),
+    }
     assert {key: len(entry.editions) for key, entry in splits.items()} == {
         "2.66": 36,
         "2.1028": 24,
+        **dict.fromkeys(quarterly, 1),
     }
     assert splits["2.66"].source_editions == [str(year) for year in range(1987, 2026)]
     assert splits["2.1028"].source_editions == [str(year) for year in range(2002, 2026)]
-    assert {entry.split for entry in splits.values()} <= {
-        variant.native_id for variant in rtb.variant
-    }
+    variants = {variant.native_id: variant for variant in rtb.variant}
+    assert {entry.split for entry in splits.values()} <= variants.keys()
+    for parent_id, (slug, edition, retained_count) in quarterly.items():
+        split = splits[parent_id]
+        assert split.editions == [edition]
+        assert len(split.source_editions) == retained_count
+        assert edition not in split.source_editions
+        assert split.split == f"{parent_id}.{slug}"
+        assert split.noted == "2026-09-27"
+        parent = variants[parent_id]
+        child = variants[split.split]
+        assert child.slug == slug
+        assert child.display_group == f"{parent.display_group}, kvartal 1–3"
+        assert (
+            child.panel_entity_key,
+            child.panel_time_key,
+            child.panel_time_grain,
+        ) == (
+            parent.panel_entity_key,
+            parent.panel_time_key,
+            parent.panel_time_grain,
+        )
+    assert "Änkor/ änklingar 1968-1997" in splits["2.56"].source_editions
+    assert "1961-1997" in splits["2.61"].source_editions
 
 
 def test_repo_lineage_parses_from_overlay() -> None:

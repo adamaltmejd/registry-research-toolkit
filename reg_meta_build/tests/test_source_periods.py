@@ -2,8 +2,69 @@
 
 from __future__ import annotations
 
+from datetime import date
+
 import pytest
+from reg_meta_build.source_intervals import coding_scope_bounds, occurrence_bounds
+from reg_meta_build.source_occurrences import EffectiveOccurrence
 from reg_meta_build.source_periods import source_scopes
+from reg_meta_build.source_records import SourceFields
+
+
+@pytest.mark.parametrize(
+    ("source", "start"),
+    (
+        ("Kvartal 1-3 fr.o.m. 2009", "2009-01-01"),
+        ("Kvartal 1-3 fr.o.m 2010", "2010-01-01"),
+    ),
+)
+def test_quarterly_from_line_has_explicit_open_scope(source: str, start: str) -> None:
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue is None
+    assert edition == edition_period
+    assert edition.kind == "intervals"
+    assert [(interval.start, interval.end) for interval in edition.intervals] == [
+        (start, None)
+    ]
+    expected_bounds = ((date.fromisoformat(start).toordinal(), date.max.toordinal()),)
+    occurrence = EffectiveOccurrence(
+        provider="scb",
+        variable_key=None,
+        variant_key=None,
+        edition_key=None,
+        population_key=None,
+        fields=SourceFields(),
+        edition_scope=edition,
+        edition_period_scope=edition_period,
+        source_records=(),
+    )
+    assert occurrence_bounds(occurrence) == expected_bounds
+    assert coding_scope_bounds(edition) == expected_bounds
+
+
+@pytest.mark.parametrize(
+    ("source", "period_start", "period_end"),
+    (
+        ("Kvartal 1-3 2010", "2010-01-01", "2010-09-30"),
+        ("2005 kvartal 2-4", "2005-04-01", "2005-12-31"),
+        ("Från år 2003 och framåt", "2003-01-01", "2003-12-31"),
+        ("Kvartal 1-3 fr.o.m. 2010 extra", "2010-01-01", "2010-09-30"),
+    ),
+)
+def test_other_edition_labels_keep_bounded_claims(
+    source: str, period_start: str, period_end: str
+) -> None:
+    edition, edition_period, issue = source_scopes(source)
+
+    assert issue is None
+    assert edition.kind == edition_period.kind == "intervals"
+    assert [(interval.start, interval.end) for interval in edition.intervals] == [
+        (period_start[:4], period_end[:4])
+    ]
+    assert [
+        (interval.start, interval.end) for interval in edition_period.intervals
+    ] == [(period_start, period_end)]
 
 
 @pytest.mark.parametrize(

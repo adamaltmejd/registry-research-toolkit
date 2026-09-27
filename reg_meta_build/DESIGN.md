@@ -144,7 +144,12 @@ never replaces the original cells:
   is one period from the first day of the first month to the last day of the second. A
   `Läsåren A/A+1 - C/C+1` school-year hull pools over 1 July of the first year to 30
   June of the last. A `Deklarationsår YYYY (beskattningsår ZZZZ)` with ZZZZ one below
-  YYYY is the income year 1 January to 31 December. Other multi-year periods remain
+  YYYY is the income year 1 January to 31 December. An exact `Kvartal 1-3 fr.o.m.
+  YYYY` or `Kvartal 1-3 fr.o.m YYYY` label is an open quarterly delivery line from
+  YYYY-01-01. This interval is its hull: it includes Q4 even though that line only
+  delivers Q1–Q3. `source_scopes` alone applies this reading; `edition_bounds` and
+  `edition_claims` still read these labels as one year's Q1–Q3 for inventory coverage,
+  errata era order and `register_edition_claims`. Other multi-year periods remain
   pooled. The edition label and a variable's declared measurement/reference period are
   separate observations. An SCB `YYYY, slutlig version` edition supersedes the same
   variant's `YYYY, preliminär version` per native variable, retaining its records as
@@ -217,7 +222,7 @@ Deldatamängdsetikett as well as Deldatamängdsnamn. Unique tokens retain their 
 keys. An authored SOS route names the chosen labeled row exactly; renaming or removing
 it makes the route stale. LOVA's `A_LOVA` routes to its Huvudtabell row and
 `A_LOVA_LISA` to its ekonomi/arbetsmarknad row. The prepared source-records schema is
-13; older stores must be re-prepared.
+14; older stores must be re-prepared.
 
 ## Input storage and preparation
 
@@ -309,7 +314,8 @@ native edition name; a new or missing name makes the entry stale and withholds t
 split. Their edition and population parents move with them; edition name shape never
 implies a split. An errata addition naming a moved edition is stale until additions can
 be rebound under the split variant; corrections to native rows still move with the
-split.
+split. RTB's eight `Kvartal 1-3 fr.o.m.` editions use this surface to keep quarterly
+delivery lines separate from their annual parent variants.
 
 `[[errata.version]]` carries `variant`, `name`, `evidence`, and `noted`; it adds an
 undocumented register edition and requires a year-bearing SCB version name. Version era
