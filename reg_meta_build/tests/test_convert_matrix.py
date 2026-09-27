@@ -68,6 +68,13 @@ def _matrix(*, blank: bool = False) -> Cis2014Matrix | Cis2016Matrix:
     }
     if blank:
         payload["source_mode"] = "documented_blank"
+        payload["answer_facts"] = {
+            "data_type": "decimal",
+            "data_type_evidence": "SWECOV CIS2014=float",
+            "is_identifier": False,
+            "is_sensitive": False,
+            "flag_evidence": "SCB adjacent wave declares both flags 0",
+        }
         return Cis2014Matrix.model_validate_json(json.dumps(payload))
     return Cis2016Matrix.model_validate_json(json.dumps(payload))
 
@@ -168,11 +175,20 @@ def test_blank_source_is_retained_and_only_declared_answers_are_added() -> None:
         assert not item.source_records
         assert item.support_records == records
         assert item.coding_records == records
-        assert item.fields.identifier is None
-        assert item.fields.sensitivity is None
+        assert item.fields.identifier == value_field(matrix.answer_facts.is_identifier)
+        assert item.fields.sensitivity == value_field(matrix.answer_facts.is_sensitive)
         assert item.edition_scope == records[0].edition_scope
-        assert item.fields.data_type == records[0].fields.data_type
+        assert item.fields.data_type == value_field(matrix.answer_facts.data_type)
     assert isinstance(converted.case.decision, OccurrenceCorrectionDecision)
+    assert all(
+        {"data_type", "identifier", "sensitivity"}.isdisjoint(effect.copied_fields)
+        for effect in converted.case.decision.effects
+        if effect.kind == "addition"
+    )
+    assert "SWECOV CIS2014=float" in converted.case.decision.provenance
+    assert (
+        "SCB adjacent wave declares both flags 0" in converted.case.decision.provenance
+    )
     assert all(
         effect.expected_codings == copied_coding_fingerprints(claims)
         for effect in converted.case.decision.effects

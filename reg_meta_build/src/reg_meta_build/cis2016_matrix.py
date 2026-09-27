@@ -20,14 +20,17 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    StrictBool,
     StringConstraints,
     ValidationError,
+    field_validator,
     model_validator,
 )
 from reg_meta.fqid import derive_variable_slug
 
 from ._curation import curation_error
 from .fqid_slugs import SlugEntry
+from .scb_errata import _DATA_TYPES
 from .source_coding import copied_coding_fingerprints
 from .source_coordinates import source_register_key
 from .source_curation import (
@@ -206,10 +209,26 @@ class Cis2016Matrix(_CisMatrix):
     """The named-column CIS 2016 answer declaration."""
 
 
+class MatrixAnswerFacts(_CurationModel):
+    data_type: str
+    data_type_evidence: NonEmpty
+    is_identifier: StrictBool
+    is_sensitive: StrictBool
+    flag_evidence: NonEmpty
+
+    @field_validator("data_type")
+    @classmethod
+    def _catalog_data_type(cls, value: str) -> str:
+        if value not in _DATA_TYPES:
+            raise ValueError(f"answer data_type must be one of {sorted(_DATA_TYPES)}")
+        return value
+
+
 class Cis2014Matrix(_CisMatrix):
     """The documented answers for the exact blank-column CIS 2014 source."""
 
     source_mode: Literal["documented_blank"]
+    answer_facts: MatrixAnswerFacts
 
     @model_validator(mode="after")
     def _exact_blank_source(self) -> Cis2014Matrix:
@@ -424,6 +443,13 @@ def convert_matrix(
             ),
             "operational_definition": value_field(answer.definition_en),
         }
+        if isinstance(matrix, Cis2014Matrix):
+            facts = matrix.answer_facts
+            authored.update(
+                data_type=value_field(facts.data_type),
+                identifier=value_field(facts.is_identifier),
+                sensitivity=value_field(facts.is_sensitive),
+            )
         for column in answer.columns:
             if blank:
                 fields = selected[0].fields.model_copy(

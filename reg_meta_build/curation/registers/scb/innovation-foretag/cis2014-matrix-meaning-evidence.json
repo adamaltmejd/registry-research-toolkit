@@ -10,6 +10,13 @@
     "cvid": 400684
   },
   "source_mode": "documented_blank",
+  "answer_facts": {
+    "data_type": "decimal",
+    "data_type_evidence": "SWECOV storage catalog/swecov/derived/swecov_column_types.csv: CIS2014=float (all 45 answer columns CO11…CO85, view CIS2014).",
+    "is_identifier": false,
+    "is_sensitive": false,
+    "flag_evidence": "SCB UnikaRegisterOchVariabler.csv declares this question for the adjacent 2014–2016 wave (54 rows): Identitetsvariabel 0, KansligVariabel 0; no 2012–2014 row exists."
+  },
   "evidence": {
     "document": "SCB quality declaration, Appendix 2, historical concordance CIS2014 column",
     "url": "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_kd_2018_ah_191113.pdf#page=23",

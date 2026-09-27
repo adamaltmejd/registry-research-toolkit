@@ -420,6 +420,14 @@ leaves it unresolved. Flags and coding are not copied from another edition. Any 
 metadata or membership must be explicitly selected and guarded. Undated `all_versions`
 holdings preserve unknown coverage; pooled editions cannot create annual states.
 
+The CIS cooperation-matrix declarations bind reviewed answer meanings to their exact
+source partitions. CIS 2014 has a blank-column source member, so each added answer
+carries a reviewed `decimal` type from the SWECOV CIS2014 storage catalog and explicit
+identifier and sensitivity flags from SCB's adjacent 2014–2016 wave declarations. The
+evidence JSON records both sources; type and flags are authored for every answer, with
+none of those facts copied from the blank donor. CIS 2016 answers retain their named
+source rows and support flags.
+
 A steward holding dated at dataset grain (`holdings_period`) converts to exactly one
 pooled-range occurrence over that range (Y-212): the delivery list says the column is
 held somewhere inside the range, never that it exists in every wave, so the entry is
