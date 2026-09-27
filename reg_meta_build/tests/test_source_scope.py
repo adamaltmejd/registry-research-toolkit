@@ -46,6 +46,7 @@ from reg_meta_build.source_curation import (
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
+    ResolutionDiagnostic,
     SearchAliasDecision,
     SourceEvidence,
     capture_expectations,
@@ -71,6 +72,7 @@ from reg_meta_build.source_records import (
     value_field,
 )
 from reg_meta_build.source_scope import resolve_source_scope
+from reg_meta_build.source_siblings import SiblingResolution
 from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_bindings import bind_copied_coding, open_value_bindings
 from reg_meta_build.source_values import (
@@ -1202,6 +1204,9 @@ def acknowledge(issue, item):
             code=issue.code,
             subject=issue.subject,
             refs=issue.refs,
+            fields=issue.fields,
+            valid_from=issue.valid_from,
+            valid_to=issue.valid_to,
             register_key=register_key,
             reason="Accepted while the source stays unresolved.",
             evidence="Fixture diagnostic ledger.",
@@ -1263,7 +1268,7 @@ def test_a_stale_acknowledgement_is_an_error():
     ]
 
 
-def test_an_overbroad_acknowledgement_is_an_error_and_acknowledges_nothing():
+def test_distinct_field_issues_can_each_be_acknowledged():
     items = tuple(
         item.model_copy(
             update={
@@ -1282,10 +1287,132 @@ def test_an_overbroad_acknowledgement_is_an_error_and_acknowledges_nothing():
     ]
     assert len(conflicts) == 2
     assert len({(d.subject, d.refs) for d in conflicts}) == 1
-    result = resolve(items, cases=(acknowledge(conflicts[0], items[0]),))
-    assert [
-        d.severity for d in result.diagnostics if d.code == "conflicting_variable_fact"
-    ] == ["error", "error"]
+    assert len({d.fields for d in conflicts}) == 2
+    cases = tuple(
+        acknowledge(issue, items[0]).model_copy(update={"case_id": f"ack-{index}"})
+        for index, issue in enumerate(conflicts, 1)
+    )
+    result = resolve(items, cases=cases)
+    warnings = tuple(
+        d for d in result.diagnostics if d.code == "conflicting_variable_fact"
+    )
+    assert warnings == tuple(
+        issue.model_copy(
+            update={"severity": "warning", "acknowledged_by": f"ack-{index}"}
+        )
+        for index, issue in enumerate(conflicts, 1)
+    )
+    assert result.acknowledged == {"conflicting_variable_fact": 2}
+    no_fields = acknowledge(conflicts[0], items[0])
+    no_fields = no_fields.model_copy(
+        update={"decision": no_fields.decision.model_copy(update={"fields": ()})}
+    )
+    stale = resolve(items, cases=(no_fields,))
+    assert [d.code for d in stale.diagnostics] == [
+        "conflicting_variable_fact",
+        "conflicting_variable_fact",
+        "stale_curation_entry",
+    ]
+    assert stale.acknowledged == {}
+
+
+def test_period_key_is_exact_and_stale_without_dates(monkeypatch):
+    item = record()
+    ref = record_ref(item)
+    first = ResolutionDiagnostic(
+        code="period_issue",
+        severity="error",
+        subject="scb/example/value-5",
+        detail="First window",
+        refs=(ref,),
+        valid_from="2020-01-01",
+        valid_to="2020-06-30",
+    )
+    second = first.model_copy(
+        update={
+            "detail": "Second window",
+            "valid_from": "2020-07-01",
+            "valid_to": "2020-12-31",
+        }
+    )
+    monkeypatch.setattr(
+        "reg_meta_build.source_scope.resolve_sibling_pairs",
+        lambda *_args, **_kwargs: SiblingResolution((), (), (first, second)),
+    )
+    cases = tuple(
+        acknowledge(issue, item).model_copy(update={"case_id": f"ack-{index}"})
+        for index, issue in enumerate((first, second), 1)
+    )
+    result = resolve((item,), cases=cases)
+    assert result.diagnostics == tuple(
+        issue.model_copy(
+            update={"severity": "warning", "acknowledged_by": f"ack-{index}"}
+        )
+        for index, issue in enumerate((first, second), 1)
+    )
+    assert result.acknowledged == {"period_issue": 2}
+
+    no_period = acknowledge(first, item).model_copy(
+        update={
+            "decision": acknowledge(first, item).decision.model_copy(
+                update={"valid_from": None, "valid_to": None}
+            )
+        }
+    )
+    stale = resolve((item,), cases=(no_period,))
+    assert [d.code for d in stale.diagnostics] == [
+        "period_issue",
+        "period_issue",
+        "stale_curation_entry",
+    ]
+    assert stale.acknowledged == {}
+
+
+def test_acknowledgement_field_order_is_exact(monkeypatch):
+    item = record()
+    issue = ResolutionDiagnostic(
+        code="ordered_fields_issue",
+        severity="error",
+        subject="scb/example/value-5",
+        detail="Ordered diagnostic fields",
+        refs=(record_ref(item),),
+        fields=("name", "description"),
+    )
+    monkeypatch.setattr(
+        "reg_meta_build.source_scope.resolve_sibling_pairs",
+        lambda *_args, **_kwargs: SiblingResolution((), (), (issue,)),
+    )
+    case = acknowledge(issue, item)
+    reversed_case = case.model_copy(
+        update={
+            "decision": case.decision.model_copy(
+                update={"fields": ("description", "name")}
+            )
+        }
+    )
+    result = resolve((item,), cases=(reversed_case,))
+    assert result.diagnostics[0] == issue
+    assert result.diagnostics[1].code == "stale_curation_entry"
+
+
+def test_an_overbroad_acknowledgement_is_an_error_and_acknowledges_nothing(monkeypatch):
+    item = record()
+    issue = ResolutionDiagnostic(
+        code="repeated_issue",
+        severity="error",
+        subject="scb/example/value-5",
+        detail="Two occurrences with one identity",
+        refs=(record_ref(item),),
+    )
+    monkeypatch.setattr(
+        "reg_meta_build.source_scope.resolve_sibling_pairs",
+        lambda *_args, **_kwargs: SiblingResolution((), (), (issue, issue)),
+    )
+    result = resolve((item,), cases=(acknowledge(issue, item),))
+    assert [d.severity for d in result.diagnostics if d.code == "repeated_issue"] == [
+        "error",
+        "error",
+    ]
     (overbroad,) = (
         d for d in result.diagnostics if d.code == "overbroad_curation_entry"
     )

@@ -3722,6 +3722,9 @@ def compile_curation(
                             subject=ack.subject,
                             detail=f"{case_id} matches no selected register scope",
                             refs=refs,
+                            fields=tuple(ack.fields),
+                            valid_from=ack.valid_from,
+                            valid_to=ack.valid_to,
                             withheld_output=(case_id,),
                         )
                     )
@@ -3735,6 +3738,9 @@ def compile_curation(
                         subject=ack.subject,
                         detail=f"{case_id} matches {len(matched)} register scopes",
                         refs=refs,
+                        fields=tuple(ack.fields),
+                        valid_from=ack.valid_from,
+                        valid_to=ack.valid_to,
                         withheld_output=(case_id,),
                     )
                 )
@@ -3749,6 +3755,9 @@ def compile_curation(
                             code=ack.code,
                             subject=ack.subject,
                             refs=refs,
+                            fields=tuple(ack.fields),
+                            valid_from=ack.valid_from,
+                            valid_to=ack.valid_to,
                             register_key=register_key,
                             reason=ack.reason,
                             evidence=ack.evidence,

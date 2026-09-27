@@ -704,6 +704,9 @@ class AcknowledgeEntry(_CurationModel):
     code: str
     subject: str
     refs: list[str]
+    fields: list[str] = Field(default_factory=list)
+    valid_from: str | None = None
+    valid_to: str | None = None
     reason: str
     evidence: str
 
@@ -715,6 +718,36 @@ class AcknowledgeEntry(_CurationModel):
     @classmethod
     def _refs(cls, value: list[str]) -> list[str]:
         return [_require_trimmed(item) for item in value]
+
+    @field_validator("fields")
+    @classmethod
+    def _fields(cls, value: list[str]) -> list[str]:
+        fields = [_require_trimmed(item) for item in value]
+        if len(fields) != len(set(fields)):
+            raise ValueError("acknowledged fields must be unique")
+        return fields
+
+    @model_validator(mode="after")
+    def _period(self) -> AcknowledgeEntry:
+        if (self.valid_from is None) != (self.valid_to is None):
+            raise ValueError("valid_from and valid_to must both be set or both omitted")
+        for field in ("valid_from", "valid_to"):
+            value = getattr(self, field)
+            if value is None:
+                continue
+            try:
+                parsed = date.fromisoformat(value)
+            except ValueError as exc:
+                raise ValueError(f"{field} must be a canonical ISO date") from exc
+            if parsed.isoformat() != value:
+                raise ValueError(f"{field} must be a canonical ISO date")
+        if (
+            self.valid_from is not None
+            and self.valid_to is not None
+            and self.valid_to < self.valid_from
+        ):
+            raise ValueError("valid_to must not precede valid_from")
+        return self
 
 
 class RegisterCuration(_CurationModel):

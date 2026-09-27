@@ -197,13 +197,27 @@ def resolve_source_scope(
     )
     # Errors an acknowledgement names, settled once the whole scope is resolved.
     held: dict[
-        tuple[str, str, tuple[SourceRecordRef, ...]],
+        tuple[
+            str,
+            str,
+            tuple[SourceRecordRef, ...],
+            tuple[str, ...],
+            str | None,
+            str | None,
+        ],
         tuple[CurationCase, AcknowledgeDecision, list[ResolutionDiagnostic]],
     ] = {}
     for case in acknowledgements:
         decision = case.decision
         assert isinstance(decision, AcknowledgeDecision)
-        issue_key = decision.code, decision.subject, decision.refs
+        issue_key = (
+            decision.code,
+            decision.subject,
+            decision.refs,
+            decision.fields,
+            decision.valid_from,
+            decision.valid_to,
+        )
         if issue_key in held:
             raise ValueError(f"one issue is acknowledged twice: {case.case_id}")
         held[issue_key] = case, decision, []
@@ -217,7 +231,16 @@ def resolve_source_scope(
 
     def emit(issue: ResolutionDiagnostic) -> None:
         if held and issue.severity == "error":
-            match = held.get((issue.code, issue.subject, issue.refs))
+            match = held.get(
+                (
+                    issue.code,
+                    issue.subject,
+                    issue.refs,
+                    issue.fields,
+                    issue.valid_from,
+                    issue.valid_to,
+                )
+            )
             if (
                 match is not None
                 and issue.refs
@@ -720,6 +743,9 @@ def resolve_source_scope(
                 subject=decision.subject,
                 detail=f"The acknowledgement of {decision.code!r} matches {len(matched)} issues; it must name exactly one.",
                 refs=decision.refs,
+                fields=decision.fields,
+                valid_from=decision.valid_from,
+                valid_to=decision.valid_to,
             )
         )
     # Dependents of acknowledged output inherit the warning, not the error.

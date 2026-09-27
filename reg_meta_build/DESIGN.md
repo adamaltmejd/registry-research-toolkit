@@ -622,11 +622,11 @@ sometimes sensitive; without a claim it stays unknown except for source-specific
 defaults. A checked sensitivity correction takes precedence over source claims. The
 original records remain attached so a curator can audit every contributing declaration.
 
-A curation `[[acknowledge]]` entry names one exact issue code, its target coordinates
-(the subject and refs the diagnostic carries), a reason and evidence. Once its scope is
-resolved, the one matching error is re-emitted as a warning that keeps its code and
-names the acknowledging entry (`acknowledged_by`). The affected output stays withheld,
-and output withheld through it inherits the warning. The build summary counts
+A curation `[[acknowledge]]` entry names one exact issue code, its subject, refs,
+fields and period as the diagnostic carries them, plus a reason and evidence. Once its
+scope is resolved, the one matching error is re-emitted as a warning that keeps its
+code and names the acknowledging entry (`acknowledged_by`). The affected output stays
+withheld, and output withheld through it inherits the warning. The build summary counts
 acknowledgements per code. An entry that matches no error is stale, and one that matches
 more than one is over-broad; both are errors. Strict publication accepts acknowledged
 issues. A warning is either defined by a rule, such as `omitted_columnless_occurrence`,

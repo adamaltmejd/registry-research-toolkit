@@ -5,8 +5,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+from pydantic import ValidationError
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.curation_tree import load_register_files
+from reg_meta_build.curation_tree import AcknowledgeEntry, load_register_files
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -134,6 +135,49 @@ def test_each_register_table_loads(
     (entry,) = load_register_files(root)
     assert entry.register_info.slug == "test"
     assert table
+
+
+@pytest.mark.parametrize(
+    ("override", "message"),
+    (
+        (
+            {"valid_from": "2020-02-01", "valid_to": "2020-01-31"},
+            "valid_to must not precede",
+        ),
+        ({"valid_from": "2020-01-01"}, "both be set or both omitted"),
+        ({"valid_to": "2020-01-01"}, "both be set or both omitted"),
+        ({"valid_from": "2020-1-01", "valid_to": "2020-12-31"}, "canonical ISO date"),
+        ({"valid_from": "2020-02-30", "valid_to": "2020-12-31"}, "canonical ISO date"),
+        ({"fields": ["name", "name"]}, "fields must be unique"),
+        ({"fields": [" name"]}, "trimmed"),
+    ),
+)
+def test_acknowledge_rejects_invalid_fields_and_period(override, message) -> None:
+    values = {
+        "code": "issue",
+        "subject": "scb/test/subject",
+        "refs": ["source"],
+        "reason": "reason",
+        "evidence": "evidence",
+        **override,
+    }
+    with pytest.raises(ValidationError, match=message):
+        AcknowledgeEntry.model_validate(values)
+
+
+def test_acknowledge_keeps_ordered_fields_and_period() -> None:
+    entry = AcknowledgeEntry(
+        code="issue",
+        subject="scb/test/subject",
+        refs=["source"],
+        fields=["description", "name"],
+        valid_from="2020-01-01",
+        valid_to="2020-12-31",
+        reason="reason",
+        evidence="evidence",
+    )
+    assert entry.fields == ["description", "name"]
+    assert (entry.valid_from, entry.valid_to) == ("2020-01-01", "2020-12-31")
 
 
 @pytest.mark.parametrize(("table", "body", "wrong_register"), _TABLES)

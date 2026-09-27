@@ -303,15 +303,18 @@ class PeerGuard(_CurationModel):
 class AcknowledgeDecision(_CurationModel):
     """Accept one exact unresolved error as a counted warning; its output stays withheld.
 
-    It names the issue by the code, subject and refs the diagnostic already
-    carries, so it pins no source members: matching nothing, or more than one
-    issue, is itself an error.
+    It names the issue by the code, subject, refs, fields and period the
+    diagnostic already carries, so it pins no source members: matching
+    nothing, or more than one issue, is itself an error.
     """
 
     kind: Literal["acknowledge"] = "acknowledge"
     code: str
     subject: str
     refs: tuple[SourceRecordRef, ...]
+    fields: tuple[str, ...] = ()
+    valid_from: str | None = None
+    valid_to: str | None = None
     register_key: NativeKey
     reason: str
     evidence: str
