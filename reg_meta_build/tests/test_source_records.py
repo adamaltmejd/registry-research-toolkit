@@ -443,7 +443,9 @@ def test_scb_unknown_measurement_unit_matches_exact_stripped_token(
     record = _clean_row(unit=unit)
 
     assert record.fields.measurement_unit == expected
-    delivered = next(cell for cell in record.delivered_cells if cell.name == "Mattenhet")
+    delivered = next(
+        cell for cell in record.delivered_cells if cell.name == "Mattenhet"
+    )
     assert delivered.raw_value == unit
     assert delivered.interpreted_value == unit
 
