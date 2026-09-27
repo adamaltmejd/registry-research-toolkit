@@ -129,11 +129,10 @@ def _text_field(
     return value_field(normalized, raw=raw)
 
 
-def _contact_field(cell: SosCellEvidence | None) -> SourceField | None:
+def _contact_field(cell: SosCellEvidence) -> SourceField:
     field = _text_field(cell)
     if (
-        field is not None
-        and field.status == "value"
+        field.status == "value"
         and isinstance(field.value, str)
         and isinstance(field.raw_value, str)
         and field.raw_value.count("@") == 1
