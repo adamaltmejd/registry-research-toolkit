@@ -155,7 +155,14 @@ class SosSheetEvidence:
     """Ordered original rows retained from one recognized SOS sheet."""
 
     kind: Literal[
-        "general", "dcat", "subsets", "variables", "codelist", "quality", "support"
+        "general",
+        "dcat",
+        "subsets",
+        "variables",
+        "codelist",
+        "documentation",
+        "quality",
+        "support",
     ]
     sheet_name: str
     rows: tuple[SosEvidenceRow, ...]
@@ -217,9 +224,9 @@ class SosKodlista:
     The caller is responsible for resolution — not guaranteed 1:1.
 
     `rows` holds structured (Tidsperiod, Kod, Beskrivning) entries. Sheets
-    that don't match the standard header shape (recoding tables, hospital
-    directories, ICD mapping tables etc.) parse with empty `rows` — the
-    raw content is preserved in `raw_rows` for downstream custom handling.
+    that don't match the code-list header shape (recoding and derivation tables,
+    unrecognized directories etc.) parse with empty `rows`. Unrecognized
+    layouts retain `raw_rows`; every layout retains original `source_sheets` evidence.
     """
 
     sheet_name: str
@@ -1351,6 +1358,13 @@ def _parse_kodlista(
         return _clean(cell.display_value if display else cell.raw_value)
 
     has_header = any(row.role == "header" for row in sheet_evidence.rows)
+    has_code_header = any(
+        row.role == "header"
+        and any(cell.field_name == "kod" for cell in row.source_evidence.cells)
+        for row in sheet_evidence.rows
+    )
+    if not has_code_header:
+        sheet_evidence = replace(sheet_evidence, kind="documentation")
     for evidence_row in sheet_evidence.rows:
         if evidence_row.role == "preamble":
             if evidence_cell(evidence_row, "codeset_name") is not None:

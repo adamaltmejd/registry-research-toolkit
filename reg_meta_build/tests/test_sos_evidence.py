@@ -88,7 +88,7 @@ def test_all_current_sos_sheet_structures_retain_ordered_original_rows(
         "subsets",
         "variables",
         "codelist",
-        "codelist",
+        "documentation",
         "quality",
     ]
     assert register.parse_issues == ()
@@ -207,7 +207,7 @@ def test_all_current_sos_sheet_structures_retain_ordered_original_rows(
         == "2020"
     )
 
-    raw_codes = _sheet(register, "codelist", "Kodlista_RAW")
+    raw_codes = _sheet(register, "documentation", "Kodlista_RAW")
     assert [row.role for row in raw_codes.rows] == ["raw", "raw"]
     assert register.kodlistor[1].rows == ()
     assert register.kodlistor[1].raw_rows[1][:2] == ("Sjukhus ett", "Nord")

@@ -714,7 +714,7 @@ def clean_sos_source(
     validity: list[SourceValueValidity] = []
     references: list[SourceReferenceDeclaration] = []
     for sheet in register.source_sheets:
-        if sheet.kind != "codelist":
+        if sheet.kind not in {"codelist", "documentation"}:
             continue
         descriptor_key = f"sheet:{sheet.sheet_name}"
         suffix = sheet.sheet_name.split("_", 1)[-1].split("!", 1)[0].strip()
@@ -892,18 +892,19 @@ def clean_sos_source(
                         ),
                     )
                 )
-        descriptors[descriptor_key] = SourceValueDescriptor(
-            payload_key=descriptor_key,
-            name=normalize_text(sheet.sheet_name),
-            member_hints=tuple(hints),
-            member_references=tuple(
-                hint.value
-                for hint in hints
-                if hint.role == "list_header" and hint.value is not None
-            ),
-            locators=tuple(declaration_locators),
-            delivered_cells=tuple(declarations),
-        )
+        if sheet.kind == "codelist":
+            descriptors[descriptor_key] = SourceValueDescriptor(
+                payload_key=descriptor_key,
+                name=normalize_text(sheet.sheet_name),
+                member_hints=tuple(hints),
+                member_references=tuple(
+                    hint.value
+                    for hint in hints
+                    if hint.role == "list_header" and hint.value is not None
+                ),
+                locators=tuple(declaration_locators),
+                delivered_cells=tuple(declarations),
+            )
     records = (
         *iter_sos_metadata_records(register, revision),
         *iter_sos_variable_records(register, revision),

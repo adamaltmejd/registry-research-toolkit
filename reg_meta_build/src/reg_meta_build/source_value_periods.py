@@ -46,7 +46,7 @@ def value_window(
 
 
 def value_period(text: str | None) -> SourceValueWindow | None:
-    """Read the documented YYYY, YYYY-YYYY and YYYY- code-period forms.
+    """Read SOS code periods, widening transition years to their outer years.
 
     None/blank is an absent row constraint, distinct from malformed supplied text.
     A code-list's multi-year validity is not evidence of delivered variable years.
@@ -58,6 +58,27 @@ def value_period(text: str | None) -> SourceValueWindow | None:
         first, last = match.groups()
         if last is None:
             last = first if re.fullmatch(r"[0-9]{4}", value) else None
+        return value_window(first, last, compact_dates=True)
+    if match := re.fullmatch(
+        r"([0-9]{4})(?:/([0-9]{4}))?\s*[-–—]\s*([0-9]{4})/([0-9]{4})",
+        value,
+    ):
+        first, first_transition, _, last_transition = match.groups()
+        # A slash denotes consecutive transition years; retain the outer bound.
+        if any(
+            int(second) != int(start) + 1
+            for start, second in (
+                (first, first_transition),
+                (match.group(3), last_transition),
+            )
+            if second is not None
+        ):
+            return SourceValueWindow("unknown")
+        return value_window(first, last_transition, compact_dates=True)
+    if match := re.fullmatch(r"([0-9]{4})/([0-9]{4})\s*[-–—]\s*([0-9]{4})", value):
+        first, transition, last = match.groups()
+        if int(transition) != int(first) + 1:
+            return SourceValueWindow("unknown")
         return value_window(first, last, compact_dates=True)
     return SourceValueWindow("unknown")
 

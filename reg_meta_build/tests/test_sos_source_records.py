@@ -1345,6 +1345,69 @@ def test_crosswalk_retains_explicit_recode_direction_and_literal_period(
     assert not cleaned.values and not cleaned.associations
 
 
+def test_non_code_list_sheets_keep_evidence_without_binding_targets(
+    tmp_path: Path,
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    shapes = {
+        "Kodlista_famsit": (
+            ["Variabelnamn", "Tidsperiod", "Indata Kod", "Kodat till", "Beskrivning"],
+            ["HDIA", "1990/91-1994", "02", "3", "Recoding"],
+        ),
+        "Kodlista_förlossningssätt": (
+            [
+                "Variabelnamn",
+                "Tidsperiod",
+                "Beskrivning",
+                "Variabler",
+                "ICD 8",
+                "ICD 9",
+                "ICD 10",
+                "Åtgärdskoder 1963-1996",
+                "Åtgärdskoder 1997-",
+            ],
+            ["HDIA", "1973-", "Delivery mode", "A", "B", "C", "D", "E", "F"],
+        ),
+        "Kodlista_msga_mlga": (
+            [
+                "Variabelnamn",
+                "Tidsperiod",
+                "Beskrivning",
+                "Variabler",
+                "Villkor",
+                "Algoritm",
+            ],
+            ["HDIA", "1973-", "Growth", "A", "A > 0", "A * 2"],
+        ),
+    }
+    for name, (header, row) in shapes.items():
+        sheet = workbook.create_sheet(name)
+        sheet.append(header)
+        sheet.append(row)
+    workbook.save(path)
+    workbook.close()
+
+    parsed = parse_register_file(path)
+    cleaned = clean_sos_source(parsed, _revision(path))
+    assert "sheet:Kodlista_HDIA" in cleaned.descriptors
+    assert len(cleaned.declarations) == 3
+    for name, (_, row) in shapes.items():
+        assert (
+            next(item for item in parsed.kodlistor if item.sheet_name == name).rows
+            == ()
+        )
+        sheet = next(item for item in parsed.source_sheets if item.sheet_name == name)
+        assert sheet.kind == "documentation"
+        assert [cell.raw_value for cell in sheet.rows[1].source_evidence.cells] == row
+        assert f"sheet:{name}" not in cleaned.descriptors
+        table = next(item for item in cleaned.tables if item.name == name)
+        assert [cell.raw_value for cell in table.rows[1].cells] == row
+
+
 def test_crosswalk_keeps_peer_namespaces_and_section_period_separate(
     tmp_path: Path,
 ) -> None:
@@ -1371,9 +1434,8 @@ def test_crosswalk_keeps_peer_namespaces_and_section_period_separate(
     assert second.operands[0].code.status == "unknown"
     assert second.supplied_period.value == "2000-2001"
     assert second.section_period.value == "1994-"
-    assert (
-        cleaned.descriptors["sheet:Kodlista_Arbitrary"].member_hints[1].value == "BHEM"
-    )
+    assert "sheet:Kodlista_Arbitrary" not in cleaned.descriptors
+    assert cleaned.declarations
     assert not cleaned.values and not cleaned.associations
 
 
