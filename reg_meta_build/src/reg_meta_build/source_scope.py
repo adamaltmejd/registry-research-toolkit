@@ -365,7 +365,9 @@ def resolve_source_scope(
             if coding_registers:
                 for source_record in occurrence.evidence:
                     column_records[column][record_ref(source_record)] = source_record
-            bound = bind_occurrence_code_lists(occurrence, value_sessions)
+            bound = bind_occurrence_code_lists(
+                occurrence, value_sessions, support=support
+            )
             claims[column].extend(bound.claims)
             if on_binding is not None:
                 on_binding(key, bound)

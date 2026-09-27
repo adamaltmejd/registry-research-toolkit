@@ -15,7 +15,12 @@ from datetime import date
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-from reg_meta_build.source_coding import CodeListClaim, CodeMembershipClaim
+from reg_meta_build.source_coding import (
+    CodeListClaim,
+    CodeMembershipClaim,
+    has_unknown_code_membership,
+    resolve_code_membership,
+)
 from reg_meta_build.source_curation import (
     CuratedOccurrenceAddition,
     CurationCase,
@@ -24,7 +29,10 @@ from reg_meta_build.source_curation import (
     SourceRecordRef,
 )
 from reg_meta_build.source_effects import copied_coding_key
-from reg_meta_build.source_intervals import coding_scope_bounds
+from reg_meta_build.source_intervals import (
+    coding_scope_bounds,
+    reconcile_source_fields,
+)
 from reg_meta_build.source_records import (
     ScopeInterval,
     SourceFields,
@@ -43,6 +51,7 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.source_occurrences import EffectiveOccurrence
     from reg_meta_build.source_records import RecordLocator
+    from reg_meta_build.source_support import SourceSupportBindings
     from reg_meta_build.source_values import SourceValueAssociation
 
 
@@ -74,6 +83,15 @@ class ValueBindingResult:
     claims: tuple[CodeListClaim, ...]
     bindings: tuple[ValueListBinding, ...]
     issues: tuple[ValueBindingIssue, ...]
+
+
+def _declared_identifier(fields: SourceFields) -> bool:
+    identifier = fields.identifier
+    return (
+        identifier is not None
+        and identifier.status == "value"
+        and identifier.value is True
+    )
 
 
 def _unknown(reason: str) -> TemporalScope:
@@ -164,7 +182,7 @@ class ValueBindingSession:
         self.session = session
         self.source = session.source.manifest.revision.dataset
         self.join = session.source.manifest.join
-        self._last_native_key: tuple[str, int, TemporalScope] | None = None
+        self._last_native_key: tuple[str, int, TemporalScope, bool] | None = None
         self._last_native_result: ValueBindingResult | None = None
         # Native stores have thousands of descriptors but need none until selected.
         # Named-list stores have finite declared dictionaries; rows remain indexed.
@@ -215,6 +233,7 @@ class ValueBindingSession:
         *,
         scope: TemporalScope | None = None,
         fields: SourceFields | None = None,
+        declared_identifier: bool | None = None,
     ) -> ValueBindingResult:
         join = self.join
         if join is None or record.source not in join.record_sources:
@@ -223,6 +242,8 @@ class ValueBindingSession:
             scope = record.edition_period_scope
             if scope.kind == "not_applicable":
                 scope = record.edition_scope
+        if declared_identifier is None:
+            declared_identifier = _declared_identifier(record.fields)
         groups: dict[str, list[SourceValueAssociation]] = defaultdict(list)
         # Group as evidence arrives: repeated validity errors need one shared
         # context, while every physical association locator remains ordered.
@@ -242,7 +263,7 @@ class ValueBindingSession:
                         ),
                     ),
                 )
-            native_key = (record.source, member, scope)
+            native_key = (record.source, member, scope, declared_identifier)
             if native_key == self._last_native_key:
                 cached = self._last_native_result
                 assert cached is not None
@@ -356,6 +377,27 @@ class ValueBindingSession:
                     missing_validity=join.missing_validity,
                     invalid_item=invalid_item,
                 )
+                if (
+                    declared_identifier
+                    and issue == "unknown_code_validity"
+                    and association.locator not in contradictory
+                ):
+                    bounded, bound_issue = _member_scope(
+                        scope,
+                        association.supplied_window
+                        if association.supplied_window is not None
+                        and association.supplied_window.status == "known"
+                        else None,
+                        association.section_window
+                        if association.section_window is not None
+                        and association.section_window.status == "known"
+                        else None,
+                        (),
+                        missing_validity="unrestricted",
+                        invalid_item=False,
+                    )
+                    if bound_issue is None:
+                        member_scope = bounded
                 if association.locator in contradictory:
                     member_scope = _unknown(
                         "source list identifies conflicting members"
@@ -368,18 +410,45 @@ class ValueBindingSession:
                 value = self.session.value(association.value_key)
                 members.append(
                     CodeMembershipClaim(
-                        value.code, value.label, member_scope, (association,), validity
+                        value.code,
+                        value.label,
+                        member_scope,
+                        (association,),
+                        validity,
+                        unknown_validity=declared_identifier
+                        and issue == "unknown_code_validity",
                     )
                 )
             if len(non_membership) != len(associations):
-                claims.append(
-                    CodeListClaim(
-                        claim_id,
-                        scope,
-                        tuple(members),
-                        version_label=descriptor.version,
-                    )
+                claim = CodeListClaim(
+                    claim_id,
+                    scope,
+                    tuple(members),
+                    version_label=descriptor.version,
                 )
+                if declared_identifier and has_unknown_code_membership(claim):
+                    resolved = resolve_code_membership((claim,))
+                    if not any(
+                        issue.code == "unknown_code_membership"
+                        for issue in resolved.issues
+                    ):
+                        claims.append(claim)
+                    elif any(
+                        segment.code_set is not None for segment in resolved.segments
+                    ):
+                        claim = replace(
+                            claim,
+                            claim_id=canonical_sha256((claim_id, "partial-identifier")),
+                            drop_unknown_membership=True,
+                        )
+                        claims.append(claim)
+                        claim_id = claim.claim_id
+                    else:
+                        claim_id = None
+                else:
+                    claims.append(claim)
+                if declared_identifier:
+                    issues.pop(("unknown_code_validity", descriptor_key), None)
             else:
                 claim_id = None
             bindings.append(
@@ -432,6 +501,7 @@ def bind_code_lists(
     *,
     scope: TemporalScope | None = None,
     fields: SourceFields | None = None,
+    declared_identifier: bool | None = None,
 ) -> ValueBindingResult:
     """Bind original evidence at its own or an already checked effective scope.
 
@@ -446,7 +516,13 @@ def bind_code_lists(
         if session.join is not None and record.source in session.join.record_sources
     )
     results = tuple(
-        session.bind(record, scope=scope, fields=fields) for session in sessions
+        session.bind(
+            record,
+            scope=scope,
+            fields=fields,
+            declared_identifier=declared_identifier,
+        )
+        for session in sessions
     )
     claims = tuple(claim for result in results for claim in result.claims)
     issues = tuple(issue for result in results for issue in result.issues)
@@ -481,26 +557,37 @@ def bind_code_lists(
 def bind_occurrence_code_lists(
     occurrence: EffectiveOccurrence,
     sessions: Iterable[ValueBindingSession],
+    *,
+    support: SourceSupportBindings | None = None,
 ) -> ValueBindingResult:
     """Bind original or explicitly copied coding at the resolved occurrence scope.
 
     Supporting metadata alone never provides coding for an added occurrence.
     Multiple source alternatives remain competing claims for the coding resolver.
+    A sealed support join supplies each record's identifier declaration for coding.
     """
     records = occurrence.source_records or occurrence.coding_records
     scope = occurrence.edition_period_scope
     if scope.kind == "not_applicable":
         scope = occurrence.edition_scope
     sessions = tuple(sessions)
-    results = tuple(
-        bind_code_lists(
-            record,
-            sessions,
-            scope=scope,
-            fields=occurrence.fields if occurrence.source_records else None,
+    results = []
+    for record in {record.record_id: record for record in records}.values():
+        fields = occurrence.fields if occurrence.source_records else record.fields
+        identifier_fields = record.fields
+        if support is not None:
+            identifier_fields, _ = reconcile_source_fields(
+                (record,), support=tuple(match.fields for match in support.bind(record))
+            )
+        results.append(
+            bind_code_lists(
+                record,
+                sessions,
+                scope=scope,
+                fields=fields,
+                declared_identifier=_declared_identifier(identifier_fields),
+            )
         )
-        for record in {record.record_id: record for record in records}.values()
-    )
     return ValueBindingResult(
         tuple(claim for result in results for claim in result.claims),
         tuple(binding for result in results for binding in result.bindings),

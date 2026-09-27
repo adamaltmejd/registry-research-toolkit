@@ -33,7 +33,7 @@ class CodeMembershipClaim:
 
     None means unknown. Empty strings and leading zeros are literal code values.
     A not-applicable/year-independent scope adds no restriction to the containing
-    occurrence; an unknown scope cannot safely establish membership anywhere.
+    occurrence; an unknown scope or validity cannot safely establish membership.
     """
 
     code: str | None
@@ -41,16 +41,18 @@ class CodeMembershipClaim:
     scope: TemporalScope
     associations: tuple[SourceValueAssociation, ...] = ()
     validity: tuple[SourceValueValidity, ...] = ()
+    unknown_validity: bool = False
 
 
 @dataclass(frozen=True, slots=True)
 class CodeListClaim:
-    """One whole source list, already bound to a finite occurrence scope."""
+    """One source list bound to an occurrence, optionally omitting unknown identifier periods."""
 
     claim_id: str
     scope: TemporalScope
     members: tuple[CodeMembershipClaim, ...]
     version_label: str | None = None
+    drop_unknown_membership: bool = False
 
 
 @dataclass(frozen=True)
@@ -82,6 +84,20 @@ class CodingResolution:
     segments: tuple[CodingSegment, ...]
     issues: tuple[CodingIssue, ...]
     claims: tuple[CodeListClaim, ...]
+
+
+def has_unknown_code_membership(claim: CodeListClaim) -> bool:
+    """Whether a source list contains membership the resolver cannot place."""
+    return any(
+        member.code is None
+        or member.label is None
+        or member.unknown_validity
+        or (
+            member.scope.kind not in {"not_applicable", "year_independent"}
+            and coding_scope_bounds(member.scope) is None
+        )
+        for member in claim.members
+    )
 
 
 def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResolution:
@@ -122,7 +138,12 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
                 member_periods = periods
             else:
                 member_periods = coding_scope_bounds(member.scope)
-            if member.code is None or member.label is None or member_periods is None:
+            if (
+                member.code is None
+                or member.label is None
+                or member.unknown_validity
+                or member_periods is None
+            ):
                 invalid_members.add((claim.claim_id, position))
             if member_periods is None:
                 member_periods = periods
@@ -155,8 +176,17 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
             continue
         lower = date.fromordinal(start).isoformat()
         upper = date.fromordinal(next_start - 1).isoformat()
-        claim_ids = tuple(sorted(active_claims))
-        invalid = tuple(sorted(active_members.keys() & invalid_members))
+        invalid = active_members.keys() & invalid_members
+        dropped = {
+            identity
+            for identity, _ in invalid
+            if claim_by_id[identity].drop_unknown_membership
+        }
+        claim_ids = tuple(sorted(active_claims.keys() - dropped))
+        if not claim_ids:
+            segments.append(CodingSegment(lower, upper, None, tuple(sorted(dropped))))
+            continue
+        invalid = tuple(sorted(item for item in invalid if item[0] not in dropped))
         if invalid:
             issues.append(
                 CodingIssue("unknown_code_membership", claim_ids, lower, upper, invalid)
@@ -167,6 +197,8 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
             identity: set() for identity in claim_ids
         }
         for identity, position in active_members:
+            if identity in dropped:
+                continue
             member = claim_by_id[identity].members[position]
             assert member.code is not None and member.label is not None
             by_claim[identity].add((member.code, member.label))
@@ -220,7 +252,11 @@ def coding_content_sha256(claim: CodeListClaim) -> str | None:
     This is for selected curation dependencies, not whole-corpus revalidation.
     """
     resolved = resolve_code_membership((claim,))
-    if resolved.issues or not resolved.segments:
+    if (
+        resolved.issues
+        or not resolved.segments
+        or any(segment.code_set is None for segment in resolved.segments)
+    ):
         return None
     segments: list[tuple[str, str, tuple[tuple[str, str], ...], str]] = []
     for segment in resolved.segments:
@@ -363,8 +399,11 @@ def copied_coding_fingerprints(claims: Iterable[CodeListClaim]) -> tuple[str, ..
                     (member.code, member.label, _member_validity_evidence(member))
                 )
                 for member in claim.members
-                if member.scope.kind not in {"not_applicable", "year_independent"}
-                and coding_scope_bounds(member.scope) is None
+                if member.unknown_validity
+                or (
+                    member.scope.kind not in {"not_applicable", "year_independent"}
+                    and coding_scope_bounds(member.scope) is None
+                )
             }
             if coding_scope_bounds(claim.scope) is not None
             else set()
