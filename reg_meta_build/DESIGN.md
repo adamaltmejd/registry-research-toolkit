@@ -134,10 +134,10 @@ never replaces the original cells:
   removal, line-wrap guessing, HTML decoding and mojibake repair are not generic rules.
 - Codes and column tokens use NFC and outer trimming only. Leading zeros, internal
   spaces, case and punctuation remain significant. Numeric-looking codes stay strings.
-- Known SQL integer, text, decimal and date aliases normalize mechanically. The
-  original declaration and width remain evidence. A text-to-integer change requires
-  curation. SCB nonnegative integer length spellings normalize to decimal spelling;
-  other length forms remain. SCB `Mattenhet` `Okänd` is a source-defined unknown.
+- Known SQL integer, text, decimal and date aliases normalize mechanically. The original
+  declaration and width remain evidence. A text-to-integer change requires curation. SCB
+  nonnegative integer length spellings normalize to decimal spelling; other length forms
+  remain. SCB `Mattenhet` `Okänd` is a source-defined unknown.
 - Exact supplied dates and recognized same-year ranges retain their endpoints. A school
   year `Läsåret YYYY/YYYY+1` — with or without the `Läsåret` prefix — is one period 1
   July of the first year to 30 June of the second, as is a
