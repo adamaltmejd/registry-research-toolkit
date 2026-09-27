@@ -2011,7 +2011,7 @@ def compile_native_naming(
                 ):
                     continue
                 native_id = register.register_info.native_id
-                assert native_id is not None  # Validated for SCB register files at load.
+                assert native_id is not None
                 native_register_id = int(native_id)
                 matching = tuple(
                     record
