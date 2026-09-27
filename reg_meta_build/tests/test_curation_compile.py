@@ -51,6 +51,7 @@ from reg_meta_build.source_effects import (
     record_ref,
 )
 from reg_meta_build.source_formation import form_native_variable
+from reg_meta_build.source_intervals import resolve_occurrence_intervals
 from reg_meta_build.source_naming import (
     NamingDeclaration,
     NativeNamingTarget,
@@ -1121,6 +1122,7 @@ def _errata_record(
     variable: int = 5,
     member: int = 20,
     variant: int = 2,
+    edition_name: str | None = None,
 ) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
     row = _var_row(
@@ -1128,6 +1130,7 @@ def _errata_record(
         cvid=member,
         var_id=variable,
         year=year,
+        versionname=edition_name,
         regver_id=int(year),
         register=("TEST", 1, variant),
     ).split("|")
@@ -1171,6 +1174,88 @@ _DELIVERED = (
     '\n[[errata.delivered]]\nvariant = "people"\ncolumn = "A"\n'
     'versions = ["2021"]\nevidence = "accepted delivery"\nnoted = "2026-09-25"\n'
 )
+
+_EDITION_PERIOD = (
+    '\n[[errata.edition_period]]\nvariant = "people"\nname = "Födelseland"\n'
+    'valid_from = "2018-02-01"\nvalid_to = "2018-11-30"\n'
+    'evidence = "Source documentation"\nnoted = "2026-09-26"\n'
+)
+
+
+def test_compiled_edition_period_places_only_named_unparseable_edition(
+    tmp_path: Path,
+) -> None:
+    topic = _errata_record(column="A", year="2020", edition_name="Födelseland")
+    another_topic = _errata_record(
+        column="C",
+        year="2020",
+        variable=6,
+        member=22,
+        edition_name="Födelseland",
+    )
+    sibling = _errata_record(column="B", year="2021", member=21, variant=3)
+    tree, prepared, scope = _errata_fixture(
+        tmp_path, (topic, another_topic, sibling), _EDITION_PERIOD
+    )
+    cases, _, _, diagnostics, report = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert diagnostics == ()
+    assert len(report["scb/sample"]["entries_matched"]) == 1
+    corrected = apply_occurrence_cases(
+        (topic, another_topic, sibling), cases[(scope.source, scope.register_key)]
+    )
+    assert corrected.diagnostics == ()
+    assert [account.disposition for account in corrected.accounting] == ["applied"]
+    by_member = {
+        occurrence.source_records[0].subject.native.member_id: occurrence
+        for occurrence in corrected.occurrences
+    }
+    for member in (20, 22):
+        result = resolve_occurrence_intervals((by_member[member],))
+        assert result.issues == ()
+        assert [
+            (segment.valid_from, segment.valid_to) for segment in result.segments
+        ] == [("2018-02-01", "2018-11-30")]
+    assert (
+        by_member[21].edition_period_scope
+        == source_occurrence(sibling).edition_period_scope
+    )
+
+
+@pytest.mark.parametrize("edition_name", ["Renamed", "2020"])
+def test_compiled_edition_period_stale_when_missing_or_parseable(
+    tmp_path: Path, edition_name: str
+) -> None:
+    record = _errata_record(column="A", year="2020", edition_name=edition_name)
+    fragment = (
+        _EDITION_PERIOD.replace('name = "Födelseland"', 'name = "2020"')
+        if edition_name == "2020"
+        else _EDITION_PERIOD
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, (record,), fragment)
+    cases, _, _, diagnostics, report = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert cases == {}
+    assert [diagnostic.code for diagnostic in diagnostics] == ["stale_curation_entry"]
+    assert len(report["scb/sample"]["stale"]) == 1
+    unresolved = resolve_occurrence_intervals((record,))
+    if edition_name == "Renamed":
+        assert unresolved.segments == ()
+        assert unresolved.issues[0].fields == ("period",)
+
+
+def test_unmatched_topic_edition_remains_unsupported(tmp_path: Path) -> None:
+    record = _errata_record(column="A", year="2020", edition_name="Födelseland")
+    tree, prepared, scope = _errata_fixture(tmp_path, (record,), "")
+    cases, _, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert cases == {} and diagnostics == ()
+    result = resolve_occurrence_intervals((record,))
+    assert result.segments == ()
+    assert result.issues[0].fields == ("period",)
 
 
 def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):

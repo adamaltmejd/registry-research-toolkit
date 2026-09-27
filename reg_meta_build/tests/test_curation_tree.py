@@ -191,6 +191,70 @@ def test_lineage_override_fails(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
+    ("replacement", "message"),
+    [
+        ('valid_to = "2017-12-31"', "valid_to must not precede valid_from"),
+        ('valid_from = "2018-02-30"', "valid_from must be an ISO date"),
+        ("unexpected = true", "Extra inputs are not permitted"),
+    ],
+)
+def test_edition_period_entry_is_strict(
+    tmp_path: Path, replacement: str, message: str
+) -> None:
+    directory = tmp_path / "registers/scb"
+    directory.mkdir(parents=True)
+    entry = (
+        '[[errata.edition_period]]\nvariant = "people"\nname = "Födelseland"\n'
+        'valid_from = "2018-01-01"\nvalid_to = "2018-12-31"\n'
+        'evidence = "Documentation"\nnoted = "2026-09-26"\n'
+    )
+    if replacement == "unexpected = true":
+        entry += replacement + "\n"
+    else:
+        field = replacement.split(" = ", 1)[0]
+        original = (
+            f'{field} = "2018-01-01"'
+            if field == "valid_from"
+            else f'{field} = "2018-12-31"'
+        )
+        entry = entry.replace(original, replacement)
+    (directory / "sample.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+        '[[variant]]\nnative_id = "1.2"\nslug = "people"\n' + entry,
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert (
+        "curation/registers/scb/sample.toml [[errata.edition_period"
+        in excinfo.value.message
+    )
+    assert "entry 1" in excinfo.value.message
+    assert message in excinfo.value.message
+
+
+def test_edition_period_rejects_duplicate_named_edition(tmp_path: Path) -> None:
+    directory = tmp_path / "registers/scb"
+    directory.mkdir(parents=True)
+    (directory / "sample.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+        '[[variant]]\nnative_id = "1.2"\nslug = "people"\n'
+        '[[errata.edition_period]]\nvariant = "people"\nname = "Födelseland"\n'
+        'valid_from = "2018-01-01"\nvalid_to = "2018-12-31"\n'
+        'evidence = "Document A"\nnoted = "2026-09-26"\n'
+        '[[errata.edition_period]]\nvariant = "people"\nname = "Födelseland"\n'
+        'valid_from = "2019-01-01"\nvalid_to = "2019-12-31"\n'
+        'evidence = "Document B"\nnoted = "2026-09-27"\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert "[[errata.edition_period]] entry 2: duplicate edition period" in (
+        excinfo.value.message
+    )
+
+
+@pytest.mark.parametrize(
     "by, part",
     [
         ("deldatamangd", 'data_type = "text", deldatamangd = "PAR_OV"'),
