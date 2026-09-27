@@ -1383,6 +1383,10 @@ def test_non_code_list_sheets_keep_evidence_without_binding_targets(
             ],
             ["HDIA", "1973-", "Growth", "A", "A > 0", "A * 2"],
         ),
+        "Kodlista_PARTIAL": (
+            ["Tidsperiod", "Kod", "Other"],
+            ["2020", "1", "Partial header"],
+        ),
     }
     for name, (header, row) in shapes.items():
         sheet = workbook.create_sheet(name)
@@ -1396,16 +1400,18 @@ def test_non_code_list_sheets_keep_evidence_without_binding_targets(
     assert "sheet:Kodlista_HDIA" in cleaned.descriptors
     assert len(cleaned.declarations) == 3
     for name, (_, row) in shapes.items():
-        assert (
-            next(item for item in parsed.kodlistor if item.sheet_name == name).rows
-            == ()
-        )
+        kodlista = next(item for item in parsed.kodlistor if item.sheet_name == name)
+        assert kodlista.rows == ()
+        assert kodlista.raw_rows[1] == tuple(row)
         sheet = next(item for item in parsed.source_sheets if item.sheet_name == name)
         assert sheet.kind == "documentation"
         assert [cell.raw_value for cell in sheet.rows[1].source_evidence.cells] == row
         assert f"sheet:{name}" not in cleaned.descriptors
         table = next(item for item in cleaned.tables if item.name == name)
         assert [cell.raw_value for cell in table.rows[1].cells] == row
+    assert not any(
+        association.source_table in shapes for association in cleaned.associations
+    )
 
 
 def test_crosswalk_keeps_peer_namespaces_and_section_period_separate(
@@ -1439,7 +1445,7 @@ def test_crosswalk_keeps_peer_namespaces_and_section_period_separate(
     assert not cleaned.values and not cleaned.associations
 
 
-def test_code_directory_retains_bounds_without_inventing_item_ids_or_end_dates(
+def test_code_directory_retains_raw_bounds_without_binding_as_code_list(
     tmp_path: Path,
 ) -> None:
     cleaned = _clean_code_rows(
@@ -1467,24 +1473,21 @@ def test_code_directory_retains_bounds_without_inventing_item_ids_or_end_dates(
             ],
         ],
     )
-    (association,) = cleaned.associations
-    (validity,) = cleaned.validity
-    assert (validity.valid_from, validity.valid_to, validity.item_id) == (
+    assert not cleaned.values and not cleaned.associations and not cleaned.validity
+    assert "sheet:Kodlista_Arbitrary" not in cleaned.descriptors
+    table = next(
+        table for table in cleaned.tables if table.name == "Kodlista_Arbitrary"
+    )
+    assert [cell.raw_value for cell in table.rows[1].cells] == [
+        "SJUKHUS",
         "2023",
-        None,
-        None,
-    )
-    assert validity.locator == association.locator
-    assert validity.locators[0] == cleaned.values[association.value_key].locators[0]
-    assert validity.delivered_cells[2].present
-    assert validity.delivered_cells[2].raw_type == "none"
-    assert association.delivered_cells[-1].raw_value == "Startade 202304"
-    assert association.supplied_period is None and association.section_period is None
-    assert association.member_hints[0].value == "SJUKHUS"
-    assert cleaned.values[association.value_key].normalized_content == (
+        "",
         "10011",
-        "Sjukhus",
-    )
+        "Stockholm",
+        " Sjukhus ",
+        "JA",
+        "Startade 202304",
+    ]
 
 
 def test_formula_and_delivered_cache_survive_without_promoting_computed_facts(
@@ -1540,15 +1543,15 @@ def test_formula_and_delivered_cache_survive_without_promoting_computed_facts(
             output.writestr(name, payload)
 
     cleaned = clean_sos_source(parse_register_file(path), _revision(path))
-    (association,) = cleaned.associations
-    delivered = association.delivered_cells[6]
+    assert not cleaned.associations
+    table = next(table for table in cleaned.tables if table.name == "Kodlista_HOSPITAL")
+    delivered = table.rows[1].cells[6]
     assert (
         delivered.raw_value,
         delivered.storage_type,
         delivered.interpreted_value,
     ) == (formula, "f", "")
     assert (delivered.cached_raw_value, delivered.cached_raw_type) == (" ", "str")
-    assert cleaned.values[association.value_key].code == "10010"
     variable = next(
         record
         for record in cleaned.records
@@ -1615,7 +1618,7 @@ def test_derivation_keeps_named_literal_clauses_without_evaluation(
     assert not cleaned.values and not cleaned.associations and not cleaned.validity
 
 
-def test_code_patterns_and_adjacent_legend_stay_literal_and_separate(
+def test_code_patterns_and_adjacent_legend_stay_raw_without_binding(
     tmp_path: Path,
 ) -> None:
     cleaned = _clean_code_rows(
@@ -1627,12 +1630,8 @@ def test_code_patterns_and_adjacent_legend_stay_literal_and_separate(
             [None, None, 1, "A", "K"],
         ],
     )
-    assert {value.normalized_content for value in cleaned.values.values()} == {
-        ("1XXXX", "missbildning i CNS"),
-        ("11xxy", "Annan kategori"),
-    }
-    assert len(cleaned.associations) == 2
-    assert all(len(value.delivered_cells) == 2 for value in cleaned.values.values())
+    assert not cleaned.values and not cleaned.associations
+    assert "sheet:Kodlista_Arbitrary" not in cleaned.descriptors
     table = next(
         table for table in cleaned.tables if table.name == "Kodlista_Arbitrary"
     )

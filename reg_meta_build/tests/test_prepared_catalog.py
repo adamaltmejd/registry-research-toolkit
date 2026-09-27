@@ -253,7 +253,7 @@ def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> Non
     assert not (destination / "tables.jsonl").exists()
 
 
-def test_sos_declarations_validity_support_and_formula_evidence_survive_preparation(
+def test_sos_declarations_support_and_formula_evidence_survive_preparation(
     tmp_path: Path,
 ) -> None:
     selection = _selection(tmp_path, all_roles=True)
@@ -319,7 +319,7 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
         input_commit=accept_prepared(destination),
     )
     entry = next(item for item in manifest.inputs if item.path == selected_file["path"])
-    assert entry.counts.declarations == 2 and entry.counts.validity == 1
+    assert entry.counts.declarations == 2 and entry.counts.validity == 0
     assert entry.revision is not None
     references = [
         item.declaration
@@ -341,32 +341,26 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
         for item in prepared.value_sources
         if item.manifest.revision == entry.revision
     )
-    (validity,) = values.validity()
-    association = next(
-        item
-        for item in values.associations()
-        if item.source_table == "Kodlista_HOSPITAL"
+    assert not list(values.validity())
+    assert not any(
+        item.source_table == "Kodlista_HOSPITAL" for item in values.associations()
     )
-    assert (validity.valid_from, validity.valid_to, validity.item_id) == (
-        "1973",
-        None,
-        None,
+    assert not any(
+        item.payload_key == "sheet:Kodlista_HOSPITAL" for item in values.descriptors()
     )
-    assert validity.locator == association.locator
-    cell = association.delivered_cells[6]
-    assert (
-        cell.raw_value,
-        cell.storage_type,
-        cell.cached_raw_value,
-        cell.cached_raw_type,
-    ) == (formula, "f", "", "none")
     tables = [
         table
         for table in prepared.records.iter_tables()
         if table.source_revision_id == entry.revision.revision_id
     ]
     source_table = next(table for table in tables if table.name == "Kodlista_HOSPITAL")
-    assert source_table.rows[1].cells[6] == cell
+    cell = source_table.rows[1].cells[6]
+    assert (
+        cell.raw_value,
+        cell.storage_type,
+        cell.cached_raw_value,
+        cell.cached_raw_type,
+    ) == (formula, "f", "", "none")
     source_table = next(table for table in tables if table.name == "Ej relevant_listor")
     assert source_table.rows[0].role == "unparsed"
     assert [cell.raw_value for cell in source_table.rows[0].cells] == [

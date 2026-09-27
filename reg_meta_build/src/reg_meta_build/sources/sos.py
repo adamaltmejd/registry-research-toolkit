@@ -225,8 +225,8 @@ class SosKodlista:
 
     `rows` holds structured (Tidsperiod, Kod, Beskrivning) entries. Sheets
     that don't match the code-list header shape (recoding and derivation tables,
-    unrecognized directories etc.) parse with empty `rows`. Unrecognized
-    layouts retain `raw_rows`; every layout retains original `source_sheets` evidence.
+    unrecognized directories etc.) parse with empty `rows` and retain `raw_rows`;
+    every layout retains original `source_sheets` evidence.
     """
 
     sheet_name: str
@@ -1360,7 +1360,8 @@ def _parse_kodlista(
     has_header = any(row.role == "header" for row in sheet_evidence.rows)
     has_code_header = any(
         row.role == "header"
-        and any(cell.field_name == "kod" for cell in row.source_evidence.cells)
+        and {"tidsperiod", "kod", "beskrivning"}
+        <= {cell.field_name for cell in row.source_evidence.cells}
         for row in sheet_evidence.rows
     )
     if not has_code_header:
@@ -1377,7 +1378,7 @@ def _parse_kodlista(
             # Legacy projection only: source evidence retains the period row and
             # leaves following rows' explicit period cells blank.
             last_tidsperiod = evidence_text(evidence_row, "tidsperiod", display=True)
-        elif evidence_row.role == "code":
+        elif evidence_row.role == "code" and has_code_header:
             source_tidsperiod = evidence_text(evidence_row, "tidsperiod", display=True)
             code = evidence_text(evidence_row, "kod", display=True)
             if code is None:
@@ -1398,6 +1399,7 @@ def _parse_kodlista(
             f"kodlista {sheet_name!r}: no supported code/documentation header row found; "
             "structured rows skipped (raw content preserved)"
         )
+    if not has_code_header:
         raw_rows = [
             tuple(cell.raw_value for cell in row.source_evidence.cells)
             for row in sheet_evidence.rows

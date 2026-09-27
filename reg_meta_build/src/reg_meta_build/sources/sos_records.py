@@ -795,7 +795,7 @@ def clean_sos_source(
                         ),
                     )
                 )
-            if row.role != "code":
+            if row.role != "code" or sheet.kind != "codelist":
                 continue
             code = _cell(evidence, "kod")
             label = _cell(evidence, "beskrivning")
