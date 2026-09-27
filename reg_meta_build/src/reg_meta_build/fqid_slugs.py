@@ -1037,13 +1037,14 @@ def _parse_register_id(source_id: str) -> int:
     return parsed
 
 
-def _parse_variant_id(source_id: str) -> tuple[int, int]:
+def _parse_variant_id(source_id: str) -> tuple[int, int] | tuple[int, int, str]:
     parts = source_id.split(".")
-    if len(parts) != 2:
+    if len(parts) not in (2, 3):
         raise _err(
             "slug_toml_invalid",
-            f"register_variant.{source_id!r}: expected `<RegisterId>.<RegVarID>`.",
-            "Compose the key from SCB's two integer IDs.",
+            f"register_variant.{source_id!r}: expected `<RegisterId>.<RegVarID>` "
+            "or `<RegisterId>.<RegVarID>.<slug>`.",
+            "Compose the key from SCB's two integer IDs and optional split slug.",
         )
     reg = _parse_canonical_int(parts[0])
     var = _parse_canonical_int(parts[1])
@@ -1054,6 +1055,16 @@ def _parse_variant_id(source_id: str) -> tuple[int, int]:
             f"in canonical form (no leading zeros).",
             "Use the literal SCB IDs.",
         )
+    if len(parts) == 3:
+        try:
+            validate_slug(parts[2], "variant")
+        except ValueError as exc:
+            raise _err(
+                "slug_toml_invalid",
+                f"register_variant.{source_id!r}: invalid split slug: {exc}",
+                "Use a canonical variant slug as the third part.",
+            ) from exc
+        return reg, var, parts[2]
     return reg, var
 
 
@@ -1200,6 +1211,8 @@ def populate_slugs(
                 counts["register"] += 1
             elif entry.kind == "register_variant":
                 key = _parse_variant_id(entry.source_id)
+                if len(key) == 3:
+                    continue  # Curated split variants have no native SQL row.
                 if key not in live_variants:
                     if entry.deprecated:
                         continue
@@ -3767,7 +3780,8 @@ def _stale_toml_entries(
                 stale_regs.append((entry.provider, entry.source_id))
         elif entry.kind == "register_variant" and entry.provider is not None:
             live = live_vars_by_provider.get(entry.provider, set())
-            if _parse_variant_id(entry.source_id) not in live:
+            key = _parse_variant_id(entry.source_id)
+            if len(key) == 2 and key not in live:
                 stale_vars.append((entry.provider, entry.source_id))
 
     return stale_regs, stale_vars

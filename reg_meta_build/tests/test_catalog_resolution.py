@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from contextlib import closing
+from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
@@ -14,6 +15,7 @@ from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_parent_key,
+    native_variant_key,
     source_register_key,
 )
 from reg_meta_build.source_curation import capture_expectations
@@ -24,6 +26,7 @@ from reg_meta_build.source_naming import (
     NativeNamingTarget,
     check_naming_target,
 )
+from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import SourceFields, SourceRevision, value_field
 from reg_meta_build.sources.scb_records import clean_scb_row
 
@@ -94,6 +97,46 @@ def _names(record: SourceRecord) -> tuple[NamingDeclaration, ...]:
             )
         )
     return tuple(result)
+
+
+def test_explicit_rebind_roots_variant_edition_and_population_parents() -> None:
+    flow = _record(Registerversionnamn="2007", RegVerID="1")
+    stock = _record(3, CVID="6", Registerversionnamn="2007-12-31", RegVerID="2")
+    native = native_variant_key(stock)
+    assert native is not None
+    split = (*native, "edition-split", "stock")
+    original = source_occurrence(stock)
+    assert original.edition_key is not None
+    moved = replace(
+        original,
+        variant_key=split,
+        edition_key=(*split, *original.edition_key[len(native) :]),
+    )
+    split_name = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="register_variant",
+            provider="scb",
+            source_key=split,
+            register_key=source_register_key(stock),
+        ),
+        naming=SlugEntry(
+            kind="register_variant",
+            provider="scb",
+            source_id="1.10.stock",
+            slug="stock",
+        ),
+        contributors=(),
+    )
+    parents = resolve_parents(
+        (source_occurrence(flow), moved),
+        (*_names(flow), split_name),
+        rebinds={record_ref(stock): split},
+    )
+    assert set(parents.variants) == {native, split}
+    assert moved.edition_key in parents.editions
+    assert any(
+        key[: len(split)] == split and "population" in key for key in parents.fields
+    )
 
 
 def test_parent_facts_feed_ordinary_formation_and_direct_catalog(

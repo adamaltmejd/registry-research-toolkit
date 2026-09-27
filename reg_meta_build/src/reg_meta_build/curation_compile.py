@@ -65,6 +65,7 @@ from .source_coordinates import (
 from .source_curation import (
     AcknowledgeDecision,
     AliasWindowDecision,
+    CheckedEditionRebind,
     CheckedFieldChange,
     CheckedIdentityChange,
     CheckedPeriodChange,
@@ -464,12 +465,14 @@ def _naming_source_id(
     )
     if provider == "scb" and not canonical_scb and register[-2] == "native-int":
         register_id = register[-1]
-        member_id = None if kind == "register" else key[-1]
+        split = kind == "register_variant" and key[-2] == "edition-split"
+        member_id = None if kind == "register" else key[-3] if split else key[-1]
         if not isinstance(register_id, int) or (
             member_id is not None and not isinstance(member_id, int)
         ):
             raise ValueError(f"SCB native naming requires integer IDs: {key!r}")
-        return native_scb_naming_id(kind, register_id, member_id)
+        native_id = native_scb_naming_id(kind, register_id, member_id)
+        return f"{native_id}.{key[-1]}" if split else native_id
     if provider == "sos":
         matches = re.findall(r"\(([^()]+)\)", Path(str(source)).name)
         if not matches:
@@ -2001,6 +2004,46 @@ def compile_native_naming(
                     ),
                     target=target,
                 )
+            for register in tree.registers:
+                if (
+                    register.register_info.provider != "scb"
+                    or not register.identity.edition_split
+                ):
+                    continue
+                matching = tuple(
+                    record
+                    for record in records
+                    if record.subject.provider == "scb"
+                    and (native_register := source_register_key(record)) is not None
+                    and native_register[-1] == int(register.register_info.native_id)
+                )
+                if not matching:
+                    continue
+                for entry in register.identity.edition_split:
+                    for record in matching:
+                        native = native_variant_key(record)
+                        if native is None or native[-1] != int(
+                            entry.variant.split(".")[1]
+                        ):
+                            continue
+                        split_key = (
+                            *native,
+                            "edition-split",
+                            entry.split.split(".")[2],
+                        )
+                        target = NativeNamingTarget(
+                            kind="register_variant",
+                            provider="scb",
+                            source_key=split_key,
+                            register_key=native[:5],
+                        )
+                        parents["register_variant", split_key] = LegacyNamingBinding(
+                            kind="register_variant",
+                            provider="scb",
+                            source_id=entry.split,
+                            target=target,
+                        )
+                        break
             bindings[scope_key].extend(parents.values())
     compiled_names = {}
     compiled_variants = {}
@@ -2394,6 +2437,172 @@ def compile_sos_thin(
                 else:
                     new_cases = _compile_thin_register(selected, sessions)
                 cases.setdefault(scope_key, []).extend(new_cases)
+    return (
+        {
+            key: tuple(sorted(value, key=lambda case: case.case_id))
+            for key, value in cases.items()
+        },
+        tuple(diagnostics),
+        report,
+    )
+
+
+def compile_edition_splits(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[CompiledScope, ...],
+    *,
+    subset: bool,
+) -> tuple[
+    dict[Any, tuple[CurationCase, ...]],
+    tuple[ResolutionDiagnostic, ...],
+    dict[str, dict[str, list[str]]],
+]:
+    cases: dict[Any, list[CurationCase]] = defaultdict(list)
+    diagnostics = []
+    report = {}
+    for register in tree.registers:
+        if not register.identity.edition_split:
+            continue
+        name = f"scb/{register.register_info.slug}"
+        statuses = report.setdefault(
+            name,
+            {
+                key: []
+                for key in (
+                    "entries_read",
+                    "entries_matched",
+                    "stale",
+                    "over_broad",
+                    "not_evaluated_in_subset",
+                )
+            },
+        )
+        owners = [
+            (scope.source, scope.register_key)
+            for scope in scopes
+            if any(item == name for item, _ in _scope_registers(scope))
+        ]
+        for index, entry in enumerate(register.identity.edition_split, 1):
+            ref = f"{register.source_file}#/identity.edition_split/{index}"
+            statuses["entries_read"].append(ref)
+            if len(owners) != 1:
+                status = (
+                    "over_broad"
+                    if owners
+                    else "not_evaluated_in_subset"
+                    if subset
+                    else "stale"
+                )
+                statuses[status].append(ref)
+                if status != "not_evaluated_in_subset":
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code="overbroad_curation_entry"
+                            if owners
+                            else "stale_curation_entry",
+                            severity="error",
+                            case_id=ref,
+                            subject=entry.split,
+                            detail=f"{ref}: matches {len(owners)} register scopes; expected one",
+                            withheld_output=(ref,),
+                        )
+                    )
+                continue
+            scope_key = owners[0]
+            native_register = next(
+                key
+                for item, key in _scope_registers(
+                    next(
+                        scope
+                        for scope in scopes
+                        if (scope.source, scope.register_key) == scope_key
+                    )
+                )
+                if item == name
+            )
+            records = tuple(
+                record
+                for _, members in prepared.records.iter_register_slices(
+                    scope_key[0], (native_register,)
+                )
+                for record in members
+                if (native := native_variant_key(record)) is not None
+                and native[-1] == int(entry.variant.split(".")[1])
+            )
+            by_name: dict[str, list[SourceRecord]] = defaultdict(list)
+            edition_keys: dict[str, set[Any]] = defaultdict(set)
+            for record in records:
+                if label := _edition_label(record):
+                    by_name[label].append(record)
+                    edition_keys[label].update(
+                        key
+                        for parent in record.parent_facts
+                        if parent.kind == "edition"
+                        if (
+                            key := native_parent_key(
+                                record.source, record.subject.provider, parent
+                            )
+                        )
+                        is not None
+                    )
+            bad = [
+                edition
+                for edition in entry.editions
+                if len(edition_keys[edition]) != 1 or not by_name[edition]
+            ]
+            if bad:
+                statuses["stale"].append(ref)
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        case_id=ref,
+                        subject=entry.split,
+                        detail=f"{ref}: edition names do not match exactly one native edition: {bad!r}",
+                        withheld_output=(ref,),
+                    )
+                )
+                continue
+            selected = tuple(
+                record for edition in entry.editions for record in by_name[edition]
+            )
+            source_variant = native_variant_key(records[0])
+            assert source_variant is not None
+            split_key = (*source_variant, "edition-split", entry.split.split(".")[2])
+            targets = capture_expectations(selected, fields=())
+            first = records[0]
+            cases[scope_key].append(
+                CurationCase(
+                    case_id=ref,
+                    targets=targets,
+                    peer_guards=(
+                        PeerGuard(
+                            guard_id=ref,
+                            source=first.source,
+                            coordinates=(
+                                ("register", first.subject.register_name),
+                                ("variant", first.subject.variant),
+                            ),
+                            expected_members=tuple(
+                                sorted(
+                                    {record_ref(record) for record in records}, key=str
+                                )
+                            ),
+                        ),
+                    ),
+                    decision=OccurrenceCorrectionDecision(
+                        reviewed=True,
+                        effects=tuple(
+                            CheckedEditionRebind(ref=target.ref, variant_key=split_key)
+                            for target in targets
+                        ),
+                        reason=entry.evidence,
+                        provenance=ref,
+                    ),
+                )
+            )
+            statuses["entries_matched"].append(ref)
     return (
         {
             key: tuple(sorted(value, key=lambda case: case.case_id))
@@ -3994,6 +4203,15 @@ def compile_curation(
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
             current.setdefault(key, []).extend(values)
+    split_cases, split_diagnostics, split_report = compile_edition_splits(
+        tree, prepared, scopes, subset=subset
+    )
+    for key, new_cases in split_cases.items():
+        cases[key].extend(new_cases)
+    for register, statuses in split_report.items():
+        current = report.setdefault(register, {key: [] for key in statuses})
+        for key, values in statuses.items():
+            current.setdefault(key, []).extend(values)
     variable_families: dict[str, set[tuple[str, tuple[str | int, ...]]]] = {}
     for scope in scopes:
         registers = {
@@ -4072,6 +4290,7 @@ def compile_curation(
             *errata_diagnostics,
             *enrichment_diagnostics,
             *thin_diagnostics,
+            *split_diagnostics,
         ),
         naming=naming,
         variants=variants,

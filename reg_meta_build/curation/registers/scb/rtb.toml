@@ -184,10 +184,33 @@ panel_time_key = "period"
 panel_time_grain = "delivery"
 
 
+
+[[identity.edition_split]]
+variant = "2.66"
+split = "2.66.grund-bosattning-31-12"
+editions = ["1990-12-31", "1991-12-31", "1992-12-31", "1993-12-31", "1994-12-31", "1995-12-31", "1996-12-31", "1997-12-31", "1998-12-31", "1999-12-31", "2000-12-31", "2001-12-31", "2002-12-31", "2003-12-31", "2004-12-31", "2005-12-31", "2006-12-31", "2007-12-31", "2008-12-31", "2009-12-31", "2010-12-31", "2011-12-31", "2012-12-31", "2013-12-31", "2014-12-31", "2015-12-31", "2016-12-31", "2017-12-31", "2018-12-31", "2019-12-31", "2020-12-31", "2021-12-31", "2022-12-31", "2023-12-31", "2024-12-31", "2025-12-31"]
+evidence = "SCB Registerinformation, RTB variant 2.66: stock editions' Populationkommentar 'Folkbokförda 31/12 YYYY som någon gång beviljats uppehållstillstånd …' and Mätinformation '…SCB:s Befolkningsregister variant Folkbokförda personer'; flow editions (YYYY) say 'flödet under YYYY' and 'variant Invandringar'. Column sets and CVIDs are disjoint."
+noted = "2026-09-27"
+
+[[identity.edition_split]]
+variant = "2.1028"
+split = "2.1028.asylsokande-i-sverige-31-12"
+editions = ["2002-12-31", "2003-12-31", "2004-12-31", "2005-12-31", "2006-12-31", "2007-12-31", "2008-12-31", "2009-12-31", "2010-12-31", "2011-12-31", "2012-12-31", "2013-12-31", "2014-12-31", "2015-12-31", "2016-12-31", "2017-12-31", "2018-12-31", "2019-12-31", "2020-12-31", "2021-12-31", "2022-12-31", "2023-12-31", "2024-12-31", "2025-12-31"]
+evidence = "SCB Registerinformation, RTB variant 2.1028: stock editions' Registerversionbeskrivning 'personer som var inskrivna i Migrationsverkets mottagningssystem den 31 december YYYY' (24 of 24); flow editions (YYYY) 'summerar antal personer som sökt asyl i Sverige under YYYY'. No shared CVID."
+noted = "2026-09-27"
+
 [[variant]]
 native_id = "2.66"
 slug = "grund-bosattning"
 display_group = "Grund för bosättning för immigranter"
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+[[variant]]
+native_id = "2.66.grund-bosattning-31-12"
+slug = "grund-bosattning-31-12"
+display_group = "Grund för bosättning för immigranter, folkbokförda 31 december"
 panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -197,6 +220,13 @@ panel_time_grain = "delivery"
 native_id = "2.1028"
 slug = "asylsokande-i-sverige"
 display_group = "Asylsökande i Sverige"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+[[variant]]
+native_id = "2.1028.asylsokande-i-sverige-31-12"
+slug = "asylsokande-i-sverige-31-12"
+display_group = "Asylsökande i Sverige, inskrivna 31 december"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 

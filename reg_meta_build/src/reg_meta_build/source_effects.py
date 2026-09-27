@@ -15,6 +15,7 @@ from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_curation import (
     ApplicabilityIssue,
     CaseEvaluation,
+    CheckedEditionRebind,
     CheckedFieldChange,
     CheckedIdentityChange,
     CheckedPeriodChange,
@@ -135,7 +136,12 @@ def _check_contract(case: CurationCase) -> None:
                 raise ValueError("an occurrence effect must name an exact target")
             if isinstance(
                 effect,
-                (CheckedIdentityChange, CheckedSourceUse, CheckedVariantAssignment),
+                (
+                    CheckedIdentityChange,
+                    CheckedSourceUse,
+                    CheckedVariantAssignment,
+                    CheckedEditionRebind,
+                ),
             ) and not any(
                 effect.ref in guard.expected_members for guard in case.peer_guards
             ):
@@ -234,6 +240,7 @@ def apply_occurrence_cases(
     periods = defaultdict(list)
     identities = defaultdict(list)
     variants = defaultdict(list)
+    rebinds = defaultdict(list)
     support_uses = defaultdict(list)
     additions = defaultdict(list)
     diagnostics = []
@@ -267,6 +274,8 @@ def apply_occurrence_cases(
                 support_uses[effect.ref].append(correction)
             elif isinstance(effect, CheckedVariantAssignment):
                 variants[effect.ref].append((effect, correction))
+            elif isinstance(effect, CheckedEditionRebind):
+                rebinds[effect.ref].append((effect, correction))
             else:
                 additions[effect.occurrence_key].append((effect, correction))
 
@@ -288,6 +297,7 @@ def apply_occurrence_cases(
         | periods.keys()
         | identities.keys()
         | variants.keys()
+        | rebinds.keys()
         | support_uses.keys()
     )
 
@@ -341,6 +351,16 @@ def apply_occurrence_cases(
             withheld_fields[ref].add("variant")
         else:
             variant_changes[ref] = next(iter(replacements))
+        field_owners[ref].extend(owner for _, owner in claims)
+    rebind_changes = {}
+    for ref, claims in rebinds.items():
+        replacements = {effect.variant_key for effect, _ in claims}
+        if len(replacements) > 1 or ref in variant_changes:
+            conflict(claims, str(ref), (ref,), ("variant",), ("occurrence.variant",))
+            withheld_fields[ref].add("variant")
+            rebind_changes[ref] = None
+        else:
+            rebind_changes[ref] = next(iter(replacements))
         field_owners[ref].extend(owner for _, owner in claims)
     occurrences = []
     for record in records:
@@ -432,6 +452,26 @@ def apply_occurrence_cases(
             raise ValueError(
                 "variant routing cannot implicitly reparent an edition or population"
             )
+        if ref in rebind_changes:
+            split = rebind_changes[ref]
+            if split is not None:
+                if occurrence.edition_key is None or occurrence.variant_key is None:
+                    raise ValueError("edition rebind needs a native edition")
+                corrected = replace(
+                    corrected,
+                    variant_key=split,
+                    edition_key=(
+                        *split,
+                        *occurrence.edition_key[len(occurrence.variant_key) :],
+                    ),
+                    population_key=(
+                        (*split, "population", *occurrence.population_key)
+                        if occurrence.population_key is not None
+                        else None
+                    ),
+                )
+                occurrences.append(corrected)
+                continue
         occurrences.extend(replace(corrected, variant_key=key) for key in targets)
     for key, claims in sorted(additions.items()):
         # Evidence references differ legitimately for identical assertions; retain

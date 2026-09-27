@@ -93,6 +93,21 @@ def test_repo_classification_files_count_and_stay_unique() -> None:
     assert all((books_dir / book.codes_file).is_file() for book in books)
 
 
+def test_repo_rtb_named_edition_splits_load() -> None:
+    tree = load_curation_tree(_CURATION)
+    rtb = next(
+        register for register in tree.registers if register.register_info.slug == "rtb"
+    )
+    splits = {entry.variant: entry for entry in rtb.identity.edition_split}
+    assert {key: len(entry.editions) for key, entry in splits.items()} == {
+        "2.66": 36,
+        "2.1028": 24,
+    }
+    assert {entry.split for entry in splits.values()} <= {
+        variant.native_id for variant in rtb.variant
+    }
+
+
 def test_repo_lineage_parses_from_overlay() -> None:
     config = load_lineage_config(_CURATION / "lineage.toml")
     assert config.defaults == {("scb", "rtb"): "folkbokforda-personer"}

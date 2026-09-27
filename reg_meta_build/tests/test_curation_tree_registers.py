@@ -180,6 +180,47 @@ def test_acknowledge_keeps_ordered_fields_and_period() -> None:
     assert (entry.valid_from, entry.valid_to) == ("2020-01-01", "2020-12-31")
 
 
+def test_edition_split_requires_declared_native_split_and_unique_names(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "curation"
+    base = (
+        '[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
+        '[[identity.edition_split]]\nvariant = "1.2"\n'
+        'split = "1.2.stock"\neditions = ["2007-12-31"]\n'
+        'evidence = "SCB population text"\nnoted = "2026-09-27"\n'
+    )
+    path = _write_register(root, base)
+    assert load_register_files(root)[0].identity.edition_split[0].editions == [
+        "2007-12-31"
+    ]
+    path.write_text(
+        path.read_text().replace(
+            'editions = ["2007-12-31"]',
+            'editions = ["2007-12-31", "2007-12-31"]',
+        )
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert "editions must be non-empty and unique" in exc.value.message
+    path.write_text(
+        path.read_text().replace(
+            'editions = ["2007-12-31", "2007-12-31"]',
+            'editions = ["2007-12-31"]',
+        )
+    )
+    path.write_text(path.read_text() + base[base.index("[[identity.edition_split]]") :])
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert "editions assigned twice" in exc.value.message
+    path.write_text(
+        path.read_text().replace('split = "1.2.stock"', 'split = "1.3.stock"')
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert "three-part key under variant" in exc.value.message
+
+
 @pytest.mark.parametrize(("table", "body", "wrong_register"), _TABLES)
 def test_each_register_table_rejects_unknown_keys(
     tmp_path: Path, table: str, body: str, wrong_register: tuple[str, str] | None

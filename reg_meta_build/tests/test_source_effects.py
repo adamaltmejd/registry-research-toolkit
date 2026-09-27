@@ -28,6 +28,7 @@ from reg_meta_build.scb_errata import (
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_curation import (
+    CheckedEditionRebind,
     CheckedFieldChange,
     CheckedIdentityChange,
     CheckedPeriodChange,
@@ -851,6 +852,23 @@ def test_variant_routing_cannot_move_a_native_edition_implicitly() -> None:
     )
     with pytest.raises(ValueError, match="cannot implicitly reparent"):
         apply_occurrence_cases((record,), (case,))
+
+
+def test_explicit_edition_rebind_moves_native_edition() -> None:
+    record = _record(column="VALUE")
+    original = source_occurrence(record)
+    assert original.variant_key is not None and original.edition_key is not None
+    split = (*original.variant_key, "edition-split", "stock")
+    case = _case(
+        record, CheckedEditionRebind(ref=record_ref(record), variant_key=split)
+    )
+    (moved,) = apply_occurrence_cases((record,), (case,)).occurrences
+    assert moved.variant_key == split
+    assert moved.edition_key == (
+        *split,
+        *original.edition_key[len(original.variant_key) :],
+    )
+    assert moved.source_records == (record,)
 
 
 @pytest.mark.parametrize("conflicting", [False, True])

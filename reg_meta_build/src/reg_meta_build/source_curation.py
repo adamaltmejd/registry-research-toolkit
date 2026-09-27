@@ -403,6 +403,21 @@ class CheckedVariantAssignment(_CurationModel):
         return tuple(sorted(keys, key=repr))
 
 
+class CheckedEditionRebind(_CurationModel):
+    """Move a checked native edition and its population under a split variant."""
+
+    kind: Literal["edition_rebind"] = "edition_rebind"
+    ref: SourceRecordRef
+    variant_key: NativeKey
+
+    @field_validator("variant_key")
+    @classmethod
+    def _split_key(cls, key: NativeKey) -> NativeKey:
+        if len(key) < 4 or key[-2] != "edition-split" or not key[-1]:
+            raise ValueError("edition rebind needs an explicit split variant key")
+        return key
+
+
 class CuratedOccurrenceAddition(_CurationModel):
     """A declared delivery, not an invented physical source row or native ID.
 
@@ -467,6 +482,7 @@ type OccurrenceEffect = (
     | CheckedIdentityChange
     | CheckedSourceUse
     | CheckedVariantAssignment
+    | CheckedEditionRebind
     | CuratedOccurrenceAddition
 )
 

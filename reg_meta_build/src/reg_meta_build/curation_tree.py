@@ -252,6 +252,17 @@ class RegisterVariantSlug(_CurationModel):
     deprecated: bool = False
     replaced_by: str | None = None
 
+    @field_validator("native_id")
+    @classmethod
+    def _native_id(cls, value: str) -> str:
+        from .fqid_slugs import _parse_variant_id
+
+        try:
+            _parse_variant_id(value)
+        except RegMetaError as exc:
+            raise ValueError(exc.message) from exc
+        return value
+
 
 class RegisterVariableSlug(_CurationModel):
     native_id: str
@@ -525,6 +536,39 @@ class IdentityRouteEntry(_CurationModel):
         return [_require_trimmed(item) for item in value]
 
 
+class IdentityEditionSplitEntry(_CurationModel):
+    variant: str
+    split: str
+    editions: list[str]
+    evidence: str
+    noted: str
+
+    _text = field_validator("evidence")(_require_trimmed)
+
+    @model_validator(mode="after")
+    def _valid(self) -> IdentityEditionSplitEntry:
+        from .fqid_slugs import _parse_variant_id
+
+        try:
+            variant = _parse_variant_id(self.variant)
+            split = _parse_variant_id(self.split)
+        except RegMetaError as exc:
+            raise ValueError(exc.message) from exc
+        if len(variant) != 2 or len(split) != 3 or split[:2] != variant:
+            raise ValueError("split must be a canonical three-part key under variant")
+        if not self.editions or len(self.editions) != len(set(self.editions)):
+            raise ValueError("editions must be non-empty and unique")
+        for edition in self.editions:
+            _require_trimmed(edition)
+        try:
+            parsed = date.fromisoformat(self.noted)
+        except ValueError as exc:
+            raise ValueError("noted must be an ISO date") from exc
+        if parsed.isoformat() != self.noted:
+            raise ValueError("noted must be a canonical ISO date")
+        return self
+
+
 class IdentitySplitPart(_CurationModel):
     data_type: str | None = None
     deldatamangd: str | None = None
@@ -587,6 +631,7 @@ class IdentityCuration(_CurationModel):
     partition: list[IdentityPartitionEntry] = Field(default_factory=list)
     column_owner: list[IdentityColumnOwnerEntry] = Field(default_factory=list)
     route: list[IdentityRouteEntry] = Field(default_factory=list)
+    edition_split: list[IdentityEditionSplitEntry] = Field(default_factory=list)
     split: list[IdentitySplitEntry] = Field(default_factory=list)
     rename: list[IdentityRenameEntry] = Field(default_factory=list)
 
@@ -946,6 +991,7 @@ def _register_arrays(
         ("identity.partition", entry.identity.partition),
         ("identity.column_owner", entry.identity.column_owner),
         ("identity.route", entry.identity.route),
+        ("identity.edition_split", entry.identity.edition_split),
         ("identity.split", entry.identity.split),
         ("identity.rename", entry.identity.rename),
         ("coding.choice", entry.coding.choice),
@@ -992,6 +1038,33 @@ def _check_register_ref(
 def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
     identity = entry.register_info
     expected = f"{identity.provider}/{identity.slug}"
+    edition_owners: set[tuple[str, str]] = set()
+    variant_ids = {variant.native_id for variant in entry.variant}
+    for index, split in enumerate(entry.identity.edition_split, 1):
+        where = f"{file} [[identity.edition_split]] entry {index}"
+        if identity.provider != "scb" or not split.variant.startswith(
+            f"{identity.native_id}."
+        ):
+            raise curation_error(
+                _CODE,
+                f"{where}: edition split must belong to this SCB register.",
+                "Use the owning SCB register and native variant.",
+            )
+        if split.split not in variant_ids:
+            raise curation_error(
+                _CODE,
+                f"{where}: split {split.split!r} has no [[variant]] entry.",
+                "Declare the split variant and its slug.",
+            )
+        pairs = {(split.variant, edition) for edition in split.editions}
+        repeated = edition_owners.intersection(pairs)
+        if repeated:
+            raise curation_error(
+                _CODE,
+                f"{where}: editions assigned twice: {sorted(repeated)!r}.",
+                "Assign each edition name once.",
+            )
+        edition_owners.update(pairs)
     if identity.provider in {"scb", "sos"} and (
         identity.native_id is None or not identity.native_id.isdecimal()
     ):

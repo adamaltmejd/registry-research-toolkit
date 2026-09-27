@@ -10,11 +10,13 @@ from typing import TYPE_CHECKING, Any, Literal, cast
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.errors import RegMetaError
+from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.curation_compile import (
     CompiledCuration,
     _compile_sos_register,
     _compile_thin_register,
     compile_curation,
+    compile_edition_splits,
     compile_enrichment,
     compile_errata,
     compile_native_naming,
@@ -37,6 +39,7 @@ from reg_meta_build.source_coding import (
 )
 from reg_meta_build.source_coordinates import (
     native_variable_key,
+    native_variant_key,
     source_register_key,
 )
 from reg_meta_build.source_curation import (
@@ -1125,6 +1128,8 @@ def _errata_record(
     member: int = 20,
     variant: int = 2,
     edition_name: str | None = None,
+    edition_id: int | None = None,
+    data_type: str = "int",
 ) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
     row = _var_row(
@@ -1133,8 +1138,9 @@ def _errata_record(
         var_id=variable,
         year=year,
         versionname=edition_name,
-        regver_id=int(year),
+        regver_id=edition_id if edition_id is not None else int(year),
         register=("TEST", 1, variant),
+        data_type=data_type,
     ).split("|")
     cells = {
         name: (True, value, value) for name, value in zip(header, row, strict=True)
@@ -1328,6 +1334,104 @@ _EDITION_PERIOD = (
     'valid_from = "2018-02-01"\nvalid_to = "2018-11-30"\n'
     'evidence = "Source documentation"\nnoted = "2026-09-26"\n'
 )
+
+
+def test_named_edition_split_rebinds_parents_and_is_order_independent(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "curation"
+    path = root / "registers/scb/sample.toml"
+    path.parent.mkdir(parents=True)
+    (root / "classifications").mkdir()
+    path.write_text(
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+        '[[variant]]\nnative_id = "1.2"\nslug = "flow"\n'
+        '[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
+        '[[identity.edition_split]]\nvariant = "1.2"\n'
+        'split = "1.2.stock"\neditions = ["2007-12-31"]\n'
+        'evidence = "SCB population text distinguishes stock"\n'
+        'noted = "2026-09-27"\n',
+        encoding="utf-8",
+    )
+    tree = load_curation_tree(root)
+    records = (
+        _errata_record(column="SHARED", year="2007", edition_name="2007", edition_id=1),
+        _errata_record(
+            column="SHARED",
+            year="2007",
+            edition_name="2007-12-31",
+            edition_id=2,
+            member=21,
+            data_type="str",
+        ),
+    )
+    assert "conflicting_occurrence_facts" in {
+        issue.code for issue in resolve_occurrence_intervals(records).issues
+    }
+    scope = _partition_scope(records)
+    native_register = source_register_key(records[0])
+    native_variable = native_variable_key(records[0])
+    assert native_register is not None and native_variable is not None
+
+    def prepared(rows):
+        reader = SimpleNamespace(
+            iter_records=lambda **kwargs: iter(rows),
+            iter_register_slices=lambda source, wanted: iter(
+                ((native_register, rows),)
+            ),
+            iter_native_families=lambda source: iter(((native_variable, rows),)),
+        )
+        return cast("Any", SimpleNamespace(records=reader))
+
+    first, issues, statuses = compile_edition_splits(
+        tree, prepared(records), (scope,), subset=False
+    )
+    second, _, _ = compile_edition_splits(
+        tree, prepared(records[::-1]), (scope,), subset=False
+    )
+    assert not issues and statuses["scb/sample"]["entries_matched"]
+    assert first == second
+    (case,) = first[scope.source, scope.register_key]
+    result = apply_occurrence_cases(records, (case,))
+    assert result.diagnostics == ()
+    flow, stock = result.occurrences
+    assert flow.variant_key is not None
+    assert stock.variant_key is not None and stock.edition_key is not None
+    assert flow.variant_key == native_variant_key(records[0])
+    assert stock.variant_key == (*flow.variant_key, "edition-split", "stock")
+    assert stock.edition_key[: len(stock.variant_key)] == stock.variant_key
+    if stock.population_key is not None:
+        assert stock.population_key[: len(stock.variant_key)] == stock.variant_key
+    assert all(
+        "conflicting_occurrence_facts"
+        not in {
+            issue.code for issue in resolve_occurrence_intervals((occurrence,)).issues
+        }
+        for occurrence in result.occurrences
+    )
+
+    naming, _, _, name_issues, _ = compile_native_naming(
+        tree, prepared(records), (scope,), subset=False
+    )
+    assert not name_issues
+    parents = resolve_parents(
+        result.occurrences,
+        naming[scope.source, scope.register_key],
+        rebinds={record_ref(records[1]): stock.variant_key},
+    )
+    assert set(parents.variants) == {flow.variant_key, stock.variant_key}
+    assert stock.edition_key in parents.editions
+    assert any(
+        key[: len(stock.variant_key)] == stock.variant_key for key in parents.fields
+    )
+
+    missing = path.read_text().replace('2007-12-31"]', '2008-12-31"]')
+    path.write_text(missing, encoding="utf-8")
+    stale, stale_issues, _ = compile_edition_splits(
+        load_curation_tree(root), prepared(records), (scope,), subset=False
+    )
+    assert not stale
+    assert [issue.code for issue in stale_issues] == ["stale_curation_entry"]
 
 
 def test_compiled_edition_period_places_only_named_unparseable_edition(

@@ -251,7 +251,10 @@ def _scb_slug_ids(slug_dir: Path | None) -> tuple[dict[str, int], dict[str, int]
     for entry in entries:
         if entry.kind != "register_variant" or not entry.slug:
             continue
-        register_id, variant_id = _parse_variant_id(entry.source_id)
+        parsed = _parse_variant_id(entry.source_id)
+        if len(parsed) != 2:
+            continue  # Split variants are curated after native SCB errata loading.
+        register_id, variant_id = parsed
         register_slug = by_register_id.get(register_id)
         if register_slug is not None:
             variants[f"{register_slug}/{entry.slug}"] = variant_id
@@ -416,7 +419,10 @@ def load_scb_errata(
         register_id = int(native_id)
         registers[register.register_info.slug] = register_id
         for variant in register.variant:
-            native_register, native_variant = _parse_variant_id(variant.native_id)
+            parsed = _parse_variant_id(variant.native_id)
+            if len(parsed) != 2:
+                continue  # Split variants have no adapter-level native ID.
+            native_register, native_variant = parsed
             if native_register != register_id:
                 raise ValueError(
                     f"{register.source_file}: variant {variant.native_id} belongs to "

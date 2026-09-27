@@ -17,6 +17,7 @@ from reg_meta_build.source_coordinates import (
     NativeKey,
     _coordinate_key,
     native_parent_key,
+    native_variant_key,
 )
 from reg_meta_build.source_curation import ResolutionDiagnostic
 from reg_meta_build.source_effects import record_ref
@@ -25,7 +26,7 @@ from reg_meta_build.source_occurrences import EffectiveOccurrence
 from reg_meta_build.source_records import SourceField
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Mapping
 
     from reg_meta_build.source_curation import ParentFactProjection, SourceRecordRef
     from reg_meta_build.source_naming import NamingDeclaration
@@ -109,6 +110,7 @@ def resolve_parents(
     *,
     language: str = "sv",
     withheld_naming: frozenset[NativeKey] = frozenset(),
+    rebinds: Mapping[SourceRecordRef, NativeKey] = {},
 ) -> ParentResolution:
     """Resolve supplied parent facts; names come from checked naming declarations.
 
@@ -166,6 +168,15 @@ def resolve_parents(
                         )
                     )
                 continue
+            split_key = rebinds.get(record_ref(record))
+            raw_variant_key = native_variant_key(record)
+            if (
+                split_key is not None
+                and raw_variant_key is not None
+                and parent.kind != "register"
+                and key[: len(raw_variant_key)] == raw_variant_key
+            ):
+                key = (*split_key, *key[len(raw_variant_key) :])
             alternatives = claims[key]
             if parent.fields not in alternatives:
                 alternatives[parent.fields] = parent, record_ref(record)
@@ -183,6 +194,8 @@ def resolve_parents(
             variant_key = (
                 (*register_key, "variant", *variant) if variant is not None else None
             )
+            if split_key is not None and variant_key == raw_variant_key:
+                variant_key = split_key
             edition = (
                 _coordinate_key(parent.edition) if parent.edition is not None else None
             )

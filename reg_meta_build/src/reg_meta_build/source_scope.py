@@ -21,6 +21,7 @@ from reg_meta_build.source_coding_choices import apply_coding_choices
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_variable_key,
+    native_variant_key,
     source_register_key,
 )
 from reg_meta_build.source_curation import (
@@ -288,6 +289,14 @@ def resolve_source_scope(
         corrected.occurrences,
         tuple(names.values()),
         withheld_naming=frozenset(withheld_naming),
+        rebinds={
+            record_ref(source): occurrence.variant_key
+            for occurrence in corrected.occurrences
+            if occurrence.variant_key is not None
+            for source in occurrence.source_records
+            if occurrence.variant_key != native_variant_key(source)
+            and occurrence.edition_key is not None
+        },
     )
     for issue in parents.diagnostics:
         emit(issue)

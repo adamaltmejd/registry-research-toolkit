@@ -295,7 +295,10 @@ entry index.
 
 SCB errata records omitted rows and explicit periods for existing editions whose names
 are topics rather than dates. The register file implies the register; each entry names a
-variant and literal SCB column/version coordinates. `[[errata.version]]` carries
+variant and literal SCB column/version coordinates. A curated
+`[[identity.edition_split]]` moves exact named editions of one native variant to a
+declared split variant. Their edition and population parents move with them; edition
+name shape never implies a split. `[[errata.version]]` carries
 `variant`, `name`, `evidence`, and `noted`; it adds an undocumented register edition and
 requires a year-bearing SCB version name. Version era order follows the maximum year the
 edition claims, so adding a historical edition cannot replace a newer documented
