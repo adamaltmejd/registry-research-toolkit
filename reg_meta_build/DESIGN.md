@@ -298,12 +298,12 @@ are topics rather than dates. The register file implies the register; each entry
 variant and literal SCB column/version coordinates. A curated
 `[[identity.edition_split]]` moves exact named editions of one native variant to a
 declared split variant. Their edition and population parents move with them; edition
-name shape never implies a split. `[[errata.version]]` carries
-`variant`, `name`, `evidence`, and `noted`; it adds an undocumented register edition and
-requires a year-bearing SCB version name. Version era order follows the maximum year the
-edition claims, so adding a historical edition cannot replace a newer documented
-edition's latest spelling or type. `[[errata.edition_period]]` names one existing native
-edition by variant and SCB's literal edition name. For a name the period parser cannot
+name shape never implies a split. `[[errata.version]]` carries `variant`, `name`,
+`evidence`, and `noted`; it adds an undocumented register edition and requires a
+year-bearing SCB version name. Version era order follows the maximum year the edition
+claims, so adding a historical edition cannot replace a newer documented edition's
+latest spelling or type. `[[errata.edition_period]]` names one existing native edition
+by variant and SCB's literal edition name. For a name the period parser cannot
 interpret, its documented `valid_from` and `valid_to` are the exact inclusive occurrence
 interval; `evidence` and `noted` record the source of that claim. A missing or renamed
 edition, or a name the parser can interpret, makes the entry stale. No register coverage
