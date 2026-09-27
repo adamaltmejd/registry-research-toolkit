@@ -91,9 +91,7 @@ def test_lisa_undeclared_sensitivity_defaults_only_for_person_tables(
     records = _read(path)
     by_table = {
         table: [
-            record
-            for record in records
-            if record.locators[0].physical_table == table
+            record for record in records if record.locators[0].physical_table == table
         ]
         for table in (
             "Individ",
