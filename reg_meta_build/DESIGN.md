@@ -145,8 +145,8 @@ never replaces the original cells:
   pooled. The edition label and a variable's declared measurement/reference period are
   separate observations. An SCB `YYYY, slutlig version` edition supersedes the same
   variant's `YYYY, preliminär version` per native variable, retaining its records as
-  support evidence. A pooled scope carries its whole-range bounds (Y-202): the
-  exact interval's endpoints for a multi-year exact range, else the first claim's start
+  support evidence. A pooled scope carries its whole-range bounds (Y-202): the exact
+  interval's endpoints for a multi-year exact range, else the first claim's start
   through the last claim's end — but only when every claim is a whole calendar year.
   Other term edges (Komvux HT/VT) and forecast-register ranges carry no range. A pooled
   scope without both bounds stays unresolvable downstream — the range is carried
