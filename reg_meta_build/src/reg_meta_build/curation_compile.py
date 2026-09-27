@@ -3066,7 +3066,12 @@ def compile_errata(
                 elif table == "delivered":
                     entry = delivered[register_id, variant_id, fold_column(row.column)]
                     result = convert_delivered_entry(
-                        entry, case_id=case_id, records=members, editions=editions
+                        entry,
+                        case_id=case_id,
+                        records=members,
+                        editions=editions,
+                        steward_table_prefixes=register.register_info.steward_table_prefixes,
+                        storage_columns=register_storage_columns,
                     )
                     blockers, converted = result.blockers, result.case
                 else:

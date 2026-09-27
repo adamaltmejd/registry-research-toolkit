@@ -39,6 +39,8 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build._resolved_common import _require_trimmed
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     import sqlite3
 
 
@@ -142,6 +144,48 @@ def fold_column(s: str) -> str:
         .decode("ascii")
         .lower()
     )
+
+
+_INTEGER_DATA_TYPES = frozenset(
+    {"integer", "int", "bigint", "smallint", "tinyint", "bit"}
+)
+_DECIMAL_DATA_TYPES = frozenset(
+    {"decimal", "numeric", "float", "real", "money", "smallmoney"}
+)
+_TEXT_DATA_TYPES = frozenset({"text", "char", "varchar", "nchar", "nvarchar", "ntext"})
+_DATE_DATA_TYPES = frozenset(
+    {"date", "datetime", "datetime2", "smalldatetime", "datetimeoffset"}
+)
+
+
+def data_type_class(value: str) -> str | None:
+    """Classify catalog and supported SQL type names without guessing from substrings."""
+    kind = value.lower()
+    if kind in _INTEGER_DATA_TYPES:
+        return "integer"
+    if kind in _DECIMAL_DATA_TYPES:
+        return "decimal"
+    if kind in _TEXT_DATA_TYPES:
+        return "text"
+    if kind in _DATE_DATA_TYPES:
+        return "date"
+    return None
+
+
+def widen_data_type_classes(classes: Iterable[str]) -> str | None:
+    """Widen type evidence; a date/numeric mixture has no safe common type."""
+    kinds = set(classes)
+    if "date" in kinds and kinds & {"integer", "decimal"}:
+        return None
+    if "text" in kinds:
+        return "text"
+    if "date" in kinds:
+        return "date"
+    if "decimal" in kinds:
+        return "decimal"
+    if "integer" in kinds:
+        return "integer"
+    return None
 
 
 # data_type marker substrings. SCB ships SQL-ish lowercased types (`int`,

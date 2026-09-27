@@ -16,10 +16,12 @@ from typing import TYPE_CHECKING, cast
 
 from ._curation import (
     curation_error,
+    data_type_class,
     fold_column,
     require_bool,
     require_evidence,
     require_str,
+    widen_data_type_classes,
 )
 from .curation_tree import load_classifications, load_register_files
 from .edition_bounds import edition_claims
@@ -49,7 +51,11 @@ from .source_records import (
     canonical_sha256,
     value_field,
 )
-from .sources.swecov_column_types import infer_steward_column_type
+from .sources.swecov_column_types import (
+    SWECOV_COLUMN_TYPES_PATH,
+    infer_steward_column_type,
+    steward_column_storage_classes,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -839,13 +845,14 @@ def convert_delivered_entry(
     case_id: str,
     records: tuple[SourceRecord, ...],
     editions: tuple[ErrataEditionBinding, ...],
+    steward_table_prefixes: tuple[str, ...] = (),
+    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> ErrataConversion:
     """Retain the availability stated by an accepted omission declaration.
 
     An elsewhere-documented column must identify one source-native variable.
-    Its original records support identity only: proximity in time never proves
-    missing-edition metadata or code membership. Blank targets keep their own
-    facts; completely absent occurrences carry only the declared delivery facts.
+    Its documented type and matching storage schemas supply widened type evidence.
+    Proximity in time never proves flags or code membership.
     """
     _variant_records(records, entry.register_id, entry.register_variant_id, editions)
     for name in entry.versions:
@@ -883,6 +890,45 @@ def convert_delivered_entry(
     original = source_occurrence(candidates[0])
     assert original.variable_key is not None and original.variant_key is not None
     native = candidates[0].subject.native
+    documented_values = tuple(
+        sorted(
+            (
+                (
+                    record.original_period_text
+                    or str(record.subject.native.edition_id),
+                    _text(record, "data_type"),
+                )
+                for record in candidates
+            ),
+            key=lambda item: (item[0], item[1] or ""),
+        )
+    )
+    documented_classes = tuple(
+        data_type_class(value) for _, value in documented_values if value is not None
+    )
+    storage_classes, storage_evidence = steward_column_storage_classes(
+        entry.column, steward_table_prefixes, storage_columns or {}
+    )
+    inferred_type = (
+        widen_data_type_classes(
+            (
+                *storage_classes,
+                *(kind for kind in documented_classes if kind is not None),
+            )
+        )
+        if None not in documented_classes
+        else None
+    )
+    provenance = "\n".join(
+        (
+            entry.provenance,
+            storage_evidence or f"SWECOV storage {SWECOV_COLUMN_TYPES_PATH}: none",
+            "Documented Datatyp: "
+            + ", ".join(
+                f"{edition}={value or 'none'}" for edition, value in documented_values
+            ),
+        )
+    )
     effects: list[OccurrenceEffect] = []
     targets: set[SourceRecordRef] = set()
     blockers = []
@@ -955,6 +1001,15 @@ def convert_delivered_entry(
                         ),
                     )
                 )
+                if inferred_type is not None:
+                    effects.append(
+                        CheckedFieldChange(
+                            ref=ref,
+                            replacement=FieldExpectation(
+                                name="data_type", status="value", value=inferred_type
+                            ),
+                        )
+                    )
             continue
         targets.update(references)
         effects.append(
@@ -967,6 +1022,9 @@ def convert_delivered_entry(
                 fields=SourceFields(
                     availability=value_field(True),
                     column_name=value_field(entry.column),
+                    data_type=value_field(inferred_type)
+                    if inferred_type is not None
+                    else None,
                 ),
                 edition_scope=edition.edition_scope,
                 edition_period_scope=edition.edition_period_scope,
@@ -985,11 +1043,11 @@ def convert_delivered_entry(
             for ref in edition.support
         }
     )
-    # Type, coding and other adjacent-edition facts are not dependencies because
-    # this declaration does not assert them. Preserve only the identity evidence.
+    # Documented type is a dependency: changing it makes the decision stale.
+    # Flags and coding are never copied from adjacent editions.
     expected = capture_expectations(
         tuple(record for record in records if record_ref(record) in required),
-        fields=("column_name",),
+        fields=("column_name", "data_type"),
     )
     case = CurationCase(
         case_id=case_id,
@@ -1000,7 +1058,7 @@ def convert_delivered_entry(
             reviewed=True,
             effects=tuple(effects),
             reason=entry.provenance,
-            provenance=entry.provenance,
+            provenance=provenance,
         ),
     )
     return ErrataConversion(case, (), references)
