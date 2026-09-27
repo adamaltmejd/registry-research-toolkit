@@ -700,14 +700,23 @@ def check_naming_target(
         and not target.expectations
         and not target.peer_guards
     ):
-        present = any(
-            native_parent_key(record.source, record.subject.provider, parent)
-            == target.source_key
-            for record in records
-            for parent in record.parent_facts
-            if parent.kind == ("register" if target.kind == "register" else "variant")
-        )
-        if target.kind == "register_variant" and target.source_key[-2:] == (
+        if (
+            target.kind == "register_variant"
+            and len(target.source_key) >= 2
+            and target.source_key[-2] == "edition-split"
+        ):
+            # The rebind creates this parent; raw facts still name its source variant.
+            present = any(
+                source_register_key(record) == target.register_key
+                and any(
+                    native_parent_key(record.source, record.subject.provider, parent)
+                    == target.source_key[:-2]
+                    for parent in record.parent_facts
+                    if parent.kind == "variant"
+                )
+                for record in records
+            )
+        elif target.kind == "register_variant" and target.source_key[-2:] == (
             "variant",
             "not-applicable",
         ):
@@ -715,6 +724,15 @@ def check_naming_target(
                 source_register_key(record) == target.register_key
                 and record.subject.variant.status == "not_applicable"
                 for record in records
+            )
+        else:
+            present = any(
+                native_parent_key(record.source, record.subject.provider, parent)
+                == target.source_key
+                for record in records
+                for parent in record.parent_facts
+                if parent.kind
+                == ("register" if target.kind == "register" else "variant")
             )
         if present:
             return ()

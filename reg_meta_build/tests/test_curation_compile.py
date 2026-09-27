@@ -48,6 +48,7 @@ from reg_meta_build.source_curation import (
     CuratedOccurrenceAddition,
     OccurrenceCorrectionDecision,
     SearchAliasDecision,
+    SourceEvidence,
 )
 from reg_meta_build.source_effects import (
     _require_checked,
@@ -60,6 +61,7 @@ from reg_meta_build.source_naming import (
     NamingDeclaration,
     NativeNamingTarget,
     authored_naming_id,
+    check_naming_target,
 )
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
@@ -1433,6 +1435,131 @@ def test_named_edition_split_rebinds_parents_and_is_order_independent(
     )
     assert not stale
     assert [issue.code for issue in stale_issues] == ["stale_curation_entry"]
+
+
+def test_split_variant_naming_accepts_source_parent_and_keeps_states(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "curation"
+    path = root / "registers/scb/sample.toml"
+    path.parent.mkdir(parents=True)
+    (root / "classifications").mkdir()
+    path.write_text(
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "2"\n'
+        '[[variant]]\nnative_id = "2.66"\nslug = "flow"\n'
+        '[[variant]]\nnative_id = "2.66.stock"\nslug = "stock"\n'
+        '[[identity.edition_split]]\nvariant = "2.66"\nsplit = "2.66.stock"\n'
+        'editions = ["2007-12-31"]\nsource_editions = ["2007"]\n'
+        'evidence = "SCB distinguishes flow and stock"\nnoted = "2026-09-27"\n',
+        encoding="utf-8",
+    )
+    header = REGISTERINFORMATION_HEADER.split("|")
+    records = tuple(
+        clean_scb_row(
+            header,
+            member,
+            {
+                name: (True, value, value)
+                for name, value in zip(
+                    header,
+                    _var_row(
+                        colname="SHARED",
+                        cvid=member,
+                        var_id=5,
+                        year="2007",
+                        versionname=edition_name,
+                        regver_id=edition_id,
+                        register=("RTB", 2, 66),
+                    ).split("|"),
+                    strict=True,
+                )
+            },
+            _revision("scb-registerinformation"),
+        ).record
+        for member, edition_name, edition_id in (
+            (20, "2007", 1),
+            (21, "2007-12-31", 2),
+        )
+    )
+    source_variant = native_variant_key(records[0])
+    register = source_register_key(records[0])
+    variable = native_variable_key(records[0])
+    assert source_variant is not None and register is not None and variable is not None
+    assert {native_variant_key(record) for record in records} == {source_variant}
+    reader = SimpleNamespace(
+        iter_native_families=lambda source: iter(((variable, records),)),
+        iter_records=lambda **kwargs: iter(records),
+        iter_register_slices=lambda source, wanted: iter(((register, records),)),
+    )
+    prepared = cast("Any", SimpleNamespace(records=reader))
+    scope = _partition_scope(records)
+    scope_key = scope.source, scope.register_key
+    tree = load_curation_tree(root)
+    split_cases, split_issues, _ = compile_edition_splits(
+        tree, prepared, (scope,), subset=False
+    )
+    naming, _, _, naming_issues, _ = compile_native_naming(
+        tree, prepared, (scope,), subset=False
+    )
+    assert split_issues == () and naming_issues == ()
+    names = naming[scope_key]
+    split_key = (*source_variant, "edition-split", "stock")
+    split_target = next(
+        name.target for name in names if name.target.source_key == split_key
+    )
+    evidence = SourceEvidence(records)
+    checks = tuple(
+        issue for name in names for issue in check_naming_target(name.target, evidence)
+    )
+    assert checks == ()
+    assert (
+        check_naming_target(
+            split_target.model_copy(
+                update={
+                    "source_key": (*source_variant[:-1], 67, "edition-split", "stock")
+                }
+            ),
+            evidence,
+        )[0].code
+        == "naming_native_identity_missing"
+    )
+    assert (
+        check_naming_target(
+            split_target.model_copy(update={"register_key": (*register[:-1], 3)}),
+            evidence,
+        )[0].code
+        == "naming_native_identity_missing"
+    )
+    (case,) = split_cases[scope_key]
+    corrected = apply_occurrence_cases(records, (case,))
+    assert corrected.diagnostics == ()
+    parents = resolve_parents(
+        corrected.occurrences,
+        names,
+        rebinds={record_ref(records[1]): split_key},
+    )
+    assert split_key in parents.variants
+    assert not [
+        issue for issue in parents.diagnostics if issue.code == "withheld_parent_naming"
+    ]
+    formed = form_native_variable(
+        corrected.occurrences,
+        register=parents.registers[register],
+        variants=parents.variants,
+        slug="shared",
+        provider_key="SHARED",
+        flags=SourceFields(
+            identifier=value_field(False), sensitivity=value_field(False)
+        ),
+        coding={
+            occurrence.column_key: resolve_code_membership(())
+            for occurrence in corrected.occurrences
+            if occurrence.column_key is not None
+        },
+    )
+    assert formed.variable is not None
+    assert {state.variant.slug for state in formed.variable.states} == {"flow", "stock"}
+    assert not formed.withheld_variant_states
 
 
 @pytest.mark.parametrize(
