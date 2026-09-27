@@ -19,6 +19,7 @@ from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
     has_unknown_code_membership,
+    resolve_code_membership,
 )
 from reg_meta_build.source_curation import (
     CuratedOccurrenceAddition,
@@ -82,6 +83,15 @@ class ValueBindingResult:
     claims: tuple[CodeListClaim, ...]
     bindings: tuple[ValueListBinding, ...]
     issues: tuple[ValueBindingIssue, ...]
+
+
+def _declared_identifier(fields: SourceFields) -> bool:
+    identifier = fields.identifier
+    return (
+        identifier is not None
+        and identifier.status == "value"
+        and identifier.value is True
+    )
 
 
 def _unknown(reason: str) -> TemporalScope:
@@ -223,6 +233,7 @@ class ValueBindingSession:
         *,
         scope: TemporalScope | None = None,
         fields: SourceFields | None = None,
+        declared_identifier: bool | None = None,
     ) -> ValueBindingResult:
         join = self.join
         if join is None or record.source not in join.record_sources:
@@ -231,12 +242,8 @@ class ValueBindingSession:
             scope = record.edition_period_scope
             if scope.kind == "not_applicable":
                 scope = record.edition_scope
-        identifier = (record.fields if fields is None else fields).identifier
-        declared_identifier = (
-            identifier is not None
-            and identifier.status == "value"
-            and identifier.value is True
-        )
+        if declared_identifier is None:
+            declared_identifier = _declared_identifier(record.fields)
         groups: dict[str, list[SourceValueAssociation]] = defaultdict(list)
         # Group as evidence arrives: repeated validity errors need one shared
         # context, while every physical association locator remains ordered.
@@ -370,6 +377,27 @@ class ValueBindingSession:
                     missing_validity=join.missing_validity,
                     invalid_item=invalid_item,
                 )
+                if (
+                    declared_identifier
+                    and issue == "unknown_code_validity"
+                    and association.locator not in contradictory
+                ):
+                    bounded, bound_issue = _member_scope(
+                        scope,
+                        association.supplied_window
+                        if association.supplied_window is not None
+                        and association.supplied_window.status == "known"
+                        else None,
+                        association.section_window
+                        if association.section_window is not None
+                        and association.section_window.status == "known"
+                        else None,
+                        (),
+                        missing_validity="unrestricted",
+                        invalid_item=False,
+                    )
+                    if bound_issue is None:
+                        member_scope = bounded
                 if association.locator in contradictory:
                     member_scope = _unknown(
                         "source list identifies conflicting members"
@@ -382,7 +410,13 @@ class ValueBindingSession:
                 value = self.session.value(association.value_key)
                 members.append(
                     CodeMembershipClaim(
-                        value.code, value.label, member_scope, (association,), validity
+                        value.code,
+                        value.label,
+                        member_scope,
+                        (association,),
+                        validity,
+                        unknown_validity=declared_identifier
+                        and issue == "unknown_code_validity",
                     )
                 )
             if len(non_membership) != len(associations):
@@ -392,14 +426,29 @@ class ValueBindingSession:
                     tuple(members),
                     version_label=descriptor.version,
                 )
-                if declared_identifier and (
-                    ("unknown_code_validity", descriptor_key) in issues
-                    or has_unknown_code_membership(claim)
-                ):
-                    claim_id = None
-                    issues.pop(("unknown_code_validity", descriptor_key), None)
+                if declared_identifier and has_unknown_code_membership(claim):
+                    resolved = resolve_code_membership((claim,))
+                    if not any(
+                        issue.code == "unknown_code_membership"
+                        for issue in resolved.issues
+                    ):
+                        claims.append(claim)
+                    elif any(
+                        segment.code_set is not None for segment in resolved.segments
+                    ):
+                        claim = replace(
+                            claim,
+                            claim_id=canonical_sha256((claim_id, "partial-identifier")),
+                            drop_unknown_membership=True,
+                        )
+                        claims.append(claim)
+                        claim_id = claim.claim_id
+                    else:
+                        claim_id = None
                 else:
                     claims.append(claim)
+                if declared_identifier:
+                    issues.pop(("unknown_code_validity", descriptor_key), None)
             else:
                 claim_id = None
             bindings.append(
@@ -452,6 +501,7 @@ def bind_code_lists(
     *,
     scope: TemporalScope | None = None,
     fields: SourceFields | None = None,
+    declared_identifier: bool | None = None,
 ) -> ValueBindingResult:
     """Bind original evidence at its own or an already checked effective scope.
 
@@ -466,7 +516,13 @@ def bind_code_lists(
         if session.join is not None and record.source in session.join.record_sources
     )
     results = tuple(
-        session.bind(record, scope=scope, fields=fields) for session in sessions
+        session.bind(
+            record,
+            scope=scope,
+            fields=fields,
+            declared_identifier=declared_identifier,
+        )
+        for session in sessions
     )
     claims = tuple(claim for result in results for claim in result.claims)
     issues = tuple(issue for result in results for issue in result.issues)
@@ -518,17 +574,18 @@ def bind_occurrence_code_lists(
     results = []
     for record in {record.record_id: record for record in records}.values():
         fields = occurrence.fields if occurrence.source_records else record.fields
+        identifier_fields = record.fields
         if support is not None:
-            joined, _ = reconcile_source_fields(
+            identifier_fields, _ = reconcile_source_fields(
                 (record,), support=tuple(match.fields for match in support.bind(record))
             )
-            fields = fields.model_copy(update={"identifier": joined.identifier})
         results.append(
             bind_code_lists(
                 record,
                 sessions,
                 scope=scope,
                 fields=fields,
+                declared_identifier=_declared_identifier(identifier_fields),
             )
         )
     return ValueBindingResult(

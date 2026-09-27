@@ -12,6 +12,7 @@ from reg_meta_build.prepared_values import (
     prepare_source_values,
 )
 from reg_meta_build.source_coding import (
+    coding_content_sha256,
     coding_observation_fingerprints,
     copied_coding_fingerprints,
     resolve_code_membership,
@@ -607,6 +608,94 @@ def test_declared_identifier_drops_unknown_membership(
     assert bound.bindings[0].claim_id is None
 
 
+def test_declared_identifier_drops_only_bad_membership_period(
+    tmp_path: Path,
+) -> None:
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(),
+        values=(SourceValue("a", "01", "One"), SourceValue("b", None, "Bad")),
+        rows=(
+            SourceValueAssociation(
+                2, "list", "a", "values", member_id="1001", item_id="1"
+            ),
+            SourceValueAssociation(
+                3,
+                "list",
+                "b",
+                "values",
+                member_id="1001",
+                item_id="2",
+                supplied_window=value_window("2020-07-01", "2020-07-31"),
+            ),
+        ),
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(_record(identifier=value_field(True)), sessions)
+    assert len(bound.claims) == 1
+    assert bound.issues == ()
+    assert bound.claims[0].drop_unknown_membership
+    assert coding_content_sha256(bound.claims[0]) is None
+    resolved = resolve_code_membership(bound.claims)
+    assert resolved.issues == ()
+    assert [
+        (
+            segment.valid_from,
+            segment.valid_to,
+            segment.code_set.members if segment.code_set else None,
+        )
+        for segment in resolved.segments
+    ] == [
+        ("2020-01-01", "2020-06-30", (("01", "One"),)),
+        ("2020-07-01", "2020-07-31", None),
+        ("2020-08-01", "2020-12-31", (("01", "One"),)),
+    ]
+
+
+def test_declared_identifier_drops_only_bad_validity_period(tmp_path: Path) -> None:
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(missing="unknown"),
+        rows=(
+            SourceValueAssociation(
+                2, "list", "a", "values", member_id="1001", item_id="1"
+            ),
+            SourceValueAssociation(
+                3,
+                "list",
+                "b",
+                "values",
+                member_id="1001",
+                item_id="2",
+                supplied_window=value_window("2020-07-01", "2020-07-31"),
+            ),
+        ),
+        validity=(
+            SourceValueValidity(
+                2, "1", None, None, "validity", window=SourceValueWindow("known")
+            ),
+        ),
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(_record(identifier=value_field(True)), sessions)
+    assert len(bound.claims) == 1
+    assert bound.issues == ()
+    resolved = resolve_code_membership(bound.claims)
+    assert resolved.issues == ()
+    assert [
+        (
+            segment.valid_from,
+            segment.valid_to,
+            segment.code_set.members if segment.code_set else None,
+        )
+        for segment in resolved.segments
+    ] == [
+        ("2020-01-01", "2020-06-30", (("01", "One"),)),
+        ("2020-07-01", "2020-07-31", None),
+        ("2020-08-01", "2020-12-31", (("01", "One"),)),
+    ]
+
+
 def test_declared_identifier_drops_validity_error_with_complete_membership(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -651,6 +740,36 @@ def test_mixed_identifier_declarations_affect_only_their_own_records(
     assert [
         issue.code for issue in resolve_code_membership(undeclared.claims).issues
     ] == ["unknown_code_membership"]
+
+
+def test_occurrence_identifier_is_decided_per_source_record(tmp_path: Path) -> None:
+    source = _prepare(
+        tmp_path / "values",
+        join=_join(),
+        values=(SourceValue("a", None, "Unknown"),),
+        rows=(
+            SourceValueAssociation(
+                2, "list", "a", "values", member_id="1001", item_id="1"
+            ),
+            SourceValueAssociation(
+                3, "list", "a", "values", member_id="1002", item_id="2"
+            ),
+        ),
+    )
+    declared = _record(member=1001, identifier=value_field(True))
+    other = _record(member=1002, identifier=value_field(False))
+    occurrence = replace(source_occurrence(declared), source_records=(declared, other))
+    assert occurrence.fields.identifier == value_field(True)
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_occurrence_code_lists(occurrence, sessions)
+    assert len(bound.claims) == 1
+    assert [issue.code for issue in resolve_code_membership(bound.claims).issues] == [
+        "unknown_code_membership"
+    ]
+    assert {binding.record_id: binding.claim_id for binding in bound.bindings} == {
+        declared.record_id: None,
+        other.record_id: bound.claims[0].claim_id,
+    }
 
 
 def test_repeated_binding_errors_share_context_but_keep_all_original_associations(
