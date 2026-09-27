@@ -12,6 +12,11 @@ from dataclasses import dataclass
 from datetime import date
 from typing import TYPE_CHECKING
 
+from reg_meta_build._curation import (
+    data_type_class,
+    fold_column,
+    widen_data_type_classes,
+)
 from reg_meta_build.source_occurrences import EffectiveOccurrence, effective_occurrence
 from reg_meta_build.source_records import (
     SourceField,
@@ -22,7 +27,9 @@ from reg_meta_build.source_records import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Mapping
+
+    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
 
 
 @dataclass(frozen=True)
@@ -271,9 +278,11 @@ def reconcile_source_fields(
     records: tuple[SourceRecord | EffectiveOccurrence | SourceParentObservation, ...],
     *,
     support: tuple[SourceFields, ...] = (),
+    storage: StewardColumnStorage | None = None,
 ) -> tuple[SourceFields, tuple[str, ...]]:
     resolved = {}
     conflicts = []
+    widened_classes: frozenset[str] | None = None
     field_sources = (*(record.fields for record in records), *support)
     checked_sensitivity = tuple(
         record.fields.sensitivity
@@ -328,6 +337,51 @@ def reconcile_source_fields(
             and not explicitly_withheld
         ):
             resolved[name] = SourceField(status="value", value=published)
+        elif name == "data_type" and len(values) > 1 and not explicitly_withheld:
+            classes = tuple(
+                data_type_class(value)
+                if status == "value" and isinstance(value, str)
+                else None
+                for status, value in values
+            )
+            provenance = "Documented Datatyp: " + ", ".join(
+                sorted(str(value) for status, value in values if status == "value")
+            )
+            if storage is not None:
+                provenance += "; " + storage.provenance
+            if all(kind is not None for kind in classes):
+                widened_classes = frozenset(
+                    kind for kind in classes if kind is not None
+                )
+                widened = widen_data_type_classes(widened_classes)
+            else:
+                widened = None
+            if widened is not None:
+                if (
+                    widened == "text"
+                    and storage is not None
+                    and storage.classes
+                    and storage.classes <= {"integer", "decimal"}
+                ):
+                    widened = widen_data_type_classes(
+                        kind
+                        for kind in storage.classes | widened_classes
+                        if kind is not None and kind in {"integer", "decimal"}
+                    )
+                    assert widened is not None
+                resolved[name] = SourceField(
+                    status="value", value=widened, raw_value=provenance
+                )
+            else:
+                widened_classes = None
+                conflicts.append(name)
+                resolved[name] = SourceField(status="unknown", raw_value=provenance)
+        elif (
+            name == "data_length"
+            and widened_classes is not None
+            and len(widened_classes) > 1
+        ):
+            resolved[name] = SourceField(status="unknown")
         elif (
             name == "data_length"
             and len(values) > 1
@@ -345,7 +399,15 @@ def reconcile_source_fields(
             and all(
                 fields.data_type is not None
                 and fields.data_type.status == "value"
-                and fields.data_type.value == data_type.value
+                and (
+                    fields.data_type.value == data_type.value
+                    or (
+                        widened_classes is not None
+                        and len(widened_classes) == 1
+                        and isinstance(fields.data_type.value, str)
+                        and data_type_class(fields.data_type.value) == data_type.value
+                    )
+                )
                 for fields in field_sources
                 if fields.data_length is not None
                 and fields.data_length.status == "value"
@@ -369,6 +431,8 @@ def reconcile_source_fields(
 
 def resolve_occurrence_intervals(
     records: Iterable[SourceRecord | EffectiveOccurrence],
+    *,
+    storage: Mapping[str, StewardColumnStorage] | None = None,
 ) -> OccurrenceResolution:
     """Keep independently supported facts on exact, non-overlapping column periods.
 
@@ -482,7 +546,12 @@ def resolve_occurrence_intervals(
                 or effective
             )
             occurrences = tuple(record for item in winners for record in item.evidence)
-            fields, conflicts = reconcile_source_fields(winners)
+            fields, conflicts = reconcile_source_fields(
+                winners,
+                storage=storage.get(fold_column(column))
+                if storage is not None
+                else None,
+            )
             lower, upper = (
                 date.fromordinal(start).isoformat(),
                 date.fromordinal(end).isoformat(),

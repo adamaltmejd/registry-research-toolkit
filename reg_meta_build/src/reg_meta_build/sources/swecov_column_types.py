@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import io
 import re
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import (
@@ -155,6 +156,47 @@ def index_swecov_column_types(
     return dict(sorted(result.items()))
 
 
+def steward_column_types(
+    prefixes: tuple[str, ...],
+    declarations: dict[tuple[str, str], SourceColumnTypeDeclaration],
+) -> dict[tuple[str, str], SourceColumnTypeDeclaration]:
+    """Select only a register's literal SWECOV table prefixes."""
+    return {
+        key: declaration
+        for key, declaration in declarations.items()
+        if prefixes and key[0].startswith(prefixes)
+    }
+
+
+@dataclass(frozen=True)
+class StewardColumnStorage:
+    classes: frozenset[str | None]
+    provenance: str
+
+
+def index_steward_column_storage(
+    prefixes: tuple[str, ...],
+    declarations: dict[tuple[str, str], SourceColumnTypeDeclaration],
+) -> dict[str, StewardColumnStorage]:
+    """Index every wave's class and table provenance by folded column."""
+    by_column: dict[str, dict[str, str]] = {}
+    for (table, column), declaration in steward_column_types(
+        prefixes, declarations
+    ).items():
+        sql_type = declaration.data_type.value
+        if not isinstance(sql_type, str):
+            raise SwecovColumnTypesError("SWECOV declaration lacks a data type")
+        by_column.setdefault(column, {})[table] = sql_type
+    return {
+        column: StewardColumnStorage(
+            classes=frozenset(storage_class(kind) for kind in tables.values()),
+            provenance=f"SWECOV storage {SWECOV_COLUMN_TYPES_PATH}: "
+            + ", ".join(f"{table}={tables[table]}" for table in sorted(tables)),
+        )
+        for column, tables in sorted(by_column.items())
+    }
+
+
 def steward_column_storage_classes(
     column: str,
     prefixes: tuple[str, ...],
@@ -162,10 +204,11 @@ def steward_column_storage_classes(
 ) -> tuple[set[str], str | None]:
     """Return matching storage classes and sorted per-table provenance."""
     folded = fold_column(column)
+    selected = steward_column_types(prefixes, declarations)
     by_table = {
         table: declaration.data_type.value
-        for (table, name), declaration in declarations.items()
-        if name == folded and table.startswith(prefixes)
+        for (table, name), declaration in selected.items()
+        if name == folded
     }
     if not by_table:
         return set(), None

@@ -71,6 +71,7 @@ if TYPE_CHECKING:
     from reg_meta_build.source_occurrences import EffectiveOccurrence
     from reg_meta_build.source_records import SourceRecord
     from reg_meta_build.source_support import SourceSupportBindings
+    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
     from reg_meta_build.source_value_bindings import (
         ValueBindingResult,
         ValueBindingSession,
@@ -153,6 +154,7 @@ def resolve_source_scope(
     diagnostic: bool = False,
     coding_scope: CompiledScope | None = None,
     coding_registers: tuple[RegisterCuration, ...] = (),
+    storage_by_register: Mapping[str, Mapping[str, StewardColumnStorage]] | None = None,
     on_coding_compiled: Callable[
         [RegisterCuration, tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]],
         None,
@@ -642,6 +644,9 @@ def resolve_source_scope(
             coding=classified.coding,
             representations=representation.cases,
             diagnostic=diagnostic,
+            storage=(storage_by_register or {}).get(
+                f"{register.provider}/{register.slug}"
+            ),
         )
         variables[key] = (
             formed.variable.model_copy(
