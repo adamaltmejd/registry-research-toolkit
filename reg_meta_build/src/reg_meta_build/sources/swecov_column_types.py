@@ -7,7 +7,11 @@ import io
 import re
 from typing import TYPE_CHECKING
 
-from reg_meta_build._curation import fold_column
+from reg_meta_build._curation import (
+    data_type_class,
+    fold_column,
+    widen_data_type_classes,
+)
 from reg_meta_build.source_records import (
     DeliveredCell,
     RecordLocator,
@@ -39,11 +43,6 @@ _HEADER = (
     "ordinal_position",
 )
 _NUMERIC_FIELDS = _HEADER[5:]
-_INTEGER = frozenset({"int", "bigint", "smallint", "tinyint", "bit"})
-_DECIMAL = frozenset({"numeric", "decimal", "float", "real", "money", "smallmoney"})
-_TEXT = frozenset({"char", "varchar", "nchar", "nvarchar", "text", "ntext"})
-_DATE = frozenset({"date", "datetime", "datetime2", "smalldatetime", "datetimeoffset"})
-_CLASS_ORDER = ("integer", "decimal", "text")
 
 
 class SwecovColumnTypesError(ValueError):
@@ -52,16 +51,7 @@ class SwecovColumnTypesError(ValueError):
 
 def storage_class(sql_type: str) -> str | None:
     """Map supported SQL storage types to the catalog's coarse vocabulary."""
-    kind = sql_type.lower()
-    if kind in _INTEGER:
-        return "integer"
-    if kind in _DECIMAL:
-        return "decimal"
-    if kind in _TEXT:
-        return "text"
-    if kind in _DATE:
-        return "date"
-    return None
+    return data_type_class(sql_type)
 
 
 def read_swecov_column_types(
@@ -165,12 +155,12 @@ def index_swecov_column_types(
     return dict(sorted(result.items()))
 
 
-def infer_steward_column_type(
+def steward_column_storage_classes(
     column: str,
     prefixes: tuple[str, ...],
     declarations: dict[tuple[str, str], SourceColumnTypeDeclaration],
-) -> tuple[str | None, str | None]:
-    """Widen all matching waves; return the sorted storage evidence as provenance."""
+) -> tuple[set[str], str | None]:
+    """Return matching storage classes and sorted per-table provenance."""
     folded = fold_column(column)
     by_table = {
         table: declaration.data_type.value
@@ -178,21 +168,22 @@ def infer_steward_column_type(
         if name == folded and table.startswith(prefixes)
     }
     if not by_table:
-        return None, None
+        return set(), None
     evidence = ", ".join(f"{table}={by_table[table]}" for table in sorted(by_table))
     classes = {
-        storage_class(sql_type)
+        kind
         for sql_type in by_table.values()
         if isinstance(sql_type, str)
-    } - {None}
-    if "date" in classes and classes & {"integer", "decimal"}:
-        inferred = None
-    elif "text" in classes:
-        inferred = "text"
-    elif "date" in classes:
-        inferred = "date"
-    else:
-        inferred = next(
-            (kind for kind in reversed(_CLASS_ORDER) if kind in classes), None
-        )
-    return inferred, f"SWECOV storage {SWECOV_COLUMN_TYPES_PATH}: {evidence}"
+        if (kind := storage_class(sql_type)) is not None
+    }
+    return classes, f"SWECOV storage {SWECOV_COLUMN_TYPES_PATH}: {evidence}"
+
+
+def infer_steward_column_type(
+    column: str,
+    prefixes: tuple[str, ...],
+    declarations: dict[tuple[str, str], SourceColumnTypeDeclaration],
+) -> tuple[str | None, str | None]:
+    """Widen all matching waves; return the sorted storage evidence as provenance."""
+    classes, evidence = steward_column_storage_classes(column, prefixes, declarations)
+    return widen_data_type_classes(classes), evidence

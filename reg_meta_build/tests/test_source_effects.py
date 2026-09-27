@@ -654,12 +654,13 @@ def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
 
 def _storage_columns(
     *pairs: tuple[str, str],
+    column: str = "MISSING",
 ) -> dict[tuple[str, str], SourceColumnTypeDeclaration]:
     return index_swecov_column_types(
         SourceColumnTypeDeclaration(
             revision=_REVISION,
             locator=RecordLocator(
-                semantic_record_key=("storage", table, "missing"),
+                semantic_record_key=("storage", table, column),
                 physical_file="fixture.csv",
                 physical_table=table,
                 physical_record=f"row:{index}",
@@ -667,7 +668,7 @@ def _storage_columns(
             ),
             delivered_cells=(),
             table_name=value_field(table),
-            column_name=value_field("MISSING"),
+            column_name=value_field(column),
             data_type=value_field(sql_type),
             declared_width=SourceField(status="unknown"),
             nullable=SourceField(status="unknown"),
@@ -1732,6 +1733,8 @@ def _convert_delivered(
     target_edition: SourceRecord,
     *,
     native_variable_id: int | None = None,
+    prefixes: tuple[str, ...] = (),
+    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ):
     assert target_edition.original_period_text is not None
     target = source_occurrence(target_edition)
@@ -1757,12 +1760,14 @@ def _convert_delivered(
                 native_id=target_edition.subject.native.edition_id,
             ),
         ),
+        steward_table_prefixes=prefixes,
+        storage_columns=storage_columns,
     )
 
 
-def test_converted_blank_target_changes_only_column_and_stays_source_guarded() -> None:
+def test_converted_blank_target_sets_type_and_stays_source_guarded() -> None:
     donor = _record(column="Value", year="2022")
-    blank = _record(cvid=21, year="2020", data_type="varchar")
+    blank = _record(cvid=21, year="2020", data_type="")
     result = _convert_delivered((donor, blank), blank)
     assert result.case is not None and result.blockers == ()
     applied = apply_occurrence_cases((donor, blank), (result.case,))
@@ -1770,10 +1775,17 @@ def test_converted_blank_target_changes_only_column_and_stays_source_guarded() -
     assert applied.occurrences[1].fields.column_name == SourceField(
         status="value", value="VALUE"
     )
-    assert applied.occurrences[1].fields.data_type == blank.fields.data_type
+    assert applied.occurrences[1].fields.data_type == SourceField(
+        status="value", value="integer"
+    )
+    assert any(
+        isinstance(effect, CheckedFieldChange)
+        and effect.replacement.name == "data_type"
+        for effect in result.case.decision.effects
+    )
     assert applied.occurrences[1].source_records == (blank,)
     assert all(item.occurrence_key is None for item in applied.occurrences)
-    # Unrelated variables and unused adjacent-edition metadata are not dependencies.
+    # Unrelated variables are not dependencies; documented Datatyp is.
     unrelated = _record(variable=99, cvid=30, column="UNRELATED")
     assert (
         apply_occurrence_cases((donor, blank, unrelated), (result.case,)).diagnostics
@@ -1784,11 +1796,11 @@ def test_converted_blank_target_changes_only_column_and_stays_source_guarded() -
         apply_occurrence_cases((changed_donor, blank), (result.case,))
         .accounting[0]
         .disposition
-        == "applied"
+        == "stale"
     )
 
 
-def test_delivery_statement_does_not_inherit_nearest_editions_metadata() -> None:
+def test_delivery_statement_types_without_inheriting_flags_or_coding() -> None:
     before = _record(cvid=10, column="VALUE", year="2018", data_type="varchar")
     after = _record(cvid=20, column="VALUE", year="2022")
     edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
@@ -1801,7 +1813,9 @@ def test_delivery_statement_does_not_inherit_nearest_editions_metadata() -> None
     added = applied.occurrences[-1]
     assert added.source_records == ()
     assert added.fields == SourceFields(
-        availability=value_field(True), column_name=value_field("VALUE")
+        availability=value_field(True),
+        column_name=value_field("VALUE"),
+        data_type=value_field("text"),
     )
     addition = result.case.decision.effects[0]
     assert isinstance(addition, CuratedOccurrenceAddition)
@@ -1812,6 +1826,90 @@ def test_delivery_statement_does_not_inherit_nearest_editions_metadata() -> None
     changed = apply_occurrence_cases((*records, nearer), (result.case,))
     assert changed.accounting[0].disposition == "stale"
     assert all(item.occurrence_key is None for item in changed.occurrences)
+
+
+@pytest.mark.parametrize(
+    ("documented", "storage", "expected"),
+    [
+        ("integer", "smallint", "integer"),
+        ("integer", "varchar", "text"),
+        ("", "smallint", "integer"),
+        ("float", None, "decimal"),
+        ("text", None, "text"),
+        ("Datum och klockslag", "smallint", None),
+        ("date", "smallint", None),
+    ],
+)
+def test_delivered_type_widens_documentation_and_storage(
+    documented: str, storage: str | None, expected: str | None
+) -> None:
+    donor = _record(column="VALUE", year="2022", data_type=documented)
+    edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
+    columns = _storage_columns(("CIS2004", storage), column="VALUE") if storage else {}
+    result = _convert_delivered(
+        (donor, edition), edition, prefixes=("CIS",), storage_columns=columns
+    )
+    assert result.case is not None
+    applied = apply_occurrence_cases((donor, edition), (result.case,))
+    assert applied.diagnostics == ()
+    added = next(item for item in applied.occurrences if item.occurrence_key)
+    assert added.fields.data_type == (
+        value_field(expected) if expected is not None else None
+    )
+    assert "Documented Datatyp: 2022=" in result.case.decision.provenance
+    assert "SWECOV storage " in result.case.decision.provenance
+
+
+def test_delivered_type_is_order_independent_across_records_and_storage() -> None:
+    early = _record(cvid=10, column="VALUE", year="2018", data_type="integer")
+    late = _record(cvid=20, column="value", year="2022", data_type="decimal")
+    edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
+    first = _storage_columns(
+        ("CIS2004", "smallint"), ("CIS2012", "varchar"), column="VALUE"
+    )
+    reversed_storage = dict(reversed(tuple(first.items())))
+    a = _convert_delivered(
+        (early, late, edition), edition, prefixes=("CIS",), storage_columns=first
+    )
+    b = _convert_delivered(
+        (edition, late, early),
+        edition,
+        prefixes=("CIS",),
+        storage_columns=reversed_storage,
+    )
+    assert a.case is not None and b.case is not None
+    assert a.case.decision.provenance == b.case.decision.provenance
+    assert a.case.decision.effects == b.case.decision.effects
+    assert "CIS2004=smallint, CIS2012=varchar" in a.case.decision.provenance
+
+
+def test_delivered_without_evidence_stays_untyped_and_names_missing_evidence() -> None:
+    donor = _record(column="VALUE", year="2022", data_type="")
+    edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
+    result = _convert_delivered((donor, edition), edition)
+    assert result.case is not None
+    applied = apply_occurrence_cases((donor, edition), (result.case,))
+    addition = next(item for item in applied.occurrences if item.occurrence_key)
+    assert addition.fields.data_type is None
+    formed = form_native_variable(
+        (addition,),
+        register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
+        variants={addition.variant_key: ResolvedVariant(slug="people", name="People")},
+        slug="value",
+        provider_key="2.value",
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+        coding={addition.column_key: resolve_code_membership(())},
+    )
+    details = [
+        issue.detail
+        for issue in formed.diagnostics
+        if issue.code == "unknown_data_type"
+    ]
+    assert len(details) == 1
+    assert "SWECOV storage " in details[0] and ": none" in details[0]
+    assert "Documented Datatyp: 2022=none" in details[0]
 
 
 def test_delivery_statement_cannot_choose_between_reused_column_identities() -> None:
@@ -1826,7 +1924,7 @@ def test_delivery_statement_cannot_choose_between_reused_column_identities() -> 
 
 def test_delivered_anchor_selects_one_reused_column_identity() -> None:
     before = _record(cvid=10, column="VALUE", year="2018")
-    after = _record(cvid=20, variable=6, column="VALUE", year="2022")
+    after = _record(cvid=20, variable=6, column="VALUE", year="2022", data_type="text")
     edition = _record(cvid=30, variable=99, column="EDITION", year="2020")
     records = before, after, edition
     result = _convert_delivered(records, edition, native_variable_id=5)
@@ -1837,6 +1935,7 @@ def test_delivered_anchor_selects_one_reused_column_identity() -> None:
     assert (
         applied.occurrences[-1].variable_key == source_occurrence(before).variable_key
     )
+    assert applied.occurrences[-1].fields.data_type == value_field("integer")
 
 
 def test_delivered_anchor_missing_under_column_is_stale() -> None:

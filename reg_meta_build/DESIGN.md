@@ -101,11 +101,13 @@ Authority depends on the fact and scope, rather than a universal file ordering:
 - SWECOV holdings establish possession by that project. Multi-year tables do not
   establish per-year column availability.
 - SWECOV's MONA storage-schema export supplies type evidence for steward-held columns
-  absent from SCB documentation. Each register selects its tables by literal prefixes;
-  folded column names join waves. Integer widens to decimal, and any text wave widens
-  the variable to text. Date-only waves yield date; date mixed with a numeric class
-  leaves the type unresolved with the per-table storage types in the diagnostic. Storage
-  metadata never establishes per-year availability or row content.
+  absent from SCB documentation and for delivered errata. Each register selects its
+  tables by literal prefixes; folded column names join waves. For delivered errata,
+  storage classes widen with documented Datatyp from the same column and variant.
+  Integer widens to decimal, and any text wave widens the variable to text. Date-only
+  waves yield date; date mixed with a numeric class leaves the type unresolved with the
+  evidence in the diagnostic. Storage metadata never establishes per-year availability
+  or row content.
 - Agents can investigate official handbooks separately and author structured curation
   with document/page references. Neither preparation nor a build extracts or interprets
   PDFs or calls an LLM.
@@ -407,7 +409,9 @@ a stale declaration leaves the parent withheld exactly as without it.
 
 An added delivery names an existing identity, variant, edition and supplied period with
 checked evidence. It is a declaration, not a fabricated physical source row. Supplying
-column presence does not copy type, flags or coding from another edition. Any donor
+column presence derives type by widening SWECOV storage with documented Datatyp on the
+same column and variant; an unclassifiable documented type or date mixed with numeric
+leaves it unresolved. Flags and coding are not copied from another edition. Any donor
 metadata or membership must be explicitly selected and guarded. Undated `all_versions`
 holdings preserve unknown coverage; pooled editions cannot create annual states.
 

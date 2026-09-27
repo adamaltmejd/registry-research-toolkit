@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
+from reg_meta_build._curation import data_type_class, widen_data_type_classes
 from reg_meta_build.input_snapshot import _validate_bundle_contract
 from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import (
@@ -85,6 +86,46 @@ def _read(tmp_path: Path, payload: bytes):
 def test_storage_class_boundaries(types: tuple[str, ...], expected: str) -> None:
     assert {storage_class(kind) for kind in types} == {expected}
     assert storage_class("varbinary") is None
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("INTEGER", "integer"),
+        ("decimal", "decimal"),
+        ("Text", "text"),
+        ("DATE", "date"),
+        ("SMALLINT", "integer"),
+        ("FLOAT", "decimal"),
+        ("VARCHAR", "text"),
+        ("DATETIME2", "date"),
+        ("uniqueidentifier", None),
+        ("Datum och klockslag", None),
+    ],
+)
+def test_data_type_class_boundaries(value: str, expected: str | None) -> None:
+    assert data_type_class(value) == expected
+
+
+@pytest.mark.parametrize(
+    ("classes", "expected"),
+    [
+        ((), None),
+        (("integer", "integer"), "integer"),
+        (("integer", "decimal"), "decimal"),
+        (("integer", "text"), "text"),
+        (("integer", "date"), None),
+        (("decimal", "decimal"), "decimal"),
+        (("decimal", "text"), "text"),
+        (("decimal", "date"), None),
+        (("text", "text"), "text"),
+        (("text", "date"), "text"),
+        (("date", "date"), "date"),
+        (("date", "integer", "text"), None),
+    ],
+)
+def test_type_class_lattice(classes: tuple[str, ...], expected: str | None) -> None:
+    assert widen_data_type_classes(classes) == expected
 
 
 def test_reader_contract_and_json_roundtrip(tmp_path: Path) -> None:

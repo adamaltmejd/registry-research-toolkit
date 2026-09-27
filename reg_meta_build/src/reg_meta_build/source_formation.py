@@ -681,7 +681,9 @@ def form_native_variable(
                             for occurrence in segment.effective_occurrences
                             for correction in occurrence.corrections
                             for line in correction.provenance.splitlines()
-                            if line.startswith("SWECOV storage ")
+                            if line.startswith(
+                                ("SWECOV storage ", "Documented Datatyp: ")
+                            )
                         }
                     )
                     issue(
