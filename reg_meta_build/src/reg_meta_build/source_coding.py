@@ -196,31 +196,40 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
         by_claim: dict[str, set[tuple[str, str]]] = {
             identity: set() for identity in claim_ids
         }
-        labels_by_claim_code: dict[tuple[str, str], set[str]] = {}
-        dated_codes: set[tuple[str, str]] = set()
+        sheet_labels: dict[tuple[str, str, str, str, str], set[str]] = {}
         for identity, position in active_members:
             if identity in dropped:
                 continue
             member = claim_by_id[identity].members[position]
             assert member.code is not None and member.label is not None
             by_claim[identity].add((member.code, member.label))
-            labels_by_claim_code.setdefault((identity, member.code), set()).add(
-                member.label
-            )
             if member.scope.kind == "intervals":
-                dated_codes.add((identity, member.code))
+                for association in member.associations:
+                    table = association.source_table
+                    if table is None or association.descriptor_key != f"sheet:{table}":
+                        continue
+                    sheet_labels.setdefault(
+                        (
+                            identity,
+                            member.code,
+                            association.source_file,
+                            table,
+                            association.descriptor_key,
+                        ),
+                        set(),
+                    ).add(member.label)
         empty = tuple(identity for identity in claim_ids if not by_claim[identity])
         if empty:
             issues.append(CodingIssue("empty_active_coding", empty, lower, upper))
             segments.append(CodingSegment(lower, upper, None, claim_ids))
             continue
         alternatives = {frozenset(members) for members in by_claim.values()}
-        # A dated source claim cannot give one code two labels in the same period.
-        conflicting_dated_labels = any(
-            key in dated_codes and len(labels) > 1
-            for key, labels in labels_by_claim_code.items()
+        # Overlapping rows of one code-list sheet cannot relabel the same code.
+        # Other source relations retain their existing exact pair semantics.
+        conflicting_sheet_labels = any(
+            len(labels) > 1 for labels in sheet_labels.values()
         )
-        if len(alternatives) > 1 or conflicting_dated_labels:
+        if len(alternatives) > 1 or conflicting_sheet_labels:
             issues.append(
                 CodingIssue("conflicting_code_memberships", claim_ids, lower, upper)
             )

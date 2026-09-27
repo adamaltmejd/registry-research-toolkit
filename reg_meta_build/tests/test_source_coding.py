@@ -186,15 +186,27 @@ def test_butsatt_source_blocks_withhold_the_1982_to_1988_overlap() -> None:
         ("1999-", "1", "Ej hemskriven vid 28 dagar"),
     )
     members = []
-    for period, code, label in rows:
+    for row_number, (period, code, label) in enumerate(rows, start=2):
         window = value_period(period)
         assert window is not None and window.status == "known"
         assert window.start is not None
         members.append(
-            _member(
-                code,
-                label,
-                scope=_scope(window.start, window.end or "2000-12-31"),
+            replace(
+                _member(
+                    code,
+                    label,
+                    scope=_scope(window.start, window.end or "2000-12-31"),
+                ),
+                associations=(
+                    SourceValueAssociation(
+                        row_number,
+                        "sheet:Kodlista_butsatt",
+                        str(row_number),
+                        "mfr.xlsx",
+                        "Kodlista_butsatt",
+                        supplied_period=period,
+                    ),
+                ),
             )
         )
     claim = _claim("butsatt", *members, scope=_scope("1973-01-01", "2000-12-31"))
@@ -215,10 +227,22 @@ def test_butsatt_source_blocks_withhold_the_1982_to_1988_overlap() -> None:
 
 
 def test_adjacent_dated_labels_for_one_code_keep_both_periods() -> None:
+    first = SourceValueAssociation(
+        2, "sheet:Kodlista_butsatt", "first", "mfr.xlsx", "Kodlista_butsatt"
+    )
+    second = SourceValueAssociation(
+        3, "sheet:Kodlista_butsatt", "second", "mfr.xlsx", "Kodlista_butsatt"
+    )
     claim = _claim(
         "adjacent",
-        _member("2", "Till barnklinik", scope=_scope("1982-01-01", "1989-12-31")),
-        _member("2", "Till annan adress", scope=_scope("1990-01-01", "1998-12-31")),
+        replace(
+            _member("2", "Till barnklinik", scope=_scope("1982-01-01", "1989-12-31")),
+            associations=(first,),
+        ),
+        replace(
+            _member("2", "Till annan adress", scope=_scope("1990-01-01", "1998-12-31")),
+            associations=(second,),
+        ),
         scope=_scope("1982-01-01", "1998-12-31"),
     )
     result = resolve_code_membership((claim,))
@@ -231,6 +255,60 @@ def test_adjacent_dated_labels_for_one_code_keep_both_periods() -> None:
         ("1982-01-01", "1989-12-31", (("2", "Till barnklinik"),)),
         ("1990-01-01", "1998-12-31", (("2", "Till annan adress"),)),
     ]
+
+
+@pytest.mark.parametrize(
+    ("other_file", "other_sheet"),
+    [("edition-2.xlsx", "Kodlista_codes"), ("edition-1.xlsx", "Kodlista_other")],
+)
+def test_dated_label_history_across_files_or_descriptors_is_preserved(
+    other_file: str, other_sheet: str
+) -> None:
+    first = SourceValueAssociation(
+        2, "sheet:Kodlista_codes", "first", "edition-1.xlsx", "Kodlista_codes"
+    )
+    second = SourceValueAssociation(
+        3, f"sheet:{other_sheet}", "second", other_file, other_sheet
+    )
+    claim = _claim(
+        "label-history",
+        replace(_member("2", "Old", scope=_scope()), associations=(first,)),
+        replace(_member("2", "New", scope=_scope()), associations=(second,)),
+    )
+    result = resolve_code_membership((claim,))
+    assert result.issues == ()
+    assert result.segments[0].code_set is not None
+    assert result.segments[0].code_set.members == (("2", "New"), ("2", "Old"))
+
+
+def test_non_sheet_annual_label_boundary_keeps_both_labels() -> None:
+    first = SourceValueAssociation(
+        2, "scb-values", "first", "Vardemangder.csv", "values"
+    )
+    second = SourceValueAssociation(
+        3, "scb-values", "second", "Vardemangder.csv", "values"
+    )
+    claim = _claim(
+        "annual-label-history",
+        replace(
+            _member("2", "Old", scope=_scope("1990-01-01", "1990-12-31")),
+            associations=(first,),
+        ),
+        replace(
+            _member("2", "New", scope=_scope("1990-12-31", "1991-12-31")),
+            associations=(second,),
+        ),
+        scope=_scope("1990-01-01", "1991-12-31"),
+    )
+    result = resolve_code_membership((claim,))
+    assert result.issues == ()
+    boundary = next(
+        segment
+        for segment in result.segments
+        if segment.valid_from == segment.valid_to == "1990-12-31"
+    )
+    assert boundary.code_set is not None
+    assert boundary.code_set.members == (("2", "New"), ("2", "Old"))
 
 
 @pytest.mark.parametrize("code,label", [(None, "Label"), ("001", None)])
