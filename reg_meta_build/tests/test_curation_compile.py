@@ -1206,11 +1206,22 @@ def test_scb_final_supersedes_only_shared_native_variables():
         "catalog",
     ]
     added = _edition_record(
-        name="2020, slutlig version", edition_id=11, member=4, variable=7
+        name="2020, slutlig version", edition_id=11, member=4, variable=6
     )
-    stale = apply_occurrence_cases((*records, added), (case,))
-    assert stale.accounting[0].disposition == "stale"
-    assert any(issue.code == "peer_membership_changed" for issue in stale.diagnostics)
+    next_records = (*records, added)
+    (next_case,) = _preliminary_cases(next_records)
+    assert {target.ref for target in next_case.targets} == {
+        record_ref(preliminary),
+        record_ref(preliminary_only),
+    }
+    rederived = apply_occurrence_cases(next_records, (next_case,))
+    assert rederived.accounting[0].disposition == "applied"
+    assert [item.use for item in rederived.occurrences] == [
+        "support",
+        "support",
+        "catalog",
+        "catalog",
+    ]
     assert _preliminary_cases(tuple(reversed(records))) == (case,)
 
 
@@ -1250,6 +1261,26 @@ def test_scb_unpaired_preliminary_is_untouched():
     )
     prepared = SimpleNamespace(
         records=SimpleNamespace(iter_records=lambda *, source: iter((preliminary,)))
+    )
+    assert (
+        compile_scb_preliminary(
+            cast("Any", prepared), (_partition_scope((preliminary,)),)
+        )
+        == {}
+    )
+
+
+def test_scb_pair_without_shared_native_variable_needs_no_case():
+    preliminary = _edition_record(
+        name="2020, preliminär version", edition_id=10, member=1
+    )
+    final = _edition_record(
+        name="2020, slutlig version", edition_id=11, member=2, variable=6
+    )
+    prepared = SimpleNamespace(
+        records=SimpleNamespace(
+            iter_records=lambda *, source: iter((preliminary, final))
+        )
     )
     assert (
         compile_scb_preliminary(

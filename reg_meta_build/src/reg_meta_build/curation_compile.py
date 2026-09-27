@@ -2245,6 +2245,7 @@ def compile_scb_preliminary(
                 CurationCase(
                     case_id=case_id,
                     targets=targets,
+                    # Source-use effects require a guard within this build.
                     peer_guards=(
                         PeerGuard(
                             guard_id=case_id,
