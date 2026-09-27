@@ -389,11 +389,11 @@ delivered side by side in one edition of one variant are two columns, so the fol
 applies only when no single edition co-delivers two spellings of one fold key. An
 accepted name alone cannot establish a partition across ambiguous column spellings. A
 partition, rename or parallel-column family requires checked ownership and complete
-relevant membership. An implicit split suffix binds case or diacritic twin literals
-only when their folded column key matches and no variant edition co-delivers them. A
-one-owner partition may list a spelling that recurs after an intervening rename
-(A→B→A); a literal claimed by two native variables in the same edition needs a split
-or `native_variable_id`, never a fold into one owner. Related but different variables
+relevant membership. An implicit split suffix binds case or diacritic twin literals only
+when their folded column key matches and no variant edition co-delivers them. A
+one-owner partition may list a spelling that recurs after an intervening rename (A→B→A);
+a literal claimed by two native variables in the same edition needs a split or
+`native_variable_id`, never a fold into one owner. Related but different variables
 remain connected through groups; a shared stem or suffix is not evidence that they are
 one variable.
 
