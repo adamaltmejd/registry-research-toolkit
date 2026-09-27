@@ -5,8 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+from pydantic import ValidationError
 from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_tree import (
+    ErrataDeliveredEntry,
     load_classification_families,
     load_classifications,
     load_curation_tree,
@@ -15,6 +17,30 @@ from reg_meta_build.curation_tree import (
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+
+def test_delivered_anchor_is_optional_strict_int_and_rejects_extra_keys() -> None:
+    entry = {
+        "variant": "people",
+        "column": "VALUE",
+        "versions": ["2020"],
+        "evidence": "Steward holdings",
+        "noted": "2026-09-12",
+    }
+    assert ErrataDeliveredEntry.model_validate(entry).native_variable_id is None
+    assert (
+        ErrataDeliveredEntry.model_validate(
+            {**entry, "native_variable_id": 39310}
+        ).native_variable_id
+        == 39310
+    )
+    for invalid in ("39310", True):
+        with pytest.raises(ValidationError):
+            ErrataDeliveredEntry.model_validate(
+                {**entry, "native_variable_id": invalid}
+            )
+    with pytest.raises(ValidationError):
+        ErrataDeliveredEntry.model_validate({**entry, "unknown": "value"})
 
 
 def _book(short_name: str, slug: str, *, binding: str = "", extra: str = "") -> str:

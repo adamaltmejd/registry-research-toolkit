@@ -12,7 +12,7 @@ import json
 import re
 from dataclasses import dataclass, fields
 from datetime import date
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from ._curation import (
     curation_error,
@@ -123,6 +123,7 @@ class ErrataDelivered:
     column: str
     versions: tuple[str, ...]
     provenance: str
+    native_variable_id: int | None = None
 
 
 # The `[[column]]` fields that say WHERE the variable is delivered rather
@@ -472,6 +473,7 @@ def load_scb_errata(
                 column,
                 named,
                 _state_provenance(upstream, evidence),
+                cast("int | None", values.get("native_variable_id")),
             )
         )
 
@@ -849,14 +851,29 @@ def convert_delivered_entry(
     for name in entry.versions:
         if not any(edition.name == name for edition in editions):
             raise ValueError(f"missing edition conversion binding: {name!r}")
-    candidates = tuple(
+    documented = tuple(
         record
         for record in records
         if (column := _text(record, "column_name"))
         and fold_column(column) == fold_column(entry.column)
     )
-    if not candidates:
+    if not documented:
         return ErrataConversion(None, ("no_documented_column_identity",), ())
+    candidates = (
+        tuple(
+            record
+            for record in documented
+            if record.subject.native.variable_id == entry.native_variable_id
+        )
+        if entry.native_variable_id is not None
+        else documented
+    )
+    if not candidates:
+        return ErrataConversion(
+            None,
+            ("native_variable_id_not_documented_for_column",),
+            tuple(sorted({record_ref(record) for record in documented}, key=str)),
+        )
     references = tuple(sorted({record_ref(record) for record in candidates}, key=str))
     identities = {source_occurrence(record).variable_key for record in candidates}
     if None in identities or len(identities) != 1:
@@ -876,6 +893,7 @@ def convert_delivered_entry(
             native=NativeCoordinates(
                 register_id=entry.register_id,
                 register_variant_id=entry.register_variant_id,
+                variable_id=entry.native_variable_id,
             ),
             folded_column=fold_column(entry.column),
             expected_members=references,

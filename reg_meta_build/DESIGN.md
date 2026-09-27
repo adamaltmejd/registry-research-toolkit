@@ -293,14 +293,17 @@ adds an undocumented register edition and requires a year-bearing SCB version na
 Version era order follows the maximum year the edition claims, so adding a historical
 edition cannot replace a newer documented edition's latest spelling or type.
 `[[errata.delivered]]` carries `variant`, literal `column`, existing `versions`,
-`evidence`, `noted`, and optional `upstream`; it adds omitted rows for a column
-documented elsewhere on the variant and names edition tokens verbatim.
-`[[errata.column]]` carries the variable identity (`name` and `definition`), a source
-and evidence, plus either named versions, bounded `holdings_period`, or the legacy
-undated `all_versions = true`; it mints a variable for a column SCB documents nowhere on
-that variant. Its identity is `(register, column)`, so two variants of one register use
-the same variable identity. `source` records the evidence class; it does not change the
-materialized rows.
+`evidence`, `noted`, and optional `upstream` and `native_variable_id`; it adds omitted
+rows for a column documented elsewhere on the variant and names edition tokens verbatim.
+The native-variable anchor selects one documented identity when the same column literal
+belongs to multiple variables in the variant's history. An anchor must occur under that
+column; without one, the column must identify exactly one variable across the complete
+variant history. `[[errata.column]]` carries the variable identity (`name` and
+`definition`), a source and evidence, plus either named versions, bounded
+`holdings_period`, or the legacy undated `all_versions = true`; it mints a variable for
+a column SCB documents nowhere on that variant. Its identity is `(register, column)`, so
+two variants of one register use the same variable identity. `source` records the
+evidence class; it does not change the materialized rows.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column anywhere on this variant? One column/variant omission is exactly
