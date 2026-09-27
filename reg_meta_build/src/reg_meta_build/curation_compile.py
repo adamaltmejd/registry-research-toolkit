@@ -2549,12 +2549,14 @@ def compile_edition_splits(
                         )
                         is not None
                     )
-            bad = [
+            declared = set(entry.editions) | set(entry.source_editions)
+            unlisted = sorted(set(by_name) - declared)
+            missing_or_ambiguous = sorted(
                 edition
-                for edition in entry.editions
+                for edition in declared
                 if len(edition_keys[edition]) != 1 or not by_name[edition]
-            ]
-            if bad:
+            )
+            if unlisted or missing_or_ambiguous:
                 statuses["stale"].append(ref)
                 diagnostics.append(
                     ResolutionDiagnostic(
@@ -2562,7 +2564,11 @@ def compile_edition_splits(
                         severity="error",
                         case_id=ref,
                         subject=entry.split,
-                        detail=f"{ref}: edition names do not match exactly one native edition: {bad!r}",
+                        detail=(
+                            f"{ref}: unlisted native editions {unlisted!r}; "
+                            "listed names without exactly one native edition "
+                            f"{missing_or_ambiguous!r}"
+                        ),
                         withheld_output=(ref,),
                     )
                 )

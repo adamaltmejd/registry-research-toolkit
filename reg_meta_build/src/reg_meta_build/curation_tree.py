@@ -540,6 +540,7 @@ class IdentityEditionSplitEntry(_CurationModel):
     variant: str
     split: str
     editions: list[str]
+    source_editions: list[str]
     evidence: str
     noted: str
 
@@ -558,7 +559,11 @@ class IdentityEditionSplitEntry(_CurationModel):
             raise ValueError("split must be a canonical three-part key under variant")
         if not self.editions or len(self.editions) != len(set(self.editions)):
             raise ValueError("editions must be non-empty and unique")
-        for edition in self.editions:
+        if len(self.source_editions) != len(set(self.source_editions)):
+            raise ValueError("source_editions must be unique")
+        if set(self.editions) & set(self.source_editions):
+            raise ValueError("editions and source_editions must be disjoint")
+        for edition in (*self.editions, *self.source_editions):
             _require_trimmed(edition)
         try:
             parsed = date.fromisoformat(self.noted)
@@ -1041,6 +1046,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
     identity = entry.register_info
     expected = f"{identity.provider}/{identity.slug}"
     edition_owners: set[tuple[str, str]] = set()
+    split_owners: set[str] = set()
     variant_ids = {variant.native_id for variant in entry.variant}
     native_variant_slugs = {
         variant.slug
@@ -1071,7 +1077,14 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 f"{where}: editions assigned twice: {sorted(repeated)!r}.",
                 "Assign each edition name once.",
             )
+        if split.variant in split_owners:
+            raise curation_error(
+                _CODE,
+                f"{where}: native variant {split.variant!r} has multiple edition splits.",
+                "Declare one complete edition inventory for the native variant.",
+            )
         edition_owners.update(pairs)
+        split_owners.add(split.variant)
     if identity.provider in {"scb", "sos"} and (
         identity.native_id is None or not identity.native_id.isdecimal()
     ):

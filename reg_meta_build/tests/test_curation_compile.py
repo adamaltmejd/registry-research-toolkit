@@ -1349,6 +1349,7 @@ def test_named_edition_split_rebinds_parents_and_is_order_independent(
         '[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
         '[[identity.edition_split]]\nvariant = "1.2"\n'
         'split = "1.2.stock"\neditions = ["2007-12-31"]\n'
+        'source_editions = ["2007"]\n'
         'evidence = "SCB population text distinguishes stock"\n'
         'noted = "2026-09-27"\n',
         encoding="utf-8",
@@ -1432,6 +1433,47 @@ def test_named_edition_split_rebinds_parents_and_is_order_independent(
     )
     assert not stale
     assert [issue.code for issue in stale_issues] == ["stale_curation_entry"]
+
+
+@pytest.mark.parametrize(
+    ("change", "detail"),
+    [
+        ("added", "unlisted native editions ['2008']"),
+        ("removed", "listed names without exactly one native edition ['2007']"),
+    ],
+)
+def test_named_edition_split_withholds_when_native_inventory_changes(
+    tmp_path: Path, change: str, detail: str
+) -> None:
+    flow = _errata_record(column="A", year="2007", edition_name="2007", edition_id=1)
+    stock = _errata_record(
+        column="B", year="2007", edition_name="2007-12-31", edition_id=2, member=21
+    )
+    records = (
+        (
+            flow,
+            stock,
+            _errata_record(
+                column="C", year="2008", edition_name="2008", edition_id=3, member=22
+            ),
+        )
+        if change == "added"
+        else (stock,)
+    )
+    fragment = (
+        '\n[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
+        '[[identity.edition_split]]\nvariant = "1.2"\nsplit = "1.2.stock"\n'
+        'editions = ["2007-12-31"]\nsource_editions = ["2007"]\n'
+        'evidence = "SCB population text"\nnoted = "2026-09-27"\n'
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, records, fragment)
+    cases, issues, report = compile_edition_splits(
+        tree, prepared, (scope,), subset=False
+    )
+    assert cases == {}
+    assert [issue.code for issue in issues] == ["stale_curation_entry"]
+    assert detail in issues[0].detail
+    assert len(report["scb/sample"]["stale"]) == 1
 
 
 def test_compiled_edition_period_places_only_named_unparseable_edition(
@@ -1555,6 +1597,7 @@ def test_compiled_errata_with_declared_split_uses_native_variant(tmp_path: Path)
         '\n[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
         '[[identity.edition_split]]\nvariant = "1.2"\nsplit = "1.2.stock"\n'
         'editions = ["2021-12-31"]\nevidence = "SCB stock population"\n'
+        'source_editions = ["2020"]\n'
         'noted = "2026-09-27"\n'
         + _DELIVERED.replace('versions = ["2021"]', 'versions = ["2021-12-31"]')
     )

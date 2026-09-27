@@ -188,6 +188,7 @@ def test_edition_split_requires_declared_native_split_and_unique_names(
         '[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
         '[[identity.edition_split]]\nvariant = "1.2"\n'
         'split = "1.2.stock"\neditions = ["2007-12-31"]\n'
+        'source_editions = ["2007"]\n'
         'evidence = "SCB population text"\nnoted = "2026-09-27"\n'
     )
     path = _write_register(root, base)
@@ -219,6 +220,20 @@ def test_edition_split_requires_declared_native_split_and_unique_names(
     with pytest.raises(RegMetaError) as exc:
         load_register_files(root)
     assert "three-part key under variant" in exc.value.message
+
+
+def test_edition_split_lists_must_not_overlap(tmp_path: Path) -> None:
+    root = tmp_path / "curation"
+    _write_register(
+        root,
+        '[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
+        '[[identity.edition_split]]\nvariant = "1.2"\nsplit = "1.2.stock"\n'
+        'editions = ["2007"]\nsource_editions = ["2007"]\n'
+        'evidence = "SCB population text"\nnoted = "2026-09-27"\n',
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert "editions and source_editions must be disjoint" in exc.value.message
 
 
 def test_edition_period_errata_requires_native_variant(tmp_path: Path) -> None:

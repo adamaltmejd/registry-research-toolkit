@@ -103,6 +103,8 @@ def test_repo_rtb_named_edition_splits_load() -> None:
         "2.66": 36,
         "2.1028": 24,
     }
+    assert splits["2.66"].source_editions == [str(year) for year in range(1987, 2026)]
+    assert splits["2.1028"].source_editions == [str(year) for year in range(2002, 2026)]
     assert {entry.split for entry in splits.values()} <= {
         variant.native_id for variant in rtb.variant
     }
