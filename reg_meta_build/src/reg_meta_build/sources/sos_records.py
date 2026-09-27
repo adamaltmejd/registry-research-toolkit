@@ -129,6 +129,44 @@ def _text_field(
     return value_field(normalized, raw=raw)
 
 
+def _sheet_pointer(
+    register: SosRegister, variable: SosVariable
+) -> tuple[str, bool, frozenset[str]] | None:
+    """Return an exact same-workbook pointer and the target's named members."""
+    evidence = variable.source_evidence
+    cell = _cell(evidence, "external_classification")
+    raw = cell.raw_value if cell is not None else None
+    if not isinstance(raw, str):
+        return None
+    for sheet in register.source_sheets:
+        name = sheet.sheet_name
+        if raw == name:
+            anchored = False
+        elif raw.startswith(f"{name}!") and re.fullmatch(
+            r"[A-Za-z]+[0-9]+", raw[len(name) + 1 :]
+        ):
+            anchored = True
+        elif raw == f"{name}!":
+            anchored = False
+        else:
+            continue
+        members = frozenset(
+            member
+            for row in sheet.rows
+            for member_cell in row.source_evidence.cells
+            if (
+                (
+                    row.role in {"preamble", "header"}
+                    and member_cell.field_name == "variable_header"
+                )
+                or (row.role == "code" and member_cell.field_name == "variable_name")
+            )
+            if (member := _declaration_text(member_cell, token=True)) is not None
+        )
+        return name, anchored, members
+    return None
+
+
 def _identifier_field(evidence: SosRowEvidence) -> SourceField | None:
     """Read the delivered Kopplingsvariabel cell as the identifier claim.
 
@@ -396,8 +434,15 @@ def clean_sos_variable(
                 _cell(evidence, "value_set_text"),
                 multiline=True,
             ),
-            classification_declared=_text_field(
-                _cell(evidence, "external_classification"), multiline=True
+            classification_declared=(
+                None
+                if (
+                    (pointer := _sheet_pointer(register, variable)) is not None
+                    and (pointer[2] or not pointer[1])
+                )
+                else _text_field(
+                    _cell(evidence, "external_classification"), multiline=True
+                )
             ),
             source_attribution=_text_field(
                 _cell(evidence, "source_detail"),
@@ -421,7 +466,6 @@ def iter_sos_variable_records(
 _GENERAL_FIELDS = {
     "dataset_version": "source_version",
     "dataset_date": "source_date",
-    "contact_email": "contact",
 }
 # The general sheet's Datamängd cell maps separately; see
 # iter_sos_metadata_records.
@@ -433,7 +477,6 @@ _DCAT_FIELDS = {
     "population": "population_definition",
     "update_frequency": "update_frequency",
     "publisher": "source_attribution",
-    "contact": "contact",
     "documentation_url": "documentation_url",
     "landing_page": "landing_page",
     "access_url": "access_url",
@@ -713,6 +756,7 @@ def clean_sos_source(
     associations: list[SourceValueAssociation] = []
     validity: list[SourceValueValidity] = []
     references: list[SourceReferenceDeclaration] = []
+    variable_records = tuple(iter_sos_variable_records(register, revision))
     for sheet in register.source_sheets:
         if sheet.kind not in {"codelist", "documentation"}:
             continue
@@ -893,6 +937,35 @@ def clean_sos_source(
                     )
                 )
         if sheet.kind == "codelist":
+            named_members = {
+                hint.value
+                for hint in hints
+                if hint.role == "list_header" and hint.value
+            }
+            named_members.update(
+                hint.value
+                for association in associations
+                if association.descriptor_key == descriptor_key
+                for hint in association.member_hints
+                if hint.role == "row" and hint.value
+            )
+            if not named_members:
+                for variable, record in zip(
+                    register.variables, variable_records, strict=True
+                ):
+                    pointer = _sheet_pointer(register, variable)
+                    if pointer is None or pointer[0] != sheet.sheet_name or pointer[1]:
+                        continue
+                    evidence = variable.source_evidence
+                    if evidence is None:
+                        continue
+                    hints.append(
+                        SourceMemberHint(
+                            role="variable_pointer",
+                            value=normalize_token(variable.name),
+                            locator=record.locators[0],
+                        )
+                    )
             descriptors[descriptor_key] = SourceValueDescriptor(
                 payload_key=descriptor_key,
                 name=normalize_text(sheet.sheet_name),
@@ -900,14 +973,15 @@ def clean_sos_source(
                 member_references=tuple(
                     hint.value
                     for hint in hints
-                    if hint.role == "list_header" and hint.value is not None
+                    if hint.role in {"list_header", "variable_pointer"}
+                    and hint.value is not None
                 ),
                 locators=tuple(declaration_locators),
                 delivered_cells=tuple(declarations),
             )
     records = (
         *iter_sos_metadata_records(register, revision),
-        *iter_sos_variable_records(register, revision),
+        *variable_records,
     )
     for record in records:
         representation = record.fields.representation

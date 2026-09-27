@@ -32,9 +32,8 @@ if TYPE_CHECKING:
 
 # The three `SPEC` `Värdemängd` cells of `Metadata - Variabelnivå` in
 # `Metadata_Insatser till barn och unga (BU)_webb.xlsx` (G71/G83/G99), byte for byte.
-# Only BU_SPEC_LINED delimits every assignment with a newline. The other two run
-# assignments together on one line behind a long run of plain spaces, which the
-# delivered format does not establish as a member separator.
+# Only BU_SPEC_LINED delimits every assignment with a newline. The other two
+# separate assignments with long runs of spaces.
 _SPEC_MILJO = "2 = brister i hemmilljön 2 § LVU"
 _SPEC_BETEENDE = "3 = barnets/den ungas beteende (3 § LVU)"
 _SPEC_BADA = "4 = både miljö och beteende 2-3 §§ LVU."

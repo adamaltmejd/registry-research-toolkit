@@ -256,7 +256,6 @@ class SourceFields(_SourceModel):
     geographic_coverage: SourceField | None = None
     update_frequency: SourceField | None = None
     aggregation_level: SourceField | None = None
-    contact: SourceField | None = None
     documentation_url: SourceField | None = None
     landing_page: SourceField | None = None
     access_url: SourceField | None = None

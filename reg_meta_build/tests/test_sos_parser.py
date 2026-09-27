@@ -18,7 +18,9 @@ from reg_meta_build.sources.sos import (
     SosParseError,
     _as_date,
     _as_int,
+    _classify_value_set_text,
     _clean,
+    _code_sheet_header,
     _format_code,
     _normalise,
     parse_directory,
@@ -42,6 +44,33 @@ def test_clean_empty_returns_none() -> None:
     assert _clean("   ") is None
     assert _clean("  hi ") == "hi"
     assert _clean(42) == "42"
+
+
+def test_metod_header_assigns_labels_only_in_exact_layout() -> None:
+    assert _code_sheet_header(
+        ("Variabelnamn", "Tidsperiod", "Kod", "Behandlingsmetod")
+    ) == (
+        {0: "variable_name", 1: "tidsperiod", 2: "kod", 3: "beskrivning"},
+        "code",
+    )
+    reordered = _code_sheet_header(("Kod", "Behandlingsmetod", "Tidsperiod"))
+    assert reordered is not None
+    assert "beskrivning" not in reordered[0].values()
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        (
+            "0 = A" + " " * 300 + "5 = B\n8 = C",
+            ([("0", "A"), ("5", "B"), ("8", "C")], False),
+        ),
+        ("1 = A,  2 = B", (None, True)),
+        ("0 = A  longer label\n5 = B", ([("0", "A  longer label"), ("5", "B")], False)),
+    ],
+)
+def test_inline_member_gaps_keep_code_and_label_guards(text: str, expected) -> None:
+    assert _classify_value_set_text(text) == expected
 
 
 def test_as_int_handles_common_shapes() -> None:
@@ -311,7 +340,12 @@ def test_synthetic_generell_fields(tmp_path: Path) -> None:
     assert reg.template_version == "2.1"
     assert reg.dataset_name == "Patientregistret-syntet"
     assert reg.dataset_version == "2024:2"
-    assert reg.contact_email == "kontakt@example.se"
+    general = next(sheet for sheet in reg.source_sheets if sheet.kind == "general")
+    assert any(
+        cell.raw_value == "kontakt@example.se"
+        for row in general.rows
+        for cell in row.source_evidence.cells
+    )
 
 
 def test_synthetic_dcat_ap_field_map(tmp_path: Path) -> None:

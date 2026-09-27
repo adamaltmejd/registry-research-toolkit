@@ -300,6 +300,19 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
     patterns = workbook.create_sheet("Kodlista_bdiag_bk")
     patterns.append(["KOD ", "Beskrivning", "Följande symboler används"])
     patterns.append(["1XXXX", "Pattern", "X: valfri siffra"])
+    workbook["Metadata - Variabelnivå"].append(
+        [
+            "SYN_A",
+            "BDIAG_BK1",
+            "Pattern",
+            None,
+            None,
+            "Sträng (text)",
+            "Kodlista_bdiag_bk",
+            2005,
+            2015,
+        ]
+    )
     support = workbook.create_sheet("Ej relevant_listor")
     support.sheet_state = "veryHidden"
     support.append(["Binär", "Datatyp"])
@@ -363,7 +376,17 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
             if issue.code == "unresolved_list_reference"
             and issue.descriptor_key
             in {"sheet:Kodlista_EMPTY", "sheet:Kodlista_bdiag_bk"}
-        } == {"sheet:Kodlista_EMPTY", "sheet:Kodlista_bdiag_bk"}
+        } == {"sheet:Kodlista_EMPTY"}
+        record = next(
+            record
+            for record in prepared.records.records
+            if record.subject.member.name == "BDIAG_BK1"
+        )
+        assert record.fields.classification_declared is None
+        binding = sessions[0].bind(record)
+        assert {item.descriptor_key for item in binding.bindings} == {
+            "sheet:Kodlista_bdiag_bk"
+        }
     (validity,) = values.validity()
     association = next(
         item

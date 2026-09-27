@@ -60,8 +60,6 @@ class SosDcatAp:
     update_frequency_en: str | None = None
     publisher_sv: str | None = None
     publisher_en: str | None = None
-    contact_sv: str | None = None
-    contact_en: str | None = None
     documentation_url_sv: str | None = None
     documentation_url_en: str | None = None
     landing_page_sv: str | None = None
@@ -255,7 +253,6 @@ class SosRegister:
     dataset_date: date | None
     template_version: str | None
     template_date: date | None
-    contact_email: str | None
     dcat_ap: SosDcatAp
     deldatamangder: tuple[SosDeldatamangd, ...]
     variables: tuple[SosVariable, ...]
@@ -502,7 +499,6 @@ def parse_register_file(path: Path | str) -> SosRegister:
             dataset_date=gen.get("dataset_date"),
             template_version=gen.get("template_version"),
             template_date=gen.get("template_date"),
-            contact_email=gen.get("contact_email"),
             dcat_ap=dcat_ap,
             deldatamangder=deldatamangder,
             variables=variables,
@@ -792,9 +788,6 @@ def _parse_generell(ws: Any) -> tuple[dict[str, Any], SosSheetEvidence]:
         elif section == "dataset" and low.startswith("datum"):
             field_name = "dataset_date"
             out[field_name] = _as_date(raw_value)
-        elif "e-post" in low or low == "e-post:":
-            field_name = "contact_email"
-            out[field_name] = value
         evidence_rows.append(
             SosEvidenceRow(
                 role="metadata",
@@ -827,7 +820,6 @@ _DCAT_MAP = {
     "population": "population",
     "uppdateringsfrekvens": "update_frequency",
     "utgivare": "publisher",
-    "kontaktuppgift": "contact",
     "dokumentation": "documentation_url",
     "ingångssida": "landing_page",
     "webbadress för åtkomst": "access_url",
@@ -1112,6 +1104,11 @@ def _code_sheet_header(
             ("tidsperiod", "scbkod", "siskod", "namn"),
             ("tidsperiod", "peer_code", "peer_code", "beskrivning"),
             "crosswalk",
+        ),
+        (
+            ("variabelnamn", "tidsperiod", "kod", "behandlingsmetod"),
+            ("variable_name", "tidsperiod", "kod", "beskrivning"),
+            "code",
         ),
         (
             (
@@ -1471,13 +1468,10 @@ _EMBEDDED_ASSIGNMENT = re.compile(r"(?: {2,}|, )(\S+) *=")
 def _hides_another_assignment(label: str) -> bool:
     """True when a label carries a further `kod=klartext` run together with it.
 
-    Only the two separators the delivered cells evidence count: the alignment gap
-    a wrapped cell leaves (BU `SPEC`, 42-480 spaces across the audited workbooks),
-    and a comma standing in for `;` (SOL `POMVTRYGG`). Everything else is label
-    text — one space is prose spacing, and a colon quoting a retired code is a
-    historical note whose own row follows separately (THR `TRANSTYP`).
-    `_clean_value_code` decides what could be a further code, so a gap before
-    something that is not one is a label too.
+    Alignment gaps before valid assignments are split by the classifier. This
+    guard still catches comma-separated assignments (SOL `POMVTRYGG`) and any
+    remaining hidden assignment. One space and colon-quoted codes are prose.
+    `_clean_value_code` decides what could be a further code.
     """
     return any(
         _clean_value_code(match.group(1)) is not None
@@ -1502,7 +1496,8 @@ def _classify_value_set_text(
     rejecting leaves the variable exactly as today (no value set), so a wrong
     reject is a no-op while a wrong ACCEPT would mint garbage.
 
-    Two accepted forms (real-corpus-verified):
+    Two accepted forms (real-corpus-verified), separated by semicolons, newlines,
+    or an alignment run of at least two spaces before a valid `code =`:
       - `kod=klartext` pairs — every segment carries `=`: code with inline label
         (`1=ja; 0=nej`, newline-delimited lists). Label is the right of the first
         `=` (labels may contain spaces/commas/colons — only the code is checked).
@@ -1512,10 +1507,9 @@ def _classify_value_set_text(
     MIXED `=`/no-`=` (catches trailing-prose cells like `0=…; …; strängen är
     tom`); any invalid code (range, comma, colon, whitespace); duplicate codes.
 
-    Unresolved: an OTHERWISE COMPLETE list whose label runs together with a
-    further assignment (`_hides_another_assignment`), i.e. a cell whose accepted
-    parse would be partial. The cleaner states that unresolved list rather than
-    its members.
+    Unresolved: an OTHERWISE COMPLETE list whose label still runs together with
+    a further assignment (`_hides_another_assignment`), including comma-separated
+    assignments. The cleaner states that unresolved list rather than its members.
     Every code, label and the duplicate check decide first: only a cell that
     would otherwise have been accepted whole is a delivered enumeration worth
     reporting, so anything rejected above stays ordinary free text instead of
@@ -1523,8 +1517,20 @@ def _classify_value_set_text(
     """
     if not text or not text.strip():
         return None, False
-    # Split on `;` AND newline simultaneously — both are clean SOS separators.
-    segments = [s.strip() for s in re.split(r"[;\n]+", text) if s.strip()]
+    # Only a gap immediately before an accepted code assignment is a separator.
+    segments = []
+    comma_gap = False
+    for segment in re.split(r"[;\n]+", text):
+        start = 0
+        for match in re.finditer(r" {2,}(\S+) *=", segment):
+            if _clean_value_code(match.group(1)) is None:
+                continue
+            comma_gap |= segment[: match.start()].rstrip().endswith(",")
+            if part := segment[start : match.start()].strip():
+                segments.append(part)
+            start = match.start()
+        if part := segment[start:].strip():
+            segments.append(part)
     # A single segment is a free-text descriptor, not an enumeration.
     if len(segments) < 2:
         return None, False
@@ -1554,6 +1560,8 @@ def _classify_value_set_text(
 
     if len({code for code, _ in pairs}) != len(pairs):  # duplicate codes -> reject
         return None, False
+    if comma_gap:
+        return None, True
     if any(_hides_another_assignment(label) for _, label in pairs if label):
         return None, True  # run-together members: this parse would be partial
     return pairs, False
