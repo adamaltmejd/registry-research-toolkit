@@ -76,7 +76,7 @@ class SourceValueJoin:
 class SourceMemberHint:
     """A supplied variable-name hint whose role must not imply a binding."""
 
-    role: Literal["sheet_suffix", "list_header", "row"]
+    role: Literal["sheet_suffix", "list_header", "row", "variable_pointer"]
     value: str | None
     locator: RecordLocator | None = None
 

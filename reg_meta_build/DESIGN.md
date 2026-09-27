@@ -186,6 +186,14 @@ end; other missing dates remain unknown. Cleaning does not inherit dates, synthe
 subset, group variables by name, bind code lists or mint catalog identities. Known
 workbook layouts have focused tests; unknown list shapes preserve their original rows
 without fabricated members.
+`Länk kodverk` values that exactly name a sheet in the same workbook, with an optional
+`!` or A1 cell anchor, are sheet pointers rather than classification names when the
+sheet names a variable or has no named variable and no cell anchor. An unnamed list
+can bind through an unanchored variable pointer; a pointer to a sheet naming another
+variable adds no binding. An anchored pointer to an unnamed list stays unresolved.
+Inline `Värdemängd` assignments also separate at a run of spaces before a valid
+`code =` token; malformed lists remain unresolved. A contact consisting of one email
+address is casefolded while its original cell remains evidence.
 
 Authored thin-provider TOMLs use `sources/curated_records.py`. They are machine-readable
 source declarations with publisher and transcription provenance. Reading them does not
@@ -205,7 +213,7 @@ Deldatamängdsetikett as well as Deldatamängdsnamn. Unique tokens retain their 
 keys. An authored SOS route names the chosen labeled row exactly; renaming or removing
 it makes the route stale. LOVA's `A_LOVA` routes to its Huvudtabell row and
 `A_LOVA_LISA` to its ekonomi/arbetsmarknad row. The prepared source-records schema is
-12; older stores must be re-prepared.
+13; older stores must be re-prepared.
 
 ## Input storage and preparation
 

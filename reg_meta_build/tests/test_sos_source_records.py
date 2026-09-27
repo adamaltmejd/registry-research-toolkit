@@ -17,6 +17,7 @@ from _sos_fixtures import (
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.source_coordinates import native_parent_key, source_register_key
 from reg_meta_build.source_curation import record_ref
+from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import (
     DeliveredCell,
@@ -1182,17 +1183,12 @@ def test_source_cleaning_blocks_on_parser_failure_with_original_evidence_availab
     [
         # G71: every assignment on its own line -> the complete three-member list.
         (BU_SPEC_LINED, BU_SPEC_MEMBERS, False),
-        # G83: the last two assignments share one line behind 95 plain spaces. The
-        # delivered format establishes no member separator there, so preparation
-        # keeps the record and its cells and states the list unresolved rather than
-        # the partial `2, 3` list that buries `4 = ...` in code 3's label.
-        (BU_SPEC_WRAPPED, [], True),
-        # G99: one line throughout -> a single segment, i.e. free text under the
-        # delivered format, as before this guard.
-        (BU_SPEC_ONE_LINE, [], None),
+        # Alignment gaps separate the remaining delivered assignments.
+        (BU_SPEC_WRAPPED, BU_SPEC_MEMBERS, False),
+        (BU_SPEC_ONE_LINE, BU_SPEC_MEMBERS, False),
     ],
 )
-def test_wrapped_inline_code_list_stays_unresolved_with_its_original_cell(
+def test_wrapped_inline_code_list_keeps_its_original_cell(
     tmp_path: Path, raw: str, members: list[tuple[str, str]], unresolved: bool | None
 ) -> None:
     import openpyxl
@@ -1275,6 +1271,28 @@ def _clean_code_rows(tmp_path: Path, rows: list[list[object]]):
         sheet.append(row)
     workbook.save(path)
     return clean_sos_source(parse_register_file(path), _revision(path))
+
+
+def test_metod_header_delivers_code_labels_without_reordered_inference(
+    tmp_path: Path,
+) -> None:
+    exact = _clean_code_rows(
+        tmp_path,
+        [
+            ["Variabelnamn", "Tidsperiod", "Kod", "Behandlingsmetod"],
+            ["HDIA", "2020-", "1", "IVF"],
+        ],
+    )
+    assert [value.normalized_content for value in exact.values.values()] == [
+        ("1", "IVF")
+    ]
+    reordered = _clean_code_rows(
+        tmp_path,
+        [["Kod", "Behandlingsmetod", "Tidsperiod"], ["1", "IVF", "2020-"]],
+    )
+    assert [value.normalized_content for value in reordered.values.values()] == [
+        ("1", None)
+    ]
 
 
 def test_known_hidden_support_sheet_is_preserved_but_unknown_sheet_blocks(
@@ -1433,6 +1451,116 @@ def test_empty_standard_header_keeps_binding_target(tmp_path: Path) -> None:
         table for table in cleaned.tables if table.name == "Kodlista_Arbitrary"
     )
     assert table.rows[1].role == "header"
+
+
+@pytest.mark.parametrize(
+    ("pointer", "named", "declared", "reference"),
+    [
+        ("Kodlista_Target!A1", "HDIA", False, False),
+        ("Kodlista_Target!", "HDIA", False, False),
+        ("Kodlista_Target", "SIBLING", False, False),
+        ("Kodlista_Target", None, False, True),
+        ("Kodlista_Target!", None, False, True),
+        ("Kodlista_Target!A1", None, True, False),
+        ("Kodlista_Missing!A1", None, True, False),
+        ("kodlista_Target", None, True, False),
+    ],
+)
+def test_sheet_pointer_uses_exact_target_and_named_member_guard(
+    tmp_path: Path, pointer: str, named: str | None, declared: bool, reference: bool
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["F2"] = pointer
+    target = workbook.create_sheet("Kodlista_Target")
+    if named:
+        target.append(["Variabelnamn", named])
+        target.append(["Tidsperiod", "Kod", "Beskrivning"])
+        target.append(["2020", "1", "One"])
+    else:
+        target.append(["KOD", "Beskrivning"])
+        target.append(["1", "One"])
+    workbook.save(path)
+
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+    record = next(
+        record
+        for record in cleaned.records
+        if record.subject.member.name == "HDIA"
+        and record.locators[0].physical_record == "row:2"
+    )
+    declaration = record.fields.classification_declared
+    assert (declaration is not None) is declared
+    if declaration is not None:
+        assert declaration.value == pointer
+    assert (
+        next(
+            cell for cell in record.delivered_cells if cell.name == "Länk kodverk"
+        ).raw_value
+        == pointer
+    )
+    descriptor = cleaned.descriptors["sheet:Kodlista_Target"]
+    assert ("HDIA" in descriptor.member_references) is (named == "HDIA" or reference)
+    pointer_hints = [
+        hint for hint in descriptor.member_hints if hint.role == "variable_pointer"
+    ]
+    assert bool(pointer_hints) is reference
+    if reference:
+        assert pointer_hints[0].locator.physical_record == "row:2"
+
+
+def test_sheet_pointer_record_and_descriptor_are_stable_under_sheet_order(
+    tmp_path: Path,
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["F2"] = "Kodlista_Target"
+    target = workbook.create_sheet("Kodlista_Target")
+    target.append(["KOD", "Beskrivning"])
+    target.append(["1", "One"])
+    workbook.save(path)
+    revision = _revision(path)
+    first = clean_sos_source(parse_register_file(path), revision)
+    workbook.move_sheet(target, offset=-3)
+    workbook.save(path)
+    second = clean_sos_source(parse_register_file(path), revision)
+    first_record = next(r for r in first.records if r.subject.member.name == "HDIA")
+    second_record = next(r for r in second.records if r.subject.member.name == "HDIA")
+    assert first_record == second_record
+    assert (
+        first.descriptors["sheet:Kodlista_Target"]
+        == second.descriptors["sheet:Kodlista_Target"]
+    )
+
+
+def test_sheet_pointer_honors_target_named_in_code_rows(tmp_path: Path) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"]["F2"] = "Kodlista_Target!A1"
+    target = workbook.create_sheet("Kodlista_Target")
+    target.append(["Variabelnamn", "Tidsperiod", "Kod", "Beskrivning"])
+    target.append(["HDIA", "2020", "1", "One"])
+    workbook.save(path)
+
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+    record = next(r for r in cleaned.records if r.subject.member.name == "HDIA")
+    assert record.fields.classification_declared is None
+    descriptor = cleaned.descriptors["sheet:Kodlista_Target"]
+    assert not any(h.role == "variable_pointer" for h in descriptor.member_hints)
+    assert any(
+        "HDIA" in association.member_references
+        for association in cleaned.associations
+        if association.descriptor_key == descriptor.payload_key
+    )
 
 
 def test_crosswalk_keeps_peer_namespaces_and_section_period_separate(
@@ -1706,6 +1834,44 @@ def _register_parent_records(cleaned) -> list:
         if record.subject.member.status == "not_applicable"
         and record.parent_facts[0].kind == "register"
     ]
+
+
+@pytest.mark.parametrize("general_contact", ["Rela@x.se", "Kontakt: Rela@x.se"])
+def test_contact_casefolds_only_single_email_and_retains_raw_cells(
+    tmp_path: Path, general_contact: str
+) -> None:
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    _write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Generell information"].append([None, "E-post", general_contact])
+    dcat = workbook.create_sheet("Metadata-Datamängd (DCAT-AP)")
+    dcat.append(["Attribut", "Definition", "Svenska", "Engelska"])
+    dcat.append(["Titel", None, "Patientregistret", None])
+    dcat.append(["Kontaktuppgift", None, "rela@x.se", None])
+    workbook.save(path)
+
+    cleaned = clean_sos_source(parse_register_file(path), _revision(path))
+    contacts = [
+        (record, record.parent_facts[0].fields.contact)
+        for record in _register_parent_records(cleaned)
+        if record.parent_facts[0].fields.contact is not None
+        and record.parent_facts[0].fields.contact.status == "value"
+    ]
+    assert len(contacts) == 2
+    general = next(item for item in contacts if item[0].language is None)
+    assert general[1].value == (
+        "rela@x.se" if general_contact == "Rela@x.se" else general_contact
+    )
+    assert general[1].raw_value == general_contact
+    assert any(cell.raw_value == general_contact for cell in general[0].delivered_cells)
+    fields, conflicts = reconcile_source_fields(
+        tuple(record.parent_facts[0] for record, _ in contacts)
+    )
+    assert ("contact" in conflicts) is (general_contact != "Rela@x.se")
+    if "contact" not in conflicts:
+        assert fields.contact.value == "rela@x.se"
 
 
 def test_sos_register_name_prefers_dcat_title_over_dataset_label(
