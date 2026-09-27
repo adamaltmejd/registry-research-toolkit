@@ -108,9 +108,9 @@ Authority depends on the fact and scope, rather than a universal file ordering:
   waves yield date; date mixed with a numeric class leaves the type unresolved with the
   evidence in the diagnostic. Conflicting documented Datatyp values on overlapping
   editions also widen by that lattice. When every SWECOV wave in the register's
-  prefix-selected tables stores the column numerically, that numeric evidence caps
-  a widened text declaration to the numeric classes. Storage metadata never
-  establishes per-year availability or row content.
+  prefix-selected tables stores the column numerically, that numeric evidence caps a
+  widened text declaration to the numeric classes. Storage metadata never establishes
+  per-year availability or row content.
 - Agents can investigate official handbooks separately and author structured curation
   with document/page references. Neither preparation nor a build extracts or interprets
   PDFs or calls an LLM.
@@ -494,10 +494,10 @@ published output. The underlying occurrences and provenance remain inspectable. 
 published spelling; all other disagreements remain conflicts. Distinct canonical
 nonnegative integer `data_length` values reconcile to their maximum only when every
 length-supplying observation declares the same resolved `data_type`. When distinct
-documented data types widen within one class, canonical nonnegative lengths use the
-same maximum rule. A widening across classes, including a storage-capped text result,
-has no length and no length conflict. Unmapped or incompatible types keep their
-conflicts. Other conflicting fields still raise occurrence diagnostics.
+documented data types widen within one class, canonical nonnegative lengths use the same
+maximum rule. A widening across classes, including a storage-capped text result, has no
+length and no length conflict. Unmapped or incompatible types keep their conflicts.
+Other conflicting fields still raise occurrence diagnostics.
 
 Code-list bindings identify the exact source members and their period constraints before
 membership resolution. Concurrent complete lists must agree; neither the largest list,
