@@ -467,8 +467,13 @@ and variants each keep their own exact text and provenance, so differing texts a
 one native family are not a variable-level conflict. Their variable-grain summaries stay
 populated only when ordinary reconciliation yields one stable value. Disagreement on one
 overlapping column period likewise resolves that field to unknown without an occurrence
-conflict diagnostic; the underlying occurrences and provenance remain inspectable. Other
-conflicting fields still raise occurrence diagnostics.
+conflict diagnostic; `reference_period` is also absorbed this way because it has no
+published output. The underlying occurrences and provenance remain inspectable. For
+`measurement_unit`, only the closed exact-pair list in `source_intervals.py` selects a
+published spelling; all other disagreements remain conflicts. Distinct canonical
+nonnegative integer `data_length` values reconcile to their maximum only when every
+length-supplying observation declares the same resolved `data_type`. Other conflicting
+fields still raise occurrence diagnostics.
 
 Code-list bindings identify the exact source members and their period constraints before
 membership resolution. Concurrent complete lists must agree; neither the largest list,

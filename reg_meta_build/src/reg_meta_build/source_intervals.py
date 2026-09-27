@@ -171,10 +171,22 @@ _POOLED_MERGE_FIELDS = (
     "availability",
 )
 
-# These state-grain texts can drift between overlapping source editions without
-# establishing a conflicting occurrence fact. Reconciliation still marks them unknown.
+# These source texts can drift between overlapping editions without establishing
+# a conflicting occurrence fact. Reconciliation still marks them unknown.
 _ABSORBED_OCCURRENCE_CONFLICT_FIELDS = frozenset(
-    {"source_attribution", "operational_definition"}
+    {"source_attribution", "operational_definition", "reference_period"}
+)
+
+# Closed list of observed unit spellings: (published value, other value).
+_UNIT_PAIRS = (
+    ("Kronor", "kronor"),
+    ("Kronor (SEK)", "kronor"),
+    ("Antal månader", "Månader"),
+    ("Antal veckor", "Veckor"),
+    ("Antal minuter", "Minuter"),
+    ("Antal barn", "Antal"),
+    ("Dagar", "Antal"),
+    ("Årtal", "År"),
 )
 
 
@@ -299,6 +311,51 @@ def reconcile_source_fields(
             and (("value", True) in values or ("value", "conditional") in values)
         ):
             resolved[name] = SourceField(status="value", value=True)
+        elif (
+            name == "measurement_unit"
+            and len(values) == 2
+            and (
+                published := next(
+                    (
+                        published
+                        for published, other in _UNIT_PAIRS
+                        if values == {("value", published), ("value", other)}
+                    ),
+                    None,
+                )
+            )
+            is not None
+            and not explicitly_withheld
+        ):
+            resolved[name] = SourceField(status="value", value=published)
+        elif (
+            name == "data_length"
+            and len(values) > 1
+            and not explicitly_withheld
+            and all(
+                status == "value"
+                and isinstance(value, str)
+                and value.isascii()
+                and value.isdecimal()
+                and (value == "0" or not value.startswith("0"))
+                for status, value in values
+            )
+            and (data_type := resolved.get("data_type")) is not None
+            and data_type.status == "value"
+            and all(
+                fields.data_type is not None
+                and fields.data_type.status == "value"
+                and fields.data_type.value == data_type.value
+                for fields in field_sources
+                if fields.data_length is not None
+                and fields.data_length.status == "value"
+            )
+        ):
+            lengths = []
+            for _, value in values:
+                assert isinstance(value, str)
+                lengths.append(int(value))
+            resolved[name] = SourceField(status="value", value=str(max(lengths)))
         elif len(values) > 1 or explicitly_withheld:
             conflicts.append(name)
             resolved[name] = SourceField(status="unknown")

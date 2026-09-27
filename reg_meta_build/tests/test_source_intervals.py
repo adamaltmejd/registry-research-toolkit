@@ -123,18 +123,135 @@ def test_conflicting_field_is_unknown_only_on_exact_intersection() -> None:
     )
 
 
-@pytest.mark.parametrize("field", ["source_attribution", "operational_definition"])
+@pytest.mark.parametrize(
+    "field", ["source_attribution", "operational_definition", "reference_period"]
+)
 def test_descriptive_text_disagreement_is_unknown_without_occurrence_issue(
     field: str,
 ) -> None:
-    first = _record(1, **{field: "First text"})
-    second = _record(2, **{field: "Second text"})
+    first = _record(1)
+    second = _record(2)
+    first = first.model_copy(
+        update={
+            "fields": first.fields.model_copy(update={field: value_field("First text")})
+        }
+    )
+    second = second.model_copy(
+        update={
+            "fields": second.fields.model_copy(
+                update={field: value_field("Second text")}
+            )
+        }
+    )
     result = resolve_occurrence_intervals((first, second))
     assert result.issues == result.unsupported_occurrences == ()
     assert len(result.segments) == 1
     segment = result.segments[0]
     assert getattr(segment.fields, field) == SourceField(status="unknown")
     assert segment.occurrences == (first, second)
+
+
+@pytest.mark.parametrize(
+    ("published", "other"),
+    [
+        ("Kronor", "kronor"),
+        ("Kronor (SEK)", "kronor"),
+        ("Antal månader", "Månader"),
+        ("Antal veckor", "Veckor"),
+        ("Antal minuter", "Minuter"),
+        ("Antal barn", "Antal"),
+        ("Dagar", "Antal"),
+        ("Årtal", "År"),
+    ],
+)
+def test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order(
+    published: str, other: str
+) -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"measurement_unit": value_field(unit)}
+                )
+            }
+        )
+        for record, unit in ((_record(1), published), (_record(2), other))
+    )
+    for ordered in (records, records[::-1]):
+        result = resolve_occurrence_intervals(ordered)
+        assert result.issues == ()
+        assert result.segments[0].fields.measurement_unit == SourceField(
+            status="value", value=published
+        )
+
+
+@pytest.mark.parametrize(
+    "units",
+    [
+        ("Kronor", "Kronor (SEK)"),
+        ("Procent", "Andel"),
+        ("Veckor", "Antal", "Antal veckor"),
+    ],
+)
+def test_unlisted_unit_sets_remain_occurrence_conflicts(units: tuple[str, ...]) -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"measurement_unit": value_field(unit)}
+                )
+            }
+        )
+        for record, unit in zip((_record(i) for i in range(len(units))), units)
+    )
+    result = resolve_occurrence_intervals(records)
+    assert result.segments[0].fields.measurement_unit == SourceField(status="unknown")
+    assert [(issue.code, issue.fields) for issue in result.issues] == [
+        ("conflicting_occurrence_facts", ("measurement_unit",))
+    ]
+
+
+@pytest.mark.parametrize(
+    ("types", "lengths", "expected_length", "expected_fields"),
+    [
+        (("varchar", "varchar"), ("5", "6"), "6", ()),
+        (("varchar", "float"), ("18", "53"), None, ("data_length", "data_type")),
+        (("varchar", "varchar"), ("5", "8,2"), None, ("data_length",)),
+        (("varchar", None), ("5", "6"), None, ("data_length",)),
+        (("varchar", "varchar"), ("05", "6"), None, ("data_length",)),
+    ],
+)
+def test_length_maximum_requires_one_declared_type_and_canonical_integers(
+    types: tuple[str | None, str | None],
+    lengths: tuple[str, str],
+    expected_length: str | None,
+    expected_fields: tuple[str, ...],
+) -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={
+                        "data_type": value_field(kind)
+                        if kind is not None
+                        else SourceField(status="unknown"),
+                        "data_length": value_field(length),
+                    }
+                )
+            }
+        )
+        for record, kind, length in zip((_record(1), _record(2)), types, lengths)
+    )
+    for ordered in (records, records[::-1]):
+        result = resolve_occurrence_intervals(ordered)
+        assert result.segments[0].fields.data_length == (
+            SourceField(status="value", value=expected_length)
+            if expected_length is not None
+            else SourceField(status="unknown")
+        )
+        assert [issue.fields for issue in result.issues] == (
+            [expected_fields] if expected_fields else []
+        )
 
 
 def test_data_type_conflict_still_reports_when_source_attribution_also_differs() -> (
