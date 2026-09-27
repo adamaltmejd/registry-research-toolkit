@@ -28,8 +28,9 @@ def test_delivered_anchor_is_optional_strict_int_and_rejects_extra_keys() -> Non
     }
     assert ErrataDeliveredEntry.model_validate(entry).native_variable_id is None
     assert (
-        ErrataDeliveredEntry.model_validate({**entry, "native_variable_id": 39310})
-        .native_variable_id
+        ErrataDeliveredEntry.model_validate(
+            {**entry, "native_variable_id": 39310}
+        ).native_variable_id
         == 39310
     )
     for invalid in ("39310", True):

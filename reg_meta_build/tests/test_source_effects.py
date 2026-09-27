@@ -1752,7 +1752,9 @@ def test_delivered_anchor_selects_one_reused_column_identity() -> None:
     assert result.identity_refs == (record_ref(before),)
     applied = apply_occurrence_cases(records, (result.case,))
     assert applied.diagnostics == ()
-    assert applied.occurrences[-1].variable_key == source_occurrence(before).variable_key
+    assert (
+        applied.occurrences[-1].variable_key == source_occurrence(before).variable_key
+    )
 
 
 def test_delivered_anchor_missing_under_column_is_stale() -> None:
