@@ -286,27 +286,26 @@ and native id agree with its path. Unknown tables, unknown fields, duplicate
 declarations, and entries scoped to a different register fail with the source file and
 entry index.
 
-SCB errata records omitted rows and explicit periods for existing editions whose
-names are topics rather than dates. The register file implies the register; each
-entry names a variant and literal SCB column/version coordinates.
-`[[errata.version]]` carries `variant`, `name`, `evidence`, and `noted`; it
-adds an undocumented register edition and requires a year-bearing SCB version name.
-Version era order follows the maximum year the edition claims, so adding a historical
-edition cannot replace a newer documented edition's latest spelling or type.
-`[[errata.edition_period]]` names one existing native edition by variant and SCB's
-literal edition name. For a name the period parser cannot interpret, its documented
-`valid_from` and `valid_to` are the exact inclusive occurrence interval; `evidence`
-and `noted` record the source of that claim. A missing or renamed edition, or a name
-the parser can interpret, makes the entry stale. No register coverage or nearby
-edition supplies an inferred period, and other unparseable names remain unsupported.
-`[[errata.delivered]]` carries `variant`, literal `column`, existing `versions`,
-`evidence`, `noted`, and optional `upstream` and `native_variable_id`; it adds omitted
-rows for a column documented elsewhere on the variant and names edition tokens verbatim.
-The native-variable anchor selects one documented identity when the same column literal
-belongs to multiple variables in the variant's history. An anchor must occur under that
-column; without one, the column must identify exactly one variable across the complete
-variant history. `[[errata.column]]` carries the variable identity (`name` and
-`definition`), a source and evidence, plus either named versions, bounded
+SCB errata records omitted rows and explicit periods for existing editions whose names
+are topics rather than dates. The register file implies the register; each entry names a
+variant and literal SCB column/version coordinates. `[[errata.version]]` carries
+`variant`, `name`, `evidence`, and `noted`; it adds an undocumented register edition and
+requires a year-bearing SCB version name. Version era order follows the maximum year the
+edition claims, so adding a historical edition cannot replace a newer documented
+edition's latest spelling or type. `[[errata.edition_period]]` names one existing native
+edition by variant and SCB's literal edition name. For a name the period parser cannot
+interpret, its documented `valid_from` and `valid_to` are the exact inclusive occurrence
+interval; `evidence` and `noted` record the source of that claim. A missing or renamed
+edition, or a name the parser can interpret, makes the entry stale. No register coverage
+or nearby edition supplies an inferred period, and other unparseable names remain
+unsupported. `[[errata.delivered]]` carries `variant`, literal `column`, existing
+`versions`, `evidence`, `noted`, and optional `upstream` and `native_variable_id`; it
+adds omitted rows for a column documented elsewhere on the variant and names edition
+tokens verbatim. The native-variable anchor selects one documented identity when the
+same column literal belongs to multiple variables in the variant's history. An anchor
+must occur under that column; without one, the column must identify exactly one variable
+across the complete variant history. `[[errata.column]]` carries the variable identity
+(`name` and `definition`), a source and evidence, plus either named versions, bounded
 `holdings_period`, or the legacy undated `all_versions = true`; it mints a variable for
 a column SCB documents nowhere on that variant. Its identity is `(register, column)`, so
 two variants of one register use the same variable identity. `source` records the
