@@ -144,21 +144,21 @@ never replaces the original cells:
   is one period from the first day of the first month to the last day of the second. A
   `Läsåren A/A+1 - C/C+1` school-year hull pools over 1 July of the first year to 30
   June of the last. A `Deklarationsår YYYY (beskattningsår ZZZZ)` with ZZZZ one below
-  YYYY is the income year 1 January to 31 December. An exact `Kvartal 1-3 fr.o.m.
-  YYYY` or `Kvartal 1-3 fr.o.m YYYY` label is an open quarterly delivery line from
-  YYYY-01-01. This interval is its hull: it includes Q4 even though that line only
-  delivers Q1–Q3. `source_scopes` alone applies this reading; `edition_bounds` and
-  `edition_claims` still read these labels as one year's Q1–Q3 for inventory coverage,
-  errata era order and `register_edition_claims`. Other multi-year periods remain
-  pooled. The edition label and a variable's declared measurement/reference period are
-  separate observations. An SCB `YYYY, slutlig version` edition supersedes the same
-  variant's `YYYY, preliminär version` per native variable, retaining its records as
-  support evidence. A pooled scope carries its whole-range bounds (Y-202): the exact
-  interval's endpoints for a multi-year exact range, else the first claim's start
-  through the last claim's end — but only when every claim is a whole calendar year.
-  Other term edges (Komvux HT/VT) and forecast-register ranges carry no range. A pooled
-  scope without both bounds stays unresolvable downstream — the range is carried
-  evidence, never re-parsed from the label.
+  YYYY is the income year 1 January to 31 December. An exact `Kvartal 1-3 fr.o.m. YYYY`
+  or `Kvartal 1-3 fr.o.m YYYY` label is an open quarterly delivery line from YYYY-01-01.
+  This interval is its hull: it includes Q4 even though that line only delivers Q1–Q3.
+  `source_scopes` alone applies this reading; `edition_bounds` and `edition_claims`
+  still read these labels as one year's Q1–Q3 for inventory coverage, errata era order
+  and `register_edition_claims`. Other multi-year periods remain pooled. The edition
+  label and a variable's declared measurement/reference period are separate
+  observations. An SCB `YYYY, slutlig version` edition supersedes the same variant's
+  `YYYY, preliminär version` per native variable, retaining its records as support
+  evidence. A pooled scope carries its whole-range bounds (Y-202): the exact interval's
+  endpoints for a multi-year exact range, else the first claim's start through the last
+  claim's end — but only when every claim is a whole calendar year. Other term edges
+  (Komvux HT/VT) and forecast-register ranges carry no range. A pooled scope without
+  both bounds stays unresolvable downstream — the range is carried evidence, never
+  re-parsed from the label.
 - Value-set content may deduplicate identical code/label pairs for storage and
   comparison. Equal codes with different labels remain distinct. Deduplication does not
   infer list identity, membership, variable identity or authority.
