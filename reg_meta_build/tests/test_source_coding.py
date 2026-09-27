@@ -171,6 +171,47 @@ def test_conflicting_lists_withhold_only_the_contested_coding_period(
     ]
 
 
+def test_overlapping_dated_labels_for_one_code_withhold_the_overlap() -> None:
+    claim = _claim(
+        "butsatt",
+        _member("1"),
+        _member("2", "Till barnklinik", scope=_scope("1982-01-01", "1990-12-31")),
+        _member("2", "Till annan adress", scope=_scope("1990-01-01", "1998-12-31")),
+        scope=_scope("1982-01-01", "1998-12-31"),
+    )
+    result = resolve_code_membership((claim,))
+    assert [
+        (issue.code, issue.valid_from, issue.valid_to) for issue in result.issues
+    ] == [("conflicting_code_memberships", "1990-01-01", "1990-12-31")]
+    assert [
+        (segment.valid_from, segment.valid_to, segment.code_set is None)
+        for segment in result.segments
+    ] == [
+        ("1982-01-01", "1989-12-31", False),
+        ("1990-01-01", "1990-12-31", True),
+        ("1991-01-01", "1998-12-31", False),
+    ]
+
+
+def test_adjacent_dated_labels_for_one_code_keep_both_periods() -> None:
+    claim = _claim(
+        "butsatt",
+        _member("2", "Till barnklinik", scope=_scope("1982-01-01", "1989-12-31")),
+        _member("2", "Till annan adress", scope=_scope("1990-01-01", "1998-12-31")),
+        scope=_scope("1982-01-01", "1998-12-31"),
+    )
+    result = resolve_code_membership((claim,))
+    assert result.issues == ()
+    assert [
+        (segment.valid_from, segment.valid_to, segment.code_set.members)
+        for segment in result.segments
+        if segment.code_set is not None
+    ] == [
+        ("1982-01-01", "1989-12-31", (("2", "Till barnklinik"),)),
+        ("1990-01-01", "1998-12-31", (("2", "Till annan adress"),)),
+    ]
+
+
 @pytest.mark.parametrize("code,label", [(None, "Label"), ("001", None)])
 def test_missing_code_or_label_withholds_complete_list_only_where_member_applies(
     code: str | None, label: str | None

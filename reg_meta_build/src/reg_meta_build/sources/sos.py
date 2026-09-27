@@ -223,10 +223,9 @@ class SosKodlista:
     sheet-name suffix (e.g. `Kodlista_DIAGNOS` → variable `DIAGNOS`).
     The caller is responsible for resolution — not guaranteed 1:1.
 
-    `rows` holds structured (Tidsperiod, Kod, Beskrivning) entries. Sheets
-    that don't match the code-list header shape (recoding and derivation tables,
-    unrecognized directories etc.) parse with empty `rows` and retain `raw_rows`;
-    every layout retains original `source_sheets` evidence.
+    `rows` holds structured code entries. Sheets without code rows (including
+    recoding and derivation tables) retain `raw_rows`; every layout retains
+    original `source_sheets` evidence.
     """
 
     sheet_name: str
@@ -1358,13 +1357,8 @@ def _parse_kodlista(
         return _clean(cell.display_value if display else cell.raw_value)
 
     has_header = any(row.role == "header" for row in sheet_evidence.rows)
-    has_code_header = any(
-        row.role == "header"
-        and {"tidsperiod", "kod", "beskrivning"}
-        <= {cell.field_name for cell in row.source_evidence.cells}
-        for row in sheet_evidence.rows
-    )
-    if not has_code_header:
+    has_code_rows = any(row.role == "code" for row in sheet_evidence.rows)
+    if not has_code_rows:
         sheet_evidence = replace(sheet_evidence, kind="documentation")
     for evidence_row in sheet_evidence.rows:
         if evidence_row.role == "preamble":
@@ -1378,7 +1372,7 @@ def _parse_kodlista(
             # Legacy projection only: source evidence retains the period row and
             # leaves following rows' explicit period cells blank.
             last_tidsperiod = evidence_text(evidence_row, "tidsperiod", display=True)
-        elif evidence_row.role == "code" and has_code_header:
+        elif evidence_row.role == "code":
             source_tidsperiod = evidence_text(evidence_row, "tidsperiod", display=True)
             code = evidence_text(evidence_row, "kod", display=True)
             if code is None:
@@ -1399,7 +1393,7 @@ def _parse_kodlista(
             f"kodlista {sheet_name!r}: no supported code/documentation header row found; "
             "structured rows skipped (raw content preserved)"
         )
-    if not has_code_header:
+    if not has_code_rows:
         raw_rows = [
             tuple(cell.raw_value for cell in row.source_evidence.cells)
             for row in sheet_evidence.rows
