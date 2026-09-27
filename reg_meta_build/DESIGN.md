@@ -185,15 +185,14 @@ stored cell value. A blank Data till on a row with a supplied Data från reads a
 end; other missing dates remain unknown. Cleaning does not inherit dates, synthesize a
 subset, group variables by name, bind code lists or mint catalog identities. Known
 workbook layouts have focused tests; unknown list shapes preserve their original rows
-without fabricated members.
-`Länk kodverk` values that exactly name a sheet in the same workbook, with an optional
-`!` or A1 cell anchor, are sheet pointers rather than classification names when the
-sheet names a variable or has no named variable and no cell anchor. An unnamed list
-can bind through an unanchored variable pointer; a pointer to a sheet naming another
-variable adds no binding. An anchored pointer to an unnamed list stays unresolved.
-Inline `Värdemängd` assignments also separate at a run of spaces before a valid
-`code =` token; malformed lists remain unresolved. A contact consisting of one email
-address is casefolded while its original cell remains evidence.
+without fabricated members. `Länk kodverk` values that exactly name a sheet in the same
+workbook, with an optional `!` or A1 cell anchor, are sheet pointers rather than
+classification names when the sheet names a variable or has no named variable and no
+cell anchor. An unnamed list can bind through an unanchored variable pointer; a pointer
+to a sheet naming another variable adds no binding. An anchored pointer to an unnamed
+list stays unresolved. Inline `Värdemängd` assignments also separate at a run of spaces
+before a valid `code =` token; malformed lists remain unresolved. A contact consisting
+of one email address is casefolded while its original cell remains evidence.
 
 Authored thin-provider TOMLs use `sources/curated_records.py`. They are machine-readable
 source declarations with publisher and transcription provenance. Reading them does not
