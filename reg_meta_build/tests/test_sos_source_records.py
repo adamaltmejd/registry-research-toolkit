@@ -1421,6 +1421,20 @@ def test_partial_header_with_code_rows_keeps_binding_target(tmp_path: Path) -> N
     assert table.rows[1].cells[2].raw_value == "Retained evidence"
 
 
+def test_empty_standard_header_keeps_binding_target(tmp_path: Path) -> None:
+    cleaned = _clean_code_rows(
+        tmp_path,
+        [["Variabelnamn", "HDIA"], ["Tidsperiod", "Kod", "Beskrivning"]],
+    )
+    descriptor = cleaned.descriptors["sheet:Kodlista_Arbitrary"]
+    assert descriptor.member_references == ("HDIA",)
+    assert not cleaned.associations and not cleaned.values
+    table = next(
+        table for table in cleaned.tables if table.name == "Kodlista_Arbitrary"
+    )
+    assert table.rows[1].role == "header"
+
+
 def test_crosswalk_keeps_peer_namespaces_and_section_period_separate(
     tmp_path: Path,
 ) -> None:
@@ -1673,6 +1687,8 @@ def test_code_patterns_and_adjacent_legend_stay_literal_and_separate(
         ("11xxy", "Annan kategori"),
     }
     assert len(cleaned.associations) == 2
+    assert "sheet:Kodlista_Arbitrary" in cleaned.descriptors
+    assert all(not row.member_references for row in cleaned.associations)
     assert all(len(value.delivered_cells) == 2 for value in cleaned.values.values())
     table = next(
         table for table in cleaned.tables if table.name == "Kodlista_Arbitrary"

@@ -15,6 +15,7 @@ from reg_meta_build.source_coding import (
     resolve_code_membership,
 )
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
+from reg_meta_build.source_value_periods import value_period
 from reg_meta_build.source_values import SourceValueAssociation, SourceValueWindow
 
 
@@ -171,31 +172,51 @@ def test_conflicting_lists_withhold_only_the_contested_coding_period(
     ]
 
 
-def test_overlapping_dated_labels_for_one_code_withhold_the_overlap() -> None:
-    claim = _claim(
-        "butsatt",
-        _member("1"),
-        _member("2", "Till barnklinik", scope=_scope("1982-01-01", "1990-12-31")),
-        _member("2", "Till annan adress", scope=_scope("1990-01-01", "1998-12-31")),
-        scope=_scope("1982-01-01", "1998-12-31"),
+def test_butsatt_source_blocks_withhold_the_1982_to_1988_overlap() -> None:
+    rows = (
+        ("1973-1988", "1", "Till hemmet"),
+        ("1973-1988", "2", "Till barnklinik"),
+        ("1973-1988", "3", "Annan klinik"),
+        ("1973-1988", "4", "Annan adress"),
+        ("1982/1983-1989/1990", "1", "Till hemmet"),
+        ("1982/1983-1989/1990", "2", "Till annan adress"),
+        ("1990/1991-1998", "1", "Till hemmet"),
+        ("1990/1991-1998", "2", "Till annan adress"),
+        ("1990/1991-1998", "3", "Ej utskriven vid 28 dygn"),
+        ("1999-", "1", "Ej hemskriven vid 28 dagar"),
     )
+    members = []
+    for period, code, label in rows:
+        window = value_period(period)
+        assert window is not None and window.status == "known"
+        assert window.start is not None
+        members.append(
+            _member(
+                code,
+                label,
+                scope=_scope(window.start, window.end or "2000-12-31"),
+            )
+        )
+    claim = _claim("butsatt", *members, scope=_scope("1973-01-01", "2000-12-31"))
     result = resolve_code_membership((claim,))
     assert [
         (issue.code, issue.valid_from, issue.valid_to) for issue in result.issues
-    ] == [("conflicting_code_memberships", "1990-01-01", "1990-12-31")]
-    assert [
-        (segment.valid_from, segment.valid_to, segment.code_set is None)
-        for segment in result.segments
-    ] == [
-        ("1982-01-01", "1989-12-31", False),
-        ("1990-01-01", "1990-12-31", True),
-        ("1991-01-01", "1998-12-31", False),
-    ]
+    ] == [("conflicting_code_memberships", "1982-01-01", "1988-12-31")]
+    segment_1990 = next(
+        segment for segment in result.segments if segment.valid_from == "1990-01-01"
+    )
+    assert segment_1990.valid_to == "1990-12-31"
+    assert segment_1990.code_set is not None
+    assert segment_1990.code_set.members == (
+        ("1", "Till hemmet"),
+        ("2", "Till annan adress"),
+        ("3", "Ej utskriven vid 28 dygn"),
+    )
 
 
 def test_adjacent_dated_labels_for_one_code_keep_both_periods() -> None:
     claim = _claim(
-        "butsatt",
+        "adjacent",
         _member("2", "Till barnklinik", scope=_scope("1982-01-01", "1989-12-31")),
         _member("2", "Till annan adress", scope=_scope("1990-01-01", "1998-12-31")),
         scope=_scope("1982-01-01", "1998-12-31"),

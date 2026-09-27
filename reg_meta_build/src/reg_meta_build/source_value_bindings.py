@@ -212,16 +212,14 @@ class ValueBindingSession:
                     )
         elif self.join.member_target == "member_name":
             for descriptor in self.descriptors:
-                # A sheet suffix cannot supply a missing explicit row/header ref.
-                if (
+                if descriptor.record_ids:
+                    continue
+                rows = tuple(self.session.lookup_descriptor(descriptor.payload_key))
+                # An empty list has no members even with a header ref; a sheet
+                # suffix cannot supply a missing explicit row/header ref.
+                if not rows or (
                     not descriptor.member_references
-                    and not descriptor.record_ids
-                    and not any(
-                        row.member_references
-                        for row in self.session.lookup_descriptor(
-                            descriptor.payload_key
-                        )
-                    )
+                    and not any(row.member_references for row in rows)
                 ):
                     yield ValueBindingIssue(
                         "unresolved_list_reference", self.source, descriptor.payload_key

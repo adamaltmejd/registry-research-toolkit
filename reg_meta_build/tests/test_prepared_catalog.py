@@ -31,6 +31,7 @@ from reg_meta_build.prepared_catalog import (
     prepare_catalog_sources,
 )
 from reg_meta_build.source_records import SourceRecord
+from reg_meta_build.source_value_bindings import open_value_bindings
 
 from reg_meta_build import _accepted_prepared, prepared_catalog
 
@@ -293,6 +294,12 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
     hospital.append(
         ["HOSPITAL", 1973, None, "001", "Region", "Hospital", formula, "Source note"]
     )
+    empty = workbook.create_sheet("Kodlista_EMPTY")
+    empty.append(["Variabelnamn", "CODE"])
+    empty.append(["Tidsperiod", "Kod", "Beskrivning"])
+    patterns = workbook.create_sheet("Kodlista_bdiag_bk")
+    patterns.append(["KOD ", "Beskrivning", "Följande symboler används"])
+    patterns.append(["1XXXX", "Pattern", "X: valfri siffra"])
     support = workbook.create_sheet("Ej relevant_listor")
     support.sheet_state = "veryHidden"
     support.append(["Binär", "Datatyp"])
@@ -341,6 +348,22 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
         for item in prepared.value_sources
         if item.manifest.revision == entry.revision
     )
+    assert {
+        item.payload_key
+        for item in values.descriptors()
+        if item.payload_key in {"sheet:Kodlista_EMPTY", "sheet:Kodlista_bdiag_bk"}
+    } == {"sheet:Kodlista_EMPTY", "sheet:Kodlista_bdiag_bk"}
+    assert any(
+        item.source_table == "Kodlista_bdiag_bk" for item in values.associations()
+    )
+    with open_value_bindings((values,)) as sessions:
+        assert {
+            issue.descriptor_key
+            for issue in sessions[0].source_issues()
+            if issue.code == "unresolved_list_reference"
+            and issue.descriptor_key
+            in {"sheet:Kodlista_EMPTY", "sheet:Kodlista_bdiag_bk"}
+        } == {"sheet:Kodlista_EMPTY", "sheet:Kodlista_bdiag_bk"}
     (validity,) = values.validity()
     association = next(
         item
