@@ -31,12 +31,12 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
+from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_bindings import (
     bind_code_lists,
     bind_occurrence_code_lists,
     open_value_bindings,
 )
-from reg_meta_build.source_support import SourceSupportBindings
 from reg_meta_build.source_value_periods import value_period, value_window
 from reg_meta_build.source_values import (
     SourceMemberHint,
