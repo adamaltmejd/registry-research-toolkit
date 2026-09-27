@@ -570,6 +570,42 @@ def test_variable_grain_canonical_conflict_fields_are_unchanged(field: str) -> N
     ] == [((field,), (f"variable.{field}",))]
 
 
+@pytest.mark.parametrize(
+    ("published", "other"),
+    [
+        ("Kronor", "kronor"),
+        ("Kronor (SEK)", "kronor"),
+        ("Antal månader", "Månader"),
+        ("Antal veckor", "Veckor"),
+        ("Antal minuter", "Minuter"),
+        ("Antal barn", "Antal"),
+        ("Dagar", "Antal"),
+        ("Årtal", "År"),
+    ],
+)
+def test_exact_unit_pair_publishes_variable_unit_in_either_order(
+    published: str, other: str
+) -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"measurement_unit": value_field(unit)}
+                )
+            }
+        )
+        for record, unit in ((_record(2020), published), (_record(2021), other))
+    )
+    for ordered in (records, records[::-1]):
+        result = _form(ordered)
+        assert result.variable is not None
+        assert result.variable.measurement_unit == published
+        assert not any(
+            diagnostic.code == "conflicting_variable_fact"
+            for diagnostic in result.diagnostics
+        )
+
+
 def test_state_grain_texts_vary_by_period_without_a_variable_fact_conflict(
     tmp_path: Path,
 ) -> None:
