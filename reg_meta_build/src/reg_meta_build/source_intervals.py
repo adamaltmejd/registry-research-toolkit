@@ -357,6 +357,7 @@ def reconcile_source_fields(
             else:
                 widened = None
             if widened is not None:
+                assert widened_classes is not None
                 if (
                     widened == "text"
                     and storage is not None
