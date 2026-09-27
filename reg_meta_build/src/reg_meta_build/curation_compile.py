@@ -3291,6 +3291,12 @@ def compile_errata(
                 bound_editions[variant_id] = edition_bindings(
                     members, tuple(versions.get(variant_id, ()))
                 )
+        moved_editions = {}
+        for split in register.identity.edition_split:
+            variant_id = _parse_variant_id(split.variant)[1]
+            for edition in bound_editions.get(variant_id, ()):
+                if edition.native_id is not None and edition.name in split.editions:
+                    moved_editions[edition.key] = (edition.name, split.split)
         for index, row in enumerate(register.errata.version, 1):
             case_id = f"{register.source_file}#/errata.version/{index}"
             statuses["entries_read"].append(case_id)
@@ -3458,8 +3464,29 @@ def compile_errata(
                         )
                     )
                     continue
+                assert isinstance(converted.decision, OccurrenceCorrectionDecision)
+                moved_additions = sorted(
+                    {
+                        moved_editions[effect.edition_key]
+                        for effect in converted.decision.effects
+                        if isinstance(effect, CuratedOccurrenceAddition)
+                        and effect.edition_key is not None
+                        and effect.edition_key in moved_editions
+                    }
+                )
+                if moved_additions:
+                    statuses["stale"].append(case_id)
+                    diagnostics.append(
+                        _family_diagnostic(
+                            case_id,
+                            subject,
+                            "errata addition targets editions moved to split variants "
+                            f"{moved_additions!r}; add explicit rebinding for errata "
+                            "additions before curating those editions",
+                        )
+                    )
+                    continue
                 if table == "delivered":
-                    assert isinstance(converted.decision, OccurrenceCorrectionDecision)
                     effects = []
                     rebinding_blockers = []
                     for effect in converted.decision.effects:

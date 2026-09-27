@@ -1586,22 +1586,25 @@ def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):
 
 def test_compiled_errata_with_declared_split_uses_native_variant(tmp_path: Path):
     donor = _errata_record(column="A", year="2020")
+    flow = _errata_record(
+        column="B", year="2021", variable=6, member=21, edition_name="2021"
+    )
     stock = _errata_record(
-        column="B",
+        column="C",
         year="2021",
-        variable=6,
-        member=21,
+        variable=7,
+        member=22,
         edition_name="2021-12-31",
+        edition_id=2,
     )
     fragment = (
         '\n[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
         '[[identity.edition_split]]\nvariant = "1.2"\nsplit = "1.2.stock"\n'
         'editions = ["2021-12-31"]\nevidence = "SCB stock population"\n'
-        'source_editions = ["2020"]\n'
-        'noted = "2026-09-27"\n'
-        + _DELIVERED.replace('versions = ["2021"]', 'versions = ["2021-12-31"]')
+        'source_editions = ["2020", "2021"]\n'
+        'noted = "2026-09-27"\n' + _DELIVERED
     )
-    tree, prepared, scope = _errata_fixture(tmp_path, (donor, stock), fragment)
+    tree, prepared, scope = _errata_fixture(tmp_path, (donor, flow, stock), fragment)
     cases, _, _, diagnostics, report = compile_errata(
         tree, prepared, (scope,), {}, subset=False
     )
@@ -1609,11 +1612,53 @@ def test_compiled_errata_with_declared_split_uses_native_variant(tmp_path: Path)
     assert len(report["scb/sample"]["entries_matched"]) == 1
     case = cases[(scope.source, scope.register_key)][0]
     assert isinstance(case.decision.effects[0], CuratedOccurrenceAddition)
-    assert case.decision.effects[0].edition_key == source_occurrence(stock).edition_key
+    assert case.decision.effects[0].edition_key == source_occurrence(flow).edition_key
     assert (
-        apply_occurrence_cases((donor, stock), (case,)).accounting[0].disposition
+        apply_occurrence_cases((donor, flow, stock), (case,)).accounting[0].disposition
         == "applied"
     )
+
+
+@pytest.mark.parametrize(
+    ("table", "erratum"),
+    [
+        (
+            "delivered",
+            '\n[[errata.delivered]]\nvariant = "people"\ncolumn = "A"\n'
+            'versions = ["2021-12-31"]\nevidence = "accepted delivery"\n'
+            'noted = "2026-09-27"\n',
+        ),
+        (
+            "column",
+            '\n[[errata.column]]\nvariant = "people"\ncolumn = "NewCol"\n'
+            'name = "New column"\ndefinition = "Documented"\n'
+            'source = "scb-docs"\nversions = ["2021-12-31"]\n'
+            'evidence = "accepted column"\nnoted = "2026-09-27"\n',
+        ),
+    ],
+)
+def test_compiled_errata_addition_to_moved_edition_is_stale(
+    tmp_path: Path, table: str, erratum: str
+) -> None:
+    donor = _errata_record(column="A", year="2020")
+    stock = _errata_record(
+        column="B", year="2021", variable=6, member=21, edition_name="2021-12-31"
+    )
+    fragment = (
+        '\n[[variant]]\nnative_id = "1.2.stock"\nslug = "stock"\n'
+        '[[identity.edition_split]]\nvariant = "1.2"\nsplit = "1.2.stock"\n'
+        'editions = ["2021-12-31"]\nsource_editions = ["2020"]\n'
+        'evidence = "SCB stock population"\nnoted = "2026-09-27"\n' + erratum
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, (donor, stock), fragment)
+    cases, naming, keys, diagnostics, report = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert cases == {} and naming == {} and keys == {}
+    assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+    assert f"#/errata.{table}/1" in diagnostics[0].detail
+    assert "('2021-12-31', '1.2.stock')" in diagnostics[0].detail
+    assert len(report["scb/sample"]["stale"]) == 1
 
 
 @pytest.mark.parametrize(

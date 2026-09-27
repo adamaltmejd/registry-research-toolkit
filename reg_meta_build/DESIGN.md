@@ -300,7 +300,9 @@ variant and literal SCB column/version coordinates. A curated
 declared split variant. Its `editions` and `source_editions` lists account for every
 native edition name; a new or missing name makes the entry stale and withholds the
 split. Their edition and population parents move with them; edition name shape never
-implies a split.
+implies a split. An errata addition naming a moved edition is stale until additions can
+be rebound under the split variant; corrections to native rows still move with the
+split.
 
 `[[errata.version]]` carries `variant`, `name`, `evidence`, and `noted`; it adds an
 undocumented register edition and requires a year-bearing SCB version name. Version era
