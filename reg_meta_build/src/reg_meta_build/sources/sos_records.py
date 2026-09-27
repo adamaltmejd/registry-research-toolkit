@@ -135,8 +135,10 @@ def _contact_field(cell: SosCellEvidence) -> SourceField:
         field.status == "value"
         and isinstance(field.value, str)
         and isinstance(field.raw_value, str)
-        and field.raw_value.count("@") == 1
-        and not any(char.isspace() for char in field.raw_value)
+        and re.fullmatch(
+            r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+",
+            field.raw_value,
+        )
     ):
         return value_field(field.value.casefold(), raw=field.raw_value)
     return field

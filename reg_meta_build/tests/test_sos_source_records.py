@@ -1836,7 +1836,15 @@ def _register_parent_records(cleaned) -> list:
     ]
 
 
-@pytest.mark.parametrize("general_contact", ["Rela@x.se", "Kontakt: Rela@x.se"])
+@pytest.mark.parametrize(
+    "general_contact",
+    [
+        "Rela@x.se",
+        "Kontakt: Rela@x.se",
+        "Kontakt:Rela@x.se",
+        "mailto:Rela@x.se",
+    ],
+)
 def test_contact_casefolds_only_single_email_and_retains_raw_cells(
     tmp_path: Path, general_contact: str
 ) -> None:
