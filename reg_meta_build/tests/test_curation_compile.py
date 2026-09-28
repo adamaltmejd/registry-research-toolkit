@@ -19,6 +19,7 @@ from reg_meta_build.curation_compile import (
     compile_edition_splits,
     compile_enrichment,
     compile_errata,
+    compile_flags,
     compile_native_naming,
     compile_partitions,
     compile_scb_preliminary,
@@ -1336,6 +1337,57 @@ _EDITION_PERIOD = (
     'valid_from = "2018-02-01"\nvalid_to = "2018-11-30"\n'
     'evidence = "Source documentation"\nnoted = "2026-09-26"\n'
 )
+
+
+def test_flags_compile_exact_native_variable_and_report_missing_or_foreign(
+    tmp_path: Path,
+) -> None:
+    item = _errata_record(column="A", year="2020")
+    entries = (
+        '\n[[flags]]\nvariable = "1.5"\nis_sensitive = true\n'
+        'is_identifier = false\nevidence = "SCB documentation"\nnoted = "2026-09-28"\n'
+        '[[flags]]\nvariable = "1.9"\nis_sensitive = true\n'
+        'evidence = "Missing"\nnoted = "2026-09-28"\n'
+        '[[flags]]\nvariable = "2.5"\nis_identifier = true\n'
+        'evidence = "Foreign"\nnoted = "2026-09-28"\n'
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, (item,), entries)
+    cases, issues, report = compile_flags(tree, prepared, (scope,), subset=False)
+    (case,) = cases[scope.source, scope.register_key]
+    assert case.decision.variable_key == native_variable_key(item)
+    assert case.decision.provenance.endswith("#/flags/1.5")
+    assert [issue.code for issue in issues] == [
+        "stale_curation_entry",
+        "stale_curation_entry",
+    ]
+    assert "another register" in issues[1].detail
+    assert len(report["scb/sample"]["entries_matched"]) == 1
+
+
+def test_flags_compile_is_independent_of_entry_order(tmp_path: Path) -> None:
+    records = (
+        _errata_record(column="A", year="2020"),
+        _errata_record(column="B", year="2020", variable=6, member=21),
+    )
+    first = (
+        '[[flags]]\nvariable = "1.5"\nis_sensitive = true\n'
+        'evidence = "A"\nnoted = "2026-09-28"\n'
+    )
+    second = (
+        '[[flags]]\nvariable = "1.6"\nis_identifier = false\n'
+        'evidence = "B"\nnoted = "2026-09-28"\n'
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, records, first + second)
+    original = compile_flags(tree, prepared, (scope,), subset=False)
+    path = tmp_path / "curation/registers/scb/sample.toml"
+    path.write_text(path.read_text().replace(first + second, second + first))
+    reordered = compile_flags(
+        load_curation_tree(tmp_path / "curation"),
+        prepared,
+        (scope,),
+        subset=False,
+    )
+    assert original == reordered
 
 
 def test_named_edition_split_rebinds_parents_and_is_order_independent(
