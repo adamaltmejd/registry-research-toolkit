@@ -3265,3 +3265,2239 @@ native_id = "25.681.aslspe1"
 slug = "sarskild-loneskatt-pensionskostnader"
 
 # register 250
+
+# Y-276 2026-09-28: IoT sequential delivery-column renames (swaps 25.1081/25.1082 and 25.24373/25.40427 excluded).
+
+[[identity.partition]]
+variable = "25.31"
+columns = { "Forsamling" = "25.31.forsamling", "BLKFNOV" = "25.31.forsamling" }
+columns_ref = "Y-276 2026-09-28: 25.31 'Församling' sequential rename {Forsamling 1996-2014, BLKFNOV 2016-2024} owned by forsamling (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.44"
+columns = { "BKON" = "25.44.kon", "Kon" = "25.44.kon" }
+columns_ref = "Y-276 2026-09-28: 25.44 'Kön' sequential rename {BKON 1978-1995, Kon 1996-2024} owned by kon (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.94"
+columns = { "PENS" = "25.94.pension-skattepliktig", "INPENS" = "25.94.pension-skattepliktig" }
+columns_ref = "Y-276 2026-09-28: 25.94 'Pension, skattepliktig' sequential rename {PENS 1974-1977, INPENS 1978-1989} owned by pension-skattepliktig (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.241"
+columns = { "ALDER" = "25.241.alder-31-12", "BALD" = "25.241.alder-31-12", "AlderSlut" = "25.241.alder-31-12" }
+columns_ref = "Y-276 2026-09-28: 25.241 'Ålder 31/12' sequential rename {ALDER 1986-1992, BALD 1993-1995, AlderSlut 1996-2024} owned by alder-31-12 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.245"
+columns = { "CA" = "25.245.civilstandsdatum", "CIVANDR" = "25.245.civilstandsdatum", "BCIVAND" = "25.245.civilstandsdatum" }
+columns_ref = "Y-276 2026-09-28: 25.245 'Civilståndsdatum' sequential rename {CA 1971-1977, CIVANDR 1988-1992, BCIVAND 1993-2009} owned by civilstandsdatum (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.264"
+columns = { "UTBO" = "25.264.icke-territoriell-forsamling", "BEJTERR" = "25.264.icke-territoriell-forsamling" }
+columns_ref = "Y-276 2026-09-28: 25.264 'Icke territoriell församling' sequential rename {UTBO 1968-1977, BEJTERR 1999-2016} owned by icke-territoriell-forsamling (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.355"
+columns = { "BKOMMUN" = "25.355.kommun-tidigare", "KOMA" = "25.355.kommun-tidigare", "KOMMUN" = "25.355.kommun-tidigare" }
+columns_ref = "Y-276 2026-09-28: 25.355 'Kommun tidigare' sequential rename {BKOMMUN 1960, KOMA 1968-1970, KOMMUN 1971-1977} owned by kommun-tidigare (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.480"
+columns = { "SEVH" = "25.480.sekvenssiffra", "BSEKVT" = "25.480.sekvenssiffra" }
+columns_ref = "Y-276 2026-09-28: 25.480 'Sekvenssiffra' sequential rename {SEVH 1968-1989, BSEKVT 1998} owned by sekvenssiffra (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.517"
+columns = { "INVAR" = "25.517.senaste-invandringsar", "BINVAR" = "25.517.senaste-invandringsar", "Datinv" = "25.517.senaste-invandringsar" }
+columns_ref = "Y-276 2026-09-28: 25.517 'Senaste invandringsår' sequential rename {INVAR 1982-1992, BINVAR 1993-1995, Datinv 1996-2024} owned by senaste-invandringsar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.537"
+columns = { "PANR" = "25.537.postnr", "BPOSTNR" = "25.537.postnr" }
+columns_ref = "Y-276 2026-09-28: 25.537 'Postnummer' sequential rename {PANR 1981-1992, BPOSTNR 1993-1996} owned by postnr (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.580"
+columns = { "ATPENS" = "25.580.pensionsavgift-allman-anstallning", "AAPENSA" = "25.580.pensionsavgift-allman-anstallning" }
+columns_ref = "Y-276 2026-09-28: 25.580 'Underlag för beräkning av allmän pensionsavgift, anställning' sequential rename {ATPENS 1995, AAPENSA 1999-2024} owned by pensionsavgift-allman-anstallning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.589"
+columns = { "ITP" = "25.589.tjanstepension-itp", "PITP" = "25.589.tjanstepension-itp" }
+columns_ref = "Y-276 2026-09-28: 25.589 'Tjänste- och tilläggspension från ITP' sequential rename {ITP 1988-1992, PITP 1993-2018} owned by tjanstepension-itp (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.598"
+columns = { "STP" = "25.598.statlig-tjanstepension", "PKUTJPS" = "25.598.statlig-tjanstepension" }
+columns_ref = "Y-276 2026-09-28: 25.598 'Statlig tjänstepension' sequential rename {STP 1981-1986, PKUTJPS 2004-2018} owned by statlig-tjanstepension (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.608"
+columns = { "SKAVKAST" = "25.608.avkastningsskatt", "SAVKAST" = "25.608.avkastningsskatt" }
+columns_ref = "Y-276 2026-09-28: 25.608 'Avkastningsskatt' sequential rename {SKAVKAST 1991-1992, SAVKAST 1993-2024} owned by avkastningsskatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.610"
+columns = { "SKFAST" = "25.610.fastighetsskatt", "SFAST" = "25.610.fastighetsskatt", "SFASTT" = "25.610.fastighetsskatt" }
+columns_ref = "Y-276 2026-09-28: 25.610 'Fastighetsskatt' sequential rename {SKFAST 1991-1992, SFAST 1993-2007, SFASTT 2008-2024} owned by fastighetsskatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.611"
+columns = { "FOS" = "25.611.formogenhetsskatt", "SKFORM" = "25.611.formogenhetsskatt", "SFORM" = "25.611.formogenhetsskatt" }
+columns_ref = "Y-276 2026-09-28: 25.611 'Förmögenhetsskatt' sequential rename {FOS 1971-1977, SKFORM 1978-1992, SFORM 1993-2006} owned by formogenhetsskatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.612"
+columns = { "SKFORS" = "25.612.forseningsavgift", "SKFOR" = "25.612.forseningsavgift", "SFORS" = "25.612.forseningsavgift" }
+columns_ref = "Y-276 2026-09-28: 25.612 'Förseningsavgift' sequential rename {SKFORS 1991, SKFOR 1992, SFORS 1993-2024} owned by forseningsavgift (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.614"
+columns = { "SKFVIE" = "25.614.kommunal-inkomstskatt-exkl-fast", "SKLFVIE" = "25.614.kommunal-inkomstskatt-exkl-fast" }
+columns_ref = "Y-276 2026-09-28: 25.614 'Kommunal inkomstskatt på förvärvsinkomster exkl. det fasta beloppet.' sequential rename {SKFVIE 1999, SKLFVIE 2000-2004} owned by kommunal-inkomstskatt-exkl-fast (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.615"
+columns = { "SKFVIF" = "25.615.kommunal-inkomstskatt-fast-belopp", "SKLFVIF" = "25.615.kommunal-inkomstskatt-fast-belopp" }
+columns_ref = "Y-276 2026-09-28: 25.615 'Kommunal inkomstskatt på förvärvsinkomster, fasta beloppet' sequential rename {SKFVIF 1999, SKLFVIF 2000-2004} owned by kommunal-inkomstskatt-fast-belopp (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.618"
+columns = { "SKTILL" = "25.618.skattetillagg", "STILL" = "25.618.skattetillagg" }
+columns_ref = "Y-276 2026-09-28: 25.618 'Skattetillägg' sequential rename {SKTILL 1992, STILL 1993-2024} owned by skattetillagg (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.622"
+columns = { "BNPSGA" = "25.622.norsk-pension-paverkat-grundavdrag", "PNORSK" = "25.622.norsk-pension-paverkat-grundavdrag" }
+columns_ref = "Y-276 2026-09-28: 25.622 'Norsk pension som har påverkat beräkningen av grundavdrag' sequential rename {BNPSGA 1998-2002, PNORSK 2003-2005} owned by norsk-pension-paverkat-grundavdrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.628"
+columns = { "AHYL1" = "25.628.fastighetsskatt-hyreshus-lokal", "AFAHLOK" = "25.628.fastighetsskatt-hyreshus-lokal" }
+columns_ref = "Y-276 2026-09-28: 25.628 'Underlag för fastighetsskatt avseende hyreshus, lokal.' sequential rename {AHYL1 1996-2012, AFAHLOK 2013-2024} owned by fastighetsskatt-hyreshus-lokal (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.629"
+columns = { "AIND05" = "25.629.fastighetsskatt-industri", "AFAIND" = "25.629.fastighetsskatt-industri" }
+columns_ref = "Y-276 2026-09-28: 25.629 'Underlag för fastighetsskatt avseende industri' sequential rename {AIND05 1996-2012, AFAIND 2013-2024} owned by fastighetsskatt-industri (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.658"
+columns = { "KSKATT" = "25.658.kommunalskattesats", "AKSKS" = "25.658.kommunalskattesats", "AKOMSK" = "25.658.kommunalskattesats" }
+columns_ref = "Y-276 2026-09-28: 25.658 'Kommunalskattesats' sequential rename {KSKATT 1986-1992, AKSKS 1993-1999, AKOMSK 2000-2024} owned by kommunalskattesats (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.697"
+columns = { "MARB" = "25.697.markeringskod-arbetsinkomst", "BARBINK" = "25.697.markeringskod-arbetsinkomst" }
+columns_ref = "Y-276 2026-09-28: 25.697 'Markeringskod för arbetsinkomst' sequential rename {MARB 1980-1992, BARBINK 1993-2024} owned by markeringskod-arbetsinkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.706"
+columns = { "BBOSTF" = "25.706.bostadsforman-smahusfastighet", "BBOSTSF" = "25.706.bostadsforman-smahusfastighet" }
+columns_ref = "Y-276 2026-09-28: 25.706 'Bostadsförmån i småhusfastighet' sequential rename {BBOSTF 1995-1997, BBOSTSF 1998-2024} owned by bostadsforman-smahusfastighet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.715"
+columns = { "UAKASSA" = "25.715.underlag-skattereduktion-akassa-avgift", "UKUAKAS" = "25.715.underlag-skattereduktion-akassa-avgift" }
+columns_ref = "Y-276 2026-09-28: 25.715 'Underlag för skattereduktion för avgift till arbetslöshetskassa' sequential rename {UAKASSA 2002-2006, UKUAKAS Individ 2022-2024 / KURU 2022 (Individ: 3 ed.; KURU: named by bare year, 1 ed.)} owned by underlag-skattereduktion-akassa-avgift (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.716"
+columns = { "UFACK" = "25.716.underlag-skattereduktion-fackavgift", "UKUFACK" = "25.716.underlag-skattereduktion-fackavgift" }
+columns_ref = "Y-276 2026-09-28: 25.716 'Underlag för skattereduktion för fackföreningsavgift' sequential rename {UFACK 1991,2002-2006, UKUFACK Individ 2018-2019 / KURU 2018-2019 (Individ: 2 ed.; KURU: named by bare year, 2 ed.)} owned by underlag-skattereduktion-fackavgift (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.724"
+columns = { "STP" = "25.724.tjanstepension-stp", "PSTP" = "25.724.tjanstepension-stp" }
+columns_ref = "Y-276 2026-09-28: 25.724 'Tjänste- och tilläggspension från STP' sequential rename {STP 1988-1992, PSTP 1993-2018} owned by tjanstepension-stp (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.733"
+columns = { "SREDAKS" = "25.733.medgiven-skattereduktion-akassa-avgift", "SREDAK" = "25.733.medgiven-skattereduktion-akassa-avgift" }
+columns_ref = "Y-276 2026-09-28: 25.733 'Medgiven skattereduktion för avgift till arbetslöshetskassa' sequential rename {SREDAKS 2002-2006, SREDAK 2022-2024} owned by medgiven-skattereduktion-akassa-avgift (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.736"
+columns = { "AVGSLS" = "25.736.sarskild-loneskatt-forvarvsinkomster", "SSLONE" = "25.736.sarskild-loneskatt-forvarvsinkomster" }
+columns_ref = "Y-276 2026-09-28: 25.736 'Särskild löneskatt på förvärvsinkomster' sequential rename {AVGSLS 1991-1992, SSLONE 1993-2024} owned by sarskild-loneskatt-forvarvsinkomster (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.742"
+columns = { "MANAVGR" = "25.742.antal-manader-grundavdrag", "BGAMAN" = "25.742.antal-manader-grundavdrag" }
+columns_ref = "Y-276 2026-09-28: 25.742 'Antal månader som berättigar till grundavdrag' sequential rename {MANAVGR 1990-1992, BGAMAN 1993-2024} owned by antal-manader-grundavdrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.743"
+columns = { "IDFOAB" = "25.743.famansforetag-samgranskning-id", "BIDFOAB" = "25.743.famansforetag-samgranskning-id" }
+columns_ref = "Y-276 2026-09-28: 25.743 'Identitet för fåmansföretag med vilken samgranskning skett' sequential rename {IDFOAB 1987-1992, BIDFOAB 1993-2016} owned by famansforetag-samgranskning-id (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1064"
+columns = { "TAXC" = "25.1064.taxeringskod", "TAXKOD" = "25.1064.taxeringskod", "BTAXKOD" = "25.1064.taxeringskod" }
+columns_ref = "Y-276 2026-09-28: 25.1064 'Taxeringskod' sequential rename {TAXC 1971-1977, TAXKOD 1978-1992, BTAXKOD 1993-2007} owned by taxeringskod (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1069"
+columns = { "OBJTYP" = "25.1069.objekttyp-langdtillhorighet", "BOBJTYP" = "25.1069.objekttyp-langdtillhorighet" }
+columns_ref = "Y-276 2026-09-28: 25.1069 'Objekttyp (längdtillhörighet)' sequential rename {OBJTYP 1979-1992, BOBJTYP 1993-2024} owned by objekttyp-langdtillhorighet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1070"
+columns = { "IDSAMBS" = "25.1070.sambeskattads-personnr", "IDSMBES" = "25.1070.sambeskattads-personnr", "BPNRSAM" = "25.1070.sambeskattads-personnr" }
+columns_ref = "Y-276 2026-09-28: 25.1070 'Sambeskattads personnummer' sequential rename {IDSAMBS 1989, IDSMBES 1990-1992, BPNRSAM 1993-2007} owned by sambeskattads-personnr (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1101"
+columns = { "KAPFORV" = "25.1101.avdrag-forvaltningskostnad-kapital", "KAFORV" = "25.1101.avdrag-forvaltningskostnad-kapital" }
+columns_ref = "Y-276 2026-09-28: 25.1101 'Avdrag för förvaltningskostnad överstigande 1000 kr, kapital' sequential rename {KAPFORV 1991-1992, KAFORV 1993-2015} owned by avdrag-forvaltningskostnad-kapital (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1106"
+columns = { "KAPSRTA" = "25.1106.avdrag-skuldranta-kapital", "KASKU" = "25.1106.avdrag-skuldranta-kapital" }
+columns_ref = "Y-276 2026-09-28: 25.1106 'Avdrag för skuldränta, kapital' sequential rename {KAPSRTA 1991-1992, KASKU 1993-2024} owned by avdrag-skuldranta-kapital (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1108"
+columns = { "KAPREAF" = "25.1108.avdrag-realisationsforlust-kapital", "KF" = "25.1108.avdrag-realisationsforlust-kapital" }
+columns_ref = "Y-276 2026-09-28: 25.1108 'Avdrag för realisationsförlust, kapital' sequential rename {KAPREAF 1991-1992, KF 1993-2024} owned by avdrag-realisationsforlust-kapital (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1110"
+columns = { "INKAP" = "25.1110.inkomst-av-kapital", "KKAP" = "25.1110.inkomst-av-kapital" }
+columns_ref = "Y-276 2026-09-28: 25.1110 'Inkomst av kapital' sequential rename {INKAP 1968-1992, KKAP 1993-2024} owned by inkomst-av-kapital (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1160"
+columns = { "BRANTA" = "25.1160.bankrantor", "KKURTA" = "25.1160.bankrantor" }
+columns_ref = "Y-276 2026-09-28: 25.1160 'Bankräntor' sequential rename {BRANTA 1988-1992, KKURTA Individ 1993-2024 / KURU 1999-2022 (Individ: 32 ed.; KURU: named by bare year, 24 ed.)} owned by bankrantor (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1161"
+columns = { "AUTDEL" = "25.1161.aktieutdelning", "KKUAKTI" = "25.1161.aktieutdelning", "KKUUTD" = "25.1161.aktieutdelning" }
+columns_ref = "Y-276 2026-09-28: 25.1161 'Aktieutdelning' sequential rename {AUTDEL 1988-1992, KKUAKTI 1993, KKUUTD Individ 1994-2024 / KURU 1999-2022 (Individ: 31 ed.; KURU: named by bare year, 24 ed.)} owned by aktieutdelning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1162"
+columns = { "VPRANTA" = "25.1162.vardepapperrantor", "KKUVP" = "25.1162.vardepapperrantor" }
+columns_ref = "Y-276 2026-09-28: 25.1162 'Värdepapperräntor' sequential rename {VPRANTA 1988-1992, KKUVP 1993-2024} owned by vardepapperrantor (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1170"
+columns = { "VUXERS" = "25.1170.vuxenstudiestod", "TVUXERS" = "25.1170.vuxenstudiestod" }
+columns_ref = "Y-276 2026-09-28: 25.1170 'Vuxenstudiestöd' sequential rename {VUXERS 1990-1992, TVUXERS 1993-2024} owned by vuxenstudiestod (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1171"
+columns = { "UTBDOK" = "25.1171.utbildningsbidrag-doktorander", "TUTBDOK" = "25.1171.utbildningsbidrag-doktorander" }
+columns_ref = "Y-276 2026-09-28: 25.1171 'Utbildningsbidrag för doktorander' sequential rename {UTBDOK 1986-1992, TUTBDOK 1993-2023} owned by utbildningsbidrag-doktorander (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1176"
+columns = { "AVDUBB" = "25.1176.avdrag-dubbel-bosattning-tjanst", "TADUBB" = "25.1176.avdrag-dubbel-bosattning-tjanst" }
+columns_ref = "Y-276 2026-09-28: 25.1176 'Avdrag för dubbel bosättning, tjänst' sequential rename {AVDUBB 1991-1992, TADUBB 1993-2024} owned by avdrag-dubbel-bosattning-tjanst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1177"
+columns = { "AGSTFA" = "25.1177.ersattning-inkomst-anstallning", "TAGSTFA" = "25.1177.ersattning-inkomst-anstallning" }
+columns_ref = "Y-276 2026-09-28: 25.1177 'Ersättning som utgör inkomst av anställning' sequential rename {AGSTFA 1991-1992, TAGSTFA 1993-2024} owned by ersattning-inkomst-anstallning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1178"
+columns = { "AVKOST" = "25.1178.ovriga-kostnadsavdrag-over-1000-kr", "TAKOST" = "25.1178.ovriga-kostnadsavdrag-over-1000-kr" }
+columns_ref = "Y-276 2026-09-28: 25.1178 'Övriga kostnadsavdrag som överstiger 1000 kr.' sequential rename {AVKOST 1990-1992, TAKOST 1993-2024} owned by ovriga-kostnadsavdrag-over-1000-kr (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1179"
+columns = { "AVRESE" = "25.1179.avdrag-resor-till-fran-arbetet", "TARESE" = "25.1179.avdrag-resor-till-fran-arbetet" }
+columns_ref = "Y-276 2026-09-28: 25.1179 'Avdrag för resor till och från arbetet' sequential rename {AVRESE 1978-1992, TARESE 1993-2024} owned by avdrag-resor-till-fran-arbetet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1180"
+columns = { "AVTJRES" = "25.1180.avdrag-tjansteresor", "TATJR" = "25.1180.avdrag-tjansteresor" }
+columns_ref = "Y-276 2026-09-28: 25.1180 'Avdrag för tjänsteresor, tjänst' sequential rename {AVTJRES 1991-1992, TATJR 1993-2024} owned by avdrag-tjansteresor (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1182"
+columns = { "SJUKPAN" = "25.1182.ersattning-forsakringskassa-anstallning", "TFKASSA" = "25.1182.ersattning-forsakringskassa-anstallning" }
+columns_ref = "Y-276 2026-09-28: 25.1182 'Ersättning från försäkringskassa, inkomst av anställning' sequential rename {SJUKPAN 1990-1992, TFKASSA 1993-2024} owned by ersattning-forsakringskassa-anstallning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1186"
+columns = { "TJHOBBY" = "25.1186.ovriga-inkomster-egenavgifter", "THOBBY" = "25.1186.ovriga-inkomster-egenavgifter" }
+columns_ref = "Y-276 2026-09-28: 25.1186 'Övriga inkomster som grund för egenavgifter m.m.' sequential rename {TJHOBBY 1991-1992, THOBBY 1993-2024} owned by ovriga-inkomster-egenavgifter (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1187"
+columns = { "DAGPARB" = "25.1187.akassa-arbetsloshet", "TKASSA" = "25.1187.akassa-arbetsloshet" }
+columns_ref = "Y-276 2026-09-28: 25.1187 'Ersättning från arbetslöshetskassa vid arbetslöshet' sequential rename {DAGPARB 1990-1992, TKASSA 1993-2024} owned by akassa-arbetsloshet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1188"
+columns = { "INDTJ3" = "25.1188.kostnadsersattning-tjanst", "TJERS" = "25.1188.kostnadsersattning-tjanst", "TKERS" = "25.1188.kostnadsersattning-tjanst" }
+columns_ref = "Y-276 2026-09-28: 25.1188 'Kostnadsersättning, tjänst' sequential rename {INDTJ3 1978-1990, TJERS 1991-1992, TKERS 1993-2024} owned by kostnadsersattning-tjanst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1203"
+columns = { "TJAPENS" = "25.1203.allman-pension-tillaggspension-tjanst", "TPENSA" = "25.1203.allman-pension-tillaggspension-tjanst" }
+columns_ref = "Y-276 2026-09-28: 25.1203 'Allmän pension eller tilläggspension, tjänst' sequential rename {TJAPENS 1991-1992, TPENSA 1993-2024} owned by allman-pension-tillaggspension-tjanst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1204"
+columns = { "PPENS" = "25.1204.privat-pensionsforsakring-sparkonto", "TPRIV" = "25.1204.privat-pensionsforsakring-sparkonto" }
+columns_ref = "Y-276 2026-09-28: 25.1204 'Privat pensionsförsäkrings/pensionssparkonto' sequential rename {PPENS 1992, TPRIV 1993-2018} owned by privat-pensionsforsakring-sparkonto (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1205"
+columns = { "TJPPENS" = "25.1205.privat-pensionsforsakring-tjanst", "TPRIVFD" = "25.1205.privat-pensionsforsakring-tjanst", "TPRIVL" = "25.1205.privat-pensionsforsakring-tjanst" }
+columns_ref = "Y-276 2026-09-28: 25.1205 'Privat pensionsförsäkring eller livränta, tjänst' sequential rename {TJPPENS 1991-1992, TPRIVFD 1993, TPRIVL 1994-2024} owned by privat-pensionsforsakring-tjanst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1209"
+columns = { "ARBIN" = "25.1209.arbetsinkomst-av-tjanst", "WARB" = "25.1209.arbetsinkomst-av-tjanst" }
+columns_ref = "Y-276 2026-09-28: 25.1209 'Arbetsinkomst av tjänst' sequential rename {ARBIN 1991-1992, WARB 1993-1997,2008} owned by arbetsinkomst-av-tjanst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1228"
+columns = { "EJTAX" = "25.1228.nolltaxering", "BEJTAX" = "25.1228.nolltaxering" }
+columns_ref = "Y-276 2026-09-28: 25.1228 'Nolltaxering' sequential rename {EJTAX 1971-1991, BEJTAX 1999-2024} owned by nolltaxering (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1234"
+columns = { "PENSTAT" = "25.1234.pensionsdebiteringskod", "BPENDEB" = "25.1234.pensionsdebiteringskod" }
+columns_ref = "Y-276 2026-09-28: 25.1234 'Pensionsdebiteringskod' sequential rename {PENSTAT 1991, BPENDEB 2003,2014-2024} owned by pensionsdebiteringskod (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1253"
+columns = { "SFFAVG" = "25.1253.foraldraforsakringsavgift-brutto", "SFFAVF" = "25.1253.foraldraforsakringsavgift-brutto" }
+columns_ref = "Y-276 2026-09-28: 25.1253 'Föräldraförsäkringsavgift före generell och regional nedsättning' sequential rename {SFFAVG 1999-2001, SFFAVF 2002-2024} owned by foraldraforsakringsavgift-brutto (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1255"
+columns = { "SREDFST" = "25.1255.medgiven-skattereduktion-fastighetsskatt", "SREDBO" = "25.1255.medgiven-skattereduktion-fastighetsskatt" }
+columns_ref = "Y-276 2026-09-28: 25.1255 'Medgiven skattereduktion för fastighetsskatt.' sequential rename {SREDFST 1996-2000, SREDBO 2001-2007} owned by medgiven-skattereduktion-fastighetsskatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1265"
+columns = { "STUDPF" = "25.1265.studiepenning-skattepliktig-familj", "STUDPPF" = "25.1265.studiepenning-skattepliktig-familj", "TVUXSTUH" = "25.1265.studiepenning-skattepliktig-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1265 'Studiepenning, skattepliktig, familj' sequential rename {STUDPF 1981-1982, STUDPPF 1987-1992, TVUXSTUH 1993-2003} owned by studiepenning-skattepliktig-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1271"
+columns = { "ANTB410" = "25.1271.antal-barn-4-10-ar", "BBRN410" = "25.1271.antal-barn-4-10-ar" }
+columns_ref = "Y-276 2026-09-28: 25.1271 'Antal barn 4-10 år' sequential rename {ANTB410 1991-1992, BBRN410 1993-2024} owned by antal-barn-4-10-ar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1286"
+columns = { "ANTB17" = "25.1286.antal-barn-0-17-ar", "BBRN17" = "25.1286.antal-barn-0-17-ar" }
+columns_ref = "Y-276 2026-09-28: 25.1286 'Antal barn 0-17 år' sequential rename {ANTB17 1978-1992, BBRN17 1993-2024} owned by antal-barn-0-17-ar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1292"
+columns = { "SKTRANS" = "25.1292.skattepliktiga-transfereringar-netto", "CTRAESK" = "25.1292.skattepliktiga-transfereringar-netto" }
+columns_ref = "Y-276 2026-09-28: 25.1292 'Skattepliktiga transfereringar efter skatt' sequential rename {SKTRANS 1988-1992, CTRAESK 1993-2003} owned by skattepliktiga-transfereringar-netto (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1293"
+columns = { "SKTRANSF" = "25.1293.transfereringar-netto-familj", "CTRAESKH" = "25.1293.transfereringar-netto-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1293 'Skattepliktiga transfereringar efter skatt, familj' sequential rename {SKTRANSF 1988-1992, CTRAESKH 1993-2003} owned by transfereringar-netto-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1303"
+columns = { "BRUTTOF" = "25.1303.bruttoinkomst-familj", "CBRUTTOH" = "25.1303.bruttoinkomst-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1303 'Bruttoinkomst, familj' sequential rename {BRUTTOF 1983-1992, CBRUTTOH 1993-2024} owned by bruttoinkomst-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1389"
+columns = { "AKSKU" = "25.1389.ackumulerad-studieskuld", "FSKUST" = "25.1389.ackumulerad-studieskuld" }
+columns_ref = "Y-276 2026-09-28: 25.1389 'Ackumulerad studieskuld' sequential rename {AKSKU 1986-1992, FSKUST 1993-2024} owned by ackumulerad-studieskuld (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1394"
+columns = { "BBIDRF" = "25.1394.bbidrf", "IBARNBH" = "25.1394.bbidrf" }
+columns_ref = "Y-276 2026-09-28: 25.1394 'Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg, familj' sequential rename {BBIDRF 1983-1992, IBARNBH 1993-2024} owned by bbidrf (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1397"
+columns = { "BFMBELF" = "25.1397.mottaget-bidragsforskott-familj", "IBDFH" = "25.1397.mottaget-bidragsforskott-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1397 'Mottaget bidragsförskott, familj' sequential rename {BFMBELF 1983-1992, IBDFH 1993-2024} owned by mottaget-bidragsforskott-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1400"
+columns = { "KBT" = "25.1400.bostadstillagg-till-pensionarer", "IKBT" = "25.1400.bostadstillagg-till-pensionarer", "IBTP" = "25.1400.bostadstillagg-till-pensionarer", "IBTPAP" = "25.1400.bostadstillagg-till-pensionarer" }
+columns_ref = "Y-276 2026-09-28: 25.1400 'Bostadstillägg till pensionärer' sequential rename {KBT 1982-1992, IKBT 1993-1994, IBTP 1995-2008, IBTPAP 2009-2024} owned by bostadstillagg-till-pensionarer (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1404"
+columns = { "HKAPF" = "25.1404.handikappsersattning-familj", "IHKAPH" = "25.1404.handikappsersattning-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1404 'Handikappsersättning, familj' sequential rename {HKAPF 1983-1992, IHKAPH 1993-2024} owned by handikappsersattning-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1407"
+columns = { "SKBBTF" = "25.1407.bostadstillagg-familj", "KBTF" = "25.1407.bostadstillagg-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1407 'Bostadstillägg, familj' sequential rename {SKBBTF 1978-1981, KBTF 1982-1989} owned by bostadstillagg-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1480"
+columns = { "INKAPF" = "25.1480.inkomst-av-kapital-familj", "KKAPH" = "25.1480.inkomst-av-kapital-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1480 'Inkomst av kapital, familj' sequential rename {INKAPF 1991-1992, KKAPH 1993-2003} owned by inkomst-av-kapital-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1489"
+columns = { "BARNLIVF" = "25.1489.barnpension-livranta-skattefri-familj", "PBLIVSFH" = "25.1489.barnpension-livranta-skattefri-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1489 'Skattefri del av barnpension och livränta, familj' sequential rename {BARNLIVF 1991-1992, PBLIVSFH 1993-2024} owned by barnpension-livranta-skattefri-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1500"
+columns = { "FRIFPEJ" = "25.1500.frivillig-pension-skattefri", "PFRISF" = "25.1500.frivillig-pension-skattefri" }
+columns_ref = "Y-276 2026-09-28: 25.1500 'Frivillig pension, skattefri' sequential rename {FRIFPEJ 1982-1992, PFRISF 1993-2024} owned by frivillig-pension-skattefri (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1501"
+columns = { "FRIFP" = "25.1501.frivillig-pension-skattepliktig", "PFRISP" = "25.1501.frivillig-pension-skattepliktig" }
+columns_ref = "Y-276 2026-09-28: 25.1501 'Frivillig pension, skattepliktig' sequential rename {FRIFP 1982-1992, PFRISP 1993-2024} owned by frivillig-pension-skattepliktig (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1521"
+columns = { "BELPENF" = "25.1521.pension-ku-familj", "KUPENSF" = "25.1521.pension-ku-familj", "KUPENSTF" = "25.1521.pension-ku-familj", "PKUPENSH" = "25.1521.pension-ku-familj", "PAPENSH" = "25.1521.pension-ku-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1521 'Pension enligt KU, familj' sequential rename {BELPENF 1981-1986, KUPENSF 1987-1989, KUPENSTF 1991-1992, PKUPENSH 1993-2018, PAPENSH 2019-2024} owned by pension-ku-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1595"
+columns = { "ASKADAF" = "25.1595.arbetsskadeersattning-familj", "TSKADEH" = "25.1595.arbetsskadeersattning-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1595 'Arbetsskadeersättning, familj' sequential rename {ASKADAF 1992, TSKADEH 1993-2003} owned by arbetsskadeersattning-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1598"
+columns = { "VUXBIDR" = "25.1598.vuxenstudiestod-studiebidrag-ovriga", "TVUX" = "25.1598.vuxenstudiestod-studiebidrag-ovriga", "TSVUX" = "25.1598.vuxenstudiestod-studiebidrag-ovriga" }
+columns_ref = "Y-276 2026-09-28: 25.1598 'Vuxenstudiestöd, studiebidrag, övriga (skattepliktig).' sequential rename {VUXBIDR 1987-1992, TVUX 1993-1996, TSVUX 1997-2003} owned by vuxenstudiestod-studiebidrag-ovriga (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1601"
+columns = { "VUXBIDRF" = "25.1601.vuxenstudiestod-bidrag-ovriga-familj", "TVUXH" = "25.1601.vuxenstudiestod-bidrag-ovriga-familj", "TSVUXH" = "25.1601.vuxenstudiestod-bidrag-ovriga-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1601 'Vuxenstudiestöd, studiebidrag, övriga (skattepliktig), familj' sequential rename {VUXBIDRF 1987-1992, TVUXH 1993-1996, TSVUXH 1997-2003} owned by vuxenstudiestod-bidrag-ovriga-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1603"
+columns = { "STUDPP" = "25.1603.studiepenning-skattepliktig", "TVUXSTU" = "25.1603.studiepenning-skattepliktig" }
+columns_ref = "Y-276 2026-09-28: 25.1603 'Studiepenning, skattepliktig' sequential rename {STUDPP 1981-1992, TVUXSTU 1993-2005} owned by studiepenning-skattepliktig (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1606"
+columns = { "AVGBELF" = "25.1606.aterbetalt-studielan-familj", "UATERH" = "25.1606.aterbetalt-studielan-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1606 'Återbetalt belopp studielån, familj' sequential rename {AVGBELF 1983-1992, UATERH 1993-2024} owned by aterbetalt-studielan-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1608"
+columns = { "BFGBELF" = "25.1608.givet-underhallsbidrag-familj", "UBDFH" = "25.1608.givet-underhallsbidrag-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1608 'Givet underhållsbidrag, familj' sequential rename {BFGBELF 1983-1992, UBDFH 1993-2024} owned by givet-underhallsbidrag-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1609"
+columns = { "SJUKF" = "25.1609.sjukpenning-familj", "TSJUKH" = "25.1609.sjukpenning-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1609 'Sjukpenning, familj' sequential rename {SJUKF 1991-1992, TSJUKH 1993-2003} owned by sjukpenning-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1610"
+columns = { "SJUK" = "25.1610.sjuk-havandeskaps-sjuklonegaranti", "TSJUK" = "25.1610.sjuk-havandeskaps-sjuklonegaranti" }
+columns_ref = "Y-276 2026-09-28: 25.1610 'Sjuk-, havandeskaps-, smittbärarpenning samt sjuklönegaranti' sequential rename {SJUK 1992, TSJUK 1993-2011} owned by sjuk-havandeskaps-sjuklonegaranti (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1613"
+columns = { "REHAB" = "25.1613.rehabiliteringsersattning", "TREHAB" = "25.1613.rehabiliteringsersattning" }
+columns_ref = "Y-276 2026-09-28: 25.1613 'Rehabiliteringsersättning' sequential rename {REHAB 1992, TREHAB 1993-2024} owned by rehabiliteringsersattning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1616"
+columns = { "NARPENG" = "25.1616.narstaendepenning", "TNAR" = "25.1616.narstaendepenning" }
+columns_ref = "Y-276 2026-09-28: 25.1616 'Närståendepenning' sequential rename {NARPENG 1991-1992, TNAR 1993-2024} owned by narstaendepenning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1617"
+columns = { "VPV" = "25.1617.dagersattning-repetitionsutbildning", "TMILI" = "25.1617.dagersattning-repetitionsutbildning" }
+columns_ref = "Y-276 2026-09-28: 25.1617 'Dagersättning vid repetitionsutbildning och civilförsvar, skattepliktig' sequential rename {VPV 1990-1992, TMILI 1993-2009} owned by dagersattning-repetitionsutbildning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1618"
+columns = { "LONF" = "25.1618.loneinkomst-familj", "TLONTH" = "25.1618.loneinkomst-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1618 'Löneinkomst, familj' sequential rename {LONF 1991-1992, TLONTH 1993-2024} owned by loneinkomst-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1625"
+columns = { "FPVAB" = "25.1625.foraldrapenning-vab", "TFORPT" = "25.1625.foraldrapenning-vab" }
+columns_ref = "Y-276 2026-09-28: 25.1625 'Föräldrapenning, tillfällig vård av barn' sequential rename {FPVAB 1981-1992, TFORPT 1993-2024} owned by foraldrapenning-vab (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1626"
+columns = { "SFPENG" = "25.1626.foraldrapenning-barns-fodelse", "FPBARN" = "25.1626.foraldrapenning-barns-fodelse", "TFORPF" = "25.1626.foraldrapenning-barns-fodelse" }
+columns_ref = "Y-276 2026-09-28: 25.1626 'Föräldrapenning, barns födelse' sequential rename {SFPENG 1981-1991, FPBARN 1992, TFORPF 1993-2024} owned by foraldrapenning-barns-fodelse (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1627"
+columns = { "ARBUTFF" = "25.1627.ovriga-utbildningsbidrag-familj", "TARBUTH" = "25.1627.ovriga-utbildningsbidrag-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1627 'Övriga utbildningsbidrag m.m. familj' sequential rename {ARBUTFF 1992, TARBUTH 1993-2003} owned by ovriga-utbildningsbidrag-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.1633"
+columns = { "SKSLUTXF" = "25.1633.slutlig-skatt-exkl-egenavgifter-familj", "SSLUTEXH" = "25.1633.slutlig-skatt-exkl-egenavgifter-familj" }
+columns_ref = "Y-276 2026-09-28: 25.1633 'Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter, familj' sequential rename {SKSLUTXF 1991-1992, SSLUTEXH 1993-2024} owned by slutlig-skatt-exkl-egenavgifter-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2507"
+columns = { "SPT" = "25.2507.sarskilt-pensionstillagg", "PSPT" = "25.2507.sarskilt-pensionstillagg" }
+columns_ref = "Y-276 2026-09-28: 25.2507 'Särskilt pensionstillägg' sequential rename {SPT 1991-1992, PSPT 1993-2024} owned by sarskilt-pensionstillagg (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2508"
+columns = { "STJP" = "25.2508.statlig-tjanstepension-inkl-kapan", "PSTJP" = "25.2508.statlig-tjanstepension-inkl-kapan" }
+columns_ref = "Y-276 2026-09-28: 25.2508 'Statlig tjänstepension, inkl KÅPAN' sequential rename {STJP 1987-1992, PSTJP 1993-2018} owned by statlig-tjanstepension-inkl-kapan (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2514"
+columns = { "BFO" = "25.2514.beskattningsbar-formogenhet", "FBESKN" = "25.2514.beskattningsbar-formogenhet" }
+columns_ref = "Y-276 2026-09-28: 25.2514 'Beskattningsbar förmögenhet' sequential rename {BFO 1968-1977, FBESKN 1997-2006} owned by beskattningsbar-formogenhet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2546"
+columns = { "FORMBSK" = "25.2546.beskattningsbar-formogenhet-familj", "FBESK" = "25.2546.beskattningsbar-formogenhet-familj" }
+columns_ref = "Y-276 2026-09-28: 25.2546 'Beskattningsbar förmögenhet, familj' sequential rename {FORMBSK 1985-1992, FBESK 1993-2006} owned by beskattningsbar-formogenhet-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2547"
+columns = { "FORMFORS" = "25.2547.formogenhetsskattepliktiga-forsakringar", "FFORS" = "25.2547.formogenhetsskattepliktiga-forsakringar" }
+columns_ref = "Y-276 2026-09-28: 25.2547 'Förmögenhetsskattepliktiga försäkringar' sequential rename {FORMFORS 1991-1992, FFORS 1993,1998-2007} owned by formogenhetsskattepliktiga-forsakringar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2548"
+columns = { "BFORDR" = "25.2548.fordran-pa-bankmedel", "FKUBANK" = "25.2548.fordran-pa-bankmedel" }
+columns_ref = "Y-276 2026-09-28: 25.2548 'Fordran på bankmedel' sequential rename {BFORDR 1988-1992, FKUBANK Individ 1993-2007 / KURU 1999-2007 (Individ: 15 ed.; KURU: named by bare year, 9 ed.)} owned by fordran-pa-bankmedel (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2549"
+columns = { "VPFORDR" = "25.2549.fordran-pa-vardepapper", "FKUVP" = "25.2549.fordran-pa-vardepapper" }
+columns_ref = "Y-276 2026-09-28: 25.2549 'Fordran på värdepapper' sequential rename {VPFORDR 1988-1992, FKUVP 1993-2007} owned by fordran-pa-vardepapper (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2550"
+columns = { "FSKUKAP" = "25.2550.beskattningsbar-formogenhet-skuld", "FSKULD" = "25.2550.beskattningsbar-formogenhet-skuld" }
+columns_ref = "Y-276 2026-09-28: 25.2550 'Beskattningsbar förmögenhet, skuld' sequential rename {FSKUKAP 1993, FSKULD 1994-2006} owned by beskattningsbar-formogenhet-skuld (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2551"
+columns = { "SUMFORM" = "25.2551.skattepliktig-formogenhet-egen", "FSP" = "25.2551.skattepliktig-formogenhet-egen" }
+columns_ref = "Y-276 2026-09-28: 25.2551 'Skattepliktig förmögenhet, egen' sequential rename {SUMFORM 1991-1992, FSP 1993-2006} owned by skattepliktig-formogenhet-egen (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2552"
+columns = { "SFOG" = "25.2552.skattepliktig-formogenhet-familj", "FORMSKF" = "25.2552.skattepliktig-formogenhet-familj", "FORMSKPF" = "25.2552.skattepliktig-formogenhet-familj", "FSPH" = "25.2552.skattepliktig-formogenhet-familj" }
+columns_ref = "Y-276 2026-09-28: 25.2552 'Skattepliktig förmögenhet, familj' sequential rename {SFOG 1971-1977, FORMSKF 1981-1986, FORMSKPF 1987-1992, FSPH 1993-2003} owned by skattepliktig-formogenhet-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2558"
+columns = { "KAPREAV" = "25.2558.realisationsvinst-kapital", "KV" = "25.2558.realisationsvinst-kapital" }
+columns_ref = "Y-276 2026-09-28: 25.2558 'Realisationsvinst, kapital' sequential rename {KAPREAV 1991-1992, KV 1993-2024} owned by realisationsvinst-kapital (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2562"
+columns = { "KUBIL" = "25.2562.formansvarde-fribil", "NSIBIL" = "25.2562.formansvarde-fribil" }
+columns_ref = "Y-276 2026-09-28: 25.2562 'Förmånsvärde av fribil' sequential rename {KUBIL 1987-1989, NSIBIL 2003-2006} owned by formansvarde-fribil (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2567"
+columns = { "SJUKPAF" = "25.2567.fk-ersattning-annat-forvarvsarbete", "NSJUKPF" = "25.2567.fk-ersattning-annat-forvarvsarbete" }
+columns_ref = "Y-276 2026-09-28: 25.2567 'Ersättning från försäkringskassa, annat förvärvsarbete' sequential rename {SJUKPAF 1990-1992, NSJUKPF 1993-2024} owned by fk-ersattning-annat-forvarvsarbete (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2574"
+columns = { "DINFKE" = "25.2574.disponibel-inkomst-per-ke-familj", "CDISPKEH" = "25.2574.disponibel-inkomst-per-ke-familj" }
+columns_ref = "Y-276 2026-09-28: 25.2574 'Disponibel inkomst per konsumtionsenhet, familj' sequential rename {DINFKE 1991-1992, CDISPKEH 1993-2024} owned by disponibel-inkomst-per-ke-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2576"
+columns = { "DIVFRIF" = "25.2576.skattefri-sjukpenning-familj", "CDIVSFH" = "25.2576.skattefri-sjukpenning-familj" }
+columns_ref = "Y-276 2026-09-28: 25.2576 'Skattefri sjukpenning m.m. familj' sequential rename {DIVFRIF 1983-1992, CDIVSFH 1993-2024} owned by skattefri-sjukpenning-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2648"
+columns = { "GRA" = "25.2648.medgivet-grundavdrag", "AVGR" = "25.2648.medgivet-grundavdrag", "AGA" = "25.2648.medgivet-grundavdrag" }
+columns_ref = "Y-276 2026-09-28: 25.2648 'Medgivet grundavdrag' sequential rename {GRA 1971-1977, AVGR 1978-1992, AGA 1993-2024} owned by medgivet-grundavdrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2650"
+columns = { "LSKM" = "25.2650.handlaggande-skattemyndighet", "LSM" = "25.2650.handlaggande-skattemyndighet" }
+columns_ref = "Y-276 2026-09-28: 25.2650 'Handläggande skattemyndighet' sequential rename {LSKM 1968-1977, LSM 1978-1989} owned by handlaggande-skattemyndighet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2675"
+columns = { "FAKTIN" = "25.2675.faktorinkomst-individ", "CFAKT" = "25.2675.faktorinkomst-individ" }
+columns_ref = "Y-276 2026-09-28: 25.2675 'Faktorinkomst, individ' sequential rename {FAKTIN 1982-1992, CFAKT 1994-2024} owned by faktorinkomst-individ (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2696"
+columns = { "KE" = "25.2696.konsumtionsenheter-familj", "BKEH" = "25.2696.konsumtionsenheter-familj" }
+columns_ref = "Y-276 2026-09-28: 25.2696 'Konsumtionsenheter, familj' sequential rename {KE 1991-1992, BKEH 1993-2024} owned by konsumtionsenheter-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2711"
+columns = { "MANANT" = "25.2711.antal-manader-med-socialbidrag", "BSOCMAN" = "25.2711.antal-manader-med-socialbidrag" }
+columns_ref = "Y-276 2026-09-28: 25.2711 'Antal månader med socialbidrag' sequential rename {MANANT 1986-1992, BSOCMAN 1993-2024} owned by antal-manader-med-socialbidrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2712"
+columns = { "UTBAR" = "25.2712.hogsta-utbildning-avslutningsar", "BSUNAR" = "25.2712.hogsta-utbildning-avslutningsar" }
+columns_ref = "Y-276 2026-09-28: 25.2712 'Högsta utbildningens avslutningsår' sequential rename {UTBAR 1990-1992, BSUNAR 1993-1998} owned by hogsta-utbildning-avslutningsar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2717"
+columns = { "YST" = "25.2717.yrkesstallning-arbetsinkomst-0", "YSTU" = "25.2717.yrkesstallning-arbetsinkomst-0", "BYRKU" = "25.2717.yrkesstallning-arbetsinkomst-0" }
+columns_ref = "Y-276 2026-09-28: 25.2717 'Yrkesställning, arbetsinkomst > 0' sequential rename {YST 1978-1979, YSTU 1980-1992, BYRKU 1993-2024} owned by yrkesstallning-arbetsinkomst-0 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2719"
+columns = { "YSTM" = "25.2719.yrkesstallning-arbetsinkomst-basbeloppet", "BYSTM" = "25.2719.yrkesstallning-arbetsinkomst-basbeloppet" }
+columns_ref = "Y-276 2026-09-28: 25.2719 'Yrkesställning, arbetsinkomst > basbeloppet' sequential rename {YSTM 1978-1992, BYSTM 1993-2024} owned by yrkesstallning-arbetsinkomst-basbeloppet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.2751"
+columns = { "VPV" = "25.2751.dagsersattning-varnpliktiga", "IDAGERS" = "25.2751.dagsersattning-varnpliktiga" }
+columns_ref = "Y-276 2026-09-28: 25.2751 'Dagsersättning till värnpliktiga' sequential rename {VPV 1981-1989, IDAGERS 2003-2010} owned by dagsersattning-varnpliktiga (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.3730"
+columns = { "FANA" = "25.3730.fastighetens-identitetsnummer", "FANB" = "25.3730.fastighetens-identitetsnummer" }
+columns_ref = "Y-276 2026-09-28: 25.3730 'Fastighetens identitetsnummer' sequential rename {FANA 1968-1977, FANB 1978-1979} owned by fastighetens-identitetsnummer (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.4385"
+columns = { "VPLB" = "25.4385.ersattning-varnplikt-grundutbildning", "IVPL" = "25.4385.ersattning-varnplikt-grundutbildning" }
+columns_ref = "Y-276 2026-09-28: 25.4385 'Ersättning i samband med värnplikt (grundutbildning)' sequential rename {VPLB 1983-1992, IVPL 1993} owned by ersattning-varnplikt-grundutbildning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.4504"
+columns = { "FINKSJO" = "25.4504.summa-forvarvs-och-kapitalinkomster", "CFVIKIS" = "25.4504.summa-forvarvs-och-kapitalinkomster" }
+columns_ref = "Y-276 2026-09-28: 25.4504 'Summa förvärvs- och kapitalinkomster' sequential rename {FINKSJO 1992, CFVIKIS 1993-1997} owned by summa-forvarvs-och-kapitalinkomster (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.4648"
+columns = { "FORMBOST" = "25.4648.bostadsrattens-formogenhetsvarde", "FFSTBR" = "25.4648.bostadsrattens-formogenhetsvarde", "FKUBR" = "25.4648.bostadsrattens-formogenhetsvarde" }
+columns_ref = "Y-276 2026-09-28: 25.4648 'Bostadsrättens förmögenhetsvärde' sequential rename {FORMBOST 1991-1992, FFSTBR 1993, FKUBR Individ 2005-2007 / KURU 2003-2007 (Individ: 3 ed.; KURU: named by bare year, 5 ed.)} owned by bostadsrattens-formogenhetsvarde (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.4685"
+columns = { "AVPENS" = "25.4685.allmant-avdrag-pensionsforsakring", "APENS" = "25.4685.allmant-avdrag-pensionsforsakring" }
+columns_ref = "Y-276 2026-09-28: 25.4685 'Allmänt avdrag avseende premie för pensionsförsäkring/pensionssparkonto' sequential rename {AVPENS 1991-1992, APENS 1993-2001} owned by allmant-avdrag-pensionsforsakring (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5557"
+columns = { "UFASTH4" = "25.5557.underlag-fastighetsskatt-hyreshus-0", "AHY0" = "25.5557.underlag-fastighetsskatt-hyreshus-0" }
+columns_ref = "Y-276 2026-09-28: 25.5557 'Underlag för fastighetsskatt med 0 % avseende hyreshus.' sequential rename {UFASTH4 1991-1992, AHY0 1993-2001} owned by underlag-fastighetsskatt-hyreshus-0 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5562"
+columns = { "SGA" = "25.5562.medgivet-sarskilt-grundavdrag", "ASGA" = "25.5562.medgivet-sarskilt-grundavdrag" }
+columns_ref = "Y-276 2026-09-28: 25.5562 'Medgivet särskilt grundavdrag' sequential rename {SGA 1991-1992, ASGA 1993,1995-2002} owned by medgivet-sarskilt-grundavdrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5564"
+columns = { "AVPERU" = "25.5564.allmant-avdrag-periodiskt-understod", "APERU" = "25.5564.allmant-avdrag-periodiskt-understod" }
+columns_ref = "Y-276 2026-09-28: 25.5564 'Allmänt avdrag avseende periodiskt understöd.' sequential rename {AVPERU 1991-1992, APERU 1993-2001} owned by allmant-avdrag-periodiskt-understod (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5577"
+columns = { "ARMANT" = "25.5577.folkbokforing-andringsar", "BARMANT" = "25.5577.folkbokforing-andringsar" }
+columns_ref = "Y-276 2026-09-28: 25.5577 'År för ändring av folkbokföringsuppgift' sequential rename {ARMANT 1990-1992, BARMANT 1993-1998} owned by folkbokforing-andringsar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5582"
+columns = { "BARNY" = "25.5582.antal-barn-under-16-ar", "BBRN15" = "25.5582.antal-barn-under-16-ar" }
+columns_ref = "Y-276 2026-09-28: 25.5582 'Antal barn under 16 år' sequential rename {BARNY 1988-1992, BBRN15 1993-2001} owned by antal-barn-under-16-ar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5583"
+columns = { "BARNA" = "25.5583.antal-barn-16-17-ar", "BARNAE" = "25.5583.antal-barn-16-17-ar", "BAR1617" = "25.5583.antal-barn-16-17-ar", "BBRN167" = "25.5583.antal-barn-16-17-ar" }
+columns_ref = "Y-276 2026-09-28: 25.5583 'Antal barn 16 - 17 år' sequential rename {BARNA 1988-1989, BARNAE 1990-1991, BAR1617 1992, BBRN167 1993-2001} owned by antal-barn-16-17-ar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5585"
+columns = { "CIVAKT" = "25.5585.senast-kanda-civilstand", "BCIVT" = "25.5585.senast-kanda-civilstand", "BCIVAKT" = "25.5585.senast-kanda-civilstand" }
+columns_ref = "Y-276 2026-09-28: 25.5585 'Senast kända uppgift om civilstånd' sequential rename {CIVAKT 1991, BCIVT 1992-1998, BCIVAKT 1999-2024} owned by senast-kanda-civilstand (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5598"
+columns = { "FPMARKT" = "25.5598.folkpensionsmarkering", "BSGAKOD" = "25.5598.folkpensionsmarkering" }
+columns_ref = "Y-276 2026-09-28: 25.5598 'Folkpensionsmarkering' sequential rename {FPMARKT 1978-1989, BSGAKOD 1998-2001} owned by folkpensionsmarkering (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5599"
+columns = { "SGAKOD" = "25.5599.folkpensionsuppgift-sarskilt-grundavdrag", "BFPSGA" = "25.5599.folkpensionsuppgift-sarskilt-grundavdrag" }
+columns_ref = "Y-276 2026-09-28: 25.5599 'Folkpensionsuppgift som används vid vid beräkning av särskilt grundavdrag,' sequential rename {SGAKOD 1991-1992, BFPSGA 1993-2002} owned by folkpensionsuppgift-sarskilt-grundavdrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5633"
+columns = { "PRSC" = "25.5633.skatteform-31-12", "PRELSK" = "25.5633.skatteform-31-12" }
+columns_ref = "Y-276 2026-09-28: 25.5633 'Skatteform 31/12' sequential rename {PRSC 1971-1977, PRELSK 1978-1991} owned by skatteform-31-12 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5639"
+columns = { "PTYP" = "25.5639.posttyp", "BPTYP" = "25.5639.posttyp" }
+columns_ref = "Y-276 2026-09-28: 25.5639 'Posttyp' sequential rename {PTYP 1971-1992, BPTYP Individ 1993-1996 / KURU 1999-2022 (Individ: 4 ed.; KURU: named by bare year, 24 ed.)} owned by posttyp (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5642"
+columns = { "SKONTAX" = "25.5642.taxering-skontaxeringsblankett", "BSKONTX" = "25.5642.taxering-skontaxeringsblankett" }
+columns_ref = "Y-276 2026-09-28: 25.5642 'Taxering redovisad på sköntaxeringsblankett' sequential rename {SKONTAX 1991-1992, BSKONTX 1993-2001} owned by taxering-skontaxeringsblankett (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5657"
+columns = { "SGAINK" = "25.5657.inkomster-reducerar-sga", "CSGAINK" = "25.5657.inkomster-reducerar-sga" }
+columns_ref = "Y-276 2026-09-28: 25.5657 'Summa inkomster som kan reducera SGA (pension, pensionstillskott, och ATP)' sequential rename {SGAINK 1991, CSGAINK 1999-2002} owned by inkomster-reducerar-sga (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.5661"
+columns = { "INPERU" = "25.5661.periodiskt-understod-tjanst", "TJPERU" = "25.5661.periodiskt-understod-tjanst", "TPERU" = "25.5661.periodiskt-understod-tjanst" }
+columns_ref = "Y-276 2026-09-28: 25.5661 'Periodiskt understöd, tjänst' sequential rename {INPERU 1978-1990, TJPERU 1991-1992, TPERU 1993-2001} owned by periodiskt-understod-tjanst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.8189"
+columns = { "UTBILDN" = "25.8189.utbildningens-niva-och-inriktning", "BSUN" = "25.8189.utbildningens-niva-och-inriktning" }
+columns_ref = "Y-276 2026-09-28: 25.8189 'Utbildningens nivå och inriktning' sequential rename {UTBILDN 1990-1992, BSUN 1993-1998} owned by utbildningens-niva-och-inriktning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.8283"
+columns = { "FORMSKP" = "25.8283.skattepliktig-formogenhet", "FORM_SKPL" = "25.8283.skattepliktig-formogenhet", "FTOT" = "25.8283.skattepliktig-formogenhet" }
+columns_ref = "Y-276 2026-09-28: 25.8283 'Skattepliktig förmögenhet' sequential rename {FORMSKP 1968-1977, FORM_SKPL 1979, FTOT 1993-2002} owned by skattepliktig-formogenhet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.8286"
+columns = { "BFACKR" = "25.8286.skattereduktion-for-fackforeningsavgift", "SREDFAK" = "25.8286.skattereduktion-for-fackforeningsavgift" }
+columns_ref = "Y-276 2026-09-28: 25.8286 'Skattereduktion för fackföreningsavgift' sequential rename {BFACKR 1983-1991, SREDFAK 2018-2019} owned by skattereduktion-for-fackforeningsavgift (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.9060"
+columns = { "ANTB03" = "25.9060.antal-barn-0-3-ar", "BBRN3" = "25.9060.antal-barn-0-3-ar" }
+columns_ref = "Y-276 2026-09-28: 25.9060 'Antal barn 0-3 år' sequential rename {ANTB03 1991-1992, BBRN3 1993-2024} owned by antal-barn-0-3-ar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.18102"
+columns = { "ARBINKF" = "25.18102.arbetsinkomst-familj", "CARBH" = "25.18102.arbetsinkomst-familj" }
+columns_ref = "Y-276 2026-09-28: 25.18102 'Arbetsinkomst, familj' sequential rename {ARBINKF 1990-1992, CARBH 1993-2024} owned by arbetsinkomst-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.18384"
+columns = { "BELPENS" = "25.18384.pension-enligt-ku", "KUPENS" = "25.18384.pension-enligt-ku" }
+columns_ref = "Y-276 2026-09-28: 25.18384 'Pension enligt KU' sequential rename {BELPENS 1981-1986, KUPENS 1987-1989} owned by pension-enligt-ku (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.19807"
+columns = { "AFA0375" = "25.19807.underlag-fastighetsavgift-0375-smahus", "AFASHALV" = "25.19807.underlag-fastighetsavgift-0375-smahus" }
+columns_ref = "Y-276 2026-09-28: 25.19807 'Underlag för fastighetsavgift med 0,375 % avseende småhus' sequential rename {AFA0375 2008-2012, AFASHALV 2013-2021} owned by underlag-fastighetsavgift-0375-smahus (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.19808"
+columns = { "AFA04" = "25.19808.underlag-fastighetsavgift", "AFAHHEL" = "25.19808.underlag-fastighetsavgift" }
+columns_ref = "Y-276 2026-09-28: 25.19808 'Underlag för fastighetsavgift' sequential rename {AFA04 2008-2012, AFAHHEL 2013-2024} owned by underlag-fastighetsavgift (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.19810"
+columns = { "AFA075" = "25.19810.underlag-fastighetsavgift-075-smahus", "AFASHEL" = "25.19810.underlag-fastighetsavgift-075-smahus" }
+columns_ref = "Y-276 2026-09-28: 25.19810 'Underlag för fastighetsavgift med 0,75 % avseende småhus' sequential rename {AFA075 2008-2012, AFASHEL 2013-2024} owned by underlag-fastighetsavgift-075-smahus (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.19814"
+columns = { "AFSK1" = "25.19814.underlag-fastighetsskatt-tomt-smahus", "AFSKST" = "25.19814.underlag-fastighetsskatt-tomt-smahus" }
+columns_ref = "Y-276 2026-09-28: 25.19814 'Underlag för fastighetsskatt avseende tomt för småhus' sequential rename {AFSK1 2008-2012, AFSKST 2013-2024} owned by underlag-fastighetsskatt-tomt-smahus (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.19830"
+columns = { "AASJUK2" = "25.19830.sjukforsakringsavgift-foregaende-ar", "ASJUKX" = "25.19830.sjukforsakringsavgift-foregaende-ar" }
+columns_ref = "Y-276 2026-09-28: 25.19830 'Underlag för beräkning av sjukförsäkringsavgift föregående år' sequential rename {AASJUK2 1996-1997, ASJUKX 2008-2011,2013} owned by sjukforsakringsavgift-foregaende-ar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.19838"
+columns = { "AVIN02" = "25.19838.underlag-fastighetsskatt-vindkraft", "AFAVIND" = "25.19838.underlag-fastighetsskatt-vindkraft" }
+columns_ref = "Y-276 2026-09-28: 25.19838 'Underlag för fastighetsskatt avseende elproduktionsenhet, vindkraftverk' sequential rename {AVIN02 2007-2012, AFAVIND 2013-2024} owned by underlag-fastighetsskatt-vindkraft (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.19854"
+columns = { "KUANT" = "25.19854.antal-kontrolluppgifter-per-person", "BKUANT" = "25.19854.antal-kontrolluppgifter-per-person" }
+columns_ref = "Y-276 2026-09-28: 25.19854 'Antal kontrolluppgifter för varje person' sequential rename {KUANT 1991-1992, BKUANT 1993-1996} owned by antal-kontrolluppgifter-per-person (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.21073"
+columns = { "KUSNI" = "25.21073.naringsgren-for-anstallda", "BKUNGR" = "25.21073.naringsgren-for-anstallda" }
+columns_ref = "Y-276 2026-09-28: 25.21073 'Näringsgren för anställda' sequential rename {KUSNI 1987-1992, BKUNGR 1993-1998} owned by naringsgren-for-anstallda (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.21210"
+columns = { "AFSK04" = "25.21210.underlag-fastighetsskatt-tomt-hyreshus", "AFSKHT" = "25.21210.underlag-fastighetsskatt-tomt-hyreshus" }
+columns_ref = "Y-276 2026-09-28: 25.21210 'Underlag för fastighetsskatt på tomt för hyreshus' sequential rename {AFSK04 2008-2012, AFSKHT 2013-2024} owned by underlag-fastighetsskatt-tomt-hyreshus (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.21241"
+columns = { "BISMLANT" = "25.21241.tillaggsbidrag-studiemedel-veckor", "BISTBARN" = "25.21241.tillaggsbidrag-studiemedel-veckor" }
+columns_ref = "Y-276 2026-09-28: 25.21241 'Tilläggsbidrag till studiemedel, antal veckor med bidrag' sequential rename {BISMLANT 2006, BISTBARN 2007-2024} owned by tillaggsbidrag-studiemedel-veckor (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.21469"
+columns = { "ARBUT" = "25.21469.ersattning-amprogram-skattepliktig", "TARBUT" = "25.21469.ersattning-amprogram-skattepliktig" }
+columns_ref = "Y-276 2026-09-28: 25.21469 'Ersättning vid deltagande i arbetsmarknadspolitiska program, skattepliktig' sequential rename {ARBUT 1992, TARBUT 1993-2024} owned by ersattning-amprogram-skattepliktig (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.21472"
+columns = { "Medblandnamn" = "25.21472.medborgarskapskod", "BNATION" = "25.21472.medborgarskapskod" }
+columns_ref = "Y-276 2026-09-28: 25.21472 'Medborgarskapskod' sequential rename {Medblandnamn 1998-1999, BNATION 2000-2009} owned by medborgarskapskod (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.21510"
+columns = { "KUTRIND" = "25.21510.traffindikator-kureg", "BKUIND" = "25.21510.traffindikator-kureg" }
+columns_ref = "Y-276 2026-09-28: 25.21510 'Träffindikator mot kontrolluppgiftsregistret KUREG' sequential rename {KUTRIND 1978-1992, BKUIND 1993-1998} owned by traffindikator-kureg (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.21704"
+columns = { "ISMLANT" = "25.21704.tillaggsbidrag-studiemedel", "ISTBARN" = "25.21704.tillaggsbidrag-studiemedel" }
+columns_ref = "Y-276 2026-09-28: 25.21704 'Tilläggsbidrag till studiemedel' sequential rename {ISMLANT 2006, ISTBARN 2007-2024} owned by tillaggsbidrag-studiemedel (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.21837"
+columns = { "AVAT22" = "25.21837.underlag-fastighetsskatt-vattenkraft", "AVAT" = "25.21837.underlag-fastighetsskatt-vattenkraft", "AFAVAT" = "25.21837.underlag-fastighetsskatt-vattenkraft" }
+columns_ref = "Y-276 2026-09-28: 25.21837 'Underlag för fastighetsskatt avseende elproduktionsenhet, vattenkraft' sequential rename {AVAT22 2008-2010, AVAT 2011-2012 (incl. 2011, preliminär version; 2 ed.), AFAVAT 2013-2024} owned by underlag-fastighetsskatt-vattenkraft (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.22246"
+columns = { "TKBTF" = "25.22246.bostadstillagg-sarskilt-familj", "IKBOBDRH" = "25.22246.bostadstillagg-sarskilt-familj" }
+columns_ref = "Y-276 2026-09-28: 25.22246 'Bostadstillägg och särskilt bostadstillägg till pensionärer, familj' sequential rename {TKBTF 1991-1992, IKBOBDRH 1993-2024} owned by bostadstillagg-sarskilt-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.22329"
+columns = { "FOAB" = "25.22329.samgranskning-famansbolag-kod", "BFOAB" = "25.22329.samgranskning-famansbolag-kod" }
+columns_ref = "Y-276 2026-09-28: 25.22329 'Kod för samgranskning med fåmansbolag' sequential rename {FOAB 1978-1991, BFOAB 1999-2015} owned by samgranskning-famansbolag-kod (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.24196"
+columns = { "SKBT" = "25.24196.sarskilt-bostadstillagg-pensionarer", "IKBTS" = "25.24196.sarskilt-bostadstillagg-pensionarer", "IBTPSAP" = "25.24196.sarskilt-bostadstillagg-pensionarer" }
+columns_ref = "Y-276 2026-09-28: 25.24196 'Särskilt bostadstillägg för pensionärer' sequential rename {SKBT 1992, IKBTS 1993-1994, IBTPSAP 2009-2024} owned by sarskilt-bostadstillagg-pensionarer (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.24198"
+columns = { "SEXAT" = "25.24198.aterford-expansionsfondskatt", "SEXPAA" = "25.24198.aterford-expansionsfondskatt" }
+columns_ref = "Y-276 2026-09-28: 25.24198 'Återförd expansionsfondskatt (från tidigare beskattningsår)' sequential rename {SEXAT 2009, SEXPAA 2013} owned by aterford-expansionsfondskatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.24204"
+columns = { "TGARV" = "25.24204.sjukersattning-vilande", "IFSJUK" = "25.24204.sjukersattning-vilande" }
+columns_ref = "Y-276 2026-09-28: 25.24204 'Sjukersättning, vilande' sequential rename {TGARV 2009-2016, IFSJUK 2017-2024} owned by sjukersattning-vilande (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.24208"
+columns = { "TINKV" = "25.24208.aktivitetsersattning-vilande", "IFAKT" = "25.24208.aktivitetsersattning-vilande" }
+columns_ref = "Y-276 2026-09-28: 25.24208 'Aktivitetsersättning, vilande.' sequential rename {TINKV 2009-2016, IFAKT 2017-2024} owned by aktivitetsersattning-vilande (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.24758"
+columns = { "NPASS" = "25.24758.inkomst-passiv-naringsverksamhet", "NPAS" = "25.24758.inkomst-passiv-naringsverksamhet" }
+columns_ref = "Y-276 2026-09-28: 25.24758 'Inkomst av passiv näringsverksamhet' sequential rename {NPASS 1991-1992, NPAS 1993-1996} owned by inkomst-passiv-naringsverksamhet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.25291"
+columns = { "MARA" = "25.25291.artal-for-mantalsskrivning", "ARMANT" = "25.25291.artal-for-mantalsskrivning", "BARINK" = "25.25291.artal-for-mantalsskrivning" }
+columns_ref = "Y-276 2026-09-28: 25.25291 'Årtal för mantalsskrivning' sequential rename {MARA 1968-1977, ARMANT 1978-1980, BARINK 2010-2015} owned by artal-for-mantalsskrivning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.27033"
+columns = { "SKKINF" = "25.27033.kommunal-inkomstskatt-forvarvsink", "SKFVI" = "25.27033.kommunal-inkomstskatt-forvarvsink" }
+columns_ref = "Y-276 2026-09-28: 25.27033 'Kommunal inkomstskatt, förvärvsink' sequential rename {SKKINF 1991-1992, SKFVI 1993-1998} owned by kommunal-inkomstskatt-forvarvsink (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.27151"
+columns = { "TKUVRDN" = "25.27151.vardnadsbidrag-utbetalt-belopp", "IVBU" = "25.27151.vardnadsbidrag-utbetalt-belopp" }
+columns_ref = "Y-276 2026-09-28: 25.27151 'Vårdnadsbidrag, utbetalt belopp' sequential rename {TKUVRDN 1994-1996, IVBU 2010-2016} owned by vardnadsbidrag-utbetalt-belopp (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30841"
+columns = { "KTJP" = "25.30841.kommunal-tjanstepension-spv-kpa", "PKTJP" = "25.30841.kommunal-tjanstepension-spv-kpa" }
+columns_ref = "Y-276 2026-09-28: 25.30841 'Kommunal tjänstepension från SPV och KPA' sequential rename {KTJP 1987-1992, PKTJP 1993-2004} owned by kommunal-tjanstepension-spv-kpa (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30851"
+columns = { "PKODOG" = "25.30851.pensionskod-for-ensamstaende", "BPENSOG" = "25.30851.pensionskod-for-ensamstaende" }
+columns_ref = "Y-276 2026-09-28: 25.30851 'Pensionskod för ensamstående' sequential rename {PKODOG 1981-1992, BPENSOG 1993-2003} owned by pensionskod-for-ensamstaende (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30852"
+columns = { "PKODG" = "25.30852.pensionskod-for-gifta-sambo", "BPENSG" = "25.30852.pensionskod-for-gifta-sambo" }
+columns_ref = "Y-276 2026-09-28: 25.30852 'Pensionskod för gifta/sambo' sequential rename {PKODG 1981-1992, BPENSG 1993-2003} owned by pensionskod-for-gifta-sambo (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30862"
+columns = { "TJOVR" = "25.30862.inkomst-ej-pensionsgrundande", "TOVR" = "25.30862.inkomst-ej-pensionsgrundande" }
+columns_ref = "Y-276 2026-09-28: 25.30862 'Inkomst som inte är pensionsgrundande' sequential rename {TJOVR 1991-1992, TOVR 1993-2001} owned by inkomst-ej-pensionsgrundande (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30863"
+columns = { "FORMSKP" = "25.30863.deklarerad-formogenhet", "FSUM" = "25.30863.deklarerad-formogenhet" }
+columns_ref = "Y-276 2026-09-28: 25.30863 'Deklarerad förmögenhet' sequential rename {FORMSKP 1978-1992, FSUM 1993-2001} owned by deklarerad-formogenhet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30864"
+columns = { "SUMKAP" = "25.30864.deklarerad-over-underskattning-kapital", "KSUM" = "25.30864.deklarerad-over-underskattning-kapital" }
+columns_ref = "Y-276 2026-09-28: 25.30864 'Deklarerad över- eller underskattning av kapital' sequential rename {SUMKAP 1991-1992, KSUM 1993-2001} owned by deklarerad-over-underskattning-kapital (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30866"
+columns = { "UFASTS4" = "25.30866.underlag-fastighetsskatt-smahus-0", "ASMA0" = "25.30866.underlag-fastighetsskatt-smahus-0" }
+columns_ref = "Y-276 2026-09-28: 25.30866 'Underlag för fastighetsskatt med 0 % avseende småhus' sequential rename {UFASTS4 1991-1992, ASMA0 1993-2001} owned by underlag-fastighetsskatt-smahus-0 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30879"
+columns = { "FORMSKU" = "25.30879.summa-skuldbelopp-formogenhet", "FSKUKAPH" = "25.30879.summa-skuldbelopp-formogenhet", "FSKULDH" = "25.30879.summa-skuldbelopp-formogenhet" }
+columns_ref = "Y-276 2026-09-28: 25.30879 'Summa skuldbelopp under förmögenhet' sequential rename {FORMSKU 1991-1992, FSKUKAPH 1993, FSKULDH 1994-1999} owned by summa-skuldbelopp-formogenhet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30881"
+columns = { "FORMT" = "25.30881.familjens-sammanlagda-formogenhet", "FTOTPOS" = "25.30881.familjens-sammanlagda-formogenhet" }
+columns_ref = "Y-276 2026-09-28: 25.30881 'Familjens sammanlagda förmögenhet' sequential rename {FORMT 1983-1992, FTOTPOS 1993-1999} owned by familjens-sammanlagda-formogenhet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.30882"
+columns = { "SINKFK" = "25.30882.kvinnans-sammanraknade-forvarvsinkomst", "CSFVIQ" = "25.30882.kvinnans-sammanraknade-forvarvsinkomst" }
+columns_ref = "Y-276 2026-09-28: 25.30882 'Kvinnans sammanräknade förvärvsinkomst' sequential rename {SINKFK 1991-1992, CSFVIQ 1993-1999} owned by kvinnans-sammanraknade-forvarvsinkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.31828"
+columns = { "EGENLIV" = "25.31828.arbetsskadelivranta", "PARBLIV" = "25.31828.arbetsskadelivranta" }
+columns_ref = "Y-276 2026-09-28: 25.31828 'Arbetsskadelivränta' sequential rename {EGENLIV 1988-1992, PARBLIV 1993-1998} owned by arbetsskadelivranta (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35469"
+columns = { "HPOST" = "25.35469.huvudpost-taxering", "BHPOST" = "25.35469.huvudpost-taxering" }
+columns_ref = "Y-276 2026-09-28: 25.35469 'Huvudpost taxering' sequential rename {HPOST 1992, BHPOST 1993-1998} owned by huvudpost-taxering (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35471"
+columns = { "RBIDRAG" = "25.35471.rantebidrag-smahus-hyresfastigheter", "KKURBID" = "25.35471.rantebidrag-smahus-hyresfastigheter" }
+columns_ref = "Y-276 2026-09-28: 25.35471 'Räntebidrag för småhus och hyresfastigheter' sequential rename {RBIDRAG 1988-1992, KKURBID 1993-1998} owned by rantebidrag-smahus-hyresfastigheter (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35505"
+columns = { "AVSJO" = "25.35505.avdrag-vid-sjomansbeskattning", "ASJO" = "25.35505.avdrag-vid-sjomansbeskattning" }
+columns_ref = "Y-276 2026-09-28: 25.35505 'Erhållna avdrag vid sjömansbeskattning' sequential rename {AVSJO 1991-1992, ASJO 1993-1997} owned by avdrag-vid-sjomansbeskattning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35556"
+columns = { "SINKSJO" = "25.35556.forvarvsinkomst-inkl-sjoinkomst", "CSFVISJ" = "25.35556.forvarvsinkomst-inkl-sjoinkomst" }
+columns_ref = "Y-276 2026-09-28: 25.35556 'Sammanräknad förvärvsinkomst inkl sjöinkomst' sequential rename {SINKSJO 1991-1992, CSFVISJ 1993-1997} owned by forvarvsinkomst-inkl-sjoinkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35561"
+columns = { "SINSJOF" = "25.35561.forvarvsinkomst-inkl-sjoinkomst-familj", "CSFVISJH" = "25.35561.forvarvsinkomst-inkl-sjoinkomst-familj" }
+columns_ref = "Y-276 2026-09-28: 25.35561 'Sammanräknad förvärvsinkomst inkl sjöinkomst, familj' sequential rename {SINSJOF 1990-1992, CSFVISJH 1993-1997} owned by forvarvsinkomst-inkl-sjoinkomst-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35563"
+columns = { "TJP" = "25.35563.ovriga-tjanstepensioner-tillagg-privat", "PTJP" = "25.35563.ovriga-tjanstepensioner-tillagg-privat" }
+columns_ref = "Y-276 2026-09-28: 25.35563 'Övriga tjänste-, tilläggs- och privata pensioner' sequential rename {TJP 1990-1992, PTJP 1993-1997} owned by ovriga-tjanstepensioner-tillagg-privat (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35572"
+columns = { "SKDEB" = "25.35572.debiterad-f-och-sa-skatt", "SBDEB" = "25.35572.debiterad-f-och-sa-skatt" }
+columns_ref = "Y-276 2026-09-28: 25.35572 'Debiterad F- och SA-skatt' sequential rename {SKDEB 1992, SBDEB 1993-1997} owned by debiterad-f-och-sa-skatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35575"
+columns = { "SKINBO" = "25.35575.preliminar-f-sa-skatt-overbetalt", "SBOVERB" = "25.35575.preliminar-f-sa-skatt-overbetalt" }
+columns_ref = "Y-276 2026-09-28: 25.35575 'Preliminär F- och SA-skatt, överbetalt belopp' sequential rename {SKINBO 1992, SBOVERB 1993-1997} owned by preliminar-f-sa-skatt-overbetalt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35577"
+columns = { "SKINB" = "25.35577.preliminarskatt-fortidsaterbetald", "SFORTID" = "25.35577.preliminarskatt-fortidsaterbetald" }
+columns_ref = "Y-276 2026-09-28: 25.35577 'Preliminärskatt, förtidsåterbetald' sequential rename {SKINB 1992, SFORTID 1993-1997} owned by preliminarskatt-fortidsaterbetald (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35590"
+columns = { "INSJO" = "25.35590.beskattningsbar-sjoinkomst", "TSJO" = "25.35590.beskattningsbar-sjoinkomst" }
+columns_ref = "Y-276 2026-09-28: 25.35590 'Beskattningsbar sjöinkomst' sequential rename {INSJO 1990-1992, TSJO 1993-1997} owned by beskattningsbar-sjoinkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35593"
+columns = { "FBNS" = "25.35593.personnr-samhorighet", "BSAMHET" = "25.35593.personnr-samhorighet" }
+columns_ref = "Y-276 2026-09-28: 25.35593 'Personnummer, samhörighet' sequential rename {FBNS 1982-1989, BSAMHET 1990-1997} owned by personnr-samhorighet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.35603"
+columns = { "FORTC" = "25.35603.fodelselan-ort", "BFODORT" = "25.35603.fodelselan-ort", "Fodelselan" = "25.35603.fodelselan-ort" }
+columns_ref = "Y-276 2026-09-28: 25.35603 'Födelselän/-ort' sequential rename {FORTC 1982-1992, BFODORT 1993-1995, Fodelselan 1996-1997} owned by fodelselan-ort (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.37984"
+columns = { "BARNA" = "25.37984.barnets-alder", "BARNAR" = "25.37984.barnets-alder" }
+columns_ref = "Y-276 2026-09-28: 25.37984 'Barnets ålder' sequential rename {BARNA 1978,1980-1987, BARNAR 1988-1989} owned by barnets-alder (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39045"
+columns = { "FRIBIL" = "25.39045.markering-for-bilforman", "BBILF" = "25.39045.markering-for-bilforman" }
+columns_ref = "Y-276 2026-09-28: 25.39045 'Markering för bilförmån' sequential rename {FRIBIL 1982-1986, BBILF 1995-1996} owned by markering-for-bilforman (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39168"
+columns = { "FPFKOD" = "25.39168.folkpension-efterlevandeforman", "BFPF" = "25.39168.folkpension-efterlevandeforman" }
+columns_ref = "Y-276 2026-09-28: 25.39168 'Folkpension, efterlevandeförmån' sequential rename {FPFKOD 1990-1992, BFPF 1993-1996} owned by folkpension-efterlevandeforman (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39171"
+columns = { "VUXLON" = "25.39171.vuxenstudiestod-lan", "IVUXLAN" = "25.39171.vuxenstudiestod-lan" }
+columns_ref = "Y-276 2026-09-28: 25.39171 'Vuxenstudiestöd, lån' sequential rename {VUXLON 1986-1992, IVUXLAN 1993-1996} owned by vuxenstudiestod-lan (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39182"
+columns = { "VUXLONF" = "25.39182.vuxenstudiestod-lan-familj", "IVUXLANH" = "25.39182.vuxenstudiestod-lan-familj" }
+columns_ref = "Y-276 2026-09-28: 25.39182 'Vuxenstudiestöd, lån, familj' sequential rename {VUXLONF 1988-1992, IVUXLANH 1993-1996} owned by vuxenstudiestod-lan-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39183"
+columns = { "MAKEFORM" = "25.39183.skattepliktig-formogenhet-sambeskattad", "FSPM" = "25.39183.skattepliktig-formogenhet-sambeskattad" }
+columns_ref = "Y-276 2026-09-28: 25.39183 'Skattepliktig förmögenhet, sambeskattad' sequential rename {MAKEFORM 1992, FSPM 1993-1996} owned by skattepliktig-formogenhet-sambeskattad (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39222"
+columns = { "EFB" = "25.39222.ensamforalderbidrag", "IENSAM" = "25.39222.ensamforalderbidrag" }
+columns_ref = "Y-276 2026-09-28: 25.39222 'Ensamförälderbidrag' sequential rename {EFB 1992, IENSAM 1993-1995} owned by ensamforalderbidrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39223"
+columns = { "EFBF" = "25.39223.ensamforalderbidrag-familj", "IENSAMH" = "25.39223.ensamforalderbidrag-familj" }
+columns_ref = "Y-276 2026-09-28: 25.39223 'Ensamförälderbidrag, familj' sequential rename {EFBF 1992, IENSAMH 1993-1995} owned by ensamforalderbidrag-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39229"
+columns = { "UFASTS5" = "25.39229.underlag-fastighetsskatt-utland-15", "ASMAU15" = "25.39229.underlag-fastighetsskatt-utland-15" }
+columns_ref = "Y-276 2026-09-28: 25.39229 'Underlag för fastighetsskatt med 1,5 % avseende småhus i utlandet' sequential rename {UFASTS5 1992, ASMAU15 1993-1995} owned by underlag-fastighetsskatt-utland-15 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39244"
+columns = { "UFASTS1" = "25.39244.underlag-fastighetsskatt-smahus-15", "ASMA15" = "25.39244.underlag-fastighetsskatt-smahus-15" }
+columns_ref = "Y-276 2026-09-28: 25.39244 'Underlag för fastighetsskatt för småhus, 1,5%' sequential rename {UFASTS1 1991-1992, ASMA15 1993-1995} owned by underlag-fastighetsskatt-smahus-15 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39269"
+columns = { "KBESKF" = "25.39269.kommunalt-beskattningsbar-forvarvsink", "CKBEFVI" = "25.39269.kommunalt-beskattningsbar-forvarvsink" }
+columns_ref = "Y-276 2026-09-28: 25.39269 'Kommunalt beskattningsbar förvärvsinkomst' sequential rename {KBESKF 1991-1992, CKBEFVI 1993-1994} owned by kommunalt-beskattningsbar-forvarvsink (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39270"
+columns = { "KTAXFORV" = "25.39270.kommunalt-taxerad-forvarvsinkomst", "CKTXFVI" = "25.39270.kommunalt-taxerad-forvarvsinkomst" }
+columns_ref = "Y-276 2026-09-28: 25.39270 'Kommunalt taxerad förvärvsinkomst' sequential rename {KTAXFORV 1991-1992, CKTXFVI 1993-1994} owned by kommunalt-taxerad-forvarvsinkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39271"
+columns = { "STAXFORV" = "25.39271.statligt-taxerad-forvarvsinkomst", "CSTXFVI" = "25.39271.statligt-taxerad-forvarvsinkomst" }
+columns_ref = "Y-276 2026-09-28: 25.39271 'Statligt taxerad förvärvsinkomst' sequential rename {STAXFORV 1991-1992, CSTXFVI 1993-1994} owned by statligt-taxerad-forvarvsinkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39276"
+columns = { "SBESKF" = "25.39276.statlig-beskattningsbar-forvarvsinkomst", "CSBEFVI" = "25.39276.statlig-beskattningsbar-forvarvsinkomst" }
+columns_ref = "Y-276 2026-09-28: 25.39276 'Statlig beskattningsbar förvärvsinkomst' sequential rename {SBESKF 1991-1992, CSBEFVI 1993-1994} owned by statlig-beskattningsbar-forvarvsinkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39277"
+columns = { "RSKPENF" = "25.39277.pensionsbelopp-familj", "KUPENSF" = "25.39277.pensionsbelopp-familj", "PPENEXTH" = "25.39277.pensionsbelopp-familj" }
+columns_ref = "Y-276 2026-09-28: 25.39277 'Pensionsbelopp, familj' sequential rename {RSKPENF 1981-1989, KUPENSF 1990-1992, PPENEXTH 1993-1994} owned by pensionsbelopp-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39279"
+columns = { "FORMBSTT" = "25.39279.bostadsrattens-formogenhetsvarde-familj", "FFSTBRH" = "25.39279.bostadsrattens-formogenhetsvarde-familj" }
+columns_ref = "Y-276 2026-09-28: 25.39279 'Bostadsrättens förmögenhetsvärde, familj' sequential rename {FORMBSTT 1992, FFSTBRH 1993} owned by bostadsrattens-formogenhetsvarde-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39280"
+columns = { "FORMFAST" = "25.39280.formogenhetsvarde-fastighetsinnehav", "FFSTPR" = "25.39280.formogenhetsvarde-fastighetsinnehav" }
+columns_ref = "Y-276 2026-09-28: 25.39280 'Förmögenhetsvärde fastighetsinnehav' sequential rename {FORMFAST 1991-1992, FFSTPR 1993} owned by formogenhetsvarde-fastighetsinnehav (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39281"
+columns = { "FORMFSTT" = "25.39281.formogenhetsvarde-fastighet-familj", "FFSTPRH" = "25.39281.formogenhetsvarde-fastighet-familj" }
+columns_ref = "Y-276 2026-09-28: 25.39281 'Förmögenhetsvärde fastighetsinnehav, familj' sequential rename {FORMFSTT 1992, FFSTPRH 1993} owned by formogenhetsvarde-fastighet-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39282"
+columns = { "FORMKAP" = "25.39282.formogenhetsvarde-kapital", "FKAP" = "25.39282.formogenhetsvarde-kapital" }
+columns_ref = "Y-276 2026-09-28: 25.39282 'Förmögenhetsvärde kapital' sequential rename {FORMKAP 1991-1992, FKAP 1993} owned by formogenhetsvarde-kapital (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39283"
+columns = { "FORMKAPT" = "25.39283.formogenhetsvarde-kapital-familj", "FKAPH" = "25.39283.formogenhetsvarde-kapital-familj" }
+columns_ref = "Y-276 2026-09-28: 25.39283 'Förmögenhetsvärde kapital, familj' sequential rename {FORMKAPT 1992, FKAPH 1993} owned by formogenhetsvarde-kapital-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39284"
+columns = { "FORMOVR" = "25.39284.formogenhet-ovriga-tillgangar", "FOVR" = "25.39284.formogenhet-ovriga-tillgangar" }
+columns_ref = "Y-276 2026-09-28: 25.39284 'Förmögenhet, övriga tillgångar' sequential rename {FORMOVR 1991-1992, FOVR 1993} owned by formogenhet-ovriga-tillgangar (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39285"
+columns = { "FORMOVRT" = "25.39285.formogenhet-ovriga-tillgangar-familj", "FOVRH" = "25.39285.formogenhet-ovriga-tillgangar-familj" }
+columns_ref = "Y-276 2026-09-28: 25.39285 'Förmögenhet, övriga tillgångar, familj' sequential rename {FORMOVRT 1992, FOVRH 1993} owned by formogenhet-ovriga-tillgangar-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39286"
+columns = { "BOSTK" = "25.39286.bostadsbidrag-barnfamiljer", "IBOST" = "25.39286.bostadsbidrag-barnfamiljer" }
+columns_ref = "Y-276 2026-09-28: 25.39286 'Bostadsbidrag, barnfamiljer' sequential rename {BOSTK 1978-1992, IBOST 1993} owned by bostadsbidrag-barnfamiljer (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39287"
+columns = { "BOSTU" = "25.39287.bostadsbidrag-ungdomar-ovriga", "IBOSTU" = "25.39287.bostadsbidrag-ungdomar-ovriga" }
+columns_ref = "Y-276 2026-09-28: 25.39287 'Bostadsbidrag för ungdomar och övriga hushåll utan barn' sequential rename {BOSTU 1988-1992, IBOSTU 1993} owned by bostadsbidrag-ungdomar-ovriga (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39288"
+columns = { "BOSTUF" = "25.39288.bostuf", "IBOSTUH" = "25.39288.bostuf" }
+columns_ref = "Y-276 2026-09-28: 25.39288 'Bostadsbidrag för ungdomar och övriga hushåll utan barn, familj' sequential rename {BOSTUF 1988-1992, IBOSTUH 1993} owned by bostuf (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39289"
+columns = { "VPLBF" = "25.39289.ersattning-varnplikt-familj", "IVPLH" = "25.39289.ersattning-varnplikt-familj" }
+columns_ref = "Y-276 2026-09-28: 25.39289 'Ersättning i samband med värnplikt (grundutbildning), familj' sequential rename {VPLBF 1983-1992, IVPLH 1993} owned by ersattning-varnplikt-familj (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39290"
+columns = { "KAPOVR" = "25.39290.ovriga-avdrag-kapital", "KAOVR" = "25.39290.ovriga-avdrag-kapital" }
+columns_ref = "Y-276 2026-09-28: 25.39290 'Övriga avdrag, kapital' sequential rename {KAPOVR 1991-1992, KAOVR 1993} owned by ovriga-avdrag-kapital (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39291"
+columns = { "VPUTBET" = "25.39291.utbetalt-belopp-vardepapper", "KKUVPUT" = "25.39291.utbetalt-belopp-vardepapper" }
+columns_ref = "Y-276 2026-09-28: 25.39291 'Utbetalt belopp, värdepapper' sequential rename {VPUTBET 1988-1992, KKUVPUT 1993} owned by utbetalt-belopp-vardepapper (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39292"
+columns = { "SKAINB" = "25.39292.inbetald-a-skatt", "SA" = "25.39292.inbetald-a-skatt" }
+columns_ref = "Y-276 2026-09-28: 25.39292 'Inbetald a-skatt inkl fyllnadsinbetalning' sequential rename {SKAINB 1990-1992, SA 1993} owned by inbetald-a-skatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39293"
+columns = { "SKPENS" = "25.39293.sarskild-loneskatt-pensionsutfastelse", "SSLPENS" = "25.39293.sarskild-loneskatt-pensionsutfastelse" }
+columns_ref = "Y-276 2026-09-28: 25.39293 'Särskild löneskatt på pensionsutfästelse och egen premie' sequential rename {SKPENS 1991-1992, SSLPENS 1993} owned by sarskild-loneskatt-pensionsutfastelse (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39294"
+columns = { "INKKU" = "25.39294.inkomst-ku-nolltaxerade", "TKUNOLL" = "25.39294.inkomst-ku-nolltaxerade" }
+columns_ref = "Y-276 2026-09-28: 25.39294 'Inkomst enl kontrolluppgifter för maskinellt nolltaxerade' sequential rename {INKKU 1992, TKUNOLL 1993} owned by inkomst-ku-nolltaxerade (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39296"
+columns = { "UFASTH3" = "25.39296.underlag-fastighetsskatt-hyreshus-125", "AHY125" = "25.39296.underlag-fastighetsskatt-hyreshus-125" }
+columns_ref = "Y-276 2026-09-28: 25.39296 'Underlag för fastighetsskatt för hyreshus, 1,25%' sequential rename {UFASTH3 1991-1992, AHY125 1993} owned by underlag-fastighetsskatt-hyreshus-125 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39297"
+columns = { "UFASTH2" = "25.39297.underlag-fastighetsskatt-hyreshus-25", "AHY25" = "25.39297.underlag-fastighetsskatt-hyreshus-25" }
+columns_ref = "Y-276 2026-09-28: 25.39297 'Underlag för fastighetsskatt för hyreshus, 2,5%' sequential rename {UFASTH2 1991-1992, AHY25 1993} owned by underlag-fastighetsskatt-hyreshus-25 (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39298"
+columns = { "STUDIND" = "25.39298.studerande", "BSTUD" = "25.39298.studerande" }
+columns_ref = "Y-276 2026-09-28: 25.39298 'Studerande' sequential rename {STUDIND 1987-1992, BSTUD 1993} owned by studerande (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39355"
+columns = { "SKOGSV" = "25.39355.skogsvardsavgift", "SKSKOG" = "25.39355.skogsvardsavgift" }
+columns_ref = "Y-276 2026-09-28: 25.39355 'Skogsvårdsavgift' sequential rename {SKOGSV 1985-1990, SKSKOG 1991-1992} owned by skogsvardsavgift (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39372"
+columns = { "FBNS" = "25.39372.samtaxerad-make-maka", "BGSAM" = "25.39372.samtaxerad-make-maka" }
+columns_ref = "Y-276 2026-09-28: 25.39372 'Samtaxerad personnummer make/maka' sequential rename {FBNS 1968-1977, BGSAM 1978-1989} owned by samtaxerad-make-maka (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39392"
+columns = { "AVLONE" = "25.39392.allman-loneavgift-egenforetagare", "AVGLONE" = "25.39392.allman-loneavgift-egenforetagare" }
+columns_ref = "Y-276 2026-09-28: 25.39392 'Allmän löneavgift för egenföretagare' sequential rename {AVLONE 1983-1990, AVGLONE 1991-1992} owned by allman-loneavgift-egenforetagare (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39427"
+columns = { "SJUKPA" = "25.39427.sjukpenning-a-intrade", "SJUKA" = "25.39427.sjukpenning-a-intrade" }
+columns_ref = "Y-276 2026-09-28: 25.39427 'Sjuk-, havandeskaps-, smittbärarpenning, A-inträde' sequential rename {SJUKPA 1981-1991, SJUKA 1992} owned by sjukpenning-a-intrade (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39660"
+columns = { "GF" = "25.39660.markering-gemensam-formogenhet", "GMFORMK" = "25.39660.markering-gemensam-formogenhet" }
+columns_ref = "Y-276 2026-09-28: 25.39660 'Markering gemensam beskattningsbar förmögenhet' sequential rename {GF 1971-1977, GMFORMK 1986-1991} owned by markering-gemensam-formogenhet (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39887"
+columns = { "AGSFOR" = "25.39887.ags-forsakring", "AGS" = "25.39887.ags-forsakring" }
+columns_ref = "Y-276 2026-09-28: 25.39887 'AGS-försäkring' sequential rename {AGSFOR 1980-1987, AGS 1988-1990} owned by ags-forsakring (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39894"
+columns = { "BSKRSUM" = "25.39894.skattereduktion", "BSKRED" = "25.39894.skattereduktion" }
+columns_ref = "Y-276 2026-09-28: 25.39894 'Skattereduktion' sequential rename {BSKRSUM 1979-1982, BSKRED 1983-1990} owned by skattereduktion (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39947"
+columns = { "KINS" = "25.39947.kommunal-inkomstskatt", "SKKIN" = "25.39947.kommunal-inkomstskatt" }
+columns_ref = "Y-276 2026-09-28: 25.39947 'Kommunal inkomstskatt' sequential rename {KINS 1971-1977, SKKIN 1978-1990} owned by kommunal-inkomstskatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.39963"
+columns = { "TNC" = "25.39963.taxeringsnamnd", "SNC" = "25.39963.taxeringsnamnd", "TN" = "25.39963.taxeringsnamnd" }
+columns_ref = "Y-276 2026-09-28: 25.39963 'Taxeringsnämnd' sequential rename {TNC 1968-1970, SNC 1971-1976, TN 1990} owned by taxeringsnamnd (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40024"
+columns = { "AACC" = "25.40024.ackumulerad-summa-a-skatt", "SKAINB" = "25.40024.ackumulerad-summa-a-skatt" }
+columns_ref = "Y-276 2026-09-28: 25.40024 'Ackumulerad summa A-skatt' sequential rename {AACC 1968-1977, SKAINB 1978-1989} owned by ackumulerad-summa-a-skatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40025"
+columns = { "BACC" = "25.40025.ackumulerad-summa-b-skatt", "SKBINB" = "25.40025.ackumulerad-summa-b-skatt" }
+columns_ref = "Y-276 2026-09-28: 25.40025 'Ackumulerad summa B-skatt' sequential rename {BACC 1968-1977, SKBINB 1978-1989} owned by ackumulerad-summa-b-skatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40062"
+columns = { "STAX" = "25.40062.statligt-taxerad-inkomst", "INSTAX" = "25.40062.statligt-taxerad-inkomst" }
+columns_ref = "Y-276 2026-09-28: 25.40062 'Statligt taxerad inkomst' sequential rename {STAX 1968-1977, INSTAX 1978-1989} owned by statligt-taxerad-inkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40063"
+columns = { "KTAX" = "25.40063.kommunalt-taxerad-inkomst", "INKTAX" = "25.40063.kommunalt-taxerad-inkomst" }
+columns_ref = "Y-276 2026-09-28: 25.40063 'Kommunalt taxerad inkomst' sequential rename {KTAX 1968-1977, INKTAX 1978-1989} owned by kommunalt-taxerad-inkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40068"
+columns = { "KEA" = "25.40068.kommunalt-extra-avdrag", "AVKEXT" = "25.40068.kommunalt-extra-avdrag" }
+columns_ref = "Y-276 2026-09-28: 25.40068 'Kommunalt extra avdrag' sequential rename {KEA 1968-1977, AVKEXT 1978-1989} owned by kommunalt-extra-avdrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40069"
+columns = { "SEA" = "25.40069.statligt-extra-avdrag", "AVSEXT" = "25.40069.statligt-extra-avdrag" }
+columns_ref = "Y-276 2026-09-28: 25.40069 'Statligt extra avdrag' sequential rename {SEA 1968-1977, AVSEXT 1978-1989} owned by statligt-extra-avdrag (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40070"
+columns = { "SAMTAX" = "25.40070.kod-for-samtaxering", "SAMKOD" = "25.40070.kod-for-samtaxering" }
+columns_ref = "Y-276 2026-09-28: 25.40070 'Kod för samtaxering' sequential rename {SAMTAX 1968-1977, SAMKOD 1983-1986} owned by kod-for-samtaxering (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40079"
+columns = { "DKLNR" = "25.40079.deklarationsnummer", "NRDEKL78" = "25.40079.deklarationsnummer" }
+columns_ref = "Y-276 2026-09-28: 25.40079 'Deklarationsnummer' sequential rename {DKLNR 1968-1977, NRDEKL78 1978} owned by deklarationsnummer (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40091"
+columns = { "DIA" = "25.40091.uppbordsdistrikt", "DIST" = "25.40091.uppbordsdistrikt" }
+columns_ref = "Y-276 2026-09-28: 25.40091 'Uppbördsdistrikt' sequential rename {DIA 1968-1977, DIST 1978-1989} owned by uppbordsdistrikt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40308"
+columns = { "SINS" = "25.40308.statlig-inkomstskatt", "SKSIN" = "25.40308.statlig-inkomstskatt" }
+columns_ref = "Y-276 2026-09-28: 25.40308 'Statlig inkomstskatt' sequential rename {SINS 1971-1977, SKSIN 1978-1989} owned by statlig-inkomstskatt (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40357"
+columns = { "SPA" = "25.40357.sjukpenning-anstallning", "SJUKPAN" = "25.40357.sjukpenning-anstallning" }
+columns_ref = "Y-276 2026-09-28: 25.40357 'Sjukpenning, anställning' sequential rename {SPA 1974-1977, SJUKPAN 1978-1989} owned by sjukpenning-anstallning (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40358"
+columns = { "SPAF" = "25.40358.sjukpenning-annan-forvarvsinkomst", "SJUKPAF" = "25.40358.sjukpenning-annan-forvarvsinkomst" }
+columns_ref = "Y-276 2026-09-28: 25.40358 'Sjukpenning, annan förvärvsinkomst' sequential rename {SPAF 1974-1977, SJUKPAF 1978-1989} owned by sjukpenning-annan-forvarvsinkomst (host IoT rename-family evidence)"
+
+[[identity.partition]]
+variable = "25.40360"
+columns = { "SPSBIN" = "25.40360.statlig-beskattningsbar-exkl-formaner", "NYSBIN" = "25.40360.statlig-beskattningsbar-exkl-formaner" }
+columns_ref = "Y-276 2026-09-28: 25.40360 'Statligt beskattningsbar inkomst exkl. sociala förmåner' sequential rename {SPSBIN 1974, NYSBIN 1975-1977} owned by statlig-beskattningsbar-exkl-formaner (host IoT rename-family evidence)"
+
+
+[[variable]]
+native_id = "25.31.forsamling"
+slug = "forsamling"
+
+[[variable]]
+native_id = "25.44.kon"
+slug = "kon"
+
+[[variable]]
+native_id = "25.94.pension-skattepliktig"
+slug = "pension-skattepliktig"
+
+[[variable]]
+native_id = "25.241.alder-31-12"
+slug = "alder-31-12"
+
+[[variable]]
+native_id = "25.245.civilstandsdatum"
+slug = "civilstandsdatum"
+
+[[variable]]
+native_id = "25.264.icke-territoriell-forsamling"
+slug = "icke-territoriell-forsamling"
+
+[[variable]]
+native_id = "25.355.kommun-tidigare"
+slug = "kommun-tidigare"
+
+[[variable]]
+native_id = "25.480.sekvenssiffra"
+slug = "sekvenssiffra"
+
+[[variable]]
+native_id = "25.517.senaste-invandringsar"
+slug = "senaste-invandringsar"
+
+[[variable]]
+native_id = "25.537.postnr"
+slug = "postnr"
+
+[[variable]]
+native_id = "25.580.pensionsavgift-allman-anstallning"
+slug = "pensionsavgift-allman-anstallning"
+
+[[variable]]
+native_id = "25.589.tjanstepension-itp"
+slug = "tjanstepension-itp"
+
+[[variable]]
+native_id = "25.598.statlig-tjanstepension"
+slug = "statlig-tjanstepension"
+
+[[variable]]
+native_id = "25.608.avkastningsskatt"
+slug = "avkastningsskatt"
+
+[[variable]]
+native_id = "25.610.fastighetsskatt"
+slug = "fastighetsskatt"
+
+[[variable]]
+native_id = "25.611.formogenhetsskatt"
+slug = "formogenhetsskatt"
+
+[[variable]]
+native_id = "25.612.forseningsavgift"
+slug = "forseningsavgift"
+
+[[variable]]
+native_id = "25.614.kommunal-inkomstskatt-exkl-fast"
+slug = "kommunal-inkomstskatt-exkl-fast"
+
+[[variable]]
+native_id = "25.615.kommunal-inkomstskatt-fast-belopp"
+slug = "kommunal-inkomstskatt-fast-belopp"
+
+[[variable]]
+native_id = "25.618.skattetillagg"
+slug = "skattetillagg"
+
+[[variable]]
+native_id = "25.622.norsk-pension-paverkat-grundavdrag"
+slug = "norsk-pension-paverkat-grundavdrag"
+
+[[variable]]
+native_id = "25.628.fastighetsskatt-hyreshus-lokal"
+slug = "fastighetsskatt-hyreshus-lokal"
+
+[[variable]]
+native_id = "25.629.fastighetsskatt-industri"
+slug = "fastighetsskatt-industri"
+
+[[variable]]
+native_id = "25.658.kommunalskattesats"
+slug = "kommunalskattesats"
+
+[[variable]]
+native_id = "25.697.markeringskod-arbetsinkomst"
+slug = "markeringskod-arbetsinkomst"
+
+[[variable]]
+native_id = "25.706.bostadsforman-smahusfastighet"
+slug = "bostadsforman-smahusfastighet"
+
+[[variable]]
+native_id = "25.715.underlag-skattereduktion-akassa-avgift"
+slug = "underlag-skattereduktion-akassa-avgift"
+
+[[variable]]
+native_id = "25.716.underlag-skattereduktion-fackavgift"
+slug = "underlag-skattereduktion-fackavgift"
+
+[[variable]]
+native_id = "25.724.tjanstepension-stp"
+slug = "tjanstepension-stp"
+
+[[variable]]
+native_id = "25.733.medgiven-skattereduktion-akassa-avgift"
+slug = "medgiven-skattereduktion-akassa-avgift"
+
+[[variable]]
+native_id = "25.736.sarskild-loneskatt-forvarvsinkomster"
+slug = "sarskild-loneskatt-forvarvsinkomster"
+
+[[variable]]
+native_id = "25.742.antal-manader-grundavdrag"
+slug = "antal-manader-grundavdrag"
+
+[[variable]]
+native_id = "25.743.famansforetag-samgranskning-id"
+slug = "famansforetag-samgranskning-id"
+
+[[variable]]
+native_id = "25.1064.taxeringskod"
+slug = "taxeringskod"
+
+[[variable]]
+native_id = "25.1069.objekttyp-langdtillhorighet"
+slug = "objekttyp-langdtillhorighet"
+
+[[variable]]
+native_id = "25.1070.sambeskattads-personnr"
+slug = "sambeskattads-personnr"
+
+[[variable]]
+native_id = "25.1101.avdrag-forvaltningskostnad-kapital"
+slug = "avdrag-forvaltningskostnad-kapital"
+
+[[variable]]
+native_id = "25.1106.avdrag-skuldranta-kapital"
+slug = "avdrag-skuldranta-kapital"
+
+[[variable]]
+native_id = "25.1108.avdrag-realisationsforlust-kapital"
+slug = "avdrag-realisationsforlust-kapital"
+
+[[variable]]
+native_id = "25.1110.inkomst-av-kapital"
+slug = "inkomst-av-kapital"
+
+[[variable]]
+native_id = "25.1160.bankrantor"
+slug = "bankrantor"
+
+[[variable]]
+native_id = "25.1161.aktieutdelning"
+slug = "aktieutdelning"
+
+[[variable]]
+native_id = "25.1162.vardepapperrantor"
+slug = "vardepapperrantor"
+
+[[variable]]
+native_id = "25.1170.vuxenstudiestod"
+slug = "vuxenstudiestod"
+
+[[variable]]
+native_id = "25.1171.utbildningsbidrag-doktorander"
+slug = "utbildningsbidrag-doktorander"
+
+[[variable]]
+native_id = "25.1176.avdrag-dubbel-bosattning-tjanst"
+slug = "avdrag-dubbel-bosattning-tjanst"
+
+[[variable]]
+native_id = "25.1177.ersattning-inkomst-anstallning"
+slug = "ersattning-inkomst-anstallning"
+
+[[variable]]
+native_id = "25.1178.ovriga-kostnadsavdrag-over-1000-kr"
+slug = "ovriga-kostnadsavdrag-over-1000-kr"
+
+[[variable]]
+native_id = "25.1179.avdrag-resor-till-fran-arbetet"
+slug = "avdrag-resor-till-fran-arbetet"
+
+[[variable]]
+native_id = "25.1180.avdrag-tjansteresor"
+slug = "avdrag-tjansteresor"
+
+[[variable]]
+native_id = "25.1182.ersattning-forsakringskassa-anstallning"
+slug = "ersattning-forsakringskassa-anstallning"
+
+[[variable]]
+native_id = "25.1186.ovriga-inkomster-egenavgifter"
+slug = "ovriga-inkomster-egenavgifter"
+
+[[variable]]
+native_id = "25.1187.akassa-arbetsloshet"
+slug = "akassa-arbetsloshet"
+
+[[variable]]
+native_id = "25.1188.kostnadsersattning-tjanst"
+slug = "kostnadsersattning-tjanst"
+
+[[variable]]
+native_id = "25.1203.allman-pension-tillaggspension-tjanst"
+slug = "allman-pension-tillaggspension-tjanst"
+
+[[variable]]
+native_id = "25.1204.privat-pensionsforsakring-sparkonto"
+slug = "privat-pensionsforsakring-sparkonto"
+
+[[variable]]
+native_id = "25.1205.privat-pensionsforsakring-tjanst"
+slug = "privat-pensionsforsakring-tjanst"
+
+[[variable]]
+native_id = "25.1209.arbetsinkomst-av-tjanst"
+slug = "arbetsinkomst-av-tjanst"
+
+[[variable]]
+native_id = "25.1228.nolltaxering"
+slug = "nolltaxering"
+
+[[variable]]
+native_id = "25.1234.pensionsdebiteringskod"
+slug = "pensionsdebiteringskod"
+
+[[variable]]
+native_id = "25.1253.foraldraforsakringsavgift-brutto"
+slug = "foraldraforsakringsavgift-brutto"
+
+[[variable]]
+native_id = "25.1255.medgiven-skattereduktion-fastighetsskatt"
+slug = "medgiven-skattereduktion-fastighetsskatt"
+
+[[variable]]
+native_id = "25.1265.studiepenning-skattepliktig-familj"
+slug = "studiepenning-skattepliktig-familj"
+
+[[variable]]
+native_id = "25.1271.antal-barn-4-10-ar"
+slug = "antal-barn-4-10-ar"
+
+[[variable]]
+native_id = "25.1286.antal-barn-0-17-ar"
+slug = "antal-barn-0-17-ar"
+
+[[variable]]
+native_id = "25.1292.skattepliktiga-transfereringar-netto"
+slug = "skattepliktiga-transfereringar-netto"
+
+[[variable]]
+native_id = "25.1293.transfereringar-netto-familj"
+slug = "transfereringar-netto-familj"
+
+[[variable]]
+native_id = "25.1303.bruttoinkomst-familj"
+slug = "bruttoinkomst-familj"
+
+[[variable]]
+native_id = "25.1389.ackumulerad-studieskuld"
+slug = "ackumulerad-studieskuld"
+
+[[variable]]
+native_id = "25.1394.bbidrf"
+slug = "bbidrf"
+
+[[variable]]
+native_id = "25.1397.mottaget-bidragsforskott-familj"
+slug = "mottaget-bidragsforskott-familj"
+
+[[variable]]
+native_id = "25.1400.bostadstillagg-till-pensionarer"
+slug = "bostadstillagg-till-pensionarer"
+
+[[variable]]
+native_id = "25.1404.handikappsersattning-familj"
+slug = "handikappsersattning-familj"
+
+[[variable]]
+native_id = "25.1407.bostadstillagg-familj"
+slug = "bostadstillagg-familj"
+
+[[variable]]
+native_id = "25.1480.inkomst-av-kapital-familj"
+slug = "inkomst-av-kapital-familj"
+
+[[variable]]
+native_id = "25.1489.barnpension-livranta-skattefri-familj"
+slug = "barnpension-livranta-skattefri-familj"
+
+[[variable]]
+native_id = "25.1500.frivillig-pension-skattefri"
+slug = "frivillig-pension-skattefri"
+
+[[variable]]
+native_id = "25.1501.frivillig-pension-skattepliktig"
+slug = "frivillig-pension-skattepliktig"
+
+[[variable]]
+native_id = "25.1521.pension-ku-familj"
+slug = "pension-ku-familj"
+
+[[variable]]
+native_id = "25.1595.arbetsskadeersattning-familj"
+slug = "arbetsskadeersattning-familj"
+
+[[variable]]
+native_id = "25.1598.vuxenstudiestod-studiebidrag-ovriga"
+slug = "vuxenstudiestod-studiebidrag-ovriga"
+
+[[variable]]
+native_id = "25.1601.vuxenstudiestod-bidrag-ovriga-familj"
+slug = "vuxenstudiestod-bidrag-ovriga-familj"
+
+[[variable]]
+native_id = "25.1603.studiepenning-skattepliktig"
+slug = "studiepenning-skattepliktig"
+
+[[variable]]
+native_id = "25.1606.aterbetalt-studielan-familj"
+slug = "aterbetalt-studielan-familj"
+
+[[variable]]
+native_id = "25.1608.givet-underhallsbidrag-familj"
+slug = "givet-underhallsbidrag-familj"
+
+[[variable]]
+native_id = "25.1609.sjukpenning-familj"
+slug = "sjukpenning-familj"
+
+[[variable]]
+native_id = "25.1610.sjuk-havandeskaps-sjuklonegaranti"
+slug = "sjuk-havandeskaps-sjuklonegaranti"
+
+[[variable]]
+native_id = "25.1613.rehabiliteringsersattning"
+slug = "rehabiliteringsersattning"
+
+[[variable]]
+native_id = "25.1616.narstaendepenning"
+slug = "narstaendepenning"
+
+[[variable]]
+native_id = "25.1617.dagersattning-repetitionsutbildning"
+slug = "dagersattning-repetitionsutbildning"
+
+[[variable]]
+native_id = "25.1618.loneinkomst-familj"
+slug = "loneinkomst-familj"
+
+[[variable]]
+native_id = "25.1625.foraldrapenning-vab"
+slug = "foraldrapenning-vab"
+
+[[variable]]
+native_id = "25.1626.foraldrapenning-barns-fodelse"
+slug = "foraldrapenning-barns-fodelse"
+
+[[variable]]
+native_id = "25.1627.ovriga-utbildningsbidrag-familj"
+slug = "ovriga-utbildningsbidrag-familj"
+
+[[variable]]
+native_id = "25.1633.slutlig-skatt-exkl-egenavgifter-familj"
+slug = "slutlig-skatt-exkl-egenavgifter-familj"
+
+[[variable]]
+native_id = "25.2507.sarskilt-pensionstillagg"
+slug = "sarskilt-pensionstillagg"
+
+[[variable]]
+native_id = "25.2508.statlig-tjanstepension-inkl-kapan"
+slug = "statlig-tjanstepension-inkl-kapan"
+
+[[variable]]
+native_id = "25.2514.beskattningsbar-formogenhet"
+slug = "beskattningsbar-formogenhet"
+
+[[variable]]
+native_id = "25.2546.beskattningsbar-formogenhet-familj"
+slug = "beskattningsbar-formogenhet-familj"
+
+[[variable]]
+native_id = "25.2547.formogenhetsskattepliktiga-forsakringar"
+slug = "formogenhetsskattepliktiga-forsakringar"
+
+[[variable]]
+native_id = "25.2548.fordran-pa-bankmedel"
+slug = "fordran-pa-bankmedel"
+
+[[variable]]
+native_id = "25.2549.fordran-pa-vardepapper"
+slug = "fordran-pa-vardepapper"
+
+[[variable]]
+native_id = "25.2550.beskattningsbar-formogenhet-skuld"
+slug = "beskattningsbar-formogenhet-skuld"
+
+[[variable]]
+native_id = "25.2551.skattepliktig-formogenhet-egen"
+slug = "skattepliktig-formogenhet-egen"
+
+[[variable]]
+native_id = "25.2552.skattepliktig-formogenhet-familj"
+slug = "skattepliktig-formogenhet-familj"
+
+[[variable]]
+native_id = "25.2558.realisationsvinst-kapital"
+slug = "realisationsvinst-kapital"
+
+[[variable]]
+native_id = "25.2562.formansvarde-fribil"
+slug = "formansvarde-fribil"
+
+[[variable]]
+native_id = "25.2567.fk-ersattning-annat-forvarvsarbete"
+slug = "fk-ersattning-annat-forvarvsarbete"
+
+[[variable]]
+native_id = "25.2574.disponibel-inkomst-per-ke-familj"
+slug = "disponibel-inkomst-per-ke-familj"
+
+[[variable]]
+native_id = "25.2576.skattefri-sjukpenning-familj"
+slug = "skattefri-sjukpenning-familj"
+
+[[variable]]
+native_id = "25.2648.medgivet-grundavdrag"
+slug = "medgivet-grundavdrag"
+
+[[variable]]
+native_id = "25.2650.handlaggande-skattemyndighet"
+slug = "handlaggande-skattemyndighet"
+
+[[variable]]
+native_id = "25.2675.faktorinkomst-individ"
+slug = "faktorinkomst-individ"
+
+[[variable]]
+native_id = "25.2696.konsumtionsenheter-familj"
+slug = "konsumtionsenheter-familj"
+
+[[variable]]
+native_id = "25.2711.antal-manader-med-socialbidrag"
+slug = "antal-manader-med-socialbidrag"
+
+[[variable]]
+native_id = "25.2712.hogsta-utbildning-avslutningsar"
+slug = "hogsta-utbildning-avslutningsar"
+
+[[variable]]
+native_id = "25.2717.yrkesstallning-arbetsinkomst-0"
+slug = "yrkesstallning-arbetsinkomst-0"
+
+[[variable]]
+native_id = "25.2719.yrkesstallning-arbetsinkomst-basbeloppet"
+slug = "yrkesstallning-arbetsinkomst-basbeloppet"
+
+[[variable]]
+native_id = "25.2751.dagsersattning-varnpliktiga"
+slug = "dagsersattning-varnpliktiga"
+
+[[variable]]
+native_id = "25.3730.fastighetens-identitetsnummer"
+slug = "fastighetens-identitetsnummer"
+
+[[variable]]
+native_id = "25.4385.ersattning-varnplikt-grundutbildning"
+slug = "ersattning-varnplikt-grundutbildning"
+
+[[variable]]
+native_id = "25.4504.summa-forvarvs-och-kapitalinkomster"
+slug = "summa-forvarvs-och-kapitalinkomster"
+
+[[variable]]
+native_id = "25.4648.bostadsrattens-formogenhetsvarde"
+slug = "bostadsrattens-formogenhetsvarde"
+
+[[variable]]
+native_id = "25.4685.allmant-avdrag-pensionsforsakring"
+slug = "allmant-avdrag-pensionsforsakring"
+
+[[variable]]
+native_id = "25.5557.underlag-fastighetsskatt-hyreshus-0"
+slug = "underlag-fastighetsskatt-hyreshus-0"
+
+[[variable]]
+native_id = "25.5562.medgivet-sarskilt-grundavdrag"
+slug = "medgivet-sarskilt-grundavdrag"
+
+[[variable]]
+native_id = "25.5564.allmant-avdrag-periodiskt-understod"
+slug = "allmant-avdrag-periodiskt-understod"
+
+[[variable]]
+native_id = "25.5577.folkbokforing-andringsar"
+slug = "folkbokforing-andringsar"
+
+[[variable]]
+native_id = "25.5582.antal-barn-under-16-ar"
+slug = "antal-barn-under-16-ar"
+
+[[variable]]
+native_id = "25.5583.antal-barn-16-17-ar"
+slug = "antal-barn-16-17-ar"
+
+[[variable]]
+native_id = "25.5585.senast-kanda-civilstand"
+slug = "senast-kanda-civilstand"
+
+[[variable]]
+native_id = "25.5598.folkpensionsmarkering"
+slug = "folkpensionsmarkering"
+
+[[variable]]
+native_id = "25.5599.folkpensionsuppgift-sarskilt-grundavdrag"
+slug = "folkpensionsuppgift-sarskilt-grundavdrag"
+
+[[variable]]
+native_id = "25.5633.skatteform-31-12"
+slug = "skatteform-31-12"
+
+[[variable]]
+native_id = "25.5639.posttyp"
+slug = "posttyp"
+
+[[variable]]
+native_id = "25.5642.taxering-skontaxeringsblankett"
+slug = "taxering-skontaxeringsblankett"
+
+[[variable]]
+native_id = "25.5657.inkomster-reducerar-sga"
+slug = "inkomster-reducerar-sga"
+
+[[variable]]
+native_id = "25.5661.periodiskt-understod-tjanst"
+slug = "periodiskt-understod-tjanst"
+
+[[variable]]
+native_id = "25.8189.utbildningens-niva-och-inriktning"
+slug = "utbildningens-niva-och-inriktning"
+
+[[variable]]
+native_id = "25.8283.skattepliktig-formogenhet"
+slug = "skattepliktig-formogenhet"
+
+[[variable]]
+native_id = "25.8286.skattereduktion-for-fackforeningsavgift"
+slug = "skattereduktion-for-fackforeningsavgift"
+
+[[variable]]
+native_id = "25.9060.antal-barn-0-3-ar"
+slug = "antal-barn-0-3-ar"
+
+[[variable]]
+native_id = "25.18102.arbetsinkomst-familj"
+slug = "arbetsinkomst-familj"
+
+[[variable]]
+native_id = "25.18384.pension-enligt-ku"
+slug = "pension-enligt-ku"
+
+[[variable]]
+native_id = "25.19807.underlag-fastighetsavgift-0375-smahus"
+slug = "underlag-fastighetsavgift-0375-smahus"
+
+[[variable]]
+native_id = "25.19808.underlag-fastighetsavgift"
+slug = "underlag-fastighetsavgift"
+
+[[variable]]
+native_id = "25.19810.underlag-fastighetsavgift-075-smahus"
+slug = "underlag-fastighetsavgift-075-smahus"
+
+[[variable]]
+native_id = "25.19814.underlag-fastighetsskatt-tomt-smahus"
+slug = "underlag-fastighetsskatt-tomt-smahus"
+
+[[variable]]
+native_id = "25.19830.sjukforsakringsavgift-foregaende-ar"
+slug = "sjukforsakringsavgift-foregaende-ar"
+
+[[variable]]
+native_id = "25.19838.underlag-fastighetsskatt-vindkraft"
+slug = "underlag-fastighetsskatt-vindkraft"
+
+[[variable]]
+native_id = "25.19854.antal-kontrolluppgifter-per-person"
+slug = "antal-kontrolluppgifter-per-person"
+
+[[variable]]
+native_id = "25.21073.naringsgren-for-anstallda"
+slug = "naringsgren-for-anstallda"
+
+[[variable]]
+native_id = "25.21210.underlag-fastighetsskatt-tomt-hyreshus"
+slug = "underlag-fastighetsskatt-tomt-hyreshus"
+
+[[variable]]
+native_id = "25.21241.tillaggsbidrag-studiemedel-veckor"
+slug = "tillaggsbidrag-studiemedel-veckor"
+
+[[variable]]
+native_id = "25.21469.ersattning-amprogram-skattepliktig"
+slug = "ersattning-amprogram-skattepliktig"
+
+[[variable]]
+native_id = "25.21472.medborgarskapskod"
+slug = "medborgarskapskod"
+
+[[variable]]
+native_id = "25.21510.traffindikator-kureg"
+slug = "traffindikator-kureg"
+
+[[variable]]
+native_id = "25.21704.tillaggsbidrag-studiemedel"
+slug = "tillaggsbidrag-studiemedel"
+
+[[variable]]
+native_id = "25.21837.underlag-fastighetsskatt-vattenkraft"
+slug = "underlag-fastighetsskatt-vattenkraft"
+
+[[variable]]
+native_id = "25.22246.bostadstillagg-sarskilt-familj"
+slug = "bostadstillagg-sarskilt-familj"
+
+[[variable]]
+native_id = "25.22329.samgranskning-famansbolag-kod"
+slug = "samgranskning-famansbolag-kod"
+
+[[variable]]
+native_id = "25.24196.sarskilt-bostadstillagg-pensionarer"
+slug = "sarskilt-bostadstillagg-pensionarer"
+
+[[variable]]
+native_id = "25.24198.aterford-expansionsfondskatt"
+slug = "aterford-expansionsfondskatt"
+
+[[variable]]
+native_id = "25.24204.sjukersattning-vilande"
+slug = "sjukersattning-vilande"
+
+[[variable]]
+native_id = "25.24208.aktivitetsersattning-vilande"
+slug = "aktivitetsersattning-vilande"
+
+[[variable]]
+native_id = "25.24758.inkomst-passiv-naringsverksamhet"
+slug = "inkomst-passiv-naringsverksamhet"
+
+[[variable]]
+native_id = "25.25291.artal-for-mantalsskrivning"
+slug = "artal-for-mantalsskrivning"
+
+[[variable]]
+native_id = "25.27033.kommunal-inkomstskatt-forvarvsink"
+slug = "kommunal-inkomstskatt-forvarvsink"
+
+[[variable]]
+native_id = "25.27151.vardnadsbidrag-utbetalt-belopp"
+slug = "vardnadsbidrag-utbetalt-belopp"
+
+[[variable]]
+native_id = "25.30841.kommunal-tjanstepension-spv-kpa"
+slug = "kommunal-tjanstepension-spv-kpa"
+
+[[variable]]
+native_id = "25.30851.pensionskod-for-ensamstaende"
+slug = "pensionskod-for-ensamstaende"
+
+[[variable]]
+native_id = "25.30852.pensionskod-for-gifta-sambo"
+slug = "pensionskod-for-gifta-sambo"
+
+[[variable]]
+native_id = "25.30862.inkomst-ej-pensionsgrundande"
+slug = "inkomst-ej-pensionsgrundande"
+
+[[variable]]
+native_id = "25.30863.deklarerad-formogenhet"
+slug = "deklarerad-formogenhet"
+
+[[variable]]
+native_id = "25.30864.deklarerad-over-underskattning-kapital"
+slug = "deklarerad-over-underskattning-kapital"
+
+[[variable]]
+native_id = "25.30866.underlag-fastighetsskatt-smahus-0"
+slug = "underlag-fastighetsskatt-smahus-0"
+
+[[variable]]
+native_id = "25.30879.summa-skuldbelopp-formogenhet"
+slug = "summa-skuldbelopp-formogenhet"
+
+[[variable]]
+native_id = "25.30881.familjens-sammanlagda-formogenhet"
+slug = "familjens-sammanlagda-formogenhet"
+
+[[variable]]
+native_id = "25.30882.kvinnans-sammanraknade-forvarvsinkomst"
+slug = "kvinnans-sammanraknade-forvarvsinkomst"
+
+[[variable]]
+native_id = "25.31828.arbetsskadelivranta"
+slug = "arbetsskadelivranta"
+
+[[variable]]
+native_id = "25.35469.huvudpost-taxering"
+slug = "huvudpost-taxering"
+
+[[variable]]
+native_id = "25.35471.rantebidrag-smahus-hyresfastigheter"
+slug = "rantebidrag-smahus-hyresfastigheter"
+
+[[variable]]
+native_id = "25.35505.avdrag-vid-sjomansbeskattning"
+slug = "avdrag-vid-sjomansbeskattning"
+
+[[variable]]
+native_id = "25.35556.forvarvsinkomst-inkl-sjoinkomst"
+slug = "forvarvsinkomst-inkl-sjoinkomst"
+
+[[variable]]
+native_id = "25.35561.forvarvsinkomst-inkl-sjoinkomst-familj"
+slug = "forvarvsinkomst-inkl-sjoinkomst-familj"
+
+[[variable]]
+native_id = "25.35563.ovriga-tjanstepensioner-tillagg-privat"
+slug = "ovriga-tjanstepensioner-tillagg-privat"
+
+[[variable]]
+native_id = "25.35572.debiterad-f-och-sa-skatt"
+slug = "debiterad-f-och-sa-skatt"
+
+[[variable]]
+native_id = "25.35575.preliminar-f-sa-skatt-overbetalt"
+slug = "preliminar-f-sa-skatt-overbetalt"
+
+[[variable]]
+native_id = "25.35577.preliminarskatt-fortidsaterbetald"
+slug = "preliminarskatt-fortidsaterbetald"
+
+[[variable]]
+native_id = "25.35590.beskattningsbar-sjoinkomst"
+slug = "beskattningsbar-sjoinkomst"
+
+[[variable]]
+native_id = "25.35593.personnr-samhorighet"
+slug = "personnr-samhorighet"
+
+[[variable]]
+native_id = "25.35603.fodelselan-ort"
+slug = "fodelselan-ort"
+
+[[variable]]
+native_id = "25.37984.barnets-alder"
+slug = "barnets-alder"
+
+[[variable]]
+native_id = "25.39045.markering-for-bilforman"
+slug = "markering-for-bilforman"
+
+[[variable]]
+native_id = "25.39168.folkpension-efterlevandeforman"
+slug = "folkpension-efterlevandeforman"
+
+[[variable]]
+native_id = "25.39171.vuxenstudiestod-lan"
+slug = "vuxenstudiestod-lan"
+
+[[variable]]
+native_id = "25.39182.vuxenstudiestod-lan-familj"
+slug = "vuxenstudiestod-lan-familj"
+
+[[variable]]
+native_id = "25.39183.skattepliktig-formogenhet-sambeskattad"
+slug = "skattepliktig-formogenhet-sambeskattad"
+
+[[variable]]
+native_id = "25.39222.ensamforalderbidrag"
+slug = "ensamforalderbidrag"
+
+[[variable]]
+native_id = "25.39223.ensamforalderbidrag-familj"
+slug = "ensamforalderbidrag-familj"
+
+[[variable]]
+native_id = "25.39229.underlag-fastighetsskatt-utland-15"
+slug = "underlag-fastighetsskatt-utland-15"
+
+[[variable]]
+native_id = "25.39244.underlag-fastighetsskatt-smahus-15"
+slug = "underlag-fastighetsskatt-smahus-15"
+
+[[variable]]
+native_id = "25.39269.kommunalt-beskattningsbar-forvarvsink"
+slug = "kommunalt-beskattningsbar-forvarvsink"
+
+[[variable]]
+native_id = "25.39270.kommunalt-taxerad-forvarvsinkomst"
+slug = "kommunalt-taxerad-forvarvsinkomst"
+
+[[variable]]
+native_id = "25.39271.statligt-taxerad-forvarvsinkomst"
+slug = "statligt-taxerad-forvarvsinkomst"
+
+[[variable]]
+native_id = "25.39276.statlig-beskattningsbar-forvarvsinkomst"
+slug = "statlig-beskattningsbar-forvarvsinkomst"
+
+[[variable]]
+native_id = "25.39277.pensionsbelopp-familj"
+slug = "pensionsbelopp-familj"
+
+[[variable]]
+native_id = "25.39279.bostadsrattens-formogenhetsvarde-familj"
+slug = "bostadsrattens-formogenhetsvarde-familj"
+
+[[variable]]
+native_id = "25.39280.formogenhetsvarde-fastighetsinnehav"
+slug = "formogenhetsvarde-fastighetsinnehav"
+
+[[variable]]
+native_id = "25.39281.formogenhetsvarde-fastighet-familj"
+slug = "formogenhetsvarde-fastighet-familj"
+
+[[variable]]
+native_id = "25.39282.formogenhetsvarde-kapital"
+slug = "formogenhetsvarde-kapital"
+
+[[variable]]
+native_id = "25.39283.formogenhetsvarde-kapital-familj"
+slug = "formogenhetsvarde-kapital-familj"
+
+[[variable]]
+native_id = "25.39284.formogenhet-ovriga-tillgangar"
+slug = "formogenhet-ovriga-tillgangar"
+
+[[variable]]
+native_id = "25.39285.formogenhet-ovriga-tillgangar-familj"
+slug = "formogenhet-ovriga-tillgangar-familj"
+
+[[variable]]
+native_id = "25.39286.bostadsbidrag-barnfamiljer"
+slug = "bostadsbidrag-barnfamiljer"
+
+[[variable]]
+native_id = "25.39287.bostadsbidrag-ungdomar-ovriga"
+slug = "bostadsbidrag-ungdomar-ovriga"
+
+[[variable]]
+native_id = "25.39288.bostuf"
+slug = "bostuf"
+
+[[variable]]
+native_id = "25.39289.ersattning-varnplikt-familj"
+slug = "ersattning-varnplikt-familj"
+
+[[variable]]
+native_id = "25.39290.ovriga-avdrag-kapital"
+slug = "ovriga-avdrag-kapital"
+
+[[variable]]
+native_id = "25.39291.utbetalt-belopp-vardepapper"
+slug = "utbetalt-belopp-vardepapper"
+
+[[variable]]
+native_id = "25.39292.inbetald-a-skatt"
+slug = "inbetald-a-skatt"
+
+[[variable]]
+native_id = "25.39293.sarskild-loneskatt-pensionsutfastelse"
+slug = "sarskild-loneskatt-pensionsutfastelse"
+
+[[variable]]
+native_id = "25.39294.inkomst-ku-nolltaxerade"
+slug = "inkomst-ku-nolltaxerade"
+
+[[variable]]
+native_id = "25.39296.underlag-fastighetsskatt-hyreshus-125"
+slug = "underlag-fastighetsskatt-hyreshus-125"
+
+[[variable]]
+native_id = "25.39297.underlag-fastighetsskatt-hyreshus-25"
+slug = "underlag-fastighetsskatt-hyreshus-25"
+
+[[variable]]
+native_id = "25.39298.studerande"
+slug = "studerande"
+
+[[variable]]
+native_id = "25.39355.skogsvardsavgift"
+slug = "skogsvardsavgift"
+
+[[variable]]
+native_id = "25.39372.samtaxerad-make-maka"
+slug = "samtaxerad-make-maka"
+
+[[variable]]
+native_id = "25.39392.allman-loneavgift-egenforetagare"
+slug = "allman-loneavgift-egenforetagare"
+
+[[variable]]
+native_id = "25.39427.sjukpenning-a-intrade"
+slug = "sjukpenning-a-intrade"
+
+[[variable]]
+native_id = "25.39660.markering-gemensam-formogenhet"
+slug = "markering-gemensam-formogenhet"
+
+[[variable]]
+native_id = "25.39887.ags-forsakring"
+slug = "ags-forsakring"
+
+[[variable]]
+native_id = "25.39894.skattereduktion"
+slug = "skattereduktion"
+
+[[variable]]
+native_id = "25.39947.kommunal-inkomstskatt"
+slug = "kommunal-inkomstskatt"
+
+[[variable]]
+native_id = "25.39963.taxeringsnamnd"
+slug = "taxeringsnamnd"
+
+[[variable]]
+native_id = "25.40024.ackumulerad-summa-a-skatt"
+slug = "ackumulerad-summa-a-skatt"
+
+[[variable]]
+native_id = "25.40025.ackumulerad-summa-b-skatt"
+slug = "ackumulerad-summa-b-skatt"
+
+[[variable]]
+native_id = "25.40062.statligt-taxerad-inkomst"
+slug = "statligt-taxerad-inkomst"
+
+[[variable]]
+native_id = "25.40063.kommunalt-taxerad-inkomst"
+slug = "kommunalt-taxerad-inkomst"
+
+[[variable]]
+native_id = "25.40068.kommunalt-extra-avdrag"
+slug = "kommunalt-extra-avdrag"
+
+[[variable]]
+native_id = "25.40069.statligt-extra-avdrag"
+slug = "statligt-extra-avdrag"
+
+[[variable]]
+native_id = "25.40070.kod-for-samtaxering"
+slug = "kod-for-samtaxering"
+
+[[variable]]
+native_id = "25.40079.deklarationsnummer"
+slug = "deklarationsnummer"
+
+[[variable]]
+native_id = "25.40091.uppbordsdistrikt"
+slug = "uppbordsdistrikt"
+
+[[variable]]
+native_id = "25.40308.statlig-inkomstskatt"
+slug = "statlig-inkomstskatt"
+
+[[variable]]
+native_id = "25.40357.sjukpenning-anstallning"
+slug = "sjukpenning-anstallning"
+
+[[variable]]
+native_id = "25.40358.sjukpenning-annan-forvarvsinkomst"
+slug = "sjukpenning-annan-forvarvsinkomst"
+
+[[variable]]
+native_id = "25.40360.statlig-beskattningsbar-exkl-formaner"
+slug = "statlig-beskattningsbar-exkl-formaner"
+
