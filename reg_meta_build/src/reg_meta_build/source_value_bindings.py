@@ -365,6 +365,7 @@ class ValueBindingSession:
                 validity = self.session.validity_for(
                     item_id=association.item_id, locator=association.locator
                 )
+                validity_windows = tuple(value.window for value in validity)
                 invalid_item = (
                     join.validity_target == "item"
                     and self.session.native_item_coordinate(association.item_id) is None
@@ -373,7 +374,7 @@ class ValueBindingSession:
                     scope,
                     association.supplied_window,
                     association.section_window,
-                    tuple(value.window for value in validity),
+                    validity_windows,
                     missing_validity=join.missing_validity,
                     invalid_item=invalid_item,
                 )
@@ -407,15 +408,25 @@ class ValueBindingSession:
                 if member_scope is None:
                     inactive.append(association)
                     if (
-                        issue is None
+                        join.validity_target == "item"
+                        and issue is None
                         and not invalid_item
                         and validity
                         and all(
-                            item.window is not None and item.window.status == "known"
-                            for item in validity
+                            window is not None and window.status == "known"
+                            for window in validity_windows
                         )
                     ):
-                        set_aside_candidates.append((association, validity))
+                        item_scope, item_issue = _member_scope(
+                            scope,
+                            None,
+                            None,
+                            validity_windows,
+                            missing_validity=join.missing_validity,
+                            invalid_item=False,
+                        )
+                        if item_scope is None and item_issue is None:
+                            set_aside_candidates.append((association, validity))
                     continue
                 value = self.session.value(association.value_key)
                 members.append(

@@ -463,6 +463,54 @@ def test_edition_list_sets_aside_item_validity_only_when_wholly_excluded(
     ]
 
 
+@pytest.mark.parametrize(
+    "supplied_start,supplied_end,expected_issues",
+    (
+        ("1990-01-01", "1994-12-31", ("conflicting_code_validity",)),
+        ("2001-01-01", "2004-12-31", ()),
+    ),
+)
+def test_overlapping_item_validity_prevents_whole_list_set_aside(
+    tmp_path: Path,
+    supplied_start: str,
+    supplied_end: str,
+    expected_issues: tuple[str, ...],
+) -> None:
+    rows = (
+        SourceValueAssociation(
+            2,
+            "list",
+            "a",
+            "values",
+            member_id="1001",
+            item_id="1",
+            supplied_window=value_window(supplied_start, supplied_end),
+        ),
+        SourceValueAssociation(3, "list", "b", "values", member_id="1001", item_id="2"),
+    )
+    validity = tuple(
+        SourceValueValidity(
+            index + 2,
+            str(index + 1),
+            start,
+            None,
+            "validity",
+            window=value_window(start, None),
+        )
+        for index, start in enumerate(("1995-01-01", "2008-01-01"))
+    )
+    source = _prepare(tmp_path / "values", join=_join(), rows=rows, validity=validity)
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="1990", end="2000"),)
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(_record(), sessions, scope=scope)
+    assert tuple(issue.code for issue in bound.issues) == expected_issues
+    assert bound.bindings[0].item_validity_set_aside == ()
+    assert rows[1] in bound.bindings[0].inactive_associations
+    assert all(rows[1] not in member.associations for member in bound.claims[0].members)
+
+
 def test_item_validity_set_aside_is_independent_of_association_order(
     tmp_path: Path,
 ) -> None:
