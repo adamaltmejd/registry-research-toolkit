@@ -178,10 +178,10 @@ supply no flags; conflicting flags are not combined with Boolean OR.
 SCB value preparation keeps descriptor/value dictionaries, ordered CVID/ItemId
 associations, validity declarations, disconnected identifiers and duplicates. Missing,
 empty and zero stay distinct. A descriptor label is not a global code-list ID. Exact
-validity dates are not truncated to years or silently repaired.
-An edition's own item associations establish its code list when global item validity
-would exclude every associated item over the whole edition scope. Supplied and section
-windows still apply, and partial exclusions retain item validity.
+validity dates are not truncated to years or silently repaired. An edition's own item
+associations establish its code list when global item validity would exclude every
+associated item over the whole edition scope. Supplied and section windows still apply,
+and partial exclusions retain item validity.
 
 The exact `Tal` and `Beskrivande text` rows whose code, version and level agree are type
 declarations, not enumerated codes. Cleaning records that distinction on the descriptor;
