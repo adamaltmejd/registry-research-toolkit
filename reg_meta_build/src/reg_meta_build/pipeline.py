@@ -31,6 +31,7 @@ from reg_meta_build.curation_compile import (
     CompiledCodebook,
     CompiledCuration,
     compile_curation,
+    compile_deferred_naming,
     finalize_classification_bindings,
     source_event_id,
     tree_sha256,
@@ -120,7 +121,7 @@ class _Model(BaseModel):
 
 
 class CompiledScope(_Model):
-    """In-memory decisions for one complete prepared source scope."""
+    """In-memory declarations for one prepared source scope."""
 
     source: str
     register_key: NativeKey | None
@@ -378,9 +379,16 @@ def build_catalog(
             CompiledScope(source=source, register_key=register)
             for source, register in sorted(outside_keys, key=repr)
         )
-        outside_compiled = compile_curation(tree, prepared, outside, subset=True)
+        outside_naming, outside_ambiguities = compile_deferred_naming(
+            tree, prepared, outside
+        )
         unselected_scopes = {
-            key: _compiled_scope(key, outside_compiled)
+            key: CompiledScope(
+                source=key[0],
+                register_key=key[1],
+                naming=outside_naming.get(key, ()),
+                naming_ambiguities=outside_ambiguities.get(key, ()),
+            )
             for key in sorted(outside_keys, key=repr)
         }
     coding_registers = {

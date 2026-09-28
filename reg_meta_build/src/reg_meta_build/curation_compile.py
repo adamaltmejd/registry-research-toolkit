@@ -4042,6 +4042,58 @@ def compile_flags(
     )
 
 
+def _partitioned_naming(
+    naming: dict[Any, tuple[Any, ...]],
+    partition_naming: dict[Any, tuple[Any, ...]],
+    split_bases: dict[Any, set[NativeKey]],
+) -> dict[Any, tuple[Any, ...]]:
+    return {
+        key: tuple(
+            item
+            for item in values
+            if item.target.source_key not in split_bases.get(key, set())
+        )
+        + partition_naming.get(key, ())
+        for key, values in naming.items()
+    }
+
+
+def compile_deferred_naming(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[CompiledScope, ...],
+) -> tuple[
+    dict[Any, tuple[Any, ...]],
+    dict[Any, tuple[NamingAmbiguity, ...]],
+]:
+    """Compile only declarations used to classify out-of-slice references."""
+    from .pipeline import CompiledScope
+
+    naming, _, _, _, _ = compile_native_naming(tree, prepared, scopes, subset=True)
+    scopes = tuple(
+        CompiledScope.model_validate_json(
+            scope.model_copy(
+                update={"naming": naming.get((scope.source, scope.register_key), ())}
+            ).model_dump_json()
+        )
+        for scope in scopes
+    )
+    partition_cases, partition_naming, _, ambiguities, split_bases, _ = (
+        compile_partitions(tree, prepared, scopes)
+    )
+    naming = _partitioned_naming(naming, partition_naming, split_bases)
+    _, matrix_naming, _, _ = compile_matrix_repr(tree, prepared, scopes, naming)
+    naming = {
+        key: (*values, *matrix_naming.get(key, ())) for key, values in naming.items()
+    }
+    _, errata_naming, _, _, _ = compile_errata(
+        tree, prepared, scopes, partition_cases, subset=True
+    )
+    for key, extra in errata_naming.items():
+        naming[key] = (*naming.get(key, ()), *extra)
+    return naming, ambiguities
+
+
 def compile_curation(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -4290,15 +4342,7 @@ def compile_curation(
     ) = compile_partitions(tree, prepared, scopes)
     for key, extra in partition_cases.items():
         cases[key].extend(extra)
-    naming = {
-        key: tuple(
-            item
-            for item in values
-            if item.target.source_key not in split_bases.get(key, set())
-        )
-        + partition_naming.get(key, ())
-        for key, values in naming.items()
-    }
+    naming = _partitioned_naming(naming, partition_naming, split_bases)
     provider_keys = {
         key: tuple(
             item for item in values if item[0] not in split_bases.get(key, set())

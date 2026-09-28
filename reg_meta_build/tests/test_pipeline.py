@@ -940,26 +940,28 @@ def test_reference_into_unselected_thin_provider_is_deferred(
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)
-def test_unselected_additional_family_name_uses_complete_compiler(
+def test_unselected_additional_family_name_uses_naming_stages(
     catalog: CatalogFixture, tmp_path: Path, monkeypatch
 ) -> None:
-    from reg_meta_build import pipeline
+    from reg_meta_build import curation_compile
 
     (catalog.curation / "relations.toml").write_text(
         '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
         'b = "scb/other/calendar"\n',
         encoding="utf-8",
     )
-    compile_tree = pipeline.compile_curation
+    compile_matrix = curation_compile.compile_matrix_repr
 
-    def with_matrix_name(*args, **kwargs):
-        compiled = compile_tree(*args, **kwargs)
-        if not kwargs.get("subset") or len(args[2]) != 1:
-            return compiled
-        key = args[2][0].source, args[2][0].register_key
-        declarations = (compiled.naming or {}).get(key, ())
+    def with_matrix_name(tree, prepared, scopes, naming):
+        cases, matrix_names, keys, diagnostics = compile_matrix(
+            tree, prepared, scopes, naming
+        )
+        if len(scopes) != 1:
+            return cases, matrix_names, keys, diagnostics
+        key = scopes[0].source, scopes[0].register_key
+        declarations = naming.get(key, ())
         if not declarations or key[1] is None or key[1][-1] != 2:
-            return compiled
+            return cases, matrix_names, keys, diagnostics
         native = next(item for item in declarations if item.target.kind == "variable")
         # The period-family compiler adds names after native naming and partitions.
         matrix = native.model_copy(
@@ -980,14 +982,62 @@ def test_unselected_additional_family_name_uses_complete_compiler(
                 ),
             }
         )
-        return replace(
-            compiled,
-            naming={**(compiled.naming or {}), key: (*declarations, matrix)},
+        return (
+            cases,
+            {**matrix_names, key: (*matrix_names.get(key, ()), matrix)},
+            keys,
+            diagnostics,
         )
 
-    monkeypatch.setattr(pipeline, "compile_curation", with_matrix_name)
+    monkeypatch.setattr(curation_compile, "compile_matrix_repr", with_matrix_name)
     output, report = tmp_path / "slice.db", tmp_path / "report"
     result = catalog.build(output, report, registers=("1",), diagnostic=True)
+    assert result["counts"].get("error", 0) == 0
+    assert result["counts"]["deferred_references"] == 1
+    assert [(issue["code"], issue["severity"]) for issue in _issues(report)] == [
+        ("deferred_out_of_slice_reference", "warning")
+    ]
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+def test_scoped_build_compiles_full_curation_only_for_selected_scope(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build import pipeline
+
+    compile_tree = pipeline.compile_curation
+    compiled_registers = []
+
+    def record_scopes(tree, prepared, scopes, *, subset):
+        compiled_registers.append(tuple(scope.register_key[-1] for scope in scopes))
+        return compile_tree(tree, prepared, scopes, subset=subset)
+
+    monkeypatch.setattr(pipeline, "compile_curation", record_scopes)
+    result = catalog.build(
+        tmp_path / "slice.db", tmp_path / "report", registers=("1",), diagnostic=True
+    )
+    assert result["counts"].get("error", 0) == 0
+    assert compiled_registers == [(1,)]
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+def test_unselected_declared_variable_name_is_deferred(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    other = catalog.curation / "registers/scb/other.toml"
+    other.write_text(
+        other.read_text(encoding="utf-8").replace('slug = "value"', 'slug = "curated"'),
+        encoding="utf-8",
+    )
+    (catalog.curation / "relations.toml").write_text(
+        '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
+        'b = "scb/other/curated"\n',
+        encoding="utf-8",
+    )
+    report = tmp_path / "report"
+    result = catalog.build(
+        tmp_path / "slice.db", report, registers=("1",), diagnostic=True
+    )
     assert result["counts"].get("error", 0) == 0
     assert result["counts"]["deferred_references"] == 1
     assert [(issue["code"], issue["severity"]) for issue in _issues(report)] == [
