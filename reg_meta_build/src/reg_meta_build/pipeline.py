@@ -30,6 +30,7 @@ from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
 from reg_meta_build.curation_compile import (
     CompiledCodebook,
     CompiledCuration,
+    _swecov_columns,
     compile_curation,
     compile_deferred_naming,
     finalize_classification_bindings,
@@ -83,7 +84,6 @@ from reg_meta_build.source_value_bindings import open_value_bindings
 from reg_meta_build.sources.swecov_column_types import (
     SWECOV_COLUMN_TYPES_PATH,
     index_steward_column_storage,
-    index_swecov_column_types,
 )
 from reg_meta_build.validate import validate_built_db
 
@@ -346,11 +346,13 @@ def build_catalog(
         CompiledScope(source=source, register_key=register)
         for source, register in sorted(visit, key=repr)
     )
+    storage_columns = _swecov_columns(prepared)
     compiled = compile_curation(
         tree,
         prepared,
         scope_seeds,
         subset=bool(registers),
+        storage_columns=storage_columns,
     )
     if "_classifications" in compiled.report:
         valid_overrides = set(compiled.report["_classifications"]["entries_matched"])
@@ -380,7 +382,7 @@ def build_catalog(
             for source, register in sorted(outside_keys, key=repr)
         )
         outside_naming, outside_ambiguities = compile_deferred_naming(
-            tree, prepared, outside
+            tree, prepared, outside, storage_columns
         )
         unselected_scopes = {
             key: CompiledScope(
@@ -554,7 +556,6 @@ def build_catalog(
             for entry in prepared.manifest.inputs:
                 event("input", entry.model_dump(mode="json"))
             declarations = []
-            storage_declarations = []
             for index, item in enumerate(prepared.iter_evidence()):
                 disposition = "source_context"
                 if isinstance(item, ReferenceEvidence):
@@ -565,13 +566,11 @@ def build_catalog(
                         | SourceEventDeclaration
                         | SourceJoinKeyDeclaration,
                     ):
-                        if (
+                        if not (
                             isinstance(declaration, SourceColumnTypeDeclaration)
                             and declaration.revision.artifact_path
                             == SWECOV_COLUMN_TYPES_PATH
                         ):
-                            storage_declarations.append(declaration)
-                        else:
                             declarations.append(declaration)
                             disposition = "literal_metadata"
                     else:
@@ -601,7 +600,6 @@ def build_catalog(
                     },
                 )
                 counts["prepared_evidence"] += 1
-            storage_columns = index_swecov_column_types(storage_declarations)
             storage_by_register = {
                 f"{register.register_info.provider}/{register.register_info.slug}": index_steward_column_storage(
                     register.register_info.steward_table_prefixes, storage_columns

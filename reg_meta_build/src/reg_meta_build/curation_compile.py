@@ -1421,7 +1421,10 @@ def compile_partitions(
     seen = set()
     named_rename_owners = set()
     for source in sorted({scope.source for scope in scopes}):
-        for native, records in prepared.records.iter_native_families(source):
+        wanted = {scope.register_key for scope in scopes if scope.source == source}
+        for native, records in prepared.records.iter_native_families(
+            source, None if None in wanted else wanted
+        ):
             location = registers.get((source, native[:5]))
             if location is None:
                 continue
@@ -1870,11 +1873,14 @@ def compile_native_naming(
     scope_map = {(scope.source, scope.register_key): scope for scope in scopes}
     bindings: dict[Any, list[LegacyNamingBinding]] = {key: [] for key in scope_map}
     for source in sorted({scope.source for scope in scopes}):
-        for family_key, members in prepared.records.iter_native_families(source):
+        wanted = {scope.register_key for scope in scopes if scope.source == source}
+        for family_key, members in prepared.records.iter_native_families(
+            source, None if None in wanted else wanted
+        ):
             scope_key = (source, family_key[:5])
-            if scope_key not in scope_map:
+            if None in wanted and scope_key not in scope_map:
                 scope_key = (source, None)
-            if scope_key not in scope_map or family_key[-2] not in {
+            if family_key[-2] not in {
                 "native-int",
                 "native-str",
             }:
@@ -3180,6 +3186,18 @@ def _partition_memberships(
     }
 
 
+def _swecov_columns(
+    prepared: PreparedCatalogSources,
+) -> dict[tuple[str, str], SourceColumnTypeDeclaration]:
+    return index_swecov_column_types(
+        item.declaration
+        for item in prepared.iter_evidence()
+        if isinstance(item, ReferenceEvidence)
+        and isinstance(item.declaration, SourceColumnTypeDeclaration)
+        and item.declaration.revision.artifact_path == SWECOV_COLUMN_TYPES_PATH
+    )
+
+
 def compile_errata(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -3187,6 +3205,7 @@ def compile_errata(
     partition_cases: dict[Any, tuple[CurationCase, ...]],
     *,
     subset: bool,
+    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> tuple[
     dict[Any, tuple[CurationCase, ...]],
     dict[Any, tuple[NamingDeclaration, ...]],
@@ -3207,13 +3226,8 @@ def compile_errata(
         register.errata.edition_period for register in tree.registers
     ):
         return {}, {}, {}, (), {}
-    storage_columns = index_swecov_column_types(
-        item.declaration
-        for item in prepared.iter_evidence()
-        if isinstance(item, ReferenceEvidence)
-        and isinstance(item.declaration, SourceColumnTypeDeclaration)
-        and item.declaration.revision.artifact_path == SWECOV_COLUMN_TYPES_PATH
-    )
+    if storage_columns is None:
+        storage_columns = _swecov_columns(prepared)
     partition_members = _partition_memberships(partition_cases)
     locations: dict[int, list[tuple[Any, tuple[str | int, ...]]]] = defaultdict(list)
     for scope in scopes:
@@ -4062,6 +4076,7 @@ def compile_deferred_naming(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
     scopes: tuple[CompiledScope, ...],
+    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> tuple[
     dict[Any, tuple[Any, ...]],
     dict[Any, tuple[NamingAmbiguity, ...]],
@@ -4087,7 +4102,12 @@ def compile_deferred_naming(
         key: (*values, *matrix_naming.get(key, ())) for key, values in naming.items()
     }
     _, errata_naming, _, _, _ = compile_errata(
-        tree, prepared, scopes, partition_cases, subset=True
+        tree,
+        prepared,
+        scopes,
+        partition_cases,
+        subset=True,
+        storage_columns=storage_columns,
     )
     for key, extra in errata_naming.items():
         naming[key] = (*naming.get(key, ()), *extra)
@@ -4100,6 +4120,7 @@ def compile_curation(
     scopes: tuple[CompiledScope, ...],
     *,
     subset: bool = False,
+    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> CompiledCuration:
     """Compile global families, wiring, and exact issue acknowledgements."""
     from .pipeline import CompiledScope
@@ -4368,7 +4389,14 @@ def compile_curation(
         errata_keys,
         errata_diagnostics,
         errata_report,
-    ) = compile_errata(tree, prepared, scopes, partition_cases, subset=subset)
+    ) = compile_errata(
+        tree,
+        prepared,
+        scopes,
+        partition_cases,
+        subset=subset,
+        storage_columns=storage_columns,
+    )
     for key, extra in errata_cases.items():
         cases[key].extend(extra)
     for key, extra in errata_naming.items():

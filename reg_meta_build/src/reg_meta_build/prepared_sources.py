@@ -778,6 +778,26 @@ def _read_record_batch(
     return tuple(cache[row["ordinal"]] for row in rows)
 
 
+def _register_payloads(
+    conn: sqlite3.Connection,
+    payload: Callable[[int, str], Any],
+    source: str,
+    registers: Collection[NativeKey | None] | None,
+) -> Iterator[tuple[str, int, NativeKey | None]]:
+    for row in conn.execute(
+        "SELECT DISTINCT provider, register_payload FROM occurrence "
+        "WHERE source=? ORDER BY provider, register_payload",
+        (source,),
+    ):
+        register = native_register_key(
+            source,
+            row["provider"],
+            payload(row["register_payload"], "coordinate"),
+        )
+        if registers is None or register in registers:
+            yield row["provider"], row["register_payload"], register
+
+
 @dataclass(frozen=True)
 class PreparedSourceRecords:
     """A reusable accepted reader; records are decoded only when iterated or selected."""
@@ -867,6 +887,7 @@ class PreparedSourceRecords:
     def iter_native_families(
         self,
         source: str,
+        registers: Collection[NativeKey | None] | None = None,
     ) -> Iterator[tuple[NativeKey, tuple[SourceRecord, ...]]]:
         """Decode one source-native family at a time using the cold-prepared index.
 
@@ -874,11 +895,32 @@ class PreparedSourceRecords:
         Native IDs take precedence over supplied names; name-only source identities
         remain scoped to their exact source/register. This is grouping of evidence,
         not a declaration that each group is one catalog variable. Duplicate rows
-        keep source order. Records without a complete family are available separately.
+        keep source order. Families retain payload-ID order, and records within each
+        family retain occurrence order. Given `registers`, SQL excludes other
+        registers before any family records are decoded. Records without a complete
+        family are available separately.
         """
         with _decoded_database(self.root, self.manifest) as (conn, payload):
+            join = ""
+            if registers is not None:
+                mappings = [
+                    (provider, register_payload)
+                    for provider, register_payload, _ in _register_payloads(
+                        conn, payload, source, registers
+                    )
+                ]
+                conn.execute(
+                    "CREATE TEMP TABLE selected_register (provider TEXT, "
+                    "register_payload INTEGER, PRIMARY KEY (provider, register_payload)) "
+                    "WITHOUT ROWID"
+                )
+                conn.executemany(
+                    "INSERT INTO selected_register VALUES (?, ?)", mappings
+                )
+                join = "JOIN selected_register USING (provider, register_payload) "
             rows = conn.execute(
-                "SELECT * FROM occurrence WHERE source=? AND family_payload IS NOT NULL "
+                f"SELECT occurrence.* FROM occurrence {join}"
+                "WHERE occurrence.source=? AND occurrence.family_payload IS NOT NULL "
                 "ORDER BY family_payload, ordinal",
                 (source,),
             )
@@ -890,7 +932,8 @@ class PreparedSourceRecords:
                         payload,
                         tuple(members),
                         self._record_cache,
-                        "WHERE occurrence.source=? AND occurrence.family_payload=?",
+                        f"{join}WHERE occurrence.source=? "
+                        "AND occurrence.family_payload=?",
                         (source, family),
                     ),
                 )
@@ -909,22 +952,11 @@ class PreparedSourceRecords:
         with _decoded_database(self.root, self.manifest) as (conn, payload):
             partitions: dict[tuple[str, NativeKey | None], int] = {}
             mappings = []
-            for row in conn.execute(
-                "SELECT DISTINCT provider, register_payload FROM occurrence "
-                "WHERE source=? ORDER BY provider, register_payload",
-                (source,),
+            for provider, register_payload, register in _register_payloads(
+                conn, payload, source, registers
             ):
-                register = native_register_key(
-                    source,
-                    row["provider"],
-                    payload(row["register_payload"], "coordinate"),
-                )
-                if registers is not None and register not in registers:
-                    continue
-                partition = partitions.setdefault(
-                    (row["provider"], register), len(partitions)
-                )
-                mappings.append((row["provider"], row["register_payload"], partition))
+                partition = partitions.setdefault((provider, register), len(partitions))
+                mappings.append((provider, register_payload, partition))
             conn.execute(
                 "CREATE TEMP TABLE register_partition (provider TEXT, register_payload INTEGER, "
                 "partition INTEGER, PRIMARY KEY (provider, register_payload)) WITHOUT ROWID"

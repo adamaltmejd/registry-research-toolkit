@@ -371,6 +371,39 @@ def test_family_reads_child_rows_once_and_reuses_records_across_views(
     )
 
 
+def test_native_family_register_filter_preserves_grouping_and_order(
+    tmp_path: Path,
+) -> None:
+    revision = _revision("source-a", "a")
+    first = _record(revision, row=1, member="First", raw_value="First")
+    second = _record(revision, row=2, member="Second", raw_value="Second")
+    other_subject = second.subject.model_copy(
+        update={"register_name": SourceCoordinate(status="value", name="other")}
+    )
+    arguments = {
+        field: getattr(second, field)
+        for field in SourceRecord.model_fields
+        if field not in {"record_id", "source", "source_revision_id", "subject"}
+    }
+    other = SourceRecord.create(revision=revision, subject=other_subject, **arguments)
+    records = (first, other, first)
+    root = tmp_path / "inputs" / "records"
+    manifest = prepare_source_records(
+        root, records=records, revisions=(revision,), scope="filtered families"
+    )
+    commit = accept_prepared(root)
+    reader = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=commit
+    )
+    all_families = tuple(reader.iter_native_families(revision.dataset))
+    first_register = source_register_key(first)
+    assert first_register is not None
+    assert tuple(
+        reader.iter_native_families(revision.dataset, {first_register})
+    ) == tuple(family for family in all_families if family[0][:5] == first_register)
+    assert tuple(reader.iter_native_families(revision.dataset, set())) == ()
+
+
 def test_parent_fields_round_trip_through_prepared_record(tmp_path: Path) -> None:
     revision = _revision("source-a", "a")
     original = _record(revision, row=1, member="Child", raw_value="child")

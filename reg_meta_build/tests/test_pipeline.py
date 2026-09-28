@@ -1008,9 +1008,11 @@ def test_scoped_build_compiles_full_curation_only_for_selected_scope(
     compile_tree = pipeline.compile_curation
     compiled_registers = []
 
-    def record_scopes(tree, prepared, scopes, *, subset):
+    def record_scopes(tree, prepared, scopes, *, subset, storage_columns):
         compiled_registers.append(tuple(scope.register_key[-1] for scope in scopes))
-        return compile_tree(tree, prepared, scopes, subset=subset)
+        return compile_tree(
+            tree, prepared, scopes, subset=subset, storage_columns=storage_columns
+        )
 
     monkeypatch.setattr(pipeline, "compile_curation", record_scopes)
     result = catalog.build(
@@ -1018,6 +1020,26 @@ def test_scoped_build_compiles_full_curation_only_for_selected_scope(
     )
     assert result["counts"].get("error", 0) == 0
     assert compiled_registers == [(1,)]
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+def test_scoped_build_indexes_swecov_columns_once(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build import curation_compile
+
+    original = curation_compile.index_swecov_column_types
+    calls = []
+
+    def tracked(declarations):
+        calls.append(True)
+        return original(declarations)
+
+    monkeypatch.setattr(curation_compile, "index_swecov_column_types", tracked)
+    catalog.build(
+        tmp_path / "slice.db", tmp_path / "report", registers=("1",), diagnostic=True
+    )
+    assert len(calls) == 1
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)

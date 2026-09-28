@@ -9,7 +9,9 @@ from typing import TYPE_CHECKING, Any, Literal, cast
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _prepared_fixtures import accept_prepared
 from reg_meta.errors import RegMetaError
+from reg_meta_build import prepared_sources
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.curation_compile import (
     CompiledCuration,
@@ -31,6 +33,10 @@ from reg_meta_build.curation_compile import (
 from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.id import mint
 from reg_meta_build.pipeline import CompiledScope
+from reg_meta_build.prepared_sources import (
+    open_prepared_source_records,
+    prepare_source_records,
+)
 from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
 from reg_meta_build.scb_errata import ErrataVersion, edition_bindings
 from reg_meta_build.source_annotations import apply_alias_cases
@@ -184,7 +190,7 @@ def _scope() -> CompiledScope:
 
 def _prepared():
     class Records:
-        def iter_native_families(self, source):
+        def iter_native_families(self, source, registers=None):
             return iter(())
 
         def iter_records(self, *, source):
@@ -478,7 +484,7 @@ def test_native_names_overlay_and_unnamed_provider_keys_compile(tmp_path):
     records = (record(5), record(7))
 
     class Reader:
-        def iter_native_families(self, source):
+        def iter_native_families(self, source, registers=None):
             return ((native_variable_key(item), (item,)) for item in records)
 
         def iter_records(self, *, source):
@@ -539,7 +545,7 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
     )
 
     class Reader:
-        def iter_native_families(self, source):
+        def iter_native_families(self, source, registers=None):
             return iter(())
 
         def iter_records(self, *, source):
@@ -782,7 +788,7 @@ def test_thin_native_naming_captures_complete_family_guard(tmp_path):
     records = (parent, variable)
 
     class Reader:
-        def iter_native_families(self, source):
+        def iter_native_families(self, source, registers=None):
             return iter(((native_variable_key(variable), (variable,)),))
 
         def iter_records(self, *, source):
@@ -1083,7 +1089,7 @@ def _compile_partition_fixture(
     native = native_variable_key(records[0])
     assert native is not None
     reader = SimpleNamespace(
-        iter_native_families=lambda source: iter(((native, records),))
+        iter_native_families=lambda source, registers=None: iter(((native, records),))
     )
     scope = _partition_scope(records)
     tree = load_curation_tree(root)
@@ -1125,6 +1131,55 @@ def _scb_partition_records(
         }
         records.append(clean_scb_row(header, index, cells, revision).record)
     return tuple(records)
+
+
+def test_scoped_naming_skips_unselected_family_decode(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first = _scb_partition_records(("FIRST",), register_id=1)[0]
+    other = _scb_partition_records(("OTHER",), register_id=2)[0]
+    root = tmp_path / "inputs" / "records"
+    revision = _revision("scb-registerinformation")
+    manifest = prepare_source_records(
+        root,
+        records=(first, other),
+        revisions=(revision,),
+        scope="scoped naming",
+    )
+    commit = accept_prepared(root)
+    reader = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=commit
+    )
+    original = prepared_sources._read_record
+
+    def corrupt_second(payload, row, locators, cells):
+        register = payload(row["register_payload"], "coordinate")
+        if register.native_id == 2:
+            raise ValueError("corrupt selected family")
+        return original(payload, row, locators, cells)
+
+    monkeypatch.setattr(prepared_sources, "_read_record", corrupt_second)
+    prepared = _prepared()
+    prepared.records = reader
+    tree = _tree(tmp_path / "curation")
+    selected = source_register_key(first)
+    unselected = source_register_key(other)
+    assert selected is not None and unselected is not None
+    compile_native_naming(
+        tree,
+        prepared,
+        (CompiledScope(source=first.source, register_key=selected),),
+        subset=True,
+    )
+    with pytest.raises(
+        prepared_sources.PreparedSourceError, match="corrupt selected family"
+    ):
+        compile_native_naming(
+            tree,
+            prepared,
+            (CompiledScope(source=other.source, register_key=unselected),),
+            subset=True,
+        )
 
 
 def _errata_record(
@@ -1474,7 +1529,9 @@ def test_named_edition_split_rebinds_parents_and_is_order_independent(
             iter_register_slices=lambda source, wanted: iter(
                 ((native_register, rows),)
             ),
-            iter_native_families=lambda source: iter(((native_variable, rows),)),
+            iter_native_families=lambda source, registers=None: iter(
+                ((native_variable, rows),)
+            ),
         )
         return cast("Any", SimpleNamespace(records=reader))
 
@@ -1579,7 +1636,9 @@ def test_split_variant_naming_accepts_source_parent_and_keeps_states(
     assert source_variant is not None and register is not None and variable is not None
     assert {native_variant_key(record) for record in records} == {source_variant}
     reader = SimpleNamespace(
-        iter_native_families=lambda source: iter(((variable, records),)),
+        iter_native_families=lambda source, registers=None: iter(
+            ((variable, records),)
+        ),
         iter_records=lambda **kwargs: iter(records),
         iter_register_slices=lambda source, wanted: iter(((register, records),)),
     )
@@ -2727,7 +2786,7 @@ def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path)
         update={"naming_ambiguities": generated[3][key]}
     )
     reader = SimpleNamespace(
-        iter_native_families=lambda source: iter(((native, records),))
+        iter_native_families=lambda source, registers=None: iter(((native, records),))
     )
     compiled = compile_partitions(
         load_curation_tree(root),
@@ -2919,7 +2978,9 @@ def test_sos_type_split_and_name_rename(tmp_path: Path, rename: bool):
     if rename:
         assert corrected[0].fields.column_name.value == "INVARN9"
         reader = SimpleNamespace(
-            iter_native_families=lambda source: iter(((native, records),)),
+            iter_native_families=lambda source, registers=None: iter(
+                ((native, records),)
+            ),
             iter_records=lambda **kwargs: iter(records),
             iter_register_slices=lambda source, wanted: iter(((None, records),)),
         )
@@ -3098,7 +3159,7 @@ def test_classification_binding_matches_partition_produced_name(tmp_path: Path) 
     assert native is not None and register is not None
 
     class Records:
-        def iter_native_families(self, source):
+        def iter_native_families(self, source, registers=None):
             return iter(((native, records),))
 
         def iter_records(self, *, source):
