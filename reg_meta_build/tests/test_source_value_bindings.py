@@ -309,6 +309,7 @@ def test_source_type_evidence_does_not_create_coding_or_require_item_validity(
         result = bind_code_lists(_record(), sessions)
     assert result.issues == ()
     assert result.bindings[0].non_membership_associations == rows[:1]
+    assert result.bindings[0].item_validity_set_aside == ()
     assert result.bindings[0].association_count == len(rows)
     assert result.bindings[0].inactive_associations == ()
     if mixed:
@@ -372,6 +373,289 @@ def test_native_join_preserves_raw_tokens_uses_one_session_and_exact_validity(
         assert result.bindings[0].association_count == 2
     assert tuple(source.associations()) == rows
     assert source.manifest.auxiliary_count == 0
+
+
+def test_edition_list_sets_aside_item_validity_only_when_wholly_excluded(
+    tmp_path: Path,
+) -> None:
+    rows = (
+        SourceValueAssociation(2, "list", "a", "values", member_id="1001", item_id="1"),
+        SourceValueAssociation(3, "list", "b", "values", member_id="1001", item_id="2"),
+    )
+    validity = tuple(
+        SourceValueValidity(
+            index + 2,
+            str(index + 1),
+            "2008-11-19",
+            None,
+            "validity",
+            window=value_window("2008-11-19", None),
+        )
+        for index in range(2)
+    )
+    source = _prepare(tmp_path / "values", join=_join(), rows=rows, validity=validity)
+    with open_value_bindings((source,)) as sessions:
+        old = TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="1990", end="1990"),)
+        )
+        bound = bind_code_lists(_record(), sessions, scope=old)
+        assert bound.issues == ()
+        assert len(bound.claims) == len(bound.bindings) == 1
+        assert bound.bindings[0].claim_id == bound.claims[0].claim_id
+        assert bound.bindings[0].item_validity_set_aside == rows
+        assert bound.bindings[0].inactive_associations == ()
+        assert [member.validity for member in bound.claims[0].members] == [
+            (validity[0],),
+            (validity[1],),
+        ]
+        assert [member.scope.kind for member in bound.claims[0].members] == [
+            "year_independent",
+            "year_independent",
+        ]
+        assert [
+            issue.code for issue in resolve_code_membership(bound.claims).issues
+        ] == []
+
+    partial_validity = (
+        validity[0],
+        replace(
+            validity[1],
+            valid_from="2009-01-01",
+            window=value_window("2009-01-01", None),
+        ),
+    )
+    partial_source = _prepare(
+        tmp_path / "partial", join=_join(), rows=rows, validity=partial_validity
+    )
+    partial = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="2008", end="2008"),)
+    )
+    with open_value_bindings((partial_source,)) as sessions:
+        bound = bind_code_lists(_record(), sessions, scope=partial)
+    assert bound.bindings[0].item_validity_set_aside == ()
+    assert [member.code for member in bound.claims[0].members] == ["01"]
+    assert [
+        (issue.code, issue.valid_from, issue.valid_to)
+        for issue in resolve_code_membership(bound.claims).issues
+    ] == [("empty_active_coding", "2008-01-01", "2008-11-18")]
+
+    pooled = TemporalScope(
+        kind="intervals",
+        intervals=(ScopeInterval(start="1971", end="2024"),),
+    )
+    pooled_validity = tuple(
+        replace(
+            item,
+            valid_from="2012-01-04",
+            window=value_window("2012-01-04", None),
+        )
+        for item in validity
+    )
+    pooled_source = _prepare(
+        tmp_path / "pooled", join=_join(), rows=rows, validity=pooled_validity
+    )
+    with open_value_bindings((pooled_source,)) as sessions:
+        bound = bind_code_lists(_record(), sessions, scope=pooled)
+    assert bound.bindings[0].item_validity_set_aside == ()
+    assert [member.scope.intervals[0].start for member in bound.claims[0].members] == [
+        "2012-01-04",
+        "2012-01-04",
+    ]
+
+
+@pytest.mark.parametrize(
+    "supplied_start,supplied_end,expected_issues",
+    (
+        ("1990-01-01", "1994-12-31", ("conflicting_code_validity",)),
+        ("2001-01-01", "2004-12-31", ()),
+    ),
+)
+def test_overlapping_item_validity_prevents_whole_list_set_aside(
+    tmp_path: Path,
+    supplied_start: str,
+    supplied_end: str,
+    expected_issues: tuple[str, ...],
+) -> None:
+    rows = (
+        SourceValueAssociation(
+            2,
+            "list",
+            "a",
+            "values",
+            member_id="1001",
+            item_id="1",
+            supplied_window=value_window(supplied_start, supplied_end),
+        ),
+        SourceValueAssociation(3, "list", "b", "values", member_id="1001", item_id="2"),
+    )
+    validity = tuple(
+        SourceValueValidity(
+            index + 2,
+            str(index + 1),
+            start,
+            None,
+            "validity",
+            window=value_window(start, None),
+        )
+        for index, start in enumerate(("1995-01-01", "2008-01-01"))
+    )
+    source = _prepare(tmp_path / "values", join=_join(), rows=rows, validity=validity)
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="1990", end="2000"),)
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(_record(), sessions, scope=scope)
+    assert tuple(issue.code for issue in bound.issues) == expected_issues
+    assert bound.bindings[0].item_validity_set_aside == ()
+    assert rows[1] in bound.bindings[0].inactive_associations
+    assert all(rows[1] not in member.associations for member in bound.claims[0].members)
+
+
+def test_item_validity_set_aside_is_independent_of_association_order(
+    tmp_path: Path,
+) -> None:
+    rows = (
+        SourceValueAssociation(2, "list", "a", "values", member_id="1001", item_id="1"),
+        SourceValueAssociation(3, "list", "b", "values", member_id="1001", item_id="2"),
+    )
+    validity = tuple(
+        SourceValueValidity(
+            index + 2,
+            str(index + 1),
+            "2008-11-19",
+            None,
+            "validity",
+            window=value_window("2008-11-19", None),
+        )
+        for index in range(2)
+    )
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="1990", end="1990"),)
+    )
+    results = []
+    for index, order in enumerate((rows, rows[::-1])):
+        source = _prepare(
+            tmp_path / str(index), join=_join(), rows=order, validity=validity
+        )
+        with open_value_bindings((source,)) as sessions:
+            results.append(bind_code_lists(_record(), sessions, scope=scope))
+    assert results[0] == results[1]
+
+
+def test_item_validity_set_aside_keeps_section_excluded_association_inactive(
+    tmp_path: Path,
+) -> None:
+    rows = (
+        SourceValueAssociation(
+            2,
+            "list",
+            "a",
+            "values",
+            member_id="1001",
+            item_id="1",
+            section_window=value_window("2010-01-01", "2010-12-31"),
+        ),
+        SourceValueAssociation(3, "list", "b", "values", member_id="1001", item_id="2"),
+    )
+    validity = tuple(
+        SourceValueValidity(
+            index + 2,
+            str(index + 1),
+            "2008-11-19",
+            None,
+            "validity",
+            window=value_window("2008-11-19", None),
+        )
+        for index in range(2)
+    )
+    source = _prepare(tmp_path / "values", join=_join(), rows=rows, validity=validity)
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="1990", end="1990"),)
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(_record(), sessions, scope=scope)
+    assert bound.issues == ()
+    assert bound.bindings[0].inactive_associations == rows[:1]
+    assert bound.bindings[0].item_validity_set_aside == rows[1:]
+    assert [member.code for member in bound.claims[0].members] == [""]
+
+
+@pytest.mark.parametrize("obstacle", ("unknown", "type_marker", "section", "row"))
+def test_item_validity_set_aside_respects_join_and_evidence_guards(
+    tmp_path: Path, obstacle: str
+) -> None:
+    rows = (
+        SourceValueAssociation(
+            2,
+            "list",
+            "a",
+            "values",
+            member_id="1001",
+            item_id="1",
+            section_window=value_window("2010-01-01", "2010-12-31")
+            if obstacle == "section"
+            else None,
+        ),
+        SourceValueAssociation(
+            3,
+            "list",
+            "b",
+            "values",
+            member_id="1001",
+            item_id="2",
+            section_window=value_window("2010-01-01", "2010-12-31")
+            if obstacle == "section"
+            else None,
+        ),
+    )
+    if obstacle == "type_marker":
+        rows = (replace(rows[0], value_key="marker"), rows[1])
+    validity = tuple(
+        SourceValueValidity(
+            index + 2,
+            str(index + 1),
+            "2008-11-19",
+            None,
+            "values" if obstacle == "row" else "validity",
+            window=SourceValueWindow("unknown")
+            if obstacle == "unknown" and index == 1
+            else value_window("2008-11-19", None),
+        )
+        for index in range(2)
+    )
+    source = _prepare(
+        tmp_path / "values",
+        join=_join("declared_list") if obstacle == "row" else _join(),
+        descriptors=(
+            SourceValueDescriptor(
+                "list",
+                name="Codes",
+                non_membership_codes=("TYPE",) if obstacle == "type_marker" else (),
+            ),
+        ),
+        values=(
+            SourceValue("a", "01", "One"),
+            SourceValue("b", "02", "Two"),
+            SourceValue("marker", "TYPE", "Numeric"),
+        ),
+        rows=rows,
+        validity=validity,
+    )
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="1990", end="1990"),)
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(
+            _record(declared="Codes" if obstacle == "row" else None),
+            sessions,
+            scope=scope,
+        )
+    assert bound.bindings[0].item_validity_set_aside == ()
+    if obstacle == "unknown":
+        assert [issue.code for issue in bound.issues] == ["unknown_code_validity"]
+    else:
+        assert bound.issues == ()
+        assert bound.claims[0].members == ()
 
 
 def test_checked_effective_scope_preserves_source_validity_and_evidence(

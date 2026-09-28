@@ -218,7 +218,7 @@ slug = "sun-niva-old-mor-2"
 variable = "377.38238"
 variant = "377.1397"
 column = "TerminStuderande_ht"
-periods = [["2005-01-01", "2005-12-31"], ["2006-01-01", "2006-12-31"], ["2007-01-01", "2007-12-31"], ["2008-01-01", "2008-11-18"]]
+periods = [["2008-01-01", "2008-11-18"]]
 reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
 source = "codeless_overlap.toml#/resolve/54"  # v18 accepted-codeless:54:*, 4 case(s)
 
@@ -226,7 +226,7 @@ source = "codeless_overlap.toml#/resolve/54"  # v18 accepted-codeless:54:*, 4 ca
 variable = "377.38239"
 variant = "377.1397"
 column = "TerminStuderande_vt"
-periods = [["2005-01-01", "2005-12-31"], ["2006-01-01", "2006-12-31"], ["2007-01-01", "2007-12-31"], ["2008-01-01", "2008-11-18"]]
+periods = [["2008-01-01", "2008-11-18"]]
 reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
 source = "codeless_overlap.toml#/resolve/55"  # v18 accepted-codeless:55:*, 4 case(s)
 
@@ -234,6 +234,6 @@ source = "codeless_overlap.toml#/resolve/55"  # v18 accepted-codeless:55:*, 4 ca
 variable = "377.38654"
 variant = "377.1397"
 column = "AvslutUnderAret"
-periods = [["2005-01-01", "2005-12-31"], ["2006-01-01", "2006-12-31"], ["2007-01-01", "2007-12-31"], ["2008-01-01", "2008-11-18"]]
+periods = [["2008-01-01", "2008-11-18"]]
 reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
 source = "codeless_overlap.toml#/resolve/50"  # v18 accepted-codeless:50:*, 4 case(s)
