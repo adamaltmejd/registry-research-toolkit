@@ -86,6 +86,7 @@ from reg_meta_build.source_values import (
     SourceValueAssociation,
     SourceValueDescriptor,
     SourceValueJoin,
+    SourceValueValidity,
     SourceValueWindow,
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
@@ -603,6 +604,61 @@ def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(
     assert [
         (s.valid_from, s.valid_to, s.value_set.members) for s in variable.states
     ] == [("2020-01-01", "2020-12-31", (("01", "One"),))]
+
+
+def test_whole_list_item_validity_override_emits_one_warning(tmp_path):
+    item = record(year="1990")
+    root = tmp_path / "values"
+    rows = (
+        SourceValueAssociation(2, "list", "no", "values", member_id="1", item_id="1"),
+        SourceValueAssociation(3, "list", "yes", "values", member_id="1", item_id="2"),
+    )
+    manifest = prepare_source_values(
+        root,
+        revision=REVISION,
+        validity_revision=REVISION,
+        descriptors=(SourceValueDescriptor("list"),),
+        values=(SourceValue("no", "0", "No"), SourceValue("yes", "1", "Yes")),
+        associations=rows,
+        validity=tuple(
+            SourceValueValidity(
+                index + 2,
+                str(index + 1),
+                "2008-11-19",
+                None,
+                "validity",
+                window=SourceValueWindow("known", "2008-11-19"),
+            )
+            for index in range(2)
+        ),
+        join=SourceValueJoin(
+            record_sources=(REVISION.dataset,),
+            member_target="native_member",
+            member_format="integer",
+            validity_target="item",
+            missing_validity="unrestricted",
+            rule="Exact fixture member relation",
+            provenance=("fixture",),
+        ),
+    )
+    source = open_prepared_source_values(
+        root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
+    )
+    with open_value_bindings((source,)) as sessions:
+        result = resolve((item,), value_sessions=sessions)
+    warnings = [
+        diagnostic
+        for diagnostic in result.diagnostics
+        if diagnostic.code == "item_validity_set_aside"
+    ]
+    assert len(warnings) == 1
+    assert warnings[0].severity == "warning"
+    assert "list" in warnings[0].detail
+    assert all(row.locator in warnings[0].detail for row in rows)
+    assert not any(d.code == "empty_active_coding" for d in result.diagnostics)
+    variable = result.variables[native_variable_key(item)]
+    assert variable is not None
+    assert variable.states[0].value_set.members == (("0", "No"), ("1", "Yes"))
 
 
 def test_scope_forwards_label_rule_and_fqid_override(tmp_path):

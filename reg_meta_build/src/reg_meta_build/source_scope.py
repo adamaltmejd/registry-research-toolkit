@@ -405,6 +405,26 @@ def resolve_source_scope(
             claims[column].extend(bound.claims)
             if on_binding is not None:
                 on_binding(key, bound)
+            for binding in bound.bindings:
+                if binding.item_validity_set_aside:
+                    emit(
+                        ResolutionDiagnostic(
+                            code="item_validity_set_aside",
+                            severity="warning",
+                            subject=repr(column),
+                            detail=(
+                                f"Descriptor {binding.descriptor_key!r} keeps edition"
+                                " members despite item validity at associations "
+                                f"{tuple(a.locator for a in binding.item_validity_set_aside)!r}"
+                            ),
+                            refs=tuple(
+                                dict.fromkeys(
+                                    record_ref(r) for r in occurrence.evidence
+                                )
+                            ),
+                            fields=("coding",),
+                        )
+                    )
             for issue in bound.issues:
                 emit(
                     ResolutionDiagnostic(

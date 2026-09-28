@@ -76,6 +76,7 @@ class ValueListBinding:
     association_count: int
     inactive_associations: tuple[SourceValueAssociation, ...]
     non_membership_associations: tuple[SourceValueAssociation, ...] = ()
+    item_validity_set_aside: tuple[SourceValueAssociation, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -352,6 +353,7 @@ class ValueBindingSession:
                 ]
             )
             members, inactive, non_membership = [], [], []
+            set_aside_candidates = []
             for association in associations:
                 if (
                     descriptor.non_membership_codes
@@ -404,6 +406,16 @@ class ValueBindingSession:
                     issues[issue, descriptor_key].append(association.locator)
                 if member_scope is None:
                     inactive.append(association)
+                    if (
+                        issue is None
+                        and not invalid_item
+                        and validity
+                        and all(
+                            item.window is not None and item.window.status == "known"
+                            for item in validity
+                        )
+                    ):
+                        set_aside_candidates.append((association, validity))
                     continue
                 value = self.session.value(association.value_key)
                 members.append(
@@ -417,6 +429,47 @@ class ValueBindingSession:
                         and issue == "unknown_code_validity",
                     )
                 )
+            set_aside = []
+            if (
+                join.validity_target == "item"
+                and not members
+                and not non_membership
+                and len(set_aside_candidates) == len(associations)
+                and not any(key == descriptor_key for _, key in issues)
+            ):
+                for association, validity in sorted(
+                    set_aside_candidates, key=lambda pair: pair[0].locator
+                ):
+                    member_scope, issue = _member_scope(
+                        scope,
+                        association.supplied_window,
+                        association.section_window,
+                        (),
+                        missing_validity="unrestricted",
+                        invalid_item=False,
+                    )
+                    if issue is not None or member_scope is None:
+                        continue
+                    value = self.session.value(association.value_key)
+                    members.append(
+                        CodeMembershipClaim(
+                            value.code,
+                            value.label,
+                            member_scope,
+                            (association,),
+                            validity,
+                        )
+                    )
+                    set_aside.append(association)
+                if set_aside:
+                    set_aside_locators = {
+                        association.locator for association in set_aside
+                    }
+                    inactive = [
+                        association
+                        for association in inactive
+                        if association.locator not in set_aside_locators
+                    ]
             if len(non_membership) != len(associations):
                 claim = CodeListClaim(
                     claim_id,
@@ -459,6 +512,7 @@ class ValueBindingSession:
                     len(associations),
                     tuple(inactive),
                     tuple(non_membership),
+                    tuple(set_aside),
                 )
             )
         result = ValueBindingResult(
