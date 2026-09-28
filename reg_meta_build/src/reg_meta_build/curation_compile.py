@@ -1986,7 +1986,7 @@ def compile_native_naming(
                         source_id=_naming_source_id(kind, native_key, member=member),
                         target=target,
                     )
-                native_register = source_register_key(record)
+                native_register = source_register_key(cast("SourceRecord", record))
                 if (
                     native_register is not None
                     and record.subject.variant.status == "not_applicable"
@@ -2031,14 +2031,19 @@ def compile_native_naming(
                     record
                     for record in records
                     if record.subject.provider == "scb"
-                    and (native_register := source_register_key(record)) is not None
+                    and (
+                        native_register := source_register_key(
+                            cast("SourceRecord", record)
+                        )
+                    )
+                    is not None
                     and native_register[-1] == native_register_id
                 )
                 if not matching:
                     continue
                 for entry in register.identity.edition_split:
                     for record in matching:
-                        native = native_variant_key(record)
+                        native = native_variant_key(cast("SourceRecord", record))
                         if native is None or native[-1] != int(
                             entry.variant.split(".")[1]
                         ):
