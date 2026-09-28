@@ -1,0 +1,35 @@
+# Research and evidence contracts
+
+These are semantic requirements, not a required directory tree or serialization framework. Use simple files and existing tools.
+
+## Questions
+
+Each Markdown ticket has stable id, title, status, depends_on, and batch frontmatter. Add evidence/run references and supersession links when available. Validate duplicate IDs, dangling dependencies and cycles. Keep question, rationale, method, answer, evidence and limitations in readable prose.
+
+Use a small status vocabulary, e.g. proposed, ready, awaiting-results, reviewed, closed, superseded. Distinguish answered, inconclusive and rejected outcomes in prose. Mock verification is not an empirical answer. Closing hides a ticket from the active board, not historical search. Changed source definitions should flag dependent findings for review, not automatically invalidate them.
+
+## Source contracts
+
+Document relevant columns/types, source filename/format, entity/grain, uniqueness, year coverage, units/encoding, sentinel values, cardinality, timing and evidence. Preserve exact IDs; avoid floating-point conversion. Do not assume every Swedish source uses the same encoding or identifiers. Distinguish absent rows, missing values, zero, conflicting classifications and suppression.
+
+Preserve appropriate reference-project lookups, recording revision and provenance. Read only needed columns/partitions. A bridge for an existing input format stays narrow and inside restricted compute; never export individual-level bridge files.
+
+## Batch and run
+
+A batch names tickets and required processing/configuration. Each run has an immutable ID and records source commit, batch/configuration/lock hashes, data mode, input-release identifiers, software versions, completed checks and artifact hashes. Reference processing and investigation code within that commit. Do not export raw paths, IDs, values or exception dumps as provenance. Machine-specific paths can remain in private local configuration.
+
+Execution source must be committed. Package only declared sources and verify runtime/dependencies rather than importing untracked helpers. The run and later ticket answer can be different commits. Keep execution commits reachable in history or a retained batch tag.
+
+## Results and disclosure
+
+Separate restricted intermediates from releasable output. A release explicitly inventories aggregate files, schemas and content hashes, tied to a run and mode. Recreate it cleanly; never merge old output into a new release. Unknown, extra, missing or changed files must fail release/import validation. Validate archive paths, links and size before extracting.
+
+Names and identifier regex cannot establish disclosure safety. Use narrow writers emitting declared aggregate fields and validate schemas/types/domains. Apply documented project policy before writing. Cover unique-person support, nonmissing counts/complements, related margins and differencing where relevant. Never invent universal Swedish thresholds or claim a minimum count alone makes earnings statistics safe. Provisional mock policy does not authorize real release. Record overlapping real releases for review; do not build a universal disclosure solver.
+
+Track machine checks and human release approval separately. A real evidence export needs the required review. Mock output is labelled and routed separately; never promote it by relabelling. A blocked run can emit safe status metadata, not raw failure text or unchecked artifacts.
+
+Local processing may use only quantities supported by cleared artifacts. Preserve suppression as missing/annotated, never zero. Do not reconstruct hidden margins or denominators. Presentation changes should not need remote runs; new samples, groupings or unsupported statistical quantities do.
+
+## Local interface
+
+Generate offline-capable HTML from canonical ticket/result files, not a second state store or server platform. Escape prose, filenames and labels. Show batch status, question, answer/uncertainty, provenance, result table/figure and next action. Separate remote output, local renders and paper/slides outputs.
