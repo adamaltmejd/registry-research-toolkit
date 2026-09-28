@@ -188,6 +188,18 @@ def _scope() -> CompiledScope:
     )
 
 
+def _naming_reader(reader: Any) -> Any:
+    reader.iter_naming_families = reader.iter_native_families
+
+    def slices(source, registers):
+        if None in registers:
+            return iter(((None, tuple(reader.iter_records(source=source))),))
+        return reader.iter_register_slices(source, registers)
+
+    reader.iter_naming_register_slices = slices
+    return reader
+
+
 def _prepared():
     class Records:
         def iter_native_families(self, source, registers=None):
@@ -232,7 +244,7 @@ def _prepared():
     return SimpleNamespace(
         manifest=SimpleNamespace(inputs=inputs),
         iter_evidence=lambda: iter(()),
-        records=Records(),
+        records=_naming_reader(Records()),
         value_sources=(),
     )
 
@@ -496,7 +508,7 @@ def test_native_names_overlay_and_unnamed_provider_keys_compile(tmp_path):
     key = ("scb-registerinformation", None)
     naming, variants, provider_keys, diagnostics, _ = compile_native_naming(
         load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=Reader())),
+        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
         (_scope(),),
         subset=True,
     )
@@ -578,7 +590,7 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
     )
     names, variants, _, diagnostics, _ = compile_native_naming(
         load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=Reader())),
+        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
         (scope,),
         subset=True,
     )
@@ -611,7 +623,7 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
     )
     _, _, _, stale, _ = compile_native_naming(
         load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=Reader())),
+        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
         (scope,),
         subset=True,
     )
@@ -632,7 +644,7 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
     )
     _, _, _, missing, _ = compile_native_naming(
         load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=Reader())),
+        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
         (scope,),
         subset=True,
     )
@@ -813,7 +825,7 @@ def test_thin_native_naming_captures_complete_family_guard(tmp_path):
     )
     names, _, _, diagnostics, _ = compile_native_naming(
         load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=Reader())),
+        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
         (scope,),
         subset=True,
     )
@@ -1131,6 +1143,32 @@ def _scb_partition_records(
         }
         records.append(clean_scb_row(header, index, cells, revision).record)
     return tuple(records)
+
+
+def test_partition_reads_only_registers_with_partition_work(tmp_path: Path) -> None:
+    root = tmp_path / "curation"
+    tree = _tree(root)
+    records = _scb_partition_records(("ANSWER",))
+    scope = _partition_scope(records)
+    register = source_register_key(records[0])
+    assert register is not None
+    requested = []
+
+    class Reader:
+        def iter_native_families(self, source, registers=None):
+            requested.append(set(registers))
+            return iter(())
+
+    prepared = cast("Any", SimpleNamespace(records=Reader()))
+    compile_partitions(tree, prepared, (scope,))
+    assert requested == [set()]
+
+    path = root / "registers/scb/sample.toml"
+    path.write_text(
+        path.read_text() + '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+    )
+    compile_partitions(load_curation_tree(root), prepared, (scope,))
+    assert requested[-1] == {register}
 
 
 def test_scoped_naming_skips_unselected_family_decode(
@@ -1538,7 +1576,7 @@ def test_named_edition_split_rebinds_parents_and_is_order_independent(
                 ((native_variable, rows),)
             ),
         )
-        return cast("Any", SimpleNamespace(records=reader))
+        return cast("Any", SimpleNamespace(records=_naming_reader(reader)))
 
     first, issues, statuses = compile_edition_splits(
         tree, prepared(records), (scope,), subset=False
@@ -1647,7 +1685,7 @@ def test_split_variant_naming_accepts_source_parent_and_keeps_states(
         iter_records=lambda **kwargs: iter(records),
         iter_register_slices=lambda source, wanted: iter(((register, records),)),
     )
-    prepared = cast("Any", SimpleNamespace(records=reader))
+    prepared = cast("Any", SimpleNamespace(records=_naming_reader(reader)))
     scope = _partition_scope(records)
     scope_key = scope.source, scope.register_key
     tree = load_curation_tree(root)
@@ -2991,7 +3029,7 @@ def test_sos_type_split_and_name_rename(tmp_path: Path, rename: bool):
         )
         names = compile_native_naming(
             load_curation_tree(root),
-            cast("Any", SimpleNamespace(records=reader)),
+            cast("Any", SimpleNamespace(records=_naming_reader(reader))),
             (_partition_scope(records),),
             subset=True,
         )
@@ -3174,7 +3212,7 @@ def test_classification_binding_matches_partition_produced_name(tmp_path: Path) 
             return iter(((register, records),))
 
     prepared = _prepared()
-    prepared.records = Records()
+    prepared.records = _naming_reader(Records())
     scope = CompiledScope(source=records[0].source, register_key=register)
     compiled = compile_curation(
         load_curation_tree(root), prepared, (scope,), subset=True
