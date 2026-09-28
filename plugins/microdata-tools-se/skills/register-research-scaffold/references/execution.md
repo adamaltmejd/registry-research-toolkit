@@ -8,7 +8,7 @@ Local: fixture tests, full mock pipeline/assertions, exact-artifact mock check, 
 
 Restricted server: ingestion, individual intermediates, real assertions, investigations, disclosure-controlled artifacts, release checks and approved output ZIP. No model calls or automatic raw-data synchronization.
 
-Mode is explicit, never guessed from OS/path. Missing real sources halt; never fall back to mock. Separate caches/output by mode. Refuse input/output overlap. Source readers must not alter reference-project inputs or stores.
+Mode is explicit, never guessed from OS/path. Missing real sources halt; never fall back to mock. Verify that mock inputs belong to an approved invented input set before reading them; a mode flag or filename is not sufficient. For a small trial, a committed content-hash manifest can bind the ignored mock files without tracking their records. Keep that manifest distinct from unit fixtures. Separate caches/output by mode. Refuse input/output overlap. Source readers must not alter reference-project inputs or stores.
 
 ## MONA
 
@@ -39,4 +39,4 @@ Exercise one minimal release-boundary rejection fixture (e.g. undeclared or alte
 
 ## Archive
 
-Default builds select active tickets. Closed investigations remain in Git. Rerun their recorded commit and command in an isolated checkout. Do not create growing Git bundles or repository copies per investigation. Transfer artifacts can be deleted and rebuilt from retained commits. Reproducibility also requires permitted retention of data versions and dependencies within their environment.
+Default builds select active tickets and skip closed question-specific computations, not just their output files. Shared processing remains active only while selected work needs it. Closed investigations remain in Git. Rerun their recorded commit and command in an isolated checkout. Do not create growing Git bundles or repository copies per investigation. Transfer artifacts can be deleted and rebuilt from retained commits. Reproducibility also requires permitted retention of data versions and dependencies within their environment.

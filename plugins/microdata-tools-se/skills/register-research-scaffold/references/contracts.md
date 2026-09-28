@@ -10,7 +10,7 @@ Use a small status vocabulary, e.g. proposed, ready, awaiting-results, reviewed,
 
 ## Source contracts
 
-Document relevant columns/types, source filename/format, entity/grain, uniqueness, year coverage, units/encoding, sentinel values, cardinality, timing and evidence. Preserve exact IDs; avoid floating-point conversion. Do not assume every Swedish source uses the same encoding or identifiers. Distinguish absent rows, missing values, zero, conflicting classifications and suppression.
+Document relevant columns/types, source filename/format, entity/grain, uniqueness, year coverage, units/encoding, sentinel values, cardinality, timing and evidence. Preserve exact IDs; avoid floating-point conversion. Do not assume every Swedish source uses the same encoding or identifiers. Distinguish absent rows, missing values, zero, conflicting classifications and suppression. Keep source-validity bounds separate from analysis eligibility; valid out-of-sample cohorts must not fail global assertions.
 
 Preserve appropriate reference-project lookups, recording revision and provenance. Read only needed columns/partitions. A bridge for an existing input format stays narrow and inside restricted compute; never export individual-level bridge files.
 
