@@ -5,7 +5,7 @@ description: Scaffold a small batch-based Swedish register-data research project
 
 # Register research scaffold
 
-Create the smallest working project that answers the user's first research questions and demonstrates the workflow below. Preserve an existing reference project; create a separate project when requested. Use the chosen language/build tools, not the reference project's stack by default. Do not add a workflow framework, research-record database, RAG service, hosted Git service, or independent mock generator for an MVP. This does not restrict the chosen data-processing engine, such as DuckDB.
+Create the smallest working project that answers the user's first research questions and demonstrates the workflow below. Preserve an existing reference project; create a separate project when requested. Use the chosen language/build tools, not the reference project's stack by default. Do not build a custom workflow framework, research-record database, RAG service or independent mock generator for an MVP. Use an established dependency-aware build tool when incremental execution is needed; keep its choice independent of the data-processing engine. Do not configure hosted Git or transfer data through it without an explicit request.
 
 Read [contracts.md](references/contracts.md) before implementation. Read [execution.md](references/execution.md) when wiring batches, packaging, and transfers.
 
@@ -15,7 +15,7 @@ Read supplied source code/documentation and applicable instructions. Establish e
 
 Distinguish approved choices from proposed choices. Ask about ambiguity that changes the estimand or population; otherwise state a reversible assumption. A prototype can run on mocks while questions remain open. Keep unresolved scientific definitions, source coverage and disclosure policy visibly pending; do not label real-data integration verified.
 
-Restricted compute has no remote model access. No AI invocation or model API dependency belongs in the batch runner. Keep agent-readable local inputs to code, documentation, clearly fake data, and cleared aggregate releases. Never configure automatic GitHub synchronization. Git records history locally; add approved institutional remotes only when requested.
+Restricted compute has no remote model access. No AI invocation or model API dependency belongs in the batch runner. Keep agent-readable local inputs to code, documentation, clearly fake data, and aggregate releases explicitly approved by a human for model access. An automatic disclosure pass alone never authorizes loading real outputs into model context, including through locally running tools connected to a hosted model. Never configure automatic GitHub synchronization. Git records history locally; add approved institutional remotes only when requested.
 
 ## Scaffold only what the first batch needs
 
@@ -23,9 +23,11 @@ Provide:
 - Concise project instructions recording actual boundaries, chosen tools and commands.
 - A documented source adapter, explicit mock/real configuration, and analysis/configuration files for one small batch.
 - Markdown question tickets with YAML frontmatter and dependency links; use filesystem search and metadata, not a separate database.
-- A way to package an explicit committed revision, run it, validate outputs, and import an evidence release.
+- A way to package an explicit committed revision, run it incrementally with persistent restricted caches, validate outputs, and download them into human-only review storage before explicit approval for model access. Use bounded current code/output locations rather than accumulating remote run directories.
 - A simple local HTML view of tickets, batch state, tables and evidence. Paper and slides are researcher-facing build targets too; prototype outputs must be visibly labelled mock and need not imitate a completed manuscript.
 - A short runbook stating what was checked locally and what still requires restricted compute or the researcher.
+
+Remote artifacts are declared aggregate data files, preferably CSV with a data dictionary and explicit suppression markers. Render tables and figures locally from those files; deterministic human-only previews may be generated before approval, but models must not see their contents until approval.
 
 Routine execution includes only active processing, assertions and selected analyses. Completed investigations remain tracked and discoverable but do not run unless selected. Preserve original executable code and execution revision. Promote construction rules or analyses still needed by current research into maintained code rather than archiving live dependencies.
 
