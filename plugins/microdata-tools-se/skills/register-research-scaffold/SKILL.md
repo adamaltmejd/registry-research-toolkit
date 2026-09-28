@@ -37,7 +37,7 @@ Keep these jobs separate:
 - Unit tests run locally only, on minimal hand-authored fixtures. Add a test only for a named failure not already protected. Prefer extending a focused test. Do not test every helper, mirror implementation details, or add large snapshots/combinatorial matrices.
 - The actual pipeline must run locally on mock inputs before every remote handoff. The same data assertions run on mock and real inputs. Fix mock contracts rather than adding mock-only bypasses. Assertions protect design requirements; diagnostics answer open questions.
 - When a transfer artifact exists, execute that exact artifact against mock data in an isolated directory. This can also satisfy the full mock-pipeline gate; avoid two identical full runs.
-- Real execution must pass its own assertions and disclosure process. Local success does not establish real coverage, findings, performance or disclosure clearance.
+- Every remote batch must invoke the plugin-supplied automatic disclosure checker as its final computational stage, before any result becomes downloadable. This is mandatory on MONA and other servers; see the release contract. Keep real release disabled while the checker or project policy is missing. Local success does not establish real coverage, findings, performance or disclosure clearance.
 
 Use relevant tests/targets while iterating; run the complete small suite and full mock gate on the final execution revision. Record commands, results and runtime. At batch completion consolidate obsolete/redundant tests, retaining meaningful regressions and independent scientific/disclosure checks. Do not impose coverage percentages or arbitrary test-count quotas.
 
