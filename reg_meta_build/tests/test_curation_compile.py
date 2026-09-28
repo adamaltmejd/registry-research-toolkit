@@ -15,6 +15,7 @@ from reg_meta_build.curation_compile import (
     CompiledCuration,
     _compile_sos_register,
     _compile_thin_register,
+    compile_coding_register,
     compile_curation,
     compile_edition_splits,
     compile_enrichment,
@@ -35,10 +36,13 @@ from reg_meta_build.scb_errata import ErrataVersion, edition_bindings
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_coding import (
     CodeListClaim,
+    CodeMembershipClaim,
     copied_coding_fingerprints,
     resolve_code_membership,
 )
+from reg_meta_build.source_coding_choices import apply_coding_choices
 from reg_meta_build.source_coordinates import (
+    column_identity,
     native_variable_key,
     native_variant_key,
     source_register_key,
@@ -1761,6 +1765,122 @@ def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):
         apply_occurrence_cases((donor, blank), (case,)).accounting[0].disposition
         == "applied"
     )
+
+
+def test_coding_choice_on_errata_delivered_pooled_columns_keeps_exact_peers(
+    tmp_path: Path,
+) -> None:
+    earlier = _errata_record(
+        column="", year="2008", edition_name="2008 - 2010", member=20
+    )
+    later = _errata_record(
+        column="", year="2010", edition_name="2010 - 2012", member=21
+    )
+    donor = _errata_record(column="VALUE", year="2013", member=22)
+    originals = (earlier, later, donor)
+    fragment = (
+        '\n[[errata.delivered]]\nvariant = "people"\ncolumn = "VALUE"\n'
+        'versions = ["2008 - 2010", "2010 - 2012"]\n'
+        'evidence = "accepted delivery"\nnoted = "2026-09-28"\n'
+        '\n[[coding.choice]]\nvariable = "1.5"\nvariant = "people"\n'
+        'column = "VALUE"\nperiods = [["2010-01-01", "2010-12-31"]]\n'
+        'keep = "later"\nover = ["earlier"]\n'
+        'reason = "Reviewed overlap"\nsource = "fixture"\n'
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, originals, fragment)
+    errata_cases, _, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert not diagnostics
+    corrected = apply_occurrence_cases(
+        originals, errata_cases[(scope.source, scope.register_key)]
+    )
+    assert corrected.accounting[0].disposition == "applied"
+    occurrence = source_occurrence(donor)
+    assert occurrence.variable_key is not None and occurrence.variant_key is not None
+    column = column_identity(occurrence.variable_key, occurrence.variant_key, "VALUE")
+    members = tuple(
+        record
+        for item in corrected.occurrences
+        if item.column_key == column
+        for record in item.evidence
+    )
+    assert {record_ref(record) for record in members} == {
+        record_ref(record) for record in originals
+    }
+    scope = scope.model_copy(
+        update={
+            "naming": (
+                *scope.naming,
+                NamingDeclaration(
+                    target=NativeNamingTarget(
+                        kind="register_variant",
+                        provider="scb",
+                        source_key=occurrence.variant_key,
+                        register_key=source_register_key(donor),
+                    ),
+                    naming=SlugEntry("register_variant", "1.2", "people", "scb"),
+                    contributors=(),
+                ),
+                NamingDeclaration(
+                    target=NativeNamingTarget(
+                        kind="variable",
+                        provider="scb",
+                        source_key=occurrence.variable_key,
+                        register_key=source_register_key(donor),
+                    ),
+                    naming=SlugEntry("variable", "1.5", "value", "scb"),
+                    contributors=(),
+                ),
+            )
+        }
+    )
+    independent = TemporalScope(kind="year_independent")
+    claims = (
+        CodeListClaim(
+            "earlier",
+            earlier.edition_scope,
+            (CodeMembershipClaim("0", "Nej", independent),),
+            version_label="earlier",
+        ),
+        CodeListClaim(
+            "later",
+            later.edition_scope,
+            (CodeMembershipClaim("1", "Ja", independent),),
+            version_label="later",
+        ),
+    )
+    assert "conflicting_code_memberships" in {
+        issue.code for issue in resolve_code_membership(claims).issues
+    }
+    register = next(
+        entry for entry in tree.registers if entry.register_info.slug == "sample"
+    )
+    choices, diagnostics = compile_coding_register(
+        register,
+        scope,
+        originals=originals,
+        columns={column: members},
+        coding={column: claims},
+    )
+    assert not diagnostics and len(choices) == 1
+    applied = apply_coding_choices(originals, choices, coding={column: claims})
+    assert applied.accounting[0].status == "applied"
+    assert not applied.diagnostics
+    assert "conflicting_code_memberships" not in {
+        issue.code for issue in applied.coding[column].issues
+    }
+
+    added_peer = _errata_record(column="VALUE", year="2014", member=23)
+    stale = apply_coding_choices(
+        (*originals, added_peer), choices, coding={column: claims}
+    )
+    assert stale.accounting[0].status == "stale"
+    assert "peer_membership_changed" in {issue.code for issue in stale.diagnostics}
+
+    removed = apply_coding_choices((later, donor), choices, coding={column: claims})
+    assert removed.accounting[0].status == "stale"
+    assert "peer_membership_changed" in {issue.code for issue in removed.diagnostics}
 
 
 def test_compiled_errata_with_declared_split_uses_native_variant(tmp_path: Path):
