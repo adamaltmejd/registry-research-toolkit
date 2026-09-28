@@ -7220,3 +7220,554 @@ native_id = "257.39089"
 slug = "innovationsutgifter-kapitalvaror"
 
 # register 258
+
+# Overlapping pooled CIS waves: keep the later wave's list for the shared year (curation triage 2026-09-28, P4).
+
+[[coding.choice]]
+variable = "257.15595"
+variant = "257.553"
+column = "Q9"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Ja eller nej"
+keep_members = [[".", "Skall ej svara"], ["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Ja eller nej' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15603"
+variant = "257.553"
+column = "Q16a"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Ja eller nej"
+keep_members = [[".", "Skall ej svara"], ["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Ja eller nej' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15604"
+variant = "257.553"
+column = "Q16b"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Ja eller nej"
+keep_members = [[".", "Skall ej svara"], ["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Ja eller nej' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15605"
+variant = "257.553"
+column = "Q16c"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Ja eller nej"
+keep_members = [[".", "Skall ej svara"], ["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Ja eller nej' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15601"
+variant = "257.553"
+column = "Q15b"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Grad av observerad effekt"
+keep_members = [[".", "Skall ej svara"], ["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av observerad effekt"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Grad av observerad effekt' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15623"
+variant = "257.553"
+column = "Q15c"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Grad av observerad effekt"
+keep_members = [[".", "Skall ej svara"], ["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av observerad effekt"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Grad av observerad effekt' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15626"
+variant = "257.553"
+column = "Q15f"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Grad av observerad effekt"
+keep_members = [[".", "Skall ej svara"], ["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av observerad effekt"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Grad av observerad effekt' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15627"
+variant = "257.553"
+column = "Q15g"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Grad av observerad effekt"
+keep_members = [[".", "Skall ej svara"], ["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av observerad effekt"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Grad av observerad effekt' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15628"
+variant = "257.553"
+column = "Q15h"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Grad av observerad effekt"
+keep_members = [[".", "Skall ej svara"], ["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av observerad effekt"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Grad av observerad effekt' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15629"
+variant = "257.553"
+column = "Q15i"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Grad av observerad effekt"
+keep_members = [[".", "Skall ej svara"], ["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av observerad effekt"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Grad av observerad effekt' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.15644"
+variant = "257.553"
+column = "Q10a1"
+periods = [["2004-01-01", "2004-12-31"]]
+keep = "Återkommande FoU"
+keep_members = [[".", "Skall ej svara"], ["1", "Kontinuerligt"], ["2", "Emellanåt"]]
+over = ["Återkommande FoU"]
+reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 2004 - 2006 'Återkommande FoU' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.28042"
+variant = "257.553"
+column = "INPDFW"
+periods = [["2010-01-01", "2010-12-31"]]
+keep = "Ja/nej/vet inte, alternativ 1"
+keep_members = [["1", "Ja"], ["2", "Nej"], ["3", "Vet inte"]]
+over = ["Ja eller nej"]
+reason = "2008 - 2010 and 2010 - 2012 disagree on shared 2010; keep the later 2010 - 2012 'Ja/nej/vet inte, alternativ 1' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.28043"
+variant = "257.553"
+column = "INPDFE"
+periods = [["2010-01-01", "2010-12-31"]]
+keep = "Ja/nej/vet inte, alternativ 1"
+keep_members = [["1", "Ja"], ["2", "Nej"], ["3", "Vet inte"]]
+over = ["Ja eller nej"]
+reason = "2008 - 2010 and 2010 - 2012 disagree on shared 2010; keep the later 2010 - 2012 'Ja/nej/vet inte, alternativ 1' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.28044"
+variant = "257.553"
+column = "INPDFC"
+periods = [["2010-01-01", "2010-12-31"]]
+keep = "Ja/nej/vet inte, alternativ 1"
+keep_members = [["1", "Ja"], ["2", "Nej"], ["3", "Vet inte"]]
+over = ["Ja eller nej"]
+reason = "2008 - 2010 and 2010 - 2012 disagree on shared 2010; keep the later 2010 - 2012 'Ja/nej/vet inte, alternativ 1' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39048"
+variant = "257.553"
+column = "STRA_FHQUAL"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39049"
+variant = "257.553"
+column = "STRA_FBRGS"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39050"
+variant = "257.553"
+column = "STRA_FLOWP"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39051"
+variant = "257.553"
+column = "STRA_FSMGS"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39052"
+variant = "257.553"
+column = "STRA_FNWGS"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39053"
+variant = "257.553"
+column = "STRA_FIMPGS"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39054"
+variant = "257.553"
+column = "STRA_FCSOL"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39055"
+variant = "257.553"
+column = "STRA_FSTDGS"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39056"
+variant = "257.553"
+column = "STRA_FNWCUS"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39057"
+variant = "257.553"
+column = "STRA_FESTCUS"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ingen/liten/medel/stor"
+keep_members = [["0", "Ingen"], ["1", "Liten"], ["2", "Medel"], ["3", "Stor"]]
+over = ["Stämmer inte alls/till viss del/ganska väl/mycket väl"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ingen/liten/medel/stor' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39103"
+variant = "257.553"
+column = "COOP_PRV_CN_NEU_NEFTA"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Ja eller nej"
+over = ["Variant ja/nej (1,0)"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Ja eller nej' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39127"
+variant = "257.553"
+column = "COOP_GOV_RI_EU_EFTA"
+periods = [["2018-01-01", "2018-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"], ["9", "Ej godkänt värde, bortfall"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2016 - 2018 and 2018 - 2020 disagree on shared 2018; keep the later 2018 - 2020 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39128"
+variant = "257.553"
+column = "COOP_GOV_RI_NAT"
+periods = [["2018-01-01", "2018-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"], ["9", "Ej godkänt värde, bortfall"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2016 - 2018 and 2018 - 2020 disagree on shared 2018; keep the later 2018 - 2020 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39129"
+variant = "257.553"
+column = "COOP_GOV_RI_NEU_NEFTA"
+periods = [["2018-01-01", "2018-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"], ["9", "Ej godkänt värde, bortfall"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2016 - 2018 and 2018 - 2020 disagree on shared 2018; keep the later 2018 - 2020 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39130"
+variant = "257.553"
+column = "COOP_NPO_EU_EFTA"
+periods = [["2018-01-01", "2018-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"], ["9", "Ej godkänt värde, bortfall"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2016 - 2018 and 2018 - 2020 disagree on shared 2018; keep the later 2018 - 2020 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39131"
+variant = "257.553"
+column = "COOP_NPO_NAT"
+periods = [["2018-01-01", "2018-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"], ["9", "Ej godkänt värde, bortfall"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2016 - 2018 and 2018 - 2020 disagree on shared 2018; keep the later 2018 - 2020 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39132"
+variant = "257.553"
+column = "COOP_NPO_NEU_NEFTA"
+periods = [["2018-01-01", "2018-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"], ["9", "Ej godkänt värde, bortfall"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2016 - 2018 and 2018 - 2020 disagree on shared 2018; keep the later 2018 - 2020 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39127"
+variant = "257.553"
+column = "COOP_GOV_RI_EU_EFTA"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39128"
+variant = "257.553"
+column = "COOP_GOV_RI_NAT"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39129"
+variant = "257.553"
+column = "COOP_GOV_RI_NEU_NEFTA"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39130"
+variant = "257.553"
+column = "COOP_NPO_EU_EFTA"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39131"
+variant = "257.553"
+column = "COOP_NPO_NAT"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.39132"
+variant = "257.553"
+column = "COOP_NPO_NEU_NEFTA"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Variant ja/nej (1,0)"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Variant ja/nej (1,0)' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44657"
+variant = "257.553"
+column = "ENV_ENEREG"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44658"
+variant = "257.553"
+column = "ENV_ENETX"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44659"
+variant = "257.553"
+column = "ENV_ENREGF"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44662"
+variant = "257.553"
+column = "ENV_ENREP"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44663"
+variant = "257.553"
+column = "ENV_ENAGR"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44664"
+variant = "257.553"
+column = "ENV_ENCOST"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44665"
+variant = "257.553"
+column = "ENV_ENREQU"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44666"
+variant = "257.553"
+column = "CLIM_GOV"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans lång"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44668"
+variant = "257.553"
+column = "CLIM_PRIC"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans lång"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.44669"
+variant = "257.553"
+column = "CLIM_WEATH"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Grad av betydelse"
+keep_members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+over = ["Grad av relevans lång"]
+reason = "2018 - 2020 and 2020 - 2022 disagree on shared 2020; keep the later 2020 - 2022 'Grad av betydelse' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.46503"
+variant = "257.553"
+column = "COOP_NPRV_NEU_NEFTA"
+periods = [["2022-01-01", "2022-12-31"]]
+keep = "Ja eller nej"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Enbart ja"]
+reason = "2020 - 2022 and 2022 - 2024 disagree on shared 2022; keep the later 2022 - 2024 'Ja eller nej' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.46504"
+variant = "257.553"
+column = "COOP_NPRV_EU_EFTA"
+periods = [["2022-01-01", "2022-12-31"]]
+keep = "Ja eller nej"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Enbart ja"]
+reason = "2020 - 2022 and 2022 - 2024 disagree on shared 2022; keep the later 2022 - 2024 'Ja eller nej' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
+
+[[coding.choice]]
+variable = "257.46505"
+variant = "257.553"
+column = "COOP_NPRV_NAT"
+periods = [["2022-01-01", "2022-12-31"]]
+keep = "Ja eller nej"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Enbart ja"]
+reason = "2020 - 2022 and 2022 - 2024 disagree on shared 2022; keep the later 2022 - 2024 'Ja eller nej' list."
+source = "curation triage 2026-09-28, P4 later pooled wave"
