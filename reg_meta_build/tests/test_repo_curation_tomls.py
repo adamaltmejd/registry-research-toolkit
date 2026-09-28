@@ -161,15 +161,15 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 110
-    assert sum(len(entry.periods) for entry in coding) == 225
+    assert len(coding) == 107
+    assert sum(len(entry.periods) for entry in coding) == 222
     assert (
         sum(
             len(entry.periods)
             for register in tree.registers
             for entry in register.coding.choice
         )
-        == 87
+        == 84
     )
     assert (
         sum(

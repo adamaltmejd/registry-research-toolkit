@@ -7345,39 +7345,6 @@ reason = "2002 - 2004 and 2004 - 2006 disagree on shared 2004; keep the later 20
 source = "curation triage 2026-09-28, P4 later pooled wave"
 
 [[coding.choice]]
-variable = "257.28042"
-variant = "257.553"
-column = "INPDFW"
-periods = [["2010-01-01", "2010-12-31"]]
-keep = "Ja/nej/vet inte, alternativ 1"
-keep_members = [["1", "Ja"], ["2", "Nej"], ["3", "Vet inte"]]
-over = ["Ja eller nej"]
-reason = "2008 - 2010 and 2010 - 2012 disagree on shared 2010; keep the later 2010 - 2012 'Ja/nej/vet inte, alternativ 1' list."
-source = "curation triage 2026-09-28, P4 later pooled wave"
-
-[[coding.choice]]
-variable = "257.28043"
-variant = "257.553"
-column = "INPDFE"
-periods = [["2010-01-01", "2010-12-31"]]
-keep = "Ja/nej/vet inte, alternativ 1"
-keep_members = [["1", "Ja"], ["2", "Nej"], ["3", "Vet inte"]]
-over = ["Ja eller nej"]
-reason = "2008 - 2010 and 2010 - 2012 disagree on shared 2010; keep the later 2010 - 2012 'Ja/nej/vet inte, alternativ 1' list."
-source = "curation triage 2026-09-28, P4 later pooled wave"
-
-[[coding.choice]]
-variable = "257.28044"
-variant = "257.553"
-column = "INPDFC"
-periods = [["2010-01-01", "2010-12-31"]]
-keep = "Ja/nej/vet inte, alternativ 1"
-keep_members = [["1", "Ja"], ["2", "Nej"], ["3", "Vet inte"]]
-over = ["Ja eller nej"]
-reason = "2008 - 2010 and 2010 - 2012 disagree on shared 2010; keep the later 2010 - 2012 'Ja/nej/vet inte, alternativ 1' list."
-source = "curation triage 2026-09-28, P4 later pooled wave"
-
-[[coding.choice]]
 variable = "257.39048"
 variant = "257.553"
 column = "STRA_FHQUAL"
