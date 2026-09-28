@@ -11,7 +11,6 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from _prepared_fixtures import accept_prepared
 from reg_meta.errors import RegMetaError
-from reg_meta_build import prepared_sources
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.curation_compile import (
     CompiledCuration,
@@ -91,6 +90,7 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
 
+from reg_meta_build import prepared_sources
 from reg_meta_build.fqid_slugs import SlugEntry
 
 if TYPE_CHECKING:
