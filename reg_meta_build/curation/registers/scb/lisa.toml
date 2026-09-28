@@ -411,11 +411,11 @@ column = "ATPFam"
 name = "ATP-kod för efterlevandeförmån"
 definition = "ATP-kod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension."
 data_type = "text"
-is_sensitive = false
+is_sensitive = true
 is_identifier = false
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ATPFam for 1990–2002 — see reg_meta_build/docs/lisa/ATPFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling folkatpfam (FolkATPFam, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ATPFam for 1990–2002 — see reg_meta_build/docs/lisa/ATPFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -424,11 +424,11 @@ column = "FolkFam"
 name = "Folkpensionskod för efterlevandeförmån"
 definition = "Folkpensionskod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension."
 data_type = "text"
-is_sensitive = false
+is_sensitive = true
 is_identifier = false
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FolkFam for 1990–2002 — see reg_meta_build/docs/lisa/FolkFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling folkatpfam (FolkATPFam, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FolkFam for 1990–2002 — see reg_meta_build/docs/lisa/FolkFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
