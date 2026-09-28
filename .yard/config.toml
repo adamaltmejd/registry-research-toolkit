@@ -81,11 +81,13 @@ tools = { subagents = false }
 # DeepSeek implements curation tickets (selected by the curation workflows). It
 # won the 2026-09-28 curation bake-off against Sol, Muse and GPT-6 Luna: every
 # run correct, the unmappable IoT swap families left out and explained, at
-# $0.02-0.14 a lane. Luna mapped a swap pair in both of its runs.
+# $0.02-0.14 a lane. Luna mapped a swap pair in both of its runs. It spends the
+# OpenCode Go subscription (OPENCODE_API_KEY in operator.env) since 2026-09-28,
+# not OpenRouter; the model is the same DeepSeek V4.1 Flash.
 [agents.deepseek]
 harness = "pi"
-provider = "openrouter"
-model = "deepseek/deepseek-v4.1-flash"
+provider = "opencode-go"
+model = "deepseek-v4.1-flash"
 effort = "high"
 tools = { subagents = false }
 
