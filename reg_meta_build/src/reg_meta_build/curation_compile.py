@@ -3071,57 +3071,22 @@ def compile_coding_register(
                     raise ValueError(f"{case_id}: target refs left the original scope")
                 targets = capture_expectations(target_records, fields=("column_name",))
                 first = records[0]
-                # An erratum may give a blank source column its effective name.
-                # Guard each original spelling, including the effective name so a
-                # newly documented peer is still detected against source evidence.
-                members_by_field: dict[FieldExpectation, set[SourceRecordRef]] = (
-                    defaultdict(set)
-                )
-                for record in target_records:
-                    field = record.fields.column_name
-                    expected_field = FieldExpectation(
-                        name="column_name",
-                        status=field.status if field is not None else "absent",
-                        value=field.value if field is not None else None,
-                    )
-                    members_by_field[expected_field].add(record_ref(record))
-                members_by_field.setdefault(
-                    FieldExpectation(
-                        name="column_name", status="value", value=entry.column
+                guard = PeerGuard(
+                    guard_id=case_id,
+                    source=scope.source,
+                    coordinates=(
+                        ("register", first.subject.register_name),
+                        ("variant", first.subject.variant),
+                        ("variable", first.subject.variable),
                     ),
-                    set(),
+                    effective_column=column,
+                    expected_members=tuple(target.ref for target in targets),
                 )
-                guards = []
-                for peer_index, field in enumerate(
-                    sorted(
-                        members_by_field,
-                        key=lambda item: (item.status, repr(item.value)),
-                    ),
-                    1,
-                ):
-                    guard = PeerGuard(
-                        guard_id=(
-                            case_id
-                            if len(members_by_field) == 1
-                            else f"{case_id}:peer:{peer_index}"
-                        ),
-                        source=scope.source,
-                        coordinates=(
-                            ("register", first.subject.register_name),
-                            ("variant", first.subject.variant),
-                            ("variable", first.subject.variable),
-                        ),
-                        fields=(field,),
-                        expected_members=tuple(
-                            sorted(members_by_field[field], key=repr)
-                        ),
-                    )
-                    guards.append(guard)
                 cases.append(
                     CurationCase(
                         case_id=case_id,
                         targets=targets,
-                        peer_guards=tuple(guards),
+                        peer_guards=(guard,),
                         decision=CodingDecision(
                             reviewed=True,
                             column_key=column,

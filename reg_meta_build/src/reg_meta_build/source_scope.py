@@ -280,6 +280,9 @@ def resolve_source_scope(
     )
     copied_coding = bind_copied_coding(evidence, occurrence_cases, value_sessions)
     corrected = apply_occurrence_cases(evidence, occurrence_cases, coding=copied_coding)
+    coding_evidence = SourceEvidence(
+        originals, effective_occurrences=corrected.occurrences
+    )
     for issue in corrected.diagnostics:
         emit(issue)
     evaluations = [a.evaluation for a in corrected.accounting]
@@ -567,7 +570,7 @@ def resolve_source_scope(
         )
         selected = tuple(late[key])
         chosen = apply_coding_choices(
-            evidence,
+            coding_evidence,
             tuple(c for c in selected if c.decision.kind == "coding"),
             coding={column: tuple(values) for column, values in claims.items()},
         )

@@ -22,6 +22,7 @@ from reg_meta_build.source_coordinates import (
     native_variable_key,
     source_register_key,
 )
+from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     FieldScalar,
     FieldState,
@@ -39,6 +40,8 @@ from reg_meta_build.source_records import (
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
+
+    from reg_meta_build.source_occurrences import EffectiveOccurrence
 
 
 class _CurationModel(BaseModel):
@@ -251,6 +254,7 @@ class PeerGuard(_CurationModel):
     fields: tuple[FieldExpectation, ...] = ()
     edition_scopes: tuple[TemporalScope, ...] = ()
     folded_column: str | None = None
+    effective_column: NativeKey | None = None
     coordinates: tuple[
         tuple[
             Literal["register", "variant", "variable", "population", "member"],
@@ -270,6 +274,7 @@ class PeerGuard(_CurationModel):
             and self.register_name is None
             and not self.fields
             and self.folded_column is None
+            and self.effective_column is None
             and not self.coordinates
         ):
             raise ValueError("a peer guard needs review matching criteria")
@@ -930,17 +935,32 @@ class SourceEvidence:
     """Original source slice shared by correction and naming applicability checks.
 
     Every index includes newly supplied evidence, not just expected peers. Reuse
-    this object only for the same immutable prepared slice; corrected occurrences
-    are output and must never be substituted as its original evidence.
+    this object only for the same immutable prepared slice. Effective occurrences
+    may supply coding peer membership; target projections still use originals.
     """
 
-    def __init__(self, records: Iterable[SourceRecord]) -> None:
+    def __init__(
+        self,
+        records: Iterable[SourceRecord],
+        *,
+        effective_occurrences: Iterable[EffectiveOccurrence] | None = None,
+    ) -> None:
         self.records = tuple(records)
         self.grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]] = (
             defaultdict(list)
         )
         for record in self.records:
             self.grouped[_record_key(record)].append(record)
+        self.effective_columns: dict[tuple[str, tuple[str, ...]], set[NativeKey]] = (
+            defaultdict(set)
+        )
+        if effective_occurrences is not None:
+            for occurrence in effective_occurrences:
+                column = occurrence.column_key
+                for record in occurrence.evidence:
+                    columns = self.effective_columns[_record_key(record)]
+                    if occurrence.use == "catalog" and column is not None:
+                        columns.add(column)
         self.indexes: dict[
             tuple[str, str], dict[tuple[str, object], list[SourceRecord]]
         ] = {}
@@ -978,9 +998,19 @@ class SourceEvidence:
         register = record.subject.register_name
         return register.name if register.status == "value" else None
 
+    def _effective_column_matches(
+        self, record: SourceRecord, column: NativeKey
+    ) -> bool:
+        columns = self.effective_columns.get(_record_key(record))
+        return (
+            source_occurrence(record).column_key == column
+            if columns is None
+            else column in columns
+        )
+
     def peers(self, guard: PeerGuard) -> Iterable[SourceRecord]:
         # Column/variable selectors make the many finite correction checks cheap.
-        # All remaining predicates still pass through the same exact matcher.
+        # Original predicates and effective column membership are both checked.
         selector: tuple[str, str] | None = None
         value: object = None
         if guard.folded_column is not None:
@@ -1015,7 +1045,15 @@ class SourceEvidence:
                     index[record.source, self._value(record, selector)].append(record)
                 self.indexes[selector] = index
             candidates = self.indexes[selector].get((guard.source, value), ())
-        return (record for record in candidates if _peer_matches(record, guard))
+        return (
+            record
+            for record in candidates
+            if _peer_matches(record, guard)
+            and (
+                guard.effective_column is None
+                or self._effective_column_matches(record, guard.effective_column)
+            )
+        )
 
 
 def evaluate_source_expectations(
