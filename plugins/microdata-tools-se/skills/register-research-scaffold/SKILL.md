@@ -5,7 +5,7 @@ description: Scaffold a small batch-based Swedish register-data research project
 
 # Register research scaffold
 
-Create the smallest working project that answers the user's first research questions and demonstrates the workflow below. Preserve an existing reference project; create a separate project when requested. Use the chosen language/build tools, not the reference project's stack by default. Do not add a framework, database, RAG service, hosted Git service, or independent mock generator for an MVP.
+Create the smallest working project that answers the user's first research questions and demonstrates the workflow below. Preserve an existing reference project; create a separate project when requested. Use the chosen language/build tools, not the reference project's stack by default. Do not add a workflow framework, research-record database, RAG service, hosted Git service, or independent mock generator for an MVP. This does not restrict the chosen data-processing engine, such as DuckDB.
 
 Read [contracts.md](references/contracts.md) before implementation. Read [execution.md](references/execution.md) when wiring batches, packaging, and transfers.
 
