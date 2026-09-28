@@ -26,7 +26,9 @@ from reg_meta_build.source_records import (
     SourceCoordinate,
     SourceEvidenceRow,
     SourceEvidenceTable,
+    SourceFieldCells,
     SourceFields,
+    SourceParentObservation,
     SourceRecord,
     SourceRevision,
     SourceSubject,
@@ -367,6 +369,44 @@ def test_family_reads_child_rows_once_and_reuses_records_across_views(
     assert not any(
         "FROM locator" in sql or "FROM delivered_cell" in sql for sql in statements
     )
+
+
+def test_parent_fields_round_trip_through_prepared_record(tmp_path: Path) -> None:
+    revision = _revision("source-a", "a")
+    original = _record(revision, row=1, member="Child", raw_value="child")
+    register = original.subject.register_name
+    parent = SourceParentObservation(
+        kind="register",
+        coordinate=register,
+        register=register,
+        fields=SourceFields(name=value_field("Parent name")),
+        field_cells=(SourceFieldCells(field="name", positions=(0,)),),
+    )
+    record = SourceRecord.create(
+        revision=revision,
+        locators=original.locators,
+        subject=original.subject,
+        edition_scope=original.edition_scope,
+        edition_period_scope=original.edition_period_scope,
+        fields=original.fields,
+        parent_facts=(parent,),
+        language=original.language,
+        code_set_references=original.code_set_references,
+        original_period_text=original.original_period_text,
+        context=original.context,
+        delivered_cells=original.delivered_cells[:2],
+    )
+    root = tmp_path / "inputs" / "records"
+    manifest = prepare_source_records(
+        root, records=(record,), revisions=(revision,), scope="parent fields"
+    )
+    commit = accept_prepared(root)
+    reader = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=commit
+    )
+    decoded = next(reader.iter_records())
+    assert decoded == record
+    assert decoded.parent_facts[0].fields.name == value_field("Parent name")
 
 
 def test_register_slices_preserve_native_identity_parent_rows_and_unknowns(

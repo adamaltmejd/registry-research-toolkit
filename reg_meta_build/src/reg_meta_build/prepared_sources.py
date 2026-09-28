@@ -636,6 +636,7 @@ def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
                 for name, value in decoded.items()
             ):
                 raise PreparedSourceError("invalid prepared field references")
+            # SourceFields declares named BaseModel fields, not a RootModel value.
             return SourceFields.model_construct(
                 **{name: payload(value, "field") for name, value in decoded.items()}
             )
