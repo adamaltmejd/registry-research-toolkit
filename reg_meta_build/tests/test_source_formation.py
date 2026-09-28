@@ -652,6 +652,7 @@ def test_variable_grain_canonical_conflict_fields_are_unchanged(field: str) -> N
         ("Kronor", "kronor"),
         ("Kronor (SEK)", "kronor"),
         ("Antal månader", "Månader"),
+        ("Månader", "Månad"),
         ("Antal veckor", "Veckor"),
         ("Antal minuter", "Minuter"),
         ("Antal barn", "Antal"),

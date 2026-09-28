@@ -189,6 +189,7 @@ _UNIT_PAIRS = (
     ("Kronor", "kronor"),
     ("Kronor (SEK)", "kronor"),
     ("Antal månader", "Månader"),
+    ("Månader", "Månad"),
     ("Antal veckor", "Veckor"),
     ("Antal minuter", "Minuter"),
     ("Antal barn", "Antal"),

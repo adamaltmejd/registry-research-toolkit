@@ -156,6 +156,7 @@ def test_descriptive_text_disagreement_is_unknown_without_occurrence_issue(
         ("Kronor", "kronor"),
         ("Kronor (SEK)", "kronor"),
         ("Antal månader", "Månader"),
+        ("Månader", "Månad"),
         ("Antal veckor", "Veckor"),
         ("Antal minuter", "Minuter"),
         ("Antal barn", "Antal"),
@@ -190,6 +191,8 @@ def test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order(
         ("Kronor", "Kronor (SEK)"),
         ("Procent", "Andel"),
         ("Veckor", "Antal", "Antal veckor"),
+        ("Antal månader", "Månader", "Månad"),
+        ("År", "Datum"),
     ],
 )
 def test_unlisted_unit_sets_remain_occurrence_conflicts(units: tuple[str, ...]) -> None:
