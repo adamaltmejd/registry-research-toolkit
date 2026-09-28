@@ -26,15 +26,15 @@ from reg_meta_build.source_coding import (
     CodeMembershipClaim,
     resolve_code_membership,
 )
-from reg_meta_build.source_curation import (
-    CurationCase,
-    FlagDecision,
-    capture_expectations,
-)
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_variable_key,
     native_variant_key,
+)
+from reg_meta_build.source_curation import (
+    CurationCase,
+    FlagDecision,
+    capture_expectations,
 )
 from reg_meta_build.source_effects import apply_occurrence_cases
 from reg_meta_build.source_formation import form_native_variable
