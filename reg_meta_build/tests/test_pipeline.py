@@ -1030,8 +1030,7 @@ def test_unselected_declared_variable_name_is_deferred(
         encoding="utf-8",
     )
     (catalog.curation / "relations.toml").write_text(
-        '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
-        'b = "scb/other/curated"\n',
+        '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\nb = "scb/other/curated"\n',
         encoding="utf-8",
     )
     report = tmp_path / "report"
