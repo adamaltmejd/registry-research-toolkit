@@ -78,7 +78,7 @@ vardekod,vardebenamning
 2224,Apotekare
 2225,Logopeder
 2229,Övriga hälso- och sjukvårdsspecialister
-223,Barnmorskor. sjuksköterskor med särskild kompetens
+223,Barnmorskor; sjuksköterskor med särskild kompetens
 2231,Barnmorskor
 2232,"Avdelningschefer, vårdavdelning/mottagning"
 2233,Akutsjuksköterskor m.fl.
@@ -150,7 +150,7 @@ vardekod,vardebenamning
 312,Datatekniker och dataoperatörer
 3121,Datatekniker
 3122,Dataoperatörer
-313,"Fotografer. ljud- och bildtekniker, sjukhustekniker m.fl."
+313,"Fotografer; ljud- och bildtekniker, sjukhustekniker m.fl."
 3131,Fotografer
 3132,Ljud- och bildtekniker
 3133,"Kopplingstekniker, radioassistenter m.fl."
@@ -288,7 +288,7 @@ vardekod,vardebenamning
 52,Försäljningsarbete inom detaljhandel m.m.
 521,Fotomodeller m.fl.
 5210,Fotomodeller m.fl.
-522,"Försäljare, detaljhandel. demonstratörer m.fl."
+522,"Försäljare, detaljhandel; demonstratörer m.fl."
 5221,"Försäljare, dagligvaror"
 5222,"Försäljare, fackhandel"
 5223,Kaféföreståndare
@@ -351,6 +351,7 @@ vardekod,vardebenamning
 7222,Verktygsmakare m.fl.
 7223,Verktygsuppsättare
 7224,Slipare m.fl.
+723,Maskin- och motorreparatörer
 7231,Motorfordonsmekaniker och motorfordonsreparatörer
 7232,Flygmekaniker och flygreparatörer
 7233,"Maskinmekaniker, maskinmontörer och maskinreparatörer"
@@ -444,6 +445,7 @@ vardekod,vardebenamning
 8269,"Övriga maskinoperatörer, textil-, skinn- och läderindustri"
 827,"Maskinoperatörer, livsmedelsindustri m.m."
 8271,"Maskinoperatörer, kött- och fiskberedning"
+8272,"Maskinoperatörer, mejeri"
 8273,"Maskinoperatörer, kvarnindustri"
 8274,"Maskinoperatörer, bageri och konfektyrindustri"
 8275,"Maskinoperatörer, frukt- och grönsaksberedning"
@@ -454,6 +456,7 @@ vardekod,vardebenamning
 828,Montörer
 8281,Fordonsmontörer m.fl.
 8282,"Montörer, el- och teleutrustning"
+8283,"Montörer, metall-, gummi- och plastprodukter"
 8284,"Montörer, träprodukter m.m."
 8285,"Montörer, papp- och textilprodukter m.m."
 829,Övriga maskinoperatörer och montörer
@@ -483,6 +486,7 @@ vardekod,vardebenamning
 9123,Fönsterputsare
 913,Köks- och restaurangbiträden
 9130,Köks- och restaurangbiträden
+914,"Tidningsdistributörer, vaktmästare m.fl."
 9141,Tidningsdistributörer m.fl.
 9142,Vaktmästare m.fl.
 9143,Mätaravläsare

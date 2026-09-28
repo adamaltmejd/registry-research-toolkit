@@ -623,6 +623,12 @@ vardekod,vardebenamning
 9622,Vaktmästare m.fl.
 9629,Övriga servicearbetare
 0,Militära yrken
-110,Officerare
-210,Specialistofficerare
-310,Soldater m.fl.
+01,Officerare
+011,Officerare
+0110,Officerare
+02,Specialistofficerare
+021,Specialistofficerare
+0210,Specialistofficerare
+03,Soldater m.fl.
+031,Soldater m.fl.
+0310,Soldater m.fl.
