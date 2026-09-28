@@ -26,11 +26,17 @@ native_id = "34"
 #    RAMS/LISA ownership-sector family as scb/lisa/sektorkod). InstKod7J's
 #    10-position institutional sector code has no catalog classification (omitted);
 #    YSEG_J16/MedbLandNamn have no matching catalog classification (omitted).
-#  * is_identifier = true ONLY where the column's catalog sibling carries it (so an
-#    identifier column is NOT published as ordinary text, weakening the PII guard):
-#    CfarNrSregJ (sibling CFARNrSreg), PeOrgNrSregJ (sibling PeOrgNrSreg), ArbstIdJ
-#    (linkage id; sibling ArbstId). None of the 32 has a sensitive sibling, so
-#    is_sensitive is left at its default throughout.
+#  * Column flags follow Q5 (curation triage 2026-09-27): copy the resolved
+#    documented sibling where one exists (the same measure under another LISA
+#    column — the J / _J16 stem, the FortPens_*/SjukBidr_* benefit family, or the
+#    same payment under another delivery rule); otherwise apply the LISA
+#    person-level default is_sensitive = true. is_identifier = true ONLY where that
+#    sibling already carries it (so an identifier column is NOT published as
+#    ordinary text, weakening the PII guard): CfarNrSregJ (sibling CFARNrSreg),
+#    PeOrgNrSregJ (sibling PeOrgNrSreg), ArbstIdJ (linkage id; sibling ArbstId).
+#    FastBet and MedbLandNamn have no same-measure sibling, so both take the
+#    person-level default; neither is a curated identifier (FastBet's property
+#    identity is the pre-1998 fastlopnr, a different variable).
 #  * "justerad metod" (J) columns are SCB's single backcast year 2003, produced to
 #    bridge the 2004 RAMS method change.
 #  * `noted` is the date lisa_canonical.toml recorded the omission; git carries the
@@ -114,9 +120,11 @@ name = "Yrke enligt SSYK 96, 3-siffernivå, inkl. härledda yrken för företaga
 definition = "Yrke enligt SSYK 96 på 3-siffernivå, inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för Yrke enligt SSYK 96 sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn. De härledda yrkena identifieras via SSYKStatus_J16."
 data_type = "text"
 classification = "SSYK96"
+is_sensitive = false
+is_identifier = false
 versions = ["2010", "2011", "2012", "2013"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk3_J16 for 2010–2013 — see reg_meta_build/docs/lisa/Ssyk3_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk3_J16 for 2010–2013 — see reg_meta_build/docs/lisa/Ssyk3_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling ssyk3 (Ssyk3, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -126,9 +134,11 @@ name = "Yrke enligt SSYK 96, 4-siffernivå, inkl. härledda yrken för företaga
 definition = "Yrke enligt SSYK 96 på 4-siffernivå, inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för Yrke enligt SSYK 96 sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn. De härledda yrkena identifieras via SSYKStatus_J16."
 data_type = "text"
 classification = "SSYK96"
+is_sensitive = false
+is_identifier = false
 versions = ["2010", "2011", "2012", "2013"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk4_J16 for 2010–2013 — see reg_meta_build/docs/lisa/Ssyk4_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk4_J16 for 2010–2013 — see reg_meta_build/docs/lisa/Ssyk4_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling ssyk4 (Ssyk4, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -137,9 +147,11 @@ column = "YSEG_J16"
 name = "Yrkesbaserad socioekonomisk gruppering, inkl. härledda yrken för företagare"
 definition = "Yrkesbaserad socioekonomisk gruppering (YSEG), inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för YSEG sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["2010", "2011", "2012", "2013"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YSEG_J16 for 2010–2013 — see reg_meta_build/docs/lisa/YSEG_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YSEG_J16 for 2010–2013 — see reg_meta_build/docs/lisa/YSEG_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -148,9 +160,11 @@ column = "Nyk"
 name = "Yrke enligt Folk- och bostadsräkningen"
 definition = "Yrkeskod enligt Nordisk yrkesklassificering, FoB-85:s schema (NYK-kod). Yrkeskodningen bygger på den förvärvsarbetande befolkningens yrkesuppgift till Folk- och Bostadsräkningen 1990 (FoB 90) och avser i princip november månad 1990. Likartade yrken sammanförs utan hänsyn till utbildning, yrkesställning, tjänsteställning eller branschtillhörighet. I FoB 1990 kunde 8–9 procent av samtliga förvärvsarbetande inte kodas enligt NYK då yrkesuppgift saknas eller inte går att klassificera."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["1990"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Nyk for 1990–1990 — see reg_meta_build/docs/lisa/Nyk.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Nyk for 1990–1990 — see reg_meta_build/docs/lisa/Nyk.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -159,9 +173,11 @@ column = "YrkStallnJ"
 name = "Yrkesställning enligt justerad metod"
 definition = "Yrkesställning enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YrkStallnJ for 2003–2003 — see reg_meta_build/docs/lisa/YrkStallnJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YrkStallnJ for 2003–2003 — see reg_meta_build/docs/lisa/YrkStallnJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -170,9 +186,11 @@ column = "AstKommunJ"
 name = "Arbetsställekommun enligt justerad metod"
 definition = "Arbetsställekommun enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstKommunJ for 2003–2003 — see reg_meta_build/docs/lisa/AstKommunJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstKommunJ for 2003–2003 — see reg_meta_build/docs/lisa/AstKommunJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -181,9 +199,11 @@ column = "AstLanJ"
 name = "Arbetsställelän enligt justerad metod"
 definition = "Arbetsställelän enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
 data_type = "text"
+is_sensitive = false
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstLanJ for 2003–2003 — see reg_meta_build/docs/lisa/AstLanJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstLanJ for 2003–2003 — see reg_meta_build/docs/lisa/AstLanJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling lan-arbetsstalle (AstLan, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -193,9 +213,11 @@ name = "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justera
 definition = "Arbetsställets näringsgren enligt SNI2002, enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
 data_type = "text"
 classification = "SNI2002"
+is_sensitive = false
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002J for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002J for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ (AstSNI92/AstSNI2007/AstSNI69/AstSNI2002, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -205,9 +227,11 @@ name = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper), en
 definition = "Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2002 (begränsad nivå, 42 grupper), enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
 data_type = "text"
 classification = "SNI2002"
+is_sensitive = false
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002BJ for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002BJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002BJ for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002BJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ-sni2002b (AstSNI2002B/Astsni2002B, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -217,9 +241,11 @@ name = "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justera
 definition = "Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2002 (grov nivå, 10 grupper), enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
 data_type = "text"
 classification = "SNI2002"
+is_sensitive = false
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002GJ for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002GJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002GJ for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002GJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ-sni2002g (AstSNI2002G/Astsni2002G, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -229,9 +255,11 @@ name = "Sektorstillhörighet (företag) enligt justerad metod"
 definition = "Sektorstillhörighet enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
 data_type = "text"
 classification = "SEKTORKOD"
+is_sensitive = false
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SektorKodJ for 2003–2003 — see reg_meta_build/docs/lisa/SektorKodJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SektorKodJ for 2003–2003 — see reg_meta_build/docs/lisa/SektorKodJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sektorkod (SektorKod, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -240,9 +268,11 @@ column = "InstKod7J"
 name = "Institutionell sektorkod (företag) enligt justerad metod"
 definition = "Institutionell sektorkod enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Koden bildas utifrån företagets samhällssektor, ägare och juridiska form (tio positioner) och hämtas ur Företagsdatabasen (FDB)."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents InstKod7J for 2003–2003 — see reg_meta_build/docs/lisa/InstKod7J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents InstKod7J for 2003–2003 — see reg_meta_build/docs/lisa/InstKod7J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -252,9 +282,10 @@ name = "Arbetsställe (november) enligt justerad metod"
 definition = "Det huvudsakliga arbetsstället (CFAR-nummer) bestämt utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Vid utlämnande av data från LISA ersätts CFAR-numret av ett nytt löpnummer."
 data_type = "text"
 is_identifier = true
+is_sensitive = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents CfarNrSregJ for 2003–2003 — see reg_meta_build/docs/lisa/CfarNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents CfarNrSregJ for 2003–2003 — see reg_meta_build/docs/lisa/CfarNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling cfar-nummer-3 (CfarNrSreg, is_sensitive=false, is_identifier=true)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -264,9 +295,10 @@ name = "Företagets organisationsnummer, enligt justerad metod"
 definition = "Företagets person-/organisationsnummer enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
 data_type = "text"
 is_identifier = true
+is_sensitive = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents PeOrgNrSregJ for 2003–2003 — see reg_meta_build/docs/lisa/PeOrgNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents PeOrgNrSregJ for 2003–2003 — see reg_meta_build/docs/lisa/PeOrgNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling person-orgnr-3 (PeOrgNrSreg, is_sensitive=false, is_identifier=true)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -276,9 +308,10 @@ name = "Kopplingsvariabel till arbetsställetabell (endast förvärvsarbetande v
 definition = "Kopplingsvariabel (identifierare) till arbetsställetabellen för endast förvärvsarbetande vid faktiska arbetsställen, enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004."
 data_type = "text"
 is_identifier = true
+is_sensitive = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbstIdJ for 2003–2003 — see reg_meta_build/docs/lisa/ArbstIdJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbstIdJ for 2003–2003 — see reg_meta_build/docs/lisa/ArbstIdJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fad-arbetsstalle-id (ArbstId, is_sensitive=false, is_identifier=true)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -287,9 +320,11 @@ column = "LoneInkJ"
 name = "Kontant bruttolön enligt justerad metod"
 definition = "Kontant bruttolön utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Beloppet anges i hundratals kronor."
 data_type = "decimal"
+is_sensitive = false
+is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents LoneInkJ for 2003–2003 — see reg_meta_build/docs/lisa/LoneInkJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents LoneInkJ for 2003–2003 — see reg_meta_build/docs/lisa/LoneInkJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling loneink (LoneInk, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -298,9 +333,11 @@ column = "FortPens_Bdag_MiDAS"
 name = "Förtidspension, antal bruttodagar"
 definition = "Antal utbetalda bruttodagar under året med förtidspension. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning."
 data_type = "integer"
+is_sensitive = false
+is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Bdag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Bdag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-bman (FortPens_Bman, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -309,9 +346,11 @@ column = "FortPens_Ndag_MiDAS"
 name = "Förtidspension, antal nettodagar"
 definition = "Antal utbetalda nettodagar under året med förtidspension. Förtidspension kan betalas ut som hel (100 %), tre fjärdedels (75 %), halv (50 %) eller en fjärdedels (25 %); antal nettodagar är bruttodagar gånger omfattningen under året."
 data_type = "integer"
+is_sensitive = false
+is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Ndag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Ndag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-nman (FortPens_Nman, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -320,9 +359,11 @@ column = "FortPens_Belopp_MiDAS"
 name = "Förtidspension, ersättningsbelopp"
 definition = "Utbetalt belopp under året för förtidspension, i relation till utbetalda dagar med förtidspension. Beloppet avser ersättningsperioden och anges i hundratal kronor."
 data_type = "decimal"
+is_sensitive = false
+is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Belopp_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Belopp_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-belopp (FortPens_Belopp, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -331,9 +372,11 @@ column = "SjukBidr_Bdag_MiDAS"
 name = "Sjukbidrag, antal bruttodagar"
 definition = "Antal utbetalda bruttodagar under året med sjukbidrag. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning."
 data_type = "integer"
+is_sensitive = false
+is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Bdag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Bdag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-bman (SjukBidr_Bman, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -342,9 +385,11 @@ column = "SjukBidr_Ndag_MiDAS"
 name = "Sjukbidrag, antal nettodagar"
 definition = "Antal utbetalda nettodagar under året med sjukbidrag. Sjukbidrag kan betalas ut som hel (100 %), tre fjärdedels (75 %), halv (50 %) eller en fjärdedels (25 %); antal nettodagar är bruttodagar gånger omfattningen under året."
 data_type = "integer"
+is_sensitive = false
+is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Ndag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Ndag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-nman (SjukBidr_Nman, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -353,9 +398,11 @@ column = "SjukBidr_Belopp_MiDAS"
 name = "Sjukbidrag, ersättningsbelopp"
 definition = "Utbetalt belopp under året för sjukbidrag, i relation till utbetalda dagar med sjukbidrag. Beloppet avser ersättningsperioden och anges i hundratal kronor."
 data_type = "decimal"
+is_sensitive = false
+is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Belopp_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Belopp_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-belopp (SjukBidr_Belopp, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -364,9 +411,11 @@ column = "ATPFam"
 name = "ATP-kod för efterlevandeförmån"
 definition = "ATP-kod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension."
 data_type = "text"
+is_sensitive = false
+is_identifier = false
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ATPFam for 1990–2002 — see reg_meta_build/docs/lisa/ATPFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ATPFam for 1990–2002 — see reg_meta_build/docs/lisa/ATPFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling folkatpfam (FolkATPFam, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -375,9 +424,11 @@ column = "FolkFam"
 name = "Folkpensionskod för efterlevandeförmån"
 definition = "Folkpensionskod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension."
 data_type = "text"
+is_sensitive = false
+is_identifier = false
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FolkFam for 1990–2002 — see reg_meta_build/docs/lisa/FolkFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FolkFam for 1990–2002 — see reg_meta_build/docs/lisa/FolkFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling folkatpfam (FolkATPFam, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -386,9 +437,11 @@ column = "ALUAMK"
 name = "Arbetslivsutvecklingsbidrag (från AMK)"
 definition = "Arbetslivsutvecklingsbidrag från statlig arbetsmarknadskassa (AMK). Beloppet anges i hundratal kronor."
 data_type = "decimal"
+is_sensitive = false
+is_identifier = false
 versions = ["1994", "1995", "1996"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ALUAMK for 1994–1996 — see reg_meta_build/docs/lisa/ALUAMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ALUAMK for 1994–1996 — see reg_meta_build/docs/lisa/ALUAMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling alukas (ALUKAS, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -397,9 +450,11 @@ column = "AMK"
 name = "Ersättning från statlig arbetsmarknadskassa"
 definition = "Inkomstrelaterad dagpenning från statlig arbetsmarknadskassa till arbetslösa som inte tillhör en arbetslöshetskassa, införd 1/7 1994 och avskaffad 1/1 1995 med övergångsbestämmelser t.o.m. 30 juni 1996. Ersättningsnivån var 80 procent av tidigare inkomst. Beloppet anges i hundratals kronor."
 data_type = "decimal"
+is_sensitive = false
+is_identifier = false
 versions = ["1994", "1995", "1996", "1997"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AMK for 1994–1997 — see reg_meta_build/docs/lisa/AMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AMK for 1994–1997 — see reg_meta_build/docs/lisa/AMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling kas (KAS, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -408,9 +463,11 @@ column = "OTA"
 name = "Offentligt Tillfälligt Arbete (OTA)"
 definition = "Ersättning i samband med Offentligt Tillfälligt Arbete (OTA), infört 1/11 1996 för arbetslösa som fyllt 55 år och varit anmälda som arbetssökande minst 24 månader. Endast de som fått sin OTA-ersättning utbetald från Försäkringskassan redovisas här; de som ersätts av arbetslöshetskassa redovisas under ALUKU (t.o.m. 1999) respektive AKassa-AmPol (fr.o.m. 2000). Beloppet anges i hundratal kronor."
 data_type = "decimal"
+is_sensitive = true
+is_identifier = false
 versions = ["1997"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents OTA for 1997–1997 — see reg_meta_build/docs/lisa/OTA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents OTA for 1997–1997 — see reg_meta_build/docs/lisa/OTA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -419,9 +476,11 @@ column = "SjukPA"
 name = "Sjukpenning, skattepliktig (arbetsgivarinträde)"
 definition = "Skattepliktig sjukpenning vid arbetsgivarinträde: arbetsgivaren lämnar sjuklön och får sedan, från Försäkringskassan, den sjukpenning/arbetsskadesjukpenning som den anställde har rätt till. Arbetsgivarinträdet upphörde 1/7 1992. Sjukpenningen avser utbetalningsåret oavsett ersättningsperiod. Beloppet anges i hundratals kronor."
 data_type = "decimal"
+is_sensitive = true
+is_identifier = false
 versions = ["1990", "1991", "1992", "1993"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukPA for 1990–1993 — see reg_meta_build/docs/lisa/SjukPA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukPA for 1990–1993 — see reg_meta_build/docs/lisa/SjukPA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukpenning-ej-arbetsgivarintrade (SjukPP, is_sensitive=true, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -430,9 +489,11 @@ column = "TAE"
 name = "Tillfällig avgångsersättning"
 definition = "Tillfällig avgångsersättning."
 data_type = "decimal"
+is_sensitive = true
+is_identifier = false
 versions = ["1997"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents TAE for 1997–1997 — see reg_meta_build/docs/lisa/TAE.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents TAE for 1997–1997 — see reg_meta_build/docs/lisa/TAE.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -441,9 +502,11 @@ column = "ArbTid"
 name = "Arbetad tid"
 definition = "Överenskommen eller normal veckoarbetstid under oktober 1990 (vid tillfällig frånvaro avses senaste arbetade veckan); för personer med mer än ett förvärvsarbete redovisas den sammanlagda arbetstiden. Kodad i intervall: 1 = 0 tim, 2 = 1–15 tim, 3 = 16–19 tim, 4 = 20–34 tim, 5 = 35– tim, 9 = Uppgift saknas. Kodningen bygger på Folk- och Bostadsräkningen 1990 (FoB 90)."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["1990"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbTid for 1990–1990 — see reg_meta_build/docs/lisa/ArbTid.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbTid for 1990–1990 — see reg_meta_build/docs/lisa/ArbTid.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -452,9 +515,11 @@ column = "FastBet"
 name = "Fastighetsbeteckning"
 definition = "Officiell fastighetsbeteckning som fastighetsidentitet, införd 1998 när SCB skapade det nya systemet för Registret över totalbefolkningen (RTB). Personer redovisas där de är folkbokförda. Av sekretesskäl kan varken fastighetens löpnummer eller fastighetsbeteckning lämnas ut, men uppgifterna kan användas för härledningar (t.ex. för att skapa områden)."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see reg_meta_build/docs/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see reg_meta_build/docs/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -463,9 +528,11 @@ column = "FastBet"
 name = "Fastighetsbeteckning"
 definition = "Officiell fastighetsbeteckning som fastighetsidentitet, införd 1998 när SCB skapade det nya systemet för Registret över totalbefolkningen (RTB). Personer redovisas där de är folkbokförda. Av sekretesskäl kan varken fastighetens löpnummer eller fastighetsbeteckning lämnas ut, men uppgifterna kan användas för härledningar (t.ex. för att skapa områden)."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see reg_meta_build/docs/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see reg_meta_build/docs/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -474,9 +541,11 @@ column = "MedbLandNamn"
 name = "Medborgarskap"
 definition = "Medborgarskap (medborgarskapsland)."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see reg_meta_build/docs/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see reg_meta_build/docs/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -485,9 +554,11 @@ column = "MedbLandNamn"
 name = "Medborgarskap"
 definition = "Medborgarskap (medborgarskapsland)."
 data_type = "text"
+is_sensitive = true
+is_identifier = false
 versions = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see reg_meta_build/docs/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see reg_meta_build/docs/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[enrichment.description]]

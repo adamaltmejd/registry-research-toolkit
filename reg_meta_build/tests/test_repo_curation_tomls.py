@@ -595,6 +595,8 @@ def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
     # must fall inside its variant's era.
     eras = {1335: range(1990, 2010), 153: range(2010, 2024)}
     docs = [c for c in errata.columns if c.source == "scb-docs"]
+    # Y-281 Q5: every doc-coverage column carries both curated flags explicitly.
+    assert all(c.is_sensitive is not None and c.is_identifier is not None for c in docs)
     assert {c.register_variant_id for c in docs} == set(eras)
     for c in docs:
         assert c.versions is not None
