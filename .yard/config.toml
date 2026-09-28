@@ -78,6 +78,21 @@ model = "meta/muse-spark-1.3-contributor"
 effort = "high"
 tools = { subagents = false }
 
+# Curation bake-off arms (2026-09-28): same effort as the Sol control and Muse so
+# the comparison is about the model, not the budget.
+[agents.luna]
+harness = "codex"
+model = "gpt-6-luna"
+effort = "high"
+tools = { subagents = true }
+
+[agents.deepseek]
+harness = "pi"
+provider = "openrouter"
+model = "deepseek/deepseek-v4.1-flash"
+effort = "high"
+tools = { subagents = false }
+
 # [workflows.default] is what a ticket naming no workflow runs, and it carries
 # the implementation job settings every other workflow inherits where it leaves
 # them unset. Light agents and Pi do their simplification pass themselves;
@@ -445,6 +460,15 @@ review = "none"
 # Rendered frontend changes still use ui/light-ui.
 [workflows.muse]
 implementer = "muse"
+
+# Curation bake-off (2026-09-28): the same curation ticket runs once per arm, all
+# reviewed by Sol. Arms: default (Sol, control), muse, trial-b (Luna), trial-c
+# (DeepSeek). Delete trial-b/trial-c and their agents when the bake-off ends.
+[workflows.trial-b]
+implementer = "luna"
+
+[workflows.trial-c]
+implementer = "deepseek"
 
 # heavy: Sol at xhigh effort for design-heavy tickets, with the default review.
 [workflows.heavy]
