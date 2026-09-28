@@ -372,7 +372,7 @@ def test_family_reads_child_rows_once_and_reuses_records_across_views(
 
 
 def test_native_family_register_filter_preserves_grouping_and_order(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     revision = _revision("source-a", "a")
     first = _record(revision, row=1, member="First", raw_value="First")
@@ -402,6 +402,58 @@ def test_native_family_register_filter_preserves_grouping_and_order(
         reader.iter_native_families(revision.dataset, {first_register})
     ) == tuple(family for family in all_families if family[0][:5] == first_register)
     assert tuple(reader.iter_native_families(revision.dataset, set())) == ()
+
+    narrow = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=commit
+    )
+    register_key_calls = []
+    original_register_key = prepared_sources.native_register_key
+
+    def tracked_register_key(source, provider, coordinate):
+        register_key_calls.append((source, provider))
+        return original_register_key(source, provider, coordinate)
+
+    def no_complete_record(*_args):
+        raise AssertionError("naming must not decode a complete record")
+
+    monkeypatch.setattr(prepared_sources, "native_register_key", tracked_register_key)
+    monkeypatch.setattr(prepared_sources, "_read_record", no_complete_record)
+    naming_families = tuple(
+        narrow.iter_naming_families(revision.dataset, {first_register})
+    )
+    expected = tuple(
+        family for family in all_families if family[0][:5] == first_register
+    )
+    assert tuple(key for key, _ in naming_families) == tuple(key for key, _ in expected)
+    for (_, projected), (_, complete) in zip(naming_families, expected, strict=True):
+        assert tuple(
+            (
+                item.source,
+                item.subject,
+                item.parent_facts,
+                item.edition_scope,
+                item.edition_period_scope,
+                item.locators[0].semantic_record_key,
+            )
+            for item in projected
+        ) == tuple(
+            (
+                item.source,
+                item.subject,
+                item.parent_facts,
+                item.edition_scope,
+                item.edition_period_scope,
+                item.locators[0].semantic_record_key,
+            )
+            for item in complete
+        )
+    calls_after_first_read = len(register_key_calls)
+    assert calls_after_first_read == 2
+    assert tuple(narrow.iter_naming_register_slices(revision.dataset, {first_register}))
+    assert len(register_key_calls) == calls_after_first_read
+    registerless = tuple(narrow.iter_naming_register_slices(revision.dataset, {None}))
+    assert len(registerless) == 1 and registerless[0][0] is None
+    assert len(registerless[0][1]) == len(records)
 
 
 def test_parent_fields_round_trip_through_prepared_record(tmp_path: Path) -> None:

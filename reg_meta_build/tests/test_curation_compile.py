@@ -1150,15 +1150,20 @@ def test_scoped_naming_skips_unselected_family_decode(
     reader = open_prepared_source_records(
         root, expected_sha256=manifest.sha256, input_commit=commit
     )
-    original = prepared_sources._read_record
+    original = prepared_sources._read_naming_record
 
-    def corrupt_second(payload, row, locators, cells):
+    def corrupt_second(payload, row):
         register = payload(row["register_payload"], "coordinate")
         if register.native_id == 2:
             raise ValueError("corrupt selected family")
-        return original(payload, row, locators, cells)
+        return original(payload, row)
 
-    monkeypatch.setattr(prepared_sources, "_read_record", corrupt_second)
+    monkeypatch.setattr(prepared_sources, "_read_naming_record", corrupt_second)
+
+    def no_complete_record(*_args):
+        raise AssertionError("naming must not decode a complete record")
+
+    monkeypatch.setattr(prepared_sources, "_read_record", no_complete_record)
     prepared = _prepared()
     prepared.records = reader
     tree = _tree(tmp_path / "curation")

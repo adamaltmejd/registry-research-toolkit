@@ -1874,7 +1874,12 @@ def compile_native_naming(
     bindings: dict[Any, list[LegacyNamingBinding]] = {key: [] for key in scope_map}
     for source in sorted({scope.source for scope in scopes}):
         wanted = {scope.register_key for scope in scopes if scope.source == source}
-        for family_key, members in prepared.records.iter_native_families(
+        family_reader = getattr(
+            prepared.records,
+            "iter_naming_families",
+            prepared.records.iter_native_families,
+        )
+        for family_key, members in family_reader(
             source, None if None in wanted else wanted
         ):
             scope_key = (source, family_key[:5])
@@ -1887,7 +1892,9 @@ def compile_native_naming(
                 continue
             provider = str(family_key[1])
             expectations = (
-                capture_expectations(members, fields=())
+                capture_expectations(
+                    cast("tuple[SourceRecord, ...]", members), fields=()
+                )
                 if provider not in {"scb", "sos"}
                 else ()
             )
@@ -1923,11 +1930,15 @@ def compile_native_naming(
                 )
             )
         wanted = {scope.register_key for scope in scopes if scope.source == source}
-        slices = (
-            ((None, tuple(prepared.records.iter_records(source=source))),)
-            if None in wanted
-            else prepared.records.iter_register_slices(source, wanted)
-        )
+        naming_slices = getattr(prepared.records, "iter_naming_register_slices", None)
+        if naming_slices is not None:
+            slices = naming_slices(source, wanted)
+        else:
+            slices = (
+                ((None, tuple(prepared.records.iter_records(source=source))),)
+                if None in wanted
+                else prepared.records.iter_register_slices(source, wanted)
+            )
         for register_key, records in slices:
             scope_key = source, register_key
             if scope_key not in scope_map:

@@ -778,24 +778,97 @@ def _read_record_batch(
     return tuple(cache[row["ordinal"]] for row in rows)
 
 
+@dataclass(frozen=True)
+class _NamingLocator:
+    semantic_record_key: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class PreparedNamingRecord:
+    """Accepted naming fields; SCB/SOS subjects carry only register and variant."""
+
+    source: str
+    subject: SourceSubject
+    parent_facts: tuple[SourceParentObservation, ...]
+    edition_scope: TemporalScope | None = None
+    edition_period_scope: TemporalScope | None = None
+    locators: tuple[_NamingLocator, ...] = ()
+
+
+_NAMING_COLUMNS = (
+    "occurrence.source, occurrence.provider, occurrence.semantic_key, "
+    "occurrence.register_payload, occurrence.variant_payload, "
+    "occurrence.variable_payload, occurrence.parents_payload, "
+    "occurrence.variant_references_payload, occurrence.population_payload, "
+    "occurrence.member_payload, occurrence.native_payload, "
+    "occurrence.scope_payload, occurrence.period_payload"
+)
+
+
+def _read_naming_record(
+    payload: Callable[[int, str], Any], row: sqlite3.Row
+) -> PreparedNamingRecord:
+    provider = row["provider"]
+    subject = SourceSubject.model_construct(
+        provider=provider,
+        register_name=payload(row["register_payload"], "coordinate"),
+        variant=payload(row["variant_payload"], "coordinate"),
+    )
+    if provider not in {"scb", "sos"}:
+        subject = SourceSubject.model_construct(
+            provider=provider,
+            register_name=subject.register_name,
+            variant=subject.variant,
+            variant_references=payload(
+                row["variant_references_payload"], "coordinates"
+            ),
+            population=payload(row["population_payload"], "coordinate"),
+            variable=payload(row["variable_payload"], "coordinate"),
+            member=payload(row["member_payload"], "coordinate"),
+            native=payload(row["native_payload"], "native"),
+        )
+        return PreparedNamingRecord(
+            source=row["source"],
+            subject=subject,
+            parent_facts=payload(row["parents_payload"], "parents"),
+            edition_scope=payload(row["scope_payload"], "scope"),
+            edition_period_scope=payload(row["period_payload"], "scope"),
+            locators=(_NamingLocator(tuple(json.loads(row["semantic_key"]))),),
+        )
+    return PreparedNamingRecord(
+        source=row["source"],
+        subject=subject,
+        parent_facts=payload(row["parents_payload"], "parents"),
+    )
+
+
 def _register_payloads(
     conn: sqlite3.Connection,
     payload: Callable[[int, str], Any],
     source: str,
     registers: Collection[NativeKey | None] | None,
+    cache: dict[str, tuple[tuple[str, int, NativeKey | None], ...]],
 ) -> Iterator[tuple[str, int, NativeKey | None]]:
-    for row in conn.execute(
-        "SELECT DISTINCT provider, register_payload FROM occurrence "
-        "WHERE source=? ORDER BY provider, register_payload",
-        (source,),
-    ):
-        register = native_register_key(
-            source,
-            row["provider"],
-            payload(row["register_payload"], "coordinate"),
+    if source not in cache:
+        cache[source] = tuple(
+            (
+                row["provider"],
+                row["register_payload"],
+                native_register_key(
+                    source,
+                    row["provider"],
+                    payload(row["register_payload"], "coordinate"),
+                ),
+            )
+            for row in conn.execute(
+                "SELECT DISTINCT provider, register_payload FROM occurrence "
+                "WHERE source=? ORDER BY provider, register_payload",
+                (source,),
+            )
         )
+    for provider, register_payload, register in cache[source]:
         if registers is None or register in registers:
-            yield row["provider"], row["register_payload"], register
+            yield provider, register_payload, register
 
 
 @dataclass(frozen=True)
@@ -806,6 +879,9 @@ class PreparedSourceRecords:
     manifest: PreparedSourceManifest
     input_commit: str
     _record_cache: dict[int, SourceRecord] = field(
+        default_factory=dict, init=False, repr=False, compare=False
+    )
+    _register_cache: dict[str, tuple[tuple[str, int, NativeKey | None], ...]] = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
 
@@ -901,23 +977,7 @@ class PreparedSourceRecords:
         family are available separately.
         """
         with _decoded_database(self.root, self.manifest) as (conn, payload):
-            join = ""
-            if registers is not None:
-                mappings = [
-                    (provider, register_payload)
-                    for provider, register_payload, _ in _register_payloads(
-                        conn, payload, source, registers
-                    )
-                ]
-                conn.execute(
-                    "CREATE TEMP TABLE selected_register (provider TEXT, "
-                    "register_payload INTEGER, PRIMARY KEY (provider, register_payload)) "
-                    "WITHOUT ROWID"
-                )
-                conn.executemany(
-                    "INSERT INTO selected_register VALUES (?, ?)", mappings
-                )
-                join = "JOIN selected_register USING (provider, register_payload) "
+            join = self._selected_register_join(conn, payload, source, registers)
             rows = conn.execute(
                 f"SELECT occurrence.* FROM occurrence {join}"
                 "WHERE occurrence.source=? AND occurrence.family_payload IS NOT NULL "
@@ -938,6 +998,112 @@ class PreparedSourceRecords:
                     ),
                 )
 
+    def _selected_register_join(
+        self,
+        conn: sqlite3.Connection,
+        payload: Callable[[int, str], Any],
+        source: str,
+        registers: Collection[NativeKey | None] | None,
+    ) -> str:
+        if registers is None:
+            return ""
+        mappings = [
+            (provider, register_payload)
+            for provider, register_payload, _ in _register_payloads(
+                conn, payload, source, registers, self._register_cache
+            )
+        ]
+        conn.execute(
+            "CREATE TEMP TABLE selected_register (provider TEXT, "
+            "register_payload INTEGER, PRIMARY KEY (provider, register_payload)) "
+            "WITHOUT ROWID"
+        )
+        conn.executemany("INSERT INTO selected_register VALUES (?, ?)", mappings)
+        return "JOIN selected_register USING (provider, register_payload) "
+
+    def iter_naming_families(
+        self,
+        source: str,
+        registers: Collection[NativeKey | None] | None = None,
+    ) -> Iterator[tuple[NativeKey, tuple[PreparedNamingRecord, ...]]]:
+        """Keep native-family order, reading only naming evidence for thin providers."""
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            join = self._selected_register_join(conn, payload, source, registers)
+            families = conn.execute(
+                f"SELECT DISTINCT occurrence.family_payload FROM occurrence {join}"
+                "WHERE occurrence.source=? AND occurrence.family_payload IS NOT NULL "
+                "ORDER BY occurrence.family_payload",
+                (source,),
+            )
+            for row in families:
+                family_id = row["family_payload"]
+                family_key = payload(family_id, "native_family")
+                members: tuple[PreparedNamingRecord, ...] = ()
+                if family_key[1] not in {"scb", "sos"}:
+                    members = tuple(
+                        _read_naming_record(payload, member)
+                        for member in conn.execute(
+                            f"SELECT {_NAMING_COLUMNS} FROM occurrence {join}"
+                            "WHERE occurrence.source=? AND occurrence.family_payload=? "
+                            "ORDER BY occurrence.ordinal",
+                            (source, family_id),
+                        )
+                    )
+                yield family_key, members
+
+    def iter_naming_register_slices(
+        self, source: str, registers: Collection[NativeKey | None]
+    ) -> Iterator[tuple[NativeKey | None, tuple[PreparedNamingRecord, ...]]]:
+        """Read parent/variant naming fields, preserving registerless scope behavior."""
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            if None in registers:
+                yield (
+                    None,
+                    tuple(
+                        _read_naming_record(payload, row)
+                        for row in conn.execute(
+                            f"SELECT {_NAMING_COLUMNS} FROM occurrence "
+                            "WHERE source=? ORDER BY ordinal",
+                            (source,),
+                        )
+                    ),
+                )
+                return
+            keys = self._register_partitions(conn, payload, source, registers)
+            rows = conn.execute(
+                f"SELECT {_NAMING_COLUMNS}, register_partition.partition FROM occurrence "
+                "JOIN register_partition USING (provider, register_payload) "
+                "WHERE occurrence.source=? ORDER BY register_partition.partition, "
+                "occurrence.ordinal",
+                (source,),
+            )
+            for partition, members in groupby(rows, key=lambda row: row["partition"]):
+                yield (
+                    keys[partition],
+                    tuple(_read_naming_record(payload, row) for row in members),
+                )
+
+    def _register_partitions(
+        self,
+        conn: sqlite3.Connection,
+        payload: Callable[[int, str], Any],
+        source: str,
+        registers: Collection[NativeKey | None] | None,
+    ) -> list[NativeKey | None]:
+        partitions: dict[tuple[str, NativeKey | None], int] = {}
+        mappings = []
+        for provider, register_payload, register in _register_payloads(
+            conn, payload, source, registers, self._register_cache
+        ):
+            partition = partitions.setdefault((provider, register), len(partitions))
+            mappings.append((provider, register_payload, partition))
+        conn.execute(
+            "CREATE TEMP TABLE register_partition (provider TEXT, register_payload INTEGER, "
+            "partition INTEGER, PRIMARY KEY (provider, register_payload)) WITHOUT ROWID"
+        )
+        conn.executemany("INSERT INTO register_partition VALUES (?, ?, ?)", mappings)
+        return [register for _provider, register in partitions]
+
     def iter_register_slices(
         self, source: str, registers: Collection[NativeKey | None] | None = None
     ) -> Iterator[tuple[NativeKey | None, tuple[SourceRecord, ...]]]:
@@ -950,21 +1116,7 @@ class PreparedSourceRecords:
         Given `registers`, no other register is decoded.
         """
         with _decoded_database(self.root, self.manifest) as (conn, payload):
-            partitions: dict[tuple[str, NativeKey | None], int] = {}
-            mappings = []
-            for provider, register_payload, register in _register_payloads(
-                conn, payload, source, registers
-            ):
-                partition = partitions.setdefault((provider, register), len(partitions))
-                mappings.append((provider, register_payload, partition))
-            conn.execute(
-                "CREATE TEMP TABLE register_partition (provider TEXT, register_payload INTEGER, "
-                "partition INTEGER, PRIMARY KEY (provider, register_payload)) WITHOUT ROWID"
-            )
-            conn.executemany(
-                "INSERT INTO register_partition VALUES (?, ?, ?)", mappings
-            )
-            keys = [register for _provider, register in partitions]
+            keys = self._register_partitions(conn, payload, source, registers)
             rows = conn.execute(
                 "SELECT occurrence.*, register_partition.partition FROM occurrence "
                 "JOIN register_partition USING (provider, register_payload) "
