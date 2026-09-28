@@ -325,6 +325,50 @@ def test_native_family_index_groups_ids_across_variants_without_losing_other_rec
     assert tuple(reader.iter_native_families("missing-source")) == ()
 
 
+def test_family_reads_child_rows_once_and_reuses_records_across_views(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    revision = _revision("source-a", "a")
+    records = tuple(
+        _record(revision, row=row, member="Same", raw_value=f"value {row}")
+        for row in (1, 2, 3)
+    )
+    root = tmp_path / "inputs" / "records"
+    manifest = prepare_source_records(
+        root, records=records, revisions=(revision,), scope="batch reuse"
+    )
+    commit = accept_prepared(root)
+    reader = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=commit
+    )
+    statements: list[str] = []
+    readonly = prepared_sources._readonly
+
+    def traced(database: Path) -> sqlite3.Connection:
+        conn = readonly(database)
+        conn.set_trace_callback(statements.append)
+        return conn
+
+    monkeypatch.setattr(prepared_sources, "_readonly", traced)
+    family = next(reader.iter_native_families(revision.dataset))[1]
+    assert family == records
+    assert sum("FROM locator" in sql for sql in statements) == 1
+    assert sum("FROM delivered_cell" in sql for sql in statements) == 1
+    statements.clear()
+    assert next(reader.iter_native_families(revision.dataset))[1] == family
+    assert next(reader.iter_register_slices(revision.dataset))[1] == family
+    assert tuple(reader.iter_records(source=revision.dataset)) == family
+    assert all(
+        left is right
+        for left, right in zip(
+            family, tuple(reader.iter_records(source=revision.dataset)), strict=True
+        )
+    )
+    assert not any(
+        "FROM locator" in sql or "FROM delivered_cell" in sql for sql in statements
+    )
+
+
 def test_register_slices_preserve_native_identity_parent_rows_and_unknowns(
     tmp_path: Path,
 ) -> None:

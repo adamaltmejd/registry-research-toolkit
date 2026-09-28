@@ -16,9 +16,9 @@ import shutil
 import sqlite3
 import tempfile
 from contextlib import closing, contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import lru_cache
-from itertools import groupby
+from itertools import groupby, islice
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 
@@ -36,6 +36,7 @@ from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
     RecordLocator,
+    ScopeInterval,
     SourceCoordinate,
     SourceEvidenceRow,
     SourceEvidenceTable,
@@ -568,9 +569,16 @@ def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
         ).fetchone()
         if row is None or row["kind"] != kind:
             raise PreparedSourceError(f"missing or wrong-kind prepared payload {key}")
-        if kind in _PAYLOAD_MODELS:
-            return _PAYLOAD_MODELS[kind].model_validate_json(row["body"])
         decoded = json.loads(row["body"])
+        if kind in _PAYLOAD_MODELS:
+            # Preparation validates the complete SourceRecord contract. Its accepted
+            # manifest and Git blob proof bind these exact bytes at open time.
+            if kind == "scope":
+                decoded["intervals"] = tuple(
+                    ScopeInterval.model_construct(**interval)
+                    for interval in decoded.get("intervals", ())
+                )
+            return _PAYLOAD_MODELS[kind].model_construct(**decoded)
         if kind == "native_family":
             if not isinstance(decoded, list) or any(
                 type(value) not in {str, int} for value in decoded
@@ -604,7 +612,7 @@ def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
                 raise PreparedSourceError("invalid prepared parent fragment references")
             if not isinstance(decoded["field_cells"], list):
                 raise PreparedSourceError("invalid prepared parent field cells")
-            return SourceParentObservation(
+            return SourceParentObservation.model_construct(
                 kind=decoded["kind"],
                 coordinate=payload(decoded["coordinate"], "coordinate"),
                 register=payload(decoded["register"], "coordinate"),
@@ -616,7 +624,9 @@ def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
                 else None,
                 fields=payload(decoded["fields"], "fields"),
                 field_cells=tuple(
-                    SourceFieldCells.model_validate_json(_json(mapping))
+                    SourceFieldCells.model_construct(
+                        field=mapping["field"], positions=tuple(mapping["positions"])
+                    )
                     for mapping in decoded["field_cells"]
                 ),
             )
@@ -626,8 +636,8 @@ def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
                 for name, value in decoded.items()
             ):
                 raise PreparedSourceError("invalid prepared field references")
-            return SourceFields.model_validate(
-                {name: payload(value, "field") for name, value in decoded.items()}
+            return SourceFields.model_construct(
+                **{name: payload(value, "field") for name, value in decoded.items()}
             )
         if kind == "strings":
             if not isinstance(decoded, list) or any(
@@ -636,13 +646,9 @@ def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
                 raise PreparedSourceError("invalid prepared string tuple")
             return tuple(decoded)
         if kind == "codes":
-            return tuple(
-                CodeSetReference.model_validate_json(_json(value)) for value in decoded
-            )
+            return tuple(CodeSetReference.model_construct(**value) for value in decoded)
         if kind == "coordinates":
-            return tuple(
-                SourceCoordinate.model_validate_json(_json(value)) for value in decoded
-            )
+            return tuple(SourceCoordinate.model_construct(**value) for value in decoded)
         raise PreparedSourceError(f"unknown prepared payload kind {kind}")
 
     return payload
@@ -667,7 +673,7 @@ def _decoded_database(
 def _read_locator(
     row: sqlite3.Row, semantic_key: tuple[str, ...], payload: Callable[[int, str], Any]
 ) -> RecordLocator:
-    return RecordLocator(
+    return RecordLocator.model_construct(
         semantic_record_key=semantic_key,
         physical_file=row["physical_file"],
         physical_table=row["physical_table"],
@@ -689,18 +695,11 @@ def _read_cells(
 
 
 def _read_record(
-    conn: sqlite3.Connection,
     payload: Callable[[int, str], Any],
     row: sqlite3.Row,
+    locators: tuple[RecordLocator, ...],
+    cells: tuple[DeliveredCell, ...],
 ) -> SourceRecord:
-    semantic_key = tuple(json.loads(row["semantic_key"]))
-    locators = tuple(
-        _read_locator(locator, semantic_key, payload)
-        for locator in conn.execute(
-            "SELECT * FROM locator WHERE occurrence = ? ORDER BY position",
-            (row["ordinal"],),
-        )
-    )
     subject = SourceSubject.model_construct(
         provider=row["provider"],
         register_name=payload(row["register_payload"], "coordinate"),
@@ -728,13 +727,54 @@ def _read_record(
         code_set_references=payload(row["codes_payload"], "codes"),
         original_period_text=row["original_period_text"],
         context=payload(row["context_payload"], "strings"),
-        delivered_cells=_read_cells(
-            conn,
-            payload,
-            "SELECT payload FROM delivered_cell WHERE occurrence = ? ORDER BY position",
-            row["ordinal"],
-        ),
+        delivered_cells=cells,
     )
+
+
+def _read_record_batch(
+    conn: sqlite3.Connection,
+    payload: Callable[[int, str], Any],
+    rows: tuple[sqlite3.Row, ...],
+    cache: dict[int, SourceRecord],
+    where: str,
+    parameters: tuple[Any, ...],
+) -> tuple[SourceRecord, ...]:
+    """Fetch locator and cell rows for one family or register in two queries."""
+    if all(row["ordinal"] in cache for row in rows):
+        return tuple(cache[row["ordinal"]] for row in rows)
+    locators: dict[int, list[RecordLocator]] = {}
+    cells: dict[int, list[DeliveredCell]] = {}
+    for row in conn.execute(
+        "SELECT locator.*, occurrence.semantic_key FROM locator "
+        "JOIN occurrence ON occurrence.ordinal=locator.occurrence "
+        f"{where} ORDER BY locator.occurrence, locator.position",
+        parameters,
+    ):
+        ordinal = row["occurrence"]
+        if ordinal not in cache:
+            locators.setdefault(ordinal, []).append(
+                _read_locator(row, tuple(json.loads(row["semantic_key"])), payload)
+            )
+    for row in conn.execute(
+        "SELECT delivered_cell.occurrence, delivered_cell.payload "
+        "FROM delivered_cell JOIN occurrence "
+        "ON occurrence.ordinal=delivered_cell.occurrence "
+        f"{where} ORDER BY delivered_cell.occurrence, delivered_cell.position",
+        parameters,
+    ):
+        ordinal = row["occurrence"]
+        if ordinal not in cache:
+            cells.setdefault(ordinal, []).append(payload(row["payload"], "cell"))
+    for row in rows:
+        ordinal = row["ordinal"]
+        if ordinal not in cache:
+            cache[ordinal] = _read_record(
+                payload,
+                row,
+                tuple(locators.pop(ordinal, ())),
+                tuple(cells.pop(ordinal, ())),
+            )
+    return tuple(cache[row["ordinal"]] for row in rows)
 
 
 @dataclass(frozen=True)
@@ -744,6 +784,9 @@ class PreparedSourceRecords:
     root: Path
     manifest: PreparedSourceManifest
     input_commit: str
+    _record_cache: dict[int, SourceRecord] = field(
+        default_factory=dict, init=False, repr=False, compare=False
+    )
 
     @property
     def records(self) -> Iterator[SourceRecord]:
@@ -841,7 +884,14 @@ class PreparedSourceRecords:
             for family, members in groupby(rows, key=lambda row: row["family_payload"]):
                 yield (
                     payload(family, "native_family"),
-                    tuple(_read_record(conn, payload, row) for row in members),
+                    _read_record_batch(
+                        conn,
+                        payload,
+                        tuple(members),
+                        self._record_cache,
+                        "WHERE occurrence.source=? AND occurrence.family_payload=?",
+                        (source, family),
+                    ),
                 )
 
     def iter_register_slices(
@@ -891,7 +941,15 @@ class PreparedSourceRecords:
             for partition, members in groupby(rows, key=lambda row: row["partition"]):
                 yield (
                     keys[partition],
-                    tuple(_read_record(conn, payload, row) for row in members),
+                    _read_record_batch(
+                        conn,
+                        payload,
+                        tuple(members),
+                        self._record_cache,
+                        "JOIN register_partition USING (provider, register_payload) "
+                        "WHERE occurrence.source=? AND register_partition.partition=?",
+                        (source, partition),
+                    ),
                 )
 
     def register_coordinates(
@@ -939,11 +997,21 @@ class PreparedSourceRecords:
     def _iter(self, where: str, parameters: tuple[str, ...]) -> Iterator[SourceRecord]:
         with _decoded_database(self.root, self.manifest) as (conn, payload):
             seen = 0
-            for row in conn.execute(
+            rows = conn.execute(
                 f"SELECT * FROM occurrence {where} ORDER BY ordinal", parameters
-            ):
-                yield _read_record(conn, payload, row)
-                seen += 1
+            )
+            while batch := tuple(islice(rows, 512)):
+                clause = f"{where} {'AND' if where else 'WHERE'} occurrence.ordinal BETWEEN ? AND ?"
+                records = _read_record_batch(
+                    conn,
+                    payload,
+                    batch,
+                    self._record_cache,
+                    clause,
+                    (*parameters, batch[0]["ordinal"], batch[-1]["ordinal"]),
+                )
+                yield from records
+                seen += len(records)
             if not where and seen != self.manifest.record_count:
                 raise PreparedSourceError(
                     "prepared source record count differs from manifest"
