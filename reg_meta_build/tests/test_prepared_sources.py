@@ -447,6 +447,40 @@ def test_native_family_register_filter_preserves_grouping_and_order(
             )
             for item in complete
         )
+    partition_families = tuple(
+        narrow.iter_partition_families(revision.dataset, {first_register})
+    )
+    assert tuple(key for key, _ in partition_families) == tuple(
+        key for key, _ in expected
+    )
+    for (_, projected), (_, complete) in zip(partition_families, expected, strict=True):
+        assert tuple(
+            (
+                item.source,
+                item.subject,
+                item.parent_facts,
+                item.edition_scope,
+                item.edition_period_scope,
+                item.locators[0].semantic_record_key,
+                item.fields.column_name,
+                item.fields.name,
+                item.fields.data_type,
+            )
+            for item in projected
+        ) == tuple(
+            (
+                item.source,
+                item.subject,
+                item.parent_facts,
+                item.edition_scope,
+                item.edition_period_scope,
+                item.locators[0].semantic_record_key,
+                item.fields.column_name,
+                item.fields.name,
+                item.fields.data_type,
+            )
+            for item in complete
+        )
     calls_after_first_read = len(register_key_calls)
     assert calls_after_first_read == 2
     assert tuple(narrow.iter_naming_register_slices(revision.dataset, {first_register}))

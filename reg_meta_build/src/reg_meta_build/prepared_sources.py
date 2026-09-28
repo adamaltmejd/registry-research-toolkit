@@ -795,6 +795,13 @@ class PreparedNamingRecord:
     locators: tuple[_NamingLocator, ...] = ()
 
 
+@dataclass(frozen=True, kw_only=True)
+class PreparedPartitionRecord(PreparedNamingRecord):
+    """Fields used by checked partition decisions, without physical evidence."""
+
+    fields: SourceFields
+
+
 _NAMING_COLUMNS = (
     "occurrence.source, occurrence.provider, occurrence.semantic_key, "
     "occurrence.register_payload, occurrence.variant_payload, "
@@ -803,6 +810,7 @@ _NAMING_COLUMNS = (
     "occurrence.member_payload, occurrence.native_payload, "
     "occurrence.scope_payload, occurrence.period_payload"
 )
+_PARTITION_COLUMNS = f"{_NAMING_COLUMNS}, occurrence.fields_payload"
 
 
 def _read_naming_record(
@@ -839,6 +847,37 @@ def _read_naming_record(
         source=row["source"],
         subject=subject,
         parent_facts=payload(row["parents_payload"], "parents"),
+    )
+
+
+def _read_partition_record(
+    payload: Callable[[int, str], Any], row: sqlite3.Row
+) -> PreparedPartitionRecord:
+    """Project the accepted record facts used by the partition compiler."""
+    naming = _read_naming_record(payload, row)
+    subject = SourceSubject.model_construct(
+        provider=row["provider"],
+        register_name=naming.subject.register_name,
+        variant=naming.subject.variant,
+        variant_references=payload(row["variant_references_payload"], "coordinates"),
+        population=payload(row["population_payload"], "coordinate"),
+        variable=payload(row["variable_payload"], "coordinate"),
+        member=payload(row["member_payload"], "coordinate"),
+        native=payload(row["native_payload"], "native"),
+    )
+    fields = payload(row["fields_payload"], "fields")
+    return PreparedPartitionRecord(
+        source=naming.source,
+        subject=subject,
+        parent_facts=naming.parent_facts,
+        edition_scope=payload(row["scope_payload"], "scope"),
+        edition_period_scope=payload(row["period_payload"], "scope"),
+        locators=(_NamingLocator(tuple(json.loads(row["semantic_key"]))),),
+        fields=SourceFields.model_construct(
+            column_name=fields.column_name,
+            name=fields.name,
+            data_type=fields.data_type,
+        ),
     )
 
 
@@ -1050,6 +1089,27 @@ class PreparedSourceRecords:
                         )
                     )
                 yield family_key, members
+
+    def iter_partition_families(
+        self,
+        source: str,
+        registers: Collection[NativeKey | None] | None = None,
+    ) -> Iterator[tuple[NativeKey, tuple[PreparedPartitionRecord, ...]]]:
+        """Read only checked partition facts in native-family order."""
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            join = self._selected_register_join(conn, payload, source, registers)
+            rows = conn.execute(
+                f"SELECT {_PARTITION_COLUMNS}, occurrence.family_payload "
+                f"FROM occurrence {join}"
+                "WHERE occurrence.source=? AND occurrence.family_payload IS NOT NULL "
+                "ORDER BY occurrence.family_payload, occurrence.ordinal",
+                (source,),
+            )
+            for family, members in groupby(rows, key=lambda row: row["family_payload"]):
+                yield (
+                    payload(family, "native_family"),
+                    tuple(_read_partition_record(payload, row) for row in members),
+                )
 
     def iter_naming_register_slices(
         self, source: str, registers: Collection[NativeKey | None]

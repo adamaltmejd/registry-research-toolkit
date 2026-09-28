@@ -16,8 +16,10 @@ from reg_meta_build.curation_compile import (
     CompiledCuration,
     _compile_sos_register,
     _compile_thin_register,
+    _partition_memberships,
     compile_coding_register,
     compile_curation,
+    compile_deferred_partitions,
     compile_edition_splits,
     compile_enrichment,
     compile_errata,
@@ -190,6 +192,7 @@ def _scope() -> CompiledScope:
 
 def _naming_reader(reader: Any) -> Any:
     reader.iter_naming_families = reader.iter_native_families
+    reader.iter_partition_families = reader.iter_native_families
 
     def slices(source, registers):
         if None in registers:
@@ -1101,7 +1104,9 @@ def _compile_partition_fixture(
     native = native_variable_key(records[0])
     assert native is not None
     reader = SimpleNamespace(
-        iter_native_families=lambda source, registers=None: iter(((native, records),))
+        iter_partition_families=lambda source, registers=None: iter(
+            ((native, records),)
+        )
     )
     scope = _partition_scope(records)
     tree = load_curation_tree(root)
@@ -1155,7 +1160,7 @@ def test_partition_reads_only_registers_with_partition_work(tmp_path: Path) -> N
     requested = []
 
     class Reader:
-        def iter_native_families(self, source, registers=None):
+        def iter_partition_families(self, source, registers=None):
             requested.append(set(registers))
             return iter(())
 
@@ -1169,6 +1174,54 @@ def test_partition_reads_only_registers_with_partition_work(tmp_path: Path) -> N
     )
     compile_partitions(load_curation_tree(root), prepared, (scope,))
     assert requested[-1] == {register}
+
+
+def test_partition_projection_preserves_compiled_declarations(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    curation = tmp_path / "curation"
+    _scb_partition_tree(
+        curation,
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n',
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"))
+    native = native_variable_key(records[0])
+    assert native is not None
+    scope = _partition_scope(records)
+    tree = load_curation_tree(curation)
+    full = cast(
+        "Any",
+        SimpleNamespace(
+            records=SimpleNamespace(
+                iter_partition_families=lambda source, registers=None: iter(
+                    ((native, records),)
+                )
+            )
+        ),
+    )
+    expected = compile_partitions(tree, full, (scope,))
+    root = tmp_path / "inputs" / "records"
+    revision = _revision("scb-registerinformation")
+    manifest = prepare_source_records(
+        root, records=records, revisions=(revision,), scope="partitions"
+    )
+    reader = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
+    )
+
+    def no_complete_record(*_args):
+        raise AssertionError("partition compile decoded a complete record")
+
+    monkeypatch.setattr(prepared_sources, "_read_record", no_complete_record)
+    projected = cast("Any", SimpleNamespace(records=reader))
+    assert compile_partitions(tree, projected, (scope,)) == expected
+    deferred = compile_deferred_partitions(tree, projected, (scope,))
+    assert deferred == (
+        expected[1],
+        expected[3],
+        expected[4],
+        _partition_memberships(expected[0]),
+    )
 
 
 def test_scoped_naming_skips_unselected_family_decode(
@@ -2257,7 +2310,11 @@ def test_compiled_delivered_addition_uses_unique_literal_split(tmp_path: Path):
     assert converted.case is not None
     scope_key = (scope.source, scope.register_key)
     cases, _, _, diagnostics, _ = compile_errata(
-        tree, prepared, (scope,), {scope_key: (converted.case,)}, subset=False
+        tree,
+        prepared,
+        (scope,),
+        _partition_memberships({scope_key: (converted.case,)}),
+        subset=False,
     )
     assert diagnostics == ()
     assert cases[scope_key][0].decision.effects[0].variable_key == (
@@ -2716,6 +2773,26 @@ def test_tracked_partition_map_checks_every_literal(
     )
     records = _scb_partition_records(columns)
     compiled, key, native = _compile_partition_fixture(root, records)
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        cast(
+            "Any",
+            SimpleNamespace(
+                records=SimpleNamespace(
+                    iter_partition_families=lambda source, registers=None: iter(
+                        ((native, records),)
+                    )
+                )
+            ),
+        ),
+        (_partition_scope(records),),
+    )
+    assert deferred == (
+        compiled[1],
+        compiled[3],
+        compiled[4],
+        _partition_memberships(compiled[0]),
+    )
     cases, naming, keys, ambiguities, bases, issues = compiled
     assert native in bases[key]
     assert (
@@ -2829,7 +2906,9 @@ def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path)
         update={"naming_ambiguities": generated[3][key]}
     )
     reader = SimpleNamespace(
-        iter_native_families=lambda source, registers=None: iter(((native, records),))
+        iter_partition_families=lambda source, registers=None: iter(
+            ((native, records),)
+        )
     )
     compiled = compile_partitions(
         load_curation_tree(root),
@@ -2930,6 +3009,26 @@ def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
     )
     records = _scb_partition_records(("ANSWER", "ANSWER"), variants=(2, 3))
     compiled, key, native = _compile_partition_fixture(root, records)
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        cast(
+            "Any",
+            SimpleNamespace(
+                records=SimpleNamespace(
+                    iter_partition_families=lambda source, registers=None: iter(
+                        ((native, records),)
+                    )
+                )
+            ),
+        ),
+        (_partition_scope(records),),
+    )
+    assert deferred == (
+        compiled[1],
+        compiled[3],
+        compiled[4],
+        _partition_memberships(compiled[0]),
+    )
     cases, _, keys, _, _, _ = compiled
     assert (native, None) in keys[key]
     corrected = apply_occurrence_cases(records, cases[key]).occurrences
@@ -3012,6 +3111,21 @@ def test_sos_type_split_and_name_rename(tmp_path: Path, rename: bool):
     records = _sos_partition_records(rename=rename)
     compiled, key, native = _compile_partition_fixture(root, records)
     cases, naming, keys, _, bases, issues = compiled
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        cast(
+            "Any",
+            SimpleNamespace(
+                records=SimpleNamespace(
+                    iter_partition_families=lambda source, registers=None: iter(
+                        ((native, records),)
+                    )
+                )
+            ),
+        ),
+        (_partition_scope(records),),
+    )
+    assert deferred == (naming, compiled[3], bases, _partition_memberships(cases))
     assert not issues
     assert len(cases[key]) == 1
     assert len(naming[key]) == (1 if rename else 2)
