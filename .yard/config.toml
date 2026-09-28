@@ -78,14 +78,10 @@ model = "meta/muse-spark-1.3-contributor"
 effort = "high"
 tools = { subagents = false }
 
-# Curation bake-off arms (2026-09-28): same effort as the Sol control and Muse so
-# the comparison is about the model, not the budget.
-[agents.luna]
-harness = "codex"
-model = "gpt-6-luna"
-effort = "high"
-tools = { subagents = true }
-
+# DeepSeek implements curation tickets (selected by the curation workflows). It
+# won the 2026-09-28 curation bake-off against Sol, Muse and GPT-6 Luna: every
+# run correct, the unmappable IoT swap families left out and explained, at
+# $0.02-0.14 a lane. Luna mapped a swap pair in both of its runs.
 [agents.deepseek]
 harness = "pi"
 provider = "openrouter"
@@ -461,13 +457,20 @@ review = "none"
 [workflows.muse]
 implementer = "muse"
 
-# Curation bake-off (2026-09-28): the same curation ticket runs once per arm, all
-# reviewed by Sol. Arms: default (Sol, control), muse, trial-b (Luna), trial-c
-# (DeepSeek). Delete trial-b/trial-c and their agents when the bake-off ends.
-[workflows.trial-b]
-implementer = "luna"
+# curation: a register-file curation ticket whose evidence determines every entry
+# (a worklist with the answer derivable, and an expected error delta). It lands on
+# the gates, the operator's host slice proof and the operator's read of the diff
+# against the worklist; a review would repeat that read.
+[workflows.curation]
+implementer = "deepseek"
+review = "none"
 
-[workflows.trial-c]
+# curation-judgment: curation that decides something the evidence leaves open
+# (identity swaps, conflicting facts, sensitivity flags or anything else touching
+# disclosure control). A wrong call here usually builds clean, so the Sol seat
+# reviews it -- from a different model family than the implementer. File
+# judgment items out of a mechanical worklist into their own ticket here.
+[workflows.curation-judgment]
 implementer = "deepseek"
 
 # heavy: Sol at xhigh effort for design-heavy tickets, with the default review.
