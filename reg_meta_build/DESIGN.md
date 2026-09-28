@@ -309,6 +309,13 @@ and native id agree with its path. Unknown tables, unknown fields, duplicate
 declarations, and entries scoped to a different register fail with the source file and
 entry index.
 
+Top-level `[[flags]]` entries on a register file name one existing native variable by
+`<RegisterId>.<VarId>` and supply `is_sensitive` and/or `is_identifier`, with evidence
+and a noted date. A guarded case fills only flags that source reconciliation leaves
+unknown; a source value, including the conservative `true` from conditional
+sensitivity, makes that flag entry stale and remains authoritative. This one-way rule
+prevents curation from lowering a source disclosure flag.
+
 SCB errata records omitted rows and explicit periods for existing editions whose names
 are topics rather than dates. The register file implies the register; each entry names a
 variant and literal SCB column/version coordinates. A curated

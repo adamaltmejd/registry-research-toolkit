@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_tree import (
     ErrataDeliveredEntry,
+    FlagEntry,
     load_classification_families,
     load_classifications,
     load_curation_tree,
@@ -41,6 +42,41 @@ def test_delivered_anchor_is_optional_strict_int_and_rejects_extra_keys() -> Non
             )
     with pytest.raises(ValidationError):
         ErrataDeliveredEntry.model_validate({**entry, "unknown": "value"})
+
+
+def test_flag_entry_requires_native_variable_flag_and_evidence() -> None:
+    entry = {
+        "variable": "1.5",
+        "is_sensitive": True,
+        "evidence": "SCB documentation",
+        "noted": "2026-09-28",
+    }
+    assert FlagEntry.model_validate(entry).is_sensitive is True
+    for change in (
+        {"variable": "1.5.split"},
+        {"variable": "01.5"},
+        {"is_sensitive": None},
+        {"evidence": " "},
+        {"unexpected": True},
+    ):
+        with pytest.raises(ValidationError):
+            FlagEntry.model_validate({**entry, **change})
+
+
+def test_duplicate_flags_for_one_variable_fail_at_load(tmp_path: Path) -> None:
+    directory = tmp_path / "registers/scb"
+    directory.mkdir(parents=True)
+    (directory / "sample.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+        '[[flags]]\nvariable = "1.5"\nis_sensitive = true\n'
+        'evidence = "A"\nnoted = "2026-09-28"\n'
+        '[[flags]]\nvariable = "1.5"\nis_identifier = false\n'
+        'evidence = "B"\nnoted = "2026-09-28"\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert "[[flags]] entry 2: duplicate variable" in excinfo.value.message
 
 
 def _book(short_name: str, slug: str, *, binding: str = "", extra: str = "") -> str:

@@ -29,6 +29,7 @@ from reg_meta_build.source_curation import (
     CheckedIdentityChange,
     ClassificationDecision,
     CodingDecision,
+    FlagDecision,
     OccurrenceCorrectionDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
@@ -500,9 +501,23 @@ def resolve_source_scope(
                     )
             key = column_owners.get(column_key)
         else:
-            assert isinstance(case.decision, RepresentationDecision)
+            assert isinstance(case.decision, (RepresentationDecision, FlagDecision))
             key = case.decision.variable_key
         if key not in groups:
+            if isinstance(case.decision, FlagDecision):
+                emit(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        case_id=case.case_id,
+                        subject=repr(key),
+                        detail=f"{case.case_id}: documented native variable has no effective catalog family",
+                        refs=tuple(item.ref for item in case.targets),
+                        fields=("is_sensitive", "is_identifier"),
+                        withheld_output=(case.case_id,),
+                    )
+                )
+                continue
             raise ValueError(
                 f"case has an unconverted effective identity: {case.case_id}"
             )
@@ -587,6 +602,29 @@ def resolve_source_scope(
             tuple(c for c in selected if c.decision.kind == "representations"),
             coding=classified.coding,
         )
+        flag_cases = tuple(c for c in selected if isinstance(c.decision, FlagDecision))
+        flag_evaluations = evaluate_cases(flag_cases, evidence)
+        applicable_flags = tuple(
+            case
+            for case, evaluation in zip(flag_cases, flag_evaluations, strict=True)
+            if evaluation.status == "applicable"
+        )
+        evaluations.extend(flag_evaluations)
+        for case, evaluation in zip(flag_cases, flag_evaluations, strict=True):
+            for problem in evaluation.issues:
+                emit(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        case_id=case.case_id,
+                        subject=repr(key),
+                        detail=f"{case.case_id}: {problem.detail}",
+                        applicability_issue=problem,
+                        refs=tuple(item.ref for item in case.targets),
+                        fields=("is_sensitive", "is_identifier"),
+                        withheld_output=(case.case_id,),
+                    )
+                )
         for result in (chosen, classified, representation):
             evaluations.extend(result.evaluations)
             for issue in result.diagnostics:
@@ -672,6 +710,7 @@ def resolve_source_scope(
             flags=flags,
             coding=classified.coding,
             representations=representation.cases,
+            flag_cases=applicable_flags,
             diagnostic=diagnostic,
             storage=(storage_by_register or {}).get(
                 f"{register.provider}/{register.slug}"

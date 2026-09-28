@@ -26,6 +26,11 @@ from reg_meta_build.source_coding import (
     CodeMembershipClaim,
     resolve_code_membership,
 )
+from reg_meta_build.source_curation import (
+    CurationCase,
+    FlagDecision,
+    capture_expectations,
+)
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_variable_key,
@@ -139,6 +144,7 @@ def _form(
     flags: SourceFields = _FLAGS,
     claims: tuple[CodeListClaim, ...] = (),
     storage: dict[str, StewardColumnStorage] | None = None,
+    flag_cases: tuple[CurationCase, ...] = (),
 ):
     variants = {}
     coding = {}
@@ -157,6 +163,7 @@ def _form(
         flags=flags,
         coding=coding,
         storage=storage,
+        flag_cases=flag_cases,
     )
 
 
@@ -813,6 +820,76 @@ def test_unknown_flags_withhold_unsupported_entity_without_defaulting_false() ->
     assert result.diagnostics[0].code == "unresolved_flag"
     assert result.diagnostics[0].fields == ("is_sensitive", "is_identifier")
     assert len(result.intervals[0].segments) == 1
+
+
+def _flag_case(item: SourceRecord, **values: bool | None) -> CurationCase:
+    key = native_variable_key(item)
+    assert key is not None
+    return CurationCase(
+        case_id="curation/registers/scb/example.toml#/flags/1.4",
+        targets=capture_expectations(
+            (item,), fields=("sensitivity", "identifier", "conditional_sensitivity")
+        ),
+        decision=FlagDecision(
+            variable_key=key,
+            evidence="SCB documentation",
+            noted="2026-09-28",
+            provenance="curation:flags/1.4",
+            **values,
+        ),
+    )
+
+
+def test_curated_flags_fill_unknown_values_with_entry_provenance() -> None:
+    item = _record(2020)
+    result = _form(
+        (item,),
+        flags=SourceFields(),
+        flag_cases=(_flag_case(item, is_sensitive=True, is_identifier=False),),
+    )
+    assert result.variable is not None
+    assert (result.variable.is_sensitive, result.variable.is_identifier) == (
+        True,
+        False,
+    )
+    assert result.diagnostics == ()
+    assert result.variable.flag_provenance == (
+        (
+            "is_identifier",
+            "curation/registers/scb/example.toml#/flags/1.4: SCB documentation (2026-09-28)",
+        ),
+        (
+            "is_sensitive",
+            "curation/registers/scb/example.toml#/flags/1.4: SCB documentation (2026-09-28)",
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    "flags",
+    [
+        SourceFields(sensitivity=value_field(True), identifier=value_field(False)),
+        SourceFields(
+            identifier=value_field(False),
+            conditional_sensitivity=value_field(True),
+        ),
+    ],
+)
+def test_curated_false_cannot_lower_resolved_source_sensitivity(
+    flags: SourceFields,
+) -> None:
+    item = _record(2020)
+    result = _form(
+        (item,), flags=flags, flag_cases=(_flag_case(item, is_sensitive=False),)
+    )
+    assert result.variable is not None
+    assert result.variable.is_sensitive is True
+    assert result.variable.flag_provenance == ()
+    assert [issue.code for issue in result.diagnostics] == ["stale_curation_entry"]
+    assert (
+        "is_sensitive already resolves to source value True"
+        in result.diagnostics[0].detail
+    )
 
 
 @pytest.mark.parametrize(

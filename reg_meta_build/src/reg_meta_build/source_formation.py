@@ -22,7 +22,12 @@ from reg_meta_build.resolved_catalog import (
     column_state_overlaps,
     unresolved_variable_flags,
 )
-from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
+from reg_meta_build.source_curation import (
+    CurationCase,
+    FlagDecision,
+    ResolutionDiagnostic,
+    SourceRecordRef,
+)
 from reg_meta_build.source_intervals import (
     OccurrenceResolution,
     SourceSegment,
@@ -39,7 +44,6 @@ if TYPE_CHECKING:
     from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
     from reg_meta_build.source_coding import CodingResolution
     from reg_meta_build.source_coordinates import NativeKey
-    from reg_meta_build.source_curation import CurationCase
     from reg_meta_build.source_records import (
         SourceField,
         SourceFields,
@@ -369,6 +373,7 @@ def form_native_variable(
     flags: SourceFields,
     coding: Mapping[NativeKey, CodingResolution],
     representations: tuple[CurationCase, ...] = (),
+    flag_cases: tuple[CurationCase, ...] = (),
     diagnostic: bool = False,
     storage: Mapping[str, StewardColumnStorage] | None = None,
 ) -> VariableFormation:
@@ -862,6 +867,28 @@ def form_native_variable(
         conditional.status != "value" or conditional.value is not False
     ):
         flag_values["is_sensitive"] = True
+    flag_provenance: list[tuple[str, str]] = []
+    for case in sorted(flag_cases, key=lambda item: item.case_id):
+        decision = case.decision
+        if not isinstance(decision, FlagDecision):
+            raise TypeError("flag formation requires flag decisions")
+        for name in ("is_sensitive", "is_identifier"):
+            curated = getattr(decision, name)
+            if curated is None:
+                continue
+            source_value = flag_values[name]
+            if source_value is not None:
+                issue(
+                    "stale_curation_entry",
+                    f"{case.case_id}: {name} already resolves to source value {source_value!r}",
+                    (name,),
+                    (case.case_id,),
+                )
+                continue
+            flag_values[name] = curated
+            flag_provenance.append(
+                (name, f"{case.case_id}: {decision.evidence} ({decision.noted})")
+            )
     variable = ResolvedVariable(
         register=register,
         slug=slug,
@@ -874,6 +901,7 @@ def form_native_variable(
         source_register_text=_text(canonical, "source_attribution"),
         is_sensitive=flag_values["is_sensitive"],
         is_identifier=flag_values["is_identifier"],
+        flag_provenance=tuple(sorted(flag_provenance)),
         states=tuple(states),
         aliases=aliases,
     )
