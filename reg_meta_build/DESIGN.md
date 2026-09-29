@@ -359,11 +359,11 @@ token, variable native id, and literal column, checks the original type and
 representation, and records evidence and a canonical noted date. The entry must find
 exactly one physical record in its owning selected native register; missing or changed
 evidence is stale, and multiple records are over broad. A checked case guards all
-original register/variable/Deldatamängd peers regardless of column or type, so a new
-peer blocks the correction until reviewed. The only replacement is `data_type`; routing,
-identity, coverage, coding, and source evidence remain separate. LOVA's `DESLEG_DATUM`
-uses this surface because its workbook declares `YYYY-MM-DD` while its source type cell
-says `Decimal`.
+original register/variable/Deldatamängd peers regardless of column or type. A second
+peer blocks fresh compilation, and a late-added peer invalidates the guard. The only
+replacement is `data_type`; routing, identity, coverage, coding, and source evidence
+remain separate. LOVA's `DESLEG_DATUM` uses this surface because its workbook declares
+`YYYY-MM-DD` while its source type cell says `Decimal`.
 
 `is_identifier` and `is_sensitive` are strict booleans. Set `is_identifier` only when a
 sibling row for the same variable already carries that flag; this is a PII guard, not a

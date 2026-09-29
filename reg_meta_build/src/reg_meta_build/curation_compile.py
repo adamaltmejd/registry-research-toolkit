@@ -3272,13 +3272,14 @@ def _compile_sos_register(
             if _source_text(record.fields.column_name) == entry.column
         )
         valid = (
-            len(matching) == 1
+            len(peers) == 1
+            and len(matching) == 1
             and _source_text(matching[0].fields.data_type) == entry.expected_type
             and _source_text(matching[0].fields.representation)
             == entry.expected_representation
         )
         if not valid:
-            status = "over_broad" if len(matching) > 1 else "stale"
+            status = "over_broad" if len(peers) > 1 else "stale"
             statuses[status].append(case_id)
             diagnostics.append(
                 ResolutionDiagnostic(
@@ -3290,8 +3291,8 @@ def _compile_sos_register(
                     severity="error",
                     case_id=case_id,
                     subject=entry.variable,
-                    detail=f"{case_id}: expected one original {entry.deldatamangd}/{entry.variable}/{entry.column} record with type {entry.expected_type!r} and representation {entry.expected_representation!r}; found {len(matching)} matching records",
-                    refs=tuple(record_ref(record) for record in matching),
+                    detail=f"{case_id}: expected one original {entry.deldatamangd}/{entry.variable} peer and one {entry.column!r} record with type {entry.expected_type!r} and representation {entry.expected_representation!r}; found {len(peers)} peers and {len(matching)} column records",
+                    refs=tuple(record_ref(record) for record in peers),
                     withheld_output=(case_id,),
                 )
             )
@@ -3314,9 +3315,7 @@ def _compile_sos_register(
                             ("variable", record.subject.variable),
                             ("variant", record.subject.variant),
                         ),
-                        expected_members=tuple(
-                            sorted({record_ref(peer) for peer in peers}, key=str)
-                        ),
+                        expected_members=(ref,),
                     ),
                 ),
                 decision=OccurrenceCorrectionDecision(

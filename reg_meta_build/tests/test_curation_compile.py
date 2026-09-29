@@ -936,15 +936,15 @@ def test_sos_data_type_checks_complete_native_peers_and_overbreadth():
     peer = _distinct_sos_record(
         _sos_type_record(column="OTHER", data_type="text", representation="X")
     )
-    cases, diagnostics, _ = _compile_sos_register(
+    cases, diagnostics, statuses = _compile_sos_register(
         _sos_type_register(), (original, peer)
     )
-    assert diagnostics == ()
-    case = next(case for case in cases if "/errata.data_type/" in case.case_id)
-    assert set(case.peer_guards[0].expected_members) == {
-        record_ref(original),
-        record_ref(peer),
-    }
+    assert not [case for case in cases if "/errata.data_type/" in case.case_id]
+    assert [issue.code for issue in diagnostics] == ["overbroad_curation_entry"]
+    assert set(diagnostics[0].refs) == {record_ref(original), record_ref(peer)}
+    assert statuses["over_broad"] == [
+        "curation/registers/sos/sample.toml#/errata.data_type/1"
+    ]
     prior, _, _ = _compile_sos_register(_sos_type_register(), (original,))
     prior_case = next(case for case in prior if "/errata.data_type/" in case.case_id)
     assert (
