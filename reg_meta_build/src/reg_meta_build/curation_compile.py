@@ -1942,8 +1942,38 @@ def compile_deferred_partitions(
         lambda: defaultdict(set)
     )
     for source in sorted({scope.source for scope in scopes}):
+
+        def relevant_family(
+            native: NativeKey, *, selected_source: str = source
+        ) -> bool:
+            location = registers.get((selected_source, native[:5]))
+            if location is None:
+                return False
+            _scope_key, register = location
+            source_id = f"{register.register_info.native_id}.{native[-1]}"
+            return (
+                any(
+                    item.entry.source_id.startswith(source_id + ".")
+                    for item in entries_by_register[selected_source, native[:5]]
+                )
+                or any(
+                    item.variable == source_id for item in register.identity.partition
+                )
+                or any(
+                    item.variable == source_id
+                    for item in register.identity.column_owner
+                )
+                or any(
+                    item.variable == str(native[-1]) for item in register.identity.split
+                )
+                or any(
+                    item.variable == str(native[-1])
+                    for item in register.identity.rename
+                )
+            )
+
         for native, projected in prepared.records.iter_partition_families(
-            source, active_registers[source]
+            source, active_registers[source], select_family=relevant_family
         ):
             location = registers.get((source, native[:5]))
             if location is None:

@@ -1094,8 +1094,9 @@ class PreparedSourceRecords:
         self,
         source: str,
         registers: Collection[NativeKey | None] | None = None,
+        select_family: Callable[[NativeKey], bool] | None = None,
     ) -> Iterator[tuple[NativeKey, tuple[PreparedPartitionRecord, ...]]]:
-        """Read only checked partition facts in native-family order."""
+        """Read checked facts in native-family order, selecting before projection."""
         with _decoded_database(self.root, self.manifest) as (conn, payload):
             join = self._selected_register_join(conn, payload, source, registers)
             rows = conn.execute(
@@ -1106,8 +1107,11 @@ class PreparedSourceRecords:
                 (source,),
             )
             for family, members in groupby(rows, key=lambda row: row["family_payload"]):
+                family_key = payload(family, "native_family")
+                if select_family is not None and not select_family(family_key):
+                    continue
                 yield (
-                    payload(family, "native_family"),
+                    family_key,
                     tuple(_read_partition_record(payload, row) for row in members),
                 )
 

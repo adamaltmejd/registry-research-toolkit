@@ -386,7 +386,8 @@ def test_native_family_register_filter_preserves_grouping_and_order(
         if field not in {"record_id", "source", "source_revision_id", "subject"}
     }
     other = SourceRecord.create(revision=revision, subject=other_subject, **arguments)
-    records = (first, other, first)
+    unrelated = _record(revision, row=3, member="Unrelated", raw_value="Unrelated")
+    records = (first, other, first, unrelated)
     root = tmp_path / "inputs" / "records"
     manifest = prepare_source_records(
         root, records=records, revisions=(revision,), scope="filtered families"
@@ -481,6 +482,42 @@ def test_native_family_register_filter_preserves_grouping_and_order(
             )
             for item in complete
         )
+    needed_key = native_variable_key(first)
+    unrelated_key = native_variable_key(unrelated)
+    assert needed_key is not None and unrelated_key is not None
+    decoded = []
+    original_read_partition = prepared_sources._read_partition_record
+
+    def tracked_partition(payload, row):
+        decoded.append(payload(row["family_payload"], "native_family"))
+        return original_read_partition(payload, row)
+
+    monkeypatch.setattr(prepared_sources, "_read_partition_record", tracked_partition)
+    selected = tuple(
+        narrow.iter_partition_families(
+            revision.dataset,
+            {first_register},
+            select_family={needed_key}.__contains__,
+        )
+    )
+    assert tuple(key for key, _ in selected) == (needed_key,)
+    assert len(selected[0][1]) == 2
+    assert decoded == [needed_key, needed_key]
+    decoded.clear()
+    assert (
+        tuple(
+            narrow.iter_partition_families(
+                revision.dataset, {first_register}, select_family=set().__contains__
+            )
+        )
+        == ()
+    )
+    assert decoded == []
+    assert tuple(
+        key
+        for key, _ in narrow.iter_partition_families(revision.dataset, {first_register})
+    ) == (needed_key, unrelated_key)
+    assert decoded == [needed_key, needed_key, unrelated_key]
     calls_after_first_read = len(register_key_calls)
     assert calls_after_first_read == 2
     assert tuple(narrow.iter_naming_register_slices(revision.dataset, {first_register}))

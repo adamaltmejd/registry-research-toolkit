@@ -1127,6 +1127,7 @@ def _scb_partition_records(
     *,
     variants: tuple[int, ...] | None = None,
     register_id: int = 1,
+    variable_id: int = 5,
 ):
     header = REGISTERINFORMATION_HEADER.split("|")
     revision = _revision("scb-registerinformation")
@@ -1134,7 +1135,7 @@ def _scb_partition_records(
     for index, column in enumerate(columns, 1):
         row = _var_row(
             cvid=20 + index,
-            var_id=5,
+            var_id=variable_id,
             colname=column,
             register=(
                 "TEST",
@@ -1184,6 +1185,7 @@ def test_partition_projection_preserves_compiled_declarations(
         '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n',
     )
     records = _scb_partition_records(("ANSWER", "LEFT"))
+    unrelated = _scb_partition_records(("UNRELATED",), variable_id=6)
     native = native_variable_key(records[0])
     assert native is not None
     scope = _partition_scope(records)
@@ -1192,8 +1194,13 @@ def test_partition_projection_preserves_compiled_declarations(
         "Any",
         SimpleNamespace(
             records=SimpleNamespace(
-                iter_partition_families=lambda source, registers=None: iter(
-                    ((native, records),)
+                iter_partition_families=lambda source, registers=None, select_family=None: (
+                    iter(
+                        (
+                            (native, records),
+                            (native_variable_key(unrelated[0]), unrelated),
+                        )
+                    )
                 )
             )
         ),
@@ -1202,7 +1209,7 @@ def test_partition_projection_preserves_compiled_declarations(
     root = tmp_path / "inputs" / "records"
     revision = _revision("scb-registerinformation")
     manifest = prepare_source_records(
-        root, records=records, revisions=(revision,), scope="partitions"
+        root, records=(*records, *unrelated), revisions=(revision,), scope="partitions"
     )
     reader = open_prepared_source_records(
         root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
@@ -1212,8 +1219,19 @@ def test_partition_projection_preserves_compiled_declarations(
         raise AssertionError("partition compile decoded a complete record")
 
     monkeypatch.setattr(prepared_sources, "_read_record", no_complete_record)
+    unrelated_native = native_variable_key(unrelated[0])
+    assert unrelated_native is not None
+    original_read_partition = prepared_sources._read_partition_record
+
+    def read_needed_partition(payload, row):
+        assert payload(row["family_payload"], "native_family") != unrelated_native
+        return original_read_partition(payload, row)
+
     projected = cast("Any", SimpleNamespace(records=reader))
     assert compile_partitions(tree, projected, (scope,)) == expected
+    monkeypatch.setattr(
+        prepared_sources, "_read_partition_record", read_needed_partition
+    )
     deferred = compile_deferred_partitions(tree, projected, (scope,))
     assert deferred == (
         expected[1],
@@ -2727,8 +2745,8 @@ def test_tracked_partition_map_checks_every_literal(
             "Any",
             SimpleNamespace(
                 records=SimpleNamespace(
-                    iter_partition_families=lambda source, registers=None: iter(
-                        ((native, records),)
+                    iter_partition_families=lambda source, registers=None, select_family=None: (
+                        iter(((native, records),))
                     )
                 )
             ),
@@ -2963,8 +2981,8 @@ def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
             "Any",
             SimpleNamespace(
                 records=SimpleNamespace(
-                    iter_partition_families=lambda source, registers=None: iter(
-                        ((native, records),)
+                    iter_partition_families=lambda source, registers=None, select_family=None: (
+                        iter(((native, records),))
                     )
                 )
             ),
@@ -3065,8 +3083,8 @@ def test_sos_type_split_and_name_rename(tmp_path: Path, rename: bool):
             "Any",
             SimpleNamespace(
                 records=SimpleNamespace(
-                    iter_partition_families=lambda source, registers=None: iter(
-                        ((native, records),)
+                    iter_partition_families=lambda source, registers=None, select_family=None: (
+                        iter(((native, records),))
                     )
                 )
             ),
