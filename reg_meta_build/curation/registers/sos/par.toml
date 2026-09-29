@@ -43,12 +43,82 @@ parts = [
   { data_type = "text", owner = "5891427617861710725.ATC.atc-1" },   # slug atc-komplement-diagnos
 ]
 
+# AR, INDATUM and INDATUMA are each reused as a native name across PAR subsets
+# while the delivered source concept differs per subset. Split by Deldatamängd
+# so each source-basis keeps its own owner instead of collapsing onto one
+# canonical text: AR is visit year (PAR_OV), discharge year / last delivered
+# period (PAR_SV) or end-of-compulsory-care year / last delivered period
+# (PAR_TV); INDATUM is a SAS visit date, a SAS admission date, or a text
+# admission date (PAR_TV, 2010-2014); INDATUMA is an alphanumeric visit or
+# admission date.
+
+[[identity.split]]
+variable = "AR"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "PAR_OV", owner = "5891427617861710725.AR.besoksar" },
+  { deldatamangd = "PAR_SV", owner = "5891427617861710725.AR.utskrivningsar" },
+  { deldatamangd = "PAR_TV", owner = "5891427617861710725.AR.ar-avslutad-psykiatrisk-vardform" },
+]
+
+[[identity.split]]
+variable = "INDATUM"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "PAR_OV", owner = "5891427617861710725.INDATUM.besoksdatum" },
+  { deldatamangd = "PAR_SV", owner = "5891427617861710725.INDATUM.inskrivningsdatum-slutenvard" },
+  { deldatamangd = "PAR_TV", owner = "5891427617861710725.INDATUM.inskrivningsdatum-psykiatrisk-vardform" },
+]
+
+[[identity.split]]
+variable = "INDATUMA"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "PAR_OV", owner = "5891427617861710725.INDATUMA.besoksdatum-alfanumeriskt" },
+  { deldatamangd = "PAR_SV", owner = "5891427617861710725.INDATUMA.inskrivningsdatum-alfanumeriskt" },
+]
+
+# ALDER and IDNR are reused across the PAR subsets with distinct source
+# concepts. ALDER names stay "Ålder" in every subset while the reference
+# occasion changes: age at outpatient contact (PAR_OV), age at discharge or
+# reporting date when discharge is absent (PAR_SV), age at discharge (PAR_TV).
+# IDNR names the outpatient-contact, inpatient-episode and compulsory-care-form
+# identifiers; its PAR_TV original starts 2024. FODDAT's PAR_OV/PAR_SV text
+# originals share one alphanumeric concept (raw ÅÅÅÅMMDD) while its PAR_TV
+# original is a SAS date, so it splits by data type instead of Deldatamängd.
+
+[[identity.split]]
+variable = "ALDER"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "PAR_OV", owner = "5891427617861710725.ALDER.alder-vid-oppenvardskontakt" },
+  { deldatamangd = "PAR_SV", owner = "5891427617861710725.ALDER.alder-vid-utskrivning-slutenvard" },
+  { deldatamangd = "PAR_TV", owner = "5891427617861710725.ALDER.alder-vid-utskrivning-psykiatrisk-vardform" },
+]
+
+[[identity.split]]
+variable = "IDNR"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "PAR_OV", owner = "5891427617861710725.IDNR.lopnr-vardkontakt-oppenvard" },
+  { deldatamangd = "PAR_SV", owner = "5891427617861710725.IDNR.lopnr-slutenvardstillfalle" },
+  { deldatamangd = "PAR_TV", owner = "5891427617861710725.IDNR.lopnr-tvangsvardsform" },
+]
+
+[[identity.split]]
+variable = "FODDAT"
+by = "data_type"
+parts = [
+  { data_type = "text", owner = "5891427617861710725.FODDAT.fodelsedatum-alfanumeriskt" },
+  { data_type = "date", owner = "5891427617861710725.FODDAT.fodelsedatum-sas-psykiatrisk-vardform" },
+]
+
 [[variant]]
 native_id = "5891427617861710725.6299896919770839454"
 slug = "par-sv"
 display_group = "PAR_SV"
 panel_entity_key = "personnr"
-panel_time_key = "indatum"
+panel_time_key = "inskrivningsdatum-slutenvard"
 panel_time_grain = "row"
 
 
@@ -57,7 +127,7 @@ native_id = "5891427617861710725.5623677195158740599"
 slug = "par-ov"
 display_group = "PAR_OV"
 panel_entity_key = "personnr"
-panel_time_key = "indatum"
+panel_time_key = "besoksdatum"
 panel_time_grain = "row"
 
 
@@ -66,7 +136,7 @@ native_id = "5891427617861710725.6508659120530331974"
 slug = "par-tv"
 display_group = "PAR_TV"
 panel_entity_key = "personnr"
-panel_time_key = "indatum"
+panel_time_key = "inskrivningsdatum-psykiatrisk-vardform"
 panel_time_grain = "row"
 
 # Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM (LVM)
@@ -89,6 +159,72 @@ slug = "dia-yo-kod-ar-atc-kod"
 [[variable]]
 native_id = "5891427617861710725.ATC.atc-1"
 slug = "atc-komplement-diagnos"
+
+# Owners of the AR / INDATUM / INDATUMA source-basis splits above.
+
+[[variable]]
+native_id = "5891427617861710725.AR.besoksar"
+slug = "besoksar"
+
+[[variable]]
+native_id = "5891427617861710725.AR.utskrivningsar"
+slug = "utskrivningsar"
+
+[[variable]]
+native_id = "5891427617861710725.AR.ar-avslutad-psykiatrisk-vardform"
+slug = "ar-avslutad-psykiatrisk-vardform"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUM.besoksdatum"
+slug = "besoksdatum"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUM.inskrivningsdatum-slutenvard"
+slug = "inskrivningsdatum-slutenvard"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUM.inskrivningsdatum-psykiatrisk-vardform"
+slug = "inskrivningsdatum-psykiatrisk-vardform"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUMA.besoksdatum-alfanumeriskt"
+slug = "besoksdatum-alfanumeriskt"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUMA.inskrivningsdatum-alfanumeriskt"
+slug = "inskrivningsdatum-alfanumeriskt"
+
+[[variable]]
+native_id = "5891427617861710725.ALDER.alder-vid-oppenvardskontakt"
+slug = "alder-vid-oppenvardskontakt"
+
+[[variable]]
+native_id = "5891427617861710725.ALDER.alder-vid-utskrivning-slutenvard"
+slug = "alder-vid-utskrivning-slutenvard"
+
+[[variable]]
+native_id = "5891427617861710725.ALDER.alder-vid-utskrivning-psykiatrisk-vardform"
+slug = "alder-vid-utskrivning-psykiatrisk-vardform"
+
+[[variable]]
+native_id = "5891427617861710725.IDNR.lopnr-vardkontakt-oppenvard"
+slug = "lopnr-vardkontakt-oppenvard"
+
+[[variable]]
+native_id = "5891427617861710725.IDNR.lopnr-slutenvardstillfalle"
+slug = "lopnr-slutenvardstillfalle"
+
+[[variable]]
+native_id = "5891427617861710725.IDNR.lopnr-tvangsvardsform"
+slug = "lopnr-tvangsvardsform"
+
+[[variable]]
+native_id = "5891427617861710725.FODDAT.fodelsedatum-alfanumeriskt"
+slug = "fodelsedatum-alfanumeriskt"
+
+[[variable]]
+native_id = "5891427617861710725.FODDAT.fodelsedatum-sas-psykiatrisk-vardform"
+slug = "fodelsedatum-sas-psykiatrisk-vardform"
 
 # register 7550156225339591583 (bu)
 
