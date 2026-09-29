@@ -7219,6 +7219,115 @@ slug = "koncernforetag"
 native_id = "257.39089"
 slug = "innovationsutgifter-kapitalvaror"
 
+# CIS2016 response components. The historical CIS2016 column in SCB's
+# 2019-11-12 quality declaration identifies each literal; the questionnaire
+# identifies the corresponding question. No independent time range is authored;
+# host proof must verify the compiled source scopes.
+[[identity.partition]]
+variable = "257.28054"
+columns = { INITGD = "257.28054.varuinnovation-utvecklad-av-foretaget", INTOGD = "257.28054.varuinnovation-utvecklad-med-andra", INADGD = "257.28054.varuinnovation-anpassad-av-foretaget", INOTHGD = "257.28054.varuinnovation-utvecklad-av-andra" }
+columns_ref = "SCB Kvalitetsdeklaration version 1, 2019-11-12, appendix 2 historical CIS2016 column, p. 18; original CIS 2014-2016 questionnaire Q6; edition 11529, pooled 2014-01-01 through 2016-12-31."
+
+[[identity.partition]]
+variable = "257.28055"
+columns = { INITSV = "257.28055.tjansteinnovation-utvecklad-av-foretaget", INTOSV = "257.28055.tjansteinnovation-utvecklad-med-andra", INADSV = "257.28055.tjansteinnovation-anpassad-av-foretaget", INOTHSV = "257.28055.tjansteinnovation-utvecklad-av-andra" }
+columns_ref = "SCB Kvalitetsdeklaration version 1, 2019-11-12, appendix 2 historical CIS2016 column, p. 18; original CIS 2014-2016 questionnaire Q6; edition 11529, pooled 2014-01-01 through 2016-12-31."
+
+[[identity.partition]]
+variable = "257.28056"
+columns = { INITPS = "257.28056.processinnovation-utvecklad-av-foretaget", INTOPS = "257.28056.processinnovation-utvecklad-med-andra", INADPS = "257.28056.processinnovation-anpassad-av-foretaget", INOTHPS = "257.28056.processinnovation-utvecklad-av-andra" }
+columns_ref = "SCB Kvalitetsdeklaration version 1, 2019-11-12, appendix 2 historical CIS2016 column, p. 20; original CIS 2014-2016 questionnaire Q11; edition 11529, pooled 2014-01-01 through 2016-12-31."
+
+[[identity.partition]]
+variable = "257.30131"
+columns = { PBINN = "257.30131.innovationsaktivitet-i-upphandlingsavtal", PBINCT = "257.30131.innovation-kravd-i-upphandlingsavtal", PBNOCT = "257.30131.innovation-ej-kravd-i-upphandlingsavtal" }
+columns_ref = "SCB Kvalitetsdeklaration version 1, 2019-11-12, appendix 2 historical CIS2016 column, p. 28; original CIS 2014-2016 questionnaire Q23; edition 11529, pooled 2014-01-01 through 2016-12-31."
+
+[[identity.partition]]
+variable = "257.37092"
+columns = { LG = "257.37092.logistikinnovation-utebliven-huvudorsak", LGFIN = "257.37092.logistikinnovation-ekonomiskt-hinder", LGTEC = "257.37092.logistikinnovation-tekniskt-hinder", LGREG = "257.37092.logistikinnovation-rattsligt-hinder", LGOTHO = "257.37092.logistikinnovation-annat-hinder" }
+columns_ref = "SCB Kvalitetsdeklaration version 1, 2019-11-12, appendix 2 historical CIS2016 column, p. 36; original CIS 2014-2016 questionnaire Q31; edition 11529, pooled 2014-01-01 through 2016-12-31."
+
+[[variable]]
+native_id = "257.28054.varuinnovation-utvecklad-av-foretaget"
+slug = "varuinnovation-utvecklad-av-foretaget"
+
+[[variable]]
+native_id = "257.28054.varuinnovation-utvecklad-med-andra"
+slug = "varuinnovation-utvecklad-med-andra"
+
+[[variable]]
+native_id = "257.28054.varuinnovation-anpassad-av-foretaget"
+slug = "varuinnovation-anpassad-av-foretaget"
+
+[[variable]]
+native_id = "257.28054.varuinnovation-utvecklad-av-andra"
+slug = "varuinnovation-utvecklad-av-andra"
+
+[[variable]]
+native_id = "257.28055.tjansteinnovation-utvecklad-av-foretaget"
+slug = "tjansteinnovation-utvecklad-av-foretaget"
+
+[[variable]]
+native_id = "257.28055.tjansteinnovation-utvecklad-med-andra"
+slug = "tjansteinnovation-utvecklad-med-andra"
+
+[[variable]]
+native_id = "257.28055.tjansteinnovation-anpassad-av-foretaget"
+slug = "tjansteinnovation-anpassad-av-foretaget"
+
+[[variable]]
+native_id = "257.28055.tjansteinnovation-utvecklad-av-andra"
+slug = "tjansteinnovation-utvecklad-av-andra"
+
+[[variable]]
+native_id = "257.28056.processinnovation-utvecklad-av-foretaget"
+slug = "processinnovation-utvecklad-av-foretaget"
+
+[[variable]]
+native_id = "257.28056.processinnovation-utvecklad-med-andra"
+slug = "processinnovation-utvecklad-med-andra"
+
+[[variable]]
+native_id = "257.28056.processinnovation-anpassad-av-foretaget"
+slug = "processinnovation-anpassad-av-foretaget"
+
+[[variable]]
+native_id = "257.28056.processinnovation-utvecklad-av-andra"
+slug = "processinnovation-utvecklad-av-andra"
+
+[[variable]]
+native_id = "257.30131.innovationsaktivitet-i-upphandlingsavtal"
+slug = "innovationsaktivitet-i-upphandlingsavtal"
+
+[[variable]]
+native_id = "257.30131.innovation-kravd-i-upphandlingsavtal"
+slug = "innovation-kravd-i-upphandlingsavtal"
+
+[[variable]]
+native_id = "257.30131.innovation-ej-kravd-i-upphandlingsavtal"
+slug = "innovation-ej-kravd-i-upphandlingsavtal"
+
+[[variable]]
+native_id = "257.37092.logistikinnovation-utebliven-huvudorsak"
+slug = "logistikinnovation-utebliven-huvudorsak"
+
+[[variable]]
+native_id = "257.37092.logistikinnovation-ekonomiskt-hinder"
+slug = "logistikinnovation-ekonomiskt-hinder"
+
+[[variable]]
+native_id = "257.37092.logistikinnovation-tekniskt-hinder"
+slug = "logistikinnovation-tekniskt-hinder"
+
+[[variable]]
+native_id = "257.37092.logistikinnovation-rattsligt-hinder"
+slug = "logistikinnovation-rattsligt-hinder"
+
+[[variable]]
+native_id = "257.37092.logistikinnovation-annat-hinder"
+slug = "logistikinnovation-annat-hinder"
+
 # register 258
 
 # Overlapping pooled CIS waves: keep the later wave's list for the shared year (curation triage 2026-09-28, P4).

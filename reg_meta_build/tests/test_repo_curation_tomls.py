@@ -1026,6 +1026,65 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         "PAR_SV": "inskrivningsdatum-slutenvard",
         "PAR_TV": "inskrivningsdatum-psykiatrisk-vardform",
     }
+    # Y-308: historical CIS2016 crosswalk components, not response recoding.
+    innovation = next(
+        register
+        for register in tree.registers
+        if register.register_info.slug == "innovation-foretag"
+    )
+    cis2016 = {
+        "257.28054": {
+            "INITGD": "257.28054.varuinnovation-utvecklad-av-foretaget",
+            "INTOGD": "257.28054.varuinnovation-utvecklad-med-andra",
+            "INADGD": "257.28054.varuinnovation-anpassad-av-foretaget",
+            "INOTHGD": "257.28054.varuinnovation-utvecklad-av-andra",
+        },
+        "257.28055": {
+            "INITSV": "257.28055.tjansteinnovation-utvecklad-av-foretaget",
+            "INTOSV": "257.28055.tjansteinnovation-utvecklad-med-andra",
+            "INADSV": "257.28055.tjansteinnovation-anpassad-av-foretaget",
+            "INOTHSV": "257.28055.tjansteinnovation-utvecklad-av-andra",
+        },
+        "257.28056": {
+            "INITPS": "257.28056.processinnovation-utvecklad-av-foretaget",
+            "INTOPS": "257.28056.processinnovation-utvecklad-med-andra",
+            "INADPS": "257.28056.processinnovation-anpassad-av-foretaget",
+            "INOTHPS": "257.28056.processinnovation-utvecklad-av-andra",
+        },
+        "257.30131": {
+            "PBINN": "257.30131.innovationsaktivitet-i-upphandlingsavtal",
+            "PBINCT": "257.30131.innovation-kravd-i-upphandlingsavtal",
+            "PBNOCT": "257.30131.innovation-ej-kravd-i-upphandlingsavtal",
+        },
+        "257.37092": {
+            "LG": "257.37092.logistikinnovation-utebliven-huvudorsak",
+            "LGFIN": "257.37092.logistikinnovation-ekonomiskt-hinder",
+            "LGTEC": "257.37092.logistikinnovation-tekniskt-hinder",
+            "LGREG": "257.37092.logistikinnovation-rattsligt-hinder",
+            "LGOTHO": "257.37092.logistikinnovation-annat-hinder",
+        },
+    }
+    cis2016_partitions = [
+        entry for entry in innovation.identity.partition if entry.variable in cis2016
+    ]
+    assert len(cis2016_partitions) == len(cis2016)
+    assert {
+        entry.variable: dict(entry.columns) for entry in cis2016_partitions
+    } == cis2016
+    assert all(not entry.unassigned_columns for entry in cis2016_partitions)
+    expected_names = {
+        owner: owner.split(".", 2)[2]
+        for columns in cis2016.values()
+        for owner in columns.values()
+    }
+    cis2016_names = [
+        entry
+        for entry in innovation.variable
+        if entry.native_id.rsplit(".", 1)[0] in cis2016
+    ]
+    assert len(cis2016_names) == len(expected_names)
+    assert {entry.native_id: entry.slug for entry in cis2016_names} == expected_names
+    assert {("scb", owner) for owner in expected_names} <= slugged
     # The KU-to-AGI source-basis partitions (Y-299 34.591 and the 29 Y-302
     # employment/source families) are exact maps with two named leaves; each owner
     # must carry its own naming slug.
