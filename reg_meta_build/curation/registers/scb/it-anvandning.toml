@@ -54,7 +54,7 @@ column = "EMPIUSEPCT"
 versions = ["2014"]
 native_variable_id = 17675
 upstream = "blank-column-name-in-version"
-evidence = "SWECOV holds EMPIUSEPCT in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024."
+evidence = "SWECOV holds EMPIUSEPCT in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); native variable 17675 has named rows in 2013, 2015, 2017, 2018, 2019."
 noted = "2026-09-12"
 
 [[errata.delivered]]
@@ -247,7 +247,7 @@ column = "SISC"
 versions = ["2014"]
 native_variable_id = 16946
 upstream = "blank-column-name-in-version"
-evidence = "SWECOV holds SISC in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2023."
+evidence = "SWECOV holds SISC in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); native variable 16946 has named rows in 2015."
 noted = "2026-09-12"
 
 [[errata.delivered]]
@@ -336,7 +336,7 @@ column = "WEBORD"
 versions = ["2014"]
 native_variable_id = 26864
 upstream = "blank-column-name-in-version"
-evidence = "SWECOV holds WEBORD in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2023, 2025."
+evidence = "SWECOV holds WEBORD in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); native variable 26864 has named rows in 2013, 2015, 2017, 2018, 2019, 2020, 2021."
 noted = "2026-09-12"
 
 [[errata.delivered]]
