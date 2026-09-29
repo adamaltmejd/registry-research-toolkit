@@ -353,6 +353,18 @@ Retire only the fixed edition from `versions`, or delete the entry when that was
 last edition; do not edit it to keep a failing build green. Git history preserves the
 upstream-error record.
 
+SOS `[[errata.data_type]]` corrects one existing original record's interpreted
+`data_type` without changing its delivered cells. It names the original Deldatamängd
+token, variable native id, and literal column, checks the original type and
+representation, and records evidence and a canonical noted date. The entry must find
+exactly one physical record in its owning selected native register; missing or changed
+evidence is stale, and multiple records are over broad. A checked case guards all
+original register/variable/Deldatamängd peers regardless of column or type, so a new
+peer blocks the correction until reviewed. The only replacement is `data_type`; routing,
+identity, coverage, coding, and source evidence remain separate. LOVA's `DESLEG_DATUM`
+uses this surface because its workbook declares `YYYY-MM-DD` while its source type cell
+says `Decimal`.
+
 `is_identifier` and `is_sensitive` are strict booleans. Set `is_identifier` only when a
 sibling row for the same variable already carries that flag; this is a PII guard, not a
 way to infer identifiers from a label. HSL was checked for monthly delivery families and

@@ -333,11 +333,45 @@ class ErrataColumnEntry(_CurationModel):
     noted: str
 
 
+class ErrataDataTypeEntry(_CurationModel):
+    deldatamangd: str
+    variable: str
+    column: str
+    expected_type: str
+    expected_representation: str
+    data_type: str
+    evidence: str
+    noted: str
+
+    _text = field_validator(
+        "deldatamangd",
+        "variable",
+        "column",
+        "expected_type",
+        "expected_representation",
+        "data_type",
+        "evidence",
+    )(_require_trimmed)
+
+    @model_validator(mode="after")
+    def _checked_change(self) -> ErrataDataTypeEntry:
+        if self.expected_type == self.data_type:
+            raise ValueError("expected_type and data_type must differ")
+        try:
+            parsed = date.fromisoformat(self.noted)
+        except ValueError as exc:
+            raise ValueError("noted must be an ISO date") from exc
+        if parsed.isoformat() != self.noted:
+            raise ValueError("noted must be a canonical ISO date")
+        return self
+
+
 class ErrataCuration(_CurationModel):
     delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
     column: list[ErrataColumnEntry] = Field(default_factory=list)
     version: list[ErrataVersionEntry] = Field(default_factory=list)
     edition_period: list[ErrataEditionPeriodEntry] = Field(default_factory=list)
+    data_type: list[ErrataDataTypeEntry] = Field(default_factory=list)
 
 
 class EnrichmentDescriptionEntry(_CurationModel):
@@ -987,6 +1021,7 @@ def _register_arrays(
         ("errata.column", entry.errata.column),
         ("errata.version", entry.errata.version),
         ("errata.edition_period", entry.errata.edition_period),
+        ("errata.data_type", entry.errata.data_type),
         ("enrichment.description", entry.enrichment.description),
         ("enrichment.alias", entry.enrichment.alias),
         ("group", entry.group),
@@ -1106,6 +1141,13 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     "must name a native variant of an SCB register.",
                     "Use a native [[variant]] slug in the owning SCB register file.",
                 )
+            if isinstance(row, ErrataDataTypeEntry) and identity.provider != "sos":
+                raise curation_error(
+                    _CODE,
+                    f"{file} [[{table}]] entry {index}: data type correction applies "
+                    f"to SOS registers, not {identity.provider!r}.",
+                    "Move the entry to the SOS register file it describes.",
+                )
             register_refs: list[str] = []
             if isinstance(
                 row,
@@ -1200,7 +1242,18 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
     for table, rows in _register_arrays(entry):
         seen: set[str] = set()
         edition_period_keys: set[tuple[str, str]] = set()
+        data_type_keys: set[tuple[str, str, str]] = set()
         for index, row in enumerate(rows, start=1):
+            if isinstance(row, ErrataDataTypeEntry):
+                coordinate = (row.deldatamangd, row.variable, row.column)
+                if coordinate in data_type_keys:
+                    raise curation_error(
+                        _CODE,
+                        f"{file} [[{table}]] entry {index}: duplicate data type "
+                        f"target {coordinate!r}.",
+                        "Keep one correction per Deldatamängd, variable and column.",
+                    )
+                data_type_keys.add(coordinate)
             if isinstance(row, ErrataEditionPeriodEntry):
                 coordinate = (row.variant, row.name)
                 if coordinate in edition_period_keys:

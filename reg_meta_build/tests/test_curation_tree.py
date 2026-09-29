@@ -269,6 +269,75 @@ def test_edition_period_rejects_duplicate_named_edition(tmp_path: Path) -> None:
     )
 
 
+_SOS_TYPE_ROW = (
+    '[[errata.data_type]]\ndeldatamangd = "A_LOVA_HOSP"\n'
+    'variable = "DESLEG_DATUM"\ncolumn = "DESLEG_DATUM"\n'
+    'expected_type = "Decimal"\nexpected_representation = "YYYY-MM-DD"\n'
+    'data_type = "date"\nevidence = "Workbook row 28"\nnoted = "2026-09-29"\n'
+)
+
+
+@pytest.mark.parametrize(
+    ("replacement", "message"),
+    [
+        ('expected_type = "date"', "expected_type and data_type must differ"),
+        ('expected_representation = " "', "nonempty and trimmed"),
+        ('noted = "20260929"', "canonical ISO date"),
+        ('unknown = "x"', "Extra inputs are not permitted"),
+    ],
+)
+def test_sos_data_type_row_is_checked_at_load(
+    tmp_path: Path, replacement: str, message: str
+) -> None:
+    path = tmp_path / "registers/sos/sample.toml"
+    path.parent.mkdir(parents=True)
+    row = _SOS_TYPE_ROW
+    if replacement.startswith("unknown"):
+        row += replacement + "\n"
+    else:
+        field = replacement.split(" = ", 1)[0]
+        row = row.replace(
+            next(line for line in row.splitlines() if line.startswith(field + " = ")),
+            replacement,
+        )
+    path.write_text(
+        '[register]\nprovider = "sos"\nslug = "sample"\nnative_id = "1"\n' + row,
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert "[[errata.data_type" in excinfo.value.message
+    assert "entry 1" in excinfo.value.message
+    assert message in excinfo.value.message
+
+
+def test_sos_data_type_duplicate_target_and_non_sos_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "registers/sos/sample.toml"
+    path.parent.mkdir(parents=True)
+    header = '[register]\nprovider = "sos"\nslug = "sample"\nnative_id = "1"\n'
+    path.write_text(
+        header
+        + _SOS_TYPE_ROW
+        + _SOS_TYPE_ROW.replace(
+            'evidence = "Workbook row 28"', 'evidence = "Other evidence"'
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert "duplicate data type target" in excinfo.value.message
+    path.unlink()
+    other = tmp_path / "registers/scb/sample.toml"
+    other.parent.mkdir(parents=True)
+    other.write_text(
+        header.replace('provider = "sos"', 'provider = "scb"') + _SOS_TYPE_ROW,
+        encoding="utf-8",
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert "applies to SOS registers" in excinfo.value.message
+
+
 @pytest.mark.parametrize(
     "by, part",
     [

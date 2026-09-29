@@ -26,6 +26,7 @@ from reg_meta_build.curation_compile import (
     compile_native_naming,
     compile_partitions,
     compile_scb_preliminary,
+    compile_sos_thin,
     convert_column_partitions,
     finalize_classification_bindings,
     tree_sha256,
@@ -80,6 +81,7 @@ from reg_meta_build.source_records import (
     NativeCoordinates,
     RecordLocator,
     SourceCoordinate,
+    SourceField,
     SourceFieldCells,
     SourceFields,
     SourceParentObservation,
@@ -775,7 +777,7 @@ def _case_record(
 
 def _route_register(*routes):
     return SimpleNamespace(
-        register_info=SimpleNamespace(slug="sample"),
+        register_info=SimpleNamespace(provider="sos", slug="sample"),
         source_file="curation/registers/sos/sample.toml",
         identity=SimpleNamespace(
             route=tuple(
@@ -783,7 +785,265 @@ def _route_register(*routes):
                 for token, names in routes
             )
         ),
+        errata=SimpleNamespace(data_type=()),
     )
+
+
+def _sos_type_register():
+    register = _route_register()
+    register.errata.data_type = (
+        SimpleNamespace(
+            deldatamangd="A_LOVA_HOSP",
+            variable="DESLEG_DATUM",
+            column="DESLEG_DATUM",
+            expected_type="Decimal",
+            expected_representation="YYYY-MM-DD",
+            data_type="date",
+            evidence="Workbook row 28 declares a date.",
+        ),
+    )
+    return register
+
+
+def _sos_type_record(
+    *,
+    column: str = "DESLEG_DATUM",
+    data_type: str = "Decimal",
+    representation: str = "YYYY-MM-DD",
+) -> SourceRecord:
+    return _case_record(
+        provider="sos",
+        register="LOVA",
+        variant="A_LOVA_HOSP",
+        variable="DESLEG_DATUM",
+        fields=SourceFields(
+            column_name=value_field(column),
+            data_type=value_field(data_type),
+            representation=value_field(representation),
+        ),
+    )
+
+
+def _distinct_sos_record(record: SourceRecord) -> SourceRecord:
+    locator = record.locators[0]
+    return record.model_copy(
+        update={
+            "locators": (
+                locator.model_copy(
+                    update={
+                        "semantic_record_key": (*locator.semantic_record_key, "peer:2"),
+                        "physical_record": "peer:2",
+                    }
+                ),
+            )
+        }
+    )
+
+
+def test_sos_data_type_correction_preserves_original_source_and_attribution():
+    record = _sos_type_record()
+    cases, diagnostics, statuses = _compile_sos_register(
+        _sos_type_register(), (record,)
+    )
+    case = next(case for case in cases if "/errata.data_type/" in case.case_id)
+    assert diagnostics == ()
+    assert case.case_id == "curation/registers/sos/sample.toml#/errata.data_type/1"
+    assert statuses["entries_matched"] == [case.case_id]
+    assert case.targets[0].ref == record_ref(record)
+    assert {field.name for field in case.targets[0].alternatives[0].fields} == {
+        "column_name",
+        "data_type",
+        "representation",
+    }
+    assert case.peer_guards[0].expected_members == (record_ref(record),)
+    assert isinstance(case.decision, OccurrenceCorrectionDecision)
+    assert len(case.decision.effects) == 1
+    assert isinstance(case.decision.effects[0], CheckedFieldChange)
+    assert case.decision.effects[0].replacement.name == "data_type"
+    assert case.decision.reason == "Workbook row 28 declares a date."
+    assert case.decision.provenance == f"{case.case_id}: {case.decision.reason}"
+    result = apply_occurrence_cases((record,), (case,))
+    assert result.diagnostics == ()
+    assert result.accounting[0].disposition == "applied"
+    assert result.occurrences[0].fields.data_type.value == "date"
+    assert result.occurrences[0].corrections[0].provenance == case.decision.provenance
+    assert record.fields.data_type.value == "Decimal"
+    assert result.occurrences[0].fields.representation == record.fields.representation
+    assert result.occurrences[0].source_records == (record,)
+
+
+@pytest.mark.parametrize(
+    "record",
+    [
+        _sos_type_record(data_type="date"),
+        _sos_type_record(representation="YYYYMMDD"),
+        _sos_type_record(column="OTHER"),
+        _sos_type_record().model_copy(
+            update={
+                "fields": SourceFields(
+                    column_name=value_field("DESLEG_DATUM"),
+                    data_type=SourceField(status="unknown"),
+                    representation=value_field("YYYY-MM-DD"),
+                )
+            }
+        ),
+        _sos_type_record().model_copy(
+            update={
+                "fields": SourceFields(
+                    column_name=value_field("DESLEG_DATUM"),
+                    data_type=value_field("Decimal"),
+                    representation=SourceField(status="unknown"),
+                )
+            }
+        ),
+        _sos_type_record().model_copy(
+            update={
+                "fields": SourceFields(
+                    column_name=value_field("DESLEG_DATUM"),
+                    representation=value_field("YYYY-MM-DD"),
+                )
+            }
+        ),
+        _sos_type_record().model_copy(
+            update={
+                "fields": SourceFields(
+                    column_name=value_field("DESLEG_DATUM"),
+                    data_type=value_field("Decimal"),
+                )
+            }
+        ),
+        _case_record(
+            provider="sos",
+            register="LOVA",
+            variant="A_LOVA_HOSP",
+            variable="DESLEG_DATUM",
+        ),
+    ],
+)
+def test_sos_data_type_rejects_changed_or_absent_original(record: SourceRecord):
+    cases, diagnostics, statuses = _compile_sos_register(
+        _sos_type_register(), (record,)
+    )
+    assert not [case for case in cases if "/errata.data_type/" in case.case_id]
+    assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+    assert statuses["stale"] == [
+        "curation/registers/sos/sample.toml#/errata.data_type/1"
+    ]
+
+
+def test_sos_data_type_checks_complete_native_peers_and_overbreadth():
+    original = _sos_type_record()
+    peer = _distinct_sos_record(
+        _sos_type_record(column="OTHER", data_type="text", representation="X")
+    )
+    cases, diagnostics, _ = _compile_sos_register(
+        _sos_type_register(), (original, peer)
+    )
+    assert diagnostics == ()
+    case = next(case for case in cases if "/errata.data_type/" in case.case_id)
+    assert set(case.peer_guards[0].expected_members) == {
+        record_ref(original),
+        record_ref(peer),
+    }
+    prior, _, _ = _compile_sos_register(_sos_type_register(), (original,))
+    prior_case = next(case for case in prior if "/errata.data_type/" in case.case_id)
+    assert (
+        apply_occurrence_cases((original, peer), (prior_case,))
+        .accounting[0]
+        .disposition
+        == "stale"
+    )
+
+    another = _distinct_sos_record(
+        _sos_type_record(data_type="text", representation="X")
+    )
+    cases, diagnostics, statuses = _compile_sos_register(
+        _sos_type_register(), (original, another)
+    )
+    assert not [case for case in cases if "/errata.data_type/" in case.case_id]
+    assert [issue.code for issue in diagnostics] == ["overbroad_curation_entry"]
+    assert statuses["over_broad"] == [
+        "curation/registers/sos/sample.toml#/errata.data_type/1"
+    ]
+
+
+def test_sos_data_type_stays_in_owning_source_and_register():
+    record = _sos_type_record()
+    cases, _, _ = _compile_sos_register(_sos_type_register(), (record,))
+    case = next(case for case in cases if "/errata.data_type/" in case.case_id)
+    wrong_register = record.model_copy(
+        update={
+            "subject": record.subject.model_copy(
+                update={"register_name": SourceCoordinate(status="value", name="OTHER")}
+            )
+        }
+    )
+    wrong_source = record.model_copy(
+        update={
+            "source": "Socialstyrelsen/other.xlsx",
+        }
+    )
+    for other in (wrong_register, wrong_source):
+        result = apply_occurrence_cases((other,), (case,))
+        assert result.accounting[0].disposition == "stale"
+        assert result.occurrences[0].fields.data_type.value == "Decimal"
+
+
+def test_sos_data_type_skipped_register_is_accounted_in_subset():
+    register = _sos_type_register()
+    tree = SimpleNamespace(registers=(register,))
+    prepared = SimpleNamespace(value_sources=(), records=SimpleNamespace())
+    case_id = "curation/registers/sos/sample.toml#/errata.data_type/1"
+    cases, diagnostics, report = compile_sos_thin(tree, prepared, (), subset=True)
+    assert cases == {}
+    assert diagnostics == ()
+    assert report["sos/sample"]["entries_read"] == [case_id]
+    assert report["sos/sample"]["not_evaluated_in_subset"] == [case_id]
+    _, diagnostics, report = compile_sos_thin(tree, prepared, (), subset=False)
+    assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+    assert report["sos/sample"]["stale"] == [case_id]
+
+
+def test_sos_data_type_compiles_only_selected_native_source_scope():
+    record = _sos_type_record()
+    register_key = source_register_key(record)
+    assert register_key is not None
+    register = _sos_type_register()
+    tree = SimpleNamespace(registers=(register,))
+    scope = CompiledScope(
+        source=record.source,
+        register_key=None,
+        naming=(
+            NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind="register", provider="sos", source_key=register_key
+                ),
+                naming=SlugEntry(
+                    kind="register", provider="sos", source_id="1", slug="sample"
+                ),
+                contributors=(),
+            ),
+        ),
+    )
+    other = record.model_copy(update={"source": "Socialstyrelsen/other.xlsx"})
+    prepared = SimpleNamespace(
+        value_sources=(),
+        records=SimpleNamespace(
+            iter_records=lambda *, source: iter(
+                item for item in (record, other) if item.source == source
+            )
+        ),
+    )
+    cases, diagnostics, report = compile_sos_thin(tree, prepared, (scope,), subset=True)
+    assert diagnostics == ()
+    case = next(
+        case
+        for case in cases[record.source, None]
+        if "/errata.data_type/" in case.case_id
+    )
+    assert case.peer_guards[0].source == record.source
+    assert case.peer_guards[0].expected_members == (record_ref(record),)
+    assert report["sos/sample"]["entries_matched"] == [case.case_id]
 
 
 def test_thin_native_naming_captures_complete_family_guard(tmp_path):

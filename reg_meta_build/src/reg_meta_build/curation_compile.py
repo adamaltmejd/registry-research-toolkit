@@ -2787,6 +2787,8 @@ def compile_sos_thin(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
     scopes: tuple[CompiledScope, ...],
+    *,
+    subset: bool,
 ) -> tuple[
     dict[Any, tuple[CurationCase, ...]],
     tuple[ResolutionDiagnostic, ...],
@@ -2800,12 +2802,6 @@ def compile_sos_thin(
     cases: dict[Any, list[CurationCase]] = {}
     diagnostics: list[ResolutionDiagnostic] = []
     report: dict[str, dict[str, list[str]]] = {}
-    if not any(
-        name in registers and registers[name].register_info.provider != "scb"
-        for scope in scopes
-        for name, _ in _scope_registers(scope)
-    ):
-        return {}, (), {}
     with open_value_bindings(prepared.value_sources) as sessions:
         for scope in sorted(
             scopes, key=lambda item: (item.source, repr(item.register_key))
@@ -2852,6 +2848,37 @@ def compile_sos_thin(
                 else:
                     new_cases = _compile_thin_register(selected, sessions)
                 cases.setdefault(scope_key, []).extend(new_cases)
+    for register in tree.registers:
+        if register.register_info.provider != "sos" or not register.errata.data_type:
+            continue
+        name = f"sos/{register.register_info.slug}"
+        if name in report:
+            continue
+        statuses = report[name] = {
+            key: []
+            for key in (
+                "entries_read",
+                "entries_matched",
+                "stale",
+                "over_broad",
+                "not_evaluated_in_subset",
+            )
+        }
+        for index, entry in enumerate(register.errata.data_type, 1):
+            case_id = f"{register.source_file}#/errata.data_type/{index}"
+            statuses["entries_read"].append(case_id)
+            statuses["not_evaluated_in_subset" if subset else "stale"].append(case_id)
+            if not subset:
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        case_id=case_id,
+                        subject=entry.variable,
+                        detail=f"{case_id}: owning SOS register has no selected source scope",
+                        withheld_output=(case_id,),
+                    )
+                )
     return (
         {
             key: tuple(sorted(value, key=lambda case: case.case_id))
@@ -3221,6 +3248,103 @@ def _compile_sos_register(
                     withheld_output=(ref,),
                 )
             )
+    for index, entry in enumerate(register.errata.data_type, 1):
+        case_id = f"{register.source_file}#/errata.data_type/{index}"
+        statuses["entries_read"].append(case_id)
+        peers = tuple(
+            record
+            for record in variables
+            if record.subject.variable.status == "value"
+            and record.subject.variable.native_id == entry.variable
+            and record.subject.variant.status == "value"
+            and record.subject.variant.name == entry.deldatamangd
+        )
+        matching = tuple(
+            record
+            for record in peers
+            if _source_text(record.fields.column_name) == entry.column
+        )
+        valid = (
+            len(matching) == 1
+            and _source_text(matching[0].fields.data_type) == entry.expected_type
+            and _source_text(matching[0].fields.representation)
+            == entry.expected_representation
+        )
+        if not valid:
+            status = "over_broad" if len(matching) > 1 else "stale"
+            statuses[status].append(case_id)
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code=(
+                        "overbroad_curation_entry"
+                        if status == "over_broad"
+                        else "stale_curation_entry"
+                    ),
+                    severity="error",
+                    case_id=case_id,
+                    subject=entry.variable,
+                    detail=f"{case_id}: expected one original {entry.deldatamangd}/{entry.variable}/{entry.column} record with type {entry.expected_type!r} and representation {entry.expected_representation!r}; found {len(matching)} matching records",
+                    refs=tuple(record_ref(record) for record in matching),
+                    withheld_output=(case_id,),
+                )
+            )
+            continue
+        record = matching[0]
+        ref = record_ref(record)
+        targets = capture_expectations(
+            (record,), fields=("column_name", "data_type", "representation")
+        )
+        cases.append(
+            CurationCase(
+                case_id=case_id,
+                targets=targets,
+                peer_guards=(
+                    PeerGuard(
+                        guard_id=case_id,
+                        source=record.source,
+                        coordinates=(
+                            ("register", record.subject.register_name),
+                            ("variable", record.subject.variable),
+                            ("variant", record.subject.variant),
+                        ),
+                        expected_members=tuple(
+                            sorted({record_ref(peer) for peer in peers}, key=str)
+                        ),
+                    ),
+                ),
+                decision=OccurrenceCorrectionDecision(
+                    reviewed=True,
+                    effects=(
+                        CheckedFieldChange(
+                            ref=ref,
+                            replacement=FieldExpectation(
+                                name="data_type", status="value", value=entry.data_type
+                            ),
+                            when=(
+                                FieldExpectation(
+                                    name="column_name",
+                                    status="value",
+                                    value=entry.column,
+                                ),
+                                FieldExpectation(
+                                    name="data_type",
+                                    status="value",
+                                    value=entry.expected_type,
+                                ),
+                                FieldExpectation(
+                                    name="representation",
+                                    status="value",
+                                    value=entry.expected_representation,
+                                ),
+                            ),
+                        ),
+                    ),
+                    reason=entry.evidence,
+                    provenance=f"{case_id}: {entry.evidence}",
+                ),
+            )
+        )
+        statuses["entries_matched"].append(case_id)
     return tuple(cases), tuple(diagnostics), statuses
 
 
@@ -4707,7 +4831,9 @@ def compile_curation(
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
             current.setdefault(key, []).extend(values)
-    thin_cases, thin_diagnostics, thin_report = compile_sos_thin(tree, prepared, scopes)
+    thin_cases, thin_diagnostics, thin_report = compile_sos_thin(
+        tree, prepared, scopes, subset=subset
+    )
     for key, new_cases in thin_cases.items():
         cases[key].extend(new_cases)
     for key, new_cases in compile_scb_preliminary(prepared, scopes).items():
