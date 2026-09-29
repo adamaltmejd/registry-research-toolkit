@@ -788,7 +788,9 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         entry for entry in innovation.identity.partition if entry.variable in cis2016
     ]
     assert len(cis2016_partitions) == len(cis2016)
-    assert {entry.variable: dict(entry.columns) for entry in cis2016_partitions} == cis2016
+    assert {
+        entry.variable: dict(entry.columns) for entry in cis2016_partitions
+    } == cis2016
     assert all(not entry.unassigned_columns for entry in cis2016_partitions)
     expected_names = {
         owner: owner.split(".", 2)[2]
