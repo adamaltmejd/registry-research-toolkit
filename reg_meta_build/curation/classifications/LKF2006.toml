@@ -24,6 +24,8 @@ sentinel_codes = [
   { code = "9800", meaning = "Okänd kommun" },
   { code = "9993", meaning = "Okänt" },
   { code = "9994", meaning = "Okänt" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "99", meaning = "Utländsk adress" },
 ]
 
 [binding]

@@ -18,6 +18,8 @@ sentinel_codes = [
   { code = "0141", meaning = "Okänt" },
   { code = "0147", meaning = "Okänt" },
   { code = "9900", meaning = "Svensk skola i utlandet" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "99", meaning = "Utländsk adress" },
 ]
 
 [binding]
