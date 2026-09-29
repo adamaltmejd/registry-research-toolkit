@@ -1018,8 +1018,8 @@ def test_repo_relations_parses() -> None:
     # on a real build. Endpoint RESOLUTION is maintainer-build territory (the
     # materializers fail fast).
     relations = load_relations(_CURATION / "relations.toml")
-    # 615 (#508) + 232 (#737) = 847 curated variable-grain identity edges.
-    assert len(relations.same_as) == 847
+    # 615 (#508) + 232 (#737) - 6 (Y-318 mixed SUN owner) = 841 edges.
+    assert len(relations.same_as) == 841
     assert all(
         e.grain is FqidKind.VARIABLE_BINDING and e.a_variable and e.b_variable
         for e in relations.same_as
@@ -1030,6 +1030,25 @@ def test_repo_relations_parses() -> None:
     #     or the file was hand-edited to bypass it).
     pairs = {frozenset((e.a_fqid(), e.b_fqid())) for e in relations.same_as}
     assert len(pairs) == len(relations.same_as)
+    # Y-318: five peers match LISA's SUN2000 representation. The mixed
+    # Personalutbildningsstatistik owner and LISA's SUN2020 owner cannot be in
+    # this identity component, including by a transitive peer link.
+    sun2000_owners = (
+        "scb/fasit/utbildningsniva-aggregat-old",
+        "scb/lisa/utbildningsniva-aggregat-old-sun2000",
+        "scb/rams/sun2000niva-old",
+        "scb/slk/sun2000niva-old",
+        "scb/sls/sun2000niva-old",
+        "scb/stativ/sun2000niva-old",
+    )
+    sun2000_pairs = {
+        frozenset((a, b))
+        for index, a in enumerate(sun2000_owners)
+        for b in sun2000_owners[index + 1 :]
+    }
+    assert len(sun2000_pairs) == 15
+    assert {pair for pair in pairs if pair & set(sun2000_owners)} == sun2000_pairs
+    assert all("scb/lisa/utbildningsniva-aggregat-old" not in pair for pair in pairs)
     # (2) COMPONENT CAP — the actual safety property same_as exists to protect: a
     #     mistaken edge welds two identity components into a runaway resolver blob.
     #     Recompute connected components (union-find over the endpoint FQIDs) and
@@ -1052,6 +1071,15 @@ def test_repo_relations_parses() -> None:
     for node in parent:
         sizes[find(node)] = sizes.get(find(node), 0) + 1
     assert max(sizes.values()) <= _SAME_AS_MAX_COMPONENT
+    sun2000_component = {
+        node for node in parent if find(node) == find(sun2000_owners[0])
+    }
+    assert sun2000_component == set(sun2000_owners)
+    assert "scb/lisa/utbildningsniva-aggregat-old-sun2020" not in sun2000_component
+    assert (
+        "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+        not in sun2000_component
+    )
     # 11 #375 variable succession edges + 21 #931 LISA SNI-coding succession edges
     # + 2 #400 SSYK J16 succession edges
     # + 3 #579 classification split edges

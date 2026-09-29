@@ -4506,16 +4506,12 @@ type = "same_as"
 a = "scb/kapitalvinster/senast-kanda-civilstand"
 b = "scb/linda/senast-kanda-civilstand"
 note = "curated:#737 senast kända uppgift om civilstånd"
-# utbildningsnivå (aggregat old) (7 vars)
+# SUN 2000 NivaOld (6 vars). The unqualified Personalutbildningsstatistik
+# owner mixes SUN 2000 and SUN 2020 members, so it is outside this clique.
 [[edge]]
 type = "same_as"
 a = "scb/fasit/utbildningsniva-aggregat-old"
-b = "scb/lisa/utbildningsniva-aggregat-old"
-note = "curated:#737 utbildningsnivå (aggregat old)"
-[[edge]]
-type = "same_as"
-a = "scb/fasit/utbildningsniva-aggregat-old"
-b = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+b = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
@@ -4539,47 +4535,22 @@ b = "scb/stativ/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old"
-b = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
-note = "curated:#737 utbildningsnivå (aggregat old)"
-[[edge]]
-type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old"
+a = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 b = "scb/rams/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old"
+a = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 b = "scb/slk/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old"
+a = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 b = "scb/sls/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old"
-b = "scb/stativ/sun2000niva-old"
-note = "curated:#737 utbildningsnivå (aggregat old)"
-[[edge]]
-type = "same_as"
-a = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
-b = "scb/rams/sun2000niva-old"
-note = "curated:#737 utbildningsnivå (aggregat old)"
-[[edge]]
-type = "same_as"
-a = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
-b = "scb/slk/sun2000niva-old"
-note = "curated:#737 utbildningsnivå (aggregat old)"
-[[edge]]
-type = "same_as"
-a = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
-b = "scb/sls/sun2000niva-old"
-note = "curated:#737 utbildningsnivå (aggregat old)"
-[[edge]]
-type = "same_as"
-a = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+a = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 b = "scb/stativ/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
