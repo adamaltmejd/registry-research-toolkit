@@ -612,9 +612,7 @@ def _run_pipeline(
         compressed_events = stack.enter_context(
             gzip.GzipFile(filename="", mode="wb", fileobj=raw_events, mtime=0)
         )
-        events = stack.enter_context(
-            TextIOWrapper(compressed_events, encoding="utf-8")
-        )
+        events = stack.enter_context(TextIOWrapper(compressed_events, encoding="utf-8"))
 
         def event(kind: str, value: dict[str, object]) -> None:
             events.write(
