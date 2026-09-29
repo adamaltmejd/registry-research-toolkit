@@ -9,6 +9,7 @@ from collections import Counter, defaultdict
 from contextlib import ExitStack, contextmanager
 from dataclasses import asdict
 from datetime import UTC, datetime
+from io import TextIOWrapper
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -607,8 +608,12 @@ def _run_pipeline(
     sibling_pairs, slice_keys = set(), set()
     build_result: dict[str, object] = {}
     with _retain_completed_artifact(build_result, report_dir), ExitStack() as stack:
+        raw_events = stack.enter_context((report_dir / "events.jsonl.gz").open("xb"))
+        compressed_events = stack.enter_context(
+            gzip.GzipFile(filename="", mode="wb", fileobj=raw_events, mtime=0)
+        )
         events = stack.enter_context(
-            gzip.open(report_dir / "events.jsonl.gz", "wt", encoding="utf-8")
+            TextIOWrapper(compressed_events, encoding="utf-8")
         )
 
         def event(kind: str, value: dict[str, object]) -> None:

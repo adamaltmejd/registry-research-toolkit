@@ -539,6 +539,9 @@ def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> Non
     assert {p.name: p.read_bytes() for p in (tmp_path / "a-decisions").iterdir()} == {
         p.name: p.read_bytes() for p in (tmp_path / "b-decisions").iterdir()
     }
+    first_ledger = (tmp_path / "a-report/events.jsonl.gz").read_bytes()
+    assert first_ledger == (tmp_path / "b-report/events.jsonl.gz").read_bytes()
+    assert first_ledger[4:8] == bytes(4)
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)
