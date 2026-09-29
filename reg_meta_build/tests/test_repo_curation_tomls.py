@@ -672,7 +672,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for register in tree.registers
         for partition in register.identity.partition
     ]
-    assert len(partitions) == 658
+    assert len(partitions) == 680
     assert len(tree.registers) == 289
     assert (
         sum(len(register.identity.route) for register in tree.registers),
@@ -879,6 +879,75 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     assert {
         ("scb", owner) for expected in ku_agi.values() for owner in expected.values()
     } <= slugged
+    # Y-305: 22 IoT KUSOC compensation-code sequential renames. Each family's
+    # two exact literals occupy disjoint windows and name one existing owner.
+    kusoc = {
+        "25.21785": ("PKUEN426", "PEN426", "25.21785.summa-skattefritt-skattepliktigt"),
+        "25.21786": ("PKULI421", "PLI421", "25.21786.pkuli421"),
+        "25.21787": ("PKULI422", "PLI422", "25.21787.pkuli422"),
+        "25.21788": ("PKULI423", "PLI423", "25.21788.pkuli423"),
+        "25.21789": ("PKULI424", "PLI424", "25.21789.pkuli424"),
+        "25.21790": ("PKULI428", "PLI428", "25.21790.pkuli428"),
+        "25.21791": ("PKULI429", "PLI429", "25.21791.pkuli429"),
+        "25.21792": ("PKULI473", "PLI473", "25.21792.pkuli473"),
+        "25.21793": ("PKULI481", "PLI481", "25.21793.pkuli481"),
+        "25.21794": ("PKULI483", "PLI483", "25.21794.pkuli483"),
+        "25.21795": ("PKULI486", "PLI486", "25.21795.pkuli486"),
+        "25.21796": ("PKULI999", "PLI999", "25.21796.pkuli999"),
+        "25.21797": (
+            "PKUSF420",
+            "PSF420",
+            "25.21797.ersattningskod-420-skattefri-del",
+        ),
+        "25.21798": (
+            "PKUSF421",
+            "PSF421",
+            "25.21798.ersattningskod-421-skattefri-del",
+        ),
+        "25.21799": (
+            "PKUSF423",
+            "PSF423",
+            "25.21799.ersattningskod-423-skattefri-del",
+        ),
+        "25.21800": (
+            "PKUSF426",
+            "PSF426",
+            "25.21800.ersattningskod-426-skattefri-del",
+        ),
+        "25.21801": (
+            "PKUSF429",
+            "PSF429",
+            "25.21801.ersattningskod-429-skattefri-del",
+        ),
+        "25.21802": (
+            "PKUSP420",
+            "PSP420",
+            "25.21802.ersattningskod-420-skattepliktig-del",
+        ),
+        "25.21803": (
+            "PKUSP421",
+            "PSP421",
+            "25.21803.ersattningskod-421-skattepliktig-del",
+        ),
+        "25.21804": (
+            "PKUSP423",
+            "PSP423",
+            "25.21804.ersattningskod-423-skattepliktig-del",
+        ),
+        "25.21805": (
+            "PKUSP429",
+            "PSP429",
+            "25.21805.ersattningskod-429-skattepliktig-del",
+        ),
+        "25.21806": (
+            "PKUSP426",
+            "PSP426",
+            "25.21806.ersattningskod-426-skattepliktig-del",
+        ),
+    }
+    for variable, (old, new, owner) in kusoc.items():
+        assert dict(by_variable[variable].columns) == {old: owner, new: owner}
+        assert ("scb", owner) in slugged
     absent_owners = {
         owner
         for partition in partitions

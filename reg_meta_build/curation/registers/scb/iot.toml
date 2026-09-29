@@ -4508,6 +4508,122 @@ variable = "25.40360"
 columns = { "SPSBIN" = "25.40360.statlig-beskattningsbar-exkl-formaner", "NYSBIN" = "25.40360.statlig-beskattningsbar-exkl-formaner" }
 columns_ref = "Y-276 2026-09-28: 25.40360 'Statligt beskattningsbar inkomst exkl. sociala förmåner' sequential rename {SPSBIN 1974, NYSBIN 1975-1977} owned by statlig-beskattningsbar-exkl-formaner (host IoT rename-family evidence)"
 
+# Y-305 2026-09-29: IoT KUSOC compensation-code sequential renames, 25.21785-25.21806.
+# Each family's two exact literals occupy disjoint, non-interleaved windows and map
+# to one existing qualified owner; both spellings keep the original KUSOC source
+# basis (Y-211/Y-276 sequential-rename policy). No source-basis switch, swap or
+# interleaving is asserted here.
+
+[[identity.partition]]
+variable = "25.21785"
+columns = { PKUEN426 = "25.21785.summa-skattefritt-skattepliktigt", PEN426 = "25.21785.summa-skattefritt-skattepliktigt" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21785 sequential rename {PKUEN426 2005-2018, PEN426 2019-2024} owned by 25.21785.summa-skattefritt-skattepliktigt; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21786"
+columns = { PKULI421 = "25.21786.pkuli421", PLI421 = "25.21786.pkuli421" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21786 sequential rename {PKULI421 2005-2018, PLI421 2019-2024} owned by 25.21786.pkuli421; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21787"
+columns = { PKULI422 = "25.21787.pkuli422", PLI422 = "25.21787.pkuli422" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21787 sequential rename {PKULI422 2005-2018, PLI422 2019-2024} owned by 25.21787.pkuli422; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21788"
+columns = { PKULI423 = "25.21788.pkuli423", PLI423 = "25.21788.pkuli423" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21788 sequential rename {PKULI423 2005-2018, PLI423 2019-2024} owned by 25.21788.pkuli423; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21789"
+columns = { PKULI424 = "25.21789.pkuli424", PLI424 = "25.21789.pkuli424" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21789 sequential rename {PKULI424 2005-2018, PLI424 2019-2024} owned by 25.21789.pkuli424; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21790"
+columns = { PKULI428 = "25.21790.pkuli428", PLI428 = "25.21790.pkuli428" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21790 sequential rename {PKULI428 2005-2018, PLI428 2019-2024} owned by 25.21790.pkuli428; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21791"
+columns = { PKULI429 = "25.21791.pkuli429", PLI429 = "25.21791.pkuli429" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21791 sequential rename {PKULI429 2005-2018, PLI429 2019-2024} owned by 25.21791.pkuli429; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21792"
+columns = { PKULI473 = "25.21792.pkuli473", PLI473 = "25.21792.pkuli473" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21792 sequential rename {PKULI473 2005-2018, PLI473 2019-2024} owned by 25.21792.pkuli473; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21793"
+columns = { PKULI481 = "25.21793.pkuli481", PLI481 = "25.21793.pkuli481" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21793 sequential rename {PKULI481 2005-2018, PLI481 2019-2024} owned by 25.21793.pkuli481; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21794"
+columns = { PKULI483 = "25.21794.pkuli483", PLI483 = "25.21794.pkuli483" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21794 sequential rename {PKULI483 2005-2018, PLI483 2019-2024} owned by 25.21794.pkuli483; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21795"
+columns = { PKULI486 = "25.21795.pkuli486", PLI486 = "25.21795.pkuli486" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21795 sequential rename {PKULI486 2005-2018, PLI486 2019-2024} owned by 25.21795.pkuli486; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21796"
+columns = { PKULI999 = "25.21796.pkuli999", PLI999 = "25.21796.pkuli999" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21796 sequential rename {PKULI999 2005-2018, PLI999 2019-2024} owned by 25.21796.pkuli999; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21797"
+columns = { PKUSF420 = "25.21797.ersattningskod-420-skattefri-del", PSF420 = "25.21797.ersattningskod-420-skattefri-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21797 sequential rename {PKUSF420 2005-2018, PSF420 2019-2024} owned by 25.21797.ersattningskod-420-skattefri-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21798"
+columns = { PKUSF421 = "25.21798.ersattningskod-421-skattefri-del", PSF421 = "25.21798.ersattningskod-421-skattefri-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21798 sequential rename {PKUSF421 2005-2018, PSF421 2019-2024} owned by 25.21798.ersattningskod-421-skattefri-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21799"
+columns = { PKUSF423 = "25.21799.ersattningskod-423-skattefri-del", PSF423 = "25.21799.ersattningskod-423-skattefri-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21799 sequential rename {PKUSF423 2005-2018, PSF423 2019-2024} owned by 25.21799.ersattningskod-423-skattefri-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21800"
+columns = { PKUSF426 = "25.21800.ersattningskod-426-skattefri-del", PSF426 = "25.21800.ersattningskod-426-skattefri-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21800 sequential rename {PKUSF426 2005-2018, PSF426 2019-2024} owned by 25.21800.ersattningskod-426-skattefri-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21801"
+columns = { PKUSF429 = "25.21801.ersattningskod-429-skattefri-del", PSF429 = "25.21801.ersattningskod-429-skattefri-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21801 sequential rename {PKUSF429 2005-2018, PSF429 2019-2024} owned by 25.21801.ersattningskod-429-skattefri-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21802"
+columns = { PKUSP420 = "25.21802.ersattningskod-420-skattepliktig-del", PSP420 = "25.21802.ersattningskod-420-skattepliktig-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21802 sequential rename {PKUSP420 2005-2018, PSP420 2019-2024} owned by 25.21802.ersattningskod-420-skattepliktig-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21803"
+columns = { PKUSP421 = "25.21803.ersattningskod-421-skattepliktig-del", PSP421 = "25.21803.ersattningskod-421-skattepliktig-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21803 sequential rename {PKUSP421 2005-2018, PSP421 2019-2024} owned by 25.21803.ersattningskod-421-skattepliktig-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21804"
+columns = { PKUSP423 = "25.21804.ersattningskod-423-skattepliktig-del", PSP423 = "25.21804.ersattningskod-423-skattepliktig-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21804 sequential rename {PKUSP423 2005-2018, PSP423 2019-2024} owned by 25.21804.ersattningskod-423-skattepliktig-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21805"
+columns = { PKUSP429 = "25.21805.ersattningskod-429-skattepliktig-del", PSP429 = "25.21805.ersattningskod-429-skattepliktig-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21805 sequential rename {PKUSP429 2005-2018, PSP429 2019-2024} owned by 25.21805.ersattningskod-429-skattepliktig-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
+[[identity.partition]]
+variable = "25.21806"
+columns = { PKUSP426 = "25.21806.ersattningskod-426-skattepliktig-del", PSP426 = "25.21806.ersattningskod-426-skattepliktig-del" }
+columns_ref = "Y-305 2026-09-29: SCB VarId 21806 sequential rename {PKUSP426 2005-2018, PSP426 2019-2024} owned by 25.21806.ersattningskod-426-skattepliktig-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
+
 
 [[variable]]
 native_id = "25.31.forsamling"
@@ -5500,4 +5616,95 @@ slug = "sjukpenning-annan-forvarvsinkomst"
 [[variable]]
 native_id = "25.40360.statlig-beskattningsbar-exkl-formaner"
 slug = "statlig-beskattningsbar-exkl-formaner"
+
+# Y-305 2026-09-29: qualified owners for the 22 IoT KUSOC compensation-code
+# sequential renames declared above; each reuses the family's existing slug.
+
+[[variable]]
+native_id = "25.21785.summa-skattefritt-skattepliktigt"
+slug = "summa-skattefritt-skattepliktigt"
+
+[[variable]]
+native_id = "25.21786.pkuli421"
+slug = "pkuli421"
+
+[[variable]]
+native_id = "25.21787.pkuli422"
+slug = "pkuli422"
+
+[[variable]]
+native_id = "25.21788.pkuli423"
+slug = "pkuli423"
+
+[[variable]]
+native_id = "25.21789.pkuli424"
+slug = "pkuli424"
+
+[[variable]]
+native_id = "25.21790.pkuli428"
+slug = "pkuli428"
+
+[[variable]]
+native_id = "25.21791.pkuli429"
+slug = "pkuli429"
+
+[[variable]]
+native_id = "25.21792.pkuli473"
+slug = "pkuli473"
+
+[[variable]]
+native_id = "25.21793.pkuli481"
+slug = "pkuli481"
+
+[[variable]]
+native_id = "25.21794.pkuli483"
+slug = "pkuli483"
+
+[[variable]]
+native_id = "25.21795.pkuli486"
+slug = "pkuli486"
+
+[[variable]]
+native_id = "25.21796.pkuli999"
+slug = "pkuli999"
+
+[[variable]]
+native_id = "25.21797.ersattningskod-420-skattefri-del"
+slug = "ersattningskod-420-skattefri-del"
+
+[[variable]]
+native_id = "25.21798.ersattningskod-421-skattefri-del"
+slug = "ersattningskod-421-skattefri-del"
+
+[[variable]]
+native_id = "25.21799.ersattningskod-423-skattefri-del"
+slug = "ersattningskod-423-skattefri-del"
+
+[[variable]]
+native_id = "25.21800.ersattningskod-426-skattefri-del"
+slug = "ersattningskod-426-skattefri-del"
+
+[[variable]]
+native_id = "25.21801.ersattningskod-429-skattefri-del"
+slug = "ersattningskod-429-skattefri-del"
+
+[[variable]]
+native_id = "25.21802.ersattningskod-420-skattepliktig-del"
+slug = "ersattningskod-420-skattepliktig-del"
+
+[[variable]]
+native_id = "25.21803.ersattningskod-421-skattepliktig-del"
+slug = "ersattningskod-421-skattepliktig-del"
+
+[[variable]]
+native_id = "25.21804.ersattningskod-423-skattepliktig-del"
+slug = "ersattningskod-423-skattepliktig-del"
+
+[[variable]]
+native_id = "25.21805.ersattningskod-429-skattepliktig-del"
+slug = "ersattningskod-429-skattepliktig-del"
+
+[[variable]]
+native_id = "25.21806.ersattningskod-426-skattepliktig-del"
+slug = "ersattningskod-426-skattepliktig-del"
 
