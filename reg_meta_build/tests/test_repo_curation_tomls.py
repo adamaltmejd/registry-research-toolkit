@@ -558,6 +558,26 @@ def test_repo_scb_errata_parses() -> None:
         ("DispInkKE", ("2010", "2011", "2012"), 34, 153),
         ("DispInkKE04", ("2010", "2011", "2012"), 34, 153),
     }
+    # Y-298: scb/it-anvandning (258.556) reused the delivery literals of later
+    # native owners, so the 2014 entries need their source-native owner named.
+    # Pin the exact coordinates, versions and native guards.
+    assert {
+        (
+            d.column,
+            d.versions,
+            d.register_id,
+            d.register_variant_id,
+            d.native_variable_id,
+        )
+        for d in errata.delivered
+        if d.register_id == 258
+        and d.register_variant_id == 556
+        and d.column in {"EMPIUSEPCT", "SISC", "WEBORD"}
+    } == {
+        ("EMPIUSEPCT", ("2014",), 258, 556, 17675),
+        ("SISC", ("2014",), 258, 556, 16946),
+        ("WEBORD", ("2014",), 258, 556, 26864),
+    }
 
 
 def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
