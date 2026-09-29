@@ -3119,4 +3119,301 @@ slug = "utbildningsinriktning-4-positioner"
 native_id = "34.784.sun2020inr"
 slug = "utbildningsinriktning-4-positioner-2"
 
+# Y-291 2026-09-28: LISA STORE/non-MiDAS and MiDAS source-basis partitions.
+# SCB `lisa-bakgrundsfakta-1990-2017` Bilaga 4 documents STORE as the
+# administrative payment/decision records and MiDAS as analysis data derived
+# from them; the two bases need not agree (see docs/lisa/_appendix-midas.md,
+# Rehab_Belopp_MiDAS.md, SjukP_08_Belopp.md). Each family below is owned by two
+# DISTINCT split keys: the earlier column keeps the canonical concept leaf, the
+# MiDAS column takes the `-midas` discriminator. This is a source-basis
+# distinction, NOT a succession or an equivalent sequential rename; the exact
+# prepared v28 physical periods are the only availability claim.
+
+[[identity.partition]]
+variable = "34.31512"
+columns = { SjukFall_Antal = "34.31512.sjukfall-antal", SjukFall_Antal_MiDAS = "34.31512.sjukfall-antal-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31512: SjukFall_Antal 1993-2013,2015; SjukFall_Antal_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31516"
+columns = { SjukSum_Bdag = "34.31516.sjukfall-bruttodagar", SjukSum_Bdag_MiDAS = "34.31516.sjukfall-bruttodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31516: SjukSum_Bdag 1993-2015; SjukSum_Bdag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31517"
+columns = { SjukSum_Ndag = "34.31517.sjukfall-nettodagar", SjukSum_Ndag_MiDAS = "34.31517.sjukfall-nettodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31517: SjukSum_Ndag 1993-2015; SjukSum_Ndag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31518"
+columns = { SjukSum_Belopp = "34.31518.sjukfall-ersattningsbelopp", SjukSum_Belopp_MiDAS = "34.31518.sjukfall-ersattningsbelopp-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31518: SjukSum_Belopp 1993-2015; SjukSum_Belopp_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31532"
+columns = { SjukP_Bdag = "34.31532.sjukpenning-bruttodagar", SjukP_Bdag_MiDAS = "34.31532.sjukpenning-bruttodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31532: SjukP_Bdag 1993-2015; SjukP_Bdag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31533"
+columns = { SjukP_Ndag = "34.31533.sjukpenning-nettodagar", SjukP_Ndag_MiDAS = "34.31533.sjukpenning-nettodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31533: SjukP_Ndag 1993-2015; SjukP_Ndag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31534"
+columns = { SjukP_Belopp = "34.31534.sjukpenning-ersattningsbelopp", SjukP_Belopp_MiDAS = "34.31534.sjukpenning-ersattningsbelopp-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31534: SjukP_Belopp 1993-2015; SjukP_Belopp_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31535"
+columns = { Rehab_Bdag = "34.31535.rehabiliteringspenning-bruttodagar", Rehab_Bdag_MiDAS = "34.31535.rehabiliteringspenning-bruttodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31535: Rehab_Bdag 1993-2015; Rehab_Bdag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31536"
+columns = { Rehab_Ndag = "34.31536.rehabiliteringspenning-nettodagar", Rehab_Ndag_MiDAS = "34.31536.rehabiliteringspenning-nettodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31536: Rehab_Ndag 1993-2015; Rehab_Ndag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31537"
+columns = { Rehab_Belopp = "34.31537.rehabiliteringspenning-ersattningsbelopp", Rehab_Belopp_MiDAS = "34.31537.rehabiliteringspenning-ersattningsbelopp-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31537: Rehab_Belopp 1993-2015; Rehab_Belopp_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31538"
+columns = { ArbSk_Bdag = "34.31538.arbetsskadesjukpenning-bruttodagar", ArbSk_Bdag_MiDAS = "34.31538.arbetsskadesjukpenning-bruttodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31538: ArbSk_Bdag 1993-2015; ArbSk_Bdag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31539"
+columns = { ArbSk_Ndag = "34.31539.arbetsskadesjukpenning-nettodagar", ArbSk_Ndag_MiDAS = "34.31539.arbetsskadesjukpenning-nettodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31539: ArbSk_Ndag 1993-2015; ArbSk_Ndag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31540"
+columns = { ArbSk_Belopp = "34.31540.arbetsskadesjukpenning-ersattningsbelopp", ArbSk_Belopp_MiDAS = "34.31540.arbetsskadesjukpenning-ersattningsbelopp-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31540: ArbSk_Belopp 1993-2015; ArbSk_Belopp_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31740"
+columns = { SjukErs_Belopp = "34.31740.sjukersattning-ersattningsbelopp", SjukErs_Belopp_MiDAS = "34.31740.sjukersattning-ersattningsbelopp-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31740: SjukErs_Belopp 2003-2015; SjukErs_Belopp_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.31744"
+columns = { AktErs_Belopp = "34.31744.aktivitetsersattning-ersattningsbelopp", AktErs_Belopp_MiDAS = "34.31744.aktivitetsersattning-ersattningsbelopp-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31744: AktErs_Belopp 2003-2015; AktErs_Belopp_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.36228"
+columns = { SjukErs_Bdag = "34.36228.sjukersattning-bruttodagar", SjukErs_BDag_MiDAS = "34.36228.sjukersattning-bruttodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.36228: SjukErs_Bdag 2015; SjukErs_BDag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.36229"
+columns = { SjukErs_Ndag = "34.36229.sjukersattning-nettodagar", SjukErs_NDag_MiDAS = "34.36229.sjukersattning-nettodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.36229: SjukErs_Ndag 2015; SjukErs_NDag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.36230"
+columns = { AktErs_Bdag = "34.36230.aktivitetsersattning-bruttodagar", AktErs_BDag_MiDAS = "34.36230.aktivitetsersattning-bruttodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.36230: AktErs_Bdag 2015; AktErs_BDag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.36231"
+columns = { AktErs_Ndag = "34.36231.aktivitetsersattning-nettodagar", AktErs_NDag_MiDAS = "34.36231.aktivitetsersattning-nettodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.36231: AktErs_Ndag 2015; AktErs_NDag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.37047"
+columns = { ForPeng_Bdag = "34.37047.foraldrapenning-antal-bruttodagar", ForPeng_Bdag_MiDAS = "34.37047.foraldrapenning-antal-bruttodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37047: ForPeng_Bdag 1993-2012; ForPeng_Bdag_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.37048"
+columns = { ForPeng_Belopp = "34.37048.foraldrapenning-ersattningsbelopp", ForPeng_Belopp_MiDAS = "34.37048.foraldrapenning-ersattningsbelopp-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37048: ForPeng_Belopp 1993-2012; ForPeng_Belopp_MiDAS 2016-2023."
+
+[[identity.partition]]
+variable = "34.37049"
+columns = { ForPeng_Ndag = "34.37049.foraldrapenning-antal-nettodagar", ForPeng_Ndag_MiDAS = "34.37049.foraldrapenning-antal-nettodagar-midas" }
+columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37049: ForPeng_Ndag 1993-2012; ForPeng_Ndag_MiDAS 2016-2023."
+
+
+[[variable]]
+native_id = "34.31512.sjukfall-antal"
+slug = "sjukfall-antal"
+
+[[variable]]
+native_id = "34.31512.sjukfall-antal-midas"
+slug = "sjukfall-antal-midas"
+
+[[variable]]
+native_id = "34.31516.sjukfall-bruttodagar"
+slug = "sjukfall-bruttodagar"
+
+[[variable]]
+native_id = "34.31516.sjukfall-bruttodagar-midas"
+slug = "sjukfall-bruttodagar-midas"
+
+[[variable]]
+native_id = "34.31517.sjukfall-nettodagar"
+slug = "sjukfall-nettodagar"
+
+[[variable]]
+native_id = "34.31517.sjukfall-nettodagar-midas"
+slug = "sjukfall-nettodagar-midas"
+
+[[variable]]
+native_id = "34.31518.sjukfall-ersattningsbelopp"
+slug = "sjukfall-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31518.sjukfall-ersattningsbelopp-midas"
+slug = "sjukfall-ersattningsbelopp-midas"
+
+[[variable]]
+native_id = "34.31532.sjukpenning-bruttodagar"
+slug = "sjukpenning-bruttodagar"
+
+[[variable]]
+native_id = "34.31532.sjukpenning-bruttodagar-midas"
+slug = "sjukpenning-bruttodagar-midas"
+
+[[variable]]
+native_id = "34.31533.sjukpenning-nettodagar"
+slug = "sjukpenning-nettodagar"
+
+[[variable]]
+native_id = "34.31533.sjukpenning-nettodagar-midas"
+slug = "sjukpenning-nettodagar-midas"
+
+[[variable]]
+native_id = "34.31534.sjukpenning-ersattningsbelopp"
+slug = "sjukpenning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31534.sjukpenning-ersattningsbelopp-midas"
+slug = "sjukpenning-ersattningsbelopp-midas"
+
+[[variable]]
+native_id = "34.31535.rehabiliteringspenning-bruttodagar"
+slug = "rehabiliteringspenning-bruttodagar"
+
+[[variable]]
+native_id = "34.31535.rehabiliteringspenning-bruttodagar-midas"
+slug = "rehabiliteringspenning-bruttodagar-midas"
+
+[[variable]]
+native_id = "34.31536.rehabiliteringspenning-nettodagar"
+slug = "rehabiliteringspenning-nettodagar"
+
+[[variable]]
+native_id = "34.31536.rehabiliteringspenning-nettodagar-midas"
+slug = "rehabiliteringspenning-nettodagar-midas"
+
+[[variable]]
+native_id = "34.31537.rehabiliteringspenning-ersattningsbelopp"
+slug = "rehabiliteringspenning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31537.rehabiliteringspenning-ersattningsbelopp-midas"
+slug = "rehabiliteringspenning-ersattningsbelopp-midas"
+
+[[variable]]
+native_id = "34.31538.arbetsskadesjukpenning-bruttodagar"
+slug = "arbetsskadesjukpenning-bruttodagar"
+
+[[variable]]
+native_id = "34.31538.arbetsskadesjukpenning-bruttodagar-midas"
+slug = "arbetsskadesjukpenning-bruttodagar-midas"
+
+[[variable]]
+native_id = "34.31539.arbetsskadesjukpenning-nettodagar"
+slug = "arbetsskadesjukpenning-nettodagar"
+
+[[variable]]
+native_id = "34.31539.arbetsskadesjukpenning-nettodagar-midas"
+slug = "arbetsskadesjukpenning-nettodagar-midas"
+
+[[variable]]
+native_id = "34.31540.arbetsskadesjukpenning-ersattningsbelopp"
+slug = "arbetsskadesjukpenning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31540.arbetsskadesjukpenning-ersattningsbelopp-midas"
+slug = "arbetsskadesjukpenning-ersattningsbelopp-midas"
+
+[[variable]]
+native_id = "34.31740.sjukersattning-ersattningsbelopp"
+slug = "sjukersattning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31740.sjukersattning-ersattningsbelopp-midas"
+slug = "sjukersattning-ersattningsbelopp-midas"
+
+[[variable]]
+native_id = "34.31744.aktivitetsersattning-ersattningsbelopp"
+slug = "aktivitetsersattning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.31744.aktivitetsersattning-ersattningsbelopp-midas"
+slug = "aktivitetsersattning-ersattningsbelopp-midas"
+
+[[variable]]
+native_id = "34.36228.sjukersattning-bruttodagar"
+slug = "sjukersattning-bruttodagar"
+
+[[variable]]
+native_id = "34.36228.sjukersattning-bruttodagar-midas"
+slug = "sjukersattning-bruttodagar-midas"
+
+[[variable]]
+native_id = "34.36229.sjukersattning-nettodagar"
+slug = "sjukersattning-nettodagar"
+
+[[variable]]
+native_id = "34.36229.sjukersattning-nettodagar-midas"
+slug = "sjukersattning-nettodagar-midas"
+
+[[variable]]
+native_id = "34.36230.aktivitetsersattning-bruttodagar"
+slug = "aktivitetsersattning-bruttodagar"
+
+[[variable]]
+native_id = "34.36230.aktivitetsersattning-bruttodagar-midas"
+slug = "aktivitetsersattning-bruttodagar-midas"
+
+[[variable]]
+native_id = "34.36231.aktivitetsersattning-nettodagar"
+slug = "aktivitetsersattning-nettodagar"
+
+[[variable]]
+native_id = "34.36231.aktivitetsersattning-nettodagar-midas"
+slug = "aktivitetsersattning-nettodagar-midas"
+
+[[variable]]
+native_id = "34.37047.foraldrapenning-antal-bruttodagar"
+slug = "foraldrapenning-antal-bruttodagar"
+
+[[variable]]
+native_id = "34.37047.foraldrapenning-antal-bruttodagar-midas"
+slug = "foraldrapenning-antal-bruttodagar-midas"
+
+[[variable]]
+native_id = "34.37048.foraldrapenning-ersattningsbelopp"
+slug = "foraldrapenning-ersattningsbelopp"
+
+[[variable]]
+native_id = "34.37048.foraldrapenning-ersattningsbelopp-midas"
+slug = "foraldrapenning-ersattningsbelopp-midas"
+
+[[variable]]
+native_id = "34.37049.foraldrapenning-antal-nettodagar"
+slug = "foraldrapenning-antal-nettodagar"
+
+[[variable]]
+native_id = "34.37049.foraldrapenning-antal-nettodagar-midas"
+slug = "foraldrapenning-antal-nettodagar-midas"
+
 # register 340
