@@ -134,6 +134,27 @@ variable = "2.356"
 columns = { LanFg = "2.356.lan-tidigare", LanG = "2.356.lan-tidigare" }
 columns_ref = "Y-306 2026-09-29: SCB VarId 356 'Län tidigare' sequential rename {LanFg 1968-01-01-1997-12-31, LanG 1998-01-01-open} owned by 2.356.lan-tidigare; unchanged source name/definition; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
 
+# Y-317 2026-09-29: three RTB classification-basis families. Each native has two
+# explicitly named delivered source coding representations; this is the same
+# classification-basis separation policy applied to LISA in Y-313. It does not
+# harmonize tokens, assert statistical comparability or reinterpret a delivery
+# boundary as a population change. All literals are exact and case-sensitive.
+
+[[identity.partition]]
+variable = "2.24"
+columns = { FST90 = "2.24.familjestallning-1990-1997", FST91 = "2.24.familjestallning-1990-1997", FST92 = "2.24.familjestallning-1990-1997", FST93 = "2.24.familjestallning-1990-1997", FST94 = "2.24.familjestallning-1990-1997", FST95 = "2.24.familjestallning-1990-1997", FST96 = "2.24.familjestallning-1990-1997", FST97 = "2.24.familjestallning-1990-1997", Famstall = "2.24.familjestallning", FamStall = "2.24.familjestallning" }
+columns_ref = "Y-317 2026-09-29: SCB VarId 24 'Familjeställning' has two explicitly named delivered coding representations. The eight year-specific historical literals FST90-FST97 each have exactly one prepared v28 snapshot dated December 31 of that literal's year (1990-1997), nativevariant 1524 'Familjer 1990-1997'; the two later case spellings Famstall (nine December 31 snapshots 1998-2006) and FamStall (nineteen 2007-2025) carry nativevariant 54 'Familjer från 1998-'. The historical 28 code/label pairs differ from the current three-digit representation in eleven tokens (11/110, 12/120, 13/130, 14/140, 15/150, 16/160, 21/210, 22/220, 23/230, 24/240, 40/400) while labels match; SCB BE0101_DO_2002 printed pp43-45 corroborates the current three-digit form. Distinct delivered classification bases, not a conversion or bridge; no annual coverage is synthesized outside the originals."
+
+[[identity.partition]]
+variable = "2.24851"
+columns = { GFB_FFB_Grupp = "2.24851.gfb-grupp-ffb", GFB_FFB_KlassGrupp = "2.24851.gfb-klassgruppering-ffb" }
+columns_ref = "Y-317 2026-09-29: SCB VarId 24851 GFB FFB has two explicitly named delivered coding representations. GFB_FFB_Grupp carries the old text categories (2 annual originals 2009-2010, variant 66; 26 associations in 2009 including repeated NULL associations and 13 in 2010); GFB_FFB_KlassGrupp carries the current 19 two-digit text codes (15 annual originals 2011-2025). The original descriptors date the new grouping to 2011 and distinguish decisions before population registration (FFB); the old and current lists are never converted or crosswalked."
+
+[[identity.partition]]
+variable = "2.24852"
+columns = { GFB_EFB_Grupp = "2.24852.gfb-grupp-efb", GFB_EFB_KlassGrupp = "2.24852.gfb-klassgruppering-efb" }
+columns_ref = "Y-317 2026-09-29: SCB VarId 24852 GFB EFB has two explicitly named delivered coding representations. GFB_EFB_Grupp carries the old text categories (2 annual originals 2009-2010, variant 66; 26 associations in 2009 including repeated NULL associations and 13 in 2010); GFB_EFB_KlassGrupp carries the current 19 two-digit text codes (15 annual originals 2011-2025). The original descriptors date the new grouping to 2011 and distinguish decisions after population registration (EFB); the old and current lists are never converted or crosswalked."
+
 [[variable]]
 native_id = "2.57.personnr"
 slug = "personnr"
@@ -926,5 +947,33 @@ slug = "kommun-tidigare"
 [[variable]]
 native_id = "2.356.lan-tidigare"
 slug = "lan-tidigare"
+
+# Y-317 2026-09-29: qualified owners for the three RTB classification-basis
+# families declared above. Each owner takes its own naming leaf; the base
+# native declarations (2.24, 2.24851, 2.24852) keep their existing slugs.
+
+[[variable]]
+native_id = "2.24.familjestallning-1990-1997"
+slug = "familjestallning-1990-1997"
+
+[[variable]]
+native_id = "2.24.familjestallning"
+slug = "familjestallning"
+
+[[variable]]
+native_id = "2.24851.gfb-grupp-ffb"
+slug = "gfb-grupp-ffb"
+
+[[variable]]
+native_id = "2.24851.gfb-klassgruppering-ffb"
+slug = "gfb-klassgruppering-ffb"
+
+[[variable]]
+native_id = "2.24852.gfb-grupp-efb"
+slug = "gfb-grupp-efb"
+
+[[variable]]
+native_id = "2.24852.gfb-klassgruppering-efb"
+slug = "gfb-klassgruppering-efb"
 
 # register 200

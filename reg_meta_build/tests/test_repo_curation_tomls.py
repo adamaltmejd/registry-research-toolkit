@@ -1553,6 +1553,66 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     }
     assert lisa_names == expected_names
     assert {("scb", owner) for owner in expected_names} <= slugged
+    # Y-317: three RTB classification-basis families. Native 2.24 separates the
+    # eight year-specific historical literals (one December 31 snapshot each,
+    # 1990-1997, nativevariant 1524) from the two later case spellings (Famstall
+    # 1998-2006, FamStall 2007-2025, nativevariant 54); natives 2.24851/2.24852
+    # each separate the old Grupp text categories (2009-2010) from the current
+    # KlassGrupp two-digit codes (2011-2025). Each owner takes its own naming
+    # leaf. The literal map is exact and case-sensitive, and the three base
+    # native declarations keep their original slugs.
+    rtb_classifications3 = {
+        "2.24": {
+            "FST90": "2.24.familjestallning-1990-1997",
+            "FST91": "2.24.familjestallning-1990-1997",
+            "FST92": "2.24.familjestallning-1990-1997",
+            "FST93": "2.24.familjestallning-1990-1997",
+            "FST94": "2.24.familjestallning-1990-1997",
+            "FST95": "2.24.familjestallning-1990-1997",
+            "FST96": "2.24.familjestallning-1990-1997",
+            "FST97": "2.24.familjestallning-1990-1997",
+            "Famstall": "2.24.familjestallning",
+            "FamStall": "2.24.familjestallning",
+        },
+        "2.24851": {
+            "GFB_FFB_Grupp": "2.24851.gfb-grupp-ffb",
+            "GFB_FFB_KlassGrupp": "2.24851.gfb-klassgruppering-ffb",
+        },
+        "2.24852": {
+            "GFB_EFB_Grupp": "2.24852.gfb-grupp-efb",
+            "GFB_EFB_KlassGrupp": "2.24852.gfb-klassgruppering-efb",
+        },
+    }
+    assert len(rtb_classifications3) == 3
+    assert sum(len(columns) for columns in rtb_classifications3.values()) == 14
+    for variable, expected in rtb_classifications3.items():
+        assert dict(by_variable[variable].columns) == expected, variable
+    rtb_expected_names = {
+        owner: owner.split(".", 2)[2]
+        for columns in rtb_classifications3.values()
+        for owner in columns.values()
+    }
+    assert len(rtb_expected_names) == 6
+    rtb_names = {
+        entry.native_id: entry.slug
+        for register in tree.registers
+        for entry in register.variable
+        if entry.native_id in rtb_expected_names
+    }
+    assert rtb_names == rtb_expected_names
+    assert {("scb", owner) for owner in rtb_expected_names} <= slugged
+    # The three existing native declarations keep their original slugs.
+    rtb_base = {
+        entry.native_id: entry.slug
+        for register in tree.registers
+        for entry in register.variable
+        if entry.native_id in {"2.24", "2.24851", "2.24852"}
+    }
+    assert rtb_base == {
+        "2.24": "familjestallning",
+        "2.24851": "gfb-klassgruppering-ffb",
+        "2.24852": "gfb-klassgruppering-efb",
+    }
     # Y-306: eleven RTB/IoT sequential delivery-column renames. Each family's
     # exact literals occupy disjoint windows and name one existing owner.
     sequential11 = {
