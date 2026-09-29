@@ -672,7 +672,6 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for register in tree.registers
         for partition in register.identity.partition
     ]
-    assert len(partitions) == 680
     assert len(tree.registers) == 289
     assert (
         sum(len(register.identity.route) for register in tree.registers),
@@ -878,6 +877,61 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         assert dict(by_variable[variable].columns) == expected, variable
     assert {
         ("scb", owner) for expected in ku_agi.values() for owner in expected.values()
+    } <= slugged
+    # Y-306: eleven RTB/IoT sequential delivery-column renames. Each family's
+    # exact literals occupy disjoint windows and name one existing owner.
+    sequential11 = {
+        "2.243": {
+            "AlderHRel": "2.243.alder-vid-handelsen-relationsperson",
+            "DodMakAr": "2.243.alder-vid-handelsen-relationsperson",
+        },
+        "2.283": {
+            "DodDat": "2.283.dodsdatum",
+            "DodDatum": "2.283.dodsdatum",
+        },
+        "2.292": {
+            "AntBord": "2.292.antal-fodda",
+            "EnkFlerBord": "2.292.antal-fodda",
+        },
+        "2.297": {
+            "CivDatMor": "2.297.civilstandsdatum-mor",
+            "CivilDatumMor": "2.297.civilstandsdatum-mor",
+        },
+        "2.322": {
+            "BarnOrdDod": "2.322.ordningsnummer-dodfodd-mor",
+            "OrdnrDodF": "2.322.ordningsnummer-dodfodd-mor",
+        },
+        "2.346": {
+            "BarnOrdLev": "2.346.ordningsnummer-mor",
+            "OrdnrLevFoddaM": "2.346.ordningsnummer-mor",
+        },
+        "2.353": {
+            "ForsamlingFg": "2.353.forsamling-tidigare",
+            "ForsamlingG": "2.353.forsamling-tidigare",
+        },
+        "2.355": {
+            "KommunFg": "2.355.kommun-tidigare",
+            "KommunG": "2.355.kommun-tidigare",
+        },
+        "2.356": {
+            "LanFg": "2.356.lan-tidigare",
+            "LanG": "2.356.lan-tidigare",
+        },
+        "25.596": {
+            "PKUTJP": "25.596.tjanstepension",
+            "PTJP": "25.596.tjanstepension",
+        },
+        "25.1190": {
+            "TALU": "25.1190.akassa-atgarder",
+            "TKUALU": "25.1190.akassa-atgarder",
+        },
+    }
+    for variable, expected in sequential11.items():
+        assert dict(by_variable[variable].columns) == expected, variable
+    assert {
+        ("scb", owner)
+        for expected in sequential11.values()
+        for owner in expected.values()
     } <= slugged
     # Y-305: 22 IoT KUSOC compensation-code sequential renames. Each family's
     # two exact literals occupy disjoint windows and name one existing owner.

@@ -83,6 +83,57 @@ columns = { PNR = "2.57.pnr", PersonNr = "2.57.personnr", PersonNrAnkn = "2.57.p
 unassigned_columns = ["Personnr"]
 columns_ref = "curation/relations.toml replaced_by edge scb/rtb/pnr -> scb/rtb/personnr (PNR -> PersonNr, 1998); fqid_slugs/scb.toml comment on 2.57.personnr: PersonNrSamh/PersonNrsamh is case-wobble of one column. Personnr has no ownership declaration."
 
+# Y-306 2026-09-29: nine RTB sequential delivery-column renames. Each family's
+# exact literals occupy disjoint, non-interleaved windows and map to one existing
+# qualified owner under the Y-211 (2026-09-19) / Y-276 sequential-rename policy.
+# Source names and definitions are unchanged; absent original source attribution
+# stays absent and is not inferred. These maps add no inference by spelling.
+
+[[identity.partition]]
+variable = "2.243"
+columns = { AlderHRel = "2.243.alder-vid-handelsen-relationsperson", DodMakAr = "2.243.alder-vid-handelsen-relationsperson" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 243 'Ålder vid händelsen relationsperson' sequential rename {AlderHRel 1998-01-01-open, DodMakAr 1968-01-01-1997-12-31 pooled 'Änkor/ änklingar 1968-1997'} owned by 2.243.alder-vid-handelsen-relationsperson; DodMakAr is the relationsperson's age at civil-status change, same concept/definition as AlderHRel, not a death year; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-243-focused-proof.json)"
+
+[[identity.partition]]
+variable = "2.283"
+columns = { DodDat = "2.283.dodsdatum", DodDatum = "2.283.dodsdatum" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 283 'Dödsdatum' sequential rename {DodDat 1998-01-01-open, DodDatum 1968-01-01-1997-12-31} owned by 2.283.dodsdatum; unchanged source name/definition; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
+[[identity.partition]]
+variable = "2.292"
+columns = { AntBord = "2.292.antal-fodda", EnkFlerBord = "2.292.antal-fodda" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 292 'Antal födda' sequential rename {AntBord 1998-01-01-open, EnkFlerBord 1961-01-01-1997-12-31} owned by 2.292.antal-fodda; unchanged source name/definition; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
+[[identity.partition]]
+variable = "2.297"
+columns = { CivDatMor = "2.297.civilstandsdatum-mor", CivilDatumMor = "2.297.civilstandsdatum-mor" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 297 'Civilståndsdatum mor' sequential rename {CivDatMor 1998-01-01-open, CivilDatumMor 1961-01-01-1997-12-31} owned by 2.297.civilstandsdatum-mor; unchanged source name/definition; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
+[[identity.partition]]
+variable = "2.322"
+columns = { BarnOrdDod = "2.322.ordningsnummer-dodfodd-mor", OrdnrDodF = "2.322.ordningsnummer-dodfodd-mor" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 322 'Ordningsnummer dödfödd, mor' sequential rename {BarnOrdDod 1961-01-01-1997-12-31, OrdnrDodF 1998-01-01-2025-12-31} owned by 2.322.ordningsnummer-dodfodd-mor; unchanged source name/definition; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
+[[identity.partition]]
+variable = "2.346"
+columns = { BarnOrdLev = "2.346.ordningsnummer-mor", OrdnrLevFoddaM = "2.346.ordningsnummer-mor" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 346 'Ordningsnummer mor' sequential rename {BarnOrdLev 1961-01-01-1997-12-31, OrdnrLevFoddaM 1998-01-01-open} owned by 2.346.ordningsnummer-mor; unchanged source name/definition; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
+[[identity.partition]]
+variable = "2.353"
+columns = { ForsamlingFg = "2.353.forsamling-tidigare", ForsamlingG = "2.353.forsamling-tidigare" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 353 'Församling tidigare' sequential rename {ForsamlingFg 1968-01-01-1997-12-31, ForsamlingG 1998-01-01-open} owned by 2.353.forsamling-tidigare; identity assertion only, the source availability conflict (open interval vs 'Finns t.o.m. 2015 kvartal 3.') is unresolved and no availability correction is applied; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-353-source-boundary.json)"
+
+[[identity.partition]]
+variable = "2.355"
+columns = { KommunFg = "2.355.kommun-tidigare", KommunG = "2.355.kommun-tidigare" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 355 'Kommun tidigare' sequential rename {KommunFg 1968-01-01-1997-12-31, KommunG 1998-01-01-open} owned by 2.355.kommun-tidigare; unchanged source name/definition; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
+[[identity.partition]]
+variable = "2.356"
+columns = { LanFg = "2.356.lan-tidigare", LanG = "2.356.lan-tidigare" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 356 'Län tidigare' sequential rename {LanFg 1968-01-01-1997-12-31, LanG 1998-01-01-open} owned by 2.356.lan-tidigare; unchanged source name/definition; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
 [[variable]]
 native_id = "2.57.personnr"
 slug = "personnr"
@@ -836,5 +887,44 @@ slug = "kon-samhorighet"
 [[variable]]
 native_id = "2.5144.inkomdatum"
 slug = "inkommandedatum"
+
+# Y-306 2026-09-29: qualified owners for the nine RTB sequential delivery-column
+# renames declared above; each reuses the family's existing slug.
+
+[[variable]]
+native_id = "2.243.alder-vid-handelsen-relationsperson"
+slug = "alder-vid-handelsen-relationsperson"
+
+[[variable]]
+native_id = "2.283.dodsdatum"
+slug = "dodsdatum"
+
+[[variable]]
+native_id = "2.292.antal-fodda"
+slug = "antal-fodda"
+
+[[variable]]
+native_id = "2.297.civilstandsdatum-mor"
+slug = "civilstandsdatum-mor"
+
+[[variable]]
+native_id = "2.322.ordningsnummer-dodfodd-mor"
+slug = "ordningsnummer-dodfodd-mor"
+
+[[variable]]
+native_id = "2.346.ordningsnummer-mor"
+slug = "ordningsnummer-mor"
+
+[[variable]]
+native_id = "2.353.forsamling-tidigare"
+slug = "forsamling-tidigare"
+
+[[variable]]
+native_id = "2.355.kommun-tidigare"
+slug = "kommun-tidigare"
+
+[[variable]]
+native_id = "2.356.lan-tidigare"
+slug = "lan-tidigare"
 
 # register 200
