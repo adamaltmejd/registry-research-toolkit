@@ -362,7 +362,7 @@ def test_repo_classification_groups_parses() -> None:
 
 def test_repo_delivery_enrichment_parses() -> None:
     enr = load_delivery_enrichment(_CURATION)
-    assert (len(enr.descriptions), len(enr.aliases)) == (362, 45)
+    assert (len(enr.descriptions), len(enr.aliases)) == (359, 45)
     # the #365 global description backfills + delivery-column aliases ship together
     assert enr.descriptions
     assert enr.aliases

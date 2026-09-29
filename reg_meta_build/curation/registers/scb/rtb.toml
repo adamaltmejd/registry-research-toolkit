@@ -54,12 +54,6 @@ variable = "lan"
 description = "Bostadslän"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-[[enrichment.description]]
-register = "scb/rtb"
-variable = "medborgarskapsland"
-description = "Medborgarskapsland, enskilda länder"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 # Batch 2 (#496): these guardian and other-person identifier pairs name ordinal
 # roles for one person concept; their source variables remain distinct.
 [[group]]

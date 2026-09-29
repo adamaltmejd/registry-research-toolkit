@@ -665,12 +665,6 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[enrichment.description]]
 register = "scb/lisa"
-variable = "cfar-nummer-2"
-description = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[enrichment.description]]
-register = "scb/lisa"
 variable = "civilstand"
 description = "Civilstånd"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
@@ -907,12 +901,6 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 register = "scb/lisa"
 variable = "org-belkommun"
 description = "Belägenhetskommun för största arbetsstället"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[enrichment.description]]
-register = "scb/lisa"
-variable = "org-sektorkod"
-description = "Företagets sektorkod"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[enrichment.description]]
