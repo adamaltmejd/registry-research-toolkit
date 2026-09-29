@@ -2802,7 +2802,14 @@ def compile_sos_thin(
     cases: dict[Any, list[CurationCase]] = {}
     diagnostics: list[ResolutionDiagnostic] = []
     report: dict[str, dict[str, list[str]]] = {}
-    with open_value_bindings(prepared.value_sources) as sessions:
+    has_selected_provider = any(
+        name in registers and registers[name].register_info.provider != "scb"
+        for scope in scopes
+        for name, _ in _scope_registers(scope)
+    )
+    with open_value_bindings(
+        prepared.value_sources if has_selected_provider else ()
+    ) as sessions:
         for scope in sorted(
             scopes, key=lambda item: (item.source, repr(item.register_key))
         ):
