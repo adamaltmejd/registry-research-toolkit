@@ -366,12 +366,45 @@ class ErrataDataTypeEntry(_CurationModel):
         return self
 
 
+class ErrataClassificationReferenceEntry(_CurationModel):
+    deldatamangd: str
+    variable: str
+    column: str
+    expected_reference: str
+    expected_representation: str
+    evidence: str
+    noted: str
+
+    _text = field_validator(
+        "deldatamangd",
+        "variable",
+        "column",
+        "expected_reference",
+        "expected_representation",
+        "evidence",
+    )(_require_trimmed)
+
+    @field_validator("noted")
+    @classmethod
+    def _noted(cls, value: str) -> str:
+        try:
+            parsed = date.fromisoformat(value)
+        except ValueError as exc:
+            raise ValueError("noted must be an ISO date") from exc
+        if parsed.isoformat() != value:
+            raise ValueError("noted must be a canonical ISO date")
+        return value
+
+
 class ErrataCuration(_CurationModel):
     delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
     column: list[ErrataColumnEntry] = Field(default_factory=list)
     version: list[ErrataVersionEntry] = Field(default_factory=list)
     edition_period: list[ErrataEditionPeriodEntry] = Field(default_factory=list)
     data_type: list[ErrataDataTypeEntry] = Field(default_factory=list)
+    classification_reference: list[ErrataClassificationReferenceEntry] = Field(
+        default_factory=list
+    )
 
 
 class EnrichmentDescriptionEntry(_CurationModel):
@@ -1022,6 +1055,7 @@ def _register_arrays(
         ("errata.version", entry.errata.version),
         ("errata.edition_period", entry.errata.edition_period),
         ("errata.data_type", entry.errata.data_type),
+        ("errata.classification_reference", entry.errata.classification_reference),
         ("enrichment.description", entry.enrichment.description),
         ("enrichment.alias", entry.enrichment.alias),
         ("group", entry.group),
@@ -1141,10 +1175,16 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     "must name a native variant of an SCB register.",
                     "Use a native [[variant]] slug in the owning SCB register file.",
                 )
-            if isinstance(row, ErrataDataTypeEntry) and identity.provider != "sos":
+            if (
+                isinstance(
+                    row, (ErrataDataTypeEntry, ErrataClassificationReferenceEntry)
+                )
+                and identity.provider != "sos"
+            ):
                 raise curation_error(
                     _CODE,
-                    f"{file} [[{table}]] entry {index}: data type correction applies "
+                    f"{file} [[{table}]] entry {index}: "
+                    f"{'data type correction' if isinstance(row, ErrataDataTypeEntry) else 'classification reference correction'} applies "
                     f"to SOS registers, not {identity.provider!r}.",
                     "Move the entry to the SOS register file it describes.",
                 )
@@ -1243,7 +1283,17 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
         seen: set[str] = set()
         edition_period_keys: set[tuple[str, str]] = set()
         data_type_keys: set[tuple[str, str, str]] = set()
+        classification_reference_keys: set[tuple[str, str, str]] = set()
         for index, row in enumerate(rows, start=1):
+            if isinstance(row, ErrataClassificationReferenceEntry):
+                coordinate = (row.deldatamangd, row.variable, row.column)
+                if coordinate in classification_reference_keys:
+                    raise curation_error(
+                        _CODE,
+                        f"{file} [[{table}]] entry {index}: duplicate classification reference target {coordinate!r}.",
+                        "Keep one correction per Deldatamängd, variable and column.",
+                    )
+                classification_reference_keys.add(coordinate)
             if isinstance(row, ErrataDataTypeEntry):
                 coordinate = (row.deldatamangd, row.variable, row.column)
                 if coordinate in data_type_keys:
