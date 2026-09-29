@@ -1265,6 +1265,19 @@ variable = "34.16221"
 columns = { "AGI1AstSNI2007" = "34.16221.agi1astsni2007", "AGI1AstSNI2007G" = "34.16221.agi1astsni2007g", "AGI1AstSNI2007U" = "34.16221.agi1astsni2007u", "KU1AstSNI2002" = "34.16221.ku1astsni92", "KU1AstSNI2002B" = "34.16221.ku1astsni2002b", "KU1AstSNI2002G" = "34.16221.ku1astsni2002g", "KU1AstSNI2007" = "34.16221.ku1astsni92", "KU1AstSNI2007G" = "34.16221.ku1astsni2007g", "KU1AstSNI2007U" = "34.16221.ku1astsni2007u", "KU1AstSNI69" = "34.16221.ku1astsni69", "KU1AstSNI92" = "34.16221.ku1astsni92", "KU1AstSNI92B" = "34.16221.ku1astsni92b", "KU1AstSNI92G" = "34.16221.ku1astsni92g", "KU1AstSni2007G" = "34.16221.ku1astsni2007g", "KU1AstSni2007U" = "34.16221.ku1astsni2007u", "KU1Astsni2002B" = "34.16221.ku1astsni2002b", "KU1Astsni2002G" = "34.16221.ku1astsni2002g" }
 columns_ref = "curation/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
 
+# Y-318: delivered SUN and citizenship classification versions have distinct
+# owners. Proven case forms of SUN 2000 NivaOld share one owner; source periods,
+# including co-delivered and retrospectively classified years, remain intact.
+[[identity.partition]]
+variable = "34.774"
+columns = { Sun2000niva_old = "34.774.utbildningsniva-aggregat-old-sun2000", Sun2000niva_Old = "34.774.utbildningsniva-aggregat-old-sun2000", Sun2000Niva_old = "34.774.utbildningsniva-aggregat-old-sun2000", Sun2020Niva_Old = "34.774.utbildningsniva-aggregat-old-sun2020" }
+columns_ref = "Y-318 2026-09-29: SCB LISA VarId 774 explicitly distinguishes SUN 2000 NivaOld (29 annual originals: Sun2000niva_old 25 in 1990-1991 and 1994-2016, Sun2000Niva_old 2 in 1992-1993, Sun2000niva_Old 2 in 2017-2018) from SUN 2020 NivaOld (Sun2020Niva_Old 5 annual originals, 2019-2023). Every member has 14 coding associations; preserve the source description of four aggregate levels, exact descriptor whitespace, population-age/variant differences and original physical provenance."
+
+[[identity.partition]]
+variable = "34.31193"
+columns = { MedbGrEg3 = "34.31193.medbgreg-eu27-2007", MedbGrEg5 = "34.31193.medbgreg-eu27-2020" }
+columns_ref = "Y-318 2026-09-29: SCB LISA VarId 31193 explicitly distinguishes Världsdelar EU(27 2007) (MedbGrEg3, 34 annual originals 1990-2023, 11 associations/member) and Världsdelar EU(27 2020) (MedbGrEg5, 4 annual originals 2020-2023, 12 associations/member), both with level Världsdelar, nollutfyllnad. Operational definitions distinguish EU grouping applicable in 2007-2019 from since 2020, but both groupings are co-delivered in 2020-2023. Preserve those originals; classification vintage is not an observation-year cutoff."
+
 [[variant]]
 native_id = "34.151"
 slug = "arbetsstallen"
@@ -1868,6 +1881,14 @@ native_id = "34.774"
 slug = "utbildningsniva-aggregat-old"
 
 [[variable]]
+native_id = "34.774.utbildningsniva-aggregat-old-sun2000"
+slug = "utbildningsniva-aggregat-old-sun2000"
+
+[[variable]]
+native_id = "34.774.utbildningsniva-aggregat-old-sun2020"
+slug = "utbildningsniva-aggregat-old-sun2020"
+
+[[variable]]
 native_id = "34.1165"
 slug = "inkomst-aktiv-enskild-naringsverksamhet"
 
@@ -2010,6 +2031,14 @@ slug = "sektorkod-nast-forvarvskalla"
 [[variable]]
 native_id = "34.31191"
 slug = "medbgreg-eu15"
+
+[[variable]]
+native_id = "34.31193.medbgreg-eu27-2007"
+slug = "medbgreg-eu27-2007"
+
+[[variable]]
+native_id = "34.31193.medbgreg-eu27-2020"
+slug = "medbgreg-eu27-2020"
 
 [[variable]]
 native_id = "34.31289"

@@ -4,6 +4,14 @@ slug = "hreg"
 native_id = "47"
 steward_table_prefixes = ["Hreg_Examina", "Hreg_Reg"]
 
+# Y-318: the four delivered Anställningskategori classification versions have
+# distinct owners. The 2001 and current versions are also delivered for years
+# before their named vintage; the source observation periods are unchanged.
+[[identity.partition]]
+variable = "47.29507"
+columns = { TjKat_1995 = "47.29507.anstallningskategori-1995", TjKat_2001 = "47.29507.anstallningskategori-2001", TjKat_2008 = "47.29507.anstallningskategori-2008", TjKat = "47.29507.anstallningskategori-2012" }
+columns_ref = "Y-318 2026-09-29: SCB HREG VarId 29507 explicitly delivers Anställningskategori för UoH 1995-2000, 2001-2007, 2008-2012 and 2012- as four classification versions. Prepared v28 has TjKat_1995 6 originals/6 members (1995-2000, variant 960), TjKat_2001 20/13 (1995-2007, variants 960/104), TjKat_2008 8/4 (2008-2011, variant 104), and TjKat 52/29 (1995-2023, variants 960/104); member coding associations 72/169/44/406. Operational definitions state the 2001 category/assignment change and retrospective application to 1995, the 2008 cleaners code 11 to technical staff code 10 change, and the 2012 terminology change. Classification vintage is not an observation-year cutoff; preserve every original and co-delivered version."
+
 # Y-113..Y-120 HREG evidence comes from the SWECOV inventory and SCB's
 # 2026-03-09 Registerinformation export. KursOrt, ProgOrt and YProg are excluded:
 # those apparent misses are coalescer defects, not holdings corrections (see report.md).
@@ -989,6 +997,23 @@ slug = "forskningsamnesgrupp"
 [[variable]]
 native_id = "47.29507"
 slug = "anstallningskategori"
+
+# Y-318: qualified owners for the four delivered classification versions.
+[[variable]]
+native_id = "47.29507.anstallningskategori-1995"
+slug = "anstallningskategori-1995"
+
+[[variable]]
+native_id = "47.29507.anstallningskategori-2001"
+slug = "anstallningskategori-2001"
+
+[[variable]]
+native_id = "47.29507.anstallningskategori-2008"
+slug = "anstallningskategori-2008"
+
+[[variable]]
+native_id = "47.29507.anstallningskategori-2012"
+slug = "anstallningskategori-2012"
 
 [[variable]]
 native_id = "47.30008"

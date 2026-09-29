@@ -1613,6 +1613,77 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         "2.24851": "gfb-klassgruppering-ffb",
         "2.24852": "gfb-klassgruppering-efb",
     }
+    # Y-318: the HREG/LISA partitions are literal-based. In particular, the
+    # retrospective HREG 2001/current versions retain their pre-vintage source
+    # years, and the 2007/2020 citizenship groupings coexist in 2020-2023.
+    # There is no observation-year gate in either partition.
+    classification_versions3 = {
+        "47.29507": {
+            "TjKat_1995": "47.29507.anstallningskategori-1995",
+            "TjKat_2001": "47.29507.anstallningskategori-2001",
+            "TjKat_2008": "47.29507.anstallningskategori-2008",
+            "TjKat": "47.29507.anstallningskategori-2012",
+        },
+        "34.774": {
+            "Sun2000niva_old": "34.774.utbildningsniva-aggregat-old-sun2000",
+            "Sun2000niva_Old": "34.774.utbildningsniva-aggregat-old-sun2000",
+            "Sun2000Niva_old": "34.774.utbildningsniva-aggregat-old-sun2000",
+            "Sun2020Niva_Old": "34.774.utbildningsniva-aggregat-old-sun2020",
+        },
+        "34.31193": {
+            "MedbGrEg3": "34.31193.medbgreg-eu27-2007",
+            "MedbGrEg5": "34.31193.medbgreg-eu27-2020",
+        },
+    }
+    selected = [
+        partition
+        for partition in partitions
+        if partition.variable in classification_versions3
+    ]
+    assert len(selected) == 3
+    assert {entry.variable: dict(entry.columns) for entry in selected} == (
+        classification_versions3
+    )
+    assert all(not entry.unassigned_columns for entry in selected)
+    owners = {
+        owner
+        for columns in classification_versions3.values()
+        for owner in columns.values()
+    }
+    assert len(owners) == 8
+    assert {("scb", owner) for owner in owners} <= slugged
+    assert {
+        entry.native_id: entry.slug
+        for register in tree.registers
+        for entry in register.variable
+        if entry.native_id in owners
+    } == {owner: owner.split(".", 2)[2] for owner in owners}
+    assert {
+        entry.native_id: entry.slug
+        for register in tree.registers
+        for entry in register.variable
+        if entry.native_id in classification_versions3
+    } == {
+        "47.29507": "anstallningskategori",
+        "34.774": "utbildningsniva-aggregat-old",
+    }
+    assert (
+        classification_versions3["47.29507"]["TjKat_2001"]
+        != (classification_versions3["47.29507"]["TjKat"])
+    )
+    assert (
+        classification_versions3["34.31193"]["MedbGrEg3"]
+        != (classification_versions3["34.31193"]["MedbGrEg5"])
+    )
+    assert (
+        len(
+            {
+                classification_versions3["34.774"][literal]
+                for literal in ("Sun2000niva_old", "Sun2000niva_Old", "Sun2000Niva_old")
+            }
+        )
+        == 1
+    )
     # Y-306: eleven RTB/IoT sequential delivery-column renames. Each family's
     # exact literals occupy disjoint windows and name one existing owner.
     sequential11 = {
