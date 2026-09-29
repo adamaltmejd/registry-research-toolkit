@@ -3668,6 +3668,392 @@ variable = "258.48031"
 columns = { D5d = "258.48031.betalat-dataspel-streaming", E5d = "258.48031.betalat-dataspel-streaming" }
 columns_ref = "Y-211 2026-09-19: 258.48031 'Betalt för dataspel som streamingtjänst' sequential rename {D5d 2024-2024, E5d 2025-2025} owned by betalat-dataspel-streaming (diagnostic v17 rename-worklist-258)"
 
+# Y-304 2026-09-30: 75 IT-anvandning (258) native-question identity families whose
+# delivered column labels recur/interleave across years. Maintainer-approved policy:
+# one stable source-native question owns every reviewed spelling while each edition's
+# physical availability, coding and raw/effective source facts stay intact. The
+# accepted prepared-export audit (IT75) supplies native names/definitions, so names
+# and definitions are constant across each included family; independent annual
+# questionnaire versions were not available and were not compared. These are recurrent
+# year labels, NOT sequential renames, and the ownership is a disclosed curator identity
+# policy, not proof of statistical comparability. Excluded simultaneous different-question
+# collisions: 258.6845, 258.23399, 258.18031, 258.18032.
+
+[[identity.partition]]
+variable = "258.15918"
+columns = { B1 = "258.15918.datc1", B1a = "258.15918.datc1", C1 = "258.15918.datc1", DatC1 = "258.15918.datc1" }
+columns_ref = "Y-304 2026-09-30: 258.15918 reviewed native-question identity {B1, B1a, C1, DatC1} owned by datc1 (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15958"
+columns = { DatC5B = "258.15958.anvant-internet-sokvaror", DatC5D = "258.15958.anvant-internet-sokvaror", IUIF = "258.15958.anvant-internet-sokvaror" }
+columns_ref = "Y-304 2026-09-30: 258.15958 reviewed native-question identity {DatC5B, DatC5D, IUIF} owned by anvant-internet-sokvaror (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15959"
+columns = { B6o = "258.15959.anvant-internet-resor", C4l = "258.15959.anvant-internet-resor", DatC5C = "258.15959.anvant-internet-resor", DatC5E = "258.15959.anvant-internet-resor", DatC5M = "258.15959.anvant-internet-resor", IUHOLS = "258.15959.anvant-internet-resor" }
+columns_ref = "Y-304 2026-09-30: 258.15959 reviewed native-question identity {B6o, C4l, DatC5C, DatC5E, DatC5M, IUHOLS} owned by anvant-internet-resor (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15962"
+columns = { DatC5D = "258.15962.anvant-nedladdning-programvara", DatC5F = "258.15962.anvant-nedladdning-programvara", DatC5H = "258.15962.anvant-nedladdning-programvara" }
+columns_ref = "Y-304 2026-09-30: 258.15962 reviewed native-question identity {DatC5D, DatC5F, DatC5H} owned by anvant-nedladdning-programvara (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15963"
+columns = { B3f = "258.15963.anvant-internet-nyheter", B4E = "258.15963.anvant-internet-nyheter", B4e = "258.15963.anvant-internet-nyheter", B6d = "258.15963.anvant-internet-nyheter", C4e = "258.15963.anvant-internet-nyheter", DatC5B = "258.15963.anvant-internet-nyheter", DatC5E = "258.15963.anvant-internet-nyheter", DatC5I = "258.15963.anvant-internet-nyheter", DatC5J = "258.15963.anvant-internet-nyheter", IUNW = "258.15963.anvant-internet-nyheter", IUNW1 = "258.15963.anvant-internet-nyheter" }
+columns_ref = "Y-304 2026-09-30: 258.15963 reviewed native-question identity {B3f, B4E, B4e, B6d, C4e, DatC5B, DatC5E, DatC5I, DatC5J, IUNW, IUNW1} owned by anvant-internet-nyheter (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15966"
+columns = { B3m = "258.15966.anvant-internet-halsoinformation", B3o = "258.15966.anvant-internet-halsoinformation", B4f = "258.15966.anvant-internet-halsoinformation", B6m = "258.15966.anvant-internet-halsoinformation", DatC5C = "258.15966.anvant-internet-halsoinformation", DatC5G = "258.15966.anvant-internet-halsoinformation", DatC5K = "258.15966.anvant-internet-halsoinformation", DatC5L = "258.15966.anvant-internet-halsoinformation" }
+columns_ref = "Y-304 2026-09-30: 258.15966 reviewed native-question identity {B3m, B3o, B4f, B6m, DatC5C, DatC5G, DatC5K, DatC5L} owned by anvant-internet-halsoinformation (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15968"
+columns = { B3r = "258.15968.utfort-bankarenden-pa-natet", B3t = "258.15968.utfort-bankarenden-pa-natet", B4N = "258.15968.utfort-bankarenden-pa-natet", B4l = "258.15968.utfort-bankarenden-pa-natet", B5m = "258.15968.utfort-bankarenden-pa-natet", C4n = "258.15968.utfort-bankarenden-pa-natet", DatC5H = "258.15968.utfort-bankarenden-pa-natet", DatC5M = "258.15968.utfort-bankarenden-pa-natet", DatC5P = "258.15968.utfort-bankarenden-pa-natet", IUBK = "258.15968.utfort-bankarenden-pa-natet" }
+columns_ref = "Y-304 2026-09-30: 258.15968 reviewed native-question identity {B3r, B3t, B4N, B4l, B5m, C4n, DatC5H, DatC5M, DatC5P, IUBK} owned by utfort-bankarenden-pa-natet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15969"
+columns = { B3q = "258.15969.anvant-internet-salja-varor", B3s = "258.15969.anvant-internet-salja-varor", B4k = "258.15969.anvant-internet-salja-varor", B5l = "258.15969.anvant-internet-salja-varor", B6p = "258.15969.anvant-internet-salja-varor", C4m = "258.15969.anvant-internet-salja-varor", DatC5I = "258.15969.anvant-internet-salja-varor", DatC5N = "258.15969.anvant-internet-salja-varor", IUSELL = "258.15969.anvant-internet-salja-varor" }
+columns_ref = "Y-304 2026-09-30: 258.15969 reviewed native-question identity {B3q, B3s, B4k, B5l, B6p, C4m, DatC5I, DatC5N, IUSELL} owned by anvant-internet-salja-varor (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15998"
+columns = { D1 = "258.15998.nar-handlade-du-senast-via-internet", DatD1 = "258.15998.nar-handlade-du-senast-via-internet", DatE1 = "258.15998.nar-handlade-du-senast-via-internet", E1 = "258.15998.nar-handlade-du-senast-via-internet", IBUY = "258.15998.nar-handlade-du-senast-via-internet" }
+columns_ref = "Y-304 2026-09-30: 258.15998 reviewed native-question identity {D1, DatD1, DatE1, E1, IBUY} owned by nar-handlade-du-senast-via-internet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.15999"
+columns = { BMED = "258.15999.kopt-lakemedel", D2C = "258.15999.kopt-lakemedel", D2c = "258.15999.kopt-lakemedel", DatD2C = "258.15999.kopt-lakemedel", DatE2C = "258.15999.kopt-lakemedel", E2c = "258.15999.kopt-lakemedel" }
+columns_ref = "Y-304 2026-09-30: 258.15999 reviewed native-question identity {BMED, D2C, D2c, DatD2C, DatE2C, E2c} owned by kopt-lakemedel (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16000"
+columns = { BFOOD = "258.16000.kopt-mat-eller-specerivaror", D2A = "258.16000.kopt-mat-eller-specerivaror", D2a = "258.16000.kopt-mat-eller-specerivaror", DatD2A = "258.16000.kopt-mat-eller-specerivaror", DatE2A = "258.16000.kopt-mat-eller-specerivaror", E2a = "258.16000.kopt-mat-eller-specerivaror" }
+columns_ref = "Y-304 2026-09-30: 258.16000 reviewed native-question identity {BFOOD, D2A, D2a, DatD2A, DatE2A, E2a} owned by kopt-mat-eller-specerivaror (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16001"
+columns = { BBOOKNL = "258.16001.kopt-bocker-tidningar-ink-e-bocker", D2L = "258.16001.kopt-bocker-tidningar-ink-e-bocker", D2l = "258.16001.kopt-bocker-tidningar-ink-e-bocker", DatD2D = "258.16001.kopt-bocker-tidningar-ink-e-bocker", DatD2E = "258.16001.kopt-bocker-tidningar-ink-e-bocker", DatE2D = "258.16001.kopt-bocker-tidningar-ink-e-bocker", DatE2E = "258.16001.kopt-bocker-tidningar-ink-e-bocker", E2l = "258.16001.kopt-bocker-tidningar-ink-e-bocker" }
+columns_ref = "Y-304 2026-09-30: 258.16001 reviewed native-question identity {BBOOKNL, D2L, D2l, DatD2D, DatD2E, DatE2D, DatE2E, E2l} owned by kopt-bocker-tidningar-ink-e-bocker (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16002"
+columns = { BCLOT = "258.16002.kopt-klader-eller-sportartiklar", D2D = "258.16002.kopt-klader-eller-sportartiklar", D2d = "258.16002.kopt-klader-eller-sportartiklar", DatD2E = "258.16002.kopt-klader-eller-sportartiklar", DatD2F = "258.16002.kopt-klader-eller-sportartiklar", DatD2G = "258.16002.kopt-klader-eller-sportartiklar", DatE2E = "258.16002.kopt-klader-eller-sportartiklar", DatE2G = "258.16002.kopt-klader-eller-sportartiklar", E2d = "258.16002.kopt-klader-eller-sportartiklar" }
+columns_ref = "Y-304 2026-09-30: 258.16002 reviewed native-question identity {BCLOT, D2D, D2d, DatD2E, DatD2F, DatD2G, DatE2E, DatE2G, E2d} owned by kopt-klader-eller-sportartiklar (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16004"
+columns = { BHARD = "258.16004.kopt-datorer-eller-datautrustning", D2E = "258.16004.kopt-datorer-eller-datautrustning", D2e = "258.16004.kopt-datorer-eller-datautrustning", DatD2G = "258.16004.kopt-datorer-eller-datautrustning", DatD2I = "258.16004.kopt-datorer-eller-datautrustning", DatD2J = "258.16004.kopt-datorer-eller-datautrustning", DatE2G = "258.16004.kopt-datorer-eller-datautrustning", DatE2J = "258.16004.kopt-datorer-eller-datautrustning", E2e = "258.16004.kopt-datorer-eller-datautrustning" }
+columns_ref = "Y-304 2026-09-30: 258.16004 reviewed native-question identity {BHARD, D2E, D2e, DatD2G, DatD2I, DatD2J, DatE2G, DatE2J, E2e} owned by kopt-datorer-eller-datautrustning (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16005"
+columns = { BEEQU = "258.16005.kopt-hemelektronik-eller-kameror", D2F = "258.16005.kopt-hemelektronik-eller-kameror", D2f = "258.16005.kopt-hemelektronik-eller-kameror", DatD2H = "258.16005.kopt-hemelektronik-eller-kameror", DatD2J = "258.16005.kopt-hemelektronik-eller-kameror", DatD2K = "258.16005.kopt-hemelektronik-eller-kameror", DatE2H = "258.16005.kopt-hemelektronik-eller-kameror", DatE2K = "258.16005.kopt-hemelektronik-eller-kameror", E2f = "258.16005.kopt-hemelektronik-eller-kameror" }
+columns_ref = "Y-304 2026-09-30: 258.16005 reviewed native-question identity {BEEQU, D2F, D2f, DatD2H, DatD2J, DatD2K, DatE2H, DatE2K, E2f} owned by kopt-hemelektronik-eller-kameror (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16008"
+columns = { BTICK = "258.16008.kopt-biljetter-till-evenemang", D2J = "258.16008.kopt-biljetter-till-evenemang", D2j = "258.16008.kopt-biljetter-till-evenemang", DatD2K = "258.16008.kopt-biljetter-till-evenemang", DatD2O = "258.16008.kopt-biljetter-till-evenemang", DatD2P = "258.16008.kopt-biljetter-till-evenemang", DatE2K = "258.16008.kopt-biljetter-till-evenemang", DatE2P = "258.16008.kopt-biljetter-till-evenemang", E2j = "258.16008.kopt-biljetter-till-evenemang" }
+columns_ref = "Y-304 2026-09-30: 258.16008 reviewed native-question identity {BTICK, D2J, D2j, DatD2K, DatD2O, DatD2P, DatE2K, DatE2P, E2j} owned by kopt-biljetter-till-evenemang (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16010"
+columns = { BOTHTH = "258.16010.kopt-andra-varor-eller-tjanster", D2O = "258.16010.kopt-andra-varor-eller-tjanster", D2o = "258.16010.kopt-andra-varor-eller-tjanster", D2p = "258.16010.kopt-andra-varor-eller-tjanster", DatD2M = "258.16010.kopt-andra-varor-eller-tjanster", DatD2P = "258.16010.kopt-andra-varor-eller-tjanster", DatD2Q = "258.16010.kopt-andra-varor-eller-tjanster", DatE2M = "258.16010.kopt-andra-varor-eller-tjanster", DatE2Q = "258.16010.kopt-andra-varor-eller-tjanster", E2o = "258.16010.kopt-andra-varor-eller-tjanster" }
+columns_ref = "Y-304 2026-09-30: 258.16010 reviewed native-question identity {BOTHTH, D2O, D2o, D2p, DatD2M, DatD2P, DatD2Q, DatE2M, DatE2Q, E2o} owned by kopt-andra-varor-eller-tjanster (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16011"
+columns = { BFILMO = "258.16011.kopt-nedladdad-film-musik", DatD3A = "258.16011.kopt-nedladdad-film-musik", DatE3A = "258.16011.kopt-nedladdad-film-musik" }
+columns_ref = "Y-304 2026-09-30: 258.16011 reviewed native-question identity {BFILMO, DatD3A, DatE3A} owned by kopt-nedladdad-film-musik (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.16088"
+columns = { DatE11 = "258.16088.antal-personer-under-16-ar-i-hushallet", DatF11 = "258.16088.antal-personer-under-16-ar-i-hushallet", DatF9 = "258.16088.antal-personer-under-16-ar-i-hushallet", DatG13 = "258.16088.antal-personer-under-16-ar-i-hushallet", DatG14 = "258.16088.antal-personer-under-16-ar-i-hushallet", H13 = "258.16088.antal-personer-under-16-ar-i-hushallet", H13antal = "258.16088.antal-personer-under-16-ar-i-hushallet", H15 = "258.16088.antal-personer-under-16-ar-i-hushallet", HH_CHILD = "258.16088.antal-personer-under-16-ar-i-hushallet" }
+columns_ref = "Y-304 2026-09-30: 258.16088 reviewed native-question identity {DatE11, DatF11, DatF9, DatG13, DatG14, H13, H13antal, H15, HH_CHILD} owned by antal-personer-under-16-ar-i-hushallet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.17510"
+columns = { BFURN = "258.17510.kopt-hushallsvaror", D2B = "258.17510.kopt-hushallsvaror", D2b = "258.17510.kopt-hushallsvaror", DatD2B = "258.17510.kopt-hushallsvaror", DatE2B = "258.17510.kopt-hushallsvaror", E2b = "258.17510.kopt-hushallsvaror" }
+columns_ref = "Y-304 2026-09-30: 258.17510 reviewed native-question identity {BFURN, D2B, D2b, DatD2B, DatE2B, E2b} owned by kopt-hushallsvaror (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.18036"
+columns = { C1C = "258.18036.myndighetskontakt-lamnat-uppgifter", C1c = "258.18036.myndighetskontakt-lamnat-uppgifter", D1c = "258.18036.myndighetskontakt-lamnat-uppgifter", DatC6C = "258.18036.myndighetskontakt-lamnat-uppgifter", DatD1C = "258.18036.myndighetskontakt-lamnat-uppgifter", GOV12RT = "258.18036.myndighetskontakt-lamnat-uppgifter", IGOV12RT = "258.18036.myndighetskontakt-lamnat-uppgifter" }
+columns_ref = "Y-304 2026-09-30: 258.18036 reviewed native-question identity {C1C, C1c, D1c, DatC6C, DatD1C, GOV12RT, IGOV12RT} owned by myndighetskontakt-lamnat-uppgifter (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.18087"
+columns = { BFDOM = "258.18087.kopt-varor-tjanster-fran-sverige", D3a = "258.18087.kopt-varor-tjanster-fran-sverige", D4A = "258.18087.kopt-varor-tjanster-fran-sverige", DatD4A = "258.18087.kopt-varor-tjanster-fran-sverige", DatE4A = "258.18087.kopt-varor-tjanster-fran-sverige", E4a = "258.18087.kopt-varor-tjanster-fran-sverige" }
+columns_ref = "Y-304 2026-09-30: 258.18087 reviewed native-question identity {BFDOM, D3a, D4A, DatD4A, DatE4A, E4a} owned by kopt-varor-tjanster-fran-sverige (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.18088"
+columns = { BFEU = "258.18088.kopt-varor-tjanster-fran-eu", D3b = "258.18088.kopt-varor-tjanster-fran-eu", D4B = "258.18088.kopt-varor-tjanster-fran-eu", DatD4B = "258.18088.kopt-varor-tjanster-fran-eu", DatE4B = "258.18088.kopt-varor-tjanster-fran-eu", E4b = "258.18088.kopt-varor-tjanster-fran-eu" }
+columns_ref = "Y-304 2026-09-30: 258.18088 reviewed native-question identity {BFEU, D3b, D4B, DatD4B, DatE4B, E4b} owned by kopt-varor-tjanster-fran-eu (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.18089"
+columns = { BFWRLD = "258.18089.kopt-varor-tjanster-utanfor-eu", D3c = "258.18089.kopt-varor-tjanster-utanfor-eu", D4C = "258.18089.kopt-varor-tjanster-utanfor-eu", DatD4C = "258.18089.kopt-varor-tjanster-utanfor-eu", DatE4C = "258.18089.kopt-varor-tjanster-utanfor-eu", E4c = "258.18089.kopt-varor-tjanster-utanfor-eu" }
+columns_ref = "Y-304 2026-09-30: 258.18089 reviewed native-question identity {BFWRLD, D3c, D4C, DatD4C, DatE4C, E4c} owned by kopt-varor-tjanster-utanfor-eu (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.18090"
+columns = { BFUNK = "258.18090.kopt-varor-tjanster-okant-land", D3d = "258.18090.kopt-varor-tjanster-okant-land", D4D = "258.18090.kopt-varor-tjanster-okant-land", DatD4D = "258.18090.kopt-varor-tjanster-okant-land", DatE4D = "258.18090.kopt-varor-tjanster-okant-land", E4d = "258.18090.kopt-varor-tjanster-okant-land" }
+columns_ref = "Y-304 2026-09-30: 258.18090 reviewed native-question identity {BFUNK, D3d, D4D, DatD4D, DatE4D, E4d} owned by kopt-varor-tjanster-okant-land (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.21112"
+columns = { B3d = "258.21112.internet-snabbmeddelanden", B4D = "258.21112.internet-snabbmeddelanden", B4d = "258.21112.internet-snabbmeddelanden", DatC5C = "258.21112.internet-snabbmeddelanden", IUFORIM = "258.21112.internet-snabbmeddelanden" }
+columns_ref = "Y-304 2026-09-30: 258.21112 reviewed native-question identity {B3d, B4D, B4d, DatC5C, IUFORIM} owned by internet-snabbmeddelanden (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.21120"
+columns = { BOTA = "258.21120.kopt-researrangemang-fardbiljetter", D2I = "258.21120.kopt-researrangemang-fardbiljetter", D2i = "258.21120.kopt-researrangemang-fardbiljetter", DatD2N = "258.21120.kopt-researrangemang-fardbiljetter", DatD2O = "258.21120.kopt-researrangemang-fardbiljetter", DatE2O = "258.21120.kopt-researrangemang-fardbiljetter", E2i = "258.21120.kopt-researrangemang-fardbiljetter" }
+columns_ref = "Y-304 2026-09-30: 258.21120 reviewed native-question identity {BOTA, D2I, D2i, DatD2N, DatD2O, DatE2O, E2i} owned by kopt-researrangemang-fardbiljetter (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.21175"
+columns = { BFILM = "258.21175.kopt-filmer-musik-internet", D2K = "258.21175.kopt-filmer-musik-internet", D2k = "258.21175.kopt-filmer-musik-internet", DatD2D = "258.21175.kopt-filmer-musik-internet", DatE2D = "258.21175.kopt-filmer-musik-internet", E2k = "258.21175.kopt-filmer-musik-internet" }
+columns_ref = "Y-304 2026-09-30: 258.21175 reviewed native-question identity {BFILM, D2K, D2k, DatD2D, DatE2D, E2k} owned by kopt-filmer-musik-internet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.21176"
+columns = { BGSOFT = "258.21176.kopt-video-dataspel-internet", D2N = "258.21176.kopt-video-dataspel-internet", D2n = "258.21176.kopt-video-dataspel-internet", DatD2G = "258.21176.kopt-video-dataspel-internet", DatD2H = "258.21176.kopt-video-dataspel-internet", DatE2H = "258.21176.kopt-video-dataspel-internet", E2n = "258.21176.kopt-video-dataspel-internet" }
+columns_ref = "Y-304 2026-09-30: 258.21176 reviewed native-question identity {BGSOFT, D2N, D2n, DatD2G, DatD2H, DatE2H, E2n} owned by kopt-video-dataspel-internet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.23396"
+columns = { B3e = "258.23396.anvant-internet-sokvaror-tjanster", B4G = "258.23396.anvant-internet-sokvaror-tjanster", B4g = "258.23396.anvant-internet-sokvaror-tjanster", B5d = "258.23396.anvant-internet-sokvaror-tjanster", B6e = "258.23396.anvant-internet-sokvaror-tjanster", C4g = "258.23396.anvant-internet-sokvaror-tjanster", DatC5D = "258.23396.anvant-internet-sokvaror-tjanster", DatC5E = "258.23396.anvant-internet-sokvaror-tjanster", IUIF = "258.23396.anvant-internet-sokvaror-tjanster" }
+columns_ref = "Y-304 2026-09-30: 258.23396 reviewed native-question identity {B3e, B4G, B4g, B5d, B6e, C4g, DatC5D, DatC5E, IUIF} owned by anvant-internet-sokvaror-tjanster (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.23397"
+columns = { BLRN = "258.23397.kopt-el-bestallt-datorbaserade-laromedel", D2M = "258.23397.kopt-el-bestallt-datorbaserade-laromedel", D2m = "258.23397.kopt-el-bestallt-datorbaserade-laromedel", DatD2F = "258.23397.kopt-el-bestallt-datorbaserade-laromedel", DatE2F = "258.23397.kopt-el-bestallt-datorbaserade-laromedel", E2m = "258.23397.kopt-el-bestallt-datorbaserade-laromedel" }
+columns_ref = "Y-304 2026-09-30: 258.23397 reviewed native-question identity {BLRN, D2M, D2m, DatD2F, DatE2F, E2m} owned by kopt-el-bestallt-datorbaserade-laromedel (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.23477"
+columns = { H8 = "258.23477.yrke", Sy2 = "258.23477.yrke" }
+columns_ref = "Y-304 2026-09-30: 258.23477 reviewed native-question identity {H8, Sy2} owned by yrke (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.26891"
+columns = { AXSVALPCT = "258.26891.andel-omsattning-fran-edi", AXVALPCT = "258.26891.andel-omsattning-fran-edi" }
+columns_ref = "Y-304 2026-09-30: 258.26891 reviewed native-question identity {AXSVALPCT, AXVALPCT} owned by andel-omsattning-fran-edi (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.27978"
+columns = { B3c = "258.27978.delta-pa-sociala-natverkssajter", B4C = "258.27978.delta-pa-sociala-natverkssajter", B4c = "258.27978.delta-pa-sociala-natverkssajter", B5c = "258.27978.delta-pa-sociala-natverkssajter", B6c = "258.27978.delta-pa-sociala-natverkssajter", C4c = "258.27978.delta-pa-sociala-natverkssajter", DatC5A = "258.27978.delta-pa-sociala-natverkssajter" }
+columns_ref = "Y-304 2026-09-30: 258.27978 reviewed native-question identity {B3c, B4C, B4c, B5c, B6c, C4c, DatC5A} owned by delta-pa-sociala-natverkssajter (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.27994"
+columns = { CXFER = "258.27994.flyttat-filer-dator-annan-enhet", DatF3G = "258.27994.flyttat-filer-dator-annan-enhet", E1A = "258.27994.flyttat-filer-dator-annan-enhet", E1a = "258.27994.flyttat-filer-dator-annan-enhet", F1a = "258.27994.flyttat-filer-dator-annan-enhet" }
+columns_ref = "Y-304 2026-09-30: 258.27994 reviewed native-question identity {CXFER, DatF3G, E1A, E1a, F1a} owned by flyttat-filer-dator-annan-enhet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.28013"
+columns = { C2A = "258.28013.datd2a-2", C2a = "258.28013.datd2a-2", D2a = "258.28013.datd2a-2", DatD2A = "258.28013.datd2a-2", GOV12RTX_NAP = "258.28013.datd2a-2", IGOV12RTX_NAP = "258.28013.datd2a-2" }
+columns_ref = "Y-304 2026-09-30: 258.28013 reviewed native-question identity {C2A, C2a, D2a, DatD2A, GOV12RTX_NAP, IGOV12RTX_NAP} owned by datd2a-2 (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.28014"
+columns = { C2B = "258.28014.datd2b-2", C2b = "258.28014.datd2b-2", D2b = "258.28014.datd2b-2", DatD2B = "258.28014.datd2b-2", GOV12RTX_SNA = "258.28014.datd2b-2", IGOV12RTX_SNA = "258.28014.datd2b-2" }
+columns_ref = "Y-304 2026-09-30: 258.28014 reviewed native-question identity {C2B, C2b, D2b, DatD2B, GOV12RTX_SNA, IGOV12RTX_SNA} owned by datd2b-2 (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.28016"
+columns = { C2C = "258.28016.datd2d", C2c = "258.28016.datd2d", D2c = "258.28016.datd2d", DatD2D = "258.28016.datd2d", GOV12RTX_SKL = "258.28016.datd2d", IGOV12RTX_SKL = "258.28016.datd2d" }
+columns_ref = "Y-304 2026-09-30: 258.28016 reviewed native-question identity {C2C, C2c, D2c, DatD2D, GOV12RTX_SKL, IGOV12RTX_SKL} owned by datd2d (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.28017"
+columns = { C2D = "258.28017.datd2e", C2d = "258.28017.datd2e", D2d = "258.28017.datd2e", DatD2E = "258.28017.datd2e", GOV12RTX_SEC = "258.28017.datd2e", IGOV12RTX_SEC = "258.28017.datd2e" }
+columns_ref = "Y-304 2026-09-30: 258.28017 reviewed native-question identity {C2D, C2d, D2d, DatD2E, GOV12RTX_SEC, IGOV12RTX_SEC} owned by datd2e (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.28861"
+columns = { B3a = "258.28861.anvant-internet-skicka-ta-emot-epost", B4A = "258.28861.anvant-internet-skicka-ta-emot-epost", B4a = "258.28861.anvant-internet-skicka-ta-emot-epost", B5a = "258.28861.anvant-internet-skicka-ta-emot-epost", C4a = "258.28861.anvant-internet-skicka-ta-emot-epost", IUEM = "258.28861.anvant-internet-skicka-ta-emot-epost" }
+columns_ref = "Y-304 2026-09-30: 258.28861 reviewed native-question identity {B3a, B4A, B4a, B5a, C4a, IUEM} owned by anvant-internet-skicka-ta-emot-epost (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.29967"
+columns = { AWSVALCPCT = "258.29967.andel-webb-forsaljning-konsumenter", AWSVAL_B2CPCT = "258.29967.andel-webb-forsaljning-konsumenter", E_AWSVAL_B2C = "258.29967.andel-webb-forsaljning-konsumenter" }
+columns_ref = "Y-304 2026-09-30: 258.29967 reviewed native-question identity {AWSVALCPCT, AWSVAL_B2CPCT, E_AWSVAL_B2C} owned by andel-webb-forsaljning-konsumenter (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.29988"
+columns = { AWSVALBGPCT = "258.29988.andel-webb-forsaljning-foretag-offentlig", AWSVAL_B2BGPCT = "258.29988.andel-webb-forsaljning-foretag-offentlig", E_AWSVAL_B2BG = "258.29988.andel-webb-forsaljning-foretag-offentlig" }
+columns_ref = "Y-304 2026-09-30: 258.29988 reviewed native-question identity {AWSVALBGPCT, AWSVAL_B2BGPCT, E_AWSVAL_B2BG} owned by andel-webb-forsaljning-foretag-offentlig (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.30112"
+columns = { C2e = "258.30112.igov12rtx-sign", D2e = "258.30112.igov12rtx-sign", IGOV12RTX_SIGN = "258.30112.igov12rtx-sign" }
+columns_ref = "Y-304 2026-09-30: 258.30112 reviewed native-question identity {C2e, D2e, IGOV12RTX_SIGN} owned by igov12rtx-sign (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.30113"
+columns = { C2E = "258.30113.myndighet-nagon-annan-skickade-blankett", C2e = "258.30113.myndighet-nagon-annan-skickade-blankett", C2f = "258.30113.myndighet-nagon-annan-skickade-blankett", C2g = "258.30113.myndighet-nagon-annan-skickade-blankett", D2f = "258.30113.myndighet-nagon-annan-skickade-blankett", IGOV12RTX_DEL = "258.30113.myndighet-nagon-annan-skickade-blankett" }
+columns_ref = "Y-304 2026-09-30: 258.30113 reviewed native-question identity {C2E, C2e, C2f, C2g, D2f, IGOV12RTX_DEL} owned by myndighet-nagon-annan-skickade-blankett (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.35520"
+columns = { D5 = "258.35520.kop-belopp-internet", D6 = "258.35520.kop-belopp-internet", E5 = "258.35520.kop-belopp-internet", E7 = "258.35520.kop-belopp-internet" }
+columns_ref = "Y-304 2026-09-30: 258.35520 reviewed native-question identity {D5, D6, E5, E7} owned by kop-belopp-internet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.35530"
+columns = { E2B = "258.35530.anvant-ordbehandling", E2a = "258.35530.anvant-ordbehandling", E2b = "258.35530.anvant-ordbehandling", F2a = "258.35530.anvant-ordbehandling", F2b = "258.35530.anvant-ordbehandling" }
+columns_ref = "Y-304 2026-09-30: 258.35530 reviewed native-question identity {E2B, E2a, E2b, F2a, F2b} owned by anvant-ordbehandling (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.35551"
+columns = { B4b = "258.35551.studiematerial-natet", B5b = "258.35551.studiematerial-natet", B7B = "258.35551.studiematerial-natet", B8b = "258.35551.studiematerial-natet", C6b = "258.35551.studiematerial-natet" }
+columns_ref = "Y-304 2026-09-30: 258.35551 reviewed native-question identity {B4b, B5b, B7B, B8b, C6b} owned by studiematerial-natet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.35554"
+columns = { B4c = "258.35554.kommunicerat-larare", B5c = "258.35554.kommunicerat-larare", B7C = "258.35554.kommunicerat-larare", B8c = "258.35554.kommunicerat-larare", C6c = "258.35554.kommunicerat-larare" }
+columns_ref = "Y-304 2026-09-30: 258.35554 reviewed native-question identity {B4c, B5c, B7C, B8c, C6c} owned by kommunicerat-larare (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.35557"
+columns = { B8d = "258.35557.andra-utbildn-internet", C6d = "258.35557.andra-utbildn-internet" }
+columns_ref = "Y-304 2026-09-30: 258.35557 reviewed native-question identity {B8d, C6d} owned by andra-utbildn-internet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.35562"
+columns = { B4 = "258.35562.lagringsutrymme-internet", B5_1 = "258.35562.lagringsutrymme-internet", B6 = "258.35562.lagringsutrymme-internet", B7 = "258.35562.lagringsutrymme-internet", C5 = "258.35562.lagringsutrymme-internet", CC = "258.35562.lagringsutrymme-internet" }
+columns_ref = "Y-304 2026-09-30: 258.35562 reviewed native-question identity {B4, B5_1, B6, B7, C5, CC} owned by lagringsutrymme-internet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.37000"
+columns = { B3b = "258.37000.telefon-videosamtal", B4B = "258.37000.telefon-videosamtal", B4b = "258.37000.telefon-videosamtal", B5b = "258.37000.telefon-videosamtal", B6b = "258.37000.telefon-videosamtal", C4b = "258.37000.telefon-videosamtal", IUPH1 = "258.37000.telefon-videosamtal" }
+columns_ref = "Y-304 2026-09-30: 258.37000 reviewed native-question identity {B3b, B4B, B4b, B5b, B6b, C4b, IUPH1} owned by telefon-videosamtal (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.37031"
+columns = { E1C = "258.37031.andrat-installningar", E1c = "258.37031.andrat-installningar", F1c = "258.37031.andrat-installningar" }
+columns_ref = "Y-304 2026-09-30: 258.37031 reviewed native-question identity {E1C, E1c, F1c} owned by andrat-installningar (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.37032"
+columns = { E2C = "258.37032.skapat-presentationer", E2c = "258.37032.skapat-presentationer", F2c = "258.37032.skapat-presentationer" }
+columns_ref = "Y-304 2026-09-30: 258.37032 reviewed native-question identity {E2C, E2c, F2c} owned by skapat-presentationer (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.37033"
+columns = { E2D = "258.37033.anvant-kalkylprogram", E2c = "258.37033.anvant-kalkylprogram", E2d = "258.37033.anvant-kalkylprogram", F2c = "258.37033.anvant-kalkylprogram", F2d = "258.37033.anvant-kalkylprogram" }
+columns_ref = "Y-304 2026-09-30: 258.37033 reviewed native-question identity {E2D, E2c, E2d, F2c, F2d} owned by anvant-kalkylprogram (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.39489"
+columns = { B4a = "258.39489.tagit-nagon-kurs-pa-internet", B5a = "258.39489.tagit-nagon-kurs-pa-internet", B7A = "258.39489.tagit-nagon-kurs-pa-internet", B8a = "258.39489.tagit-nagon-kurs-pa-internet" }
+columns_ref = "Y-304 2026-09-30: 258.39489 reviewed native-question identity {B4a, B5a, B7A, B8a} owned by tagit-nagon-kurs-pa-internet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41678"
+columns = { B4c2 = "258.41678.ej-utbildningsaktiviteter", B5b2 = "258.41678.ej-utbildningsaktiviteter", B5c2 = "258.41678.ej-utbildningsaktiviteter", B5d2 = "258.41678.ej-utbildningsaktiviteter", B8c2 = "258.41678.ej-utbildningsaktiviteter" }
+columns_ref = "Y-304 2026-09-30: 258.41678 reviewed native-question identity {B4c2, B5b2, B5c2, B5d2, B8c2} owned by ej-utbildningsaktiviteter (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41723"
+columns = { D2b = "258.41723.kopt-sportartiklar", E2b = "258.41723.kopt-sportartiklar" }
+columns_ref = "Y-304 2026-09-30: 258.41723 reviewed native-question identity {D2b, E2b} owned by kopt-sportartiklar (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41724"
+columns = { D2a = "258.41724.kopt-klader-skor-accessoarer", E2a = "258.41724.kopt-klader-skor-accessoarer" }
+columns_ref = "Y-304 2026-09-30: 258.41724 reviewed native-question identity {D2a, E2a} owned by kopt-klader-skor-accessoarer (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41725"
+columns = { D2c = "258.41725.kopt-barnleksaker-eller-barnartiklar", E2c = "258.41725.kopt-barnleksaker-eller-barnartiklar" }
+columns_ref = "Y-304 2026-09-30: 258.41725 reviewed native-question identity {D2c, E2c} owned by kopt-barnleksaker-eller-barnartiklar (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41726"
+columns = { D2d = "258.41726.kopt-mobler-inredning-tradgard", E2d = "258.41726.kopt-mobler-inredning-tradgard" }
+columns_ref = "Y-304 2026-09-30: 258.41726 reviewed native-question identity {D2d, E2d} owned by kopt-mobler-inredning-tradgard (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41727"
+columns = { D2e = "258.41727.kopt-cd-eller-vinylskivor", E2e = "258.41727.kopt-cd-eller-vinylskivor" }
+columns_ref = "Y-304 2026-09-30: 258.41727 reviewed native-question identity {D2e, E2e} owned by kopt-cd-eller-vinylskivor (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41729"
+columns = { D2g = "258.41729.kopt-tryckta-bocker-tidningar", E2g = "258.41729.kopt-tryckta-bocker-tidningar" }
+columns_ref = "Y-304 2026-09-30: 258.41729 reviewed native-question identity {D2g, E2g} owned by kopt-tryckta-bocker-tidningar (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41730"
+columns = { D2h = "258.41730.kopt-datorer-surfplattor-mobiler", E2h = "258.41730.kopt-datorer-surfplattor-mobiler" }
+columns_ref = "Y-304 2026-09-30: 258.41730 reviewed native-question identity {D2h, E2h} owned by kopt-datorer-surfplattor-mobiler (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41731"
+columns = { D2i = "258.41731.kopt-hushallsapparater-eller-vitvaror", E2i = "258.41731.kopt-hushallsapparater-eller-vitvaror" }
+columns_ref = "Y-304 2026-09-30: 258.41731 reviewed native-question identity {D2i, E2i} owned by kopt-hushallsapparater-eller-vitvaror (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41732"
+columns = { D2j = "258.41732.kopt-lakemedel-eller-kosttillskott", E2j = "258.41732.kopt-lakemedel-eller-kosttillskott" }
+columns_ref = "Y-304 2026-09-30: 258.41732 reviewed native-question identity {D2j, E2j} owned by kopt-lakemedel-eller-kosttillskott (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41733"
+columns = { D2k = "258.41733.kopt-leveranser-fran-restauranger", E2k = "258.41733.kopt-leveranser-fran-restauranger" }
+columns_ref = "Y-304 2026-09-30: 258.41733 reviewed native-question identity {D2k, E2k} owned by kopt-leveranser-fran-restauranger (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41734"
+columns = { D2l = "258.41734.kopt-mat-eller-dryck", E2l = "258.41734.kopt-mat-eller-dryck" }
+columns_ref = "Y-304 2026-09-30: 258.41734 reviewed native-question identity {D2l, E2l} owned by kopt-mat-eller-dryck (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41735"
+columns = { D2m = "258.41735.kopt-kosmetik-skonhet", E2m = "258.41735.kopt-kosmetik-skonhet" }
+columns_ref = "Y-304 2026-09-30: 258.41735 reviewed native-question identity {D2m, E2m} owned by kopt-kosmetik-skonhet (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41736"
+columns = { D2n = "258.41736.kopt-rengoring-hygienprodukter", E2n = "258.41736.kopt-rengoring-hygienprodukter" }
+columns_ref = "Y-304 2026-09-30: 258.41736 reviewed native-question identity {D2n, E2n} owned by kopt-rengoring-hygienprodukter (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41737"
+columns = { D2o = "258.41737.kopt-cyklar-mopeder-bilar", E2o = "258.41737.kopt-cyklar-mopeder-bilar" }
+columns_ref = "Y-304 2026-09-30: 258.41737 reviewed native-question identity {D2o, E2o} owned by kopt-cyklar-mopeder-bilar (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41738"
+columns = { D2p = "258.41738.kopt-andra-fysiska-varor", E2p = "258.41738.kopt-andra-fysiska-varor" }
+columns_ref = "Y-304 2026-09-30: 258.41738 reviewed native-question identity {D2p, E2p} owned by kopt-andra-fysiska-varor (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41740"
+columns = { D5a = "258.41740.betalat-musik-streaming", E5a = "258.41740.betalat-musik-streaming" }
+columns_ref = "Y-304 2026-09-30: 258.41740 reviewed native-question identity {D5a, E5a} owned by betalat-musik-streaming (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.41741"
+columns = { D5b = "258.41741.betalat-filmer-serier-streaming", E5b = "258.41741.betalat-filmer-serier-streaming" }
+columns_ref = "Y-304 2026-09-30: 258.41741 reviewed native-question identity {D5b, E5b} owned by betalat-filmer-serier-streaming (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.44638"
+columns = { B3g = "258.44638.anvant-internet-asikter-politik", B4h = "258.44638.anvant-internet-asikter-politik" }
+columns_ref = "Y-304 2026-09-30: 258.44638 reviewed native-question identity {B3g, B4h} owned by anvant-internet-asikter-politik (IT75 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "258.44639"
+columns = { B3h = "258.44639.aktivt-delta-politisk-diskussion", B4i = "258.44639.aktivt-delta-politisk-diskussion" }
+columns_ref = "Y-304 2026-09-30: 258.44639 reviewed native-question identity {B3h, B4i} owned by aktivt-delta-politisk-diskussion (IT75 accepted prepared-export audit)"
+
 [[variant]]
 native_id = "258.556"
 slug = "it-anvandning-i-foretag"
@@ -7420,6 +7806,309 @@ slug = "prenumererat-digital-tidning"
 [[variable]]
 native_id = "258.48031.betalat-dataspel-streaming"
 slug = "betalat-dataspel-streaming"
+
+# Y-304 2026-09-30: split-owner naming for the 75 recurrent IT native-question families
+# above. Each leaf reuses the listed existing slug; the base family keeps its own name.
+
+[[variable]]
+native_id = "258.15918.datc1"
+slug = "datc1"
+
+[[variable]]
+native_id = "258.15958.anvant-internet-sokvaror"
+slug = "anvant-internet-sokvaror"
+
+[[variable]]
+native_id = "258.15959.anvant-internet-resor"
+slug = "anvant-internet-resor"
+
+[[variable]]
+native_id = "258.15962.anvant-nedladdning-programvara"
+slug = "anvant-nedladdning-programvara"
+
+[[variable]]
+native_id = "258.15963.anvant-internet-nyheter"
+slug = "anvant-internet-nyheter"
+
+[[variable]]
+native_id = "258.15966.anvant-internet-halsoinformation"
+slug = "anvant-internet-halsoinformation"
+
+[[variable]]
+native_id = "258.15968.utfort-bankarenden-pa-natet"
+slug = "utfort-bankarenden-pa-natet"
+
+[[variable]]
+native_id = "258.15969.anvant-internet-salja-varor"
+slug = "anvant-internet-salja-varor"
+
+[[variable]]
+native_id = "258.15998.nar-handlade-du-senast-via-internet"
+slug = "nar-handlade-du-senast-via-internet"
+
+[[variable]]
+native_id = "258.15999.kopt-lakemedel"
+slug = "kopt-lakemedel"
+
+[[variable]]
+native_id = "258.16000.kopt-mat-eller-specerivaror"
+slug = "kopt-mat-eller-specerivaror"
+
+[[variable]]
+native_id = "258.16001.kopt-bocker-tidningar-ink-e-bocker"
+slug = "kopt-bocker-tidningar-ink-e-bocker"
+
+[[variable]]
+native_id = "258.16002.kopt-klader-eller-sportartiklar"
+slug = "kopt-klader-eller-sportartiklar"
+
+[[variable]]
+native_id = "258.16004.kopt-datorer-eller-datautrustning"
+slug = "kopt-datorer-eller-datautrustning"
+
+[[variable]]
+native_id = "258.16005.kopt-hemelektronik-eller-kameror"
+slug = "kopt-hemelektronik-eller-kameror"
+
+[[variable]]
+native_id = "258.16008.kopt-biljetter-till-evenemang"
+slug = "kopt-biljetter-till-evenemang"
+
+[[variable]]
+native_id = "258.16010.kopt-andra-varor-eller-tjanster"
+slug = "kopt-andra-varor-eller-tjanster"
+
+[[variable]]
+native_id = "258.16011.kopt-nedladdad-film-musik"
+slug = "kopt-nedladdad-film-musik"
+
+[[variable]]
+native_id = "258.16088.antal-personer-under-16-ar-i-hushallet"
+slug = "antal-personer-under-16-ar-i-hushallet"
+
+[[variable]]
+native_id = "258.17510.kopt-hushallsvaror"
+slug = "kopt-hushallsvaror"
+
+[[variable]]
+native_id = "258.18036.myndighetskontakt-lamnat-uppgifter"
+slug = "myndighetskontakt-lamnat-uppgifter"
+
+[[variable]]
+native_id = "258.18087.kopt-varor-tjanster-fran-sverige"
+slug = "kopt-varor-tjanster-fran-sverige"
+
+[[variable]]
+native_id = "258.18088.kopt-varor-tjanster-fran-eu"
+slug = "kopt-varor-tjanster-fran-eu"
+
+[[variable]]
+native_id = "258.18089.kopt-varor-tjanster-utanfor-eu"
+slug = "kopt-varor-tjanster-utanfor-eu"
+
+[[variable]]
+native_id = "258.18090.kopt-varor-tjanster-okant-land"
+slug = "kopt-varor-tjanster-okant-land"
+
+[[variable]]
+native_id = "258.21112.internet-snabbmeddelanden"
+slug = "internet-snabbmeddelanden"
+
+[[variable]]
+native_id = "258.21120.kopt-researrangemang-fardbiljetter"
+slug = "kopt-researrangemang-fardbiljetter"
+
+[[variable]]
+native_id = "258.21175.kopt-filmer-musik-internet"
+slug = "kopt-filmer-musik-internet"
+
+[[variable]]
+native_id = "258.21176.kopt-video-dataspel-internet"
+slug = "kopt-video-dataspel-internet"
+
+[[variable]]
+native_id = "258.23396.anvant-internet-sokvaror-tjanster"
+slug = "anvant-internet-sokvaror-tjanster"
+
+[[variable]]
+native_id = "258.23397.kopt-el-bestallt-datorbaserade-laromedel"
+slug = "kopt-el-bestallt-datorbaserade-laromedel"
+
+[[variable]]
+native_id = "258.23477.yrke"
+slug = "yrke"
+
+[[variable]]
+native_id = "258.26891.andel-omsattning-fran-edi"
+slug = "andel-omsattning-fran-edi"
+
+[[variable]]
+native_id = "258.27978.delta-pa-sociala-natverkssajter"
+slug = "delta-pa-sociala-natverkssajter"
+
+[[variable]]
+native_id = "258.27994.flyttat-filer-dator-annan-enhet"
+slug = "flyttat-filer-dator-annan-enhet"
+
+[[variable]]
+native_id = "258.28013.datd2a-2"
+slug = "datd2a-2"
+
+[[variable]]
+native_id = "258.28014.datd2b-2"
+slug = "datd2b-2"
+
+[[variable]]
+native_id = "258.28016.datd2d"
+slug = "datd2d"
+
+[[variable]]
+native_id = "258.28017.datd2e"
+slug = "datd2e"
+
+[[variable]]
+native_id = "258.28861.anvant-internet-skicka-ta-emot-epost"
+slug = "anvant-internet-skicka-ta-emot-epost"
+
+[[variable]]
+native_id = "258.29967.andel-webb-forsaljning-konsumenter"
+slug = "andel-webb-forsaljning-konsumenter"
+
+[[variable]]
+native_id = "258.29988.andel-webb-forsaljning-foretag-offentlig"
+slug = "andel-webb-forsaljning-foretag-offentlig"
+
+[[variable]]
+native_id = "258.30112.igov12rtx-sign"
+slug = "igov12rtx-sign"
+
+[[variable]]
+native_id = "258.30113.myndighet-nagon-annan-skickade-blankett"
+slug = "myndighet-nagon-annan-skickade-blankett"
+
+[[variable]]
+native_id = "258.35520.kop-belopp-internet"
+slug = "kop-belopp-internet"
+
+[[variable]]
+native_id = "258.35530.anvant-ordbehandling"
+slug = "anvant-ordbehandling"
+
+[[variable]]
+native_id = "258.35551.studiematerial-natet"
+slug = "studiematerial-natet"
+
+[[variable]]
+native_id = "258.35554.kommunicerat-larare"
+slug = "kommunicerat-larare"
+
+[[variable]]
+native_id = "258.35557.andra-utbildn-internet"
+slug = "andra-utbildn-internet"
+
+[[variable]]
+native_id = "258.35562.lagringsutrymme-internet"
+slug = "lagringsutrymme-internet"
+
+[[variable]]
+native_id = "258.37000.telefon-videosamtal"
+slug = "telefon-videosamtal"
+
+[[variable]]
+native_id = "258.37031.andrat-installningar"
+slug = "andrat-installningar"
+
+[[variable]]
+native_id = "258.37032.skapat-presentationer"
+slug = "skapat-presentationer"
+
+[[variable]]
+native_id = "258.37033.anvant-kalkylprogram"
+slug = "anvant-kalkylprogram"
+
+[[variable]]
+native_id = "258.39489.tagit-nagon-kurs-pa-internet"
+slug = "tagit-nagon-kurs-pa-internet"
+
+[[variable]]
+native_id = "258.41678.ej-utbildningsaktiviteter"
+slug = "ej-utbildningsaktiviteter"
+
+[[variable]]
+native_id = "258.41723.kopt-sportartiklar"
+slug = "kopt-sportartiklar"
+
+[[variable]]
+native_id = "258.41724.kopt-klader-skor-accessoarer"
+slug = "kopt-klader-skor-accessoarer"
+
+[[variable]]
+native_id = "258.41725.kopt-barnleksaker-eller-barnartiklar"
+slug = "kopt-barnleksaker-eller-barnartiklar"
+
+[[variable]]
+native_id = "258.41726.kopt-mobler-inredning-tradgard"
+slug = "kopt-mobler-inredning-tradgard"
+
+[[variable]]
+native_id = "258.41727.kopt-cd-eller-vinylskivor"
+slug = "kopt-cd-eller-vinylskivor"
+
+[[variable]]
+native_id = "258.41729.kopt-tryckta-bocker-tidningar"
+slug = "kopt-tryckta-bocker-tidningar"
+
+[[variable]]
+native_id = "258.41730.kopt-datorer-surfplattor-mobiler"
+slug = "kopt-datorer-surfplattor-mobiler"
+
+[[variable]]
+native_id = "258.41731.kopt-hushallsapparater-eller-vitvaror"
+slug = "kopt-hushallsapparater-eller-vitvaror"
+
+[[variable]]
+native_id = "258.41732.kopt-lakemedel-eller-kosttillskott"
+slug = "kopt-lakemedel-eller-kosttillskott"
+
+[[variable]]
+native_id = "258.41733.kopt-leveranser-fran-restauranger"
+slug = "kopt-leveranser-fran-restauranger"
+
+[[variable]]
+native_id = "258.41734.kopt-mat-eller-dryck"
+slug = "kopt-mat-eller-dryck"
+
+[[variable]]
+native_id = "258.41735.kopt-kosmetik-skonhet"
+slug = "kopt-kosmetik-skonhet"
+
+[[variable]]
+native_id = "258.41736.kopt-rengoring-hygienprodukter"
+slug = "kopt-rengoring-hygienprodukter"
+
+[[variable]]
+native_id = "258.41737.kopt-cyklar-mopeder-bilar"
+slug = "kopt-cyklar-mopeder-bilar"
+
+[[variable]]
+native_id = "258.41738.kopt-andra-fysiska-varor"
+slug = "kopt-andra-fysiska-varor"
+
+[[variable]]
+native_id = "258.41740.betalat-musik-streaming"
+slug = "betalat-musik-streaming"
+
+[[variable]]
+native_id = "258.41741.betalat-filmer-serier-streaming"
+slug = "betalat-filmer-serier-streaming"
+
+[[variable]]
+native_id = "258.44638.anvant-internet-asikter-politik"
+slug = "anvant-internet-asikter-politik"
+
+[[variable]]
+native_id = "258.44639.aktivt-delta-politisk-diskussion"
+slug = "aktivt-delta-politisk-diskussion"
 
 # register 26 (rams)
 

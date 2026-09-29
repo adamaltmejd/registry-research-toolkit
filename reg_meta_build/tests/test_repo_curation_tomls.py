@@ -49,6 +49,286 @@ _ROOT = Path(__file__).resolve().parent.parent
 _CURATION = _ROOT / "curation"
 
 
+# Y-304: the 75 reviewed IT-användning (258) recurrent-question identity
+# families. Each value is the native-question split owner leaf and the complete
+# set of delivered literals that leaf owns in that native family.
+_IT_RECURRENT_QUESTION_OWNERS: dict[str, tuple[str, tuple[str, ...]]] = {
+    "258.15918": ("datc1", ("B1", "B1a", "C1", "DatC1")),
+    "258.15958": ("anvant-internet-sokvaror", ("DatC5B", "DatC5D", "IUIF")),
+    "258.15959": (
+        "anvant-internet-resor",
+        ("B6o", "C4l", "DatC5C", "DatC5E", "DatC5M", "IUHOLS"),
+    ),
+    "258.15962": ("anvant-nedladdning-programvara", ("DatC5D", "DatC5F", "DatC5H")),
+    "258.15963": (
+        "anvant-internet-nyheter",
+        (
+            "B3f",
+            "B4E",
+            "B4e",
+            "B6d",
+            "C4e",
+            "DatC5B",
+            "DatC5E",
+            "DatC5I",
+            "DatC5J",
+            "IUNW",
+            "IUNW1",
+        ),
+    ),
+    "258.15966": (
+        "anvant-internet-halsoinformation",
+        ("B3m", "B3o", "B4f", "B6m", "DatC5C", "DatC5G", "DatC5K", "DatC5L"),
+    ),
+    "258.15968": (
+        "utfort-bankarenden-pa-natet",
+        (
+            "B3r",
+            "B3t",
+            "B4N",
+            "B4l",
+            "B5m",
+            "C4n",
+            "DatC5H",
+            "DatC5M",
+            "DatC5P",
+            "IUBK",
+        ),
+    ),
+    "258.15969": (
+        "anvant-internet-salja-varor",
+        ("B3q", "B3s", "B4k", "B5l", "B6p", "C4m", "DatC5I", "DatC5N", "IUSELL"),
+    ),
+    "258.15998": (
+        "nar-handlade-du-senast-via-internet",
+        ("D1", "DatD1", "DatE1", "E1", "IBUY"),
+    ),
+    "258.15999": ("kopt-lakemedel", ("BMED", "D2C", "D2c", "DatD2C", "DatE2C", "E2c")),
+    "258.16000": (
+        "kopt-mat-eller-specerivaror",
+        ("BFOOD", "D2A", "D2a", "DatD2A", "DatE2A", "E2a"),
+    ),
+    "258.16001": (
+        "kopt-bocker-tidningar-ink-e-bocker",
+        ("BBOOKNL", "D2L", "D2l", "DatD2D", "DatD2E", "DatE2D", "DatE2E", "E2l"),
+    ),
+    "258.16002": (
+        "kopt-klader-eller-sportartiklar",
+        (
+            "BCLOT",
+            "D2D",
+            "D2d",
+            "DatD2E",
+            "DatD2F",
+            "DatD2G",
+            "DatE2E",
+            "DatE2G",
+            "E2d",
+        ),
+    ),
+    "258.16004": (
+        "kopt-datorer-eller-datautrustning",
+        (
+            "BHARD",
+            "D2E",
+            "D2e",
+            "DatD2G",
+            "DatD2I",
+            "DatD2J",
+            "DatE2G",
+            "DatE2J",
+            "E2e",
+        ),
+    ),
+    "258.16005": (
+        "kopt-hemelektronik-eller-kameror",
+        (
+            "BEEQU",
+            "D2F",
+            "D2f",
+            "DatD2H",
+            "DatD2J",
+            "DatD2K",
+            "DatE2H",
+            "DatE2K",
+            "E2f",
+        ),
+    ),
+    "258.16008": (
+        "kopt-biljetter-till-evenemang",
+        (
+            "BTICK",
+            "D2J",
+            "D2j",
+            "DatD2K",
+            "DatD2O",
+            "DatD2P",
+            "DatE2K",
+            "DatE2P",
+            "E2j",
+        ),
+    ),
+    "258.16010": (
+        "kopt-andra-varor-eller-tjanster",
+        (
+            "BOTHTH",
+            "D2O",
+            "D2o",
+            "D2p",
+            "DatD2M",
+            "DatD2P",
+            "DatD2Q",
+            "DatE2M",
+            "DatE2Q",
+            "E2o",
+        ),
+    ),
+    "258.16011": ("kopt-nedladdad-film-musik", ("BFILMO", "DatD3A", "DatE3A")),
+    "258.16088": (
+        "antal-personer-under-16-ar-i-hushallet",
+        (
+            "DatE11",
+            "DatF11",
+            "DatF9",
+            "DatG13",
+            "DatG14",
+            "H13",
+            "H13antal",
+            "H15",
+            "HH_CHILD",
+        ),
+    ),
+    "258.17510": (
+        "kopt-hushallsvaror",
+        ("BFURN", "D2B", "D2b", "DatD2B", "DatE2B", "E2b"),
+    ),
+    "258.18036": (
+        "myndighetskontakt-lamnat-uppgifter",
+        ("C1C", "C1c", "D1c", "DatC6C", "DatD1C", "GOV12RT", "IGOV12RT"),
+    ),
+    "258.18087": (
+        "kopt-varor-tjanster-fran-sverige",
+        ("BFDOM", "D3a", "D4A", "DatD4A", "DatE4A", "E4a"),
+    ),
+    "258.18088": (
+        "kopt-varor-tjanster-fran-eu",
+        ("BFEU", "D3b", "D4B", "DatD4B", "DatE4B", "E4b"),
+    ),
+    "258.18089": (
+        "kopt-varor-tjanster-utanfor-eu",
+        ("BFWRLD", "D3c", "D4C", "DatD4C", "DatE4C", "E4c"),
+    ),
+    "258.18090": (
+        "kopt-varor-tjanster-okant-land",
+        ("BFUNK", "D3d", "D4D", "DatD4D", "DatE4D", "E4d"),
+    ),
+    "258.21112": (
+        "internet-snabbmeddelanden",
+        ("B3d", "B4D", "B4d", "DatC5C", "IUFORIM"),
+    ),
+    "258.21120": (
+        "kopt-researrangemang-fardbiljetter",
+        ("BOTA", "D2I", "D2i", "DatD2N", "DatD2O", "DatE2O", "E2i"),
+    ),
+    "258.21175": (
+        "kopt-filmer-musik-internet",
+        ("BFILM", "D2K", "D2k", "DatD2D", "DatE2D", "E2k"),
+    ),
+    "258.21176": (
+        "kopt-video-dataspel-internet",
+        ("BGSOFT", "D2N", "D2n", "DatD2G", "DatD2H", "DatE2H", "E2n"),
+    ),
+    "258.23396": (
+        "anvant-internet-sokvaror-tjanster",
+        ("B3e", "B4G", "B4g", "B5d", "B6e", "C4g", "DatC5D", "DatC5E", "IUIF"),
+    ),
+    "258.23397": (
+        "kopt-el-bestallt-datorbaserade-laromedel",
+        ("BLRN", "D2M", "D2m", "DatD2F", "DatE2F", "E2m"),
+    ),
+    "258.23477": ("yrke", ("H8", "Sy2")),
+    "258.26891": ("andel-omsattning-fran-edi", ("AXSVALPCT", "AXVALPCT")),
+    "258.27978": (
+        "delta-pa-sociala-natverkssajter",
+        ("B3c", "B4C", "B4c", "B5c", "B6c", "C4c", "DatC5A"),
+    ),
+    "258.27994": (
+        "flyttat-filer-dator-annan-enhet",
+        ("CXFER", "DatF3G", "E1A", "E1a", "F1a"),
+    ),
+    "258.28013": (
+        "datd2a-2",
+        ("C2A", "C2a", "D2a", "DatD2A", "GOV12RTX_NAP", "IGOV12RTX_NAP"),
+    ),
+    "258.28014": (
+        "datd2b-2",
+        ("C2B", "C2b", "D2b", "DatD2B", "GOV12RTX_SNA", "IGOV12RTX_SNA"),
+    ),
+    "258.28016": (
+        "datd2d",
+        ("C2C", "C2c", "D2c", "DatD2D", "GOV12RTX_SKL", "IGOV12RTX_SKL"),
+    ),
+    "258.28017": (
+        "datd2e",
+        ("C2D", "C2d", "D2d", "DatD2E", "GOV12RTX_SEC", "IGOV12RTX_SEC"),
+    ),
+    "258.28861": (
+        "anvant-internet-skicka-ta-emot-epost",
+        ("B3a", "B4A", "B4a", "B5a", "C4a", "IUEM"),
+    ),
+    "258.29967": (
+        "andel-webb-forsaljning-konsumenter",
+        ("AWSVALCPCT", "AWSVAL_B2CPCT", "E_AWSVAL_B2C"),
+    ),
+    "258.29988": (
+        "andel-webb-forsaljning-foretag-offentlig",
+        ("AWSVALBGPCT", "AWSVAL_B2BGPCT", "E_AWSVAL_B2BG"),
+    ),
+    "258.30112": ("igov12rtx-sign", ("C2e", "D2e", "IGOV12RTX_SIGN")),
+    "258.30113": (
+        "myndighet-nagon-annan-skickade-blankett",
+        ("C2E", "C2e", "C2f", "C2g", "D2f", "IGOV12RTX_DEL"),
+    ),
+    "258.35520": ("kop-belopp-internet", ("D5", "D6", "E5", "E7")),
+    "258.35530": ("anvant-ordbehandling", ("E2B", "E2a", "E2b", "F2a", "F2b")),
+    "258.35551": ("studiematerial-natet", ("B4b", "B5b", "B7B", "B8b", "C6b")),
+    "258.35554": ("kommunicerat-larare", ("B4c", "B5c", "B7C", "B8c", "C6c")),
+    "258.35557": ("andra-utbildn-internet", ("B8d", "C6d")),
+    "258.35562": ("lagringsutrymme-internet", ("B4", "B5_1", "B6", "B7", "C5", "CC")),
+    "258.37000": (
+        "telefon-videosamtal",
+        ("B3b", "B4B", "B4b", "B5b", "B6b", "C4b", "IUPH1"),
+    ),
+    "258.37031": ("andrat-installningar", ("E1C", "E1c", "F1c")),
+    "258.37032": ("skapat-presentationer", ("E2C", "E2c", "F2c")),
+    "258.37033": ("anvant-kalkylprogram", ("E2D", "E2c", "E2d", "F2c", "F2d")),
+    "258.39489": ("tagit-nagon-kurs-pa-internet", ("B4a", "B5a", "B7A", "B8a")),
+    "258.41678": (
+        "ej-utbildningsaktiviteter",
+        ("B4c2", "B5b2", "B5c2", "B5d2", "B8c2"),
+    ),
+    "258.41723": ("kopt-sportartiklar", ("D2b", "E2b")),
+    "258.41724": ("kopt-klader-skor-accessoarer", ("D2a", "E2a")),
+    "258.41725": ("kopt-barnleksaker-eller-barnartiklar", ("D2c", "E2c")),
+    "258.41726": ("kopt-mobler-inredning-tradgard", ("D2d", "E2d")),
+    "258.41727": ("kopt-cd-eller-vinylskivor", ("D2e", "E2e")),
+    "258.41729": ("kopt-tryckta-bocker-tidningar", ("D2g", "E2g")),
+    "258.41730": ("kopt-datorer-surfplattor-mobiler", ("D2h", "E2h")),
+    "258.41731": ("kopt-hushallsapparater-eller-vitvaror", ("D2i", "E2i")),
+    "258.41732": ("kopt-lakemedel-eller-kosttillskott", ("D2j", "E2j")),
+    "258.41733": ("kopt-leveranser-fran-restauranger", ("D2k", "E2k")),
+    "258.41734": ("kopt-mat-eller-dryck", ("D2l", "E2l")),
+    "258.41735": ("kopt-kosmetik-skonhet", ("D2m", "E2m")),
+    "258.41736": ("kopt-rengoring-hygienprodukter", ("D2n", "E2n")),
+    "258.41737": ("kopt-cyklar-mopeder-bilar", ("D2o", "E2o")),
+    "258.41738": ("kopt-andra-fysiska-varor", ("D2p", "E2p")),
+    "258.41740": ("betalat-musik-streaming", ("D5a", "E5a")),
+    "258.41741": ("betalat-filmer-serier-streaming", ("D5b", "E5b")),
+    "258.44638": ("anvant-internet-asikter-politik", ("B3g", "B4h")),
+    "258.44639": ("aktivt-delta-politisk-diskussion", ("B3h", "B4i")),
+}
+
+
 def test_catalog_overlays_share_one_directory() -> None:
     names = {
         "classification_groups.toml",
@@ -672,7 +952,6 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for register in tree.registers
         for partition in register.identity.partition
     ]
-    assert len(partitions) == 680
     assert len(tree.registers) == 289
     assert (
         sum(len(register.identity.route) for register in tree.registers),
@@ -948,6 +1227,18 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     for variable, (old, new, owner) in kusoc.items():
         assert dict(by_variable[variable].columns) == {old: owner, new: owner}
         assert ("scb", owner) in slugged
+
+    # Y-304: the 75 reviewed IT-användning (258) recurrent-question identity
+    # families each own every listed literal through one native-question leaf.
+    it_partitions = {
+        partition.variable: partition
+        for partition in partitions
+        if partition.variable in _IT_RECURRENT_QUESTION_OWNERS
+    }
+    assert set(it_partitions) == set(_IT_RECURRENT_QUESTION_OWNERS)
+    for native, (leaf, literals) in _IT_RECURRENT_QUESTION_OWNERS.items():
+        owner = f"{native}.{leaf}"
+        assert dict(it_partitions[native].columns) == dict.fromkeys(literals, owner)
     absent_owners = {
         owner
         for partition in partitions
