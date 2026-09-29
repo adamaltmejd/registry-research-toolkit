@@ -2298,6 +2298,97 @@ def test_repo_fee_bases_and_hreg_representations_keep_distinct_owners() -> None:
     assert snapshot["scb/47.29874"] == "programinriktning"
 
 
+def test_repo_iot_disposable_income_keeps_capital_gain_exclusion_distinct() -> None:
+    tree = load_curation_tree(_CURATION)
+    iot = next(
+        register for register in tree.registers if register.register_info.slug == "iot"
+    )
+    partition = next(p for p in iot.identity.partition if p.variable == "25.1304")
+    assert dict(partition.columns) == {
+        "CDISP": "25.1304.cdisp",
+        "CDISP5": "25.1304.cdisp5",
+        "DIN83": "25.1304.din83",
+        "DIN84": "25.1304.din83",
+        "DIN86": "25.1304.din83",
+        "DIN88K": "25.1304.din88k",
+        "DIN91": "25.1304.din91",
+        "DIND": "25.1304.dind",
+        "DINKD": "25.1304.dinkd",
+        "DINU82": "25.1304.dinu82",
+    }
+    names = {entry.native_id: entry.slug for entry in iot.variable}
+    excluded = "delkomponent-disponibel-inkomst-exkl-kapitalvinst"
+    assert names["25.1304.cdisp5"] == excluded
+    assert names["25.1304.cdisp"] == "delkomponent-disponibel-inkomst"
+    assert names["25.22307"] == "disponibel-inkomst-exkl-kapitalvinst"
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
+    assert snapshot["scb/25.1304.cdisp5"] == excluded
+    group = next(g for g in iot.group if g.key == "disponibel-inkomst")
+    member = next(
+        m
+        for m in group.members
+        if m.variable == excluded and m.delivery_column == "CDISP5"
+    )
+    assert member.coords is not None
+    assert [(c.axis, c.value) for c in member.coords] == [
+        ("enhet", "individ"),
+        ("hushallsbegrepp", "na"),
+        ("kapitalvinst", "exkl"),
+    ]
+    assert any(
+        m.variable == names["25.22307"] and m.delivery_column == "CDISP5"
+        for m in group.members
+    )
+
+
+def test_repo_iot_per_adult_income_retains_supplied_definition_bases() -> None:
+    tree = load_curation_tree(_CURATION)
+    iot = next(
+        register for register in tree.registers if register.register_info.slug == "iot"
+    )
+    partition = next(p for p in iot.identity.partition if p.variable == "25.2575")
+    expected = {
+        "CDISPP": "25.2575.cdispp",
+        "DINKPP": "25.2575.dinkpp",
+        "DINPP": "25.2575.dinpp",
+        "DINPP81": "25.2575.definition-1981",
+        "DINPP82": "25.2575.kapital-ranta-utdelning",
+        "DINPP83": "25.2575.kapital-ranta-utdelning",
+        "DINPP84": "25.2575.definition-1984",
+        "DINPP86": "25.2575.definition-1986",
+        "DINPP88K": "25.2575.dinpp88k",
+        "DINPP91": "25.2575.dinpp91",
+        "DINUPP": "25.2575.dinupp",
+    }
+    assert dict(partition.columns) == expected
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
+    names = {owner: snapshot[f"scb/{owner}"] for owner in expected.values()}
+    assert names["25.2575.dinpp"] == "dinpp"
+    assert names["25.2575.dinpp88k"] == "dinpp88k"
+    declared = {entry.native_id: entry.slug for entry in iot.variable}
+    for owner in (
+        "25.2575.definition-1981",
+        "25.2575.kapital-ranta-utdelning",
+        "25.2575.definition-1984",
+        "25.2575.definition-1986",
+    ):
+        assert declared[owner] == names[owner]
+    group = next(g for g in iot.group if g.key == "disponibel-inkomst")
+    for column, owner in expected.items():
+        assert snapshot[f"scb/{owner}"] == names[owner]
+        member = next(
+            m
+            for m in group.members
+            if m.variable == names[owner] and m.delivery_column == column
+        )
+        assert member.coords is not None
+        assert [(c.axis, c.value) for c in member.coords] == [
+            ("enhet", "per-vuxen"),
+            ("hushallsbegrepp", "familj"),
+            ("kapitalvinst", "inkl"),
+        ]
+
+
 def test_repo_iot_income_renames_retain_the_2019_source_basis_boundary() -> None:
     expected = {
         "25.591": {
@@ -2492,3 +2583,58 @@ def test_repo_hreg_source_constructs_preserve_event_anchors_and_aliases() -> Non
     for native in ("47.241", "47.1715", "47.29874"):
         assert native not in expected
         assert not any(owner.startswith(f"{native}.") for owner in names)
+
+
+def test_repo_iot_operational_definitions_keep_slots_points_and_native_scope() -> None:
+    expected = {
+        "25.21523": {
+            "TKULONSF": "25.21523.vissa-ej-skattepliktiga-ersattningar",
+            "IKUSF": "25.21523.vissa-ej-skattepliktiga-ersattningar",
+            "TLONSF": "25.21523.vissa-ej-skattepliktiga-ersattningar-agi-ku",
+        },
+        "25.30856": {
+            "BSAMF1": "25.30856.samfundskod-samfund-1",
+            "BSAMF2": "25.30856.samfundskod-samfund-2",
+        },
+        "25.39924": {
+            "INDTJ1": "25.39924.inkomst-av-tjanst-punkt-1",
+            "INDTJ2": "25.39924.inkomst-av-tjanst-punkt-2",
+        },
+        "25.40427": {
+            "IDMANT": "25.40427.folkbokforingsforhallande",
+            "KBH": "25.40427.folkbokforingsforhallande",
+        },
+    }
+    tree = load_curation_tree(_CURATION)
+    iot = next(
+        register for register in tree.registers if register.register_info.slug == "iot"
+    )
+    partitions = {entry.variable: entry for entry in iot.identity.partition}
+    for native, columns in expected.items():
+        assert dict(partitions[native].columns) == columns
+        assert not partitions[native].unassigned_columns
+        assert len(set(columns.values())) == (1 if native == "25.40427" else 2)
+    names = {
+        owner: owner.split(".", 2)[2]
+        for columns in expected.values()
+        for owner in columns.values()
+    }
+    assert {
+        entry.native_id: entry.slug
+        for entry in iot.variable
+        if entry.native_id in names
+    } == names
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
+    assert {f"scb/{owner}": snapshot[f"scb/{owner}"] for owner in names} == {
+        f"scb/{owner}": slug for owner, slug in names.items()
+    }
+    # The 2010 preliminary/final name boundary stays within the historical
+    # construct. Post-2019 source basis and the co-delivered slots/points differ.
+    assert expected["25.21523"]["IKUSF"] == expected["25.21523"]["TKULONSF"]
+    assert expected["25.21523"]["TLONSF"] != expected["25.21523"]["TKULONSF"]
+    # IDMANT/KBH also describe a different native parish variable (1 November).
+    assert "25.24373" not in expected
+    assert all(not owner.startswith("25.24373.") for owner in names)
+    assert snapshot["scb/25.24373"] == "forsamling-den-1-11"
+    assert snapshot["scb/25.30856"] == "bsamf"
+    assert snapshot["scb/25.39924"] == "indtj"
