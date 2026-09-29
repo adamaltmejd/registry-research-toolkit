@@ -661,6 +661,11 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     slug_dir = repo_slug_dir()
     assert slug_dir is not None
     entries = load_slug_dir(slug_dir)
+    slugged = {
+        (e.provider, e.source_id)
+        for e in entries
+        if e.kind == "variable" and e.slug is not None
+    }
     tree = load_curation_tree(_CURATION)
     partitions = [
         partition
@@ -674,11 +679,51 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 2, 1, 1)
-    slugged = {
-        (e.provider, e.source_id)
-        for e in entries
-        if e.kind == "variable" and e.slug is not None
+    ) == (20, 5, 1, 1)
+    # Y-303: AR/INDATUM/INDATUMA are reused native names whose source concept
+    # differs by Deldatamängd. The three splits expose one owner per subset and
+    # each PAR panel references the owner of its own subset, never the withheld
+    # unsplit `indatum` base.
+    par = next(
+        register for register in tree.registers if register.register_info.slug == "par"
+    )
+    assert {
+        entry.variable: {getattr(part, entry.by): part.owner for part in entry.parts}
+        for entry in par.identity.split
+    } == {
+        "ATC": {
+            "integer": "5891427617861710725.ATC.atc",
+            "text": "5891427617861710725.ATC.atc-1",
+        },
+        "AR": {
+            "PAR_OV": "5891427617861710725.AR.besoksar",
+            "PAR_SV": "5891427617861710725.AR.utskrivningsar",
+            "PAR_TV": "5891427617861710725.AR.ar-avslutad-psykiatrisk-vardform",
+        },
+        "INDATUM": {
+            "PAR_OV": "5891427617861710725.INDATUM.besoksdatum",
+            "PAR_SV": "5891427617861710725.INDATUM.inskrivningsdatum-slutenvard",
+            "PAR_TV": "5891427617861710725.INDATUM.inskrivningsdatum-psykiatrisk-vardform",
+        },
+        "INDATUMA": {
+            "PAR_OV": "5891427617861710725.INDATUMA.besoksdatum-alfanumeriskt",
+            "PAR_SV": "5891427617861710725.INDATUMA.inskrivningsdatum-alfanumeriskt",
+        },
+    }
+    par_owners = {
+        part.owner
+        for entry in par.identity.split
+        if entry.by == "deldatamangd"
+        for part in entry.parts
+    }
+    assert len(par_owners) == 8
+    assert {("sos", owner) for owner in par_owners} <= slugged
+    assert {
+        variant.display_group: variant.panel_time_key for variant in par.variant
+    } == {
+        "PAR_OV": "besoksdatum",
+        "PAR_SV": "inskrivningsdatum-slutenvard",
+        "PAR_TV": "inskrivningsdatum-psykiatrisk-vardform",
     }
     # The KU-to-AGI source-basis partition (Y-299) is the one exact map with two
     # named leaves; each owner must carry its own naming slug.

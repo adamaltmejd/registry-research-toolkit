@@ -43,12 +43,47 @@ parts = [
   { data_type = "text", owner = "5891427617861710725.ATC.atc-1" },   # slug atc-komplement-diagnos
 ]
 
+# AR, INDATUM and INDATUMA are each reused as a native name across PAR subsets
+# while the delivered source concept differs per subset. Split by Deldatamängd
+# so each source-basis keeps its own owner instead of collapsing onto one
+# canonical text: AR is visit year (PAR_OV), discharge year / last delivered
+# period (PAR_SV) or end-of-compulsory-care year / last delivered period
+# (PAR_TV); INDATUM is a SAS visit date, a SAS admission date, or a text
+# admission date (PAR_TV, 2010-2014); INDATUMA is an alphanumeric visit or
+# admission date.
+
+[[identity.split]]
+variable = "AR"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "PAR_OV", owner = "5891427617861710725.AR.besoksar" },
+  { deldatamangd = "PAR_SV", owner = "5891427617861710725.AR.utskrivningsar" },
+  { deldatamangd = "PAR_TV", owner = "5891427617861710725.AR.ar-avslutad-psykiatrisk-vardform" },
+]
+
+[[identity.split]]
+variable = "INDATUM"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "PAR_OV", owner = "5891427617861710725.INDATUM.besoksdatum" },
+  { deldatamangd = "PAR_SV", owner = "5891427617861710725.INDATUM.inskrivningsdatum-slutenvard" },
+  { deldatamangd = "PAR_TV", owner = "5891427617861710725.INDATUM.inskrivningsdatum-psykiatrisk-vardform" },
+]
+
+[[identity.split]]
+variable = "INDATUMA"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "PAR_OV", owner = "5891427617861710725.INDATUMA.besoksdatum-alfanumeriskt" },
+  { deldatamangd = "PAR_SV", owner = "5891427617861710725.INDATUMA.inskrivningsdatum-alfanumeriskt" },
+]
+
 [[variant]]
 native_id = "5891427617861710725.6299896919770839454"
 slug = "par-sv"
 display_group = "PAR_SV"
 panel_entity_key = "personnr"
-panel_time_key = "indatum"
+panel_time_key = "inskrivningsdatum-slutenvard"
 panel_time_grain = "row"
 
 
@@ -57,7 +92,7 @@ native_id = "5891427617861710725.5623677195158740599"
 slug = "par-ov"
 display_group = "PAR_OV"
 panel_entity_key = "personnr"
-panel_time_key = "indatum"
+panel_time_key = "besoksdatum"
 panel_time_grain = "row"
 
 
@@ -66,7 +101,7 @@ native_id = "5891427617861710725.6508659120530331974"
 slug = "par-tv"
 display_group = "PAR_TV"
 panel_entity_key = "personnr"
-panel_time_key = "indatum"
+panel_time_key = "inskrivningsdatum-psykiatrisk-vardform"
 panel_time_grain = "row"
 
 # Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM (LVM)
@@ -89,6 +124,40 @@ slug = "dia-yo-kod-ar-atc-kod"
 [[variable]]
 native_id = "5891427617861710725.ATC.atc-1"
 slug = "atc-komplement-diagnos"
+
+# Owners of the AR / INDATUM / INDATUMA source-basis splits above.
+
+[[variable]]
+native_id = "5891427617861710725.AR.besoksar"
+slug = "besoksar"
+
+[[variable]]
+native_id = "5891427617861710725.AR.utskrivningsar"
+slug = "utskrivningsar"
+
+[[variable]]
+native_id = "5891427617861710725.AR.ar-avslutad-psykiatrisk-vardform"
+slug = "ar-avslutad-psykiatrisk-vardform"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUM.besoksdatum"
+slug = "besoksdatum"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUM.inskrivningsdatum-slutenvard"
+slug = "inskrivningsdatum-slutenvard"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUM.inskrivningsdatum-psykiatrisk-vardform"
+slug = "inskrivningsdatum-psykiatrisk-vardform"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUMA.besoksdatum-alfanumeriskt"
+slug = "besoksdatum-alfanumeriskt"
+
+[[variable]]
+native_id = "5891427617861710725.INDATUMA.inskrivningsdatum-alfanumeriskt"
+slug = "inskrivningsdatum-alfanumeriskt"
 
 # register 7550156225339591583 (bu)
 
