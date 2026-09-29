@@ -5734,3 +5734,1007 @@ slug = "tjanstepension"
 [[variable]]
 native_id = "25.1190.akassa-atgarder"
 slug = "akassa-atgarder"
+
+# Y-310 2026-09-29: 58 IoT native families each deliver three distinct
+# calculation bases. SCB's Mikrodata Aktuellt correction item dated 2025-10-10
+# names the shared-residence IoT tables VX; the 2024 IoT register documentation
+# (he0101_dokstar_2024_20260120.pdf) K2.2.5 pp.21-25 describes the model that
+# changes household classification and consumption weights, divides children's
+# income across households and calculates an alternative economic standard; the
+# HE0110 microdata tree lists paired ordinary and VX household editions
+# 2021-2024. Each family's complete delivered inventory is exactly three
+# literals: X in variant 25.763 ('Individer och dödsbon'), and XHB / XVXHB in
+# variant 25.1153 ('Bostadshushåll'). The owners are separate delivered bases,
+# not spelling aliases, and no numerical comparability is claimed. The unsplit
+# native naming is retained; every original scope, interval, label, unit,
+# source attribution and formula revision is preserved.
+
+[[identity.partition]]
+variable = "25.5655"
+columns = { SBEGR = "25.5655.individ", SBEGRHB = "25.5655.hushall", SBEGRVXHB = "25.5655.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.5655 'betald-begravningsavgift', 138 physical originals, split into individual SBEGR (variant 25.763), ordinary household SBEGRHB (variant 25.1153) and household with modelled shared residence SBEGRVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.21514"
+columns = { CTRAN04 = "25.21514.individ", CTRAN04HB = "25.21514.hushall", CTRAN04VXHB = "25.21514.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.21514 'negativa-transfereringar-2004', 123 physical originals, split into individual CTRAN04 (variant 25.763), ordinary household CTRAN04HB (variant 25.1153) and household with modelled shared residence CTRAN04VXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1413"
+columns = { ISMBID = "25.1413.individ", ISMBIDHB = "25.1413.hushall", ISMBIDVXHB = "25.1413.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1413 'studiemedel-studiebidrag', 125 physical originals, split into individual ISMBID (variant 25.763), ordinary household ISMBIDHB (variant 25.1153) and household with modelled shared residence ISMBIDVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.5610"
+columns = { SKYRK = "25.5610.individ", SKYRKHB = "25.5610.hushall", SKYRKVXHB = "25.5610.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.5610 'kyrkoavgift-inklusive-begravningsavgift', 128 physical originals, split into individual SKYRK (variant 25.763), ordinary household SKYRKHB (variant 25.1153) and household with modelled shared residence SKYRKVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.39337"
+columns = { SREDSA = "25.39337.individ", SREDSAHB = "25.39337.hushall", SREDSAVXHB = "25.39337.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.39337 'skattereduktion-sjuk-aktivitet', 50 physical originals, split into individual SREDSA (variant 25.763), ordinary household SREDSAHB (variant 25.1153) and household with modelled shared residence SREDSAVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4866"
+columns = { CSTUDT = "25.4866.individ", CSTUDTHB = "25.4866.hushall", CSTUDTVXHB = "25.4866.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.4866 'studiestod', 126 physical originals, split into individual CSTUDT (variant 25.763), ordinary household CSTUDTHB (variant 25.1153) and household with modelled shared residence CSTUDTVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.22277"
+columns = { COVRN04 = "25.22277.individ", COVRN04HB = "25.22277.hushall", COVRN04VXHB = "25.22277.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.22277 'ovriga-negativa-transfereringar-2004', 123 physical originals, split into individual COVRN04 (variant 25.763), ordinary household COVRN04HB (variant 25.1153) and household with modelled shared residence COVRN04VXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.714"
+columns = { SREDSJO = "25.714.individ", SREDSJOHB = "25.714.hushall", SREDSJOVXHB = "25.714.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.714 'medgiven-skattereduktion-sjoinkomst', 144 physical originals, split into individual SREDSJO (variant 25.763), ordinary household SREDSJOHB (variant 25.1153) and household with modelled shared residence SREDSJOVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4387"
+columns = { PPENSSP = "25.4387.individ", PPENSSPHB = "25.4387.hushall", PPENSSPVXHB = "25.4387.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.4387 'pension-och-livranta-skattepliktig', 126 physical originals, split into individual PPENSSP (variant 25.763), ordinary household PPENSSPHB (variant 25.1153) and household with modelled shared residence PPENSSPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.36641"
+columns = { CTRAPSFOV = "25.36641.individ", CTRAPSFOVHB = "25.36641.hushall", CTRAPSFOVVXHB = "25.36641.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.36641 'ovriga-transfereringar-skattefria', 67 physical originals, split into individual CTRAPSFOV (variant 25.763), ordinary household CTRAPSFOVHB (variant 25.1153) and household with modelled shared residence CTRAPSFOVVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.712"
+columns = { SREDPEN = "25.712.individ", SREDPENHB = "25.712.hushall", SREDPENVXHB = "25.712.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.712 'skattereduktion-allman-pensionsavgift', 138 physical originals, split into individual SREDPEN (variant 25.763), ordinary household SREDPENHB (variant 25.1153) and household with modelled shared residence SREDPENVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.22247"
+columns = { PLIVRTA = "25.22247.individ", PLIVRTAHB = "25.22247.hushall", PLIVRTAVXHB = "25.22247.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.22247 'livranta-harledd', 119 physical originals, split into individual PLIVRTA (variant 25.763), ordinary household PLIVRTAHB (variant 25.1153) and household with modelled shared residence PLIVRTAVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.21824"
+columns = { SREDARB = "25.21824.individ", SREDARBHB = "25.21824.hushall", SREDARBVXHB = "25.21824.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.21824 'skattereduktion-for-arbetsinkomst', 117 physical originals, split into individual SREDARB (variant 25.763), ordinary household SREDARBHB (variant 25.1153) and household with modelled shared residence SREDARBVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.36637"
+columns = { CBRUTTO15 = "25.36637.individ", CBRUTTO15HB = "25.36637.hushall", CBRUTTO15VXHB = "25.36637.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.36637 'bruttoinkomst-definition-2015', 67 physical originals, split into individual CBRUTTO15 (variant 25.763), ordinary household CBRUTTO15HB (variant 25.1153) and household with modelled shared residence CBRUTTO15VXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.45919"
+columns = { SREDARBT = "25.45919.individ", SREDARBTHB = "25.45919.hushall", SREDARBTVXHB = "25.45919.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.45919 'tillfallig-skattereduktion-arbete', 16 physical originals, split into individual SREDARBT (variant 25.763), ordinary household SREDARBTHB (variant 25.1153) and household with modelled shared residence SREDARBTVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.38226"
+columns = { ISA = "25.38226.individ", ISAHB = "25.38226.hushall", ISAVXHB = "25.38226.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.38226 'sjuk-aktivitetsersattning-skattefri', 56 physical originals, split into individual ISA (variant 25.763), ordinary household ISAHB (variant 25.1153) and household with modelled shared residence ISAVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.22242"
+columns = { ISHBID = "25.22242.individ", ISHBIDHB = "25.22242.hushall", ISHBIDVXHB = "25.22242.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.22242 'studiehjalp-bidrag', 125 physical originals, split into individual ISHBID (variant 25.763), ordinary household ISHBIDHB (variant 25.1153) and household with modelled shared residence ISHBIDVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1484"
+columns = { PALLP = "25.1484.individ", PALLPHB = "25.1484.hushall", PALLPVXHB = "25.1484.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1484 'allman-pension-inklusive-delpension', 119 physical originals, split into individual PALLP (variant 25.763), ordinary household PALLPHB (variant 25.1153) and household with modelled shared residence PALLPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1295"
+columns = { CTRAP = "25.1295.individ", CTRAPHB = "25.1295.hushall", CTRAPVXHB = "25.1295.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1295 'summa-positiva-transfereringar', 129 physical originals, split into individual CTRAP (variant 25.763), ordinary household CTRAPHB (variant 25.1153) and household with modelled shared residence CTRAPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1486"
+columns = { PBARN = "25.1486.individ", PBARNHB = "25.1486.hushall", PBARNVXHB = "25.1486.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1486 'barnpension-skattepliktig-och-skattefri', 119 physical originals, split into individual PBARN (variant 25.763), ordinary household PBARNHB (variant 25.1153) and household with modelled shared residence PBARNVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.25618"
+columns = { KUTHYRM = "25.25618.individ", KUTHYRMHB = "25.25618.hushall", KUTHYRMVXHB = "25.25618.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.25618 'uthyrning-privatbostad-inkl-avdrag', 98 physical originals, split into individual KUTHYRM (variant 25.763), ordinary household KUTHYRMHB (variant 25.1153) and household with modelled shared residence KUTHYRMVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.22249"
+columns = { PAENKP = "25.22249.individ", PAENKPHB = "25.22249.hushall", PAENKPVXHB = "25.22249.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.22249 'ankepension-skapad', 119 physical originals, split into individual PAENKP (variant 25.763), ordinary household PAENKPHB (variant 25.1153) and household with modelled shared residence PAENKPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.21711"
+columns = { KFBRUT = "25.21711.individ", KFBRUTHB = "25.21711.hushall", KFBRUTVXHB = "25.21711.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.21711 'kapitalforlust-brutto', 113 physical originals, split into individual KFBRUT (variant 25.763), ordinary household KFBRUTHB (variant 25.1153) and household with modelled shared residence KFBRUTVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1615"
+columns = { TPENBID = "25.1615.individ", TPENBIDHB = "25.1615.hushall", TPENBIDVXHB = "25.1615.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1615 'pensioner-bidrag-exkl-arbetsmarkn', 156 physical originals, split into individual TPENBID (variant 25.763), ordinary household TPENBIDHB (variant 25.1153) and household with modelled shared residence TPENBIDVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1390"
+columns = { IALDF = "25.1390.individ", IALDFHB = "25.1390.hushall", IALDFVXHB = "25.1390.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1390 'aldreforsorjningsstod', 129 physical originals, split into individual IALDF (variant 25.763), ordinary household IALDFHB (variant 25.1153) and household with modelled shared residence IALDFVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1483"
+columns = { PALDP = "25.1483.individ", PALDPHB = "25.1483.hushall", PALDPVXHB = "25.1483.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1483 'alderspension', 119 physical originals, split into individual PALDP (variant 25.763), ordinary household PALDPHB (variant 25.1153) and household with modelled shared residence PALDPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1078"
+columns = { CKAP = "25.1078.individ", CKAPHB = "25.1078.hushall", CKAPVXHB = "25.1078.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1078 'rantor-utdelningar-exkl-rantebidrag', 129 physical originals, split into individual CKAP (variant 25.763), ordinary household CKAPHB (variant 25.1153) and household with modelled shared residence CKAPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.21701"
+columns = { ISMLAN = "25.21701.individ", ISMLANHB = "25.21701.hushall", ISMLANVXHB = "25.21701.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.21701 'studiemedel-lan-m-m', 125 physical originals, split into individual ISMLAN (variant 25.763), ordinary household ISMLANHB (variant 25.1153) and household with modelled shared residence ISMLANVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.26974"
+columns = { ISHIN = "25.26974.individ", ISHINHB = "25.26974.hushall", ISHINVXHB = "25.26974.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.26974 'inackorderingsbidrag', 83 physical originals, split into individual ISHIN (variant 25.763), ordinary household ISHINHB (variant 25.1153) and household with modelled shared residence ISHINVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.30826"
+columns = { IKBOBDR = "25.30826.individ", IKBOBDRHB = "25.30826.hushall", IKBOBDRVXHB = "25.30826.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.30826 'bostadstillagg-sarskilt-pensionarer', 90 physical originals, split into individual IKBOBDR (variant 25.763), ordinary household IKBOBDRHB (variant 25.1153) and household with modelled shared residence IKBOBDRVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.44792"
+columns = { SSLUTU = "25.44792.individ", SSLUTUHB = "25.44792.hushall", SSLUTUVXHB = "25.44792.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.44792 'skatt-utlandsk', 23 physical originals, split into individual SSLUTU (variant 25.763), ordinary household SSLUTUHB (variant 25.1153) and household with modelled shared residence SSLUTUVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.30674"
+columns = { CDIVSF = "25.30674.individ", CDIVSFHB = "25.30674.hushall", CDIVSFVXHB = "25.30674.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.30674 'skattefri-pension-pensionstillagg', 54 physical originals, split into individual CDIVSF (variant 25.763), ordinary household CDIVSFHB (variant 25.1153) and household with modelled shared residence CDIVSFVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.44791"
+columns = { TPENSAU = "25.44791.individ", TPENSAUHB = "25.44791.hushall", TPENSAUVXHB = "25.44791.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.44791 'pensioner-utlandskt-beskattade', 23 physical originals, split into individual TPENSAU (variant 25.763), ordinary household TPENSAUHB (variant 25.1153) and household with modelled shared residence TPENSAUVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.88"
+columns = { TFORP = "25.88.individ", TFORPHB = "25.88.hushall", TFORPVXHB = "25.88.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.88 'foraldrapenning-skattepliktig', 90 physical originals, split into individual TFORP (variant 25.763), ordinary household TFORPHB (variant 25.1153) and household with modelled shared residence TFORPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1630"
+columns = { TARBST = "25.1630.individ", TARBSTHB = "25.1630.hushall", TARBSTVXHB = "25.1630.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1630 'totalt-arbetsmarknadsstod', 159 physical originals, split into individual TARBST (variant 25.763), ordinary household TARBSTHB (variant 25.1153) and household with modelled shared residence TARBSTVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4523"
+columns = { COVRN = "25.4523.individ", COVRNHB = "25.4523.hushall", COVRNVXHB = "25.4523.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.4523 'ovriga-negativa-transfereringar', 54 physical originals, split into individual COVRN (variant 25.763), ordinary household COVRNHB (variant 25.1153) and household with modelled shared residence COVRNVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.21878"
+columns = { SDEBUTL = "25.21878.individ", SDEBUTLHB = "25.21878.hushall", SDEBUTLVXHB = "25.21878.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.21878 'debiterad-utlandsk-skatt', 119 physical originals, split into individual SDEBUTL (variant 25.763), ordinary household SDEBUTLHB (variant 25.1153) and household with modelled shared residence SDEBUTLVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1493"
+columns = { PEFLEVB = "25.1493.individ", PEFLEVBHB = "25.1493.hushall", PEFLEVBVXHB = "25.1493.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1493 'efterlevandepension-till-barn', 129 physical originals, split into individual PEFLEVB (variant 25.763), ordinary household PEFLEVBHB (variant 25.1153) and household with modelled shared residence PEFLEVBVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.44462"
+columns = { ISTIP = "25.44462.individ", ISTIPHB = "25.44462.hushall", ISTIPVXHB = "25.44462.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.44462 'stipendium-skattefritt', 38 physical originals, split into individual ISTIP (variant 25.763), ordinary household ISTIPHB (variant 25.1153) and household with modelled shared residence ISTIPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4871"
+columns = { PRESTA = "25.4871.individ", PRESTAHB = "25.4871.hushall", PRESTAVXHB = "25.4871.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.4871 'presta', 126 physical originals, split into individual PRESTA (variant 25.763), ordinary household PRESTAHB (variant 25.1153) and household with modelled shared residence PRESTAVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4386"
+columns = { PPENSSF = "25.4386.individ", PPENSSFHB = "25.4386.hushall", PPENSSFVXHB = "25.4386.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.4386 'pension-och-livranta-skattefri', 126 physical originals, split into individual PPENSSF (variant 25.763), ordinary household PPENSSFHB (variant 25.1153) and household with modelled shared residence PPENSSFVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.21861"
+columns = { POMSTP = "25.21861.individ", POMSTPHB = "25.21861.hushall", POMSTPVXHB = "25.21861.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.21861 'omstallningspension-skapad', 119 physical originals, split into individual POMSTP (variant 25.763), ordinary household POMSTPHB (variant 25.1153) and household with modelled shared residence POMSTPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.8274"
+columns = { SKLFVI = "25.8274.individ", SKLFVIHB = "25.8274.hushall", SKLFVIVXHB = "25.8274.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.8274 'kommunal-inkomstskatt-forvarvsinkomst', 123 physical originals, split into individual SKLFVI (variant 25.763), ordinary household SKLFVIHB (variant 25.1153) and household with modelled shared residence SKLFVIVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.21729"
+columns = { KVBRUT = "25.21729.individ", KVBRUTHB = "25.21729.hushall", KVBRUTVXHB = "25.21729.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.21729 'kapitalvinst-brutto', 113 physical originals, split into individual KVBRUT (variant 25.763), ordinary household KVBRUTHB (variant 25.1153) and household with modelled shared residence KVBRUTVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.45923"
+columns = { PIPT = "25.45923.individ", PIPTHB = "25.45923.hushall", PIPTVXHB = "25.45923.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.45923 'inkomstpensionstillagg', 32 physical originals, split into individual PIPT (variant 25.763), ordinary household PIPTHB (variant 25.1153) and household with modelled shared residence PIPTVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.732"
+columns = { SPENAVG = "25.732.individ", SPENAVGHB = "25.732.hushall", SPENAVGVXHB = "25.732.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.732 'allman-pensionsavgift', 153 physical originals, split into individual SPENAVG (variant 25.763), ordinary household SPENAVGHB (variant 25.1153) and household with modelled shared residence SPENAVGVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.630"
+columns = { AAPENS = "25.630.individ", AAPENSHB = "25.630.hushall", AAPENSVXHB = "25.630.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.630 'underlag-allman-pensionsavgift', 140 physical originals, split into individual AAPENS (variant 25.763), ordinary household AAPENSHB (variant 25.1153) and household with modelled shared residence AAPENSVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4874"
+columns = { PRESTPR = "25.4874.individ", PRESTPRHB = "25.4874.hushall", PRESTPRVXHB = "25.4874.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.4874 'prestpr', 126 physical originals, split into individual PRESTPR (variant 25.763), ordinary household PRESTPRHB (variant 25.1153) and household with modelled shared residence PRESTPRVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.30640"
+columns = { UUHBID = "25.30640.individ", UUHBIDHB = "25.30640.hushall", UUHBIDVXHB = "25.30640.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.30640 'givet-underhallsbidrag', 54 physical originals, split into individual UUHBID (variant 25.763), ordinary household UUHBIDHB (variant 25.1153) and household with modelled shared residence UUHBIDVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1508"
+columns = { PGARP = "25.1508.individ", PGARPHB = "25.1508.hushall", PGARPVXHB = "25.1508.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1508 'garantipension', 119 physical originals, split into individual PGARP (variant 25.763), ordinary household PGARPHB (variant 25.1153) and household with modelled shared residence PGARPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1632"
+columns = { TARBFOR = "25.1632.individ", TARBFORHB = "25.1632.hushall", TARBFORVXHB = "25.1632.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1632 'arbetsmarknadsforsakringar', 156 physical originals, split into individual TARBFOR (variant 25.763), ordinary household TARBFORHB (variant 25.1153) and household with modelled shared residence TARBFORVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.22241"
+columns = { ISHEXT = "25.22241.individ", ISHEXTHB = "25.22241.hushall", ISHEXTVXHB = "25.22241.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.22241 'extra-tillagg-studiemedel-bidrag', 125 physical originals, split into individual ISHEXT (variant 25.763), ordinary household ISHEXTHB (variant 25.1153) and household with modelled shared residence ISHEXTVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.30639"
+columns = { IUHBID = "25.30639.individ", IUHBIDHB = "25.30639.hushall", IUHBIDVXHB = "25.30639.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.30639 'mottaget-underhallsbidrag', 90 physical originals, split into individual IUHBID (variant 25.763), ordinary household IUHBIDHB (variant 25.1153) and household with modelled shared residence IUHBIDVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.101"
+columns = { TSA = "25.101.individ", TSAHB = "25.101.hushall", TSAVXHB = "25.101.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.101 'sjuk-och-aktivitetsersattning', 129 physical originals, split into individual TSA (variant 25.763), ordinary household TSAHB (variant 25.1153) and household with modelled shared residence TSAVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.42415"
+columns = { IMILI = "25.42415.individ", IMILIHB = "25.42415.hushall", IMILIVXHB = "25.42415.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.42415 'skattefri-ersattning-forsvar', 44 physical originals, split into individual IMILI (variant 25.763), ordinary household IMILIHB (variant 25.1153) and household with modelled shared residence IMILIVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.2504"
+columns = { PPRIV = "25.2504.individ", PPRIVHB = "25.2504.hushall", PPRIVVXHB = "25.2504.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.2504 'frivilliga-pensioner', 119 physical originals, split into individual PPRIV (variant 25.763), ordinary household PPRIVHB (variant 25.1153) and household with modelled shared residence PPRIVVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.1485"
+columns = { PAVTAL = "25.1485.individ", PAVTALHB = "25.1485.hushall", PAVTALVXHB = "25.1485.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.1485 'avtalspension', 119 physical originals, split into individual PAVTAL (variant 25.763), ordinary household PAVTALHB (variant 25.1153) and household with modelled shared residence PAVTALVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.23618"
+columns = { PFOMSTP = "25.23618.individ", PFOMSTPHB = "25.23618.hushall", PFOMSTPVXHB = "25.23618.hushall-vaxelvis-boende" }
+columns_ref = "Y-310 2026-09-29: SCB IoT native 25.23618 'forlangd-omstallningspension-summerad', 119 physical originals, split into individual PFOMSTP (variant 25.763), ordinary household PFOMSTPHB (variant 25.1153) and household with modelled shared residence PFOMSTPVXHB (variant 25.1153); evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+
+# Y-310 2026-09-29: qualified naming leaves for the 58 IoT calculation-base
+# families above; each leaf reuses the family's existing source-name stem.
+
+[[variable]]
+native_id = "25.5655.individ"
+slug = "betald-begravningsavgift-individ"
+
+[[variable]]
+native_id = "25.5655.hushall"
+slug = "betald-begravningsavgift-hushall"
+
+[[variable]]
+native_id = "25.5655.hushall-vaxelvis-boende"
+slug = "betald-begravningsavgift-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21514.individ"
+slug = "negativa-transfereringar-2004-individ"
+
+[[variable]]
+native_id = "25.21514.hushall"
+slug = "negativa-transfereringar-2004-hushall"
+
+[[variable]]
+native_id = "25.21514.hushall-vaxelvis-boende"
+slug = "negativa-transfereringar-2004-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1413.individ"
+slug = "studiemedel-studiebidrag-individ"
+
+[[variable]]
+native_id = "25.1413.hushall"
+slug = "studiemedel-studiebidrag-hushall"
+
+[[variable]]
+native_id = "25.1413.hushall-vaxelvis-boende"
+slug = "studiemedel-studiebidrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.5610.individ"
+slug = "kyrkoavgift-inklusive-begravningsavgift-individ"
+
+[[variable]]
+native_id = "25.5610.hushall"
+slug = "kyrkoavgift-inklusive-begravningsavgift-hushall"
+
+[[variable]]
+native_id = "25.5610.hushall-vaxelvis-boende"
+slug = "kyrkoavgift-inklusive-begravningsavgift-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.39337.individ"
+slug = "skattereduktion-sjuk-aktivitet-individ"
+
+[[variable]]
+native_id = "25.39337.hushall"
+slug = "skattereduktion-sjuk-aktivitet-hushall"
+
+[[variable]]
+native_id = "25.39337.hushall-vaxelvis-boende"
+slug = "skattereduktion-sjuk-aktivitet-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4866.individ"
+slug = "studiestod-individ"
+
+[[variable]]
+native_id = "25.4866.hushall"
+slug = "studiestod-hushall"
+
+[[variable]]
+native_id = "25.4866.hushall-vaxelvis-boende"
+slug = "studiestod-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22277.individ"
+slug = "ovriga-negativa-transfereringar-2004-individ"
+
+[[variable]]
+native_id = "25.22277.hushall"
+slug = "ovriga-negativa-transfereringar-2004-hushall"
+
+[[variable]]
+native_id = "25.22277.hushall-vaxelvis-boende"
+slug = "ovriga-negativa-transfereringar-2004-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.714.individ"
+slug = "medgiven-skattereduktion-sjoinkomst-individ"
+
+[[variable]]
+native_id = "25.714.hushall"
+slug = "medgiven-skattereduktion-sjoinkomst-hushall"
+
+[[variable]]
+native_id = "25.714.hushall-vaxelvis-boende"
+slug = "medgiven-skattereduktion-sjoinkomst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4387.individ"
+slug = "pension-och-livranta-skattepliktig-individ"
+
+[[variable]]
+native_id = "25.4387.hushall"
+slug = "pension-och-livranta-skattepliktig-hushall"
+
+[[variable]]
+native_id = "25.4387.hushall-vaxelvis-boende"
+slug = "pension-och-livranta-skattepliktig-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.36641.individ"
+slug = "ovriga-transfereringar-skattefria-individ"
+
+[[variable]]
+native_id = "25.36641.hushall"
+slug = "ovriga-transfereringar-skattefria-hushall"
+
+[[variable]]
+native_id = "25.36641.hushall-vaxelvis-boende"
+slug = "ovriga-transfereringar-skattefria-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.712.individ"
+slug = "skattereduktion-allman-pensionsavgift-individ"
+
+[[variable]]
+native_id = "25.712.hushall"
+slug = "skattereduktion-allman-pensionsavgift-hushall"
+
+[[variable]]
+native_id = "25.712.hushall-vaxelvis-boende"
+slug = "skattereduktion-allman-pensionsavgift-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22247.individ"
+slug = "livranta-harledd-individ"
+
+[[variable]]
+native_id = "25.22247.hushall"
+slug = "livranta-harledd-hushall"
+
+[[variable]]
+native_id = "25.22247.hushall-vaxelvis-boende"
+slug = "livranta-harledd-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21824.individ"
+slug = "skattereduktion-for-arbetsinkomst-individ"
+
+[[variable]]
+native_id = "25.21824.hushall"
+slug = "skattereduktion-for-arbetsinkomst-hushall"
+
+[[variable]]
+native_id = "25.21824.hushall-vaxelvis-boende"
+slug = "skattereduktion-for-arbetsinkomst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.36637.individ"
+slug = "bruttoinkomst-definition-2015-individ"
+
+[[variable]]
+native_id = "25.36637.hushall"
+slug = "bruttoinkomst-definition-2015-hushall"
+
+[[variable]]
+native_id = "25.36637.hushall-vaxelvis-boende"
+slug = "bruttoinkomst-definition-2015-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.45919.individ"
+slug = "tillfallig-skattereduktion-arbete-individ"
+
+[[variable]]
+native_id = "25.45919.hushall"
+slug = "tillfallig-skattereduktion-arbete-hushall"
+
+[[variable]]
+native_id = "25.45919.hushall-vaxelvis-boende"
+slug = "tillfallig-skattereduktion-arbete-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.38226.individ"
+slug = "sjuk-aktivitetsersattning-skattefri-individ"
+
+[[variable]]
+native_id = "25.38226.hushall"
+slug = "sjuk-aktivitetsersattning-skattefri-hushall"
+
+[[variable]]
+native_id = "25.38226.hushall-vaxelvis-boende"
+slug = "sjuk-aktivitetsersattning-skattefri-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22242.individ"
+slug = "studiehjalp-bidrag-individ"
+
+[[variable]]
+native_id = "25.22242.hushall"
+slug = "studiehjalp-bidrag-hushall"
+
+[[variable]]
+native_id = "25.22242.hushall-vaxelvis-boende"
+slug = "studiehjalp-bidrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1484.individ"
+slug = "allman-pension-inklusive-delpension-individ"
+
+[[variable]]
+native_id = "25.1484.hushall"
+slug = "allman-pension-inklusive-delpension-hushall"
+
+[[variable]]
+native_id = "25.1484.hushall-vaxelvis-boende"
+slug = "allman-pension-inklusive-delpension-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1295.individ"
+slug = "summa-positiva-transfereringar-individ"
+
+[[variable]]
+native_id = "25.1295.hushall"
+slug = "summa-positiva-transfereringar-hushall"
+
+[[variable]]
+native_id = "25.1295.hushall-vaxelvis-boende"
+slug = "summa-positiva-transfereringar-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1486.individ"
+slug = "barnpension-skattepliktig-och-skattefri-individ"
+
+[[variable]]
+native_id = "25.1486.hushall"
+slug = "barnpension-skattepliktig-och-skattefri-hushall"
+
+[[variable]]
+native_id = "25.1486.hushall-vaxelvis-boende"
+slug = "barnpension-skattepliktig-och-skattefri-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.25618.individ"
+slug = "uthyrning-privatbostad-inkl-avdrag-individ"
+
+[[variable]]
+native_id = "25.25618.hushall"
+slug = "uthyrning-privatbostad-inkl-avdrag-hushall"
+
+[[variable]]
+native_id = "25.25618.hushall-vaxelvis-boende"
+slug = "uthyrning-privatbostad-inkl-avdrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22249.individ"
+slug = "ankepension-skapad-individ"
+
+[[variable]]
+native_id = "25.22249.hushall"
+slug = "ankepension-skapad-hushall"
+
+[[variable]]
+native_id = "25.22249.hushall-vaxelvis-boende"
+slug = "ankepension-skapad-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21711.individ"
+slug = "kapitalforlust-brutto-individ"
+
+[[variable]]
+native_id = "25.21711.hushall"
+slug = "kapitalforlust-brutto-hushall"
+
+[[variable]]
+native_id = "25.21711.hushall-vaxelvis-boende"
+slug = "kapitalforlust-brutto-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1615.individ"
+slug = "pensioner-bidrag-exkl-arbetsmarkn-individ"
+
+[[variable]]
+native_id = "25.1615.hushall"
+slug = "pensioner-bidrag-exkl-arbetsmarkn-hushall"
+
+[[variable]]
+native_id = "25.1615.hushall-vaxelvis-boende"
+slug = "pensioner-bidrag-exkl-arbetsmarkn-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1390.individ"
+slug = "aldreforsorjningsstod-individ"
+
+[[variable]]
+native_id = "25.1390.hushall"
+slug = "aldreforsorjningsstod-hushall"
+
+[[variable]]
+native_id = "25.1390.hushall-vaxelvis-boende"
+slug = "aldreforsorjningsstod-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1483.individ"
+slug = "alderspension-individ"
+
+[[variable]]
+native_id = "25.1483.hushall"
+slug = "alderspension-hushall"
+
+[[variable]]
+native_id = "25.1483.hushall-vaxelvis-boende"
+slug = "alderspension-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1078.individ"
+slug = "rantor-utdelningar-exkl-rantebidrag-individ"
+
+[[variable]]
+native_id = "25.1078.hushall"
+slug = "rantor-utdelningar-exkl-rantebidrag-hushall"
+
+[[variable]]
+native_id = "25.1078.hushall-vaxelvis-boende"
+slug = "rantor-utdelningar-exkl-rantebidrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21701.individ"
+slug = "studiemedel-lan-m-m-individ"
+
+[[variable]]
+native_id = "25.21701.hushall"
+slug = "studiemedel-lan-m-m-hushall"
+
+[[variable]]
+native_id = "25.21701.hushall-vaxelvis-boende"
+slug = "studiemedel-lan-m-m-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.26974.individ"
+slug = "inackorderingsbidrag-individ"
+
+[[variable]]
+native_id = "25.26974.hushall"
+slug = "inackorderingsbidrag-hushall"
+
+[[variable]]
+native_id = "25.26974.hushall-vaxelvis-boende"
+slug = "inackorderingsbidrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.30826.individ"
+slug = "bostadstillagg-sarskilt-pensionarer-individ"
+
+[[variable]]
+native_id = "25.30826.hushall"
+slug = "bostadstillagg-sarskilt-pensionarer-hushall"
+
+[[variable]]
+native_id = "25.30826.hushall-vaxelvis-boende"
+slug = "bostadstillagg-sarskilt-pensionarer-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.44792.individ"
+slug = "skatt-utlandsk-individ"
+
+[[variable]]
+native_id = "25.44792.hushall"
+slug = "skatt-utlandsk-hushall"
+
+[[variable]]
+native_id = "25.44792.hushall-vaxelvis-boende"
+slug = "skatt-utlandsk-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.30674.individ"
+slug = "skattefri-pension-pensionstillagg-individ"
+
+[[variable]]
+native_id = "25.30674.hushall"
+slug = "skattefri-pension-pensionstillagg-hushall"
+
+[[variable]]
+native_id = "25.30674.hushall-vaxelvis-boende"
+slug = "skattefri-pension-pensionstillagg-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.44791.individ"
+slug = "pensioner-utlandskt-beskattade-individ"
+
+[[variable]]
+native_id = "25.44791.hushall"
+slug = "pensioner-utlandskt-beskattade-hushall"
+
+[[variable]]
+native_id = "25.44791.hushall-vaxelvis-boende"
+slug = "pensioner-utlandskt-beskattade-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.88.individ"
+slug = "foraldrapenning-skattepliktig-individ"
+
+[[variable]]
+native_id = "25.88.hushall"
+slug = "foraldrapenning-skattepliktig-hushall"
+
+[[variable]]
+native_id = "25.88.hushall-vaxelvis-boende"
+slug = "foraldrapenning-skattepliktig-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1630.individ"
+slug = "totalt-arbetsmarknadsstod-individ"
+
+[[variable]]
+native_id = "25.1630.hushall"
+slug = "totalt-arbetsmarknadsstod-hushall"
+
+[[variable]]
+native_id = "25.1630.hushall-vaxelvis-boende"
+slug = "totalt-arbetsmarknadsstod-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4523.individ"
+slug = "ovriga-negativa-transfereringar-individ"
+
+[[variable]]
+native_id = "25.4523.hushall"
+slug = "ovriga-negativa-transfereringar-hushall"
+
+[[variable]]
+native_id = "25.4523.hushall-vaxelvis-boende"
+slug = "ovriga-negativa-transfereringar-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21878.individ"
+slug = "debiterad-utlandsk-skatt-individ"
+
+[[variable]]
+native_id = "25.21878.hushall"
+slug = "debiterad-utlandsk-skatt-hushall"
+
+[[variable]]
+native_id = "25.21878.hushall-vaxelvis-boende"
+slug = "debiterad-utlandsk-skatt-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1493.individ"
+slug = "efterlevandepension-till-barn-individ"
+
+[[variable]]
+native_id = "25.1493.hushall"
+slug = "efterlevandepension-till-barn-hushall"
+
+[[variable]]
+native_id = "25.1493.hushall-vaxelvis-boende"
+slug = "efterlevandepension-till-barn-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.44462.individ"
+slug = "stipendium-skattefritt-individ"
+
+[[variable]]
+native_id = "25.44462.hushall"
+slug = "stipendium-skattefritt-hushall"
+
+[[variable]]
+native_id = "25.44462.hushall-vaxelvis-boende"
+slug = "stipendium-skattefritt-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4871.individ"
+slug = "presta-individ"
+
+[[variable]]
+native_id = "25.4871.hushall"
+slug = "presta-hushall"
+
+[[variable]]
+native_id = "25.4871.hushall-vaxelvis-boende"
+slug = "presta-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4386.individ"
+slug = "pension-och-livranta-skattefri-individ"
+
+[[variable]]
+native_id = "25.4386.hushall"
+slug = "pension-och-livranta-skattefri-hushall"
+
+[[variable]]
+native_id = "25.4386.hushall-vaxelvis-boende"
+slug = "pension-och-livranta-skattefri-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21861.individ"
+slug = "omstallningspension-skapad-individ"
+
+[[variable]]
+native_id = "25.21861.hushall"
+slug = "omstallningspension-skapad-hushall"
+
+[[variable]]
+native_id = "25.21861.hushall-vaxelvis-boende"
+slug = "omstallningspension-skapad-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.8274.individ"
+slug = "kommunal-inkomstskatt-forvarvsinkomst-individ"
+
+[[variable]]
+native_id = "25.8274.hushall"
+slug = "kommunal-inkomstskatt-forvarvsinkomst-hushall"
+
+[[variable]]
+native_id = "25.8274.hushall-vaxelvis-boende"
+slug = "kommunal-inkomstskatt-forvarvsinkomst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21729.individ"
+slug = "kapitalvinst-brutto-individ"
+
+[[variable]]
+native_id = "25.21729.hushall"
+slug = "kapitalvinst-brutto-hushall"
+
+[[variable]]
+native_id = "25.21729.hushall-vaxelvis-boende"
+slug = "kapitalvinst-brutto-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.45923.individ"
+slug = "inkomstpensionstillagg-individ"
+
+[[variable]]
+native_id = "25.45923.hushall"
+slug = "inkomstpensionstillagg-hushall"
+
+[[variable]]
+native_id = "25.45923.hushall-vaxelvis-boende"
+slug = "inkomstpensionstillagg-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.732.individ"
+slug = "allman-pensionsavgift-individ"
+
+[[variable]]
+native_id = "25.732.hushall"
+slug = "allman-pensionsavgift-hushall"
+
+[[variable]]
+native_id = "25.732.hushall-vaxelvis-boende"
+slug = "allman-pensionsavgift-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.630.individ"
+slug = "underlag-allman-pensionsavgift-individ"
+
+[[variable]]
+native_id = "25.630.hushall"
+slug = "underlag-allman-pensionsavgift-hushall"
+
+[[variable]]
+native_id = "25.630.hushall-vaxelvis-boende"
+slug = "underlag-allman-pensionsavgift-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4874.individ"
+slug = "prestpr-individ"
+
+[[variable]]
+native_id = "25.4874.hushall"
+slug = "prestpr-hushall"
+
+[[variable]]
+native_id = "25.4874.hushall-vaxelvis-boende"
+slug = "prestpr-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.30640.individ"
+slug = "givet-underhallsbidrag-individ"
+
+[[variable]]
+native_id = "25.30640.hushall"
+slug = "givet-underhallsbidrag-hushall"
+
+[[variable]]
+native_id = "25.30640.hushall-vaxelvis-boende"
+slug = "givet-underhallsbidrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1508.individ"
+slug = "garantipension-individ"
+
+[[variable]]
+native_id = "25.1508.hushall"
+slug = "garantipension-hushall"
+
+[[variable]]
+native_id = "25.1508.hushall-vaxelvis-boende"
+slug = "garantipension-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1632.individ"
+slug = "arbetsmarknadsforsakringar-individ"
+
+[[variable]]
+native_id = "25.1632.hushall"
+slug = "arbetsmarknadsforsakringar-hushall"
+
+[[variable]]
+native_id = "25.1632.hushall-vaxelvis-boende"
+slug = "arbetsmarknadsforsakringar-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22241.individ"
+slug = "extra-tillagg-studiemedel-bidrag-individ"
+
+[[variable]]
+native_id = "25.22241.hushall"
+slug = "extra-tillagg-studiemedel-bidrag-hushall"
+
+[[variable]]
+native_id = "25.22241.hushall-vaxelvis-boende"
+slug = "extra-tillagg-studiemedel-bidrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.30639.individ"
+slug = "mottaget-underhallsbidrag-individ"
+
+[[variable]]
+native_id = "25.30639.hushall"
+slug = "mottaget-underhallsbidrag-hushall"
+
+[[variable]]
+native_id = "25.30639.hushall-vaxelvis-boende"
+slug = "mottaget-underhallsbidrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.101.individ"
+slug = "sjuk-och-aktivitetsersattning-individ"
+
+[[variable]]
+native_id = "25.101.hushall"
+slug = "sjuk-och-aktivitetsersattning-hushall"
+
+[[variable]]
+native_id = "25.101.hushall-vaxelvis-boende"
+slug = "sjuk-och-aktivitetsersattning-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.42415.individ"
+slug = "skattefri-ersattning-forsvar-individ"
+
+[[variable]]
+native_id = "25.42415.hushall"
+slug = "skattefri-ersattning-forsvar-hushall"
+
+[[variable]]
+native_id = "25.42415.hushall-vaxelvis-boende"
+slug = "skattefri-ersattning-forsvar-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.2504.individ"
+slug = "frivilliga-pensioner-individ"
+
+[[variable]]
+native_id = "25.2504.hushall"
+slug = "frivilliga-pensioner-hushall"
+
+[[variable]]
+native_id = "25.2504.hushall-vaxelvis-boende"
+slug = "frivilliga-pensioner-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1485.individ"
+slug = "avtalspension-individ"
+
+[[variable]]
+native_id = "25.1485.hushall"
+slug = "avtalspension-hushall"
+
+[[variable]]
+native_id = "25.1485.hushall-vaxelvis-boende"
+slug = "avtalspension-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.23618.individ"
+slug = "forlangd-omstallningspension-summerad-individ"
+
+[[variable]]
+native_id = "25.23618.hushall"
+slug = "forlangd-omstallningspension-summerad-hushall"
+
+[[variable]]
+native_id = "25.23618.hushall-vaxelvis-boende"
+slug = "forlangd-omstallningspension-summerad-hushall-vaxelvis-boende"
