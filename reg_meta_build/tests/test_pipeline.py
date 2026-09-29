@@ -366,6 +366,81 @@ def test_cli_summary_cannot_overwrite_prepared_manifest(
     assert not (tmp_path / "report").exists()
 
 
+def test_check_cli_output_cannot_replace_default_catalog(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta.db import DB_FILENAME
+
+    from reg_meta_build import cli
+
+    db_dir = tmp_path / "active"
+    db_dir.mkdir()
+    active = db_dir / DB_FILENAME
+    previous = active.with_name(active.name + ".prev")
+    active.write_bytes(b"active catalog sentinel")
+    previous.write_bytes(b"previous catalog sentinel")
+    monkeypatch.setattr(cli, "default_db_dir", lambda: db_dir)
+    alias = tmp_path / "catalog-alias.json"
+    alias.symlink_to(active)
+    summary = tmp_path / "summary.json"
+    temporary = summary.with_suffix(".json.tmp")
+    temporary.hardlink_to(active)
+    args = [
+        "check-curation",
+        "--prepared",
+        str(catalog.prepared),
+        "--input-commit",
+        catalog.commit,
+        "--input-manifest-sha256",
+        catalog.digest,
+        "--curation-dir",
+        str(catalog.curation),
+        "--registers",
+        "1",
+        "--report-dir",
+        str(tmp_path / "report"),
+    ]
+    for destination in (active, previous, alias, summary):
+        assert run(["--output", str(destination), *args]) == EXIT_USAGE
+        assert active.read_bytes() == b"active catalog sentinel"
+        assert previous.read_bytes() == b"previous catalog sentinel"
+    assert temporary.read_bytes() == b"active catalog sentinel"
+    assert not summary.exists()
+    assert not (tmp_path / "report").exists()
+
+
+def test_check_cli_output_protects_default_curation_tree(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build import _curation
+
+    monkeypatch.setattr(_curation, "repo_curation_dir", lambda: catalog.curation)
+    curated = catalog.curation / "registers/scb/sample.toml"
+    slug_dir = catalog.curation.parent / "fqid_slugs"
+    slug_dir.mkdir()
+    slug = slug_dir / "keep.toml"
+    slug.write_bytes(b"slug sentinel")
+    original = curated.read_bytes()
+    args = [
+        "check-curation",
+        "--prepared",
+        str(catalog.prepared),
+        "--input-commit",
+        catalog.commit,
+        "--input-manifest-sha256",
+        catalog.digest,
+        "--registers",
+        "1",
+        "--report-dir",
+        str(tmp_path / "report"),
+    ]
+    for destination in (curated, slug):
+        assert run(["--output", str(destination), *args]) == EXIT_USAGE
+    assert curated.read_bytes() == original
+    assert slug.read_bytes() == b"slug sentinel"
+    assert not (tmp_path / "report").exists()
+
+
 def test_diagnostic_and_strict_compile_identically(
     catalog: CatalogFixture, tmp_path: Path, capsys
 ) -> None:

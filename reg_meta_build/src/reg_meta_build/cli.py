@@ -2382,7 +2382,7 @@ def _confined_bundle_output_path(
             )
             database_paths = _database_paths(database)
         else:
-            database_paths = set()
+            database_paths = _database_paths((default_db_dir() / DB_FILENAME).resolve())
         report_paths = {
             resolved_output,
             resolved_output.with_suffix(resolved_output.suffix + ".tmp").resolve(),
