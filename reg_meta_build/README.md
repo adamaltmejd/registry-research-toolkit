@@ -20,6 +20,12 @@ reg-meta-build prepare-input-bundle --help
 reg-meta-build verify-input-bundle --help
 reg-meta-build prepare-sources --help
 
+# During curation edits, check complete selected registers without writing a DB.
+# Catalog dependency, delivery and SQLite checks are not run here.
+reg-meta-build check-curation --prepared /path/to/accepted-prepared \
+  --input-commit EXACT_SHA --input-manifest-sha256 EXACT_SHA256 \
+  --registers 25 --report-dir /path/to/new-local-report --timing
+
 # A diagnostic completes the selected scan but remains nonpublishable (exit 10).
 # Both paths must be new; the active catalog is untouched.
 reg-meta-build build-db --selection /path/to/selection.json \
@@ -30,6 +36,8 @@ reg-meta-build build-db --selection /path/to/selection.json \
 reg-meta-build --db /path/to/output-dir build-db \
   --selection /path/to/selection.json --report-dir /path/to/new-strict-report
 ```
+
+Use a full `build-db` with the accepted inputs for approval after local checks.
 
 `pipeline.PipelineSelection` and `pipeline.ScopeDeclarations` define the
 machine-readable selection contract. Scope files are pinned by SHA-256. Selection

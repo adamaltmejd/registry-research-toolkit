@@ -23,7 +23,11 @@ from reg_meta_build.curation_tree import (
     ClassificationMetadata,
     CuratedClassification,
 )
-from reg_meta_build.pipeline import _classification_references, build_catalog
+from reg_meta_build.pipeline import (
+    _classification_references,
+    build_catalog,
+    check_curation,
+)
 from reg_meta_build.prepared_catalog import prepare_catalog_sources
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_naming import authored_naming_id
@@ -50,6 +54,18 @@ class CatalogFixture:
             output,
             report,
             curation_dir=self.curation,
+            **kwargs,
+        )
+
+    def check(self, report: Path, **kwargs):
+        registers = kwargs.pop("registers", ("1",))
+        return check_curation(
+            self.prepared,
+            self.commit,
+            self.digest,
+            report,
+            curation_dir=self.curation,
+            registers=registers,
             **kwargs,
         )
 
@@ -280,47 +296,86 @@ def test_cli_requires_prepared_pins_and_rejects_selection(
     capsys.readouterr()
     assert run(["--db", str(tmp_path / "db-dir"), *args]) == 0
     assert json.loads(capsys.readouterr().out)["status"] == "complete"
+    check_args = ["check-curation", *args[1:]]
+    check_args[check_args.index(str(tmp_path / "report"))] = str(
+        tmp_path / "check-report"
+    )
+    assert run(check_args) == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["status"] == "curation_check_complete"
+    assert summary["passed"] is True
+    assert summary["publication_ready"] is False
+    assert summary["database"] is None
+    assert summary["checks_not_run"]
+    assert summary["curation_tree_sha256"]
+    assert "counts" in summary and "acknowledged" in summary
+    assert summary["prepared_commit"] == catalog.commit
+    assert summary["prepared_manifest_sha256"] == catalog.digest
+    assert list(tmp_path.rglob("*.db")) == [tmp_path / "db-dir" / "reg_meta.db"]
+    for invalid in (
+        ["--db", str(tmp_path / "not-a-db"), *check_args],
+        [*check_args, "--diagnostic"],
+        [*check_args, "--diagnostic-db-path", str(tmp_path / "bad.db")],
+        check_args[:-2],
+        [*check_args[:-1], "1,"],
+    ):
+        assert run(invalid) == EXIT_USAGE
+        capsys.readouterr()
 
 
+@pytest.mark.parametrize("command", ["build-db", "check-curation"])
 def test_cli_summary_cannot_overwrite_prepared_manifest(
-    catalog: CatalogFixture, tmp_path: Path, capsys
+    catalog: CatalogFixture, tmp_path: Path, capsys, command: str
 ) -> None:
     manifest = catalog.prepared / "manifest.json"
     original = manifest.read_bytes()
-    status = run(
-        [
-            "--output",
-            str(manifest),
-            "--db",
-            str(tmp_path / "db-dir"),
-            "build-db",
-            "--prepared",
-            str(catalog.prepared),
-            "--input-commit",
-            catalog.commit,
-            "--input-manifest-sha256",
-            catalog.digest,
-            "--curation-dir",
-            str(catalog.curation),
-            "--report-dir",
-            str(tmp_path / "report"),
-            "--registers",
-            "1",
-        ]
-    )
-    assert status == EXIT_USAGE
-    assert manifest.read_bytes() == original
+    common = [
+        command,
+        "--prepared",
+        str(catalog.prepared),
+        "--input-commit",
+        catalog.commit,
+        "--input-manifest-sha256",
+        catalog.digest,
+        "--curation-dir",
+        str(catalog.curation),
+        "--report-dir",
+        str(tmp_path / "report"),
+        "--registers",
+        "1",
+    ]
+    prefix = ["--db", str(tmp_path / "db-dir")] if command == "build-db" else []
+    alias = tmp_path / "manifest-alias.json"
+    alias.symlink_to(manifest)
+    for destination in (manifest, alias):
+        assert run(["--output", str(destination), *prefix, *common]) == EXIT_USAGE
+        assert manifest.read_bytes() == original
+        capsys.readouterr()
+    if command == "check-curation":
+        slug_dir = catalog.curation.parent / "fqid_slugs"
+        slug_dir.mkdir()
+        marker = slug_dir / "keep.json"
+        marker.write_text("untouched")
+        assert run(["--output", str(marker), *common]) == EXIT_USAGE
+        slug_alias = tmp_path / "slug-alias"
+        slug_alias.symlink_to(slug_dir, target_is_directory=True)
+        assert run(["--output", str(slug_alias / marker.name), *common]) == EXIT_USAGE
+        assert marker.read_text() == "untouched"
+        capsys.readouterr()
     assert not (tmp_path / "db-dir").exists()
-    capsys.readouterr()
+    assert not (tmp_path / "report").exists()
 
 
 def test_diagnostic_and_strict_compile_identically(
-    catalog: CatalogFixture, tmp_path: Path
+    catalog: CatalogFixture, tmp_path: Path, capsys
 ) -> None:
     register = catalog.curation / "registers" / "scb" / "sample.toml"
     register.write_text(
         register.read_text(encoding="utf-8")
-        + '[[variable]]\nnative_id = "1.999"\nslug = "missing"\n',
+        + '[[variable]]\nnative_id = "1.999"\nslug = "missing"\n'
+        + '[[coding.uncoded]]\nvariable = "1.999"\nvariant = "people"\n'
+        + 'column = "VALUE"\nperiods = [["2020-01-01", "2020-12-31"]]\n'
+        + 'reason = "Reviewed"\nsource = "fixture"\n',
         encoding="utf-8",
     )
     strict = catalog.build(
@@ -348,6 +403,42 @@ def test_diagnostic_and_strict_compile_identically(
     ]
     assert {
         p.name: p.read_bytes() for p in (tmp_path / "strict-decisions").iterdir()
+    } == {p.name: p.read_bytes() for p in (tmp_path / "diagnostic-decisions").iterdir()}
+    assert (
+        run(
+            [
+                "check-curation",
+                "--prepared",
+                str(catalog.prepared),
+                "--input-commit",
+                catalog.commit,
+                "--input-manifest-sha256",
+                catalog.digest,
+                "--curation-dir",
+                str(catalog.curation),
+                "--registers",
+                "1",
+                "--report-dir",
+                str(tmp_path / "check-report"),
+                "--dump-decisions",
+                str(tmp_path / "check-decisions"),
+            ]
+        )
+        == 10
+    )
+    checked = json.loads(capsys.readouterr().out)
+    assert checked["status"] == "curation_check_complete"
+    assert checked["passed"] is False
+    assert checked["counts"]["error"] > 0
+    assert any(
+        "coding.uncoded" in issue.get("case_id", "")
+        for issue in _issues(tmp_path / "check-report")
+    )
+    assert [i["code"] for i in _issues(tmp_path / "check-report")] == [
+        i["code"] for i in _issues(tmp_path / "diagnostic-report")
+    ]
+    assert {
+        p.name: p.read_bytes() for p in (tmp_path / "check-decisions").iterdir()
     } == {p.name: p.read_bytes() for p in (tmp_path / "diagnostic-decisions").iterdir()}
 
 
@@ -377,15 +468,35 @@ def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> Non
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)
 def test_subset_resolves_only_named_scope(
-    catalog: CatalogFixture, tmp_path: Path
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
 ) -> None:
+    from reg_meta_build.source_support import SourceSupportBindings
+
+    observe = SourceSupportBindings.observe_target
+    targets = []
+
+    def record_target(self, target):
+        targets.append(target)
+        return observe(self, target)
+
+    monkeypatch.setattr(SourceSupportBindings, "observe_target", record_target)
     result = catalog.build(tmp_path / "slice.db", tmp_path / "report", registers=("1",))
+    full_support_count = len(targets)
     assert result["counts"]["physical_occurrences"] == 1
     assert result["variables"] == 1
     with sqlite3.connect(tmp_path / "slice.db") as conn:
         assert conn.execute("SELECT COUNT(*) FROM register").fetchone() == (1,)
+    local = catalog.check(tmp_path / "local-report")
+    assert len(targets) == 2 * full_support_count
+    assert full_support_count >= 2
+    assert local["counts"]["physical_occurrences"] == 1
+    assert local["counts"]["scopes"] == 1
+    assert "variables" not in local and "states" not in local
+    assert "skipped_curation" not in local["counts"]
     with pytest.raises(ValueError, match="names no selected scope"):
         catalog.build(tmp_path / "bad.db", tmp_path / "bad-report", registers=("3",))
+    with pytest.raises(ValueError, match="names no selected scope"):
+        catalog.check(tmp_path / "bad-check-report", registers=("3",))
 
 
 @pytest.mark.parametrize("catalog", ["thin_two"], indirect=True)
@@ -556,6 +667,25 @@ def test_outputs_cannot_alias_inputs_or_each_other(
         kwargs["dump_decisions"] = catalog.prepared
     with pytest.raises(ValueError, match="separate|new directory"):
         catalog.build(output, report, **kwargs)
+    if where in {"prepared", "curation", "dump"}:
+        check_report = (
+            catalog.prepared / "report"
+            if where == "prepared"
+            else catalog.curation / "report"
+            if where == "curation"
+            else tmp_path / "check-report"
+        )
+        check_kwargs = {"dump_decisions": catalog.prepared} if where == "dump" else {}
+        with pytest.raises(ValueError, match="separate|new directory"):
+            catalog.check(check_report, **check_kwargs)
+        if where == "curation":
+            alias = tmp_path / "curation-alias"
+            alias.symlink_to(catalog.curation, target_is_directory=True)
+            with pytest.raises(ValueError, match="separate"):
+                catalog.check(alias / "report")
+    elif where == "report":
+        with pytest.raises(ValueError, match="separate|new directory"):
+            catalog.check(report, dump_decisions=report / "decisions")
 
 
 @pytest.mark.parametrize(
@@ -596,23 +726,48 @@ def test_outputs_cannot_overlap_slug_tree(
         catalog.build(output, report, **kwargs)
     assert marker.read_bytes() == b"tracked slug input"
     assert not output.exists()
+    if where.startswith("report") or where == "dump_inside":
+        with pytest.raises(ValueError, match="separate|new directory"):
+            catalog.check(
+                report if where.startswith("report") else outside / "check-report",
+                **(
+                    {"dump_decisions": slug_dir / "decisions"}
+                    if where == "dump_inside"
+                    else {}
+                ),
+            )
+        assert marker.read_bytes() == b"tracked slug input"
 
 
-def test_prepared_pins_are_checked(catalog: CatalogFixture, tmp_path: Path) -> None:
+@pytest.mark.parametrize("local", [False, True])
+def test_prepared_pins_are_checked(
+    catalog: CatalogFixture, tmp_path: Path, local: bool
+) -> None:
     with pytest.raises(ValueError):
-        build_catalog(
-            catalog.prepared,
-            "0" * 40,
-            catalog.digest,
-            tmp_path / "bad.db",
-            tmp_path / "report",
-            curation_dir=catalog.curation,
-            registers=("1",),
-        )
+        if local:
+            check_curation(
+                catalog.prepared,
+                "0" * 40,
+                catalog.digest,
+                tmp_path / "report",
+                curation_dir=catalog.curation,
+                registers=("1",),
+            )
+        else:
+            build_catalog(
+                catalog.prepared,
+                "0" * 40,
+                catalog.digest,
+                tmp_path / "bad.db",
+                tmp_path / "report",
+                curation_dir=catalog.curation,
+                registers=("1",),
+            )
 
 
+@pytest.mark.parametrize("local", [False, True])
 def test_source_occurrence_accounting_cannot_drop_a_record(
-    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, local: bool
 ) -> None:
     from reg_meta_build import pipeline
 
@@ -624,7 +779,10 @@ def test_source_occurrence_accounting_cannot_drop_a_record(
 
     monkeypatch.setattr(pipeline, "resolve_source_scope", drop_occurrence)
     with pytest.raises(ValueError, match="physical source occurrence accounting"):
-        catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
+        if local:
+            catalog.check(tmp_path / "report")
+        else:
+            catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
     assert not (tmp_path / "bad.db").exists()
 
 
@@ -645,8 +803,9 @@ def test_compiled_global_contract_rejects_unknown_field(
     assert not (tmp_path / "bad.db").exists()
 
 
+@pytest.mark.parametrize("local", [False, True])
 def test_compiled_global_contract_revalidates_serialized_nested_field(
-    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, local: bool
 ) -> None:
     from reg_meta_build.curation_compile import CompiledCodebook
 
@@ -656,17 +815,21 @@ def test_compiled_global_contract_revalidates_serialized_nested_field(
 
     def invalid(*args, **kwargs):
         compiled = compile_tree(*args, **kwargs)
-        book = CompiledCodebook("invalid", "invalid", {"broken": ["invalid"]})
+        book = CompiledCodebook("invalid", "invalid", {"broken": ["invalid"]})  # ty: ignore[invalid-argument-type]
         return replace(compiled, fields={**compiled.fields, "classifications": (book,)})
 
     monkeypatch.setattr(pipeline, "compile_curation", invalid)
     with pytest.raises(ValueError, match="classifications.0.metadata.broken"):
-        catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
+        if local:
+            catalog.check(tmp_path / "report")
+        else:
+            catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
     assert not (tmp_path / "bad.db").exists()
 
 
+@pytest.mark.parametrize("local", [False, True])
 def test_compiled_scope_contract_revalidates_serialized_naming(
-    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, local: bool
 ) -> None:
     from reg_meta_build import pipeline
 
@@ -685,7 +848,10 @@ def test_compiled_scope_contract_revalidates_serialized_naming(
 
     monkeypatch.setattr(pipeline, "compile_curation", invalid)
     with pytest.raises(ValueError, match="nonempty exact source key"):
-        catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
+        if local:
+            catalog.check(tmp_path / "report")
+        else:
+            catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
     assert not (tmp_path / "bad.db").exists()
 
 
@@ -1016,10 +1182,67 @@ def test_scoped_build_compiles_full_curation_only_for_selected_scope(
 
     monkeypatch.setattr(pipeline, "compile_curation", record_scopes)
     result = catalog.build(
-        tmp_path / "slice.db", tmp_path / "report", registers=("1",), diagnostic=True
+        tmp_path / "slice.db",
+        tmp_path / "report",
+        registers=("1",),
+        diagnostic=True,
+        dump_decisions=tmp_path / "build-decisions",
     )
     assert result["counts"].get("error", 0) == 0
     assert compiled_registers == [(1,)]
+    for name in (
+        "compile_deferred_naming",
+        "resolve_panel_dependencies",
+        "write_resolved_catalog",
+        "validate_built_db",
+    ):
+        monkeypatch.setattr(
+            pipeline, name, lambda *a, **kw: pytest.fail("catalog tail ran")
+        )
+    checked = catalog.check(
+        tmp_path / "check-report", dump_decisions=tmp_path / "check-decisions"
+    )
+    assert checked["passed"] is True
+    assert compiled_registers == [(1,), (1,)]
+    assert {
+        p.name: p.read_bytes() for p in (tmp_path / "build-decisions").iterdir()
+    } == {p.name: p.read_bytes() for p in (tmp_path / "check-decisions").iterdir()}
+    with gzip.open(tmp_path / "report/events.jsonl.gz", "rb") as stream:
+        full_events = stream.read().splitlines()
+    with gzip.open(tmp_path / "check-report/events.jsonl.gz", "rb") as stream:
+        local_events = stream.read().splitlines()
+    assert full_events[: len(local_events)] == local_events
+
+
+def test_check_curation_keeps_late_classification_diagnostics(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta_build.source_curation import ResolutionDiagnostic
+
+    from reg_meta_build import pipeline
+
+    finalize = pipeline.finalize_classification_bindings
+
+    def late_binding(*args, **kwargs):
+        return (
+            *finalize(*args, **kwargs),
+            ResolutionDiagnostic(
+                code="late_classification_check",
+                severity="error",
+                subject="test",
+                detail="late binding reached",
+            ),
+        )
+
+    monkeypatch.setattr(pipeline, "finalize_classification_bindings", late_binding)
+    result = catalog.check(tmp_path / "report", dump_decisions=tmp_path / "decisions")
+    assert result["status"] == "curation_check_complete"
+    assert result["passed"] is False
+    assert result["counts"]["error"] == 1
+    assert [issue["code"] for issue in _issues(tmp_path / "report")] == [
+        "late_classification_check"
+    ]
+    assert (tmp_path / "decisions/compile-report.json").exists()
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)
@@ -1083,6 +1306,12 @@ def test_undeclared_reference_is_fatal_even_when_register_is_unselected(
                 diagnostic=True,
                 registers=registers,
             )
+    checked = catalog.check(tmp_path / "check-report")
+    assert checked["status"] == "curation_check_complete"
+    assert checked["passed"] is True
+    assert "variable_edge_groups" in checked["checks_not_run"]
+    assert "delivery_coverage" in checked["checks_not_run"]
+    assert "deferred_references" not in checked["counts"]
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)

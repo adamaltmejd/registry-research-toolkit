@@ -144,6 +144,23 @@ class CompiledGlobals(_Model):
     lineage_defaults: tuple[tuple[str, str], ...] = ()
 
 
+# Catalog dependency checks, including those within selected registers, are not
+# reached by local checking. No deferred-reference proof or final skipped_curation
+# accounting follows from a completed local check.
+LOCAL_CHECKS_NOT_RUN = (
+    "panel_dependencies",
+    "variable_edge_groups",
+    "month_groups",
+    "source_events",
+    "metadata_dependencies",
+    "catalog_lineage",
+    "successions",
+    "delivery_coverage",
+    "sqlite_structural_validation",
+    "corpus_validation",
+)
+
+
 def _compiled_scope(
     key: tuple[str, NativeKey | None], compiled: CompiledCuration
 ) -> CompiledScope:
@@ -252,6 +269,58 @@ def build_catalog(
     that exist but were not selected. Its output is never publishable and its
     corpus volume guards do not apply.
     """
+    return _run_pipeline(
+        prepared_path,
+        input_commit,
+        input_manifest_sha256,
+        output,
+        report_dir,
+        diagnostic=diagnostic,
+        registers=registers,
+        curation_dir=curation_dir,
+        dump_decisions=dump_decisions,
+    )
+
+
+def check_curation(
+    prepared_path: Path,
+    input_commit: str,
+    input_manifest_sha256: str,
+    report_dir: Path,
+    *,
+    registers: tuple[str, ...],
+    curation_dir: Path | None = None,
+    dump_decisions: Path | None = None,
+) -> dict[str, object]:
+    """Check complete selected scopes before catalog assembly, without a database."""
+    if not registers or not all(registers):
+        raise ValueError("--registers requires nonempty comma-separated scope names")
+    return _run_pipeline(
+        prepared_path,
+        input_commit,
+        input_manifest_sha256,
+        None,
+        report_dir,
+        diagnostic=True,
+        registers=registers,
+        curation_dir=curation_dir,
+        dump_decisions=dump_decisions,
+    )
+
+
+def _run_pipeline(
+    prepared_path: Path,
+    input_commit: str,
+    input_manifest_sha256: str,
+    output: Path | None,
+    report_dir: Path,
+    *,
+    diagnostic: bool,
+    registers: tuple[str, ...],
+    curation_dir: Path | None,
+    dump_decisions: Path | None,
+) -> dict[str, object]:
+    check = output is None
     if len(input_commit) != 40 or any(
         ch not in "0123456789abcdef" for ch in input_commit
     ):
@@ -263,7 +332,8 @@ def build_catalog(
     started = time.perf_counter()
     publishable = not diagnostic and not registers
     prepared_path = prepared_path.resolve()
-    output, report_dir = output.resolve(), report_dir.resolve()
+    output = output.resolve() if output is not None else None
+    report_dir = report_dir.resolve()
     if curation_dir is None:
         from reg_meta_build._curation import repo_curation_dir
 
@@ -275,13 +345,13 @@ def build_catalog(
         raise ValueError(f"curation directory does not exist: {curation_dir}")
     slug_dir = (curation_dir.parent / "fqid_slugs").resolve()
     dump_decisions = dump_decisions.resolve() if dump_decisions is not None else None
-    output_paths = {output, Path(str(output) + ".prev")}
+    output_paths = {output, Path(str(output) + ".prev")} if output else set()
     protected_dirs = (prepared_path, curation_dir, slug_dir)
     if dump_decisions is not None and (
         dump_decisions.exists()
         or any(
             dump_decisions.is_relative_to(path) or path.is_relative_to(dump_decisions)
-            for path in (*protected_dirs, report_dir, output, *output_paths)
+            for path in (*protected_dirs, report_dir, *output_paths)
         )
     ):
         raise ValueError(
@@ -293,10 +363,14 @@ def build_catalog(
             for path in (*output_paths, report_dir)
             for directory in protected_dirs
         )
-        or (slug_dir.is_dir() and slug_dir.is_relative_to(output.parent))
-        or output.is_relative_to(report_dir)
-        or (not publishable and output.exists())
-        or (output.exists() and not output.is_file())
+        or (
+            output is not None
+            and slug_dir.is_dir()
+            and slug_dir.is_relative_to(output.parent)
+        )
+        or (output is not None and output.is_relative_to(report_dir))
+        or (output is not None and not publishable and output.exists())
+        or (output is not None and output.exists() and not output.is_file())
     ):
         raise ValueError(
             "build outputs must be separate from build inputs and each other"
@@ -375,7 +449,7 @@ def build_catalog(
     selected = CompiledGlobals.model_validate_json(global_json)
     scopes = {key: _compiled_scope(key, compiled) for key in visit}
     unselected_scopes: dict[tuple[str, NativeKey | None], CompiledScope] = {}
-    if registers:
+    if registers and not check:
         outside_keys = scope_keys - visit
         outside = tuple(
             CompiledScope(source=source, register_key=register)
@@ -1033,240 +1107,265 @@ def build_catalog(
                     + "\n",
                     encoding="utf-8",
                 )
-            # A scoped build skips curation whose every register reference lies
-            # outside the selected registers. Elsewhere it defers only a
-            # reference to what exists but was not selected: compiled naming in
-            # the unselected scopes declares those registers, variants and variables,
-            # and the prepared store holds their observed names and native IDs.
-            # Anything else stays the complete build's error.
-            slice_registers = (
-                {key[1] for key in slice_keys if key[0] == "register"}
-                if registers
-                else None
-            )
-            unselected: set[tuple[str, ...]] = set()
-            unselected_names: dict[str, set[str]] = {}
-            if registers:
-                unvisited = scope_keys - visit
-                names = defaultdict(set)
-                for source, rows in coordinates.items():
-                    for register, coordinate, _ in rows:
-                        key = source, None if source in whole_sources else register
-                        if key in unvisited and coordinate.name:
-                            names[register].add(coordinate.name)
-                for key in sorted(unvisited, key=repr):
-                    scope = unselected_scopes[key]
-                    declared = (
-                        declared_dependency_keys(scope.naming, scope.naming_ambiguities)
-                        - slice_keys
-                    )
-                    unselected |= declared
-                    for register, fqid in declared_register_fqids(scope.naming).items():
-                        if ("register", fqid) in declared:
-                            unselected_names.setdefault(fqid, set()).update(
-                                names[register]
-                            )
-                for source in sorted(set(event_sources.values())):
-                    outside = {r for s, r in unvisited if s == source}
-                    if outside:
-                        event_bindings.observe_unselected(
-                            source,
-                            prepared.records.iter_native_ids(
-                                source, None if source in whole_sources else outside
-                            ),
-                        )
-            refs = {
-                fqid: tuple(
-                    SourceRecordRef(source=s, semantic_record_key=k)
-                    for s, k in sorted(items)
-                )
-                for fqid, items in evidence.items()
-            }
-            register_parents = {
-                key: value
-                for (kind, key), value in parents.items()
-                if kind == "register"
-            }
-            variants = tuple(
-                (register_parents[variant_registers[key]], value)
-                for (kind, key), value in parents.items()
-                if kind == "variant"
-            )
-            editions = tuple(
-                value for (kind, key), value in parents.items() if kind == "edition"
-            )
-            panel = resolve_panel_dependencies(
-                tuple(v for v in variables.values() if v is not None),
-                registers=tuple(register_parents.values()),
-                variants=variants,
-                editions=editions,
-                withheld=withheld,
-            )
-            for value in panel.diagnostics:
-                issue(value)
-            edges = resolve_variable_edge_groups(
-                selected.code_label_pairs,
-                panel.variables,
-                foldable_sibling_pairs=tuple(sorted(sibling_pairs)),
-                curated_groups=selected.metadata.variable_groups,
-                evidence=refs,
-                withheld=withheld,
-                unselected=unselected,
-                slice_registers=slice_registers,
-            )
-            months = resolve_month_groups(
-                panel.variables,
-                edge_groups=edges.groups,
-                curated_groups=selected.metadata.variable_groups,
-                evidence=refs,
-            )
-            for value in (*edges.diagnostics, *months.diagnostics):
-                issue(value)
-            metadata = selected.metadata.model_copy(
-                update={
-                    **{
-                        name: getattr(source_metadata, name)
-                        for name in (
-                            "identifiers",
-                            "source_columns",
-                            "source_join_keys",
-                            "timeseries_events",
-                        )
-                    },
-                    "variable_groups": (
-                        *selected.metadata.variable_groups,
-                        *edges.groups,
-                        *months.groups,
-                    ),
-                }
-            )
-            source_events = event_bindings.resolve(metadata)
-            if event_bindings.skipped_events:
-                dropped = compiled.report["_subset"]["dropped"]
-                dropped.extend(
-                    source_event_id(ref) for ref in event_bindings.skipped_events
-                )
-                dropped.sort()
-                if dump_decisions is not None:
-                    (dump_decisions / "compile-report.json").write_text(
-                        json.dumps(
-                            compiled.report,
-                            ensure_ascii=False,
-                            sort_keys=True,
-                            separators=(",", ":"),
-                        )
-                        + "\n",
-                        encoding="utf-8",
-                    )
-            for value in source_events.diagnostics:
-                issue(value)
-            resolved_metadata = resolve_metadata_dependencies(
-                source_events.metadata,
-                panel.variables,
-                registers=panel.registers,
-                variants=panel.variants,
-                classifications=tuple(books.values()),
-                withheld=withheld,
-                unselected=unselected,
-                slice_registers=slice_registers,
-            )
-            for value in resolved_metadata.diagnostics:
-                issue(value)
-            lineage = resolve_catalog_lineage(
-                panel.variables,
-                registers=panel.registers,
-                variants=panel.variants,
-                defaults=_unique_pairs(selected.lineage_defaults, "lineage default"),
-                metadata=resolved_metadata.metadata,
-                evidence=refs,
-                withheld=withheld,
-                unselected=unselected,
-                unselected_names=unselected_names,
-                source_labels={
-                    f"{register.register_info.provider}/{register.register_info.slug}": register.register_info.source_labels
-                    for register in tree.registers
-                    if register.register_info.source_labels
-                },
-                slice_registers=slice_registers,
-            )
-            for value in lineage.diagnostics:
-                issue(value)
-            if registers:
-                counts["skipped_curation"] = sum(
-                    part.skipped
-                    for part in (edges, source_events, resolved_metadata, lineage)
-                )
-            successions = resolve_classification_successions(
-                tuple(books.values()), selected.classification_successions
-            )
-            final_metadata = resolve_variable_successions(
-                lineage.metadata, lineage.variables, successions
-            )
-            # Mandatory in both modes, whatever else the ledger holds: losing
-            # supported delivery is our bug, and no curation error may stand in
-            # for the source outcome that never came. Strict mode raises before
-            # anything is placed. Diagnostic mode records each unexplained
-            # change as an error diagnostic and completes with a nonpublishable
-            # database, so one family's defect no longer hides the rest of the
-            # cycle.
-            for value in check_delivery_coverage(
-                lineage.variables, coverage, withheld=withheld, diagnostic=diagnostic
-            ):
-                issue(value)
-            _emit_timing("pipeline: catalog dependencies", phase_started)
-            build_result.update(
-                {
-                    "status": "blocked" if counts["error"] else "ready",
-                    "publication_ready": publishable and not counts["error"],
-                    "counts": dict(counts),
-                    "acknowledged": dict(sorted(acknowledged.items())),
-                    "variables": len(panel.variables),
-                    "states": sum(len(v.states) for v in panel.variables),
-                    "database": None,
-                    "curation_tree_sha256": curation_hash,
-                }
-            )
-            if registers:
+            if check:
                 build_result.update(
+                    status="curation_check_complete",
+                    passed=not counts["error"],
+                    publication_ready=False,
+                    database=None,
                     registers=sorted(set(registers)),
-                    corpus_validation="not_applicable",
+                    prepared_commit=input_commit,
+                    prepared_manifest_sha256=input_manifest_sha256,
+                    curation_tree_sha256=curation_hash,
+                    counts=dict(counts),
+                    acknowledged=dict(sorted(acknowledged.items())),
+                    checks_not_run=list(LOCAL_CHECKS_NOT_RUN),
                 )
-            if diagnostic or not counts["error"]:
-                phase_started = time.perf_counter()
-                write_resolved_catalog(
-                    lineage.variables,
-                    output,
-                    diagnostic=diagnostic,
-                    scoped=bool(registers),
-                    corpus=publishable,
-                    manifest={
-                        "import_date": import_date,
-                        "prepared_commit": input_commit,
-                        "prepared_manifest_sha256": input_manifest_sha256,
-                        CURATION_TREE_SHA256_KEY: curation_hash,
-                    },
-                    parent_registers=panel.registers,
-                    parent_variants=panel.variants,
-                    editions=panel.editions,
-                    classifications=tuple(books.values()),
-                    classification_successions=successions,
-                    metadata=final_metadata,
+            else:
+                assert output is not None
+                # A scoped build skips curation whose every register reference lies
+                # outside the selected registers. Elsewhere it defers only a
+                # reference to what exists but was not selected: compiled naming in
+                # the unselected scopes declares those registers, variants and variables,
+                # and the prepared store holds their observed names and native IDs.
+                # Anything else stays the complete build's error.
+                slice_registers = (
+                    {key[1] for key in slice_keys if key[0] == "register"}
+                    if registers
+                    else None
                 )
-                build_result.update(
-                    status="diagnostic_complete" if diagnostic else "complete",
-                    database=str(output),
+                unselected: set[tuple[str, ...]] = set()
+                unselected_names: dict[str, set[str]] = {}
+                if registers:
+                    unvisited = scope_keys - visit
+                    names = defaultdict(set)
+                    for source, rows in coordinates.items():
+                        for register, coordinate, _ in rows:
+                            key = source, None if source in whole_sources else register
+                            if key in unvisited and coordinate.name:
+                                names[register].add(coordinate.name)
+                    for key in sorted(unvisited, key=repr):
+                        scope = unselected_scopes[key]
+                        declared = (
+                            declared_dependency_keys(
+                                scope.naming, scope.naming_ambiguities
+                            )
+                            - slice_keys
+                        )
+                        unselected |= declared
+                        for register, fqid in declared_register_fqids(
+                            scope.naming
+                        ).items():
+                            if ("register", fqid) in declared:
+                                unselected_names.setdefault(fqid, set()).update(
+                                    names[register]
+                                )
+                    for source in sorted(set(event_sources.values())):
+                        outside = {r for s, r in unvisited if s == source}
+                        if outside:
+                            event_bindings.observe_unselected(
+                                source,
+                                prepared.records.iter_native_ids(
+                                    source, None if source in whole_sources else outside
+                                ),
+                            )
+                refs = {
+                    fqid: tuple(
+                        SourceRecordRef(source=s, semantic_record_key=k)
+                        for s, k in sorted(items)
+                    )
+                    for fqid, items in evidence.items()
+                }
+                register_parents = {
+                    key: value
+                    for (kind, key), value in parents.items()
+                    if kind == "register"
+                }
+                variants = tuple(
+                    (register_parents[variant_registers[key]], value)
+                    for (kind, key), value in parents.items()
+                    if kind == "variant"
                 )
-                _emit_timing("pipeline: database materialization", phase_started)
-                if diagnostic and not registers:
-                    # Structural validation already passed before placement. Keep
-                    # the unchanged corpus safeguards visible on partial output.
-                    validation = validate_built_db(output, corpus=True)
-                    corpus_report: dict[str, object] = {
-                        "passed": validation.passed,
-                        "failures": validation.failures,
+                editions = tuple(
+                    value for (kind, key), value in parents.items() if kind == "edition"
+                )
+                panel = resolve_panel_dependencies(
+                    tuple(v for v in variables.values() if v is not None),
+                    registers=tuple(register_parents.values()),
+                    variants=variants,
+                    editions=editions,
+                    withheld=withheld,
+                )
+                for value in panel.diagnostics:
+                    issue(value)
+                edges = resolve_variable_edge_groups(
+                    selected.code_label_pairs,
+                    panel.variables,
+                    foldable_sibling_pairs=tuple(sorted(sibling_pairs)),
+                    curated_groups=selected.metadata.variable_groups,
+                    evidence=refs,
+                    withheld=withheld,
+                    unselected=unselected,
+                    slice_registers=slice_registers,
+                )
+                months = resolve_month_groups(
+                    panel.variables,
+                    edge_groups=edges.groups,
+                    curated_groups=selected.metadata.variable_groups,
+                    evidence=refs,
+                )
+                for value in (*edges.diagnostics, *months.diagnostics):
+                    issue(value)
+                metadata = selected.metadata.model_copy(
+                    update={
+                        **{
+                            name: getattr(source_metadata, name)
+                            for name in (
+                                "identifiers",
+                                "source_columns",
+                                "source_join_keys",
+                                "timeseries_events",
+                            )
+                        },
+                        "variable_groups": (
+                            *selected.metadata.variable_groups,
+                            *edges.groups,
+                            *months.groups,
+                        ),
                     }
-                    build_result["corpus_validation"] = corpus_report
-                    event("corpus_validation", corpus_report)
+                )
+                source_events = event_bindings.resolve(metadata)
+                if event_bindings.skipped_events:
+                    dropped = compiled.report["_subset"]["dropped"]
+                    dropped.extend(
+                        source_event_id(ref) for ref in event_bindings.skipped_events
+                    )
+                    dropped.sort()
+                    if dump_decisions is not None:
+                        (dump_decisions / "compile-report.json").write_text(
+                            json.dumps(
+                                compiled.report,
+                                ensure_ascii=False,
+                                sort_keys=True,
+                                separators=(",", ":"),
+                            )
+                            + "\n",
+                            encoding="utf-8",
+                        )
+                for value in source_events.diagnostics:
+                    issue(value)
+                resolved_metadata = resolve_metadata_dependencies(
+                    source_events.metadata,
+                    panel.variables,
+                    registers=panel.registers,
+                    variants=panel.variants,
+                    classifications=tuple(books.values()),
+                    withheld=withheld,
+                    unselected=unselected,
+                    slice_registers=slice_registers,
+                )
+                for value in resolved_metadata.diagnostics:
+                    issue(value)
+                lineage = resolve_catalog_lineage(
+                    panel.variables,
+                    registers=panel.registers,
+                    variants=panel.variants,
+                    defaults=_unique_pairs(
+                        selected.lineage_defaults, "lineage default"
+                    ),
+                    metadata=resolved_metadata.metadata,
+                    evidence=refs,
+                    withheld=withheld,
+                    unselected=unselected,
+                    unselected_names=unselected_names,
+                    source_labels={
+                        f"{register.register_info.provider}/{register.register_info.slug}": register.register_info.source_labels
+                        for register in tree.registers
+                        if register.register_info.source_labels
+                    },
+                    slice_registers=slice_registers,
+                )
+                for value in lineage.diagnostics:
+                    issue(value)
+                if registers:
+                    counts["skipped_curation"] = sum(
+                        part.skipped
+                        for part in (edges, source_events, resolved_metadata, lineage)
+                    )
+                successions = resolve_classification_successions(
+                    tuple(books.values()), selected.classification_successions
+                )
+                final_metadata = resolve_variable_successions(
+                    lineage.metadata, lineage.variables, successions
+                )
+                # Mandatory in both modes, whatever else the ledger holds: losing
+                # supported delivery is our bug, and no curation error may stand in
+                # for the source outcome that never came. Strict mode raises before
+                # anything is placed. Diagnostic mode records each unexplained
+                # change as an error diagnostic and completes with a nonpublishable
+                # database, so one family's defect no longer hides the rest of the
+                # cycle.
+                for value in check_delivery_coverage(
+                    lineage.variables,
+                    coverage,
+                    withheld=withheld,
+                    diagnostic=diagnostic,
+                ):
+                    issue(value)
+                _emit_timing("pipeline: catalog dependencies", phase_started)
+                build_result.update(
+                    {
+                        "status": "blocked" if counts["error"] else "ready",
+                        "publication_ready": publishable and not counts["error"],
+                        "counts": dict(counts),
+                        "acknowledged": dict(sorted(acknowledged.items())),
+                        "variables": len(panel.variables),
+                        "states": sum(len(v.states) for v in panel.variables),
+                        "database": None,
+                        "curation_tree_sha256": curation_hash,
+                    }
+                )
+                if registers:
+                    build_result.update(
+                        registers=sorted(set(registers)),
+                        corpus_validation="not_applicable",
+                    )
+                if diagnostic or not counts["error"]:
+                    phase_started = time.perf_counter()
+                    write_resolved_catalog(
+                        lineage.variables,
+                        output,
+                        diagnostic=diagnostic,
+                        scoped=bool(registers),
+                        corpus=publishable,
+                        manifest={
+                            "import_date": import_date,
+                            "prepared_commit": input_commit,
+                            "prepared_manifest_sha256": input_manifest_sha256,
+                            CURATION_TREE_SHA256_KEY: curation_hash,
+                        },
+                        parent_registers=panel.registers,
+                        parent_variants=panel.variants,
+                        editions=panel.editions,
+                        classifications=tuple(books.values()),
+                        classification_successions=successions,
+                        metadata=final_metadata,
+                    )
+                    build_result.update(
+                        status="diagnostic_complete" if diagnostic else "complete",
+                        database=str(output),
+                    )
+                    _emit_timing("pipeline: database materialization", phase_started)
+                    if diagnostic and not registers:
+                        # Structural validation already passed before placement. Keep
+                        # the unchanged corpus safeguards visible on partial output.
+                        validation = validate_built_db(output, corpus=True)
+                        corpus_report: dict[str, object] = {
+                            "passed": validation.passed,
+                            "failures": validation.failures,
+                        }
+                        build_result["corpus_validation"] = corpus_report
+                        event("corpus_validation", corpus_report)
         except Exception as exc:
             if build_result.get("database"):
                 raise

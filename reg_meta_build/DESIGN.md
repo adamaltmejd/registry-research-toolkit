@@ -775,6 +775,15 @@ corpus-wide. The scoped output is create-only and marked incomplete and nonpubli
 in both modes. The summary records the register list, `publication_ready` false and
 `corpus_validation` `not_applicable`; structural validation still runs.
 
+`check-curation --registers ...` is local editing feedback for complete selected
+register scopes. It shares prepared-input verification, full curation-tree validation,
+support and source resolution with `build-db`, then stops after occurrence accounting,
+late coding/classification checks and decision dumps. The source-linked report marks
+catalog dependencies (including checks within selected registers), final delivery
+coverage, SQLite structural validation and corpus validation as not run. It makes no
+deferred-reference proof or final `skipped_curation` accounting and writes no database.
+The full `build-db` remains the approval proof.
+
 Publication uses staged output and atomic replacement, with the previous generation
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call
 occurs during a build.
@@ -820,6 +829,7 @@ reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-man
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--curation-dir DIR]
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
 reg-meta-build --db NEW_DIR build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --registers SPEC[,SPEC...]
+reg-meta-build check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC[,SPEC...] --report-dir NEW_DIR
 reg-meta-build inspect-source-records --input-bundle DIR ...
 reg-meta-build extend-db --base-db DB --providers-dir DIR --steward NAME ...
 reg-meta-build build-docs ...

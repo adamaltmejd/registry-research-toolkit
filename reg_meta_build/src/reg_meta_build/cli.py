@@ -128,6 +128,39 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 
 
+def _add_pipeline_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--prepared", required=True, help="Accepted prepared catalog directory."
+    )
+    parser.add_argument(
+        "--input-commit", required=True, help="Accepted prepared input commit."
+    )
+    parser.add_argument(
+        "--input-manifest-sha256",
+        required=True,
+        help="Accepted prepared manifest SHA-256.",
+    )
+    parser.add_argument(
+        "--curation-dir",
+        help="Tracked curation directory (defaults to this checkout's tree).",
+    )
+    parser.add_argument(
+        "--dump-decisions",
+        metavar="DIR",
+        help="Write canonical compiled declarations and per-register compile report.",
+    )
+    parser.add_argument(
+        "--report-dir",
+        required=True,
+        help="New directory for structured build issues and source accounting.",
+    )
+    parser.add_argument(
+        "--timing",
+        action="store_true",
+        help="Emit phase and source-scope durations to stderr.",
+    )
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = NoRepeatParser(
         prog="reg-meta-build",
@@ -178,31 +211,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "explicit --db DIR). Prepare or update sources with prepare-sources."
         ),
     )
-    build_p.add_argument(
-        "--prepared", required=True, help="Accepted prepared catalog directory."
-    )
-    build_p.add_argument(
-        "--input-commit", required=True, help="Accepted prepared input commit."
-    )
-    build_p.add_argument(
-        "--input-manifest-sha256",
-        required=True,
-        help="Accepted prepared manifest SHA-256.",
-    )
-    build_p.add_argument(
-        "--curation-dir",
-        help="Tracked curation directory (defaults to this checkout's tree).",
-    )
-    build_p.add_argument(
-        "--dump-decisions",
-        metavar="DIR",
-        help="Write canonical compiled declarations and per-register compile report.",
-    )
-    build_p.add_argument(
-        "--report-dir",
-        required=True,
-        help="New directory for structured build issues and source accounting.",
-    )
+    _add_pipeline_arguments(build_p)
     build_p.add_argument(
         "--diagnostic",
         action="store_true",
@@ -225,10 +234,24 @@ def _build_parser() -> argparse.ArgumentParser:
             "warnings."
         ),
     )
-    build_p.add_argument(
-        "--timing",
-        action="store_true",
-        help="Emit phase and source-scope durations to stderr.",
+
+    check_p = sub.add_parser(
+        "check-curation",
+        help="Check selected curation before catalog assembly without writing a database.",
+        description=(
+            "Resolve complete selected register scopes and write source-linked local "
+            "curation feedback. Catalog checks are not run, including panel, edge and "
+            "month groups, source events, metadata, lineage, successions, final delivery "
+            "coverage, SQLite structural validation and corpus validation. These checks "
+            "may also concern selected registers. Use a full build-db for approval."
+        ),
+    )
+    _add_pipeline_arguments(check_p)
+    check_p.add_argument(
+        "--registers",
+        required=True,
+        metavar="SPEC[,SPEC...]",
+        help="Complete register scopes to check; uses build-db selector syntax.",
     )
 
     prepare_sources_p = sub.add_parser(
@@ -999,6 +1022,49 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     return result, EXIT_CONFIG if result[
         "status"
     ] == "blocked" or args.diagnostic else 0
+
+
+def _cmd_check_curation(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .pipeline import check_curation
+
+    if args.timing:
+        os.environ["REG_META_BUILD_TIMING"] = "1"
+    if args.db is not None:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_options_invalid",
+            error_class="usage",
+            message="check-curation accepts no database destination, including --db.",
+            remediation="Omit --db; use --report-dir for the local check report.",
+        )
+    registers = tuple(args.registers.split(","))
+    if not all(registers):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_options_invalid",
+            error_class="usage",
+            message="--registers needs nonempty comma-separated scope names.",
+            remediation="Name each complete register scope once between commas.",
+        )
+    try:
+        result = check_curation(
+            Path(args.prepared),
+            args.input_commit,
+            args.input_manifest_sha256,
+            Path(args.report_dir),
+            registers=registers,
+            curation_dir=Path(args.curation_dir) if args.curation_dir else None,
+            dump_decisions=Path(args.dump_decisions) if args.dump_decisions else None,
+        )
+    except (ValueError, OSError, KeyError) as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="pipeline_build_failed",
+            error_class="configuration",
+            message=str(exc),
+            remediation="Repair the selected declarations or implementation; inspect the report directory if source resolution started.",
+        ) from exc
+    return result, 0 if result["passed"] else EXIT_CONFIG
 
 
 def _cmd_prepare_sources(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -2127,6 +2193,7 @@ COMMAND_DISPATCH: dict[
     str, Callable[[argparse.Namespace], tuple[dict[str, Any], int]]
 ] = {
     "build-db": _cmd_build_db,
+    "check-curation": _cmd_check_curation,
     "prepare-sources": _cmd_prepare_sources,
     "prepare-input-bundle": _cmd_prepare_input_bundle,
     "verify-input-bundle": _cmd_verify_input_bundle,
@@ -2160,6 +2227,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
         "[--registers SPEC[,SPEC...]] [--curation-dir DIR] [--dump-decisions DIR]",
         "Build from prepared sources and common curation; strict publication is the default.",
+    ),
+    (
+        "check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC[,SPEC...] --report-dir DIR",
+        "Check selected curation locally; catalog checks are not run. Use build-db for approval.",
     ),
     (
         "prepare-input-bundle --input-dir DIR --scb-snapshot DIR ...",
@@ -2278,12 +2349,10 @@ def _confined_bundle_output_path(
             message="CLI JSON --output must be outside the prepared source artifact.",
             remediation="Choose a separate summary path or use stdout.",
         )
-    if args.command == "build-db" and (
-        prepared_path := getattr(args, "prepared", None)
-    ):
+    if args.command in {"build-db", "check-curation"} and args.prepared:
         from .prepared_catalog import prepared_catalog_paths
 
-        prepared = Path(prepared_path).expanduser().resolve()
+        prepared = Path(args.prepared).expanduser().resolve()
         try:
             protected = set(prepared_catalog_paths(prepared))
         except ValueError, OSError:
@@ -2299,15 +2368,21 @@ def _confined_bundle_output_path(
         )
         if curation_dir is not None:
             directories.add(curation_dir.resolve())
+            if args.command == "check-curation":
+                directories.add((curation_dir.parent / "fqid_slugs").resolve())
         if args.dump_decisions:
             directories.add(Path(args.dump_decisions).expanduser().resolve())
         if args.report_dir:
             directories.add(Path(args.report_dir).expanduser().resolve())
-        database = (
-            Path(args.diagnostic_db_path).expanduser().resolve()
-            if args.diagnostic_db_path
-            else (Path(args.db or default_db_dir()) / DB_FILENAME).resolve()
-        )
+        if args.command == "build-db":
+            database = (
+                Path(args.diagnostic_db_path).expanduser().resolve()
+                if args.diagnostic_db_path
+                else (Path(args.db or default_db_dir()) / DB_FILENAME).resolve()
+            )
+            database_paths = _database_paths(database)
+        else:
+            database_paths = set()
         report_paths = {
             resolved_output,
             resolved_output.with_suffix(resolved_output.suffix + ".tmp").resolve(),
@@ -2319,7 +2394,7 @@ def _confined_bundle_output_path(
                 for path in report_paths
                 for directory in directories
             )
-            or _paths_overlap(report_paths, protected | _database_paths(database))
+            or _paths_overlap(report_paths, protected | database_paths)
         ):
             raise RegMetaError(
                 exit_code=EXIT_USAGE,
