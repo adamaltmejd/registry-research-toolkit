@@ -21,7 +21,5 @@ sentinel_codes = [
 value_set_labels = [
   "Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter",
   "Svensk standard för näringsgrensindelning, brancher SNI 92",
-  "SNI 92, begränsad nivå",
-  "SNI 92, grov nivå",
   "SNI, 92, detaljgrupp",
 ]

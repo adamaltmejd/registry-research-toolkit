@@ -799,6 +799,13 @@ def _synthetic_label_claim(setup, *, label: str, code: str):
     [
         ("SNI 2002, begränsad nivå", "01"),
         ("SNI 2002, begränsad nivå", "42"),
+        # SNI 92 reporting groups: limited (42 groups) and coarse (10 groups).
+        ("SNI 92, begränsad nivå", "42"),
+        ("SNI 92, begränsad nivå", "70"),  # RAMS 'Okänd värde' (missing)
+        ("SNI 92, grov nivå", "03"),
+        ("SNI 92, grov nivå", "00000"),  # coarse 'Uppgift saknas' (missing)
+        # SNI 2002 coarse reporting groups (10 groups).
+        ("SNI 2002, grov nivå", "02"),
         ('SNI 2007, grov nivå - "populärversion"', "G01"),
         ('SNI 2007, grov nivå - "populärversion"', "G99"),
         ('SNI 2007, utökad nivå - "populärversion"', "U01"),
@@ -813,6 +820,7 @@ def test_grouped_sni_reporting_labels_are_not_bound_to_detailed_books(label, cod
         (),
         coding=coding,
         classifications={
+            "sni92": _repo_book("SNI92", "sni92.csv"),
             "sni2002": _repo_book("SNI2002", "sni2002.csv"),
             "sni2007": _repo_book("SNI2007", "sni2007.csv"),
         },

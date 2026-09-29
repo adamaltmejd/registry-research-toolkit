@@ -27,6 +27,5 @@ sentinel_codes = [
 value_set_labels = [
   "Standard för svensk näringsgrensindelning, 2002 Branscher",
   "Standard för svensk näringsgrensindelning, 2002, Aktiviteter",
-  "SNI 2002, grov nivå",
   "SNI 2002, Aktiviteter, alternativ",
 ]
