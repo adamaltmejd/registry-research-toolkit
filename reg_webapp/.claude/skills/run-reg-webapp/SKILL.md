@@ -85,21 +85,8 @@ alone satisfies it), `--viewport WxH` (repeatable). Each viewport × route is sh
 non-desktop shots get a `-<label>` suffix (e.g. `_catalog_scb_lisa-mobile.png`,
 `…-wide.png`, `…-414x896.png`) so they don't clobber the desktop shot.
 
-**Inside a Yard lane.** The same commands work unchanged in the `.yard/Dockerfile` image
-under the gates' `env -i` environment (no system `python3`, `HOME` wherever the runner
-puts it): free ports come from this checkout's `.venv/bin/python`, and the driver honors
-`PLAYWRIGHT_BROWSERS_PATH`, defaulting to the image's baked `/opt/pw-browsers` when it
-is unset. Chromium is launched up a ladder — `sandboxed` (Chromium's own sandbox on),
-then `no-sandbox` multi-process (a container running as a uid with no user-namespace
-grant for the sandbox helper), then `single-process` (a sandboxed agent shell, issue
-#1049) — and stderr names the rung that rendered, e.g.
-`driver: chromium launched (no-sandbox)`, which is the one a lane container gets. Quote
-that line as evidence. A lane must provision first the way the gates do (offline
-`uv sync`, `cp -a /opt/frontend/node_modules reg_webapp/frontend/`).
-
-**Project flows (`flows`) — what the `project-flows`, `catalog-flows` and
-`replace-flows` yard gates run.** One command drives the whole project evidence set:
-eight scenarios — an empty project the backend blocks, an order request that fails in
+**Project flows (`flows`).** One command drives the whole project evidence set: eight
+scenarios — an empty project the backend blocks, an order request that fails in
 transport and is retried, a validation request that fails and is retried, a draft
 authored from a catalog leaf (picked, reloaded, recovered, then extended by a further
 pick on a cold catalog entry), a pick made on that leaf with no period chosen (refused,
@@ -136,21 +123,7 @@ Naming scenarios after the output directory runs just those —
 `dev.sh flows <dir> blocked-order order-retry validation-retry`,
 `dev.sh flows <dir> catalog-draft catalog-period-required project-source-period catalog-period-focus`,
 or `dev.sh flows <dir> replace-confirm`. The bare form above runs all eight and is the
-local verification invocation; the names exist for the gates.
-
-In yard this is **three** gates (`.yard/config.toml`, all selected by the `ui`
-workflow), each handed `$YARD_ARTIFACT_DIR` as its output directory: `project-flows`
-runs the three `/project` error+retry scenarios and declares their 16 filenames,
-`catalog-flows` runs the two catalog ones and declares their 16, and `replace-flows`
-runs the deliberate-replacement one and declares its 8. The split is an artifact-list
-limit, not a distinction of concern — a gate declares at most 16 filenames and the six
-gated scenarios write 40 — and each gate names its own scenarios so none runs another's
-cases. `project-source-period` and `catalog-period-focus` have no gate yet: run them
-locally and read their 24 PNGs from the `/tmp` directory you name. Unlike the ephemeral
-`/tmp` captures above, these are **retained**: `yard lane show <lane>` prints the
-artifact paths for the execution — they outlive the container and view cleanup, so open
-the PNGs there and judge them against `reg_webapp/frontend/DESIGN.md`. The gate log
-carries the rest (route, scenario, viewport, request counts, candidate HEAD).
+local verification invocation; the names allow focused verification.
 
 **Deterministic UI verification (`--fixture-db`) — the default.** Pass `--fixture-db`
 before the mode and `dev.sh` serves a *synthetic* catalog: it runs

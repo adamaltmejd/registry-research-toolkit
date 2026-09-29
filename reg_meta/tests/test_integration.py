@@ -41,7 +41,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 # Both external images below carry a readable exact tag PLUS its immutable
 # multi-arch manifest digest, matching the workspace baseline
-# (reg_webapp/Dockerfile, .yard/Dockerfile). Floating `python:3.14-slim` /
+# (reg_webapp/Dockerfile). Floating `python:3.14-slim` /
 # `uv:latest` made this test drift with whatever uv shipped that week, which is
 # how uv's rejection of the workspace source (see INSTALL_STEP's `registry`
 # note) landed as a surprise failure; bump both halves deliberately, with the

@@ -19,11 +19,9 @@ versions.
 
 ## Direct execution and dependency handoff
 
-Run this workflow directly in a task-owned worktree, without a Yard ticket or lane.
-Before advancing main, follow the shared [manual integration
-handoff](../../../.yard/OPERATOR.md#manual-integration). Keep its coordinated
-integration window through the sequential release pushes; Yard pause alone does not
-quiesce existing lanes.
+Run this workflow in a task-owned worktree. Coordinate changes to main so only one
+integration advances it at a time, including the sequential release pushes. Manual PRs
+require green CI and the maintainer's review before merge.
 
 Start from the verified source revision. When a dependency upgrade was also requested,
 [upgrade-deps](../upgrade-deps/SKILL.md) owns that upgrade and its compatibility fixes

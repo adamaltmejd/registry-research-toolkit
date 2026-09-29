@@ -1,6 +1,6 @@
 # Markdown formatter + linter (replaces markdownlint-cli2). Run via
 # `uvx --from panache-cli==3.9.0 panache` — pinned because uvx otherwise grabs
-# latest, drifting the local run from CI and the offline Yard image. A bump must
+# latest, drifting the local run from CI. A bump must
 # move every home: `rg 'panache-cli=='`.
 # gfm flavor uniformly: GitHub-rendered hand-written docs and the generated LISA docs both
 # use standard markdown links (the parser emits [X](X.md), not Obsidian [[wiki-links]]).
@@ -8,17 +8,10 @@
 flavor = "gfm"
 
 # _raw is untracked marker output; CLAUDE.md/AGENTS.md are agent config, not rendered docs.
-# The generated Yard routine and its Claude aliases retain upstream bytes for drift checks.
 extend-exclude = [
   "reg_meta_build/docs/_raw/",
   "CLAUDE.md",
   "AGENTS.md",
-  ".agents/skills/yard-operator/SKILL.md",
-  ".agents/skills/yard-file/SKILL.md",
-  ".agents/skills/yard-drive/SKILL.md",
-  ".claude/skills/yard-operator/SKILL.md",
-  ".claude/skills/yard-file/SKILL.md",
-  ".claude/skills/yard-drive/SKILL.md",
 ]
 
 [extensions]

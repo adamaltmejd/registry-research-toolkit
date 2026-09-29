@@ -8,10 +8,8 @@ impossible — the skills in these trees that are still copies have already drif
 
 Two link directions exist:
 
-- `yard init` scaffolds the generated Yard routine (`yard-operator`, `yard-file`,
-  `yard-drive`) under `.agents/skills/`, so `.claude/skills/<name>` is the alias —
-  `.claude/skills/<name>` → `../../.agents/skills/<name>`. The hand-authored
-  `upgrade-deps` maintenance skill uses that same direction.
+- The hand-authored `upgrade-deps` maintenance skill lives under `.agents/skills/`,
+  so `.claude/skills/upgrade-deps` aliases `../../.agents/skills/upgrade-deps`.
 - The specialized design skills are hand-authored under `.claude/skills/`, so
   `.agents/skills/<name>` is the alias — `.agents/skills/<name>` → `../../.claude/skills/<name>`.
 
@@ -29,14 +27,11 @@ import pytest
 
 _ROOT = Path(__file__).resolve().parents[2]
 # skill name -> (canonical catalog, alias catalog). The specialized design skills are
-# hand-authored under `.claude/skills/`; the generated Yard routine is scaffolded under
-# `.agents/skills/`. Either way, the alias catalog holds only the symlink.
+# hand-authored under `.claude/skills/`; upgrade-deps lives under `.agents/skills/`.
+# Either way, the alias catalog holds only the symlink.
 _SKILLS = {
     "reg-webapp-frontend-design": (".claude", ".agents"),
     "reg-webapp-design-reviewer": (".claude", ".agents"),
-    "yard-operator": (".agents", ".claude"),
-    "yard-file": (".agents", ".claude"),
-    "yard-drive": (".agents", ".claude"),
     "upgrade-deps": (".agents", ".claude"),
 }
 

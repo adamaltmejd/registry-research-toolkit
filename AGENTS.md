@@ -176,8 +176,8 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 
 # Issue tracker
 
-GitHub Issues is the **idea archive, not a build queue** — Yard (below) is where work
-gets built. Before filing, **search open AND closed issues**
+GitHub Issues is the **idea archive, not a build queue**. Before filing,
+**search open AND closed issues**
 (`gh issue list --state all --search "<keywords>"`) for an existing match: extend or
 comment on it rather than opening a duplicate.
 
@@ -199,13 +199,13 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a
   pre-commit hook fails, fix the underlying issue rather than bypassing.
-- Yard (below) is the product-development pathway. Dependency maintenance uses
-  [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md) directly, including necessary
-  compatibility fixes. Releases use [release](.agents/skills/release/SKILL.md) directly;
-  real-seed `build-db` verification and deploy/infra are also manual exceptions. A
-  manual PR needs green CI and the maintainer's own review before it merges. Follow the
-  [manual integration handoff](.yard/OPERATOR.md#manual-integration) to keep main and
-  Yard canonical aligned.
+- Develop on an isolated branch or worktree. A PR needs green CI and the maintainer's
+  review before it merges. Coordinate concurrent work and keep main to a single write
+  path.
+- Dependency maintenance uses
+  [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md), releases use
+  [release](.agents/skills/release/SKILL.md), and real-seed verification uses
+  [build-db](.agents/skills/build-db/SKILL.md).
 
 # Layout
 
@@ -214,35 +214,3 @@ lives in `reg_meta/DESIGN.md`; per-provider source-delivery shapes in
 `reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph,
 repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see
 `REFACTOR_SPEC.md`.
-
-# Yard
-
-Development runs through [Switchyard](https://github.com/adamaltmejd/switchyard)
-(`yard`): tickets, isolated lanes, review, gates, operator approval. Yard is built to be
-driven by an agent operator, and **the agent working this repo is that operator** — when
-driving the board (filing tickets, answering attention items, approving/rejecting
-candidates), load the `yard-operator` skill (`/yard-operator` in Claude Code,
-`$yard-operator` in Codex) and read [.yard/OPERATOR.md](.yard/OPERATOR.md) before
-acting. `yard-operator` is the entry to two skills it loads in turn: `yard-file` for
-filing and admitting work, `yard-drive` for answering the board. The project policy
-takes precedence over the generic routine. Keep
-`.agents/skills/{yard-operator,yard-file,yard-drive}/SKILL.md` exactly as `yard init`
-generates them; put local rules and temporary upstream corrections in
-`.yard/OPERATOR.md` instead. `.claude/skills/{yard-operator,yard-file,yard-drive}` are
-relative symlinks to the generated skill directories, so both catalogs serve one
-routine. Project config is `.yard/config.toml`; its gates mirror
-`.github/workflows/ci.yml`.
-
-**Yard is the primary product-development pathway.** New product work runs as Yard
-tickets; the manual exceptions above use their direct workflows. Dependency upgrades and
-releases do not need a Yard ticket. Keep main to a single write path: Yard lands on its
-local canonical main, and an uncoordinated second writer produces diverged heads that
-`yard sync` will refuse.
-
-**Dogfooding**: Yard is the maintainer's own project under active development, and this
-repo is its testbed. While operating it, log in `.yard/DOGFOOD.md` how Yard behaves in
-practice — serious problems, but also papercuts: inconsistencies, unclear output, extra
-steps, and anything that wastes time or tokens. The log holds open items only: delete an
-entry once its upstream report is closed (fixed in the running Yard version, with the
-retest result on the issue, or declined), and delete an unfiled observation once it is
-filed or judged not worth filing. Git history keeps the deleted text.

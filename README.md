@@ -79,12 +79,10 @@ See the [reg_meta README](reg_meta/README.md) for details.
 
 ## Development
 
-Development runs through [Switchyard](https://github.com/adamaltmejd/switchyard)
-(`yard`): tickets, isolated lanes, review, gates, operator approval. The gates are
-defined in [`.yard/config.toml`](.yard/config.toml) and run the lint and test commands
-listed in [`CLAUDE.md`](CLAUDE.md). For the operator contract, see the "Yard" section of
-[`CLAUDE.md`](CLAUDE.md) and
-[`.claude/skills/yard-operator/SKILL.md`](.claude/skills/yard-operator/SKILL.md).
+Use isolated branches and reviewed pull requests. Run the relevant lint and test
+commands in [AGENTS.md](AGENTS.md); pull requests require green CI and the maintainer's
+review before merge. Coordinate changes to main so only one integration advances it at a
+time.
 
 ## License
 

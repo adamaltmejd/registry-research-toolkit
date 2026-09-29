@@ -85,8 +85,8 @@ jobs:
       # The frontend bins (biome, svelte-check, vitest, vite, openapi-typescript)
       # are `#!/usr/bin/env node` launchers, so bun does not decide the runtime
       # they get: without this step the gates run on whatever node the runner
-      # happens to ship, and stop exercising the one `.yard/Dockerfile` bakes.
-      # Pinned to that exact version — bump both together.
+      # happens to ship, and stop exercising the one production builds use.
+      # Pinned to reg_webapp/Dockerfile's version — bump both together.
       - uses: actions/setup-node@v7.0.0
         with:
           node-version: "26.8.1"

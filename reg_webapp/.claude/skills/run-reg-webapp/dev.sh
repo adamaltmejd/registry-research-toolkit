@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Run the reg_webapp dev servers on auto-selected FREE ports — works in any
-# checkout (main, a git worktree, a Yard lane container) with no port
+# checkout (main, a git worktree, a container) with no port
 # collisions. Picks a free backend and frontend port, points the Vite /api proxy
 # at the backend via REG_WEBAPP_BACKEND_URL, and starts both from the .venv of
 # THIS SCRIPT's own checkout — resolved from this file's path, never from the
@@ -20,10 +20,8 @@
 #                          /project card's source-period edit and the period
 #                          card's keyboard focus, at four viewports), tear down,
 #                          exit with the driver's status. The PNGs land in
-#                          <out-dir> — each yard gate passes it
-#                          $YARD_ARTIFACT_DIR and names the scenarios it retains
-#                          the PNGs for; no names runs all eight, which is the
-#                          local verification invocation.
+#                          <out-dir>. Named scenarios run only those cases;
+#                          no names runs all eight.
 #   dev.sh shot [viewport...] <route>...
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive

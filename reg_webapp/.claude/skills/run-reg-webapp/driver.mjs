@@ -13,7 +13,7 @@
 //   shot <url-path>     open a path (e.g. /catalog/scb/lisa) and screenshot it
 //   eval <url-path> <js> open a path, evaluate JS in the page, print the result
 //   flows <out-dir> [scenario...]
-//                       the project gates: eight scenarios (three /project
+//                       the project flows: eight scenarios (three /project
 //                       error+retry, four catalog, one deliberate replacement)
 //                       × four viewports, each in a fresh context, PNGs →
 //                       <out-dir>. Named scenarios run just those; no names
@@ -21,8 +21,8 @@
 //
 // smoke/shot screenshots land in $REG_WEBAPP_SHOTS — dev.sh sets it to the one
 // directory that invocation owns, and a direct run gets a fresh one under /tmp;
-// `flows` writes only into its explicit <out-dir> (the gate passes
-// $YARD_ARTIFACT_DIR). The servers must already be running on whichever free
+// `flows` writes only into its explicit <out-dir>. The servers must already
+// be running on whichever free
 // ports dev.sh picked, with REG_WEBAPP_DEV_URL pointing here — see SKILL.md.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -30,7 +30,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 // Where playwright looks for its browsers. An explicit PLAYWRIGHT_BROWSERS_PATH
-// always wins; inside the lane image Chromium is baked at /opt/pw-browsers,
+// always wins; inside a prepared container Chromium is baked at /opt/pw-browsers,
 // outside any HOME the run may have been given, so default to it when it exists.
 // Set BEFORE requiring playwright — the registry reads this at import time.
 if (!process.env.PLAYWRIGHT_BROWSERS_PATH && existsSync("/opt/pw-browsers")) {
@@ -72,12 +72,10 @@ const viewport = resolveViewport(process.env.REG_WEBAPP_VIEWPORT);
 
 const [cmd = "smoke", ...rest] = process.argv.slice(2);
 
-// Where the images go. `flows` writes ONLY into the directory it is handed (the
-// gate hands it $YARD_ARTIFACT_DIR, whose exact filenames are a declared
-// contract), so an absent argument is an error rather than a silent fallback.
+// `flows` requires an explicit output directory so screenshots have a known home.
 const outDir = cmd === "flows" ? rest[0] : null;
 if (cmd === "flows" && !outDir) {
-  throw new Error("flows: needs an output directory, e.g. flows $YARD_ARTIFACT_DIR");
+  throw new Error("flows: needs an output directory, e.g. flows /tmp/project-flows");
 }
 // Scenario names after the out-dir, empty for "all of them" (see the dispatch).
 const selection = cmd === "flows" ? rest.slice(1) : [];
@@ -96,7 +94,7 @@ if (SHOTS) mkdirSync(SHOTS, { recursive: true });
 // top two would be the same launch under two names.
 //   1. sandboxed — an ordinary multi-process launch with Chromium's own sandbox on:
 //      what a real browser does, so it is what we try first.
-//   2. no-sandbox — a Linux CONTAINER (the Yard lane image) runs as a uid with no
+//   2. no-sandbox — a Linux CONTAINER runs as a uid with no
 //      user-namespace grant, so the sandbox helper cannot start; multi-process
 //      Chromium is otherwise healthy there, so ONLY the sandbox is dropped.
 //   3. single-process — a sandboxed agent SHELL (codex `-s workspace-write`
@@ -193,7 +191,7 @@ function check(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-// ── `flows`: the project error/retry + catalog gates ────────────────────────
+// ── `flows`: the project error/retry + catalog flows ────────────────────────
 //
 // Eight scenarios × four viewports = 32 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
@@ -202,15 +200,8 @@ function check(condition, message) {
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 64 PNGs. 40 of them are artifact contracts declared in
-// .yard/config.toml, split across gates because a yard gate declares at most 16
-// filenames: `project-flows` names the three /project error+retry scenarios (16
-// PNGs), `catalog-flows` two catalog ones (16) and `replace-flows` the
-// deliberate-replacement one (8). The remaining 24 are `project-source-period`
-// (12) and `catalog-period-focus` (12), which have no gate yet — the gate list is
-// the operator's. That is what the scenario argument in the dispatch below is
-// for — a bare `flows <out-dir>` still runs all eight, which is the local
-// verification invocation.
+// These write 64 PNGs. A bare `flows <out-dir>` runs all eight scenarios;
+// scenario arguments select a subset for focused verification.
 //
 // The filenames carry the size — so the sizes are the `shot` presets above,
 // spelled once (frontend/DESIGN.md designs for exactly these four widths). Named
@@ -1252,9 +1243,7 @@ try {
         `flows: unknown scenario "${name}" — pick from ${Object.keys(scenarios).join(", ")}`,
       );
     }
-    // No names = every scenario, which is the local verification invocation. The
-    // yard gates each name their own subset instead: a gate declares at most
-    // 16 artifact filenames, and all eight scenarios write 64.
+    // No names = every scenario; explicit names select a focused subset.
     const names = selection.length > 0 ? selection : Object.keys(scenarios);
     for (const viewport of FLOW_VIEWPORTS) {
       for (const name of names) {

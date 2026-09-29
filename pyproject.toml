@@ -13,7 +13,7 @@ dependencies = [
 [dependency-groups]
 dev = [
   "duckdb>=1.5.2",
-  # hatchling+editables: locked so the yard gates' offline
+  # hatchling+editables: locked so an offline
   # `uv sync --no-build-isolation` can build
   # the editable workspace members without dynamic build-backend resolution
   # (uv's offline resolver refuses registry lookups for build-system.requires).
