@@ -4624,6 +4624,22 @@ variable = "25.21806"
 columns = { PKUSP426 = "25.21806.ersattningskod-426-skattepliktig-del", PSP426 = "25.21806.ersattningskod-426-skattepliktig-del" }
 columns_ref = "Y-305 2026-09-29: SCB VarId 21806 sequential rename {PKUSP426 2005-2018, PSP426 2019-2024} owned by 25.21806.ersattningskod-426-skattepliktig-del; unchanged KUSOC source basis; Y-211/Y-276 sequential-rename policy (host IoT KUSOC compensation-code evidence)"
 
+# Y-306 2026-09-29: two IoT sequential delivery-column renames, 25.596 and
+# 25.1190. Each family's exact literals occupy disjoint, non-interleaved windows
+# and map to one existing qualified owner under the Y-211 (2026-09-19) / Y-276
+# policy. Both spellings keep the original KUSOC source basis. Historical reuse
+# of these literals by other native families is disjoint and preserved.
+
+[[identity.partition]]
+variable = "25.596"
+columns = { PKUTJP = "25.596.tjanstepension", PTJP = "25.596.tjanstepension" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 596 'Tjänstepension' sequential rename {PKUTJP 1998-01-01-2018-12-31, PTJP 2019-01-01-2024-12-31} owned by 25.596.tjanstepension; unchanged KUSOC source basis; PTJP is also used by 25.35563 in 1993-1997, a disjoint historical reuse preserved; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
+[[identity.partition]]
+variable = "25.1190"
+columns = { TALU = "25.1190.akassa-atgarder", TKUALU = "25.1190.akassa-atgarder" }
+columns_ref = "Y-306 2026-09-29: SCB VarId 1190 'A-kassa åtgärder' sequential rename {TKUALU 2008-01-01-2018-12-31, TALU 2019-01-01-2024-12-31} owned by 25.1190.akassa-atgarder; unchanged KUSOC source basis; TKUALU is also used by 25.35479 in 1993-1998, a disjoint historical reuse preserved; Y-211/Y-276 sequential-rename policy (host evidence tools/Sequential11-RTB-IoT-evidence.json)"
+
 
 [[variable]]
 native_id = "25.31.forsamling"
@@ -5708,3 +5724,13 @@ slug = "ersattningskod-429-skattepliktig-del"
 native_id = "25.21806.ersattningskod-426-skattepliktig-del"
 slug = "ersattningskod-426-skattepliktig-del"
 
+# Y-306 2026-09-29: qualified owners for the two IoT sequential delivery-column
+# renames declared above; each reuses the family's existing slug.
+
+[[variable]]
+native_id = "25.596.tjanstepension"
+slug = "tjanstepension"
+
+[[variable]]
+native_id = "25.1190.akassa-atgarder"
+slug = "akassa-atgarder"
