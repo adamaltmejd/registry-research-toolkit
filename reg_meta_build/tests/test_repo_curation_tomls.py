@@ -328,6 +328,70 @@ _IT_RECURRENT_QUESTION_OWNERS: dict[str, tuple[str, tuple[str, ...]]] = {
     "258.44639": ("aktivt-delta-politisk-diskussion", ("B3h", "B4i")),
 }
 
+# Y-310: the 58 IoT native families whose individual (X), ordinary-household (XHB)
+# and modelled shared-residence (XVXHB) calculation bases are separated. Each
+# value is (base literal, existing source-name stem, physical originals).
+_IOT_Y310_CALCULATION_BASES: dict[str, tuple[str, str, int]] = {
+    "25.5655": ("SBEGR", "betald-begravningsavgift", 138),
+    "25.21514": ("CTRAN04", "negativa-transfereringar-2004", 123),
+    "25.1413": ("ISMBID", "studiemedel-studiebidrag", 125),
+    "25.5610": ("SKYRK", "kyrkoavgift-inklusive-begravningsavgift", 128),
+    "25.39337": ("SREDSA", "skattereduktion-sjuk-aktivitet", 50),
+    "25.4866": ("CSTUDT", "studiestod", 126),
+    "25.22277": ("COVRN04", "ovriga-negativa-transfereringar-2004", 123),
+    "25.714": ("SREDSJO", "medgiven-skattereduktion-sjoinkomst", 144),
+    "25.4387": ("PPENSSP", "pension-och-livranta-skattepliktig", 126),
+    "25.36641": ("CTRAPSFOV", "ovriga-transfereringar-skattefria", 67),
+    "25.712": ("SREDPEN", "skattereduktion-allman-pensionsavgift", 138),
+    "25.22247": ("PLIVRTA", "livranta-harledd", 119),
+    "25.21824": ("SREDARB", "skattereduktion-for-arbetsinkomst", 117),
+    "25.36637": ("CBRUTTO15", "bruttoinkomst-definition-2015", 67),
+    "25.45919": ("SREDARBT", "tillfallig-skattereduktion-arbete", 16),
+    "25.38226": ("ISA", "sjuk-aktivitetsersattning-skattefri", 56),
+    "25.22242": ("ISHBID", "studiehjalp-bidrag", 125),
+    "25.1484": ("PALLP", "allman-pension-inklusive-delpension", 119),
+    "25.1295": ("CTRAP", "summa-positiva-transfereringar", 129),
+    "25.1486": ("PBARN", "barnpension-skattepliktig-och-skattefri", 119),
+    "25.25618": ("KUTHYRM", "uthyrning-privatbostad-inkl-avdrag", 98),
+    "25.22249": ("PAENKP", "ankepension-skapad", 119),
+    "25.21711": ("KFBRUT", "kapitalforlust-brutto", 113),
+    "25.1615": ("TPENBID", "pensioner-bidrag-exkl-arbetsmarkn", 156),
+    "25.1390": ("IALDF", "aldreforsorjningsstod", 129),
+    "25.1483": ("PALDP", "alderspension", 119),
+    "25.1078": ("CKAP", "rantor-utdelningar-exkl-rantebidrag", 129),
+    "25.21701": ("ISMLAN", "studiemedel-lan-m-m", 125),
+    "25.26974": ("ISHIN", "inackorderingsbidrag", 83),
+    "25.30826": ("IKBOBDR", "bostadstillagg-sarskilt-pensionarer", 90),
+    "25.44792": ("SSLUTU", "skatt-utlandsk", 23),
+    "25.30674": ("CDIVSF", "skattefri-pension-pensionstillagg", 54),
+    "25.44791": ("TPENSAU", "pensioner-utlandskt-beskattade", 23),
+    "25.88": ("TFORP", "foraldrapenning-skattepliktig", 90),
+    "25.1630": ("TARBST", "totalt-arbetsmarknadsstod", 159),
+    "25.4523": ("COVRN", "ovriga-negativa-transfereringar", 54),
+    "25.21878": ("SDEBUTL", "debiterad-utlandsk-skatt", 119),
+    "25.1493": ("PEFLEVB", "efterlevandepension-till-barn", 129),
+    "25.44462": ("ISTIP", "stipendium-skattefritt", 38),
+    "25.4871": ("PRESTA", "presta", 126),
+    "25.4386": ("PPENSSF", "pension-och-livranta-skattefri", 126),
+    "25.21861": ("POMSTP", "omstallningspension-skapad", 119),
+    "25.8274": ("SKLFVI", "kommunal-inkomstskatt-forvarvsinkomst", 123),
+    "25.21729": ("KVBRUT", "kapitalvinst-brutto", 113),
+    "25.45923": ("PIPT", "inkomstpensionstillagg", 32),
+    "25.732": ("SPENAVG", "allman-pensionsavgift", 153),
+    "25.630": ("AAPENS", "underlag-allman-pensionsavgift", 140),
+    "25.4874": ("PRESTPR", "prestpr", 126),
+    "25.30640": ("UUHBID", "givet-underhallsbidrag", 54),
+    "25.1508": ("PGARP", "garantipension", 119),
+    "25.1632": ("TARBFOR", "arbetsmarknadsforsakringar", 156),
+    "25.22241": ("ISHEXT", "extra-tillagg-studiemedel-bidrag", 125),
+    "25.30639": ("IUHBID", "mottaget-underhallsbidrag", 90),
+    "25.101": ("TSA", "sjuk-och-aktivitetsersattning", 129),
+    "25.42415": ("IMILI", "skattefri-ersattning-forsvar", 44),
+    "25.2504": ("PPRIV", "frivilliga-pensioner", 119),
+    "25.1485": ("PAVTAL", "avtalspension", 119),
+    "25.23618": ("PFOMSTP", "forlangd-omstallningspension-summerad", 119),
+}
+
 
 def test_catalog_overlays_share_one_directory() -> None:
     names = {
@@ -1360,6 +1424,68 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         if ("scb", owner) not in slugged
     }
     assert absent_owners == set()
+
+
+def test_repo_iot_y310_separates_calculation_bases() -> None:
+    # Y-310: 58 IoT native families each deliver three calculation bases, not
+    # spelling aliases: individual X (variant 25.763), ordinary household XHB and
+    # modelled shared-residence household XVXHB (both variant 25.1153). The map,
+    # the 174 qualified naming leaves and the retained unsplit naming are exact,
+    # so a wrong or new literal cannot silently join a branch.
+    slug_dir = repo_slug_dir()
+    assert slug_dir is not None
+    entries = load_slug_dir(slug_dir)
+    slugged = {
+        (entry.provider, entry.source_id)
+        for entry in entries
+        if entry.kind == "variable" and entry.slug is not None
+    }
+    tree = load_curation_tree(_CURATION)
+    iot = next(
+        register for register in tree.registers if register.register_info.slug == "iot"
+    )
+    by_variable = {
+        partition.variable: partition for partition in iot.identity.partition
+    }
+    expected_maps: dict[str, dict[str, str]] = {}
+    expected_names: dict[str, str] = {}
+    for native, (literal, stem, _) in _IOT_Y310_CALCULATION_BASES.items():
+        expected_maps[native] = {
+            literal: f"{native}.individ",
+            f"{literal}HB": f"{native}.hushall",
+            f"{literal}VXHB": f"{native}.hushall-vaxelvis-boende",
+        }
+        for leaf in ("individ", "hushall", "hushall-vaxelvis-boende"):
+            expected_names[f"{native}.{leaf}"] = f"{stem}-{leaf}"
+    assert len(expected_maps) == 58
+    assert len(expected_names) == 174
+    assert set(expected_maps) <= set(by_variable)
+    for native, columns in expected_maps.items():
+        partition = by_variable[native]
+        assert dict(partition.columns) == columns, native
+        assert not partition.unassigned_columns, native
+    assert {
+        ("scb", owner)
+        for columns in expected_maps.values()
+        for owner in columns.values()
+    } <= slugged
+    named = {
+        entry.native_id: entry.slug
+        for entry in iot.variable
+        if entry.native_id in expected_names
+    }
+    assert named == expected_names
+    # The unsplit native naming stays; only the calculation bases are split.
+    base_slugs = {
+        entry.source_id: entry.slug
+        for entry in entries
+        if entry.kind == "variable"
+        and entry.provider == "scb"
+        and entry.source_id in _IOT_Y310_CALCULATION_BASES
+    }
+    assert base_slugs == {
+        native: stem for native, (_, stem, _) in _IOT_Y310_CALCULATION_BASES.items()
+    }
 
 
 def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> None:
