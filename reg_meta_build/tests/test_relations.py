@@ -778,10 +778,10 @@ class TestMovedEdges:
         # register_variant succession edge + 3 #1122 LISA FÅMANS KU→AGI source
         # succession edges + 8 Y-88 curated LISA succession edges.
         assert len(rel.replaced_by) == 63
-        # #508 (615) + #737 (232) = 847 curated same_as identity edges; all
+        # #508 (615) + #737 (232) - 6 mixed SUN peer edges = 841 same_as edges; all
         # variable-grain with a non-empty note; max connected component stays
         # ≤32 FQIDs.
-        assert len(rel.same_as) == 847
+        assert len(rel.same_as) == 841
         assert len(rel.derived_from) == 1
         assert (str(rel.derived_from[0].derived), str(rel.derived_from[0].source)) == (
             "class/ks87-p",
