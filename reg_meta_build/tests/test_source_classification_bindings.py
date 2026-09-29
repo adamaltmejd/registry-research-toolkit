@@ -820,7 +820,9 @@ def test_grouped_sni_reporting_labels_are_not_bound_to_detailed_books(label, cod
         (),
         coding=coding,
         classifications={
-            "sni92": _repo_book("SNI92", "sni92.csv"),
+            "sni1992": _repo_book("SNI92", "sni92.csv").model_copy(
+                update={"slug": "sni1992"}
+            ),
             "sni2002": _repo_book("SNI2002", "sni2002.csv"),
             "sni2007": _repo_book("SNI2007", "sni2007.csv"),
         },
