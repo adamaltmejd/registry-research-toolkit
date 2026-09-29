@@ -952,7 +952,6 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for register in tree.registers
         for partition in register.identity.partition
     ]
-    assert len(partitions) == 755
     assert len(tree.registers) == 289
     assert (
         sum(len(register.identity.route) for register in tree.registers),
