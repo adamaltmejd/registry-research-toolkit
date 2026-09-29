@@ -359,35 +359,6 @@ class EnrichmentCuration(_CurationModel):
     alias: list[EnrichmentAliasEntry] = Field(default_factory=list)
 
 
-class FlagEntry(_CurationModel):
-    variable: str
-    is_sensitive: bool | None = None
-    is_identifier: bool | None = None
-    evidence: str
-    noted: str
-
-    _evidence = field_validator("evidence", "noted")(_require_trimmed)
-
-    @field_validator("variable")
-    @classmethod
-    def _variable_id(cls, value: str) -> str:
-        from .fqid_slugs import _parse_variable_id
-
-        try:
-            _parse_variable_id(value)
-        except RegMetaError as exc:
-            raise ValueError(exc.message) from exc
-        if len(value.split(".")) != 2:
-            raise ValueError("flags require a native <RegisterId>.<VarId> variable")
-        return value
-
-    @model_validator(mode="after")
-    def _has_flag(self) -> FlagEntry:
-        if self.is_sensitive is None and self.is_identifier is None:
-            raise ValueError("flags require is_sensitive or is_identifier")
-        return self
-
-
 class GroupAxis(_CurationModel):
     axis: str
     label: str
@@ -837,7 +808,6 @@ class RegisterCuration(_CurationModel):
     variable: list[RegisterVariableSlug] = Field(default_factory=list)
     errata: ErrataCuration = Field(default_factory=ErrataCuration)
     enrichment: EnrichmentCuration = Field(default_factory=EnrichmentCuration)
-    flags: list[FlagEntry] = Field(default_factory=list)
     group: list[RegisterGroupEntry] = Field(default_factory=list)
     code_label_pair: list[CodeLabelPairEntry] = Field(default_factory=list)
     representation: RepresentationCuration = Field(
@@ -1019,7 +989,6 @@ def _register_arrays(
         ("errata.edition_period", entry.errata.edition_period),
         ("enrichment.description", entry.enrichment.description),
         ("enrichment.alias", entry.enrichment.alias),
-        ("flags", entry.flags),
         ("group", entry.group),
         ("code_label_pair", entry.code_label_pair),
         ("representation.period_family", entry.representation.period_family),
@@ -1230,17 +1199,8 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
     _validate_register_scope(entry, file)
     for table, rows in _register_arrays(entry):
         seen: set[str] = set()
-        flag_variables: set[str] = set()
         edition_period_keys: set[tuple[str, str]] = set()
         for index, row in enumerate(rows, start=1):
-            if isinstance(row, FlagEntry):
-                if row.variable in flag_variables:
-                    raise curation_error(
-                        _CODE,
-                        f"{file} [[flags]] entry {index}: duplicate variable {row.variable!r}.",
-                        "Keep one flags entry per native variable.",
-                    )
-                flag_variables.add(row.variable)
             if isinstance(row, ErrataEditionPeriodEntry):
                 coordinate = (row.variant, row.name)
                 if coordinate in edition_period_keys:

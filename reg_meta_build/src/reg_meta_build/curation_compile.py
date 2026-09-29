@@ -76,7 +76,6 @@ from .source_curation import (
     CuratedOccurrenceAddition,
     CurationCase,
     FieldExpectation,
-    FlagDecision,
     OccurrenceCorrectionDecision,
     PeerGuard,
     RepresentationDecision,
@@ -4317,122 +4316,6 @@ def compile_enrichment(
     )
 
 
-def compile_flags(
-    tree: CurationTree,
-    prepared: PreparedCatalogSources,
-    scopes: tuple[CompiledScope, ...],
-    *,
-    subset: bool,
-) -> tuple[
-    dict[Any, tuple[CurationCase, ...]],
-    tuple[ResolutionDiagnostic, ...],
-    dict[str, dict[str, list[str]]],
-]:
-    """Bind fill-only declarations to exact documented native families."""
-    locations: dict[str, list[tuple[Any, tuple[str | int, ...]]]] = defaultdict(list)
-    for scope in scopes:
-        locations_for_scope = (scope.source, scope.register_key)
-        for name, register_key in _scope_registers(scope):
-            locations[name].append((locations_for_scope, register_key))
-    cases: dict[Any, list[CurationCase]] = defaultdict(list)
-    diagnostics: list[ResolutionDiagnostic] = []
-    report: dict[str, dict[str, list[str]]] = {}
-    for register in sorted(tree.registers, key=lambda item: item.source_file):
-        if not register.flags:
-            continue
-        name = f"{register.register_info.provider}/{register.register_info.slug}"
-        statuses = _family_status(report, name)
-        for entry in sorted(register.flags, key=lambda item: item.variable):
-            case_id = f"{register.source_file}#/flags/{entry.variable}"
-            statuses["entries_read"].append(case_id)
-            register_id, variable_id = entry.variable.split(".")
-            if register_id != register.register_info.native_id:
-                statuses["stale"].append(case_id)
-                diagnostics.append(
-                    _family_diagnostic(
-                        case_id, entry.variable, "variable belongs to another register"
-                    )
-                )
-                continue
-            matches = locations.get(name, ())
-            if not matches and subset:
-                statuses["not_evaluated_in_subset"].append(case_id)
-                continue
-            if len(matches) != 1:
-                statuses["over_broad" if matches else "stale"].append(case_id)
-                diagnostics.append(
-                    _family_diagnostic(
-                        case_id,
-                        entry.variable,
-                        f"matches {len(matches)} selected register scopes; expected one",
-                        overbroad=bool(matches),
-                    )
-                )
-                continue
-            scope_key, register_key = matches[0]
-            # simplify: rescan this register for each entry; index if its flag
-            # curation grows beyond a few thousand variables.
-            selected = tuple(
-                record
-                for _, members in prepared.records.iter_register_slices(
-                    scope_key[0], (register_key,)
-                )
-                for record in members
-                if record.subject.native.register_id == int(register_id)
-                and str(record.subject.variable.native_id) == variable_id
-            )
-            keys = {native_variable_key(record) for record in selected}
-            if not selected or None in keys or len(keys) != 1:
-                statuses["stale"].append(case_id)
-                diagnostics.append(
-                    _family_diagnostic(
-                        case_id,
-                        entry.variable,
-                        "matches no single documented native variable",
-                        refs=tuple(sorted({record_ref(r) for r in selected}, key=str)),
-                    )
-                )
-                continue
-            variable_key = next(iter(keys))
-            assert variable_key is not None
-            anchor = selected[0]
-            expectations = capture_expectations(
-                selected,
-                fields=("sensitivity", "identifier", "conditional_sensitivity"),
-            )
-            cases[scope_key].append(
-                CurationCase(
-                    case_id=case_id,
-                    targets=expectations,
-                    peer_guards=(
-                        PeerGuard(
-                            guard_id=f"{case_id}:variable",
-                            source=scope_key[0],
-                            coordinates=(
-                                ("register", anchor.subject.register_name),
-                                ("variable", anchor.subject.variable),
-                            ),
-                            expected_members=tuple(item.ref for item in expectations),
-                        ),
-                    ),
-                    decision=FlagDecision(
-                        variable_key=variable_key,
-                        is_sensitive=entry.is_sensitive,
-                        is_identifier=entry.is_identifier,
-                        evidence=entry.evidence,
-                        noted=entry.noted,
-                        provenance=f"curation:{case_id}",
-                    ),
-                )
-            )
-            statuses["entries_matched"].append(case_id)
-    return (
-        {key: tuple(value) for key, value in cases.items()},
-        tuple(diagnostics),
-        report,
-    )
-
-
 def _partitioned_naming(
     naming: dict[Any, tuple[Any, ...]],
     partition_naming: dict[Any, tuple[Any, ...]],
@@ -4785,12 +4668,7 @@ def compile_curation(
     )
     for key, extra in enrichment_cases.items():
         cases[key].extend(extra)
-    flag_cases, flag_diagnostics, flag_report = compile_flags(
-        tree, prepared, scopes, subset=subset
-    )
-    for key, extra in flag_cases.items():
-        cases[key].extend(extra)
-    for family_report in (errata_report, enrichment_report, flag_report):
+    for family_report in (errata_report, enrichment_report):
         for register, statuses in family_report.items():
             current = report.setdefault(register, {key: [] for key in statuses})
             for status, entries in statuses.items():
@@ -4894,7 +4772,6 @@ def compile_curation(
             *matrix_diagnostics,
             *errata_diagnostics,
             *enrichment_diagnostics,
-            *flag_diagnostics,
             *thin_diagnostics,
             *split_diagnostics,
         ),

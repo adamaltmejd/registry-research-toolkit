@@ -333,7 +333,6 @@ class ResolvedVariable(_ResolvedModel):
     measurement_unit: str | None
     is_sensitive: bool | None
     is_identifier: bool | None
-    flag_provenance: tuple[tuple[str, str], ...] = ()
     states: tuple[ResolvedState, ...]
     aliases: tuple[ResolvedAlias, ...] = ()
     deprecated: bool = False

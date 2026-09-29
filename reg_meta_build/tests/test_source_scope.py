@@ -50,7 +50,6 @@ from reg_meta_build.source_curation import (
     CuratedOccurrenceAddition,
     CurationCase,
     FieldExpectation,
-    FlagDecision,
     OccurrenceCorrectionDecision,
     PeerGuard,
     ResolutionDiagnostic,
@@ -1944,51 +1943,6 @@ def test_an_evidenced_whole_variable_withholding_answers_for_its_own_claim():
     check_delivery_coverage((), result.coverage, withheld=result.withheld_dependencies)
     with pytest.raises(ValueError, match=r"2020-01-01\.\.2020-12-31"):
         check_delivery_coverage((), result.coverage, withheld={})
-
-
-def test_guarded_flags_case_fills_missing_flags_in_scope() -> None:
-    item = record()
-    item = item.model_copy(
-        update={
-            "fields": item.fields.model_copy(
-                update={"sensitivity": None, "identifier": None}
-            )
-        }
-    )
-    key = native_variable_key(item)
-    assert key is not None
-    case = CurationCase(
-        case_id="curation/registers/scb/example.toml#/flags/1.5",
-        targets=capture_expectations(
-            (item,), fields=("sensitivity", "identifier", "conditional_sensitivity")
-        ),
-        decision=FlagDecision(
-            variable_key=key,
-            is_sensitive=True,
-            is_identifier=False,
-            evidence="SCB documentation",
-            noted="2026-09-28",
-            provenance="curation:flags/1.5",
-        ),
-    )
-    result = resolve((item,), cases=(case,))
-    variable = result.variables[key]
-    assert variable is not None
-    assert (variable.is_sensitive, variable.is_identifier) == (True, False)
-    assert variable.flag_provenance[0][1].startswith(case.case_id)
-    assert result.diagnostics == ()
-
-    changed = item.model_copy(
-        update={
-            "fields": item.fields.model_copy(update={"sensitivity": value_field(True)})
-        }
-    )
-    stale = resolve((changed,), cases=(case,))
-    assert stale.variables[key] is None
-    assert [issue.code for issue in stale.diagnostics] == [
-        "stale_curation_entry",
-        "unresolved_flag",
-    ]
 
 
 def test_a_search_only_alias_establishes_no_delivery_for_the_lost_window():

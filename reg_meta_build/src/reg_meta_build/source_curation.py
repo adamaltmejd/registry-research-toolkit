@@ -676,18 +676,6 @@ class ClassificationDecision(_ColumnDecision):
     binding_scope: Literal["inline_coding", "declared"]
 
 
-class FlagDecision(_CurationModel):
-    """Fill only unresolved flags on one documented native variable."""
-
-    kind: Literal["flags"] = "flags"
-    variable_key: NativeKey
-    is_sensitive: bool | None = None
-    is_identifier: bool | None = None
-    evidence: str = Field(min_length=1)
-    noted: str = Field(min_length=1)
-    provenance: str = Field(min_length=1)
-
-
 type CurationDecision = (
     AcknowledgeDecision
     | OccurrenceCorrectionDecision
@@ -696,7 +684,6 @@ type CurationDecision = (
     | RepresentationDecision
     | CodingDecision
     | ClassificationDecision
-    | FlagDecision
 )
 
 
