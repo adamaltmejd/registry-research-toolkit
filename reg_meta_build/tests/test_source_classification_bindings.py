@@ -784,7 +784,7 @@ def _repo_book(short_name: str, codes_file: str) -> ResolvedClassification:
     )
 
 
-def _synthetic_grouped_claim(setup, *, label: str, code: str):
+def _synthetic_label_claim(setup, *, label: str, code: str):
     key, original = next(iter(setup[2].items()))
     claim = replace(
         original.claims[0],
@@ -807,7 +807,7 @@ def _synthetic_grouped_claim(setup, *, label: str, code: str):
 )
 def test_grouped_sni_reporting_labels_are_not_bound_to_detailed_books(label, code):
     setup = _setup()
-    key, coding = _synthetic_grouped_claim(setup, label=label, code=code)
+    key, coding = _synthetic_label_claim(setup, label=label, code=code)
     result = apply_classification_cases(
         (setup[0],),
         (),
@@ -832,8 +832,10 @@ def test_grouped_sni_reporting_labels_are_not_bound_to_detailed_books(label, cod
 
 def test_retained_detailed_sni_label_still_binds():
     setup = _setup()
-    key, coding = _synthetic_grouped_claim(
-        setup, label="SNI 2002, grov nivå", code="01"
+    key, coding = _synthetic_label_claim(
+        setup,
+        label="Standard för svensk näringsgrensindelning, 2002 Branscher",
+        code="01",
     )
     result = apply_classification_cases(
         (setup[0],),
