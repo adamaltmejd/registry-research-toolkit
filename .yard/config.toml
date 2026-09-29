@@ -51,13 +51,13 @@ tools = { subagents = true }
 
 [agents.light]
 harness = "claude"
-model = "claude-sonnet-5"
+model = "claude-sonnet-5-5"
 effort = "medium"
 tools = { subagents = false }
 
 [agents.light-ui]
 harness = "claude"
-model = "claude-sonnet-5"
+model = "claude-sonnet-5-5"
 effort = "xhigh"
 tools = { subagents = false }
 
