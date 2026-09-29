@@ -203,7 +203,7 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
             member = claim_by_id[identity].members[position]
             assert member.code is not None and member.label is not None
             by_claim[identity].add((member.code, member.label))
-            if member.scope.kind == "intervals":
+            if member.scope.kind in {"intervals", "year_independent"}:
                 for association in member.associations:
                     table = association.source_table
                     if table is None or association.descriptor_key != f"sheet:{table}":

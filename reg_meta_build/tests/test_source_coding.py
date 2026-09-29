@@ -257,12 +257,81 @@ def test_adjacent_dated_labels_for_one_code_keep_both_periods() -> None:
     ]
 
 
+@pytest.mark.parametrize("second_scope", ["year_independent", "intervals"])
+def test_same_sheet_year_independent_conflicting_labels_withhold_coding(
+    second_scope: str,
+) -> None:
+    first = SourceValueAssociation(
+        21, "sheet:Kodlista_bdiag_bk", "first", "mfr.xlsx", "Kodlista_bdiag_bk"
+    )
+    second = SourceValueAssociation(
+        23, "sheet:Kodlista_bdiag_bk", "second", "mfr.xlsx", "Kodlista_bdiag_bk"
+    )
+    scope = (
+        TemporalScope(kind="year_independent")
+        if second_scope == "year_independent"
+        else _scope("2020-06-01", "2020-06-30")
+    )
+    claim = _claim(
+        "shared",
+        replace(
+            _member(
+                "16310",
+                "pakygyri i cerebrala cortex",
+                scope=TemporalScope(kind="year_independent"),
+            ),
+            associations=(first,),
+        ),
+        replace(_member("16310", "micropolygyri", scope=scope), associations=(second,)),
+    )
+    result = resolve_code_membership((claim,))
+    assert result.claims == (claim,)
+    contested = (
+        result.segments if second_scope == "year_independent" else result.segments[1:2]
+    )
+    assert all(segment.code_set is None for segment in contested)
+    assert [issue.code for issue in result.issues] == ["conflicting_code_memberships"]
+    assert result.issues[0].valid_from == (
+        "2020-01-01" if second_scope == "year_independent" else "2020-06-01"
+    )
+    assert result.issues[0].valid_to == (
+        "2020-12-31" if second_scope == "year_independent" else "2020-06-30"
+    )
+    if second_scope == "intervals":
+        assert result.segments[0].code_set is not None
+        assert result.segments[2].code_set is not None
+
+
+def test_same_sheet_identical_year_independent_duplicates_are_harmless() -> None:
+    associations = tuple(
+        SourceValueAssociation(row, "sheet:Codes", str(row), "dors.xlsx", "Codes")
+        for row in (2, 3)
+    )
+    claim = _claim(
+        "duplicate",
+        *(
+            replace(
+                _member("01", "Same", scope=TemporalScope(kind="year_independent")),
+                associations=(association,),
+            )
+            for association in associations
+        ),
+    )
+    result = resolve_code_membership((claim,))
+    assert result.issues == ()
+    assert result.segments[0].code_set is not None
+    assert result.segments[0].code_set.members == (("01", "Same"),)
+    assert result.claims[0].members[0].associations == (associations[0],)
+    assert result.claims[0].members[1].associations == (associations[1],)
+
+
 @pytest.mark.parametrize(
     ("other_file", "other_sheet"),
     [("edition-2.xlsx", "Kodlista_codes"), ("edition-1.xlsx", "Kodlista_other")],
 )
+@pytest.mark.parametrize("scope_kind", ["intervals", "year_independent"])
 def test_dated_label_history_across_files_or_descriptors_is_preserved(
-    other_file: str, other_sheet: str
+    other_file: str, other_sheet: str, scope_kind: str
 ) -> None:
     first = SourceValueAssociation(
         2, "sheet:Kodlista_codes", "first", "edition-1.xlsx", "Kodlista_codes"
@@ -270,10 +339,15 @@ def test_dated_label_history_across_files_or_descriptors_is_preserved(
     second = SourceValueAssociation(
         3, f"sheet:{other_sheet}", "second", other_file, other_sheet
     )
+    member_scope = (
+        _scope()
+        if scope_kind == "intervals"
+        else TemporalScope(kind="year_independent")
+    )
     claim = _claim(
         "label-history",
-        replace(_member("2", "Old", scope=_scope()), associations=(first,)),
-        replace(_member("2", "New", scope=_scope()), associations=(second,)),
+        replace(_member("2", "Old", scope=member_scope), associations=(first,)),
+        replace(_member("2", "New", scope=member_scope), associations=(second,)),
     )
     result = resolve_code_membership((claim,))
     assert result.issues == ()

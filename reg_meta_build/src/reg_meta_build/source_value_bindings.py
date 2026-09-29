@@ -310,9 +310,51 @@ class ValueBindingSession:
                 if member_name is None:
                     continue
                 header_refs = set(descriptor.member_references)
-                for association in self.session.lookup_descriptor(
-                    descriptor.payload_key
+                associations = tuple(
+                    self.session.lookup_descriptor(descriptor.payload_key)
+                )
+                pointer_hints = tuple(
+                    hint
+                    for hint in descriptor.member_hints
+                    if hint.role != "sheet_suffix"
+                )
+                shared_pointer_shape = (
+                    len(header_refs) > 1
+                    and len(descriptor.member_references)
+                    == len(header_refs)
+                    == len(pointer_hints)
+                    and all(
+                        hint.role == "variable_pointer"
+                        and hint.value in header_refs
+                        and hint.locator is not None
+                        for hint in pointer_hints
+                    )
+                    and {hint.value for hint in pointer_hints} == header_refs
+                    and len({hint.locator for hint in pointer_hints})
+                    == len(pointer_hints)
+                    and len(
+                        {
+                            hint.locator.physical_file
+                            for hint in pointer_hints
+                            if hint.locator is not None
+                        }
+                    )
+                    == 1
+                    and not any(
+                        association.member_references
+                        or any(
+                            hint.role in {"list_header", "row"}
+                            for hint in association.member_hints
+                        )
+                        for association in associations
+                    )
+                )
+                if shared_pointer_shape and not any(
+                    hint.value == member_name and hint.locator in record.locators
+                    for hint in pointer_hints
                 ):
+                    continue
+                for association in associations:
                     row_refs = set(association.member_references)
                     candidates = (
                         header_refs & row_refs
@@ -321,7 +363,9 @@ class ValueBindingSession:
                     )
                     if member_name not in candidates:
                         continue
-                    if len(header_refs) > 1 or len(row_refs) > 1:
+                    if (len(header_refs) > 1 and not shared_pointer_shape) or len(
+                        row_refs
+                    ) > 1:
                         contradictory.add(association.locator)
                         issues[
                             "ambiguous_list_member_references", descriptor.payload_key

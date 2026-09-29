@@ -1193,6 +1193,106 @@ def test_named_and_inline_references_do_not_cross_sources_or_record_occurrences(
     ]
 
 
+def test_shared_explicit_pointers_bind_only_their_exact_record_occurrences(
+    tmp_path: Path,
+) -> None:
+    first, second = _record(member="FIRST"), _record(member="SECOND")
+    descriptor = SourceValueDescriptor(
+        "shared",
+        member_references=("FIRST", "SECOND"),
+        member_hints=(
+            SourceMemberHint("sheet_suffix", "FIRST"),
+            SourceMemberHint("variable_pointer", "FIRST", first.locators[0]),
+            SourceMemberHint("variable_pointer", "SECOND", second.locators[0]),
+        ),
+    )
+    source = _prepare(
+        tmp_path / "values",
+        join=_join("member_name"),
+        descriptors=(
+            descriptor,
+            SourceValueDescriptor("inline", record_ids=(first.record_id,)),
+        ),
+        rows=(
+            SourceValueAssociation(2, "shared", "a", "values"),
+            SourceValueAssociation(3, "inline", "b", "values"),
+        ),
+    )
+    elsewhere = SourceRecord.create(
+        revision=_revision("records"),
+        locators=(
+            first.locators[0].model_copy(
+                update={
+                    "semantic_record_key": ("FIRST", "other"),
+                    "physical_record": "row:99",
+                }
+            ),
+        ),
+        subject=first.subject,
+        edition_scope=first.edition_scope,
+        edition_period_scope=first.edition_period_scope,
+        fields=first.fields,
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound_first = bind_code_lists(first, sessions)
+        bound_second = bind_code_lists(second, sessions)
+        same_name_elsewhere = bind_code_lists(elsewhere, sessions)
+        outsider = bind_code_lists(_record(member="OUTSIDER"), sessions)
+        other_source = bind_code_lists(
+            _record(member="FIRST", source="other"), sessions
+        )
+    assert {binding.descriptor_key for binding in bound_first.bindings} == {
+        "shared",
+        "inline",
+    }
+    assert [binding.descriptor_key for binding in bound_second.bindings] == ["shared"]
+    assert all(not result.issues for result in (bound_first, bound_second))
+    assert all(
+        not result.claims and not result.bindings
+        for result in (same_name_elsewhere, outsider, other_source)
+    )
+
+
+@pytest.mark.parametrize("missing", ["pointer", "locator", "header", "row", "source"])
+def test_incomplete_or_competing_shared_pointer_evidence_stays_ambiguous(
+    tmp_path: Path, missing: str
+) -> None:
+    first, second = _record(member="FIRST"), _record(member="SECOND")
+    pointer = SourceMemberHint("variable_pointer", "FIRST", first.locators[0])
+    second_locator: RecordLocator | None = second.locators[0]
+    if missing == "locator":
+        second_locator = None
+    elif missing == "source":
+        second_locator = second_locator.model_copy(update={"physical_file": "other"})
+    other_pointer = SourceMemberHint("variable_pointer", "SECOND", second_locator)
+    hints = (pointer,) if missing == "pointer" else (pointer, other_pointer)
+    if missing == "header":
+        hints += (SourceMemberHint("list_header", "FIRST"),)
+    source = _prepare(
+        tmp_path / "values",
+        join=_join("member_name"),
+        descriptors=(
+            SourceValueDescriptor(
+                "shared", member_references=("FIRST", "SECOND"), member_hints=hints
+            ),
+        ),
+        rows=(
+            SourceValueAssociation(
+                2,
+                "shared",
+                "a",
+                "values",
+                member_references=("FIRST",) if missing == "row" else (),
+            ),
+        ),
+    )
+    with open_value_bindings((source,)) as sessions:
+        result = bind_code_lists(first, sessions)
+    assert "ambiguous_list_member_references" in [issue.code for issue in result.issues]
+    assert result.bindings[0].association_count == 1
+    assert resolve_code_membership(result.claims).segments[0].code_set is None
+
+
 def test_conflicting_named_references_withhold_and_outside_codes_stay_accounted(
     tmp_path: Path,
 ) -> None:
