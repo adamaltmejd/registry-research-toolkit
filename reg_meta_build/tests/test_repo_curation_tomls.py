@@ -2211,9 +2211,7 @@ def test_repo_sun2020_levels_and_grouping_detail_have_exact_owners() -> None:
         "34.6416": "sun2020grp",
         "47.1315": "utbildnings-inriktning-sun-2000",
     }
-    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())[
-        "variable"
-    ]
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
     assert {key: snapshot[key] for key in (f"scb/{owner}" for owner in owners)} == {
         f"scb/{owner}": slug for owner, slug in slugs.items()
     }
