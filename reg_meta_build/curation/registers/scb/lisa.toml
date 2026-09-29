@@ -3416,4 +3416,45 @@ slug = "foraldrapenning-antal-nettodagar"
 native_id = "34.37049.foraldrapenning-antal-nettodagar-midas"
 slug = "foraldrapenning-antal-nettodagar-midas"
 
+# Y-292 2026-09-29: LISA pension and adult-study loan documented-concept
+# partitions. SCB `lisa-bakgrundsfakta-1990-2017` documents that the earlier
+# and later native columns behind these two families measure DIFFERENT
+# documented components despite sharing the source-native family name. ATPBel
+# (Summa ATP, 1990-2002) is the paid ATP amount including Förtidspension,
+# Sjukbidrag, Ålderspension and/or Efterlevandeförmån; TillPens
+# (Tilläggspension, from 2003) is "summa av tidigare ATP och folkpension".
+# VuxLan (1990-1996) reports the unemployed loan component (SVuxALan) and the
+# other loan component (SVuxLan) in one variable; SVuxLan (Vuxenstudiestöd,
+# lånedel (övriga), 1997-2003) is the other component only. Both loan
+# descriptions use hundreds of kronor, but matching units do not make their
+# component coverage equal. This is a documented-concept identity split, NOT a
+# succession or an equivalent sequential rename; the exact prepared v28
+# physical periods are the only availability claim.
+
+[[identity.partition]]
+variable = "34.2509"
+columns = { ATPBel = "34.2509.summa-atp", TillPens = "34.2509.tillaggspension" }
+columns_ref = "Reviewed documented-concept split; SCB lisa-bakgrundsfakta-1990-2017 docs/lisa/ATPBel.md (Summa ATP, 1990-2002) and docs/lisa/TillPens.md (Tilläggspension, from 2003, sum of earlier ATP and folkpension); prepared v28 native family 34.2509: ATPBel 1990-2002, TillPens 2003-2009 (variant 34.1335) and 2010-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.2669"
+columns = { VuxLan = "34.2669.vuxenstudiestod-lan", SVuxLan = "34.2669.vuxenstudiestod-lan-ovriga" }
+columns_ref = "Reviewed documented-concept split; SCB lisa-bakgrundsfakta-1990-2017 docs/lisa/VuxLan.md (1990-1996 reports SVuxALan and SVuxLan in one VuxLan variable) and docs/lisa/SVuxLan.md (Vuxenstudiestöd, lånedel (övriga), 1997-2003); prepared v28 native family 34.2669: VuxLan 1990-1996, SVuxLan 1997-2003; both in hundreds of kronor but with unequal component coverage."
+
+[[variable]]
+native_id = "34.2509.summa-atp"
+slug = "summa-atp"
+
+[[variable]]
+native_id = "34.2509.tillaggspension"
+slug = "tillaggspension"
+
+[[variable]]
+native_id = "34.2669.vuxenstudiestod-lan"
+slug = "vuxenstudiestod-lan"
+
+[[variable]]
+native_id = "34.2669.vuxenstudiestod-lan-ovriga"
+slug = "vuxenstudiestod-lan-ovriga"
+
 # register 340
