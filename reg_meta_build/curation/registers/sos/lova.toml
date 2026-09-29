@@ -94,6 +94,69 @@ data_type = "date"
 evidence = "Metadata - Variabelnivå row 28 labels the field 'Datum för beslut: Återkallelse av legitimation', describes 'Datum för beslutet att dra in legitiamation', and declares YYYY-MM-DD; Decimal contradicts this explicit date representation."
 noted = "2026-09-29"
 
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "EU_EES"
+column = "EU_EES"
+expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+expected_representation = "Fritext, land eller område"
+evidence = "Metadata - Variabelnivå row 31 describes a country for a converted EU/EES licence in C/D and free-text country or area in F; SSYK classifies occupations."
+noted = "2026-09-29"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA"
+variable = "EXAMAR"
+column = "EXAMAR"
+expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+expected_representation = "YYYY"
+evidence = "Metadata - Variabelnivå row 32 describes the year of the current degree in C/D and YYYY in F; SSYK classifies occupations."
+noted = "2026-09-29"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_EXAMEN"
+variable = "EXAMAR"
+column = "EXAMAR"
+expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+expected_representation = "YYYY"
+evidence = "Metadata - Variabelnivå row 33 describes the year of the highest degree in C/D and YYYY in F; SSYK classifies occupations."
+noted = "2026-09-29"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "EXAMAR"
+column = "EXAMAR"
+expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+expected_representation = "YYYY"
+evidence = "Metadata - Variabelnivå row 34 describes the year of the current degree in C/D and YYYY in F; SSYK classifies occupations."
+noted = "2026-09-29"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_EXAMEN"
+variable = "EXAMEN"
+column = "EXAMEN"
+expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+expected_representation = "fritext"
+evidence = "Metadata - Variabelnivå row 35 describes the name of a basic higher-education degree in C/D and free text in F; SSYK classifies occupations."
+noted = "2026-09-29"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "TEMPBEHORIGHETFRAN"
+column = "TEMPBEHORIGHETFRAN"
+expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+expected_representation = "YYYY-MM-DD"
+evidence = "Metadata - Variabelnivå row 171 describes the start of a temporary licence in C/D and a date in F; SUN classifies education."
+noted = "2026-09-29"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "TEMPBEHORIGHETTILL"
+column = "TEMPBEHORIGHETTILL"
+expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+expected_representation = "YYYY-MM-DD"
+evidence = "Metadata - Variabelnivå row 172 describes the end of a temporary licence in C/D and a date in F; SUN classifies education."
+noted = "2026-09-29"
+
 [[identity.route]]
 deldatamangd = "A_LOVA_PERSON"
 variants = ["LOVA PERSON"] # v18: 64 rows
