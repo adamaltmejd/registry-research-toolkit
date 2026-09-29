@@ -1,10 +1,14 @@
 """Checked codebook bindings preserve original evidence and bounded ambiguity."""
 
 from dataclasses import replace
+from functools import cache
+from pathlib import Path
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta_build._curation import SentinelCode
+from reg_meta_build.classifications import load_valid_codes
+from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationCode,
@@ -748,3 +752,99 @@ def test_override_wins_over_label_rule_on_its_window():
         duplicate_overrides=duplicate_overrides,
     )
     assert duplicate_overrides == {"classifications/FIX.toml#/binding/variable/1"}
+
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+_CURATION = _REPO_ROOT / "curation"
+_CLASSIFICATION_CODES = _REPO_ROOT / "input_data" / "classifications"
+
+
+@cache
+def _repo_label_rules() -> dict[str, str]:
+    tree = load_curation_tree(_CURATION)
+    return {
+        label: entry.classification.slug
+        for entry in tree.classifications
+        for label in entry.binding.value_set_labels
+    }
+
+
+@cache
+def _repo_book(short_name: str, codes_file: str) -> ResolvedClassification:
+    return ResolvedClassification(
+        slug=short_name.lower(),
+        short_name=short_name,
+        name=short_name,
+        codes=tuple(
+            ResolvedClassificationCode(code=code, label=label)
+            for code, label in load_valid_codes(
+                _CLASSIFICATION_CODES / codes_file
+            ).items()
+        ),
+    )
+
+
+def _synthetic_grouped_claim(setup, *, label: str, code: str):
+    key, original = next(iter(setup[2].items()))
+    claim = replace(
+        original.claims[0],
+        version_label=label,
+        members=(replace(original.claims[0].members[0], code=code),),
+    )
+    return key, {key: resolve_code_membership((claim,))}
+
+
+@pytest.mark.parametrize(
+    ("label", "code"),
+    [
+        ("SNI 2002, begränsad nivå", "01"),
+        ("SNI 2002, begränsad nivå", "42"),
+        ('SNI 2007, grov nivå - "populärversion"', "G01"),
+        ('SNI 2007, grov nivå - "populärversion"', "G99"),
+        ('SNI 2007, utökad nivå - "populärversion"', "U01"),
+        ('SNI 2007, utökad nivå - "populärversion"', "U99"),
+    ],
+)
+def test_grouped_sni_reporting_labels_are_not_bound_to_detailed_books(label, code):
+    setup = _setup()
+    key, coding = _synthetic_grouped_claim(setup, label=label, code=code)
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding=coding,
+        classifications={
+            "sni2002": _repo_book("SNI2002", "sni2002.csv"),
+            "sni2007": _repo_book("SNI2007", "sni2007.csv"),
+        },
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules=_repo_label_rules(),
+    )
+    assert result.diagnostics == ()
+    segment = result.coding[key].segments[0]
+    assert segment.classification is None
+    assert segment.conformance is None
+    assert segment.code_set is not None
+    assert segment.code_set.members == ((code, "Source label"),)
+    assert result.coding[key].claims[0].version_label == label
+    assert (segment.valid_from, segment.valid_to) == ("2020-01-01", "2020-12-31")
+    assert not any(p.startswith("label rule:") for p in segment.provenance)
+
+
+def test_retained_detailed_sni_label_still_binds():
+    setup = _setup()
+    key, coding = _synthetic_grouped_claim(
+        setup, label="SNI 2002, grov nivå", code="01"
+    )
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding=coding,
+        classifications={"sni2002": _repo_book("SNI2002", "sni2002.csv")},
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules=_repo_label_rules(),
+    )
+    assert result.diagnostics == ()
+    segment = result.coding[key].segments[0]
+    assert segment.classification == "sni2002"
+    assert segment.conformance is not None and segment.conformance.status == "kept"
+    assert any(p.startswith("label rule:") for p in segment.provenance)

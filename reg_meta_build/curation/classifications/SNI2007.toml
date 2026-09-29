@@ -32,8 +32,6 @@ value_set_labels = [
   "SNI 2007, Branscher Huvudgrupp, alternativ",
   "Standard för svensk näringsgrensindelning 2007, Aktiviteter",
   "Standard för svensk näringsgrensindelning 2007, Branscher",
-  "SNI 2007, grov nivå - \"populärversion\"",
-  "SNI 2007, utökad nivå - \"populärversion\"",
   "SNI 2007, grov redovisningsnivå",
   "SNI 2007, utökad redovisningsnivå",
   "SNI 2007, konjunkturstatistik, variant",
