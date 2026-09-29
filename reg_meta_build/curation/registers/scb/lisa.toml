@@ -1278,6 +1278,12 @@ variable = "34.31193"
 columns = { MedbGrEg3 = "34.31193.medbgreg-eu27-2007", MedbGrEg5 = "34.31193.medbgreg-eu27-2020" }
 columns_ref = "Y-318 2026-09-29: SCB LISA VarId 31193 explicitly distinguishes Världsdelar EU(27 2007) (MedbGrEg3, 34 annual originals 1990-2023, 11 associations/member) and Världsdelar EU(27 2020) (MedbGrEg5, 4 annual originals 2020-2023, 12 associations/member), both with level Världsdelar, nollutfyllnad. Operational definitions distinguish EU grouping applicable in 2007-2019 from since 2020, but both groupings are co-delivered in 2020-2023. Preserve those originals; classification vintage is not an observation-year cutoff."
 
+# Y-319: ordinary and detailed SUN2020 groups are co-delivered but distinct.
+[[identity.partition]]
+variable = "34.6416"
+columns = { Sun2020Grp = "34.6416.sun2020grp", Sun2020Grp_Detalj = "34.6416.sun2020grp-detalj" }
+columns_ref = "Y-319 2026-09-29: SCB LISA VarId 6416 explicitly distinguishes SUN2020 Gruppering (about 100 education groups, five annual originals 2019-2023, 97 coding associations/member) from SUN2020 Gruppering Detaljerad (about 130 groups, three annual originals 2021-2023, 132 associations/member). Both are delivered in 2021-2023. Preserve the detailed delivery start in 2021, all original source fields including the missing ordinary operational definition where delivered, and all coding."
+
 [[variant]]
 native_id = "34.151"
 slug = "arbetsstallen"
@@ -1887,6 +1893,15 @@ slug = "utbildningsniva-aggregat-old-sun2000"
 [[variable]]
 native_id = "34.774.utbildningsniva-aggregat-old-sun2020"
 slug = "utbildningsniva-aggregat-old-sun2020"
+
+# Y-319: qualified SUN2020 grouping detail; the native fallback stays.
+[[variable]]
+native_id = "34.6416.sun2020grp"
+slug = "sun2020grp"
+
+[[variable]]
+native_id = "34.6416.sun2020grp-detalj"
+slug = "sun2020grp-detalj"
 
 [[variable]]
 native_id = "34.1165"

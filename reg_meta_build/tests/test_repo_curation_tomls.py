@@ -11,6 +11,7 @@ real corpus and stays maintainer-build-only by design.
 
 from __future__ import annotations
 
+import json
 from collections import Counter
 from pathlib import Path
 
@@ -2145,3 +2146,77 @@ def test_related_documents_unknown_top_level_key_raises_curation_error(
         load_related_documents(path)
     assert exc_info.value.code == "related_documents_invalid"
     assert "top-level" in exc_info.value.message
+
+
+def test_repo_sun2020_levels_and_grouping_detail_have_exact_owners() -> None:
+    tree = load_curation_tree(_CURATION)
+    expected = {
+        "47.65": {
+            "SUNInr1": "47.65.suninr-1",
+            "SUNInr2": "47.65.suninr-2",
+            "SunInr3": "47.65.suninr-3",
+            "SUNInr3": "47.65.suninr-3",
+            "SUNInr": "47.65.suninr-4",
+        },
+        "34.6416": {
+            "Sun2020Grp": "34.6416.sun2020grp",
+            "Sun2020Grp_Detalj": "34.6416.sun2020grp-detalj",
+        },
+    }
+    partitions = [
+        entry
+        for register in tree.registers
+        for entry in register.identity.partition
+        if entry.variable in expected
+    ]
+    assert len(partitions) == 2
+    assert {entry.variable: dict(entry.columns) for entry in partitions} == expected
+    assert all(not entry.unassigned_columns for entry in partitions)
+
+    hreg = expected["47.65"]
+    assert hreg["SunInr3"] == hreg["SUNInr3"]
+    assert len(set(hreg.values())) == 4
+    lisa = expected["34.6416"]
+    assert lisa["Sun2020Grp"] != lisa["Sun2020Grp_Detalj"]
+
+    owners = {owner for columns in expected.values() for owner in columns.values()}
+    assert len(owners) == 6
+    slugs = {owner: owner.split(".", 2)[2] for owner in owners}
+    declarations = {
+        entry.native_id: entry.slug
+        for register in tree.registers
+        for entry in register.variable
+        if entry.native_id in owners | {"47.1315"}
+    }
+    assert declarations == {
+        **slugs,
+        "47.1315": "utbildnings-inriktning-sun-2000",
+    }
+    assert "47.1315" not in expected
+    assert all(not owner.startswith("47.1315.") for owner in owners)
+
+    slug_dir = repo_slug_dir()
+    assert slug_dir is not None
+    entries = load_slug_dir(slug_dir)
+    named = {
+        entry.source_id: entry.slug
+        for entry in entries
+        if entry.provider == "scb"
+        and entry.kind == "variable"
+        and entry.source_id in owners | {"47.65", "34.6416", "47.1315"}
+    }
+    assert named == {
+        **slugs,
+        "47.65": "suninr",
+        "34.6416": "sun2020grp",
+        "47.1315": "utbildnings-inriktning-sun-2000",
+    }
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())[
+        "variable"
+    ]
+    assert {key: snapshot[key] for key in (f"scb/{owner}" for owner in owners)} == {
+        f"scb/{owner}": slug for owner, slug in slugs.items()
+    }
+    assert snapshot["scb/47.65"] == "suninr"
+    assert snapshot["scb/34.6416"] == "sun2020grp"
+    assert snapshot["scb/47.1315"] == "utbildnings-inriktning-sun-2000"

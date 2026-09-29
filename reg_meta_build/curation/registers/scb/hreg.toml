@@ -12,6 +12,13 @@ variable = "47.29507"
 columns = { TjKat_1995 = "47.29507.anstallningskategori-1995", TjKat_2001 = "47.29507.anstallningskategori-2001", TjKat_2008 = "47.29507.anstallningskategori-2008", TjKat = "47.29507.anstallningskategori-2012" }
 columns_ref = "Y-318 2026-09-29: SCB HREG VarId 29507 explicitly delivers Anställningskategori för UoH 1995-2000, 2001-2007, 2008-2012 and 2012- as four classification versions. Prepared v28 has TjKat_1995 6 originals/6 members (1995-2000, variant 960), TjKat_2001 20/13 (1995-2007, variants 960/104), TjKat_2008 8/4 (2008-2011, variant 104), and TjKat 52/29 (1995-2023, variants 960/104); member coding associations 72/169/44/406. Operational definitions state the 2001 category/assignment change and retrospective application to 1995, the 2008 cleaners code 11 to technical staff code 10 change, and the 2012 terminology change. Classification vintage is not an observation-year cutoff; preserve every original and co-delivered version."
 
+# Y-319: SUN2020 education-field positions are distinct delivered levels.
+# SunInr3 and SUNInr3 share the source's identical three-position descriptor.
+[[identity.partition]]
+variable = "47.65"
+columns = { SUNInr1 = "47.65.suninr-1", SUNInr2 = "47.65.suninr-2", SunInr3 = "47.65.suninr-3", SUNInr3 = "47.65.suninr-3", SUNInr = "47.65.suninr-4" }
+columns_ref = "Y-319 2026-09-29: SCB HREG VarId 65 explicitly describes SUN 2020 Utbildningsinriktning at 1, 2, 3 and 4 positions. Prepared v28 has SUNInr1 4 pooled originals/40 coding associations, SUNInr2 4/104, SUNInr3 4/472, SunInr3 49/5782, and SUNInr 4/1508. The two three-position spellings have the same descriptor. Each uppercase literal has one pooled original per variant 1, 10, 11 and 15: SUNInr1 1970-2024, SUNInr2 1971-2024, SUNInr3 1972-2024 and SUNInr 1970-2024. SunInr3 also has 34 semester originals in 2009-2025, 14 annual originals in 2011-2024 and one pooled academic-year original in 1977/1978-2024/2025. Preserve all source periods and coding. The same SunInr3 literal on VarId 1315 is a separate SUN2000 three-position classification in 2005-2008 and stays outside this partition."
+
 # Y-113..Y-120 HREG evidence comes from the SWECOV inventory and SCB's
 # 2026-03-09 Registerinformation export. KursOrt, ProgOrt and YProg are excluded:
 # those apparent misses are coalescer defects, not holdings corrections (see report.md).
@@ -891,6 +898,23 @@ slug = "imputerad"
 [[variable]]
 native_id = "47.66.sunniva3"
 slug = "utbildningsniva"
+
+# Y-319: qualified SUN2020 education-field levels; the native fallback stays.
+[[variable]]
+native_id = "47.65.suninr-1"
+slug = "suninr-1"
+
+[[variable]]
+native_id = "47.65.suninr-2"
+slug = "suninr-2"
+
+[[variable]]
+native_id = "47.65.suninr-3"
+slug = "suninr-3"
+
+[[variable]]
+native_id = "47.65.suninr-4"
+slug = "suninr-4"
 
 # register 50 (slp)
 
