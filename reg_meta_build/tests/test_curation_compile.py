@@ -31,7 +31,11 @@ from reg_meta_build.curation_compile import (
     finalize_classification_bindings,
     tree_sha256,
 )
-from reg_meta_build.curation_tree import load_curation_tree
+from reg_meta_build.curation_tree import (
+    ErrataDataTypeEntry,
+    load_curation_tree,
+    load_register_files,
+)
 from reg_meta_build.id import mint
 from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.prepared_sources import (
@@ -77,6 +81,7 @@ from reg_meta_build.source_naming import (
 )
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
+    CodeSetReference,
     DeliveredCell,
     NativeCoordinates,
     RecordLocator,
@@ -682,8 +687,13 @@ def _case_record(
     parent: Literal["register", "variant"] | None = None,
     fields: SourceFields | None = None,
     references: tuple[str, ...] = (),
+    source: str | None = None,
+    code_set_references: tuple[CodeSetReference, ...] = (),
+    delivered_cells: tuple[DeliveredCell, ...] = (),
 ) -> SourceRecord:
-    source = "Socialstyrelsen/test.xlsx" if provider == "sos" else "Agency/test.toml"
+    source = source or (
+        "Socialstyrelsen/test.xlsx" if provider == "sos" else "Agency/test.toml"
+    )
     reg = SourceCoordinate(
         status="value",
         name=register if provider == "sos" else None,
@@ -716,7 +726,7 @@ def _case_record(
         native=NativeCoordinates(),
     )
     facts = ()
-    cells = ()
+    cells = delivered_cells
     if parent is not None:
         coordinate = reg if parent == "register" else var
         parent_fields = fields or SourceFields(name=value_field(variant or register))
@@ -772,6 +782,7 @@ def _case_record(
         fields=fields or SourceFields(),
         parent_facts=facts,
         delivered_cells=cells,
+        code_set_references=code_set_references,
     )
 
 
@@ -785,14 +796,14 @@ def _route_register(*routes):
                 for token, names in routes
             )
         ),
-        errata=SimpleNamespace(data_type=()),
+        errata=SimpleNamespace(data_type=(), classification_reference=()),
     )
 
 
 def _sos_type_register():
     register = _route_register()
     register.errata.data_type = (
-        SimpleNamespace(
+        ErrataDataTypeEntry(
             deldatamangd="A_LOVA_HOSP",
             variable="DESLEG_DATUM",
             column="DESLEG_DATUM",
@@ -800,6 +811,7 @@ def _sos_type_register():
             expected_representation="YYYY-MM-DD",
             data_type="date",
             evidence="Workbook row 28 declares a date.",
+            noted="2026-09-29",
         ),
     )
     return register
@@ -1044,6 +1056,198 @@ def test_sos_data_type_compiles_only_selected_native_source_scope():
     assert case.peer_guards[0].source == record.source
     assert case.peer_guards[0].expected_members == (record_ref(record),)
     assert report["sos/sample"]["entries_matched"] == [case.case_id]
+
+
+_MFR_SOURCE = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+
+
+def _mfr_reference_register(variable: str):
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1] / "curation"
+    register = next(
+        item
+        for item in load_register_files(root)
+        if item.register_info.provider == "sos" and item.register_info.slug == "mfr"
+    )
+    entry = next(
+        item
+        for item in register.errata.classification_reference
+        if item.variable == variable
+    )
+    return register.model_copy(
+        update={
+            "errata": register.errata.model_copy(
+                update={"classification_reference": (entry,)}
+            )
+        }
+    ), entry
+
+
+def _mfr_reference_record(entry, **changes) -> SourceRecord:
+    reference = changes.get("reference", entry.expected_reference)
+    fields = SourceFields(
+        column_name=value_field(changes.get("column", entry.column)),
+        classification_declared=value_field(reference),
+        representation=value_field(
+            changes.get("representation", entry.expected_representation)
+        ),
+        value_set_declared=value_field("1 = ja; 0 = nej"),
+        availability=value_field(True),
+    )
+    return _case_record(
+        provider="sos",
+        register=changes.get("register", "Medicinska födelseregistret"),
+        variant=changes.get("variant", entry.deldatamangd),
+        variable=changes.get("variable", entry.variable),
+        source=changes.get("source", _MFR_SOURCE),
+        fields=fields,
+        code_set_references=(
+            CodeSetReference(
+                reference_id="source-inline-codes",
+                content_sha256="a" * 64,
+                physical_locator="Metadata - Variabelnivå!F179",
+            ),
+        ),
+        delivered_cells=(
+            DeliveredCell(
+                name="classification_declared",
+                present=True,
+                raw_value=reference,
+                interpreted_value=reference,
+                hyperlink_location=reference,
+            ),
+        ),
+    )
+
+
+@pytest.mark.parametrize("variable", ["BPNR", "SECMARK"])
+def test_mfr_classification_reference_corrects_only_effective_field(variable: str):
+    register, entry = _mfr_reference_register(variable)
+    record = _mfr_reference_record(entry)
+    cases, diagnostics, statuses = _compile_sos_register(register, (record,))
+    case = next(
+        case for case in cases if "/errata.classification_reference/" in case.case_id
+    )
+    assert diagnostics == ()
+    assert statuses["entries_matched"] == [case.case_id]
+    assert {field.name for field in case.targets[0].alternatives[0].fields} == {
+        "column_name",
+        "classification_declared",
+        "representation",
+    }
+    assert case.peer_guards[0].source == _MFR_SOURCE
+    assert case.peer_guards[0].expected_members == (record_ref(record),)
+    effect = case.decision.effects[0]
+    assert isinstance(effect, CheckedFieldChange)
+    assert effect.replacement.name == "classification_declared"
+    assert effect.replacement.status == "unknown"
+    assert {field.name for field in effect.when} == {
+        "column_name",
+        "classification_declared",
+        "representation",
+    }
+    result = apply_occurrence_cases((record,), (case,))
+    assert result.diagnostics == ()
+    assert result.accounting[0].disposition == "applied"
+    effective = result.occurrences[0]
+    assert effective.fields.classification_declared == SourceField(status="unknown")
+    assert effective.fields.representation == record.fields.representation
+    assert effective.fields.value_set_declared == record.fields.value_set_declared
+    assert effective.fields.availability == record.fields.availability
+    assert effective.edition_scope == record.edition_scope
+    assert effective.edition_period_scope == record.edition_period_scope
+    assert effective.source_records == (record,)
+    assert effective.source_records[0].code_set_references == record.code_set_references
+    assert record.fields.classification_declared == value_field(
+        entry.expected_reference
+    )
+    assert record.delivered_cells[0].hyperlink_location == entry.expected_reference
+
+
+@pytest.mark.parametrize("variable", ["BPNR", "SECMARK"])
+def test_mfr_classification_reference_fails_closed_on_changed_facts(variable: str):
+    register, entry = _mfr_reference_register(variable)
+    original = _mfr_reference_record(entry)
+    cases, _, _ = _compile_sos_register(register, (original,))
+    case = next(
+        case for case in cases if "/errata.classification_reference/" in case.case_id
+    )
+    for changes in (
+        {"variable": "OTHER"},
+        {"variant": "OTHER"},
+        {"column": "OTHER"},
+        {"reference": "Other!A1"},
+        {"representation": "different domain"},
+    ):
+        changed = _mfr_reference_record(entry, **changes)
+        _, diagnostics, statuses = _compile_sos_register(register, (changed,))
+        assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+        assert statuses["stale"] == [case.case_id]
+        assert apply_occurrence_cases((changed,), (case,)).accounting[
+            0
+        ].disposition == ("stale")
+    missing = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={"classification_declared": None}
+            )
+        }
+    )
+    _, diagnostics, statuses = _compile_sos_register(register, (missing,))
+    assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+    assert statuses["stale"] == [case.case_id]
+    for changes in ({"source": "Socialstyrelsen/other.xlsx"}, {"register": "OTHER"}):
+        changed = _mfr_reference_record(entry, **changes)
+        assert apply_occurrence_cases((changed,), (case,)).accounting[
+            0
+        ].disposition == ("stale")
+    peer = _distinct_sos_record(_mfr_reference_record(entry, column="OTHER"))
+    _, diagnostics, statuses = _compile_sos_register(register, (original, peer))
+    assert [issue.code for issue in diagnostics] == ["overbroad_curation_entry"]
+    assert statuses["over_broad"] == [case.case_id]
+    assert set(diagnostics[0].refs) == {record_ref(original), record_ref(peer)}
+    assert apply_occurrence_cases((original, peer), (case,)).accounting[
+        0
+    ].disposition == ("stale")
+
+
+def test_mfr_reference_entries_exclude_missing_sheet_and_bdiag_consumers():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1] / "curation"
+    register = next(
+        item
+        for item in load_register_files(root)
+        if item.register_info.provider == "sos" and item.register_info.slug == "mfr"
+    )
+    assert {
+        (item.deldatamangd, item.variable)
+        for item in register.errata.classification_reference
+    } == {
+        ("MFR_IVF", name)
+        for name in ("BPNR", "BPSEUDO", "EMBRYON", "ETDATUM", "HINNSACK")
+    } | {("MFR", name) for name in ("SECMARK", "SUGMARK", "TANGMARK")}
+    assert all(
+        item.expected_reference == "Kodlista_förlossningssätt!A1"
+        and item.expected_representation == "1 = ja" + " " * 538 + "0 = nej"
+        for item in register.errata.classification_reference
+        if item.deldatamangd == "MFR"
+    )
+
+
+def test_mfr_reference_absent_full_source_vs_skipped_subset():
+    register, _ = _mfr_reference_register("BPNR")
+    tree = SimpleNamespace(registers=(register,))
+    prepared = SimpleNamespace(value_sources=(), records=SimpleNamespace())
+    case_id = f"{register.source_file}#/errata.classification_reference/1"
+    _, diagnostics, report = compile_sos_thin(tree, prepared, (), subset=True)
+    assert diagnostics == ()
+    assert report["sos/mfr"]["entries_read"] == [case_id]
+    assert report["sos/mfr"]["not_evaluated_in_subset"] == [case_id]
+    _, diagnostics, report = compile_sos_thin(tree, prepared, (), subset=False)
+    assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+    assert report["sos/mfr"]["stale"] == [case_id]
 
 
 def test_thin_native_naming_captures_complete_family_guard(tmp_path):

@@ -24,7 +24,11 @@ from .cis2016_matrix import (
     load_cis2016_matrix,
 )
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
-from .curation_tree import EnrichmentAliasEntry, EnrichmentDescriptionEntry
+from .curation_tree import (
+    EnrichmentAliasEntry,
+    EnrichmentDescriptionEntry,
+    ErrataDataTypeEntry,
+)
 from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
 from .normalization import normalize_token
 from .prepared_catalog import ReferenceEvidence
@@ -2856,7 +2860,9 @@ def compile_sos_thin(
                     new_cases = _compile_thin_register(selected, sessions)
                 cases.setdefault(scope_key, []).extend(new_cases)
     for register in tree.registers:
-        if register.register_info.provider != "sos" or not register.errata.data_type:
+        if register.register_info.provider != "sos" or not (
+            register.errata.data_type or register.errata.classification_reference
+        ):
             continue
         name = f"sos/{register.register_info.slug}"
         if name in report:
@@ -2871,21 +2877,27 @@ def compile_sos_thin(
                 "not_evaluated_in_subset",
             )
         }
-        for index, entry in enumerate(register.errata.data_type, 1):
-            case_id = f"{register.source_file}#/errata.data_type/{index}"
-            statuses["entries_read"].append(case_id)
-            statuses["not_evaluated_in_subset" if subset else "stale"].append(case_id)
-            if not subset:
-                diagnostics.append(
-                    ResolutionDiagnostic(
-                        code="stale_curation_entry",
-                        severity="error",
-                        case_id=case_id,
-                        subject=entry.variable,
-                        detail=f"{case_id}: owning SOS register has no selected source scope",
-                        withheld_output=(case_id,),
-                    )
+        for table, entries in (
+            ("data_type", register.errata.data_type),
+            ("classification_reference", register.errata.classification_reference),
+        ):
+            for index, entry in enumerate(entries, 1):
+                case_id = f"{register.source_file}#/errata.{table}/{index}"
+                statuses["entries_read"].append(case_id)
+                statuses["not_evaluated_in_subset" if subset else "stale"].append(
+                    case_id
                 )
+                if not subset:
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code="stale_curation_entry",
+                            severity="error",
+                            case_id=case_id,
+                            subject=entry.variable,
+                            detail=f"{case_id}: owning SOS register has no selected source scope",
+                            withheld_output=(case_id,),
+                        )
+                    )
     return (
         {
             key: tuple(sorted(value, key=lambda case: case.case_id))
@@ -3255,102 +3267,117 @@ def _compile_sos_register(
                     withheld_output=(ref,),
                 )
             )
-    for index, entry in enumerate(register.errata.data_type, 1):
-        case_id = f"{register.source_file}#/errata.data_type/{index}"
-        statuses["entries_read"].append(case_id)
-        peers = tuple(
-            record
-            for record in variables
-            if record.subject.variable.status == "value"
-            and record.subject.variable.native_id == entry.variable
-            and record.subject.variant.status == "value"
-            and record.subject.variant.name == entry.deldatamangd
-        )
-        matching = tuple(
-            record
-            for record in peers
-            if _source_text(record.fields.column_name) == entry.column
-        )
-        valid = (
-            len(peers) == 1
-            and len(matching) == 1
-            and _source_text(matching[0].fields.data_type) == entry.expected_type
-            and _source_text(matching[0].fields.representation)
-            == entry.expected_representation
-        )
-        if not valid:
-            status = "over_broad" if len(peers) > 1 else "stale"
-            statuses[status].append(case_id)
-            diagnostics.append(
-                ResolutionDiagnostic(
-                    code=(
-                        "overbroad_curation_entry"
-                        if status == "over_broad"
-                        else "stale_curation_entry"
-                    ),
-                    severity="error",
-                    case_id=case_id,
-                    subject=entry.variable,
-                    detail=f"{case_id}: expected one original {entry.deldatamangd}/{entry.variable} peer and one {entry.column!r} record with type {entry.expected_type!r} and representation {entry.expected_representation!r}; found {len(peers)} peers and {len(matching)} column records",
-                    refs=tuple(record_ref(record) for record in peers),
-                    withheld_output=(case_id,),
+    for table, entries in (
+        ("data_type", register.errata.data_type),
+        ("classification_reference", register.errata.classification_reference),
+    ):
+        for index, entry in enumerate(entries, 1):
+            case_id = f"{register.source_file}#/errata.{table}/{index}"
+            statuses["entries_read"].append(case_id)
+            peers = tuple(
+                record
+                for record in variables
+                if record.subject.variable.status == "value"
+                and record.subject.variable.native_id == entry.variable
+                and record.subject.variant.status == "value"
+                and record.subject.variant.name == entry.deldatamangd
+            )
+            matching = tuple(
+                record
+                for record in peers
+                if _source_text(record.fields.column_name) == entry.column
+            )
+            is_type = isinstance(entry, ErrataDataTypeEntry)
+            field_name = "data_type" if is_type else "classification_declared"
+            expected_label = "type" if is_type else "classification reference"
+            expected = entry.expected_type if is_type else entry.expected_reference
+            valid = (
+                len(peers) == 1
+                and len(matching) == 1
+                and _source_text(getattr(matching[0].fields, field_name)) == expected
+                and _source_text(matching[0].fields.representation)
+                == entry.expected_representation
+            )
+            if not valid:
+                status = "over_broad" if len(peers) > 1 else "stale"
+                statuses[status].append(case_id)
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code=(
+                            "overbroad_curation_entry"
+                            if status == "over_broad"
+                            else "stale_curation_entry"
+                        ),
+                        severity="error",
+                        case_id=case_id,
+                        subject=entry.variable,
+                        detail=f"{case_id}: expected one original {entry.deldatamangd}/{entry.variable} peer and one {entry.column!r} record with {expected_label} {expected!r} and representation {entry.expected_representation!r}; found {len(peers)} peers and {len(matching)} column records",
+                        refs=tuple(record_ref(record) for record in peers),
+                        withheld_output=(case_id,),
+                    )
+                )
+                continue
+            record = matching[0]
+            ref = record_ref(record)
+            targets = capture_expectations(
+                (record,), fields=("column_name", field_name, "representation")
+            )
+            replacement = (
+                FieldExpectation(
+                    name="data_type", status="value", value=entry.data_type
+                )
+                if is_type
+                else FieldExpectation(
+                    name="classification_declared", status="unknown", value=None
                 )
             )
-            continue
-        record = matching[0]
-        ref = record_ref(record)
-        targets = capture_expectations(
-            (record,), fields=("column_name", "data_type", "representation")
-        )
-        cases.append(
-            CurationCase(
-                case_id=case_id,
-                targets=targets,
-                peer_guards=(
-                    PeerGuard(
-                        guard_id=case_id,
-                        source=record.source,
-                        coordinates=(
-                            ("register", record.subject.register_name),
-                            ("variable", record.subject.variable),
-                            ("variant", record.subject.variant),
-                        ),
-                        expected_members=(ref,),
-                    ),
-                ),
-                decision=OccurrenceCorrectionDecision(
-                    reviewed=True,
-                    effects=(
-                        CheckedFieldChange(
-                            ref=ref,
-                            replacement=FieldExpectation(
-                                name="data_type", status="value", value=entry.data_type
+            cases.append(
+                CurationCase(
+                    case_id=case_id,
+                    targets=targets,
+                    peer_guards=(
+                        PeerGuard(
+                            guard_id=case_id,
+                            source=record.source,
+                            coordinates=(
+                                ("register", record.subject.register_name),
+                                ("variable", record.subject.variable),
+                                ("variant", record.subject.variant),
                             ),
-                            when=(
-                                FieldExpectation(
-                                    name="column_name",
-                                    status="value",
-                                    value=entry.column,
-                                ),
-                                FieldExpectation(
-                                    name="data_type",
-                                    status="value",
-                                    value=entry.expected_type,
-                                ),
-                                FieldExpectation(
-                                    name="representation",
-                                    status="value",
-                                    value=entry.expected_representation,
+                            expected_members=(ref,),
+                        ),
+                    ),
+                    decision=OccurrenceCorrectionDecision(
+                        reviewed=True,
+                        effects=(
+                            CheckedFieldChange(
+                                ref=ref,
+                                replacement=replacement,
+                                when=(
+                                    FieldExpectation(
+                                        name="column_name",
+                                        status="value",
+                                        value=entry.column,
+                                    ),
+                                    FieldExpectation(
+                                        name=field_name,
+                                        status="value",
+                                        value=expected,
+                                    ),
+                                    FieldExpectation(
+                                        name="representation",
+                                        status="value",
+                                        value=entry.expected_representation,
+                                    ),
                                 ),
                             ),
                         ),
+                        reason=entry.evidence,
+                        provenance=f"{case_id}: {entry.evidence}",
                     ),
-                    reason=entry.evidence,
-                    provenance=f"{case_id}: {entry.evidence}",
-                ),
+                )
             )
-        )
-        statuses["entries_matched"].append(case_id)
+            statuses["entries_matched"].append(case_id)
     return tuple(cases), tuple(diagnostics), statuses
 
 

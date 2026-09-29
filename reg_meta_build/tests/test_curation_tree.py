@@ -8,6 +8,7 @@ import pytest
 from pydantic import ValidationError
 from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_tree import (
+    ErrataClassificationReferenceEntry,
     ErrataDeliveredEntry,
     load_classification_families,
     load_classifications,
@@ -333,6 +334,59 @@ def test_sos_data_type_duplicate_target_and_non_sos_rejected(tmp_path: Path) -> 
         header.replace('provider = "sos"', 'provider = "scb"') + _SOS_TYPE_ROW,
         encoding="utf-8",
     )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert "applies to SOS registers" in excinfo.value.message
+
+
+def test_sos_classification_reference_entry_is_bounded_and_keeps_inner_spaces() -> None:
+    row = {
+        "deldatamangd": "MFR",
+        "variable": "SECMARK",
+        "column": "SECMARK",
+        "expected_reference": "Kodlista_förlossningssätt!A1",
+        "expected_representation": "1 = ja" + " " * 538 + "0 = nej",
+        "evidence": "Workbook row 179 and derivation sheet rows 6-7.",
+        "noted": "2026-09-29",
+    }
+    entry = ErrataClassificationReferenceEntry.model_validate(row)
+    assert len(entry.expected_representation) == 551
+    assert entry.expected_representation == row["expected_representation"]
+    for field, value in (
+        ("deldatamangd", " MFR"),
+        ("variable", ""),
+        ("column", "SECMARK "),
+        ("expected_reference", " "),
+        ("expected_representation", " 1 = ja"),
+        ("evidence", ""),
+        ("noted", "20260929"),
+        ("replacement", "FIX"),
+    ):
+        with pytest.raises(ValidationError):
+            ErrataClassificationReferenceEntry.model_validate({**row, field: value})
+
+
+def test_sos_classification_reference_duplicate_and_non_sos_rejected(
+    tmp_path: Path,
+) -> None:
+    row = (
+        '[[errata.classification_reference]]\ndeldatamangd = "MFR"\n'
+        'variable = "SECMARK"\ncolumn = "SECMARK"\n'
+        'expected_reference = "Kodlista_förlossningssätt!A1"\n'
+        'expected_representation = "1 = ja  0 = nej"\n'
+        'evidence = "Workbook row 179"\nnoted = "2026-09-29"\n'
+    )
+    path = tmp_path / "registers/sos/sample.toml"
+    path.parent.mkdir(parents=True)
+    header = '[register]\nprovider = "sos"\nslug = "sample"\nnative_id = "1"\n'
+    path.write_text(header + row + row.replace("row 179", "row 194"))
+    with pytest.raises(RegMetaError) as excinfo:
+        load_register_files(tmp_path)
+    assert "duplicate classification reference target" in excinfo.value.message
+    path.unlink()
+    other = tmp_path / "registers/scb/sample.toml"
+    other.parent.mkdir(parents=True)
+    other.write_text(header.replace('provider = "sos"', 'provider = "scb"') + row)
     with pytest.raises(RegMetaError) as excinfo:
         load_register_files(tmp_path)
     assert "applies to SOS registers" in excinfo.value.message
