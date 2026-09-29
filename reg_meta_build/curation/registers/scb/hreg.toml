@@ -19,6 +19,24 @@ variable = "47.65"
 columns = { SUNInr1 = "47.65.suninr-1", SUNInr2 = "47.65.suninr-2", SunInr3 = "47.65.suninr-3", SUNInr3 = "47.65.suninr-3", SUNInr = "47.65.suninr-4" }
 columns_ref = "Y-319 2026-09-29: SCB HREG VarId 65 explicitly describes SUN 2020 Utbildningsinriktning at 1, 2, 3 and 4 positions. Prepared v28 has SUNInr1 4 pooled originals/40 coding associations, SUNInr2 4/104, SUNInr3 4/472, SunInr3 49/5782, and SUNInr 4/1508. The two three-position spellings have the same descriptor. Each uppercase literal has one pooled original per variant 1, 10, 11 and 15: SUNInr1 1970-2024, SUNInr2 1971-2024, SUNInr3 1972-2024 and SUNInr 1970-2024. SunInr3 also has 34 semester originals in 2009-2025, 14 annual originals in 2011-2024 and one pooled academic-year original in 1977/1978-2024/2025. Preserve all source periods and coding. The same SunInr3 literal on VarId 1315 is a separate SUN2000 three-position classification in 2005-2008 and stays outside this partition."
 
+# SCB delivers code and clear-text representations as separate columns.
+[[identity.partition]]
+variable = "47.1768"
+columns = { ExTyp = "47.1768.extyp", ExTypGrpText = "47.1768.extypgrptext" }
+columns_ref = "2026-09-29: SCB HREG VarId 1768 operational definitions explicitly distinguish translation to SCB-intern kod (ExTyp) from translation to klartext (ExTypGrpText). Prepared v28 delivers one ExTyp original in variant 15, pooled 1970-2024, with four Examenstyp (Forskarexamen) code associations D/E/F/L; one ExTypGrpText original in variant 1389, pooled 2016-2024, has one Beskrivande text nonmembership association. Preserve both representations, original periods and coding without inferring equivalence."
+
+# The source explicitly distinguishes CSN's three groups from SCB's two.
+[[identity.partition]]
+variable = "47.5249"
+columns = { Niva = "47.5249.niva-csn", "Nivå" = "47.5249.niva-scb" }
+columns_ref = "2026-09-29: SCB HREG VarId 5249 says CSNs variabel niva med tre värden blir SCB-variabeln nivå med två värden. Prepared v28 has 48 originals per literal in variant 1466 over 2001-2025, including multiple source editions. Niva delivers Utbildningsnivå för utlandsstudier, 3 grupper, with codes EG/FO/HÖ and 144 associations; Nivå delivers the 2 grupper classification, codes F/G and 96 associations. These are distinct classifications, not spelling aliases. Preserve all original periods and coding. Niva on VarId 1279 is outside this partition."
+
+# Application and study-documentation indicators use different blank meanings.
+[[identity.partition]]
+variable = "47.29830"
+columns = { StudieAvg = "47.29830.studieavg", AvgSkyldig = "47.29830.avgskyldig" }
+columns_ref = "2026-09-29: SCB HREG VarId 29830 distinguishes StudieAvg from UHR applications and AvgSkyldig from Lärosätenas studiedokumentationsregister. Prepared v28 has 62 StudieAvg originals in variants 2/1623/1624/1625 over 2011-2025 and 210 associations: J/Ja, N/Nej and literal blank with missing/unknown labels. AvgSkyldig has one variant 264 original pooled 1993/94-2024/25 with two associations, J/Ja-Finns and literal blank/Nej-Finns inte. AvgSkyldig prose says from autumn 2011, conflicting with its broad pooled source period. Preserve both original prose and period; do not infer an availability correction, recode blank or merge the indicators."
+
 # Y-113..Y-120 HREG evidence comes from the SWECOV inventory and SCB's
 # 2026-03-09 Registerinformation export. KursOrt, ProgOrt and YProg are excluded:
 # those apparent misses are coalescer defects, not holdings corrections (see report.md).
@@ -738,6 +756,14 @@ native_id = "47.1768"
 slug = "examenstyp"
 
 [[variable]]
+native_id = "47.1768.extyp"
+slug = "examenstyp-kod"
+
+[[variable]]
+native_id = "47.1768.extypgrptext"
+slug = "examenstyp-klartext"
+
+[[variable]]
 native_id = "47.1852"
 slug = "tjanstebenamning"
 
@@ -844,6 +870,14 @@ slug = "termin-for-ansokan"
 [[variable]]
 native_id = "47.29830"
 slug = "avgiftsskyldighet"
+
+[[variable]]
+native_id = "47.29830.studieavg"
+slug = "avgiftsskyldighet-studieavg"
+
+[[variable]]
+native_id = "47.29830.avgskyldig"
+slug = "avgiftsskyldighet-avgskyldig"
 
 [[variable]]
 native_id = "47.29874"
@@ -993,6 +1027,14 @@ slug = "verksamhetsomrade"
 [[variable]]
 native_id = "47.5249"
 slug = "niva-pa-utlandsstudier"
+
+[[variable]]
+native_id = "47.5249.niva-csn"
+slug = "niva-pa-utlandsstudier-csn"
+
+[[variable]]
+native_id = "47.5249.niva-scb"
+slug = "niva-pa-utlandsstudier-scb"
 
 [[variable]]
 native_id = "47.5976"

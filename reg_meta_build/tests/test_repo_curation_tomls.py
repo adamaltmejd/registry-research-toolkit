@@ -2218,3 +2218,215 @@ def test_repo_sun2020_levels_and_grouping_detail_have_exact_owners() -> None:
     assert snapshot["scb/47.65"] == "suninr"
     assert snapshot["scb/34.6416"] == "sun2020grp"
     assert snapshot["scb/47.1315"] == "utbildnings-inriktning-sun-2000"
+
+
+def test_repo_fee_bases_and_hreg_representations_keep_distinct_owners() -> None:
+    # Source descriptions distinguish total/component bases, code/text, CSN/SCB
+    # classifications and two fee indicators with different blank-code meanings.
+    # Literal reuse on another native identity must not broaden these maps.
+    expected = {
+        "25.1213": {
+            "AEPAVG": "25.1213.underlag-efterlevande-pensionsavgift",
+            "AEPAVG1": "25.1213.underlag-efterlevande-pensionsavgift-delperiod-1",
+            "AEPAVG2": "25.1213.underlag-efterlevande-pensionsavgift-delperiod-2",
+            "AEPAVG3": "25.1213.underlag-efterlevande-pensionsavgift-delperiod-3",
+        },
+        "25.1218": {
+            "ASJUKM": "25.1218.sjukforsakringsavg-lag-inkomst",
+            "ASJUKM1": "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-1",
+            "ASJUKM2": "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-2",
+            "ASJUKM3": "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-3",
+        },
+        "25.1220": {
+            "ASKAD": "25.1220.underlag-arbetsskadeavgift",
+            "ASKAD1": "25.1220.underlag-arbetsskadeavgift-delperiod-1",
+            "ASKAD2": "25.1220.underlag-arbetsskadeavgift-delperiod-2",
+            "ASKAD3": "25.1220.underlag-arbetsskadeavgift-delperiod-3",
+        },
+        "25.21834": {
+            "ASFAVG": "25.21834.asfavg",
+            "ASFAVG1": "25.21834.asfavg-delperiod-1",
+            "ASFAVG2": "25.21834.asfavg-delperiod-2",
+            "ASFAVG3": "25.21834.asfavg-delperiod-3",
+        },
+        "47.1768": {"ExTyp": "47.1768.extyp", "ExTypGrpText": "47.1768.extypgrptext"},
+        "47.5249": {"Niva": "47.5249.niva-csn", "Nivå": "47.5249.niva-scb"},
+        "47.29830": {
+            "StudieAvg": "47.29830.studieavg",
+            "AvgSkyldig": "47.29830.avgskyldig",
+        },
+    }
+    names = {
+        owner: owner.split(".", 2)[2]
+        for native, columns in expected.items()
+        if native.startswith("25.")
+        for owner in columns.values()
+    } | {
+        "47.1768.extyp": "examenstyp-kod",
+        "47.1768.extypgrptext": "examenstyp-klartext",
+        "47.5249.niva-csn": "niva-pa-utlandsstudier-csn",
+        "47.5249.niva-scb": "niva-pa-utlandsstudier-scb",
+        "47.29830.studieavg": "avgiftsskyldighet-studieavg",
+        "47.29830.avgskyldig": "avgiftsskyldighet-avgskyldig",
+    }
+    tree = load_curation_tree(_CURATION)
+    partitions = {
+        entry.variable: entry
+        for register in tree.registers
+        for entry in register.identity.partition
+    }
+    for native, columns in expected.items():
+        assert dict(partitions[native].columns) == columns
+        assert not partitions[native].unassigned_columns
+        assert len(set(columns.values())) == len(columns)
+    declarations = {
+        entry.native_id: entry.slug
+        for register in tree.registers
+        for entry in register.variable
+        if entry.native_id in names
+    }
+    assert declarations == names
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
+    assert {key: snapshot[key] for key in (f"scb/{owner}" for owner in names)} == {
+        f"scb/{owner}": slug for owner, slug in names.items()
+    }
+    # ASKAD is also delivered as compensation; Niva also labels another variable.
+    for negative in ("25.1594", "47.1279", "47.29874"):
+        assert negative not in expected
+        assert all(not owner.startswith(f"{negative}.") for owner in names)
+    assert snapshot["scb/25.1594"] == "arbetsskadeersattning"
+    assert snapshot["scb/47.29874"] == "programinriktning"
+
+
+def test_repo_iot_income_renames_retain_the_2019_source_basis_boundary() -> None:
+    expected = {
+        "25.591": {
+            "PKUAPEN": "25.591.tjanstepension-tjanst",
+            "KUPENS": "25.591.tjanstepension-tjanst",
+            "PAPEN": "25.591.tjanstepension-tjanst-agi-ku",
+        },
+        "25.1192": {
+            "TKUERS": "25.1192.ovriga-kostnadsersattningar",
+            "KUERS": "25.1192.ovriga-kostnadsersattningar",
+            "TERS": "25.1192.ovriga-kostnadsersattningar-agi-ku",
+        },
+        "25.1193": {
+            "TKUHOBB": "25.1193.ersattning-grund-egenavgifter-tjanst",
+            "THOBB": "25.1193.ersattning-grund-egenavgifter-tjanst-agi-ku",
+            "KUHOBBY": "25.1193.ersattning-grund-egenavgifter-tjanst",
+        },
+        "25.1194": {
+            "KULON": "25.1194.kontant-bruttolon-mm",
+            "TKULON": "25.1194.kontant-bruttolon-mm",
+            "TLON": "25.1194.kontant-bruttolon-mm-agi-ku",
+        },
+        "25.1196": {
+            "KUOVR": "25.1196.ovriga-skattepliktiga-ers-tjanst",
+            "TKUOVR": "25.1196.ovriga-skattepliktiga-ers-tjanst",
+            "TOVR": "25.1196.ovriga-skattepliktiga-ers-tjanst-agi-ku",
+        },
+        "25.21816": {
+            "SAKU": "25.21816.avdragen-preliminar-a-skatt-arbetsgivare",
+            "SKUARB": "25.21816.avdragen-preliminar-a-skatt-arbetsgivare",
+            "SARB": "25.21816.avdragen-preliminar-a-skatt-arbetsgivare-agi-ku",
+        },
+        "25.35587": {"SKSJO": "25.35587.sjomansskatt", "SSJO": "25.35587.sjomansskatt"},
+        "25.40060": {
+            "INFAST": "25.40060.inkomst-av-annan-fastighet",
+            "INAF": "25.40060.inkomst-av-annan-fastighet",
+            "INSFAST": "25.40060.inkomst-av-annan-fastighet",
+        },
+    }
+    tree = load_curation_tree(_CURATION)
+    iot = next(
+        register for register in tree.registers if register.register_info.slug == "iot"
+    )
+    partitions = {entry.variable: entry for entry in iot.identity.partition}
+    for native, columns in expected.items():
+        assert dict(partitions[native].columns) == columns
+        assert not partitions[native].unassigned_columns
+        owners = set(columns.values())
+        if native in {"25.35587", "25.40060"}:
+            assert len(owners) == 1
+        else:
+            assert len(owners) == 2
+            assert sum(owner.endswith("-agi-ku") for owner in owners) == 1
+    names = {
+        owner: owner.split(".", 2)[2]
+        for columns in expected.values()
+        for owner in columns.values()
+    }
+    assert {
+        entry.native_id: entry.slug
+        for entry in iot.variable
+        if entry.native_id in names
+    } == names
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
+    assert {key: snapshot[key] for key in (f"scb/{owner}" for owner in names)} == {
+        f"scb/{owner}": slug for owner, slug in names.items()
+    }
+    # KUPENS and TOVR also occur on other native variables; those stay separate.
+    assert not any(owner.startswith(("25.18384.", "25.30862.")) for owner in names)
+
+
+def test_repo_rtb_contexts_preserve_native_aliases_and_distinct_roles() -> None:
+    expected = {
+        "2.19": {"ARegion": "2.19.a-region", "AReg": "2.19.a-region"},
+        "2.250": {
+            "CivDatGRel": "2.250.civildat-tidigare-rel",
+            "CivilDatGRel": "2.250.civildat-tidigare-rel",
+        },
+        "2.251": {
+            "CivilG": "2.251.civilstand-tidigare",
+            "TidCivil": "2.251.civilstand-tidigare",
+        },
+        "2.267": {
+            "KonRel": "2.267.kon-relationsperson",
+            "KonMakPart": "2.267.kon-make-maka-partner",
+        },
+        "2.272": {
+            "VarGamCiv": "2.272.civilstand-tidigare-varaktighet",
+            "AktVar": "2.272.civilstand-tidigare-varaktighet",
+            "Aktvar": "2.272.civilstand-tidigare-varaktighet",
+        },
+        "2.293": {
+            "AntDodFoddTot": "2.293.antal-dodfodda",
+            "AntDodFodd": "2.293.antal-dodfodda",
+        },
+        "2.302": {
+            "FodDat": "2.302.fodelsedatum",
+            "FodelseDatumPnr": "2.302.fodelsedatum-personnummer",
+        },
+        "2.3195": {"HRegion": "2.3195.h-region", "HReg": "2.3195.h-region"},
+        "2.40288": {
+            "StorstOmr": "2.40288.storstadsomrade",
+            "StorStadsOmr": "2.40288.storstadsomrade",
+        },
+    }
+    tree = load_curation_tree(_CURATION)
+    rtb = next(
+        register for register in tree.registers if register.register_info.slug == "rtb"
+    )
+    partitions = {entry.variable: entry for entry in rtb.identity.partition}
+    for native, columns in expected.items():
+        assert dict(partitions[native].columns) == columns
+        assert not partitions[native].unassigned_columns
+        assert len(set(columns.values())) == (2 if native in {"2.267", "2.302"} else 1)
+    names = {
+        owner: owner.split(".", 2)[2]
+        for columns in expected.values()
+        for owner in columns.values()
+    }
+    assert {
+        entry.native_id: entry.slug
+        for entry in rtb.variable
+        if entry.native_id in names
+    } == names
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
+    assert {key: snapshot[key] for key in (f"scb/{owner}" for owner in names)} == {
+        f"scb/{owner}": slug for owner, slug in names.items()
+    }
+    # TidCivil on the current-status native variable cannot join previous status.
+    assert "2.15" not in expected
+    assert not any(owner.startswith("2.15.") for owner in names)
+    assert snapshot["scb/2.15.tidcivil"] == "tidpunkt-civilstand"

@@ -977,3 +977,92 @@ native_id = "2.24852.gfb-klassgruppering-efb"
 slug = "gfb-klassgruppering-efb"
 
 # register 200
+
+[[identity.partition]]
+variable = "2.19"
+columns = { "ARegion" = "2.19.a-region", "AReg" = "2.19.a-region" }
+columns_ref = "2026-09-29: SCB RTB VarId 19: ARegion and AReg share the documented A-region classification and native definition; the registered residence is observed at the original respective event on each variant. Prepared v28 has 95 physical originals/95 native members. Retain every original field, variant, source period and coding association."
+
+[[identity.partition]]
+variable = "2.250"
+columns = { "CivDatGRel" = "2.250.civildat-tidigare-rel", "CivilDatGRel" = "2.250.civildat-tidigare-rel" }
+columns_ref = "2026-09-29: SCB RTB VarId 250: CivDatGRel and CivilDatGRel share the previous related-person civil-status date definition and supplied YYYYMMDD operation on variant 56. Prepared v28 has 29 physical originals/29 native members. Retain every original field, variant, source period and coding association."
+
+[[identity.partition]]
+variable = "2.251"
+columns = { "CivilG" = "2.251.civilstand-tidigare", "TidCivil" = "2.251.civilstand-tidigare" }
+columns_ref = "2026-09-29: SCB RTB VarId 251: CivilG and TidCivil both describe civil status before the change; retain the historical numeric and later letter classifications, with their original validity. TidCivil on native 2.15 is outside this map. Prepared v28 has 34 physical originals/34 native members. Retain every original field, variant, source period and coding association."
+
+[[identity.partition]]
+variable = "2.267"
+columns = { "KonRel" = "2.267.kon-relationsperson", "KonMakPart" = "2.267.kon-make-maka-partner" }
+columns_ref = "2026-09-29: SCB RTB VarId 267: KonRel observes the related person at the civil-status change on variant 56; KonMakPart explicitly observes an eventual spouse or registered partner in population variant 53. Preserve both supplied roles and their original personal-identifier-based derivation, including the supplied 2012-quarter-1 wording. Prepared v28 has 45 physical originals/45 native members. Retain every original field, variant, source period and coding association."
+
+[[identity.partition]]
+variable = "2.272"
+columns = { "VarGamCiv" = "2.272.civilstand-tidigare-varaktighet", "AktVar" = "2.272.civilstand-tidigare-varaktighet", "Aktvar" = "2.272.civilstand-tidigare-varaktighet" }
+columns_ref = "2026-09-29: SCB RTB VarId 272: VarGamCiv, AktVar and Aktvar describe previous civil-status duration in days on variant 56. Preserve the source warning against use and the contradictory Antal år units; no unit normalization. Prepared v28 has 31 physical originals/31 native members. Retain every original field, variant, source period and coding association."
+
+[[identity.partition]]
+variable = "2.293"
+columns = { "AntDodFoddTot" = "2.293.antal-dodfodda", "AntDodFodd" = "2.293.antal-dodfodda" }
+columns_ref = "2026-09-29: SCB RTB VarId 293: AntDodFoddTot and AntDodFodd both count stillborn children in the same maternal birth; retain the original stillbirth and livebirth observation variants and their wording. Prepared v28 has 85 physical originals/57 native members. Retain every original field, variant, source period and coding association."
+
+[[identity.partition]]
+variable = "2.302"
+columns = { "FodDat" = "2.302.fodelsedatum", "FodelseDatumPnr" = "2.302.fodelsedatum-personnummer" }
+columns_ref = "2026-09-29: SCB RTB VarId 302: FodDat is the supplied child birth date in stillbirth variant 59; FodelseDatumPnr is explicitly derived from the first eight personal-identifier positions in population variant 53. Keep separate source representations, without reconstructing dates or claiming equality. Prepared v28 has 62 physical originals/34 native members. Retain every original field, variant, source period and coding association."
+
+[[identity.partition]]
+variable = "2.3195"
+columns = { "HRegion" = "2.3195.h-region", "HReg" = "2.3195.h-region" }
+columns_ref = "2026-09-29: SCB RTB VarId 3195: HRegion and HReg share the documented H-region classification and native definition; preserve all original event contexts, historical availability prose and classification validity. Prepared v28 has 80 physical originals/80 native members. Retain every original field, variant, source period and coding association."
+
+[[identity.partition]]
+variable = "2.40288"
+columns = { "StorstOmr" = "2.40288.storstadsomrade", "StorStadsOmr" = "2.40288.storstadsomrade" }
+columns_ref = "2026-09-29: SCB RTB VarId 40288: StorstOmr and StorStadsOmr share the supplied metropolitan-region definition. Keep the citizenship-change context on variant 64 and other events on their supplied variants. Prepared v28 has 92 physical originals/92 native members. Retain every original field, variant, source period and coding association."
+
+[[variable]]
+native_id = "2.19.a-region"
+slug = "a-region"
+
+[[variable]]
+native_id = "2.250.civildat-tidigare-rel"
+slug = "civildat-tidigare-rel"
+
+[[variable]]
+native_id = "2.251.civilstand-tidigare"
+slug = "civilstand-tidigare"
+
+[[variable]]
+native_id = "2.267.kon-relationsperson"
+slug = "kon-relationsperson"
+
+[[variable]]
+native_id = "2.267.kon-make-maka-partner"
+slug = "kon-make-maka-partner"
+
+[[variable]]
+native_id = "2.272.civilstand-tidigare-varaktighet"
+slug = "civilstand-tidigare-varaktighet"
+
+[[variable]]
+native_id = "2.293.antal-dodfodda"
+slug = "antal-dodfodda"
+
+[[variable]]
+native_id = "2.302.fodelsedatum"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "2.302.fodelsedatum-personnummer"
+slug = "fodelsedatum-personnummer"
+
+[[variable]]
+native_id = "2.3195.h-region"
+slug = "h-region"
+
+[[variable]]
+native_id = "2.40288.storstadsomrade"
+slug = "storstadsomrade"

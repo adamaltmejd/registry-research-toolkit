@@ -7004,3 +7004,192 @@ slug = "underlag-skattereduktion-rot-forman"
 [[variable]]
 native_id = "25.24169.underlag-skattereduktion-rot-forman-agi-ku"
 slug = "underlag-skattereduktion-rot-forman-agi-ku"
+
+
+# Source operational descriptions distinguish total fee-calculation bases from
+# delperiod 1 (January-April), 2 (May-July), and 3 (August-December).
+# These meanings do not narrow the delivered full-calendar-year periods.
+
+[[identity.partition]]
+variable = "25.1213"
+columns = { AEPAVG = "25.1213.underlag-efterlevande-pensionsavgift", AEPAVG1 = "25.1213.underlag-efterlevande-pensionsavgift-delperiod-1", AEPAVG2 = "25.1213.underlag-efterlevande-pensionsavgift-delperiod-2", AEPAVG3 = "25.1213.underlag-efterlevande-pensionsavgift-delperiod-3" }
+columns_ref = "SCB Registerinformation native 25.1213: original operational descriptions explicitly distinguish total AEPAVG from AEPAVG1 January-April, AEPAVG2 May-July and AEPAVG3 August-December bases. Pinned prepared source ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba: 153 originals/51 members in variant 25.763; total 1999-2024, components 1/2 2015-2016, component 3 2015 only. Retain all original full-calendar-year periods, int/bigint types, SEK units and Tal non-membership coding; no tax-rate or summed-total inference."
+
+[[identity.partition]]
+variable = "25.1218"
+columns = { ASJUKM = "25.1218.sjukforsakringsavg-lag-inkomst", ASJUKM1 = "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-1", ASJUKM2 = "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-2", ASJUKM3 = "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-3" }
+columns_ref = "SCB Registerinformation native 25.1218: original operational descriptions explicitly distinguish total ASJUKM from ASJUKM1 January-April, ASJUKM2 May-July and ASJUKM3 August-December bases. Pinned prepared source ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba: 153 originals/51 members in variant 25.763; total 1999-2024, components 1/2 2015-2016, component 3 2015 only. Retain all original full-calendar-year periods, int/bigint types, SEK units and Tal non-membership coding; no tax-rate or summed-total inference."
+
+[[identity.partition]]
+variable = "25.1220"
+columns = { ASKAD = "25.1220.underlag-arbetsskadeavgift", ASKAD1 = "25.1220.underlag-arbetsskadeavgift-delperiod-1", ASKAD2 = "25.1220.underlag-arbetsskadeavgift-delperiod-2", ASKAD3 = "25.1220.underlag-arbetsskadeavgift-delperiod-3" }
+columns_ref = "SCB Registerinformation native 25.1220: original operational descriptions explicitly distinguish total ASKAD from ASKAD1 January-April, ASKAD2 May-July and ASKAD3 August-December bases. Pinned prepared source ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba: 153 originals/51 members in variant 25.763; total 1999-2024, components 1/2 2015-2016, component 3 2015 only. Retain all original full-calendar-year periods, int/bigint types, SEK units and Tal non-membership coding; no tax-rate or summed-total inference. Native 25.1594 ASKAD is separately described Arbetsskadeersättning in 1992 and remains outside this map."
+
+[[identity.partition]]
+variable = "25.21834"
+columns = { ASFAVG = "25.21834.asfavg", ASFAVG1 = "25.21834.asfavg-delperiod-1", ASFAVG2 = "25.21834.asfavg-delperiod-2", ASFAVG3 = "25.21834.asfavg-delperiod-3" }
+columns_ref = "SCB Registerinformation native 25.21834: original operational descriptions explicitly distinguish total ASFAVG from ASFAVG1 January-April, ASFAVG2 May-July and ASFAVG3 August-December bases. Pinned prepared source ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba: 153 originals/51 members in variant 25.763; total 1999-2024, components 1/2 2015-2016, component 3 2015 only. Retain all original full-calendar-year periods, int/bigint types, SEK units and Tal non-membership coding; no tax-rate or summed-total inference."
+
+[[variable]]
+native_id = "25.1213.underlag-efterlevande-pensionsavgift"
+slug = "underlag-efterlevande-pensionsavgift"
+
+[[variable]]
+native_id = "25.1213.underlag-efterlevande-pensionsavgift-delperiod-1"
+slug = "underlag-efterlevande-pensionsavgift-delperiod-1"
+
+[[variable]]
+native_id = "25.1213.underlag-efterlevande-pensionsavgift-delperiod-2"
+slug = "underlag-efterlevande-pensionsavgift-delperiod-2"
+
+[[variable]]
+native_id = "25.1213.underlag-efterlevande-pensionsavgift-delperiod-3"
+slug = "underlag-efterlevande-pensionsavgift-delperiod-3"
+
+[[variable]]
+native_id = "25.1218.sjukforsakringsavg-lag-inkomst"
+slug = "sjukforsakringsavg-lag-inkomst"
+
+[[variable]]
+native_id = "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-1"
+slug = "sjukforsakringsavg-lag-inkomst-delperiod-1"
+
+[[variable]]
+native_id = "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-2"
+slug = "sjukforsakringsavg-lag-inkomst-delperiod-2"
+
+[[variable]]
+native_id = "25.1218.sjukforsakringsavg-lag-inkomst-delperiod-3"
+slug = "sjukforsakringsavg-lag-inkomst-delperiod-3"
+
+[[variable]]
+native_id = "25.1220.underlag-arbetsskadeavgift"
+slug = "underlag-arbetsskadeavgift"
+
+[[variable]]
+native_id = "25.1220.underlag-arbetsskadeavgift-delperiod-1"
+slug = "underlag-arbetsskadeavgift-delperiod-1"
+
+[[variable]]
+native_id = "25.1220.underlag-arbetsskadeavgift-delperiod-2"
+slug = "underlag-arbetsskadeavgift-delperiod-2"
+
+[[variable]]
+native_id = "25.1220.underlag-arbetsskadeavgift-delperiod-3"
+slug = "underlag-arbetsskadeavgift-delperiod-3"
+
+[[variable]]
+native_id = "25.21834.asfavg"
+slug = "asfavg"
+
+[[variable]]
+native_id = "25.21834.asfavg-delperiod-1"
+slug = "asfavg-delperiod-1"
+
+[[variable]]
+native_id = "25.21834.asfavg-delperiod-2"
+slug = "asfavg-delperiod-2"
+
+[[variable]]
+native_id = "25.21834.asfavg-delperiod-3"
+slug = "asfavg-delperiod-3"
+
+
+# Historical amount spellings retain source-native identity. For families crossing
+# 2019, keep annual-KU and mixed monthly-AGI/remaining-KU reporting bases separate.
+
+[[identity.partition]]
+variable = "25.591"
+columns = { PKUAPEN = "25.591.tjanstepension-tjanst", KUPENS = "25.591.tjanstepension-tjanst", PAPEN = "25.591.tjanstepension-tjanst-agi-ku" }
+columns_ref = "SCB Registerinformation native 25.591: all 150 physical originals/50 members explicitly describe the same source-native amount; exact supplied literals (PKUAPEN 1993-2018, KUPENS 1990-1992, PAPEN 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras. Cross-native literals remain outside this map: KUPENS native 25.18384."
+
+[[identity.partition]]
+variable = "25.1192"
+columns = { TKUERS = "25.1192.ovriga-kostnadsersattningar", KUERS = "25.1192.ovriga-kostnadsersattningar", TERS = "25.1192.ovriga-kostnadsersattningar-agi-ku" }
+columns_ref = "SCB Registerinformation native 25.1192: all 147 physical originals/49 members explicitly describe the same source-native amount; exact supplied literals (TKUERS 1993-2018, KUERS 1991-1992, TERS 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras."
+
+[[identity.partition]]
+variable = "25.1193"
+columns = { TKUHOBB = "25.1193.ersattning-grund-egenavgifter-tjanst", THOBB = "25.1193.ersattning-grund-egenavgifter-tjanst-agi-ku", KUHOBBY = "25.1193.ersattning-grund-egenavgifter-tjanst" }
+columns_ref = "SCB Registerinformation native 25.1193: all 147 physical originals/49 members explicitly describe the same source-native amount; exact supplied literals (TKUHOBB 1993-2018, THOBB 2019-2024, KUHOBBY 1991-1992) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras."
+
+[[identity.partition]]
+variable = "25.1194"
+columns = { KULON = "25.1194.kontant-bruttolon-mm", TKULON = "25.1194.kontant-bruttolon-mm", TLON = "25.1194.kontant-bruttolon-mm-agi-ku" }
+columns_ref = "SCB Registerinformation native 25.1194: all 174 physical originals/58 members explicitly describe the same source-native amount; exact supplied literals (KULON 1982-1992, TKULON 1993-2018, TLON 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras."
+
+[[identity.partition]]
+variable = "25.1196"
+columns = { KUOVR = "25.1196.ovriga-skattepliktiga-ers-tjanst", TKUOVR = "25.1196.ovriga-skattepliktiga-ers-tjanst", TOVR = "25.1196.ovriga-skattepliktiga-ers-tjanst-agi-ku" }
+columns_ref = "SCB Registerinformation native 25.1196: all 156 physical originals/52 members explicitly describe the same source-native amount; exact supplied literals (KUOVR 1988-1992, TKUOVR 1993-2018, TOVR 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras. Cross-native literals remain outside this map: TOVR native 25.30862."
+
+[[identity.partition]]
+variable = "25.21816"
+columns = { SAKU = "25.21816.avdragen-preliminar-a-skatt-arbetsgivare", SKUARB = "25.21816.avdragen-preliminar-a-skatt-arbetsgivare", SARB = "25.21816.avdragen-preliminar-a-skatt-arbetsgivare-agi-ku" }
+columns_ref = "SCB Registerinformation native 25.21816: all 117 physical originals/39 members explicitly describe the same source-native amount; exact supplied literals (SAKU 1994-1997, SKUARB 2005-2018, SARB 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras."
+
+[[identity.partition]]
+variable = "25.35587"
+columns = { SKSJO = "25.35587.sjomansskatt", SSJO = "25.35587.sjomansskatt" }
+columns_ref = "SCB Registerinformation native 25.35587: all 81 physical originals/27 members explicitly describe the same source-native amount; exact supplied literals (SKSJO 1990-1992, SSJO 1971-1997) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. These historical-only spelling aliases do not create later editions or infer any broader income/tax equivalence."
+
+[[identity.partition]]
+variable = "25.40060"
+columns = { INFAST = "25.40060.inkomst-av-annan-fastighet", INAF = "25.40060.inkomst-av-annan-fastighet", INSFAST = "25.40060.inkomst-av-annan-fastighet" }
+columns_ref = "SCB Registerinformation native 25.40060: all 66 physical originals/22 members explicitly describe the same source-native amount; exact supplied literals (INFAST 1968-1977, INAF 1971-1974, INSFAST 1978-1989) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. These historical-only spelling aliases do not create later editions or infer any broader income/tax equivalence."
+
+[[variable]]
+native_id = "25.591.tjanstepension-tjanst"
+slug = "tjanstepension-tjanst"
+
+[[variable]]
+native_id = "25.591.tjanstepension-tjanst-agi-ku"
+slug = "tjanstepension-tjanst-agi-ku"
+
+[[variable]]
+native_id = "25.1192.ovriga-kostnadsersattningar"
+slug = "ovriga-kostnadsersattningar"
+
+[[variable]]
+native_id = "25.1192.ovriga-kostnadsersattningar-agi-ku"
+slug = "ovriga-kostnadsersattningar-agi-ku"
+
+[[variable]]
+native_id = "25.1193.ersattning-grund-egenavgifter-tjanst"
+slug = "ersattning-grund-egenavgifter-tjanst"
+
+[[variable]]
+native_id = "25.1193.ersattning-grund-egenavgifter-tjanst-agi-ku"
+slug = "ersattning-grund-egenavgifter-tjanst-agi-ku"
+
+[[variable]]
+native_id = "25.1194.kontant-bruttolon-mm"
+slug = "kontant-bruttolon-mm"
+
+[[variable]]
+native_id = "25.1194.kontant-bruttolon-mm-agi-ku"
+slug = "kontant-bruttolon-mm-agi-ku"
+
+[[variable]]
+native_id = "25.1196.ovriga-skattepliktiga-ers-tjanst"
+slug = "ovriga-skattepliktiga-ers-tjanst"
+
+[[variable]]
+native_id = "25.1196.ovriga-skattepliktiga-ers-tjanst-agi-ku"
+slug = "ovriga-skattepliktiga-ers-tjanst-agi-ku"
+
+[[variable]]
+native_id = "25.21816.avdragen-preliminar-a-skatt-arbetsgivare"
+slug = "avdragen-preliminar-a-skatt-arbetsgivare"
+
+[[variable]]
+native_id = "25.21816.avdragen-preliminar-a-skatt-arbetsgivare-agi-ku"
+slug = "avdragen-preliminar-a-skatt-arbetsgivare-agi-ku"
+
+[[variable]]
+native_id = "25.35587.sjomansskatt"
+slug = "sjomansskatt"
+
+[[variable]]
+native_id = "25.40060.inkomst-av-annan-fastighet"
+slug = "inkomst-av-annan-fastighet"

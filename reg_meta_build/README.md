@@ -37,7 +37,12 @@ reg-meta-build --db /path/to/output-dir build-db \
   --selection /path/to/selection.json --report-dir /path/to/new-strict-report
 ```
 
-Use a full `build-db` with the accepted inputs for approval after local checks.
+During a curation batch, use focused TOML and slug tests for editing feedback.
+`check-curation` scans complete selected source scopes and is optional investigation,
+not a seconds-long check. Run a full `build-db` with the accepted inputs at a coherent
+batch checkpoint for approval, rather than after each small edit. Record the exact
+revision; further curation can proceed separately while that frozen revision is
+verified.
 
 `pipeline.PipelineSelection` and `pipeline.ScopeDeclarations` define the
 machine-readable selection contract. Scope files are pinned by SHA-256. Selection
