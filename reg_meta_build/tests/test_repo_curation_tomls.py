@@ -667,7 +667,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for register in tree.registers
         for partition in register.identity.partition
     ]
-    assert len(partitions) == 629
+    assert len(partitions) == 658
     assert len(tree.registers) == 289
     assert (
         sum(len(register.identity.route) for register in tree.registers),
@@ -680,8 +680,9 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for e in entries
         if e.kind == "variable" and e.slug is not None
     }
-    # The KU-to-AGI source-basis partition (Y-299) is the one exact map with two
-    # named leaves; each owner must carry its own naming slug.
+    # The KU-to-AGI source-basis partitions (Y-299 34.591 and the 29 Y-302
+    # employment/source families) are exact maps with two named leaves; each owner
+    # must carry its own naming slug.
     pension = [partition for partition in partitions if partition.variable == "34.591"]
     assert len(pension) == 1
     assert dict(pension[0].columns) == {
@@ -691,6 +692,125 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     assert {
         ("scb", "34.591.tjanstepension-tjanst"),
         ("scb", "34.591.tjanstepension-tjanst-agi"),
+    } <= slugged
+    # Y-302: the 29 documented LISA KU-to-AGI employment/source families. Each
+    # family has one KU literal (through 2018) and one AGI literal (from 2019); the
+    # columns map is exact and both owners take a distinct naming leaf.
+    ku_agi = {
+        "34.1933": {
+            "KU1SsykAr": "34.1933.ku1ssykar",
+            "AGI1SsykAr": "34.1933.agi1ssykar",
+        },
+        "34.1935": {
+            "KU1AstKommun": "34.1935.ku1astkommun",
+            "AGI1AstKommun": "34.1935.agi1astkommun",
+        },
+        "34.1936": {
+            "KU1AstLan": "34.1936.ku1astlan",
+            "AGI1AstLan": "34.1936.agi1astlan",
+        },
+        "34.4911": {
+            "KU2YrkStalln": "34.4911.yrkesstallning-nast-forvarvskallan",
+            "AGI2YrkStalln": "34.4911.yrkesstallning-nast-forvarvskallan-agi",
+        },
+        "34.4948": {
+            "KU1YrkStalln": "34.4948.yrkesstallning-storsta-forvarvskallan",
+            "AGI1YrkStalln": "34.4948.yrkesstallning-storsta-forvarvskallan-agi",
+        },
+        "34.15858": {
+            "KU2AstNr": "34.15858.ku2astnr",
+            "AGI2AstNr": "34.15858.agi2astnr",
+        },
+        "34.16214": {
+            "KU1AstNr": "34.16214.ku1astnr",
+            "AGI1AstNr": "34.16214.agi1astnr",
+        },
+        "34.16219": {
+            "KU1PeOrgNr": "34.16219.ku1peorgnr",
+            "AGI1PeOrgNr": "34.16219.agi1peorgnr",
+        },
+        "34.16220": {
+            "KU2PeOrgNr": "34.16220.ku2peorgnr",
+            "AGI2PeOrgNr": "34.16220.agi2peorgnr",
+        },
+        "34.16227": {
+            "KU2SsykKalla": "34.16227.ku2ssykkalla",
+            "AGI2SsykKalla": "34.16227.agi2ssykkalla",
+        },
+        "34.16237": {
+            "KU1SsykKalla": "34.16237.ku1ssykkalla",
+            "AGI1SsykKalla": "34.16237.agi1ssykkalla",
+        },
+        "34.16244": {
+            "KU2SsykAr": "34.16244.ku2ssykar",
+            "AGI2SsykAr": "34.16244.agi2ssykar",
+        },
+        "34.16249": {"KU1Ink": "34.16249.ku1ink", "AGI1Ink": "34.16249.agi1ink"},
+        "34.16250": {"KU2Ink": "34.16250.ku2ink", "AGI2Ink": "34.16250.agi2ink"},
+        "34.18911": {
+            "KU1SsykStatus": "34.18911.ssyk-overensstammelse",
+            "AGI1SsykStatus": "34.18911.ssyk-overensstammelse-agi",
+        },
+        "34.21004": {
+            "KU1CfarNr": "34.21004.ku1cfarnr",
+            "AGI1CfarNr": "34.21004.agi1cfarnr",
+        },
+        "34.21005": {
+            "KU2CfarNr": "34.21005.ku2cfarnr",
+            "AGI2CfarNr": "34.21005.agi2cfarnr",
+        },
+        "34.25621": {
+            "KU1SektorKod": "34.25621.sektorkod-storsta-forvarvskalla",
+            "AGI1SektorKod": "34.25621.sektorkod-storsta-forvarvskalla-agi",
+        },
+        "34.31108": {
+            "KU2AstKommun": "34.31108.ku2astkommun",
+            "AGI2AstKommun": "34.31108.agi2astkommun",
+        },
+        "34.31109": {
+            "KU2AstLan": "34.31109.ku2astlan",
+            "AGI2AstLan": "34.31109.agi2astlan",
+        },
+        "34.31118": {
+            "KU2SektorKod": "34.31118.sektorkod-nast-forvarvskalla",
+            "AGI2SektorKod": "34.31118.sektorkod-nast-forvarvskalla-agi",
+        },
+        "34.31290": {"KU3Ink": "34.31290.ku3ink", "AGI3Ink": "34.31290.agi3ink"},
+        "34.31291": {
+            "KU3PeOrgNr": "34.31291.ku3peorgnr",
+            "AGI3PeOrgNr": "34.31291.agi3peorgnr",
+        },
+        "34.31292": {
+            "KU3CfarNr": "34.31292.ku3cfarnr",
+            "AGI3CfarNr": "34.31292.agi3cfarnr",
+        },
+        "34.31293": {
+            "KU3AstNr": "34.31293.ku3astnr",
+            "AGI3AstNr": "34.31293.agi3astnr",
+        },
+        "34.31294": {
+            "KU3YrkStalln": "34.31294.ku3yrkesstallning",
+            "AGI3YrkStalln": "34.31294.agi3yrkesstallning",
+        },
+        "34.31295": {
+            "KU3AstKommun": "34.31295.ku3astkommun",
+            "AGI3AstKommun": "34.31295.agi3astkommun",
+        },
+        "34.31296": {
+            "KU3AstLan": "34.31296.ku3astlan",
+            "AGI3AstLan": "34.31296.agi3astlan",
+        },
+        "34.31299": {
+            "KU3SektorKod": "34.31299.sektorkod-tredje-forvarvskalla",
+            "AGI3SektorKod": "34.31299.sektorkod-tredje-forvarvskalla-agi",
+        },
+    }
+    by_variable = {partition.variable: partition for partition in partitions}
+    assert set(ku_agi) <= set(by_variable)
+    for variable, expected in ku_agi.items():
+        assert dict(by_variable[variable].columns) == expected, variable
+    assert {
+        ("scb", owner) for expected in ku_agi.values() for owner in expected.values()
     } <= slugged
     absent_owners = {
         owner
