@@ -3445,4 +3445,28 @@ slug = "vuxenstudiestod-lan"
 native_id = "34.2669.vuxenstudiestod-lan-ovriga"
 slug = "vuxenstudiestod-lan-ovriga"
 
+# Y-299 2026-09-30: LISA individual-pension KU-to-AGI source-basis partition.
+# SCB `lisa-bakgrundsfakta-1990-2017` docs/lisa/_changelog-2019.md Tjanstepension
+# documents the information disappearing from the control statements with the 2019
+# AGI transition and maps KUPens (2018) to AGIPens (2019). docs/lisa/KUPens.md
+# documents the amount in hundreds of kronor and that 1990 cannot be reported.
+# KUPens and AGIPens share the individual employer/employee pension-agreement
+# concept but are distinct source bases; this is a source-basis distinction, NOT a
+# claim that the concept changed, a harmonized equivalent rename, or a succession
+# edge. PTjP and SumTjp stay separate. The exact prepared v28 physical periods are
+# the only availability claim.
+
+[[identity.partition]]
+variable = "34.591"
+columns = { KUPens = "34.591.tjanstepension-tjanst", AGIPens = "34.591.tjanstepension-tjanst-agi" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md Tjanstepension (KUPens 2018 to AGIPens 2019 with the KU-to-AGI transition, 'variabler försvinner från kontrolluppgifterna i samband med övergången till AGI') and docs/lisa/KUPens.md (amount in hundreds of kronor; 1990 cannot be reported); prepared v28 native family 34.591: KUPens 1991-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGIPens 2019-2023 (variant 34.153)."
+
+[[variable]]
+native_id = "34.591.tjanstepension-tjanst"
+slug = "tjanstepension-tjanst"
+
+[[variable]]
+native_id = "34.591.tjanstepension-tjanst-agi"
+slug = "tjanstepension-tjanst-agi"
+
 # register 340

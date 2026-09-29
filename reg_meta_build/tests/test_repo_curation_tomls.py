@@ -667,7 +667,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for register in tree.registers
         for partition in register.identity.partition
     ]
-    assert len(partitions) == 628
+    assert len(partitions) == 629
     assert len(tree.registers) == 289
     assert (
         sum(len(register.identity.route) for register in tree.registers),
@@ -680,6 +680,18 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for e in entries
         if e.kind == "variable" and e.slug is not None
     }
+    # The KU-to-AGI source-basis partition (Y-299) is the one exact map with two
+    # named leaves; each owner must carry its own naming slug.
+    pension = [partition for partition in partitions if partition.variable == "34.591"]
+    assert len(pension) == 1
+    assert dict(pension[0].columns) == {
+        "KUPens": "34.591.tjanstepension-tjanst",
+        "AGIPens": "34.591.tjanstepension-tjanst-agi",
+    }
+    assert {
+        ("scb", "34.591.tjanstepension-tjanst"),
+        ("scb", "34.591.tjanstepension-tjanst-agi"),
+    } <= slugged
     absent_owners = {
         owner
         for partition in partitions
