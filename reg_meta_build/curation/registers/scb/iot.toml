@@ -6738,3 +6738,131 @@ slug = "forlangd-omstallningspension-summerad-hushall"
 [[variable]]
 native_id = "25.23618.hushall-vaxelvis-boende"
 slug = "forlangd-omstallningspension-summerad-hushall-vaxelvis-boende"
+
+
+# Y-315 2026-09-29: eight household-only IoT native families deliver two
+# distinct calculation bases under the same native household variant 25.1153
+# ('Bostadshushåll'): an ordinary household column XHB from the annual
+# 'YYYY, slutlig version' editions 2011-2024, and a modelled shared-residence
+# column XVXHB from the 'YYYYVX, slutlig version' editions 2021-2024. SCB's
+# Mikrodata Aktuellt correction item dated 2025-10-10 names the VX tables
+# växelvis boende; the 2024 IoT register documentation
+# (he0101_dokstar_2024_20260120.pdf) K2.2.5 pp.21-25 describes the modelled
+# shared-residence household basis (household type, equivalence weight and
+# children's income allocation, method updated from 2022); the HE0110 microdata
+# tree lists the ordinary and VX editions separately (paired 2021-2024). These
+# are separate delivered bases, not spelling aliases, and no numerical
+# comparability is claimed. The ordinary owner keeps the existing
+# household-native slug; the VX owner adds the explicit -vaxelvis-boende suffix
+# (VX is not an individual branch and no individual branch exists). The unsplit
+# native naming is retained; every original scope, interval, label, unit,
+# source attribution and formula revision is preserved.
+
+[[identity.partition]]
+variable = "25.3188"
+columns = { BHTYPHB = "25.3188.hushallstyp", BHTYPVXHB = "25.3188.hushallstyp-vaxelvis-boende" }
+columns_ref = "Y-315 2026-09-29: SCB IoT native 25.3188 'hushallstyp', 18 physical originals in variant 25.1153 (Bostadshushåll): 14 ordinary household BHTYPHB in the 2011-2024 'slutlig version' editions and 4 household with modelled shared residence BHTYPVXHB in the 2021VX-2024VX 'slutlig version' editions; evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4381"
+columns = { IBOSTBHB = "25.4381.bostadsbidrag", IBOSTBVXHB = "25.4381.bostadsbidrag-vaxelvis-boende" }
+columns_ref = "Y-315 2026-09-29: SCB IoT native 25.4381 'bostadsbidrag', 18 physical originals in variant 25.1153 (Bostadshushåll): 14 ordinary household IBOSTBHB in the 2011-2024 'slutlig version' editions and 4 household with modelled shared residence IBOSTBVXHB in the 2021VX-2024VX 'slutlig version' editions; evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4499"
+columns = { IFAMHB = "25.4499.familjestod-totalt", IFAMVXHB = "25.4499.familjestod-totalt-vaxelvis-boende" }
+columns_ref = "Y-315 2026-09-29: SCB IoT native 25.4499 'familjestod-totalt', 18 physical originals in variant 25.1153 (Bostadshushåll): 14 ordinary household IFAMHB in the 2011-2024 'slutlig version' editions and 4 household with modelled shared residence IFAMVXHB in the 2021VX-2024VX 'slutlig version' editions; evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4783"
+columns = { CTRAPSFHB = "25.4783.skattefria-transfereringar-hushall", CTRAPSFVXHB = "25.4783.skattefria-transfereringar-hushall-vaxelvis-boende" }
+columns_ref = "Y-315 2026-09-29: SCB IoT native 25.4783 'skattefria-transfereringar-hushall', 18 physical originals in variant 25.1153 (Bostadshushåll): 14 ordinary household CTRAPSFHB in the 2011-2024 'slutlig version' editions and 4 household with modelled shared residence CTRAPSFVXHB in the 2021VX-2024VX 'slutlig version' editions; evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.4784"
+columns = { CTRAPSPHB = "25.4784.skattepliktiga-transfereringar-hushall", CTRAPSPVXHB = "25.4784.skattepliktiga-transfereringar-hushall-vaxelvis-boende" }
+columns_ref = "Y-315 2026-09-29: SCB IoT native 25.4784 'skattepliktiga-transfereringar-hushall', 18 physical originals in variant 25.1153 (Bostadshushåll): 14 ordinary household CTRAPSPHB in the 2011-2024 'slutlig version' editions and 4 household with modelled shared residence CTRAPSPVXHB in the 2021VX-2024VX 'slutlig version' editions; evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.22335"
+columns = { BKE04HB = "25.22335.konsumtionsenhetsvikt-2004", BKE04VXHB = "25.22335.konsumtionsenhetsvikt-2004-vaxelvis-boende" }
+columns_ref = "Y-315 2026-09-29: SCB IoT native 25.22335 'konsumtionsenhetsvikt-2004', 18 physical originals in variant 25.1153 (Bostadshushåll): 14 ordinary household BKE04HB in the 2011-2024 'slutlig version' editions and 4 household with modelled shared residence BKE04VXHB in the 2021VX-2024VX 'slutlig version' editions; evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.22349"
+columns = { ISOCBHB = "25.22349.ekonomiskt-bistand-socialbidrag", ISOCBVXHB = "25.22349.ekonomiskt-bistand-socialbidrag-vaxelvis-boende" }
+columns_ref = "Y-315 2026-09-29: SCB IoT native 25.22349 'ekonomiskt-bistand-socialbidrag', 18 physical originals in variant 25.1153 (Bostadshushåll): 14 ordinary household ISOCBHB in the 2011-2024 'slutlig version' editions and 4 household with modelled shared residence ISOCBVXHB in the 2021VX-2024VX 'slutlig version' editions; evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+[[identity.partition]]
+variable = "25.30835"
+columns = { BINKSTATHB = "25.30835.hushall-inkluderas-inkomststatistiken", BINKSTATVXHB = "25.30835.hushall-inkluderas-inkomststatistiken-vaxelvis-boende" }
+columns_ref = "Y-315 2026-09-29: SCB IoT native 25.30835 'hushall-inkluderas-inkomststatistiken', 18 physical originals in variant 25.1153 (Bostadshushåll): 14 ordinary household BINKSTATHB in the 2011-2024 'slutlig version' editions and 4 household with modelled shared residence BINKSTATVXHB in the 2021VX-2024VX 'slutlig version' editions; evidence SCB Mikrodata Aktuellt 2025-10-10 VX terminology + IoT register documentation 2024 K2.2.5 pp.21-25 (2026-01-20) + HE0110 paired ordinary/VX editions 2021-2024; no numerical comparability claimed"
+
+
+# Y-315 2026-09-29: qualified naming leaves for the eight household-only
+# families above. The ordinary leaf reuses the family's existing
+# household-native slug; the VX leaf adds the explicit -vaxelvis-boende suffix.
+
+[[variable]]
+native_id = "25.3188.hushallstyp"
+slug = "hushallstyp"
+
+[[variable]]
+native_id = "25.3188.hushallstyp-vaxelvis-boende"
+slug = "hushallstyp-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4381.bostadsbidrag"
+slug = "bostadsbidrag"
+
+[[variable]]
+native_id = "25.4381.bostadsbidrag-vaxelvis-boende"
+slug = "bostadsbidrag-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4499.familjestod-totalt"
+slug = "familjestod-totalt"
+
+[[variable]]
+native_id = "25.4499.familjestod-totalt-vaxelvis-boende"
+slug = "familjestod-totalt-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4783.skattefria-transfereringar-hushall"
+slug = "skattefria-transfereringar-hushall"
+
+[[variable]]
+native_id = "25.4783.skattefria-transfereringar-hushall-vaxelvis-boende"
+slug = "skattefria-transfereringar-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4784.skattepliktiga-transfereringar-hushall"
+slug = "skattepliktiga-transfereringar-hushall"
+
+[[variable]]
+native_id = "25.4784.skattepliktiga-transfereringar-hushall-vaxelvis-boende"
+slug = "skattepliktiga-transfereringar-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22335.konsumtionsenhetsvikt-2004"
+slug = "konsumtionsenhetsvikt-2004"
+
+[[variable]]
+native_id = "25.22335.konsumtionsenhetsvikt-2004-vaxelvis-boende"
+slug = "konsumtionsenhetsvikt-2004-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22349.ekonomiskt-bistand-socialbidrag"
+slug = "ekonomiskt-bistand-socialbidrag"
+
+[[variable]]
+native_id = "25.22349.ekonomiskt-bistand-socialbidrag-vaxelvis-boende"
+slug = "ekonomiskt-bistand-socialbidrag-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.30835.hushall-inkluderas-inkomststatistiken"
+slug = "hushall-inkluderas-inkomststatistiken"
+
+[[variable]]
+native_id = "25.30835.hushall-inkluderas-inkomststatistiken-vaxelvis-boende"
+slug = "hushall-inkluderas-inkomststatistiken-vaxelvis-boende"

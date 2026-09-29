@@ -392,6 +392,34 @@ _IOT_Y310_CALCULATION_BASES: dict[str, tuple[str, str, int]] = {
     "25.23618": ("PFOMSTP", "forlangd-omstallningspension-summerad", 119),
 }
 
+# Y-315: eight IoT household-only native families whose ordinary-household (XHB)
+# and modelled shared-residence (XVXHB) calculation bases are separated, both in
+# variant 25.1153. Each value is (HB literal, VXHB literal, existing
+# household-native stem); the ordinary owner keeps the stem and the VX owner adds
+# the explicit -vaxelvis-boende suffix. No individual branch exists.
+_IOT_Y315_HOUSEHOLD_PAIRS: dict[str, tuple[str, str, str]] = {
+    "25.3188": ("BHTYPHB", "BHTYPVXHB", "hushallstyp"),
+    "25.4381": ("IBOSTBHB", "IBOSTBVXHB", "bostadsbidrag"),
+    "25.4499": ("IFAMHB", "IFAMVXHB", "familjestod-totalt"),
+    "25.4783": (
+        "CTRAPSFHB",
+        "CTRAPSFVXHB",
+        "skattefria-transfereringar-hushall",
+    ),
+    "25.4784": (
+        "CTRAPSPHB",
+        "CTRAPSPVXHB",
+        "skattepliktiga-transfereringar-hushall",
+    ),
+    "25.22335": ("BKE04HB", "BKE04VXHB", "konsumtionsenhetsvikt-2004"),
+    "25.22349": ("ISOCBHB", "ISOCBVXHB", "ekonomiskt-bistand-socialbidrag"),
+    "25.30835": (
+        "BINKSTATHB",
+        "BINKSTATVXHB",
+        "hushall-inkluderas-inkomststatistiken",
+    ),
+}
+
 
 # Y-311: the 74 reviewed Innovation i foretag (257) native-question identity
 # families. Each value is the native-question split owner leaf and the complete
@@ -1722,6 +1750,36 @@ def test_repo_iot_y310_separates_calculation_bases() -> None:
     assert base_slugs == {
         native: stem for native, (_, stem, _) in _IOT_Y310_CALCULATION_BASES.items()
     }
+    # Y-315: eight IoT household-only native families each deliver an ordinary
+    # household HB literal and a modelled shared-residence VXHB literal under the
+    # same variant 25.1153. The ordinary owner keeps the existing
+    # household-native slug; the VX owner adds the explicit -vaxelvis-boende
+    # suffix. The map, the 16 leaves and the retained unsplit naming are exact, so
+    # a wrong or new literal cannot silently join a branch.
+    pair_maps: dict[str, dict[str, str]] = {}
+    pair_names: dict[str, str] = {}
+    for native, (hb, vx, stem) in _IOT_Y315_HOUSEHOLD_PAIRS.items():
+        pair_maps[native] = {
+            hb: f"{native}.{stem}",
+            vx: f"{native}.{stem}-vaxelvis-boende",
+        }
+        pair_names[f"{native}.{stem}"] = stem
+        pair_names[f"{native}.{stem}-vaxelvis-boende"] = f"{stem}-vaxelvis-boende"
+    assert len(pair_maps) == 8
+    assert len(pair_names) == 16
+    for native, columns in pair_maps.items():
+        partition = by_variable[native]
+        assert dict(partition.columns) == columns, native
+        assert not partition.unassigned_columns, native
+    assert {
+        ("scb", owner) for columns in pair_maps.values() for owner in columns.values()
+    } <= slugged
+    pair_named = {
+        entry.native_id: entry.slug
+        for entry in iot.variable
+        if entry.native_id in pair_names
+    }
+    assert pair_named == pair_names
 
 
 def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> None:
