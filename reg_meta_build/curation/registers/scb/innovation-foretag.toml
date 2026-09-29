@@ -7248,6 +7248,390 @@ variable = "257.37092"
 columns = { LG = "257.37092.logistikinnovation-utebliven-huvudorsak", LGFIN = "257.37092.logistikinnovation-ekonomiskt-hinder", LGTEC = "257.37092.logistikinnovation-tekniskt-hinder", LGREG = "257.37092.logistikinnovation-rattsligt-hinder", LGOTHO = "257.37092.logistikinnovation-annat-hinder" }
 columns_ref = "SCB Kvalitetsdeklaration version 1, 2019-11-12, appendix 2 historical CIS2016 column, p. 36; original CIS 2014-2016 questionnaire Q31; edition 11529, pooled 2014-01-01 through 2016-12-31."
 
+# Y-311 2026-09-29: 74 Innovation i foretag (257) native-question identity families whose
+# delivered column labels change across years. Maintainer-approved finite policy: one stable
+# source-native question owns every reviewed spelling while each edition's physical availability,
+# pooled reference periods, coding and raw/effective source facts stay intact. The accepted
+# prepared-export audit (Innovation87-source-cohort-audit.json,
+# Innovation-full-register-literal-reuse.json, Innovation74-proposed-map-evidence.json)
+# supplies native names and definitions, so names/definitions are constant
+# across each included family; independent annual questionnaire versions were not compared and no
+# statistical equivalence is claimed. These are recurrent question labels, NOT a claim that every
+# rename is sequential. Blank/negative source columns and pooled 2008-2010/2010-2012/2012-2014
+# periods are preserved exactly. Excluded: reciprocal-swap families 46586-46591, same-edition
+# cross-native collisions 39101/39104, and the five multiresponse families 28054/28055/28056/
+# 30131/37092 already landed in Y-308.
+
+[[identity.partition]]
+variable = "257.29"
+columns = { FENr = "257.29.fenr", SCBID = "257.29.fenr" }
+columns_ref = "Y-311 2026-09-29: 257.29 reviewed native-question identity {FENr, SCBID} owned by fenr; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.690"
+columns = { EMP = "257.690.antal-anstallda", EMP2022 = "257.690.antal-anstallda" }
+columns_ref = "Y-311 2026-09-29: 257.690 reviewed native-question identity {EMP, EMP2022} owned by antal-anstallda; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.2468"
+columns = { OUTLFL = "257.2468.outlier", Outlier = "257.2468.outlier" }
+columns_ref = "Y-311 2026-09-29: 257.2468 reviewed native-question identity {OUTLFL, Outlier} owned by outlier; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.4032"
+columns = { A4 = "257.4032.antal-anstallda-foretaget", Q4FDB = "257.4032.antal-anstallda-foretaget" }
+columns_ref = "Y-311 2026-09-29: 257.4032 reviewed native-question identity {A4, Q4FDB} owned by antal-anstallda-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.4045"
+columns = { A1 = "257.4045.koncernmarkering", GP = "257.4045.koncernmarkering", Q1 = "257.4045.koncernmarkering" }
+columns_ref = "Y-311 2026-09-29: 257.4045 reviewed native-question identity {A1, GP, Q1} owned by koncernmarkering; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.4256"
+columns = { TUR = "257.4256.nettoomsattning", TUR2022 = "257.4256.nettoomsattning" }
+columns_ref = "Y-311 2026-09-29: 257.4256 reviewed native-question identity {TUR, TUR2022} owned by nettoomsattning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.7705"
+columns = { E11a = "257.7705.utgifter-for-egen-fou", EXP_INNO_RND_IH = "257.7705.utgifter-for-egen-fou", Q11a = "257.7705.utgifter-for-egen-fou", RRDINX = "257.7705.utgifter-for-egen-fou" }
+columns_ref = "Y-311 2026-09-29: 257.7705 reviewed native-question identity {E11a, EXP_INNO_RND_IH, Q11a, RRDINX} owned by utgifter-for-egen-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.7708"
+columns = { E11b = "257.7708.utgifter-for-utlagd-fou", EXP_INNO_RND_CONTR_OUT = "257.7708.utgifter-for-utlagd-fou", Q11b = "257.7708.utgifter-for-utlagd-fou", RRDEXX = "257.7708.utgifter-for-utlagd-fou" }
+columns_ref = "Y-311 2026-09-29: 257.7708 reviewed native-question identity {E11b, EXP_INNO_RND_CONTR_OUT, Q11b, RRDEXX} owned by utgifter-for-utlagd-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15555"
+columns = { A2b = "257.15555.geografisk-marknad-nationellt", MARNAT = "257.15555.geografisk-marknad-nationellt", Q2b = "257.15555.geografisk-marknad-nationellt" }
+columns_ref = "Y-311 2026-09-29: 257.15555 reviewed native-question identity {A2b, MARNAT, Q2b} owned by geografisk-marknad-nationellt; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15556"
+columns = { A2c = "257.15556.geografisk-marknad-eu-efta", MAREUR = "257.15556.geografisk-marknad-eu-efta", Q2c = "257.15556.geografisk-marknad-eu-efta" }
+columns_ref = "Y-311 2026-09-29: 257.15556 reviewed native-question identity {A2c, MAREUR, Q2c} owned by geografisk-marknad-eu-efta; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15559"
+columns = { A2d = "257.15559.geografisk-marknad-ovriga-lander", MAROTH = "257.15559.geografisk-marknad-ovriga-lander", Q2d = "257.15559.geografisk-marknad-ovriga-lander" }
+columns_ref = "Y-311 2026-09-29: 257.15559 reviewed native-question identity {A2d, MAROTH, Q2d} owned by geografisk-marknad-ovriga-lander; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15562"
+columns = { B6a = "257.15562.produktinnovation-ny-for-marknad", INNO_PRD_NEW_MKT = "257.15562.produktinnovation-ny-for-marknad", NEWMKT = "257.15562.produktinnovation-ny-for-marknad", Q6a = "257.15562.produktinnovation-ny-for-marknad" }
+columns_ref = "Y-311 2026-09-29: 257.15562 reviewed native-question identity {B6a, INNO_PRD_NEW_MKT, NEWMKT, Q6a} owned by produktinnovation-ny-for-marknad; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15563"
+columns = { B6b = "257.15563.produktinnovation-ny-for-foretaget", INNO_PRD_NEW_ENT = "257.15563.produktinnovation-ny-for-foretaget", NEWFRM = "257.15563.produktinnovation-ny-for-foretaget", Q6b = "257.15563.produktinnovation-ny-for-foretaget" }
+columns_ref = "Y-311 2026-09-29: 257.15563 reviewed native-question identity {B6b, INNO_PRD_NEW_ENT, NEWFRM, Q6b} owned by produktinnovation-ny-for-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15568"
+columns = { B7a = "257.15568.omsattningsandel-inno-ny-for-marknad", Q7a = "257.15568.omsattningsandel-inno-ny-for-marknad", TURNMAR = "257.15568.omsattningsandel-inno-ny-for-marknad", TUR_PRD_NEW_MKT = "257.15568.omsattningsandel-inno-ny-for-marknad" }
+columns_ref = "Y-311 2026-09-29: 257.15568 reviewed native-question identity {B7a, Q7a, TURNMAR, TUR_PRD_NEW_MKT} owned by omsattningsandel-inno-ny-for-marknad; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15569"
+columns = { B7b = "257.15569.omsattningsandel-inno-ny-for-foretaget", Q7b = "257.15569.omsattningsandel-inno-ny-for-foretaget", TURNIN = "257.15569.omsattningsandel-inno-ny-for-foretaget", TUR_PRD_NEW_ENT = "257.15569.omsattningsandel-inno-ny-for-foretaget" }
+columns_ref = "Y-311 2026-09-29: 257.15569 reviewed native-question identity {B7b, Q7b, TURNIN, TUR_PRD_NEW_ENT} owned by omsattningsandel-inno-ny-for-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15570"
+columns = { B7c = "257.15570.omsattningsandel-oforandrade-varor", Q7c = "257.15570.omsattningsandel-oforandrade-varor", TURNTOT = "257.15570.omsattningsandel-oforandrade-varor", TUR_PRD_NINN = "257.15570.omsattningsandel-oforandrade-varor" }
+columns_ref = "Y-311 2026-09-29: 257.15570 reviewed native-question identity {B7c, Q7c, TURNTOT, TUR_PRD_NINN} owned by omsattningsandel-oforandrade-varor; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15571"
+columns = { C8a = "257.15571.introduktion-av-produktionsmetoder", INNO_PCS_PRD = "257.15571.introduktion-av-produktionsmetoder", INPSPD = "257.15571.introduktion-av-produktionsmetoder", Q8a = "257.15571.introduktion-av-produktionsmetoder" }
+columns_ref = "Y-311 2026-09-29: 257.15571 reviewed native-question identity {C8a, INNO_PCS_PRD, INPSPD, Q8a} owned by introduktion-av-produktionsmetoder; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15578"
+columns = { C8b = "257.15578.introduktion-av-leveransmetoder", INNO_PCS_LOG = "257.15578.introduktion-av-leveransmetoder", INPSLG = "257.15578.introduktion-av-leveransmetoder", Q8b = "257.15578.introduktion-av-leveransmetoder" }
+columns_ref = "Y-311 2026-09-29: 257.15578 reviewed native-question identity {C8b, INNO_PCS_LOG, INPSLG, Q8b} owned by introduktion-av-leveransmetoder; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15579"
+columns = { C8c = "257.15579.introduktion-av-stodverksamheter", INNO_PCS_ACCT = "257.15579.introduktion-av-stodverksamheter", INPSSU = "257.15579.introduktion-av-stodverksamheter", Q8c = "257.15579.introduktion-av-stodverksamheter" }
+columns_ref = "Y-311 2026-09-29: 257.15579 reviewed native-question identity {C8c, INNO_PCS_ACCT, INPSSU, Q8c} owned by introduktion-av-stodverksamheter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15580"
+columns = { C81 = "257.15580.utvecklare-av-processinnovationer", Q81 = "257.15580.utvecklare-av-processinnovationer" }
+columns_ref = "Y-311 2026-09-29: 257.15580 reviewed native-question identity {C81, Q81} owned by utvecklare-av-processinnovationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15582"
+columns = { B5a = "257.15582.introduktion-av-varor", INNO_PRD_GD = "257.15582.introduktion-av-varor", INPDGD = "257.15582.introduktion-av-varor", Q5a = "257.15582.introduktion-av-varor" }
+columns_ref = "Y-311 2026-09-29: 257.15582 reviewed native-question identity {B5a, INNO_PRD_GD, INPDGD, Q5a} owned by introduktion-av-varor; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15583"
+columns = { B5b = "257.15583.introduktion-av-tjanster", INNO_PRD_SERV = "257.15583.introduktion-av-tjanster", INPDSV = "257.15583.introduktion-av-tjanster", Q5b = "257.15583.introduktion-av-tjanster" }
+columns_ref = "Y-311 2026-09-29: 257.15583 reviewed native-question identity {B5b, INNO_PRD_SERV, INPDSV, Q5b} owned by introduktion-av-tjanster; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15584"
+columns = { B51 = "257.15584.utvecklare-av-produktinnovationer", Q51 = "257.15584.utvecklare-av-produktinnovationer" }
+columns_ref = "Y-311 2026-09-29: 257.15584 reviewed native-question identity {B51, Q51} owned by utvecklare-av-produktinnovationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15593"
+columns = { A1a = "257.15593.huvudkontoret-belaget", Q1a = "257.15593.huvudkontoret-belaget" }
+columns_ref = "Y-311 2026-09-29: 257.15593 reviewed native-question identity {A1a, Q1a} owned by huvudkontoret-belaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15600"
+columns = { CO = "257.15600.innovationssamarbete", F12 = "257.15600.innovationssamarbete", Q12 = "257.15600.innovationssamarbete" }
+columns_ref = "Y-311 2026-09-29: 257.15600 reviewed native-question identity {CO, F12, Q12} owned by innovationssamarbete; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15612"
+columns = { E11c = "257.15612.utgifter-forvarv-maskiner-programvara", Q11c = "257.15612.utgifter-forvarv-maskiner-programvara" }
+columns_ref = "Y-311 2026-09-29: 257.15612 reviewed native-question identity {E11c, Q11c} owned by utgifter-forvarv-maskiner-programvara; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15613"
+columns = { E11d = "257.15613.utgifter-forvarv-existerande-kunskap", Q11d = "257.15613.utgifter-forvarv-existerande-kunskap", ROEKX = "257.15613.utgifter-forvarv-existerande-kunskap" }
+columns_ref = "Y-311 2026-09-29: 257.15613 reviewed native-question identity {E11d, Q11d, ROEKX} owned by utgifter-forvarv-existerande-kunskap; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15614"
+columns = { E10a = "257.15614.inna-egen-fou", EGFOU = "257.15614.inna-egen-fou", INNA_IH_RND = "257.15614.inna-egen-fou", Q10a = "257.15614.inna-egen-fou" }
+columns_ref = "Y-311 2026-09-29: 257.15614 reviewed native-question identity {E10a, EGFOU, INNA_IH_RND, Q10a} owned by inna-egen-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15616"
+columns = { E10b = "257.15616.inna-utlagd-fou", INNA_RND_CONTR_OUT = "257.15616.inna-utlagd-fou", Q10b = "257.15616.inna-utlagd-fou", RRDEX = "257.15616.inna-utlagd-fou" }
+columns_ref = "Y-311 2026-09-29: 257.15616 reviewed native-question identity {E10b, INNA_RND_CONTR_OUT, Q10b, RRDEX} owned by inna-utlagd-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15617"
+columns = { E10c = "257.15617.inna-forvarv-maskiner", Q10c = "257.15617.inna-forvarv-maskiner", RMAC = "257.15617.inna-forvarv-maskiner" }
+columns_ref = "Y-311 2026-09-29: 257.15617 reviewed native-question identity {E10c, Q10c, RMAC} owned by inna-forvarv-maskiner; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15618"
+columns = { E10d = "257.15618.inna-forvarv-existerande-kunskap", Q10d = "257.15618.inna-forvarv-existerande-kunskap", ROEK = "257.15618.inna-forvarv-existerande-kunskap" }
+columns_ref = "Y-311 2026-09-29: 257.15618 reviewed native-question identity {E10d, Q10d, ROEK} owned by inna-forvarv-existerande-kunskap; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15619"
+columns = { E10e = "257.15619.inna-utbildning", Q10e = "257.15619.inna-utbildning", RTR = "257.15619.inna-utbildning" }
+columns_ref = "Y-311 2026-09-29: 257.15619 reviewed native-question identity {E10e, Q10e, RTR} owned by inna-utbildning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15620"
+columns = { E10f = "257.15620.inna-marknadsintroduktion", Q10f = "257.15620.inna-marknadsintroduktion", RMAR = "257.15620.inna-marknadsintroduktion" }
+columns_ref = "Y-311 2026-09-29: 257.15620 reviewed native-question identity {E10f, Q10f, RMAR} owned by inna-marknadsintroduktion; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15621"
+columns = { E10g = "257.15621.inna-andra-forberedelser", Q10g = "257.15621.inna-andra-forberedelser" }
+columns_ref = "Y-311 2026-09-29: 257.15621 reviewed native-question identity {E10g, Q10g} owned by inna-andra-forberedelser; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15642"
+columns = { A2a = "257.15642.geografisk-marknad-regional-lokal", MARLOC = "257.15642.geografisk-marknad-regional-lokal", Q2a = "257.15642.geografisk-marknad-regional-lokal" }
+columns_ref = "Y-311 2026-09-29: 257.15642 reviewed native-question identity {A2a, MARLOC, Q2a} owned by geografisk-marknad-regional-lokal; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15643"
+columns = { E11e = "257.15643.totala-innovationsutgifter", Q11e = "257.15643.totala-innovationsutgifter", RALLX = "257.15643.totala-innovationsutgifter" }
+columns_ref = "Y-311 2026-09-29: 257.15643 reviewed native-question identity {E11e, Q11e, RALLX} owned by totala-innovationsutgifter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.15665"
+columns = { F14 = "257.15665.mest-vardefull-samarbetspartner", PMOS = "257.15665.mest-vardefull-samarbetspartner", Q14 = "257.15665.mest-vardefull-samarbetspartner" }
+columns_ref = "Y-311 2026-09-29: 257.15665 reviewed native-question identity {F14, PMOS, Q14} owned by mest-vardefull-samarbetspartner; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.17402"
+columns = { ENTGRP_PART = "257.17402.koncerntillhorighet", Koncern = "257.17402.koncerntillhorighet" }
+columns_ref = "Y-311 2026-09-29: 257.17402 reviewed native-question identity {ENTGRP_PART, Koncern} owned by koncerntillhorighet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20900"
+columns = { D9a = "257.20900.avbruten-innovationsaktivitet", INABA = "257.20900.avbruten-innovationsaktivitet", INNA_ABDN = "257.20900.avbruten-innovationsaktivitet" }
+columns_ref = "Y-311 2026-09-29: 257.20900 reviewed native-question identity {D9a, INABA, INNA_ABDN} owned by avbruten-innovationsaktivitet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20901"
+columns = { D9b = "257.20901.pagaende-innovationsaktivitet", INNA_ONGO = "257.20901.pagaende-innovationsaktivitet", INONG = "257.20901.pagaende-innovationsaktivitet" }
+columns_ref = "Y-311 2026-09-29: 257.20901 reviewed native-question identity {D9b, INNA_ONGO, INONG} owned by pagaende-innovationsaktivitet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20940"
+columns = { H16a = "257.20940.introduktion-av-nya-affarsmetoder", ORGBUP = "257.20940.introduktion-av-nya-affarsmetoder" }
+columns_ref = "Y-311 2026-09-29: 257.20940 reviewed native-question identity {H16a, ORGBUP} owned by introduktion-av-nya-affarsmetoder; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20941"
+columns = { H16b = "257.20941.introduktion-metoder-ansvar-beslut", INNO_PCS_WR_DEC_HRM = "257.20941.introduktion-metoder-ansvar-beslut", ORGWKP = "257.20941.introduktion-metoder-ansvar-beslut" }
+columns_ref = "Y-311 2026-09-29: 257.20941 reviewed native-question identity {H16b, INNO_PCS_WR_DEC_HRM, ORGWKP} owned by introduktion-metoder-ansvar-beslut; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20942"
+columns = { H16c = "257.20942.introduktion-metoder-externa-relationer", INNO_PCS_OPROC_EXTREL = "257.20942.introduktion-metoder-externa-relationer", ORGEXR = "257.20942.introduktion-metoder-externa-relationer" }
+columns_ref = "Y-311 2026-09-29: 257.20942 reviewed native-question identity {H16c, INNO_PCS_OPROC_EXTREL, ORGEXR} owned by introduktion-metoder-externa-relationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20948"
+columns = { I18a = "257.20948.introduktion-forandringar-utformning", MKTDGP = "257.20948.introduktion-forandringar-utformning" }
+columns_ref = "Y-311 2026-09-29: 257.20948 reviewed native-question identity {I18a, MKTDGP} owned by introduktion-forandringar-utformning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20949"
+columns = { I18b = "257.20949.introduktion-metoder-marknadsforing", INNO_PCS_SLS_SERV = "257.20949.introduktion-metoder-marknadsforing", MKTPDP = "257.20949.introduktion-metoder-marknadsforing" }
+columns_ref = "Y-311 2026-09-29: 257.20949 reviewed native-question identity {I18b, INNO_PCS_SLS_SERV, MKTPDP} owned by introduktion-metoder-marknadsforing; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20950"
+columns = { I18c = "257.20950.introduktion-metoder-produktplacering", MKTPDL = "257.20950.introduktion-metoder-produktplacering" }
+columns_ref = "Y-311 2026-09-29: 257.20950 reviewed native-question identity {I18c, MKTPDL} owned by introduktion-metoder-produktplacering; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20951"
+columns = { I18d = "257.20951.introduktion-metoder-prissattning", MKTPRI = "257.20951.introduktion-metoder-prissattning" }
+columns_ref = "Y-311 2026-09-29: 257.20951 reviewed native-question identity {I18d, MKTPRI} owned by introduktion-metoder-prissattning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20955"
+columns = { ECO_MAT = "257.20955.miljoinnovation-minskad-materialatgang", ECO_MAT_SG = "257.20955.miljoinnovation-minskad-materialatgang", J20a = "257.20955.miljoinnovation-minskad-materialatgang" }
+columns_ref = "Y-311 2026-09-29: 257.20955 reviewed native-question identity {ECO_MAT, ECO_MAT_SG, J20a} owned by miljoinnovation-minskad-materialatgang; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20957"
+columns = { ECO_ENO = "257.20957.j20c", ECO_ENO_SG = "257.20957.j20c", J20c = "257.20957.j20c" }
+columns_ref = "Y-311 2026-09-29: 257.20957 reviewed native-question identity {ECO_ENO, ECO_ENO_SG, J20c} owned by j20c; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20958"
+columns = { ECO_SUB = "257.20958.miljoinnovation-materialersattning", ECO_SUB_SG = "257.20958.miljoinnovation-materialersattning", J20d = "257.20958.miljoinnovation-materialersattning" }
+columns_ref = "Y-311 2026-09-29: 257.20958 reviewed native-question identity {ECO_SUB, ECO_SUB_SG, J20d} owned by miljoinnovation-materialersattning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20959"
+columns = { ECO_POL = "257.20959.miljoinnovation-fororeningar-foretaget", ECO_POL_SG = "257.20959.miljoinnovation-fororeningar-foretaget", J20e = "257.20959.miljoinnovation-fororeningar-foretaget" }
+columns_ref = "Y-311 2026-09-29: 257.20959 reviewed native-question identity {ECO_POL, ECO_POL_SG, J20e} owned by miljoinnovation-fororeningar-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20960"
+columns = { ECO_REC = "257.20960.miljoinnovation-atervinning-avfall", ECO_REC_SG = "257.20960.miljoinnovation-atervinning-avfall", J20f = "257.20960.miljoinnovation-atervinning-avfall" }
+columns_ref = "Y-311 2026-09-29: 257.20960 reviewed native-question identity {ECO_REC, ECO_REC_SG, J20f} owned by miljoinnovation-atervinning-avfall; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.20962"
+columns = { ECO_POS = "257.20962.miljoinno-fororeningar-slutkonsumtion", ECO_POS_SG = "257.20962.miljoinno-fororeningar-slutkonsumtion", J20h = "257.20962.miljoinno-fororeningar-slutkonsumtion" }
+columns_ref = "Y-311 2026-09-29: 257.20962 reviewed native-question identity {ECO_POS, ECO_POS_SG, J20h} owned by miljoinno-fororeningar-slutkonsumtion; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.29913"
+columns = { EXP_INNO_INN_XRND = "257.29913.utgifter-ovrig-innovationsverksamhet", ROTRX = "257.29913.utgifter-ovrig-innovationsverksamhet" }
+columns_ref = "Y-311 2026-09-29: 257.29913 reviewed native-question identity {EXP_INNO_INN_XRND, ROTRX} owned by utgifter-ovrig-innovationsverksamhet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.29914"
+columns = { FUND_AUT_LOC_REG_RNDINN = "257.29914.stod-for-innovationsverksamhet-kommun", FUNLOC = "257.29914.stod-for-innovationsverksamhet-kommun" }
+columns_ref = "Y-311 2026-09-29: 257.29914 reviewed native-question identity {FUND_AUT_LOC_REG_RNDINN, FUNLOC} owned by stod-for-innovationsverksamhet-kommun; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.32713"
+columns = { IPR_OUT_PAT = "257.32713.ipr-patent", PROPAT = "257.32713.ipr-patent" }
+columns_ref = "Y-311 2026-09-29: 257.32713 reviewed native-question identity {IPR_OUT_PAT, PROPAT} owned by ipr-patent; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.36983"
+columns = { FUND_GOV_CTL_RNDINN = "257.36983.stod-for-innovationsverksamhet-staten", FUNGMT = "257.36983.stod-for-innovationsverksamhet-staten" }
+columns_ref = "Y-311 2026-09-29: 257.36983 reviewed native-question identity {FUND_GOV_CTL_RNDINN, FUNGMT} owned by stod-for-innovationsverksamhet-staten; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.36984"
+columns = { FUND_EU_OTH_RNDINN = "257.36984.stod-for-innovationsverksamhet-eu", FUNEU = "257.36984.stod-for-innovationsverksamhet-eu" }
+columns_ref = "Y-311 2026-09-29: 257.36984 reviewed native-question identity {FUND_EU_OTH_RNDINN, FUNEU} owned by stod-for-innovationsverksamhet-eu; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.37076"
+columns = { IPR_OUT_IDESG = "257.37076.ipr-monsterskydd", PRODSG = "257.37076.ipr-monsterskydd" }
+columns_ref = "Y-311 2026-09-29: 257.37076 reviewed native-question identity {IPR_OUT_IDESG, PRODSG} owned by ipr-monsterskydd; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.37077"
+columns = { IPR_OUT_TRDM = "257.37077.ipr-varumarke", PROTM = "257.37077.ipr-varumarke" }
+columns_ref = "Y-311 2026-09-29: 257.37077 reviewed native-question identity {IPR_OUT_TRDM, PROTM} owned by ipr-varumarke; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.37078"
+columns = { IPR_OUT_SELL = "257.37078.ipr-salt", PROLEX = "257.37078.ipr-salt" }
+columns_ref = "Y-311 2026-09-29: 257.37078 reviewed native-question identity {IPR_OUT_SELL, PROLEX} owned by ipr-salt; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.37079"
+columns = { IPR_IN_ENT = "257.37079.ipr-kopt", PROLIN = "257.37079.ipr-kopt" }
+columns_ref = "Y-311 2026-09-29: 257.37079 reviewed native-question identity {IPR_IN_ENT, PROLIN} owned by ipr-kopt; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.39094"
+columns = { FUND_EU_HP2020_RNDINN = "257.39094.stod-innovationsaktiviteter-eu-h2020", FUND_EU_HP_RNDINN = "257.39094.stod-innovationsaktiviteter-eu-h2020" }
+columns_ref = "Y-311 2026-09-29: 257.39094 reviewed native-question identity {FUND_EU_HP2020_RNDINN, FUND_EU_HP_RNDINN} owned by stod-innovationsaktiviteter-eu-h2020; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.39096"
+columns = { FUND_EU_HP = "257.39096.stod-fran-eu-h2020", FUND_EU_HP2020 = "257.39096.stod-fran-eu-h2020" }
+columns_ref = "Y-311 2026-09-29: 257.39096 reviewed native-question identity {FUND_EU_HP, FUND_EU_HP2020} owned by stod-fran-eu-h2020; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.39102"
+columns = { COOP_NO = "257.39102.samarbete-inom-ovriga-aktiviteter", COOP_OTH = "257.39102.samarbete-inom-ovriga-aktiviteter" }
+columns_ref = "Y-311 2026-09-29: 257.39102 reviewed native-question identity {COOP_NO, COOP_OTH} owned by samarbete-inom-ovriga-aktiviteter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.39126"
+columns = { COOP_PUB_CLCU_NEU_EFTA = "257.39126.coop-pub-clcu-neu-nefta", COOP_PUB_CLCU_NEU_NEFTA = "257.39126.coop-pub-clcu-neu-nefta" }
+columns_ref = "Y-311 2026-09-29: 257.39126 reviewed native-question identity {COOP_PUB_CLCU_NEU_EFTA, COOP_PUB_CLCU_NEU_NEFTA} owned by coop-pub-clcu-neu-nefta; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.46481"
+columns = { ECO_EXT = "257.46481.miljoinno-livscykel", ECO_EXT_SG = "257.46481.miljoinno-livscykel" }
+columns_ref = "Y-311 2026-09-29: 257.46481 reviewed native-question identity {ECO_EXT, ECO_EXT_SG} owned by miljoinno-livscykel; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.46482"
+columns = { ECO_REA = "257.46482.miljoinno-atervinning", ECO_REA_SG = "257.46482.miljoinno-atervinning" }
+columns_ref = "Y-311 2026-09-29: 257.46482 reviewed native-question identity {ECO_REA, ECO_REA_SG} owned by miljoinno-atervinning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.46483"
+columns = { ECO_ENU = "257.46483.eco-enu-sg", ECO_ENU_SG = "257.46483.eco-enu-sg" }
+columns_ref = "Y-311 2026-09-29: 257.46483 reviewed native-question identity {ECO_ENU, ECO_ENU_SG} owned by eco-enu-sg; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.46484"
+columns = { ECO_BIU = "257.46484.miljoinno-mangfald-kons", ECO_BIU_SG = "257.46484.miljoinno-mangfald-kons" }
+columns_ref = "Y-311 2026-09-29: 257.46484 reviewed native-question identity {ECO_BIU, ECO_BIU_SG} owned by miljoinno-mangfald-kons; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.46485"
+columns = { ECO_BIO = "257.46485.miljoinno-mangfald-intern", ECO_BIO_SG = "257.46485.miljoinno-mangfald-intern" }
+columns_ref = "Y-311 2026-09-29: 257.46485 reviewed native-question identity {ECO_BIO, ECO_BIO_SG} owned by miljoinno-mangfald-intern; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.46492"
+columns = { ECO_REP = "257.46492.miljoinno-fossila", ECO_REP_SG = "257.46492.miljoinno-fossila" }
+columns_ref = "Y-311 2026-09-29: 257.46492 reviewed native-question identity {ECO_REP, ECO_REP_SG} owned by miljoinno-fossila; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.46650"
+columns = { LillaNs_TUR = "257.46650.turpop", TURPOP = "257.46650.turpop" }
+columns_ref = "Y-311 2026-09-29: 257.46650 reviewed native-question identity {LillaNs_TUR, TURPOP} owned by turpop; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
+[[identity.partition]]
+variable = "257.46654"
+columns = { StoraN_TUR = "257.46654.turresp", TURRESP = "257.46654.turresp" }
+columns_ref = "Y-311 2026-09-29: 257.46654 reviewed native-question identity {StoraN_TUR, TURRESP} owned by turresp; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+
 [[variable]]
 native_id = "257.28054.varuinnovation-utvecklad-av-foretaget"
 slug = "varuinnovation-utvecklad-av-foretaget"
@@ -7327,6 +7711,306 @@ slug = "logistikinnovation-rattsligt-hinder"
 [[variable]]
 native_id = "257.37092.logistikinnovation-annat-hinder"
 slug = "logistikinnovation-annat-hinder"
+
+# Y-311 2026-09-29: split-owner naming for the 74 finite Innovation native-question
+# families above. Each leaf reuses the family's existing source-native slug; the base
+# family keeps its own name.
+
+[[variable]]
+native_id = "257.29.fenr"
+slug = "fenr"
+
+[[variable]]
+native_id = "257.690.antal-anstallda"
+slug = "antal-anstallda"
+
+[[variable]]
+native_id = "257.2468.outlier"
+slug = "outlier"
+
+[[variable]]
+native_id = "257.4032.antal-anstallda-foretaget"
+slug = "antal-anstallda-foretaget"
+
+[[variable]]
+native_id = "257.4045.koncernmarkering"
+slug = "koncernmarkering"
+
+[[variable]]
+native_id = "257.4256.nettoomsattning"
+slug = "nettoomsattning"
+
+[[variable]]
+native_id = "257.7705.utgifter-for-egen-fou"
+slug = "utgifter-for-egen-fou"
+
+[[variable]]
+native_id = "257.7708.utgifter-for-utlagd-fou"
+slug = "utgifter-for-utlagd-fou"
+
+[[variable]]
+native_id = "257.15555.geografisk-marknad-nationellt"
+slug = "geografisk-marknad-nationellt"
+
+[[variable]]
+native_id = "257.15556.geografisk-marknad-eu-efta"
+slug = "geografisk-marknad-eu-efta"
+
+[[variable]]
+native_id = "257.15559.geografisk-marknad-ovriga-lander"
+slug = "geografisk-marknad-ovriga-lander"
+
+[[variable]]
+native_id = "257.15562.produktinnovation-ny-for-marknad"
+slug = "produktinnovation-ny-for-marknad"
+
+[[variable]]
+native_id = "257.15563.produktinnovation-ny-for-foretaget"
+slug = "produktinnovation-ny-for-foretaget"
+
+[[variable]]
+native_id = "257.15568.omsattningsandel-inno-ny-for-marknad"
+slug = "omsattningsandel-inno-ny-for-marknad"
+
+[[variable]]
+native_id = "257.15569.omsattningsandel-inno-ny-for-foretaget"
+slug = "omsattningsandel-inno-ny-for-foretaget"
+
+[[variable]]
+native_id = "257.15570.omsattningsandel-oforandrade-varor"
+slug = "omsattningsandel-oforandrade-varor"
+
+[[variable]]
+native_id = "257.15571.introduktion-av-produktionsmetoder"
+slug = "introduktion-av-produktionsmetoder"
+
+[[variable]]
+native_id = "257.15578.introduktion-av-leveransmetoder"
+slug = "introduktion-av-leveransmetoder"
+
+[[variable]]
+native_id = "257.15579.introduktion-av-stodverksamheter"
+slug = "introduktion-av-stodverksamheter"
+
+[[variable]]
+native_id = "257.15580.utvecklare-av-processinnovationer"
+slug = "utvecklare-av-processinnovationer"
+
+[[variable]]
+native_id = "257.15582.introduktion-av-varor"
+slug = "introduktion-av-varor"
+
+[[variable]]
+native_id = "257.15583.introduktion-av-tjanster"
+slug = "introduktion-av-tjanster"
+
+[[variable]]
+native_id = "257.15584.utvecklare-av-produktinnovationer"
+slug = "utvecklare-av-produktinnovationer"
+
+[[variable]]
+native_id = "257.15593.huvudkontoret-belaget"
+slug = "huvudkontoret-belaget"
+
+[[variable]]
+native_id = "257.15600.innovationssamarbete"
+slug = "innovationssamarbete"
+
+[[variable]]
+native_id = "257.15612.utgifter-forvarv-maskiner-programvara"
+slug = "utgifter-forvarv-maskiner-programvara"
+
+[[variable]]
+native_id = "257.15613.utgifter-forvarv-existerande-kunskap"
+slug = "utgifter-forvarv-existerande-kunskap"
+
+[[variable]]
+native_id = "257.15614.inna-egen-fou"
+slug = "inna-egen-fou"
+
+[[variable]]
+native_id = "257.15616.inna-utlagd-fou"
+slug = "inna-utlagd-fou"
+
+[[variable]]
+native_id = "257.15617.inna-forvarv-maskiner"
+slug = "inna-forvarv-maskiner"
+
+[[variable]]
+native_id = "257.15618.inna-forvarv-existerande-kunskap"
+slug = "inna-forvarv-existerande-kunskap"
+
+[[variable]]
+native_id = "257.15619.inna-utbildning"
+slug = "inna-utbildning"
+
+[[variable]]
+native_id = "257.15620.inna-marknadsintroduktion"
+slug = "inna-marknadsintroduktion"
+
+[[variable]]
+native_id = "257.15621.inna-andra-forberedelser"
+slug = "inna-andra-forberedelser"
+
+[[variable]]
+native_id = "257.15642.geografisk-marknad-regional-lokal"
+slug = "geografisk-marknad-regional-lokal"
+
+[[variable]]
+native_id = "257.15643.totala-innovationsutgifter"
+slug = "totala-innovationsutgifter"
+
+[[variable]]
+native_id = "257.15665.mest-vardefull-samarbetspartner"
+slug = "mest-vardefull-samarbetspartner"
+
+[[variable]]
+native_id = "257.17402.koncerntillhorighet"
+slug = "koncerntillhorighet"
+
+[[variable]]
+native_id = "257.20900.avbruten-innovationsaktivitet"
+slug = "avbruten-innovationsaktivitet"
+
+[[variable]]
+native_id = "257.20901.pagaende-innovationsaktivitet"
+slug = "pagaende-innovationsaktivitet"
+
+[[variable]]
+native_id = "257.20940.introduktion-av-nya-affarsmetoder"
+slug = "introduktion-av-nya-affarsmetoder"
+
+[[variable]]
+native_id = "257.20941.introduktion-metoder-ansvar-beslut"
+slug = "introduktion-metoder-ansvar-beslut"
+
+[[variable]]
+native_id = "257.20942.introduktion-metoder-externa-relationer"
+slug = "introduktion-metoder-externa-relationer"
+
+[[variable]]
+native_id = "257.20948.introduktion-forandringar-utformning"
+slug = "introduktion-forandringar-utformning"
+
+[[variable]]
+native_id = "257.20949.introduktion-metoder-marknadsforing"
+slug = "introduktion-metoder-marknadsforing"
+
+[[variable]]
+native_id = "257.20950.introduktion-metoder-produktplacering"
+slug = "introduktion-metoder-produktplacering"
+
+[[variable]]
+native_id = "257.20951.introduktion-metoder-prissattning"
+slug = "introduktion-metoder-prissattning"
+
+[[variable]]
+native_id = "257.20955.miljoinnovation-minskad-materialatgang"
+slug = "miljoinnovation-minskad-materialatgang"
+
+[[variable]]
+native_id = "257.20957.j20c"
+slug = "j20c"
+
+[[variable]]
+native_id = "257.20958.miljoinnovation-materialersattning"
+slug = "miljoinnovation-materialersattning"
+
+[[variable]]
+native_id = "257.20959.miljoinnovation-fororeningar-foretaget"
+slug = "miljoinnovation-fororeningar-foretaget"
+
+[[variable]]
+native_id = "257.20960.miljoinnovation-atervinning-avfall"
+slug = "miljoinnovation-atervinning-avfall"
+
+[[variable]]
+native_id = "257.20962.miljoinno-fororeningar-slutkonsumtion"
+slug = "miljoinno-fororeningar-slutkonsumtion"
+
+[[variable]]
+native_id = "257.29913.utgifter-ovrig-innovationsverksamhet"
+slug = "utgifter-ovrig-innovationsverksamhet"
+
+[[variable]]
+native_id = "257.29914.stod-for-innovationsverksamhet-kommun"
+slug = "stod-for-innovationsverksamhet-kommun"
+
+[[variable]]
+native_id = "257.32713.ipr-patent"
+slug = "ipr-patent"
+
+[[variable]]
+native_id = "257.36983.stod-for-innovationsverksamhet-staten"
+slug = "stod-for-innovationsverksamhet-staten"
+
+[[variable]]
+native_id = "257.36984.stod-for-innovationsverksamhet-eu"
+slug = "stod-for-innovationsverksamhet-eu"
+
+[[variable]]
+native_id = "257.37076.ipr-monsterskydd"
+slug = "ipr-monsterskydd"
+
+[[variable]]
+native_id = "257.37077.ipr-varumarke"
+slug = "ipr-varumarke"
+
+[[variable]]
+native_id = "257.37078.ipr-salt"
+slug = "ipr-salt"
+
+[[variable]]
+native_id = "257.37079.ipr-kopt"
+slug = "ipr-kopt"
+
+[[variable]]
+native_id = "257.39094.stod-innovationsaktiviteter-eu-h2020"
+slug = "stod-innovationsaktiviteter-eu-h2020"
+
+[[variable]]
+native_id = "257.39096.stod-fran-eu-h2020"
+slug = "stod-fran-eu-h2020"
+
+[[variable]]
+native_id = "257.39102.samarbete-inom-ovriga-aktiviteter"
+slug = "samarbete-inom-ovriga-aktiviteter"
+
+[[variable]]
+native_id = "257.39126.coop-pub-clcu-neu-nefta"
+slug = "coop-pub-clcu-neu-nefta"
+
+[[variable]]
+native_id = "257.46481.miljoinno-livscykel"
+slug = "miljoinno-livscykel"
+
+[[variable]]
+native_id = "257.46482.miljoinno-atervinning"
+slug = "miljoinno-atervinning"
+
+[[variable]]
+native_id = "257.46483.eco-enu-sg"
+slug = "eco-enu-sg"
+
+[[variable]]
+native_id = "257.46484.miljoinno-mangfald-kons"
+slug = "miljoinno-mangfald-kons"
+
+[[variable]]
+native_id = "257.46485.miljoinno-mangfald-intern"
+slug = "miljoinno-mangfald-intern"
+
+[[variable]]
+native_id = "257.46492.miljoinno-fossila"
+slug = "miljoinno-fossila"
+
+[[variable]]
+native_id = "257.46650.turpop"
+slug = "turpop"
+
+[[variable]]
+native_id = "257.46654.turresp"
+slug = "turresp"
 
 # register 258
 

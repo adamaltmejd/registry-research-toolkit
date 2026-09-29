@@ -393,6 +393,159 @@ _IOT_Y310_CALCULATION_BASES: dict[str, tuple[str, str, int]] = {
 }
 
 
+# Y-311: the 74 reviewed Innovation i foretag (257) native-question identity
+# families. Each value is the native-question split owner leaf and the complete
+# set of delivered literals that leaf owns in that native family.
+_INNOVATION_RECURRENT_QUESTION_OWNERS: dict[str, tuple[str, tuple[str, ...]]] = {
+    "257.29": ("fenr", ("FENr", "SCBID")),
+    "257.690": ("antal-anstallda", ("EMP", "EMP2022")),
+    "257.2468": ("outlier", ("OUTLFL", "Outlier")),
+    "257.4032": ("antal-anstallda-foretaget", ("A4", "Q4FDB")),
+    "257.4045": ("koncernmarkering", ("A1", "GP", "Q1")),
+    "257.4256": ("nettoomsattning", ("TUR", "TUR2022")),
+    "257.7705": (
+        "utgifter-for-egen-fou",
+        ("E11a", "EXP_INNO_RND_IH", "Q11a", "RRDINX"),
+    ),
+    "257.7708": (
+        "utgifter-for-utlagd-fou",
+        ("E11b", "EXP_INNO_RND_CONTR_OUT", "Q11b", "RRDEXX"),
+    ),
+    "257.15555": ("geografisk-marknad-nationellt", ("A2b", "MARNAT", "Q2b")),
+    "257.15556": ("geografisk-marknad-eu-efta", ("A2c", "MAREUR", "Q2c")),
+    "257.15559": ("geografisk-marknad-ovriga-lander", ("A2d", "MAROTH", "Q2d")),
+    "257.15562": (
+        "produktinnovation-ny-for-marknad",
+        ("B6a", "INNO_PRD_NEW_MKT", "NEWMKT", "Q6a"),
+    ),
+    "257.15563": (
+        "produktinnovation-ny-for-foretaget",
+        ("B6b", "INNO_PRD_NEW_ENT", "NEWFRM", "Q6b"),
+    ),
+    "257.15568": (
+        "omsattningsandel-inno-ny-for-marknad",
+        ("B7a", "Q7a", "TURNMAR", "TUR_PRD_NEW_MKT"),
+    ),
+    "257.15569": (
+        "omsattningsandel-inno-ny-for-foretaget",
+        ("B7b", "Q7b", "TURNIN", "TUR_PRD_NEW_ENT"),
+    ),
+    "257.15570": (
+        "omsattningsandel-oforandrade-varor",
+        ("B7c", "Q7c", "TURNTOT", "TUR_PRD_NINN"),
+    ),
+    "257.15571": (
+        "introduktion-av-produktionsmetoder",
+        ("C8a", "INNO_PCS_PRD", "INPSPD", "Q8a"),
+    ),
+    "257.15578": (
+        "introduktion-av-leveransmetoder",
+        ("C8b", "INNO_PCS_LOG", "INPSLG", "Q8b"),
+    ),
+    "257.15579": (
+        "introduktion-av-stodverksamheter",
+        ("C8c", "INNO_PCS_ACCT", "INPSSU", "Q8c"),
+    ),
+    "257.15580": ("utvecklare-av-processinnovationer", ("C81", "Q81")),
+    "257.15582": ("introduktion-av-varor", ("B5a", "INNO_PRD_GD", "INPDGD", "Q5a")),
+    "257.15583": (
+        "introduktion-av-tjanster",
+        ("B5b", "INNO_PRD_SERV", "INPDSV", "Q5b"),
+    ),
+    "257.15584": ("utvecklare-av-produktinnovationer", ("B51", "Q51")),
+    "257.15593": ("huvudkontoret-belaget", ("A1a", "Q1a")),
+    "257.15600": ("innovationssamarbete", ("CO", "F12", "Q12")),
+    "257.15612": ("utgifter-forvarv-maskiner-programvara", ("E11c", "Q11c")),
+    "257.15613": ("utgifter-forvarv-existerande-kunskap", ("E11d", "Q11d", "ROEKX")),
+    "257.15614": ("inna-egen-fou", ("E10a", "EGFOU", "INNA_IH_RND", "Q10a")),
+    "257.15616": ("inna-utlagd-fou", ("E10b", "INNA_RND_CONTR_OUT", "Q10b", "RRDEX")),
+    "257.15617": ("inna-forvarv-maskiner", ("E10c", "Q10c", "RMAC")),
+    "257.15618": ("inna-forvarv-existerande-kunskap", ("E10d", "Q10d", "ROEK")),
+    "257.15619": ("inna-utbildning", ("E10e", "Q10e", "RTR")),
+    "257.15620": ("inna-marknadsintroduktion", ("E10f", "Q10f", "RMAR")),
+    "257.15621": ("inna-andra-forberedelser", ("E10g", "Q10g")),
+    "257.15642": ("geografisk-marknad-regional-lokal", ("A2a", "MARLOC", "Q2a")),
+    "257.15643": ("totala-innovationsutgifter", ("E11e", "Q11e", "RALLX")),
+    "257.15665": ("mest-vardefull-samarbetspartner", ("F14", "PMOS", "Q14")),
+    "257.17402": ("koncerntillhorighet", ("ENTGRP_PART", "Koncern")),
+    "257.20900": ("avbruten-innovationsaktivitet", ("D9a", "INABA", "INNA_ABDN")),
+    "257.20901": ("pagaende-innovationsaktivitet", ("D9b", "INNA_ONGO", "INONG")),
+    "257.20940": ("introduktion-av-nya-affarsmetoder", ("H16a", "ORGBUP")),
+    "257.20941": (
+        "introduktion-metoder-ansvar-beslut",
+        ("H16b", "INNO_PCS_WR_DEC_HRM", "ORGWKP"),
+    ),
+    "257.20942": (
+        "introduktion-metoder-externa-relationer",
+        ("H16c", "INNO_PCS_OPROC_EXTREL", "ORGEXR"),
+    ),
+    "257.20948": ("introduktion-forandringar-utformning", ("I18a", "MKTDGP")),
+    "257.20949": (
+        "introduktion-metoder-marknadsforing",
+        ("I18b", "INNO_PCS_SLS_SERV", "MKTPDP"),
+    ),
+    "257.20950": ("introduktion-metoder-produktplacering", ("I18c", "MKTPDL")),
+    "257.20951": ("introduktion-metoder-prissattning", ("I18d", "MKTPRI")),
+    "257.20955": (
+        "miljoinnovation-minskad-materialatgang",
+        ("ECO_MAT", "ECO_MAT_SG", "J20a"),
+    ),
+    "257.20957": ("j20c", ("ECO_ENO", "ECO_ENO_SG", "J20c")),
+    "257.20958": (
+        "miljoinnovation-materialersattning",
+        ("ECO_SUB", "ECO_SUB_SG", "J20d"),
+    ),
+    "257.20959": (
+        "miljoinnovation-fororeningar-foretaget",
+        ("ECO_POL", "ECO_POL_SG", "J20e"),
+    ),
+    "257.20960": (
+        "miljoinnovation-atervinning-avfall",
+        ("ECO_REC", "ECO_REC_SG", "J20f"),
+    ),
+    "257.20962": (
+        "miljoinno-fororeningar-slutkonsumtion",
+        ("ECO_POS", "ECO_POS_SG", "J20h"),
+    ),
+    "257.29913": (
+        "utgifter-ovrig-innovationsverksamhet",
+        ("EXP_INNO_INN_XRND", "ROTRX"),
+    ),
+    "257.29914": (
+        "stod-for-innovationsverksamhet-kommun",
+        ("FUND_AUT_LOC_REG_RNDINN", "FUNLOC"),
+    ),
+    "257.32713": ("ipr-patent", ("IPR_OUT_PAT", "PROPAT")),
+    "257.36983": (
+        "stod-for-innovationsverksamhet-staten",
+        ("FUND_GOV_CTL_RNDINN", "FUNGMT"),
+    ),
+    "257.36984": ("stod-for-innovationsverksamhet-eu", ("FUND_EU_OTH_RNDINN", "FUNEU")),
+    "257.37076": ("ipr-monsterskydd", ("IPR_OUT_IDESG", "PRODSG")),
+    "257.37077": ("ipr-varumarke", ("IPR_OUT_TRDM", "PROTM")),
+    "257.37078": ("ipr-salt", ("IPR_OUT_SELL", "PROLEX")),
+    "257.37079": ("ipr-kopt", ("IPR_IN_ENT", "PROLIN")),
+    "257.39094": (
+        "stod-innovationsaktiviteter-eu-h2020",
+        ("FUND_EU_HP2020_RNDINN", "FUND_EU_HP_RNDINN"),
+    ),
+    "257.39096": ("stod-fran-eu-h2020", ("FUND_EU_HP", "FUND_EU_HP2020")),
+    "257.39102": ("samarbete-inom-ovriga-aktiviteter", ("COOP_NO", "COOP_OTH")),
+    "257.39126": (
+        "coop-pub-clcu-neu-nefta",
+        ("COOP_PUB_CLCU_NEU_EFTA", "COOP_PUB_CLCU_NEU_NEFTA"),
+    ),
+    "257.46481": ("miljoinno-livscykel", ("ECO_EXT", "ECO_EXT_SG")),
+    "257.46482": ("miljoinno-atervinning", ("ECO_REA", "ECO_REA_SG")),
+    "257.46483": ("eco-enu-sg", ("ECO_ENU", "ECO_ENU_SG")),
+    "257.46484": ("miljoinno-mangfald-kons", ("ECO_BIU", "ECO_BIU_SG")),
+    "257.46485": ("miljoinno-mangfald-intern", ("ECO_BIO", "ECO_BIO_SG")),
+    "257.46492": ("miljoinno-fossila", ("ECO_REP", "ECO_REP_SG")),
+    "257.46650": ("turpop", ("LillaNs_TUR", "TURPOP")),
+    "257.46654": ("turresp", ("StoraN_TUR", "TURRESP")),
+}
+
+
 def test_catalog_overlays_share_one_directory() -> None:
     names = {
         "classification_groups.toml",
@@ -1417,6 +1570,19 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     for native, (leaf, literals) in _IT_RECURRENT_QUESTION_OWNERS.items():
         owner = f"{native}.{leaf}"
         assert dict(it_partitions[native].columns) == dict.fromkeys(literals, owner)
+    # Y-311: the 74 reviewed Innovation i foretag (257) native-question identity
+    # families each own every listed literal through one native-question leaf.
+    innovation_partitions = {
+        partition.variable: partition
+        for partition in partitions
+        if partition.variable in _INNOVATION_RECURRENT_QUESTION_OWNERS
+    }
+    assert set(innovation_partitions) == set(_INNOVATION_RECURRENT_QUESTION_OWNERS)
+    for native, (leaf, literals) in _INNOVATION_RECURRENT_QUESTION_OWNERS.items():
+        owner = f"{native}.{leaf}"
+        assert dict(innovation_partitions[native].columns) == dict.fromkeys(
+            literals, owner
+        )
     absent_owners = {
         owner
         for partition in partitions
