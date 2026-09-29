@@ -1250,6 +1250,194 @@ def test_mfr_reference_absent_full_source_vs_skipped_subset():
     assert report["sos/mfr"]["stale"] == [case_id]
 
 
+_LOVA_SOURCE = (
+    "Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och "
+    "vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx"
+)
+_LOVA_REGISTER = (
+    "Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)"
+)
+_LOVA_SSYK = (
+    "https://www.scb.se/dokumentation/klassifikationer-och-standarder/"
+    "standard-for-svensk-yrkesklassificering-ssyk/"
+)
+_LOVA_SUN = (
+    "https://www.scb.se/dokumentation/klassifikationer-och-standarder/"
+    "svensk-utbildningsnomenklatur-sun/"
+)
+_LOVA_REFERENCE_ROWS = (
+    ("A_LOVA_HOSP", "EU_EES", "Fritext, land eller område", _LOVA_SSYK),
+    ("A_LOVA", "EXAMAR", "YYYY", _LOVA_SSYK),
+    ("A_LOVA_EXAMEN", "EXAMAR", "YYYY", _LOVA_SSYK),
+    ("A_LOVA_HOSP", "EXAMAR", "YYYY", _LOVA_SSYK),
+    ("A_LOVA_EXAMEN", "EXAMEN", "fritext", _LOVA_SSYK),
+    ("A_LOVA_HOSP", "TEMPBEHORIGHETFRAN", "YYYY-MM-DD", _LOVA_SUN),
+    ("A_LOVA_HOSP", "TEMPBEHORIGHETTILL", "YYYY-MM-DD", _LOVA_SUN),
+)
+
+
+def test_lova_reference_inventory_is_exact():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1] / "curation"
+    register = next(
+        item
+        for item in load_register_files(root)
+        if item.register_info.provider == "sos" and item.register_info.slug == "lova"
+    )
+    assert {
+        (
+            item.deldatamangd,
+            item.variable,
+            item.expected_representation,
+            item.expected_reference,
+        )
+        for item in register.errata.classification_reference
+    } == set(_LOVA_REFERENCE_ROWS)
+    assert len(register.errata.classification_reference) == len(_LOVA_REFERENCE_ROWS)
+
+
+def _lova_reference_register(variant: str, variable: str):
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1] / "curation"
+    register = next(
+        item
+        for item in load_register_files(root)
+        if item.register_info.provider == "sos" and item.register_info.slug == "lova"
+    )
+    entry = next(
+        item
+        for item in register.errata.classification_reference
+        if (item.deldatamangd, item.variable) == (variant, variable)
+    )
+    # Isolate this declaration from the register's unrelated route and type entries.
+    return register.model_copy(
+        update={
+            "identity": register.identity.model_copy(update={"route": ()}),
+            "errata": register.errata.model_copy(
+                update={"data_type": (), "classification_reference": (entry,)}
+            ),
+        }
+    ), entry
+
+
+def _lova_reference_record(entry, **changes) -> SourceRecord:
+    reference = changes.get("reference", entry.expected_reference)
+    return _case_record(
+        provider="sos",
+        register=_LOVA_REGISTER,
+        variant=changes.get("variant", entry.deldatamangd),
+        variable=changes.get("variable", entry.variable),
+        source=_LOVA_SOURCE,
+        fields=SourceFields(
+            column_name=value_field(changes.get("column", entry.column)),
+            classification_declared=value_field(reference),
+            representation=value_field(
+                changes.get("representation", entry.expected_representation)
+            ),
+            data_type=value_field("Text"),
+            value_set_declared=value_field("independent coding claim"),
+        ),
+        delivered_cells=(
+            DeliveredCell(
+                name="classification_declared",
+                present=True,
+                raw_value=reference,
+                interpreted_value=reference,
+                hyperlink_location=reference,
+            ),
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    "variant,variable,representation,reference", _LOVA_REFERENCE_ROWS
+)
+def test_lova_reference_corrects_only_declared_classification(
+    variant: str, variable: str, representation: str, reference: str
+):
+    register, entry = _lova_reference_register(variant, variable)
+    assert (entry.column, entry.expected_representation, entry.expected_reference) == (
+        variable,
+        representation,
+        reference,
+    )
+    record = _lova_reference_record(entry)
+    cases, diagnostics, statuses = _compile_sos_register(register, (record,))
+    assert diagnostics == ()
+    case = next(
+        case for case in cases if "/errata.classification_reference/" in case.case_id
+    )
+    assert statuses["entries_matched"] == [case.case_id]
+    assert case.peer_guards[0].source == _LOVA_SOURCE
+    assert case.peer_guards[0].expected_members == (record_ref(record),)
+    result = apply_occurrence_cases((record,), (case,))
+    assert result.diagnostics == ()
+    assert result.accounting[0].disposition == "applied"
+    effective = result.occurrences[0]
+    assert effective.fields == record.fields.model_copy(
+        update={"classification_declared": SourceField(status="unknown")}
+    )
+    assert effective.source_records == (record,)
+    assert record.delivered_cells[0].hyperlink_location == reference
+
+
+def test_lova_reference_stale_and_peer_guards_exclude_other_variants():
+    register, entry = _lova_reference_register("A_LOVA_EXAMEN", "EXAMAR")
+    original = _lova_reference_record(entry)
+    cases, diagnostics, _ = _compile_sos_register(register, (original,))
+    assert diagnostics == ()
+    case = next(
+        case for case in cases if "/errata.classification_reference/" in case.case_id
+    )
+    for changed in (
+        _lova_reference_record(entry, representation="different"),
+        _lova_reference_record(entry, reference="different"),
+    ):
+        _, diagnostics, statuses = _compile_sos_register(register, (changed,))
+        assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+        assert statuses["stale"] == [case.case_id]
+        assert (
+            apply_occurrence_cases((changed,), (case,)).accounting[0].disposition
+            == "stale"
+        )
+    peer = _distinct_sos_record(_lova_reference_record(entry, column="OTHER"))
+    _, diagnostics, statuses = _compile_sos_register(register, (original, peer))
+    assert [issue.code for issue in diagnostics] == ["overbroad_curation_entry"]
+    assert statuses["over_broad"] == [case.case_id]
+    assert (
+        apply_occurrence_cases((original, peer), (case,)).accounting[0].disposition
+        == "stale"
+    )
+    other_variant = _lova_reference_record(entry, variant="A_LOVA_HOSP")
+    _, diagnostics, statuses = _compile_sos_register(
+        register, (original, other_variant)
+    )
+    assert diagnostics == ()
+    assert statuses["entries_matched"] == [case.case_id]
+    result = apply_occurrence_cases((original, other_variant), (case,))
+    assert result.accounting[0].disposition == "applied"
+    assert (
+        result.occurrences[1].fields.classification_declared
+        == other_variant.fields.classification_declared
+    )
+
+    examen_register, examen_entry = _lova_reference_register("A_LOVA_EXAMEN", "EXAMEN")
+    examen = _lova_reference_record(examen_entry)
+    row36 = _lova_reference_record(
+        examen_entry, variant="A_LOVA_STYR_EXAMENSKODER", reference="other declaration"
+    )
+    cases, diagnostics, _ = _compile_sos_register(examen_register, (examen, row36))
+    assert diagnostics == ()
+    case = next(
+        case for case in cases if "/errata.classification_reference/" in case.case_id
+    )
+    result = apply_occurrence_cases((examen, row36), (case,))
+    assert result.accounting[0].disposition == "applied"
+    assert result.occurrences[1].fields == row36.fields
+
+
 def test_thin_native_naming_captures_complete_family_guard(tmp_path):
     root = tmp_path / "curation"
     _tree(root)
