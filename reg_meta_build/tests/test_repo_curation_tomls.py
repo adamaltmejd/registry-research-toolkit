@@ -2430,3 +2430,65 @@ def test_repo_rtb_contexts_preserve_native_aliases_and_distinct_roles() -> None:
     assert "2.15" not in expected
     assert not any(owner.startswith("2.15.") for owner in names)
     assert snapshot["scb/2.15.tidcivil"] == "tidpunkt-civilstand"
+
+
+def test_repo_hreg_source_constructs_preserve_event_anchors_and_aliases() -> None:
+    expected = {
+        "47.44": {"Kon": "47.44.kon", "Kon2": "47.44.kon", "kon": "47.44.kon"},
+        "47.73": {"Ar": "47.73.ar", "KAr": "47.73.ar-for-tillgodoraknande"},
+        "47.326": {"Namn": "47.326.namn", "FSLNamn": "47.326.namn"},
+        "47.1280": {
+            "Pomf": "47.1280.poangomfattning",
+            "Omfattning": "47.1280.tillgodoraknad-omfattning-forskarniva",
+        },
+        "47.1375": {"ExDatum": "47.1375.examensdatum", "Datum": "47.1375.examensdatum"},
+        "47.1465": {
+            "UtbytStud": "47.1465.utbytesstudier",
+            "Typ": "47.1465.typ-av-utlandsstudier-csn",
+        },
+        "47.1537": {
+            "ar": "47.1537.ar-for-examensbevis",
+            "Kar": "47.1537.ar-for-examensbevis",
+        },
+        "47.1557": {
+            "Ar": "47.1557.kalenderar",
+            "Kar": "47.1557.kalenderar-for-examensbevis",
+        },
+        "47.1565": {
+            "AvhoppDat": "47.1565.datum-for-studieavbrott",
+            "AvbrDatum": "47.1565.datum-for-studieavbrott",
+        },
+        "47.38118": {
+            "GenomHsKod": "47.38118.medverkande-hogskola",
+            "MedverkHsKod": "47.38118.medverkande-hogskola",
+        },
+    }
+    tree = load_curation_tree(_CURATION)
+    hreg = next(
+        register for register in tree.registers if register.register_info.slug == "hreg"
+    )
+    partitions = {entry.variable: entry for entry in hreg.identity.partition}
+    split_constructs = {"47.73", "47.1280", "47.1465", "47.1557"}
+    for native, columns in expected.items():
+        assert dict(partitions[native].columns) == columns
+        assert not partitions[native].unassigned_columns
+        assert len(set(columns.values())) == (2 if native in split_constructs else 1)
+    names = {
+        owner: owner.split(".", 2)[2]
+        for columns in expected.values()
+        for owner in columns.values()
+    }
+    assert {
+        entry.native_id: entry.slug
+        for entry in hreg.variable
+        if entry.native_id in names
+    } == names
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
+    assert {key: snapshot[key] for key in (f"scb/{owner}" for owner in names)} == {
+        f"scb/{owner}": slug for owner, slug in names.items()
+    }
+    # Literal-only evidence cannot separate age anchors or establish ambiguous
+    # examination/program representations. These await a different decision.
+    for native in ("47.241", "47.1715", "47.29874"):
+        assert native not in expected
+        assert not any(owner.startswith(f"{native}.") for owner in names)

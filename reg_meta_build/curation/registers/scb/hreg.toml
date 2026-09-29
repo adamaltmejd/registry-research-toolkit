@@ -1140,3 +1140,113 @@ native_id = "47.benamning"
 slug = "examensbenamning-namnare"
 
 # register 55
+
+
+# Reviewed original operational meanings distinguish event anchors and credit
+# constructs; spelling aliases retain their source coding and pooled scopes.
+
+[[identity.partition]]
+variable = "47.44"
+columns = { "Kon" = "47.44.kon", "Kon2" = "47.44.kon", "kon" = "47.44.kon" }
+columns_ref = "SCB Registerinformation native 47.44: reviewed all 174 original occurrences. Original operational descriptions derive the same person sex from the penultimate personal-number digit. Keep numeric 0/1/2 and alphabetical M/K source coding versions as delivered; the literals do not establish separate constructs. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.73"
+columns = { "Ar" = "47.73.ar", "KAr" = "47.73.ar-for-tillgodoraknande" }
+columns_ref = "SCB Registerinformation native 47.73: reviewed all 7 original occurrences. Ar is explicitly the single reference-year value in the staff delivery; KAr is explicitly the calendar year when doctoral training was credited. Distinct event anchors, not a variant-only split. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.326"
+columns = { "Namn" = "47.326.namn", "FSLNamn" = "47.326.namn" }
+columns_ref = "SCB Registerinformation native 47.326: reviewed all 7 original occurrences. Every original operational definition explicitly names the doctoral student at the latest reporting occasion, surname plus first name; FSLNamn does not name a doctoral school. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.1280"
+columns = { "Pomf" = "47.1280.poangomfattning", "Omfattning" = "47.1280.tillgodoraknad-omfattning-forskarniva" }
+columns_ref = "SCB Registerinformation native 47.1280: reviewed all 2 original occurrences. Pomf belongs to completed basic-level course credits and explicitly retains the autumn-2007 transition from 40 points to 60 higher-education credits per full-time year. Omfattning explicitly measures credited doctoral-level higher-education credits. Do not convert values, split or narrow the pooled Pomf period, or relabel the entire pooled vintage as old points. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.1375"
+columns = { "ExDatum" = "47.1375.examensdatum", "Datum" = "47.1375.examensdatum" }
+columns_ref = "SCB Registerinformation native 47.1375: reviewed all 2 original occurrences. Both original definitions explicitly identify the date the examination certificate was issued. Retain ExDatum source prose that before autumn 1998 only year and term were stored; no precision upgrade or availability repair. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.1465"
+columns = { "UtbytStud" = "47.1465.utbytesstudier", "Typ" = "47.1465.typ-av-utlandsstudier-csn" }
+columns_ref = "SCB Registerinformation native 47.1465: reviewed all 49 original occurrences. UtbytStud retains the six-code Utbytesstudent source classification for university registrations. Typ is explicitly the evaluated outgoing-study type for CSN-funded foreign studies, with a separate three-code Utresande student classification and original CSN education-group derivation. No code equivalence or category transfer. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.1537"
+columns = { "ar" = "47.1537.ar-for-examensbevis", "Kar" = "47.1537.ar-for-examensbevis" }
+columns_ref = "SCB Registerinformation native 47.1537: reviewed all 2 original occurrences. Both originals name the calendar year for the examination certificate; Kar explicitly derives it from the issue date. Preserve both pooled delivery scopes and original year coding. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.1557"
+columns = { "Ar" = "47.1557.kalenderar", "Kar" = "47.1557.kalenderar-for-examensbevis" }
+columns_ref = "SCB Registerinformation native 47.1557: reviewed all 47 original occurrences. Ar is explicitly the single reference-year value in staff deliveries; Kar explicitly equals the year part of the examination date in older basic-level examinations. Distinct event anchors, retaining all native source fields and calendar-year coding. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.1565"
+columns = { "AvhoppDat" = "47.1565.datum-for-studieavbrott", "AvbrDatum" = "47.1565.datum-for-studieavbrott" }
+columns_ref = "SCB Registerinformation native 47.1565: reviewed all 3 original occurrences. Both originals explicitly define year, month and day when studies in the subject were interrupted; identical original caveats describe availability from autumn 1998 and incomplete later Ladok reporting. Keep those caveats and all pooled periods unchanged. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[identity.partition]]
+variable = "47.38118"
+columns = { "GenomHsKod" = "47.38118.medverkande-hogskola", "MedverkHsKod" = "47.38118.medverkande-hogskola" }
+columns_ref = "SCB Registerinformation native 47.38118: reviewed all 2 original occurrences. Both originals explicitly name a university participating in a doctoral school and share the operational translation from external university name codes to SCB internal codes for universities with doctoral degree rights; preserve the complete 135-code classification and both pooled delivery scopes. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[variable]]
+native_id = "47.44.kon"
+slug = "kon"
+
+[[variable]]
+native_id = "47.73.ar"
+slug = "ar"
+
+[[variable]]
+native_id = "47.73.ar-for-tillgodoraknande"
+slug = "ar-for-tillgodoraknande"
+
+[[variable]]
+native_id = "47.326.namn"
+slug = "namn"
+
+[[variable]]
+native_id = "47.1280.poangomfattning"
+slug = "poangomfattning"
+
+[[variable]]
+native_id = "47.1280.tillgodoraknad-omfattning-forskarniva"
+slug = "tillgodoraknad-omfattning-forskarniva"
+
+[[variable]]
+native_id = "47.1375.examensdatum"
+slug = "examensdatum"
+
+[[variable]]
+native_id = "47.1465.utbytesstudier"
+slug = "utbytesstudier"
+
+[[variable]]
+native_id = "47.1465.typ-av-utlandsstudier-csn"
+slug = "typ-av-utlandsstudier-csn"
+
+[[variable]]
+native_id = "47.1537.ar-for-examensbevis"
+slug = "ar-for-examensbevis"
+
+[[variable]]
+native_id = "47.1557.kalenderar"
+slug = "kalenderar"
+
+[[variable]]
+native_id = "47.1557.kalenderar-for-examensbevis"
+slug = "kalenderar-for-examensbevis"
+
+[[variable]]
+native_id = "47.1565.datum-for-studieavbrott"
+slug = "datum-for-studieavbrott"
+
+[[variable]]
+native_id = "47.38118.medverkande-hogskola"
+slug = "medverkande-hogskola"

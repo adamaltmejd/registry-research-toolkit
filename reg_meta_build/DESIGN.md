@@ -586,6 +586,17 @@ unsafe state. Monthly alias windows do not split annual metadata into monthly st
 The stored representative column is chosen deterministically from participating columns
 after reconciliation; it never selects a metadata donor.
 
+`[[representation.parallel]]` authoring binds an already curated variable and variant to
+exact literal columns, source edition labels and full supplied source windows. Its
+metadata window must equal their intersection. Compilation verifies complete overlapping
+peers and captures their original fields, periods and coding references, then emits the
+existing parallel-column decision only for that intersection. Original pooled source
+windows remain unchanged, including the outer periods owned by each column. This surface
+accepts one literal column per source edition; same-edition competing columns require
+separate evidence and are not inferred from a shared native identifier. Later source
+drift stales the checked case. Metadata and coding conflicts still pass through the
+existing reconciliation diagnostics.
+
 Search aliases add discovery spellings without adding states or coverage. An alias
 window makes an already owned spelling orderable only within supported state coverage
 for its variable and variant. Gaps or competing owners withhold the affected window.

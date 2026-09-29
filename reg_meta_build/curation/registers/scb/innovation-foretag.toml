@@ -8561,3 +8561,239 @@ keep_members = [["0", "Nej"], ["1", "Ja"]]
 over = ["Enbart ja"]
 reason = "2020 - 2022 and 2022 - 2024 disagree on shared 2022; keep the later 2022 - 2024 'Ja eller nej' list."
 source = "curation triage 2026-09-28, P4 later pooled wave"
+
+# Explicit representations of reviewed overlapping source waves.
+
+[[representation.parallel]]
+variable = "257.4032.antal-anstallda-foretaget"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "A4"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q4FDB"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.4045.koncernmarkering"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "A1"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q1"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.7705.utgifter-for-egen-fou"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "E11a"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q11a"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.7708.utgifter-for-utlagd-fou"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "E11b"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q11b"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15568.omsattningsandel-inno-ny-for-marknad"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "B7a"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q7a"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15569.omsattningsandel-inno-ny-for-foretaget"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "B7b"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q7b"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15570.omsattningsandel-oforandrade-varor"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "B7c"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q7c"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15584.utvecklare-av-produktinnovationer"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "B51"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q51"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15612.utgifter-forvarv-maskiner-programvara"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "E11c"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q11c"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15613.utgifter-forvarv-existerande-kunskap"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "E11d"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q11d"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15643.totala-innovationsutgifter"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "E11e"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q11e"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15665.mest-vardefull-samarbetspartner"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "F14"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q14"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.39102.samarbete-inom-ovriga-aktiviteter"
+variant = "257.553"
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+evidence = "Prepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+noted = "2026-09-29"
+[[representation.parallel.columns]]
+column = "COOP_NO"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "COOP_OTH"
+valid_from = "2018-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2018 - 2020"]

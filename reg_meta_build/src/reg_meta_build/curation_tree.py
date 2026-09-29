@@ -47,6 +47,7 @@ from .fqid_slugs import (
 from .normalization import normalize_text
 from .relations import load_relations
 from .resolved_metadata import _variable
+from .source_curation import ColumnRepresentation, FiniteCurationWindow
 from .tags import load_tags
 
 if TYPE_CHECKING:
@@ -483,6 +484,48 @@ class AliasWindowEntry(_CurationModel):
     noted: str
 
 
+class ParallelRepresentationColumn(ColumnRepresentation):
+    """An exact source column/window, before clipping to the shared window."""
+
+    source_editions: list[str] = Field(min_length=1)
+
+    @field_validator("source_editions")
+    @classmethod
+    def _editions(cls, value: list[str]) -> list[str]:
+        values = [_require_trimmed(item) for item in value]
+        if len(values) != len(set(values)):
+            raise ValueError("source editions must be unique")
+        return values
+
+
+class ParallelRepresentationEntry(FiniteCurationWindow):
+    variable: str
+    variant: str
+    columns: list[ParallelRepresentationColumn] = Field(min_length=2)
+    evidence: str
+    noted: str
+
+    _text = field_validator("variable", "variant", "evidence", "noted")(
+        _require_trimmed
+    )
+
+    @model_validator(mode="after")
+    def _shared_window(self) -> ParallelRepresentationEntry:
+        if len({column.column for column in self.columns}) != len(self.columns):
+            raise ValueError("parallel columns must be unique")
+        if any(
+            column.valid_from > self.valid_from or column.valid_to < self.valid_to
+            for column in self.columns
+        ):
+            raise ValueError("every source column must cover the shared window")
+        if (self.valid_from, self.valid_to) != (
+            max(column.valid_from for column in self.columns),
+            min(column.valid_to for column in self.columns),
+        ):
+            raise ValueError("shared window must equal the source-window intersection")
+        return self
+
+
 class IdentityPartitionEntry(_CurationModel):
     variable: str
     columns: dict[str, str]
@@ -711,6 +754,7 @@ class IdentityCuration(_CurationModel):
 class RepresentationCuration(_CurationModel):
     period_family: list[PeriodFamilyEntry] = Field(default_factory=list)
     alias_window: list[AliasWindowEntry] = Field(default_factory=list)
+    parallel: list[ParallelRepresentationEntry] = Field(default_factory=list)
 
 
 class CodingEntry(_CurationModel):
@@ -1062,6 +1106,7 @@ def _register_arrays(
         ("code_label_pair", entry.code_label_pair),
         ("representation.period_family", entry.representation.period_family),
         ("representation.alias_window", entry.representation.alias_window),
+        ("representation.parallel", entry.representation.parallel),
         ("identity.partition", entry.identity.partition),
         ("identity.column_owner", entry.identity.column_owner),
         ("identity.route", entry.identity.route),
@@ -1210,7 +1255,13 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     value, expected=expected, file=file, table=table, index=index
                 )
             if isinstance(
-                row, (IdentityPartitionEntry, IdentityColumnOwnerEntry, CodingEntry)
+                row,
+                (
+                    IdentityPartitionEntry,
+                    IdentityColumnOwnerEntry,
+                    CodingEntry,
+                    ParallelRepresentationEntry,
+                ),
             ):
                 native_id = identity.native_id
                 if native_id is not None and not row.variable.startswith(

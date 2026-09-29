@@ -1036,6 +1036,167 @@ def compile_period_families(
     return tuple(cases), tuple(names), tuple(keys), tuple(diagnostics)
 
 
+def compile_parallel_representations(
+    register: RegisterCuration,
+    records: tuple[SourceRecord, ...],
+    naming: tuple[NamingDeclaration, ...],
+) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
+    """Bind finite reviewed column windows without changing original scopes."""
+    cases = []
+    diagnostics = []
+    for index, entry in enumerate(register.representation.parallel, 1):
+        ref = f"{register.source_file}#/representation.parallel/{index}"
+        variable_names = tuple(
+            name
+            for name in naming
+            if name.target.kind == "variable"
+            and name.naming.source_id == entry.variable
+            and name.naming.provider == register.register_info.provider
+        )
+        variable_keys = {name.target.source_key for name in variable_names}
+        variant_keys = {
+            name.target.source_key
+            for name in naming
+            if name.target.kind == "register_variant"
+            and entry.variant in {name.naming.source_id, name.naming.slug}
+            and name.target.register_key
+            in {variable.target.register_key for variable in variable_names}
+        }
+        if len(variable_keys) != 1 or len(variant_keys) != 1:
+            diagnostics.append(
+                _stale_partition(ref, entry.variable, "owner/variant is not unique")
+            )
+            continue
+        variable_key, variant_key = next(iter(variable_keys)), next(iter(variant_keys))
+        expected_refs = {
+            item.ref for name in variable_names for item in name.target.expectations
+        }
+        owned = tuple(
+            record
+            for record in records
+            if native_variant_key(record) == variant_key
+            and (
+                record_ref(record) in expected_refs
+                if expected_refs
+                else native_variable_key(record) == variable_key
+            )
+        )
+        selected = []
+        invalid = False
+        for column in entry.columns:
+            members = tuple(
+                record
+                for record in owned
+                if _literal_field(record, "column_name") == column.column
+                and _edition_label(record) in column.source_editions
+            )
+            bounds = (
+                date.fromisoformat(column.valid_from).toordinal(),
+                date.fromisoformat(column.valid_to).toordinal(),
+            )
+            if (
+                not members
+                or {_edition_label(r) for r in members} != set(column.source_editions)
+                or any(
+                    coding_scope_bounds(
+                        record.edition_period_scope
+                        if record.edition_period_scope.kind != "not_applicable"
+                        else record.edition_scope
+                    )
+                    != (bounds,)
+                    for record in members
+                )
+            ):
+                invalid = True
+            selected.extend(members)
+        by_edition: dict[str | None, set[str | None]] = defaultdict(set)
+        for record in selected:
+            by_edition[_edition_label(record)].add(
+                _literal_field(record, "column_name")
+            )
+        lower, upper = (
+            date.fromisoformat(entry.valid_from).toordinal(),
+            date.fromisoformat(entry.valid_to).toordinal(),
+        )
+        overlapping_refs = {
+            record_ref(record)
+            for record in owned
+            if _literal_field(record, "column_name") is not None
+            and any(
+                lo <= upper and hi >= lower
+                for lo, hi in (
+                    coding_scope_bounds(
+                        record.edition_period_scope
+                        if record.edition_period_scope.kind != "not_applicable"
+                        else record.edition_scope
+                    )
+                    or ()
+                )
+            )
+        }
+        if (
+            invalid
+            or any(len(columns) != 1 for columns in by_edition.values())
+            or (overlapping_refs != {record_ref(record) for record in selected})
+        ):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.variable,
+                    "exact source editions/windows or complete parallel peers changed",
+                )
+            )
+            continue
+        first = selected[0]
+        peers = tuple(
+            record
+            for record in records
+            if record.source == first.source
+            and native_variable_key(record) == native_variable_key(first)
+            and native_variant_key(record) == variant_key
+        )
+        targets = capture_expectations(
+            tuple(selected),
+            fields=tuple(SourceFields.model_fields),
+            coding=True,
+        )
+        guard = PeerGuard(
+            guard_id=ref,
+            source=first.source,
+            coordinates=(
+                ("register", first.subject.register_name),
+                ("variant", first.subject.variant),
+                ("variable", first.subject.variable),
+            ),
+            expected_members=tuple(sorted({record_ref(r) for r in peers}, key=repr)),
+        )
+        cases.append(
+            CurationCase(
+                case_id=ref,
+                targets=targets,
+                peer_guards=(guard,),
+                decision=RepresentationDecision(
+                    reviewed=True,
+                    variable_key=variable_key,
+                    variant_key=variant_key,
+                    valid_from=entry.valid_from,
+                    valid_to=entry.valid_to,
+                    columns=tuple(
+                        ColumnRepresentation(
+                            column=column.column,
+                            valid_from=entry.valid_from,
+                            valid_to=entry.valid_to,
+                        )
+                        for column in entry.columns
+                    ),
+                    reason=entry.evidence,
+                    provenance=ref,
+                ),
+            )
+        )
+    return tuple(cases), tuple(diagnostics)
+
+
 def compile_alias_windows(
     register: RegisterCuration,
     records: tuple[SourceRecord, ...],
@@ -1206,6 +1367,7 @@ def compile_matrix_repr(
         and (
             registers[name].representation.period_family
             or registers[name].representation.alias_window
+            or registers[name].representation.parallel
             or name == "scb/innovation-foretag"
         )
         for scope in scopes
@@ -1238,6 +1400,7 @@ def compile_matrix_repr(
                 and (
                     registers[name].representation.period_family
                     or registers[name].representation.alias_window
+                    or registers[name].representation.parallel
                     or name == "scb/innovation-foretag"
                 )
             )
@@ -1343,6 +1506,13 @@ def compile_matrix_repr(
                 )
                 cases[scope_key].extend(alias_cases)
                 diagnostics.extend(alias_issues)
+                parallel_cases, parallel_issues = compile_parallel_representations(
+                    register,
+                    records,
+                    (*naming.get(scope_key, ()), *names[scope_key]),
+                )
+                cases[scope_key].extend(parallel_cases)
+                diagnostics.extend(parallel_issues)
     return (
         {key: tuple(value) for key, value in cases.items()},
         {key: tuple(value) for key, value in names.items()},

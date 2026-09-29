@@ -374,6 +374,7 @@ def form_representations(
                     classification=classification,
                     conformance=conformance,
                     provenance=provenance,
+                    pooled=all(s.pooled for s in represented),
                 )
             )
             for column in first.columns:
