@@ -3469,4 +3469,402 @@ slug = "tjanstepension-tjanst"
 native_id = "34.591.tjanstepension-tjanst-agi"
 slug = "tjanstepension-tjanst-agi"
 
+# Y-302 2026-10-01: LISA employment/source KU-to-AGI source-basis partitions.
+# SCB `lisa-bakgrundsfakta-1990-2017` docs/lisa/_changelog-2019.md documents that
+# the monthly employer declarations at individual level (AGI) replace the annual
+# control statements (KU) from reference year 2019 and lists the new AGI-based
+# employment/source variables. Each family below has one KU literal (through 2018)
+# and one AGI literal (from 2019); the two are distinct source bases and get
+# distinct catalog owners. This is a source-basis distinction, NOT a claim that the
+# concept changed, a harmonized equivalent rename, or a succession edge. The exact
+# prepared v28 physical periods are the only availability claim.
+#
+# Five SSYK source/age/status families (34.1933, 34.16227, 34.16237, 34.16244,
+# 34.18911) begin 2001, not 1990. Three occupational-position AGI branches
+# (AGI2YrkStalln 34.4911, AGI1YrkStalln 34.4948, AGI3YrkStalln 34.31294) end 2021.
+# Three SektorKod AGI branches (AGI1SektorKod 34.25621, AGI2SektorKod 34.31118,
+# AGI3SektorKod 34.31299) have only four records 2019-2023: the missing 2022
+# occurrence is preserved, never filled from the min/max envelope. All other AGI
+# branches have five records 2019-2023. Excluded are the seven KU/AGI families
+# with classification revisions (34.1842, 34.16224, 34.4904, 34.4905, 34.31289,
+# 34.31111, 34.31298) and every other LISA family.
+
+[[identity.partition]]
+variable = "34.1933"
+columns = { KU1SsykAr = "34.1933.ku1ssykar", AGI1SsykAr = "34.1933.agi1ssykar" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1933: KU1SsykAr 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SsykAr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.1935"
+columns = { KU1AstKommun = "34.1935.ku1astkommun", AGI1AstKommun = "34.1935.agi1astkommun" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1935: KU1AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstKommun 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.1936"
+columns = { KU1AstLan = "34.1936.ku1astlan", AGI1AstLan = "34.1936.agi1astlan" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1936: KU1AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstLan 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.4911"
+columns = { KU2YrkStalln = "34.4911.yrkesstallning-nast-forvarvskallan", AGI2YrkStalln = "34.4911.yrkesstallning-nast-forvarvskallan-agi" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.4911: KU2YrkStalln 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2YrkStalln 2019-2021 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.4948"
+columns = { KU1YrkStalln = "34.4948.yrkesstallning-storsta-forvarvskallan", AGI1YrkStalln = "34.4948.yrkesstallning-storsta-forvarvskallan-agi" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.4948: KU1YrkStalln 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1YrkStalln 2019-2021 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.15858"
+columns = { KU2AstNr = "34.15858.ku2astnr", AGI2AstNr = "34.15858.agi2astnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.15858: KU2AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.16214"
+columns = { KU1AstNr = "34.16214.ku1astnr", AGI1AstNr = "34.16214.agi1astnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16214: KU1AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.16219"
+columns = { KU1PeOrgNr = "34.16219.ku1peorgnr", AGI1PeOrgNr = "34.16219.agi1peorgnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16219: KU1PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1PeOrgNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.16220"
+columns = { KU2PeOrgNr = "34.16220.ku2peorgnr", AGI2PeOrgNr = "34.16220.agi2peorgnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16220: KU2PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2PeOrgNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.16227"
+columns = { KU2SsykKalla = "34.16227.ku2ssykkalla", AGI2SsykKalla = "34.16227.agi2ssykkalla" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16227: KU2SsykKalla 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2SsykKalla 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.16237"
+columns = { KU1SsykKalla = "34.16237.ku1ssykkalla", AGI1SsykKalla = "34.16237.agi1ssykkalla" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16237: KU1SsykKalla 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SsykKalla 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.16244"
+columns = { KU2SsykAr = "34.16244.ku2ssykar", AGI2SsykAr = "34.16244.agi2ssykar" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16244: KU2SsykAr 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2SsykAr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.16249"
+columns = { KU1Ink = "34.16249.ku1ink", AGI1Ink = "34.16249.agi1ink" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16249: KU1Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1Ink 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.16250"
+columns = { KU2Ink = "34.16250.ku2ink", AGI2Ink = "34.16250.agi2ink" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16250: KU2Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2Ink 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.18911"
+columns = { KU1SsykStatus = "34.18911.ssyk-overensstammelse", AGI1SsykStatus = "34.18911.ssyk-overensstammelse-agi" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.18911: KU1SsykStatus 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SsykStatus 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.21004"
+columns = { KU1CfarNr = "34.21004.ku1cfarnr", AGI1CfarNr = "34.21004.agi1cfarnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.21004: KU1CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1CfarNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.21005"
+columns = { KU2CfarNr = "34.21005.ku2cfarnr", AGI2CfarNr = "34.21005.agi2cfarnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.21005: KU2CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2CfarNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.25621"
+columns = { KU1SektorKod = "34.25621.sektorkod-storsta-forvarvskalla", AGI1SektorKod = "34.25621.sektorkod-storsta-forvarvskalla-agi" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.25621: KU1SektorKod 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SektorKod 2019-2023 except 2022 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31108"
+columns = { KU2AstKommun = "34.31108.ku2astkommun", AGI2AstKommun = "34.31108.agi2astkommun" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31108: KU2AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstKommun 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31109"
+columns = { KU2AstLan = "34.31109.ku2astlan", AGI2AstLan = "34.31109.agi2astlan" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31109: KU2AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstLan 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31118"
+columns = { KU2SektorKod = "34.31118.sektorkod-nast-forvarvskalla", AGI2SektorKod = "34.31118.sektorkod-nast-forvarvskalla-agi" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31118: KU2SektorKod 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2SektorKod 2019-2023 except 2022 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31290"
+columns = { KU3Ink = "34.31290.ku3ink", AGI3Ink = "34.31290.agi3ink" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31290: KU3Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3Ink 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31291"
+columns = { KU3PeOrgNr = "34.31291.ku3peorgnr", AGI3PeOrgNr = "34.31291.agi3peorgnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31291: KU3PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3PeOrgNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31292"
+columns = { KU3CfarNr = "34.31292.ku3cfarnr", AGI3CfarNr = "34.31292.agi3cfarnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31292: KU3CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3CfarNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31293"
+columns = { KU3AstNr = "34.31293.ku3astnr", AGI3AstNr = "34.31293.agi3astnr" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31293: KU3AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstNr 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31294"
+columns = { KU3YrkStalln = "34.31294.ku3yrkesstallning", AGI3YrkStalln = "34.31294.agi3yrkesstallning" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31294: KU3YrkStalln 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3YrkStalln 2019-2021 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31295"
+columns = { KU3AstKommun = "34.31295.ku3astkommun", AGI3AstKommun = "34.31295.agi3astkommun" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31295: KU3AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstKommun 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31296"
+columns = { KU3AstLan = "34.31296.ku3astlan", AGI3AstLan = "34.31296.agi3astlan" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31296: KU3AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstLan 2019-2023 (variant 34.153)."
+
+[[identity.partition]]
+variable = "34.31299"
+columns = { KU3SektorKod = "34.31299.sektorkod-tredje-forvarvskalla", AGI3SektorKod = "34.31299.sektorkod-tredje-forvarvskalla-agi" }
+columns_ref = "Reviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31299: KU3SektorKod 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3SektorKod 2019-2023 except 2022 (variant 34.153)."
+
+
+[[variable]]
+native_id = "34.1933.ku1ssykar"
+slug = "ku1ssykar"
+
+[[variable]]
+native_id = "34.1933.agi1ssykar"
+slug = "agi1ssykar"
+
+[[variable]]
+native_id = "34.1935.ku1astkommun"
+slug = "ku1astkommun"
+
+[[variable]]
+native_id = "34.1935.agi1astkommun"
+slug = "agi1astkommun"
+
+[[variable]]
+native_id = "34.1936.ku1astlan"
+slug = "ku1astlan"
+
+[[variable]]
+native_id = "34.1936.agi1astlan"
+slug = "agi1astlan"
+
+[[variable]]
+native_id = "34.4911.yrkesstallning-nast-forvarvskallan"
+slug = "yrkesstallning-nast-forvarvskallan"
+
+[[variable]]
+native_id = "34.4911.yrkesstallning-nast-forvarvskallan-agi"
+slug = "yrkesstallning-nast-forvarvskallan-agi"
+
+[[variable]]
+native_id = "34.4948.yrkesstallning-storsta-forvarvskallan"
+slug = "yrkesstallning-storsta-forvarvskallan"
+
+[[variable]]
+native_id = "34.4948.yrkesstallning-storsta-forvarvskallan-agi"
+slug = "yrkesstallning-storsta-forvarvskallan-agi"
+
+[[variable]]
+native_id = "34.15858.ku2astnr"
+slug = "ku2astnr"
+
+[[variable]]
+native_id = "34.15858.agi2astnr"
+slug = "agi2astnr"
+
+[[variable]]
+native_id = "34.16214.ku1astnr"
+slug = "ku1astnr"
+
+[[variable]]
+native_id = "34.16214.agi1astnr"
+slug = "agi1astnr"
+
+[[variable]]
+native_id = "34.16219.ku1peorgnr"
+slug = "ku1peorgnr"
+
+[[variable]]
+native_id = "34.16219.agi1peorgnr"
+slug = "agi1peorgnr"
+
+[[variable]]
+native_id = "34.16220.ku2peorgnr"
+slug = "ku2peorgnr"
+
+[[variable]]
+native_id = "34.16220.agi2peorgnr"
+slug = "agi2peorgnr"
+
+[[variable]]
+native_id = "34.16227.ku2ssykkalla"
+slug = "ku2ssykkalla"
+
+[[variable]]
+native_id = "34.16227.agi2ssykkalla"
+slug = "agi2ssykkalla"
+
+[[variable]]
+native_id = "34.16237.ku1ssykkalla"
+slug = "ku1ssykkalla"
+
+[[variable]]
+native_id = "34.16237.agi1ssykkalla"
+slug = "agi1ssykkalla"
+
+[[variable]]
+native_id = "34.16244.ku2ssykar"
+slug = "ku2ssykar"
+
+[[variable]]
+native_id = "34.16244.agi2ssykar"
+slug = "agi2ssykar"
+
+[[variable]]
+native_id = "34.16249.ku1ink"
+slug = "ku1ink"
+
+[[variable]]
+native_id = "34.16249.agi1ink"
+slug = "agi1ink"
+
+[[variable]]
+native_id = "34.16250.ku2ink"
+slug = "ku2ink"
+
+[[variable]]
+native_id = "34.16250.agi2ink"
+slug = "agi2ink"
+
+[[variable]]
+native_id = "34.18911.ssyk-overensstammelse"
+slug = "ssyk-overensstammelse"
+
+[[variable]]
+native_id = "34.18911.ssyk-overensstammelse-agi"
+slug = "ssyk-overensstammelse-agi"
+
+[[variable]]
+native_id = "34.21004.ku1cfarnr"
+slug = "ku1cfarnr"
+
+[[variable]]
+native_id = "34.21004.agi1cfarnr"
+slug = "agi1cfarnr"
+
+[[variable]]
+native_id = "34.21005.ku2cfarnr"
+slug = "ku2cfarnr"
+
+[[variable]]
+native_id = "34.21005.agi2cfarnr"
+slug = "agi2cfarnr"
+
+[[variable]]
+native_id = "34.25621.sektorkod-storsta-forvarvskalla"
+slug = "sektorkod-storsta-forvarvskalla"
+
+[[variable]]
+native_id = "34.25621.sektorkod-storsta-forvarvskalla-agi"
+slug = "sektorkod-storsta-forvarvskalla-agi"
+
+[[variable]]
+native_id = "34.31108.ku2astkommun"
+slug = "ku2astkommun"
+
+[[variable]]
+native_id = "34.31108.agi2astkommun"
+slug = "agi2astkommun"
+
+[[variable]]
+native_id = "34.31109.ku2astlan"
+slug = "ku2astlan"
+
+[[variable]]
+native_id = "34.31109.agi2astlan"
+slug = "agi2astlan"
+
+[[variable]]
+native_id = "34.31118.sektorkod-nast-forvarvskalla"
+slug = "sektorkod-nast-forvarvskalla"
+
+[[variable]]
+native_id = "34.31118.sektorkod-nast-forvarvskalla-agi"
+slug = "sektorkod-nast-forvarvskalla-agi"
+
+[[variable]]
+native_id = "34.31290.ku3ink"
+slug = "ku3ink"
+
+[[variable]]
+native_id = "34.31290.agi3ink"
+slug = "agi3ink"
+
+[[variable]]
+native_id = "34.31291.ku3peorgnr"
+slug = "ku3peorgnr"
+
+[[variable]]
+native_id = "34.31291.agi3peorgnr"
+slug = "agi3peorgnr"
+
+[[variable]]
+native_id = "34.31292.ku3cfarnr"
+slug = "ku3cfarnr"
+
+[[variable]]
+native_id = "34.31292.agi3cfarnr"
+slug = "agi3cfarnr"
+
+[[variable]]
+native_id = "34.31293.ku3astnr"
+slug = "ku3astnr"
+
+[[variable]]
+native_id = "34.31293.agi3astnr"
+slug = "agi3astnr"
+
+[[variable]]
+native_id = "34.31294.ku3yrkesstallning"
+slug = "ku3yrkesstallning"
+
+[[variable]]
+native_id = "34.31294.agi3yrkesstallning"
+slug = "agi3yrkesstallning"
+
+[[variable]]
+native_id = "34.31295.ku3astkommun"
+slug = "ku3astkommun"
+
+[[variable]]
+native_id = "34.31295.agi3astkommun"
+slug = "agi3astkommun"
+
+[[variable]]
+native_id = "34.31296.ku3astlan"
+slug = "ku3astlan"
+
+[[variable]]
+native_id = "34.31296.agi3astlan"
+slug = "agi3astlan"
+
+[[variable]]
+native_id = "34.31299.sektorkod-tredje-forvarvskalla"
+slug = "sektorkod-tredje-forvarvskalla"
+
+[[variable]]
+native_id = "34.31299.sektorkod-tredje-forvarvskalla-agi"
+slug = "sektorkod-tredje-forvarvskalla-agi"
+
 # register 340
