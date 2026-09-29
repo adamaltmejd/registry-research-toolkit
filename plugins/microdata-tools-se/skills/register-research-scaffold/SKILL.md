@@ -7,7 +7,7 @@ description: Scaffold a small batch-based Swedish register-data research project
 
 Create the smallest working project that answers the user's first research questions and demonstrates the workflow below. Preserve an existing reference project; create a separate project when requested. Use the chosen language/build tools, not the reference project's stack by default. Do not build a custom workflow framework, research-record database, RAG service or independent mock generator for an MVP. Use an established dependency-aware build tool when incremental execution is needed; keep its choice independent of the data-processing engine. Do not configure hosted Git or transfer data through it without an explicit request.
 
-Read [contracts.md](references/contracts.md) before implementation. Read [execution.md](references/execution.md) when wiring batches, packaging, and transfers.
+Read [contracts.md](references/contracts.md) before implementation. Read [execution.md](references/execution.md) when wiring batches, packaging, and transfers. Read [operator-review.md](references/operator-review.md) when preparing human-operated transfer and model-access approval.
 
 ## Establish the research and execution boundary
 
@@ -15,7 +15,7 @@ Read supplied source code/documentation and applicable instructions. Establish e
 
 Distinguish approved choices from proposed choices. Ask about ambiguity that changes the estimand or population; otherwise state a reversible assumption. A prototype can run on mocks while questions remain open. Keep unresolved scientific definitions, source coverage and disclosure policy visibly pending; do not label real-data integration verified.
 
-Restricted compute has no remote model access. No AI invocation or model API dependency belongs in the batch runner. Keep agent-readable local inputs to code, documentation, clearly fake data, and aggregate releases explicitly approved by a human for model access. An automatic disclosure pass alone never authorizes loading real outputs into model context, including through locally running tools connected to a hosted model. Never configure automatic GitHub synchronization. Git records history locally; add approved institutional remotes only when requested.
+Server connections are researcher-operated. Do not request or use the researcher's SSH access, inspect private connection configuration, or download results for them. Prepare placeholders, operator commands and local mock simulations; the researcher supplies server details privately. Restricted compute has no remote model access. No AI invocation or model API dependency belongs in the batch runner. Keep agent-readable local inputs to code, documentation, clearly fake data, and aggregate releases explicitly approved by a human for model access. An automatic disclosure pass alone never authorizes loading real outputs into model context, including through locally running tools connected to a hosted model. Never configure automatic GitHub synchronization. Git records history locally; add approved institutional remotes only when requested.
 
 ## Scaffold only what the first batch needs
 
@@ -49,4 +49,4 @@ Commit executable inputs when the user has authorized a committed-code trial. Ke
 
 Demonstrate one complete local batch transfer roundtrip, a rejection case at the release boundary, and that a closed investigation is excluded from default execution yet can be selected at its original revision. Use Git plus ticket status and a recorded command; do not build an archival subsystem.
 
-Report usable project path, skill version, execution commit, checks, and precise server prerequisites. Do not connect to restricted compute or run real inputs unless specifically authorized and compatible with the access boundary. Scaffolding for a real project permits source-led preparation; it does not authorize exposing microdata to the agent.
+Report usable project path, skill version, execution commit, checks, and operator prerequisites. Leave restricted connections, execution, downloads and approval of real results to the researcher. Scaffolding for a real project permits source-led preparation; it does not authorize exposing microdata to the agent.
