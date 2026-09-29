@@ -58,7 +58,7 @@ tools = { subagents = false }
 [agents.light-ui]
 harness = "claude"
 model = "claude-sonnet-5-5"
-effort = "xhigh"
+effort = "medium"
 tools = { subagents = false }
 
 # Sol at xhigh effort for design-heavy tickets, selected by the heavy workflow.
@@ -445,8 +445,7 @@ implementer = "light"
 review = "none"
 
 # light-ui is light's economy applied to a rendered change: the same model at
-# full effort (Sonnet at xhigh -- more reasoning per turn than light's medium),
-# dropping the in-session review machinery (no reg-webapp-design-reviewer
+# the same medium effort as light, dropping the in-session review machinery (no reg-webapp-design-reviewer
 # subagent, no design seat). Select it for a small rendered change whose
 # surface the flow-gate scenarios already render -- a copy change, a gate flip,
 # a label source.
