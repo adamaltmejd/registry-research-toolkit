@@ -679,10 +679,12 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 5, 1, 1)
-    # Y-303: AR/INDATUM/INDATUMA are reused native names whose source concept
-    # differs by Deldatamängd. The three splits expose one owner per subset and
-    # each PAR panel references the owner of its own subset, never the withheld
+    ) == (20, 8, 1, 1)
+    # Y-303 rev 2: six reused PAR native names each deliver distinct source
+    # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
+    # splits by data type because its OV/SV text originals share one
+    # alphanumeric concept while the TV original is a SAS date. Each PAR panel
+    # references the INDATUM owner of its own subset, never the withheld
     # unsplit `indatum` base.
     par = next(
         register for register in tree.registers if register.register_info.slug == "par"
@@ -709,14 +711,34 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
             "PAR_OV": "5891427617861710725.INDATUMA.besoksdatum-alfanumeriskt",
             "PAR_SV": "5891427617861710725.INDATUMA.inskrivningsdatum-alfanumeriskt",
         },
+        "ALDER": {
+            "PAR_OV": "5891427617861710725.ALDER.alder-vid-oppenvardskontakt",
+            "PAR_SV": "5891427617861710725.ALDER.alder-vid-utskrivning-slutenvard",
+            "PAR_TV": "5891427617861710725.ALDER.alder-vid-utskrivning-psykiatrisk-vardform",
+        },
+        "IDNR": {
+            "PAR_OV": "5891427617861710725.IDNR.lopnr-vardkontakt-oppenvard",
+            "PAR_SV": "5891427617861710725.IDNR.lopnr-slutenvardstillfalle",
+            "PAR_TV": "5891427617861710725.IDNR.lopnr-tvangsvardsform",
+        },
+        "FODDAT": {
+            "text": "5891427617861710725.FODDAT.fodelsedatum-alfanumeriskt",
+            "date": "5891427617861710725.FODDAT.fodelsedatum-sas-psykiatrisk-vardform",
+        },
+    }
+    assert Counter(
+        entry.by for entry in par.identity.split if entry.variable != "ATC"
+    ) == {
+        "deldatamangd": 5,
+        "data_type": 1,
     }
     par_owners = {
         part.owner
         for entry in par.identity.split
-        if entry.by == "deldatamangd"
+        if entry.variable != "ATC"
         for part in entry.parts
     }
-    assert len(par_owners) == 8
+    assert len(par_owners) == 16
     assert {("sos", owner) for owner in par_owners} <= slugged
     assert {
         variant.display_group: variant.panel_time_key for variant in par.variant
