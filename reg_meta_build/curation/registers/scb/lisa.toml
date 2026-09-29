@@ -3867,4 +3867,159 @@ slug = "sektorkod-tredje-forvarvskalla"
 native_id = "34.31299.sektorkod-tredje-forvarvskalla-agi"
 slug = "sektorkod-tredje-forvarvskalla-agi"
 
+# Y-313 2026-09-29: seven LISA classification-edition and KU/AGI source-basis
+# partitions. Four SSYK first/second income-source families separate the delivered
+# SSYK96 edition (KU literal), the delivered SSYK2012 edition (KU _2012 literal)
+# and the SSYK2012 AGI source basis (the two AGI spellings are one delivered
+# descriptor). Three institutional-sector families separate the 1968 (unsuffixed),
+# 1999 (InstKod6), 2000 (InstKod7) and 2014 (InstKod10) Enhetsindelning coding
+# editions plus the 2014 AGI source basis. This is a delivered-edition/source-basis
+# distinction, NOT a sequential synonym rename, a succession edge or a claim that
+# codes have identical meanings across revisions. The exact prepared v28 physical
+# periods are the only availability claim; every original keeps its source variant,
+# member, fields, coding and provenance.
+
+[[identity.partition]]
+variable = "34.1842"
+columns = { KU1Ssyk3_2012 = "34.1842.ssyk3-storsta-2012", KU1Ssyk3 = "34.1842.ssyk3-storsta", AGI1SSYK3_2012 = "34.1842.ssyk3-storsta-2012-agi", AGI1Ssyk3_2012 = "34.1842.ssyk3-storsta-2012-agi" }
+columns_ref = "Reviewed classification-edition and source-basis split; SCB docs/lisa/KU1Ssyk3.md identifies KU1Ssyk3 as Standard för svensk yrkesklassificering 1996 at Yrkesgrupp level and docs/lisa/KU1Ssyk3_2012.md identifies KU1Ssyk3_2012 as Standard för svensk yrkesklassificering 2012 at Yrkesgrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI1SSYK3_2012 and AGI1Ssyk3_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.1842: KU1Ssyk3 2001-2013, KU1Ssyk3_2012 2014-2018, AGI1Ssyk3_2012 2019 and AGI1SSYK3_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[identity.partition]]
+variable = "34.4904"
+columns = { KU2Ssyk3_2012 = "34.4904.ssyk3-nast-2012", KU2Ssyk3 = "34.4904.ssyk3-nast", AGI2SSYK3_2012 = "34.4904.ssyk3-nast-2012-agi", AGI2Ssyk3_2012 = "34.4904.ssyk3-nast-2012-agi" }
+columns_ref = "Reviewed classification-edition and source-basis split; SCB docs/lisa/KU2Ssyk3.md identifies KU2Ssyk3 as Standard för svensk yrkesklassificering 1996 at Yrkesgrupp level and docs/lisa/KU2Ssyk3_2012.md identifies KU2Ssyk3_2012 as Standard för svensk yrkesklassificering 2012 at Yrkesgrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI2SSYK3_2012 and AGI2Ssyk3_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.4904: KU2Ssyk3 2001-2013, KU2Ssyk3_2012 2014-2018, AGI2Ssyk3_2012 2019 and AGI2SSYK3_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[identity.partition]]
+variable = "34.4905"
+columns = { KU2Ssyk4_2012 = "34.4905.ssyk4-nast-2012", KU2Ssyk4 = "34.4905.ssyk4-nast", AGI2SSYK4_2012 = "34.4905.ssyk4-nast-2012-agi", AGI2Ssyk4_2012 = "34.4905.ssyk4-nast-2012-agi" }
+columns_ref = "Reviewed classification-edition and source-basis split; SCB docs/lisa/KU2Ssyk4.md identifies KU2Ssyk4 as Standard för svensk yrkesklassificering 1996 at Undergrupp level and docs/lisa/KU2Ssyk4_2012.md identifies KU2Ssyk4_2012 as Standard för svensk yrkesklassificering 2012 at Undergrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI2SSYK4_2012 and AGI2Ssyk4_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.4905: KU2Ssyk4 2001-2013, KU2Ssyk4_2012 2014-2018, AGI2Ssyk4_2012 2019 and AGI2SSYK4_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[identity.partition]]
+variable = "34.16224"
+columns = { KU1Ssyk4_2012 = "34.16224.ssyk4-storsta-2012", KU1Ssyk4 = "34.16224.ssyk4-storsta", AGI1SSYK4_2012 = "34.16224.ssyk4-storsta-2012-agi", AGI1Ssyk4_2012 = "34.16224.ssyk4-storsta-2012-agi" }
+columns_ref = "Reviewed classification-edition and source-basis split; SCB docs/lisa/KU1Ssyk4.md identifies KU1Ssyk4 as Standard för svensk yrkesklassificering 1996 at Undergrupp level and docs/lisa/KU1Ssyk4_2012.md identifies KU1Ssyk4_2012 as Standard för svensk yrkesklassificering 2012 at Undergrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI1SSYK4_2012 and AGI1Ssyk4_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.16224: KU1Ssyk4 2001-2013, KU1Ssyk4_2012 2014-2018, AGI1Ssyk4_2012 2019 and AGI1SSYK4_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[identity.partition]]
+variable = "34.31111"
+columns = { KU2InstKod10 = "34.31111.ku2instkod-2014", KU2InstKod7 = "34.31111.ku2instkod-2000", AGI2InstKod10 = "34.31111.ku2instkod-2014-agi", KU2InstKod = "34.31111.ku2instkod", KU2InstKod6 = "34.31111.ku2instkod-1999" }
+columns_ref = "Reviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[identity.partition]]
+variable = "34.31289"
+columns = { KU1InstKod10 = "34.31289.ku1instkod-2014", KU1InstKod7 = "34.31289.ku1instkod-2000", AGI1InstKod10 = "34.31289.ku1instkod-2014-agi", KU1InstKod = "34.31289.ku1instkod", KU1InstKod6 = "34.31289.ku1instkod-1999" }
+columns_ref = "Reviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[identity.partition]]
+variable = "34.31298"
+columns = { KU3InstKod7 = "34.31298.ku3instkod-2000", KU3InstKod10 = "34.31298.ku3instkod-2014", AGI3InstKod10 = "34.31298.ku3instkod-2014-agi", KU3InstKod = "34.31298.ku3instkod", KU3InstKod6 = "34.31298.ku3instkod-1999" }
+columns_ref = "Reviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU3InstKod as Enhetsindelning 1968 (5-siffrig kod), KU3InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU3InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU3InstKod10/AGI3InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU3InstKod.md documents the 1990-1998 five-position layout, docs/lisa/KU3InstKod6.md the 1999-2000 six-position layout, docs/lisa/KU3InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU3InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31298: KU3InstKod 1990-1998, KU3InstKod6 1999-2000, KU3InstKod7 2001-2013, KU3InstKod10 2014-2018, AGI3InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[variable]]
+native_id = "34.1842.ssyk3-storsta-2012"
+slug = "ssyk3-storsta-2012"
+
+[[variable]]
+native_id = "34.1842.ssyk3-storsta"
+slug = "ssyk3-storsta"
+
+[[variable]]
+native_id = "34.1842.ssyk3-storsta-2012-agi"
+slug = "ssyk3-storsta-2012-agi"
+
+[[variable]]
+native_id = "34.4904.ssyk3-nast-2012"
+slug = "ssyk3-nast-2012"
+
+[[variable]]
+native_id = "34.4904.ssyk3-nast"
+slug = "ssyk3-nast"
+
+[[variable]]
+native_id = "34.4904.ssyk3-nast-2012-agi"
+slug = "ssyk3-nast-2012-agi"
+
+[[variable]]
+native_id = "34.4905.ssyk4-nast-2012"
+slug = "ssyk4-nast-2012"
+
+[[variable]]
+native_id = "34.4905.ssyk4-nast"
+slug = "ssyk4-nast"
+
+[[variable]]
+native_id = "34.4905.ssyk4-nast-2012-agi"
+slug = "ssyk4-nast-2012-agi"
+
+[[variable]]
+native_id = "34.16224.ssyk4-storsta-2012"
+slug = "ssyk4-storsta-2012"
+
+[[variable]]
+native_id = "34.16224.ssyk4-storsta"
+slug = "ssyk4-storsta"
+
+[[variable]]
+native_id = "34.16224.ssyk4-storsta-2012-agi"
+slug = "ssyk4-storsta-2012-agi"
+
+[[variable]]
+native_id = "34.31111.ku2instkod-2014"
+slug = "ku2instkod-2014"
+
+[[variable]]
+native_id = "34.31111.ku2instkod-2000"
+slug = "ku2instkod-2000"
+
+[[variable]]
+native_id = "34.31111.ku2instkod-2014-agi"
+slug = "ku2instkod-2014-agi"
+
+[[variable]]
+native_id = "34.31111.ku2instkod"
+slug = "ku2instkod"
+
+[[variable]]
+native_id = "34.31111.ku2instkod-1999"
+slug = "ku2instkod-1999"
+
+[[variable]]
+native_id = "34.31289.ku1instkod-2014"
+slug = "ku1instkod-2014"
+
+[[variable]]
+native_id = "34.31289.ku1instkod-2000"
+slug = "ku1instkod-2000"
+
+[[variable]]
+native_id = "34.31289.ku1instkod-2014-agi"
+slug = "ku1instkod-2014-agi"
+
+[[variable]]
+native_id = "34.31289.ku1instkod"
+slug = "ku1instkod"
+
+[[variable]]
+native_id = "34.31289.ku1instkod-1999"
+slug = "ku1instkod-1999"
+
+[[variable]]
+native_id = "34.31298.ku3instkod-2000"
+slug = "ku3instkod-2000"
+
+[[variable]]
+native_id = "34.31298.ku3instkod-2014"
+slug = "ku3instkod-2014"
+
+[[variable]]
+native_id = "34.31298.ku3instkod-2014-agi"
+slug = "ku3instkod-2014-agi"
+
+[[variable]]
+native_id = "34.31298.ku3instkod"
+slug = "ku3instkod"
+
+[[variable]]
+native_id = "34.31298.ku3instkod-1999"
+slug = "ku3instkod-1999"
+
 # register 340

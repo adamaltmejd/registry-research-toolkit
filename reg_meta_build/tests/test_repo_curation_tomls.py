@@ -1434,6 +1434,76 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     assert {
         ("scb", owner) for expected in ku_agi.values() for owner in expected.values()
     } <= slugged
+    # Y-313: seven LISA classification-edition and KU/AGI source-basis families.
+    # Four SSYK first/second income-source families separate the delivered SSYK96
+    # KU edition (2001-2013), the delivered SSYK2012 KU _2012 edition (2014-2018)
+    # and the SSYK2012 AGI source basis (2019-2023); three institutional-sector
+    # families separate the 1968/1999/2000/2014 Enhetsindelning coding editions
+    # plus the 2014 AGI source basis. Each owner takes its own naming leaf.
+    lisa_editions7 = {
+        "34.1842": {
+            "KU1Ssyk3_2012": "34.1842.ssyk3-storsta-2012",
+            "KU1Ssyk3": "34.1842.ssyk3-storsta",
+            "AGI1SSYK3_2012": "34.1842.ssyk3-storsta-2012-agi",
+            "AGI1Ssyk3_2012": "34.1842.ssyk3-storsta-2012-agi",
+        },
+        "34.4904": {
+            "KU2Ssyk3_2012": "34.4904.ssyk3-nast-2012",
+            "KU2Ssyk3": "34.4904.ssyk3-nast",
+            "AGI2SSYK3_2012": "34.4904.ssyk3-nast-2012-agi",
+            "AGI2Ssyk3_2012": "34.4904.ssyk3-nast-2012-agi",
+        },
+        "34.4905": {
+            "KU2Ssyk4_2012": "34.4905.ssyk4-nast-2012",
+            "KU2Ssyk4": "34.4905.ssyk4-nast",
+            "AGI2SSYK4_2012": "34.4905.ssyk4-nast-2012-agi",
+            "AGI2Ssyk4_2012": "34.4905.ssyk4-nast-2012-agi",
+        },
+        "34.16224": {
+            "KU1Ssyk4_2012": "34.16224.ssyk4-storsta-2012",
+            "KU1Ssyk4": "34.16224.ssyk4-storsta",
+            "AGI1SSYK4_2012": "34.16224.ssyk4-storsta-2012-agi",
+            "AGI1Ssyk4_2012": "34.16224.ssyk4-storsta-2012-agi",
+        },
+        "34.31111": {
+            "KU2InstKod10": "34.31111.ku2instkod-2014",
+            "KU2InstKod7": "34.31111.ku2instkod-2000",
+            "AGI2InstKod10": "34.31111.ku2instkod-2014-agi",
+            "KU2InstKod": "34.31111.ku2instkod",
+            "KU2InstKod6": "34.31111.ku2instkod-1999",
+        },
+        "34.31289": {
+            "KU1InstKod10": "34.31289.ku1instkod-2014",
+            "KU1InstKod7": "34.31289.ku1instkod-2000",
+            "AGI1InstKod10": "34.31289.ku1instkod-2014-agi",
+            "KU1InstKod": "34.31289.ku1instkod",
+            "KU1InstKod6": "34.31289.ku1instkod-1999",
+        },
+        "34.31298": {
+            "KU3InstKod7": "34.31298.ku3instkod-2000",
+            "KU3InstKod10": "34.31298.ku3instkod-2014",
+            "AGI3InstKod10": "34.31298.ku3instkod-2014-agi",
+            "KU3InstKod": "34.31298.ku3instkod",
+            "KU3InstKod6": "34.31298.ku3instkod-1999",
+        },
+    }
+    assert len(lisa_editions7) == 7
+    for variable, expected in lisa_editions7.items():
+        assert dict(by_variable[variable].columns) == expected, variable
+    expected_names = {
+        owner: owner.split(".", 2)[2]
+        for columns in lisa_editions7.values()
+        for owner in columns.values()
+    }
+    assert len(expected_names) == 27
+    lisa_names = {
+        entry.native_id: entry.slug
+        for register in tree.registers
+        for entry in register.variable
+        if entry.native_id in expected_names
+    }
+    assert lisa_names == expected_names
+    assert {("scb", owner) for owner in expected_names} <= slugged
     # Y-306: eleven RTB/IoT sequential delivery-column renames. Each family's
     # exact literals occupy disjoint windows and name one existing owner.
     sequential11 = {
