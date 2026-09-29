@@ -420,6 +420,27 @@ _IOT_Y315_HOUSEHOLD_PAIRS: dict[str, tuple[str, str, str]] = {
     ),
 }
 
+# Y-316: nine IoT employer-reporting native families whose pre-2019 annual
+# control-statement (KU) basis and post-2019 monthly AGI + remaining annual KU
+# basis are separated, all in variant 25.763. Each value is (old KU literal,
+# new literal, existing native stem); the old owner keeps the stem and the new
+# owner adds the explicit -agi-ku suffix.
+_IOT_Y316_SOURCE_BASIS_PAIRS: dict[str, tuple[str, str, str]] = {
+    "25.1195": ("TKULONO", "TLONO", "skattepliktiga-formaner-ej-lon"),
+    "25.6093": ("KKUHYR", "KHYR", "hyresersattning"),
+    "25.19855": ("BKUAORG", "BAORG", "ordinarie-organisationsnummer"),
+    "25.21209": ("AKUHUV", "AHUV", "underlag-skattereduktion-rut-forman"),
+    "25.21829": ("TAKUAV", "TAAV", "avdrag"),
+    "25.21830": ("TKUBILF", "TBILF", "bilforman-utom-drivmedel"),
+    "25.21831": ("TKUDRIV", "TDRIV", "drivmedel-vid-bilforman"),
+    "25.21879": (
+        "TKUOVE",
+        "TOVE",
+        "skattepliktiga-ersattningar-ej-sociala",
+    ),
+    "25.24169": ("AKUROT", "AROT", "underlag-skattereduktion-rot-forman"),
+}
+
 
 # Y-311: the 74 reviewed Innovation i foretag (257) native-question identity
 # families. Each value is the native-question split owner leaf and the complete
@@ -1780,6 +1801,36 @@ def test_repo_iot_y310_separates_calculation_bases() -> None:
         if entry.native_id in pair_names
     }
     assert pair_named == pair_names
+    # Y-316: nine IoT employer-reporting native families each deliver a pre-2019
+    # annual-KU literal and a post-2019 monthly-AGI + remaining-annual-KU literal
+    # under variant 25.763. The old owner keeps the existing native slug; the new
+    # owner adds the explicit -agi-ku suffix. The map, the 18 leaves and the
+    # retained unsplit naming are exact, so a wrong or new literal cannot
+    # silently join a branch.
+    source_maps: dict[str, dict[str, str]] = {}
+    source_names: dict[str, str] = {}
+    for native, (old, new, stem) in _IOT_Y316_SOURCE_BASIS_PAIRS.items():
+        source_maps[native] = {
+            old: f"{native}.{stem}",
+            new: f"{native}.{stem}-agi-ku",
+        }
+        source_names[f"{native}.{stem}"] = stem
+        source_names[f"{native}.{stem}-agi-ku"] = f"{stem}-agi-ku"
+    assert len(source_maps) == 9
+    assert len(source_names) == 18
+    for native, columns in source_maps.items():
+        partition = by_variable[native]
+        assert dict(partition.columns) == columns, native
+        assert not partition.unassigned_columns, native
+    assert {
+        ("scb", owner) for columns in source_maps.values() for owner in columns.values()
+    } <= slugged
+    source_named = {
+        entry.native_id: entry.slug
+        for entry in iot.variable
+        if entry.native_id in source_names
+    }
+    assert source_named == source_names
 
 
 def test_scb_errata_repeated_version_raises_curation_error(tmp_path: Path) -> None:

@@ -6866,3 +6866,141 @@ slug = "hushall-inkluderas-inkomststatistiken"
 [[variable]]
 native_id = "25.30835.hushall-inkluderas-inkomststatistiken-vaxelvis-boende"
 slug = "hushall-inkluderas-inkomststatistiken-vaxelvis-boende"
+
+
+# Y-316 2026-09-29: nine IoT employer-reporting native families whose pre-2019
+# annual control-statement (KU) reporting basis and post-2019 monthly AGI plus
+# remaining annual KU basis are separated. SCB 'Det statistiska registrets
+# framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1
+# 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents the 2019
+# shift from annual KU to monthly AGI (which removed KU from most IoT variable
+# names) and that SCB combines the monthly AGI with the remaining annual KU.
+# The old owner keeps the existing native slug; the new owner adds the explicit
+# -agi-ku suffix for the mixed later basis. This is a delivered source-basis
+# separation, not a sequential synonym rename, a pure-AGI claim or a claim of
+# equivalent numeric contents across 2018/2019. The unsplit native naming is
+# retained; every original scope, interval, label, unit, source attribution and
+# coding is preserved.
+
+[[identity.partition]]
+variable = "25.1195"
+columns = { TKULONO = "25.1195.skattepliktiga-formaner-ej-lon", TLONO = "25.1195.skattepliktiga-formaner-ej-lon-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.1195 'skattepliktiga-formaner-ej-lon' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TKULONO 2005-2018 (69 originals) owned by 25.1195.skattepliktiga-formaner-ej-lon, and post-2019 literal TLONO 2019-2024 (36 originals) owned by 25.1195.skattepliktiga-formaner-ej-lon-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[identity.partition]]
+variable = "25.6093"
+columns = { KKUHYR = "25.6093.hyresersattning", KHYR = "25.6093.hyresersattning-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.6093 'hyresersattning' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal KKUHYR 2005-2018 (69 originals) owned by 25.6093.hyresersattning, and post-2019 literal KHYR 2019-2024 (36 originals) owned by 25.6093.hyresersattning-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[identity.partition]]
+variable = "25.19855"
+columns = { BKUAORG = "25.19855.ordinarie-organisationsnummer", BAORG = "25.19855.ordinarie-organisationsnummer-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.19855 'ordinarie-organisationsnummer' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal BKUAORG 2005-2018 (69 originals) owned by 25.19855.ordinarie-organisationsnummer, and post-2019 literal BAORG 2019-2024 (36 originals) owned by 25.19855.ordinarie-organisationsnummer-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[identity.partition]]
+variable = "25.21209"
+columns = { AKUHUV = "25.21209.underlag-skattereduktion-rut-forman", AHUV = "25.21209.underlag-skattereduktion-rut-forman-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.21209 'underlag-skattereduktion-rut-forman' employer-reporting source-basis split, 96 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal AKUHUV 2008-2018 (60 originals) owned by 25.21209.underlag-skattereduktion-rut-forman, and post-2019 literal AHUV 2019-2024 (36 originals) owned by 25.21209.underlag-skattereduktion-rut-forman-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[identity.partition]]
+variable = "25.21829"
+columns = { TAKUAV = "25.21829.avdrag", TAAV = "25.21829.avdrag-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.21829 'avdrag' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TAKUAV 2005-2018 (69 originals) owned by 25.21829.avdrag, and post-2019 literal TAAV 2019-2024 (36 originals) owned by 25.21829.avdrag-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[identity.partition]]
+variable = "25.21830"
+columns = { TKUBILF = "25.21830.bilforman-utom-drivmedel", TBILF = "25.21830.bilforman-utom-drivmedel-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.21830 'bilforman-utom-drivmedel' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TKUBILF 2005-2018 (69 originals) owned by 25.21830.bilforman-utom-drivmedel, and post-2019 literal TBILF 2019-2024 (36 originals) owned by 25.21830.bilforman-utom-drivmedel-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[identity.partition]]
+variable = "25.21831"
+columns = { TKUDRIV = "25.21831.drivmedel-vid-bilforman", TDRIV = "25.21831.drivmedel-vid-bilforman-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.21831 'drivmedel-vid-bilforman' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TKUDRIV 2005-2018 (69 originals) owned by 25.21831.drivmedel-vid-bilforman, and post-2019 literal TDRIV 2019-2024 (36 originals) owned by 25.21831.drivmedel-vid-bilforman-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[identity.partition]]
+variable = "25.21879"
+columns = { TKUOVE = "25.21879.skattepliktiga-ersattningar-ej-sociala", TOVE = "25.21879.skattepliktiga-ersattningar-ej-sociala-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.21879 'skattepliktiga-ersattningar-ej-sociala' employer-reporting source-basis split, 99 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TKUOVE 2007-2018 (63 originals) owned by 25.21879.skattepliktiga-ersattningar-ej-sociala, and post-2019 literal TOVE 2019-2024 (36 originals) owned by 25.21879.skattepliktiga-ersattningar-ej-sociala-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[identity.partition]]
+variable = "25.24169"
+columns = { AKUROT = "25.24169.underlag-skattereduktion-rot-forman", AROT = "25.24169.underlag-skattereduktion-rot-forman-agi-ku" }
+columns_ref = "Y-316 2026-09-29: SCB IoT native 25.24169 'underlag-skattereduktion-rot-forman' employer-reporting source-basis split, 93 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal AKUROT 2009-2018 (57 originals) owned by 25.24169.underlag-skattereduktion-rot-forman, and post-2019 literal AROT 2019-2024 (36 originals) owned by 25.24169.underlag-skattereduktion-rot-forman-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+
+# Y-316 2026-09-29: qualified naming leaves for the nine employer-reporting
+# source-basis families above. The pre-2019 leaf reuses the family's existing
+# native slug; the post-2019 leaf adds the explicit -agi-ku suffix for the mixed
+# monthly-AGI + remaining-annual-KU basis.
+
+[[variable]]
+native_id = "25.1195.skattepliktiga-formaner-ej-lon"
+slug = "skattepliktiga-formaner-ej-lon"
+
+[[variable]]
+native_id = "25.1195.skattepliktiga-formaner-ej-lon-agi-ku"
+slug = "skattepliktiga-formaner-ej-lon-agi-ku"
+
+[[variable]]
+native_id = "25.6093.hyresersattning"
+slug = "hyresersattning"
+
+[[variable]]
+native_id = "25.6093.hyresersattning-agi-ku"
+slug = "hyresersattning-agi-ku"
+
+[[variable]]
+native_id = "25.19855.ordinarie-organisationsnummer"
+slug = "ordinarie-organisationsnummer"
+
+[[variable]]
+native_id = "25.19855.ordinarie-organisationsnummer-agi-ku"
+slug = "ordinarie-organisationsnummer-agi-ku"
+
+[[variable]]
+native_id = "25.21209.underlag-skattereduktion-rut-forman"
+slug = "underlag-skattereduktion-rut-forman"
+
+[[variable]]
+native_id = "25.21209.underlag-skattereduktion-rut-forman-agi-ku"
+slug = "underlag-skattereduktion-rut-forman-agi-ku"
+
+[[variable]]
+native_id = "25.21829.avdrag"
+slug = "avdrag"
+
+[[variable]]
+native_id = "25.21829.avdrag-agi-ku"
+slug = "avdrag-agi-ku"
+
+[[variable]]
+native_id = "25.21830.bilforman-utom-drivmedel"
+slug = "bilforman-utom-drivmedel"
+
+[[variable]]
+native_id = "25.21830.bilforman-utom-drivmedel-agi-ku"
+slug = "bilforman-utom-drivmedel-agi-ku"
+
+[[variable]]
+native_id = "25.21831.drivmedel-vid-bilforman"
+slug = "drivmedel-vid-bilforman"
+
+[[variable]]
+native_id = "25.21831.drivmedel-vid-bilforman-agi-ku"
+slug = "drivmedel-vid-bilforman-agi-ku"
+
+[[variable]]
+native_id = "25.21879.skattepliktiga-ersattningar-ej-sociala"
+slug = "skattepliktiga-ersattningar-ej-sociala"
+
+[[variable]]
+native_id = "25.21879.skattepliktiga-ersattningar-ej-sociala-agi-ku"
+slug = "skattepliktiga-ersattningar-ej-sociala-agi-ku"
+
+[[variable]]
+native_id = "25.24169.underlag-skattereduktion-rot-forman"
+slug = "underlag-skattereduktion-rot-forman"
+
+[[variable]]
+native_id = "25.24169.underlag-skattereduktion-rot-forman-agi-ku"
+slug = "underlag-skattereduktion-rot-forman-agi-ku"
