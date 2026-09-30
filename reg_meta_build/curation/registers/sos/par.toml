@@ -812,3 +812,163 @@ field = "name"
 value = "Folkbokföringsort (län, kommun) 31 dec"
 evidence = "Both exact annual LK originals positively state identical31December observation wording and SCB source attribution. Use the existing PAR_OV name also for PAR_SV; redundant source attribution remains explicitly SCB. Retain all monthly care-event originals, source descriptions, periods, classifications and raw contexts."
 noted = "2026-09-30"
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'KLINIK', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'KLINIK')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:KLINIK\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "2012-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'KLINIK', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_TV', 'column', 'KLINIK')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_TV\",\"variable:KLINIK\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2010-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LT_KLIN', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'LT_KLIN')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:LT_KLIN\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "2014-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LT_KLIN', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'LT_KLIN')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:LT_KLIN\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1964-01-01"
+valid_to = "2015-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'MVO', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'MVO')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:MVO\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'MVO', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'MVO')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:MVO\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1964-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'MVO', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_TV', 'column', 'MVO')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_TV\",\"variable:MVO\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2024-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'SJUKHUS', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'SJUKHUS')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'SJUKHUS', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'SJUKHUS')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1964-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'SJUKHUS', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_TV', 'column', 'SJUKHUS')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_TV\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2010-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ANE1', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'ANE1')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:ANE1\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "2008-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ANE2', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'ANE2')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:ANE2\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "2008-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATG', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'ATG')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:ATG\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2015-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATG', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'ATG')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:ATG\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2015-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATGARD', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_TV', 'column', 'ATGARD')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_TV\",\"variable:ATGARD\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2010-01-01"
+valid_to = "2014-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'YRKE', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'YRKE')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:YRKE\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2015-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."

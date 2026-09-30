@@ -2134,3 +2134,103 @@ valid_from = "2023-01-01"
 valid_to = "9999-12-31"
 reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
 evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'ASTMA', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'ASTMA')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:ASTMA\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1973-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'DIABETES', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'DIABETES')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:DIABETES\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1973-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'EPILEPSI', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'EPILEPSI')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:EPILEPSI\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1973-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'HYPERTON', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'HYPERTON')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:HYPERTON\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1973-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'NJURSJUK', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'NJURSJUK')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:NJURSJUK\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1973-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'SLE', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'SLE')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SLE\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1973-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'ULCOLIT', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'ULCOLIT')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:ULCOLIT\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1973-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'URINVINF', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'URINVINF')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:URINVINF\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1973-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'KLINIK', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'KLINIK')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:KLINIK\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variable', 'native-str', 'MHVNR', 'variant-key', 'Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx', 'sos', 'register', 'name', 'Medicinska födelseregistret', 'variant', 'name', 'MFR', 'column', 'MHVNR')"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:MHVNR\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1998-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."

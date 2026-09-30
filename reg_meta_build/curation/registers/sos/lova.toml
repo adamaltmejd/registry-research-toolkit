@@ -2308,3 +2308,133 @@ edition_scope = {"kind" = "intervals", "intervals" = [{"start" = "1995"}]}
 edition_period_scope = {"kind" = "not_applicable", "intervals" = []}
 evidence = "Exact routed subset parent declares annual individual delivery Data från1995: LOVA EXAMEN row3. Preserve all original variable Data från1977 and Data till, field-value years, prose, coding and associations. Correct effective delivery scope only; Existing open ends retained. Reviewed immutable accepted source revision d186882b9a8ef43c64210d00b4b0906628141180c88928b7e973c794b3e6ac0a; prepared records commit1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Full parent authority/negative/sourcecoding receipt: LOVA-EXAMEN-parent1995-next12-proposal.json. Complete literal parent authority and metadata peers are guarded; changed or missing authority refuses."
 noted = "2026-09-30"
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'AGARKAT', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'AGARKAT')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:AGARKAT\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'AGARKAT', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation', 'column', 'AGARKAT')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:AGARKAT\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'ARB_MARK_STAT', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'ARB_MARK_STAT')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:ARB_MARK_STAT\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'ARB_MARK_STAT_LISA', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation', 'column', 'ARB_MARK_STAT_LISA')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:ARB_MARK_STAT_LISA\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'EXAMENSKOD', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA EXAMEN', 'column', 'EXAMENSKOD')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_EXAMEN\",\"variable:EXAMENSKOD\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'SJUKVARDSREGION', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'SJUKVARDSREGION')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:SJUKVARDSREGION\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'SYSSSTAT', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'SYSSSTAT')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:SYSSSTAT\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'SYSSSTAT', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation', 'column', 'SYSSSTAT')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:SYSSSTAT\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'TANDVARDSREGION', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'TANDVARDSREGION')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:TANDVARDSREGION\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'UTBLAND', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'UTBLAND')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:UTBLAND\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'UTBLAND', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA HOSP', 'column', 'UTBLAND')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_HOSP\",\"variable:UTBLAND\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'YRKSTALLN', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'YRKSTALLN')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:YRKSTALLN\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'YRKSTALLN', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation', 'column', 'YRKSTALLN')"
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:YRKSTALLN\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
+evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
