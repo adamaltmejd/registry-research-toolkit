@@ -1495,3 +1495,109 @@ def test_empty_or_invalid_native_binding_does_not_evaluate_outer_bounds(
     assert [issue.code for issue in bound.issues] == (
         ["unknown_record_member"] if isinstance(member, str) else []
     )
+
+
+def test_identifier_inline_enumeration_retains_incomplete_membership(
+    tmp_path: Path,
+) -> None:
+    record = _record(member="EXACT", identifier=value_field(True))
+    source = _prepare(
+        tmp_path / "values",
+        join=_join("member_name"),
+        descriptors=(SourceValueDescriptor("inline", record_ids=(record.record_id,)),),
+        rows=(SourceValueAssociation(2, "inline", "a", "values"),),
+        values=(SourceValue("a", "1", None),),
+    )
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(record, sessions)
+    assert len(bound.claims) == 1
+    assert bound.claims[0].members[0].code == "1"
+    assert bound.claims[0].members[0].label is None
+    assert bound.bindings[0].association_count == 1
+    assert bound.bindings[0].claim_id == bound.claims[0].claim_id
+    assert [issue.code for issue in resolve_code_membership(bound.claims).issues] == [
+        "unknown_code_membership"
+    ]
+
+
+@pytest.mark.parametrize(
+    "drift",
+    (
+        None,
+        "pointer",
+        "case_pointer",
+        "sheet_locator",
+        "file",
+        "header",
+        "headers",
+        "row",
+        "column",
+        "anchor",
+    ),
+)
+def test_explicit_workbook_pointer_preserves_named_header_case(
+    tmp_path: Path, drift: str | None
+) -> None:
+    record = _record(member="CIVIL")
+    record = record.model_copy(
+        update={
+            "fields": record.fields.model_copy(
+                update={
+                    "column_name": value_field(
+                        "CIVIL" if drift != "column" else "OTHER"
+                    ),
+                    "representation": value_field(
+                        {
+                            "pointer": "Se Kodlista_Other",
+                            "case_pointer": "Se kodlista_Civil",
+                            "anchor": "Se Kodlista_Civil!A1",
+                        }.get(drift, "Se Kodlista_Civil")
+                    ),
+                }
+            )
+        }
+    )
+    locator = record.locators[0].model_copy(
+        update={
+            "physical_file": "other.xlsx"
+            if drift == "file"
+            else record.locators[0].physical_file,
+            "physical_table": "OTHER" if drift == "sheet_locator" else "Kodlista_Civil",
+            "physical_record": "row:1",
+        }
+    )
+    header = "OTHER" if drift == "header" else "Civil"
+    hints = (SourceMemberHint("list_header", header, locator),)
+    refs = (header,)
+    if drift == "headers":
+        hints += (SourceMemberHint("list_header", "SIBLING", locator),)
+        refs += ("SIBLING",)
+    descriptor = SourceValueDescriptor(
+        "list",
+        name="Kodlista_Civil",
+        member_hints=hints,
+        member_references=refs,
+        locators=(locator,),
+    )
+    rows = (
+        SourceValueAssociation(
+            2,
+            "list",
+            "a",
+            "values",
+            member_references=("SIBLING",) if drift == "row" else (),
+        ),
+    )
+    source = _prepare(
+        tmp_path / "values",
+        join=_join("member_name"),
+        descriptors=(descriptor,),
+        rows=rows,
+    )
+    with open_value_bindings((source,)) as sessions:
+        result = bind_code_lists(record, sessions)
+    assert bool(result.claims) is (drift is None)
+    if drift is None:
+        assert [(m.code, m.label) for m in result.claims[0].members] == [("01", "One")]
+        assert result.claims[0].members[0].associations == rows
+        assert source.manifest.descriptor_count == 1

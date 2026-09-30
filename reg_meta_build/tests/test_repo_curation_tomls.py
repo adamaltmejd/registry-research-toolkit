@@ -732,8 +732,8 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 211
-    assert sum(len(entry.periods) for entry in coding) == 369
+    assert len(coding) == 215
+    assert sum(len(entry.periods) for entry in coding) == 373
     assert (
         sum(
             entry.source_authority is not None
@@ -763,7 +763,7 @@ def test_repo_coding_windows_are_ported() -> None:
             )
             for register in tree.registers
         )
-        == 29
+        == 30
     )
 
 
@@ -1154,7 +1154,7 @@ def test_repo_scb_errata_parses() -> None:
     )
     assert errata  # the verified LISA DispInkKE case ships with the repo
     assert (len(errata.delivered), len(errata.columns), len(errata.versions)) == (
-        225,
+        260,
         1885,
         4,
     )

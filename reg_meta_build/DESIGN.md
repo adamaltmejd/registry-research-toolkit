@@ -226,6 +226,16 @@ list stays unresolved. Inline `Värdemängd` assignments also separate at a run 
 before a valid `code =` token; malformed lists remain unresolved. SOS contact cells stay
 as delivered evidence without a parent metadata field.
 
+An explicit `Värdemängd` representation such as `Se Kodlista_Civil` can bind that exact
+sheet in the same workbook. One supplied list header may differ from the physical column
+only in case; multiple headers, contrary row references or a different workbook prevent
+the binding. Original pointers, headers and codes remain unchanged. This route does not
+relax support-record coordinate joins.
+
+The identifier flag does not suppress an exact inline finite enumeration. Missing labels
+still produce an incomplete-membership diagnostic, while genuine open keys retain their
+existing treatment. A linkage marker cannot silently discard supplied code assertions.
+
 Authored thin-provider TOMLs use `sources/curated_records.py`. They are machine-readable
 source declarations with publisher and transcription provenance. Reading them does not
 apply parent defaults, invent false flags or make the old final-catalog adapter part of
@@ -566,6 +576,9 @@ same column and variant; an unclassifiable documented type or date mixed with nu
 leaves it unresolved. Flags and coding are not copied from another edition. Any donor
 metadata or membership must be explicitly selected and guarded. Undated `all_versions`
 holdings preserve unknown coverage; pooled editions cannot create annual states.
+Delivery correction guards capture every supplied source field, parent fact and coding
+reference from both donor and target evidence. Changed meaning or bindings makes the
+correction stale, even when the physical column and storage type remain unchanged.
 
 The CIS cooperation-matrix declarations bind reviewed answer meanings to their exact
 source partitions. CIS 2014 has a blank-column source member, so each added answer

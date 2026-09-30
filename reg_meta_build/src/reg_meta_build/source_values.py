@@ -8,15 +8,33 @@ normalized content separately; that never replaces occurrence evidence.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from datetime import date
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from reg_meta.source_evidence import DeliveredCell, RecordLocator
 
 
 type NormalizedValue = tuple[str | None, str | None]
+
+
+def exact_sheet_pointer(value: object, names: Iterable[str]) -> tuple[str, bool] | None:
+    """Interpret an explicit workbook reference without guessing a sheet name."""
+    if not isinstance(value, str):
+        return None
+    value = value.removeprefix("Se ")
+    for name in names:
+        if value in {name, f"{name}!"}:
+            return name, False
+        if value.startswith(f"{name}!") and re.fullmatch(
+            r"[A-Za-z]+[0-9]+", value[len(name) + 1 :]
+        ):
+            return name, True
+    return None
 
 
 @dataclass(frozen=True, slots=True)

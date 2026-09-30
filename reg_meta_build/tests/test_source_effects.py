@@ -58,6 +58,7 @@ from reg_meta_build.source_intervals import (
 )
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
+    CodeSetReference,
     NativeCoordinates,
     ScopeInterval,
     SourceFields,
@@ -1922,6 +1923,47 @@ def test_delivery_statement_types_without_inheriting_flags_or_coding() -> None:
     changed = apply_occurrence_cases((*records, nearer), (result.case,))
     assert changed.accounting[0].disposition == "stale"
     assert all(item.occurrence_key is None for item in changed.occurrences)
+
+
+@pytest.mark.parametrize("drift", ["prose", "parent", "coding"])
+@pytest.mark.parametrize("role", ["donor", "target"])
+def test_delivered_guards_complete_source_meaning_and_bindings(
+    drift: str, role: str
+) -> None:
+    code = CodeSetReference(
+        reference_id="declared-list",
+        content_sha256="c" * 64,
+        physical_locator="source:list:1",
+    )
+    donor = _record(column="VALUE", year="2022").model_copy(
+        update={"code_set_references": (code,)}
+    )
+    target = _record(column="", year="2020").model_copy(
+        update={"code_set_references": (code,)}
+    )
+    records = donor, target
+    converted = _convert_delivered(records, target)
+    assert converted.case is not None and converted.blockers == ()
+    assert apply_occurrence_cases(records, (converted.case,)).diagnostics == ()
+    original = donor if role == "donor" else target
+    assert original.parent_facts
+    changed = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={"definition": value_field("Different measured quantity")}
+            )
+        }
+        if drift == "prose"
+        else {"parent_facts": ()}
+        if drift == "parent"
+        else {"code_set_references": ()}
+    )
+    replay = apply_occurrence_cases(
+        tuple(changed if r is original else r for r in records),
+        (converted.case,),
+    )
+    assert replay.accounting[0].disposition == "stale"
+    assert all(o.fields == o.source_records[0].fields for o in replay.occurrences)
 
 
 @pytest.mark.parametrize(

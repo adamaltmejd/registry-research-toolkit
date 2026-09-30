@@ -5349,3 +5349,737 @@ edition = "2023-12-31"
 [[edition]]
 table = "RTBFamilj2024"
 edition = "2024-12-31"
+
+# Retain intentionally unowned CIS matrix columns as physical holdings.
+
+[[unmap]]
+table = "CIS2002"
+column = "CO21"
+
+[[unmap]]
+table = "CIS2002"
+column = "CO41"
+
+[[unmap]]
+table = "CIS2002"
+column = "CO51"
+
+[[unmap]]
+table = "CIS2002"
+column = "CO61"
+
+[[unmap]]
+table = "CIS2002"
+column = "CO71"
+
+[[unmap]]
+table = "CIS2002"
+column = "Co55"
+
+[[unmap]]
+table = "CIS2002"
+column = "co11"
+
+[[unmap]]
+table = "CIS2002"
+column = "co12"
+
+[[unmap]]
+table = "CIS2002"
+column = "co13"
+
+[[unmap]]
+table = "CIS2002"
+column = "co14"
+
+[[unmap]]
+table = "CIS2002"
+column = "co15"
+
+[[unmap]]
+table = "CIS2002"
+column = "co22"
+
+[[unmap]]
+table = "CIS2002"
+column = "co23"
+
+[[unmap]]
+table = "CIS2002"
+column = "co24"
+
+[[unmap]]
+table = "CIS2002"
+column = "co25"
+
+[[unmap]]
+table = "CIS2002"
+column = "co42"
+
+[[unmap]]
+table = "CIS2002"
+column = "co43"
+
+[[unmap]]
+table = "CIS2002"
+column = "co44"
+
+[[unmap]]
+table = "CIS2002"
+column = "co45"
+
+[[unmap]]
+table = "CIS2002"
+column = "co52"
+
+[[unmap]]
+table = "CIS2002"
+column = "co53"
+
+[[unmap]]
+table = "CIS2002"
+column = "co54"
+
+[[unmap]]
+table = "CIS2002"
+column = "co62"
+
+[[unmap]]
+table = "CIS2002"
+column = "co63"
+
+[[unmap]]
+table = "CIS2002"
+column = "co64"
+
+[[unmap]]
+table = "CIS2002"
+column = "co65"
+
+[[unmap]]
+table = "CIS2002"
+column = "co72"
+
+[[unmap]]
+table = "CIS2002"
+column = "co73"
+
+[[unmap]]
+table = "CIS2002"
+column = "co74"
+
+[[unmap]]
+table = "CIS2002"
+column = "co75"
+
+[[unmap]]
+table = "CIS2004"
+column = "CO21"
+
+[[unmap]]
+table = "CIS2004"
+column = "CO41"
+
+[[unmap]]
+table = "CIS2004"
+column = "CO51"
+
+[[unmap]]
+table = "CIS2004"
+column = "CO61"
+
+[[unmap]]
+table = "CIS2004"
+column = "CO71"
+
+[[unmap]]
+table = "CIS2004"
+column = "co11"
+
+[[unmap]]
+table = "CIS2004"
+column = "co12"
+
+[[unmap]]
+table = "CIS2004"
+column = "co13"
+
+[[unmap]]
+table = "CIS2004"
+column = "co14"
+
+[[unmap]]
+table = "CIS2004"
+column = "co22"
+
+[[unmap]]
+table = "CIS2004"
+column = "co23"
+
+[[unmap]]
+table = "CIS2004"
+column = "co24"
+
+[[unmap]]
+table = "CIS2004"
+column = "co42"
+
+[[unmap]]
+table = "CIS2004"
+column = "co43"
+
+[[unmap]]
+table = "CIS2004"
+column = "co44"
+
+[[unmap]]
+table = "CIS2004"
+column = "co52"
+
+[[unmap]]
+table = "CIS2004"
+column = "co53"
+
+[[unmap]]
+table = "CIS2004"
+column = "co54"
+
+[[unmap]]
+table = "CIS2004"
+column = "co62"
+
+[[unmap]]
+table = "CIS2004"
+column = "co63"
+
+[[unmap]]
+table = "CIS2004"
+column = "co64"
+
+[[unmap]]
+table = "CIS2004"
+column = "co72"
+
+[[unmap]]
+table = "CIS2004"
+column = "co73"
+
+[[unmap]]
+table = "CIS2004"
+column = "co74"
+
+[[unmap]]
+table = "CIS2006"
+column = "CO21"
+
+[[unmap]]
+table = "CIS2006"
+column = "CO41"
+
+[[unmap]]
+table = "CIS2006"
+column = "CO51"
+
+[[unmap]]
+table = "CIS2006"
+column = "CO61"
+
+[[unmap]]
+table = "CIS2006"
+column = "CO71"
+
+[[unmap]]
+table = "CIS2006"
+column = "co11"
+
+[[unmap]]
+table = "CIS2006"
+column = "co12"
+
+[[unmap]]
+table = "CIS2006"
+column = "co13"
+
+[[unmap]]
+table = "CIS2006"
+column = "co14"
+
+[[unmap]]
+table = "CIS2006"
+column = "co22"
+
+[[unmap]]
+table = "CIS2006"
+column = "co23"
+
+[[unmap]]
+table = "CIS2006"
+column = "co24"
+
+[[unmap]]
+table = "CIS2006"
+column = "co42"
+
+[[unmap]]
+table = "CIS2006"
+column = "co43"
+
+[[unmap]]
+table = "CIS2006"
+column = "co44"
+
+[[unmap]]
+table = "CIS2006"
+column = "co52"
+
+[[unmap]]
+table = "CIS2006"
+column = "co53"
+
+[[unmap]]
+table = "CIS2006"
+column = "co54"
+
+[[unmap]]
+table = "CIS2006"
+column = "co62"
+
+[[unmap]]
+table = "CIS2006"
+column = "co63"
+
+[[unmap]]
+table = "CIS2006"
+column = "co64"
+
+[[unmap]]
+table = "CIS2006"
+column = "co72"
+
+[[unmap]]
+table = "CIS2006"
+column = "co73"
+
+[[unmap]]
+table = "CIS2006"
+column = "co74"
+
+[[unmap]]
+table = "CIS2008"
+column = "CO21"
+
+[[unmap]]
+table = "CIS2008"
+column = "CO41"
+
+[[unmap]]
+table = "CIS2008"
+column = "CO51"
+
+[[unmap]]
+table = "CIS2008"
+column = "CO61"
+
+[[unmap]]
+table = "CIS2008"
+column = "CO71"
+
+[[unmap]]
+table = "CIS2008"
+column = "Co55"
+
+[[unmap]]
+table = "CIS2008"
+column = "co11"
+
+[[unmap]]
+table = "CIS2008"
+column = "co12"
+
+[[unmap]]
+table = "CIS2008"
+column = "co13"
+
+[[unmap]]
+table = "CIS2008"
+column = "co14"
+
+[[unmap]]
+table = "CIS2008"
+column = "co15"
+
+[[unmap]]
+table = "CIS2008"
+column = "co22"
+
+[[unmap]]
+table = "CIS2008"
+column = "co23"
+
+[[unmap]]
+table = "CIS2008"
+column = "co24"
+
+[[unmap]]
+table = "CIS2008"
+column = "co25"
+
+[[unmap]]
+table = "CIS2008"
+column = "co42"
+
+[[unmap]]
+table = "CIS2008"
+column = "co43"
+
+[[unmap]]
+table = "CIS2008"
+column = "co44"
+
+[[unmap]]
+table = "CIS2008"
+column = "co45"
+
+[[unmap]]
+table = "CIS2008"
+column = "co52"
+
+[[unmap]]
+table = "CIS2008"
+column = "co53"
+
+[[unmap]]
+table = "CIS2008"
+column = "co54"
+
+[[unmap]]
+table = "CIS2008"
+column = "co62"
+
+[[unmap]]
+table = "CIS2008"
+column = "co63"
+
+[[unmap]]
+table = "CIS2008"
+column = "co64"
+
+[[unmap]]
+table = "CIS2008"
+column = "co65"
+
+[[unmap]]
+table = "CIS2008"
+column = "co72"
+
+[[unmap]]
+table = "CIS2008"
+column = "co73"
+
+[[unmap]]
+table = "CIS2008"
+column = "co74"
+
+[[unmap]]
+table = "CIS2008"
+column = "co75"
+
+[[unmap]]
+table = "CIS2010"
+column = "Co52"
+
+[[unmap]]
+table = "CIS2010"
+column = "Co54"
+
+[[unmap]]
+table = "CIS2010"
+column = "co11"
+
+[[unmap]]
+table = "CIS2010"
+column = "co12"
+
+[[unmap]]
+table = "CIS2010"
+column = "co13"
+
+[[unmap]]
+table = "CIS2010"
+column = "co14"
+
+[[unmap]]
+table = "CIS2010"
+column = "co15"
+
+[[unmap]]
+table = "CIS2010"
+column = "co21"
+
+[[unmap]]
+table = "CIS2010"
+column = "co22"
+
+[[unmap]]
+table = "CIS2010"
+column = "co23"
+
+[[unmap]]
+table = "CIS2010"
+column = "co24"
+
+[[unmap]]
+table = "CIS2010"
+column = "co25"
+
+[[unmap]]
+table = "CIS2010"
+column = "co41"
+
+[[unmap]]
+table = "CIS2010"
+column = "co42"
+
+[[unmap]]
+table = "CIS2010"
+column = "co43"
+
+[[unmap]]
+table = "CIS2010"
+column = "co44"
+
+[[unmap]]
+table = "CIS2010"
+column = "co45"
+
+[[unmap]]
+table = "CIS2010"
+column = "co51"
+
+[[unmap]]
+table = "CIS2010"
+column = "co53"
+
+[[unmap]]
+table = "CIS2010"
+column = "co55"
+
+[[unmap]]
+table = "CIS2010"
+column = "co61"
+
+[[unmap]]
+table = "CIS2010"
+column = "co62"
+
+[[unmap]]
+table = "CIS2010"
+column = "co63"
+
+[[unmap]]
+table = "CIS2010"
+column = "co64"
+
+[[unmap]]
+table = "CIS2010"
+column = "co65"
+
+[[unmap]]
+table = "CIS2010"
+column = "co71"
+
+[[unmap]]
+table = "CIS2010"
+column = "co72"
+
+[[unmap]]
+table = "CIS2010"
+column = "co73"
+
+[[unmap]]
+table = "CIS2010"
+column = "co74"
+
+[[unmap]]
+table = "CIS2010"
+column = "co75"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO311"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO313"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO315"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO321"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO322"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO323"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO324"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO325"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO81"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO83"
+
+[[unmap]]
+table = "CIS2012"
+column = "CO85"
+
+[[unmap]]
+table = "CIS2012"
+column = "Co52"
+
+[[unmap]]
+table = "CIS2012"
+column = "Co54"
+
+[[unmap]]
+table = "CIS2012"
+column = "co11"
+
+[[unmap]]
+table = "CIS2012"
+column = "co12"
+
+[[unmap]]
+table = "CIS2012"
+column = "co13"
+
+[[unmap]]
+table = "CIS2012"
+column = "co14"
+
+[[unmap]]
+table = "CIS2012"
+column = "co15"
+
+[[unmap]]
+table = "CIS2012"
+column = "co21"
+
+[[unmap]]
+table = "CIS2012"
+column = "co22"
+
+[[unmap]]
+table = "CIS2012"
+column = "co23"
+
+[[unmap]]
+table = "CIS2012"
+column = "co24"
+
+[[unmap]]
+table = "CIS2012"
+column = "co25"
+
+[[unmap]]
+table = "CIS2012"
+column = "co312"
+
+[[unmap]]
+table = "CIS2012"
+column = "co314"
+
+[[unmap]]
+table = "CIS2012"
+column = "co41"
+
+[[unmap]]
+table = "CIS2012"
+column = "co42"
+
+[[unmap]]
+table = "CIS2012"
+column = "co43"
+
+[[unmap]]
+table = "CIS2012"
+column = "co44"
+
+[[unmap]]
+table = "CIS2012"
+column = "co45"
+
+[[unmap]]
+table = "CIS2012"
+column = "co51"
+
+[[unmap]]
+table = "CIS2012"
+column = "co53"
+
+[[unmap]]
+table = "CIS2012"
+column = "co55"
+
+[[unmap]]
+table = "CIS2012"
+column = "co61"
+
+[[unmap]]
+table = "CIS2012"
+column = "co62"
+
+[[unmap]]
+table = "CIS2012"
+column = "co63"
+
+[[unmap]]
+table = "CIS2012"
+column = "co64"
+
+[[unmap]]
+table = "CIS2012"
+column = "co65"
+
+[[unmap]]
+table = "CIS2012"
+column = "co71"
+
+[[unmap]]
+table = "CIS2012"
+column = "co72"
+
+[[unmap]]
+table = "CIS2012"
+column = "co73"
+
+[[unmap]]
+table = "CIS2012"
+column = "co74"
+
+[[unmap]]
+table = "CIS2012"
+column = "co75"
+
+[[unmap]]
+table = "CIS2012"
+column = "co82"
+
+[[unmap]]
+table = "CIS2012"
+column = "co84"

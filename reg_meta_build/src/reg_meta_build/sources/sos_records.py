@@ -49,6 +49,7 @@ from reg_meta_build.source_values import (
     SourceValueDescriptor,
     SourceValueValidity,
     SourceValueWindow,
+    exact_sheet_pointer,
 )
 from reg_meta_build.sources.sos import _classify_value_set_text
 
@@ -140,19 +141,15 @@ def _sheet_pointer(
     evidence = variable.source_evidence
     cell = _cell(evidence, "external_classification")
     raw = cell.raw_value if cell is not None else None
-    if not isinstance(raw, str):
+    pointer = exact_sheet_pointer(
+        raw, (sheet.sheet_name for sheet in register.source_sheets)
+    )
+    if pointer is None:
         return None
+    target, anchored = pointer
     for sheet in register.source_sheets:
         name = sheet.sheet_name
-        if raw == name:
-            anchored = False
-        elif raw.startswith(f"{name}!") and re.fullmatch(
-            r"[A-Za-z]+[0-9]+", raw[len(name) + 1 :]
-        ):
-            anchored = True
-        elif raw == f"{name}!":
-            anchored = False
-        else:
+        if name != target:
             continue
         members = frozenset(
             member

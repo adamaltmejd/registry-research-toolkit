@@ -1105,11 +1105,13 @@ def convert_delivered_entry(
             for ref in edition.support
         }
     )
-    # Documented type is a dependency: changing it makes the decision stale.
-    # Flags and coding are never copied from adjacent editions.
+    # Ownership depends on the complete supplied meaning and source bindings.
+    # Capturing flags/coding guards them; it does not copy them across editions.
     expected = capture_expectations(
         context.records_for_refs(required),
-        fields=("column_name", "data_type"),
+        fields=tuple(SourceFields.model_fields),
+        parents=True,
+        coding=True,
     )
     case = CurationCase(
         case_id=case_id,

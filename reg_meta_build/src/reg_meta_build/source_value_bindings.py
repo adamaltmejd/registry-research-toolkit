@@ -41,7 +41,7 @@ from reg_meta_build.source_records import (
     SourceRecord,
     TemporalScope,
 )
-from reg_meta_build.source_values import SourceValueWindow
+from reg_meta_build.source_values import SourceValueWindow, exact_sheet_pointer
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -54,7 +54,63 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.source_occurrences import EffectiveOccurrence
     from reg_meta_build.source_support import SourceSupportBindings
-    from reg_meta_build.source_values import SourceValueAssociation
+    from reg_meta_build.source_values import (
+        SourceValueAssociation,
+        SourceValueDescriptor,
+    )
+
+
+def _explicit_sheet_member(
+    record: SourceRecord,
+    fields: SourceFields,
+    descriptor: SourceValueDescriptor,
+    associations: tuple[SourceValueAssociation, ...],
+) -> bool:
+    """Permit a header's case spelling only through its explicit workbook pointer."""
+    representation = fields.representation
+    column = fields.column_name
+    member = record.subject.member.name
+    if (
+        representation is None
+        or representation.status != "value"
+        or column is None
+        or column.status != "value"
+        or column.value != member
+        or member is None
+        or descriptor.name is None
+        or exact_sheet_pointer(representation.value, (descriptor.name,))
+        != (descriptor.name, False)
+    ):
+        return False
+    headers = tuple(
+        hint for hint in descriptor.member_hints if hint.role == "list_header"
+    )
+    if (
+        len(headers) != 1
+        or headers[0].value is None
+        or headers[0].value.casefold() != member.casefold()
+        or tuple(descriptor.member_references) != (headers[0].value,)
+        or headers[0].locator is None
+        or headers[0].locator.physical_table != descriptor.name
+        or not descriptor.locators
+        or any(
+            locator.physical_table != descriptor.name for locator in descriptor.locators
+        )
+        or {locator.physical_file for locator in record.locators}
+        != {headers[0].locator.physical_file}
+        or {locator.physical_file for locator in descriptor.locators}
+        != {headers[0].locator.physical_file}
+    ):
+        return False
+    return all(
+        set(association.member_references) <= {headers[0].value}
+        and all(
+            hint.value == headers[0].value
+            for hint in association.member_hints
+            if hint.role == "row"
+        )
+        for association in associations
+    )
 
 
 @dataclass(frozen=True)
@@ -348,6 +404,12 @@ class ValueBindingSession:
                 associations = tuple(
                     self.session.lookup_descriptor(descriptor.payload_key)
                 )
+                explicit_sheet_member = _explicit_sheet_member(
+                    record,
+                    record.fields if fields is None else fields,
+                    descriptor,
+                    associations,
+                )
                 pointer_hints = tuple(
                     hint
                     for hint in descriptor.member_hints
@@ -396,7 +458,7 @@ class ValueBindingSession:
                         if header_refs and row_refs and header_refs & row_refs
                         else header_refs | row_refs
                     )
-                    if member_name not in candidates:
+                    if member_name not in candidates and not explicit_sheet_member:
                         continue
                     if (len(header_refs) > 1 and not shared_pointer_shape) or len(
                         row_refs
@@ -554,7 +616,11 @@ class ValueBindingSession:
                     tuple(members),
                     version_label=descriptor.version,
                 )
-                if declared_identifier and has_unknown_code_membership(claim):
+                if (
+                    declared_identifier
+                    and not descriptor.record_ids
+                    and has_unknown_code_membership(claim)
+                ):
                     resolved = resolve_code_membership((claim,))
                     if not any(
                         issue.code == "unknown_code_membership"

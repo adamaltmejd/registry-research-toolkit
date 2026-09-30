@@ -25558,7 +25558,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -25751,7 +25751,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -25944,7 +25944,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -26137,7 +26137,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -26330,7 +26330,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -26523,7 +26523,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -26716,7 +26716,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -26909,7 +26909,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -27102,7 +27102,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -27295,7 +27295,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -27488,7 +27488,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -27681,7 +27681,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -27874,7 +27874,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -28067,7 +28067,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -28260,7 +28260,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -28453,7 +28453,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -28646,7 +28646,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -28839,7 +28839,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -29056,7 +29056,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -29273,7 +29273,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -29490,7 +29490,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -29707,7 +29707,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -29900,7 +29900,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -30093,7 +30093,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -30286,7 +30286,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -30479,7 +30479,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -30672,7 +30672,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -30865,7 +30865,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -31074,7 +31074,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -31283,7 +31283,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -31492,7 +31492,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -31701,7 +31701,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -31897,7 +31897,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -32017,7 +32017,7 @@ name = "Ast_SektorGrp"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/institutionell-sektor"
+variable = "scb/lisa/institutionell-sektor-aggregerad"
 representation = "Ast_SektorGrp"
 
 [[table.column]]
@@ -32093,7 +32093,7 @@ name = "Ast_AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-bas"
 representation = "Ast_AntalSys"
 
 [[table.column]]
@@ -32213,7 +32213,7 @@ name = "Ast_SektorGrp"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/arbetsstallen"
-variable = "scb/lisa/institutionell-sektor"
+variable = "scb/lisa/institutionell-sektor-aggregerad"
 representation = "Ast_SektorGrp"
 
 [[table.column]]
@@ -59535,53 +59535,23 @@ representation = "CO"
 [[table.column]]
 name = "CO21"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO21"
-
 [[table.column]]
 name = "CO31"
 
 [[table.column]]
 name = "CO41"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO41"
-
 [[table.column]]
 name = "CO51"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO51"
 
 [[table.column]]
 name = "CO61"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO61"
-
 [[table.column]]
 name = "CO71"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO71"
-
 [[table.column]]
 name = "Co55"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO55"
 
 [[table.column]]
 name = "EMP"
@@ -60924,74 +60894,29 @@ representation = "WEIGHT"
 [[table.column]]
 name = "co11"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO11"
-
 [[table.column]]
 name = "co12"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO12"
 
 [[table.column]]
 name = "co13"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO13"
-
 [[table.column]]
 name = "co14"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO14"
 
 [[table.column]]
 name = "co15"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO15"
-
 [[table.column]]
 name = "co22"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO22"
 
 [[table.column]]
 name = "co23"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO23"
-
 [[table.column]]
 name = "co24"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO24"
-
 [[table.column]]
 name = "co25"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO25"
 
 [[table.column]]
 name = "co32"
@@ -61008,122 +60933,47 @@ name = "co35"
 [[table.column]]
 name = "co42"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO42"
-
 [[table.column]]
 name = "co43"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO44"
-
 [[table.column]]
 name = "co45"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO45"
 
 [[table.column]]
 name = "co52"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO52"
-
 [[table.column]]
 name = "co53"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO53"
 
 [[table.column]]
 name = "co54"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO54"
-
 [[table.column]]
 name = "co62"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO62"
 
 [[table.column]]
 name = "co63"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO63"
-
 [[table.column]]
 name = "co64"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO64"
 
 [[table.column]]
 name = "co65"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO65"
-
 [[table.column]]
 name = "co72"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO73"
-
 [[table.column]]
 name = "co74"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO74"
-
 [[table.column]]
 name = "co75"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO75"
 
 [[table.column]]
 name = "nace"
@@ -61204,45 +61054,20 @@ representation = "CO"
 [[table.column]]
 name = "CO21"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO21"
-
 [[table.column]]
 name = "CO31"
 
 [[table.column]]
 name = "CO41"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO41"
-
 [[table.column]]
 name = "CO51"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO51"
 
 [[table.column]]
 name = "CO61"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO61"
-
 [[table.column]]
 name = "CO71"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO71"
 
 [[table.column]]
 name = "ECap"
@@ -62620,11 +62445,6 @@ representation = "TurnUng_o"
 [[table.column]]
 name = "co11"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO11"
-
 [[table.column]]
 name = "co11_o"
 
@@ -62635,11 +62455,6 @@ representation = "co11_o"
 
 [[table.column]]
 name = "co12"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO12"
 
 [[table.column]]
 name = "co12_o"
@@ -62652,11 +62467,6 @@ representation = "co12_o"
 [[table.column]]
 name = "co13"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO13"
-
 [[table.column]]
 name = "co13_o"
 
@@ -62667,11 +62477,6 @@ representation = "co13_o"
 
 [[table.column]]
 name = "co14"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO14"
 
 [[table.column]]
 name = "co14_o"
@@ -62692,11 +62497,6 @@ representation = "co21_o"
 [[table.column]]
 name = "co22"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO22"
-
 [[table.column]]
 name = "co22_o"
 
@@ -62708,11 +62508,6 @@ representation = "co22_o"
 [[table.column]]
 name = "co23"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO23"
-
 [[table.column]]
 name = "co23_o"
 
@@ -62723,11 +62518,6 @@ representation = "co23_o"
 
 [[table.column]]
 name = "co24"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO24"
 
 [[table.column]]
 name = "co24_o"
@@ -62789,11 +62579,6 @@ representation = "co41_o"
 [[table.column]]
 name = "co42"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO42"
-
 [[table.column]]
 name = "co42_o"
 
@@ -62805,11 +62590,6 @@ representation = "co42_o"
 [[table.column]]
 name = "co43"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO43"
-
 [[table.column]]
 name = "co43_o"
 
@@ -62820,11 +62600,6 @@ representation = "co43_o"
 
 [[table.column]]
 name = "co44"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO44"
 
 [[table.column]]
 name = "co44_o"
@@ -62845,11 +62620,6 @@ representation = "co51_o"
 [[table.column]]
 name = "co52"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO52"
-
 [[table.column]]
 name = "co52_o"
 
@@ -62861,11 +62631,6 @@ representation = "co52_o"
 [[table.column]]
 name = "co53"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO53"
-
 [[table.column]]
 name = "co53_o"
 
@@ -62876,11 +62641,6 @@ representation = "co53_o"
 
 [[table.column]]
 name = "co54"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO54"
 
 [[table.column]]
 name = "co54_o"
@@ -62901,11 +62661,6 @@ representation = "co61_o"
 [[table.column]]
 name = "co62"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO62"
-
 [[table.column]]
 name = "co62_o"
 
@@ -62917,11 +62672,6 @@ representation = "co62_o"
 [[table.column]]
 name = "co63"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO63"
-
 [[table.column]]
 name = "co63_o"
 
@@ -62932,11 +62682,6 @@ representation = "co63_o"
 
 [[table.column]]
 name = "co64"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO64"
 
 [[table.column]]
 name = "co64_o"
@@ -62957,11 +62702,6 @@ representation = "co71_o"
 [[table.column]]
 name = "co72"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO72"
-
 [[table.column]]
 name = "co72_o"
 
@@ -62973,11 +62713,6 @@ representation = "co72_o"
 [[table.column]]
 name = "co73"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO73"
-
 [[table.column]]
 name = "co73_o"
 
@@ -62988,11 +62723,6 @@ representation = "co73_o"
 
 [[table.column]]
 name = "co74"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO74"
 
 [[table.column]]
 name = "co74_o"
@@ -63471,45 +63201,20 @@ representation = "CO"
 [[table.column]]
 name = "CO21"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO21"
-
 [[table.column]]
 name = "CO31"
 
 [[table.column]]
 name = "CO41"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO41"
-
 [[table.column]]
 name = "CO51"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO51"
 
 [[table.column]]
 name = "CO61"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO61"
-
 [[table.column]]
 name = "CO71"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO71"
 
 [[table.column]]
 name = "ECap"
@@ -64804,58 +64509,23 @@ representation = "Weightnr"
 [[table.column]]
 name = "co11"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO11"
-
 [[table.column]]
 name = "co12"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO12"
 
 [[table.column]]
 name = "co13"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO13"
-
 [[table.column]]
 name = "co14"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO14"
 
 [[table.column]]
 name = "co22"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO22"
-
 [[table.column]]
 name = "co23"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO23"
-
 [[table.column]]
 name = "co24"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO24"
 
 [[table.column]]
 name = "co32"
@@ -64869,98 +64539,38 @@ name = "co34"
 [[table.column]]
 name = "co42"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO42"
-
 [[table.column]]
 name = "co43"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO44"
-
 [[table.column]]
 name = "co52"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO52"
 
 [[table.column]]
 name = "co53"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO53"
-
 [[table.column]]
 name = "co54"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO54"
 
 [[table.column]]
 name = "co62"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO62"
-
 [[table.column]]
 name = "co63"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO63"
 
 [[table.column]]
 name = "co64"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO64"
-
 [[table.column]]
 name = "co72"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO73"
-
 [[table.column]]
 name = "co74"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO74"
 
 [[table.column]]
 name = "emp04"
@@ -65111,53 +64721,23 @@ representation = "CO"
 [[table.column]]
 name = "CO21"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO21"
-
 [[table.column]]
 name = "CO31"
 
 [[table.column]]
 name = "CO41"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO41"
-
 [[table.column]]
 name = "CO51"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO51"
 
 [[table.column]]
 name = "CO61"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO61"
-
 [[table.column]]
 name = "CO71"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO71"
-
 [[table.column]]
 name = "Co55"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO55"
 
 [[table.column]]
 name = "EcoCo"
@@ -66705,74 +66285,29 @@ representation = "Weightnr"
 [[table.column]]
 name = "co11"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO11"
-
 [[table.column]]
 name = "co12"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO12"
 
 [[table.column]]
 name = "co13"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO13"
-
 [[table.column]]
 name = "co14"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO14"
 
 [[table.column]]
 name = "co15"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO15"
-
 [[table.column]]
 name = "co22"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO22"
 
 [[table.column]]
 name = "co23"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO23"
-
 [[table.column]]
 name = "co24"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO24"
-
 [[table.column]]
 name = "co25"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO25"
 
 [[table.column]]
 name = "co32"
@@ -66789,122 +66324,47 @@ name = "co35"
 [[table.column]]
 name = "co42"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO42"
-
 [[table.column]]
 name = "co43"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO43"
 
 [[table.column]]
 name = "co44"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO44"
-
 [[table.column]]
 name = "co45"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO45"
 
 [[table.column]]
 name = "co52"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO52"
-
 [[table.column]]
 name = "co53"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO53"
 
 [[table.column]]
 name = "co54"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO54"
-
 [[table.column]]
 name = "co62"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO62"
 
 [[table.column]]
 name = "co63"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO63"
-
 [[table.column]]
 name = "co64"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO64"
 
 [[table.column]]
 name = "co65"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO65"
-
 [[table.column]]
 name = "co72"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO72"
 
 [[table.column]]
 name = "co73"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO73"
-
 [[table.column]]
 name = "co74"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO74"
-
 [[table.column]]
 name = "co75"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO75"
 
 [[table.column]]
 name = "emp06"
@@ -66975,18 +66435,8 @@ edition = 2010
 [[table.column]]
 name = "Co52"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO52"
-
 [[table.column]]
 name = "Co54"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO54"
 
 [[table.column]]
 name = "G17a"
@@ -67833,82 +67283,32 @@ representation = "CO"
 [[table.column]]
 name = "co11"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO11"
-
 [[table.column]]
 name = "co12"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO12"
 
 [[table.column]]
 name = "co13"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO13"
-
 [[table.column]]
 name = "co14"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO14"
 
 [[table.column]]
 name = "co15"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO15"
-
 [[table.column]]
 name = "co21"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO21"
 
 [[table.column]]
 name = "co22"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO22"
-
 [[table.column]]
 name = "co23"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO23"
 
 [[table.column]]
 name = "co24"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO24"
-
 [[table.column]]
 name = "co25"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO25"
 
 [[table.column]]
 name = "co31"
@@ -67928,146 +67328,56 @@ name = "co35"
 [[table.column]]
 name = "co41"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO41"
-
 [[table.column]]
 name = "co42"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO42"
 
 [[table.column]]
 name = "co43"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO43"
-
 [[table.column]]
 name = "co44"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO44"
 
 [[table.column]]
 name = "co45"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO45"
-
 [[table.column]]
 name = "co51"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO51"
 
 [[table.column]]
 name = "co53"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO53"
-
 [[table.column]]
 name = "co55"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO55"
 
 [[table.column]]
 name = "co61"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO61"
-
 [[table.column]]
 name = "co62"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO62"
 
 [[table.column]]
 name = "co63"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO63"
-
 [[table.column]]
 name = "co64"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO64"
 
 [[table.column]]
 name = "co65"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO65"
-
 [[table.column]]
 name = "co71"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO71"
 
 [[table.column]]
 name = "co72"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO72"
-
 [[table.column]]
 name = "co73"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO73"
 
 [[table.column]]
 name = "co74"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO74"
-
 [[table.column]]
 name = "co75"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO75"
 
 [[table.column]]
 name = "emp08"
@@ -68178,106 +67488,41 @@ edition = 2012
 [[table.column]]
 name = "CO311"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO311"
-
 [[table.column]]
 name = "CO313"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO313"
 
 [[table.column]]
 name = "CO315"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO315"
-
 [[table.column]]
 name = "CO321"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO321"
 
 [[table.column]]
 name = "CO322"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO322"
-
 [[table.column]]
 name = "CO323"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO323"
 
 [[table.column]]
 name = "CO324"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO324"
-
 [[table.column]]
 name = "CO325"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO325"
 
 [[table.column]]
 name = "CO81"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO81"
-
 [[table.column]]
 name = "CO83"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO83"
 
 [[table.column]]
 name = "CO85"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO85"
-
 [[table.column]]
 name = "Co52"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO52"
-
 [[table.column]]
 name = "Co54"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO54"
 
 [[table.column]]
 name = "ENMRG"
@@ -68361,7 +67606,7 @@ name = "INADPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-anpassad-av-foretaget"
 representation = "INADPS"
 
 [[table.column]]
@@ -68481,7 +67726,7 @@ name = "InAdGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-anpassad-av-foretaget"
 representation = "INADGD"
 
 [[table.column]]
@@ -68489,7 +67734,7 @@ name = "InAdSv"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-anpassad-av-foretaget"
 representation = "INADSV"
 
 [[table.column]]
@@ -68868,258 +68113,98 @@ representation = "CO"
 [[table.column]]
 name = "co11"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO11"
-
 [[table.column]]
 name = "co12"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO12"
 
 [[table.column]]
 name = "co13"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO13"
-
 [[table.column]]
 name = "co14"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO14"
 
 [[table.column]]
 name = "co15"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO15"
-
 [[table.column]]
 name = "co21"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO21"
 
 [[table.column]]
 name = "co22"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO22"
-
 [[table.column]]
 name = "co23"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO23"
 
 [[table.column]]
 name = "co24"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO24"
-
 [[table.column]]
 name = "co25"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO25"
 
 [[table.column]]
 name = "co312"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO312"
-
 [[table.column]]
 name = "co314"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO314"
 
 [[table.column]]
 name = "co41"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO41"
-
 [[table.column]]
 name = "co42"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO42"
 
 [[table.column]]
 name = "co43"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO43"
-
 [[table.column]]
 name = "co44"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO44"
 
 [[table.column]]
 name = "co45"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO45"
-
 [[table.column]]
 name = "co51"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO51"
 
 [[table.column]]
 name = "co53"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO53"
-
 [[table.column]]
 name = "co55"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO55"
 
 [[table.column]]
 name = "co61"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO61"
-
 [[table.column]]
 name = "co62"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO62"
 
 [[table.column]]
 name = "co63"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO63"
-
 [[table.column]]
 name = "co64"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO64"
 
 [[table.column]]
 name = "co65"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO65"
-
 [[table.column]]
 name = "co71"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO71"
 
 [[table.column]]
 name = "co72"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO72"
-
 [[table.column]]
 name = "co73"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO73"
 
 [[table.column]]
 name = "co74"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO74"
-
 [[table.column]]
 name = "co75"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO75"
 
 [[table.column]]
 name = "co82"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO82"
-
 [[table.column]]
 name = "co84"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/co11"
-representation = "CO84"
 
 [[table.column]]
 name = "emp2010"
@@ -69332,7 +68417,7 @@ name = "pbinct"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinct"
+variable = "scb/innovation-foretag/innovation-kravd-i-upphandlingsavtal"
 representation = "PBINCT"
 
 [[table.column]]
@@ -69966,7 +69051,7 @@ name = "INADPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-anpassad-av-foretaget"
 representation = "INADPS"
 
 [[table.column]]
@@ -69974,7 +69059,7 @@ name = "INITPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-av-foretaget"
 representation = "INITPS"
 
 [[table.column]]
@@ -69990,7 +69075,7 @@ name = "INOTHGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-andra"
 representation = "INOTHGD"
 
 [[table.column]]
@@ -69998,7 +69083,7 @@ name = "INOTHPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-av-andra"
 representation = "INOTHPS"
 
 [[table.column]]
@@ -70006,7 +69091,7 @@ name = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-andra"
 representation = "INOTHSV"
 
 [[table.column]]
@@ -70062,7 +69147,7 @@ name = "INTOGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-med-andra"
 representation = "INTOGD"
 
 [[table.column]]
@@ -70070,7 +69155,7 @@ name = "INTOPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-med-andra"
 representation = "INTOPS"
 
 [[table.column]]
@@ -70078,7 +69163,7 @@ name = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-med-andra"
 representation = "INTOSV"
 
 [[table.column]]
@@ -70086,7 +69171,7 @@ name = "InAdGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-anpassad-av-foretaget"
 representation = "INADGD"
 
 [[table.column]]
@@ -70094,7 +69179,7 @@ name = "InAdSv"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-anpassad-av-foretaget"
 representation = "INADSV"
 
 [[table.column]]
@@ -70102,7 +69187,7 @@ name = "InItGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-foretaget"
 representation = "INITGD"
 
 [[table.column]]
@@ -70110,7 +69195,7 @@ name = "InItSv"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-foretaget"
 representation = "INITSV"
 
 [[table.column]]
@@ -70219,7 +69304,7 @@ name = "PBINN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinct"
+variable = "scb/innovation-foretag/innovationsaktivitet-i-upphandlingsavtal"
 representation = "PBINN"
 
 [[table.column]]
@@ -70227,7 +69312,7 @@ name = "PBNOCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinct"
+variable = "scb/innovation-foretag/innovation-ej-kravd-i-upphandlingsavtal"
 representation = "PBNOCT"
 
 [[table.column]]
@@ -70782,7 +69867,7 @@ name = "pbinct"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinct"
+variable = "scb/innovation-foretag/innovation-kravd-i-upphandlingsavtal"
 representation = "PBINCT"
 
 [[table.column]]
@@ -71231,7 +70316,7 @@ name = "INADPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-anpassad-av-foretaget"
 representation = "INADPS"
 
 [[table.column]]
@@ -71239,7 +70324,7 @@ name = "INITPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-av-foretaget"
 representation = "INITPS"
 
 [[table.column]]
@@ -71255,7 +70340,7 @@ name = "INOTHGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-andra"
 representation = "INOTHGD"
 
 [[table.column]]
@@ -71263,7 +70348,7 @@ name = "INOTHPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-av-andra"
 representation = "INOTHPS"
 
 [[table.column]]
@@ -71271,7 +70356,7 @@ name = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-andra"
 representation = "INOTHSV"
 
 [[table.column]]
@@ -71327,7 +70412,7 @@ name = "INTOGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-med-andra"
 representation = "INTOGD"
 
 [[table.column]]
@@ -71335,7 +70420,7 @@ name = "INTOPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-med-andra"
 representation = "INTOPS"
 
 [[table.column]]
@@ -71343,7 +70428,7 @@ name = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-med-andra"
 representation = "INTOSV"
 
 [[table.column]]
@@ -71351,7 +70436,7 @@ name = "InAdGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-anpassad-av-foretaget"
 representation = "INADGD"
 
 [[table.column]]
@@ -71359,7 +70444,7 @@ name = "InAdSv"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-anpassad-av-foretaget"
 representation = "INADSV"
 
 [[table.column]]
@@ -71367,7 +70452,7 @@ name = "InItGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-foretaget"
 representation = "INITGD"
 
 [[table.column]]
@@ -71375,7 +70460,7 @@ name = "InItSv"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-foretaget"
 representation = "INITSV"
 
 [[table.column]]
@@ -71439,7 +70524,7 @@ name = "LG"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lg"
+variable = "scb/innovation-foretag/logistikinnovation-utebliven-huvudorsak"
 representation = "LG"
 
 [[table.column]]
@@ -71463,7 +70548,7 @@ name = "LGFIN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lg"
+variable = "scb/innovation-foretag/logistikinnovation-ekonomiskt-hinder"
 representation = "LGFIN"
 
 [[table.column]]
@@ -71527,7 +70612,7 @@ name = "LGOTHO"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lg"
+variable = "scb/innovation-foretag/logistikinnovation-annat-hinder"
 representation = "LGOTHO"
 
 [[table.column]]
@@ -71535,7 +70620,7 @@ name = "LGREG"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lg"
+variable = "scb/innovation-foretag/logistikinnovation-rattsligt-hinder"
 representation = "LGREG"
 
 [[table.column]]
@@ -71567,7 +70652,7 @@ name = "LGTEC"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lg"
+variable = "scb/innovation-foretag/logistikinnovation-tekniskt-hinder"
 representation = "LGTEC"
 
 [[table.column]]
@@ -71708,7 +70793,7 @@ name = "PBINN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinct"
+variable = "scb/innovation-foretag/innovationsaktivitet-i-upphandlingsavtal"
 representation = "PBINN"
 
 [[table.column]]
@@ -71716,7 +70801,7 @@ name = "PBNOCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinct"
+variable = "scb/innovation-foretag/innovation-ej-kravd-i-upphandlingsavtal"
 representation = "PBNOCT"
 
 [[table.column]]
@@ -72292,7 +71377,7 @@ name = "pbinct"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinct"
+variable = "scb/innovation-foretag/innovation-kravd-i-upphandlingsavtal"
 representation = "PBINCT"
 
 [[table.column]]
@@ -119507,7 +118592,7 @@ name = "Org_SektorGrp"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektor"
+variable = "scb/lisa/institutionell-sektor-aggregerad"
 representation = "Org_SektorGrp"
 
 [[table.column]]
@@ -120220,7 +119305,7 @@ name = "Org_SektorGrp"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektor"
+variable = "scb/lisa/institutionell-sektor-aggregerad"
 representation = "Org_SektorGrp"
 
 [[table.column]]
@@ -164671,7 +163756,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -165136,7 +164221,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -165176,7 +164261,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -165252,7 +164337,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -165749,7 +164834,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -165789,7 +164874,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -165881,7 +164966,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -166394,7 +165479,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -166434,7 +165519,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -166526,7 +165611,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -167039,7 +166124,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -167079,7 +166164,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -167179,7 +166264,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -167693,7 +166778,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -167733,7 +166818,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -167825,7 +166910,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -168339,7 +167424,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -168379,7 +167464,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -168471,7 +167556,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -168985,7 +168070,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -169025,7 +168110,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -169117,7 +168202,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -169631,7 +168716,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -169671,7 +168756,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -169763,7 +168848,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -170285,7 +169370,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -170325,7 +169410,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -170417,7 +169502,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -170939,7 +170024,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -170979,7 +170064,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -171071,7 +170156,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -171593,7 +170678,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -171633,7 +170718,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -171725,7 +170810,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -172319,7 +171404,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -172359,7 +171444,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -172451,7 +171536,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -173045,7 +172130,7 @@ name = "SumAld"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-folkpension-atp"
 representation = "SumAld"
 
 [[table.column]]
@@ -173085,7 +172170,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -173201,7 +172286,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -173883,7 +172968,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -173923,7 +173008,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -174063,7 +173148,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -174785,7 +173870,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -174825,7 +173910,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -174957,7 +174042,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -175655,7 +174740,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -175695,7 +174780,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -175827,7 +174912,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -176525,7 +175610,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -176565,7 +175650,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -176697,7 +175782,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -177403,7 +176488,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -177443,7 +176528,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -177575,7 +176660,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -178281,7 +177366,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -178321,7 +177406,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -178469,7 +177554,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -179183,7 +178268,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -179223,7 +178308,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_old"
 
 [[table.column]]
@@ -179371,7 +178456,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -180152,7 +179237,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -180192,7 +179277,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -180343,7 +179428,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -181124,7 +180209,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -181164,7 +180249,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -181339,7 +180424,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -182120,7 +181205,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -182160,7 +181245,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -182327,7 +181412,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -183124,7 +182209,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -183164,7 +182249,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -183347,7 +182432,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -184136,7 +183221,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -184176,7 +183261,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -184359,7 +183444,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -185148,7 +184233,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -185188,7 +184273,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -185371,7 +184456,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -186160,7 +185245,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -186200,7 +185285,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -186383,7 +185468,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -187172,7 +186257,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -187212,7 +186297,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -187395,7 +186480,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -188192,7 +187277,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -188232,7 +187317,7 @@ name = "Sun2000niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
 representation = "Sun2000niva_Old"
 
 [[table.column]]
@@ -188529,7 +187614,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -189222,7 +188307,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -189278,7 +188363,7 @@ name = "Sun2020niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2020"
 representation = "Sun2020Niva_Old"
 
 [[table.column]]
@@ -189572,7 +188657,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -190289,7 +189374,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -190345,7 +189430,7 @@ name = "Sun2020niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2020"
 representation = "Sun2020Niva_Old"
 
 [[table.column]]
@@ -190639,7 +189724,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-fore-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -191372,7 +190457,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -191428,7 +190513,7 @@ name = "Sun2020niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2020"
 representation = "Sun2020Niva_Old"
 
 [[table.column]]
@@ -191714,7 +190799,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -192447,7 +191532,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -192487,7 +191572,7 @@ name = "Sun2020niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2020"
 representation = "Sun2020Niva_Old"
 
 [[table.column]]
@@ -192757,7 +191842,7 @@ name = "AntalSys"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/antal-sysselsatta-ast"
+variable = "scb/lisa/antal-sysselsatta-arbetsstalle-bas"
 representation = "AntalSys"
 
 [[table.column]]
@@ -193474,7 +192559,7 @@ name = "SumAldP03"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/summa-inkomst-foranledd-av-alderspension"
+variable = "scb/lisa/alderspension-inkomst-premie-garanti"
 representation = "SumAldP03"
 
 [[table.column]]
@@ -193514,7 +192599,7 @@ name = "Sun2020niva_old"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/utbildningsniva-aggregat-old"
+variable = "scb/lisa/utbildningsniva-aggregat-old-sun2020"
 representation = "Sun2020Niva_Old"
 
 [[table.column]]
