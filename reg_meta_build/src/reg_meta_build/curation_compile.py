@@ -5955,7 +5955,20 @@ def compile_curation(
         for key, values in provider_keys.items()
     }
     matrix_cases, matrix_names, matrix_keys, matrix_diagnostics = compile_matrix_repr(
-        tree, prepared, scopes, naming
+        tree,
+        prepared,
+        tuple(
+            scope.model_copy(
+                update={
+                    "cases": (
+                        *scope.cases,
+                        *partition_cases.get((scope.source, scope.register_key), ()),
+                    )
+                }
+            )
+            for scope in scopes
+        ),
+        naming,
     )
     for key, values in matrix_cases.items():
         cases[key].extend(values)

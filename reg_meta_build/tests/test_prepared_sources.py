@@ -373,7 +373,20 @@ def test_native_family_register_filter_preserves_grouping_and_order(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     revision = _revision("source-a", "a")
-    first = _record(revision, row=1, member="First", raw_value="First")
+    first = _record(
+        revision,
+        row=1,
+        member="First",
+        raw_value="First",
+        fields=SourceFields(
+            name=value_field("First"),
+            definition=value_field("Exact supplied definition"),
+            operational_definition=value_field("Exact supplied operation"),
+            measurement_unit=value_field("100-tal kronor"),
+            source_attribution=value_field("Supplied origin"),
+            data_length=value_field("8"),
+        ),
+    )
     second = _record(revision, row=2, member="Second", raw_value="Second")
     other_subject = second.subject.model_copy(
         update={"register_name": SourceCoordinate(status="value", name="other")}
@@ -487,6 +500,9 @@ def test_native_family_register_filter_preserves_grouping_and_order(
         key for key, _ in expected
     )
     for (_, projected), (_, complete) in zip(partition_families, expected, strict=True):
+        assert tuple(item.fields for item in projected) == tuple(
+            item.fields for item in complete
+        )
         assert tuple(
             (
                 item.source,

@@ -9590,3 +9590,13 @@ support = [{"ref" = {"source" = "scb-registerinformation", "semantic_record_key"
 columns = [{"variant_key" = ["scb-registerinformation", "scb", "register", "native-int", 25, "variant", "native-int", 763], "column" = "SKTOTF", "valid_from" = "1983-01-01", "valid_to" = "1992-12-31", "expected_codings" = []}, {"variant_key" = ["scb-registerinformation", "scb", "register", "native-int", 25, "variant", "native-int", 763], "column" = "STOTEXH", "valid_from" = "1993-01-01", "valid_to" = "1997-12-31", "expected_codings" = []}]
 evidence = "Retain the exact positively supplied literal measurement unit on each original delivery. No value scaling, guessed currency, statistical equivalence, or formula backfill. Unspecified original sickness-benefit and final-tax formulas remain unspecified; no gap is filled. Complete original fields, native-family peers and source coding are guarded."
 noted = "2026-09-30"
+
+[[coding.sentinel]]
+variable = "25.8189.utbildningens-niva-och-inriktning"
+variant = "25.763"
+column = "BSUN"
+classification = "sun1996"
+periods = [["1996-01-01", "1996-12-31"]]
+members = [["90000", "Okänt"], ["[NULL]", "Okänt värde"]]
+reason = "Preserve the two exactly supplied unknown values as local classification sentinels in1996 only."
+source = "HistoricalSUN7 complete pinned IoT audit: native member589237 explicitly supplies90000=Okänt and[NULL]=Okänt värde underSUN1996. Other six reviewed years use different source meanings and70 noncanonical codes; they remain unbound. Preserve all complete domains, original fields/scopes/ordered associations and canonical book bytes; no global sentinel widening, scaling, label correction or historical version transplant."

@@ -875,12 +875,7 @@ def _read_partition_record(
         edition_scope=payload(row["scope_payload"], "scope"),
         edition_period_scope=payload(row["period_payload"], "scope"),
         locators=(_NamingLocator(tuple(json.loads(row["semantic_key"]))),),
-        fields=SourceFields.model_construct(
-            column_name=fields.column_name,
-            name=fields.name,
-            description=fields.description,
-            data_type=fields.data_type,
-        ),
+        fields=fields,
     )
 
 

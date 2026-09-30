@@ -4227,6 +4227,108 @@ def test_selected_classification_variable_binding_has_exact_status(tmp_path):
     assert [issue.code for issue in stale.diagnostics] == ["stale_curation_entry"]
 
 
+def test_delivery_units_use_fresh_partition_cases_without_duplicate_emission(tmp_path):
+    from reg_meta_build.curation_tree import DeliveryUnitEntry
+    from reg_meta_build.source_curation import DeliveryUnitColumn
+
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/scb/sample.toml"
+    path.write_text(
+        path.read_text()
+        + '[[variable]]\nnative_id = "1.5.ku"\nslug = "ku"\n'
+        + '[[variable]]\nnative_id = "1.5.agi"\nslug = "agi"\n'
+        + '[[identity.partition]]\nvariable = "1.5"\n'
+        + 'columns = { KU = "1.5.ku", AGI = "1.5.agi" }\ncolumns_ref = "fixture"\n'
+    )
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={
+                        "name": value_field("Income"),
+                        "definition": value_field("Supplied income quantity"),
+                        "measurement_unit": value_field("100-tal kronor"),
+                    }
+                )
+            }
+        )
+        for record in _scb_partition_records(("KU", "AGI"))
+    )
+    target = records[0]
+    bounds = target.edition_period_scope.intervals[0]
+    entry = DeliveryUnitEntry(
+        variable="1.5.ku",
+        records=list(
+            capture_expectations(
+                (target,),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+        support=list(
+            capture_expectations(
+                records[1:],
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+        columns=[
+            DeliveryUnitColumn(
+                variant_key=native_variant_key(target),
+                column="KU",
+                valid_from=bounds.start,
+                valid_to=bounds.end,
+                expected_codings=(),
+            )
+        ],
+        evidence="Exact supplied KU quantity; AGI remains separate",
+        noted="2026-09-30",
+    )
+    tree = load_curation_tree(root)
+    register = next(r for r in tree.registers if r.register_info.slug == "sample")
+    register = register.model_copy(
+        update={
+            "representation": register.representation.model_copy(
+                update={"delivery_unit": [entry]}
+            )
+        }
+    )
+    tree = replace(
+        tree,
+        registers=tuple(
+            register if r.register_info.slug == "sample" else r for r in tree.registers
+        ),
+    )
+    native = native_variable_key(target)
+    register_key = source_register_key(target)
+
+    class Records:
+        def iter_native_families(self, source, registers=None, select_family=None):
+            return iter(((native, records),))
+
+        def iter_records(self, *, source):
+            return iter(records)
+
+        def iter_register_slices(self, source, registers):
+            return iter(((register_key, records),))
+
+    prepared = _prepared()
+    prepared.records = _naming_reader(Records())
+    scope = CompiledScope(source=target.source, register_key=register_key)
+    compiled = compile_curation(tree, prepared, (scope,), subset=True)
+    cases = compiled.cases[scope.source, scope.register_key]
+    assert [case.decision.kind for case in cases] == [
+        "correct_occurrences",
+        "delivery_unit",
+    ]
+    assert len({case.case_id for case in cases}) == 2
+    assert scope.cases == ()
+    assert not any("delivery_unit" in (d.case_id or "") for d in compiled.diagnostics)
+
+
 def test_classification_binding_matches_partition_produced_name(tmp_path: Path) -> None:
     root = tmp_path / "curation"
     _tree(root)
