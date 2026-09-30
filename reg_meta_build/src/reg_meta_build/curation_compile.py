@@ -27,6 +27,7 @@ from .cis2016_matrix import (
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import (
     CodingDocumentedEntry,
+    CodingEntry,
     CodingSentinelEntry,
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
@@ -59,6 +60,7 @@ from .resolved_metadata import (
     ResolvedVariantSuccession,
 )
 from .scb_errata import (
+    ErrataVariantContext,
     convert_column_entry,
     convert_delivered_entry,
     edition_bindings,
@@ -87,6 +89,7 @@ from .source_curation import (
     ColumnRepresentation,
     CuratedOccurrenceAddition,
     CurationCase,
+    DeliveryUnitDecision,
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
@@ -96,8 +99,9 @@ from .source_curation import (
     SourceRecordRef,
     _field_matches,
     capture_expectations,
+    evaluate_cases,
 )
-from .source_effects import record_ref
+from .source_effects import apply_occurrence_cases, record_ref
 from .source_intervals import coding_scope_bounds, scope_bounds
 from .source_naming import (
     AcceptedNamingEntry,
@@ -614,7 +618,13 @@ def _column_partition_plan(
         }
         unassigned = tuple(
             sorted(
-                column for column, owner in declared_columns.items() if owner is None
+                column
+                for column, owner in declared_columns.items()
+                if owner is None
+                and any(
+                    (record_ref(record), column) not in scoped_owners
+                    for record in columns[column]
+                )
             )
         )
     elif declaration_reference is not None:
@@ -982,6 +992,21 @@ def compile_period_families(
                 _stale_partition(ref, entry.family_stem, "no month members")
             )
             continue
+        if entry.expected_definitions is not None and any(
+            _literal_field(record, "definition")
+            != entry.expected_definitions[f"{month:02}"]
+            for months in groups.values()
+            for month, members in months.items()
+            for record in members
+        ):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.family_stem,
+                    "literal monthly definitions disagree with the complete reviewed map",
+                )
+            )
+            continue
         family_key = (
             "curation",
             "period-family",
@@ -989,6 +1014,22 @@ def compile_period_families(
             register.register_info.slug,
             entry.family_stem,
         )
+        if entry.expected_definitions is not None and any(
+            set(months) != set(range(1, 13))
+            or any(
+                len({_literal_field(r, "column_name") for r in members}) != 1
+                for members in months.values()
+            )
+            for months in groups.values()
+        ):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.family_stem,
+                    "reviewed definition family lacks one exact column for every month",
+                )
+            )
+            continue
         named_members = []
         for (variant, year), months in sorted(
             groups.items(), key=lambda item: repr(item[0])
@@ -1018,9 +1059,12 @@ def compile_period_families(
                     "data_type",
                     "data_length",
                     "operational_definition",
+                    "source_attribution",
+                    "definition",
                     "name",
                 ),
                 coding=True,
+                parents=True,
             )
             guards = _matrix_repr_guards(members, identity_id)
             effects = tuple(
@@ -1060,6 +1104,9 @@ def compile_period_families(
                         reviewed=True,
                         variable_key=family_key,
                         variant_key=variant,
+                        column_metadata="per_column"
+                        if entry.expected_definitions is not None
+                        else "shared",
                         valid_from=f"{year}-01-01",
                         valid_to=f"{year}-12-31",
                         columns=tuple(
@@ -1108,6 +1155,175 @@ def compile_period_families(
                 )
             )
     return tuple(cases), tuple(names), tuple(keys), tuple(diagnostics)
+
+
+def compile_delivery_units(
+    register: RegisterCuration,
+    records: tuple[SourceRecord, ...],
+    naming: tuple[NamingDeclaration, ...],
+    *,
+    ownership_cases: tuple[CurationCase, ...],
+) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
+    """Authorize exact literal units only for completely pinned accepted owners."""
+    if not register.representation.delivery_unit:
+        return (), ()
+    cases = []
+    diagnostics = []
+    unit_names = {entry.variable for entry in register.representation.delivery_unit}
+    owner_keys = {
+        name.target.source_key
+        for name in naming
+        if name.target.kind == "variable" and name.naming.source_id in unit_names
+    }
+    identities = tuple(
+        case
+        for case in ownership_cases
+        if isinstance(case.decision, OccurrenceCorrectionDecision)
+        and any(
+            isinstance(effect, CheckedIdentityChange)
+            and effect.variable_key in owner_keys
+            for effect in case.decision.effects
+        )
+    )
+    corrected = apply_occurrence_cases(records, identities)
+    if corrected.diagnostics:
+        return (), tuple(
+            _stale_partition(
+                f"{register.source_file}#/representation.delivery_unit",
+                repr(key),
+                "checked effective unit ownership is stale",
+            )
+            for key in sorted(owner_keys, key=repr)
+        )
+    for index, entry in enumerate(register.representation.delivery_unit, 1):
+        ref = f"{register.source_file}#/representation.delivery_unit/{index}"
+        declarations = tuple(
+            name
+            for name in naming
+            if name.target.kind == "variable"
+            and name.naming.source_id == entry.variable
+            and name.naming.provider == register.register_info.provider
+        )
+        keys = {name.target.source_key for name in declarations}
+        if len(keys) != 1:
+            diagnostics.append(
+                _stale_partition(ref, entry.variable, "unit owner is not unique")
+            )
+            continue
+        key = next(iter(keys))
+        owned = tuple(
+            record
+            for occurrence in corrected.occurrences
+            if occurrence.variable_key == key
+            for record in occurrence.source_records
+        )
+        if {record_ref(record) for record in owned} != {
+            target.ref for target in entry.records
+        }:
+            diagnostics.append(
+                _stale_partition(
+                    ref, entry.variable, "complete accepted unit owner changed"
+                )
+            )
+            continue
+        supplied_windows = {}
+        unsupported_scope = False
+        for record in owned:
+            bounds = coding_scope_bounds(
+                record.edition_period_scope
+                if record.edition_period_scope.kind != "not_applicable"
+                else record.edition_scope
+            )
+            if not bounds:
+                unsupported_scope = True
+                continue
+            coordinate = (
+                native_variant_key(record),
+                _literal_field(record, "column_name"),
+            )
+            supplied_windows.setdefault(coordinate, []).extend(bounds)
+        authored_windows = {
+            (column.variant_key, column.column): column for column in entry.columns
+        }
+        if (
+            unsupported_scope
+            or len(authored_windows) != len(entry.columns)
+            or set(authored_windows) != set(supplied_windows)
+            or any(
+                (
+                    date.fromisoformat(column.valid_from).toordinal(),
+                    date.fromisoformat(column.valid_to).toordinal(),
+                )
+                != (
+                    min(start for start, _ in supplied_windows[coordinate]),
+                    max(end for _, end in supplied_windows[coordinate]),
+                )
+                for coordinate, column in authored_windows.items()
+            )
+        ):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.variable,
+                    "exact complete source-column unit windows changed",
+                )
+            )
+            continue
+        guards = []
+        all_expected = (*entry.records, *entry.support)
+        native_families = {
+            (
+                record.source,
+                record.subject.native.register_id,
+                record.subject.native.variable_id,
+            )
+            for record in records
+            if record_ref(record) in {item.ref for item in all_expected}
+        }
+        for source, register_id, variable_id in sorted(native_families, key=repr):
+            peers = tuple(
+                record
+                for record in records
+                if record.source == source
+                and record.subject.native.register_id == register_id
+                and record.subject.native.variable_id == variable_id
+            )
+            peer_refs = {record_ref(record) for record in peers}
+            authored = {item.ref for item in all_expected if item.ref in peer_refs}
+            guards.append(
+                PeerGuard(
+                    guard_id=f"{ref}:{source}:{register_id}:{variable_id}",
+                    source=source,
+                    native=NativeCoordinates(
+                        register_id=register_id, variable_id=variable_id
+                    ),
+                    expected_members=tuple(sorted(authored, key=repr)),
+                )
+            )
+        case = CurationCase(
+            case_id=ref,
+            targets=tuple(entry.records),
+            support=tuple(entry.support),
+            peer_guards=tuple(guards),
+            decision=DeliveryUnitDecision(
+                reviewed=True,
+                variable_key=key,
+                columns=tuple(entry.columns),
+                reason=entry.evidence,
+                provenance=f"{ref}: {entry.noted}: {entry.evidence}",
+            ),
+        )
+        if evaluate_cases((case,), records)[0].status != "applicable":
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.variable,
+                    "checked unit source projections or family peers changed",
+                )
+            )
+            continue
+        cases.append(case)
+    return tuple(cases), tuple(diagnostics)
 
 
 def compile_parallel_representations(
@@ -1445,6 +1661,7 @@ def compile_matrix_repr(
             registers[name].representation.period_family
             or registers[name].representation.alias_window
             or registers[name].representation.parallel
+            or registers[name].representation.delivery_unit
             or name == "scb/innovation-foretag"
         )
         for scope in scopes
@@ -1478,6 +1695,7 @@ def compile_matrix_repr(
                     registers[name].representation.period_family
                     or registers[name].representation.alias_window
                     or registers[name].representation.parallel
+                    or registers[name].representation.delivery_unit
                     or name == "scb/innovation-foretag"
                 )
             )
@@ -1590,6 +1808,15 @@ def compile_matrix_repr(
                 )
                 cases[scope_key].extend(parallel_cases)
                 diagnostics.extend(parallel_issues)
+                unit_cases, unit_issues = compile_delivery_units(
+                    register,
+                    records,
+                    (*naming.get(scope_key, ()), *names[scope_key]),
+                    ownership_cases=scope.cases,
+                )
+                cases[scope_key].extend(unit_cases)
+                diagnostics.extend(unit_issues)
+
     return (
         {key: tuple(value) for key, value in cases.items()},
         {key: tuple(value) for key, value in names.items()},
@@ -3295,7 +3522,12 @@ def compile_edition_splits(
             source_variant = native_variant_key(records[0])
             assert source_variant is not None
             split_key = (*source_variant, "edition-split", entry.split.split(".")[2])
-            targets = capture_expectations(selected, fields=())
+            targets = capture_expectations(
+                selected,
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
             first = records[0]
             cases[scope_key].append(
                 CurationCase(
@@ -3796,6 +4028,24 @@ def _compile_thin_register(
     return tuple(cases)
 
 
+def coding_entry_windows(entry: CodingEntry) -> tuple[tuple[str, str], ...]:
+    """Normalize authored periods and exact supplied documentary scope alike."""
+    source_scope = (
+        entry.source_authority.source_scope
+        if isinstance(entry, CodingDocumentedEntry)
+        and entry.source_authority is not None
+        else None
+    )
+    if source_scope is not None:
+        bounds = coding_scope_bounds(source_scope)
+        assert bounds is not None and len(bounds) == 1
+        lower, upper = bounds[0]
+        return (
+            (date.fromordinal(lower).isoformat(), date.fromordinal(upper).isoformat()),
+        )
+    return tuple((start, end) for start, end in entry.periods)
+
+
 def compile_coding_register(
     register: RegisterCuration,
     scope: CompiledScope,
@@ -3828,17 +4078,13 @@ def compile_coding_register(
     ):
         for index, entry in enumerate(entries, 1):
             ref = f"{register.source_file}#/coding.{kind}/{index}"
-            periods = entry.periods
+            periods = coding_entry_windows(entry)
             source_scope = (
                 entry.source_authority.source_scope
                 if isinstance(entry, CodingDocumentedEntry)
                 and entry.source_authority is not None
                 else None
             )
-            if source_scope is not None:
-                bounds = coding_scope_bounds(source_scope)
-                assert bounds is not None and len(bounds) == 1
-                periods = [[date.fromordinal(bound).isoformat() for bound in bounds[0]]]
             variables = {
                 item.target.source_key
                 for item in scope.naming
@@ -4640,6 +4886,7 @@ def compile_errata(
             for edition in bound_editions.get(variant_id, ()):
                 if edition.native_id is not None and edition.name in split.editions:
                     moved_editions[edition.key] = (edition.name, split.split)
+        variant_contexts: dict[int, ErrataVariantContext] = {}
         for index, row in enumerate(register.errata.version, 1):
             case_id = f"{register.source_file}#/errata.version/{index}"
             statuses["entries_read"].append(case_id)
@@ -4770,30 +5017,39 @@ def compile_errata(
                 ):
                     blockers = ("declared column has no tracked slug",)
                     converted = None
-                elif table == "delivered":
-                    entry = delivered[register_id, variant_id, fold_column(row.column)]
-                    result = convert_delivered_entry(
-                        entry,
-                        case_id=case_id,
-                        records=members,
-                        editions=editions,
-                        steward_table_prefixes=register.register_info.steward_table_prefixes,
-                        storage_columns=register_storage_columns,
-                    )
-                    blockers, converted = result.blockers, result.case
                 else:
-                    entry = columns[register_id, variant_id, fold_column(row.column)]
-                    result = convert_column_entry(
-                        entry,
-                        case_id=case_id,
-                        records=members,
-                        editions=editions,
-                        declared_flags=frozenset(row.model_fields_set)
-                        & {"is_identifier", "is_sensitive"},
-                        steward_table_prefixes=register.register_info.steward_table_prefixes,
-                        storage_columns=register_storage_columns,
-                    )
-                    blockers, converted = result.blockers, result.case
+                    context = variant_contexts.get(variant_id)
+                    if context is None:
+                        context = ErrataVariantContext(
+                            members, register_id, variant_id, editions
+                        )
+                        variant_contexts[variant_id] = context
+                    if table == "delivered":
+                        entry = delivered[
+                            register_id, variant_id, fold_column(row.column)
+                        ]
+                        result = convert_delivered_entry(
+                            entry,
+                            case_id=case_id,
+                            context=context,
+                            steward_table_prefixes=register.register_info.steward_table_prefixes,
+                            storage_columns=register_storage_columns,
+                        )
+                        blockers, converted = result.blockers, result.case
+                    else:
+                        entry = columns[
+                            register_id, variant_id, fold_column(row.column)
+                        ]
+                        result = convert_column_entry(
+                            entry,
+                            case_id=case_id,
+                            context=context,
+                            declared_flags=frozenset(row.model_fields_set)
+                            & {"is_identifier", "is_sensitive"},
+                            steward_table_prefixes=register.register_info.steward_table_prefixes,
+                            storage_columns=register_storage_columns,
+                        )
+                        blockers, converted = result.blockers, result.case
                 if converted is None:
                     overbroad = any("ambiguous" in blocker for blocker in blockers)
                     statuses["over_broad" if overbroad else "stale"].append(case_id)

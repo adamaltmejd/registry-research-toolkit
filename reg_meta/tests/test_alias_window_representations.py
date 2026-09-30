@@ -437,11 +437,11 @@ def test_column_metadata_preserves_literal_values_and_explicit_nulls(
     write_conn = sqlite3.connect(db)
     try:
         write_conn.execute(
-            "UPDATE variable_state SET operational_definition = 'Canonical operation', source_register_text = 'Canonical source' WHERE variable_id = 1"
+            "UPDATE variable_state SET definition = 'Canonical definition', measurement_unit = '100-tals kronor', operational_definition = 'Canonical operation', source_register_text = 'Canonical source' WHERE variable_id = 1"
         )
         if mode == "per_column":
             write_conn.execute(
-                "UPDATE variable_alias_window SET column_metadata = 'per_column', data_type = 'integer', data_length = '3', operational_definition = 'Physical operation', source_register_text = 'Physical source' WHERE delivery_column_name = ?",
+                "UPDATE variable_alias_window SET column_metadata = 'per_column', data_type = 'integer', data_length = '3', definition = 'Physical definition', measurement_unit = 'Kronor (SEK)', operational_definition = 'Physical operation', source_register_text = 'Physical source' WHERE delivery_column_name = ?",
                 (_ALIASES[0],),
             )
             write_conn.execute(
@@ -461,16 +461,35 @@ def test_column_metadata_preserves_literal_values_and_explicit_nulls(
                 s.data_length,
                 s.operational_definition,
                 s.source_register_text,
+                s.definition,
+                s.measurement_unit,
             )
             for s in states
         ]
         assert fields == (
             [
-                ("integer", "3", "Physical operation", "Physical source"),
-                (None, None, None, None),
+                (
+                    "integer",
+                    "3",
+                    "Physical operation",
+                    "Physical source",
+                    "Physical definition",
+                    "Kronor (SEK)",
+                ),
+                (None, None, None, None, None, None),
             ]
             if mode == "per_column"
-            else [("integer", "1", None, "Canonical source")] * 2
+            else [
+                (
+                    "integer",
+                    "1",
+                    None,
+                    "Canonical source",
+                    "Canonical definition",
+                    "100-tals kronor",
+                )
+            ]
+            * 2
         )
         assert all(s.value_set_id == 1 and len(s.value_set) == 2 for s in states)
         if mode == "per_column":
@@ -482,13 +501,39 @@ def test_column_metadata_preserves_literal_values_and_explicit_nulls(
                 if c["variable_id"] == 1
             ]
             assert [
-                (c["operational_definition"], c["source_register_text"])
+                (
+                    c["operational_definition"],
+                    c["source_register_text"],
+                    c["definition"],
+                    c["measurement_unit"],
+                )
                 for c in columns
-            ] == [("Physical operation", "Physical source"), (None, None)]
+            ] == [
+                (
+                    "Physical operation",
+                    "Physical source",
+                    "Physical definition",
+                    "Kronor (SEK)",
+                ),
+                (None, None, None, None),
+            ]
             instances = get_varinfo(conn, _ALIASES[0])[0]["instances"]
             assert [
-                (s["operational_definition"], s["source_register_text"])
+                (
+                    s["operational_definition"],
+                    s["source_register_text"],
+                    s["definition"],
+                    s["measurement_unit"],
+                )
                 for s in instances
-            ] == [("Physical operation", "Physical source"), (None, None)]
+            ] == [
+                (
+                    "Physical operation",
+                    "Physical source",
+                    "Physical definition",
+                    "Kronor (SEK)",
+                ),
+                (None, None, None, None),
+            ]
     finally:
         conn.close()

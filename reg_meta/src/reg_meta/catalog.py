@@ -756,6 +756,9 @@ class VariableState(_CatalogModel):
     # multi-response members may share one variable/value set while each delivery
     # column has its own meaning.
     operational_definition: str | None = None
+    # Exact source definition at this delivery; checked month families may differ.
+    definition: str | None = None
+    measurement_unit: str | None = None
     provenance: str | None = Field(
         description="NULL for an ordinary provider-documented interval. SCB "
         "corrections use `errata:<class>\\n<evidence>`; when a corrected source "
@@ -1255,6 +1258,8 @@ type _StoredAliasWindow = tuple[
     str,
     str | None,
     str,
+    str | None,
+    str | None,
     str | None,
     str | None,
     str | None,
@@ -2850,7 +2855,7 @@ class Catalog:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.operational_definition, vs.provenance, vs.pooled, vs.value_set_id, "
+                "vs.operational_definition, vs.definition, vs.measurement_unit, vs.provenance, vs.pooled, vs.value_set_id, "
                 "vs.value_set_version_label, vs.period_scope, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
@@ -2876,7 +2881,7 @@ class Catalog:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.operational_definition, vs.provenance, vs.pooled, vs.value_set_id, "
+                "vs.operational_definition, vs.definition, vs.measurement_unit, vs.provenance, vs.pooled, vs.value_set_id, "
                 "vs.value_set_version_label, vs.period_scope, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
@@ -3064,6 +3069,8 @@ class Catalog:
             delivery_column_name=row["delivery_column_name"],
             source_register_text=row["source_register_text"],
             operational_definition=row["operational_definition"],
+            definition=row["definition"],
+            measurement_unit=row["measurement_unit"],
             provenance=row["provenance"],
             pooled=bool(row["pooled"]),
             value_set_version_label=row["value_set_version_label"],
@@ -3110,7 +3117,7 @@ class Catalog:
         """`variable_alias_window` rows (#319/#945/Y-132) grouped by
         `register_variant_id` → [(delivery_column_name, valid_from, valid_to,
         provenance, column_metadata, data_type, data_length, operational_definition,
-        source_register_text, coding_metadata,
+        source_register_text, definition, measurement_unit, coding_metadata,
         value_set_id, value_set_version_label), …] sorted by window start.
         EMPTY for variables with no resolver-visible alias representations, so expansion is a no-op there.
         One indexed point-lookup on `idx_variable_alias_window_lookup`."""
@@ -3126,13 +3133,15 @@ class Catalog:
             length,
             operation,
             source_text,
+            definition,
+            unit,
             coding_mode,
             value_set_id,
             version_label,
         ) in self._conn.execute(
             "SELECT register_variant_id, delivery_column_name, valid_from, valid_to, "
             "provenance, column_metadata, data_type, data_length, "
-            "operational_definition, source_register_text, "
+            "operational_definition, source_register_text, definition, measurement_unit, "
             "coding_metadata, value_set_id, value_set_version_label "
             "FROM variable_alias_window WHERE variable_id = ? "
             "ORDER BY register_variant_id, valid_from, delivery_column_name",
@@ -3149,6 +3158,8 @@ class Catalog:
                     length,
                     operation,
                     source_text,
+                    definition,
+                    unit,
                     coding_mode,
                     value_set_id,
                     version_label,
@@ -3208,6 +3219,8 @@ class Catalog:
                 length,
                 operation,
                 source_text,
+                definition,
+                unit,
                 coding_mode,
                 value_set_id,
                 version_label,
@@ -3228,6 +3241,8 @@ class Catalog:
                             "data_length": length,
                             "operational_definition": operation,
                             "source_register_text": source_text,
+                            "definition": definition,
+                            "measurement_unit": unit,
                         }
                         if mode == "per_column"
                         else {}
@@ -3265,7 +3280,7 @@ class Catalog:
             windows = windows_by_variant.get(row["register_variant_id"], [])
             state_windows: list[_StoredAliasWindow] = []
             for window in windows:
-                if window[4] == "per_column" or window[9] == "per_column":
+                if window[4] == "per_column" or window[11] == "per_column":
                     # One physical column window may span successive coding states.
                     start, end = (
                         max(base.valid_from, window[1]),
@@ -3276,10 +3291,10 @@ class Catalog:
                 elif base.valid_from <= window[1] and window[2] <= base.valid_to:
                     state_windows.append(window)
             source_windows = [
-                w for w in state_windows if w[3] is None or w[9] == "per_column"
+                w for w in state_windows if w[3] is None or w[11] == "per_column"
             ]
             curated_windows = [
-                w for w in state_windows if w[3] is not None and w[9] != "per_column"
+                w for w in state_windows if w[3] is not None and w[11] != "per_column"
             ]
             has_source_base = base.delivery_column_name is not None and any(
                 window[0].lower() == base.delivery_column_name.lower()

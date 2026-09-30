@@ -2838,3 +2838,18 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
         "2008-12-31",
     )
     assert {c.column for c in participating.columns} == {"GenomHsKod", "MedverkHsKod"}
+
+    units = [
+        entry
+        for register in tree.registers
+        for entry in register.representation.delivery_unit
+    ]
+    assert {entry.variable for entry in units} == {
+        "25.39431",
+        "34.16249.ku1ink",
+        "34.31290.ku3ink",
+        "34.31395",
+    }
+    assert len(units) == 4
+    assert sum(len(entry.columns) for entry in units) == 7
+    assert sum(len(entry.records) for entry in units) == 105

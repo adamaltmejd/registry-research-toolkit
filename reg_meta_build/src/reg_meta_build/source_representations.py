@@ -24,12 +24,15 @@ from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_coordinates import column_identity
 from reg_meta_build.source_curation import (
     CurationCase,
+    DeliveryUnitColumn,
+    DeliveryUnitDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
+from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -59,15 +62,26 @@ def resolve_representation_cases(
     if len({c.case_id for c in ordered}) != len(ordered):
         raise ValueError("representation case IDs must be unique")
     for case in ordered:
-        if not isinstance(case.decision, RepresentationDecision):
+        if not isinstance(
+            case.decision, (RepresentationDecision, DeliveryUnitDecision)
+        ):
             raise TypeError(
                 "representation resolution requires representation decisions"
             )
         decision = case.decision
+        if isinstance(decision, DeliveryUnitDecision):
+            decision.require_targets(case.targets)
         for column in decision.columns:
+            if isinstance(decision, DeliveryUnitDecision):
+                assert isinstance(column, DeliveryUnitColumn)
+                variant_key = column.variant_key
+            else:
+                variant_key = decision.variant_key
             if (
                 column_identity(
-                    decision.variable_key, decision.variant_key, column.column
+                    decision.variable_key,
+                    variant_key,
+                    column.column,
                 )
                 not in coding
             ):
@@ -78,7 +92,19 @@ def resolve_representation_cases(
         for target in (*case.targets, *case.support):
             _require_checked(
                 target,
-                ("column_name", "data_type", "data_length", "operational_definition"),
+                tuple(SourceFields.model_fields)
+                if isinstance(decision, DeliveryUnitDecision)
+                else (
+                    "column_name",
+                    "data_type",
+                    "data_length",
+                    "operational_definition",
+                )
+                + (
+                    ("definition", "measurement_unit", "source_attribution")
+                    if decision.column_metadata == "per_column"
+                    else ()
+                ),
                 case_id=case.case_id,
             )
             if target.ref not in guarded or any(
@@ -92,15 +118,25 @@ def resolve_representation_cases(
     applicable = []
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
-        assert isinstance(decision, RepresentationDecision)
+        assert isinstance(decision, (RepresentationDecision, DeliveryUnitDecision))
         coding_changed = []
-        if decision.coding_metadata == "per_column":
-            lower = date.fromisoformat(decision.valid_from).toordinal()
-            upper = date.fromisoformat(decision.valid_to).toordinal()
+        if (
+            isinstance(decision, DeliveryUnitDecision)
+            or decision.coding_metadata == "per_column"
+        ):
             for column in decision.columns:
+                if isinstance(decision, DeliveryUnitDecision):
+                    assert isinstance(column, DeliveryUnitColumn)
+                    variant_key = column.variant_key
+                else:
+                    variant_key = decision.variant_key
+                lower = date.fromisoformat(column.valid_from).toordinal()
+                upper = date.fromisoformat(column.valid_to).toordinal()
                 resolution = coding[
                     column_identity(
-                        decision.variable_key, decision.variant_key, column.column
+                        decision.variable_key,
+                        variant_key,
+                        column.column,
                     )
                 ]
                 claims = tuple(
@@ -121,8 +157,12 @@ def resolve_representation_cases(
                     detail=f"Complete source coding changed for literal columns {coding_changed!r}.",
                     refs=tuple(t.ref for t in (*case.targets, *case.support)),
                     fields=("coding",),
-                    valid_from=decision.valid_from,
-                    valid_to=decision.valid_to,
+                    valid_from=decision.valid_from
+                    if isinstance(decision, RepresentationDecision)
+                    else None,
+                    valid_to=decision.valid_to
+                    if isinstance(decision, RepresentationDecision)
+                    else None,
                     withheld_output=("representations",),
                 )
             )
@@ -139,8 +179,12 @@ def resolve_representation_cases(
                     applicability_issue=issue,
                     refs=tuple(t.ref for t in (*case.targets, *case.support)),
                     fields=("representations",),
-                    valid_from=decision.valid_from,
-                    valid_to=decision.valid_to,
+                    valid_from=decision.valid_from
+                    if isinstance(decision, RepresentationDecision)
+                    else None,
+                    valid_to=decision.valid_to
+                    if isinstance(decision, RepresentationDecision)
+                    else None,
                     withheld_output=("representations",),
                 )
             )
@@ -374,6 +418,8 @@ def form_representations(
                 column: {} for column in columns
             }
             for field in (
+                "definition",
+                "measurement_unit",
                 "data_type",
                 "data_length",
                 "operational_definition",
@@ -405,6 +451,10 @@ def form_representations(
                             fact_conflicts.append(
                                 (variant.slug, column, field, start, end)
                             )
+                    continue
+                if field == "definition":
+                    # Shared definition conflicts retain the existing variable-level error.
+                    # Only checked per-column mode preserves differing literal texts.
                     continue
                 if len(alternatives) != 1:
                     report(
@@ -505,6 +555,8 @@ def form_representations(
                     delivery_column_name=representative,
                     data_type=values["data_type"],
                     data_length=values["data_length"],
+                    definition=values["definition"],
+                    measurement_unit=values["measurement_unit"],
                     operational_definition=values["operational_definition"],
                     source_register_text=values["source_register_text"],
                     value_set=codes,

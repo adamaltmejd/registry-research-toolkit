@@ -5038,6 +5038,17 @@
             ],
             "title": "Data Type"
           },
+          "definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Definition"
+          },
           "delivery_column_name": {
             "anyOf": [
               {
@@ -5052,6 +5063,17 @@
           "is_identifier": {
             "title": "Is Identifier",
             "type": "boolean"
+          },
+          "measurement_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Measurement Unit"
           },
           "operational_definition": {
             "anyOf": [

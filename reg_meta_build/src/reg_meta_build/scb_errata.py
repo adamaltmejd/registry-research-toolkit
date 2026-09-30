@@ -10,8 +10,9 @@ from __future__ import annotations
 import functools
 import json
 import re
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
 from datetime import date
+from types import MappingProxyType
 from typing import TYPE_CHECKING, cast
 
 from reg_meta.source_evidence import canonical_sha256
@@ -54,7 +55,7 @@ from .sources.swecov_column_types import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Mapping, Sequence
     from pathlib import Path
 
     from .curation_tree import RegisterCuration
@@ -820,7 +821,7 @@ def _variant_records(
     register_id: int,
     variant_id: int,
     editions: tuple[ErrataEditionBinding, ...],
-) -> None:
+) -> tuple[SourceRecordRef, ...]:
     if not records or len({record.source for record in records}) != 1:
         raise ValueError("conversion requires a complete single-source variant slice")
     if any(
@@ -832,7 +833,8 @@ def _variant_records(
         raise ValueError(
             "source slice differs from the accepted errata register/variant"
         )
-    refs = {record_ref(record) for record in records}
+    ordered_refs = tuple(record_ref(record) for record in records)
+    refs = set(ordered_refs)
     if any(
         not edition.support or not set(edition.support) <= refs for edition in editions
     ):
@@ -840,13 +842,74 @@ def _variant_records(
             "edition bindings require checked evidence in the supplied slice"
         )
 
+    return ordered_refs
+
+
+@dataclass(frozen=True)
+class ErrataVariantContext:
+    """Validate one immutable source variant once; retain physical alternatives."""
+
+    records: tuple[SourceRecord, ...]
+    register_id: int
+    variant_id: int
+    editions: tuple[ErrataEditionBinding, ...]
+    by_column: Mapping[str, tuple[SourceRecord, ...]] = field(init=False, repr=False)
+    by_variable: Mapping[int | None, tuple[SourceRecord, ...]] = field(
+        init=False, repr=False
+    )
+    by_ref: Mapping[SourceRecordRef, tuple[tuple[int, SourceRecord], ...]] = field(
+        init=False, repr=False
+    )
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "records", tuple(self.records))
+        object.__setattr__(self, "editions", tuple(self.editions))
+        refs = _variant_records(
+            self.records, self.register_id, self.variant_id, self.editions
+        )
+        columns: dict[str, list[SourceRecord]] = {}
+        variables: dict[int | None, list[SourceRecord]] = {}
+        members: dict[SourceRecordRef, list[tuple[int, SourceRecord]]] = {}
+        for position, (record, ref) in enumerate(zip(self.records, refs, strict=True)):
+            column = _text(record, "column_name")
+            if column:
+                columns.setdefault(fold_column(column), []).append(record)
+            variables.setdefault(record.subject.native.variable_id, []).append(record)
+            members.setdefault(ref, []).append((position, record))
+        for name, values in (
+            ("by_column", columns),
+            ("by_variable", variables),
+            ("by_ref", members),
+        ):
+            object.__setattr__(
+                self,
+                name,
+                MappingProxyType({key: tuple(value) for key, value in values.items()}),
+            )
+
+    def require_coordinates(self, register_id: int, variant_id: int) -> None:
+        if (register_id, variant_id) != (self.register_id, self.variant_id):
+            raise ValueError(
+                "source slice differs from the accepted errata register/variant"
+            )
+
+    def records_for_refs(
+        self, references: set[SourceRecordRef]
+    ) -> tuple[SourceRecord, ...]:
+        return tuple(
+            record
+            for _, record in sorted(
+                (item for ref in references for item in self.by_ref.get(ref, ())),
+                key=lambda item: item[0],
+            )
+        )
+
 
 def convert_delivered_entry(
     entry: ErrataDelivered,
     *,
     case_id: str,
-    records: tuple[SourceRecord, ...],
-    editions: tuple[ErrataEditionBinding, ...],
+    context: ErrataVariantContext,
     steward_table_prefixes: tuple[str, ...] = (),
     storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> ErrataConversion:
@@ -856,16 +919,12 @@ def convert_delivered_entry(
     Its documented type and matching storage schemas supply widened type evidence.
     Proximity in time never proves flags or code membership.
     """
-    _variant_records(records, entry.register_id, entry.register_variant_id, editions)
+    context.require_coordinates(entry.register_id, entry.register_variant_id)
+    records, editions = context.records, context.editions
     for name in entry.versions:
         if not any(edition.name == name for edition in editions):
             raise ValueError(f"missing edition conversion binding: {name!r}")
-    documented = tuple(
-        record
-        for record in records
-        if (column := _text(record, "column_name"))
-        and fold_column(column) == fold_column(entry.column)
-    )
+    documented = context.by_column.get(fold_column(entry.column), ())
     if not documented:
         return ErrataConversion(None, ("no_documented_column_identity",), ())
     candidates = (
@@ -956,9 +1015,8 @@ def convert_delivered_entry(
             continue
         matching = tuple(
             record
-            for record in records
-            if record.subject.native.variable_id == native.variable_id
-            and (
+            for record in context.by_variable.get(native.variable_id, ())
+            if (
                 record.subject.native.edition_id == edition.native_id
                 if edition.native_id is not None
                 else record.edition_scope == edition.edition_scope
@@ -1048,7 +1106,7 @@ def convert_delivered_entry(
     # Documented type is a dependency: changing it makes the decision stale.
     # Flags and coding are never copied from adjacent editions.
     expected = capture_expectations(
-        tuple(record for record in records if record_ref(record) in required),
+        context.records_for_refs(required),
         fields=("column_name", "data_type"),
     )
     case = CurationCase(
@@ -1070,8 +1128,7 @@ def convert_column_entry(
     entry: ErrataColumn,
     *,
     case_id: str,
-    records: tuple[SourceRecord, ...],
-    editions: tuple[ErrataEditionBinding, ...],
+    context: ErrataVariantContext,
     declared_flags: frozenset[str],
     steward_table_prefixes: tuple[str, ...] = (),
     storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
@@ -1091,12 +1148,9 @@ def convert_column_entry(
     """
     if not declared_flags <= {"is_identifier", "is_sensitive"}:
         raise ValueError("declared_flags must name original boolean declaration keys")
-    _variant_records(records, entry.register_id, entry.register_variant_id, editions)
-    if any(
-        (column := _text(record, "column_name"))
-        and fold_column(column) == fold_column(entry.column)
-        for record in records
-    ):
+    context.require_coordinates(entry.register_id, entry.register_variant_id)
+    records, editions = context.records, context.editions
+    if context.by_column.get(fold_column(entry.column)):
         return ErrataConversion(None, ("column_now_documented",), ())
     names = set(entry.versions or ())
     missing = names - {edition.name for edition in editions}
@@ -1110,7 +1164,7 @@ def convert_column_entry(
         # This member establishes the native variant coordinate only. It says
         # nothing about when the independently declared column was delivered.
         references.add(record_ref(records[0]))
-    anchors = tuple(record for record in records if record_ref(record) in references)
+    anchors = context.records_for_refs(references)
     expected = capture_expectations(anchors, fields=("availability",))
     guards = [
         PeerGuard(

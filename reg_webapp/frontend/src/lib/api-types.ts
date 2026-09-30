@@ -3158,10 +3158,14 @@ export interface components {
             data_length: string | null;
             /** Data Type */
             data_type: string | null;
+            /** Definition */
+            definition?: string | null;
             /** Delivery Column Name */
             delivery_column_name: string | null;
             /** Is Identifier */
             is_identifier: boolean;
+            /** Measurement Unit */
+            measurement_unit?: string | null;
             /** Operational Definition */
             operational_definition?: string | null;
             /**

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from contextlib import closing
-from dataclasses import replace
+from dataclasses import FrozenInstanceError, replace
 from typing import TYPE_CHECKING
 
 import pytest
@@ -23,6 +23,7 @@ from reg_meta_build.scb_errata import (
     ErrataColumn,
     ErrataDelivered,
     ErrataEditionBinding,
+    ErrataVariantContext,
     convert_column_entry,
     convert_delivered_entry,
 )
@@ -516,8 +517,7 @@ def test_column_declaration_preserves_only_supplied_flags_and_periods(
     converted = convert_column_entry(
         entry,
         case_id="column-1",
-        records=(record,),
-        editions=(binding,),
+        context=ErrataVariantContext((record,), 1, 2, (binding,)),
         declared_flags=frozenset({"is_sensitive"}),
     )
     assert converted.case is not None and converted.blockers == ()
@@ -556,8 +556,7 @@ def test_column_declaration_preserves_only_supplied_flags_and_periods(
     blocked = convert_column_entry(
         entry,
         case_id="column-1",
-        records=(record, documented),
-        editions=(binding,),
+        context=ErrataVariantContext((record, documented), 1, 2, (binding,)),
         declared_flags=frozenset({"is_sensitive"}),
     )
     assert blocked.case is None and blocked.blockers == ("column_now_documented",)
@@ -596,8 +595,7 @@ def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
     converted = convert_column_entry(
         entry,
         case_id="column-1",
-        records=(record,),
-        editions=(binding,),
+        context=ErrataVariantContext((record,), 1, 2, (binding,)),
         declared_flags=frozenset(),
     )
     assert converted.case is not None and converted.blockers == ()
@@ -707,8 +705,7 @@ def test_steward_storage_type_and_flags_preserve_curated_identifier() -> None:
     result = convert_column_entry(
         entry,
         case_id="column-storage",
-        records=(record,),
-        editions=(binding,),
+        context=ErrataVariantContext((record,), 1, 2, (binding,)),
         declared_flags=frozenset({"is_identifier"}),
         steward_table_prefixes=("CIS",),
         storage_columns=columns,
@@ -725,8 +722,7 @@ def test_steward_storage_type_and_flags_preserve_curated_identifier() -> None:
     missing = convert_column_entry(
         entry,
         case_id="column-storage",
-        records=(record,),
-        editions=(binding,),
+        context=ErrataVariantContext((record,), 1, 2, (binding,)),
         declared_flags=frozenset({"is_identifier"}),
         steward_table_prefixes=("NONE",),
         storage_columns=columns,
@@ -740,8 +736,7 @@ def test_steward_storage_type_and_flags_preserve_curated_identifier() -> None:
     curated = convert_column_entry(
         replace(entry, data_type="integer"),
         case_id="column-storage",
-        records=(record,),
-        editions=(binding,),
+        context=ErrataVariantContext((record,), 1, 2, (binding,)),
         declared_flags=frozenset({"is_identifier"}),
         steward_table_prefixes=("CIS",),
         storage_columns=_storage_columns(("CIS2016", "varchar")),
@@ -755,8 +750,7 @@ def test_steward_storage_type_and_flags_preserve_curated_identifier() -> None:
     mixed = convert_column_entry(
         entry,
         case_id="column-storage",
-        records=(record,),
-        editions=(binding,),
+        context=ErrataVariantContext((record,), 1, 2, (binding,)),
         declared_flags=frozenset({"is_identifier"}),
         steward_table_prefixes=("CIS",),
         storage_columns=_storage_columns(("CIS2004", "date"), ("CIS2012", "int")),
@@ -767,6 +761,7 @@ def test_steward_storage_type_and_flags_preserve_curated_identifier() -> None:
     assert addition.fields.data_type is None
     intervals = resolve_occurrence_intervals((addition,))
     assert intervals.segments
+    assert addition.variant_key is not None and addition.column_key is not None
     formed = form_native_variable(
         (addition,),
         register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
@@ -1779,20 +1774,91 @@ def _convert_delivered(
             native_variable_id=native_variable_id,
         ),
         case_id="accepted/delivered/0",
-        records=records,
-        editions=(
-            ErrataEditionBinding(
-                key=target.edition_key,
-                name=target_edition.original_period_text,
-                edition_scope=target.edition_scope,
-                edition_period_scope=target.edition_period_scope,
-                support=(record_ref(target_edition),),
-                native_id=target_edition.subject.native.edition_id,
+        context=ErrataVariantContext(
+            records,
+            1,
+            2,
+            (
+                ErrataEditionBinding(
+                    key=target.edition_key,
+                    name=target_edition.original_period_text,
+                    edition_scope=target.edition_scope,
+                    edition_period_scope=target.edition_period_scope,
+                    support=(record_ref(target_edition),),
+                    native_id=target_edition.subject.native.edition_id,
+                ),
             ),
         ),
         steward_table_prefixes=prefixes,
         storage_columns=storage_columns,
     )
+
+
+@pytest.mark.parametrize(
+    "invalid", ["empty", "coordinate", "mixed_source", "foreign_support"]
+)
+def test_errata_context_validates_complete_variant_evidence(invalid: str) -> None:
+    record = _record(column="VALUE")
+    original = source_occurrence(record)
+    assert original.edition_key is not None
+    binding = ErrataEditionBinding(
+        key=original.edition_key,
+        name="2020",
+        edition_scope=record.edition_scope,
+        edition_period_scope=record.edition_period_scope,
+        support=(record_ref(_record(cvid=99)),)
+        if invalid == "foreign_support"
+        else (record_ref(record),),
+        native_id=2020,
+    )
+    with pytest.raises(ValueError):
+        ErrataVariantContext(
+            ()
+            if invalid == "empty"
+            else (record, record.model_copy(update={"source": "other-source"}))
+            if invalid == "mixed_source"
+            else (record,),
+            99 if invalid == "coordinate" else 1,
+            2,
+            (binding,),
+        )
+
+
+def test_errata_context_preserves_physical_alternatives_and_edition_names() -> None:
+    first = _record(column="VALUE")
+    second = _record(column="value", data_type="varchar")
+    other = _record(variable=99, cvid=30, column="OTHER")
+    original = source_occurrence(first)
+    assert original.edition_key is not None
+    binding = ErrataEditionBinding(
+        key=original.edition_key,
+        name="2020",
+        edition_scope=first.edition_scope,
+        edition_period_scope=first.edition_period_scope,
+        support=(record_ref(first),),
+        native_id=2020,
+    )
+    records = (first, other, second, first)
+    context = ErrataVariantContext(records, 1, 2, (binding, binding))
+    assert context.records == records
+    assert context.editions == (binding, binding)
+    assert context.by_column["value"] == (first, second, first)
+    assert context.records_for_refs({record_ref(first)}) == (first, second, first)
+    for field_name in ("records", "editions"):
+        with pytest.raises(FrozenInstanceError):
+            setattr(context, field_name, ())
+    with pytest.raises(ValueError, match="register/variant"):
+        convert_delivered_entry(
+            ErrataDelivered(
+                register_id=99,
+                register_variant_id=2,
+                column="VALUE",
+                versions=("2020",),
+                provenance="errata:accepted\nExisting evidence",
+            ),
+            case_id="wrong-coordinate",
+            context=context,
+        )
 
 
 def test_converted_blank_target_sets_type_and_stays_source_guarded() -> None:
@@ -1921,6 +1987,7 @@ def test_delivered_without_evidence_stays_untyped_and_names_missing_evidence() -
     applied = apply_occurrence_cases((donor, edition), (result.case,))
     addition = next(item for item in applied.occurrences if item.occurrence_key)
     assert addition.fields.data_type is None
+    assert addition.variant_key is not None and addition.column_key is not None
     formed = form_native_variable(
         (addition,),
         register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),

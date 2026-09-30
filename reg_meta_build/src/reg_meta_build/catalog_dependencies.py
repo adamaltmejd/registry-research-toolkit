@@ -209,6 +209,8 @@ class CoverageObligation:
     attributions: tuple[str, ...] = ()
     coding_claim: tuple[ResolvedCodeSet | None, str | None] | None = None
     column_text_claim: tuple[str | None, str | None] | None = None
+    definition_claim: tuple[str, str | None] | None = None
+    measurement_unit_claim: tuple[str, str | None] | None = None
     period_scope: Literal["intervals", "year_independent"] = "intervals"
 
     def __post_init__(self) -> None:
@@ -435,6 +437,8 @@ def check_delivery_coverage(
             and not claimed_attributions
             and obligation.coding_claim is None
             and obligation.column_text_claim is None
+            and obligation.definition_claim is None
+            and obligation.measurement_unit_claim is None
             and not alias_cover
         ):
             losses.extend(ob_losses)
@@ -532,6 +536,8 @@ def check_delivery_coverage(
                             "valid_to": window.valid_to,
                             **(
                                 {
+                                    "definition": window.definition,
+                                    "measurement_unit": window.measurement_unit,
                                     "data_type": window.data_type,
                                     "data_length": window.data_length,
                                     "operational_definition": window.operational_definition,
@@ -575,6 +581,21 @@ def check_delivery_coverage(
                     )
                     candidates.setdefault(token, candidate)
         for state in candidates.values():
+            if (
+                obligation.measurement_unit_claim is not None
+                and state.measurement_unit != obligation.measurement_unit_claim[1]
+            ):
+                ob_facts.append(
+                    f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                    f"{scope_label} claimed by {refs}: literal delivery unit changed"
+                )
+            if (
+                obligation.definition_claim is not None
+                and state.definition != obligation.definition_claim[1]
+            ):
+                ob_facts.append(
+                    f"{obligation.fqid} {obligation.variant}/{obligation.column} {scope_label} claimed by {refs}: literal definition changed"
+                )
             if (
                 obligation.coding_claim is not None
                 and (state.value_set, state.value_set_version_label)

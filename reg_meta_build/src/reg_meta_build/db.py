@@ -500,6 +500,8 @@ CREATE TABLE variable_state (
     data_length TEXT,
     delivery_column_name TEXT,
     source_register_text TEXT,
+    definition TEXT,
+    measurement_unit TEXT,
     -- Per-state delivery-column meaning (#736). Parallel same-period
     -- multi-response members can share one variable and value set while each
     -- column carries a distinct SCB `VariabelOperationell_definition`.
@@ -660,6 +662,8 @@ CREATE TABLE variable_alias_window (
     -- projects it onto VariableState.provenance.
     provenance TEXT,
     column_metadata TEXT NOT NULL DEFAULT 'shared' CHECK (column_metadata IN ('shared', 'per_column')),
+    definition TEXT,
+    measurement_unit TEXT,
     data_type TEXT,
     data_length TEXT,
     operational_definition TEXT,
@@ -667,7 +671,7 @@ CREATE TABLE variable_alias_window (
     coding_metadata TEXT NOT NULL DEFAULT 'shared' CHECK (coding_metadata IN ('shared', 'per_column')),
     value_set_id INTEGER REFERENCES value_set(value_set_id),
     value_set_version_label TEXT NOT NULL DEFAULT '',
-    CHECK (column_metadata = 'per_column' OR (data_type IS NULL AND data_length IS NULL AND operational_definition IS NULL AND source_register_text IS NULL)),
+    CHECK (column_metadata = 'per_column' OR (data_type IS NULL AND data_length IS NULL AND operational_definition IS NULL AND source_register_text IS NULL AND definition IS NULL AND measurement_unit IS NULL)),
     CHECK ((coding_metadata = 'shared' AND value_set_id IS NULL AND value_set_version_label = '')
         OR (coding_metadata = 'per_column' AND value_set_id IS NOT NULL)),
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_name, valid_from)
@@ -685,7 +689,14 @@ SELECT
     v.register_id,
     v.provider_key,
     v.name,
-    v.definition,
+    COALESCE(v.definition, (
+        SELECT group_concat(definition, char(10)) FROM (
+            SELECT definition FROM variable_state WHERE variable_id = v.variable_id AND definition IS NOT NULL
+            UNION
+            SELECT definition FROM variable_alias_window WHERE variable_id = v.variable_id AND definition IS NOT NULL
+            ORDER BY definition
+        )
+    )) AS definition,
     v.description,
     v.operational_definition,
     (

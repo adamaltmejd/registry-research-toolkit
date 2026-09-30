@@ -360,6 +360,14 @@ Name-conditioned effects keep distinct originals at the same semantic source coo
 separate. This establishes concept ownership; it does not infer delivery
 interchangeability or fill missing file-role coordinates.
 
+Several `identity.edition_split` entries may partition one native variant into disjoint
+reviewed delivery roles. A source edition may have only one target, and each entry lists
+the complete native edition inventory through selected editions and its complement.
+Explicit source edition labels establish the role; unknown population definitions remain
+unknown. Frozen cases capture complete literal fields, parent declarations and coding
+references. Splitting delivery context changes neither variable ownership nor source
+periods or code domains.
+
 `[[errata.version]]` carries `variant`, `name`, `evidence`, and `noted`; it adds an
 undocumented register edition and requires a year-bearing SCB version name. Version era
 order follows the maximum year the edition claims, so adding a historical edition cannot
@@ -391,6 +399,13 @@ has one. If SCB ships an omitted row, the build fails with `scb_errata_now_prese
 Retire only the fixed edition from `versions`, or delete the entry when that was its
 last edition; do not edit it to keep a failing build green. Git history preserves the
 upstream-error record.
+
+SCB omitted-row converters share one immutable, validated `ErrataVariantContext` per
+source variant during compilation. It validates complete native coordinates and edition
+references before indexing literal folded columns, native variables and semantic refs.
+Ordered physical duplicates remain in each index. Every entry still checks its exact
+source peers and facts; the context changes lookup cost, not evidence or guard behavior.
+It is local to the compiler invocation, so no cached source state survives a build.
 
 SOS `[[errata.data_type]]` corrects one existing original record's interpreted
 `data_type` without changing its delivered cells. It names the original Deldatamängd
@@ -726,14 +741,34 @@ An explicit `column_metadata = "per_column"` retains physical type, width, opera
 definition and source attribution on each checked representation window. Each literal
 column is reconciled independently; a conflict within that column remains unknown and
 diagnosed. The shared state retains only agreed facts and never selects a metadata
-donor. The existing `variable_alias_window` carries the mode and these four fields, and
-selected-column reads project them, including nulls, onto that representation. An absent
-source attribution never inherits a sibling's questionnaire reference. Coverage checks
-compare the source claim with the same column's written window. Names, meaning and
-measurement units retain the shared reconciliation contract; coding has its independent
-mode below. The default `shared` mode retains its existing behavior. Source SQL widths
-and precision remain literal metadata; this mode neither converts them nor asserts
-comparability.
+donor. The existing `variable_alias_window` carries the mode and these literal fields,
+and selected-column reads project them, including nulls, onto that representation. An
+absent source attribution never inherits a sibling's questionnaire reference. Coverage
+checks compare the source claim with the same column's written window. Names retain the
+shared reconciliation contract; literal definitions and units require the guarded
+authoring described below; coding has its independent mode below. The default `shared`
+mode retains its existing behavior. Source SQL widths and precision remain literal
+metadata; this mode neither converts them nor asserts comparability.
+
+A calendar-month period family may supply an exact `expected_definitions` map for all
+months `01` through `12`. Every original definition must match its month before any
+identity change is emitted. A mismatch invalidates the whole projected-definition
+family, including its other years. Only these fully checked period families permit a
+varying common definition: every effective contributor must be covered by an applicable
+guarded case. The common variable definition then stays NULL when monthly texts differ,
+with a rule-defined warning. Ordinary variable-definition conflicts and disagreements
+within one column remain errors. Annual source and metadata scopes stay annual; alias
+windows carry the exact calendar month. State merging, delivery coverage and search
+aggregation retain these literal definitions. No generic prose replacement or scale
+conversion is inferred.
+
+A checked `representation.delivery_unit` decision permits literal units to vary for one
+exact reviewed owner. Compilation captures every original field, source scope, parent
+and coding association, including finite sibling support, and formation checks that
+every effective contributor belongs to the reviewed owner and exact projection. Each
+state and column window retains its own literal unit; a common unit is written only when
+it agrees. Unknown units and contradictions within one column remain unresolved. This
+does not convert values, infer currency or fill absent components.
 
 An independent `coding_metadata = "per_column"` mode retains each checked column's
 complete finite response domain on its alias windows. The shared quantity state claims

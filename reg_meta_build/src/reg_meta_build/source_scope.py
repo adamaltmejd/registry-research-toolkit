@@ -589,7 +589,11 @@ def resolve_source_scope(
         )
         representation = resolve_representation_cases(
             evidence,
-            tuple(c for c in selected if c.decision.kind == "representations"),
+            tuple(
+                c
+                for c in selected
+                if c.decision.kind in {"representations", "delivery_unit"}
+            ),
             coding=classified.coding,
         )
         for result in (chosen, classified, representation):

@@ -175,6 +175,7 @@ def _segment_pooled(effective: tuple[EffectiveOccurrence, ...]) -> bool:
 # formation carries onto the state, plus the population and coding evidence
 # that shape it.
 _POOLED_MERGE_FIELDS = (
+    "definition",
     "data_type",
     "data_length",
     "operational_definition",

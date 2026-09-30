@@ -3157,6 +3157,8 @@ def get_schema(
                             {
                                 "operational_definition": s["operational_definition"],
                                 "source_register_text": s["source_register_text"],
+                                "definition": s["definition"],
+                                "measurement_unit": s["measurement_unit"],
                             }
                             if s.get("_column_alias")
                             else {}
@@ -3384,6 +3386,8 @@ def get_varinfo(
             }
             if s.get("_column_alias"):
                 inst_dict["source_register_text"] = s["source_register_text"]
+                inst_dict["definition"] = s["definition"]
+                inst_dict["measurement_unit"] = s["measurement_unit"]
             instances_out.append(inst_dict)
 
         var_classifications = classifications_for_variable(conn, variable_id)
@@ -3660,6 +3664,8 @@ def _expand_column_alias_rows(
         "data_length",
         "operational_definition",
         "source_register_text",
+        "definition",
+        "measurement_unit",
         "provenance",
         "value_set_id",
         "value_set_version_label",

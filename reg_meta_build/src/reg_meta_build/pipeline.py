@@ -32,6 +32,7 @@ from reg_meta_build.curation_compile import (
     CompiledCodebook,
     CompiledCuration,
     _swecov_columns,
+    coding_entry_windows,
     compile_curation,
     compile_deferred_naming,
     finalize_classification_bindings,
@@ -478,6 +479,7 @@ def _run_pipeline(
             or register.coding.extend
             or register.coding.documented
             or register.coding.sentinel
+            or register.coding.support
         )
     }
     coding_ids = {}
@@ -491,9 +493,10 @@ def _run_pipeline(
                 ("extend", register.coding.extend),
                 ("documented", register.coding.documented),
                 ("sentinel", register.coding.sentinel),
+                ("support", register.coding.support),
             )
             for index, entry in enumerate(entries, 1)
-            for period_index, _ in enumerate(entry.periods, 1)
+            for period_index, _ in enumerate(coding_entry_windows(entry), 1)
         )
         coding_ids[name] = ids
         compiled.report.setdefault(

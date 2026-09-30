@@ -2389,6 +2389,45 @@ def test_named_edition_split_rebinds_parents_and_is_order_independent(
         key[: len(stock.variant_key)] == stock.variant_key for key in parents.fields
     )
 
+    selected = records[1]
+    changed_parent = selected.parent_facts[0].model_copy(
+        update={
+            "fields": selected.parent_facts[0].fields.model_copy(
+                update={"description": value_field("Changed parent prose")}
+            )
+        }
+    )
+    drifted = (
+        selected.model_copy(
+            update={
+                "fields": selected.fields.model_copy(
+                    update={"operational_definition": value_field("Changed operation")}
+                )
+            }
+        ),
+        selected.model_copy(
+            update={"parent_facts": (changed_parent, *selected.parent_facts[1:])}
+        ),
+        selected.model_copy(
+            update={
+                "code_set_references": (
+                    CodeSetReference(
+                        reference_id="new-codes",
+                        content_sha256="a" * 64,
+                        physical_locator="codes.csv:1",
+                    ),
+                )
+            }
+        ),
+    )
+    for changed in drifted:
+        replay = apply_occurrence_cases((records[0], changed), (case,))
+        assert replay.diagnostics
+        assert all(
+            item.variant_key == native_variant_key(records[0])
+            for item in replay.occurrences
+        )
+
     missing = path.read_text().replace('2007-12-31"]', '2008-12-31"]')
     path.write_text(missing, encoding="utf-8")
     stale, stale_issues, _ = compile_edition_splits(
@@ -5856,3 +5895,306 @@ def test_guarded_column_owner_allows_operation_only_guard():
         }
     )
     assert entry.expected_fields[0].value == "Amount"
+
+
+@pytest.mark.parametrize("end", ["2020-12-31", None])
+def test_documented_source_scope_has_reportable_window_when_source_missing(
+    tmp_path: Path, end
+):
+    from reg_meta_build.curation_compile import coding_entry_windows
+    from reg_meta_build.curation_tree import (
+        CodingDocumentedEntry,
+        PreparedCodingAuthority,
+    )
+
+    root = tmp_path / "curation"
+    _scb_partition_tree(root, "")
+    record = _errata_record(column="ANSWER", year="2020", member=20)
+    revision = SourceRevision.create(
+        dataset=record.source,
+        publisher="SCB",
+        purpose="coding fixture",
+        upstream_revision="1",
+        artifact_path="records.csv",
+        artifact_size=1,
+        artifact_sha256="a" * 64,
+    )
+    authority = PreparedCodingAuthority(
+        revision=revision,
+        source_scope=TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2020-01-01", end=end),)
+        ),
+        locators=list(record.locators),
+        records=list(
+            capture_expectations(
+                (record,),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+        codings=["b" * 64],
+    )
+    entry = CodingDocumentedEntry(
+        variable="1.999",
+        variant="1.2",
+        column="MISSING",
+        reason="Exact supplied source domain",
+        source="fixture",
+        members=(("J", "Yes"), ("N", "No")),
+        version_label="Source list",
+        source_authority=authority,
+    )
+    assert entry.periods == []
+    assert coding_entry_windows(entry) == (("2020-01-01", end or "9999-12-31"),)
+    tree = load_curation_tree(root)
+    register = tree.registers[0]
+    register = register.model_copy(
+        update={"coding": register.coding.model_copy(update={"documented": [entry]})}
+    )
+    cases, diagnostics = compile_coding_register(
+        register,
+        _partition_scope((record,)),
+        originals=(record,),
+        columns={},
+        column_scopes={},
+        coding={},
+    )
+    assert not cases
+    assert len(diagnostics) == 1
+    assert diagnostics[0].code == "stale_curation_entry"
+    assert diagnostics[0].case_id.endswith("coding.documented/1/period/1")
+    assert (diagnostics[0].valid_from, diagnostics[0].valid_to) == coding_entry_windows(
+        entry
+    )[0]
+
+
+@pytest.mark.parametrize("unlisted_peer", [False, True])
+def test_finite_scoped_owner_closes_only_fully_covered_unassigned_literal(
+    unlisted_peer,
+):
+    records = tuple(
+        _errata_record(column="ANSWER", year=year, member=20 + i)
+        for i, year in enumerate(("2020", "2021"))
+    )
+    owners = {(record_ref(record), "ANSWER"): "1.5.answer" for record in records}
+    records += (_errata_record(column="KNOWN", year="1999", member=19),)
+    if unlisted_peer:
+        records += (_errata_record(column="ANSWER", year="2022", member=22),)
+    result = convert_column_partitions(
+        records,
+        source_id="1.5",
+        split_ids=("1.5.answer",),
+        declared_columns={"ANSWER": None, "KNOWN": "1.5.answer"},
+        declaration_reference="Explicitly withheld except finite reviewed owners",
+        scoped_owners=owners,
+    )
+    assert bool(result.diagnostics) is unlisted_peer
+    assert result.case is not None
+    after = apply_occurrence_cases(records, (result.case,))
+    assert not after.diagnostics
+    for occurrence in after.occurrences:
+        record = occurrence.source_records[0]
+        if (
+            record.fields.column_name.value == "KNOWN"
+            or (record_ref(record), "ANSWER") in owners
+        ):
+            assert occurrence.variable_key[-1] == "1.5.answer"
+        else:
+            assert occurrence.variable_key == source_occurrence(record).variable_key
+
+
+@pytest.mark.parametrize("drift", [None, "unit", "missing", "new", "partial", "window"])
+def test_delivery_unit_compiler_keeps_complete_literal_source_guards(tmp_path, drift):
+    from reg_meta_build.curation_compile import compile_delivery_units
+    from reg_meta_build.curation_tree import DeliveryUnitEntry
+    from reg_meta_build.source_curation import DeliveryUnitColumn, capture_expectations
+    from reg_meta_build.source_records import SourceFields, value_field
+
+    path, raw, naming = _pooled_parallel_fixture(tmp_path)
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={
+                        "measurement_unit": value_field(unit),
+                        "definition": value_field("Source income definition"),
+                    }
+                )
+            }
+        )
+        for record, unit in zip(raw, ("100-tal kronor", "Kronor (SEK)"), strict=True)
+    )
+    entry = DeliveryUnitEntry(
+        variable="1.1.income",
+        records=list(
+            capture_expectations(
+                records,
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+        columns=[
+            DeliveryUnitColumn(
+                variant_key=native_variant_key(record),
+                column=record.fields.column_name.value,
+                valid_from=start,
+                valid_to=end,
+                expected_codings=(),
+            )
+            for record, start, end in zip(
+                records,
+                ("2020-01-01", "2022-01-01"),
+                ("2022-12-31", "2024-12-31"),
+                strict=True,
+            )
+        ],
+        evidence="Retain source encoding without value conversion",
+        noted="2026-09-30",
+    )
+    (register,) = load_register_files(path.parents[2])
+    register = register.model_copy(
+        update={
+            "representation": register.representation.model_copy(
+                update={"parallel": [], "delivery_unit": [entry]}
+            )
+        }
+    )
+    if drift == "unit":
+        records = (
+            records[0],
+            records[1].model_copy(
+                update={
+                    "fields": records[1].fields.model_copy(
+                        update={"measurement_unit": value_field("changed")}
+                    )
+                }
+            ),
+        )
+    elif drift == "missing":
+        records = records[:-1]
+    elif drift == "new":
+        new = records[0].model_copy(
+            update={
+                "locators": (
+                    records[0]
+                    .locators[0]
+                    .model_copy(
+                        update={
+                            "semantic_record_key": (
+                                *records[0].locators[0].semantic_record_key,
+                                "new-peer",
+                            )
+                        }
+                    ),
+                )
+            }
+        )
+        records = (*records, new)
+    elif drift == "partial":
+        register = register.model_copy(
+            update={
+                "representation": register.representation.model_copy(
+                    update={
+                        "delivery_unit": [
+                            entry.model_copy(update={"records": entry.records[:-1]})
+                        ]
+                    }
+                )
+            }
+        )
+    elif drift == "window":
+        register = register.model_copy(
+            update={
+                "representation": register.representation.model_copy(
+                    update={
+                        "delivery_unit": [
+                            entry.model_copy(
+                                update={
+                                    "columns": [
+                                        entry.columns[0].model_copy(
+                                            update={"valid_to": "2021-12-31"}
+                                        ),
+                                        entry.columns[1],
+                                    ]
+                                }
+                            )
+                        ]
+                    }
+                )
+            }
+        )
+    from reg_meta_build.source_curation import (
+        CheckedIdentityChange,
+        CurationCase,
+        OccurrenceCorrectionDecision,
+        PeerGuard,
+    )
+
+    original_targets = tuple(entry.records)
+    identity = CurationCase(
+        case_id="unit-owner",
+        targets=original_targets,
+        peer_guards=(
+            PeerGuard(
+                guard_id="unit-identity-peers",
+                source=original_targets[0].ref.source,
+                native=NativeCoordinates(
+                    register_id=1, register_variant_id=10, variable_id=1
+                ),
+                expected_members=tuple(target.ref for target in original_targets),
+            ),
+        ),
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            effects=tuple(
+                CheckedIdentityChange(
+                    ref=target.ref, variable_key=naming[-1].target.source_key
+                )
+                for target in original_targets
+            ),
+            reason="Checked owner",
+            provenance="Exact family",
+        ),
+    )
+    cases, diagnostics = compile_delivery_units(
+        register, records, naming, ownership_cases=(identity,)
+    )
+    assert bool(cases) == (drift is None)
+    assert bool(diagnostics) == (drift is not None)
+
+
+def test_disjoint_edition_splits_share_native_variant_but_not_target_edition(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "curation"
+    path = root / "registers/scb/sample.toml"
+    path.parent.mkdir(parents=True)
+    (root / "classifications").mkdir()
+    prefix = (
+        '[register]\nprovider="scb"\nslug="sample"\nnative_id="1"\n'
+        '[[variant]]\nnative_id="1.2"\nslug="flow"\n'
+        '[[variant]]\nnative_id="1.2.marriage"\nslug="marriage"\n'
+        '[[variant]]\nnative_id="1.2.divorce"\nslug="divorce"\n'
+    )
+    entries = (
+        '[[identity.edition_split]]\nvariant="1.2"\nsplit="1.2.marriage"\n'
+        'editions=["Married"]\nsource_editions=["Divorced"]\n'
+        'evidence="Explicit source event edition"\nnoted="2026-09-30"\n'
+        '[[identity.edition_split]]\nvariant="1.2"\nsplit="1.2.divorce"\n'
+        'editions=["Divorced"]\nsource_editions=["Married"]\n'
+        'evidence="Explicit source event edition"\nnoted="2026-09-30"\n'
+    )
+    path.write_text(prefix + entries)
+    assert len(load_curation_tree(root).registers[0].identity.edition_split) == 2
+    path.write_text(
+        prefix
+        + entries.replace(
+            'editions=["Divorced"]\nsource_editions=["Married"]',
+            'editions=["Married"]\nsource_editions=["Divorced"]',
+        )
+    )
+    with pytest.raises(RegMetaError) as exc:
+        load_curation_tree(root)
+    assert "editions assigned twice" in exc.value.message

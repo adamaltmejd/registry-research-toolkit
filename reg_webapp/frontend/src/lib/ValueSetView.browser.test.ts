@@ -155,6 +155,62 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
   });
 
+  it.each([false, true])(
+    "shows literal delivery definitions and units (multiple=%s)",
+    async (multiple) => {
+      const first = state({
+        state_id: 10,
+        value_set_id: 500,
+        delivery_column_name: "AGI1LonFink01",
+        definition: "Löneinkomst i januari från största förvärvskällan",
+        measurement_unit: "100-tals kronor",
+      });
+      const states = multiple
+        ? [
+            first,
+            state({
+              ...first,
+              delivery_column_name: "AGI1LonFink02",
+              definition: "Löneinkomst i februari från största förvärvskällan",
+              measurement_unit: "Kronor (SEK)",
+            }),
+          ]
+        : [first];
+      await render(ValueSetView, { states, narrowed: false });
+      await expect
+        .element(
+          page.getByText("Löneinkomst i januari från största förvärvskällan"),
+        )
+        .toBeVisible();
+      await expect.element(page.getByText("100-tals kronor")).toBeVisible();
+      if (multiple) {
+        await expect
+          .element(
+            page.getByText(
+              "Löneinkomst i februari från största förvärvskällan",
+            ),
+          )
+          .toBeVisible();
+        await expect.element(page.getByText("Kronor (SEK)")).toBeVisible();
+      }
+    },
+  );
+
+  it("omits common facts and does not fill absent delivery facts", async () => {
+    await render(ValueSetView, {
+      states: [
+        state({ definition: "Common definition", measurement_unit: "Kronor" }),
+        state({ state_id: 2, definition: null, measurement_unit: null }),
+      ],
+      narrowed: false,
+      commonDefinition: "Common definition",
+      commonUnit: "Kronor",
+    });
+    expect(document.querySelector(".state-definitions")).toBeNull();
+    expect(document.body.textContent).not.toContain("Common definition");
+    expect(document.body.textContent).not.toContain("Kronor");
+  });
+
   it("shows state operational definitions when parallel columns share one value set (#736)", async () => {
     const states = [
       state({

@@ -51,6 +51,8 @@ let {
   scopeStates = null,
   focusColumn = null,
   focusVariant = null,
+  commonDefinition = null,
+  commonUnit = null,
 }: {
   states: VariableStateModel[];
   /** True when these are the `?period`-narrowed subset (drives empty wording). */
@@ -69,6 +71,9 @@ let {
    * column is considered across all variants (a column unique across variants, or a
    * deep link with no variant) — `valueSetKeyForColumn`'s back-compat path. */
   focusVariant?: string | null;
+  /** Common facts already displayed by the containing variable view. */
+  commonDefinition?: string | null;
+  commonUnit?: string | null;
 } = $props();
 
 // Single-state DETAIL — PERIOD-AWARE (#905, Codex P2). A single state reaching the view
@@ -236,7 +241,12 @@ function usageChanges(
 function definitionStates(
   usage: DistinctValueSet["usages"][number],
 ): VariableStateModel[] {
-  return usage.states.filter((s) => s.operational_definition);
+  return usage.states.filter(
+    (s) =>
+      s.operational_definition ||
+      (s.definition && s.definition !== commonDefinition) ||
+      (s.measurement_unit && s.measurement_unit !== commonUnit),
+  );
 }
 
 function repeatedDefinitionLabels(states: VariableStateModel[]): Set<string> {
@@ -463,7 +473,19 @@ function trackDisclosure(key: string, event: Event): void {
                       >pooled</span
                     >{/if}
                 </dt>
-                <dd>{s.operational_definition}</dd>
+                <dd>
+                  {#if s.definition && s.definition !== commonDefinition}
+                    <span class="micro-label">Definition:</span>{" "}{s.definition}
+                  {/if}
+                  {#if s.measurement_unit && s.measurement_unit !== commonUnit}
+                    {#if s.definition && s.definition !== commonDefinition}<br />{/if}
+                    <span class="micro-label">Unit:</span>{" "}{s.measurement_unit}
+                  {/if}
+                  {#if s.operational_definition}
+                    {#if (s.definition && s.definition !== commonDefinition) || (s.measurement_unit && s.measurement_unit !== commonUnit)}<br />{/if}
+                    {s.operational_definition}
+                  {/if}
+                </dd>
               </div>
             {/each}
           </dl>
@@ -601,6 +623,14 @@ function trackDisclosure(key: string, event: Event): void {
       {#if s.value_set_version_label}
         <dt class="micro-label">Value-set version</dt>
         <dd>{s.value_set_version_label}</dd>
+      {/if}
+      {#if s.definition && s.definition !== commonDefinition}
+        <dt class="micro-label">Definition</dt>
+        <dd>{s.definition}</dd>
+      {/if}
+      {#if s.measurement_unit && s.measurement_unit !== commonUnit}
+        <dt class="micro-label">Unit</dt>
+        <dd>{s.measurement_unit}</dd>
       {/if}
       {#if s.operational_definition}
         <dt class="micro-label">Operational definition</dt>

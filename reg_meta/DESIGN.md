@@ -651,21 +651,24 @@ delivery column can be picked/ordered rather than remaining search-only. The exp
 base claim, so windows can SHARE one `state_id` (one claim, N representations) — the
 per-window identity is the compound (`state_id`, `delivery_column_name`, `valid_from`).
 Checked `column_metadata = "per_column"` windows additionally supply their own
-`data_type`, `data_length`, `operational_definition` and `source_register_text`. These
-literal facts can differ between representations of one variable. They override the base
-even when null: an unknown or absent column fact never borrows a sibling's value.
-Shared-mode windows retain inherited metadata. Coding uses its separate window mode;
-state identity remains shared. This does not assert interchangeable storage or
-statistical comparability between source editions. A nullable window-level `provenance`
-uses the same contract as `variable_state.provenance`: source-derived windows leave it
-NULL, retain the existing replacement/participation semantics, and inherit the base
-state's provenance. An exact-edition curated alias carries the correction class,
-evidence, and source-edition scope; the reader adds it to the source result rather than
-making it participate in replacement. This preserves the original base state, including
-its operational definition, without a synthetic full-state window. A variable with no
-window rows maps 1:1, byte-identically. The monthly merge is explicitly retained under
-#518/#523; the retention rationale and the #523↔#496 two-layer boundary are recorded in
-`reg_meta_build/DESIGN.md` → *Consumers: monthly column families*.
+`data_type`, `data_length`, `operational_definition`, `source_register_text`,
+`definition` and `measurement_unit`. These literal facts can differ between
+representations of one variable. They override the base even when null: an unknown or
+absent column fact never borrows a sibling's value. Shared-mode windows retain inherited
+metadata. Checked calendar-month families expose their literal monthly definitions here;
+a varying common definition remains NULL at variable grain. Coding uses its separate
+window mode; state identity remains shared. This does not assert interchangeable storage
+or statistical comparability between source editions. A nullable window-level
+`provenance` uses the same contract as `variable_state.provenance`: source-derived
+windows leave it NULL, retain the existing replacement/participation semantics, and
+inherit the base state's provenance. An exact-edition curated alias carries the
+correction class, evidence, and source-edition scope; the reader adds it to the source
+result rather than making it participate in replacement. This preserves the original
+base state, including its operational definition, without a synthetic full-state window.
+A variable with no window rows maps 1:1, byte-identically. The monthly merge is
+explicitly retained under #518/#523; the retention rationale and the #523↔#496 two-layer
+boundary are recorded in `reg_meta_build/DESIGN.md` → *Consumers: monthly column
+families*.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts (mirrors
 `Source.period`): a bare year (`2018`), a period token

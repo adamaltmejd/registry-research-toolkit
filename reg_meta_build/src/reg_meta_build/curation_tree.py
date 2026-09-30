@@ -57,6 +57,8 @@ from .relations import load_relations
 from .resolved_metadata import _variable
 from .source_curation import (
     ColumnRepresentation,
+    DeliveryUnitColumn,
+    DeliveryUnitDecision,
     DocumentedCodingSelection,
     FieldExpectation,
     FiniteCurationWindow,
@@ -641,6 +643,19 @@ class PeriodFamilyEntry(_CurationModel):
     family_stem: str
     label: str
     slug: str
+    expected_definitions: dict[str, str] | None = None
+
+    @field_validator("expected_definitions")
+    @classmethod
+    def _month_definitions(cls, value: dict[str, str] | None) -> dict[str, str] | None:
+        if value is not None:
+            if set(value) != {f"{month:02}" for month in range(1, 13)}:
+                raise ValueError(
+                    "expected definitions require every exact month 01 through 12"
+                )
+            for text in value.values():
+                _require_trimmed(text)
+        return value
 
     @field_validator("slug")
     @classmethod
@@ -977,8 +992,45 @@ class IdentityCuration(_CurationModel):
     rename: list[IdentityRenameEntry] = Field(default_factory=list)
 
 
+class DeliveryUnitEntry(_CurationModel):
+    variable: str
+    records: list[RecordExpectation] = Field(min_length=1)
+    support: list[RecordExpectation] = Field(default_factory=list)
+    columns: list[DeliveryUnitColumn] = Field(min_length=1)
+    evidence: str
+    noted: str
+
+    _text = field_validator("variable", "evidence", "noted")(_require_trimmed)
+
+    @field_validator("records", "support", mode="before")
+    @classmethod
+    def _record_shapes(cls, values):
+        return [
+            RecordExpectation.model_validate_json(json.dumps(value))
+            if isinstance(value, dict)
+            else value
+            for value in values
+        ]
+
+    @field_validator("columns", mode="before")
+    @classmethod
+    def _columns(cls, values):
+        return [
+            DeliveryUnitColumn.model_validate_json(json.dumps(value))
+            if isinstance(value, dict)
+            else value
+            for value in values
+        ]
+
+    @model_validator(mode="after")
+    def _positive(self) -> DeliveryUnitEntry:
+        DeliveryUnitDecision.require_targets(tuple(self.records))
+        return self
+
+
 class RepresentationCuration(_CurationModel):
     period_family: list[PeriodFamilyEntry] = Field(default_factory=list)
+    delivery_unit: list[DeliveryUnitEntry] = Field(default_factory=list)
     alias_window: list[AliasWindowEntry] = Field(default_factory=list)
     parallel: list[ParallelRepresentationEntry] = Field(default_factory=list)
 
@@ -1506,6 +1558,7 @@ def _register_arrays(
         ("representation.period_family", entry.representation.period_family),
         ("representation.alias_window", entry.representation.alias_window),
         ("representation.parallel", entry.representation.parallel),
+        ("representation.delivery_unit", entry.representation.delivery_unit),
         ("identity.partition", entry.identity.partition),
         ("identity.column_owner", entry.identity.column_owner),
         ("identity.route", entry.identity.route),
@@ -1561,7 +1614,6 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
     identity = entry.register_info
     expected = f"{identity.provider}/{identity.slug}"
     edition_owners: set[tuple[str, str]] = set()
-    split_owners: set[str] = set()
     variant_ids = {variant.native_id for variant in entry.variant}
     native_variant_slugs = {
         variant.slug
@@ -1592,14 +1644,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 f"{where}: editions assigned twice: {sorted(repeated)!r}.",
                 "Assign each edition name once.",
             )
-        if split.variant in split_owners:
-            raise curation_error(
-                _CODE,
-                f"{where}: native variant {split.variant!r} has multiple edition splits.",
-                "Declare one complete edition inventory for the native variant.",
-            )
         edition_owners.update(pairs)
-        split_owners.add(split.variant)
     if identity.provider in {"scb", "sos"} and (
         identity.native_id is None or not identity.native_id.isdecimal()
     ):
@@ -1665,6 +1710,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     ErrataOccurrencePeriodEntry,
                     CodingEntry,
                     ParallelRepresentationEntry,
+                    DeliveryUnitEntry,
                 ),
             ):
                 native_id = identity.native_id

@@ -1663,3 +1663,73 @@ field = "measurement_unit"
 value = "Datum"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
 noted = "2026-09-30"
+
+[[identity.column_owner]]
+variable = "2.57"
+variant = "2.66"
+column = "Personnr"
+owner = "2.57.personnr"
+expected_fields = [{ name = "name", status = "value", value = "Personnummer" }, { name = "definition", status = "value", value = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten." }, { name = "operational_definition", status = "value", value = "Personnumret består av: Födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }, { name = "data_type", status = "value", value = "text" }, { name = "data_length", status = "value", value = "12" }]
+source_editions = ["2014-12-31", "2015-12-31"]
+ref = "Complete native2.57 personidentifier family: exact Personnr originals in Grund för bosättning för immigranter2007–2015 supply the same personidentifier name/definition and text12 shape as accepted PersonNr in this variant.2014/2015 also supply the same8+3+1 identifier operation; earlier blank operations stay blank. No sameedition co-delivery ofPersonnr andPersonNr exists. PersonNrAnkn explicitly refers to the anchoring otherperson and retains its separate owner. Retain each original field, period, role, coding and physical spelling; no identifier values inspected or transformed. Only exact enumerated source editions are assigned; future/unlisted Personnr records remain unassigned."
+
+[[identity.column_owner]]
+variable = "2.57"
+variant = "2.66"
+column = "Personnr"
+owner = "2.57.personnr"
+expected_fields = [{ name = "name", status = "value", value = "Personnummer" }, { name = "definition", status = "value", value = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten." }, { name = "operational_definition", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "data_length", status = "value", value = "12" }]
+source_editions = ["2012-12-31", "2013-12-31", "2007-12-31", "2008-12-31", "2009-12-31", "2010-12-31", "2011-12-31"]
+ref = "Complete native2.57 personidentifier family: exact Personnr originals in Grund för bosättning för immigranter2007–2015 supply the same personidentifier name/definition and text12 shape as accepted PersonNr in this variant.2014/2015 also supply the same8+3+1 identifier operation; earlier blank operations stay blank. No sameedition co-delivery ofPersonnr andPersonNr exists. PersonNrAnkn explicitly refers to the anchoring otherperson and retains its separate owner. Retain each original field, period, role, coding and physical spelling; no identifier values inspected or transformed. Only exact enumerated source editions are assigned; future/unlisted Personnr records remain unassigned."
+
+[[variant]]
+native_id = "2.56.civilstandsandringar-gifta"
+slug = "civilstandsandringar-gifta"
+display_group = "Civilståndsändringar"
+
+[[identity.edition_split]]
+variant = "2.56"
+split = "2.56.civilstandsandringar-gifta"
+editions = ["Gifta 1968-1995", "Gifta 1996-1997"]
+source_editions = ["1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Kvartal 1-3 fr.o.m. 2010", "Registrerade partners 1995-1997", "Skilda 1968-1997", "Änkor/ änklingar 1968-1997"]
+evidence = "The explicit SCB native source edition labels identify distinct historical marriage, divorce, widowhood and registered-partnership event deliveries. Event-date/age operations corroborate the role. Rebind every original in the finite named editions, retaining native variable ownership and original fields, periods, parents and coding. No supplied population definition, event uniqueness or domain equivalence is inferred; no code union or value conversion. Complete variant edition membership remains guarded."
+noted = "2026-09-30"
+
+[[variant]]
+native_id = "2.56.civilstandsandringar-skilda"
+slug = "civilstandsandringar-skilda"
+display_group = "Civilståndsändringar"
+
+[[identity.edition_split]]
+variant = "2.56"
+split = "2.56.civilstandsandringar-skilda"
+editions = ["Skilda 1968-1997"]
+source_editions = ["1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Gifta 1968-1995", "Gifta 1996-1997", "Kvartal 1-3 fr.o.m. 2010", "Registrerade partners 1995-1997", "Änkor/ änklingar 1968-1997"]
+evidence = "The explicit SCB native source edition labels identify distinct historical marriage, divorce, widowhood and registered-partnership event deliveries. Event-date/age operations corroborate the role. Rebind every original in the finite named editions, retaining native variable ownership and original fields, periods, parents and coding. No supplied population definition, event uniqueness or domain equivalence is inferred; no code union or value conversion. Complete variant edition membership remains guarded."
+noted = "2026-09-30"
+
+[[variant]]
+native_id = "2.56.civilstandsandringar-ankor-anklingar"
+slug = "civilstandsandringar-ankor-anklingar"
+display_group = "Civilståndsändringar"
+
+[[identity.edition_split]]
+variant = "2.56"
+split = "2.56.civilstandsandringar-ankor-anklingar"
+editions = ["Änkor/ änklingar 1968-1997"]
+source_editions = ["1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Gifta 1968-1995", "Gifta 1996-1997", "Kvartal 1-3 fr.o.m. 2010", "Registrerade partners 1995-1997", "Skilda 1968-1997"]
+evidence = "The explicit SCB native source edition labels identify distinct historical marriage, divorce, widowhood and registered-partnership event deliveries. Event-date/age operations corroborate the role. Rebind every original in the finite named editions, retaining native variable ownership and original fields, periods, parents and coding. No supplied population definition, event uniqueness or domain equivalence is inferred; no code union or value conversion. Complete variant edition membership remains guarded."
+noted = "2026-09-30"
+
+[[variant]]
+native_id = "2.56.civilstandsandringar-registrerade-partners"
+slug = "civilstandsandringar-registrerade-partners"
+display_group = "Civilståndsändringar"
+
+[[identity.edition_split]]
+variant = "2.56"
+split = "2.56.civilstandsandringar-registrerade-partners"
+editions = ["Registrerade partners 1995-1997"]
+source_editions = ["1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Gifta 1968-1995", "Gifta 1996-1997", "Kvartal 1-3 fr.o.m. 2010", "Skilda 1968-1997", "Änkor/ änklingar 1968-1997"]
+evidence = "The explicit SCB native source edition labels identify distinct historical marriage, divorce, widowhood and registered-partnership event deliveries. Event-date/age operations corroborate the role. Rebind every original in the finite named editions, retaining native variable ownership and original fields, periods, parents and coding. No supplied population definition, event uniqueness or domain equivalence is inferred; no code union or value conversion. Complete variant edition membership remains guarded."
+noted = "2026-09-30"

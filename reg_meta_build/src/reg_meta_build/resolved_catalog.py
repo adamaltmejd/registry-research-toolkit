@@ -297,6 +297,8 @@ class ResolvedState(_ResolvedDeliveryScope):
     operational_definition: str | None
     provenance: str | None
     source_register_text: str | None = None
+    definition: str | None = None
+    measurement_unit: str | None = None
     # Y-202: True when the state spans a pooled multi-year edition range with no
     # explicit annual coverage — one marked state over the whole pooled range,
     # never inferred annual availability. False for every other state.
@@ -350,6 +352,8 @@ class ResolvedAliasWindow(_ResolvedWindow):
     data_length: str | None = None
     operational_definition: str | None = None
     source_register_text: str | None = None
+    definition: str | None = None
+    measurement_unit: str | None = None
     coding_metadata: Literal["shared", "per_column"] = "shared"
     value_set: ResolvedCodeSet | None = None
     value_set_version_label: str = ""
@@ -364,6 +368,8 @@ class ResolvedAliasWindow(_ResolvedWindow):
                     self.data_length,
                     self.operational_definition,
                     self.source_register_text,
+                    self.definition,
+                    self.measurement_unit,
                 )
             )
         ):
@@ -1156,8 +1162,8 @@ def write_resolved_catalog(
                         "INSERT INTO variable_state (state_id, variable_id, "
                         "register_variant_id, valid_from, valid_to, delivery_column_name, "
                         "data_type, data_length, operational_definition, provenance, pooled, "
-                        "value_set_id, value_set_version_label, source_register_text, classification_id, period_scope) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "value_set_id, value_set_version_label, source_register_text, classification_id, period_scope, definition, measurement_unit) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             state_id,
                             variable_id,
@@ -1179,6 +1185,8 @@ def write_resolved_catalog(
                             if state.classification is not None
                             else None,
                             state.period_scope,
+                            state.definition,
+                            state.measurement_unit,
                         ),
                     )
                     if state.conformance is not None:
@@ -1202,8 +1210,8 @@ def write_resolved_catalog(
                     )
                     conn.executemany(
                         "INSERT INTO variable_alias_window "
-                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, column_metadata, data_type, data_length, operational_definition, source_register_text, coding_metadata, value_set_id, value_set_version_label) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, column_metadata, data_type, data_length, operational_definition, source_register_text, coding_metadata, value_set_id, value_set_version_label, definition, measurement_unit) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             (
                                 variable_id,
@@ -1222,6 +1230,8 @@ def write_resolved_catalog(
                                 if window.value_set is not None
                                 else None,
                                 window.value_set_version_label,
+                                window.definition,
+                                window.measurement_unit,
                             )
                             for window in sorted(
                                 alias.windows, key=lambda w: w.valid_from

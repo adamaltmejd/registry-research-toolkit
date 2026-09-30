@@ -114,6 +114,7 @@ def _setup(records=None, claims=None):
             "column_name",
             "name",
             "definition",
+            "measurement_unit",
             "data_type",
             "data_length",
             "operational_definition",
@@ -1022,3 +1023,247 @@ def test_per_column_operation_and_attribution_do_not_borrow_sibling_facts(
             formed.coverage,
             withheld={},
         )
+
+
+def _unit_fixture(*, overlap=False):
+    from reg_meta_build.source_curation import DeliveryUnitColumn, DeliveryUnitDecision
+
+    revision = SourceRevision.create(
+        dataset="fixture",
+        publisher="SCB",
+        purpose="test",
+        upstream_revision="1",
+        artifact_path="units.csv",
+        artifact_size=1,
+        artifact_sha256="a" * 64,
+    )
+    header = REGISTERINFORMATION_HEADER.split("|")
+    records = []
+    for index, (year, unit) in enumerate(
+        (("2020", "100-tal kronor"), ("2020" if overlap else "2021", "Kronor (SEK)"))
+    ):
+        values = _var_row(
+            colname="VALUE",
+            var_id=1,
+            cvid=100 + index,
+            varname="Income",
+            vardef="Source supplied income definition",
+            unit=unit,
+            year=year,
+        ).split("|")
+        records.append(
+            clean_scb_row(
+                header,
+                index + 1,
+                {
+                    name: (True, value, value)
+                    for name, value in zip(header, values, strict=True)
+                },
+                revision,
+            ).record
+        )
+    records = tuple(records)
+    first = source_occurrence(records[0])
+    assert first.variable_key is not None and first.variant_key is not None
+    expectations = capture_expectations(
+        records, fields=tuple(SourceFields.model_fields), parents=True, coding=True
+    )
+    case = CurationCase(
+        case_id="literal-delivery-units",
+        targets=expectations,
+        peer_guards=(
+            PeerGuard(
+                guard_id="full-unit-family",
+                source=records[0].source,
+                native=NativeCoordinates(
+                    register_id=1, register_variant_id=10, variable_id=1
+                ),
+                expected_members=tuple(e.ref for e in expectations),
+            ),
+        ),
+        decision=DeliveryUnitDecision(
+            reviewed=True,
+            variable_key=first.variable_key,
+            columns=(
+                DeliveryUnitColumn(
+                    variant_key=first.variant_key,
+                    column="VALUE",
+                    valid_from="2020-01-01",
+                    valid_to="2020-12-31" if overlap else "2021-12-31",
+                    expected_codings=(),
+                ),
+            ),
+            reason="Retain literal source units",
+            provenance="Source encoding only; no value conversion",
+        ),
+    )
+    return (
+        records,
+        case,
+        {first.variant_key: ResolvedVariant(slug="people", name="People")},
+        {first.column_key: resolve_code_membership(())},
+    )
+
+
+def _form_units(fixture, *, cases=None, records=None):
+    original, case, variants, coding = fixture
+    records = original if records is None else records
+    resolution = resolve_representation_cases(
+        records, (case,) if cases is None else cases, coding=coding
+    )
+    formed = form_native_variable(
+        tuple(source_occurrence(record) for record in records),
+        register=ResolvedRegister(provider="scb", slug="example", name="Example"),
+        variants=variants,
+        slug="income",
+        provider_key="1",
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+        coding=coding,
+        representations=resolution.cases,
+    )
+    return resolution, formed
+
+
+def test_checked_delivery_units_retain_literals_and_coverage(tmp_path):
+    fixture = _unit_fixture()
+    records, _, _, _ = fixture
+    _, baseline = _form_units(fixture, cases=())
+    assert any(
+        issue.code == "conflicting_variable_fact"
+        and issue.fields == ("measurement_unit",)
+        for issue in baseline.diagnostics
+    )
+    resolution, formed = _form_units(fixture)
+    assert not resolution.diagnostics
+    assert formed.variable is not None and formed.variable.measurement_unit is None
+    assert not any(issue.severity == "error" for issue in formed.diagnostics)
+    assert {state.measurement_unit for state in formed.variable.states} == {
+        "100-tal kronor",
+        "Kronor (SEK)",
+    }
+    assert tuple(record.fields.measurement_unit.value for record in records) == (
+        "100-tal kronor",
+        "Kronor (SEK)",
+    )
+    check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
+    wrong = formed.variable.model_copy(
+        update={
+            "states": tuple(
+                state.model_copy(update={"measurement_unit": "Kronor (SEK)"})
+                for state in formed.variable.states
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="literal delivery unit changed"):
+        check_delivery_coverage((wrong,), formed.coverage, withheld={})
+    write_resolved_catalog((formed.variable,), tmp_path / "reg_meta.db", manifest={})
+    with closing(open_db(tmp_path / "reg_meta.db")) as conn:
+        assert {
+            row[0]
+            for row in conn.execute("SELECT measurement_unit FROM variable_state")
+        } == {"100-tal kronor", "Kronor (SEK)"}
+
+
+@pytest.mark.parametrize("drift", ["missing", "changed", "new", "partial", "owner"])
+def test_checked_delivery_units_fail_closed(drift):
+    fixture = _unit_fixture()
+    records, case, variants, coding = fixture
+    if drift == "missing":
+        records = records[:-1]
+    elif drift == "changed":
+        records = (
+            records[0],
+            records[1].model_copy(
+                update={
+                    "fields": records[1].fields.model_copy(
+                        update={"measurement_unit": value_field("other unit")}
+                    )
+                }
+            ),
+        )
+    elif drift == "new":
+        records = (
+            *records,
+            records[1].model_copy(
+                update={
+                    "locators": (
+                        records[1]
+                        .locators[0]
+                        .model_copy(
+                            update={
+                                "semantic_record_key": (
+                                    *records[1].locators[0].semantic_record_key,
+                                    "new-peer",
+                                )
+                            }
+                        ),
+                    )
+                }
+            ),
+        )
+    elif drift == "partial":
+        case = case.model_copy(update={"targets": case.targets[:-1]})
+    elif drift == "owner":
+        case = case.model_copy(
+            update={
+                "decision": case.decision.model_copy(
+                    update={"variable_key": ("different", "owner")}
+                )
+            }
+        )
+    fixture = (fixture[0], case, variants, coding)
+    if drift == "owner":
+        with pytest.raises(ValueError, match="unconverted column coding"):
+            _form_units(fixture, records=records)
+        return
+    resolution, formed = _form_units(fixture, records=records)
+    if drift in {"missing", "changed", "new"}:
+        assert resolution.diagnostics and not resolution.cases
+    else:
+        assert any(
+            issue.code == "conflicting_variable_fact" for issue in formed.diagnostics
+        )
+
+
+def test_checked_delivery_units_do_not_resolve_same_column_conflicts():
+    _, formed = _form_units(_unit_fixture(overlap=True))
+    assert any(
+        issue.severity == "error" and "measurement_unit" in issue.fields
+        for issue in formed.diagnostics
+    )
+
+
+def test_checked_delivery_units_reject_unknown_units_and_changed_coding():
+    from reg_meta_build.source_curation import capture_expectations
+
+    fixture = _unit_fixture()
+    records, case, variants, coding = fixture
+    key = next(iter(coding))
+    changed_coding = {key: resolve_code_membership((_claim("new supplied list", "1"),))}
+    resolution, _ = _form_units((records, case, variants, changed_coding))
+    assert not resolution.cases
+    assert any(
+        issue.code == "stale_representation_coding" for issue in resolution.diagnostics
+    )
+    unknown = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(update={"measurement_unit": None})
+            }
+        )
+        for record in records
+    )
+    unknown_case = case.model_copy(
+        update={
+            "targets": capture_expectations(
+                unknown,
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="positive literal units"):
+        resolve_representation_cases(unknown, (unknown_case,), coding=coding)

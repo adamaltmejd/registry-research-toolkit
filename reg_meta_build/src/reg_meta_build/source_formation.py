@@ -24,8 +24,12 @@ from reg_meta_build.resolved_catalog import (
 )
 from reg_meta_build.source_curation import (
     CurationCase,
+    DeliveryUnitDecision,
+    RepresentationDecision,
     ResolutionDiagnostic,
     SourceRecordRef,
+    _field_matches,
+    record_ref,
 )
 from reg_meta_build.source_intervals import (
     OccurrenceResolution,
@@ -119,6 +123,8 @@ def _state_from_segment(
         delivery_column_name=segment.delivery_column_name,
         data_type=_text(segment.fields, "data_type"),
         data_length=_text(segment.fields, "data_length"),
+        definition=_text(segment.fields, "definition"),
+        measurement_unit=_text(segment.fields, "measurement_unit"),
         operational_definition=_text(segment.fields, "operational_definition"),
         source_register_text=_text(segment.fields, "source_attribution"),
         pooled=segment.pooled,
@@ -402,19 +408,21 @@ def _null_conflicting_facts(
 ) -> tuple[CoverageObligation, ...]:
     """Keep the window but drop the exact fact an accepted representation disputes.
 
-    Only data_type/data_length travel on the obligation; other conflicting facts
-    need no claim change. Partial overlaps split the obligation so the safe slice
+    Type, length and literal unit travel on the obligation. Partial overlaps split the obligation so the safe slice
     stays fully checked, the same period rule waived delivery already uses.
     A nulled fact is simply None, which the boundary guard never compares.
     """
     type_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     length_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
+    unit_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     for variant, column, fact_field, start, end in conflicts:
         if fact_field == "data_type":
             type_windows[variant, column].append((start, end))
         elif fact_field == "data_length":
             length_windows[variant, column].append((start, end))
-    if not type_windows and not length_windows:
+        elif fact_field == "measurement_unit":
+            unit_windows[variant, column].append((start, end))
+    if not type_windows and not length_windows and not unit_windows:
         return obligations
     result: list[CoverageObligation] = []
     for claim in obligations:
@@ -433,14 +441,19 @@ def _null_conflicting_facts(
             for window in length_windows.get(key, ())
             if window[0] <= claim.valid_to and window[1] >= claim.valid_from
         ]
-        if not claimed_types and not claimed_lengths:
+        claimed_units = [
+            window
+            for window in unit_windows.get(key, ())
+            if window[0] <= claim.valid_to and window[1] >= claim.valid_from
+        ]
+        if not claimed_types and not claimed_lengths and not claimed_units:
             result.append(claim)
             continue
         cuts = {
             date.fromisoformat(claim.valid_from).toordinal(),
             date.fromisoformat(claim.valid_to).toordinal() + 1,
         }
-        for start, end in (*claimed_types, *claimed_lengths):
+        for start, end in (*claimed_types, *claimed_lengths, *claimed_units):
             lower = max(start, claim.valid_from)
             upper = min(end, claim.valid_to)
             cuts.add(date.fromisoformat(lower).toordinal())
@@ -456,6 +469,9 @@ def _null_conflicting_facts(
                 start <= piece_from and end >= piece_to
                 for start, end in claimed_lengths
             )
+            null_unit = any(
+                start <= piece_from and end >= piece_to for start, end in claimed_units
+            )
             result.append(
                 replace(
                     claim,
@@ -463,9 +479,110 @@ def _null_conflicting_facts(
                     valid_to=piece_to,
                     data_type_claim=None if null_type else claim.data_type_claim,
                     data_length_claim=None if null_length else claim.data_length_claim,
+                    measurement_unit_claim=None
+                    if null_unit
+                    else claim.measurement_unit_claim,
                 )
             )
     return tuple(result)
+
+
+def _checked_month_definitions(
+    effective: tuple[EffectiveOccurrence, ...],
+    cases: tuple[CurationCase, ...],
+) -> tuple[str, ...]:
+    """Authorize literal definitions only for a completely checked month family."""
+    key = effective[0].variable_key
+    if key is None or len(key) != 5 or key[:2] != ("curation", "period-family"):
+        return ()
+    selected = []
+    coverage: dict[SourceRecordRef, list[CurationCase]] = defaultdict(list)
+    for case in cases:
+        decision = case.decision
+        if (
+            not isinstance(decision, RepresentationDecision)
+            or decision.variable_key != key
+            or decision.column_metadata != "per_column"
+            or len(decision.columns) != 12
+        ):
+            continue
+        if any(
+            not any(
+                field.name == "definition" and field.status == "value"
+                for field in projection.fields
+            )
+            for target in case.targets
+            for projection in target.alternatives
+        ):
+            continue
+        selected.append(case.case_id)
+        for target in case.targets:
+            coverage[target.ref].append(case)
+    for occurrence in effective:
+        if not occurrence.identity_checked:
+            return ()
+        definition = _text(occurrence.fields, "definition")
+        if definition is None:
+            return ()
+        for ref in _refs((occurrence,)):
+            if not any(
+                isinstance(case.decision, RepresentationDecision)
+                and case.decision.variant_key == occurrence.variant_key
+                and any(
+                    field.name == "definition"
+                    and field.status == "value"
+                    and field.value == definition
+                    for target in case.targets
+                    if target.ref == ref
+                    for projection in target.alternatives
+                    for field in projection.fields
+                )
+                for case in coverage.get(ref, ())
+            ):
+                return ()
+    return tuple(sorted(selected))
+
+
+def _checked_delivery_units(
+    effective: tuple[EffectiveOccurrence, ...],
+    cases: tuple[CurationCase, ...],
+) -> tuple[str, ...]:
+    """A unit permission must cover every original and effective contributor."""
+    actual_refs = set(_refs(effective))
+    accepted = []
+    for case in cases:
+        decision = case.decision
+        if not isinstance(decision, DeliveryUnitDecision):
+            continue
+        targets = {target.ref: target for target in case.targets}
+        if set(targets) != actual_refs:
+            continue
+        valid = True
+        for occurrence in effective:
+            if (
+                occurrence.variable_key != decision.variable_key
+                or not occurrence.source_records
+                or occurrence.support_records
+                or occurrence.occurrence_key is not None
+            ):
+                valid = False
+                break
+            for source in occurrence.source_records:
+                target = targets[record_ref(source)]
+                if not any(
+                    projection.edition_scope == occurrence.edition_scope
+                    and projection.edition_period_scope
+                    == occurrence.edition_period_scope
+                    and all(
+                        _field_matches(occurrence, field) for field in projection.fields
+                    )
+                    for projection in target.alternatives
+                ):
+                    valid = False
+                    break
+        if valid:
+            accepted.append(case.case_id)
+    return tuple(sorted(accepted))
 
 
 def form_native_variable(
@@ -627,6 +744,28 @@ def form_native_variable(
         "description",
         "measurement_unit",
     }
+    unit_cases = _checked_delivery_units(effective, representations)
+    if "measurement_unit" in conflicts and unit_cases:
+        canonical_fields.remove("measurement_unit")
+        issue(
+            "delivery_unit_projected",
+            "Checked literal delivery units remain on source states; no common unit or quantity conversion was selected. Cases: "
+            + ", ".join(unit_cases),
+            ("measurement_unit",),
+            ("variable.measurement_unit",),
+            severity="warning",
+        )
+    definition_cases = _checked_month_definitions(effective, representations)
+    if "definition" in conflicts and definition_cases:
+        canonical_fields.remove("definition")
+        issue(
+            "period_family_definition_projected",
+            "Checked calendar-month definitions remain on literal delivery columns; no common definition was selected. Cases: "
+            + ", ".join(definition_cases),
+            ("definition",),
+            ("variable.definition",),
+            severity="warning",
+        )
     for field_name in sorted(canonical_fields & set(conflicts)):
         issue(
             "conflicting_variable_fact",
@@ -769,6 +908,11 @@ def form_native_variable(
                     segment.valid_to,
                     _refs(segment.occurrences),
                     period_scope=segment.period_scope,
+                    definition_claim=_fact_claim(segment.fields.definition)
+                    if definition_cases
+                    else None,
+                    measurement_unit_claim=_fact_claim(segment.fields.measurement_unit)
+                    or ("negative", None),
                     data_type_claim=_fact_claim(segment.fields.data_type),
                     data_length_claim=_fact_claim(segment.fields.data_length),
                     attributions=tuple(
@@ -784,6 +928,30 @@ def form_native_variable(
                 new_states, new_issues, uncoded = _coded_states(
                     segment, variant, code_result, subject
                 )
+                if unit_cases:
+                    unit_attributions = {
+                        f"{case.case_id}: {case.decision.reason}\n{case.decision.provenance}"
+                        for case in representations
+                        if case.case_id in unit_cases
+                        and isinstance(case.decision, DeliveryUnitDecision)
+                    }
+                    new_states = [
+                        state.model_copy(
+                            update={
+                                "provenance": "\n\n".join(
+                                    sorted(
+                                        unit_attributions
+                                        | (
+                                            {state.provenance}
+                                            if state.provenance
+                                            else set()
+                                        )
+                                    )
+                                )
+                            }
+                        )
+                        for state in new_states
+                    ]
                 waived[variant.slug, column].extend(uncoded)
                 created_states.extend(new_states)
                 if not new_states:
@@ -876,7 +1044,11 @@ def form_native_variable(
     states, aliases, grouping_issues, representation_waivers, representation_facts = (
         form_representations(
             [state for state in states if state.period_scope == "intervals"],
-            representations,
+            tuple(
+                case
+                for case in representations
+                if isinstance(case.decision, RepresentationDecision)
+            ),
             variable_key=variable_key,
             variants=variants,
             subject=subject,

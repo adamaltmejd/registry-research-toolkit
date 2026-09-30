@@ -1486,3 +1486,42 @@ def test_unbound_relationship_defers_only_known_unselected_occurrence_source(
         assert retained[0]["disposition"] == (
             "out_of_slice_relationship" if deferred else "unbound_relationship"
         )
+
+
+def test_support_only_register_reaches_coding_compiler_and_report(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    register = catalog.curation / "registers/scb/sample.toml"
+    register.write_text(
+        register.read_text()
+        + '\n[[coding.support]]\nvariable = "1.999"\nvariant = "people"\n'
+        'column = "VALUE"\nperiods = [["2020-01-01", "2020-12-31"]]\n'
+        'code = "1"\nlabel = "erroneous"\nassociation = "row:bad"\n'
+        'expected_association = "' + "a" * 64 + '"\n'
+        'authority_code = "2"\nauthority_label = "correct"\n'
+        'authority_association = "row:correct"\n'
+        'expected_authority_association = "' + "b" * 64 + '"\n'
+        'expected_source_codings = ["' + "c" * 64 + '"]\n'
+        'reason = "Reviewed exact association"\nsource = "fixture"\n'
+    )
+    report = tmp_path / "report"
+    decisions = tmp_path / "decisions"
+    result = catalog.build(
+        tmp_path / "catalog.db",
+        report,
+        registers=("1",),
+        diagnostic=True,
+        dump_decisions=decisions,
+    )
+    assert result["status"] == "diagnostic_complete"
+    issues = _issues(report)
+    assert any(
+        issue["code"] == "stale_curation_entry"
+        and "coding.support/1/period/1" in issue.get("case_id", "")
+        for issue in issues
+    )
+    compiled = json.loads((decisions / "compile-report.json").read_text())
+    assert any(
+        "coding.support/1/period/1" in case_id
+        for case_id in compiled["scb/sample"]["entries_read"]
+    )

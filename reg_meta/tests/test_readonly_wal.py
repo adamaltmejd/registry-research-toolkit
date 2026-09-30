@@ -138,7 +138,7 @@ def test_open_doc_db_rejects_stale_1_1_0_schema(tmp_path: Path) -> None:
     assert exc_info.value.code == "doc_schema_incompatible"
 
 
-@pytest.mark.parametrize("schema_version", ["6.11.0", "6.12.0", "6.13.0"])
+@pytest.mark.parametrize("schema_version", ["6.11.0", "6.12.0", "6.13.0", "6.14.0"])
 def test_open_db_rejects_catalog_without_current_delivery_contract(
     tmp_path: Path,
     schema_version: str,

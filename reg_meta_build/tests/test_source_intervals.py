@@ -779,3 +779,23 @@ def test_independent_occurrence_cannot_absorb_other_temporal_claims(scope):
     resolution = resolve_occurrence_intervals(records)
     assert resolution.segments == ()
     assert "conflicting_occurrence_scope" in {issue.code for issue in resolution.issues}
+
+
+def test_same_column_definition_conflict_is_not_absorbed() -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"definition": value_field(definition)}
+                )
+            }
+        )
+        for record, definition in zip(
+            (_record(1), _record(2)), ("January income", "February income"), strict=True
+        )
+    )
+    result = resolve_occurrence_intervals(records)
+    assert result.segments[0].fields.definition == SourceField(status="unknown")
+    assert [(issue.code, issue.fields) for issue in result.issues] == [
+        ("conflicting_occurrence_facts", ("definition",))
+    ]

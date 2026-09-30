@@ -661,6 +661,64 @@ class RepresentationDecision(FiniteCurationWindow):
         return self
 
 
+class DeliveryUnitColumn(ColumnRepresentation):
+    variant_key: NativeKey
+
+    @model_validator(mode="after")
+    def _checked(self) -> Self:
+        if not self.variant_key or self.expected_codings is None:
+            raise ValueError("delivery units need exact variant and coding evidence")
+        return self
+
+
+class DeliveryUnitDecision(_CurationModel):
+    """Retain checked literal units without converting quantities or source scopes."""
+
+    kind: Literal["delivery_unit"] = "delivery_unit"
+    reviewed: Literal[True]
+    variable_key: NativeKey
+    columns: tuple[DeliveryUnitColumn, ...] = Field(min_length=1)
+    reason: str = Field(min_length=1)
+    provenance: str = Field(min_length=1)
+
+    @staticmethod
+    def require_targets(targets: tuple[RecordExpectation, ...]) -> None:
+        for record in targets:
+            for projection in record.alternatives:
+                supplied = {field.name: field for field in projection.fields}
+                if any(
+                    name not in supplied
+                    or supplied[name].status != "value"
+                    or not isinstance(value := supplied[name].value, str)
+                    or not value.strip()
+                    for name in ("measurement_unit", "definition", "name")
+                ):
+                    raise ValueError(
+                        "delivery units need positive literal units, names and definitions"
+                    )
+                if (
+                    set(supplied) != set(SourceFields.model_fields)
+                    or projection.subject is None
+                    or projection.edition_scope is None
+                    or projection.edition_period_scope is None
+                    or projection.parent_facts is None
+                    or projection.code_set_references is None
+                ):
+                    raise ValueError(
+                        "delivery units need complete original source projections"
+                    )
+
+    @model_validator(mode="after")
+    def _owner(self) -> Self:
+        if not self.variable_key or "" in self.variable_key:
+            raise ValueError("delivery units need an exact accepted owner")
+        if len({(column.variant_key, column.column) for column in self.columns}) != len(
+            self.columns
+        ):
+            raise ValueError("delivery units require unique literal variant columns")
+        return self
+
+
 class CodingWindow(FiniteCurationWindow):
     """The complete observed coding evidence for one finite period."""
 
@@ -822,6 +880,7 @@ type CurationDecision = (
     | SearchAliasDecision
     | AliasWindowDecision
     | RepresentationDecision
+    | DeliveryUnitDecision
     | CodingDecision
     | ClassificationDecision
 )
@@ -901,7 +960,9 @@ def _record_key(record: SourceRecord) -> tuple[str, tuple[str, ...]]:
     return record.source, record.locators[0].semantic_record_key
 
 
-def _actual_field(record: SourceRecord, name: str) -> FieldExpectation:
+def _actual_field(
+    record: SourceRecord | EffectiveOccurrence, name: str
+) -> FieldExpectation:
     field = getattr(record.fields, name)
     if field is None:
         return FieldExpectation(name=name, status="absent")
@@ -948,7 +1009,9 @@ def _project_record(record: SourceRecord, shape: RecordProjection) -> RecordProj
     )
 
 
-def _field_matches(record: SourceRecord, expected: FieldExpectation) -> bool:
+def _field_matches(
+    record: SourceRecord | EffectiveOccurrence, expected: FieldExpectation
+) -> bool:
     return _actual_field(record, expected.name) == expected
 
 
