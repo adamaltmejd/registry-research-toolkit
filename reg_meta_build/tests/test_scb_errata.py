@@ -112,6 +112,36 @@ class TestDeliveredEntry:
         (entry,) = _load(tmp_path, slug_dir, body).delivered
         assert entry.native_variable_id == 39310
 
+    @pytest.mark.parametrize("second_version", ["2011", "2010"])
+    def test_delivered_subsets_require_disjoint_versions(
+        self, tmp_path: Path, slug_dir: Path, second_version: str
+    ) -> None:
+        first = (
+            "[[errata.delivered]]\n"
+            'variant = "individer-15plus"\ncolumn = "Kon"\n'
+            'versions = ["2010"]\nnative_variable_id = 39310\n'
+            'upstream = "blank-column-name-in-version"\n'
+            'evidence = "Exact blank source row."\nnoted = "2026-09-12"\n'
+        )
+        second = (
+            "[[errata.delivered]]\n"
+            'variant = "individer-15plus"\ncolumn = "KON"\n'
+            f'versions = ["{second_version}"]\nnative_variable_id = 39310\n'
+            'evidence = "Existing holdings assertion."\nnoted = "2026-09-12"\n'
+        )
+        if second_version == "2010":
+            err = _refused(tmp_path, slug_dir, first + second)
+            assert "duplicate delivered column" in err.message
+            assert "2010" in err.message
+        else:
+            entries = _load(tmp_path, slug_dir, first + second).delivered
+            assert [e.versions for e in entries] == [("2010",), ("2011",)]
+            assert all(e.native_variable_id == 39310 for e in entries)
+            assert entries[0].provenance.startswith(
+                "errata:blank-column-name-in-version"
+            )
+            assert entries[1].provenance.startswith("errata:omitted-column-in-version")
+
     def test_evidence_and_default_class_form_provenance(
         self, tmp_path: Path, slug_dir: Path
     ) -> None:

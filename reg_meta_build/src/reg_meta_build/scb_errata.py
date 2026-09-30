@@ -452,6 +452,7 @@ def load_scb_errata(
 
     delivered: list[ErrataDelivered] = []
     seen_columns: set[tuple[int, str]] = set()
+    delivered_versions: dict[tuple[int, str], set[str]] = {}
     for entry in delivered_entries:
         register_id, variant_id, context = _resolve_variant(
             entry, "delivered", registers, variants
@@ -467,13 +468,14 @@ def load_scb_errata(
             else _DEFAULT_DELIVERED_CLASS
         )
         key = (variant_id, fold_column(column))
-        if key in seen_columns:
+        overlap = delivered_versions.get(key, set()).intersection(named)
+        if overlap:
             raise curation_error(
                 _CODE,
-                f"{context}: duplicate delivered column {column!r}.",
-                "Each (register, variant, column) may appear once — list every "
-                "omitted version in that entry's `versions`.",
+                f"{context}: duplicate delivered column {column!r} versions {sorted(overlap)!r}.",
+                "Declarations for one (register, variant, column) must select disjoint versions.",
             )
+        delivered_versions.setdefault(key, set()).update(named)
         seen_columns.add(key)
         delivered.append(
             ErrataDelivered(
