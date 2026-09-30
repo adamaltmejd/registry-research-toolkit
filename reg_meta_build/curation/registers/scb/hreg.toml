@@ -616,7 +616,7 @@ native_id = "47.73"
 slug = "ar"
 
 [[variable]]
-native_id = "47.241"
+native_id = "47.241.alder-31-12"
 slug = "alder-31-12"
 
 [[variable]]
@@ -748,7 +748,7 @@ native_id = "47.1714"
 slug = "ar-termin-forsorjning"
 
 [[variable]]
-native_id = "47.1715"
+native_id = "47.1715.ar-och-termin-for-examen"
 slug = "ar-och-termin-for-examen"
 
 [[variable]]
@@ -1250,3 +1250,82 @@ slug = "datum-for-studieavbrott"
 [[variable]]
 native_id = "47.38118.medverkande-hogskola"
 slug = "medverkande-hogskola"
+
+[[variable]]
+native_id = "47.241.alder-vid-terminens-referensarsslut"
+slug = "alder-vid-terminens-referensarsslut"
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.3"
+column = "Talder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.10"
+column = "TAlder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.1"
+column = "TAlder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.15"
+column = "TAlder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.11"
+column = "TAlder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.17"
+column = "TAlder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.4"
+column = "KAlder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.264"
+column = "TAlder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.1506"
+column = "TAlder"
+owner = "47.241.alder-vid-terminens-referensarsslut"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.column_owner]]
+variable = "47.241"
+variant = "47.5"
+column = "KAlder"
+owner = "47.241.alder-31-12"
+ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and all 126 original age-code/label pairs per member. Nine operational definitions explicitly measure age at the current reference, admission, activity, financing or examination calendar year end. Variant 1506 explicitly uses previous year end for spring and current calendar year end for autumn. Keep this term-dependent reference basis distinct. Preserve all source types, columns, prose, coding associations, validity and pooled delivery scopes; no year, age or period correction is inferred."
+
+[[identity.partition]]
+variable = "47.1715"
+columns = { "ExArTermin" = "47.1715.ar-och-termin-for-examen", "LicArTermin" = "47.1715.ar-och-termin-for-examen", "ArTermin" = "47.1715.ar-och-termin-for-examen" }
+columns_ref = "SCB HREG native 47.1715: all three originals explicitly measure year and semester (calendar half-year) for the issued examination certificate. ExArTermin specifies a doctoral certificate, LicArTermin identifies a completed licentiate certificate, and ArTermin covers the examination event in the mixed doctoral/licentiate examination variant. This is one generic certificate-issued-semester question, not an assertion that degree types or observations are equivalent. All three retain text length 5, Termin unit and Tal nonmembership coding. Preserve the pre-autumn-1998 paper-report caveat and every pooled source scope, including the LicArTermin January period versus July context discrepancy. ArTermin on other native variables is outside this mapping."

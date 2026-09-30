@@ -17,7 +17,7 @@ register = "scb/iot"
 key = "disponibel-inkomst"
 label = "Disponibel inkomst"
 axes = [{ axis = "enhet", label = "Enhet" }, { axis = "hushallsbegrepp", label = "Hushållsbegrepp" }, { axis = "kapitalvinst", label = "Kapitalvinst" }]
-members = [{ variable = "delkomponent-disponibel-inkomst", delivery_column = "CDISP", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-exkl-kapitalvinst", delivery_column = "CDISP5", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN83", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN84", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN86", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din88k", delivery_column = "DIN88K", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din91", delivery_column = "DIN91", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dind", delivery_column = "DIND", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinkd", delivery_column = "DINKD", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinu82", delivery_column = "DINU82", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj", delivery_column = "CDISPH", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF83", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF84", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF86", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-3", delivery_column = "DINF88K", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-4", delivery_column = "DINF91", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-5", delivery_column = "DINFU82", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-6", delivery_column = "DINKF", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-2004-inkl-kapitalvinst", delivery_column = "CDISP04", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-2004-exkl-kapitalvinst", delivery_column = "CDISP504", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj-2004", delivery_column = "CDISPKE04H", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2004", delivery_column = "CDISP04H", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst", delivery_column = "CDISP04HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-2", delivery_column = "CDISP04VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-3", delivery_column = "CDISPHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-4", delivery_column = "CDISPVXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-kosthushall-2004", delivery_column = "CDISP04HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004", delivery_column = "CDISP504", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004", delivery_column = "CDISP504HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004", delivery_column = "CDISP504VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst", delivery_column = "CDISP5", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst", delivery_column = "CDISP5HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst", delivery_column = "CDISP5VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj", delivery_column = "CDISPKEH", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj", delivery_column = "DINFKE", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispp", delivery_column = "CDISPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinkpp", delivery_column = "DINKPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp", delivery_column = "DINPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1981", delivery_column = "DINPP81", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning", delivery_column = "DINPP82", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning", delivery_column = "DINPP83", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1984", delivery_column = "DINPP84", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1986", delivery_column = "DINPP86", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp88k", delivery_column = "DINPP88K", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp91", delivery_column = "DINPP91", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinupp", delivery_column = "DINUPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp04kehb", delivery_column = "CDISP04KEHB", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispkehb", delivery_column = "CDISPKEHB", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispkevx", delivery_column = "CDISPKEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp04kevx", delivery_column = "CDISP04KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp5kevx", delivery_column = "CDISP5KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "cdisp504kevx", delivery_column = "CDISP504KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }]
+members = [{ variable = "delkomponent-disponibel-inkomst", delivery_column = "CDISP", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-exkl-kapitalvinst", delivery_column = "CDISP5", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN83", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN84", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN86", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din88k", delivery_column = "DIN88K", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din91", delivery_column = "DIN91", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dind", delivery_column = "DIND", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinkd", delivery_column = "DINKD", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinu82", delivery_column = "DINU82", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj", delivery_column = "CDISPH", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF83", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF84", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF86", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-3", delivery_column = "DINF88K", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-4", delivery_column = "DINF91", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-5", delivery_column = "DINFU82", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-6", delivery_column = "DINKF", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-2004-inkl-kapitalvinst", delivery_column = "CDISP04", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-2004-exkl-kapitalvinst", delivery_column = "CDISP504", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj-2004", delivery_column = "CDISPKE04H", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2004", delivery_column = "CDISP04H", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst", delivery_column = "CDISP04HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-2", delivery_column = "CDISP04VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-3", delivery_column = "CDISPHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-4", delivery_column = "CDISPVXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-kosthushall-2004", delivery_column = "CDISP04HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004-individ", delivery_column = "CDISP504", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004-hushall", delivery_column = "CDISP504HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende", delivery_column = "CDISP504VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst-individ", delivery_column = "CDISP5", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst-hushall", delivery_column = "CDISP5HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende", delivery_column = "CDISP5VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj", delivery_column = "CDISPKEH", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj", delivery_column = "DINFKE", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispp", delivery_column = "CDISPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinkpp", delivery_column = "DINKPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp", delivery_column = "DINPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1981", delivery_column = "DINPP81", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning", delivery_column = "DINPP82", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning", delivery_column = "DINPP83", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1984", delivery_column = "DINPP84", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1986", delivery_column = "DINPP86", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp88k", delivery_column = "DINPP88K", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp91", delivery_column = "DINPP91", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinupp", delivery_column = "DINUPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp04kehb", delivery_column = "CDISP04KEHB", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispkehb", delivery_column = "CDISPKEHB", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispkevx", delivery_column = "CDISPKEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp04kevx", delivery_column = "CDISP04KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp5kevx", delivery_column = "CDISP5KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "cdisp504kevx", delivery_column = "CDISP504KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }]
 
 # CDISP5 explicitly excludes capital gains; retain a distinct calculation owner.
 
@@ -98,7 +98,7 @@ native_id = "25.44"
 slug = "kon"
 
 [[variable]]
-native_id = "25.75"
+native_id = "25.75.individ-summa"
 slug = "arbetsinkomst"
 
 [[variable]]
@@ -114,7 +114,7 @@ native_id = "25.94"
 slug = "pension-skattepliktig"
 
 [[variable]]
-native_id = "25.99"
+native_id = "25.99.deklarerade-delbelopp-positiv-tjanst"
 slug = "sammanraknad-forvarvsinkomst"
 
 [[variable]]
@@ -462,7 +462,7 @@ native_id = "25.1196"
 slug = "ovriga-skattepliktiga-ers-tjanst"
 
 [[variable]]
-native_id = "25.1198"
+native_id = "25.1198.bruttolon-med-kostnadsavdrag"
 slug = "loneinkomst"
 
 [[variable]]
@@ -518,7 +518,7 @@ native_id = "25.1287"
 slug = "ersattning-forsakringskassa-ku"
 
 [[variable]]
-native_id = "25.1289"
+native_id = "25.1289.individ-ku"
 slug = "summa-lon-formaner-ku"
 
 [[variable]]
@@ -578,7 +578,7 @@ native_id = "25.1413"
 slug = "studiemedel-studiebidrag"
 
 [[variable]]
-native_id = "25.1430"
+native_id = "25.1430.individ-fyra-komponenter"
 slug = "studiemedel-studiehjalp-lan-och-bidrag"
 
 [[variable]]
@@ -1198,7 +1198,7 @@ native_id = "25.21514"
 slug = "negativa-transfereringar-2004"
 
 [[variable]]
-native_id = "25.21515"
+native_id = "25.21515.inkl-kapitalvinst"
 slug = "delkomponent-disponibel-inkomst-2004"
 
 [[variable]]
@@ -1338,7 +1338,7 @@ native_id = "25.21831"
 slug = "drivmedel-vid-bilforman"
 
 [[variable]]
-native_id = "25.21832"
+native_id = "25.21832.individ-agi-ku"
 slug = "summa-skattepliktiga-formaner"
 
 [[variable]]
@@ -1450,7 +1450,7 @@ native_id = "25.24208"
 slug = "aktivitetsersattning-vilande"
 
 [[variable]]
-native_id = "25.24373"
+native_id = "25.24373.folkbokford-1-november"
 slug = "forsamling-den-1-11"
 
 [[variable]]
@@ -7595,9 +7595,6 @@ slug = "ovriga-positiva-transfereringar-individ-fran-2016"
 native_id = "25.21515.exkl-kapitalvinst"
 slug = "delkomponent-disponibel-inkomst-2004-exkl-kapitalvinst"
 
-[[variable]]
-native_id = "25.21515.inkl-kapitalvinst"
-slug = "delkomponent-disponibel-inkomst-2004-inkl-kapitalvinst"
 
 [[variable]]
 native_id = "25.30828.hushall"
@@ -7614,3 +7611,725 @@ slug = "bostadsbidrag-och-bostadstillagg-individ"
 [[variable]]
 native_id = "25.30828.pensionarer"
 slug = "bostadsbidrag-och-bostadstillagg-pensionarer"
+
+[[identity.partition]]
+variable = "25.1175"
+columns = { "STOTEX" = "25.1175.individ", "STOTEXHB" = "25.1175.hushall", "STOTEXVXHB" = "25.1175.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: The supplied HEK tax definition and operations explicitly sum final tax excluding deductible taxes/fees plus any seamen tax. Retain individual, ordinary household and modelled shared-residence household amounts. The reused STOTEX under native 25.105 remains an independent native final-tax family with its own original operations."
+
+[[identity.partition]]
+variable = "25.4530"
+columns = { "CTRAN" = "25.4530.individ", "CTRANHB" = "25.4530.hushall", "CTRANVXHB" = "25.4530.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: The supplied definition and operations explicitly sum final tax plus other negative transfers. Retain individual, ordinary household and modelled shared-residence household amounts. Reused CTRAN under native 25.126 means only other negative transfers (student-loan repayments and provided maintenance advances); it remains independent."
+
+[[identity.partition]]
+variable = "25.22306"
+columns = { "CDISP504" = "25.22306.individ", "CDISP504HB" = "25.22306.hushall", "CDISP504VXHB" = "25.22306.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: Retain separate individual, ordinary household and modelled shared-residence household 2004-definition disposable-income amounts. The individual CDISP504 operation explicitly subtracts gross gains, adds gross losses and adds the 0.3 realisation-gain/loss adjustment. The reused CDISP504 under native 25.21515 supplies the different individual disposable-income component without this explicit adjustment and remains independent. Preserve original Nordic-income notes and per-occurrence formulas without inferring numerical equivalence."
+
+[[identity.partition]]
+variable = "25.22307"
+columns = { "CDISP5" = "25.22307.individ", "CDISP5HB" = "25.22307.hushall", "CDISP5VXHB" = "25.22307.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: Retain separate individual, ordinary household and modelled shared-residence household disposable-income amounts excluding capital gains. The individual CDISP5 operation explicitly supplies the 1991 definition and 0.3 realisation-gain/loss adjustment. Reused CDISP5 under native 25.1304 is the individual disposable-income component whose supplied capital-gain exclusion formula remains independent. Preserve original Nordic-income notes and per-occurrence formulas without inferring numerical equivalence."
+
+[[identity.partition]]
+variable = "25.21862"
+columns = { "PPENS" = "25.21862.individ", "PPENSHB" = "25.21862.hushall", "PPENSVXHB" = "25.21862.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: The supplied definition and operations explicitly sum taxable and tax-free pension and annuity amounts. Retain separate individual, ordinary household and modelled shared-residence household amounts; original Nordic-income notes remain unchanged. Reused PPENS under native 25.1204 means private pension insurance/pension savings account alone, so that native family remains independent."
+
+[[identity.partition]]
+variable = "25.24930"
+columns = { "IBTP" = "25.24930.individ", "IBTPHB" = "25.24930.hushall", "IBTPVXHB" = "25.24930.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: The supplied definition and operations explicitly sum housing supplements for pensioners and for sickness/activity compensation recipients. Retain separate individual, ordinary household and modelled shared-residence household amounts. Reused IBTP under native 25.1400 means the pensioner supplement alone and remains independent."
+
+[[identity.partition]]
+variable = "25.24931"
+columns = { "IBTPS" = "25.24931.individ", "IBTPSHB" = "25.24931.hushall", "IBTPSVXHB" = "25.24931.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: The supplied definition and operations explicitly sum special housing supplements for pensioners and for sickness/activity compensation recipients. Retain separate individual, ordinary household and modelled shared-residence household amounts. Reused IBTPS under native 25.1401 means the special pensioner supplement alone and remains independent."
+
+[[identity.partition]]
+variable = "25.42404"
+columns = { "PAGSFT" = "25.42404.individ", "PAGSFTHB" = "25.42404.hushall", "PAGSFTVXHB" = "25.42404.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: The supplied definition and operation explicitly identify AGS amounts forming the special earned-income payroll-tax base, payment code 440. Retain separate individual, ordinary household and modelled shared-residence household amounts. Reused PAGSFT under native 25.21858 is the independently identified AGS early-retirement pension amount; no cross-native merger or reporting-basis change is inferred."
+
+[[variable]]
+native_id = "25.1175.hushall"
+slug = "skatt-hek-hushall"
+
+[[variable]]
+native_id = "25.1175.hushall-vaxelvis-boende"
+slug = "skatt-hek-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1175.individ"
+slug = "skatt-hek-individ"
+
+[[variable]]
+native_id = "25.4530.hushall"
+slug = "negativa-transfereringar-hushall"
+
+[[variable]]
+native_id = "25.4530.hushall-vaxelvis-boende"
+slug = "negativa-transfereringar-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.4530.individ"
+slug = "negativa-transfereringar-individ"
+
+[[variable]]
+native_id = "25.22306.hushall"
+slug = "disponibel-inkomst-exkl-kapvinst-2004-hushall"
+
+[[variable]]
+native_id = "25.22306.hushall-vaxelvis-boende"
+slug = "disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22306.individ"
+slug = "disponibel-inkomst-exkl-kapvinst-2004-individ"
+
+[[variable]]
+native_id = "25.22307.hushall"
+slug = "disponibel-inkomst-exkl-kapitalvinst-hushall"
+
+[[variable]]
+native_id = "25.22307.hushall-vaxelvis-boende"
+slug = "disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22307.individ"
+slug = "disponibel-inkomst-exkl-kapitalvinst-individ"
+
+[[variable]]
+native_id = "25.21862.hushall"
+slug = "pension-livranta-skattepliktig-skattefri-hushall"
+
+[[variable]]
+native_id = "25.21862.hushall-vaxelvis-boende"
+slug = "pension-livranta-skattepliktig-skattefri-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21862.individ"
+slug = "pension-livranta-skattepliktig-skattefri-individ"
+
+[[variable]]
+native_id = "25.24930.hushall"
+slug = "summa-bostadstillagg-hushall"
+
+[[variable]]
+native_id = "25.24930.hushall-vaxelvis-boende"
+slug = "summa-bostadstillagg-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.24930.individ"
+slug = "summa-bostadstillagg-individ"
+
+[[variable]]
+native_id = "25.24931.hushall"
+slug = "summa-sarskilt-bostadstillagg-hushall"
+
+[[variable]]
+native_id = "25.24931.hushall-vaxelvis-boende"
+slug = "summa-sarskilt-bostadstillagg-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.24931.individ"
+slug = "summa-sarskilt-bostadstillagg-individ"
+
+[[variable]]
+native_id = "25.42404.hushall"
+slug = "ags-sarskild-loneskatt-hushall"
+
+[[variable]]
+native_id = "25.42404.hushall-vaxelvis-boende"
+slug = "ags-sarskild-loneskatt-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.42404.individ"
+slug = "ags-sarskild-loneskatt-individ"
+
+[[identity.partition]]
+variable = "25.645"
+columns = { "NUNDAT1" = "25.645.individ", "NUNDAT1HB" = "25.645.hushall", "NUNDAT1VXHB" = "25.645.hushall-vaxelvis-boende", "UNRVA" = "25.645.individ" }
+columns_ref = "Prepared SCB export: UNRVA and NUNDAT1 explicitly name and define the same active-business deficit amount under this native identity. Retain the original blank 1991 operation; later operations explicitly sum sole-proprietor and handelsbolag deficits. Keep individual, household and modelled shared-residence household amounts separate. This map does not infer an unreported old formula or numerical equivalence."
+
+[[identity.partition]]
+variable = "25.650"
+columns = { "NUNDPT1" = "25.650.individ", "NUNDPT1HB" = "25.650.hushall", "NUNDPT1VXHB" = "25.650.hushall-vaxelvis-boende", "UNRVP" = "25.650.individ" }
+columns_ref = "Prepared SCB export: UNRVP and NUNDPT1 explicitly name and define the same passive-business deficit amount under this native identity. Retain the original blank 1991 operation; later operations explicitly sum sole-proprietor and handelsbolag deficits. Keep individual, household and modelled shared-residence household amounts separate. This map does not infer an unreported old formula or numerical equivalence."
+
+[[identity.partition]]
+variable = "25.1287"
+columns = { "CFKASS" = "25.1287.individ", "CFKASSHB" = "25.1287.hushall", "CFKASSVXHB" = "25.1287.hushall-vaxelvis-boende", "SJUKPEN" = "25.1287.individ" }
+columns_ref = "Prepared SCB export: SJUKPEN and CFKASS explicitly name and define the same Försäkringskassa KU compensation amount under this native identity. Retain blank historical operations; later operations specify the sum of compensation from employment and other earned work. Keep individual, household and modelled shared-residence household amounts separate. No unreported old calculation, reporting transition or statistical equivalence is inferred."
+
+[[identity.partition]]
+variable = "25.22253"
+columns = { "BARNSKF" = "25.22253.individ", "PBARNSF" = "25.22253.individ", "PBLIVSFHB" = "25.22253.barnpension-livranta-pension-hushall", "PBLIVSFVXHB" = "25.22253.barnpension-livranta-pension-hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: PBARNSF and BARNSKF explicitly name and define the same individual tax-free child-pension amount. Household PBLIVSFHB and its modelled shared-residence counterpart explicitly sum tax-free child pension plus total tax-free annuity and pension, a broader component set; keep these separate owners with names reflecting the supplied sum. Preserve every original name/definition even where its child-pension caption is narrower than the operational calculation."
+
+[[identity.partition]]
+variable = "25.85"
+columns = { "CFAKT03" = "25.85.individ-2003", "CFAKTHB" = "25.85.hushall", "CFAKTVXHB" = "25.85.hushall-vaxelvis-boende" }
+columns_ref = "Prepared SCB export: CFAKT03 explicitly supplies the individual 2003 definition of derived factor income. Household CFAKTHB and its modelled shared-residence counterpart explicitly sum wages, hobby income, business income excluding business-owner sick pay and close-company income. Keep the 2003 basis and the household calculations separate; preserve all original Nordic-income notes and no numerical or statistical equivalence is inferred."
+
+[[variable]]
+native_id = "25.645.hushall"
+slug = "underskott-aktiv-naringsverksamhet-hushall"
+
+[[variable]]
+native_id = "25.645.hushall-vaxelvis-boende"
+slug = "underskott-aktiv-naringsverksamhet-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.645.individ"
+slug = "underskott-aktiv-naringsverksamhet-individ"
+
+[[variable]]
+native_id = "25.650.hushall"
+slug = "underskott-passiv-naringsverksamhet-hushall"
+
+[[variable]]
+native_id = "25.650.hushall-vaxelvis-boende"
+slug = "underskott-passiv-naringsverksamhet-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.650.individ"
+slug = "underskott-passiv-naringsverksamhet-individ"
+
+[[variable]]
+native_id = "25.1287.hushall"
+slug = "ersattning-forsakringskassa-ku-hushall"
+
+[[variable]]
+native_id = "25.1287.hushall-vaxelvis-boende"
+slug = "ersattning-forsakringskassa-ku-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1287.individ"
+slug = "ersattning-forsakringskassa-ku-individ"
+
+[[variable]]
+native_id = "25.22253.barnpension-livranta-pension-hushall"
+slug = "barnpension-livranta-och-pension-skattefri-hushall"
+
+[[variable]]
+native_id = "25.22253.barnpension-livranta-pension-hushall-vaxelvis-boende"
+slug = "barnpension-livranta-och-pension-skattefri-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.22253.individ"
+slug = "barnpension-skattefri-del-individ"
+
+[[variable]]
+native_id = "25.85.hushall"
+slug = "faktorinkomst-hushall"
+
+[[variable]]
+native_id = "25.85.hushall-vaxelvis-boende"
+slug = "faktorinkomst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.85.individ-2003"
+slug = "faktorinkomst-individ-2003"
+
+[[coding.uncoded]]
+variable = "25.1227"
+variant = "25.763"
+column = "BDEBSED"
+periods = [["2016-01-01", "2016-12-31"], ["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"], ["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"]]
+reason = "The exact annual source supplies the extraction-round date as text with unit Datum and a Tal marker. Retain these delivered date-valued windows without a finite value set; do not extend the earlier 0–5 extraction-round list. Earlier coded windows remain unchanged."
+source = "SCB Registerinformation: IoT, Individer och dödsbon, BDEBSED, 2016–2024 slutlig version; definition Omgång för vilken slutskatteuppgifter tagits ut., measurement unit Datum, Datatyp varchar; pinned prepared-v28 originals reviewed."
+
+[[identity.partition]]
+variable = "25.24373"
+columns = { "BLKFNOV" = "25.24373.folkbokford-1-november", "FORS" = "25.24373.folkbokford-1-november", "IDMANT" = "25.24373.folkbokford-1-november", "KBH" = "25.24373.folkbokford-1-november" }
+columns_ref = "Prepared SCB export: IDMANT, BLKFNOV, KBH and FORS under native 25.24373 explicitly define the same registered parish at 1 November. Preserve all original physical column names, text/integer representations, source editions and complete year-specific parish coding. Native 25.31 independently supplies 31 December parish or explicitly prior-income-year 1 November tax-table location; native 25.40427 supplies 31 December registration status. Reused literal columns do not merge these distinct native concepts. No rewritten dates, coding schemes or numerical equivalence are inferred."
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.763"
+column = "ARBINK"
+owner = "25.75.individ-summa"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1982, slutlig version", "1990, slutlig version", "1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.763"
+column = "CARB"
+owner = "25.75.a-inkomster"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1971, slutlig version", "1972, slutlig version", "1973, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.763"
+column = "CARB"
+owner = "25.75.a-inkomster-pension-arbetsloshet-livranta"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1978, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.763"
+column = "CARB"
+owner = "25.75.a-inkomster-dagpenning-pension"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1976, slutlig version", "1977, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.763"
+column = "CARB"
+owner = "25.75.a-inkomster-dagpenning-pension-utbildning"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1974, slutlig version", "1975, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.763"
+column = "CARB"
+owner = "25.75.individ-summa"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2015, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.763"
+column = "CARB"
+owner = "25.75.formel-ej-angiven"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.763"
+column = "CARB"
+owner = "25.75.tjanst-rorelse-jordbruk"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1968, slutlig version", "1969, slutlig version", "1970, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.1153"
+column = "CARBHB"
+owner = "25.75.hushall"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["2011, slutlig version", "2012, slutlig version", "2013, slutlig version", "2014, slutlig version", "2015, slutlig version", "2016, slutlig version", "2017, slutlig version", "2018, slutlig version", "2019, slutlig version", "2020, slutlig version", "2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.75"
+variant = "25.1153"
+column = "CARBVXHB"
+owner = "25.75.hushall-vaxelvis-boende"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.75. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[variable]]
+native_id = "25.75.a-inkomster"
+slug = "arbetsinkomst-a-inkomster"
+
+[[variable]]
+native_id = "25.75.a-inkomster-dagpenning-pension"
+slug = "arbetsinkomst-a-inkomster-dagpenning-pension"
+
+[[variable]]
+native_id = "25.75.a-inkomster-dagpenning-pension-utbildning"
+slug = "arbetsinkomst-a-inkomster-dagpenning-pension-utbildning"
+
+[[variable]]
+native_id = "25.75.a-inkomster-pension-arbetsloshet-livranta"
+slug = "arbetsinkomst-a-inkomster-pension-arbetsloshet-livranta"
+
+[[variable]]
+native_id = "25.75.formel-ej-angiven"
+slug = "arbetsinkomst-formel-ej-angiven"
+
+[[variable]]
+native_id = "25.75.hushall"
+slug = "arbetsinkomst-hushall"
+
+[[variable]]
+native_id = "25.75.hushall-vaxelvis-boende"
+slug = "arbetsinkomst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.75.tjanst-rorelse-jordbruk"
+slug = "arbetsinkomst-tjanst-rorelse-jordbruk"
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.763"
+column = "CSFVI"
+owner = "25.99.alternativmax-ab-inkomster"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1971, slutlig version", "1972, slutlig version", "1973, slutlig version", "1974, slutlig version", "1975, slutlig version", "1976, slutlig version", "1977, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.763"
+column = "CSFVI"
+owner = "25.99.alternativmax-inkomstslag"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1968, slutlig version", "1969, slutlig version", "1970, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.763"
+column = "CSFVI"
+owner = "25.99.deklarerade-delbelopp"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.763"
+column = "CSFVI"
+owner = "25.99.deklarerade-delbelopp-positiv-tjanst"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.763"
+column = "CSFVI"
+owner = "25.99.summerade-inkomstslag-utan-b-tjanst"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1978, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.763"
+column = "CSFVI"
+owner = "25.99.summerade-ab-inkomster"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1979, slutlig version", "1980, slutlig version", "1981, slutlig version", "1982, slutlig version", "1983, slutlig version", "1984, slutlig version", "1985, slutlig version", "1986, slutlig version", "1987, slutlig version", "1988, slutlig version", "1989, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.1153"
+column = "CSFVIHB"
+owner = "25.99.hushall"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["2011, slutlig version", "2012, slutlig version", "2013, slutlig version", "2014, slutlig version", "2015, slutlig version", "2016, slutlig version", "2017, slutlig version", "2018, slutlig version", "2019, slutlig version", "2020, slutlig version", "2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.1153"
+column = "CSFVIVXHB"
+owner = "25.99.hushall-vaxelvis-boende"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.99"
+variant = "25.763"
+column = "SINKF"
+owner = "25.99.deklarerade-delbelopp"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.99. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[variable]]
+native_id = "25.99.alternativmax-ab-inkomster"
+slug = "sammanraknad-forvarvsinkomst-alternativmax-ab-inkomster"
+
+[[variable]]
+native_id = "25.99.alternativmax-inkomstslag"
+slug = "sammanraknad-forvarvsinkomst-alternativmax-inkomstslag"
+
+[[variable]]
+native_id = "25.99.deklarerade-delbelopp"
+slug = "sammanraknad-forvarvsinkomst-deklarerade-delbelopp"
+
+[[variable]]
+native_id = "25.99.hushall"
+slug = "sammanraknad-forvarvsinkomst-hushall"
+
+[[variable]]
+native_id = "25.99.hushall-vaxelvis-boende"
+slug = "sammanraknad-forvarvsinkomst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.99.summerade-ab-inkomster"
+slug = "sammanraknad-forvarvsinkomst-summerade-ab-inkomster"
+
+[[variable]]
+native_id = "25.99.summerade-inkomstslag-utan-b-tjanst"
+slug = "sammanraknad-forvarvsinkomst-summerade-inkomstslag-utan-b-tjanst"
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.763"
+column = "LON"
+owner = "25.1198.bruttolon-med-kostnadsavdrag"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.763"
+column = "TLONT"
+owner = "25.1198.a-tjanst"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1971, slutlig version", "1972, slutlig version", "1973, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.763"
+column = "TLONT"
+owner = "25.1198.a-tjanst-sjukpenning-dagpenning-pension"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1976, slutlig version", "1977, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.763"
+column = "TLONT"
+owner = "25.1198.a-tjanst-sjukpenning-dagpenning-pension-utbildning"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1974, slutlig version", "1975, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.763"
+column = "TLONT"
+owner = "25.1198.bruttolon-med-kostnadsavdrag"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.763"
+column = "TLONT"
+owner = "25.1198.deklarerade-tjanstposter"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1978, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.763"
+column = "TLONT"
+owner = "25.1198.deklarerade-tjanstposter-delpension"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1979, slutlig version", "1980, slutlig version", "1981, slutlig version", "1982, slutlig version", "1983, slutlig version", "1984, slutlig version", "1985, slutlig version", "1986, slutlig version", "1987, slutlig version", "1988, slutlig version", "1989, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.763"
+column = "TLONT"
+owner = "25.1198.tjanst-sjoinkomst"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["1968, slutlig version", "1969, slutlig version", "1970, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.1153"
+column = "TLONTHB"
+owner = "25.1198.hushall"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["2011, slutlig version", "2012, slutlig version", "2013, slutlig version", "2014, slutlig version", "2015, slutlig version", "2016, slutlig version", "2017, slutlig version", "2018, slutlig version", "2019, slutlig version", "2020, slutlig version", "2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1198"
+variant = "25.1153"
+column = "TLONTVXHB"
+owner = "25.1198.hushall-vaxelvis-boende"
+ref = "Prepared SCB export: Exact reviewed source editions retain the supplied operational formula basis for 25.1198. Different component sets, alternative-max methods or deduction clauses are independent owners. The original ambiguous Swedish subtraction prose remains verbatim; these neutral component-basis labels do not infer its direction. Component codes added to an otherwise explicitly unchanged formula do not create equivalence claims. Blank operations are never reconstructed: CARB editions without a supplied operation have the distinct formel-ej-angiven owner. Nordic-income notes, physical original fields, source periods, variants, types, units and provenance remain unchanged. No numerical or statistical equivalence is claimed, and unlisted source editions receive no ownership."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[variable]]
+native_id = "25.1198.a-tjanst"
+slug = "loneinkomst-a-tjanst"
+
+[[variable]]
+native_id = "25.1198.a-tjanst-sjukpenning-dagpenning-pension"
+slug = "loneinkomst-a-tjanst-sjukpenning-dagpenning-pension"
+
+[[variable]]
+native_id = "25.1198.a-tjanst-sjukpenning-dagpenning-pension-utbildning"
+slug = "loneinkomst-a-tjanst-sjukpenning-dagpenning-pension-utbildning"
+
+[[variable]]
+native_id = "25.1198.deklarerade-tjanstposter"
+slug = "loneinkomst-deklarerade-tjanstposter"
+
+[[variable]]
+native_id = "25.1198.deklarerade-tjanstposter-delpension"
+slug = "loneinkomst-deklarerade-tjanstposter-delpension"
+
+[[variable]]
+native_id = "25.1198.hushall"
+slug = "loneinkomst-hushall"
+
+[[variable]]
+native_id = "25.1198.hushall-vaxelvis-boende"
+slug = "loneinkomst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1198.tjanst-sjoinkomst"
+slug = "loneinkomst-tjanst-sjoinkomst"
+
+[[identity.column_owner]]
+variable = "25.1289"
+variant = "25.763"
+column = "CKULONF"
+owner = "25.1289.individ-ku"
+ref = "Prepared SCB export: The supplied operation explicitly sums cash gross wages and taxable benefits. Historical KULONS/WKULONF/CKULONF are annual-KU individual sources; CLONF is the post-2019 AGI plus remaining KU source. Household TLONFHB and its VX counterpart supply this same wage-plus-benefits component set, not the benefits-only sum suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1289"
+variant = "25.763"
+column = "CLONF"
+owner = "25.1289.individ-agi-ku"
+ref = "Prepared SCB export: The supplied operation explicitly sums cash gross wages and taxable benefits. Historical KULONS/WKULONF/CKULONF are annual-KU individual sources; CLONF is the post-2019 AGI plus remaining KU source. Household TLONFHB and its VX counterpart supply this same wage-plus-benefits component set, not the benefits-only sum suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1289"
+variant = "25.763"
+column = "KULONS"
+owner = "25.1289.individ-ku"
+ref = "Prepared SCB export: The supplied operation explicitly sums cash gross wages and taxable benefits. Historical KULONS/WKULONF/CKULONF are annual-KU individual sources; CLONF is the post-2019 AGI plus remaining KU source. Household TLONFHB and its VX counterpart supply this same wage-plus-benefits component set, not the benefits-only sum suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1289"
+variant = "25.1153"
+column = "TLONFHB"
+owner = "25.1289.hushall"
+ref = "Prepared SCB export: The supplied operation explicitly sums cash gross wages and taxable benefits. Historical KULONS/WKULONF/CKULONF are annual-KU individual sources; CLONF is the post-2019 AGI plus remaining KU source. Household TLONFHB and its VX counterpart supply this same wage-plus-benefits component set, not the benefits-only sum suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1289"
+variant = "25.1153"
+column = "TLONFVXHB"
+owner = "25.1289.hushall-vaxelvis-boende"
+ref = "Prepared SCB export: The supplied operation explicitly sums cash gross wages and taxable benefits. Historical KULONS/WKULONF/CKULONF are annual-KU individual sources; CLONF is the post-2019 AGI plus remaining KU source. Household TLONFHB and its VX counterpart supply this same wage-plus-benefits component set, not the benefits-only sum suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1289"
+variant = "25.763"
+column = "WKULONF"
+owner = "25.1289.individ-ku"
+ref = "Prepared SCB export: The supplied operation explicitly sums cash gross wages and taxable benefits. Historical KULONS/WKULONF/CKULONF are annual-KU individual sources; CLONF is the post-2019 AGI plus remaining KU source. Household TLONFHB and its VX counterpart supply this same wage-plus-benefits component set, not the benefits-only sum suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["1993, slutlig version"]
+
+[[variable]]
+native_id = "25.1289.hushall"
+slug = "summa-lon-formaner-hushall"
+
+[[variable]]
+native_id = "25.1289.hushall-vaxelvis-boende"
+slug = "summa-lon-formaner-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1289.individ-agi-ku"
+slug = "summa-lon-formaner-agi-ku"
+
+[[identity.column_owner]]
+variable = "25.21832"
+variant = "25.1153"
+column = "CLONFHB"
+owner = "25.21832.hushall"
+ref = "Prepared SCB export: The supplied operation explicitly sums taxable non-car benefits, car benefit excluding fuel and fuel benefit. Historical KULONF/TKULONF are annual-KU individual sources; TLONF is the post-2019 AGI plus remaining KU source. Household CLONFHB and its VX counterpart supply benefits only, not wages plus benefits suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21832"
+variant = "25.1153"
+column = "CLONFVXHB"
+owner = "25.21832.hushall-vaxelvis-boende"
+ref = "Prepared SCB export: The supplied operation explicitly sums taxable non-car benefits, car benefit excluding fuel and fuel benefit. Historical KULONF/TKULONF are annual-KU individual sources; TLONF is the post-2019 AGI plus remaining KU source. Household CLONFHB and its VX counterpart supply benefits only, not wages plus benefits suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21832"
+variant = "25.763"
+column = "KULONF"
+owner = "25.21832.individ-ku"
+ref = "Prepared SCB export: The supplied operation explicitly sums taxable non-car benefits, car benefit excluding fuel and fuel benefit. Historical KULONF/TKULONF are annual-KU individual sources; TLONF is the post-2019 AGI plus remaining KU source. Household CLONFHB and its VX counterpart supply benefits only, not wages plus benefits suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21832"
+variant = "25.763"
+column = "TKULONF"
+owner = "25.21832.individ-ku"
+ref = "Prepared SCB export: The supplied operation explicitly sums taxable non-car benefits, car benefit excluding fuel and fuel benefit. Historical KULONF/TKULONF are annual-KU individual sources; TLONF is the post-2019 AGI plus remaining KU source. Household CLONFHB and its VX counterpart supply benefits only, not wages plus benefits suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21832"
+variant = "25.763"
+column = "TLONF"
+owner = "25.21832.individ-agi-ku"
+ref = "Prepared SCB export: The supplied operation explicitly sums taxable non-car benefits, car benefit excluding fuel and fuel benefit. Historical KULONF/TKULONF are annual-KU individual sources; TLONF is the post-2019 AGI plus remaining KU source. Household CLONFHB and its VX counterpart supply benefits only, not wages plus benefits suggested by the literal stem. Following the already established SCB IoT 2019 source-basis policy (Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019, v1 2021-03-03, K5.1 pp. 18–19, Övergången från KU till AGI), employer components switch to monthly AGI plus remaining annual KU in 2019. Original employer component 1194 and car/fuel components 21830/21831 already have checked basis splits. No numerical equivalence across reporting eras is inferred. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[variable]]
+native_id = "25.21832.hushall"
+slug = "summa-skattepliktiga-formaner-hushall"
+
+[[variable]]
+native_id = "25.21832.hushall-vaxelvis-boende"
+slug = "summa-skattepliktiga-formaner-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.21832.individ-ku"
+slug = "summa-skattepliktiga-formaner-ku"
+
+[[identity.column_owner]]
+variable = "25.1430"
+variant = "25.763"
+column = "ISTUD"
+owner = "25.1430.individ-fyra-komponenter"
+ref = "Prepared SCB export: The supplied older individual STUD/ISTUD operation explicitly lists domestic and foreign study grants and loans plus study assistance and extra supplement. Newer ISTUD explicitly lists four named component codes ISMBID, ISMLAN, ISHBID and ISHEXT; retain a separate owner without assuming equivalence to the older foreign-component list. Household ISTUDHB and VX supply their own four-item grant/loan operation; preserve original grant-versus-loan wording differences and malformed Antal centiliter unit as source facts, without normalising either. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1430"
+variant = "25.763"
+column = "ISTUD"
+owner = "25.1430.individ-utlandsbidrag-utlandslan"
+ref = "Prepared SCB export: The supplied older individual STUD/ISTUD operation explicitly lists domestic and foreign study grants and loans plus study assistance and extra supplement. Newer ISTUD explicitly lists four named component codes ISMBID, ISMLAN, ISHBID and ISHEXT; retain a separate owner without assuming equivalence to the older foreign-component list. Household ISTUDHB and VX supply their own four-item grant/loan operation; preserve original grant-versus-loan wording differences and malformed Antal centiliter unit as source facts, without normalising either. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1430"
+variant = "25.1153"
+column = "ISTUDHB"
+owner = "25.1430.hushall"
+ref = "Prepared SCB export: The supplied older individual STUD/ISTUD operation explicitly lists domestic and foreign study grants and loans plus study assistance and extra supplement. Newer ISTUD explicitly lists four named component codes ISMBID, ISMLAN, ISHBID and ISHEXT; retain a separate owner without assuming equivalence to the older foreign-component list. Household ISTUDHB and VX supply their own four-item grant/loan operation; preserve original grant-versus-loan wording differences and malformed Antal centiliter unit as source facts, without normalising either. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2011, slutlig version", "2012, slutlig version", "2013, slutlig version", "2014, slutlig version", "2015, slutlig version", "2016, slutlig version", "2017, slutlig version", "2018, slutlig version", "2019, slutlig version", "2020, slutlig version", "2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1430"
+variant = "25.1153"
+column = "ISTUDVXHB"
+owner = "25.1430.hushall-vaxelvis-boende"
+ref = "Prepared SCB export: The supplied older individual STUD/ISTUD operation explicitly lists domestic and foreign study grants and loans plus study assistance and extra supplement. Newer ISTUD explicitly lists four named component codes ISMBID, ISMLAN, ISHBID and ISHEXT; retain a separate owner without assuming equivalence to the older foreign-component list. Household ISTUDHB and VX supply their own four-item grant/loan operation; preserve original grant-versus-loan wording differences and malformed Antal centiliter unit as source facts, without normalising either. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1430"
+variant = "25.763"
+column = "STUD"
+owner = "25.1430.individ-utlandsbidrag-utlandslan"
+ref = "Prepared SCB export: The supplied older individual STUD/ISTUD operation explicitly lists domestic and foreign study grants and loans plus study assistance and extra supplement. Newer ISTUD explicitly lists four named component codes ISMBID, ISMLAN, ISHBID and ISHEXT; retain a separate owner without assuming equivalence to the older foreign-component list. Household ISTUDHB and VX supply their own four-item grant/loan operation; preserve original grant-versus-loan wording differences and malformed Antal centiliter unit as source facts, without normalising either. Exact supplied source editions only; preserve all original literals, formulas, types, units, periods and provenance. Unlisted source editions remain unresolved."
+source_editions = ["1983, slutlig version", "1984, slutlig version", "1985, slutlig version", "1986, slutlig version", "1987, slutlig version", "1988, slutlig version", "1989, slutlig version", "1990, slutlig version", "1991, slutlig version", "1992, slutlig version"]
+
+[[variable]]
+native_id = "25.1430.hushall"
+slug = "studiemedel-studiehjalp-lan-och-bidrag-hushall"
+
+[[variable]]
+native_id = "25.1430.hushall-vaxelvis-boende"
+slug = "studiemedel-studiehjalp-lan-och-bidrag-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.1430.individ-utlandsbidrag-utlandslan"
+slug = "studiemedel-studiehjalp-lan-och-bidrag-individ-utlandsbidrag-utlandslan"

@@ -2644,6 +2644,10 @@ def test_coding_choice_on_errata_delivered_pooled_columns_keeps_exact_peers(
         scope,
         originals=originals,
         columns={column: members},
+        column_scopes=SourceEvidence(
+            originals, effective_occurrences=corrected.occurrences
+        ).effective_scopes
+        or {},
         coding={column: claims},
     )
     assert not diagnostics and len(choices) == 1
@@ -2761,7 +2765,15 @@ def test_two_errata_delivered_blank_columns_have_separate_coding_peers(
         entry for entry in tree.registers if entry.register_info.slug == "sample"
     )
     choices, diagnostics = compile_coding_register(
-        register, scope, originals=originals, columns=columns, coding=coding
+        register,
+        scope,
+        originals=originals,
+        columns=columns,
+        column_scopes=SourceEvidence(
+            originals, effective_occurrences=corrected.occurrences
+        ).effective_scopes
+        or {},
+        coding=coding,
     )
     assert not diagnostics and len(choices) == 2
     applied = apply_coding_choices(

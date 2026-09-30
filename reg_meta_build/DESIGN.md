@@ -569,6 +569,10 @@ and nonmembership associations stay in source accounting. Raw type-marker whites
 not a finite-membership guard: those associations cannot establish a list and are
 retained in the documentary audit.
 
+Coding decisions require complete checked effective column delivery over their finite
+window. Original field and scope guards still capture the supplied records, including
+anchors for accepted deliveries; a changed delivery invalidates the decision.
+
 ### Classifications and representations
 
 Canonical classification membership comes from the selected prepared codebook.

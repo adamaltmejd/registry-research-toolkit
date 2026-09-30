@@ -1128,3 +1128,16 @@ columns_ref = "2026-09-30: SCB RTB VarId 25: FamTyp, Famtyp and FTYP90 through F
 variable = "2.372"
 columns = { "FamId1" = "2.372.familjeidentitet-rtb", "Famid1" = "2.372.familjeidentitet-rtb", "FAMID90" = "2.372.familjeidentitet-rtb", "FAMID91" = "2.372.familjeidentitet-rtb", "FAMID92" = "2.372.familjeidentitet-rtb", "FAMID93" = "2.372.familjeidentitet-rtb", "FAMID94" = "2.372.familjeidentitet-rtb", "FAMID95" = "2.372.familjeidentitet-rtb", "FAMID96" = "2.372.familjeidentitet-rtb", "FAMID97" = "2.372.familjeidentitet-rtb" }
 columns_ref = "2026-09-30: SCB RTB VarId 372: FamId1, Famid1 and FAMID90 through FAMID97 supply the same RTB-family identity, defined as the oldest family member personal identifier. Preserve the historical extended source-frame provenance and original scopes; do not equate other household/family identifiers. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[variable]]
+native_id = "2.15724.prioriterad"
+slug = "grund-for-bosattning-grupperad-prioriterad"
+
+[[variable]]
+native_id = "2.15724.senaste"
+slug = "grund-for-bosattning-grupperad-senaste"
+
+[[identity.partition]]
+variable = "2.15724"
+columns = {"GrundForBosattning" = "2.15724.prioriterad", "GFBGrupp_SCB" = "2.15724.senaste"}
+columns_ref = "Prepared SCB operations explicitly distinguish grouping the prioritized residence-basis classification from grouping the latest residence-basis classification. Keep both owners distinct; retain Nordic US/blank/null-to-unknown wording, all literal codes and labels, widths, original years and source facts. The reused GrundForBosattning under native 2.8180 is an ungrouped classification and remains an independent native identity."

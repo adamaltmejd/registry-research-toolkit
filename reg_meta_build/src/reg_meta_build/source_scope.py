@@ -469,6 +469,7 @@ def resolve_source_scope(
             coding_scope,
             originals=originals,
             columns=coding_columns,
+            column_scopes=coding_evidence.effective_scopes or {},
             coding=original_coding,
         )
         compiled_cases.extend(new_cases)

@@ -964,13 +964,24 @@ class SourceEvidence:
         self.effective_columns: dict[tuple[str, tuple[str, ...]], set[NativeKey]] = (
             defaultdict(set)
         )
+        self.effective_scopes: dict[NativeKey, frozenset[TemporalScope]] | None = None
         if effective_occurrences is not None:
+            scopes: dict[NativeKey, set[TemporalScope]] = defaultdict(set)
             for occurrence in effective_occurrences:
                 column = occurrence.column_key
+                if occurrence.use == "catalog" and column is not None:
+                    scopes[column].add(
+                        occurrence.edition_period_scope
+                        if occurrence.edition_period_scope.kind != "not_applicable"
+                        else occurrence.edition_scope
+                    )
                 for record in occurrence.evidence:
                     columns = self.effective_columns[_record_key(record)]
                     if occurrence.use == "catalog" and column is not None:
                         columns.add(column)
+            self.effective_scopes = {
+                column: frozenset(values) for column, values in scopes.items()
+            }
         self.indexes: dict[
             tuple[str, str], dict[tuple[str, object], list[SourceRecord]]
         ] = {}
@@ -1018,6 +1029,19 @@ class SourceEvidence:
             else column in columns
         )
 
+    @cached_property
+    def effective_column_records(self) -> dict[NativeKey, tuple[SourceRecord, ...]]:
+        """Index original peers without losing duplicates or explicit exclusions."""
+        grouped: dict[NativeKey, list[SourceRecord]] = defaultdict(list)
+        for record in self.records:
+            columns = self.effective_columns.get(_record_key(record))
+            if columns is None:
+                column = source_occurrence(record).column_key
+                columns = () if column is None else (column,)
+            for column in columns:
+                grouped[column].append(record)
+        return {column: tuple(records) for column, records in grouped.items()}
+
     def peers(self, guard: PeerGuard) -> Iterable[SourceRecord]:
         # Column/variable selectors make the many finite correction checks cheap.
         # Original predicates and effective column membership are both checked.
@@ -1047,7 +1071,11 @@ class SourceEvidence:
             selector, value = ("register_name", ""), guard.register_name
         candidates: Iterable[SourceRecord]
         if selector is None:
-            candidates = self.records
+            candidates = (
+                self.records
+                if guard.effective_column is None
+                else self.effective_column_records.get(guard.effective_column, ())
+            )
         else:
             if selector not in self.indexes:
                 index: dict[tuple[str, object], list[SourceRecord]] = defaultdict(list)

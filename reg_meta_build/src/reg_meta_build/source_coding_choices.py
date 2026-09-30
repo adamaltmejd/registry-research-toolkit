@@ -30,6 +30,7 @@ from reg_meta_build.source_curation import (
     CurationCase,
     DocumentedCodingSelection,
     ResolutionDiagnostic,
+    SourceEvidence,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
@@ -450,7 +451,7 @@ def _selection(
 
 
 def apply_coding_choices(
-    records: Iterable[SourceRecord],
+    records: Iterable[SourceRecord] | SourceEvidence,
     cases: tuple[CurationCase, ...],
     *,
     coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
@@ -519,6 +520,19 @@ def apply_coding_choices(
                 report(issue.code, issue.detail)
             accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
             continue
+        if isinstance(records, SourceEvidence) and records.effective_scopes is not None:
+            windows = (
+                (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
+                for scope in records.effective_scopes.get(decision.column_key, ())
+                for lo, hi in (coding_scope_bounds(scope) or ())
+            )
+            if not covers_window(windows, decision.valid_from, decision.valid_to):
+                report(
+                    "coding_delivery_changed",
+                    "The checked coding window no longer has complete effective column delivery.",
+                )
+                accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
+                continue
         claims = coding[decision.column_key]
         projected = coding_for_period(claims, decision.valid_from, decision.valid_to)
         observed = coding_expectations(claims, decision.valid_from, decision.valid_to)

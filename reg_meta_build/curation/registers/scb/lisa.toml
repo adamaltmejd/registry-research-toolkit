@@ -1863,7 +1863,7 @@ native_id = "34.16"
 slug = "antal-anstallda-ku"
 
 [[variable]]
-native_id = "34.17"
+native_id = "34.17.arbetsstallenummer"
 slug = "arbetsstallenummer"
 
 [[variable]]
@@ -1875,7 +1875,7 @@ native_id = "34.591"
 slug = "tjanstepension-tjanst"
 
 [[variable]]
-native_id = "34.667"
+native_id = "34.667.arbetsstallekommun"
 slug = "kommun-for-arbetsstalle"
 
 [[variable]]
@@ -4068,9 +4068,6 @@ slug = "ku3instkod-1999"
 
 # register 340
 
-[[variable]]
-native_id = "34.17.arbetsstallenummer"
-slug = "arbetsstallenummer-lisa"
 
 [[identity.partition]]
 variable = "34.17"
@@ -4086,9 +4083,6 @@ variable = "34.33"
 columns = {"SektorGrp" = "34.33.sektor-aggregerad", "Org_SektorGrp" = "34.33.sektor-aggregerad", "Ast_SektorGrp" = "34.33.sektor-aggregerad"}
 columns_ref = "Exact definitions and supplied BAS operations establish aggregated institutional sector. Company, workplace and individual variant contexts remain separate. No codebook equivalence or validity extension is asserted."
 
-[[variable]]
-native_id = "34.667.arbetsstallekommun"
-slug = "kommun-arbetsstalle"
 
 [[identity.partition]]
 variable = "34.667"

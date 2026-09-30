@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
@@ -18,12 +19,17 @@ from reg_meta_build.source_coding import (
     resolve_code_membership,
 )
 from reg_meta_build.source_coding_choices import apply_coding_choices, coding_for_period
-from reg_meta_build.source_coordinates import column_identity, source_register_key
+from reg_meta_build.source_coordinates import (
+    NativeKey,
+    column_identity,
+    source_register_key,
+)
 from reg_meta_build.source_curation import (
     CodingDecision,
     CodingSelection,
     CurationCase,
     PeerGuard,
+    SourceEvidence,
     capture_expectations,
 )
 from reg_meta_build.source_effects import record_ref
@@ -43,8 +49,27 @@ from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
-def _record(year: int = 2020, column: str = "VALUE") -> SourceRecord:
+
+def _column_scopes(
+    columns: Mapping[NativeKey, tuple[SourceRecord, ...]],
+) -> dict[NativeKey, frozenset[TemporalScope]]:
+    return {
+        key: frozenset(
+            record.edition_period_scope
+            if record.edition_period_scope.kind != "not_applicable"
+            else record.edition_scope
+            for record in records
+        )
+        for key, records in columns.items()
+    }
+
+
+def _record(
+    year: int = 2020, column: str = "VALUE", *, variable: int = 5
+) -> SourceRecord:
     revision = SourceRevision.create(
         dataset="scb-fixture",
         publisher="SCB",
@@ -57,7 +82,7 @@ def _record(year: int = 2020, column: str = "VALUE") -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
     values = _var_row(
         cvid=year,
-        var_id=5,
+        var_id=variable,
         colname=column,
         register=("TEST", 1, 2),
         regver_id=year,
@@ -224,6 +249,7 @@ def _compile_entry(
         scope,
         originals=(record,),
         columns=columns,
+        column_scopes=_column_scopes(columns),
         coding={column: claims},
     )
     return cases, diagnostics, register, scope, columns, column
@@ -422,6 +448,7 @@ def test_coding_target_captures_sibling_projection_on_same_ref() -> None:
         scope,
         originals=(record, sibling),
         columns=columns,
+        column_scopes=_column_scopes(columns),
         coding={column: ()},
     )
     assert not diagnostics and len(cases) == 1
@@ -488,6 +515,9 @@ def test_pin_free_coding_rejects_ambiguous_column_identity() -> None:
         ambiguous,
         originals=(record,),
         columns={other_column: (record,), column: columns[column]},
+        column_scopes=_column_scopes(
+            {other_column: (record,), column: columns[column]}
+        ),
         coding={column: claims, other_column: claims},
     )
     assert not cases and diagnostics[0].code == "overbroad_curation_entry"
@@ -509,6 +539,9 @@ def test_pin_free_coding_compile_is_byte_identical() -> None:
         scope,
         originals=(*columns[column], other_record),
         columns={unrelated: (other_record,), column: columns[column]},
+        column_scopes=_column_scopes(
+            {unrelated: (other_record,), column: columns[column]}
+        ),
         coding={unrelated: (), column: claims},
     )
     assert not diagnostics
@@ -1179,6 +1212,200 @@ def test_documented_coding_requires_an_existing_exact_column_window():
     cases, diagnostics, *_ = _compile_entry("documented", values, ())
     assert not cases and diagnostics[0].code == "stale_curation_entry"
     assert "no column occurrence" in diagnostics[0].detail
+
+
+@pytest.mark.parametrize(
+    "scopes",
+    [
+        (),
+        (TemporalScope(kind="unknown", label="unsupplied"),),
+        (TemporalScope(kind="pooled", label="historical window"),),
+        (
+            TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start="2019-01-01", end="2019-12-31"),),
+            ),
+        ),
+        (
+            TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start="2020-02-01", end="2020-12-31"),),
+            ),
+        ),
+    ],
+    ids=["removed", "unknown", "unbounded-pooled", "disjoint", "incomplete"],
+)
+def test_documented_coding_uses_current_effective_delivery_without_rewriting_originals(
+    scopes,
+):
+    original = _record(year=2024)
+    _, _, register, scope, columns, column = _compile_entry(
+        "documented", _documented_values(), (), record=original
+    )
+    historical = TemporalScope(
+        kind="pooled", label="2020", pooled_start="2020-01-01", pooled_end="2020-12-31"
+    )
+    occurrence = replace(source_occurrence(original), edition_period_scope=historical)
+    evidence = SourceEvidence((original,), effective_occurrences=(occurrence,))
+    assert evidence.effective_scopes is not None
+    cases, diagnostics = compile_coding_register(
+        register,
+        scope,
+        originals=(original,),
+        columns=columns,
+        column_scopes=evidence.effective_scopes,
+        coding={column: ()},
+    )
+    assert not diagnostics and len(cases) == 1
+    result = apply_coding_choices(evidence, cases, coding={column: ()})
+    assert result.accounting[0].status == "applied"
+    assert result.coding[column].segments[0].code_set is not None
+    assert original.edition_period_scope.intervals[0].start == "2024-01-01"
+    assert (
+        cases[0].targets[0].alternatives[0].edition_period_scope
+        == original.edition_period_scope
+    )
+
+    invalid = SourceEvidence(
+        (original,),
+        effective_occurrences=tuple(
+            replace(occurrence, edition_period_scope=value) for value in scopes
+        ),
+    )
+    assert invalid.effective_scopes is not None
+    absent, diagnostics = compile_coding_register(
+        register,
+        scope,
+        originals=(original,),
+        columns=columns,
+        column_scopes=invalid.effective_scopes,
+        coding={column: ()},
+    )
+    assert not absent and diagnostics[0].code == "stale_curation_entry"
+    stale = apply_coding_choices(invalid, cases, coding={column: ()})
+    assert stale.accounting[0].status == "stale"
+    assert "coding_delivery_changed" in {d.code for d in stale.diagnostics}
+    assert not stale.coding[column].segments
+
+
+@pytest.mark.parametrize("drift", ["new-peer", "anchor-removed", "anchor-changed"])
+def test_documented_historical_delivery_checks_cross_variable_anchor_membership(drift):
+    original = _record(year=2024)
+    anchor = _record(column="ANCHOR", variable=6)
+    _, _, register, scope, _, column = _compile_entry(
+        "documented", _documented_values(), (), record=original
+    )
+    historical = replace(
+        source_occurrence(original),
+        source_records=(original, anchor),
+        edition_period_scope=anchor.edition_period_scope,
+    )
+    evidence = SourceEvidence((original, anchor), effective_occurrences=(historical,))
+    assert evidence.effective_scopes is not None
+    cases, diagnostics = compile_coding_register(
+        register,
+        scope,
+        originals=(original, anchor),
+        columns={column: (original, anchor)},
+        column_scopes=evidence.effective_scopes,
+        coding={column: ()},
+    )
+    assert not diagnostics and len(cases) == 1
+    assert set(cases[0].peer_guards[0].expected_members) == {
+        record_ref(original),
+        record_ref(anchor),
+    }
+    applied = apply_coding_choices(evidence, cases, coding={column: ()})
+    assert applied.accounting[0].status == "applied"
+
+    if drift == "anchor-removed":
+        records = (original,)
+        historical = replace(historical, source_records=records)
+    elif drift == "anchor-changed":
+        changed = anchor.model_copy(
+            update={
+                "fields": anchor.fields.model_copy(
+                    update={"definition": value_field("Changed")}
+                )
+            }
+        )
+        records = (original, changed)
+        historical = replace(historical, source_records=records)
+    else:
+        added = _record(year=2023, column="OTHER", variable=7)
+        records = (original, anchor, added)
+        historical = replace(historical, source_records=records)
+    stale = apply_coding_choices(
+        SourceEvidence(records, effective_occurrences=(historical,)),
+        cases,
+        coding={column: ()},
+    )
+    assert stale.accounting[0].status == "stale"
+    assert not stale.coding[column].segments
+
+
+def test_support_occurrence_cannot_supply_catalog_coding_coverage():
+    occurrence = replace(source_occurrence(_record()), use="support")
+    evidence = SourceEvidence(
+        occurrence.source_records, effective_occurrences=(occurrence,)
+    )
+    assert evidence.effective_scopes == {}
+
+
+def test_effective_column_peer_index_matches_full_scan_and_preserves_exclusions():
+    from reg_meta_build.source_curation import _peer_matches
+
+    original = _record()
+    anchor = _record(column="ANCHOR", variable=6)
+    excluded = _record(year=2021)
+    unmapped = _record(year=2022)
+    foreign = _record(year=2023).model_copy(update={"source": "other-source"})
+    occurrence = replace(
+        source_occurrence(original), source_records=(original, anchor, foreign)
+    )
+    column = occurrence.column_key
+    assert column is not None
+    evidence = SourceEvidence(
+        (original, original, anchor, excluded, unmapped, foreign),
+        effective_occurrences=(
+            occurrence,
+            replace(source_occurrence(excluded), use="support"),
+        ),
+    )
+    guard = PeerGuard(
+        guard_id="indexed",
+        source=original.source,
+        effective_column=column,
+        expected_members=(
+            record_ref(original),
+            record_ref(anchor),
+            record_ref(unmapped),
+        ),
+    )
+    assert "effective_column_records" not in evidence.__dict__
+    expected = tuple(
+        r
+        for r in evidence.records
+        if _peer_matches(r, guard) and evidence._effective_column_matches(r, column)
+    )
+    assert (
+        tuple(evidence.peers(guard))
+        == expected
+        == (original, original, anchor, unmapped)
+    )
+    assert "effective_column_records" in evidence.__dict__
+    assert tuple(evidence.peers(guard)) == expected
+    # A new immutable slice with the anchor removed from the binding cannot
+    # accidentally reuse the previous effective-column cache.
+    removed = SourceEvidence(
+        evidence.records,
+        effective_occurrences=(
+            replace(occurrence, source_records=(original, foreign)),
+            replace(source_occurrence(anchor), use="support"),
+            replace(source_occurrence(excluded), use="support"),
+        ),
+    )
+    assert tuple(removed.peers(guard)) == (original, original, unmapped)
 
 
 def test_documented_coding_requires_the_exact_partition_owner():

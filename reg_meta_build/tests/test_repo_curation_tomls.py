@@ -705,11 +705,12 @@ def test_repo_coding_windows_are_ported() -> None:
             register.coding.uncoded,
             register.coding.omit,
             register.coding.extend,
+            register.coding.documented,
         )
         for entry in kind
     ]
-    assert len(coding) == 110
-    assert sum(len(entry.periods) for entry in coding) == 225
+    assert len(coding) == 143
+    assert sum(len(entry.periods) for entry in coding) == 277
     assert (
         sum(
             len(entry.periods)
@@ -725,10 +726,11 @@ def test_repo_coding_windows_are_ported() -> None:
                 or register.coding.uncoded
                 or register.coding.omit
                 or register.coding.extend
+                or register.coding.documented
             )
             for register in tree.registers
         )
-        == 21
+        == 23
     )
 
 
@@ -1253,7 +1255,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 8, 1, 6)
+    ) == (20, 8, 1, 61)
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -2336,7 +2338,7 @@ def test_repo_iot_disposable_income_keeps_capital_gain_exclusion_distinct() -> N
         ("kapitalvinst", "exkl"),
     ]
     assert any(
-        m.variable == names["25.22307"] and m.delivery_column == "CDISP5"
+        m.variable == names["25.22307.individ"] and m.delivery_column == "CDISP5"
         for m in group.members
     )
 
@@ -2678,3 +2680,23 @@ def test_repo_rtb_roles_and_date_granularity_remain_distinct() -> None:
     assert week["BearbArVecka"] == week["BearbArvecka"] == week["BeArbArVecka"]
     assert week["BearbVecka"] == week["BearbVecka1"] != week["BearbArVecka"]
     assert maps["2.339"]["FlyttGrans"] != maps["2.339"]["Posttyp"]
+
+
+def test_repo_identity_splits_preserve_public_dependency_targets() -> None:
+    tree = load_curation_tree(_CURATION)
+    names = {
+        entry.native_id: entry.slug
+        for register in tree.registers
+        for entry in register.variable
+    }
+    assert names["34.17.arbetsstallenummer"] == "arbetsstallenummer"
+    assert names["34.667.arbetsstallekommun"] == "kommun-for-arbetsstalle"
+    assert names["25.21515.inkl-kapitalvinst"] == "delkomponent-disponibel-inkomst-2004"
+    assert not {"34.17", "34.667", "25.21515"} & names.keys()
+    snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
+    for owner in (
+        "34.17.arbetsstallenummer",
+        "34.667.arbetsstallekommun",
+        "25.21515.inkl-kapitalvinst",
+    ):
+        assert snapshot[f"scb/{owner}"] == names[owner]

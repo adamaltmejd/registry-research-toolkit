@@ -3730,6 +3730,7 @@ def compile_coding_register(
     *,
     originals: tuple[SourceRecord, ...],
     columns: Mapping[NativeKey, tuple[SourceRecord, ...]],
+    column_scopes: Mapping[NativeKey, frozenset[TemporalScope]],
     coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
 ) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
     """Compile one register's coding from established scope identities and claims.
@@ -3803,15 +3804,8 @@ def compile_coding_register(
                 case_id = f"{ref}/period/{period_index}"
                 source_windows = (
                     (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
-                    for record in records
-                    for lo, hi in (
-                        coding_scope_bounds(
-                            record.edition_period_scope
-                            if record.edition_period_scope.kind != "not_applicable"
-                            else record.edition_scope
-                        )
-                        or ()
-                    )
+                    for column_scope in column_scopes.get(column, ())
+                    for lo, hi in (coding_scope_bounds(column_scope) or ())
                 )
                 used = covers_window(source_windows, start, end)
                 selection, status, detail = compile_coding_selection(
@@ -3847,19 +3841,13 @@ def compile_coding_register(
                 targets = capture_expectations(
                     target_records,
                     fields=tuple(SourceFields.model_fields)
-                    if kind == "documented"
+                    if kind in {"documented", "uncoded"}
                     else ("column_name",),
                     coding=kind == "documented",
                 )
-                first = records[0]
                 guard = PeerGuard(
                     guard_id=case_id,
                     source=scope.source,
-                    coordinates=(
-                        ("register", first.subject.register_name),
-                        ("variant", first.subject.variant),
-                        ("variable", first.subject.variable),
-                    ),
                     effective_column=column,
                     expected_members=tuple(target.ref for target in targets),
                 )
