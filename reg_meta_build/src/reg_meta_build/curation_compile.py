@@ -1846,6 +1846,25 @@ def _literal_field(record: SourceRecord, name: str) -> str | None:
     )
 
 
+def _scoped_partition_entries(
+    entries: tuple[AcceptedNamingEntry, ...],
+    records: tuple[SourceRecord, ...],
+    scoped: Mapping[tuple[SourceRecordRef, str], str],
+) -> tuple[AcceptedNamingEntry, ...]:
+    """Replace generated discriminators only after complete checked ownership."""
+    if not records or any(
+        (record_ref(record), _literal_field(record, "column_name")) not in scoped
+        for record in records
+    ):
+        return entries
+    owners = set(scoped.values())
+    return tuple(
+        entry
+        for entry in entries
+        if entry.origin != "generated" or entry.entry.source_id in owners
+    )
+
+
 def _partition_ambiguity(
     native: tuple[str | int, ...],
     records: tuple[SourceRecord, ...],
@@ -1855,6 +1874,8 @@ def _partition_ambiguity(
     expectations: tuple[Any, ...],
     guard: PeerGuard,
 ) -> NamingAmbiguity:
+    entries = tuple(entry for entry in entries if entry.entry.source_id not in bound)
+    split_ids = tuple(split for split in split_ids if split not in bound)
     columns: dict[str, list[SourceRecord]] = defaultdict(list)
     for record in records:
         if (column := _literal_field(record, "column_name")) is not None:
@@ -2040,6 +2061,8 @@ def compile_partitions(
                 if scoped_issues:
                     null_bases[scope_key].add(native)
                     continue
+                entries = _scoped_partition_entries(entries, records, scoped)
+                split_ids = tuple(sorted({item.entry.source_id for item in entries}))
                 if len(partitions) > 1:
                     raise ValueError(
                         f"{register.source_file}: duplicate partition map for {source_id}"
@@ -2502,6 +2525,8 @@ def compile_deferred_partitions(
                 )
                 if scoped_issues:
                     continue
+                entries = _scoped_partition_entries(entries, records, scoped)
+                split_ids = tuple(sorted({item.entry.source_id for item in entries}))
                 if len(partitions) > 1:
                     raise ValueError(
                         f"{register.source_file}: duplicate partition map for {source_id}"

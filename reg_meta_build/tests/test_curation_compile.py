@@ -3604,7 +3604,7 @@ def test_unassigned_and_partial_suffix_keep_base_identity(tmp_path: Path):
     assert {item.naming.source_id for item in naming[key]} == {"1.5.answer"}
     assert (native, None) in keys[key]
     assert len(ambiguities[key]) == 1
-    assert ambiguities[key][0].candidate_columns == (("1.5.answer", "ANSWER"),)
+    assert ambiguities[key][0].candidate_columns == ()
     assert (
         apply_occurrence_cases(records, cases[key]).occurrences[1].variable_key
         == native
@@ -3685,7 +3685,7 @@ def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path)
     )
     assert compiled == generated
     assert generated[0][key]
-    assert generated[3][key][0].candidate_columns == (("1.5.answer", "ANSWER"),)
+    assert generated[3][key][0].candidate_columns == ()
     assert native in generated[4][key]
 
 
@@ -3765,6 +3765,53 @@ def test_implicit_partition_refuses_unsafe_slug_twins(columns, years):
     assert [issue.code for issue in converted.diagnostics] == [
         "split_identity_conversion_pending"
     ]
+
+
+@pytest.mark.parametrize("new_row", [False, True])
+def test_scoped_owners_replace_generated_names_only_with_complete_coverage(
+    tmp_path: Path, new_row: bool
+):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.reviewed"\nslug = "answer"\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "ANSWER"\nowner = "1.5.reviewed"\nref = "reviewed basis"\n'
+        'source_editions = ["2020"]\n',
+    )
+    (root / "registers" / "scb" / "sample.auto.toml").write_text(
+        '[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+    )
+    records = tuple(
+        _errata_record(column="ANSWER", year=year, member=20 + index)
+        for index, year in enumerate(("2020", "2021") if new_row else ("2020",))
+    )
+    compiled, key, native = _compile_partition_fixture(root, records)
+    corrected = apply_occurrence_cases(records, compiled[0][key])
+    assert not corrected.diagnostics
+    assert corrected.occurrences[0].variable_key[-1] == "1.5.reviewed"
+    if new_row:
+        assert corrected.occurrences[1].variable_key == native
+        assert len(compiled[3][key]) == 1
+        assert [name.source_id for name in compiled[3][key][0].names] == ["1.5.answer"]
+    else:
+        assert not compiled[3].get(key)
+    reader = SimpleNamespace(
+        iter_partition_families=lambda source, registers=None, select_family=None: iter(
+            ((native, records),)
+        )
+    )
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        cast("Any", SimpleNamespace(records=reader)),
+        (_partition_scope(records),),
+    )
+    assert deferred == (
+        compiled[1],
+        compiled[3],
+        compiled[4],
+        _partition_memberships(compiled[0]),
+    )
 
 
 def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
