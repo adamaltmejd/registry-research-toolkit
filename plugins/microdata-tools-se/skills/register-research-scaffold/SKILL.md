@@ -21,9 +21,9 @@ Server connections are researcher-operated. Do not request or use the researcher
 
 Provide:
 - Concise project instructions recording actual boundaries, chosen tools and commands.
-- A documented source adapter, explicit mock/real configuration, and analysis/configuration files for one small batch.
+- A documented source adapter, configured external real/mock input directories, and analysis/configuration files for one small batch.
 - Markdown question tickets with YAML frontmatter and dependency links; use filesystem search and metadata, not a separate database.
-- A way to package an explicit committed revision, run it incrementally with persistent restricted caches, validate outputs, and download them into human-only review storage before explicit approval for model access. Use bounded current code/output locations rather than accumulating remote run directories.
+- A way to upload committed code, inspect and run it manually on the server with persistent caches, and download only the current checked export after human review. Private local review before approval is an alternative. Use bounded current code/output locations rather than accumulating remote run directories.
 - A simple local HTML view of tickets, batch state, tables and evidence. Paper and slides are researcher-facing build targets too; prototype outputs must be visibly labelled mock and need not imitate a completed manuscript.
 - A short runbook stating what was checked locally and what still requires restricted compute or the researcher.
 

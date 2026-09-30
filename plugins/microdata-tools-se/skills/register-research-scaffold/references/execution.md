@@ -8,7 +8,7 @@ Local: fixture tests, full mock pipeline/assertions, exact-artifact mock check, 
 
 Restricted server: ingestion, persistent private intermediate caches, real assertions, investigations, aggregate data files and the mandatory final automatic disclosure check. MONA returns a checked ZIP; flexible servers return a checked file set through rsync. No model calls or automatic raw-data synchronization. Tables and figures are rendered locally.
 
-Mode is explicit, never guessed from OS/path. Missing real sources halt; never fall back to mock. Verify that mock inputs belong to an approved invented input set before reading them; a mode flag or filename is not sufficient. For a small trial, a committed content-hash manifest can bind the ignored mock files without tracking their records. Keep that manifest distinct from unit fixtures. Separate caches/output by mode. Refuse input/output overlap. Source readers must not alter reference-project inputs or stores.
+Configure real and mock input directories outside the project. Select real mode when the real directory exists; otherwise select mock when its directory exists; fail when neither exists. Select once before running. An unreadable directory, invalid input or failed assertion in the selected mode halts execution; never retry with another mode. Print the selected mode prominently. Verify that mock inputs belong to an approved invented input set before reading them; a mode flag or filename is not sufficient. For a small trial, a committed content-hash manifest can bind the ignored mock files without tracking their records. Keep that manifest distinct from unit fixtures. Derive separate cache, result and local-render paths from the selected mode. Keep generated paths and machine-specific configuration gitignored and outside code uploads. Mock runs must never overwrite real outputs; missing real results must never make a paper or slide build use mock results. Refuse input/output overlap. Source readers must not alter reference-project inputs or stores.
 
 ## MONA
 
@@ -22,13 +22,15 @@ Use manual MONA upload/export. A simulated local run establishes packaging only.
 
 ## Other servers
 
-Use operator-run rsync over SSH. The agent prepares an allowlisted committed source snapshot, placeholder configuration and reviewed commands; the researcher privately configures and runs the connection. Never ask for server aliases, credentials or private paths, and never inspect or invoke the operator's connection configuration. A local fake-data simulation can test the same transfer sequence without a network connection.
+Use operator-run rsync over SSH with independent upload, run and download steps. The agent prepares source selection, placeholder configuration and reviewed commands; the researcher privately configures and runs the connection. Never ask for server aliases, credentials or private paths, and never inspect or invoke the operator's connection configuration. A local fake-data simulation can test the transfer sequence without a network connection.
 
-Upload committed code into a fixed code location and download only the current automatically disclosure-checked release into human-only review storage. Use a separate OS identity or equivalent access boundary that prevents the agent/tool identity from reading that storage or obtaining the credentials. Directory restrictions, .gitignore and same-user chmod are insufficient. Do not auto-preview, index or pass through transfer logs. The operator exposes approved bytes only after manual review; see [operator-review.md](operator-review.md).
+Keep the same source layout locally and remotely. Upload an explicit committed source snapshot, or Git-selected tracked files after verifying the tracked working tree is clean and matches the recorded commit. Exclude .git and private/generated files; Git history stays local and remote Git is unnecessary. Handle removed source files within the managed source scope without deleting caches, results or environment files. Do not use .gitignore as the download selector: downloads select only the designated checked export.
 
-Use fixed code/, cache/, candidate/ and output/ locations, not a new retained directory for every run. Coding, Git history and research evidence stay local; do not build remote backup/history management. Preserve cache and build-tool metadata across deployments. Replace current code and outputs under an execution/transfer lock so a running batch cannot observe mixed source versions and a download cannot mix result sets. Bound temporary staging space, validate the manifest, then promote completed files; never expose partially written results. Scope any rsync deletion to the exact managed code/output subtree, never the source-data root or cache. Do not use in-place transfer into files being read by a running process. Invalidate the completion marker before a new run; a failed batch must not make stale results appear current.
+The researcher uploads while no batch is running, inspects the uploaded code, then runs it manually (for a Python project, a simple command such as `uv run run.py`). Provision dependencies separately; do not sync local virtual environments. Preserve private cache and build-tool metadata across uploads. A pipeline lock prevents concurrent runs; operator procedure prevents upload/run overlap. Do not introduce a cross-step deployment lock or an all-in-one script that invokes remote execution by default.
 
-Do not return a data-bearing Git working tree or route results through GitHub. Code may be published to GitHub later when requested; downloading results and admitting them to model context remain separate operations.
+Use fixed current paths for code, mode-specific caches/results and exports. Invalidate completion before a new run; a failure must not present stale output as current. Reassemble the export from declared current outputs, check its entire contents, and publish only after successful completion. Keep temporary staging bounded. The researcher reviews the checked export remotely before explicitly downloading it; alternatively download into private human-only storage and review there. Review need not happen twice. Keep raw logs, intermediates and caches outside the export; see [operator-review.md](operator-review.md).
+
+Do not return a data-bearing Git working tree or route results through GitHub. Code may be published to GitHub later when requested. Only human-approved exports may become readable by the model/tool identity; an automatic check alone never grants that approval.
 
 ## Incremental builds
 
@@ -44,9 +46,9 @@ Always execute the automatic disclosure checker over the complete current candid
 
 1. Validate ticket/batch dependencies and configuration.
 2. Run the small fixture-only suite.
-3. Package the committed execution revision.
-4. Run that package on separate mock inputs in a fresh directory using the actual pipeline/assertions.
-5. Verify and import the labelled mock ZIP, then build local reports.
+3. Prepare the committed execution snapshot (one file for MONA, source files for a flexible server).
+4. Run that snapshot on separate mock inputs in a fresh directory using the actual pipeline/assertions.
+5. Verify and import the labelled mock export, then build local reports.
 6. Record revision, artifact digest, commands, runtimes and outcomes outside the execution snapshot. Real run/release remain pending until completed.
 
 Exercise one minimal release-boundary rejection fixture (e.g. undeclared or altered file). Do not proliferate tests of command wording.
