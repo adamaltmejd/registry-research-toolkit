@@ -4960,3 +4960,392 @@ register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
 [[assign]]
 table = "GDB_Skolor2017"
 register_variant = ["scb/gdb/fastigheter", "scb/gdb/adresser-fastigheter"]
+
+# Annual RTB stock files: exact year-end observation, not full-calendar coverage.
+# Delivery variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx, RTB sheet
+# rows50 (RTB),84 (RTB-Familj),97 (HushallPerson), literal annual view templates.
+# Workbook SHA256 91ce4eaf7978c8863fe2dd7f0235e4f91dd1a602f3bdcf06c58010731925036b
+# Accepted native variants2.53/2.54/2.1080 explicitly declare the year-end point
+# and population "Folkbokförda personer i Sverige 31/12 undersökningsåret."
+# Each exact table is present in the actual holdings CSV; no quarterly/event
+# or pooled table is changed. Source catalog states remain dated points.
+
+# Native 1080, edition 5878; original scb-registerinformation:record:sha256:487ac81ebb5f51766f2292877548994943223dde9956e4f18f2e531569df1857
+[[edition]]
+table = "HushallPerson_2011"
+edition = "2011-12-31"
+
+# Native 1080, edition 5093; original scb-registerinformation:record:sha256:9378dd02e412772d338ea4629db1babee56843c36ba4886d0d4e78c4a63abe38
+[[edition]]
+table = "HushallPerson_2012"
+edition = "2012-12-31"
+
+# Native 1080, edition 5258; original scb-registerinformation:record:sha256:c239bdb40f5cd670cffecf1c1cd9de6b29aed3c59204242f3a95110ad58541dc
+[[edition]]
+table = "HushallPerson_2013"
+edition = "2013-12-31"
+
+# Native 1080, edition 5875; original scb-registerinformation:record:sha256:b365f1b775dfc8e3557839f538334956b678e5fc8144f06ae1136eea34ee4027
+[[edition]]
+table = "HushallPerson_2014"
+edition = "2014-12-31"
+
+# Native 1080, edition 7391; original scb-registerinformation:record:sha256:96dbca425c82af88e63bb5f5de8de2b0e2e44480b8aee5aa6344bbb7f9151701
+[[edition]]
+table = "HushallPerson_2015"
+edition = "2015-12-31"
+
+# Native 1080, edition 10042; original scb-registerinformation:record:sha256:7de3df04b9a9119af479ed6c687af7630065ba6ecc3db9eef18c3014a4e55379
+[[edition]]
+table = "HushallPerson_2016"
+edition = "2016-12-31"
+
+# Native 1080, edition 11810; original scb-registerinformation:record:sha256:402d98ee1f11ee3a1f0e6e79142b594c63c551cb1bc8965c5a8a1f9d0559fcec
+[[edition]]
+table = "HushallPerson_2017"
+edition = "2017-12-31"
+
+# Native 1080, edition 13062; original scb-registerinformation:record:sha256:89e405ade69aa004d5f49291a0befedbfbc731c4d796d32cc7a8451e9162e6e0
+[[edition]]
+table = "HushallPerson_2018"
+edition = "2018-12-31"
+
+# Native 1080, edition 13919; original scb-registerinformation:record:sha256:3fe3f27566126b77f1b137f716710c569834d662e077adefe35c2c4259f43f0e
+[[edition]]
+table = "HushallPerson_2019"
+edition = "2019-12-31"
+
+# Native 1080, edition 16223; original scb-registerinformation:record:sha256:4be19ad5e3a2b4d330fd4f7f65d3eab7f431d3f849bc2dda0dfaf54ce0e12a8f
+[[edition]]
+table = "HushallPerson_2020"
+edition = "2020-12-31"
+
+# Native 1080, edition 18080; original scb-registerinformation:record:sha256:4a35513f5c272cbf9fb550913e3ed861eec41659846052995c480f726ddb4f2b
+[[edition]]
+table = "HushallPerson_2021"
+edition = "2021-12-31"
+
+# Native 1080, edition 18615; original scb-registerinformation:record:sha256:9cf4d353b1fe3927509e526c49e370cd892752b1d740d86ed759aeec6e7aeb6c
+[[edition]]
+table = "HushallPerson_2022"
+edition = "2022-12-31"
+
+# Native 1080, edition 19111; original scb-registerinformation:record:sha256:3b5b8763a0a8f9808b9c5bd0663ad0d71398bb496b9c14501e558cb1deb131eb
+[[edition]]
+table = "HushallPerson_2023"
+edition = "2023-12-31"
+
+# Native 1080, edition 19736; original scb-registerinformation:record:sha256:76dc4b9313a6a7fdcc092167fbc710e3dc1bbfc6545eb32ddb23db1a83850d56
+[[edition]]
+table = "HushallPerson_2024"
+edition = "2024-12-31"
+
+# Native 53, edition 13759; original scb-registerinformation:record:sha256:0bc2da99515ee2f752e4b303afb5dd100cf91e2a1a118fb6cbceecd8ffeab7f2
+[[edition]]
+table = "RTB1990"
+edition = "1990-12-31"
+
+# Native 53, edition 13758; original scb-registerinformation:record:sha256:097d206ae7e0179ef7c7f860dd9916287eaf8b9595d613f345b6bd40ff5916d5
+[[edition]]
+table = "RTB1991"
+edition = "1991-12-31"
+
+# Native 53, edition 13757; original scb-registerinformation:record:sha256:040c4c832ba9b85afed3414ba26646500b9a315b76674544797be3f7905aea3a
+[[edition]]
+table = "RTB1992"
+edition = "1992-12-31"
+
+# Native 53, edition 13755; original scb-registerinformation:record:sha256:bbdb730007cda4f231df31aede45b16a87a6dc77e93dd7a7d49e879ddf6a0942
+[[edition]]
+table = "RTB1993"
+edition = "1993-12-31"
+
+# Native 53, edition 13754; original scb-registerinformation:record:sha256:c7f69f08fe109f695dcd2b13a4308106ab01185d6aca0606a9b8070b7ed50c69
+[[edition]]
+table = "RTB1994"
+edition = "1994-12-31"
+
+# Native 53, edition 13753; original scb-registerinformation:record:sha256:e2da55695e7d0366d57a1cbeb0c389375ebea0143db6ca4bda0943400b4908eb
+[[edition]]
+table = "RTB1995"
+edition = "1995-12-31"
+
+# Native 53, edition 13751; original scb-registerinformation:record:sha256:23534ba7a8bcf50cafddf5cd737e02d8c58456fcdc6e87a257242020d1186683
+[[edition]]
+table = "RTB1996"
+edition = "1996-12-31"
+
+# Native 53, edition 12998; original scb-registerinformation:record:sha256:6ed447863e8128b3adaf376a48e33f8a5def8318f692c5f6558fff2de5b8a4b7
+[[edition]]
+table = "RTB1997"
+edition = "1997-12-31"
+
+# Native 53, edition 769; original scb-registerinformation:record:sha256:bb0a752ab8e2280dcd46718a05f1deb274cfff6b96d67f030b5a50c76bd484bb
+[[edition]]
+table = "RTB1998"
+edition = "1998-12-31"
+
+# Native 53, edition 768; original scb-registerinformation:record:sha256:2e57c13e7af52d5e5549451a95f16751c211d53ecd322f6f4f8a7f4298ca477e
+[[edition]]
+table = "RTB1999"
+edition = "1999-12-31"
+
+# Native 53, edition 52; original scb-registerinformation:record:sha256:1ce297aec23beec8e45a17aac532c70e21a1414dc402862295883c476b6307d1
+[[edition]]
+table = "RTB2000"
+edition = "2000-12-31"
+
+# Native 53, edition 767; original scb-registerinformation:record:sha256:bd0faf909714dac25d27dfa870c6227e34822ede04065cdcd49dfc292ba9db43
+[[edition]]
+table = "RTB2001"
+edition = "2001-12-31"
+
+# Native 53, edition 766; original scb-registerinformation:record:sha256:3242dfc4983caf0724a38f82625d77f835f4a829c3cafe0bf8ead0d1dbc5cde3
+[[edition]]
+table = "RTB2002"
+edition = "2002-12-31"
+
+# Native 53, edition 765; original scb-registerinformation:record:sha256:d062f3f0d10de17c670833aa32f5ae5ce5e1e80290963e9842a765a48bfd19a0
+[[edition]]
+table = "RTB2003"
+edition = "2003-12-31"
+
+# Native 53, edition 764; original scb-registerinformation:record:sha256:6a4502c595703d12e9991ba7538ff06faaa75ce35ec227261eedf15de210d19b
+[[edition]]
+table = "RTB2004"
+edition = "2004-12-31"
+
+# Native 53, edition 757; original scb-registerinformation:record:sha256:aad437190f1f64819620167cbaf21f38eb1738baa06f8f97701eb70efab748aa
+[[edition]]
+table = "RTB2005"
+edition = "2005-12-31"
+
+# Native 53, edition 686; original scb-registerinformation:record:sha256:ba7cf94e213c1864a8ecaf2162c1aff9e98be10e8baadaf7775761572dd89db1
+[[edition]]
+table = "RTB2006"
+edition = "2006-12-31"
+
+# Native 53, edition 1278; original scb-registerinformation:record:sha256:eec2abcb327a6c0e87b38ed08973fc75bfef4e4bacae2042f7e4e365e9bbea7e
+[[edition]]
+table = "RTB2007"
+edition = "2007-12-31"
+
+# Native 53, edition 2109; original scb-registerinformation:record:sha256:a5214f6d3577596a12350e8380c7edb351d9edd75e7f2dd847b29cf44fc37bd5
+[[edition]]
+table = "RTB2008"
+edition = "2008-12-31"
+
+# Native 53, edition 2876; original scb-registerinformation:record:sha256:ae8bf9b50d172b77e5ebf2c187aeab1283f97e044255730dd354730b76a723f5
+[[edition]]
+table = "RTB2009"
+edition = "2009-12-31"
+
+# Native 53, edition 3390; original scb-registerinformation:record:sha256:b353b9ba9cadcea7540d320bb2177d93e0582a44ff853d42a96c2be1c8d800cd
+[[edition]]
+table = "RTB2010"
+edition = "2010-12-31"
+
+# Native 53, edition 3980; original scb-registerinformation:record:sha256:f94fd539bd92b0f026f6dab86a52f6889401e6ac97f778bcda63461220b801db
+[[edition]]
+table = "RTB2011"
+edition = "2011-12-31"
+
+# Native 53, edition 4586; original scb-registerinformation:record:sha256:5b116a1f3a5d2a00d3eb9e3c052c5b67afac4628c1395585df2180126a0eae94
+[[edition]]
+table = "RTB2012"
+edition = "2012-12-31"
+
+# Native 53, edition 5257; original scb-registerinformation:record:sha256:e7967e57d593a4090c06d33d7e0943dd9f0801532ecd791628664094198e5329
+[[edition]]
+table = "RTB2013"
+edition = "2013-12-31"
+
+# Native 53, edition 5871; original scb-registerinformation:record:sha256:306cba08b6d8ee6fa0defe3882dcfb427c48ccd69b39ff56bab49a845b349fa4
+[[edition]]
+table = "RTB2014"
+edition = "2014-12-31"
+
+# Native 53, edition 7407; original scb-registerinformation:record:sha256:2df9fb3582df16c65374c6df50994ccad8049ed4c546b8013d837ccdb436e6d9
+[[edition]]
+table = "RTB2015"
+edition = "2015-12-31"
+
+# Native 53, edition 10030; original scb-registerinformation:record:sha256:776c882f470752d0cbc5edc4a90c3c86f898741afbb6a91e7394a4627cd016af
+[[edition]]
+table = "RTB2016"
+edition = "2016-12-31"
+
+# Native 53, edition 11712; original scb-registerinformation:record:sha256:92ad1a61b7afd0af9ebcbfefaf8e3b3e4f2f20b31aaecd3dfac893fa7122e076
+[[edition]]
+table = "RTB2017"
+edition = "2017-12-31"
+
+# Native 53, edition 13042; original scb-registerinformation:record:sha256:ec325101fd2e8a2ca6c32bcd1350ddd3a50b39813fba093bea3e8f2fdca195ec
+[[edition]]
+table = "RTB2018"
+edition = "2018-12-31"
+
+# Native 53, edition 13917; original scb-registerinformation:record:sha256:d69fb695187e111fb3dcf9ddb719d94b944bc2f7d62dd428cc3a7fe16661fcfa
+[[edition]]
+table = "RTB2019"
+edition = "2019-12-31"
+
+# Native 53, edition 15944; original scb-registerinformation:record:sha256:c5104d96408b8baaf1e759b2525c999ad917d7abea06f675d17d9332418bc811
+[[edition]]
+table = "RTB2020"
+edition = "2020-12-31"
+
+# Native 53, edition 18038; original scb-registerinformation:record:sha256:1fb03e5fc692a95a1f449c2cbc887ea1901561b6a34f93c6c267729d90ff6d36
+[[edition]]
+table = "RTB2021"
+edition = "2021-12-31"
+
+# Native 53, edition 18604; original scb-registerinformation:record:sha256:819b675d51db9beec80f359d15f5c00fe3d3a513b50af384a2985018b5b36d0a
+[[edition]]
+table = "RTB2022"
+edition = "2022-12-31"
+
+# Native 53, edition 19050; original scb-registerinformation:record:sha256:50d7b12356ee91627bd0832c1888bd23f1680775adca1810c1d5f961439612c8
+[[edition]]
+table = "RTB2023"
+edition = "2023-12-31"
+
+# Native 53, edition 19724; original scb-registerinformation:record:sha256:84545e00683977df386d60b67759095a300bed23537e6a7cd560d50b207f0eed
+[[edition]]
+table = "RTB2024"
+edition = "2024-12-31"
+
+# Native 54, edition 770; original scb-registerinformation:record:sha256:bf68d8d5aa64a347c5cdcdf01f38fad2c83fa35bcba4f4a4323b9772233347fc
+[[edition]]
+table = "RTBFamilj1998"
+edition = "1998-12-31"
+
+# Native 54, edition 771; original scb-registerinformation:record:sha256:3120865ca805397e8be0195697ff3048d01bc15f99d17e1e41e4817b8af0a938
+[[edition]]
+table = "RTBFamilj1999"
+edition = "1999-12-31"
+
+# Native 54, edition 61; original scb-registerinformation:record:sha256:2e465e01e92df8e77569105ff001ab16dba45417ffa9c63ddac2710e62f4ac13
+[[edition]]
+table = "RTBFamilj2000"
+edition = "2000-12-31"
+
+# Native 54, edition 772; original scb-registerinformation:record:sha256:e12d0d88f5f0b3b6d00d0fe63a395b83d6d960abbdbdb3cabeb74bc3a51a3950
+[[edition]]
+table = "RTBFamilj2001"
+edition = "2001-12-31"
+
+# Native 54, edition 773; original scb-registerinformation:record:sha256:a5e0f87c06c7dfd8b419633bcce2ec454417a30de69c2e3df13d6b130fd6a39b
+[[edition]]
+table = "RTBFamilj2002"
+edition = "2002-12-31"
+
+# Native 54, edition 774; original scb-registerinformation:record:sha256:10466df8592dfc56ddad8965d3ff9be4ff254365c88865dee717aed735666602
+[[edition]]
+table = "RTBFamilj2003"
+edition = "2003-12-31"
+
+# Native 54, edition 775; original scb-registerinformation:record:sha256:1597f961f0a5f1c75131ae3c51c86879120d8bfb3570d418d6370970ff7c96f3
+[[edition]]
+table = "RTBFamilj2004"
+edition = "2004-12-31"
+
+# Native 54, edition 758; original scb-registerinformation:record:sha256:f14c0da449dc6b7d04f57d7773bf287408d84d658896bec1aae84f99d5379e91
+[[edition]]
+table = "RTBFamilj2005"
+edition = "2005-12-31"
+
+# Native 54, edition 755; original scb-registerinformation:record:sha256:8e13214aea7e062381dbf412d4e1d8284f45fb1255e33253a5593e2b1c11a330
+[[edition]]
+table = "RTBFamilj2006"
+edition = "2006-12-31"
+
+# Native 54, edition 1279; original scb-registerinformation:record:sha256:b4de77b810fb76efd9aa3c945a881709e93e10b19cbde9dbc2679d8ba993e6bb
+[[edition]]
+table = "RTBFamilj2007"
+edition = "2007-12-31"
+
+# Native 54, edition 2112; original scb-registerinformation:record:sha256:2672e270ebf039635a673bb6cc8c276d0871bdacc1a1ccf852fa0c6be28f36f7
+[[edition]]
+table = "RTBFamilj2008"
+edition = "2008-12-31"
+
+# Native 54, edition 2856; original scb-registerinformation:record:sha256:b179725f085537656acbc344c190cbddb362f40f7f221487a8dbd7ceb54cef9b
+[[edition]]
+table = "RTBFamilj2009"
+edition = "2009-12-31"
+
+# Native 54, edition 3389; original scb-registerinformation:record:sha256:5ada7f93cfb9a2488017aad5fabeb515d891fa9eebb62be9de6fde9612012d9b
+[[edition]]
+table = "RTBFamilj2010"
+edition = "2010-12-31"
+
+# Native 54, edition 3974; original scb-registerinformation:record:sha256:009ec1d5908036a2e900387d69e3885e60a4a302ee9ebac472eeb8590c11f5ff
+[[edition]]
+table = "RTBFamilj2011"
+edition = "2011-12-31"
+
+# Native 54, edition 4560; original scb-registerinformation:record:sha256:49d380e130dc8a0ce484e0c8dd75ec9be48f7c7c2ea661350dcc51fceff2cca1
+[[edition]]
+table = "RTBFamilj2012"
+edition = "2012-12-31"
+
+# Native 54, edition 5256; original scb-registerinformation:record:sha256:f5bfebc03c9c3505c952357bd1c253d4400d1b2455d9f8f3b0c1203c4d975d75
+[[edition]]
+table = "RTBFamilj2013"
+edition = "2013-12-31"
+
+# Native 54, edition 5870; original scb-registerinformation:record:sha256:66caad5247a212a1e7995c69eb9c78aa2fa34b45a867a5ff3d491738536529de
+[[edition]]
+table = "RTBFamilj2014"
+edition = "2014-12-31"
+
+# Native 54, edition 7400; original scb-registerinformation:record:sha256:556b4920d56e974377a64224e764340ba967b01e78feb23493bca7a2653ff098
+[[edition]]
+table = "RTBFamilj2015"
+edition = "2015-12-31"
+
+# Native 54, edition 10039; original scb-registerinformation:record:sha256:40504c1ea9d92cf5d1b4a53fbc1cad219dd23af5a7096daaff6e6b9340644fb8
+[[edition]]
+table = "RTBFamilj2016"
+edition = "2016-12-31"
+
+# Native 54, edition 11711; original scb-registerinformation:record:sha256:7e69a87ccbd3aa5c1b0dac07b31e1a6b28a8a12077c79d6c8b4cc5ac9d9ac7a4
+[[edition]]
+table = "RTBFamilj2017"
+edition = "2017-12-31"
+
+# Native 54, edition 13041; original scb-registerinformation:record:sha256:013e04f8c2736043e624b24aec08c05a7a67d16465d2389ac75c9f55494d31df
+[[edition]]
+table = "RTBFamilj2018"
+edition = "2018-12-31"
+
+# Native 54, edition 13918; original scb-registerinformation:record:sha256:48075a5abe9ba34023037edb0c13812bb069898d24bef38ad8f47b936c4f5fd1
+[[edition]]
+table = "RTBFamilj2019"
+edition = "2019-12-31"
+
+# Native 54, edition 15949; original scb-registerinformation:record:sha256:b2269e43858685dff9827abf263b47a80c1f84a157c5e7e6f4e64da1faddf207
+[[edition]]
+table = "RTBFamilj2020"
+edition = "2020-12-31"
+
+# Native 54, edition 18041; original scb-registerinformation:record:sha256:cf2efcbf7ae8d170764bad271327898bd9c2c4a14188ca66f47faa7061b800d2
+[[edition]]
+table = "RTBFamilj2021"
+edition = "2021-12-31"
+
+# Native 54, edition 18606; original scb-registerinformation:record:sha256:f81e19eb2474247550e9eebfc027f1e0fa4fd4f5553a675b92a5fa2566c40746
+[[edition]]
+table = "RTBFamilj2022"
+edition = "2022-12-31"
+
+# Native 54, edition 19049; original scb-registerinformation:record:sha256:adce74f7d41db9392373eca149e063566a9d01d48c8dce3ebfeaffae10e5bb93
+[[edition]]
+table = "RTBFamilj2023"
+edition = "2023-12-31"
+
+# Native 54, edition 19723; original scb-registerinformation:record:sha256:13c736e68daeba6e89c7c7bd23b3028ef98a77a2c88eef0253b1f880a71aaf51
+[[edition]]
+table = "RTBFamilj2024"
+edition = "2024-12-31"

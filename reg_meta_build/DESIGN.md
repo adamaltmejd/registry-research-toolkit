@@ -666,7 +666,9 @@ carry an accepted quantity's own positively bound source list into an earlier mi
 window. Complete physical originals, parent facts and ordered coding associations guard
 the target and witness; projections sharing a source reference are checked separately. A
 holding anchor for another quantity cannot supply its coding. Contrary historical
-members or labels remain unresolved under the explicit-link policy.
+members or labels remain unresolved under the explicit-link policy. A literal empty
+source-book label is accepted only with explicit nonempty members and complete prepared
+source authority, including raw fingerprints; it never receives an invented name.
 
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot
@@ -676,7 +678,15 @@ prepared workbook rows themselves, when their prose supplies the meanings of alr
 supplied finite code tokens. This form pins the source revision, physical locators,
 complete original fields, scopes, parent facts and all coding fingerprints. Changed,
 missing or new rows and changed incomplete lists invalidate compilation and application.
-Source rows cannot be mixed with PDF authority. PDF decisions retain the finite window
+Source rows cannot be mixed with PDF authority. A finite source-row decision may carry
+explicit reviewed label-equivalence certificates for unchanged code keys, such as
+`Landsting` and `Region` for the same county-government sector. Each certificate names
+all exact observed labels and selects one label already supplied by the source. The
+exact authored version label identifies the positive book; complete original and raw
+coding guards still cover other historical books. Compilation and replay require the
+observed label set and code keys to match exactly. Missing, new or changed labels, books
+or associations invalidate the decision. Original labels remain in source evidence; no
+fuzzy matching or code reassignment occurs. PDF decisions retain the finite window
 requirement. A source-row decision instead may name its exact supplied `TemporalScope`,
 mutually exclusive with authored finite periods. That scope must match every effective
 occurrence and list claim exactly, including an open `end`. The authored scope and
@@ -1168,6 +1178,13 @@ pooled ranges/lists are explicitly unassessed and never infer annual column
 availability. A missing delivery inventory fails configuration unless the explicit skip
 flag is selected. Provider regeneration and input acceptance remain separate maintainer
 operations.
+
+Inventory generation retains accepted catalog placement bounds and resolves each finite
+table edition through positively covering declared owners. Missing coverage or
+simultaneous owners produces a worklist before the inventory can be replaced. Each
+literal representation must cover the edition; sibling spellings cannot supply its
+dates. Source-backed annual stock-file overrides may name the exact year-end snapshot in
+the inventory while retaining the original catalog state windows.
 
 ## Document database
 

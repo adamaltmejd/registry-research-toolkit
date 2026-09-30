@@ -73,7 +73,11 @@ from .source_coding import (
     copied_coding_fingerprints,
     resolve_code_membership,
 )
-from .source_coding_choices import coding_expectations, compile_coding_selection
+from .source_coding_choices import (
+    coding_expectations,
+    compile_coding_selection,
+    documented_source_members,
+)
 from .source_coordinates import (
     column_identity,
     native_parent_key,
@@ -105,6 +109,7 @@ from .source_curation import (
     SourceRecordRef,
     _field_matches,
     capture_expectations,
+    documented_labels_match,
     evaluate_cases,
     evaluate_source_expectations,
 )
@@ -4372,7 +4377,8 @@ def compile_coding_register(
                             and (
                                 not enumeration_matches
                                 if authority.enumeration is not None
-                                else {
+                                else not authority.label_equivalences
+                                and {
                                     member.code
                                     for claim in claims
                                     for member in claim.members
@@ -4383,11 +4389,14 @@ def compile_coding_register(
                         or (
                             isinstance(entry, CodingDocumentedEntry)
                             and authority.enumeration is None
-                            and any(
-                                member.label is not None
-                                and (member.code, member.label) not in entry.members
-                                for claim in claims
-                                for member in claim.members
+                            and not documented_labels_match(
+                                documented_source_members(
+                                    claims,
+                                    entry.version_label,
+                                    reviewed_labels=bool(authority.label_equivalences),
+                                ),
+                                entry.members,
+                                authority.label_equivalences,
                             )
                         )
                     ):
@@ -5149,7 +5158,12 @@ def compile_errata(
     for entry in loaded.versions:
         versions[entry.register_variant_id].append(entry)
     delivered = {
-        (entry.register_id, entry.register_variant_id, fold_column(entry.column)): entry
+        (
+            entry.register_id,
+            entry.register_variant_id,
+            fold_column(entry.column),
+            entry.versions,
+        ): entry
         for entry in loaded.delivered
     }
     columns = {
@@ -5358,8 +5372,12 @@ def compile_errata(
                         )
                         variant_contexts[variant_id] = context
                     if table == "delivered":
+                        assert row.versions is not None
                         entry = delivered[
-                            register_id, variant_id, fold_column(row.column)
+                            register_id,
+                            variant_id,
+                            fold_column(row.column),
+                            tuple(row.versions),
                         ]
                         result = convert_delivered_entry(
                             entry,

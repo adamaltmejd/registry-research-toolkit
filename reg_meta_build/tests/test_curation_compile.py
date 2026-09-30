@@ -2716,6 +2716,38 @@ def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):
     )
 
 
+def test_same_column_delivery_entries_preserve_distinct_blank_and_missing_editions(
+    tmp_path: Path,
+) -> None:
+    donor = _errata_record(column="A", year="2020")
+    blank = _errata_record(column="", year="2021", member=22)
+    other = _errata_record(column="B", year="2022", variable=6, member=23)
+    originals = (donor, blank, other)
+    fragment = _DELIVERED + _DELIVERED.replace(
+        'versions = ["2021"]', 'versions = ["2022"]'
+    ).replace("accepted delivery", "accepted missing-edition delivery")
+    tree, prepared, scope = _errata_fixture(tmp_path, originals, fragment)
+    cases, _, _, diagnostics, _ = compile_errata(
+        tree, prepared, (scope,), {}, subset=False
+    )
+    assert not diagnostics
+    first, second = cases[scope.source, scope.register_key]
+    assert isinstance(first.decision.effects[0], CheckedFieldChange)
+    assert first.decision.effects[0].ref == record_ref(blank)
+    assert isinstance(second.decision.effects[0], CuratedOccurrenceAddition)
+    assert (
+        second.decision.effects[0].edition_key == source_occurrence(other).edition_key
+    )
+    changed = apply_occurrence_cases(originals, (first, second))
+    assert all(item.disposition == "applied" for item in changed.accounting)
+    corrected = next(o for o in changed.occurrences if blank in o.source_records)
+    assert corrected.fields.column_name.value == "A"
+    added = next(o for o in changed.occurrences if o.occurrence_key)
+    assert added.edition_key == source_occurrence(other).edition_key
+    assert added.variable_key == source_occurrence(donor).variable_key
+    assert not added.coding_records
+
+
 def test_coding_choice_on_errata_delivered_pooled_columns_keeps_exact_peers(
     tmp_path: Path,
 ) -> None:

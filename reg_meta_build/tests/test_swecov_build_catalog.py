@@ -475,6 +475,9 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
             "coord": coord,
             "vslug": "covid-19-antikroppar",
             "col": spelling,
+            "valid_from": "0001-01-01",
+            "valid_to": "9999-12-31",
+            "period_scope": "intervals",
         }
         # Both spellings resolve under the one variable.
         assert by_regcol[("inera/bestallda-prover", spelling.upper())] == [record]
@@ -486,6 +489,9 @@ def test_an_alias_only_spelling_resolves_beside_its_state_spelling(
             "coord": coord,
             "vslug": "t-kolumn",
             "col": "T_kolumn",
+            "valid_from": "0001-01-01",
+            "valid_to": "9999-12-31",
+            "period_scope": "intervals",
         }
     ]
 
@@ -1244,3 +1250,125 @@ def test_the_emitted_candidates_load_as_scb_errata(
     }
     # `all_versions` — the generator dates nothing, and neither source does.
     assert all(column.versions is None for column in errata.columns)
+
+
+@pytest.mark.parametrize(("year", "expected"), [(2021, "before-bas"), (2022, "bas")])
+def test_inventory_uses_the_declared_owner_covering_its_exact_year(
+    tmp_path: Path, flavored_db: Path, year: int, expected: str
+) -> None:
+    """The Org_InstKod10 shape: one literal, distinct reviewed edition owners."""
+    import shutil
+
+    db = tmp_path / "candidate.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        for variable, owner, start, end in (
+            (910, "before-bas", "2014-01-01", "2021-12-31"),
+            (911, "bas", "2022-01-01", "2023-12-31"),
+        ):
+            conn.execute(
+                "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
+                "VALUES (?,901,?,?,?)",
+                (variable, owner, owner, owner),
+            )
+            conn.execute(
+                "INSERT INTO variable_state(variable_id,register_variant_id,valid_from,"
+                "valid_to,delivery_column_name) VALUES (?,902,?,?,'InstKod10')",
+                (variable, start, end),
+            )
+    steward = _run_inventory(tmp_path, db, "", f"T{year}", ["InstKod10"])
+    table = load_delivery_inventory(steward / "inventory.toml").tables[0]
+    assert str(table.columns[0].mappings[0].variable) == (
+        f"inera/bestallda-prover/{expected}"
+    )
+    assert len(table.columns[0].mappings) == 1
+
+
+def _period_record(owner: str, start: str | None, end: str | None) -> dict:
+    return {
+        "coord": "inera/bestallda-prover/_default",
+        "vslug": owner,
+        "col": "Column",
+        "valid_from": start,
+        "valid_to": end,
+        "period_scope": "intervals",
+    }
+
+
+@pytest.mark.parametrize(
+    ("records", "issue"),
+    [
+        (
+            [_period_record("one", "2019-01-01", "2019-06-30")],
+            "no_covering_delivery_owner",
+        ),
+        (
+            [
+                _period_record("one", "2019-01-01", "2019-12-31"),
+                _period_record("two", "2019-01-01", "2019-12-31"),
+            ],
+            "ambiguous_delivered_owners",
+        ),
+        ([_period_record("one", None, None)], "no_covering_delivery_owner"),
+    ],
+)
+def test_inventory_refuses_incomplete_ambiguous_or_unknown_owner_scopes(
+    records: list[dict], issue: str
+) -> None:
+    admitted, finding = build_catalog._inventory_period_records(records, 2019)
+    assert not admitted
+    assert finding == issue
+
+
+def test_inventory_accepts_abutting_delivery_windows_of_the_same_owner() -> None:
+    records = [
+        _period_record("one", "2019-01-01", "2019-06-30"),
+        _period_record("one", "2019-07-01", "2019-12-31"),
+    ]
+    admitted, issue = build_catalog._inventory_period_records(records, 2019)
+    assert {r["vslug"] for r in admitted} == {"one"}
+    assert issue is None
+
+
+def test_inventory_does_not_choose_an_owner_from_a_pooled_range() -> None:
+    records = [
+        _period_record("one", "2019-01-01", "2019-12-31"),
+        _period_record("two", "2020-01-01", "2020-12-31"),
+    ]
+    admitted, issue = build_catalog._inventory_period_records(
+        records, {"from": 2019, "to": 2020}
+    )
+    assert {r["vslug"] for r in admitted} == {"one", "two"}
+    assert issue is None
+
+
+def test_unavailable_inventory_owner_writes_worklist_without_replacing_inventory(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    import shutil
+
+    db = tmp_path / "candidate.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute("UPDATE variable_state SET valid_to='2018-12-31'")
+        conn.execute("UPDATE variable_alias_window SET valid_to='2018-12-31'")
+    steward = tmp_path / "steward"
+    steward.mkdir()
+    (steward / "inventory_overlay.toml").write_text("")
+    previous = steward / "inventory.toml"
+    previous.write_text("previous inspected inventory")
+    csv = tmp_path / "holdings.csv"
+    csv.write_text(
+        "Category,Detail,Table,V1\nInera/1177,Ordered tests,T2019,T_kolumn\n"
+    )
+    with pytest.raises(
+        SystemExit, match="no_covering|need positive delivery-owner scope"
+    ):
+        build_catalog.cmd_inventory(argparse.Namespace(csv=csv, db=db, out=steward))
+    assert previous.read_text() == "previous inspected inventory"
+    worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
+    assert worklist["mapping_scope_needed"][0]["code"] == "no_covering_delivery_owner"
+    assert (
+        worklist["mapping_scope_needed"][0]["candidate_records"][0]["valid_to"]
+        == "2018-12-31"
+    )

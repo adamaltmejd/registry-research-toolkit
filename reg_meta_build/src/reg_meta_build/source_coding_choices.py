@@ -36,6 +36,7 @@ from reg_meta_build.source_curation import (
     ResolutionDiagnostic,
     SourceEvidence,
     SupportedCodingAssociation,
+    documented_labels_match,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
@@ -333,6 +334,18 @@ def _supported_association(
     return replace(resolved, claims=claims), None
 
 
+def documented_source_members(
+    claims: tuple[CodeListClaim, ...], version_label: str, *, reviewed_labels: bool
+) -> tuple[tuple[str | None, str | None], ...]:
+    """Bound reviewed label equivalence to one exact positively supplied book."""
+    return tuple(
+        (member.code, member.label)
+        for claim in claims
+        if not reviewed_labels or claim.version_label == version_label
+        for member in claim.members
+    )
+
+
 def compile_coding_selection(
     entry: CodingEntry | CodingChoiceEntry | CodingExtendEntry | CodingDocumentedEntry,
     kind: str,
@@ -388,6 +401,15 @@ def compile_coding_selection(
                 expected_source_codings=tuple(documented.source_authority.codings)
                 if documented.source_authority is not None
                 else None,
+                expected_raw_codings=tuple(
+                    sorted(documented.source_authority.raw_codings)
+                )
+                if documented.source_authority is not None
+                and documented.source_authority.raw_codings is not None
+                else None,
+                label_equivalences=tuple(documented.source_authority.label_equivalences)
+                if documented.source_authority is not None
+                else (),
             ),
             "matched",
             "",
@@ -479,6 +501,19 @@ def _selection(
             selection, claims, decision.valid_from, decision.valid_to
         )
     if isinstance(selection, DocumentedCodingSelection):
+        if selection.label_equivalences and (
+            selection.expected_raw_codings is None
+            or tuple(sorted({coding_source_sha256(claim) for claim in claims}))
+            != selection.expected_raw_codings
+            or not documented_labels_match(
+                documented_source_members(
+                    claims, selection.version_label, reviewed_labels=True
+                ),
+                selection.members,
+                selection.label_equivalences,
+            )
+        ):
+            return None, "documented_label_equivalence_changed"
         if selection.expected_source_codings is not None and copied_coding_fingerprints(
             claims
         ) != tuple(sorted(selection.expected_source_codings)):

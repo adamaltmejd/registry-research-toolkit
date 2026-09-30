@@ -103540,7 +103540,7 @@ name = "Org_InstKod6"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-1999"
 representation = "Org_InstKod6"
 
 [[table.column]]
@@ -104205,7 +104205,7 @@ name = "Org_InstKod6"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-1999"
 representation = "Org_InstKod6"
 
 [[table.column]]
@@ -104870,7 +104870,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -105535,7 +105535,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -106200,7 +106200,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -106873,7 +106873,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -107546,7 +107546,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -108219,7 +108219,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -108908,7 +108908,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -109597,7 +109597,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -110310,7 +110310,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -111023,7 +111023,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -111736,7 +111736,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -112425,7 +112425,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -113114,7 +113114,7 @@ name = "Org_InstKod7"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2000"
 representation = "Org_InstKod7"
 
 [[table.column]]
@@ -113803,7 +113803,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -114492,7 +114492,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -115181,7 +115181,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -115870,7 +115870,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -116575,7 +116575,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -117280,7 +117280,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -117985,7 +117985,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -118690,7 +118690,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -119387,7 +119387,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -120100,7 +120100,7 @@ name = "Org_InstKod10"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/foretag"
-variable = "scb/lisa/institutionell-sektorkod-foretag"
+variable = "scb/lisa/institutionell-sektorkod-foretag-2014-bas"
 representation = "Org_InstKod10"
 
 [[table.column]]
@@ -162651,7 +162651,7 @@ representation = "SCB_Upplatform"
 
 [[table]]
 id = "HushallPerson_2011"
-edition = 2011
+edition = "2011-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -162738,7 +162738,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2012"
-edition = 2012
+edition = "2012-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -162825,7 +162825,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2013"
-edition = 2013
+edition = "2013-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -162912,7 +162912,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2014"
-edition = 2014
+edition = "2014-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -162999,7 +162999,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2015"
-edition = 2015
+edition = "2015-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163086,7 +163086,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2016"
-edition = 2016
+edition = "2016-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163173,7 +163173,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2017"
-edition = 2017
+edition = "2017-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163260,7 +163260,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2018"
-edition = 2018
+edition = "2018-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163347,7 +163347,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2019"
-edition = 2019
+edition = "2019-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163434,7 +163434,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2020"
-edition = 2020
+edition = "2020-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163521,7 +163521,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2021"
-edition = 2021
+edition = "2021-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163608,7 +163608,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2022"
-edition = 2022
+edition = "2022-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163695,7 +163695,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2023"
-edition = 2023
+edition = "2023-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -163782,7 +163782,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "HushallPerson_2024"
-edition = 2024
+edition = "2024-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -183704,7 +183704,7 @@ name = "KU1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012"
 representation = "KU1Ssyk3_2012"
 
 [[table.column]]
@@ -183712,7 +183712,7 @@ name = "KU1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012"
 representation = "KU1Ssyk4_2012"
 
 [[table.column]]
@@ -183752,7 +183752,7 @@ name = "KU2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012"
 representation = "KU2Ssyk3_2012"
 
 [[table.column]]
@@ -183760,7 +183760,7 @@ name = "KU2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012"
 representation = "KU2Ssyk4_2012"
 
 [[table.column]]
@@ -184716,7 +184716,7 @@ name = "KU1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012"
 representation = "KU1Ssyk3_2012"
 
 [[table.column]]
@@ -184724,7 +184724,7 @@ name = "KU1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012"
 representation = "KU1Ssyk4_2012"
 
 [[table.column]]
@@ -184764,7 +184764,7 @@ name = "KU2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012"
 representation = "KU2Ssyk3_2012"
 
 [[table.column]]
@@ -184772,7 +184772,7 @@ name = "KU2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012"
 representation = "KU2Ssyk4_2012"
 
 [[table.column]]
@@ -185728,7 +185728,7 @@ name = "KU1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012"
 representation = "KU1Ssyk3_2012"
 
 [[table.column]]
@@ -185736,7 +185736,7 @@ name = "KU1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012"
 representation = "KU1Ssyk4_2012"
 
 [[table.column]]
@@ -185776,7 +185776,7 @@ name = "KU2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012"
 representation = "KU2Ssyk3_2012"
 
 [[table.column]]
@@ -185784,7 +185784,7 @@ name = "KU2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012"
 representation = "KU2Ssyk4_2012"
 
 [[table.column]]
@@ -186048,7 +186048,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -186056,7 +186056,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -186064,7 +186064,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -186740,7 +186740,7 @@ name = "KU1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012"
 representation = "KU1Ssyk3_2012"
 
 [[table.column]]
@@ -186748,7 +186748,7 @@ name = "KU1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012"
 representation = "KU1Ssyk4_2012"
 
 [[table.column]]
@@ -186788,7 +186788,7 @@ name = "KU2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012"
 representation = "KU2Ssyk3_2012"
 
 [[table.column]]
@@ -186796,7 +186796,7 @@ name = "KU2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012"
 representation = "KU2Ssyk4_2012"
 
 [[table.column]]
@@ -187060,7 +187060,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -187068,7 +187068,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -187076,7 +187076,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -187752,7 +187752,7 @@ name = "KU1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012"
 representation = "KU1Ssyk3_2012"
 
 [[table.column]]
@@ -187760,7 +187760,7 @@ name = "KU1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012"
 representation = "KU1Ssyk4_2012"
 
 [[table.column]]
@@ -187800,7 +187800,7 @@ name = "KU2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012"
 representation = "KU2Ssyk3_2012"
 
 [[table.column]]
@@ -187808,7 +187808,7 @@ name = "KU2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012"
 representation = "KU2Ssyk4_2012"
 
 [[table.column]]
@@ -188072,7 +188072,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -188080,7 +188080,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -188088,7 +188088,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -188324,7 +188324,7 @@ name = "AGI1AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1astnr"
+variable = "scb/lisa/agi1astnr"
 representation = "AGI1AstNr"
 
 [[table.column]]
@@ -188332,7 +188332,7 @@ name = "AGI1Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ink"
+variable = "scb/lisa/agi1ink"
 representation = "AGI1Ink"
 
 [[table.column]]
@@ -188340,7 +188340,7 @@ name = "AGI1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012-agi"
 representation = "AGI1SSYK3_2012"
 
 [[table.column]]
@@ -188348,7 +188348,7 @@ name = "AGI1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012-agi"
 representation = "AGI1SSYK4_2012"
 
 [[table.column]]
@@ -188356,7 +188356,7 @@ name = "AGI1SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ssykar"
+variable = "scb/lisa/agi1ssykar"
 representation = "AGI1SsykAr"
 
 [[table.column]]
@@ -188364,7 +188364,7 @@ name = "AGI1SsykStatus"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk-overensstammelse"
+variable = "scb/lisa/ssyk-overensstammelse-agi"
 representation = "AGI1SsykStatus"
 
 [[table.column]]
@@ -188372,7 +188372,7 @@ name = "AGI2AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2astnr"
+variable = "scb/lisa/agi2astnr"
 representation = "AGI2AstNr"
 
 [[table.column]]
@@ -188380,7 +188380,7 @@ name = "AGI2Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ink"
+variable = "scb/lisa/agi2ink"
 representation = "AGI2Ink"
 
 [[table.column]]
@@ -188388,12 +188388,12 @@ name = "AGI2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2SSYK3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2Ssyk3_2012"
 
 [[table.column]]
@@ -188401,12 +188401,12 @@ name = "AGI2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2SSYK4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2Ssyk4_2012"
 
 [[table.column]]
@@ -188414,7 +188414,7 @@ name = "AGI2SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ssykar"
+variable = "scb/lisa/agi2ssykar"
 representation = "AGI2SsykAr"
 
 [[table.column]]
@@ -188422,7 +188422,7 @@ name = "AGI3AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3astnr"
+variable = "scb/lisa/agi3astnr"
 representation = "AGI3AstNr"
 
 [[table.column]]
@@ -188430,7 +188430,7 @@ name = "AGI3Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3ink"
+variable = "scb/lisa/agi3ink"
 representation = "AGI3Ink"
 
 [[table.column]]
@@ -188926,7 +188926,7 @@ name = "P1105_LopNr_AGI1CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1cfarnr"
+variable = "scb/lisa/agi1cfarnr"
 representation = "AGI1CfarNr"
 
 [[table.column]]
@@ -188934,7 +188934,7 @@ name = "P1105_LopNr_AGI1PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1peorgnr"
+variable = "scb/lisa/agi1peorgnr"
 representation = "AGI1PeOrgNr"
 
 [[table.column]]
@@ -188942,7 +188942,7 @@ name = "P1105_LopNr_AGI2CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2cfarnr"
+variable = "scb/lisa/agi2cfarnr"
 representation = "AGI2CfarNr"
 
 [[table.column]]
@@ -188950,7 +188950,7 @@ name = "P1105_LopNr_AGI2PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2peorgnr"
+variable = "scb/lisa/agi2peorgnr"
 representation = "AGI2PeOrgNr"
 
 [[table.column]]
@@ -188958,7 +188958,7 @@ name = "P1105_LopNr_AGI3CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3cfarnr"
+variable = "scb/lisa/agi3cfarnr"
 representation = "AGI3CfarNr"
 
 [[table.column]]
@@ -188966,7 +188966,7 @@ name = "P1105_LopNr_AGI3PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3peorgnr"
+variable = "scb/lisa/agi3peorgnr"
 representation = "AGI3PeOrgNr"
 
 [[table.column]]
@@ -189102,7 +189102,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -189110,7 +189110,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -189118,7 +189118,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -189370,7 +189370,7 @@ name = "AGI1AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1astnr"
+variable = "scb/lisa/agi1astnr"
 representation = "AGI1AstNr"
 
 [[table.column]]
@@ -189378,7 +189378,7 @@ name = "AGI1Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ink"
+variable = "scb/lisa/agi1ink"
 representation = "AGI1Ink"
 
 [[table.column]]
@@ -189386,7 +189386,7 @@ name = "AGI1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012-agi"
 representation = "AGI1SSYK3_2012"
 
 [[table.column]]
@@ -189394,7 +189394,7 @@ name = "AGI1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012-agi"
 representation = "AGI1SSYK4_2012"
 
 [[table.column]]
@@ -189402,7 +189402,7 @@ name = "AGI1SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ssykar"
+variable = "scb/lisa/agi1ssykar"
 representation = "AGI1SsykAr"
 
 [[table.column]]
@@ -189410,7 +189410,7 @@ name = "AGI1SsykStatus"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk-overensstammelse"
+variable = "scb/lisa/ssyk-overensstammelse-agi"
 representation = "AGI1SsykStatus"
 
 [[table.column]]
@@ -189418,7 +189418,7 @@ name = "AGI2AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2astnr"
+variable = "scb/lisa/agi2astnr"
 representation = "AGI2AstNr"
 
 [[table.column]]
@@ -189426,7 +189426,7 @@ name = "AGI2Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ink"
+variable = "scb/lisa/agi2ink"
 representation = "AGI2Ink"
 
 [[table.column]]
@@ -189434,12 +189434,12 @@ name = "AGI2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2SSYK3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2Ssyk3_2012"
 
 [[table.column]]
@@ -189447,12 +189447,12 @@ name = "AGI2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2SSYK4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2Ssyk4_2012"
 
 [[table.column]]
@@ -189460,7 +189460,7 @@ name = "AGI2SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ssykar"
+variable = "scb/lisa/agi2ssykar"
 representation = "AGI2SsykAr"
 
 [[table.column]]
@@ -189468,7 +189468,7 @@ name = "AGI3AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3astnr"
+variable = "scb/lisa/agi3astnr"
 representation = "AGI3AstNr"
 
 [[table.column]]
@@ -189476,7 +189476,7 @@ name = "AGI3Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3ink"
+variable = "scb/lisa/agi3ink"
 representation = "AGI3Ink"
 
 [[table.column]]
@@ -189985,7 +189985,7 @@ name = "P1105_LopNr_AGI1CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1cfarnr"
+variable = "scb/lisa/agi1cfarnr"
 representation = "AGI1CfarNr"
 
 [[table.column]]
@@ -189993,7 +189993,7 @@ name = "P1105_LopNr_AGI1PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1peorgnr"
+variable = "scb/lisa/agi1peorgnr"
 representation = "AGI1PeOrgNr"
 
 [[table.column]]
@@ -190001,7 +190001,7 @@ name = "P1105_LopNr_AGI2CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2cfarnr"
+variable = "scb/lisa/agi2cfarnr"
 representation = "AGI2CfarNr"
 
 [[table.column]]
@@ -190009,7 +190009,7 @@ name = "P1105_LopNr_AGI2PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2peorgnr"
+variable = "scb/lisa/agi2peorgnr"
 representation = "AGI2PeOrgNr"
 
 [[table.column]]
@@ -190017,7 +190017,7 @@ name = "P1105_LopNr_AGI3CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3cfarnr"
+variable = "scb/lisa/agi3cfarnr"
 representation = "AGI3CfarNr"
 
 [[table.column]]
@@ -190025,7 +190025,7 @@ name = "P1105_LopNr_AGI3PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3peorgnr"
+variable = "scb/lisa/agi3peorgnr"
 representation = "AGI3PeOrgNr"
 
 [[table.column]]
@@ -190169,7 +190169,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -190177,7 +190177,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -190185,7 +190185,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -190437,7 +190437,7 @@ name = "AGI1AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1astnr"
+variable = "scb/lisa/agi1astnr"
 representation = "AGI1AstNr"
 
 [[table.column]]
@@ -190445,7 +190445,7 @@ name = "AGI1Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ink"
+variable = "scb/lisa/agi1ink"
 representation = "AGI1Ink"
 
 [[table.column]]
@@ -190453,7 +190453,7 @@ name = "AGI1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012-agi"
 representation = "AGI1SSYK3_2012"
 
 [[table.column]]
@@ -190461,7 +190461,7 @@ name = "AGI1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012-agi"
 representation = "AGI1SSYK4_2012"
 
 [[table.column]]
@@ -190469,7 +190469,7 @@ name = "AGI1SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ssykar"
+variable = "scb/lisa/agi1ssykar"
 representation = "AGI1SsykAr"
 
 [[table.column]]
@@ -190477,7 +190477,7 @@ name = "AGI1SsykStatus"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk-overensstammelse"
+variable = "scb/lisa/ssyk-overensstammelse-agi"
 representation = "AGI1SsykStatus"
 
 [[table.column]]
@@ -190485,7 +190485,7 @@ name = "AGI2AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2astnr"
+variable = "scb/lisa/agi2astnr"
 representation = "AGI2AstNr"
 
 [[table.column]]
@@ -190493,7 +190493,7 @@ name = "AGI2Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ink"
+variable = "scb/lisa/agi2ink"
 representation = "AGI2Ink"
 
 [[table.column]]
@@ -190501,12 +190501,12 @@ name = "AGI2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2SSYK3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2Ssyk3_2012"
 
 [[table.column]]
@@ -190514,12 +190514,12 @@ name = "AGI2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2SSYK4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2Ssyk4_2012"
 
 [[table.column]]
@@ -190527,7 +190527,7 @@ name = "AGI2SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ssykar"
+variable = "scb/lisa/agi2ssykar"
 representation = "AGI2SsykAr"
 
 [[table.column]]
@@ -190535,7 +190535,7 @@ name = "AGI3AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3astnr"
+variable = "scb/lisa/agi3astnr"
 representation = "AGI3AstNr"
 
 [[table.column]]
@@ -190543,7 +190543,7 @@ name = "AGI3Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3ink"
+variable = "scb/lisa/agi3ink"
 representation = "AGI3Ink"
 
 [[table.column]]
@@ -191068,7 +191068,7 @@ name = "P1105_LopNr_AGI1CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1cfarnr"
+variable = "scb/lisa/agi1cfarnr"
 representation = "AGI1CfarNr"
 
 [[table.column]]
@@ -191076,7 +191076,7 @@ name = "P1105_LopNr_AGI1PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1peorgnr"
+variable = "scb/lisa/agi1peorgnr"
 representation = "AGI1PeOrgNr"
 
 [[table.column]]
@@ -191084,7 +191084,7 @@ name = "P1105_LopNr_AGI2CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2cfarnr"
+variable = "scb/lisa/agi2cfarnr"
 representation = "AGI2CfarNr"
 
 [[table.column]]
@@ -191092,7 +191092,7 @@ name = "P1105_LopNr_AGI2PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2peorgnr"
+variable = "scb/lisa/agi2peorgnr"
 representation = "AGI2PeOrgNr"
 
 [[table.column]]
@@ -191100,7 +191100,7 @@ name = "P1105_LopNr_AGI3CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3cfarnr"
+variable = "scb/lisa/agi3cfarnr"
 representation = "AGI3CfarNr"
 
 [[table.column]]
@@ -191108,7 +191108,7 @@ name = "P1105_LopNr_AGI3PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3peorgnr"
+variable = "scb/lisa/agi3peorgnr"
 representation = "AGI3PeOrgNr"
 
 [[table.column]]
@@ -191252,7 +191252,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -191260,7 +191260,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -191268,7 +191268,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -191520,7 +191520,7 @@ name = "AGI1AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1astnr"
+variable = "scb/lisa/agi1astnr"
 representation = "AGI1AstNr"
 
 [[table.column]]
@@ -191528,7 +191528,7 @@ name = "AGI1Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ink"
+variable = "scb/lisa/agi1ink"
 representation = "AGI1Ink"
 
 [[table.column]]
@@ -191536,7 +191536,7 @@ name = "AGI1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012-agi"
 representation = "AGI1SSYK3_2012"
 
 [[table.column]]
@@ -191544,7 +191544,7 @@ name = "AGI1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012-agi"
 representation = "AGI1SSYK4_2012"
 
 [[table.column]]
@@ -191552,7 +191552,7 @@ name = "AGI1SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ssykar"
+variable = "scb/lisa/agi1ssykar"
 representation = "AGI1SsykAr"
 
 [[table.column]]
@@ -191560,7 +191560,7 @@ name = "AGI1SsykStatus"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk-overensstammelse"
+variable = "scb/lisa/ssyk-overensstammelse-agi"
 representation = "AGI1SsykStatus"
 
 [[table.column]]
@@ -191568,7 +191568,7 @@ name = "AGI2AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2astnr"
+variable = "scb/lisa/agi2astnr"
 representation = "AGI2AstNr"
 
 [[table.column]]
@@ -191576,7 +191576,7 @@ name = "AGI2Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ink"
+variable = "scb/lisa/agi2ink"
 representation = "AGI2Ink"
 
 [[table.column]]
@@ -191584,12 +191584,12 @@ name = "AGI2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2SSYK3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2Ssyk3_2012"
 
 [[table.column]]
@@ -191597,12 +191597,12 @@ name = "AGI2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2SSYK4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2Ssyk4_2012"
 
 [[table.column]]
@@ -191610,7 +191610,7 @@ name = "AGI2SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ssykar"
+variable = "scb/lisa/agi2ssykar"
 representation = "AGI2SsykAr"
 
 [[table.column]]
@@ -191618,7 +191618,7 @@ name = "AGI3AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3astnr"
+variable = "scb/lisa/agi3astnr"
 representation = "AGI3AstNr"
 
 [[table.column]]
@@ -191626,7 +191626,7 @@ name = "AGI3Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3ink"
+variable = "scb/lisa/agi3ink"
 representation = "AGI3Ink"
 
 [[table.column]]
@@ -192143,7 +192143,7 @@ name = "P1105_LopNr_AGI1CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1cfarnr"
+variable = "scb/lisa/agi1cfarnr"
 representation = "AGI1CfarNr"
 
 [[table.column]]
@@ -192151,7 +192151,7 @@ name = "P1105_LopNr_AGI1PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1peorgnr"
+variable = "scb/lisa/agi1peorgnr"
 representation = "AGI1PeOrgNr"
 
 [[table.column]]
@@ -192159,7 +192159,7 @@ name = "P1105_LopNr_AGI2CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2cfarnr"
+variable = "scb/lisa/agi2cfarnr"
 representation = "AGI2CfarNr"
 
 [[table.column]]
@@ -192167,7 +192167,7 @@ name = "P1105_LopNr_AGI2PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2peorgnr"
+variable = "scb/lisa/agi2peorgnr"
 representation = "AGI2PeOrgNr"
 
 [[table.column]]
@@ -192175,7 +192175,7 @@ name = "P1105_LopNr_AGI3CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3cfarnr"
+variable = "scb/lisa/agi3cfarnr"
 representation = "AGI3CfarNr"
 
 [[table.column]]
@@ -192183,7 +192183,7 @@ name = "P1105_LopNr_AGI3PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3peorgnr"
+variable = "scb/lisa/agi3peorgnr"
 representation = "AGI3PeOrgNr"
 
 [[table.column]]
@@ -192327,7 +192327,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -192335,7 +192335,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -192343,7 +192343,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -192563,7 +192563,7 @@ name = "AGI1AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1astnr"
+variable = "scb/lisa/agi1astnr"
 representation = "AGI1AstNr"
 
 [[table.column]]
@@ -192571,7 +192571,7 @@ name = "AGI1Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ink"
+variable = "scb/lisa/agi1ink"
 representation = "AGI1Ink"
 
 [[table.column]]
@@ -192579,7 +192579,7 @@ name = "AGI1Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-storsta"
+variable = "scb/lisa/ssyk3-storsta-2012-agi"
 representation = "AGI1SSYK3_2012"
 
 [[table.column]]
@@ -192587,7 +192587,7 @@ name = "AGI1Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-storsta"
+variable = "scb/lisa/ssyk4-storsta-2012-agi"
 representation = "AGI1SSYK4_2012"
 
 [[table.column]]
@@ -192595,7 +192595,7 @@ name = "AGI1SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1ssykar"
+variable = "scb/lisa/agi1ssykar"
 representation = "AGI1SsykAr"
 
 [[table.column]]
@@ -192603,7 +192603,7 @@ name = "AGI1SsykStatus"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk-overensstammelse"
+variable = "scb/lisa/ssyk-overensstammelse-agi"
 representation = "AGI1SsykStatus"
 
 [[table.column]]
@@ -192611,7 +192611,7 @@ name = "AGI2AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2astnr"
+variable = "scb/lisa/agi2astnr"
 representation = "AGI2AstNr"
 
 [[table.column]]
@@ -192619,7 +192619,7 @@ name = "AGI2Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ink"
+variable = "scb/lisa/agi2ink"
 representation = "AGI2Ink"
 
 [[table.column]]
@@ -192627,12 +192627,12 @@ name = "AGI2Ssyk3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2SSYK3_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk3-nast"
+variable = "scb/lisa/ssyk3-nast-2012-agi"
 representation = "AGI2Ssyk3_2012"
 
 [[table.column]]
@@ -192640,12 +192640,12 @@ name = "AGI2Ssyk4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2SSYK4_2012"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ssyk4-nast"
+variable = "scb/lisa/ssyk4-nast-2012-agi"
 representation = "AGI2Ssyk4_2012"
 
 [[table.column]]
@@ -192653,7 +192653,7 @@ name = "AGI2SsykAr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2ssykar"
+variable = "scb/lisa/agi2ssykar"
 representation = "AGI2SsykAr"
 
 [[table.column]]
@@ -192661,7 +192661,7 @@ name = "AGI3AstNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3astnr"
+variable = "scb/lisa/agi3astnr"
 representation = "AGI3AstNr"
 
 [[table.column]]
@@ -192669,7 +192669,7 @@ name = "AGI3Ink"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3ink"
+variable = "scb/lisa/agi3ink"
 representation = "AGI3Ink"
 
 [[table.column]]
@@ -193178,7 +193178,7 @@ name = "P1105_LopNr_AGI1CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1cfarnr"
+variable = "scb/lisa/agi1cfarnr"
 representation = "AGI1CfarNr"
 
 [[table.column]]
@@ -193186,7 +193186,7 @@ name = "P1105_LopNr_AGI1PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku1peorgnr"
+variable = "scb/lisa/agi1peorgnr"
 representation = "AGI1PeOrgNr"
 
 [[table.column]]
@@ -193194,7 +193194,7 @@ name = "P1105_LopNr_AGI2CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2cfarnr"
+variable = "scb/lisa/agi2cfarnr"
 representation = "AGI2CfarNr"
 
 [[table.column]]
@@ -193202,7 +193202,7 @@ name = "P1105_LopNr_AGI2PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku2peorgnr"
+variable = "scb/lisa/agi2peorgnr"
 representation = "AGI2PeOrgNr"
 
 [[table.column]]
@@ -193210,7 +193210,7 @@ name = "P1105_LopNr_AGI3CfarNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3cfarnr"
+variable = "scb/lisa/agi3cfarnr"
 representation = "AGI3CfarNr"
 
 [[table.column]]
@@ -193218,7 +193218,7 @@ name = "P1105_LopNr_AGI3PeOrgNr"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/ku3peorgnr"
+variable = "scb/lisa/agi3peorgnr"
 representation = "AGI3PeOrgNr"
 
 [[table.column]]
@@ -193354,7 +193354,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -193362,7 +193362,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -193370,7 +193370,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -252376,7 +252376,7 @@ representation = "PersonNr"
 
 [[table]]
 id = "RTB1990"
-edition = 1990
+edition = "1990-12-31"
 
 [[table.column]]
 name = "Civil"
@@ -252442,7 +252442,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1991"
-edition = 1991
+edition = "1991-12-31"
 
 [[table.column]]
 name = "Civil"
@@ -252508,7 +252508,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1992"
-edition = 1992
+edition = "1992-12-31"
 
 [[table.column]]
 name = "Civil"
@@ -252574,7 +252574,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1993"
-edition = 1993
+edition = "1993-12-31"
 
 [[table.column]]
 name = "Civil"
@@ -252640,7 +252640,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1994"
-edition = 1994
+edition = "1994-12-31"
 
 [[table.column]]
 name = "Civil"
@@ -252706,7 +252706,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1995"
-edition = 1995
+edition = "1995-12-31"
 
 [[table.column]]
 name = "Civil"
@@ -252772,7 +252772,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1996"
-edition = 1996
+edition = "1996-12-31"
 
 [[table.column]]
 name = "Civil"
@@ -252838,7 +252838,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1997"
-edition = 1997
+edition = "1997-12-31"
 
 [[table.column]]
 name = "Civil"
@@ -252904,7 +252904,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1998"
-edition = 1998
+edition = "1998-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -252983,7 +252983,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB1999"
-edition = 1999
+edition = "1999-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253062,7 +253062,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2000"
-edition = 2000
+edition = "2000-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253141,7 +253141,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2001"
-edition = 2001
+edition = "2001-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253220,7 +253220,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2002"
-edition = 2002
+edition = "2002-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253299,7 +253299,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2003"
-edition = 2003
+edition = "2003-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253378,7 +253378,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2004"
-edition = 2004
+edition = "2004-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253457,7 +253457,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2005"
-edition = 2005
+edition = "2005-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253536,7 +253536,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2006"
-edition = 2006
+edition = "2006-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253615,7 +253615,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2007"
-edition = 2007
+edition = "2007-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253694,7 +253694,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2008"
-edition = 2008
+edition = "2008-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253773,7 +253773,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2009"
-edition = 2009
+edition = "2009-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253852,7 +253852,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2010"
-edition = 2010
+edition = "2010-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -253931,7 +253931,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2011"
-edition = 2011
+edition = "2011-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254010,7 +254010,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2012"
-edition = 2012
+edition = "2012-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254089,7 +254089,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2013"
-edition = 2013
+edition = "2013-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254168,7 +254168,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2014"
-edition = 2014
+edition = "2014-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254247,7 +254247,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2015"
-edition = 2015
+edition = "2015-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254326,7 +254326,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2016"
-edition = 2016
+edition = "2016-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254405,7 +254405,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2017"
-edition = 2017
+edition = "2017-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254484,7 +254484,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2018"
-edition = 2018
+edition = "2018-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254563,7 +254563,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2019"
-edition = 2019
+edition = "2019-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254642,7 +254642,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2020"
-edition = 2020
+edition = "2020-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254721,7 +254721,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2021"
-edition = 2021
+edition = "2021-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254800,7 +254800,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2022"
-edition = 2022
+edition = "2022-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254879,7 +254879,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2023"
-edition = 2023
+edition = "2023-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -254958,7 +254958,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTB2024"
-edition = 2024
+edition = "2024-12-31"
 
 [[table.column]]
 name = "CivDat"
@@ -255037,7 +255037,7 @@ name = "P1105_Lopnr_Fast"
 
 [[table]]
 id = "RTBFamilj1998"
-edition = 1998
+edition = "1998-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255121,7 +255121,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj1999"
-edition = 1999
+edition = "1999-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255205,7 +255205,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2000"
-edition = 2000
+edition = "2000-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255289,7 +255289,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2001"
-edition = 2001
+edition = "2001-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255373,7 +255373,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2002"
-edition = 2002
+edition = "2002-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255457,7 +255457,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2003"
-edition = 2003
+edition = "2003-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255541,7 +255541,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2004"
-edition = 2004
+edition = "2004-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255625,7 +255625,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2005"
-edition = 2005
+edition = "2005-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255709,7 +255709,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2006"
-edition = 2006
+edition = "2006-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255793,7 +255793,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2007"
-edition = 2007
+edition = "2007-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255877,7 +255877,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2008"
-edition = 2008
+edition = "2008-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -255961,7 +255961,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2009"
-edition = 2009
+edition = "2009-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256045,7 +256045,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2010"
-edition = 2010
+edition = "2010-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256129,7 +256129,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2011"
-edition = 2011
+edition = "2011-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256213,7 +256213,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2012"
-edition = 2012
+edition = "2012-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256297,7 +256297,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2013"
-edition = 2013
+edition = "2013-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256381,7 +256381,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2014"
-edition = 2014
+edition = "2014-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256465,7 +256465,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2015"
-edition = 2015
+edition = "2015-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256549,7 +256549,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2016"
-edition = 2016
+edition = "2016-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256633,7 +256633,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2017"
-edition = 2017
+edition = "2017-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256717,7 +256717,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2018"
-edition = 2018
+edition = "2018-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256801,7 +256801,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2019"
-edition = 2019
+edition = "2019-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256885,7 +256885,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2020"
-edition = 2020
+edition = "2020-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -256969,7 +256969,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2021"
-edition = 2021
+edition = "2021-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -257053,7 +257053,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2022"
-edition = 2022
+edition = "2022-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -257137,7 +257137,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2023"
-edition = 2023
+edition = "2023-12-31"
 
 [[table.column]]
 name = "AntalBarn"
@@ -257221,7 +257221,7 @@ representation = "YngstaBarn"
 
 [[table]]
 id = "RTBFamilj2024"
-edition = 2024
+edition = "2024-12-31"
 
 [[table.column]]
 name = "AntalBarn"

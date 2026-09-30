@@ -56,6 +56,7 @@ from .normalization import normalize_text
 from .relations import load_relations
 from .resolved_metadata import _variable
 from .source_curation import (
+    CodeLabelEquivalence,
     ColumnRepresentation,
     DeliveryMetadataColumn,
     DeliveryMetadataDecision,
@@ -1195,6 +1196,7 @@ class _CheckedCodingEntry(CodingEntry):
             authority.enumeration is not None
             or authority.source_scope is not None
             or not authority.raw_codings
+            or authority.label_equivalences
         ):
             raise ValueError(
                 "coding authority requires finite original rows and complete source coding fingerprints"
@@ -1228,7 +1230,18 @@ class CodingExtendEntry(_CheckedCodingEntry):
     list_members: list[list[str]] | None = None
     witness: list[str]
 
-    _list = field_validator("list")(_require_trimmed)
+    @field_validator("list")
+    @classmethod
+    def _list(cls, value: str) -> str:
+        return value if value == "" else _require_trimmed(value)
+
+    @model_validator(mode="after")
+    def _unlabelled_source(self) -> CodingExtendEntry:
+        if self.list == "" and (not self.list_members or self.source_authority is None):
+            raise ValueError(
+                "an unlabelled source list requires exact members and prepared source authority"
+            )
+        return self
 
     @field_validator("list_members")
     @classmethod
@@ -1252,12 +1265,23 @@ class PreparedCodingAuthority(_CurationModel):
     codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]]
     enumeration: SourceEnumeration | None = None
     raw_codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] | None = None
+    label_equivalences: list[CodeLabelEquivalence] = Field(default_factory=list)
     marker_bindings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] | None = (
         None
     )
 
     @model_validator(mode="after")
     def _complete(self) -> PreparedCodingAuthority:
+        if self.label_equivalences and (
+            self.enumeration is not None
+            or self.source_scope is not None
+            or not self.raw_codings
+            or len({entry.code for entry in self.label_equivalences})
+            != len(self.label_equivalences)
+        ):
+            raise ValueError(
+                "label equivalence needs distinct codes and complete finite raw authority"
+            )
         if self.enumeration is None:
             if not self.codings or self.marker_bindings is not None:
                 raise ValueError("source-row token authority requires supplied codings")
@@ -1344,7 +1368,10 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
                 raise ValueError(
                     "documented coding requires complete PDF authority or exact source rows"
                 )
-        elif self.source_authority.raw_codings is not None:
+        elif (
+            self.source_authority.raw_codings is not None
+            and not self.source_authority.label_equivalences
+        ):
             raise ValueError(
                 "raw choice coding fingerprints belong to choice authority"
             )
@@ -1364,6 +1391,8 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
             or self.expected_marker_bindings is not None
             or self.source_scope is not None
             or self.expected_source_codings is not None
+            or self.expected_raw_codings is not None
+            or self.label_equivalences
         ):
             raise ValueError("source-scope coding must use checked source authority")
         if (

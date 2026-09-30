@@ -867,6 +867,52 @@ class SourceEnumeration(_CurationModel):
         return tuple(lines) == self.lines
 
 
+class CodeLabelEquivalence(_CurationModel):
+    """Reviewed literal labels for one unchanged source code and meaning."""
+
+    code: str
+    labels: Annotated[tuple[str, ...], Field(strict=False, min_length=2)]
+    selected_label: str
+
+    @model_validator(mode="after")
+    def _literal_labels(self) -> Self:
+        if (
+            not self.code.strip()
+            or any(not label.strip() for label in self.labels)
+            or len(set(self.labels)) != len(self.labels)
+            or self.selected_label not in self.labels
+        ):
+            raise ValueError(
+                "label equivalence requires distinct positive source labels"
+            )
+        return self
+
+
+def documented_labels_match(
+    source_members: Iterable[tuple[str | None, str | None]],
+    members: Iterable[tuple[str, str]],
+    equivalences: Iterable[CodeLabelEquivalence],
+) -> bool:
+    """Match exact reviewed alternatives, without changing any source code."""
+    source = set(source_members)
+    selected = dict(members)
+    aliases = {entry.code: entry for entry in equivalences}
+    if aliases and (not source or {code for code, _ in source} != set(selected)):
+        return False
+    if any(
+        {label for code, label in source if code == entry.code} != set(entry.labels)
+        or selected.get(entry.code) != entry.selected_label
+        for entry in aliases.values()
+    ):
+        return False
+    return all(
+        label is None
+        or (code in aliases and label in aliases[code].labels)
+        or selected.get(code) == label
+        for code, label in source
+    )
+
+
 class DocumentedCodingSelection(_CurationModel):
     """An exact finite list supplied by independently reviewed documentation."""
 
@@ -883,6 +929,16 @@ class DocumentedCodingSelection(_CurationModel):
     expected_source_codings: (
         tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...] | None
     ) = None
+    expected_raw_codings: (
+        Annotated[
+            tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...],
+            Field(strict=False),
+        ]
+        | None
+    ) = None
+    label_equivalences: Annotated[
+        tuple[CodeLabelEquivalence, ...], Field(strict=False)
+    ] = ()
     version_label: str = Field(min_length=1)
     members: Annotated[
         tuple[Annotated[tuple[str, str], Field(strict=False)], ...], Field(strict=False)
@@ -897,6 +953,10 @@ class DocumentedCodingSelection(_CurationModel):
             raise ValueError("documented member labels must be nonempty")
         if len({code for code, _ in self.members}) != len(self.members):
             raise ValueError("documented member codes must be unique")
+        if len({entry.code for entry in self.label_equivalences}) != len(
+            self.label_equivalences
+        ):
+            raise ValueError("label equivalences must use distinct source codes")
         if (self.enumeration is None) != (self.expected_marker_bindings is None):
             raise ValueError("enumerated authority needs exact marker bindings")
         if self.enumeration is not None and (

@@ -2687,7 +2687,7 @@ def _steward_load_db(db_path: Path):
     """Build the column-resolution index from a FLAVORED DB.
 
     Returns ``by_regcol[(provider/register, UPPER col)]`` → a list of
-    ``{coord, vslug, col}`` resolution records (``coord`` is the 3-part
+    ``{coord, vslug, col, valid_from, valid_to, period_scope}`` resolution records (``coord`` is the 3-part
     ``provider/register/variant`` coordinate).
 
     A co-delivered second spelling — the flavor group's other Covid column,
@@ -2722,12 +2722,24 @@ def _steward_load_db(db_path: Path):
     # they are not appended after them), so the resolution order is stable
     # across reg_meta rebuilds. `coord` orders exactly as the variant slug did:
     # its `provider/register/` prefix is constant within the two preceding keys.
-    for prov, reg, coord, vslug, col, _dtype, _isid, _vsid, _vf, _vt in conn.execute(
+    for (
+        prov,
+        reg,
+        coord,
+        vslug,
+        col,
+        _dtype,
+        _isid,
+        _vsid,
+        vf,
+        vt,
+        scope,
+    ) in conn.execute(
         """SELECT p.slug AS prov, r.slug AS reg,
                   p.slug||'/'||r.slug||'/'||rv.slug AS coord, v.slug AS vslug,
                   vs.delivery_column_name AS col, vs.data_type AS dtype,
                   v.is_identifier AS isid, vs.value_set_id AS vsid,
-                  vs.valid_from AS vf, vs.valid_to AS vt
+                  vs.valid_from AS vf, vs.valid_to AS vt, vs.period_scope
            FROM variable_state vs JOIN variable v USING(variable_id)
            JOIN register r ON r.register_id=v.register_id
            JOIN provider p ON p.provider_id=r.provider_id
@@ -2737,7 +2749,7 @@ def _steward_load_db(db_path: Path):
            UNION ALL
            SELECT p.slug, r.slug, p.slug||'/'||r.slug||'/'||rv.slug, v.slug,
                   w.delivery_column_name, vs.data_type, v.is_identifier,
-                  vs.value_set_id, w.valid_from, w.valid_to
+                  vs.value_set_id, w.valid_from, w.valid_to, 'intervals'
            FROM variable_alias_window w JOIN variable v USING(variable_id)
            JOIN register r ON r.register_id=v.register_id
            JOIN provider p ON p.provider_id=r.provider_id
@@ -2760,10 +2772,65 @@ def _steward_load_db(db_path: Path):
            ORDER BY prov, reg, coord, vslug, col, vf, dtype"""
     ):
         u = col.upper()
-        rec = {"coord": coord, "vslug": vslug, "col": col}
+        rec = {
+            "coord": coord,
+            "vslug": vslug,
+            "col": col,
+            "valid_from": vf,
+            "valid_to": vt,
+            "period_scope": scope,
+        }
         by_regcol[(f"{prov}/{reg}", u)].append(rec)
     conn.close()
     return by_regcol
+
+
+def _inventory_period_records(
+    records: list[dict], edition: object
+) -> tuple[list[dict], str | None]:
+    """Choose already-declared owners by their complete delivery windows.
+
+    A range/list is record coverage, not per-column availability; it remains
+    unassessed. Distinct owners active together in one variant stay ambiguous.
+    """
+    from reg_meta.inventory import _merge, edition_bounds
+    from reg_meta_build.inventory_coverage import _covers
+
+    if not isinstance(edition, (str, int)):
+        return records, None
+    bounds = edition_bounds(str(edition))
+    grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for record in records:
+        grouped[(record["coord"], record["vslug"])].append(record)
+    admitted: list[dict] = []
+    owners: dict[str, set[str]] = defaultdict(set)
+    for (coord, owner), members in sorted(grouped.items()):
+        # Separate case spellings remain literal representations. Do not borrow
+        # another spelling's dates to admit a column in an unsupported edition.
+        by_column: dict[str, list[dict]] = defaultdict(list)
+        for member in members:
+            by_column[member["col"]].append(member)
+        active = []
+        for column_records in by_column.values():
+            windows = _merge(
+                [
+                    (r["valid_from"], r["valid_to"])
+                    for r in column_records
+                    if r["period_scope"] == "intervals"
+                    and r["valid_from"] is not None
+                    and r["valid_to"] is not None
+                ]
+            )
+            if all(_covers(interval, tuple(windows)) for interval in bounds):
+                active.extend(column_records)
+        if active:
+            owners[coord].add(owner)
+            admitted.extend(active)
+    if any(len(active) > 1 for active in owners.values()):
+        return [], "ambiguous_delivered_owners"
+    if not admitted:
+        return [], "no_covering_delivery_owner"
+    return admitted, None
 
 
 def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
@@ -3036,6 +3103,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         "edition_needed": [],
         "assignment_needed": [],
         "stale_overlay_entries": stale,
+        "mapping_scope_needed": [],
     }
     n_cols = n_mapped = n_pivot = n_unresolved = n_auto_assigned = n_unmapped = 0
     # [[school_year]] bookkeeping: tables re-spelled per rule (printed) and the
@@ -3144,6 +3212,24 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                 n_unresolved += 1
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
+            recs, scope_issue = _inventory_period_records(recs, edition)
+            if scope_issue:
+                worklist["mapping_scope_needed"].append(
+                    {
+                        "table": table,
+                        "column": col,
+                        "edition": edition,
+                        "code": scope_issue,
+                        "candidate_records": [
+                            r
+                            for coord in sorted(coords)
+                            for r in by_coordcol[(coord, u)]
+                        ],
+                    }
+                )
+                n_unresolved += 1
+                lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
+                continue
             n_mapped += 1
             lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
             seen: set[tuple[str, str, str]] = set()
@@ -3172,12 +3258,17 @@ def cmd_inventory(args: argparse.Namespace) -> None:
     ]
 
     dest = steward_dir / "inventory.toml"
-    dest.write_text("\n".join(lines) + "\n", encoding="utf-8")
     wl_path = args.csv.parent / "derived" / "inventory_worklist.json"
     wl_path.parent.mkdir(parents=True, exist_ok=True)
     wl_path.write_text(
         json.dumps(worklist, ensure_ascii=False, indent=1), encoding="utf-8"
     )
+    if worklist["mapping_scope_needed"]:
+        raise SystemExit(
+            f"{len(worklist['mapping_scope_needed'])} physical column(s) need "
+            f"positive delivery-owner scope; see {wl_path}. Inventory not replaced."
+        )
+    dest.write_text("\n".join(lines) + "\n", encoding="utf-8")
     n_tables = (
         len(tables)
         - len(excluded)

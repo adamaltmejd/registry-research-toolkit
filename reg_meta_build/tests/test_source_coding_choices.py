@@ -2294,6 +2294,44 @@ def test_prepared_coding_authority_materializes_all_original_projection_alternat
     assert replay.accounting[0].status == "stale"
 
 
+@pytest.mark.parametrize("missing", [None, "authority", "members", "raw_codings"])
+def test_unlabelled_extension_requires_complete_literal_source_authority(missing):
+    from reg_meta_build.source_coding import coding_source_sha256
+
+    record = _record()
+    claim = replace(
+        _claim("source", "1", "2021-01-01", "2021-12-31"), version_label=None
+    )
+    authority = _row_authority(record, (claim,)).model_copy(
+        update={"raw_codings": [coding_source_sha256(claim)]}
+    )
+    values = {
+        "list": "",
+        "list_members": [["1", "Label"]],
+        "witness": ["2021-01-01", "2021-12-31"],
+        "source_authority": authority,
+    }
+    if missing == "authority":
+        values.pop("source_authority")
+    elif missing == "members":
+        values.pop("list_members")
+    elif missing == "raw_codings":
+        values["source_authority"] = authority.model_copy(update={"raw_codings": None})
+    if missing is not None:
+        with pytest.raises(ValueError):
+            _compile_entry("extend", values, (claim,))
+        return
+    cases, issues, _, _, _, column = _compile_entry("extend", values, (claim,))
+    assert len(cases) == 1 and not issues
+    result = apply_coding_choices((record,), cases, coding={column: (claim,)})
+    assert not result.diagnostics
+    assert result.coding[column].claims == (claim,)
+    segment = result.coding[column].segments[0]
+    assert segment.code_set is not None
+    assert segment.code_set.members == (("1", "Label"),)
+    assert segment.version_label == ""
+
+
 def test_guarded_extend_uses_held_column_owner_without_anchor_coding():
     from reg_meta_build.source_coding import coding_source_sha256
 
@@ -2357,3 +2395,116 @@ def test_guarded_extend_uses_held_column_owner_without_anchor_coding():
         cases,
         coding={column: (claim,)},
     ).diagnostics
+
+
+@pytest.mark.parametrize(
+    "drift", [None, "label", "missing", "code", "association", "book", "historical"]
+)
+def test_documented_exact_label_equivalence_retains_raw_claims(drift):
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_curation import CodeLabelEquivalence
+    from reg_meta_build.source_values import SourceValueAssociation
+
+    record = _record()
+    association = SourceValueAssociation(1, "descriptor", "value", "values.csv")
+    claim = replace(
+        _claim("Sector", "14", "2019-01-01", "2019-12-31"),
+        members=(
+            CodeMembershipClaim(
+                "14", "Landsting", TemporalScope(kind="year_independent")
+            ),
+            CodeMembershipClaim(
+                "14",
+                "Region",
+                TemporalScope(kind="year_independent"),
+                associations=(association,),
+            ),
+            CodeMembershipClaim("15", "Other", TemporalScope(kind="year_independent")),
+        ),
+    )
+    historical = _claim("Old sector", "29", "1968-01-01", "1968-12-31")
+    claims = (claim, historical)
+    authority = _row_authority(record, claims).model_copy(
+        update={
+            "raw_codings": [coding_source_sha256(c) for c in claims],
+            "label_equivalences": [
+                CodeLabelEquivalence(
+                    code="14",
+                    labels=("Landsting", "Region"),
+                    selected_label="Landsting",
+                )
+            ],
+        }
+    )
+    values = {
+        "members": [["14", "Landsting"], ["15", "Other"]],
+        "version_label": "Sector",
+        "source_authority": authority,
+    }
+    cases, diagnostics, _, _, _, column = _compile_entry(
+        "documented", values, claims, record=record
+    )
+    assert not diagnostics
+    changed = claim
+    if drift == "label":
+        changed = replace(
+            claim,
+            members=(
+                claim.members[0],
+                replace(claim.members[1], label="Different"),
+                claim.members[2],
+            ),
+        )
+    elif drift == "missing":
+        changed = replace(claim, members=(claim.members[0], claim.members[2]))
+    elif drift == "code":
+        changed = replace(
+            claim, members=(*claim.members, replace(claim.members[2], code="16"))
+        )
+    elif drift == "association":
+        changed = replace(
+            claim,
+            members=(
+                claim.members[0],
+                replace(
+                    claim.members[1], associations=(replace(association, row_number=2),)
+                ),
+                claim.members[2],
+            ),
+        )
+    if drift == "book":
+        changed = replace(claim, version_label="Different book")
+    if drift == "historical":
+        historical = replace(
+            historical,
+            members=(replace(historical.members[0], label="Changed old label"),),
+        )
+    current = (changed, historical)
+    result = apply_coding_choices((record,), cases, coding={column: current})
+    assert result.coding[column].claims == current
+    if drift is None:
+        assert not result.diagnostics
+        selected = next(
+            s for s in result.coding[column].segments if s.valid_from == "2020-01-01"
+        )
+        assert selected.code_set.members == (("14", "Landsting"), ("15", "Other"))
+    else:
+        assert result.accounting[0].status == "stale"
+        assert _compile_entry("documented", values, current, record=record)[1]
+
+
+@pytest.mark.parametrize(
+    "labels,selected",
+    [
+        (["Region", "Region"], "Region"),
+        (["Region"], "Region"),
+        (["Landsting", "Region"], "Other"),
+    ],
+)
+def test_label_equivalence_requires_exact_positive_source_alternatives(
+    labels, selected
+):
+    from reg_meta_build.source_curation import CodeLabelEquivalence
+
+    with pytest.raises(ValidationError):
+        CodeLabelEquivalence(code="14", labels=labels, selected_label=selected)
