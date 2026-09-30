@@ -29,6 +29,7 @@ from .curation_tree import (
     CodingChoiceEntry,
     CodingDocumentedEntry,
     CodingEntry,
+    CodingExtendEntry,
     CodingSentinelEntry,
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
@@ -2169,7 +2170,23 @@ def compile_partitions(
                     diagnostics.extend(converted.diagnostics)
                 if converted.case is not None:
                     cases[scope_key].append(converted.case)
-                    if converted.case.support:
+                    identity_effects: dict[
+                        SourceRecordRef, list[CheckedIdentityChange]
+                    ] = defaultdict(list)
+                    assert isinstance(
+                        converted.case.decision, OccurrenceCorrectionDecision
+                    )
+                    for effect in converted.case.decision.effects:
+                        if isinstance(effect, CheckedIdentityChange):
+                            identity_effects[effect.ref].append(effect)
+                    if converted.case.support or any(
+                        _literal_field(record, "column_name") is not None
+                        and not any(
+                            all(_field_matches(record, field) for field in effect.when)
+                            for effect in identity_effects.get(record_ref(record), ())
+                        )
+                        for record in records
+                    ):
                         null_bases[scope_key].add(native)
                 else:
                     null_bases[scope_key].add(native)
@@ -4289,15 +4306,16 @@ def compile_coding_register(
                         entry, kind, claims, start, end
                     )
                 if (
-                    isinstance(entry, (CodingDocumentedEntry, CodingChoiceEntry))
+                    isinstance(
+                        entry,
+                        (CodingDocumentedEntry, CodingChoiceEntry, CodingExtendEntry),
+                    )
                     and entry.source_authority is not None
                 ):
                     authority = entry.source_authority
                     authority_refs = {record_ref(record) for record in records}
-                    authority_records = (
-                        tuple(r for r in originals if record_ref(r) in authority_refs)
-                        if isinstance(entry, CodingChoiceEntry)
-                        else records
+                    authority_records = tuple(
+                        r for r in originals if record_ref(r) in authority_refs
                     )
                     expected = capture_expectations(
                         authority_records,
@@ -4398,7 +4416,7 @@ def compile_coding_register(
                     )
                     continue
                 if (
-                    isinstance(entry, CodingChoiceEntry)
+                    isinstance(entry, (CodingChoiceEntry, CodingExtendEntry))
                     and entry.source_authority is not None
                 ):
                     assert selection is not None and not isinstance(selection, str)
@@ -4413,7 +4431,7 @@ def compile_coding_register(
                 target_refs = {record_ref(record) for record in records}
                 target_records = (
                     authority_records
-                    if isinstance(entry, CodingChoiceEntry)
+                    if isinstance(entry, (CodingChoiceEntry, CodingExtendEntry))
                     and entry.source_authority is not None
                     else tuple(
                         record
@@ -4431,7 +4449,10 @@ def compile_coding_register(
                     coding=kind in {"documented", "sentinel", "support"},
                 )
                 if (
-                    isinstance(entry, (CodingDocumentedEntry, CodingChoiceEntry))
+                    isinstance(
+                        entry,
+                        (CodingDocumentedEntry, CodingChoiceEntry, CodingExtendEntry),
+                    )
                     and entry.source_authority is not None
                 ):
                     targets = tuple(entry.source_authority.records)
@@ -4493,7 +4514,12 @@ def compile_coding_register(
                                 f"SHA256: {entry.source_authority.revision.artifact_sha256}\n"
                                 f"Rows: {', '.join(locator.physical_table + ':' + locator.physical_record for locator in entry.source_authority.locators)}"
                                 if isinstance(
-                                    entry, (CodingDocumentedEntry, CodingChoiceEntry)
+                                    entry,
+                                    (
+                                        CodingDocumentedEntry,
+                                        CodingChoiceEntry,
+                                        CodingExtendEntry,
+                                    ),
                                 )
                                 and entry.source_authority is not None
                                 else f"{entry.source}\nDocument: {entry.document_url}\n"
@@ -6269,6 +6295,7 @@ def compile_curation(
     thin_cases, thin_diagnostics, thin_report = compile_sos_thin(
         tree, prepared, scopes, subset=subset
     )
+    preliminary_cases = compile_scb_preliminary(prepared, scopes)
     matrix_cases, matrix_names, matrix_keys, matrix_diagnostics = compile_matrix_repr(
         tree,
         prepared,
@@ -6280,6 +6307,7 @@ def compile_curation(
                         *partition_cases.get((scope.source, scope.register_key), ()),
                         *correction_cases.get((scope.source, scope.register_key), ()),
                         *thin_cases.get((scope.source, scope.register_key), ()),
+                        *preliminary_cases.get((scope.source, scope.register_key), ()),
                     )
                 }
             )
@@ -6335,7 +6363,7 @@ def compile_curation(
             current.setdefault(key, []).extend(values)
     for key, new_cases in thin_cases.items():
         cases[key].extend(new_cases)
-    for key, new_cases in compile_scb_preliminary(prepared, scopes).items():
+    for key, new_cases in preliminary_cases.items():
         cases[key].extend(new_cases)
     for register, statuses in thin_report.items():
         current = report.setdefault(register, {key: [] for key in statuses})

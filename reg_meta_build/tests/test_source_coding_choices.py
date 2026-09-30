@@ -2052,7 +2052,8 @@ def test_enumerated_source_meanings_require_complete_marker_certificate(drift):
         "scope",
     ],
 )
-def test_guarded_choice_pins_complete_physical_source_authority(drift):
+@pytest.mark.parametrize("kind", ["choice", "extend"])
+def test_guarded_selection_pins_complete_physical_source_authority(drift, kind):
     from reg_meta_build.source_coding import coding_source_sha256
     from reg_meta_build.source_values import SourceValueAssociation
 
@@ -2060,7 +2061,11 @@ def test_guarded_choice_pins_complete_physical_source_authority(drift):
     association = SourceValueAssociation(1, "binary", "1", "codes.csv")
     narrow = _claim("narrow", "1")
     keeper = replace(
-        _claim("keeper", "1"),
+        (
+            _claim("keeper", "1")
+            if kind == "choice"
+            else _claim("keeper", "1", "2021-01-01", "2021-12-31")
+        ),
         members=(
             replace(narrow.members[0], associations=(association,)),
             CodeMembershipClaim(
@@ -2071,17 +2076,25 @@ def test_guarded_choice_pins_complete_physical_source_authority(drift):
             ),
         ),
     )
-    claims = (narrow, keeper)
+    claims = (narrow, keeper) if kind == "choice" else (keeper,)
     authority = _row_authority(record, claims).model_copy(
         update={"raw_codings": sorted({coding_source_sha256(c) for c in claims})}
     )
-    values = {
-        "keep": "keeper",
-        "keep_members": [["1", "Label"], [".", "Skip"]],
-        "over": ["narrow"],
-        "source_authority": authority,
-    }
-    cases, issues, register, scope, _, column = _compile_entry("choice", values, claims)
+    values = (
+        {
+            "keep": "keeper",
+            "keep_members": [["1", "Label"], [".", "Skip"]],
+            "over": ["narrow"],
+        }
+        if kind == "choice"
+        else {
+            "list": "keeper",
+            "list_members": [["1", "Label"], [".", "Skip"]],
+            "witness": ["2021-01-01", "2021-12-31"],
+        }
+    )
+    values["source_authority"] = authority
+    cases, issues, register, scope, _, column = _compile_entry(kind, values, claims)
     assert len(cases) == 1 and not issues
     assert cases[0].targets == tuple(authority.records)
     records, changed_claims = (record,), claims
@@ -2117,7 +2130,7 @@ def test_guarded_choice_pins_complete_physical_source_authority(drift):
             ),
         )
     elif drift == "removed":
-        changed_claims = (keeper,)
+        changed_claims = (keeper,) if kind == "choice" else ()
     elif drift is not None:
         member = keeper.members[0]
         if drift == "multiplicity":
@@ -2138,7 +2151,8 @@ def test_guarded_choice_pins_complete_physical_source_authority(drift):
                     intervals=(ScopeInterval(start="2020-05-01", end="2020-12-31"),),
                 ),
             )
-        changed_claims = (narrow, replace(keeper, members=(member, keeper.members[1])))
+        changed = replace(keeper, members=(member, keeper.members[1]))
+        changed_claims = (narrow, changed) if kind == "choice" else (changed,)
     fresh, issues = compile_coding_register(
         register,
         scope,
@@ -2169,7 +2183,10 @@ def test_guarded_choice_pins_complete_physical_source_authority(drift):
         assert replay.accounting[0].status == "stale"
 
 
-def test_guarded_choice_materializes_all_original_projection_alternatives():
+@pytest.mark.parametrize("kind", ["choice", "documented"])
+def test_prepared_coding_authority_materializes_all_original_projection_alternatives(
+    kind,
+):
     from reg_meta_build.source_coding import coding_source_sha256
 
     record = _record()
@@ -2183,7 +2200,20 @@ def test_guarded_choice_materializes_all_original_projection_alternatives():
             ),
         }
     )
-    claims = (_claim("keep", "1"), _claim("other", "2"))
+    claims = (
+        (_claim("keep", "1"), _claim("other", "2"))
+        if kind == "choice"
+        else (
+            replace(
+                _claim("source", "1"),
+                members=(
+                    CodeMembershipClaim(
+                        "1", None, TemporalScope(kind="year_independent")
+                    ),
+                ),
+            ),
+        )
+    )
     authority = _row_authority(record, claims).model_copy(
         update={
             "records": list(
@@ -2195,12 +2225,19 @@ def test_guarded_choice_materializes_all_original_projection_alternatives():
                 )
             ),
             "locators": [*record.locators, *alternative.locators],
-            "raw_codings": sorted({coding_source_sha256(c) for c in claims}),
+            "raw_codings": sorted({coding_source_sha256(c) for c in claims})
+            if kind == "choice"
+            else None,
         }
     )
+    values = (
+        {"keep": "keep", "over": ["other"]}
+        if kind == "choice"
+        else {"members": [["1", "Included"]], "version_label": "Supplied row"}
+    )
     _, _, register, scope, columns, column = _compile_entry(
-        "choice",
-        {"keep": "keep", "over": ["other"], "source_authority": authority},
+        kind,
+        {**values, "source_authority": authority},
         claims,
     )
     # Production column membership contains one representative per semantic ref.
@@ -2255,3 +2292,68 @@ def test_guarded_choice_materializes_all_original_projection_alternatives():
         coding={column: claims},
     )
     assert replay.accounting[0].status == "stale"
+
+
+def test_guarded_extend_uses_held_column_owner_without_anchor_coding():
+    from reg_meta_build.source_coding import coding_source_sha256
+
+    donor, anchor = _record(2021), _record(2020, "ANCHOR", variable=6)
+    claim = _claim("binary", "1", "2021-01-01", "2021-12-31")
+    _, _, register, scope, _, column = _compile_entry(
+        "extend",
+        {"list": "binary", "witness": ["2021-01-01", "2021-12-31"]},
+        (claim,),
+        record=donor,
+    )
+    authority = _row_authority(donor, (claim,)).model_copy(
+        update={
+            "records": list(
+                capture_expectations(
+                    (donor, anchor),
+                    fields=tuple(SourceFields.model_fields),
+                    parents=True,
+                    coding=True,
+                )
+            ),
+            "locators": [*donor.locators, *anchor.locators],
+            "raw_codings": [coding_source_sha256(claim)],
+        }
+    )
+    entry = register.coding.extend[0].model_copy(update={"source_authority": authority})
+    register = register.model_copy(
+        update={"coding": register.coding.model_copy(update={"extend": [entry]})}
+    )
+    held = replace(
+        source_occurrence(anchor),
+        variable_key=source_occurrence(donor).variable_key,
+        fields=SourceFields(column_name=value_field("VALUE")),
+        source_records=(),
+        support_records=(anchor,),
+        coding_records=(),
+        occurrence_key="accepted-holding",
+    )
+    occurrences = (source_occurrence(donor), held)
+    evidence = SourceEvidence((donor, anchor), effective_occurrences=occurrences)
+    assert evidence.effective_scopes is not None
+    cases, issues = compile_coding_register(
+        register,
+        scope,
+        originals=(donor, anchor),
+        columns={column: (donor, anchor)},
+        column_scopes=evidence.effective_scopes,
+        coding={column: (claim,)},
+    )
+    assert len(cases) == 1 and not issues
+    result = apply_coding_choices(evidence, cases, coding={column: (claim,)})
+    assert not result.diagnostics
+    assert result.coding[column].claims == (claim,)
+    code_set = result.coding[column].segments[0].code_set
+    assert code_set is not None and code_set.members == (("1", "Label"),)
+    assert held.variable_key == source_occurrence(donor).variable_key
+    assert held.coding_records == ()
+    changed = anchor.model_copy(update={"parent_facts": ()})
+    assert apply_coding_choices(
+        SourceEvidence((donor, changed), effective_occurrences=occurrences),
+        cases,
+        coding={column: (claim,)},
+    ).diagnostics

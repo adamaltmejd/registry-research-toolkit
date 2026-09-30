@@ -1180,7 +1180,7 @@ def _coding_members(value: list[list[str]]) -> list[list[str]]:
     return value
 
 
-class CodingChoiceEntry(CodingEntry):
+class _CheckedCodingEntry(CodingEntry):
     source_authority: PreparedCodingAuthority | None = None
 
     @field_validator("source_authority", mode="before")
@@ -1189,7 +1189,7 @@ class CodingChoiceEntry(CodingEntry):
         return _prepared_coding_authority(value)
 
     @model_validator(mode="after")
-    def _checked_authority(self) -> CodingChoiceEntry:
+    def _checked_authority(self) -> _CheckedCodingEntry:
         authority = self.source_authority
         if authority is not None and (
             authority.enumeration is not None
@@ -1197,10 +1197,12 @@ class CodingChoiceEntry(CodingEntry):
             or not authority.raw_codings
         ):
             raise ValueError(
-                "choice authority requires finite original rows and complete source coding fingerprints"
+                "coding authority requires finite original rows and complete source coding fingerprints"
             )
         return self
 
+
+class CodingChoiceEntry(_CheckedCodingEntry):
     keep: str
     keep_members: list[list[str]] | None = None
     over: list[str]
@@ -1221,7 +1223,7 @@ class CodingChoiceEntry(CodingEntry):
         return trimmed
 
 
-class CodingExtendEntry(CodingEntry):
+class CodingExtendEntry(_CheckedCodingEntry):
     list: str
     list_members: list[list[str]] | None = None
     witness: list[str]

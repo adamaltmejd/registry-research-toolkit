@@ -732,8 +732,8 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 191
-    assert sum(len(entry.periods) for entry in coding) == 344
+    assert len(coding) == 202
+    assert sum(len(entry.periods) for entry in coding) == 358
     assert (
         sum(
             entry.source_authority is not None
@@ -763,7 +763,7 @@ def test_repo_coding_windows_are_ported() -> None:
             )
             for register in tree.registers
         )
-        == 27
+        == 28
     )
 
 

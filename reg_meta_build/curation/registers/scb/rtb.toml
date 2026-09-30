@@ -1987,3 +1987,25 @@ field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
 noted = "2026-09-30"
+
+[[coding.extend]]
+variable = "2.18404"
+variant = "2.66"
+column = "Sarlagstiftning"
+list = "Särlagstiftning"
+list_members = [["0", "Klassningen härrör inte från särlagstiftning"], ["1", "Klassningen härrör från särlagstiftning"]]
+witness = ["2008-12-31", "2008-12-31"]
+periods = [["2009-01-01", "2009-12-31"], ["2010-01-01", "2010-12-31"]]
+reason = "The complete same-native same-variant physical source column has explicit agreeing0/1 dictionaries before these years and on their exactyear-end witnesses. Use the user-approved explicit variable-to-codebook identity/validity policy for these finite annualmarker gaps. Preserve all sourceprose, including contradictorySärlag/NULL or1/NULL descriptions, allpositive0/1 labels, originalsourcevalidity and everyassociation. No inventedNULLliteral, missing-tokenencoding, statistical equivalence or observed-valueconversion."
+source = "Complete SCB same-native sourcecoding and user-approved explicit variable-to-codebook validity policy; reviewed2026-09-30"
+
+[[coding.extend]]
+variable = "2.18406"
+variant = "2.66"
+column = "Forlangning"
+list = "Förlängning av tidigare beslut"
+list_members = [["0", "Nytt beslut"], ["1", "Förlängning av ett tidigare beslut"]]
+witness = ["2008-12-31", "2008-12-31"]
+periods = [["2009-01-01", "2009-12-31"], ["2010-01-01", "2010-12-31"]]
+reason = "The complete same-native same-variant physical source column has explicit agreeing0/1 dictionaries before these years and on their exactyear-end witnesses. Use the user-approved explicit variable-to-codebook identity/validity policy for these finite annualmarker gaps. Preserve all sourceprose, including contradictorySärlag/NULL or1/NULL descriptions, allpositive0/1 labels, originalsourcevalidity and everyassociation. No inventedNULLliteral, missing-tokenencoding, statistical equivalence or observed-valueconversion."
+source = "Complete SCB same-native sourcecoding and user-approved explicit variable-to-codebook validity policy; reviewed2026-09-30"

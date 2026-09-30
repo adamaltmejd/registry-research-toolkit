@@ -661,6 +661,13 @@ This includes explicitly supplied routing and nonresponse codes. The choice requ
 complete source-row authority and coding guards; changed, missing or additional source
 assertions invalidate it. Contrary meanings for a shared code remain unresolved.
 
+A checked `coding.extend` entry can use the same complete prepared-row authority to
+carry an accepted quantity's own positively bound source list into an earlier missing
+window. Complete physical originals, parent facts and ordered coding associations guard
+the target and witness; projections sharing a source reference are checked separately. A
+holding anchor for another quantity cannot supply its coding. Contrary historical
+members or labels remain unresolved under the explicit-link policy.
+
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot
 establish membership. Its document URL, SHA256 and page references are tracked
@@ -804,13 +811,15 @@ value, it replaces the need for a delivery-metadata permission for that field.
 A checked `representation.delivery_metadata` decision permits only its explicitly listed
 fields (`name`, `description`, `measurement_unit`) to vary for one exact reviewed owner.
 Compilation captures every original field, source scope, parent and coding association,
-including sibling support. Formation requires complete coverage of the owner's effective
-contributors before suppressing a disagreement in a permitted field. Each state and
-column window retains its literal texts and unit; a common value is written only when it
-agrees. Unknown names still withhold the quantity unless complete checked positive state
-names are available. Unit permission requires positive quantity names and definitions,
-permits exact supplied absence alongside at least one positive unit, and writes NULL for
-that absence without interpreting it. Unknown units and contradictions within one column
+including sibling support. Checked preliminary-source dispositions participate in the
+compiler's ownership context, so their exact support rows cannot be mistaken for catalog
+contributors. Formation requires complete coverage of the owner's effective contributors
+before suppressing a disagreement in a permitted field. Each state and column window
+retains its literal texts and unit; a common value is written only when it agrees.
+Unknown names still withhold the quantity unless complete checked positive state names
+are available. Unit permission requires positive quantity names and definitions, permits
+exact supplied absence alongside at least one positive unit, and writes NULL for that
+absence without interpreting it. Unknown units and contradictions within one column
 remain unresolved.
 
 Ordinary delivery-metadata windows remain finite. An explicitly authored `source_scope`

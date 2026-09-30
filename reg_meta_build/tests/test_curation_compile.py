@@ -4422,8 +4422,10 @@ def test_selected_classification_variable_binding_has_exact_status(tmp_path):
     assert [issue.code for issue in stale.diagnostics] == ["stale_curation_entry"]
 
 
+@pytest.mark.parametrize("with_preliminary", [False, True])
 def test_delivery_metadata_use_fresh_partition_cases_without_duplicate_emission(
     tmp_path,
+    with_preliminary,
 ):
     from reg_meta_build.curation_tree import DeliveryMetadataEntry
     from reg_meta_build.source_curation import DeliveryMetadataColumn
@@ -4452,6 +4454,23 @@ def test_delivery_metadata_use_fresh_partition_cases_without_duplicate_emission(
         )
         for record in _scb_partition_records(("KU", "AGI"))
     )
+    if with_preliminary:
+        final = _edition_record(
+            name="2020, slutlig version", edition_id=11, member=31, column="KU"
+        ).model_copy(update={"fields": records[0].fields})
+        preliminary = _edition_record(
+            name="2020, preliminär version", edition_id=10, member=30, column="KU"
+        ).model_copy(
+            update={
+                "fields": records[0].fields.model_copy(
+                    update={"measurement_unit": value_field("Olika valutor")}
+                )
+            }
+        )
+        final_agi = _edition_record(
+            name="2020, slutlig version", edition_id=11, member=32, column="AGI"
+        ).model_copy(update={"fields": records[1].fields})
+        records = (final, final_agi, preliminary)
     target = records[0]
     bounds = target.edition_period_scope.intervals[0]
     entry = DeliveryMetadataEntry(
@@ -4518,11 +4537,60 @@ def test_delivery_metadata_use_fresh_partition_cases_without_duplicate_emission(
     scope = CompiledScope(source=target.source, register_key=register_key)
     compiled = compile_curation(tree, prepared, (scope,), subset=True)
     cases = compiled.cases[scope.source, scope.register_key]
+    assert not any(
+        "delivery_metadata" in (d.case_id or "") for d in compiled.diagnostics
+    ), [d.detail for d in compiled.diagnostics]
     assert [case.decision.kind for case in cases] == [
         "correct_occurrences",
         "delivery_metadata",
+        *(["correct_occurrences"] if with_preliminary else []),
     ]
-    assert len({case.case_id for case in cases}) == 2
+    assert len({case.case_id for case in cases}) == 2 + int(with_preliminary)
+    if with_preliminary:
+        from reg_meta_build.source_formation import _checked_delivery_metadata
+
+        corrected = apply_occurrence_cases(
+            records, tuple(c for c in cases if c.decision.kind == "correct_occurrences")
+        )
+        assert not corrected.diagnostics
+        assert [o.use for o in corrected.occurrences] == [
+            "catalog",
+            "catalog",
+            "support",
+        ]
+        metadata = next(c for c in cases if c.decision.kind == "delivery_metadata")
+        delivered = tuple(
+            o
+            for o in corrected.occurrences
+            if o.use == "catalog" and o.variable_key == metadata.decision.variable_key
+        )
+        assert _checked_delivery_metadata(
+            delivered, (metadata,), "measurement_unit"
+        ) == (metadata.case_id,)
+        assert {t.ref for t in metadata.targets} == {record_ref(final)}
+        assert record_ref(preliminary) in {t.ref for t in metadata.support}
+        changed_preliminary = preliminary.model_copy(
+            update={
+                "fields": preliminary.fields.model_copy(
+                    update={"measurement_unit": value_field("Changed literal")}
+                )
+            }
+        )
+        assert (
+            evaluate_cases((metadata,), (final, final_agi, changed_preliminary))[
+                0
+            ].status
+            == "stale"
+        )
+        records = (final, final_agi, changed_preliminary)
+        refreshed = compile_curation(tree, prepared, (scope,), subset=True)
+        assert any(
+            "delivery_metadata" in (d.case_id or "") for d in refreshed.diagnostics
+        )
+        assert not any(
+            c.decision.kind == "delivery_metadata"
+            for c in refreshed.cases[scope.source, scope.register_key]
+        )
     assert scope.cases == ()
     assert not any(
         "delivery_metadata" in (d.case_id or "") for d in compiled.diagnostics
@@ -6853,3 +6921,57 @@ def test_checked_nonphysical_support_retains_quantity_witness_and_raw_facts(
     positive["column"] = "FIRST"
     with pytest.raises(ValueError, match="negative-column"):
         ErrataSupportEntry.model_validate_json(json.dumps(positive))
+
+
+@pytest.mark.parametrize("future", [False, True])
+def test_scoped_partial_owner_withholds_unowned_shared_ref_projection(tmp_path, future):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.code"\nslug = "code"\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "CODE"\nowner = "1.5.code"\nref = "exact supplied physical code"\n'
+        'source_editions = ["2020"]\n'
+        'expected_fields = [{ name = "column_name", status = "value", value = "CODE" }]\n',
+    )
+    code = _errata_record(column="CODE", year="2020", member=20)
+    other = code.model_copy(
+        update={
+            "record_id": code.record_id + "-other-projection",
+            "fields": code.fields.model_copy(
+                update={"column_name": value_field("NAME")}
+            ),
+        }
+    )
+    assert record_ref(code) == record_ref(other)
+    records = (code, other)
+    if future:
+        records += (_errata_record(column="CODE", year="2021", member=21),)
+    compiled, key, native = _compile_partition_fixture(root, records)
+    cases, _, _, _, bases, _ = compiled
+    assert len(cases[key][0].support) == int(future)
+    assert native in bases[key]
+    result = apply_occurrence_cases(records, cases[key])
+    assert not result.diagnostics
+    assert result.occurrences[0].variable_key is not None
+    assert result.occurrences[0].variable_key[-1] == "1.5.code"
+    assert result.occurrences[1] == source_occurrence(other)
+    assert result.occurrences[1].use == "catalog"
+    if future:
+        assert result.occurrences[2] == source_occurrence(records[2])
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        cast(
+            "Any",
+            SimpleNamespace(
+                records=SimpleNamespace(
+                    iter_partition_families=lambda *args, **kwargs: iter(
+                        ((native, records),)
+                    )
+                )
+            ),
+        ),
+        (_partition_scope(records),),
+    )
+    assert deferred[0] == compiled[1]
+    assert deferred[3] == _partition_memberships(compiled[0])
