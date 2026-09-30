@@ -596,6 +596,28 @@ class TestProviderToml:
             load_slug_dir(curation)
         assert exc.value.code == "slug_toml_invalid"
 
+    @pytest.mark.parametrize("owner", ["34.4.kon", "34.4.other"])
+    def test_finite_column_owner_retains_only_its_own_base_slug(
+        self, tmp_path: Path, owner: str
+    ) -> None:
+        body = (
+            '[[identity.column_owner]]\nvariable = "34.4"\nvariant = "34.44"\n'
+            f'column = "Kon"\nowner = "{owner}"\nsource_editions = ["2023"]\n'
+            'ref = "documented source ownership"\n'
+            '[[variable]]\nnative_id = "34.4"\nslug = "kon"\n'
+            '[[variable]]\nnative_id = "34.4.kon"\nslug = "kon"\n'
+        )
+        _, curation = self._write_partition(tmp_path, body)
+        if owner == "34.4.kon":
+            assert {e.source_id for e in load_slug_dir(curation)} >= {
+                "34.4",
+                "34.4.kon",
+            }
+        else:
+            with pytest.raises(RegMetaError) as exc:
+                load_slug_dir(curation)
+            assert "reused" in exc.value.message
+
     @pytest.mark.parametrize("auto_base", [False, True])
     @pytest.mark.parametrize("declared_owner", ["current", "undeclared"])
     def test_sos_split_retains_only_declared_owner_base_slug(

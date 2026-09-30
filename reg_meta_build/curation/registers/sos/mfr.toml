@@ -696,3 +696,209 @@ expected_reference = "Kodlista_förlossningssätt!A1"
 expected_representation = "1 = ja                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0 = nej"
 evidence = "MFR workbook row 196 gives binary 1=ja,0=nej; linked förlossningssätt rows 4-5 say Skapas utifrån and list ICD/procedure inputs, not output values."
 noted = "2026-09-29"
+
+# Reviewed equivalent SOS wording; retain original evidence and representations.
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG2"
+variant = "MFR"
+column = "BDIAG2"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 2" }, { name = "name", status = "value", value = "Diagnoskod 2, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1973" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 2 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:19 and row:232 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG3"
+variant = "MFR"
+column = "BDIAG3"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 3" }, { name = "name", status = "value", value = "Diagnoskod 3, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1973" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 3 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:20 and row:234 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG4"
+variant = "MFR"
+column = "BDIAG4"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 4" }, { name = "name", status = "value", value = "Diagnoskod 4, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1973" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 4 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:21 and row:235 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG5"
+variant = "MFR"
+column = "BDIAG5"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 5" }, { name = "name", status = "value", value = "Diagnoskod 5, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1982" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 5 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:22 and row:236 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG6"
+variant = "MFR"
+column = "BDIAG6"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 6" }, { name = "name", status = "value", value = "Diagnoskod 6, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1982" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 6 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:23 and row:237 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG7"
+variant = "MFR"
+column = "BDIAG7"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 7" }, { name = "name", status = "value", value = "Diagnoskod 7, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1982" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 7 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:24 and row:238 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG8"
+variant = "MFR"
+column = "BDIAG8"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 8" }, { name = "name", status = "value", value = "Diagnoskod 8, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1999" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 8 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:25 and row:239 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG9"
+variant = "MFR"
+column = "BDIAG9"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 9" }, { name = "name", status = "value", value = "Diagnoskod 9, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1999" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 9 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:26 and row:240 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG10"
+variant = "MFR"
+column = "BDIAG10"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 10" }, { name = "name", status = "value", value = "Diagnoskod 10, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1999" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 10 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:16 and row:222 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG11"
+variant = "MFR"
+column = "BDIAG11"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 11" }, { name = "name", status = "value", value = "Diagnoskod 11, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1999" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 11 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:17 and row:223 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BDIAG12"
+variant = "MFR"
+column = "BDIAG12"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets diagnoskod 12" }, { name = "name", status = "value", value = "Diagnoskod 12, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1999" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets diagnoskod 12 enligt  svenska versionen av ICD"
+evidence = "Both originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:18 and row:224 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.AR"
+variant = "MFR"
+column = "AR"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets födelseår" }, { name = "name", status = "value", value = "Födelseår, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1973" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Barnets födelseår"
+evidence = "All four originals define the child birth year and retain YYYY format. Original rows row:11 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.AR"
+variant = "MFR_IVF"
+column = "AR"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets födelseår" }, { name = "name", status = "value", value = "Födelseår, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1982", end = "2006" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Barnets födelseår"
+evidence = "All four originals define the child birth year and retain YYYY format. Original rows row:272 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.AR"
+variant = "MFR_LMED"
+column = "AR"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets födelseår" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1995" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Barnets födelseår"
+evidence = "All four originals define the child birth year and retain YYYY format. Original rows row:290 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.BVIKT"
+variant = "MFR"
+column = "BVIKT"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets födelsevikt i gram" }, { name = "name", status = "value", value = "Barnets födelsevikt" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1973" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets födelsevikt i gram."
+evidence = "Terminal punctuation only; retain differing original data types. Original rows row:56 and row:250 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.HOMF"
+variant = "MFR"
+column = "HOMF"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Pediatrisk huvudomfång i cm" }, { name = "name", status = "value", value = "Barnets huvudomfång" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1973" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets huvudomfång i cm"
+evidence = "Both names explicitly state child head circumference in centimetres; retain differing original data types. Original rows row:103 and row:262 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.DDAGAR"
+variant = "MFR_FOK"
+column = "DDAGAR"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Barnets dödsålder i dagar, anges endast dagar som infaller under nyföddhetsperioden" }, { name = "name", status = "value", value = "Dödsålder i dagar, barnet" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1973" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Barnets dödsålder i dagar, endast om barnet har avlidit under nyföddhetsperioden"
+evidence = "Both originals state child death age restricted to the neonatal period and supply the identical 0–27 day representation. Original rows row:252 and row:63 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"

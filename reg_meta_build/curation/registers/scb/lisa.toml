@@ -4158,3 +4158,285 @@ column = "Ast_AntalSys"
 owner = "34.15532.fore-bas"
 ref = "Exact reviewed source editions separate the explicitly documented BAS annual employment basis in 2022 and 2023 from prior supplied workplace counts. Earlier null operations remain null; this mapping does not assert RAMS provenance for every historical record, numerical equivalence or coverage beyond these exact editions. Original column literals, variants, years, units and all source facts remain unchanged."
 source_editions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+
+# Reviewed finite source basis and representation boundaries; original facts remain unchanged.
+
+[[variable]]
+native_id = "34.1821.fore-bas"
+slug = "yrkesstallning"
+
+[[variable]]
+native_id = "34.1821.bas"
+slug = "yrkesstallning-bas"
+
+[[identity.column_owner]]
+variable = "34.1821"
+variant = "34.1335"
+column = "YrkStalln"
+owner = "34.1821.fore-bas"
+source_editions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+ref = "Same native employment-status construct; separate original unspecified operations from explicit BAS annual November/AGI-versus-entrepreneur-income operations in 2022 and 2023. Earlier null operations remain null. No equivalence of measurement algorithms across the BAS boundary is asserted."
+
+[[identity.column_owner]]
+variable = "34.1821"
+variant = "34.153"
+column = "BYrkstalln"
+owner = "34.1821.bas"
+source_editions = ["2022", "2023"]
+ref = "Same native employment-status construct; separate original unspecified operations from explicit BAS annual November/AGI-versus-entrepreneur-income operations in 2022 and 2023. Earlier null operations remain null. No equivalence of measurement algorithms across the BAS boundary is asserted."
+
+[[identity.column_owner]]
+variable = "34.1821"
+variant = "34.153"
+column = "YrkStalln"
+owner = "34.1821.fore-bas"
+source_editions = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+ref = "Same native employment-status construct; separate original unspecified operations from explicit BAS annual November/AGI-versus-entrepreneur-income operations in 2022 and 2023. Earlier null operations remain null. No equivalence of measurement algorithms across the BAS boundary is asserted."
+
+[[variable]]
+native_id = "34.29960.yseg"
+slug = "yrkesbaserad-seg"
+
+[[variable]]
+native_id = "34.29960.eseg"
+slug = "yrkesbaserad-seg-eseg"
+
+[[identity.column_owner]]
+variable = "34.29960"
+variant = "34.153"
+column = "ESeG"
+owner = "34.29960.eseg"
+source_editions = ["2015"]
+ref = "Separate YSEG and ESeG coding representations: original widths 2 versus 3 and independently supplied finite domains (11 versus 42 distinct code/label pairs). The original ISCO-88 definition is retained, not repaired into an inferred schema or transplanted codebook."
+
+[[identity.column_owner]]
+variable = "34.29960"
+variant = "34.153"
+column = "YSEG"
+owner = "34.29960.yseg"
+source_editions = ["2013"]
+ref = "Separate YSEG and ESeG coding representations: original widths 2 versus 3 and independently supplied finite domains (11 versus 42 distinct code/label pairs). The original ISCO-88 definition is retained, not repaired into an inferred schema or transplanted codebook."
+
+[[variable]]
+native_id = "34.31110.huvudsaklig-sysselsattning-1968"
+slug = "institutionell-sektorkod-huvudsaklig-sysselsattning-1968"
+
+[[variable]]
+native_id = "34.31110.huvudsaklig-sysselsattning-1999"
+slug = "institutionell-sektorkod-huvudsaklig-sysselsattning-1999"
+
+[[variable]]
+native_id = "34.31110.huvudsaklig-sysselsattning-2000"
+slug = "institutionell-sektorkod-huvudsaklig-sysselsattning-2000"
+
+[[variable]]
+native_id = "34.31110.huvudsaklig-sysselsattning-2014-fore-bas"
+slug = "institutionell-sektorkod-huvudsaklig-sysselsattning-2014-fore-bas"
+
+[[variable]]
+native_id = "34.31110.huvudsaklig-sysselsattning-2014-bas"
+slug = "institutionell-sektorkod-huvudsaklig-sysselsattning-2014-bas"
+
+[[variable]]
+native_id = "34.31110.foretag-1968"
+slug = "institutionell-sektorkod-foretag"
+
+[[variable]]
+native_id = "34.31110.foretag-1999"
+slug = "institutionell-sektorkod-foretag-1999"
+
+[[variable]]
+native_id = "34.31110.foretag-2000"
+slug = "institutionell-sektorkod-foretag-2000"
+
+[[variable]]
+native_id = "34.31110.foretag-2014-fore-bas"
+slug = "institutionell-sektorkod-foretag-2014-fore-bas"
+
+[[variable]]
+native_id = "34.31110.foretag-2014-bas"
+slug = "institutionell-sektorkod-foretag-2014-bas"
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.1335"
+column = "InstKod"
+owner = "34.31110.huvudsaklig-sysselsattning-1968"
+source_editions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.1335"
+column = "InstKod6"
+owner = "34.31110.huvudsaklig-sysselsattning-1999"
+source_editions = ["1999", "2000"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.1335"
+column = "InstKod7"
+owner = "34.31110.huvudsaklig-sysselsattning-2000"
+source_editions = ["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.152"
+column = "Org_InstKod"
+owner = "34.31110.foretag-1968"
+source_editions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.152"
+column = "Org_InstKod10"
+owner = "34.31110.foretag-2014-bas"
+source_editions = ["2022", "2023"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.152"
+column = "Org_InstKod10"
+owner = "34.31110.foretag-2014-fore-bas"
+source_editions = ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.152"
+column = "Org_InstKod6"
+owner = "34.31110.foretag-1999"
+source_editions = ["1999", "2000"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.152"
+column = "Org_InstKod7"
+owner = "34.31110.foretag-2000"
+source_editions = ["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.153"
+column = "InstKod10"
+owner = "34.31110.huvudsaklig-sysselsattning-2014-bas"
+source_editions = ["2022", "2023"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.153"
+column = "InstKod10"
+owner = "34.31110.huvudsaklig-sysselsattning-2014-fore-bas"
+source_editions = ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[identity.column_owner]]
+variable = "34.31110"
+variant = "34.153"
+column = "InstKod7"
+owner = "34.31110.huvudsaklig-sysselsattning-2000"
+source_editions = ["2010", "2011", "2012", "2013"]
+ref = "Separate selected-job individual records from company records, and preserve exact supplied Enhetsindelning 1968/1999/2000/2014 coding bases. Widths 5/6/7/10 and descriptor versions are supplied fields/value evidence, not inferred from column stems. RAMS Jobbregistret is explicitly attributed throughout individual 2014–2021, while narrower JOBB wording remains original evidence; 2022–2023 explicitly uses BAS and has a separate owner. Generic historical operation and conflicting position prose are not repaired."
+
+[[variable]]
+native_id = "34.41952.fore-bas"
+slug = "tillfalligt-franvarande"
+
+[[variable]]
+native_id = "34.41952.bas"
+slug = "tillfalligt-franvarande-bas"
+
+[[identity.column_owner]]
+variable = "34.41952"
+variant = "34.153"
+column = "BTFranv"
+owner = "34.41952.bas"
+source_editions = ["2022", "2023"]
+ref = "Separate earlier AGI payment followed by FK through November algorithm from explicit BAS November employment with preceding-eleven-month payment and subsequent FK conditions. All original finite response domains, years and prose remain unchanged."
+
+[[identity.column_owner]]
+variable = "34.41952"
+variant = "34.153"
+column = "TFranv"
+owner = "34.41952.fore-bas"
+source_editions = ["2019", "2020", "2021"]
+ref = "Separate earlier AGI payment followed by FK through November algorithm from explicit BAS November employment with preceding-eleven-month payment and subsequent FK conditions. All original finite response domains, years and prose remain unchanged."
+
+[[variable]]
+native_id = "34.42026.referens-1989"
+slug = "fink-1989"
+
+[[variable]]
+native_id = "34.42026.referens-ej-angiven"
+slug = "fink"
+
+[[identity.column_owner]]
+variable = "34.42026"
+variant = "34.1335"
+column = "FInk89"
+owner = "34.42026.referens-1989"
+source_editions = ["1990"]
+ref = "FInk89 explicitly refers to income year 1989, while same-edition FInk90 has no supplied operational/reference-year statement. Keep distinct reference owners; do not infer 1990 from its literal or the 1990 edition. Original amounts, units and unknown reference fields remain unchanged."
+
+[[identity.column_owner]]
+variable = "34.42026"
+variant = "34.1335"
+column = "FInk90"
+owner = "34.42026.referens-ej-angiven"
+source_editions = ["1990"]
+ref = "FInk89 explicitly refers to income year 1989, while same-edition FInk90 has no supplied operational/reference-year statement. Keep distinct reference owners; do not infer 1990 from its literal or the 1990 edition. Original amounts, units and unknown reference fields remain unchanged."
+
+[[variable]]
+native_id = "34.42953.fore-bas"
+slug = "markering-lonegaranti"
+
+[[variable]]
+native_id = "34.42953.bas"
+slug = "markering-lonegaranti-bas"
+
+[[identity.column_owner]]
+variable = "34.42953"
+variant = "34.153"
+column = "BLonGar"
+owner = "34.42953.bas"
+source_editions = ["2022", "2023"]
+ref = "Separate the earlier detailed company-selection algorithm from BAS annual November-employed population, whose company-selection algorithm is not supplied. Do not copy earlier selection rules into BAS records."
+
+[[identity.column_owner]]
+variable = "34.42953"
+variant = "34.153"
+column = "LonGarant"
+owner = "34.42953.fore-bas"
+source_editions = ["2019", "2020", "2021"]
+ref = "Separate the earlier detailed company-selection algorithm from BAS annual November-employed population, whose company-selection algorithm is not supplied. Do not copy earlier selection rules into BAS records."
+
+[[variable]]
+native_id = "34.49430.flagga"
+slug = "operativ-verksamhetsledare"
+
+[[variable]]
+native_id = "34.49430.personnummer"
+slug = "personnummer-operativ-verksamhetsledare"
+
+[[identity.column_owner]]
+variable = "34.49430"
+variant = "34.152"
+column = "PersonNr_OpV"
+owner = "34.49430.personnummer"
+source_editions = ["2023"]
+ref = "Separate the descriptive twelve-position PersonNr_OpV identifier representation from one-position OpVLedare with exact supplied 0=Nej and 1=Ja finite domain. Native definition and source algorithm remain unchanged; no identifier or sensitivity flags are fabricated."
+
+[[identity.column_owner]]
+variable = "34.49430"
+variant = "34.153"
+column = "OpVLedare"
+owner = "34.49430.flagga"
+source_editions = ["2023"]
+ref = "Separate the descriptive twelve-position PersonNr_OpV identifier representation from one-position OpVLedare with exact supplied 0=Nej and 1=Ja finite domain. Native definition and source algorithm remain unchanged; no identifier or sensitivity flags are fabricated."

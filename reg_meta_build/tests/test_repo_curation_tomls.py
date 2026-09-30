@@ -1255,7 +1255,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 11, 1, 144)
+    ) == (20, 19, 1, 235)
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -1269,6 +1269,45 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         entry.variable: {getattr(part, entry.by): part.owner for part in entry.parts}
         for entry in par.identity.split
     } == {
+        "ALDER_S": {
+            "PAR_OV": "5891427617861710725.ALDER_S.alder-vid-arets-slut",
+            "PAR_SV": "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut",
+            "PAR_TV": "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut",
+        },
+        "HDIA": {
+            "Typ av diagnos": "5891427617861710725.HDIA.typ-av-diagnos",
+            "Huvuddiagnoskod": "5891427617861710725.HDIA.huvuddiagnoskod",
+        },
+        "START": {
+            "Startdatum för psykiatrisk vårdform": "5891427617861710725.START.startdatum-psykiatrisk-vardform",
+            "Startdatum för permission": "5891427617861710725.START.startdatum-permission",
+            "Startdatum för avvikning": "5891427617861710725.START.startdatum-avvikning",
+        },
+        "SLUT": {
+            "Slutdatum för psykiatrisk vårdform": "5891427617861710725.SLUT.slutdatum-psyk-vardform",
+            "Slutdatum för permission": "5891427617861710725.SLUT.slutdatum-permission",
+            "Slutdatum för avvikning": "5891427617861710725.SLUT.slutdatum-avvikning",
+        },
+        "TYP": {
+            "Psykiatrisk vårdform": "5891427617861710725.TYP.typ",
+            "Markör för yttre orsakskod": "5891427617861710725.TYP.markor-yttre-orsakskod",
+            "Markör för avvikning": "5891427617861710725.TYP.markor-avvikning",
+            "Markör för permission": "5891427617861710725.TYP.markor-permission",
+        },
+        "ATCO": {
+            "text": "5891427617861710725.ATCO.atc-komplement-atgardskod",
+            "integer": "5891427617861710725.ATCO.atg-kod-ar-atc-kod",
+        },
+        "DIAGNOS": {
+            "PAR_OV": "5891427617861710725.DIAGNOS.diagnoskoder",
+            "PAR_SV": "5891427617861710725.DIAGNOS.diagnoskoder",
+            "PAR_TV": "5891427617861710725.DIAGNOS.diagnoskod-eller-atc-kod-psykiatrisk-vard",
+        },
+        "EKOD": {
+            "PAR_OV": "5891427617861710725.EKOD.yttre-orsakskoder",
+            "PAR_SV": "5891427617861710725.EKOD.yttre-orsakskoder",
+            "PAR_TV": "5891427617861710725.EKOD.yttre-orsakskod-eller-atc-kod-psykiatrisk-vard",
+        },
         "ATC": {
             "integer": "5891427617861710725.ATC.atc",
             "text": "5891427617861710725.ATC.atc-1",
@@ -1305,8 +1344,9 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     assert Counter(
         entry.by for entry in par.identity.split if entry.variable != "ATC"
     ) == {
-        "deldatamangd": 5,
-        "data_type": 1,
+        "deldatamangd": 8,
+        "data_type": 2,
+        "name": 4,
     }
     par_owners = {
         part.owner
@@ -1314,7 +1354,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         if entry.variable != "ATC"
         for part in entry.parts
     }
-    assert len(par_owners) == 16
+    assert len(par_owners) == 36
     assert {("sos", owner) for owner in par_owners} <= slugged
     assert {
         variant.display_group: variant.panel_time_key for variant in par.variant

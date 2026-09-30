@@ -4176,7 +4176,7 @@ native_id = "258.15901"
 slug = "anslutning-dsl-fiber"
 
 [[variable]]
-native_id = "258.15902"
+native_id = "258.15902.individvariant"
 slug = "anslutning-fast-bb-kabel"
 
 [[variable]]
@@ -4544,15 +4544,15 @@ native_id = "258.17642"
 slug = "arsverken-programvaruutv-ovriga"
 
 [[variable]]
-native_id = "258.17651"
+native_id = "258.17651.foretagsvariant"
 slug = "internetansl-modem-isdn"
 
 [[variable]]
-native_id = "258.17652"
+native_id = "258.17652.foretagsvariant"
 slug = "internetansl-gsm"
 
 [[variable]]
-native_id = "258.17653"
+native_id = "258.17653.foretagsvariant"
 slug = "bredbandsansl-annan-fast"
 
 [[variable]]
@@ -4940,7 +4940,7 @@ native_id = "258.23392"
 slug = "inte-internet-pga-sakerhetsskal"
 
 [[variable]]
-native_id = "258.23393"
+native_id = "258.23393.individvariant"
 slug = "mobiluppkoppling-3g-4g"
 
 [[variable]]
@@ -5224,7 +5224,7 @@ native_id = "258.30747"
 slug = "molntjanster-delar-inte-filer"
 
 [[variable]]
-native_id = "258.30776"
+native_id = "258.30776.foretagsvariant"
 slug = "koper-fillagring-som-molntjanst"
 
 [[variable]]
@@ -8564,3 +8564,163 @@ column = "Alder"
 periods = [["2013-01-01", "2013-12-31"], ["2014-01-01", "2014-12-31"], ["2015-01-01", "2015-12-31"], ["2016-01-01", "2016-12-31"], ["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"], ["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2024-01-01", "2024-12-31"], ["2025-01-01", "2025-12-31"]]
 reason = "The exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
 source = "SCB Registerinformation: IT-användning, Ålder 31/12, exact 2013–2022 and 2024–2025 annual source records; definition Ålder i antal år vid årets slut., measurement unit År, Datatyp float; pinned prepared-v28 originals reviewed."
+
+[[identity.column_owner]]
+variable = "258.15902"
+variant = "258.557"
+column = "A2_2"
+owner = "258.15902.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2016"]
+
+[[identity.column_owner]]
+variable = "258.15902"
+variant = "258.557"
+column = "BBWFX"
+owner = "258.15902.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2012"]
+
+[[identity.column_owner]]
+variable = "258.15902"
+variant = "258.557"
+column = "DatA3C1"
+owner = "258.15902.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2011"]
+
+[[identity.column_owner]]
+variable = "258.15902"
+variant = "258.557"
+column = "DatA4C"
+owner = "258.15902.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2007", "2008", "2009"]
+
+[[identity.column_owner]]
+variable = "258.15902"
+variant = "258.557"
+column = "DatA4C1"
+owner = "258.15902.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2010"]
+
+[[identity.column_owner]]
+variable = "258.15902"
+variant = "258.556"
+column = "FIXBB"
+owner = "258.15902.foretagsvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2017", "2018"]
+
+[[variable]]
+native_id = "258.15902.foretagsvariant"
+slug = "anslutning-fast-bb-kabel-foretagsvariant"
+
+[[identity.column_owner]]
+variable = "258.17651"
+variant = "258.556"
+column = "DIALUP"
+owner = "258.17651.foretagsvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2013"]
+
+[[identity.column_owner]]
+variable = "258.17651"
+variant = "258.557"
+column = "DIALUP1"
+owner = "258.17651.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2013"]
+
+[[variable]]
+native_id = "258.17651.individvariant"
+slug = "internetansl-modem-isdn-individvariant"
+
+[[identity.column_owner]]
+variable = "258.17652"
+variant = "258.556"
+column = "MOBOTH"
+owner = "258.17652.foretagsvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2013", "2014"]
+
+[[identity.column_owner]]
+variable = "258.17652"
+variant = "258.557"
+column = "MPHNAR1"
+owner = "258.17652.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2013"]
+
+[[variable]]
+native_id = "258.17652.individvariant"
+slug = "internetansl-gsm-individvariant"
+
+[[identity.column_owner]]
+variable = "258.17653"
+variant = "258.556"
+column = "BBOTH"
+owner = "258.17653.foretagsvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2013"]
+
+[[identity.column_owner]]
+variable = "258.17653"
+variant = "258.557"
+column = "BBWFX"
+owner = "258.17653.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2013", "2014"]
+
+[[variable]]
+native_id = "258.17653.individvariant"
+slug = "bredbandsansl-annan-fast-individvariant"
+
+[[identity.column_owner]]
+variable = "258.23393"
+variant = "258.557"
+column = "DatC4A"
+owner = "258.23393.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2010"]
+
+[[identity.column_owner]]
+variable = "258.23393"
+variant = "258.557"
+column = "DatC4A2"
+owner = "258.23393.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2011"]
+
+[[identity.column_owner]]
+variable = "258.23393"
+variant = "258.556"
+column = "EMPMD1PCT"
+owner = "258.23393.procent-foretagsvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2017"]
+
+[[variable]]
+native_id = "258.23393.procent-foretagsvariant"
+slug = "mobiluppkoppling-3g-4g-procent-foretagsvariant"
+
+[[identity.column_owner]]
+variable = "258.30776"
+variant = "258.557"
+column = "CC_PAY"
+owner = "258.30776.individvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2014"]
+
+[[identity.column_owner]]
+variable = "258.30776"
+variant = "258.556"
+column = "CC_PFIL"
+owner = "258.30776.foretagsvariant"
+ref = "Prepared SCB export: The source variant explicitly distinguishes individual survey557 from business survey556; keep those delivery roles independent even where the native definition generically mentions a company. Within each reviewed variant, exact literal names identify the stable supplied native question quantity, without asserting annual questionnaire or statistical equivalence. Native23393 business EMPMD1PCT supplies Procent plus Tal coding, unlike the personal yes/no responses, so retain that distinct measurement role without guessing a denominator. Blank physical columns remain unassigned original evidence; no literal or neighboring response is fabricated. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2014", "2017", "2018", "2020", "2021", "2023", "2025"]
+
+[[variable]]
+native_id = "258.30776.individvariant"
+slug = "koper-fillagring-som-molntjanst-individvariant"

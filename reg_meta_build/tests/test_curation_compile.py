@@ -4729,3 +4729,98 @@ def test_checked_text_corrections_compose_and_withhold_conflicting_assignments(
     assert result.occurrences[0].fields.name.status == "unknown"
     assert result.occurrences[0].source_records == (original,)
     assert result.occurrences[1] == source_occurrence(negative)
+
+
+@pytest.mark.parametrize(
+    "supplied_names",
+    [
+        ("First", "Second", "Other"),
+        ("First", "Other"),
+        ("First", "Second", "Other", "New"),
+        ("First", "Second", None),
+    ],
+)
+def test_sos_name_split_distinguishes_shared_source_coordinates(
+    tmp_path: Path, supplied_names
+):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/sos/par.toml"
+    path.parent.mkdir(parents=True)
+    parts = (
+        '{ name = "First", owner = "5891427617861710725.ATC.shared" }',
+        '{ name = "Second", owner = "5891427617861710725.ATC.shared" }',
+        '{ name = "Other", owner = "5891427617861710725.ATC.other" }',
+    )
+    originals = _sos_partition_records(subsets=("PAR_OV",) * len(supplied_names))
+    records = tuple(
+        r.model_copy(
+            update={
+                "fields": r.fields.model_copy(
+                    update={"name": value_field(name) if name is not None else None}
+                ),
+                "locators": (
+                    r.locators[0].model_copy(
+                        update={
+                            "semantic_record_key": originals[0]
+                            .locators[0]
+                            .semantic_record_key
+                        }
+                    ),
+                ),
+            }
+        )
+        for r, name in zip(originals, supplied_names, strict=True)
+    )
+    first = None
+    for ordered in (parts, parts[::-1]):
+        path.write_text(
+            '[register]\nprovider = "sos"\nslug = "par"\nnative_id = "5891427617861710725"\n'
+            '[[identity.split]]\nvariable = "ATC"\nby = "name"\n'
+            f"parts = [{', '.join(ordered)}]\n"
+            '[[variable]]\nnative_id = "5891427617861710725.ATC.shared"\nslug = "shared"\n'
+            '[[variable]]\nnative_id = "5891427617861710725.ATC.other"\nslug = "other"\n'
+        )
+        compiled, key, native = _compile_partition_fixture(root, records)
+        if first is None:
+            first = compiled
+        else:
+            assert compiled == first
+        prepared = SimpleNamespace(
+            records=SimpleNamespace(
+                iter_partition_families=lambda source, registers=None, select_family=None, native=native: (
+                    iter(((native, records),))
+                )
+            )
+        )
+        assert compile_deferred_partitions(
+            load_curation_tree(root),
+            cast("Any", prepared),
+            (_partition_scope(records),),
+        ) == (
+            compiled[1],
+            compiled[3],
+            compiled[4],
+            _partition_memberships(compiled[0]),
+        )
+        result = apply_occurrence_cases(records, compiled[0].get(key, ()))
+        assert not result.diagnostics
+        if supplied_names != ("First", "Second", "Other"):
+            assert [i.code for i in compiled[-1]] == ["stale_curation_entry"]
+            assert all(o.variable_key == native for o in result.occurrences)
+            continue
+        assert not compiled[-1]
+        assert len(compiled[1][key]) == 2
+        assert result.occurrences[0].variable_key == result.occurrences[1].variable_key
+        assert result.occurrences[2].variable_key != result.occurrences[0].variable_key
+        for r, o in zip(records, result.occurrences, strict=True):
+            original = source_occurrence(r)
+            assert (
+                replace(
+                    o,
+                    variable_key=original.variable_key,
+                    identity_checked=original.identity_checked,
+                    corrections=original.corrections,
+                )
+                == original
+            )

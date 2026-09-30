@@ -229,7 +229,7 @@ slug = "fodelsedatum-sas-psykiatrisk-vardform"
 # register 7550156225339591583 (bu)
 
 [[variable]]
-native_id = "5891427617861710725.ALDER_S"
+native_id = "5891427617861710725.ALDER_S.alder-vid-arets-slut"
 slug = "alder-vid-arets-slut"
 
 [[variable]]
@@ -241,7 +241,7 @@ native_id = "5891427617861710725.ANE2"
 slug = "anestesikod-2"
 
 [[variable]]
-native_id = "5891427617861710725.ATCO"
+native_id = "5891427617861710725.ATCO.atc-komplement-atgardskod"
 slug = "atc-komplement-atgardskod"
 
 [[variable]]
@@ -265,7 +265,7 @@ native_id = "5891427617861710725.DRG"
 slug = "diagnosrelaterad-grupp"
 
 [[variable]]
-native_id = "5891427617861710725.EKOD"
+native_id = "5891427617861710725.EKOD.yttre-orsakskoder"
 slug = "yttre-orsakskoder"
 
 [[variable]]
@@ -313,7 +313,7 @@ native_id = "5891427617861710725.FODDATUMN"
 slug = "fodelsedatum-sas-m"
 
 [[variable]]
-native_id = "5891427617861710725.HDIA"
+native_id = "5891427617861710725.HDIA.typ-av-diagnos"
 slug = "typ-av-diagnos"
 
 [[variable]]
@@ -497,11 +497,11 @@ native_id = "5891427617861710725.SENINV1"
 slug = "senaste-invandring-1"
 
 [[variable]]
-native_id = "5891427617861710725.SLUT"
+native_id = "5891427617861710725.SLUT.slutdatum-psyk-vardform"
 slug = "slutdatum-psyk-vardform"
 
 [[variable]]
-native_id = "5891427617861710725.START"
+native_id = "5891427617861710725.START.startdatum-psykiatrisk-vardform"
 slug = "startdatum-psykiatrisk-vardform"
 
 [[variable]]
@@ -512,3 +512,212 @@ slug = "vardtid"
 native_id = "5891427617861710725.YO"
 slug = "yttre-orsakskod-eller-atc"
 # register 6052270801387609014
+
+# Reviewed equivalent SOS wording; retain original evidence and representations.
+
+[[errata.field]]
+variable = "5891427617861710725.ATGDATUM"
+variant = "PAR_OV"
+column = "ATGDATUM"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Datum då åtgärden påbörjades, i SAS-datum,i at-fil" }, { name = "name", status = "value", value = "Åtgärdsdatum" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Datum då åtgärden påbörjades, i SAS-datum, i at-fil"
+evidence = "Comma spacing only. Original rows row:12 and row:85 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.DIA"
+variant = "PAR_OV"
+column = "DIA"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet\när orsakat av eller relaterat\ntill läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }, { name = "name", status = "value", value = "Diagnoskod eller ATC-kod vid skada eller förgiftning" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga"
+evidence = "Hard line breaks only. Original rows row:15 and row:88 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.DIA_ANT"
+variant = "PAR_OV"
+column = "DIA_ANT"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Antal inrapporterade diagnoskoder, kan vara mer än 30" }, { name = "name", status = "value", value = "Antal diagnoserkoder" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2011" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Antal diagnoskoder"
+evidence = "Correct the duplicated plural ending using the peer name; both descriptions count diagnosis codes. Original rows row:16 and row:89 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.PNR"
+variant = "PAR_OV"
+column = "PNR"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Personnummer eller samordningsnummer på patient. Om reservnummer  är variabeln tom och värdet finns i RNR." }, { name = "name", status = "value", value = "Personnummer" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1997" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Personnummer eller samordningsnummer på patient. Om reservnummer är variabeln tom och värdet finns i RNR."
+evidence = "Duplicated space only. Original rows row:58 and row:161 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.PVARD"
+variant = "PAR_SV"
+column = "PVARD"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Anger om vårdkontakt varit planerat eller ej" }, { name = "name", status = "value", value = "Planerad vårdkontakt" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1964" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Anger om vårdkontakten varit planerat eller ej"
+evidence = "Definite noun form only; preserve identical planned-contact code meanings. Original rows row:165 and row:62 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.YO"
+variant = "PAR_OV"
+column = "YO"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Yttre orsak till skador och förgiftningar. Kod för yttre orsak ska finnas för vårdkontakter där diagnoskod innebär skada eller förgiftning. Om tillståndet\när orsakat av eller relaterat\ntill läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }, { name = "name", status = "value", value = "Yttre orsakskod eller ATC-kod som tillståndet är orsakat av" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Yttre orsak till skador och förgiftningar. Kod för yttre orsak ska finnas för vårdkontakter där diagnoskod innebär skada eller förgiftning. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga"
+evidence = "Hard line breaks only. Original rows row:73 and row:181 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.FODDATUMN"
+variant = "PAR_SV"
+column = "FODDATUMN"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Patientens födelsedatum, i SAS-datum,i ad-fil" }, { name = "name", status = "value", value = "Födelsedatum, SAS-datum" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Patientens födelsedatum, i SAS-datum, i ad-fil"
+evidence = "Comma spacing only; leave the TV original without the ad-file claim unchanged. Original rows row:104 and row:33 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.DIAGNOS"
+variant = "PAR_OV"
+column = "DIAGNOS"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Diagnoser som haft klinisk relevans för vårdkontakten, flera i en sträng. Max antal diagnoser som fått anges har varierat över tid. Sedan 2008 finns inget vid insamling max men endast 30 diagnoskoder läggs i strängen." }, { name = "name", status = "value", value = "Diagnoskoder" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1997" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Diagnoser som haft klinisk relevans för vårdkontakten, flera i en sträng. Max antal diagnoser som fått anges har varierat över tid. Sedan 2008 finns inget max vid insamling men endast 30 diagnoskoder läggs i strängen."
+evidence = "Word order only for the no-intake-maximum statement; preserve each original historical ICD representation. Original rows row:17 and row:90 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.EKOD"
+variant = "PAR_OV"
+column = "EKOD"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Samtliga rapporterade yttre orsakskoder för vårdkontakten i en sträng" }, { name = "name", status = "value", value = "Yttre orsakskoder" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2013" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Samtliga rapporterade yttre orsakskoder för vårdkontakten, flera koder i en sträng"
+evidence = "Explicitly state multiple external-cause codes already supplied by both originals; retain the distinct TV single-code/ATC construct. Original rows row:21 and row:94 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+noted = "2026-09-30"
+
+[[identity.split]]
+variable = "ATCO"
+by = "data_type"
+parts = [{ data_type = "text", owner = "5891427617861710725.ATCO.atc-komplement-atgardskod" }, { data_type = "integer", owner = "5891427617861710725.ATCO.atg-kod-ar-atc-kod" }]
+
+[[variable]]
+native_id = "5891427617861710725.ATCO.atg-kod-ar-atc-kod"
+slug = "atg-kod-ar-atc-kod"
+
+[[identity.split]]
+variable = "DIAGNOS"
+by = "deldatamangd"
+parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.DIAGNOS.diagnoskoder" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.DIAGNOS.diagnoskoder" }, { deldatamangd = "PAR_TV", owner = "5891427617861710725.DIAGNOS.diagnoskod-eller-atc-kod-psykiatrisk-vard" }]
+
+[[variable]]
+native_id = "5891427617861710725.DIAGNOS.diagnoskoder"
+slug = "diagnos"
+
+[[variable]]
+native_id = "5891427617861710725.DIAGNOS.diagnoskod-eller-atc-kod-psykiatrisk-vard"
+slug = "diagnoskod-eller-atc-kod-psykiatrisk-vard"
+
+[[identity.split]]
+variable = "EKOD"
+by = "deldatamangd"
+parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.EKOD.yttre-orsakskoder" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.EKOD.yttre-orsakskoder" }, { deldatamangd = "PAR_TV", owner = "5891427617861710725.EKOD.yttre-orsakskod-eller-atc-kod-psykiatrisk-vard" }]
+
+[[variable]]
+native_id = "5891427617861710725.EKOD.yttre-orsakskod-eller-atc-kod-psykiatrisk-vard"
+slug = "yttre-orsakskod-eller-atc-kod-psykiatrisk-vard"
+
+[[variable]]
+native_id = "5891427617861710725.HDIA.huvuddiagnoskod"
+slug = "huvuddiagnoskod"
+
+[[identity.split]]
+variable = "HDIA"
+by = "name"
+parts = [{ name = "Typ av diagnos", owner = "5891427617861710725.HDIA.typ-av-diagnos" }, { name = "Huvuddiagnoskod", owner = "5891427617861710725.HDIA.huvuddiagnoskod" }]
+
+[[variable]]
+native_id = "5891427617861710725.START.startdatum-permission"
+slug = "startdatum-permission"
+
+[[variable]]
+native_id = "5891427617861710725.START.startdatum-avvikning"
+slug = "startdatum-avvikning"
+
+[[identity.split]]
+variable = "START"
+by = "name"
+parts = [{ name = "Startdatum för psykiatrisk vårdform", owner = "5891427617861710725.START.startdatum-psykiatrisk-vardform" }, { name = "Startdatum för permission", owner = "5891427617861710725.START.startdatum-permission" }, { name = "Startdatum för avvikning", owner = "5891427617861710725.START.startdatum-avvikning" }]
+
+[[variable]]
+native_id = "5891427617861710725.SLUT.slutdatum-permission"
+slug = "slutdatum-permission"
+
+[[variable]]
+native_id = "5891427617861710725.SLUT.slutdatum-avvikning"
+slug = "slutdatum-avvikning"
+
+[[identity.split]]
+variable = "SLUT"
+by = "name"
+parts = [{ name = "Slutdatum för psykiatrisk vårdform", owner = "5891427617861710725.SLUT.slutdatum-psyk-vardform" }, { name = "Slutdatum för permission", owner = "5891427617861710725.SLUT.slutdatum-permission" }, { name = "Slutdatum för avvikning", owner = "5891427617861710725.SLUT.slutdatum-avvikning" }]
+
+[[variable]]
+native_id = "5891427617861710725.TYP.typ"
+slug = "typ"
+
+[[variable]]
+native_id = "5891427617861710725.TYP.markor-yttre-orsakskod"
+slug = "markor-yttre-orsakskod"
+
+[[variable]]
+native_id = "5891427617861710725.TYP.markor-avvikning"
+slug = "markor-avvikning"
+
+[[variable]]
+native_id = "5891427617861710725.TYP.markor-permission"
+slug = "markor-permission"
+
+[[identity.split]]
+variable = "TYP"
+by = "name"
+parts = [{ name = "Psykiatrisk vårdform", owner = "5891427617861710725.TYP.typ" }, { name = "Markör för yttre orsakskod", owner = "5891427617861710725.TYP.markor-yttre-orsakskod" }, { name = "Markör för avvikning", owner = "5891427617861710725.TYP.markor-avvikning" }, { name = "Markör för permission", owner = "5891427617861710725.TYP.markor-permission" }]
+
+# Literal supplied PAR names distinguish clinical codes, flags and event-file domains.
+
+# Calendar-year-end age differs from discharge-year-end age and its reporting fallback.
+[[identity.split]]
+variable = "ALDER_S"
+by = "deldatamangd"
+parts = [{deldatamangd = "PAR_OV", owner = "5891427617861710725.ALDER_S.alder-vid-arets-slut"}, {deldatamangd = "PAR_SV", owner = "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut"}, {deldatamangd = "PAR_TV", owner = "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut"}]
+
+[[variable]]
+native_id = "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut"
+slug = "alder-vid-utskrivningsarets-slut"

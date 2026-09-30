@@ -399,6 +399,8 @@ def test_sos_classification_reference_duplicate_and_non_sos_rejected(
         ("deldatamangd", ""),
         ("deldatamangd", 'data_type = "text"'),
         ("data_type", 'deldatamangd = "PAR_OV"'),
+        ("name", 'name = "Diagnosis", data_type = "text"'),
+        ("name", 'data_type = "text"'),
     ],
 )
 def test_identity_split_part_requires_matching_discriminator(

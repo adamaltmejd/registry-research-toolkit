@@ -7078,7 +7078,7 @@ native_id = "257.39096"
 slug = "stod-fran-eu-h2020"
 
 [[variable]]
-native_id = "257.39101"
+native_id = "257.39101.source-native-quantity"
 slug = "innosamarbete-konsulter-se"
 
 [[variable]]
@@ -7086,7 +7086,7 @@ native_id = "257.39102"
 slug = "samarbete-inom-ovriga-aktiviteter"
 
 [[variable]]
-native_id = "257.39104"
+native_id = "257.39104.source-native-quantity"
 slug = "innosamarbete-konsulter-eu"
 
 [[variable]]
@@ -7146,27 +7146,27 @@ native_id = "257.46502"
 slug = "fund-equit-succ"
 
 [[variable]]
-native_id = "257.46586"
+native_id = "257.46586.source-native-question"
 slug = "reas-ninn-nneed"
 
 [[variable]]
-native_id = "257.46587"
+native_id = "257.46587.source-native-question"
 slug = "reas-ninn-oth"
 
 [[variable]]
-native_id = "257.46588"
+native_id = "257.46588.source-native-question"
 slug = "reas-ninn-resc"
 
 [[variable]]
-native_id = "257.46589"
+native_id = "257.46589.source-native-question"
 slug = "reas-aktiva-nneed"
 
 [[variable]]
-native_id = "257.46590"
+native_id = "257.46590.source-native-question"
 slug = "reas-nminn-oth"
 
 [[variable]]
-native_id = "257.46591"
+native_id = "257.46591.source-native-question"
 slug = "reas-nminn-resc"
 
 [[variable]]
@@ -8931,3 +8931,131 @@ document_sha256 = "25dd4b7f5efbf979e60cf326f23b760768463114160c17475ac695ded9c09
 document_pages = [38, 39, 64, 65]
 reason = "The exact 2004-2006 official SCBDOK dictionary links Hinder, samarbetspartner to Grad av betydelse and publishes its complete stored 0–3 membership. Preserve the checked historical delivery and original facts; do not use the different questionnaire box numbers or transplant later coding."
 source = "SCB UF0315 SCBDOK 2004-2006: Hinder, samarbetspartner; definition/meaning matched to HPAR: Brist på samarbetspartner; stored value table Grad av betydelse. The same historical window is already positively delivered by checked SWECOV/edition errata."
+
+[[identity.column_owner]]
+variable = "257.39101"
+variant = "257.553"
+column = "COOP_PRV_CN_NAT"
+owner = "257.39101.source-native-quantity"
+ref = "Prepared SCB export: The explicit source-native question definition consistently asks innovation cooperation with consultants, commercial laboratories or private research institutes in the supplied geography: Sweden for39101, EU/EFTA excluding Sweden for39104. Reviewed spelling changes preserve that exact question and geographic meaning. Retain every source coding and pooled survey-wave window; no cooperation outside innovation activities or adjacent native question is merged, and no statistical comparability or annual questionnaire equivalence is asserted. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2016 - 2018", "2018 - 2020", "2022 - 2024"]
+
+[[identity.column_owner]]
+variable = "257.39101"
+variant = "257.553"
+column = "COOP_PRV_NAT"
+owner = "257.39101.source-native-quantity"
+ref = "Prepared SCB export: The explicit source-native question definition consistently asks innovation cooperation with consultants, commercial laboratories or private research institutes in the supplied geography: Sweden for39101, EU/EFTA excluding Sweden for39104. Reviewed spelling changes preserve that exact question and geographic meaning. Retain every source coding and pooled survey-wave window; no cooperation outside innovation activities or adjacent native question is merged, and no statistical comparability or annual questionnaire equivalence is asserted. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2020 - 2022"]
+
+[[identity.column_owner]]
+variable = "257.39104"
+variant = "257.553"
+column = "COOP_PRV_CN_EU_EFTA"
+owner = "257.39104.source-native-quantity"
+ref = "Prepared SCB export: The explicit source-native question definition consistently asks innovation cooperation with consultants, commercial laboratories or private research institutes in the supplied geography: Sweden for39101, EU/EFTA excluding Sweden for39104. Reviewed spelling changes preserve that exact question and geographic meaning. Retain every source coding and pooled survey-wave window; no cooperation outside innovation activities or adjacent native question is merged, and no statistical comparability or annual questionnaire equivalence is asserted. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2016 - 2018", "2018 - 2020", "2022 - 2024"]
+
+[[identity.column_owner]]
+variable = "257.39104"
+variant = "257.553"
+column = "COOP_PRV_EU_EFTA"
+owner = "257.39104.source-native-quantity"
+ref = "Prepared SCB export: The explicit source-native question definition consistently asks innovation cooperation with consultants, commercial laboratories or private research institutes in the supplied geography: Sweden for39101, EU/EFTA excluding Sweden for39104. Reviewed spelling changes preserve that exact question and geographic meaning. Retain every source coding and pooled survey-wave window; no cooperation outside innovation activities or adjacent native question is merged, and no statistical comparability or annual questionnaire equivalence is asserted. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
+source_editions = ["2020 - 2022"]
+
+[[identity.column_owner]]
+variable = "257.46586"
+variant = "257.553"
+column = "REAS_NINN_NNEED"
+owner = "257.46586.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2020 - 2022"]
+
+[[identity.column_owner]]
+variable = "257.46586"
+variant = "257.553"
+column = "REAS_NMINN_NNEED"
+owner = "257.46586.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2022 - 2024"]
+
+[[identity.column_owner]]
+variable = "257.46587"
+variant = "257.553"
+column = "REAS_NINN_OTH"
+owner = "257.46587.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2020 - 2022"]
+
+[[identity.column_owner]]
+variable = "257.46587"
+variant = "257.553"
+column = "REAS_NMINN_OTH"
+owner = "257.46587.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2022 - 2024"]
+
+[[identity.column_owner]]
+variable = "257.46588"
+variant = "257.553"
+column = "REAS_NINN_RESC"
+owner = "257.46588.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2020 - 2022"]
+
+[[identity.column_owner]]
+variable = "257.46588"
+variant = "257.553"
+column = "REAS_NMINN_RESC"
+owner = "257.46588.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2022 - 2024"]
+
+[[identity.column_owner]]
+variable = "257.46589"
+variant = "257.553"
+column = "REAS_NINN_NNEED"
+owner = "257.46589.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2022 - 2024"]
+
+[[identity.column_owner]]
+variable = "257.46589"
+variant = "257.553"
+column = "REAS_NMINN_NNEED"
+owner = "257.46589.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2020 - 2022"]
+
+[[identity.column_owner]]
+variable = "257.46590"
+variant = "257.553"
+column = "REAS_NINN_OTH"
+owner = "257.46590.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2022 - 2024"]
+
+[[identity.column_owner]]
+variable = "257.46590"
+variant = "257.553"
+column = "REAS_NMINN_OTH"
+owner = "257.46590.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2020 - 2022"]
+
+[[identity.column_owner]]
+variable = "257.46591"
+variant = "257.553"
+column = "REAS_NINN_RESC"
+owner = "257.46591.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2022 - 2024"]
+
+[[identity.column_owner]]
+variable = "257.46591"
+variant = "257.553"
+column = "REAS_NMINN_RESC"
+owner = "257.46591.source-native-question"
+ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
+source_editions = ["2020 - 2022"]

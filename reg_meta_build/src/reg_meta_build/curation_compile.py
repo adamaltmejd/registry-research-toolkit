@@ -1860,8 +1860,8 @@ def compile_partitions(
                         for part in declaration.parts
                     }
                     values = tuple(
-                        _literal_field(record, "data_type")
-                        if by == "data_type"
+                        _literal_field(record, by)
+                        if by in ("data_type", "name")
                         else (
                             record.subject.variant.name
                             if record.subject.variant.status == "value"
@@ -1879,7 +1879,7 @@ def compile_partitions(
                             _stale_partition(
                                 ref,
                                 source_id,
-                                f"{'data types' if by == 'data_type' else 'deldatamangd values'} "
+                                f"{'data types' if by == 'data_type' else 'names' if by == 'name' else 'deldatamangd values'} "
                                 f"{sorted(actual)!r} do not equal declared {sorted(owners)!r}",
                             )
                         )
@@ -1895,11 +1895,9 @@ def compile_partitions(
                                 discriminators[cast("str", value)],
                             ),
                             when=(
-                                FieldExpectation(
-                                    name="data_type", status="value", value=value
-                                ),
+                                FieldExpectation(name=by, status="value", value=value),
                             )
-                            if by == "data_type"
+                            if by in ("data_type", "name")
                             else (),
                         )
                         for record, value in zip(records, values, strict=True)
@@ -2343,17 +2341,12 @@ def compile_deferred_partitions(
                     split_bases[scope_key].add(native)
                     declaration = sos_splits[0]
                     owners = {
-                        cast(
-                            "str",
-                            part.data_type
-                            if declaration.by == "data_type"
-                            else part.deldatamangd,
-                        ): part.owner
+                        cast("str", getattr(part, declaration.by)): part.owner
                         for part in declaration.parts
                     }
                     values = tuple(
-                        _literal_field(record, "data_type")
-                        if declaration.by == "data_type"
+                        _literal_field(record, declaration.by)
+                        if declaration.by in ("data_type", "name")
                         else (
                             record.subject.variant.name
                             if record.subject.variant.status == "value"

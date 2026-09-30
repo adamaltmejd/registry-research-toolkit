@@ -608,6 +608,11 @@ def _register_allows_split_base_pair(
     split, base = (a, b) if len(a.source_id.split(".")) == 3 else (b, a)
     if any(p.variable == base.source_id for p in register.identity.partition):
         return True
+    if any(
+        declaration.variable == base.source_id and declaration.owner == split.source_id
+        for declaration in register.identity.column_owner
+    ):
+        return True
     return any(
         f"{register.register_info.native_id}.{declaration.variable}" == base.source_id
         and any(part.owner == split.source_id for part in declaration.parts)

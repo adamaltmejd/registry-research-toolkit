@@ -323,6 +323,15 @@ be rebound under the split variant; corrections to native rows still move with t
 split. RTB's eight `Kvartal 1-3 fr.o.m.` editions use this surface to keep quarterly
 delivery lines separate from their annual parent variants.
 
+SOS `[[identity.split]]` can partition a complete native family by literal supplied
+`data_type`, `deldatamangd`, or `name`. Supplied names distinguish reused columns whose
+clinical code, flag, or event-file meaning differs despite equal data types. Every
+observed discriminator must be declared, and every declared discriminator must occur;
+new or missing values make the whole split stale. Multiple literals may share a declared
+owner. Name-conditioned effects keep distinct originals at the same semantic source
+coordinate separate. This establishes concept ownership; it does not infer delivery
+interchangeability or fill missing file-role coordinates.
+
 `[[errata.version]]` carries `variant`, `name`, `evidence`, and `noted`; it adds an
 undocumented register edition and requires a year-bearing SCB version name. Version era
 order follows the maximum year the edition claims, so adding a historical edition cannot

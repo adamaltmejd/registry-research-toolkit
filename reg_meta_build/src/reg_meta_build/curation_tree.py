@@ -793,15 +793,22 @@ class IdentityEditionSplitEntry(_CurationModel):
 class IdentitySplitPart(_CurationModel):
     data_type: str | None = None
     deldatamangd: str | None = None
+    name: str | None = None
     owner: str
 
-    _trimmed = field_validator("data_type", "deldatamangd")(_require_trimmed)
+    _trimmed = field_validator("data_type", "deldatamangd", "name")(_require_trimmed)
 
     @model_validator(mode="after")
     def _one_discriminator(self) -> IdentitySplitPart:
-        if (self.data_type is None) == (self.deldatamangd is None):
+        if (
+            sum(
+                value is not None
+                for value in (self.data_type, self.deldatamangd, self.name)
+            )
+            != 1
+        ):
             raise ValueError(
-                "split part needs exactly one of data_type or deldatamangd"
+                "split part needs exactly one of data_type, deldatamangd or name"
             )
         return self
 
@@ -825,7 +832,7 @@ class IdentitySplitPart(_CurationModel):
 
 class IdentitySplitEntry(_CurationModel):
     variable: str
-    by: Literal["data_type", "deldatamangd"]
+    by: Literal["data_type", "deldatamangd", "name"]
     parts: list[IdentitySplitPart]
 
     _variable = field_validator("variable")(_require_trimmed)
