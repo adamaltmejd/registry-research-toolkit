@@ -378,7 +378,13 @@ def apply_occurrence_cases(
         }
         matching_fields = defaultdict(list)
         for effect, owner in fields.get(ref, ()):
-            if all(_field_matches(record, field) for field in effect.when):
+            if (
+                effect.when_scope is None
+                or (
+                    record.edition_scope == effect.when_scope
+                    and record.edition_period_scope == effect.when_period
+                )
+            ) and all(_field_matches(record, field) for field in effect.when):
                 matching_fields[effect.replacement.name].append((effect, owner))
         changed_fields = set(withheld_fields[ref])
         matching_owners = []

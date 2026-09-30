@@ -212,3 +212,33 @@ def test_independent_source_attribution_never_invents_dated_lineage(
     assert not result.metadata.lineage_warnings
     assert result.variables[0].source_register.slug == "origin"
     assert [issue.code for issue in result.diagnostics] == ["unsupported_lineage_scope"]
+
+
+def test_independent_register_only_attribution_retains_missing_endpoint_warning():
+    variables, options = fixture(same_as=False)
+    consumer = variables[0].model_copy(
+        update={
+            "states": tuple(
+                state.model_copy(
+                    update={
+                        "period_scope": "year_independent",
+                        "valid_from": None,
+                        "valid_to": None,
+                    }
+                )
+                for state in variables[0].states
+            ),
+        }
+    )
+    result = resolve_catalog_lineage((consumer, variables[1]), **options)
+    assert not result.metadata.state_lineage
+    assert result.variables[0].source_register.slug == "origin"
+    assert result.variables[0].source_register_text == consumer.source_register_text
+    assert [issue.code for issue in result.diagnostics] == [
+        "unresolved_lineage_no_source_state"
+    ]
+    assert result.diagnostics[0].severity == "warning"
+    (warning,) = result.metadata.lineage_warnings
+    assert warning.kind == "no_source_state"
+    assert warning.consumer.period_scope == "year_independent"
+    assert warning.consumer.valid_from is warning.consumer.valid_to is None

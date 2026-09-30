@@ -470,7 +470,9 @@ support and peer guards retain unrelated editions and coding references. Period 
 carry explicit replacement `TemporalScope` values; omitting an interval's `end` in TOML
 means an open end, while unknown and pooled scopes retain their labels and bounds. These
 entries emit existing checked field/period effects and never rewrite the original source
-records.
+records. A finite scoped name correction selects exact original source scopes and
+carries those same scopes into its conditional replay effect. A monthly row sharing an
+annual row's semantic reference cannot inherit that name correction.
 
 `[[errata.support]]` retains one documented erroneous assertion as support rather than
 catalog data. Its positive `authority` must name another native variable in the same
@@ -819,7 +821,12 @@ requires an accepted `same_as` path into that source register and exact endpoint
 intersections. Equal slugs are insufficient. Explicit source-variant defaults resolve
 genuinely multiple variants and are checked even when unused. Missing evidence produces
 retained lineage warnings and blocking diagnostics: no supported source state withholds
-the edge as a warning; ambiguity is an error.
+the edge as a warning; ambiguity is an error. Register attribution alone does not
+establish a variable endpoint. Missing accepted endpoints retain that warning even for
+year-independent deliveries. Only positively linked endpoints reach the
+dated-intersection guard; independent endpoints then require an explicit
+independent-edge contract and currently remain errors. No date hull is inferred from the
+source register's other deliveries.
 
 Panel keys require supported states in the exact variant. Losing one composite-key
 member makes that entire key unknown; it never manufactures a shorter key. Other axes,

@@ -206,22 +206,6 @@ def resolve_catalog_lineage(
                 if source_fqid not in usable_defaults
                 or item.variant.slug == usable_defaults[source_fqid]
             ]
-            if state.period_scope == "year_independent" or any(
-                item.period_scope == "year_independent" for _, item in source_states
-            ):
-                # simplify: lineage edges remain dated; add an independent edge
-                # contract when positively linked nonannual endpoints require it.
-                diagnostics.append(
-                    ResolutionDiagnostic(
-                        code="unsupported_lineage_scope",
-                        severity="error",
-                        subject=fqid,
-                        detail="A source attribution involving year-independent delivery cannot establish a dated lineage intersection.",
-                        refs=evidence[fqid],
-                        withheld_output=(fqid + ":lineage",),
-                    )
-                )
-                continue
             kinds = {item.variant.slug for _, item in source_states}
             if not source_states or len(kinds) > 1:
                 kind = (
@@ -248,6 +232,22 @@ def resolve_catalog_lineage(
                         refs=evidence[fqid],
                         valid_from=state.valid_from,
                         valid_to=state.valid_to,
+                        withheld_output=(fqid + ":lineage",),
+                    )
+                )
+                continue
+            if state.period_scope == "year_independent" or any(
+                item.period_scope == "year_independent" for _, item in source_states
+            ):
+                # simplify: lineage edges remain dated; add an independent edge
+                # contract when positively linked nonannual endpoints require it.
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="unsupported_lineage_scope",
+                        severity="error",
+                        subject=fqid,
+                        detail="A source attribution involving year-independent delivery cannot establish a dated lineage intersection.",
+                        refs=evidence[fqid],
                         withheld_output=(fqid + ":lineage",),
                     )
                 )

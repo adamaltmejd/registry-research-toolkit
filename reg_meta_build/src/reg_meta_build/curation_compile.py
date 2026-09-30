@@ -4135,7 +4135,12 @@ def _select_occurrence_correction(
         )
         and (
             not isinstance(entry, ErrataFieldEntry)
-            or entry.field not in {"classification_declared", "measurement_unit"}
+            or (
+                entry.field not in {"classification_declared", "measurement_unit"}
+                and not (
+                    entry.field == "name" and entry.expected_scope.kind == "intervals"
+                )
+            )
             or (
                 record.edition_scope == entry.expected_scope
                 and record.edition_period_scope == entry.expected_period
@@ -4345,6 +4350,14 @@ def compile_occurrence_corrections(
                         replacement=FieldExpectation(
                             name=entry.field, status="value", value=entry.value
                         ),
+                        when_scope=entry.expected_scope
+                        if entry.field == "name"
+                        and entry.expected_scope.kind == "intervals"
+                        else None,
+                        when_period=entry.expected_period
+                        if entry.field == "name"
+                        and entry.expected_scope.kind == "intervals"
+                        else None,
                         when=(
                             FieldExpectation(
                                 name="column_name", status="value", value=entry.column
@@ -4352,7 +4365,11 @@ def compile_occurrence_corrections(
                             *(
                                 tuple(entry.expected_fields)
                                 if entry.field
-                                in {"classification_declared", "measurement_unit"}
+                                in {
+                                    "classification_declared",
+                                    "measurement_unit",
+                                    "name",
+                                }
                                 else ()
                             ),
                         ),

@@ -800,3 +800,15 @@ slug = "folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard"
 [[variable]]
 native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform"
 slug = "folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform"
+
+[[errata.field]]
+variable = "5891427617861710725.LK"
+variant = "PAR_SV"
+column = "LK"
+expected_fields = [{ name = "name", status = "value", value = "Folkbokföringsort (län, kommun) 31 dec, från SCB" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Län och kommun där patienten var folkbokförd 31 december året för vårdkontakten. Finns i årsversionerna." }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2016" }, { name = "coverage_to", status = "unknown" }, { name = "classification_declared", status = "value", value = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/lan-och-kommuner-i-kodnummerordning/" }, { name = "representation", status = "value", value = "4-siffriga kommunkoder. Olika koder för olika perioder. Se kodverk." }, { name = "data_type", status = "value", value = "text" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2016" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Folkbokföringsort (län, kommun) 31 dec"
+evidence = "Both exact annual LK originals positively state identical31December observation wording and SCB source attribution. Use the existing PAR_OV name also for PAR_SV; redundant source attribution remains explicitly SCB. Retain all monthly care-event originals, source descriptions, periods, classifications and raw contexts."
+noted = "2026-09-30"

@@ -356,6 +356,17 @@ class CheckedFieldChange(_CurationModel):
     replacement: FieldExpectation
     when: tuple[FieldExpectation, ...] = ()
 
+    when_scope: TemporalScope | None = None
+    when_period: TemporalScope | None = None
+
+    @model_validator(mode="after")
+    def _paired_scopes(self) -> Self:
+        if (self.when_scope is None) != (self.when_period is None):
+            raise ValueError(
+                "conditional field changes require both exact source scopes"
+            )
+        return self
+
     _conditions = field_validator("when")(_unique_conditions)
 
 

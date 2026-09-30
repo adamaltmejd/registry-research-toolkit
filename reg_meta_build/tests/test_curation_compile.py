@@ -5726,3 +5726,31 @@ def test_measurement_unit_correction_guards_shared_ref_physical_assertions(tmp_p
                     ],
                 }
             )
+
+
+def test_checked_name_correction_keeps_same_ref_other_source_scope(tmp_path):
+    tree, scope, original, _, _ = _checked_correction_fixture(tmp_path)
+    other = original.model_copy(
+        update={
+            "record_id": original.record_id + "-monthly",
+            "edition_scope": TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start="2008-01-01", end="2008-12-31"),),
+            ),
+            "fields": original.fields.model_copy(
+                update={"name": value_field("Monthly observation")}
+            ),
+        }
+    )
+    assert record_ref(original) == record_ref(other)
+    cases, issues, _ = _run_checked_correction(tree, scope, (original, other))
+    assert not issues
+    result = apply_occurrence_cases((original, other), cases[scope.source, None])
+    assert not result.diagnostics
+    assert result.occurrences[0].fields.name.value == "Reviewed label"
+    assert result.occurrences[1] == source_occurrence(other)
+    drifted = original.model_copy(update={"edition_scope": other.edition_scope})
+    _, stale, _ = _run_checked_correction(tree, scope, (drifted, other))
+    assert stale and stale[0].code == "stale_curation_entry"
+    replay = apply_occurrence_cases((drifted, other), cases[scope.source, None])
+    assert replay.diagnostics
