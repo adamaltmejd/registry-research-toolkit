@@ -769,6 +769,15 @@ windows carry the exact calendar month. State merging, delivery coverage and sea
 aggregation retain these literal definitions. No generic prose replacement or scale
 conversion is inferred.
 
+Common metadata expresses semantic agreement after cleaning and checked curation.
+Equivalent wording or unit notation can be normalized through guarded `errata.field`
+entries before formation: for example, `kr` and `SEK` can name the same currency unit.
+Every raw source assertion remains intact. Curation must establish that the quantity and
+scale agree; percentage and proportion, different currencies or differing substantive
+qualifiers cannot be collapsed from spelling alone. The builder does not guess semantic
+equivalence from arbitrary prose. When checked normalization establishes one common
+value, it replaces the need for a delivery-metadata permission for that field.
+
 A checked `representation.delivery_metadata` decision permits only its explicitly listed
 fields (`name`, `description`, `measurement_unit`) to vary for one exact reviewed owner.
 Compilation captures every original field, source scope, parent and coding association,

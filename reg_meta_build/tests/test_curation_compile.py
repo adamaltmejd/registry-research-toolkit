@@ -69,6 +69,7 @@ from reg_meta_build.source_coordinates import (
 )
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
+    CheckedIdentityChange,
     CheckedVariantAssignment,
     CuratedOccurrenceAddition,
     OccurrenceCorrectionDecision,
@@ -3090,6 +3091,152 @@ def test_compiled_delivered_addition_uses_unique_literal_split(tmp_path: Path):
         "accepted-partition",
         "1.5.a",
     )
+
+
+@pytest.mark.parametrize("drift", ["parent", "coding"])
+def test_guarded_column_partition_preserves_parent_and_coding_guards(drift: str):
+    original = _errata_record(column="A", year="2020")
+    conversion = convert_column_partitions(
+        (original,),
+        source_id="1.5",
+        split_ids=("1.5.a",),
+        declared_columns={"A": "1.5.a"},
+        declaration_reference="exact source",
+        guard_fields=tuple(SourceFields.model_fields),
+    )
+    assert conversion.case is not None
+    if drift == "parent":
+        parent = original.parent_facts[0]
+        changed = original.model_copy(
+            update={
+                "parent_facts": (
+                    parent.model_copy(
+                        update={
+                            "fields": parent.fields.model_copy(
+                                update={"name": value_field("changed parent")}
+                            )
+                        }
+                    ),
+                    *original.parent_facts[1:],
+                )
+            }
+        )
+    else:
+        changed = original.model_copy(
+            update={
+                "code_set_references": (
+                    CodeSetReference(
+                        reference_id="changed-codes",
+                        content_sha256="a" * 64,
+                        physical_locator="codes.csv:1",
+                    ),
+                )
+            }
+        )
+    result = apply_occurrence_cases((changed,), (conversion.case,))
+    assert result.accounting[0].disposition == "stale"
+    assert result.occurrences[0].variable_key == native_variable_key(original)
+    default = convert_column_partitions(
+        (original,),
+        source_id="1.5",
+        split_ids=("1.5.a",),
+        declared_columns={"A": "1.5.a"},
+        declaration_reference="exact source",
+    )
+    assert default.case is not None
+    assert default.case.targets[0].alternatives[0].parent_facts is None
+    assert default.case.targets[0].alternatives[0].code_set_references is None
+
+
+def test_checked_delivered_blank_column_uses_partition_atomically(tmp_path: Path):
+    donor = _errata_record(column="A", year="2020")
+    sibling = _errata_record(column="B", year="2020", member=23, variant=3)
+    blank = _errata_record(column="", year="2021", member=22)
+    records = (donor, sibling, blank)
+    tree, prepared, scope = _errata_fixture(tmp_path, records, _DELIVERED)
+    path = tmp_path / "curation/registers/scb/sample.toml"
+    path.write_text(
+        path.read_text()
+        + '\n[[variable]]\nnative_id="1.5.a"\nslug="a"\n'
+        + '\n[[variable]]\nnative_id="1.5.b"\nslug="b"\n'
+        + '\n[[identity.partition]]\nvariable="1.5"\ncolumns={A="1.5.a",B="1.5.b"}\ncolumns_ref="exact fixture"\n'
+    )
+    tree = load_curation_tree(tmp_path / "curation")
+    native = native_variable_key(donor)
+    prepared.records.iter_partition_families = (
+        lambda source, registers=None, select_family=None: iter(((native, records),))
+    )
+    direct = compile_partitions(tree, prepared, (scope,))
+    assert not direct[3]
+    deferred = compile_deferred_partitions(tree, prepared, (scope,))
+    memberships = _partition_memberships(direct[0])
+    assert deferred[3] == memberships
+    first = compile_errata(tree, prepared, (scope,), memberships, subset=False)
+    second = compile_errata(tree, prepared, (scope,), deferred[3], subset=False)
+    assert repr(first).encode() == repr(second).encode()
+    assert not first[3]
+    key = scope.source, scope.register_key
+    case = first[0][key][0]
+    effects = case.decision.effects
+    identity = next(e for e in effects if isinstance(e, CheckedIdentityChange))
+    assert identity.variable_key == (*native, "accepted-partition", "1.5.a")
+    actual = apply_occurrence_cases(records, (*direct[0][key], case))
+    assert not actual.diagnostics
+    corrected = next(o for o in actual.occurrences if blank in o.source_records)
+    assert corrected.variable_key == identity.variable_key
+    assert corrected.fields.column_name.value == "A"
+    assert corrected.edition_scope == blank.edition_scope
+    assert corrected.source_records == (blank,)
+    changed = sibling.model_copy(
+        update={
+            "fields": sibling.fields.model_copy(
+                update={"definition": value_field("changed")}
+            )
+        }
+    )
+    stale = apply_occurrence_cases((donor, changed, blank), (case,))
+    assert stale.accounting[0].disposition == "stale"
+    untouched = next(o for o in stale.occurrences if blank in o.source_records)
+    assert untouched.fields == blank.fields
+    assert untouched.variable_key == native
+    locator = sibling.locators[0].model_copy(
+        update={
+            "semantic_record_key": (
+                *sibling.locators[0].semantic_record_key,
+                "new-peer",
+            )
+        }
+    )
+    new_peer = sibling.model_copy(
+        update={"record_id": sibling.record_id + "-new", "locators": (locator,)}
+    )
+    for stale_records in ((sibling, blank), (*records, new_peer)):
+        stale = apply_occurrence_cases(stale_records, (case,))
+        assert stale.accounting[0].disposition == "stale"
+        untouched = next(o for o in stale.occurrences if blank in o.source_records)
+        assert untouched.fields == blank.fields
+        assert untouched.variable_key == native
+
+
+@pytest.mark.parametrize("mode", ["ambiguous", "new_literal"])
+def test_delivered_blank_partition_rejects_unproved_owner(tmp_path: Path, mode: str):
+    donor = _errata_record(column="A", year="2020")
+    blank = _errata_record(column="", year="2021", member=22)
+    tree, prepared, scope = _errata_fixture(tmp_path, (donor, blank), _DELIVERED)
+    native = native_variable_key(donor)
+    assert native is not None
+    key = scope.source, scope.register_key
+    members = (
+        frozenset(((record_ref(donor), "A"),))
+        if mode == "ambiguous"
+        else frozenset(((record_ref(donor), "OTHER"),))
+    )
+    owners = {(*native, "accepted-partition", "1.5.a"): members}
+    if mode == "ambiguous":
+        owners[(*native, "accepted-partition", "1.5.b")] = members
+    compiled = compile_errata(tree, prepared, (scope,), {key: owners}, subset=False)
+    assert compiled[0] == {}
+    assert compiled[3][0].code in {"stale_curation_entry", "overbroad_curation_entry"}
 
 
 def test_errata_and_enrichment_compile_is_order_independent(tmp_path: Path):

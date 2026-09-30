@@ -586,6 +586,71 @@ def test_scope_routes_checked_delivery_metadata_to_literal_state_formation():
     )
 
 
+def test_delivery_metadata_scope_uses_corrected_partition_identity():
+    original = record()
+    item = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={
+                    "description": value_field("Literal supplied delivery description")
+                }
+            )
+        }
+    )
+    partition = convert_column_partitions(
+        (item,), source_id="1.5", split_ids=("1.5.value",)
+    )
+    assert partition.case is not None
+    split = partition.bindings[0].target.source_key
+    metadata = CurationCase(
+        case_id="partitioned-literal-metadata",
+        targets=capture_expectations(
+            (item,), fields=tuple(SourceFields.model_fields), parents=True, coding=True
+        ),
+        peer_guards=(guard(item),),
+        decision=DeliveryMetadataDecision(
+            reviewed=True,
+            fields=("description",),
+            variable_key=split,
+            columns=(
+                DeliveryMetadataColumn(
+                    variant_key=native_variant_key(item),
+                    column="VALUE",
+                    valid_from="2020-01-01",
+                    valid_to="2020-12-31",
+                    source_scope=item.edition_period_scope,
+                    expected_codings=(),
+                ),
+            ),
+            reason="Retain literal metadata on its checked owner.",
+            provenance="fixture",
+        ),
+    )
+    naming = tuple(n for n in names((item,)) if n.target.kind != "variable") + (
+        NamingDeclaration(
+            target=partition.bindings[0].target,
+            naming=SlugEntry(
+                kind="variable", provider="scb", source_id="1.5.value", slug="value"
+            ),
+            contributors=(),
+        ),
+    )
+    result = resolve(
+        (item,),
+        cases=(partition.case, metadata),
+        naming=naming,
+        provider_keys={split: "5.value"},
+    )
+    assert not any(
+        d.code == "stale_delivery_metadata_scope" for d in result.diagnostics
+    )
+    assert {e.case_id: e.status for e in result.evaluations}[
+        metadata.case_id
+    ] == "applicable"
+    assert split in result.variables
+    assert result.corrections.occurrences[0].source_records == (item,)
+
+
 def test_superseded_scb_preliminary_is_support_and_final_alone_forms_state():
     preliminary = record(
         edition_name="2020, preliminär version", edition_id=10, data_length="2"

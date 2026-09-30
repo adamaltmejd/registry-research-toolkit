@@ -728,7 +728,10 @@ def convert_column_partitions(
     register = source_register_key(first)
     assert native is not None and register is not None
     expectations = capture_expectations(
-        records, fields=tuple(dict.fromkeys(("column_name", *guard_fields)))
+        records,
+        fields=tuple(dict.fromkeys(("column_name", *guard_fields))),
+        parents=bool(guard_fields),
+        coding=bool(guard_fields),
     )
     guard = PeerGuard(
         guard_id=f"accepted-partitions:{first.source}:{source_id}",
@@ -5241,15 +5244,38 @@ def compile_errata(
                 if table == "delivered":
                     effects = []
                     rebinding_blockers = []
+                    corrected_families = {}
                     for effect in converted.decision.effects:
-                        if not isinstance(effect, CuratedOccurrenceAddition):
+                        blank_target = isinstance(effect, CheckedFieldChange) and (
+                            effect.replacement.name == "column_name"
+                            and effect.replacement.status == "value"
+                        )
+                        if isinstance(effect, CuratedOccurrenceAddition):
+                            variable_key = effect.variable_key
+                        elif blank_target:
+                            assert isinstance(effect, CheckedFieldChange)
+                            target_records = tuple(
+                                record
+                                for record in members
+                                if record_ref(record) == effect.ref
+                            )
+                            native_keys = {
+                                native_variable_key(r) for r in target_records
+                            }
+                            if len(native_keys) != 1 or None in native_keys:
+                                rebinding_blockers.append(
+                                    "corrected column has no unique native identity"
+                                )
+                                continue
+                            variable_key = next(iter(native_keys))
+                            assert variable_key is not None
+                        else:
                             effects.append(effect)
                             continue
                         original_pairs = {
                             (record_ref(record), row.column)
                             for record in members
-                            if source_occurrence(record).variable_key
-                            == effect.variable_key
+                            if source_occurrence(record).variable_key == variable_key
                             and _literal_field(record, "column_name") == row.column
                         }
                         owners = {
@@ -5257,11 +5283,11 @@ def compile_errata(
                             for key, pairs in partition_members.get(
                                 scope_key, {}
                             ).items()
-                            if key[: len(effect.variable_key)] == effect.variable_key
+                            if key[: len(variable_key)] == variable_key
                             and pairs & original_pairs
                         }
                         partitioned = any(
-                            key[: len(effect.variable_key)] == effect.variable_key
+                            key[: len(variable_key)] == variable_key
                             for key in partition_members.get(scope_key, {})
                         )
                         if len(owners) > 1:
@@ -5272,13 +5298,58 @@ def compile_errata(
                             rebinding_blockers.append(
                                 f"literal column {row.column!r} has no split owner"
                             )
-                        effects.append(
-                            effect.model_copy(
-                                update={"variable_key": next(iter(owners))}
+                        if blank_target and len(owners) == 1:
+                            assert isinstance(effect, CheckedFieldChange)
+                            targets = tuple(
+                                t for t in converted.targets if t.ref == effect.ref
                             )
-                            if len(owners) == 1
-                            else effect
-                        )
+                            if (
+                                effect.replacement.value != row.column
+                                or effect.when
+                                or effect.when_scope is not None
+                                or effect.when_period is not None
+                                or len(targets) != 1
+                                or any(
+                                    not any(
+                                        f.name == "column_name"
+                                        and f.status == "negative"
+                                        for f in projection.fields
+                                    )
+                                    for projection in targets[0].alternatives
+                                )
+                            ):
+                                rebinding_blockers.append(
+                                    "corrected literal lacks an exact negative-column guard"
+                                )
+                                continue
+                            effects.extend(
+                                (
+                                    effect,
+                                    CheckedIdentityChange(
+                                        ref=effect.ref,
+                                        variable_key=next(iter(owners)),
+                                        when=(
+                                            FieldExpectation(
+                                                name="column_name", status="negative"
+                                            ),
+                                        ),
+                                    ),
+                                )
+                            )
+                            corrected_families[variable_key] = tuple(
+                                record
+                                for record in records
+                                if native_variable_key(record) == variable_key
+                            )
+                        else:
+                            effects.append(
+                                effect.model_copy(
+                                    update={"variable_key": next(iter(owners))}
+                                )
+                                if isinstance(effect, CuratedOccurrenceAddition)
+                                and len(owners) == 1
+                                else effect
+                            )
                     if rebinding_blockers:
                         overbroad = any(
                             "multiple" in item for item in rebinding_blockers
@@ -5294,13 +5365,58 @@ def compile_errata(
                             )
                         )
                         continue
-                    converted = converted.model_copy(
-                        update={
-                            "decision": converted.decision.model_copy(
-                                update={"effects": tuple(effects)}
-                            )
-                        }
-                    )
+                    updates = {
+                        "decision": converted.decision.model_copy(
+                            update={"effects": tuple(effects)}
+                        )
+                    }
+                    if corrected_families:
+                        guarded = tuple(
+                            record
+                            for family in corrected_families.values()
+                            for record in family
+                        )
+                        targets = capture_expectations(
+                            guarded,
+                            fields=tuple(SourceFields.model_fields),
+                            parents=True,
+                            coding=True,
+                        )
+                        refs = {t.ref for t in targets}
+                        assert {t.ref for t in converted.targets} <= refs
+                        updates.update(
+                            targets=targets,
+                            support=tuple(
+                                t for t in converted.support if t.ref not in refs
+                            ),
+                            peer_guards=(
+                                *converted.peer_guards,
+                                *(
+                                    PeerGuard(
+                                        guard_id=f"{case_id}:post-delivery:{key!r}",
+                                        source=family[0].source,
+                                        coordinates=(
+                                            (
+                                                "register",
+                                                family[0].subject.register_name,
+                                            ),
+                                            ("variable", family[0].subject.variable),
+                                        ),
+                                        expected_members=tuple(
+                                            sorted(
+                                                {record_ref(r) for r in family},
+                                                key=repr,
+                                            )
+                                        ),
+                                    )
+                                    for key, family in sorted(
+                                        corrected_families.items(),
+                                        key=lambda item: repr(item[0]),
+                                    )
+                                ),
+                            ),
+                        )
+                    converted = converted.model_copy(update=updates)
                 else:
                     variable_key = (
                         *register_key,

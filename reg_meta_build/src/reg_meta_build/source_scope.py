@@ -591,7 +591,7 @@ def resolve_source_scope(
             duplicate_overrides=duplicate_overrides,
         )
         representation = resolve_representation_cases(
-            evidence,
+            coding_evidence,
             tuple(
                 c
                 for c in selected

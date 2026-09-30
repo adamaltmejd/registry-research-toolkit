@@ -2866,12 +2866,10 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
         for register in tree.registers
         for entry in register.representation.delivery_metadata
     ]
-    assert len(metadata) == 43
+    assert len(metadata) == 39
     assert Counter(tuple(entry.fields) for entry in metadata) == {
-        ("measurement_unit",): 20,
+        ("measurement_unit",): 18,
         ("description",): 21,
-        ("name",): 1,
-        ("description", "name"): 1,
     }
     # Retain the original four-owner receipt separately from later unit and
     # prose projections; none grants permission for an unlisted field.
