@@ -361,6 +361,12 @@ class BindingResolution(_OrderModel):
     def columns(self) -> frozenset[str]:
         """The canonical delivery columns the slices resolve to — >1 only across
         a sequential rename (co-existing columns block as ambiguity)."""
+        if self.requested_period == "_default":
+            return frozenset(
+                w.state.delivery_column_name
+                for w in self.states
+                if w.state.delivery_column_name is not None
+            )
         return frozenset(column for _lo, _hi, column in self.slices)
 
 
@@ -449,6 +455,8 @@ def requested_intervals(period: Period) -> tuple[_Interval, ...]:
     malformed segment type, an unparseable token, or an inverted range. §12
     requires every project period to be explicit and finite, so a period that
     expands to no interval is a blocking finding, never a guessed window."""
+    if period == "_default":
+        return ()
     segments = period if isinstance(period, tuple) else (period,)
     converted: list[EditionSegment] = []
     for segment in segments:
@@ -501,7 +509,7 @@ def resolve_binding(
     a REQUESTED interval. A column living entirely inside a hole of a disjoint
     request is not available, is not evidence the binding exists in the request,
     and is not a co-existing representation: no requested instant sees it."""
-    rendered = _render(requested)
+    rendered = "_default" if source.period == "_default" else _render(requested)
 
     def blocked(
         code: str, message: str, period: str | None = None
@@ -519,6 +527,67 @@ def resolve_binding(
                 variable=binding.variable,
                 period=period,
             ),
+        )
+
+    if source.period == "_default":
+        variant = source.register_variant.split("/")[-1]
+        if variant == "_default":
+            return blocked(
+                "binding_unavailable",
+                "year-independent selection requires a concrete variant",
+                rendered,
+            )
+        try:
+            independent = tuple(
+                s
+                for s in catalog.resolve_at(
+                    binding.variable, "_default", variant=variant, with_codes=False
+                )
+                if s.period_scope == "year_independent"
+            )
+        except (FqidError, RegMetaError) as exc:
+            return blocked("variable_unresolved", str(exc), rendered)
+        if any(s.delivery_column_name is None for s in independent):
+            return blocked(
+                "representation_unresolved",
+                "year-independent state has no delivery column",
+                rendered,
+            )
+        offered = {s.delivery_column_name for s in independent}
+        kept = tuple(
+            s
+            for s in independent
+            if binding.representation is None
+            or s.delivery_column_name == binding.representation
+        )
+        if not kept:
+            code = (
+                "representation_unknown"
+                if offered and binding.representation
+                else "binding_unavailable"
+            )
+            return blocked(
+                code, "no matching year-independent delivery state", rendered
+            )
+        if len({s.delivery_column_name for s in kept}) > 1:
+            return blocked(
+                "representation_ambiguous",
+                "pin one year-independent delivery column",
+                rendered,
+            )
+        if len({s.value_set_id for s in kept}) > 1:
+            return blocked(
+                "representation_ambiguous",
+                "year-independent column has conflicting value sets",
+                rendered,
+            )
+        return BindingResolution(
+            requested_period=rendered,
+            states=tuple(StateWindow(state=s, intervals=()) for s in kept),
+            slices=(),
+            availability=(),
+            clip=None,
+            finding=None,
         )
 
     # Resolve PER REQUESTED SEGMENT. `resolve_at` is the canonical resolver and
@@ -544,6 +613,7 @@ def resolve_binding(
                 # variable's code lists to answer a question about its windows.
                 with_codes=False,
             ):
+                assert state.valid_from is not None and state.valid_to is not None
                 window = (state.valid_from, snap_to_real_month_end(state.valid_to))
                 overlap = _intersect(window, req)
                 if overlap is None:
@@ -973,9 +1043,60 @@ def _materialize_binding(
     # column represents two canonical representations.
     representations = sorted(resolution.columns)
     unqualified_ok = len(representations) == 1
+    if source.period == "_default":
+        column = representations[0]
+        matches = (
+            [("", column, None)]
+            if inventory is None
+            else [
+                (table.id, physical.name, table.partition)
+                for table in inventory.tables
+                if table.period_scope == "year_independent"
+                for physical in table.columns
+                if _column_matches(
+                    physical,
+                    source.register_variant,
+                    parsed,
+                    column,
+                    unqualified_ok=True,
+                )
+            ]
+        )
+        if not matches:
+            finding(
+                "mapping_missing",
+                "no year-independent steward table maps this delivery column",
+                "_default",
+            )
+            return
+        provider, register, variant = source.register_variant.split("/")
+        for table_id, physical_column, partition in matches:
+            entries.append(
+                OrderEntry(
+                    source=source.name,
+                    logical=LogicalCoordinate(
+                        provider=provider,
+                        register_name=register,
+                        variant=variant,
+                        variable=binding.variable,
+                        representation=column,
+                    ),
+                    requested_period="_default",
+                    physical=PhysicalCoordinate(
+                        edition="_default",
+                        table=table_id,
+                        column=physical_column,
+                        partition=partition,
+                    ),
+                )
+            )
+        return
+
     if inventory is not None and not unqualified_ok:
         blocked_by_unqualified = False
         for table in inventory.tables:
+            if table.period_scope != "intervals":
+                continue
             # §12: a table matches a slice only where its edition overlaps, and
             # overlap elsewhere in the request is not a match. A table that
             # cannot reach this binding's clipped request contributes nothing,
@@ -1028,6 +1149,8 @@ def _materialize_binding(
             covered.append((lo, hi))
         else:
             for table in inventory.tables:
+                if table.period_scope != "intervals":
+                    continue
                 bounds = edition_bounds(table.edition)
                 for inv_column in table.columns:
                     if not _column_matches(

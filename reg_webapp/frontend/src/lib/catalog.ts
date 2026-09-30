@@ -848,7 +848,7 @@ function latestEraByColumn(
       continue;
     }
     const era = eraByColumn.get(column);
-    if (era === undefined || s.valid_to > era) {
+    if (s.valid_to !== null && (era === undefined || s.valid_to > era)) {
       eraByColumn.set(column, s.valid_to);
     }
   }
@@ -1020,6 +1020,7 @@ export function coexistingColumns(
     delivery_column_name: string | null;
     valid_from: string | null;
     valid_to: string | null;
+    period_scope?: "intervals" | "year_independent";
   }[],
 ): Set<string> {
   const from = (s: { valid_from: string | null }): string =>
@@ -1035,8 +1036,12 @@ export function coexistingColumns(
         a.delivery_column_name &&
         b.delivery_column_name &&
         a.delivery_column_name !== b.delivery_column_name &&
-        from(a) <= to(b) &&
-        from(b) <= to(a)
+        ((a.period_scope === "year_independent" &&
+          b.period_scope === "year_independent") ||
+          (a.period_scope !== "year_independent" &&
+            b.period_scope !== "year_independent" &&
+            from(a) <= to(b) &&
+            from(b) <= to(a)))
       ) {
         coexisting.add(a.delivery_column_name);
         coexisting.add(b.delivery_column_name);
@@ -1208,8 +1213,9 @@ export interface PickerRepresentation {
    * choice, and a coverage gap must validate as a gap rather than silently substituting
    * the sibling that happens to resolve at the source period. */
   pinRepresentation?: boolean;
-  from: string;
-  to: string;
+  from: string | null;
+  to: string | null;
+  period_scope?: "intervals" | "year_independent";
   /** The column's DISJOINT delivery windows (#678 finding: an interrupted series),
    * each an inclusive ISO span, in chronological order. A continuously-delivered
    * column has exactly one window spanning `from`..`to`; a column delivered in
@@ -1394,6 +1400,7 @@ export function rowAddPeriod(
   row: PickerRepresentation,
   window: { from: string; to: string } | null,
 ): string | null {
+  if (row.period_scope === "year_independent") return "_default";
   return windowsAddPeriod(row.windows, window, true);
 }
 
@@ -1464,6 +1471,7 @@ function minIso(a: string, b: string): string {
  * nullable), so the leaf call needs no cast — this widens the param, it doesn't
  * fork the function. */
 export interface PickerStateInput {
+  period_scope?: "intervals" | "year_independent";
   state_id: number;
   variant: string;
   /** The variant's curator DISPLAY name (`register_variant.name`), or null for a
@@ -1521,9 +1529,34 @@ export function pickerRepresentations(
   // coexist-vs-rename distinction (#902) is per-variant (a rename is one
   // variable+family's columns over non-overlapping eras). First-seen family order,
   // then first-seen column order within it, keep the output stable.
+  const independentRows = new Map<string, PickerRepresentation>();
+  for (const state of states) {
+    if (
+      state.period_scope !== "year_independent" ||
+      !state.delivery_column_name
+    )
+      continue;
+    const key = `${state.variant}::${state.delivery_column_name}::_default`;
+    independentRows.set(key, {
+      key,
+      variant: state.variant,
+      variantLabel: state.variant_label ?? state.variant,
+      column: state.delivery_column_name,
+      representation: state.delivery_column_name,
+      from: null,
+      to: null,
+      period_scope: "year_independent",
+      windows: [],
+      period: "Year-independent",
+      wirePeriod: "_default",
+      valueSetLabel: state.value_set_version_label,
+      codingsVary: false,
+      renamedColumns: [],
+    });
+  }
   const byFamily = new Map<string, Map<string, PickerStateInput[]>>();
   for (const s of states) {
-    if (!s.delivery_column_name) {
+    if (!s.delivery_column_name || s.period_scope === "year_independent") {
       continue;
     }
     const family = s.variant_family ?? s.variant;
@@ -1536,7 +1569,7 @@ export function pickerRepresentations(
     }
     byFamily.set(family, cols);
   }
-  const out: PickerRepresentation[] = [];
+  const out: PickerRepresentation[] = [...independentRows.values()];
   for (const [family, cols] of byFamily) {
     // The variant's genuinely CO-EXISTING (overlapping) columns — parallel
     // representations that stay their OWN rows. Every other column is, relative to its
@@ -1737,19 +1770,33 @@ export function deliveryColumnRows(
 ): PickerRepresentation[] {
   let stateId = 0;
   return pickerRepresentations(
-    deliveries.flatMap((delivery) =>
-      delivery.windows.map((window) => ({
-        state_id: stateId++,
-        variant: delivery.variant,
-        variant_label: null,
-        delivery_column_name: delivery.column,
-        value_set_version_label: "",
-        value_set_id: null,
-        // The wire carries the catalog sentinels raw (`0001-01-01` start unknown,
-        // `9999-12-31` still delivered) — the same bounds a leaf state carries.
-        valid_from: window.valid_from,
-        valid_to: window.valid_to,
-      })),
+    deliveries.flatMap<PickerStateInput>((delivery) =>
+      delivery.period_scope === "year_independent"
+        ? [
+            {
+              state_id: stateId++,
+              variant: delivery.variant,
+              variant_label: null,
+              delivery_column_name: delivery.column,
+              value_set_version_label: "",
+              value_set_id: null,
+              period_scope: "year_independent" as const,
+              valid_from: null,
+              valid_to: null,
+            },
+          ]
+        : delivery.windows.map((window) => ({
+            state_id: stateId++,
+            variant: delivery.variant,
+            variant_label: null,
+            delivery_column_name: delivery.column,
+            value_set_version_label: "",
+            value_set_id: null,
+            // The wire carries the catalog sentinels raw (`0001-01-01` start unknown,
+            // `9999-12-31` still delivered) — the same bounds a leaf state carries.
+            valid_from: window.valid_from,
+            valid_to: window.valid_to,
+          })),
     ),
   );
 }
@@ -2564,9 +2611,15 @@ export function pickerWindowYears(
  * an unparseable bound (neither year resolves) is treated as in-window — never
  * dim a row we can't place. */
 export function representationInWindow(
-  row: { from: string; to: string; selectable?: boolean },
+  row: {
+    from: string | null;
+    to: string | null;
+    selectable?: boolean;
+    period_scope?: "intervals" | "year_independent";
+  },
   window: [number, number] | null,
 ): boolean {
+  if (row.period_scope === "year_independent") return window === null;
   if (row.selectable === false) {
     return false;
   }
@@ -2607,8 +2660,9 @@ export function representationInWindow(
  * renders "since …"). `changes` carries the #309 technical-schema transitions
  * that would otherwise disappear when adjacent states fold into one span. */
 export interface ValueSetSpan {
-  from: string;
-  to: string;
+  from: string | null;
+  to: string | null;
+  period_scope?: "intervals" | "year_independent";
   /** Whether the span's states are pooled-edition coverage (Y-202). Spans
    * never fuse across pooled/annual evidence, so the view can badge exactly
    * the pooled windows. */
@@ -2704,7 +2758,12 @@ function appendTechnicalChanges(
   // Same-state expanded windows (#319) and overlapping co-delivered alternatives
   // are not before-after transitions; folding may still combine them for display,
   // but a "changed" hint would mis-describe them as succession.
-  if (prev.state_id === next.state_id || prev.valid_to >= next.valid_from) {
+  if (
+    prev.valid_to === null ||
+    next.valid_from === null ||
+    prev.state_id === next.state_id ||
+    prev.valid_to >= next.valid_from
+  ) {
     return;
   }
   const notes = technicalChangeNotes(prev, next);
@@ -2728,12 +2787,14 @@ function appendTechnicalChanges(
  * so each span is uniformly pooled or annual and the view can badge exactly
  * the pooled windows. */
 function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
-  const ordered = [...states].sort(
-    (a, b) =>
-      a.valid_from.localeCompare(b.valid_from) ||
-      a.state_id - b.state_id ||
-      a.valid_to.localeCompare(b.valid_to),
-  );
+  const ordered = states
+    .filter(isDatedState)
+    .sort(
+      (a, b) =>
+        a.valid_from.localeCompare(b.valid_from) ||
+        a.state_id - b.state_id ||
+        a.valid_to.localeCompare(b.valid_to),
+    );
   const spans: ValueSetSpan[] = [];
   let previous: VariableStateModel | null = null;
   let previousAmbiguous = false;
@@ -2759,7 +2820,12 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
     // Contiguous (or overlapping) with the open span → extend it. The day-after
     // test fuses back-to-back annual windows (`2019-12-31` then `2020-01-01`)
     // without merging across a skipped year (`2019-12-31` then `2021-01-01`).
-    if (open && s.pooled === open.pooled && s.valid_from <= dayAfter(open.to)) {
+    if (
+      open &&
+      open.to !== null &&
+      s.pooled === open.pooled &&
+      s.valid_from <= dayAfter(open.to)
+    ) {
       if (previous && !previousAmbiguous && !successorBoundaryAmbiguous) {
         appendTechnicalChanges(open, previous, s);
       }
@@ -2777,6 +2843,14 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
       previous = s;
       previousAmbiguous = false;
     }
+  }
+  if (states.some((s) => s.period_scope === "year_independent")) {
+    spans.push({
+      from: null,
+      to: null,
+      period_scope: "year_independent",
+      pooled: false,
+    });
   }
   return spans;
 }
@@ -2913,7 +2987,7 @@ export function distinctValueSets(
         spans: collapseSpans(ss),
         states: [...ss].sort(
           (a, b) =>
-            a.valid_from.localeCompare(b.valid_from) ||
+            (a.valid_from ?? "").localeCompare(b.valid_from ?? "") ||
             (a.delivery_column_name ?? "").localeCompare(
               b.delivery_column_name ?? "",
             ) ||
@@ -2923,19 +2997,26 @@ export function distinctValueSets(
     );
     // The entry's outer window across ALL its states — the view's disambiguator
     // when several non-classification rows share a version label.
-    const overallSpan: ValueSetSpan = {
-      from: group.reduce(
-        (m, s) => (s.valid_from < m ? s.valid_from : m),
-        rep.valid_from,
-      ),
-      to: group.reduce(
-        (m, s) => (s.valid_to > m ? s.valid_to : m),
-        rep.valid_to,
-      ),
-      // The outer window is pooled coverage only when every state in it is;
-      // it feeds the disambiguation label, never a badge.
-      pooled: group.every((s) => s.pooled),
-    };
+    const dated = group.filter(isDatedState);
+    const overallSpan: ValueSetSpan =
+      dated.length === 0
+        ? {
+            from: null,
+            to: null,
+            period_scope: "year_independent",
+            pooled: false,
+          }
+        : {
+            from: dated.reduce(
+              (m, s) => (s.valid_from < m ? s.valid_from : m),
+              dated[0].valid_from,
+            ),
+            to: dated.reduce(
+              (m, s) => (s.valid_to > m ? s.valid_to : m),
+              dated[0].valid_to,
+            ),
+            pooled: dated.every((s) => s.pooled),
+          };
     return {
       key,
       classificationSlug: rep.classification_slug ?? null,
@@ -3028,7 +3109,7 @@ export function valueSetKeyForColumn(
   const best =
     candidates.length === 0
       ? null
-      : latestRepresentativeState(candidates, (s) => s.valid_to);
+      : latestRepresentativeState(candidates, (s) => s.valid_to ?? "");
   return best === null ? null : valueSetDedupKey(best);
 }
 
@@ -3098,10 +3179,12 @@ function statesByVariant(
  * The raw ISO window stays available to the UI via a `title` tooltip.
  */
 export function formatWindow(
-  validFrom: string,
-  validTo: string,
+  validFrom: string | null,
+  validTo: string | null,
   periodToken?: string | null,
 ): string | null {
+  if (validFrom === null || validTo === null)
+    return validFrom === null && validTo === null ? "Year-independent" : null;
   if (validFrom === YEARLESS_VALID_FROM && validTo === OPEN_ENDED_VALID_TO) {
     return null;
   }
@@ -3138,12 +3221,19 @@ export function showingOf(shown: number, total: number): string | null {
 
 /** `formatWindow` over a state row (its bounds + backend token). */
 export function formatStateWindow(s: VariableStateModel): string | null {
+  if (s.period_scope === "year_independent") return "Year-independent";
   return formatWindow(s.valid_from, s.valid_to, s.period_token);
 }
 
 /** The exact-dates tooltip for a window — the sentinel reads "open-ended"
  * rather than leaking the raw 9999-12-31 (Codex P2 on #335). */
-export function windowTitle(validFrom: string, validTo: string): string {
+export function windowTitle(
+  validFrom: string | null,
+  validTo: string | null,
+  periodScope?: "intervals" | "year_independent",
+): string {
+  if (periodScope === "year_independent") return "Year-independent delivery";
+  if (validFrom === null && validTo === null) return "Delivery dates unknown";
   return `${validFrom} – ${validTo === OPEN_ENDED_VALID_TO ? "open-ended" : validTo}`;
 }
 
@@ -3168,12 +3258,23 @@ export function windowTitle(validFrom: string, validTo: string): string {
  * client-side from already-embedded data (no backend field): the leaf node
  * never carries the per-register `RegisterCoverageModel`, and the spec is
  * explicit that leaf coverage is derived from the states. */
+function isDatedState(
+  s: VariableStateModel,
+): s is VariableStateModel & { valid_from: string; valid_to: string } {
+  return (
+    s.period_scope !== "year_independent" &&
+    s.valid_from !== null &&
+    s.valid_to !== null
+  );
+}
+
 export function coverageFromStates(
   states: VariableStateModel[],
 ): Coverage | null {
   let from: number | null = null;
   let to: number | null = null;
   for (const s of states) {
+    if (s.period_scope === "year_independent") continue;
     // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1
     // — skip it so it never floors `from`; the side stays unbounded (null).
     const fromYear =
@@ -3201,7 +3302,7 @@ export function coverageFromStates(
 /** The 4-digit year of an ISO `YYYY-MM-DD` bound as an int, or null when it
  * isn't a leading-4-digit string (a blank/edge bound on a stale payload). Shared
  * with `picker_graph.ts`'s `orderKey` (one home for the leading-year regex). */
-export function yearOf(iso: string): number | null {
+export function yearOf(iso: string | null): number | null {
   const m = /^(\d{4})/.exec(iso ?? "");
   return m ? Number.parseInt(m[1], 10) : null;
 }

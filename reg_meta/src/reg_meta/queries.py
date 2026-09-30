@@ -314,7 +314,7 @@ def extract_year(version_name: str) -> int | None:
     return int(m.group()) if m else None
 
 
-def _years_in_range(lo_iso: str, hi_iso: str) -> list[int]:
+def _years_in_range(lo_iso: str | None, hi_iso: str | None) -> list[int]:
     """A2.6: the calendar years a `variable_state` validity window
     (`valid_from`..`valid_to`, ISO `YYYY-MM-DD`) spans, for DISPLAY enumeration
     only (availability year lists, lineage year ranges). The shipped DB has no
@@ -327,6 +327,8 @@ def _years_in_range(lo_iso: str, hi_iso: str) -> list[int]:
     drop a still-active state from any year past its opening. Year filters route
     through `_state_covers_year` / `_state_overlaps_years` instead, which read
     the sentinels with `<=`/`>=` and keep open-ended/multi-year windows."""
+    if lo_iso is None or hi_iso is None:
+        return []
     lo = int(lo_iso[:4])
     hi = int(hi_iso[:4])
     if hi >= 9999:
@@ -334,7 +336,7 @@ def _years_in_range(lo_iso: str, hi_iso: str) -> list[int]:
     return list(range(lo, hi + 1))
 
 
-def _state_covers_year(valid_from: str, valid_to: str, year: int) -> bool:
+def _state_covers_year(valid_from: str | None, valid_to: str | None, year: int) -> bool:
     """True when a `variable_state` validity window (`valid_from`..`valid_to`,
     ISO `YYYY-MM-DD`) covers the calendar `year`.
 
@@ -343,11 +345,15 @@ def _state_covers_year(valid_from: str, valid_to: str, year: int) -> bool:
     `9999` (open-ended) and `0001` (yearless-fallback) sentinels read naturally
     under `<=`/`>=`, so a multi-year, still-active, or yearless window matches
     any year it actually spans — not just its opening year."""
-    return int(valid_from[:4]) <= year <= int(valid_to[:4])
+    return (
+        valid_from is not None
+        and valid_to is not None
+        and int(valid_from[:4]) <= year <= int(valid_to[:4])
+    )
 
 
 def _state_overlaps_years(
-    valid_from: str, valid_to: str, lo: int | None, hi: int | None
+    valid_from: str | None, valid_to: str | None, lo: int | None, hi: int | None
 ) -> bool:
     """True when a `variable_state` validity window overlaps the requested year
     range `[lo, hi]` (either bound may be ``None`` for open-ended).
@@ -356,6 +362,8 @@ def _state_overlaps_years(
     `from_year <= hi AND to_year >= lo`. Missing bounds widen to the sentinels
     (`hi=None` → 9999, `lo=None` → 0) so an open-ended request matches every
     window, and the `9999`/`0001` window sentinels match correctly too."""
+    if valid_from is None or valid_to is None:
+        return False
     from_year = int(valid_from[:4])
     to_year = int(valid_to[:4])
     return from_year <= (hi if hi is not None else 9999) and to_year >= (
@@ -3091,7 +3099,7 @@ def get_schema(
         # join, else each `variable_state` row would fan out into N duplicate
         # columns. Only `group_key`/`label` are read here, so DISTINCT is exact.
         state_rows = conn.execute(
-            "SELECT vs.valid_from, vs.valid_to, vs.value_set_version_label, "
+            "SELECT vs.period_scope, vs.valid_from, vs.valid_to, vs.value_set_version_label, "
             "vs.data_type, vs.data_length, vs.delivery_column_name, "
             "v.variable_id, " + _VAR_ID_V + ", v.slug AS variable_slug, "
             "v.name AS variable_name, COALESCE(v.source_label, '') AS source, "
@@ -3124,7 +3132,7 @@ def get_schema(
                 valid_from, valid_to, year_lo, year_hi
             ):
                 continue
-            year = int(valid_from[:4])
+            year = int(valid_from[:4]) if valid_from is not None else None
 
             col_dicts: list[dict[str, Any]] = []
             for s in states:
@@ -3299,7 +3307,7 @@ def get_varinfo(
         # A2.2 split (siblings share one source key), so a provider_key filter
         # would fan in every sibling's states under this one matched variable.
         states = conn.execute(
-            "SELECT vs.state_id, vs.register_variant_id, vs.valid_from, vs.valid_to, "
+            "SELECT vs.state_id, vs.register_variant_id, vs.period_scope, vs.valid_from, vs.valid_to, "
             "vs.value_set_version_label, vs.data_type, vs.data_length, "
             "vs.delivery_column_name, vs.operational_definition, vs.provenance, "
             "vs.value_set_id, "
@@ -3339,7 +3347,10 @@ def get_varinfo(
                 "valid_from": s["valid_from"],
                 "valid_to": s["valid_to"],
                 "value_set_version_label": s["value_set_version_label"],
-                "year": int(s["valid_from"][:4]),
+                "year": int(s["valid_from"][:4])
+                if s["valid_from"] is not None
+                else None,
+                "period_scope": s["period_scope"],
                 "data_type": s["data_type"],
                 "data_length": s["data_length"],
                 "operational_definition": s["operational_definition"],
@@ -3728,7 +3739,7 @@ def get_values_by_variable(
     vid_ph = _in_placeholders(variable_ids)
 
     state_rows = conn.execute(
-        "SELECT vs.state_id, vs.value_set_id, vs.valid_from, vs.valid_to, "
+        "SELECT vs.state_id, vs.period_scope, vs.value_set_id, vs.valid_from, vs.valid_to, "
         "vs.variable_id, v.slug AS variable_slug, "
         "v.register_id, " + _VAR_ID_V + ", "
         f"vs.register_variant_id, r.name AS register_name, rv.name AS variant_name "
@@ -3752,7 +3763,9 @@ def get_values_by_variable(
             row["valid_from"], row["valid_to"], year
         ):
             continue
-        inst_year = int(row["valid_from"][:4])
+        inst_year = (
+            int(row["valid_from"][:4]) if row["valid_from"] is not None else None
+        )
         inst = {
             "state_id": row["state_id"],
             # A2.7: attribute each instance to its owning variable. A numeric
@@ -3769,6 +3782,7 @@ def get_values_by_variable(
             "valid_from": row["valid_from"],
             "valid_to": row["valid_to"],
             "year": inst_year,
+            "period_scope": row["period_scope"],
             "values": [],
         }
         instances.append(inst)

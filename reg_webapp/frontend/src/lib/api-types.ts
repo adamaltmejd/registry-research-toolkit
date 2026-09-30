@@ -1839,6 +1839,12 @@ export interface components {
             classification_slug: string | null;
             /** Delivery Column Name */
             delivery_column_name: string | null;
+            /**
+             * Period Scope
+             * @default intervals
+             * @enum {string}
+             */
+            period_scope: "intervals" | "year_independent";
             /** Representation Run Id */
             representation_run_id: number;
             /** State Id */
@@ -2917,6 +2923,12 @@ export interface components {
             /** Column */
             column: string | null;
             coverage: components["schemas"]["VariableCoverage"];
+            /**
+             * Period Scope
+             * @default intervals
+             * @enum {string}
+             */
+            period_scope: "intervals" | "year_independent";
             /** Variant */
             variant: string;
             /** Windows */
@@ -3152,6 +3164,12 @@ export interface components {
             is_identifier: boolean;
             /** Operational Definition */
             operational_definition?: string | null;
+            /**
+             * Period Scope
+             * @default intervals
+             * @enum {string}
+             */
+            period_scope: "intervals" | "year_independent";
             /** Period Token */
             period_token?: string | null;
             /**
@@ -3171,9 +3189,9 @@ export interface components {
             /** State Id */
             state_id: number;
             /** Valid From */
-            valid_from: string;
+            valid_from: string | null;
             /** Valid To */
-            valid_to: string;
+            valid_to: string | null;
             /** Value Set */
             value_set: components["schemas"]["ValueSetMember"][] | null;
             /** Value Set Id */

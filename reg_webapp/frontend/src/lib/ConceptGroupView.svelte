@@ -615,7 +615,7 @@ const unionCoverage = $derived.by(() => {
   let openEnded = false;
   for (const band of selectableBands) {
     for (const row of band.rows) {
-      if (row.selectable === false) {
+      if (row.selectable === false || row.from === null || row.to === null) {
         continue;
       }
       const lo = Number(row.from.slice(0, 4));

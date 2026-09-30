@@ -2280,6 +2280,15 @@
             ],
             "title": "Delivery Column Name"
           },
+          "period_scope": {
+            "default": "intervals",
+            "enum": [
+              "intervals",
+              "year_independent"
+            ],
+            "title": "Period Scope",
+            "type": "string"
+          },
           "representation_run_id": {
             "title": "Representation Run Id",
             "type": "integer"
@@ -4519,6 +4528,15 @@
           "coverage": {
             "$ref": "#/components/schemas/VariableCoverage"
           },
+          "period_scope": {
+            "default": "intervals",
+            "enum": [
+              "intervals",
+              "year_independent"
+            ],
+            "title": "Period Scope",
+            "type": "string"
+          },
           "variant": {
             "title": "Variant",
             "type": "string"
@@ -5046,6 +5064,15 @@
             ],
             "title": "Operational Definition"
           },
+          "period_scope": {
+            "default": "intervals",
+            "enum": [
+              "intervals",
+              "year_independent"
+            ],
+            "title": "Period Scope",
+            "type": "string"
+          },
           "period_token": {
             "anyOf": [
               {
@@ -5094,12 +5121,26 @@
             "type": "integer"
           },
           "valid_from": {
-            "title": "Valid From",
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid From"
           },
           "valid_to": {
-            "title": "Valid To",
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid To"
           },
           "value_set": {
             "anyOf": [

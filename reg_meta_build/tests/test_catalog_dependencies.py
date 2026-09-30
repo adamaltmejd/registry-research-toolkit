@@ -1575,3 +1575,66 @@ def test_delivery_coverage_loss_in_diagnostic_mode_returns_an_error_diagnostic()
         )
         == ()
     )
+
+
+def test_year_independent_delivery_proof_compares_exact_column_facts_without_calendar_coverage():
+    variant = ResolvedVariant(slug="birth", name="Birth")
+    dated = _variable(variant)
+    independent = dated.model_copy(
+        update={
+            "states": (
+                dated.states[0].model_copy(
+                    update={
+                        "period_scope": "year_independent",
+                        "valid_from": None,
+                        "valid_to": None,
+                    }
+                ),
+            )
+        }
+    )
+    claim = CoverageObligation(
+        "scb/example/value",
+        "birth",
+        "value",
+        None,
+        None,
+        (),
+        period_scope="year_independent",
+        data_type_claim=("negative", None),
+        attributions=("fixture",),
+    )
+    assert check_delivery_coverage((independent,), (claim,), withheld={}) == ()
+    for candidate in (
+        dated,
+        independent.model_copy(
+            update={
+                "states": (
+                    independent.states[0].model_copy(
+                        update={"delivery_column_name": "other"}
+                    ),
+                )
+            }
+        ),
+    ):
+        with pytest.raises(ValueError, match="coverage was lost"):
+            check_delivery_coverage((candidate,), (claim,), withheld={})
+    dated_claim = CoverageObligation(
+        "scb/example/value", "birth", "value", "2000-01-01", "2000-12-31", ()
+    )
+    with pytest.raises(ValueError, match="coverage was lost"):
+        check_delivery_coverage((independent,), (dated_claim,), withheld={})
+    wrong_fact = independent.model_copy(
+        update={
+            "states": (
+                independent.states[0].model_copy(update={"data_type": "integer"}),
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="facts changed"):
+        check_delivery_coverage((wrong_fact,), (claim,), withheld={})
+    from reg_meta_build.catalog_dependencies import variable_dependency_keys
+
+    keys = variable_dependency_keys(independent)
+    assert ("independent_state", "scb/example/value", "birth", "value", "") in keys
+    assert not any(key[0] == "state" for key in keys)

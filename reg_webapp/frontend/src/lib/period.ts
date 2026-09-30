@@ -128,14 +128,14 @@ function periodSegmentBounds(segment: string): PeriodBounds | null {
 }
 
 /** Strict client-side mirror for places that write `?period` directly into
- * project_data. Unlike `looksLikePeriod` (the CATALOG wire grammar, sentinel
- * included), every member here must expand to FINITE bounds — which is exactly
- * what keeps `_default` out: it is browse state, not a `Source.period`. This
+ * project_data. Dated members must expand to finite bounds. A whole `_default` wire selects
+ * year-independent delivery; the server additionally requires a concrete variant. This
  * also enforces the backend's list-level sorted/non-overlap invariant so
  * grammar-looking values such as `2020,2019` stay presentation-only until the
  * user fixes them. */
 export function isStructurallyValidPeriodWire(raw: string): boolean {
   const value = raw.trim();
+  if (value === "_default") return true;
   if (!looksLikePeriod(value)) {
     return false;
   }

@@ -312,7 +312,9 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 # - 6.11.0: per-column storage metadata and checked documentary source relationships.
 #   A representation's supplied type/width can differ from another literal
 #   column of the same variable; readers must not borrow the shared state's facts.
-SCHEMA_VERSION = "6.11.0"
+# - 6.12.0: explicit year-independent delivery states with NULL calendar bounds.
+#   Readers require period_scope and cannot interpret these as dated/pooled states.
+SCHEMA_VERSION = "6.12.0"
 DB_FILENAME = "reg_meta.db"
 
 

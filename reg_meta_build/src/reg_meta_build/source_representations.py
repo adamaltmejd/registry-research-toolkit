@@ -185,22 +185,52 @@ def form_representations(
     ):
         members = [s for s in states if s.variant == variant]
         reviewed = by_variant[variant]
-        cuts = sorted(
-            {
-                point
-                for item in (*members, *(d for _, d in reviewed))
-                for point in (
+        independent = [s for s in members if s.period_scope == "year_independent"]
+        result.extend(independent)
+        members = [s for s in members if s.period_scope == "intervals"]
+        independent_columns = {s.delivery_column_name for s in independent}
+        dated_reviewed = []
+        for case, decision in reviewed:
+            if independent_columns.intersection(c.column for c in decision.columns):
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="unsupported_representation_scope",
+                        severity="error",
+                        case_id=case.case_id,
+                        subject=subject,
+                        detail="A dated parallel-column decision cannot establish a shared window for a year-independent table.",
+                        refs=tuple(t.ref for t in (*case.targets, *case.support)),
+                        fields=("representations",),
+                        withheld_output=("representations",),
+                    )
+                )
+            else:
+                dated_reviewed.append((case, decision))
+        reviewed = dated_reviewed
+        cut_points = set()
+        for item in (*members, *(d for _, d in reviewed)):
+            if item.valid_from is None or item.valid_to is None:
+                raise ValueError("dated scope requires both calendar bounds")
+            cut_points.update(
+                (
                     date.fromisoformat(item.valid_from).toordinal(),
                     date.fromisoformat(item.valid_to).toordinal() + 1,
                 )
-            }
-        )
+            )
+        cuts = sorted(cut_points)
         for lo, hi in pairwise(cuts):
             start, end = (
                 date.fromordinal(lo).isoformat(),
                 date.fromordinal(hi - 1).isoformat(),
             )
-            active = [s for s in members if s.valid_from <= start and s.valid_to >= end]
+            active = [
+                s
+                for s in members
+                if s.valid_from is not None
+                and s.valid_to is not None
+                and s.valid_from <= start
+                and s.valid_to >= end
+            ]
             selected_pairs = [
                 (c, d)
                 for c, d in reviewed

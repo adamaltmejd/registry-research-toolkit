@@ -50,6 +50,7 @@ stays green; they bite on the orchestrator's full-corpus build.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import date
 from enum import StrEnum
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
@@ -363,6 +364,22 @@ def _check_schema_shape(
     else:
         result.fail("variable_state.pooled missing")
 
+    if "period_scope" in cols:
+        _check_state_delivery_scope(conn, result)
+        mixed = conn.execute(
+            "SELECT COUNT(*) FROM (SELECT variable_id, register_variant_id "
+            "FROM variable_state GROUP BY variable_id, register_variant_id "
+            "HAVING COUNT(DISTINCT period_scope) > 1)"
+        ).fetchone()[0]
+        if mixed:
+            result.fail(
+                f"{mixed:,} owner/variant(s) mix dated and independent delivery"
+            )
+        else:
+            result.ok("owner/variants keep dated and independent delivery distinct")
+    else:
+        result.fail("variable_state.period_scope missing")
+
     # #352: code/value search additions — value_code.mapping_count column +
     # value_code_fts index.
     if "value_code" in tables:
@@ -416,6 +433,51 @@ def _check_schema_shape(
         f"{n_sets:,} value_sets / {n_members:,} members / "
         f"{n_states_with_set:,} states linked / {n_states_total:,} total"
     )
+
+
+def _check_state_delivery_scope(
+    conn: sqlite3.Connection, result: ValidationResult
+) -> None:
+    """Validate delivery scope independently of observation/classification dates."""
+    invalid = 0
+    for scope, start, end, pooled in conn.execute(
+        "SELECT period_scope, valid_from, valid_to, pooled FROM variable_state"
+    ):
+        if scope == "year_independent":
+            valid = start is None and end is None and pooled == 0
+        elif scope == "intervals" and isinstance(start, str) and isinstance(end, str):
+            try:
+                valid = (
+                    date.fromisoformat(start).isoformat() == start
+                    and date.fromisoformat(end).isoformat() == end
+                    and start <= end
+                    and pooled in (0, 1)
+                )
+            except ValueError:
+                valid = False
+        else:
+            valid = False
+        invalid += not valid
+    if invalid:
+        result.fail(f"{invalid:,} state(s) have invalid delivery scope or date bounds")
+    else:
+        result.ok("state delivery scopes have exact conditional date bounds")
+
+
+def _state_overlap_predicate(conn: sqlite3.Connection) -> str:
+    columns = {r[1] for r in conn.execute("PRAGMA table_info(variable_state)")}
+    dated = "a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to"
+    if "period_scope" not in columns:
+        return dated
+    # An independent state cannot share one physical owner/column with a dated
+    # state or a competing independent domain. No calendar coverage is implied.
+    return f"(a.period_scope = 'year_independent' OR b.period_scope = 'year_independent' OR ({dated}))"
+
+
+def _state_window_label(start: str | None, end: str | None) -> str:
+    if start is None and end is None:
+        return "year-independent"
+    return f"{start[:4] if start else '?'}-{end[:4] if end else '?'}"
 
 
 def _check_state_projection_integrity(
@@ -646,7 +708,7 @@ def _check_one_value_set_per_period(
         " AND a.state_id < b.state_id "
         " AND a.value_set_id IS NOT NULL AND b.value_set_id IS NOT NULL "
         " AND a.value_set_id <> b.value_set_id "
-        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        f" AND {_state_overlap_predicate(conn)} "
         "JOIN variable v ON v.variable_id = a.variable_id "
         "ORDER BY v.register_id, v.slug"
     ).fetchall()
@@ -655,7 +717,7 @@ def _check_one_value_set_per_period(
         return
     affected = {(r[1], r[2]) for r in rows}
     sample = "; ".join(
-        f"{r[1]}/{r[2]} [{r[3][:4]}-{r[4][:4]}]vs{r[5]} ∩ [{r[6][:4]}-{r[7][:4]}]vs{r[8]}"
+        f"{r[1]}/{r[2]} [{_state_window_label(r[3], r[4])}]vs{r[5]} ∩ [{_state_window_label(r[6], r[7])}]vs{r[8]}"
         for r in rows[:5]
     )
     result.fail(
@@ -724,7 +786,7 @@ def _check_no_codeless_codebearing_overlap(
         " AND a.state_id < b.state_id "
         " AND ((a.value_set_id IS NULL AND b.value_set_id IS NOT NULL) "
         "      OR (a.value_set_id IS NOT NULL AND b.value_set_id IS NULL)) "
-        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        f" AND {_state_overlap_predicate(conn)} "
         "JOIN variable v ON v.variable_id = a.variable_id "
         "ORDER BY v.register_id, v.slug"
     ).fetchall()
@@ -733,7 +795,7 @@ def _check_no_codeless_codebearing_overlap(
         return
     affected = {(r[1], r[2]) for r in rows}
     sample = "; ".join(
-        f"{r[1]}/{r[2]} [{r[3][:4]}-{r[4][:4]}] ∩ [{r[5][:4]}-{r[6][:4]}]"
+        f"{r[1]}/{r[2]} [{_state_window_label(r[3], r[4])}] ∩ [{_state_window_label(r[5], r[6])}]"
         for r in rows[:5]
     )
     result.fail(
@@ -797,7 +859,7 @@ def _check_pooled_state_overlap(
         " AND py_lower(a.delivery_column_name) IS py_lower(b.delivery_column_name) "
         " AND a.state_id < b.state_id "
         " AND a.pooled <> b.pooled "
-        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        f" AND {_state_overlap_predicate(conn)} "
         "JOIN variable v ON v.variable_id = a.variable_id "
         "ORDER BY v.register_id, v.slug"
     ).fetchall()
@@ -806,7 +868,7 @@ def _check_pooled_state_overlap(
         return
     affected = {(r[1], r[2]) for r in rows}
     sample = "; ".join(
-        f"{r[1]}/{r[2]} [{r[3][:4]}-{r[4][:4]}] ∩ [{r[5][:4]}-{r[6][:4]}]"
+        f"{r[1]}/{r[2]} [{_state_window_label(r[3], r[4])}] ∩ [{_state_window_label(r[5], r[6])}]"
         for r in rows[:5]
     )
     result.fail(

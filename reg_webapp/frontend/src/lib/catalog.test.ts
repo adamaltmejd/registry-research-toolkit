@@ -86,6 +86,7 @@ function ax(...names: string[]): { name: string; label: string }[] {
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "v",
     variant_label: null,
     register_variant_id: 1,
@@ -1640,6 +1641,7 @@ describe("deliveryColumnRows (Y-83 register-list picks)", () => {
     return {
       variant,
       column,
+      period_scope: "intervals",
       coverage: {
         coverage_from: windows[0]?.[0] ?? null,
         // The wire's own rule (`_coverage_bounds`): an open-ended span carries a
@@ -1964,6 +1966,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     const gstate = (over: Partial<GraphState>): GraphState =>
       ({
         state_id: 1,
+        period_scope: "intervals",
         representation_run_id: 1,
         variant: "individer",
         variant_label: null,
@@ -1996,6 +1999,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     const [row] = pickerRepresentations([
       {
         state_id: 2,
+        period_scope: "intervals",
         representation_run_id: 1,
         variant: "v1",
         variant_label: null,
@@ -5026,5 +5030,50 @@ describe("encode/parseCodesParam (#905 — (variant, column) deep-link payload)"
     expect(parseCodesParam("%E0%A4%A")).toBeNull();
     // A malformed VARIANT segment also degrades.
     expect(parseCodesParam("%::Yrke")).toBeNull();
+  });
+});
+
+describe("year-independent delivery", () => {
+  it("has explicit scope and no calendar coverage or synthetic picker bounds", () => {
+    const independent = state({
+      period_scope: "year_independent",
+      valid_from: null,
+      valid_to: null,
+      variant: "country-groups",
+      delivery_column_name: "CountryGroup",
+      value_set_id: 1,
+    });
+    expect(formatStateWindow(independent)).toBe("Year-independent");
+    expect(coverageFromStates([independent])).toBeNull();
+    const row = pickerRepresentations([independent])[0];
+    expect(row.from).toBeNull();
+    expect(row.to).toBeNull();
+    expect(row.windows).toEqual([]);
+    expect(rowAddPeriod(row, { from: "2020-01-01", to: "2020-12-31" })).toBe(
+      "_default",
+    );
+    expect(distinctValueSets([independent])[0].overallSpan).toEqual({
+      from: null,
+      to: null,
+      period_scope: "year_independent",
+      pooled: false,
+    });
+  });
+  it("does not infer calendar co-delivery between independent and dated states", () => {
+    expect(
+      coexistingColumns([
+        state({
+          period_scope: "year_independent",
+          valid_from: null,
+          valid_to: null,
+          delivery_column_name: "Independent",
+        }),
+        state({
+          valid_from: "2020-01-01",
+          valid_to: "2020-12-31",
+          delivery_column_name: "Dated",
+        }),
+      ]),
+    ).toEqual(new Set());
   });
 });

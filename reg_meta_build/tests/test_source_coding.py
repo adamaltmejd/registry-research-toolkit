@@ -507,3 +507,54 @@ def test_undated_copy_fingerprint_pins_evidence_without_inventing_periods(kind):
         (_claim("changed", _member("1"), scope=scope),)
     )
     assert resolve_code_membership((claim,)).segments == ()
+
+
+def test_independent_lists_preserve_members_and_have_no_calendar_window():
+    scope = TemporalScope(kind="year_independent")
+    claim = _claim(
+        "source",
+        _member("00", "SVERIGE"),
+        _member("02", "EU25 utom Norden"),
+        scope=scope,
+    )
+    resolution = resolve_code_membership((claim, claim))
+    assert resolution.issues == ()
+    assert resolution.claims == (claim, claim)
+    (segment,) = resolution.segments
+    assert segment.period_scope == "year_independent"
+    assert segment.valid_from is segment.valid_to is None
+    assert segment.code_set.members == (("00", "SVERIGE"), ("02", "EU25 utom Norden"))
+
+
+@pytest.mark.parametrize(
+    "restriction", [_scope(), TemporalScope(kind="unknown", label="unresolved source")]
+)
+def test_independent_members_reject_finite_or_unknown_validity(restriction):
+    claim = _claim(
+        "source",
+        _member("02", scope=restriction),
+        scope=TemporalScope(kind="year_independent"),
+    )
+    resolution = resolve_code_membership((claim,))
+    assert [issue.code for issue in resolution.issues] == ["unknown_code_membership"]
+    assert resolution.segments[0].code_set is None
+
+
+@pytest.mark.parametrize("other", ["dated", "unknown", "conflicting", "empty"])
+def test_independent_coding_refuses_competing_or_absent_membership(other):
+    scope = TemporalScope(kind="year_independent")
+    first = _claim("source", _member("02", "EU25"), scope=scope)
+    second = {
+        "dated": _claim("other", _member("02", "EU25")),
+        "unknown": _claim(
+            "other",
+            _member("02", "EU25"),
+            scope=TemporalScope(kind="unknown", label="unresolved source"),
+        ),
+        "conflicting": _claim("other", _member("02", "EU28"), scope=scope),
+        "empty": _claim("other", scope=scope),
+    }[other]
+    resolution = resolve_code_membership((first, second))
+    assert resolution.issues
+    assert not resolution.segments or resolution.segments[0].code_set is None
+    assert resolution.claims == (first, second)

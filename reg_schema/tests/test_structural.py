@@ -345,13 +345,16 @@ def test_period_token_strings_are_ok() -> None:
         assert result.ok, (period, result.issues)
 
 
-def test_period_snapshot_sentinel_is_invalid_period() -> None:
-    # Every project period is a concrete requested period (REFACTOR_SPEC.md
-    # §12): the retired whole-history sentinel is now an ordinary bad token.
+def test_period_year_independent_requires_concrete_variant_and_whole_scope() -> None:
     spec = _spec()
     spec["sources"][0]["period"] = "_default"
-    result = validate_structural(spec)
-    assert _at(result, "invalid_period") == ["/sources/0/period"]
+    assert validate_structural(spec).ok
+    spec["sources"][0]["register_variant"] = "scb/lisa/_default"
+    assert _at(validate_structural(spec), "invalid_period") == ["/sources/0/period"]
+    spec["sources"][0]["register_variant"] = "scb/lisa/country-groups"
+    for period in (["_default"], [2020, "_default"], {"from": "_default", "to": 2020}):
+        spec["sources"][0]["period"] = period
+        assert not validate_structural(spec).ok
 
 
 def test_period_range_object_is_ok() -> None:

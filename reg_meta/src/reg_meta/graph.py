@@ -80,6 +80,7 @@ class GraphState(_CatalogModel):
     classification / column identity only (see ``_is_representation_boundary``)."""
 
     state_id: int
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
     variant: str
     # `register_variant.name` — the variant's curator display name (e.g. "Snöskotrar"
     # for slug `snoskotrar`), surfaced for DISPLAY (the picker shows it instead of the
@@ -264,7 +265,9 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
     by_key: dict[tuple[int, str | None], VariableState] = {}
     for s in states:
         by_key.setdefault((s.state_id, s.delivery_column_name), s)
-    ordered = sorted(by_key.values(), key=lambda s: (s.variant, s.valid_from))
+    ordered = sorted(
+        by_key.values(), key=lambda s: (s.variant, s.period_scope, s.valid_from or "")
+    )
 
     out: list[GraphState] = []
     run_id = 0
@@ -272,6 +275,7 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
     for s in ordered:
         if prev is not None and (
             s.variant != prev.variant
+            or s.period_scope != prev.period_scope
             # A pure delivery-column change among windows SHARING a state_id is alias
             # multiplexing (one annual claim delivered as N month-columns), NOT a
             # representation boundary — fold them into one run so the monthly family
@@ -282,6 +286,7 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
         out.append(
             GraphState(
                 state_id=s.state_id,
+                period_scope=s.period_scope,
                 variant=s.variant,
                 variant_label=s.variant_label,
                 variant_family=s.variant_family,

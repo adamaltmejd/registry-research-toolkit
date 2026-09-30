@@ -710,8 +710,8 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 172
-    assert sum(len(entry.periods) for entry in coding) == 320
+    assert len(coding) == 173
+    assert sum(len(entry.periods) for entry in coding) == 327
     assert (
         sum(
             len(entry.periods)

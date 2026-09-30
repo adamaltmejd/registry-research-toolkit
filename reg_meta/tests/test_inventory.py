@@ -163,7 +163,7 @@ name = "Betyg"
 @pytest.mark.parametrize(
     ("edition", "message"),
     [
-        ('edition = "_default"', "never '_default'"),
+        ('edition = "_default"', "requires year-independent period_scope"),
         ('edition = "all"', "not a period token"),
         ("edition = 2019.5", "Input should be"),
         ("edition = { from = 2020, to = 2015 }", "'from' is after 'to'"),
@@ -194,7 +194,10 @@ name = "Diagnos"
     assert excinfo.value.code == "inventory_invalid"
     assert excinfo.value.exit_code == EXIT_CONFIG
     # The error names the offending table, not an array index.
-    assert "table['SoS_Patientregister.csv'].edition" in excinfo.value.message
+    location = "table['SoS_Patientregister.csv']"
+    if edition != 'edition = "_default"':
+        location += ".edition"
+    assert location in excinfo.value.message
     assert message in excinfo.value.message
 
 

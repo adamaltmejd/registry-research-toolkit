@@ -788,3 +788,28 @@ def test_conflicting_parallel_fact_nulls_only_that_claimed_fact() -> None:
     assert all(o.data_type_claim is None for o in nulled.values())
     # The window is still owed; only the disputed fact is nulled.
     check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
+
+
+def test_dated_representation_does_not_manufacture_independent_window():
+    setup = _setup()
+    formed, _ = _form(setup)
+    independent = [
+        state.model_copy(
+            update={
+                "period_scope": "year_independent",
+                "valid_from": None,
+                "valid_to": None,
+            }
+        )
+        for state in formed.variable.states
+    ]
+    states, aliases, issues, withheld, _ = form_representations(
+        independent,
+        (setup[2],),
+        variable_key=KEY,
+        variants=setup[3],
+        subject="fixture",
+    )
+    assert states == independent
+    assert not aliases and not withheld
+    assert any(issue.code == "unsupported_representation_scope" for issue in issues)

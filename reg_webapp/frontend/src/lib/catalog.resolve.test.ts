@@ -17,6 +17,7 @@ vi.mock("./api", async (importOriginal) => {
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "v",
     variant_label: null,
     register_variant_id: 1,

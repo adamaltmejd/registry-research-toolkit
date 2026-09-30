@@ -585,7 +585,7 @@ function trackDisclosure(key: string, event: Event): void {
            "VT2009"); the raw ISO window stays on the tooltip. -->
       {#if validWindow}
         <dt class="micro-label">Valid</dt>
-        <dd title={windowTitle(s.valid_from, s.valid_to)}>
+        <dd title={windowTitle(s.valid_from, s.valid_to, s.period_scope)}>
           {validWindow}
           {#if s.pooled}
             <!-- Y-202: the window spans a pooled multi-year edition — annual

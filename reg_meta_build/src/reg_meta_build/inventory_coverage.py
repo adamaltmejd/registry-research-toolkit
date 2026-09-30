@@ -80,7 +80,7 @@ import functools
 import unicodedata
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 # `_merge` / `_render` / `_intersect` are `reg_meta.inventory`'s interval
 # primitives: the ONE grammar an edition, a project period and an availability
@@ -165,6 +165,7 @@ class CoverageMiss:
     mint: tuple[str, ...]
     windows: tuple[_Interval, ...]
     errata_column: bool
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
 
     @property
     def coordinate(self) -> str:
@@ -183,7 +184,7 @@ class CoverageMiss:
     @property
     def delivered_candidate(self) -> bool:
         """Can the delivered loader clone a real SCB row for this variable?"""
-        return self.scb and not self.errata_column
+        return self.scb and not self.errata_column and self.period_scope == "intervals"
 
 
 @dataclass(frozen=True)
@@ -213,12 +214,20 @@ class CoverageReport:
     @property
     def errata_column_misses(self) -> tuple[CoverageMiss, ...]:
         """SCB misses on variables minted from `[[errata.column]]` entries."""
-        return tuple(miss for miss in self.misses if miss.scb and miss.errata_column)
+        return tuple(
+            miss
+            for miss in self.misses
+            if miss.period_scope == "intervals" and miss.scb and miss.errata_column
+        )
 
     @property
     def curated_misses(self) -> tuple[CoverageMiss, ...]:
         """The misses repaired on their own provider's curated window surface."""
-        return tuple(miss for miss in self.misses if not miss.scb)
+        return tuple(
+            miss
+            for miss in self.misses
+            if miss.period_scope == "intervals" and not miss.scb
+        )
 
 
 def skipped_tables_line(count: int) -> str:
@@ -275,10 +284,39 @@ def coverage_misses(
     accumulated: defaultdict[tuple[str, str, str], _Accumulator] = defaultdict(
         _Accumulator
     )
+    independent_misses: dict[tuple[str, str, str], CoverageMiss] = {}
     pairs = 0
     missed_pairs = 0
     unresolved = 0
     for table in assessed_tables:
+        if table.period_scope == "year_independent":
+            for column in table.columns:
+                placed = _placements(column, pair_ids, windows)
+                unresolved += len(column.mappings) - len(placed)
+                if not placed:
+                    continue
+                pairs += 1
+                if any(
+                    ((place.variable_id, place.variant_id), _fold(place.key[2]))
+                    in windows.independent_columns
+                    for place in placed
+                ):
+                    continue
+                missed_pairs += 1
+                for place in placed:
+                    register, variant, canonical_column = place.key
+                    independent_misses[place.key] = CoverageMiss(
+                        register,
+                        variant,
+                        canonical_column,
+                        (),
+                        (),
+                        (),
+                        (),
+                        place.variable_id in errata_variable_ids(),
+                        period_scope="year_independent",
+                    )
+            continue
         bounds = edition_bounds(table.edition)
         for column in table.columns:
             placed = _placements(column, pair_ids, windows)
@@ -301,7 +339,15 @@ def coverage_misses(
                         place.variable_id in errata_variable_ids(),
                     )
     return CoverageReport(
-        misses=tuple(accumulated[key].finish(*key) for key in sorted(accumulated)),
+        misses=tuple(
+            sorted(
+                (
+                    *(accumulated[key].finish(*key) for key in sorted(accumulated)),
+                    *independent_misses.values(),
+                ),
+                key=lambda m: (m.register, m.variant, m.column, m.period_scope),
+            )
+        ),
         pairs=pairs,
         missed_pairs=missed_pairs,
         unresolved=unresolved,
@@ -317,6 +363,8 @@ def miss_line(miss: CoverageMiss) -> str:
     errata-created variable instead names the authoring surfaces to inspect. A
     coordinate on any other provider names the curated surface carrying its window.
     """
+    if miss.period_scope == "year_independent":
+        return f"{miss.coordinate} {miss.column}: held independent physical column has no exact independent delivery state; inspect its checked source/owner mapping without inventing dates or register versions"
     if not miss.scb:
         return (
             f"{miss.coordinate} {miss.column}: {_held_vs_windows(miss)} — not "
@@ -497,6 +545,9 @@ def errata_worklist(report: CoverageReport) -> str:
     ]
     for miss in curated:
         lines += ["", f"# {miss_line(miss)}"]
+    for miss in report.misses:
+        if miss.period_scope == "year_independent":
+            lines += ["", f"# {miss_line(miss)}"]
     return "\n".join(lines) + "\n"
 
 
@@ -511,6 +562,7 @@ class _Windows:
 
     by_column: dict[tuple[_PairIds, str], tuple[_Interval, ...]]
     by_pair: dict[_PairIds, tuple[_Interval, ...]]
+    independent_columns: frozenset[tuple[_PairIds, str]] = frozenset()
 
     def for_mapping(
         self, pair: _PairIds, representation: str | None
@@ -537,18 +589,28 @@ def _load_windows(conn: sqlite3.Connection, pairs: set[_PairIds]) -> _Windows:
     """
     by_column: dict[tuple[_PairIds, str], list[_Interval]] = {}
     by_pair: dict[_PairIds, list[_Interval]] = {}
+    independent_columns = set()
     for delivery_table in ("variable_state", "variable_alias_window"):
-        for variable_id, variant_id, column, valid_from, valid_to in conn.execute(
+        scope = "period_scope" if delivery_table == "variable_state" else "'intervals'"
+        for (
+            variable_id,
+            variant_id,
+            column,
+            valid_from,
+            valid_to,
+            period_scope,
+        ) in conn.execute(
             "SELECT variable_id, register_variant_id, delivery_column_name, "
-            f"valid_from, valid_to FROM {delivery_table}"
+            f"valid_from, valid_to, {scope} FROM {delivery_table}"
         ):
             pair = (variable_id, variant_id)
             if pair not in pairs:
                 continue
+            if period_scope == "year_independent":
+                if column is not None:
+                    independent_columns.add((pair, _fold(column)))
+                continue
             by_pair.setdefault(pair, []).append((valid_from, valid_to))
-            # NULL on `variable_state` only (`variable_alias_window` is a column
-            # row by definition): a state with no delivery column still delivers
-            # the BINDING, which is the `by_pair` grain, just not a named column.
             if column is not None:
                 by_column.setdefault((pair, _fold(column)), []).append(
                     (valid_from, valid_to)
@@ -556,6 +618,7 @@ def _load_windows(conn: sqlite3.Connection, pairs: set[_PairIds]) -> _Windows:
     return _Windows(
         by_column={key: _merge(rows) for key, rows in by_column.items()},
         by_pair={key: _merge(rows) for key, rows in by_pair.items()},
+        independent_columns=frozenset(independent_columns),
     )
 
 

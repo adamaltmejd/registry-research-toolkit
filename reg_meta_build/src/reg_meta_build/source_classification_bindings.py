@@ -223,6 +223,9 @@ def _label_rule_bindings(
         for segment in resolution.segments:
             if segment.state_disposition != "include":
                 continue
+            if segment.period_scope == "year_independent":
+                continue
+            assert segment.valid_from is not None and segment.valid_to is not None
             start = date.fromisoformat(segment.valid_from).toordinal()
             end = date.fromisoformat(segment.valid_to).toordinal()
             refs = tuple(
@@ -386,6 +389,9 @@ def apply_classification_cases(
             for segment in coding[key].segments
             if segment.state_disposition == "include"
             and segment.code_set is not None
+            and segment.period_scope == "intervals"
+            and segment.valid_from is not None
+            and segment.valid_to is not None
             and binding.valid_from <= segment.valid_to
             and binding.valid_to >= segment.valid_from
         ]
@@ -490,6 +496,21 @@ def apply_classification_cases(
     for key, applicable in sorted(selected.items(), key=lambda pair: repr(pair[0])):
         applicable = sorted(set(applicable), key=repr)
         base = coding[key]
+        if any(s.period_scope == "year_independent" for s in base.segments):
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="unsupported_classification_scope",
+                    severity="error",
+                    subject=repr(key),
+                    detail="A dated classification decision cannot establish applicability for a year-independent delivery table.",
+                    refs=tuple(
+                        sorted({r for b in applicable for r in b.refs}, key=repr)
+                    ),
+                    fields=("classification",),
+                    withheld_output=("classification",),
+                )
+            )
+            continue
         if any(
             s.classification is not None or s.conformance is not None
             for s in base.segments
@@ -497,16 +518,17 @@ def apply_classification_cases(
             raise ValueError(
                 "classification declarations must compose in one application"
             )
-        cuts = sorted(
-            {
-                point
-                for item in (*base.segments, *applicable)
-                for point in (
+        cut_points = set()
+        for item in (*base.segments, *applicable):
+            if item.valid_from is None or item.valid_to is None:
+                raise ValueError("dated scope requires both calendar bounds")
+            cut_points.update(
+                (
                     date.fromisoformat(item.valid_from).toordinal(),
                     date.fromisoformat(item.valid_to).toordinal() + 1,
                 )
-            }
-        )
+            )
+        cuts = sorted(cut_points)
         segments = []
         coding_issues = list(base.issues)
         for lo, hi in pairwise(cuts):
@@ -515,7 +537,12 @@ def apply_classification_cases(
                 date.fromordinal(hi - 1).isoformat(),
             )
             prior = [
-                s for s in base.segments if s.valid_from <= start and s.valid_to >= end
+                s
+                for s in base.segments
+                if s.valid_from is not None
+                and s.valid_to is not None
+                and s.valid_from <= start
+                and s.valid_to >= end
             ]
             if len(prior) > 1:
                 raise ValueError("classification received overlapping coding segments")

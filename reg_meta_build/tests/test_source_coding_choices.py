@@ -1561,3 +1561,22 @@ def test_checked_association_support_rejects_changed_complete_evidence(change):
     result = apply_coding_choices((record,), cases, coding={column: (changed,)})
     assert result.accounting[0].status == "stale"
     assert result.coding[column].claims == (changed,)
+
+
+@pytest.mark.parametrize("accepted", [False, True])
+def test_independent_coding_retains_base_and_rejects_dated_choices(accepted):
+    record = _record()
+    independent = replace(
+        _claim("independent", "01"), scope=TemporalScope(kind="year_independent")
+    )
+    cases = (_assignment_case(record, (independent,), "uncoded"),) if accepted else ()
+    result = _apply(record, (independent,), *cases)
+    resolved = next(iter(result.coding.values()))
+    assert resolved == resolve_code_membership((independent,))
+    assert resolved.segments[0].period_scope == "year_independent"
+    assert resolved.segments[0].valid_from is resolved.segments[0].valid_to is None
+    if accepted:
+        assert result.accounting[0].status == "stale"
+        assert result.diagnostics[0].code == "coding_scope_changed"
+    else:
+        assert not result.diagnostics

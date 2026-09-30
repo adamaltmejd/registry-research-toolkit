@@ -265,6 +265,41 @@ def check_inventory(
                 cells[cell],
             )
         )
+    scoped_delivery = {
+        scope: _delivered(conn, set(pair_probes.values()), scope=scope)
+        for scope in {table.period_scope for table in inventory.tables}
+    }
+    reported_scopes: set[tuple[str, str, str, str]] = set()
+    for table in inventory.tables:
+        for column in table.columns:
+            for mapping in column.mappings:
+                pair = (mapping.register_variant, str(mapping.variable))
+                if pair in stranded or pair not in pair_probes:
+                    continue
+                offered = scoped_delivery[table.period_scope].get(
+                    pair_probes[pair], frozenset()
+                )
+                target = mapping.representation or (
+                    column.name if table.period_scope == "year_independent" else None
+                )
+                if (
+                    table.period_scope == "intervals"
+                    and pair_probes[pair] in scoped_delivery["intervals"]
+                ):
+                    continue  # Existing binding/representation checks already cover dated states.
+                if not offered or (target is not None and target not in offered):
+                    key = (*pair, table.period_scope, target or "")
+                    if key in reported_scopes:
+                        continue
+                    reported_scopes.add(key)
+                    findings.append(
+                        _finding(
+                            "binding_unavailable",
+                            " ".join(pair),
+                            f"no {table.period_scope} delivery for this mapping",
+                            pairs[pair],
+                        )
+                    )
     return tuple(findings)
 
 
@@ -346,7 +381,7 @@ def _variable_ids(conn: sqlite3.Connection, wanted: set[str]) -> dict[str, int]:
 
 
 def _delivered(
-    conn: sqlite3.Connection, pairs: set[_PairIds]
+    conn: sqlite3.Connection, pairs: set[_PairIds], *, scope: str | None = None
 ) -> dict[_PairIds, frozenset[str]]:
     """For each pair of `pairs` the catalog carries a state for, the delivery
     column names the resolver would produce over the whole history.
@@ -377,10 +412,12 @@ def _delivered(
 
     Two streaming scans, filtered against the inventory's own pairs, so the
     working set stays the inventory's and not the catalog's."""
-    states: dict[_PairIds, list[tuple[str, str, str | None]]] = {}
+    states: dict[_PairIds, list[tuple[str | None, str | None, str | None]]] = {}
     for variable_id, register_variant_id, valid_from, valid_to, column in conn.execute(
         "SELECT variable_id, register_variant_id, valid_from, valid_to, "
         "delivery_column_name FROM variable_state"
+        + (" WHERE period_scope = ?" if scope is not None else ""),
+        (scope,) if scope is not None else (),
     ):
         pair = (variable_id, register_variant_id)
         if pair in pairs:
@@ -413,7 +450,7 @@ def _delivered(
 
 
 def _expanded_columns(
-    states: list[tuple[str, str, str | None]],
+    states: list[tuple[str | None, str | None, str | None]],
     windows: list[tuple[str, str, str, str | None, str]],
 ) -> frozenset[str]:
     """`Catalog._expand_state_windows`'s delivery columns for one pair.
@@ -425,6 +462,11 @@ def _expanded_columns(
     the same rules as the reader."""
     columns: set[str] = set()
     for valid_from, valid_to, column in states:
+        if valid_from is None and valid_to is None:
+            if column is not None:
+                columns.add(column)
+            continue
+        assert valid_from is not None and valid_to is not None
         contained = [
             w
             for w in windows

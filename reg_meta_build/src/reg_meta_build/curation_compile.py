@@ -3876,7 +3876,10 @@ def compile_coding_register(
                     matching = [
                         (segment.valid_from, segment.valid_to)
                         for segment in resolved.segments
-                        if segment.code_set is not None
+                        if segment.period_scope == "intervals"
+                        and segment.valid_from is not None
+                        and segment.valid_to is not None
+                        and segment.code_set is not None
                         and accepted <= set(segment.code_set.members)
                         and all(
                             code not in canonical_codes

@@ -90,6 +90,7 @@ _PLAIN_TABLES = frozenset(
         "variable_state_lineage",
         "variable_state_lineage_warning",
         "timeseries_event",
+        "source_relationship_variable",
     }
 )
 
@@ -148,6 +149,14 @@ _IDENTITIES: dict[str, tuple[str, str]] = {
         + ", s.delivery_column_name)",
     ),
     "tag": ("tag_id", "s.slug"),
+    "source_relationship": (
+        "relationship_id",
+        "json_array("
+        + _reference("variable", "s.owner_variable_id")
+        + ", s.kind, s.source_dataset, s.source_revision_id, "
+        "json_extract(s.declaration_json, '$.locator.physical_table'), "
+        "json_extract(s.declaration_json, '$.locator.physical_record'))",
+    ),
 }
 
 _INHERITED_SCOPE = {
@@ -217,7 +226,7 @@ def _state_identities(
     )
     conn.execute(
         "CREATE TEMP TABLE _id_variable_state (original_id INTEGER PRIMARY KEY, "
-        "identity TEXT NOT NULL, valid_from TEXT NOT NULL, valid_to TEXT NOT NULL)"
+        "identity TEXT NOT NULL, valid_from TEXT, valid_to TEXT)"
     )
     conn.execute(
         f"INSERT INTO _id_variable_state SELECT state_id, {identity}, valid_from, "
@@ -259,7 +268,11 @@ def _intervals(
         f"SELECT {names}, valid_from, valid_to FROM _interval_rows "
         f"WHERE NOT ({_VALID_INTERVAL})"
     ):
-        yield (*row, 1, "opaque")
+        independent = (
+            "period_scope" in payload_columns
+            and row[payload_columns.index("period_scope")] == "year_independent"
+        )
+        yield (*row, 1, "year_independent" if independent else "opaque")
     query = (
         f"WITH events AS (SELECT {names}, iso_ordinal(valid_from) AS boundary, "
         f"1 AS delta FROM _interval_rows WHERE {_VALID_INTERVAL} UNION ALL "

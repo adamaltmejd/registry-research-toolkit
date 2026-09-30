@@ -1,7 +1,7 @@
 """Small shared contracts and deterministic IDs for resolved catalog inputs."""
 
 from datetime import date
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, Literal, Self
 
 from pydantic import (
     BaseModel,
@@ -59,6 +59,27 @@ class _ResolvedWindow(_ResolvedModel):
     def _ordered_bounds(self) -> Self:
         if self.valid_from > self.valid_to:
             raise ValueError("state valid_from must not exceed valid_to")
+        return self
+
+
+class _ResolvedDeliveryScope(_ResolvedModel):
+    """Explicit calendar coverage or a delivery with no calendar claim."""
+
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
+    valid_from: str | None = None
+    valid_to: str | None = None
+
+    @model_validator(mode="after")
+    def _delivery_scope(self) -> Self:
+        if self.period_scope == "year_independent":
+            if self.valid_from is not None or self.valid_to is not None:
+                raise ValueError(
+                    "year-independent delivery must have no calendar bounds"
+                )
+        else:
+            if self.valid_from is None or self.valid_to is None:
+                raise ValueError("dated delivery requires both ISO bounds")
+            _ResolvedWindow(valid_from=self.valid_from, valid_to=self.valid_to)
         return self
 
 

@@ -256,11 +256,9 @@ describe("isStructurallyValidPeriodWire", () => {
     expect(isStructurallyValidPeriodWire("2005..2010,2015..2020")).toBe(true);
   });
 
-  it("rejects the whole-history sentinel — a project period is finite", () => {
-    // `_default` stays a valid CATALOG browse wire (`looksLikePeriod`), but it
-    // is not a `Source.period` any more, so nothing may write it into a draft.
+  it("accepts an explicit year-independent period without treating it as dates", () => {
     expect(looksLikePeriod("_default")).toBe(true);
-    expect(isStructurallyValidPeriodWire("_default")).toBe(false);
+    expect(isStructurallyValidPeriodWire("_default")).toBe(true);
   });
 
   it("rejects grammar-looking lists that are unsorted or overlapping", () => {

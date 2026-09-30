@@ -43,7 +43,7 @@ if TYPE_CHECKING:
     from reg_meta.source_evidence import SourceField
 
     from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
-    from reg_meta_build.source_coding import CodingResolution
+    from reg_meta_build.source_coding import CodingResolution, CodingSegment
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_records import SourceFields, SourceRecord
     from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
@@ -104,6 +104,48 @@ class VariableFormation:
     coverage: tuple[CoverageObligation, ...] = ()
 
 
+def _state_from_segment(
+    segment: SourceSegment,
+    variant: ResolvedVariant,
+    matched: CodingSegment | None,
+    start: str | None,
+    end: str | None,
+) -> ResolvedState:
+    return ResolvedState(
+        period_scope=segment.period_scope,
+        variant=variant,
+        valid_from=start,
+        valid_to=end,
+        delivery_column_name=segment.delivery_column_name,
+        data_type=_text(segment.fields, "data_type"),
+        data_length=_text(segment.fields, "data_length"),
+        operational_definition=_text(segment.fields, "operational_definition"),
+        source_register_text=_text(segment.fields, "source_attribution"),
+        pooled=segment.pooled,
+        provenance="\n\n".join(
+            sorted(
+                {
+                    correction.provenance
+                    for occurrence in segment.effective_occurrences
+                    for correction in occurrence.corrections
+                }
+                | set(matched.provenance if matched else ())
+                | (
+                    {segment.fields.data_type.raw_value}
+                    if segment.fields.data_type is not None
+                    and isinstance(segment.fields.data_type.raw_value, str)
+                    else set()
+                )
+            )
+        )
+        or None,
+        value_set=matched.code_set if matched else None,
+        value_set_version_label=matched.version_label if matched else "",
+        classification=matched.classification if matched else None,
+        conformance=matched.conformance if matched else None,
+    )
+
+
 def _coded_states(
     segment: SourceSegment,
     variant: ResolvedVariant,
@@ -111,12 +153,73 @@ def _coded_states(
     subject: str,
 ) -> tuple[list[ResolvedState], list[ResolutionDiagnostic], list[tuple[str, str]]]:
     """Cut one positive segment by coding; also report the periods coding withholds."""
+    if segment.period_scope == "year_independent":
+        matches = [c for c in coding.segments if c.period_scope == "year_independent"]
+        if len(matches) > 1:
+            raise ValueError(
+                "coding resolver returned overlapping independent segments"
+            )
+        if any(c.period_scope != "year_independent" for c in coding.segments):
+            return (
+                [],
+                [
+                    ResolutionDiagnostic(
+                        code="unsupported_coding_scope",
+                        severity="error",
+                        subject=subject,
+                        detail="Dated coding cannot describe an independent delivery.",
+                        refs=_refs(segment.occurrences),
+                        fields=("coding",),
+                        withheld_output=("state",),
+                    )
+                ],
+                [],
+            )
+        matched = matches[0] if matches else None
+        if matched is not None and matched.state_disposition != "include":
+            return [], [], []
+        diagnostics = []
+        if matched is None and coding.claims:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="missing_coding_period",
+                    severity="error",
+                    subject=subject,
+                    detail="No independent coding resolution describes this delivery.",
+                    refs=_refs(segment.occurrences),
+                    fields=("coding",),
+                    withheld_output=("state.value_set",),
+                )
+            )
+        return (
+            [_state_from_segment(segment, variant, matched, None, None)],
+            diagnostics,
+            [],
+        )
+    if any(c.period_scope != "intervals" for c in coding.segments):
+        return (
+            [],
+            [
+                ResolutionDiagnostic(
+                    code="unsupported_coding_scope",
+                    severity="error",
+                    subject=subject,
+                    detail="Independent coding cannot establish dated delivery coverage.",
+                    refs=_refs(segment.occurrences),
+                    fields=("coding",),
+                    withheld_output=("state",),
+                )
+            ],
+            [],
+        )
+    assert segment.valid_from is not None and segment.valid_to is not None
     lower, upper = (
         date.fromisoformat(segment.valid_from).toordinal(),
         date.fromisoformat(segment.valid_to).toordinal(),
     )
     cuts = {lower, upper + 1}
     for code_segment in coding.segments:
+        assert code_segment.valid_from is not None and code_segment.valid_to is not None
         lo, hi = (
             date.fromisoformat(code_segment.valid_from).toordinal(),
             date.fromisoformat(code_segment.valid_to).toordinal(),
@@ -132,7 +235,12 @@ def _coded_states(
             date.fromordinal(next_lo - 1).isoformat(),
         )
         matches = [
-            c for c in coding.segments if c.valid_from <= start and c.valid_to >= end
+            c
+            for c in coding.segments
+            if c.valid_from is not None
+            and c.valid_to is not None
+            and c.valid_from <= start
+            and c.valid_to >= end
         ]
         if len(matches) > 1:
             raise ValueError("coding resolver returned overlapping coding segments")
@@ -169,40 +277,7 @@ def _coded_states(
                     withheld_output=("state.value_set",),
                 )
             )
-        states.append(
-            ResolvedState(
-                variant=variant,
-                valid_from=start,
-                valid_to=end,
-                delivery_column_name=segment.delivery_column_name,
-                data_type=_text(segment.fields, "data_type"),
-                data_length=_text(segment.fields, "data_length"),
-                operational_definition=_text(segment.fields, "operational_definition"),
-                source_register_text=_text(segment.fields, "source_attribution"),
-                pooled=segment.pooled,
-                provenance="\n\n".join(
-                    sorted(
-                        {
-                            correction.provenance
-                            for occurrence in segment.effective_occurrences
-                            for correction in occurrence.corrections
-                        }
-                        | set(matched.provenance if matched else ())
-                        | (
-                            {segment.fields.data_type.raw_value}
-                            if segment.fields.data_type is not None
-                            and isinstance(segment.fields.data_type.raw_value, str)
-                            else set()
-                        )
-                    )
-                )
-                or None,
-                value_set=matched.code_set if matched else None,
-                value_set_version_label=matched.version_label if matched else "",
-                classification=matched.classification if matched else None,
-                conformance=matched.conformance if matched else None,
-            )
-        )
+        states.append(_state_from_segment(segment, variant, matched, start, end))
     return states, diagnostics, withheld
 
 
@@ -228,12 +303,41 @@ def _disjoint_representations(
     diagnostics = []
     withheld: dict[tuple[str, str], list[ResolutionDiagnostic]] = defaultdict(list)
     for members in groups.values():
-        ordered = sorted(members, key=lambda state: state.valid_from)
-        if all(left.valid_to < right.valid_from for left, right in pairwise(ordered)):
+        if any(state.period_scope == "year_independent" for state in members):
+            if len(members) == 1:
+                result.extend(members)
+            else:
+                problem = ResolutionDiagnostic(
+                    code="unresolved_column_representation",
+                    severity="error",
+                    subject=subject,
+                    detail="Independent delivery representations need an exact canonical choice.",
+                    refs=_refs(records),
+                    fields=("column_name",),
+                    withheld_output=("state",),
+                )
+                diagnostics.append(problem)
+                for state in members:
+                    withheld[state.variant.slug, state.delivery_column_name].append(
+                        problem
+                    )
+            continue
+        assert all(
+            state.valid_from is not None and state.valid_to is not None
+            for state in members
+        )
+        ordered = sorted(members, key=lambda state: state.valid_from or "")
+        if all(
+            left.valid_to is not None
+            and right.valid_from is not None
+            and left.valid_to < right.valid_from
+            for left, right in pairwise(ordered)
+        ):
             result.extend(ordered)
             continue
         changes: dict[int, list[tuple[int, bool]]] = defaultdict(list)
         for ordinal, state in enumerate(ordered):
+            assert state.valid_from is not None and state.valid_to is not None
             changes[date.fromisoformat(state.valid_from).toordinal()].append(
                 (ordinal, True)
             )
@@ -314,6 +418,10 @@ def _null_conflicting_facts(
         return obligations
     result: list[CoverageObligation] = []
     for claim in obligations:
+        if claim.period_scope == "year_independent":
+            result.append(claim)
+            continue
+        assert claim.valid_from is not None and claim.valid_to is not None
         key = (claim.variant, claim.column)
         claimed_types = [
             window
@@ -660,6 +768,7 @@ def form_native_variable(
                     segment.valid_from,
                     segment.valid_to,
                     _refs(segment.occurrences),
+                    period_scope=segment.period_scope,
                     data_type_claim=_fact_claim(segment.fields.data_type),
                     data_length_claim=_fact_claim(segment.fields.data_length),
                     attributions=tuple(
@@ -731,15 +840,19 @@ def form_native_variable(
         )
     variable_key = effective[0].variable_key
     assert variable_key is not None
+    independent_states = [
+        state for state in states if state.period_scope == "year_independent"
+    ]
     states, aliases, grouping_issues, representation_waivers, representation_facts = (
         form_representations(
-            states,
+            [state for state in states if state.period_scope == "intervals"],
             representations,
             variable_key=variable_key,
             variants=variants,
             subject=subject,
         )
     )
+    states.extend(independent_states)
     diagnostics.extend(grouping_issues)
     for variant_slug, column, start, end in representation_waivers:
         waived[variant_slug, column].append((start, end))
@@ -751,8 +864,8 @@ def form_native_variable(
     # Each cause names the exact parallel-column period it withholds.
     for (variant_slug, column), causes in withheld_representations.items():
         for cause in causes:
-            assert cause.valid_from is not None and cause.valid_to is not None
-            waived[variant_slug, column].append((cause.valid_from, cause.valid_to))
+            if cause.valid_from is not None and cause.valid_to is not None:
+                waived[variant_slug, column].append((cause.valid_from, cause.valid_to))
     for variant in sorted(previous_variants - {state.variant.slug for state in states}):
         causes = tuple(
             dict.fromkeys(
@@ -803,8 +916,17 @@ def form_native_variable(
     # claimed fact, like a waived delivery slice.
     coverage = _null_conflicting_facts(
         tuple(
+            claim
+            for claim in claims
+            if claim.period_scope == "year_independent"
+            and (claim.variant, claim.column) not in withheld_representations
+        )
+        + tuple(
             replace(claim, valid_from=start, valid_to=end)
             for claim in claims
+            if claim.period_scope == "intervals"
+            and claim.valid_from is not None
+            and claim.valid_to is not None
             for start, end in remaining_windows(
                 waived[claim.variant, claim.column], claim.valid_from, claim.valid_to
             )

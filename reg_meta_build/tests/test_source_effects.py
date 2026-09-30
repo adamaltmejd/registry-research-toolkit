@@ -2247,3 +2247,30 @@ def test_competing_alias_window_decisions_withhold_only_their_overlap() -> None:
         for v in (result.variables[key], result.variables[other_key])
         if v is not None
     ] == [[("2020-03-01", "2020-03-31")], [("2020-05-01", "2020-05-31")]]
+
+
+def test_dated_alias_window_cannot_annualize_independent_delivery():
+    record, search, variable, key, variants = _search_alias_fixture()
+    variant_key = next(iter(variants))
+    independent = variable.model_copy(
+        update={
+            "states": tuple(
+                state.model_copy(
+                    update={
+                        "period_scope": "year_independent",
+                        "valid_from": None,
+                        "valid_to": None,
+                    }
+                )
+                for state in variable.states
+            )
+        }
+    )
+    result = apply_alias_cases(
+        (record,),
+        (_window_case(search, key, variant_key),),
+        variables={key: independent},
+        variants=variants,
+    )
+    assert result.variables[key] == independent
+    assert [issue.code for issue in result.diagnostics] == ["unsupported_alias_scope"]

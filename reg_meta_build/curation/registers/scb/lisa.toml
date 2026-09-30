@@ -4462,3 +4462,425 @@ list_members = [["0", "Nej"], ["1", "Ja"]]
 witness = ["2020-01-01", "2020-12-31"]
 reason = "The exact2019 source operation explicitly establishes the exhaustive1/otherwise0 response domain; extend the complete matching2020 TFranv list only over2019."
 source = "Native34.41952, variant153, literalTFranv:2019edition16266/member799066 explicitly says Om individen ska räknas som tillfälligt frånvarande och sysselsatt tar variabeln värdet1, annars0. The same exact operation and physical column in2020edition18093/member837228 supplies complete Förekomst0=Nej,1=Ja membership. This is positive encoded-domain evidence in the target year, not inference from adjacency or blanket binary extension. Preserve all original prose, types, years and coding associations; exclude BTFranv/BAS reporting basis and unrelated columns."
+
+[[errata.occurrence_period]]
+variable = "34.1569"
+variant = "34.1582"
+column = "FodelseLandNamn"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Födelseland" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelseland" }, { name = "operational_definition", status = "value", value = "Födeland hämtas från Flergenerationsregistret,  födelseuppgifter." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.1569.fodgreg"
+slug = "fodelseland-grupp-eu15"
+
+[[errata.occurrence_period]]
+variable = "34.1569"
+variant = "34.1582"
+column = "FodGrEg"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Födelseland" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelseland" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(15). Födelseland hämtas från Flergenerationsregistret,  födelseuppgifter." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.1569.fodgreg2"
+slug = "fodelseland-grupp-eu25"
+
+[[errata.occurrence_period]]
+variable = "34.1569"
+variant = "34.1582"
+column = "FodGrEg2"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Födelseland" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelseland" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(25). Födelseland hämtas från Flergenerationsregistret,  födelseuppgifter." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.1569.fodgreg5"
+slug = "fodelseland-grupp-eu27-2020"
+
+[[errata.occurrence_period]]
+variable = "34.1569"
+variant = "34.1582"
+column = "FodGrEg5"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Födelseland" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelseland" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(27 2020). Födelseland hämtas från Flergenerationsregistret,  födelseuppgifter." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.1569.fodgreg3"
+slug = "fodelseland-grupp-eu27-2007"
+
+[[errata.occurrence_period]]
+variable = "34.1569"
+variant = "34.1582"
+column = "FodGrEg3"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Födelseland" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelseland" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(27). Födelseland hämtas från Flergenerationsregistret,  födelseuppgifter." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.1569.fodgreg4"
+slug = "fodelseland-grupp-eu28"
+
+[[errata.occurrence_period]]
+variable = "34.1569"
+variant = "34.1582"
+column = "FodGrEg4"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Födelseland" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelseland" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(28). Födelseland hämtas från Flergenerationsregistret,  födelseuppgifter." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[identity.partition]]
+variable = "34.1569"
+columns = { FodelseLandNamn = "34.1569.fodelselandnamn", FodGrEg = "34.1569.fodgreg", FodGrEg2 = "34.1569.fodgreg2", FodGrEg5 = "34.1569.fodgreg5", FodGrEg3 = "34.1569.fodgreg3", FodGrEg4 = "34.1569.fodgreg4" }
+columns_ref = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119. Keep each literal grouping and source role distinct; country-name spelling owners retain existing public slugs."
+
+[[variable]]
+native_id = "34.304.fodelselandnamnfar"
+slug = "fodelseland-far"
+
+[[errata.occurrence_period]]
+variable = "34.304"
+variant = "34.1582"
+column = "FodelseLandNamnFar"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där fadern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland far" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.304.fodgrfar"
+slug = "fodelseland-far-grupp-eu15"
+
+[[errata.occurrence_period]]
+variable = "34.304"
+variant = "34.1582"
+column = "FodGrFar"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där fadern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland far" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(15)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.304.fodgrfar2"
+slug = "fodelseland-far-grupp-eu25"
+
+[[errata.occurrence_period]]
+variable = "34.304"
+variant = "34.1582"
+column = "FodGrFar2"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där fadern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland far" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(25)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.304.fodgrfar5"
+slug = "fodelseland-far-grupp-eu27-2020"
+
+[[errata.occurrence_period]]
+variable = "34.304"
+variant = "34.1582"
+column = "FodGrFar5"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där fadern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland far" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(27 2020)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.304.fodgrfar3"
+slug = "fodelseland-far-grupp-eu27-2007"
+
+[[errata.occurrence_period]]
+variable = "34.304"
+variant = "34.1582"
+column = "FodGrFar3"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där fadern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland far" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(27)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.304.fodgrfar4"
+slug = "fodelseland-far-grupp-eu28"
+
+[[errata.occurrence_period]]
+variable = "34.304"
+variant = "34.1582"
+column = "FodGrFar4"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där fadern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland far" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(28)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[identity.partition]]
+variable = "34.304"
+columns = { FodelseLandNamnFar = "34.304.fodelselandnamnfar", FodGrFar = "34.304.fodgrfar", FodGrFar2 = "34.304.fodgrfar2", FodGrFar5 = "34.304.fodgrfar5", FodGrFar3 = "34.304.fodgrfar3", FodGrFar4 = "34.304.fodgrfar4" }
+columns_ref = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119. Keep each literal grouping and source role distinct; country-name spelling owners retain existing public slugs."
+
+[[errata.occurrence_period]]
+variable = "34.305"
+variant = "34.1582"
+column = "FodelseLandNamnMor"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där modern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland mor" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.occurrence_period]]
+variable = "34.305"
+variant = "34.1582"
+column = "FodGrMor"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där modern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland mor" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(15)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.305.fodgrmor2"
+slug = "fodelseland-mor-grupp-eu25"
+
+[[errata.occurrence_period]]
+variable = "34.305"
+variant = "34.1582"
+column = "FodGrMor2"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där modern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland mor" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(25)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.305.fodgrmor5"
+slug = "fodelseland-mor-grupp-eu27-2020"
+
+[[errata.occurrence_period]]
+variable = "34.305"
+variant = "34.1582"
+column = "FodGrMor5"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där modern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland mor" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(27 2020)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.305.fodgrmor3"
+slug = "fodelseland-mor-grupp-eu27-2007"
+
+[[errata.occurrence_period]]
+variable = "34.305"
+variant = "34.1582"
+column = "FodGrMor3"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där modern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland mor" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(27)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.305.fodgrmor4"
+slug = "fodelseland-mor-grupp-eu28"
+
+[[errata.occurrence_period]]
+variable = "34.305"
+variant = "34.1582"
+column = "FodGrMor4"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Land där modern är född." }, { name = "description", status = "value", value = "Fram till år 1947 räknades alla personer som föddes i utlandet som utrikes födda. Sedan 1947 betraktas barn som är födda utomlands som födda i Sverige om modern vid barnets födelse är folkbokförd i Sverige. Som princip gäller att födelselandet skall registreras som det hette vid tiden för födelsen. Hänsyn kan dock tas till den känslomässiga betydelsen det har för personer, som är födda i ett land som efter deras födelse blivit självständigt, att de registreras som födda i den frigjorda staten." }, { name = "name", status = "value", value = "Födelseland mor" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(28)." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[identity.partition]]
+variable = "34.305"
+columns = { FodelseLandNamnMor = "34.305.fodelselandnamnmor", FodGrMor = "34.305.fodgrmor", FodGrMor2 = "34.305.fodgrmor2", FodGrMor5 = "34.305.fodgrmor5", FodGrMor3 = "34.305.fodgrmor3", FodGrMor4 = "34.305.fodgrmor4" }
+columns_ref = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119. Keep each literal grouping and source role distinct; country-name spelling owners retain existing public slugs."
+
+[[variable]]
+native_id = "34.45.invutvland"
+slug = "land-vid-in-utvandring"
+
+[[errata.occurrence_period]]
+variable = "34.45"
+variant = "34.1583"
+column = "InvUtvLand"
+edition = "15550"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "Det land personen invandrat från eller det land personen utvandrat till. Variabeln \"Posttyp\" visar om landet avser in- eller utvandring." }, { name = "representation", status = "absent" }]
+expected_period_text = "In- och utvandrade"
+expected_scope = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+expected_period = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.45.inv-utvgreg"
+slug = "land-vid-in-utvandring-grupp-eu15"
+
+[[errata.occurrence_period]]
+variable = "34.45"
+variant = "34.1583"
+column = "Inv_UtvGrEg"
+edition = "15550"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(15) som personen invandrat från eller det land personen utvandrat till. Variabeln \"Posttyp\" visar om landet avser in- eller utvandring." }, { name = "representation", status = "absent" }]
+expected_period_text = "In- och utvandrade"
+expected_scope = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+expected_period = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.45.inv-utvgreg2"
+slug = "land-vid-in-utvandring-grupp-eu25"
+
+[[errata.occurrence_period]]
+variable = "34.45"
+variant = "34.1583"
+column = "Inv_UtvGrEg2"
+edition = "15550"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(25) som personen invandrat från eller det land personen utvandrat till. Variabeln \"Posttyp\" visar om landet avser in- eller utvandring." }, { name = "representation", status = "absent" }]
+expected_period_text = "In- och utvandrade"
+expected_scope = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+expected_period = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.45.inv-utvgreg3"
+slug = "land-vid-in-utvandring-grupp-eu27-2007"
+
+[[errata.occurrence_period]]
+variable = "34.45"
+variant = "34.1583"
+column = "Inv_UtvGrEg3"
+edition = "15550"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(27) som personen invandrat från eller det land personen utvandrat till. Variabeln \"Posttyp\" visar om landet avser in- eller utvandring." }, { name = "representation", status = "absent" }]
+expected_period_text = "In- och utvandrade"
+expected_scope = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+expected_period = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[variable]]
+native_id = "34.45.inv-utvgreg4"
+slug = "land-vid-in-utvandring-grupp-eu28"
+
+[[errata.occurrence_period]]
+variable = "34.45"
+variant = "34.1583"
+column = "Inv_UtvGrEg4"
+edition = "15550"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "Grupperat land enligt EU(28) som personen invandrat från eller det land personen utvandrat till. Variabeln \"Posttyp\" visar om landet avser in- eller utvandring." }, { name = "representation", status = "absent" }]
+expected_period_text = "In- och utvandrade"
+expected_scope = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+expected_period = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[identity.partition]]
+variable = "34.45"
+columns = { InvUtvLand = "34.45.invutvland", Inv_UtvGrEg = "34.45.inv-utvgreg", Inv_UtvGrEg2 = "34.45.inv-utvgreg2", Inv_UtvGrEg3 = "34.45.inv-utvgreg3", Inv_UtvGrEg4 = "34.45.inv-utvgreg4" }
+columns_ref = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119. Keep each literal grouping and source role distinct; country-name spelling owners retain existing public slugs."

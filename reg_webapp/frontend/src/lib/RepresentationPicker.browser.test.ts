@@ -52,6 +52,7 @@ function row(over: Partial<PickerRepresentation>): PickerRepresentation {
 function graphState(over: Partial<GraphState> = {}): GraphState {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "v",
     variant_label: null,
     representation_run_id: 1,
@@ -161,6 +162,7 @@ function lisaIndividerState(variant: LisaIndividerVariant): PickerStateInput {
   const predecessor = variant === "individer-16plus";
   return {
     state_id: predecessor ? 1 : 2,
+    period_scope: "intervals",
     variant,
     variant_label: predecessor ? "Individer, 16 plus" : "Individer, 15 plus",
     variant_family: "individer-15plus",
@@ -320,6 +322,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
         states: [
           graphState({
             state_id: 2,
+            period_scope: "intervals",
             representation_run_id: 2,
             delivery_column_name: "Bcol",
             valid_from: "2011-01-01",
@@ -373,6 +376,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
         }),
         graphState({
           state_id: 2,
+          period_scope: "intervals",
           representation_run_id: 2,
           delivery_column_name: "NEW",
           valid_from: "2010-01-01",
@@ -443,6 +447,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NextCol",
                 valid_from: "2011-01-01",
@@ -515,6 +520,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NextCol",
                 valid_from: "2011-01-01",
@@ -590,6 +596,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: null,
                 value_set_version_label: "successor coding",
@@ -687,6 +694,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: null,
                 value_set_version_label: "uncolumned coding",
@@ -699,6 +707,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 3,
+                period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: null,
                 value_set_version_label: "successor context",
@@ -984,6 +993,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "PersOrgNr",
                 valid_from: "2014-01-01",
@@ -991,6 +1001,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 3,
+                period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: "BorgNr",
                 valid_from: "2018-01-01",
@@ -1164,6 +1175,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "OLD",
                 valid_from: "1990-01-01",
@@ -1171,6 +1183,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEW",
                 valid_from: "2000-01-01",
@@ -1357,6 +1370,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 variant: "individer-15plus",
                 representation_run_id: 2,
                 delivery_column_name: "Kon",
@@ -1466,6 +1480,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 variant: "individer-15plus",
                 representation_run_id: 2,
                 delivery_column_name: "Kon",
@@ -1478,6 +1493,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 3,
+                period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: "Kon2",
                 valid_from: "2024-01-01",
@@ -1552,6 +1568,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEXT",
                 valid_from: "2000-01-01",
@@ -1613,6 +1630,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "OLD",
                 valid_from: "1990-01-01",
@@ -1620,6 +1638,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEW",
                 valid_from: "2000-01-01",
@@ -1678,11 +1697,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "HIDDEN",
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "MEMBER",
               }),
@@ -1748,6 +1769,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "HIDDEN",
                 valid_from: "1990-01-01",
@@ -1755,6 +1777,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "MEMBER",
                 valid_from: "2000-01-01",
@@ -1873,6 +1896,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "Bcol",
                 valid_from: "2011-01-01",
@@ -1916,6 +1940,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
         states: [
           graphState({
             state_id: i + 1,
+            period_scope: "intervals",
             representation_run_id: i + 1,
             delivery_column_name: `C${i}`,
             valid_from: `${2000 + i}-01-01`,
@@ -2038,6 +2063,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: columns.map((column, i) =>
               graphState({
                 state_id: i + 1,
+                period_scope: "intervals",
                 representation_run_id: i + 1,
                 delivery_column_name: column,
                 valid_from: `${2000 + i}-01-01`,
@@ -2049,6 +2075,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 100,
+                period_scope: "intervals",
                 representation_run_id: 100,
                 delivery_column_name: "NEXT",
                 valid_from: "2050-01-01",
@@ -2118,6 +2145,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "OLD",
                 value_set_version_label: "Old coding",
@@ -2126,6 +2154,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEW",
                 value_set_version_label: "New coding",
@@ -2193,6 +2222,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "OLD",
                 value_set_version_label: "Old coding",
@@ -2201,6 +2231,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEW",
                 value_set_version_label: "New coding",
@@ -2288,6 +2319,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 variant: "individer-16plus",
                 representation_run_id: 1,
                 delivery_column_name: "Kon",
@@ -2298,6 +2330,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 variant: "individer-15plus",
                 representation_run_id: 2,
                 delivery_column_name: "Kon",
@@ -2358,11 +2391,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "MEMBER",
               }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "HIDDEN",
               }),
@@ -2452,11 +2487,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
               graphState({ delivery_column_name: "DIN1" }),
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "DIN2",
               }),
               graphState({
                 state_id: 3,
+                period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: "DIN3",
               }),
@@ -2466,6 +2503,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 4,
+                period_scope: "intervals",
                 representation_run_id: 4,
                 delivery_column_name: "NEXT",
               }),
@@ -2530,6 +2568,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEXT",
                 valid_from: "2011-01-01",
@@ -2614,6 +2653,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "SUNNEXT",
                 value_set_version_label: "SUN 2020",
@@ -2674,11 +2714,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "JAN",
               }),
               graphState({
                 state_id: 1,
+                period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "FEB",
               }),
@@ -2688,6 +2730,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEXT",
                 valid_from: "2011-01-01",
@@ -2785,6 +2828,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({
                 state_id: 2,
+                period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "Syss",
                 valid_from: "2011-01-01",
@@ -4016,6 +4060,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
           rows: pickerRepresentations(
             populations.map((p, i) => ({
               state_id: i + 1,
+              period_scope: "intervals",
               variant: p.variant,
               variant_label: p.label,
               delivery_column_name: column,
@@ -4033,6 +4078,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
             states: populations.map((p, i) =>
               graphState({
                 state_id: i + 1,
+                period_scope: "intervals",
                 representation_run_id: i + 1,
                 variant: p.variant,
                 variant_label: p.label,
@@ -4182,6 +4228,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
             states: [
               graphState({
                 state_id: 3,
+                period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: "Syss",
                 valid_from: "2023-01-01",
@@ -4468,6 +4515,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
           rows: pickerRepresentations(
             labels.map((label, i) => ({
               state_id: i + 1,
+              period_scope: "intervals",
               variant: variants[i],
               variant_label: label,
               delivery_column_name: "Kon",
@@ -4485,6 +4533,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
             states: labels.map((label, i) =>
               graphState({
                 state_id: i + 1,
+                period_scope: "intervals",
                 representation_run_id: i + 1,
                 variant: variants[i],
                 variant_label: label,

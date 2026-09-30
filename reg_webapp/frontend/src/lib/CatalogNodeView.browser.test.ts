@@ -1417,6 +1417,7 @@ function columnState(
 ): VariableStateModel {
   return {
     state_id: id,
+    period_scope: "intervals",
     variant,
     variant_label: null,
     register_variant_id: 1,

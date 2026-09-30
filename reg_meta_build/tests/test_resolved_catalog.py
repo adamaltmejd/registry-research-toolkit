@@ -1238,3 +1238,72 @@ def test_failed_validation_preserves_previous_catalog(
         write_resolved_catalog((_variable("sos"),), output, manifest={}, corpus=corpus)
     assert output.read_bytes() == original
     assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]
+
+
+@pytest.mark.parametrize(
+    "updates",
+    [
+        {"period_scope": "year_independent", "valid_from": "2000-01-01"},
+        {"period_scope": "year_independent", "valid_to": "9999-12-31"},
+        {"period_scope": "year_independent", "pooled": True},
+        {"period_scope": "intervals"},
+        {"period_scope": "intervals", "valid_from": "2000-01-01"},
+    ],
+)
+def test_year_independent_state_requires_no_dates_and_dated_state_requires_both(
+    updates,
+):
+    state = _state(2000).model_dump()
+    state.update(valid_from=None, valid_to=None)
+    state.update(updates)
+    with pytest.raises(ValidationError):
+        ResolvedState.model_validate(state)
+
+
+def test_year_independent_writer_preserves_null_bounds_and_guards_scope_mixing(
+    tmp_path,
+):
+    independent = _state(2000).model_copy(
+        update={
+            "period_scope": "year_independent",
+            "valid_from": None,
+            "valid_to": None,
+        }
+    )
+    variable = _variable().model_copy(update={"states": (independent,)})
+    output = tmp_path / "independent.db"
+    write_resolved_catalog((variable,), output, manifest={})
+    with closing(open_db(output)) as connection:
+        assert tuple(
+            connection.execute(
+                "SELECT period_scope, valid_from, valid_to, pooled FROM variable_state"
+            ).fetchone()
+        ) == ("year_independent", None, None, 0)
+    for states in ((independent, independent), (independent, _state(2000))):
+        bad = variable.model_copy(update={"states": states})
+        with pytest.raises(
+            ValidationError, match="(duplicate year-independent|mixed dated)"
+        ):
+            write_resolved_catalog((bad,), tmp_path / "bad.db", manifest={})
+    with pytest.raises(ValidationError, match="dated alias windows"):
+        write_resolved_catalog(
+            (
+                variable.model_copy(
+                    update={
+                        "aliases": (
+                            ResolvedAlias(
+                                variant=independent.variant,
+                                delivery_column_name="Old",
+                                windows=(
+                                    ResolvedAliasWindow(
+                                        valid_from="2000-01-01", valid_to="2000-12-31"
+                                    ),
+                                ),
+                            ),
+                        )
+                    }
+                ),
+            ),
+            tmp_path / "bad-alias.db",
+            manifest={},
+        )

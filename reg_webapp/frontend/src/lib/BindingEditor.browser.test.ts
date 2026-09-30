@@ -33,6 +33,7 @@ function state(
 ): VariableStateModel {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "v1",
     variant_label: null,
     register_variant_id: 1,

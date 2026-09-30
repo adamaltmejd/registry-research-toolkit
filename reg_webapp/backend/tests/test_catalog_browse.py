@@ -119,6 +119,7 @@ def test_register_children_carry_their_delivery_columns(client):
         {
             "variant": "individer-15plus",
             "column": "Kon",
+            "period_scope": "intervals",
             "coverage": {
                 "coverage_from": "2018-01-01",
                 "coverage_to": None,

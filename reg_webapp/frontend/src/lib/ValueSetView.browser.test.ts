@@ -52,6 +52,7 @@ beforeEach(() => {
       return {
         value_set_id: valueSetId,
         state_id: state,
+        period_scope: "intervals",
         q,
         total: matched.length,
         offset,
@@ -66,6 +67,7 @@ beforeEach(() => {
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "v",
     variant_label: null,
     register_variant_id: 1,
@@ -336,6 +338,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         state({
           ...classState,
           state_id: 11,
+          period_scope: "intervals",
           value_set_id: 101,
           value_set_version_label: "LKF 2007 rev A",
           variant: "fodda",
@@ -349,6 +352,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         state({
           ...classState,
           state_id: 12,
+          period_scope: "intervals",
           value_set_id: 102,
           value_set_version_label: "LKF 2007 rev B",
           variant: "flytt",
@@ -588,6 +592,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         state({
           ...base,
           state_id: 1,
+          period_scope: "intervals",
           valid_from: "2012-01-01",
           valid_to: "2012-12-31",
           pooled: true,
@@ -595,6 +600,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         state({
           ...base,
           state_id: 2,
+          period_scope: "intervals",
           valid_from: "2013-01-01",
           valid_to: "2013-12-31",
           pooled: false,
@@ -602,6 +608,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         state({
           ...base,
           state_id: 3,
+          period_scope: "intervals",
           valid_from: "2014-01-01",
           valid_to: "2014-12-31",
           pooled: true,

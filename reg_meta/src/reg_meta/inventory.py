@@ -369,7 +369,7 @@ class InventoryColumn(_InventoryModel):
 
 class InventoryTable(_InventoryModel):
     """One delivered table: an opaque exact identifier, ONE explicit physical
-    edition, and its physical columns.
+    edition or explicit year-independent scope, and its physical columns.
 
     An authored year int or period token means the file delivers ONE period; an
     explicit range or list means the file delivers multiple periods.
@@ -388,6 +388,7 @@ class InventoryTable(_InventoryModel):
 
     id: str = Field(min_length=1)
     edition: Edition
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
     partition: str | None = None
     columns: tuple[InventoryColumn, ...] = Field(alias="column")
 
@@ -413,9 +414,11 @@ class InventoryTable(_InventoryModel):
     @classmethod
     def _check_finite_edition(cls, value: Edition) -> Edition:
         """Every segment expands through the shared period grammar — so
-        `"_default"`, an unbounded sentinel, an inverted range, and an
-        out-of-order/overlapping list all fail here, located at `edition`."""
-        edition_bounds(value)
+        An inverted range and an out-of-order/overlapping list fail here.
+        A whole `_default` is admitted only by the year-independent scope
+        validator below; it never expands into calendar bounds."""
+        if value != "_default":
+            edition_bounds(value)
         return value
 
     @field_validator("columns")
@@ -436,6 +439,23 @@ class InventoryTable(_InventoryModel):
                 "column, including the unresolved ones that carry no mapping"
             )
         return value
+
+    @model_validator(mode="after")
+    def _check_period_scope(self) -> InventoryTable:
+        if self.period_scope == "year_independent":
+            if self.edition != "_default":
+                raise ValueError("year-independent tables require edition='_default'")
+            if any(
+                m.register_variant.split("/")[-1] == "_default"
+                for c in self.columns
+                for m in c.mappings
+            ):
+                raise ValueError("year-independent mappings require a concrete variant")
+        elif self.edition == "_default":
+            raise ValueError(
+                "edition='_default' requires year-independent period_scope"
+            )
+        return self
 
     @model_validator(mode="after")
     def _check_unique_columns(self) -> InventoryTable:
@@ -551,12 +571,20 @@ class DeliveryInventory(_InventoryModel):
         O(n²) — the largest realistic group is one variable's annual series, a
         few dozen editions.
         """
-        located: dict[tuple[str, str], list[_Placement]] = {}
+        located: dict[tuple[str, str, str], list[_Placement]] = {}
         for table in self.tables:
-            bounds = edition_bounds(table.edition)
+            bounds = (
+                edition_bounds(table.edition)
+                if table.period_scope == "intervals"
+                else ()
+            )
             for column in table.columns:
                 for mapping in column.mappings:
-                    key = (mapping.register_variant, str(mapping.variable))
+                    key = (
+                        mapping.register_variant,
+                        str(mapping.variable),
+                        table.period_scope,
+                    )
                     located.setdefault(key, []).append(
                         (
                             table.id,
@@ -568,7 +596,7 @@ class DeliveryInventory(_InventoryModel):
                     )
         conflicts: list[str] = []
         reported: set[tuple[str, ...]] = set()
-        for (variant, variable), placements in located.items():
+        for (variant, variable, scope), placements in located.items():
             for index, (a_table, a_column, a_rep, a_bounds, a_part) in enumerate(
                 placements
             ):
@@ -584,7 +612,7 @@ class DeliveryInventory(_InventoryModel):
                     if _partitions_separate(a_part, b_part):
                         continue
                     overlap = _overlap(a_bounds, b_bounds)
-                    if not overlap:
+                    if not overlap and scope == "intervals":
                         continue
                     pair = (variant, variable, a_table, a_column, b_table, b_column)
                     if pair in reported:
@@ -599,7 +627,7 @@ class DeliveryInventory(_InventoryModel):
                         f"({_representation_label(a_rep)}) and "
                         f"{_location(b_table, b_column)} "
                         f"({_representation_label(b_rep)}) both map "
-                        f"{variant} {variable} over {_render(overlap)}"
+                        f"{variant} {variable} over {'_default' if scope == 'year_independent' else _render(overlap)}"
                         + _partition_hint(a_part, b_part)
                     )
         if conflicts:

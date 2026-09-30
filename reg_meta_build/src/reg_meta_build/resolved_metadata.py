@@ -17,6 +17,7 @@ from reg_meta.fqid import FqidKind, parse, validate_slug
 from reg_meta_build._resolved_common import (
     _classification_id,
     _require_trimmed,
+    _ResolvedDeliveryScope,
     _ResolvedModel,
     _ResolvedWindow,
     _storage_id,
@@ -314,7 +315,7 @@ class ResolvedClassificationDerivation(_ResolvedModel):
     _slugs = field_validator("derived", "source")(_slug)
 
 
-class ResolvedStateRef(_ResolvedWindow):
+class ResolvedStateRef(_ResolvedDeliveryScope):
     variable: str
     variant: str
     delivery_column_name: str
@@ -331,6 +332,13 @@ class ResolvedStateLineage(_ResolvedWindow):
 
     @model_validator(mode="after")
     def _scope(self) -> Self:
+        if (
+            self.consumer.valid_from is None
+            or self.consumer.valid_to is None
+            or self.source.valid_from is None
+            or self.source.valid_to is None
+        ):
+            raise ValueError("dated lineage requires dated endpoint states")
         if self.valid_from < max(
             self.consumer.valid_from, self.source.valid_from
         ) or self.valid_to > min(self.consumer.valid_to, self.source.valid_to):
@@ -513,7 +521,8 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
 
 
 def state_reference_key(ref: ResolvedStateRef) -> tuple[str, str, str, str]:
-    return ref.variable, ref.variant, ref.valid_from, ref.value_set_version_label
+    coordinate = ref.valid_from if ref.valid_from is not None else "year_independent"
+    return ref.variable, ref.variant, coordinate, ref.value_set_version_label
 
 
 _COLUMNS = {
@@ -583,7 +592,9 @@ def prepare_resolved_metadata(
             key = (
                 fqid,
                 state.variant.slug,
-                state.valid_from,
+                state.valid_from
+                if state.valid_from is not None
+                else "year_independent",
                 state.value_set_version_label,
             )
             states[key] = state
@@ -620,11 +631,12 @@ def prepare_resolved_metadata(
             )
 
     def state_id(ref: ResolvedStateRef) -> int:
-        key = (ref.variable, ref.variant, ref.valid_from, ref.value_set_version_label)
+        key = state_reference_key(ref)
         state = require(states, key, "state")
-        if (state.valid_to, state.delivery_column_name) != (
+        if (state.valid_to, state.delivery_column_name, state.period_scope) != (
             ref.valid_to,
             ref.delivery_column_name,
+            ref.period_scope,
         ):
             raise ValueError(
                 "resolved state reference does not match its exact scope/column"
@@ -636,7 +648,7 @@ def prepare_resolved_metadata(
             register,
             variable,
             ref.variant,
-            ref.valid_from,
+            key[2],
             ref.value_set_version_label,
         )
 

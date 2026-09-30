@@ -11,7 +11,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from reg_meta.source_evidence import SourceField
 
@@ -46,8 +46,8 @@ class OccurrenceIssue:
 
 @dataclass(frozen=True)
 class SourceSegment:
-    valid_from: str
-    valid_to: str
+    valid_from: str | None
+    valid_to: str | None
     delivery_column_name: str
     fields: SourceFields
     occurrences: tuple[SourceRecord, ...]
@@ -58,6 +58,7 @@ class SourceSegment:
     # evidence out before field reconciliation, so the segment is ordinary —
     # pooled evidence never marks, splits, or disputes annual coverage.
     pooled: bool = False
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
 
 
 @dataclass(frozen=True)
@@ -250,6 +251,8 @@ def _merge_adjacent_pooled(segments: list[SourceSegment]) -> list[SourceSegment]
             previous is not None
             and previous.pooled
             and segment.pooled
+            and segment.valid_from is not None
+            and previous.valid_to is not None
             and date.fromisoformat(segment.valid_from).toordinal()
             == date.fromisoformat(previous.valid_to).toordinal() + 1
             and _pooled_merge_key(previous) == _pooled_merge_key(segment)
@@ -436,6 +439,67 @@ def reconcile_source_fields(
     return SourceFields.model_validate(resolved), tuple(sorted(conflicts))
 
 
+def _reconciled_segment(
+    winners: tuple[EffectiveOccurrence, ...],
+    column: str,
+    lower: str | None,
+    upper: str | None,
+    storage: Mapping[str, StewardColumnStorage] | None,
+    *,
+    period_scope: Literal["intervals", "year_independent"] = "intervals",
+) -> tuple[SourceSegment | None, tuple[OccurrenceIssue, ...]]:
+    issues: list[OccurrenceIssue] = []
+    occurrences = tuple(record for item in winners for record in item.evidence)
+    fields, conflicts = reconcile_source_fields(
+        winners,
+        storage=storage.get(fold_column(column)) if storage is not None else None,
+    )
+    populations = {
+        record.population_key for record in winners if record.population_key is not None
+    }
+    if len(populations) > 1:
+        issues.append(
+            OccurrenceIssue(
+                "conflicting_occurrence_population",
+                ("subject.population",),
+                occurrences,
+                lower,
+                upper,
+                ("column_segment",),
+            )
+        )
+    diagnostic_conflicts = tuple(
+        name for name in conflicts if name not in _ABSORBED_OCCURRENCE_CONFLICT_FIELDS
+    )
+    if diagnostic_conflicts:
+        issues.append(
+            OccurrenceIssue(
+                "conflicting_occurrence_facts",
+                diagnostic_conflicts,
+                occurrences,
+                lower,
+                upper,
+                ("column_segment",)
+                if "availability" in diagnostic_conflicts
+                else diagnostic_conflicts,
+            )
+        )
+    availability = fields.availability
+    assert availability is not None
+    if availability.status == "unknown" or len(populations) > 1:
+        return None, tuple(issues)
+    return SourceSegment(
+        lower,
+        upper,
+        column,
+        fields,
+        occurrences,
+        winners,
+        pooled=_segment_pooled(winners) if period_scope == "intervals" else False,
+        period_scope=period_scope,
+    ), tuple(issues)
+
+
 def resolve_occurrence_intervals(
     records: Iterable[SourceRecord | EffectiveOccurrence],
     *,
@@ -461,6 +525,8 @@ def resolve_occurrence_intervals(
     Unknown optional observations do not contradict a supplied concrete fact.
     """
     by_column: dict[str, list[tuple[int, int, int]]] = defaultdict(list)
+    independent: dict[str, list[EffectiveOccurrence]] = defaultdict(list)
+    scoped_columns: set[str] = set()
     source_records = tuple(effective_occurrence(record) for record in records)
     issues: list[OccurrenceIssue] = []
     unsupported: list[SourceRecord] = []
@@ -486,12 +552,18 @@ def resolve_occurrence_intervals(
             columnless.extend(record.evidence)
             continue
         column = _column(record)
+        scope = record.edition_period_scope
+        if scope.kind == "not_applicable":
+            scope = record.edition_scope
+        is_independent = scope.kind == "year_independent"
+        if column is not None and not is_independent:
+            scoped_columns.add(column)
         periods = occurrence_bounds(record)
         availability = record.fields.availability
         missing = []
         if column is None:
             missing.append("column_name")
-        if periods is None:
+        if periods is None and not is_independent:
             missing.append("period")
         if availability is None or availability.status == "unknown":
             missing.append("availability")
@@ -508,7 +580,11 @@ def resolve_occurrence_intervals(
                 )
             )
             continue
-        assert column is not None and periods is not None
+        assert column is not None
+        if is_independent:
+            independent[column].append(record)
+            continue
+        assert periods is not None
         for start, end in periods:
             by_column[column].append((start, end, ordinal))
     if columnless:
@@ -525,6 +601,38 @@ def resolve_occurrence_intervals(
 
     segments = []
     negative_segments = []
+    for column, members in sorted(independent.items()):
+        if column in scoped_columns:
+            occurrences = tuple(
+                r
+                for record in source_records
+                if _column(record) == column
+                for r in record.evidence
+            )
+            issues.append(
+                OccurrenceIssue(
+                    "conflicting_occurrence_scope",
+                    ("period",),
+                    occurrences,
+                    None,
+                    None,
+                    ("column_segment",),
+                )
+            )
+            by_column.pop(column, None)
+            continue
+        segment, segment_issues = _reconciled_segment(
+            tuple(members), column, None, None, storage, period_scope="year_independent"
+        )
+        issues.extend(segment_issues)
+        if segment is not None:
+            if (
+                segment.fields.availability is not None
+                and segment.fields.availability.status == "negative"
+            ):
+                negative_segments.append(segment)
+            else:
+                segments.append(segment)
     for column, periods in sorted(by_column.items()):
         column_segments: list[SourceSegment] = []
         changes: dict[int, list[tuple[int, int]]] = defaultdict(list)
@@ -552,73 +660,22 @@ def resolve_occurrence_intervals(
                 tuple(record for record in effective if not _occurrence_pooled(record))
                 or effective
             )
-            occurrences = tuple(record for item in winners for record in item.evidence)
-            fields, conflicts = reconcile_source_fields(
-                winners,
-                storage=storage.get(fold_column(column))
-                if storage is not None
-                else None,
-            )
             lower, upper = (
                 date.fromordinal(start).isoformat(),
                 date.fromordinal(end).isoformat(),
             )
-            populations = {
-                record.population_key
-                for record in winners
-                if record.population_key is not None
-            }
-            if len(populations) > 1:
-                issues.append(
-                    OccurrenceIssue(
-                        "conflicting_occurrence_population",
-                        ("subject.population",),
-                        occurrences,
-                        lower,
-                        upper,
-                        ("column_segment",),
-                    )
-                )
-            diagnostic_conflicts = tuple(
-                name
-                for name in conflicts
-                if name not in _ABSORBED_OCCURRENCE_CONFLICT_FIELDS
+            segment, segment_issues = _reconciled_segment(
+                winners, column, lower, upper, storage
             )
-            if diagnostic_conflicts:
-                issues.append(
-                    OccurrenceIssue(
-                        "conflicting_occurrence_facts",
-                        diagnostic_conflicts,
-                        occurrences,
-                        lower,
-                        upper,
-                        ("column_segment",)
-                        if "availability" in diagnostic_conflicts
-                        else diagnostic_conflicts,
-                    )
-                )
-            availability = fields.availability
-            assert availability is not None
-            pooled = _segment_pooled(winners)
-            if availability.status == "negative" and len(populations) <= 1:
-                negative_segments.append(
-                    SourceSegment(
-                        lower,
-                        upper,
-                        column,
-                        fields,
-                        occurrences,
-                        winners,
-                        pooled=pooled,
-                    )
-                )
-            if availability.status != "value" or len(populations) > 1:
-                continue
-            column_segments.append(
-                SourceSegment(
-                    lower, upper, column, fields, occurrences, winners, pooled=pooled
-                )
-            )
+            issues.extend(segment_issues)
+            if segment is not None:
+                if (
+                    segment.fields.availability is not None
+                    and segment.fields.availability.status == "negative"
+                ):
+                    negative_segments.append(segment)
+                else:
+                    column_segments.append(segment)
         segments.extend(_merge_adjacent_pooled(column_segments))
     return OccurrenceResolution(
         tuple(segments), tuple(negative_segments), tuple(issues), tuple(unsupported)

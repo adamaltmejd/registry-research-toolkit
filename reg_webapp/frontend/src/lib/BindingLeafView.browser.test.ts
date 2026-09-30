@@ -56,6 +56,7 @@ vi.mock("./api", async (importOriginal) => {
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "v",
     variant_label: null,
     register_variant_id: 1,
@@ -79,6 +80,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
 function gstate(over: Partial<GraphState>): GraphState {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "v",
     variant_label: null,
     representation_run_id: 1,
@@ -298,6 +300,7 @@ beforeEach(() => {
       return {
         value_set_id: valueSetId,
         state_id: state,
+        period_scope: "intervals",
         q,
         total: codes.length,
         offset,

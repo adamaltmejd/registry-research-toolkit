@@ -222,12 +222,21 @@ two distinct facts are entangled there:
   cross-era constants (`name`, `definition`, `description`, `measurement_unit`,
   `is_sensitive`, `is_identifier`, source attribution).
 - **`variable_state`** — the **per-delivery shape**, a child of `variable`. A variable
-  has 1..N states; each carries a **variant coordinate** and a period range, plus the
-  data type, length, value set, and version label. The **value set anchors state
-  identity**: SCB's low-trust per-delivery `data_type`/`data_length` no longer split a
-  state when a value set is present (a state can span several deliveries whose only
-  difference was a type-string wobble; the displayed type is then the latest era's) —
-  see reg_meta_build/DESIGN.md § "State-identity rule (#526)".
+  has 1..N states; each carries a **variant coordinate** and explicit delivery scope,
+  plus the data type, length, value set, and version label. The **value set anchors
+  state identity**: SCB's low-trust per-delivery `data_type`/`data_length` no longer
+  split a state when a value set is present (a state can span several deliveries whose
+  only difference was a type-string wobble; the displayed type is then the latest era's)
+  — see reg_meta_build/DESIGN.md § "State-identity rule (#526)".
+
+Dated states use `period_scope = "intervals"` and two ISO bounds; pooled delivery
+retains its separate flag. A source-documented independent table uses
+`period_scope = "year_independent"`, two NULL bounds and no pooled flag. It has no
+calendar availability claim. Calendar-year selection excludes these states. Selection
+uses an explicit concrete variant and the whole `_default` period token; inventory and
+ordering retain that exact nonannual coordinate. Birth, migration or classification
+dates do not provide a delivery range. One owner/variant cannot mix dated and
+independent states, and independent code versions remain distinct.
 
 The SCB source delivery this collapses (the CVID grain, the input-file mapping) is
 documented in [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) § "Source

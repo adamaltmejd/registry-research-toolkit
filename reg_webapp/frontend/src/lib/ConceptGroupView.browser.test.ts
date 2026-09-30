@@ -41,6 +41,7 @@ const SEED = { regMetaVersion: "1.0.0", steward: "global" } as const;
 function gstate(over: Partial<GraphState>): GraphState {
   return {
     state_id: 1,
+    period_scope: "intervals",
     representation_run_id: 1,
     variant: "v",
     variant_label: null,
@@ -120,6 +121,7 @@ function node(
 function vstate(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "individer",
     variant_label: null,
     register_variant_id: 1,

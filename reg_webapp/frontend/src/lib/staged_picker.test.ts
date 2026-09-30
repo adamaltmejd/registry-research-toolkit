@@ -601,13 +601,38 @@ describe("finalAddPeriodWires", () => {
     ).toBeNull();
   });
 
-  it("refuses the batch when an add resolves to a non-finite period", () => {
-    // `_default` is browse state, never a `Source.period` — the same rule
-    // `isStructurallyValidPeriodWire` enforces everywhere a `?period` is committed.
+  it("accepts year-independent selection only with a concrete variant and unmixed scope", () => {
     expect(
       finalAddPeriodWires(
         [],
-        [{ registerVariant: "scb/lisa/ind", period: "_default" }],
+        [{ registerVariant: "scb/lisa/country-groups", period: "_default" }],
+      ),
+    ).toEqual(["_default"]);
+    expect(
+      finalAddPeriodWires(
+        [],
+        [{ registerVariant: "scb/lisa/_default", period: "_default" }],
+      ),
+    ).toBeNull();
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/country-groups", period: 2020 }],
+        [{ registerVariant: "scb/lisa/country-groups", period: "_default" }],
+      ),
+    ).toBeNull();
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/country-groups", period: "_default" }],
+        [{ registerVariant: "scb/lisa/country-groups", period: 2020 }],
+      ),
+    ).toBeNull();
+    expect(
+      finalAddPeriodWires(
+        [],
+        [
+          { registerVariant: "scb/lisa/country-groups", period: "_default" },
+          { registerVariant: "scb/lisa/country-groups", period: 2020 },
+        ],
       ),
     ).toBeNull();
   });
@@ -796,6 +821,7 @@ describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
 function leafState(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "individer",
     variant_label: null,
     register_variant_id: 1,
@@ -823,6 +849,7 @@ const konDeliveries: VariableDeliveryModel[] = [
   {
     variant: "hushall",
     column: "Kon",
+    period_scope: "intervals",
     coverage: {
       coverage_from: "1990-01-01",
       coverage_to: "2023-12-31",
@@ -834,6 +861,7 @@ const konDeliveries: VariableDeliveryModel[] = [
   {
     variant: "individer",
     column: "Kon",
+    period_scope: "intervals",
     coverage: {
       coverage_from: "1990-01-01",
       coverage_to: "2023-12-31",
@@ -889,6 +917,7 @@ const lanDeliveries: VariableDeliveryModel[] = [
   {
     variant: "andringar",
     column: "Lan",
+    period_scope: "intervals",
     coverage: {
       coverage_from: "1968-01-01",
       coverage_to: null,
@@ -1057,6 +1086,7 @@ describe("applyStagedPicks", () => {
       {
         variant: "individer",
         column: "Kon",
+        period_scope: "intervals",
         coverage: {
           coverage_from: "2018-01-01",
           coverage_to: null,

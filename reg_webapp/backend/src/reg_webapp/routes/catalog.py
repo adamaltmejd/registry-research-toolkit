@@ -1995,7 +1995,9 @@ def get_catalog_node(
                 # alone would collapse 11 of them. Insertion order keeps the
                 # per-segment resolve_at ordering, chronological across a sorted
                 # list.
-                states_by_id: dict[tuple[int, str | None, str], VariableState] = {}
+                states_by_id: dict[
+                    tuple[int, str | None, str | None], VariableState
+                ] = {}
                 try:
                     for segment in period:
                         for s in catalog.resolve_at(

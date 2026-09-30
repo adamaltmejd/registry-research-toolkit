@@ -1028,3 +1028,27 @@ def test_mixed_columnless_and_unresolvable_occurrence_stays_an_error() -> None:
     assert omitted.severity == "warning"
     (terminal,) = [d for d in formed.diagnostics if d.code == "no_supported_states"]
     assert terminal.severity == "error"
+
+
+def test_independent_delivery_forms_without_calendar_dates_and_retains_source():
+    scope = TemporalScope(kind="year_independent")
+    record = _record(2020).model_copy(
+        update={"edition_scope": scope, "edition_period_scope": scope}
+    )
+    claim = CodeListClaim(
+        "native-list",
+        scope,
+        (CodeMembershipClaim("02", "EU25 utom Norden", scope),),
+        "EU25",
+    )
+    formed = _form((record,), claims=(claim,))
+    assert formed.diagnostics == ()
+    assert formed.occurrences == (record,)
+    (state,) = formed.variable.states
+    assert state.period_scope == "year_independent"
+    assert state.valid_from is state.valid_to is None
+    assert state.pooled is False
+    assert state.value_set.members == (("02", "EU25 utom Norden"),)
+    (obligation,) = formed.coverage
+    assert obligation.period_scope == "year_independent"
+    assert obligation.valid_from is obligation.valid_to is None

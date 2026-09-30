@@ -191,6 +191,23 @@ def apply_alias_cases(
             original = variables[decision.variable_key]
             assert original is not None
             if isinstance(decision, AliasWindowDecision):
+                if any(
+                    s.variant == variant and s.period_scope == "year_independent"
+                    for s in original.states
+                ):
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code="unsupported_alias_scope",
+                            severity="error",
+                            case_id=case.case_id,
+                            subject=repr(decision.variable_key),
+                            detail="A dated alias window cannot assign availability to year-independent delivery.",
+                            refs=tuple(target.ref for target in case.targets),
+                            fields=("alias",),
+                            withheld_output=(output,),
+                        )
+                    )
+                    continue
                 owned = any(
                     s.variant == variant and s.delivery_column_name == decision.column
                     for s in original.states
@@ -203,6 +220,8 @@ def apply_alias_cases(
                         (s.valid_from, s.valid_to)
                         for s in original.states
                         if s.variant == variant
+                        and s.valid_from is not None
+                        and s.valid_to is not None
                     ),
                     decision.valid_from,
                     decision.valid_to,
@@ -217,8 +236,15 @@ def apply_alias_cases(
                         any(
                             s.variant == variant
                             and s.delivery_column_name == decision.column
-                            and s.valid_from <= decision.valid_to
-                            and s.valid_to >= decision.valid_from
+                            and (
+                                s.period_scope == "year_independent"
+                                or (
+                                    s.valid_from is not None
+                                    and s.valid_to is not None
+                                    and s.valid_from <= decision.valid_to
+                                    and s.valid_to >= decision.valid_from
+                                )
+                            )
                             for s in other.states
                         )
                         or any(

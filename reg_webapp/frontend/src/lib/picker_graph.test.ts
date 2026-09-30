@@ -20,6 +20,7 @@ import {
 function state(over: Partial<GraphState> = {}): GraphState {
   return {
     state_id: 1,
+    period_scope: "intervals",
     variant: "v",
     variant_label: null,
     representation_run_id: 1,

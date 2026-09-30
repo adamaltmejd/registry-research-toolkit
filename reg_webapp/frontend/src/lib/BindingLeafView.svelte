@@ -954,10 +954,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                       : "Interval",
                   value:
                     formatStateWindow(correction.state) ??
-                    windowTitle(
-                      correction.state.valid_from,
-                      correction.state.valid_to,
-                    ),
+                    windowTitle(correction.state.valid_from, correction.state.valid_to, correction.state.period_scope),
                   mono: true,
                 },
                 ...(correction.providerDocumented
@@ -984,10 +981,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
               ] satisfies KeyValueRow[]}
               <li>
                 <div
-                  title={windowTitle(
-                    correction.state.valid_from,
-                    correction.state.valid_to,
-                  )}
+                  title={windowTitle(correction.state.valid_from, correction.state.valid_to, correction.state.period_scope)}
                 >
                   <KeyValue rows={correctionFacts} />
                 </div>
@@ -1009,7 +1003,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
                 {
                   label: "Interval",
-                  value: windowTitle(state.valid_from, state.valid_to),
+                  value: windowTitle(state.valid_from, state.valid_to, state.period_scope),
                   mono: true,
                 },
                 {
@@ -1018,7 +1012,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
               ] satisfies KeyValueRow[]}
               <li>
-                <div title={windowTitle(state.valid_from, state.valid_to)}>
+                <div title={windowTitle(state.valid_from, state.valid_to, state.period_scope)}>
                   <KeyValue rows={gapFacts} />
                 </div>
               </li>
@@ -1038,7 +1032,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
                 {
                   label: "Interval",
-                  value: windowTitle(state.valid_from, state.valid_to),
+                  value: windowTitle(state.valid_from, state.valid_to, state.period_scope),
                   mono: true,
                 },
                 {
@@ -1048,7 +1042,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
               ] satisfies KeyValueRow[]}
               <li>
-                <div title={windowTitle(state.valid_from, state.valid_to)}>
+                <div title={windowTitle(state.valid_from, state.valid_to, state.period_scope)}>
                   <KeyValue rows={pooledFacts} />
                 </div>
               </li>
@@ -1076,10 +1070,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                   label: "Applies to interval",
                   value:
                     formatStateWindow(answer.state) ??
-                    windowTitle(
-                      answer.state.valid_from,
-                      answer.state.valid_to,
-                    ),
+                    windowTitle(answer.state.valid_from, answer.state.valid_to, answer.state.period_scope),
                   mono: true,
                 },
                 {
@@ -1138,10 +1129,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
               ] satisfies KeyValueRow[]}
               <li>
                 <div
-                  title={windowTitle(
-                    answer.state.valid_from,
-                    answer.state.valid_to,
-                  )}
+                  title={windowTitle(answer.state.valid_from, answer.state.valid_to, answer.state.period_scope)}
                 >
                   <KeyValue rows={answerFacts} />
                 </div>

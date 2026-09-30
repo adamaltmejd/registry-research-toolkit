@@ -98,6 +98,12 @@ Authority depends on the fact and scope, rather than a universal file ordering:
   state. It does not automatically establish historical meaning or coding.
 - A canonical classification supplies its own codebook and editions. It does not prove
   that a variable uses that classification.
+- Once exact source documentation establishes a named classification version, its code
+  membership may be assumed stable across the documented periods unless other supplied
+  evidence contradicts that assumption. Missing inline lists can use an explicitly
+  checked domain extension. This does not establish physical storage width,
+  missing-value encoding or availability; retain those omissions and the assumption's
+  provenance.
 - SWECOV holdings establish possession by that project. Multi-year tables do not
   establish per-year column availability.
 - SWECOV's MONA storage-schema export supplies type evidence for steward-held columns
@@ -163,6 +169,16 @@ never replaces the original cells:
 - Value-set content may deduplicate identical code/label pairs for storage and
   comparison. Equal codes with different labels remain distinct. Deduplication does not
   infer list identity, membership, variable identity or authority.
+
+Year-independent delivery is a separate scope, never an unbounded calendar interval or
+pooled delivery. Checked source authority may replace an exact occurrence's unknown
+scope with `year_independent`; raw unknown scopes remain evidence. Formation emits
+NULL-date states only from agreeing independent occurrence and complete coding claims.
+Unknown or dated competitors and supplied member-validity restrictions fail closed.
+Literal descriptive-text markers remain nonmembership evidence. Independent inventory
+coverage proves exact physical columns and shapes without claiming calendar coverage;
+dated classification and parallel-column decisions cannot assign synthetic dates to
+these states.
 
 SCB records retain native IDs and joined parent assertions. Population descriptions
 attached to an edition do not assign its variable occurrence to a particular population.

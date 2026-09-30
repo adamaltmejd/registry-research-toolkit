@@ -16,9 +16,10 @@ from __future__ import annotations
 import json
 import re
 from collections import deque
-from typing import TYPE_CHECKING, Literal, TypeVar, cast
+from datetime import date
+from typing import TYPE_CHECKING, Literal, Self, TypeVar, cast
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .db import (
     classification_succession_as_of_year,
@@ -242,6 +243,7 @@ class VariableDelivery(_CatalogModel):
 
     variant: str
     column: str | None
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
     coverage: VariableCoverage
     windows: tuple[VariableWindow, ...]
 
@@ -738,8 +740,9 @@ class VariableState(_CatalogModel):
     variant_family: str | None = None
     variant_family_label: str | None = None
     register_variant_id: int
-    valid_from: str  # ISO 8601 'YYYY-MM-DD', inclusive
-    valid_to: str  # ISO 8601 'YYYY-MM-DD', inclusive ('9999-12-31' open-ended)
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
+    valid_from: str | None
+    valid_to: str | None
     data_type: str | None
     data_length: str | None
     # Denormalized latest alias for the state (see DESIGN.md → Two-level variable model); full alias history lives in
@@ -801,6 +804,23 @@ class VariableState(_CatalogModel):
     # token — the SPA renders "since valid_from"). Computed in `_row_to_state` so
     # the webapp reads it instead of recomputing (was `_state_model`'s job).
     period_token: str | None = None
+
+    @model_validator(mode="after")
+    def _delivery_scope(self) -> Self:
+        if self.period_scope == "year_independent":
+            if self.valid_from is not None or self.valid_to is not None or self.pooled:
+                raise ValueError(
+                    "year-independent delivery requires no dates and is not pooled"
+                )
+        else:
+            if self.valid_from is None or self.valid_to is None:
+                raise ValueError("interval delivery requires both dates")
+            for bound in (self.valid_from, self.valid_to):
+                if date.fromisoformat(bound).isoformat() != bound:
+                    raise ValueError("delivery bounds must be exact ISO dates")
+            if self.valid_from > self.valid_to:
+                raise ValueError("delivery bounds must be ordered")
+        return self
 
 
 class VariableRef(_CatalogModel):
@@ -1555,7 +1575,7 @@ class Catalog:
         could have placed."""
         state_rows = self._conn.execute(
             "SELECT v.slug AS slug, rv.slug AS variant, "
-            "vs.delivery_column_name AS col, "
+            "vs.delivery_column_name AS col, vs.period_scope, "
             "vs.valid_from AS valid_from, vs.valid_to AS valid_to "
             "FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
@@ -1605,11 +1625,16 @@ class Catalog:
         # the states' own are `columns[key]`'s keys, and `representative_columns`
         # picks the one spelling to list each column under.
         aliased: dict[tuple[str, str], set[str]] = {}
+        independent: dict[tuple[str, str, str | None], int] = {}
         for r in state_rows:
+            if r["period_scope"] == "year_independent":
+                independent_key = (r["slug"], r["variant"], r["col"])
+                independent[independent_key] = independent.get(independent_key, 0) + 1
+                continue
             key = (r["slug"], r["variant"])
-            columns.setdefault(key, {}).setdefault(r["col"], []).append(
-                (r["valid_from"], r["valid_to"])
-            )
+            eras = columns.setdefault(key, {}).setdefault(r["col"], [])
+            if r["valid_from"] is not None and r["valid_to"] is not None:
+                eras.append((r["valid_from"], r["valid_to"]))
         # A column's own windows are the coverage it is delivered over. Spellings
         # that fold together are that ONE column, so their eras POOL — the fuse
         # reads them as one column's delivery history — rather than the last row
@@ -1631,6 +1656,10 @@ class Catalog:
         # named added over the variant's states.
         for key, alias_columns in aliased.items():
             stated = columns.get(key, {})
+            if not stated and any(
+                (slug, variant) == key for slug, variant, _ in independent
+            ):
+                continue
             spelled = representative_columns(stated, alias_columns)
             windowed = windows.get(key, {})
             variant_columns = {
@@ -1677,6 +1706,23 @@ class Catalog:
                         windows=fused,
                     )
                 )
+        for slug, variant, column in sorted(
+            independent, key=lambda x: (x[0], x[1], x[2] or "")
+        ):
+            out.setdefault(slug, []).append(
+                VariableDelivery(
+                    variant=variant,
+                    column=column,
+                    period_scope="year_independent",
+                    coverage=VariableCoverage(
+                        coverage_from=None,
+                        coverage_to=None,
+                        open_ended=False,
+                        state_count=independent[(slug, variant, column)],
+                    ),
+                    windows=(),
+                )
+            )
         return out
 
     def register_unnamed_column_coverage(
@@ -2789,7 +2835,7 @@ class Catalog:
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
                 "vs.operational_definition, vs.provenance, vs.pooled, vs.value_set_id, "
-                "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
+                "vs.value_set_version_label, vs.period_scope, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
                 "ccf.checked_code_count, ccf.matched_code_count, "
@@ -2815,7 +2861,7 @@ class Catalog:
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
                 "vs.operational_definition, vs.provenance, vs.pooled, vs.value_set_id, "
-                "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
+                "vs.value_set_version_label, vs.period_scope, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
                 "ccf.checked_code_count, ccf.matched_code_count, "
@@ -2839,7 +2885,13 @@ class Catalog:
         if bounds is None:
             return rows
         lo, hi = bounds
-        return [r for r in rows if r["valid_from"] <= hi and r["valid_to"] >= lo]
+        return [
+            r
+            for r in rows
+            if r["period_scope"] == "intervals"
+            and r["valid_from"] <= hi
+            and r["valid_to"] >= lo
+        ]
 
     def _value_set_codes(
         self, value_set_id: int | None
@@ -2988,6 +3040,7 @@ class Catalog:
             variant_family=family[0] if family is not None else None,
             variant_family_label=family[1] if family is not None else None,
             register_variant_id=rvid,
+            period_scope=row["period_scope"],
             valid_from=row["valid_from"],
             valid_to=row["valid_to"],
             data_type=row["data_type"],
@@ -3014,8 +3067,10 @@ class Catalog:
                 if with_codes or with_code_summary
                 else None
             ),
-            period_token=self._period_token_for_window(
-                row["valid_from"], row["valid_to"]
+            period_token=(
+                "_default"
+                if row["period_scope"] == "year_independent"
+                else self._period_token_for_window(row["valid_from"], row["valid_to"])
             ),
         )
 
@@ -3128,6 +3183,10 @@ class Catalog:
         out: list[VariableState] = []
         for row in rows:
             base = to_state(row)
+            if base.period_scope == "year_independent":
+                out.append(base)
+                continue
+            assert base.valid_from is not None and base.valid_to is not None
             windows = windows_by_variant.get(row["register_variant_id"], [])
             state_windows: list[
                 tuple[str, str, str, str | None, str, str | None, str | None]
@@ -3166,7 +3225,14 @@ class Catalog:
                 for window in curated_windows
                 if window[1] <= hi and window[2] >= lo
             )
-        out.sort(key=lambda s: (s.valid_from, s.valid_to, s.delivery_column_name or ""))
+        out.sort(
+            key=lambda s: (
+                s.period_scope,
+                s.valid_from or "",
+                s.valid_to or "",
+                s.delivery_column_name or "",
+            )
+        )
         return out
 
     def _variant_slug(self, register_variant_id: int) -> str | None:
@@ -3623,6 +3689,8 @@ class Catalog:
         {"from","to"}, or "_default" (no period filter). `variant` narrows to one
         variant (the Source's `register_variant`); `value_set_version` narrows
         multi-vintage results to a single state by `value_set_version_label`.
+        Year-independent states require `_default` plus an explicit concrete
+        variant; dated requests and unqualified history queries exclude them.
 
         `with_codes=False` returns state METADATA only: the per-state code lists
         (`value_set`, and the conformance report's nonconforming codes) stay
@@ -3661,6 +3729,8 @@ class Catalog:
             with_codes=with_codes,
             with_code_summary=with_code_summary,
         )
+        if bounds is not None or register_variant_id is None or variant == "_default":
+            states = [s for s in states if s.period_scope == "intervals"]
         if value_set_version is not None:
             states = [
                 s for s in states if s.value_set_version_label == value_set_version

@@ -1114,3 +1114,27 @@ def test_scoped_sentinel_requires_every_shared_ref_original_projection():
     )
     assert missing.evaluations[0].status != "applicable"
     assert missing.coding[key].segments[0].classification is None
+
+
+def test_dated_classification_decision_does_not_date_independent_delivery():
+    setup = _setup()
+    coding = {
+        key: replace(
+            resolution,
+            segments=tuple(
+                replace(
+                    segment,
+                    period_scope="year_independent",
+                    valid_from=None,
+                    valid_to=None,
+                )
+                for segment in resolution.segments
+            ),
+        )
+        for key, resolution in setup[2].items()
+    }
+    result = _apply(setup, coding=coding)
+    assert any(
+        issue.code == "unsupported_classification_scope" for issue in result.diagnostics
+    )
+    assert result.coding == coding

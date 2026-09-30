@@ -88,7 +88,7 @@ def _catalog(path: Path, *, offset: int = 0, split: bool = False) -> None:
             "INSERT INTO variable_alias VALUES (?, ?, 'Benefit')", (key(5), key(3))
         )
         conn.execute(
-            "INSERT INTO variable_alias_window VALUES (?, ?, 'Benefit', '2000-01-01', '2001-12-31', 'Alias reason')",
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance) VALUES (?, ?, 'Benefit', '2000-01-01', '2001-12-31', 'Alias reason')",
             (key(5), key(3)),
         )
         conn.execute("INSERT INTO code_variable_map VALUES (?, ?)", (key(8), key(5)))
@@ -217,7 +217,7 @@ def test_equivalent_alias_window_segmentation_is_neutral(tmp_path: Path) -> None
     _change(right, "UPDATE variable_alias_window SET valid_to = '2000-12-31'")
     _change(
         right,
-        "INSERT INTO variable_alias_window VALUES "
+        "INSERT INTO variable_alias_window (variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance) VALUES "
         "(5, 3, 'Benefit', '2001-01-01', '2001-12-31', 'Alias reason')",
     )
     assert diff_catalog_semantics(left, right).identical
@@ -542,3 +542,31 @@ def test_historical_events_preserve_native_tokens_and_duplicate_declarations(
     )
     assert not event_diff.identical
     assert (event_diff.count_a, event_diff.count_b) == (1, 2)
+
+
+def test_year_independent_semantic_identity_keeps_null_scope_and_membership(tmp_path):
+    left, right = tmp_path / "left.db", tmp_path / "right.db"
+    _catalog(left)
+    _catalog(right, offset=100)
+    for path in (left, right):
+        with closing(sqlite3.connect(path)) as connection:
+            connection.execute("DELETE FROM variable_alias_window")
+            connection.execute(
+                "UPDATE variable_state SET period_scope='year_independent', valid_from=NULL, valid_to=NULL"
+            )
+            connection.commit()
+    assert diff_catalog_semantics(left, right).content.identical
+    with closing(sqlite3.connect(right)) as connection:
+        connection.execute("UPDATE variable_state SET data_length='18'")
+        connection.commit()
+    difference = next(
+        t
+        for t in diff_catalog_semantics(left, right).content.table_results
+        if t.table == "variable_state"
+    )
+    row = dict(
+        zip(difference.columns, difference.sample_b_not_a[0].values, strict=True)
+    )
+    assert row["interval_representation"] == "year_independent"
+    assert row["valid_from"] is None and row["valid_to"] is None
+    assert row["period_scope"] == "year_independent"

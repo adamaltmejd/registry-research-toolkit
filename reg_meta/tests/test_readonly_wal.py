@@ -136,3 +136,16 @@ def test_open_doc_db_rejects_stale_1_1_0_schema(tmp_path: Path) -> None:
     with pytest.raises(RegMetaError) as exc_info:
         open_doc_db(db_file)
     assert exc_info.value.code == "doc_schema_incompatible"
+
+
+def test_open_db_rejects_catalog_without_explicit_delivery_scope(
+    tmp_path: Path,
+) -> None:
+    db_file = tmp_path / DB_FILENAME
+    _make_wal_db(
+        db_file,
+        setup_sql="CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT); INSERT INTO import_manifest VALUES ('schema_version', '6.11.0');",
+    )
+    with pytest.raises(RegMetaError) as exc_info:
+        open_db(db_file)
+    assert exc_info.value.code == "schema_incompatible"

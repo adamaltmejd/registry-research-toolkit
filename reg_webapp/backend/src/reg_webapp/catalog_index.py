@@ -374,7 +374,9 @@ def build_catalog_index(inventory: DeliveryInventory, catalog: Catalog) -> Catal
     for table in inventory.tables:
         # Validated at load (`InventoryTable._check_finite_edition`), so this
         # cannot raise here.
-        bounds = edition_bounds(table.edition)
+        bounds = (
+            edition_bounds(table.edition) if table.period_scope == "intervals" else ()
+        )
         for column in table.columns:
             for mapping in column.mappings:
                 # Per RESOLVED column, the intervals of this table's edition the
@@ -382,7 +384,24 @@ def build_catalog_index(inventory: DeliveryInventory, catalog: Catalog) -> Catal
                 # rename inside the edition would admit both spellings over the
                 # whole of it.
                 admitted: dict[str | None, list[Interval]] | None
-                if mapping.representation is not None:
+                if table.period_scope == "year_independent":
+                    try:
+                        states = catalog.resolve_at(
+                            mapping.variable,
+                            "_default",
+                            variant=mapping.register_variant.split("/")[-1],
+                            with_codes=False,
+                        )
+                        admitted = {
+                            s.delivery_column_name: []
+                            for s in states
+                            if s.period_scope == "year_independent"
+                            and s.delivery_column_name
+                            == (mapping.representation or column.name)
+                        }
+                    except RegMetaError:
+                        admitted = None
+                elif mapping.representation is not None:
                     admitted = {mapping.representation: list(bounds)}
                 else:
                     admitted = _admitted_intervals(mapping, bounds, catalog)
@@ -505,6 +524,7 @@ def _admitted_intervals(
             # The state's own window, built exactly as `order.py`'s availability
             # clip builds it. The EDITION side is deliberately left unsnapped:
             # an interval is stored as `edition_bounds` produced it (`_merged`).
+            assert state.valid_from is not None and state.valid_to is not None
             window = (state.valid_from, snap_to_real_month_end(state.valid_to))
             if (held := _intersect(window, edition)) is not None:
                 admitted.setdefault(state.delivery_column_name, []).append(held)

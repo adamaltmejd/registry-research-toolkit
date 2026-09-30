@@ -480,11 +480,9 @@ CREATE TABLE variable_alias_build (
 -- delivery coordinate; the coalescer resolves each group's `variable_id` from
 -- `(register_id, var_id)` via the promoted `variable` table.
 --
--- valid_from / valid_to are TEXT NOT NULL `YYYY-MM-DD` always (storage
--- contract); coarser SCB inputs like the year "2020" expand at
--- ingest into 2020-01-01..2020-12-31. Open-ended states use the sentinel
--- valid_to = '9999-12-31' (never NULL). Lexical string comparison is
--- chronologically correct because every stored value is full-date.
+-- Interval states carry two full ISO dates, including the existing open-end
+-- sentinel. Explicit year-independent states carry NULL bounds and no pooled
+-- flag; they have physical delivery scope, not calendar availability.
 --
 -- A `grain` column is intentionally absent — pre-triage rows that differ
 -- only on SCB's `vardemangdsniva` are kept distinct in the coalescer's
@@ -495,8 +493,9 @@ CREATE TABLE variable_state (
     state_id INTEGER PRIMARY KEY AUTOINCREMENT,
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
-    valid_from TEXT NOT NULL,
-    valid_to TEXT NOT NULL DEFAULT '9999-12-31',
+    period_scope TEXT NOT NULL DEFAULT 'intervals' CHECK (period_scope IN ('intervals', 'year_independent')),
+    valid_from TEXT,
+    valid_to TEXT,
     data_type TEXT,
     data_length TEXT,
     delivery_column_name TEXT,
@@ -540,9 +539,11 @@ CREATE TABLE variable_state (
     -- Full-date contract: ten-character ISO 8601 strings only. Length check
     -- is a cheap structural guard; a stricter regex isn't worth the runtime
     -- cost because the coalescer is the only writer.
-    CHECK (length(valid_from) = 10),
-    CHECK (length(valid_to) = 10),
-    CHECK (valid_to >= valid_from)
+    CHECK (
+        (period_scope = 'intervals' AND valid_from IS NOT NULL AND valid_to IS NOT NULL
+         AND length(valid_from) = 10 AND length(valid_to) = 10 AND valid_to >= valid_from)
+        OR (period_scope = 'year_independent' AND valid_from IS NULL AND valid_to IS NULL AND pooled = 0)
+    )
 );
 CREATE INDEX idx_variable_state_variable
     ON variable_state(variable_id);
@@ -572,7 +573,8 @@ CREATE INDEX idx_variable_state_register_variant
 -- single line to match the exact text the A4.3a SCB coalescer submitted (a
 -- reflowed multi-line form is a real dbdiff schema diff even though the index is
 -- semantically identical). Confirmed exit-0 vs the A4.3a baseline.
-CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state(variable_id, register_variant_id, valid_from, value_set_version_label);
+CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state(variable_id, register_variant_id, valid_from, value_set_version_label) WHERE period_scope = 'intervals';
+CREATE UNIQUE INDEX idx_variable_state_independent_unique ON variable_state(variable_id, register_variant_id, value_set_version_label) WHERE period_scope = 'year_independent';
 CREATE INDEX idx_variable_state_value_set
     ON variable_state(value_set_id)
     WHERE value_set_id IS NOT NULL;

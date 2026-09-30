@@ -181,3 +181,34 @@ def test_disjoint_validity_keeps_identity_without_inventing_edges_or_errors():
     )
     result = resolve_catalog_lineage((consumer, source), **options)
     assert not result.metadata.state_lineage and not result.diagnostics
+
+
+@pytest.mark.parametrize("independent_endpoint", [0, 1])
+def test_independent_source_attribution_never_invents_dated_lineage(
+    independent_endpoint,
+):
+    variables, options = fixture()
+    endpoint = variables[independent_endpoint]
+    independent = endpoint.model_copy(
+        update={
+            "states": tuple(
+                state.model_copy(
+                    update={
+                        "period_scope": "year_independent",
+                        "valid_from": None,
+                        "valid_to": None,
+                    }
+                )
+                for state in endpoint.states
+            )
+        }
+    )
+    variables = tuple(
+        independent if index == independent_endpoint else variable
+        for index, variable in enumerate(variables)
+    )
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.metadata.state_lineage
+    assert not result.metadata.lineage_warnings
+    assert result.variables[0].source_register.slug == "origin"
+    assert [issue.code for issue in result.diagnostics] == ["unsupported_lineage_scope"]

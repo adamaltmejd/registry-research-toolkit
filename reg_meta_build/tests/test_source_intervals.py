@@ -747,3 +747,35 @@ def test_pooled_segment_adjacent_to_explicit_does_not_merge() -> None:
         ("2012-01-01", "2014-12-31", True),
         ("2015-01-01", "2015-12-31", False),
     ]
+
+
+def test_explicit_independent_occurrences_keep_raw_scopes_without_dates():
+    scope = TemporalScope(kind="year_independent")
+    records = (_record(1, scope=scope), _record(2, scope=scope))
+    resolution = resolve_occurrence_intervals(records)
+    assert resolution.issues == ()
+    (segment,) = resolution.segments
+    assert segment.period_scope == "year_independent"
+    assert segment.valid_from is segment.valid_to is None
+    assert segment.pooled is False
+    assert segment.occurrences == records
+    assert resolution.unsupported_occurrences == ()
+
+
+@pytest.mark.parametrize(
+    "scope",
+    [
+        TemporalScope(kind="unknown", label="unresolved source"),
+        TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2021", end="2021"),)
+        ),
+    ],
+)
+def test_independent_occurrence_cannot_absorb_other_temporal_claims(scope):
+    records = (
+        _record(1, scope=TemporalScope(kind="year_independent")),
+        _record(2, scope=scope),
+    )
+    resolution = resolve_occurrence_intervals(records)
+    assert resolution.segments == ()
+    assert "conflicting_occurrence_scope" in {issue.code for issue in resolution.issues}

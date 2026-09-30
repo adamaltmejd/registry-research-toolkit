@@ -1344,13 +1344,12 @@ class TestCliAdapter:
             "project_unreadable"
         )
 
-    @pytest.mark.parametrize("period", ["notaperiod", "_default"])
+    @pytest.mark.parametrize("period", ["notaperiod"])
     def test_structurally_invalid_project_exits_config(
         self, conn, tmp_path, capsys, period
     ) -> None:
         """The shared gate runs before the DB is even opened: a model-valid but
-        structurally invalid spec (a bad period token — the retired
-        whole-history sentinel is now one of those) never materializes."""
+        structurally invalid spec (a bad period token) never materializes."""
         import json
 
         project = self._project_file(tmp_path)
@@ -1381,3 +1380,101 @@ class TestCliAdapter:
         payload = json.loads(capsys.readouterr().out)
         assert payload["error"]["code"] == "unsupported_schema_version"
         assert "entries" not in payload
+
+
+def _independent_kon(conn):
+    conn.execute(
+        "DELETE FROM variable_state WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    conn.execute(
+        "INSERT INTO variable_state (variable_id, register_variant_id, period_scope, valid_from, valid_to, delivery_column_name) SELECT variable_id, 10, 'year_independent', NULL, NULL, 'Kon' FROM variable WHERE slug = 'kon'"
+    )
+
+
+def test_year_independent_reader_and_global_order(conn):
+    _independent_kon(conn)
+    catalog = Catalog(conn)
+    assert catalog.resolve_at("scb/lisa/kon", 2020, variant="individer-15plus") == []
+    assert catalog.resolve_at("scb/lisa/kon", "_default") == []
+    states = catalog.resolve_at("scb/lisa/kon", "_default", variant="individer-15plus")
+    assert len(states) == 1
+    assert states[0].valid_from is None and states[0].valid_to is None
+    assert states[0].period_scope == "year_independent" and not states[0].pooled
+    assert len(catalog.states("scb/lisa/kon")) == 1
+    resolution = _resolve(conn, "scb/lisa/kon", "_default")
+    assert resolution.finding is None and resolution.columns == {"Kon"}
+    assert (
+        resolution.availability == ()
+        and resolution.slices == ()
+        and resolution.clip is None
+    )
+    result = materialize_order(
+        _project("scb/lisa/kon", period="_default", steward="global"), None, conn
+    )
+    assert result.findings == ()
+    entry = result.manifest.entries[0]
+    assert entry.requested_period == entry.physical.edition == "_default"
+    assert entry.physical.column == "Kon"
+    assert extraction_filenames(entry) == ("lisa_individer-15plus__default.csv",)
+    delivery = catalog.register_variable_deliveries("scb", "lisa")["kon"][0]
+    assert delivery.period_scope == "year_independent" and delivery.windows == ()
+    assert (
+        delivery.coverage.coverage_from is None
+        and delivery.coverage.coverage_to is None
+    )
+
+
+def test_year_independent_inventory_order_and_scope_guard(conn, tmp_path):
+    _independent_kon(conn)
+    path = tmp_path / "independent.toml"
+    path.write_text("""version = 1
+steward = "swecov"
+[[table]]
+id = "country_groups.csv"
+period_scope = "year_independent"
+edition = "_default"
+[[table.column]]
+name = "Kon"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kon"
+""")
+    inventory = load_inventory(path)
+    result = materialize_order(
+        _project("scb/lisa/kon", period="_default"), inventory, conn
+    )
+    assert result.findings == ()
+    assert result.manifest.entries[0].physical.table == "country_groups.csv"
+    from reg_meta.inventory_check import check_inventory
+
+    assert check_inventory(inventory, conn) == ()
+    conn.execute(
+        "UPDATE variable_state SET period_scope='intervals', valid_from='2020-01-01', valid_to='2020-12-31' WHERE delivery_column_name='Kon'"
+    )
+    assert check_inventory(inventory, conn)
+    assert (
+        _resolve(conn, "scb/lisa/kon", "_default").finding.code == "binding_unavailable"
+    )
+
+
+@pytest.mark.parametrize(
+    "period", ["_default", ["_default"], {"from": "_default", "to": 2020}]
+)
+def test_year_independent_source_requires_whole_period_and_concrete_variant(period):
+    raw = _raw_project()
+    raw["sources"][0]["period"] = period
+    if period == "_default":
+        assert project_from_raw(raw).sources[0].period == "_default"
+        raw["sources"][0]["register_variant"] = "scb/lisa/_default"
+    with pytest.raises(RegMetaError):
+        project_from_raw(raw)
+
+
+def test_year_independent_delivery_counts_all_source_states(conn):
+    _independent_kon(conn)
+    conn.execute(
+        "INSERT INTO variable_state (variable_id, register_variant_id, period_scope, valid_from, valid_to, delivery_column_name, value_set_version_label) SELECT variable_id, 10, 'year_independent', NULL, NULL, 'Kon', 'second-version' FROM variable WHERE slug='kon'"
+    )
+    delivery = Catalog(conn).register_variable_deliveries("scb", "lisa")["kon"][0]
+    assert delivery.coverage.state_count == 2
+    assert delivery.windows == () and delivery.coverage.coverage_from is None

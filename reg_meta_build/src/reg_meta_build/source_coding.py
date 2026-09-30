@@ -70,8 +70,8 @@ class CodingIssue:
 
 @dataclass(frozen=True)
 class CodingSegment:
-    valid_from: str
-    valid_to: str
+    valid_from: str | None
+    valid_to: str | None
     code_set: ResolvedCodeSet | None
     claim_ids: tuple[str, ...]
     version_label: str = ""
@@ -79,6 +79,7 @@ class CodingSegment:
     state_disposition: Literal["include", "omit", "withhold"] = "include"
     classification: str | None = None
     conformance: ResolvedConformance | None = None
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
 
 
 @dataclass(frozen=True)
@@ -102,6 +103,107 @@ def has_unknown_code_membership(claim: CodeListClaim) -> bool:
     )
 
 
+def _membership_segment(
+    claim_by_id: dict[str, CodeListClaim],
+    active_claims: set[str],
+    active_members: set[tuple[str, int]],
+    invalid_members: set[tuple[str, int]],
+    lower: str | None,
+    upper: str | None,
+    period_scope: Literal["intervals", "year_independent"] = "intervals",
+) -> tuple[CodingSegment, tuple[CodingIssue, ...]]:
+    issues: list[CodingIssue] = []
+    invalid = active_members & invalid_members
+    dropped = {
+        identity
+        for identity, _ in invalid
+        if claim_by_id[identity].drop_unknown_membership
+    }
+    claim_ids = tuple(sorted(active_claims - dropped))
+    if not claim_ids:
+        return CodingSegment(
+            lower, upper, None, tuple(sorted(dropped)), period_scope=period_scope
+        ), tuple(issues)
+    invalid = tuple(sorted(item for item in invalid if item[0] not in dropped))
+    if invalid:
+        issues.append(
+            CodingIssue("unknown_code_membership", claim_ids, lower, upper, invalid)
+        )
+        return CodingSegment(
+            lower, upper, None, claim_ids, period_scope=period_scope
+        ), tuple(issues)
+    by_claim: dict[str, set[tuple[str, str]]] = {
+        identity: set() for identity in claim_ids
+    }
+    sheet_labels: dict[tuple[str, str, str, str, str], set[str]] = {}
+    for identity, position in active_members:
+        if identity in dropped:
+            continue
+        member = claim_by_id[identity].members[position]
+        assert member.code is not None and member.label is not None
+        by_claim[identity].add((member.code, member.label))
+        if member.scope.kind in {"intervals", "year_independent"}:
+            for association in member.associations:
+                table = association.source_table
+                if table is None or association.descriptor_key != f"sheet:{table}":
+                    continue
+                sheet_labels.setdefault(
+                    (
+                        identity,
+                        member.code,
+                        association.source_file,
+                        table,
+                        association.descriptor_key,
+                    ),
+                    set(),
+                ).add(member.label)
+    empty = tuple(identity for identity in claim_ids if not by_claim[identity])
+    if empty:
+        issues.append(CodingIssue("empty_active_coding", empty, lower, upper))
+        return CodingSegment(
+            lower, upper, None, claim_ids, period_scope=period_scope
+        ), tuple(issues)
+    alternatives = {frozenset(members) for members in by_claim.values()}
+    # Overlapping rows of one code-list sheet cannot relabel the same code.
+    # Other source relations retain their existing exact pair semantics.
+    conflicting_sheet_labels = any(len(labels) > 1 for labels in sheet_labels.values())
+    if len(alternatives) > 1 or conflicting_sheet_labels:
+        issues.append(
+            CodingIssue("conflicting_code_memberships", claim_ids, lower, upper)
+        )
+        return CodingSegment(
+            lower, upper, None, claim_ids, period_scope=period_scope
+        ), tuple(issues)
+    members = next(iter(alternatives))
+    labels = {
+        label
+        for identity in claim_ids
+        if (label := claim_by_id[identity].version_label) is not None
+    }
+    version_label = next(iter(labels)) if len(labels) == 1 else ""
+    if len(labels) > 1:
+        issues.append(
+            CodingIssue(
+                "conflicting_coding_labels",
+                claim_ids,
+                lower,
+                upper,
+                withheld="coding_label",
+            )
+        )
+    return (
+        CodingSegment(
+            lower,
+            upper,
+            ResolvedCodeSet(members=tuple(members)),
+            claim_ids,
+            version_label,
+            period_scope=period_scope,
+        ),
+        tuple(issues),
+    )
+
+
 def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResolution:
     """Keep an agreed complete coding or withhold only contested coding periods.
 
@@ -118,6 +220,44 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
         if previous != claim:
             raise ValueError("one coding claim identity has conflicting content")
     issues: list[CodingIssue] = []
+    if any(claim.scope.kind == "year_independent" for claim in claims):
+        if any(claim.scope.kind != "year_independent" for claim in claims):
+            return CodingResolution(
+                (),
+                (
+                    CodingIssue(
+                        "unsupported_coding_scope",
+                        tuple(sorted(claim_by_id)),
+                        None,
+                        None,
+                    ),
+                ),
+                claims,
+            )
+        active = {
+            (claim.claim_id, position)
+            for claim in claims
+            for position, _ in enumerate(claim.members)
+        }
+        invalid = {
+            (claim.claim_id, position)
+            for claim in claims
+            for position, member in enumerate(claim.members)
+            if member.code is None
+            or member.label is None
+            or member.unknown_validity
+            or member.scope.kind not in {"year_independent", "not_applicable"}
+        }
+        segment, independent_issues = _membership_segment(
+            claim_by_id,
+            set(claim_by_id),
+            active,
+            invalid,
+            None,
+            None,
+            "year_independent",
+        )
+        return CodingResolution((segment,), independent_issues, claims)
     # Each event changes one active occurrence and/or one member position. Counts
     # preserve overlapping constraints while dictionary keys deduplicate content.
     claim_changes: dict[int, list[tuple[str, int]]] = defaultdict(list)
@@ -178,91 +318,16 @@ def resolve_code_membership(claims: tuple[CodeListClaim, ...]) -> CodingResoluti
             continue
         lower = date.fromordinal(start).isoformat()
         upper = date.fromordinal(next_start - 1).isoformat()
-        invalid = active_members.keys() & invalid_members
-        dropped = {
-            identity
-            for identity, _ in invalid
-            if claim_by_id[identity].drop_unknown_membership
-        }
-        claim_ids = tuple(sorted(active_claims.keys() - dropped))
-        if not claim_ids:
-            segments.append(CodingSegment(lower, upper, None, tuple(sorted(dropped))))
-            continue
-        invalid = tuple(sorted(item for item in invalid if item[0] not in dropped))
-        if invalid:
-            issues.append(
-                CodingIssue("unknown_code_membership", claim_ids, lower, upper, invalid)
-            )
-            segments.append(CodingSegment(lower, upper, None, claim_ids))
-            continue
-        by_claim: dict[str, set[tuple[str, str]]] = {
-            identity: set() for identity in claim_ids
-        }
-        sheet_labels: dict[tuple[str, str, str, str, str], set[str]] = {}
-        for identity, position in active_members:
-            if identity in dropped:
-                continue
-            member = claim_by_id[identity].members[position]
-            assert member.code is not None and member.label is not None
-            by_claim[identity].add((member.code, member.label))
-            if member.scope.kind in {"intervals", "year_independent"}:
-                for association in member.associations:
-                    table = association.source_table
-                    if table is None or association.descriptor_key != f"sheet:{table}":
-                        continue
-                    sheet_labels.setdefault(
-                        (
-                            identity,
-                            member.code,
-                            association.source_file,
-                            table,
-                            association.descriptor_key,
-                        ),
-                        set(),
-                    ).add(member.label)
-        empty = tuple(identity for identity in claim_ids if not by_claim[identity])
-        if empty:
-            issues.append(CodingIssue("empty_active_coding", empty, lower, upper))
-            segments.append(CodingSegment(lower, upper, None, claim_ids))
-            continue
-        alternatives = {frozenset(members) for members in by_claim.values()}
-        # Overlapping rows of one code-list sheet cannot relabel the same code.
-        # Other source relations retain their existing exact pair semantics.
-        conflicting_sheet_labels = any(
-            len(labels) > 1 for labels in sheet_labels.values()
+        segment, segment_issues = _membership_segment(
+            claim_by_id,
+            set(active_claims),
+            set(active_members),
+            invalid_members,
+            lower,
+            upper,
         )
-        if len(alternatives) > 1 or conflicting_sheet_labels:
-            issues.append(
-                CodingIssue("conflicting_code_memberships", claim_ids, lower, upper)
-            )
-            segments.append(CodingSegment(lower, upper, None, claim_ids))
-            continue
-        members = next(iter(alternatives))
-        labels = {
-            label
-            for identity in claim_ids
-            if (label := claim_by_id[identity].version_label) is not None
-        }
-        version_label = next(iter(labels)) if len(labels) == 1 else ""
-        if len(labels) > 1:
-            issues.append(
-                CodingIssue(
-                    "conflicting_coding_labels",
-                    claim_ids,
-                    lower,
-                    upper,
-                    withheld="coding_label",
-                )
-            )
-        segments.append(
-            CodingSegment(
-                lower,
-                upper,
-                ResolvedCodeSet(members=tuple(members)),
-                claim_ids,
-                version_label,
-            )
-        )
+        segments.append(segment)
+        issues.extend(segment_issues)
     return CodingResolution(tuple(segments), tuple(issues), claims)
 
 
@@ -278,12 +343,16 @@ def coding_content_sha256(claim: CodeListClaim) -> str | None:
     if (
         resolved.issues
         or not resolved.segments
-        or any(segment.code_set is None for segment in resolved.segments)
+        or any(
+            segment.code_set is None or segment.period_scope != "intervals"
+            for segment in resolved.segments
+        )
     ):
         return None
     segments: list[tuple[str, str, tuple[tuple[str, str], ...], str]] = []
     for segment in resolved.segments:
         assert segment.code_set is not None
+        assert segment.valid_from is not None and segment.valid_to is not None
         members = segment.code_set.members
         if (
             segments

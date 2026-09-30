@@ -17,7 +17,7 @@ from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build._components import DisjointSet
-from reg_meta_build._resolved_common import remaining_windows
+from reg_meta_build._resolved_common import _ResolvedWindow, remaining_windows
 from reg_meta_build.concept_groups import (
     _MONTH_LABELS,
     classification_succession_edges,
@@ -142,6 +142,29 @@ def _variable_fqid(variable: ResolvedVariable) -> str:
     return f"{register.provider}/{register.slug}/{variable.slug}"
 
 
+def _state_dependency_key(
+    fqid: str, variant: str, state: ResolvedState | ResolvedStateRef
+) -> DependencyKey:
+    if state.period_scope == "year_independent":
+        return (
+            "independent_state",
+            fqid,
+            variant,
+            state.delivery_column_name,
+            state.value_set_version_label,
+        )
+    assert state.valid_from is not None and state.valid_to is not None
+    return (
+        "state",
+        fqid,
+        variant,
+        state.valid_from,
+        state.valid_to,
+        state.delivery_column_name,
+        state.value_set_version_label,
+    )
+
+
 def variable_dependency_keys(variable: ResolvedVariable) -> set[DependencyKey]:
     """Exact materialized references, shared by resolution and dependency checks."""
     fqid = _variable_fqid(variable)
@@ -157,17 +180,7 @@ def variable_dependency_keys(variable: ResolvedVariable) -> set[DependencyKey]:
         )
     for item in variable.states:
         keys.add(("variant_states", fqid, item.variant.slug))
-        keys.add(
-            (
-                "state",
-                fqid,
-                item.variant.slug,
-                item.valid_from,
-                item.valid_to,
-                item.delivery_column_name,
-                item.value_set_version_label,
-            )
-        )
+        keys.add(_state_dependency_key(fqid, item.variant.slug, item))
     return keys
 
 
@@ -187,12 +200,24 @@ class CoverageObligation:
     fqid: str
     variant: str
     column: str
-    valid_from: str
-    valid_to: str
+    valid_from: str | None
+    valid_to: str | None
     refs: tuple[SourceRecordRef, ...]
     data_type_claim: tuple[str, str | None] | None = None
     data_length_claim: tuple[str, str | None] | None = None
     attributions: tuple[str, ...] = ()
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
+
+    def __post_init__(self) -> None:
+        if self.period_scope == "year_independent":
+            if self.valid_from is not None or self.valid_to is not None:
+                raise ValueError("independent delivery obligation cannot carry dates")
+        elif self.period_scope == "intervals":
+            if self.valid_from is None or self.valid_to is None:
+                raise ValueError("dated delivery obligation requires both bounds")
+            _ResolvedWindow(valid_from=self.valid_from, valid_to=self.valid_to)
+        else:
+            raise ValueError("unsupported delivery obligation scope")
 
 
 def _alias_overlap(
@@ -200,6 +225,9 @@ def _alias_overlap(
 ) -> list[tuple[str, str]]:
     """The obligation window slices an alias window on its coordinate delivers."""
     cover = []
+    if obligation.period_scope == "year_independent":
+        return cover
+    assert obligation.valid_from is not None and obligation.valid_to is not None
     for variable in variables:
         for alias in variable.aliases:
             if (
@@ -282,6 +310,9 @@ def check_delivery_coverage(
         fqid = _variable_fqid(variable)
         by_fqid[fqid].append(variable)
         for state in variable.states:
+            if state.period_scope == "year_independent":
+                continue
+            assert state.valid_from is not None and state.valid_to is not None
             delivered[fqid, state.variant.slug, state.delivery_column_name].append(
                 (state.valid_from, state.valid_to)
             )
@@ -304,16 +335,33 @@ def check_delivery_coverage(
         ob_losses: list[str] = []
         ob_facts: list[str] = []
         key = (obligation.fqid, obligation.variant, obligation.column)
+        scope_label = (
+            "year_independent"
+            if obligation.period_scope == "year_independent"
+            else f"{obligation.valid_from}..{obligation.valid_to}"
+        )
         refs = ", ".join(
             "/".join((ref.source, *ref.semantic_record_key)) for ref in obligation.refs
         )
-        for start, end in remaining_windows(
-            delivered.get(key, ()), obligation.valid_from, obligation.valid_to
-        ):
-            ob_losses.append(
-                f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                f"{start}..{end} claimed by {refs}"
-            )
+        if obligation.period_scope == "year_independent":
+            if not any(
+                state.period_scope == "year_independent"
+                and state.variant.slug == obligation.variant
+                and state.delivery_column_name == obligation.column
+                for variable in by_fqid.get(obligation.fqid, ())
+                for state in variable.states
+            ):
+                ob_losses.append(
+                    f"{obligation.fqid} {obligation.variant}/{obligation.column} year_independent delivery claimed by {refs} is missing"
+                )
+        else:
+            assert obligation.valid_from is not None and obligation.valid_to is not None
+            for start, end in remaining_windows(
+                delivered.get(key, ()), obligation.valid_from, obligation.valid_to
+            ):
+                ob_losses.append(
+                    f"{obligation.fqid} {obligation.variant}/{obligation.column} {start}..{end} claimed by {refs}"
+                )
         claimed_type = obligation.data_type_claim
         claimed_length = obligation.data_length_claim
         claimed_attributions = obligation.attributions
@@ -340,8 +388,12 @@ def check_delivery_coverage(
             backing: dict[tuple[str, str, str, str], ResolvedState] = {}
             for variable in by_fqid.get(obligation.fqid, ()):
                 for state in variable.states:
-                    if state.variant.slug != obligation.variant:
+                    if (
+                        state.variant.slug != obligation.variant
+                        or state.period_scope != "intervals"
+                    ):
                         continue
+                    assert state.valid_from is not None and state.valid_to is not None
                     if any(
                         state.valid_from <= end and state.valid_to >= start
                         for start, end in alias_cover
@@ -356,18 +408,21 @@ def check_delivery_coverage(
                 clipped = sorted(
                     (max(state.valid_from, start), min(state.valid_to, end))
                     for state in backing.values()
-                    if state.valid_from <= end and state.valid_to >= start
+                    if state.valid_from is not None
+                    and state.valid_to is not None
+                    and state.valid_from <= end
+                    and state.valid_to >= start
                 )
                 for gap_start, gap_end in remaining_windows(clipped, start, end):
                     ob_facts.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                        f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
+                        f"{scope_label} claimed by {refs}: "
                         f"no written state carries the claimed facts for {gap_start}..{gap_end}"
                     )
                 for first, last, count in _ambiguous_backing_slices(clipped):
                     ob_facts.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                        f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
+                        f"{scope_label} claimed by {refs}: "
                         f"alias backing is ambiguous: {count} states of variant "
                         f"{obligation.variant} overlap {first}..{last}"
                     )
@@ -380,11 +435,25 @@ def check_delivery_coverage(
             losses.extend(ob_losses)
             notes.append((obligation, ob_facts, ob_losses))
             continue
-        candidates: dict[tuple[str, str, str, str], ResolvedState] = {}
+        candidates: dict[tuple[str, str, str | None, str | None], ResolvedState] = {}
         for variable in by_fqid.get(obligation.fqid, ()):
             for state in variable.states:
-                if state.variant.slug != obligation.variant:
+                if (
+                    state.variant.slug != obligation.variant
+                    or state.period_scope != obligation.period_scope
+                ):
                     continue
+                if state.period_scope == "year_independent":
+                    if state.delivery_column_name == obligation.column:
+                        candidates[
+                            (state.variant.slug, state.delivery_column_name, None, None)
+                        ] = state
+                    continue
+                assert state.valid_from is not None and state.valid_to is not None
+                assert (
+                    obligation.valid_from is not None
+                    and obligation.valid_to is not None
+                )
                 direct = state.delivery_column_name == obligation.column
                 behind_alias = False
                 if not direct:
@@ -473,13 +542,13 @@ def check_delivery_coverage(
             if check_type and state.data_type != expected_type:
                 ob_facts.append(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                    f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
+                    f"{scope_label} claimed by {refs}: "
                     f"claimed data_type={type_claim_label} written {state.data_type!r}"
                 )
             if check_length and state.data_length != expected_length:
                 ob_facts.append(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                    f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
+                    f"{scope_label} claimed by {refs}: "
                     f"claimed data_length={length_claim_label} written {state.data_length!r}"
                 )
             if claimed_attributions:
@@ -492,7 +561,7 @@ def check_delivery_coverage(
                 if missing:
                     ob_facts.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                        f"{obligation.valid_from}..{obligation.valid_to} claimed by {refs}: "
+                        f"{scope_label} claimed by {refs}: "
                         f"claimed attributions={tuple(missing)!r} written provenance={state.provenance!r}"
                     )
         losses.extend(ob_losses)
@@ -503,9 +572,10 @@ def check_delivery_coverage(
         for obligation, ob_facts, ob_losses in notes:
             if not (ob_facts or ob_losses):
                 continue
-            subject = (
-                f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                f"{obligation.valid_from}..{obligation.valid_to}"
+            subject = f"{obligation.fqid} {obligation.variant}/{obligation.column} " + (
+                "year_independent"
+                if obligation.period_scope == "year_independent"
+                else f"{obligation.valid_from}..{obligation.valid_to}"
             )
             if ob_facts:
                 found.append(
@@ -1028,15 +1098,7 @@ def resolve_metadata_dependencies(
 
     def state(ref: ResolvedStateRef, output: str) -> bool:
         return dependencies.require(
-            (
-                "state",
-                ref.variable,
-                ref.variant,
-                ref.valid_from,
-                ref.valid_to,
-                ref.delivery_column_name,
-                ref.value_set_version_label,
-            ),
+            _state_dependency_key(ref.variable, ref.variant, ref),
             output=output,
             parents=(
                 ("variant_states", ref.variable, ref.variant),

@@ -104,7 +104,15 @@ function bindingRepresentation(binding: unknown): string | null {
 }
 
 function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
-  return (row.windows.length > 0 ? row.windows : [row]).map((window) => ({
+  if (
+    row.period_scope === "year_independent" ||
+    row.from === null ||
+    row.to === null
+  )
+    return [];
+  return (
+    row.windows.length > 0 ? row.windows : [{ from: row.from, to: row.to }]
+  ).map((window) => ({
     from: window.from,
     to: window.to,
   }));
@@ -130,6 +138,7 @@ export function windowsOverlapPeriod(
 }
 
 function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
+  if (row.period_scope === "year_independent") return period === "_default";
   return windowsOverlapPeriod(rowWindowBounds(row), period);
 }
 
@@ -192,6 +201,11 @@ export function rowDeliversInScope(
   row: PickerRepresentation,
   scope: PickerCommitScope,
 ): boolean {
+  if (row.period_scope === "year_independent")
+    return (
+      scope.period === "_default" ||
+      (scope.period == null && scope.window == null)
+    );
   return windowsOverlapWindow(
     row.windows,
     addWindowBounds(scope.period, scope.window ?? null),
@@ -382,7 +396,7 @@ export const ADD_WINDOW_REQUIRED_MESSAGE =
   "Apply a period before adding — set the study window in the rail, then add again.";
 
 /** The wire period each staged add resolves its binding at and commits under, in
- * `adds` order — or null when ANY of them has no valid FINITE period. A picker row
+ * `adds` order — or null when ANY of them has no valid dated or explicit year-independent period. A picker row
  * with an open-ended delivery window, picked with neither a `?period` nor a project
  * window to clip it to, resolves no period at all: committing it would author
  * `period: ""` and a `type: ""` the resolve cannot derive, which only the backend
@@ -393,10 +407,34 @@ export function finalAddPeriodWires(
   existing: Iterable<PickerSourcePeriod>,
   adds: readonly PickerAddPeriod[],
 ): string[] | null {
-  const periods = finalSourcePeriodsForStagedAdds(existing, adds);
+  const sources = [...existing];
+  const scopes = new Map(
+    sources.map((source) => [
+      source.registerVariant,
+      periodToWire(source.period),
+    ]),
+  );
+  for (const add of adds) {
+    const incoming = periodToWire(add.period);
+    const current = scopes.get(add.registerVariant);
+    if (
+      incoming &&
+      current &&
+      (incoming === "_default") !== (current === "_default")
+    )
+      return null;
+    if (incoming) scopes.set(add.registerVariant, incoming);
+  }
+  const periods = finalSourcePeriodsForStagedAdds(sources, adds);
   const wires: string[] = [];
   for (const add of adds) {
     const wire = periodToWire(periods.get(add.registerVariant) ?? add.period);
+    if (
+      wire === "_default" &&
+      (add.registerVariant.split("/").length !== 3 ||
+        add.registerVariant.split("/")[2] === "_default")
+    )
+      return null;
     if (wire === null || !isStructurallyValidPeriodWire(wire)) {
       return null;
     }

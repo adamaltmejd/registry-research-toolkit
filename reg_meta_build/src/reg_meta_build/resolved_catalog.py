@@ -36,6 +36,7 @@ from reg_meta_build._curation import SentinelCode  # noqa: TC001
 from reg_meta_build._resolved_common import (
     _classification_id,
     _require_trimmed,
+    _ResolvedDeliveryScope,
     _ResolvedModel,
     _ResolvedWindow,
     _storage_id,
@@ -253,7 +254,7 @@ class ResolvedClassificationSuccession(_ResolvedModel):
         return value
 
 
-class ResolvedState(_ResolvedWindow):
+class ResolvedState(_ResolvedDeliveryScope):
     variant: ResolvedVariant
     delivery_column_name: str
     data_type: str | None
@@ -271,6 +272,12 @@ class ResolvedState(_ResolvedWindow):
     conformance: ResolvedConformance | None = None
 
     _column = field_validator("delivery_column_name")(_require_trimmed)
+
+    @model_validator(mode="after")
+    def _independent_pooling(self) -> Self:
+        if self.period_scope == "year_independent" and self.pooled:
+            raise ValueError("year-independent delivery cannot carry a pooled flag")
+        return self
 
     @model_validator(mode="after")
     def _classification_contract(self) -> Self:
@@ -361,7 +368,12 @@ class ResolvedVariable(_ResolvedModel):
         previous: dict[tuple[str, str], ResolvedState] = {}
         for state in sorted(
             self.states,
-            key=lambda s: (s.variant.slug, s.value_set_version_label, s.valid_from),
+            key=lambda s: (
+                s.variant.slug,
+                s.value_set_version_label,
+                s.period_scope,
+                s.valid_from or "",
+            ),
         ):
             key = state.variant.slug, state.value_set_version_label
             prior = previous.get(key)
@@ -370,11 +382,40 @@ class ResolvedVariable(_ResolvedModel):
                     raise ValueError(
                         f"inconsistent variant definition: {state.variant.slug}"
                     )
+                if state.period_scope != prior.period_scope:
+                    raise ValueError(
+                        "mixed dated and year-independent states in one owner/variant/code version"
+                    )
+                if state.period_scope == "year_independent":
+                    raise ValueError(
+                        "duplicate year-independent state in one owner/variant/code version"
+                    )
+                assert state.valid_from is not None and prior.valid_to is not None
                 if state.valid_from <= prior.valid_to:
                     raise ValueError(
                         f"overlapping states in variant: {state.variant.slug}"
                     )
             previous[key] = state
+        independent_variants = {
+            state.variant.slug
+            for state in self.states
+            if state.period_scope == "year_independent"
+        }
+        if independent_variants & {
+            state.variant.slug
+            for state in self.states
+            if state.period_scope == "intervals"
+        }:
+            raise ValueError(
+                "mixed dated and year-independent delivery in one owner/variant"
+            )
+        if any(
+            alias.windows and alias.variant.slug in independent_variants
+            for alias in self.aliases
+        ):
+            raise ValueError(
+                "dated alias windows cannot represent year-independent delivery"
+            )
         aliases = [
             (alias.variant.slug, alias.delivery_column_name) for alias in self.aliases
         ]
@@ -426,7 +467,19 @@ def column_state_overlaps(variable: ResolvedVariable) -> tuple[tuple[str, str], 
         (column, a, b)
         for (_, column), states in by_column.items()
         for a, b in combinations(states, 2)
-        if a.valid_from <= b.valid_to and b.valid_from <= a.valid_to
+        if (
+            a.period_scope == b.period_scope == "year_independent"
+            and a.value_set_version_label == b.value_set_version_label
+        )
+        or (
+            a.period_scope == b.period_scope == "intervals"
+            and a.valid_from is not None
+            and a.valid_to is not None
+            and b.valid_from is not None
+            and b.valid_to is not None
+            and a.valid_from <= b.valid_to
+            and b.valid_from <= a.valid_to
+        )
     ]
     failures = []
     for code, conflict in _COLUMN_STATE_CONFLICTS.items():
@@ -982,28 +1035,35 @@ def write_resolved_catalog(
                     variable.states,
                     key=lambda s: (
                         s.variant.slug,
-                        s.valid_from,
+                        s.period_scope,
+                        s.valid_from or "",
                         s.value_set_version_label,
                     ),
                 ):
                     variant_id = _storage_id(
                         provider, "variant", register_slug, state.variant.slug
                     )
+                    state_coordinate = (
+                        state.valid_from
+                        if state.period_scope == "intervals"
+                        else "year_independent"
+                    )
+                    assert state_coordinate is not None
                     state_id = _storage_id(
                         provider,
                         "state",
                         register_slug,
                         variable.slug,
                         state.variant.slug,
-                        state.valid_from,
+                        state_coordinate,
                         state.value_set_version_label,
                     )
                     conn.execute(
                         "INSERT INTO variable_state (state_id, variable_id, "
                         "register_variant_id, valid_from, valid_to, delivery_column_name, "
                         "data_type, data_length, operational_definition, provenance, pooled, "
-                        "value_set_id, value_set_version_label, source_register_text, classification_id) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "value_set_id, value_set_version_label, source_register_text, classification_id, period_scope) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             state_id,
                             variable_id,
@@ -1024,6 +1084,7 @@ def write_resolved_catalog(
                             _classification_id(state.classification)
                             if state.classification is not None
                             else None,
+                            state.period_scope,
                         ),
                     )
                     if state.conformance is not None:

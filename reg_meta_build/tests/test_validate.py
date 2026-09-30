@@ -3232,3 +3232,53 @@ def test_inventory_coverage_section_present_in_report(fixture_db: Path):
         "[inventory: steward holdings have a catalog window]"
         in validate_built_db(fixture_db).format_report()
     )
+
+
+@pytest.mark.parametrize(
+    ("scope", "start", "end", "pooled", "valid"),
+    [
+        ("year_independent", None, None, 0, True),
+        ("year_independent", "2020-01-01", "2020-12-31", 0, False),
+        ("year_independent", None, None, 1, False),
+        ("intervals", "2020-01-01", "2020-12-31", 0, True),
+        ("intervals", None, None, 0, False),
+        ("intervals", "2020-02-30", "2020-12-31", 0, False),
+    ],
+)
+def test_delivery_state_scope_requires_conditional_dates(
+    scope, start, end, pooled, valid
+):
+    with sqlite3.connect(":memory:") as conn:
+        conn.execute(
+            "CREATE TABLE variable_state (period_scope TEXT, valid_from TEXT, valid_to TEXT, pooled INTEGER)"
+        )
+        conn.execute(
+            "INSERT INTO variable_state VALUES (?, ?, ?, ?)",
+            (scope, start, end, pooled),
+        )
+        result = validate_mod.ValidationResult()
+        validate_mod._check_state_delivery_scope(conn, result)
+        assert result.passed is valid
+
+
+def test_independent_domains_cannot_evade_overlap_guard_with_null_dates():
+    with sqlite3.connect(":memory:") as conn:
+        conn.row_factory = sqlite3.Row
+        conn.execute(
+            "CREATE TABLE variable (variable_id INTEGER, register_id INTEGER, slug TEXT)"
+        )
+        conn.execute("INSERT INTO variable VALUES (1, 1, 'country-group')")
+        conn.execute(
+            "CREATE TABLE variable_state (state_id INTEGER, variable_id INTEGER, register_variant_id INTEGER, delivery_column_name TEXT, value_set_id INTEGER, period_scope TEXT, valid_from TEXT, valid_to TEXT)"
+        )
+        conn.executemany(
+            "INSERT INTO variable_state VALUES (?, 1, 1, ?, ?, ?, NULL, NULL)",
+            [(1, "Group", 1, "year_independent"), (2, "group", 2, "year_independent")],
+        )
+        conn.create_function(
+            "py_lower", 1, lambda value: value.lower() if value is not None else None
+        )
+        result = validate_mod.ValidationResult()
+        validate_mod._check_one_value_set_per_period(conn, result, {"variable_state"})
+        assert not result.passed
+        assert "year-independent" in result.format_report()

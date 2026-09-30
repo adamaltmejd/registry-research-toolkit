@@ -108,7 +108,15 @@ def coding_for_period(
 
 def _covers(resolution: CodingResolution, start: str, end: str) -> bool:
     return not resolution.issues and covers_window(
-        ((s.valid_from, s.valid_to) for s in resolution.segments), start, end
+        (
+            (s.valid_from, s.valid_to)
+            for s in resolution.segments
+            if s.period_scope == "intervals"
+            and s.valid_from is not None
+            and s.valid_to is not None
+        ),
+        start,
+        end,
     )
 
 
@@ -117,9 +125,17 @@ def _compose(
     choices: list[tuple[str, CodingResolution]],
 ) -> tuple[CodingResolution, set[str]]:
     """Replace selected periods, withholding only contradictory overlap."""
+    if not choices:
+        return base, set()
+    all_segments = (*base.segments, *(s for _, r in choices for s in r.segments))
+    if any(segment.period_scope != "intervals" for segment in all_segments):
+        raise ValueError("Dated coding choices cannot rewrite independent coding")
+    for segment in all_segments:
+        assert segment.valid_from is not None and segment.valid_to is not None
     cuts = {
         point
-        for segment in (*base.segments, *(s for _, r in choices for s in r.segments))
+        for segment in all_segments
+        if segment.valid_from is not None and segment.valid_to is not None
         for point in (
             date.fromisoformat(segment.valid_from).toordinal(),
             date.fromisoformat(segment.valid_to).toordinal() + 1,
@@ -147,13 +163,19 @@ def _compose(
             (case_id, segment)
             for case_id, resolution in choices
             for segment in resolution.segments
-            if segment.valid_from <= lower and segment.valid_to >= upper
+            if segment.valid_from is not None
+            and segment.valid_to is not None
+            and segment.valid_from <= lower
+            and segment.valid_to >= upper
         ]
         if not selected:
             segments.extend(
                 replace(segment, valid_from=lower, valid_to=upper)
                 for segment in base.segments
-                if segment.valid_from <= lower and segment.valid_to >= upper
+                if segment.valid_from is not None
+                and segment.valid_to is not None
+                and segment.valid_from <= lower
+                and segment.valid_to >= upper
             )
             issues.extend(
                 replace(issue, valid_from=lower, valid_to=upper)
@@ -614,6 +636,13 @@ def apply_coding_choices(
                 accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
                 continue
         claims = coding[decision.column_key]
+        if any(claim.scope.kind == "year_independent" for claim in claims):
+            report(
+                "coding_scope_changed",
+                "Dated coding choices cannot rewrite independent source membership.",
+            )
+            accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
+            continue
         projected = coding_for_period(claims, decision.valid_from, decision.valid_to)
         observed = coding_expectations(claims, decision.valid_from, decision.valid_to)
         incomplete = tuple(

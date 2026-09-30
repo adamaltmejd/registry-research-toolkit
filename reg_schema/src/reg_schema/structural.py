@@ -505,7 +505,7 @@ def _check_period_list(
 def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> None:
     """Validate ``Source.period``: int / period-token / range / list."""
     path = f"{base}/period"
-    if _is_period_endpoint(period):
+    if period == "_default" or _is_period_endpoint(period):
         return
     if isinstance(period, str):
         issues.append(
@@ -748,6 +748,18 @@ def _check_source(
 
     if _present_and_not_null(source, "period", base, "source 'period'", issues):
         _check_period(source["period"], base, issues)
+        if source["period"] == "_default" and (
+            not isinstance(register_variant, str)
+            or not _is_register_variant_coord(register_variant)
+            or register_variant.split("/")[-1] == "_default"
+        ):
+            issues.append(
+                _error(
+                    "invalid_period",
+                    f"{base}/period",
+                    "year-independent selection requires a concrete register_variant",
+                )
+            )
 
     if not _present_and_not_null(source, "bindings", base, "source 'bindings'", issues):
         return
