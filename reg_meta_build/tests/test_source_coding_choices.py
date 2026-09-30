@@ -1582,6 +1582,35 @@ def test_independent_coding_retains_base_and_rejects_dated_choices(accepted):
         assert not result.diagnostics
 
 
+def _row_authority(record, claims, source_scope=None):
+    from reg_meta_build.curation_tree import PreparedCodingAuthority
+    from reg_meta_build.source_coding import copied_coding_fingerprints
+
+    revision = SourceRevision.create(
+        dataset="scb-fixture",
+        publisher="SCB",
+        purpose="coding fixture",
+        upstream_revision="1",
+        artifact_path="records.csv",
+        artifact_size=1,
+        artifact_sha256="a" * 64,
+    )
+    return PreparedCodingAuthority(
+        revision=revision,
+        source_scope=source_scope,
+        locators=list(record.locators),
+        records=list(
+            capture_expectations(
+                (record,),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+        codings=list(copied_coding_fingerprints(claims)),
+    )
+
+
 @pytest.mark.parametrize(
     "drift",
     [
@@ -1602,9 +1631,6 @@ def test_independent_coding_retains_base_and_rejects_dated_choices(accepted):
     ],
 )
 def test_documented_source_rows_guard_fresh_compile_and_replay(drift):
-    from reg_meta_build.curation_tree import PreparedCodingAuthority
-    from reg_meta_build.source_coding import copied_coding_fingerprints
-
     record = _record()
     claims = (
         replace(
@@ -1614,28 +1640,7 @@ def test_documented_source_rows_guard_fresh_compile_and_replay(drift):
             ),
         ),
     )
-    revision = SourceRevision.create(
-        dataset="scb-fixture",
-        publisher="SCB",
-        purpose="coding fixture",
-        upstream_revision="1",
-        artifact_path="records.csv",
-        artifact_size=1,
-        artifact_sha256="a" * 64,
-    )
-    authority = PreparedCodingAuthority(
-        revision=revision,
-        locators=list(record.locators),
-        records=list(
-            capture_expectations(
-                (record,),
-                fields=tuple(SourceFields.model_fields),
-                parents=True,
-                coding=True,
-            )
-        ),
-        codings=list(copied_coding_fingerprints(claims)),
-    )
+    authority = _row_authority(record, claims)
     values = {
         "members": [["1", "Included"]],
         "version_label": "Supplied row",
@@ -1750,3 +1755,140 @@ def test_documented_source_rows_guard_fresh_compile_and_replay(drift):
             ("1", "Included"),
         )
         assert "records.csv" in replay.coding[column].segments[0].provenance[0]
+
+
+@pytest.mark.parametrize(
+    "drift",
+    [
+        None,
+        "enlarge",
+        "shorten",
+        "close",
+        "wrong_claim",
+        "prose",
+        "removed_delivery",
+        "mixed_periods",
+        "unknown",
+        "literal_9999",
+    ],
+)
+def test_source_row_coding_follows_exact_supplied_open_scope(drift):
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="1900", end=None),)
+    )
+    record = _record().model_copy(
+        update={"edition_scope": scope, "edition_period_scope": scope}
+    )
+    claims = (
+        replace(
+            _claim("source", "J"),
+            scope=scope,
+            members=(
+                CodeMembershipClaim("J", None, TemporalScope(kind="year_independent")),
+                CodeMembershipClaim("N", None, TemporalScope(kind="year_independent")),
+            ),
+        ),
+    )
+    authority = _row_authority(record, claims, scope)
+    values = {
+        "members": [["J", "ja"], ["N", "nej"]],
+        "version_label": "Supplied J/N",
+        "periods": [],
+        "source_authority": authority,
+    }
+    if drift in {"mixed_periods", "unknown", "literal_9999"}:
+        if drift == "mixed_periods":
+            values["periods"] = [["1900-01-01", "2000-12-31"]]
+        else:
+            raw = authority.model_dump(mode="json")
+            raw["source_scope"] = (
+                TemporalScope(kind="unknown", label="unknown").model_dump(mode="json")
+                if drift == "unknown"
+                else TemporalScope(
+                    kind="intervals",
+                    intervals=(ScopeInterval(start="1900", end="9999-12-31"),),
+                ).model_dump(mode="json")
+            )
+            values["source_authority"] = raw
+        with pytest.raises(ValidationError):
+            _compile_entry("documented", values, claims, record=record)
+        return
+    cases, issues, register, compiled_scope, columns, column = _compile_entry(
+        "documented", values, claims, record=record
+    )
+    assert len(cases) == 1 and not issues
+    case = cases[0]
+    assert case.decision.selection.source_scope == scope
+    assert case.decision.selection.source_scope.intervals[0].end is None
+    assert case.decision.valid_to == "9999-12-31"
+    actual_record = record
+    actual_claims = claims
+    actual_scopes = _column_scopes(columns)
+    if drift in {"enlarge", "shorten", "close"}:
+        changed_scope = TemporalScope(
+            kind="intervals",
+            intervals=(
+                ScopeInterval(
+                    start="1899"
+                    if drift == "enlarge"
+                    else "1901"
+                    if drift == "shorten"
+                    else "1900",
+                    end="2000" if drift == "close" else None,
+                ),
+            ),
+        )
+        actual_record = record.model_copy(
+            update={
+                "edition_scope": changed_scope,
+                "edition_period_scope": changed_scope,
+            }
+        )
+        actual_scopes = {column: frozenset((changed_scope,))}
+    elif drift == "wrong_claim":
+        actual_claims = (
+            replace(
+                claims[0],
+                scope=TemporalScope(
+                    kind="intervals", intervals=(ScopeInterval(start="1901", end=None),)
+                ),
+            ),
+        )
+    elif drift == "prose":
+        actual_record = record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"description": value_field("changed")}
+                )
+            }
+        )
+    elif drift == "removed_delivery":
+        actual_scopes = {column: frozenset()}
+    fresh, diagnostics = compile_coding_register(
+        register,
+        compiled_scope,
+        originals=(actual_record,),
+        columns={column: (actual_record,)},
+        column_scopes=actual_scopes,
+        coding={column: actual_claims},
+    )
+    if drift is None:
+        assert fresh == cases and not diagnostics
+    else:
+        assert not fresh and diagnostics
+    evidence = SourceEvidence(
+        (actual_record,),
+        effective_occurrences=()
+        if drift == "removed_delivery"
+        else (source_occurrence(actual_record),),
+    )
+    result = apply_coding_choices(evidence, cases, coding={column: actual_claims})
+    if drift is None:
+        resolved = result.coding[column]
+        assert resolved.claims == claims
+        (segment,) = resolved.segments
+        assert segment.code_set.members == (("J", "ja"), ("N", "nej"))
+        assert segment.valid_from == "1900-01-01" and segment.valid_to == "9999-12-31"
+        assert resolved.claims[0].scope.intervals[0].end is None
+    else:
+        assert result.accounting[0].status == "stale"

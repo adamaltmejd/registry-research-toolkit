@@ -1621,3 +1621,45 @@ slug = "alder-vid-handelsen-partners-alder"
 [[variable]]
 native_id = "2.279.uppgiven-vid-migration"
 slug = "alder-vid-handelsen-uppgiven-vid-migration"
+
+[[errata.field]]
+variable = "2.272"
+variant = "2.56"
+column = "AktVar"
+edition = "15017"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Varaktighet i antal dagar mellan det gamla och nya civilståndet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Civilstånd tidigare varaktighet" }, { name = "operational_definition", status = "value", value = "Härledd variabel som visar det tidigare civilståndets varaktighet utifrån personens nuvarande civilståndsdatum och tidigare civilståndsdatum.\n\nVariabeln bör inte användas på grund av dålig kvalité. Osäkerhet finns om tidigare civilståndsdatum för personer som invandrat." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal år" }]
+expected_period_text = "Skilda 1968-1997"
+expected_scope = { kind = "pooled", intervals = [], label = "Skilda 1968-1997", pooled_start = "1968-01-01", pooled_end = "1997-12-31" }
+expected_period = { kind = "pooled", intervals = [], label = "Skilda 1968-1997", pooled_start = "1968-01-01", pooled_end = "1997-12-31" }
+field = "measurement_unit"
+value = "Dagar"
+evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "2.272"
+variant = "2.56"
+column = "Aktvar"
+edition = "15013"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Varaktighet i antal dagar mellan det gamla och nya civilståndet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Civilstånd tidigare varaktighet" }, { name = "operational_definition", status = "value", value = "Härledd variabel som visar det tidigare civilståndets varaktighet utifrån personens nuvarande civilståndsdatum och tidigare civilståndsdatum.\n\nVariabeln bör inte användas på grund av dålig kvalité. Osäkerhet finns om tidigare civilståndsdatum för personer som invandrat." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal år" }]
+expected_period_text = "Änkor/ änklingar 1968-1997"
+expected_scope = { kind = "pooled", intervals = [], label = "Änkor/ änklingar 1968-1997", pooled_start = "1968-01-01", pooled_end = "1997-12-31" }
+expected_period = { kind = "pooled", intervals = [], label = "Änkor/ änklingar 1968-1997", pooled_start = "1968-01-01", pooled_end = "1997-12-31" }
+field = "measurement_unit"
+value = "Dagar"
+evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "2.254"
+variant = "2.66"
+column = "Folkbdat"
+edition = "4852"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Datum från när folkbokföringen gäller." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Folkbokföringsdatum" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal anställda" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "measurement_unit"
+value = "Datum"
+evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+noted = "2026-09-30"

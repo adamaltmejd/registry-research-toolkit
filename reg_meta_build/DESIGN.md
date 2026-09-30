@@ -457,16 +457,20 @@ contradictory assignments withhold the disputed aspect. No case reads another
 correction's output as its supporting source. Application order cannot choose a winner.
 
 Register `[[errata.field]]` entries correct reviewed source-backed text in `name`,
-`description` or `definition` at exact original variable/variant/column coordinates.
-`[[errata.occurrence_period]]` entries require one exact native source edition for SCB.
-SOS rows lack that coordinate and instead require both literal supplied coverage fields
-alongside the exact native variable, subset and column. Both entry types guard the
-original edition text, both original scopes and all four supplied prose fields,
-including absent or unknown values. Complete native-family support and peer guards
-retain unrelated editions and coding references. Period entries carry explicit
-replacement `TemporalScope` values; omitting an interval's `end` in TOML means an open
-end, while unknown and pooled scopes retain their labels and bounds. These entries emit
-existing checked field/period effects and never rewrite the original source records.
+`description`, `definition` or `measurement_unit` at exact original
+variable/variant/column coordinates. Unit corrections additionally pin the supplied unit
+and both coverage fields. They reconcile literal wording only when the source definition
+positively establishes the same quantity; they do not convert values, merge differing
+scales or infer absent units. `[[errata.occurrence_period]]` entries require one exact
+native source edition for SCB. SOS rows lack that coordinate and instead require both
+literal supplied coverage fields alongside the exact native variable, subset and column.
+Both entry types guard the original edition text, both original scopes and all four
+supplied prose fields, including absent or unknown values. Complete native-family
+support and peer guards retain unrelated editions and coding references. Period entries
+carry explicit replacement `TemporalScope` values; omitting an interval's `end` in TOML
+means an open end, while unknown and pooled scopes retain their labels and bounds. These
+entries emit existing checked field/period effects and never rewrite the original source
+records.
 
 `[[errata.support]]` retains one documented erroneous assertion as support rather than
 catalog data. Its positive `authority` must name another native variable in the same
@@ -617,8 +621,14 @@ prepared workbook rows themselves, when their prose supplies the meanings of alr
 supplied finite code tokens. This form pins the source revision, physical locators,
 complete original fields, scopes, parent facts and all coding fingerprints. Changed,
 missing or new rows and changed incomplete lists invalidate compilation and application.
-Source rows cannot be mixed with PDF authority; both retain the finite window
-requirement. Exact code strings, including an explicitly documented empty string, are
+Source rows cannot be mixed with PDF authority. PDF decisions retain the finite window
+requirement. A source-row decision instead may name its exact supplied `TemporalScope`,
+mutually exclusive with authored finite periods. That scope must match every effective
+occurrence and list claim exactly, including an open `end`. The authored scope and
+originals retain `end = None`; only the existing internal interval normalization reaches
+the maximum date. Complete original and list guards invalidate any source-scope change.
+This does not authorize future extrapolation or relax finite bounds for other coding
+decisions. Exact code strings, including an explicitly documented empty string, are
 preserved. The compiler captures original fields, scopes, coding references and complete
 column peers; changed finite claims invalidate application, and any supplied complete
 list in the window makes the entry stale. Contradictory documented assignments withhold

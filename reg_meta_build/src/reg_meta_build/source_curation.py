@@ -655,6 +655,7 @@ class DocumentedCodingSelection(_CurationModel):
     """An exact finite list supplied by independently reviewed documentation."""
 
     kind: Literal["documented"] = "documented"
+    source_scope: TemporalScope | None = None
     expected_source_codings: (
         tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...] | None
     ) = None
@@ -726,6 +727,32 @@ class CodingDecision(_ColumnDecision):
         | SupportedCodingAssociation
         | Literal["uncoded", "omit_state"]
     )
+
+    @model_validator(mode="after")
+    def _bounded(self) -> Self:
+        if (
+            isinstance(self.selection, DocumentedCodingSelection)
+            and self.selection.source_scope is not None
+        ):
+            from .source_coding import coding_scope_bounds
+
+            bounds = coding_scope_bounds(self.selection.source_scope)
+            if (
+                self.selection.expected_source_codings is None
+                or self.selection.source_scope.kind != "intervals"
+                or len(self.selection.source_scope.intervals) != 1
+                or self.selection.source_scope.intervals[0].start is None
+                or bounds is None
+                or len(bounds) != 1
+                or (self.valid_from, self.valid_to)
+                != tuple(date.fromordinal(bound).isoformat() for bound in bounds[0])
+            ):
+                raise ValueError(
+                    "source-scope coding bounds must exactly match guarded supplied scope"
+                )
+            return self
+        FiniteCurationWindow(valid_from=self.valid_from, valid_to=self.valid_to)
+        return self
 
 
 class ClassificationDecision(_ColumnDecision):

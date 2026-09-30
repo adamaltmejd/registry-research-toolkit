@@ -3805,6 +3805,17 @@ def compile_coding_register(
     ):
         for index, entry in enumerate(entries, 1):
             ref = f"{register.source_file}#/coding.{kind}/{index}"
+            periods = entry.periods
+            source_scope = (
+                entry.source_authority.source_scope
+                if isinstance(entry, CodingDocumentedEntry)
+                and entry.source_authority is not None
+                else None
+            )
+            if source_scope is not None:
+                bounds = coding_scope_bounds(source_scope)
+                assert bounds is not None and len(bounds) == 1
+                periods = [[date.fromordinal(bound).isoformat() for bound in bounds[0]]]
             variables = {
                 item.target.source_key
                 for item in scope.naming
@@ -3834,7 +3845,7 @@ def compile_coding_register(
             }
             if len(matches) != 1:
                 status = "overbroad" if len(matches) > 1 else "stale"
-                for period_index, (start, end) in enumerate(entry.periods, 1):
+                for period_index, (start, end) in enumerate(periods, 1):
                     case_id = f"{ref}/period/{period_index}"
                     diagnostics.append(
                         ResolutionDiagnostic(
@@ -3852,7 +3863,7 @@ def compile_coding_register(
             column = next(iter(matches))
             records = columns[column]
             claims = coding.get(column, ())
-            for period_index, (start, end) in enumerate(entry.periods, 1):
+            for period_index, (start, end) in enumerate(periods, 1):
                 case_id = f"{ref}/period/{period_index}"
                 source_windows = (
                     (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
@@ -3915,6 +3926,13 @@ def compile_coding_register(
                     )
                     if (
                         tuple(authority.records) != expected
+                        or (
+                            source_scope is not None
+                            and (
+                                column_scopes.get(column) != frozenset((source_scope,))
+                                or any(claim.scope != source_scope for claim in claims)
+                            )
+                        )
                         or {
                             locator for record in records for locator in record.locators
                         }
@@ -4115,11 +4133,24 @@ def _select_occurrence_correction(
         )
         and (
             not isinstance(entry, ErrataFieldEntry)
-            or entry.field != "classification_declared"
+            or entry.field not in {"classification_declared", "measurement_unit"}
             or (
                 record.edition_scope == entry.expected_scope
                 and record.edition_period_scope == entry.expected_period
                 and record.original_period_text == entry.expected_period_text
+            )
+        )
+        and (
+            not isinstance(entry, ErrataFieldEntry)
+            or entry.field != "measurement_unit"
+            or (
+                record.fields.measurement_unit is not None
+                and record.fields.measurement_unit.value
+                == next(
+                    field.value
+                    for field in entry.expected_fields
+                    if field.name == "measurement_unit"
+                )
             )
         )
     )
@@ -4318,7 +4349,8 @@ def compile_occurrence_corrections(
                             ),
                             *(
                                 tuple(entry.expected_fields)
-                                if entry.field == "classification_declared"
+                                if entry.field
+                                in {"classification_declared", "measurement_unit"}
                                 else ()
                             ),
                         ),

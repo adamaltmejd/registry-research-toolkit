@@ -465,26 +465,39 @@ class _OccurrenceCorrectionEntry(_CurationModel):
         names = {item.name for item in value}
         coverage = {"coverage_from", "coverage_to"}
         classification = {"classification_declared", "representation", "data_type"}
+        unit = {"measurement_unit"}
         if (
             not required.issubset(names)
-            or names - required not in (set(), coverage, classification | coverage)
+            or names - required
+            not in (
+                set(),
+                coverage,
+                classification | coverage,
+                classification | coverage | unit,
+            )
             or len(names) != len(value)
         ):
             raise ValueError(
-                "expected_fields must guard all four supplied prose fields, optionally both coverage fields and the complete classification/type/representation group"
+                "expected_fields must guard all four supplied prose fields, optionally both coverage fields and the complete classification/type/representation group with the original measurement unit"
             )
         return value
 
 
 class ErrataFieldEntry(_OccurrenceCorrectionEntry):
-    field: Literal["name", "definition", "description", "classification_declared"]
+    field: Literal[
+        "name",
+        "definition",
+        "description",
+        "classification_declared",
+        "measurement_unit",
+    ]
     value: str
 
     _value = field_validator("value")(_require_trimmed)
 
     @model_validator(mode="after")
     def _changed_text(self) -> ErrataFieldEntry:
-        if self.field == "classification_declared" and not {
+        if self.field in {"classification_declared", "measurement_unit"} and not {
             "classification_declared",
             "representation",
             "data_type",
@@ -492,7 +505,13 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
             "coverage_to",
         }.issubset({item.name for item in self.expected_fields}):
             raise ValueError(
-                "classification corrections require original classification, type, representation and both coverage guards"
+                f"{self.field.replace('_declared', '')} corrections require original classification, type, representation and both coverage guards"
+            )
+        if self.field == "measurement_unit" and "measurement_unit" not in {
+            item.name for item in self.expected_fields
+        }:
+            raise ValueError(
+                "unit corrections require the original measurement unit guard"
             )
         expected = next(
             item for item in self.expected_fields if item.name == self.field
@@ -1038,6 +1057,7 @@ class PreparedCodingAuthority(_CurationModel):
     """Exact original source rows supplying the documented finite meanings."""
 
     revision: SourceRevision
+    source_scope: TemporalScope | None = None
     locators: list[RecordLocator] = Field(min_length=1)
     records: list[RecordExpectation] = Field(min_length=1)
     codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] = Field(
@@ -1046,6 +1066,18 @@ class PreparedCodingAuthority(_CurationModel):
 
     @model_validator(mode="after")
     def _complete(self) -> PreparedCodingAuthority:
+        if self.source_scope is not None:
+            from .source_coding import coding_scope_bounds
+
+            if (
+                self.source_scope.kind != "intervals"
+                or len(self.source_scope.intervals) != 1
+                or self.source_scope.intervals[0].start is None
+                or coding_scope_bounds(self.source_scope) is None
+            ):
+                raise ValueError(
+                    "source coding authority requires one exact supplied interval"
+                )
         if len({record.ref for record in self.records}) != len(self.records):
             raise ValueError("source authority must name distinct original members")
         for record in self.records:
@@ -1076,15 +1108,32 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
         default=None, min_length=1
     )
     source_authority: PreparedCodingAuthority | None = None
+    periods: list[list[str]] = Field(default_factory=list)
+
+    @field_validator("periods")
+    @classmethod
+    def _periods(cls, value: list[list[str]]) -> list[list[str]]:
+        return CodingEntry._periods(value) if value else value
 
     @field_validator("source_authority", mode="before")
     @classmethod
     def _source_rows(cls, value: object) -> object:
-        return (
-            PreparedCodingAuthority.model_validate_json(json.dumps(value))
-            if isinstance(value, dict)
-            else value
+        if not isinstance(value, dict):
+            return value
+        value = json.loads(json.dumps(value))
+        scope_locations = [(value, "source_scope")]
+        scope_locations.extend(
+            (alternative, name)
+            for record in value.get("records", [])
+            for alternative in record.get("alternatives", [])
+            for name in ("edition_scope", "edition_period_scope")
         )
+        for location, name in scope_locations:
+            if name in location and location[name] is not None:
+                location[name] = _OccurrenceCorrectionEntry._scope(
+                    location[name]
+                ).model_dump(mode="json")
+        return PreparedCodingAuthority.model_validate_json(json.dumps(value))
 
     @model_validator(mode="after")
     def _finite_documented_periods(self) -> CodingDocumentedEntry:
@@ -1096,6 +1145,17 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
                 )
         elif any(value is not None for value in pdf):
             raise ValueError("documented coding must select one authority form")
+        exact_scope = (
+            self.source_authority.source_scope
+            if self.source_authority is not None
+            else None
+        )
+        if bool(self.periods) == (exact_scope is not None):
+            raise ValueError(
+                "documented coding requires finite periods or exact source scope, exclusively"
+            )
+        if self.source_scope is not None or self.expected_source_codings is not None:
+            raise ValueError("source-scope coding must use checked source authority")
         for start, end in self.periods:
             FiniteCurationWindow(valid_from=start, valid_to=end)
         return self

@@ -5646,3 +5646,83 @@ def test_classification_reference_corrections_require_complete_metadata_guards(
             field="classification_declared",
             value="District reference",
         )
+
+
+def test_measurement_unit_correction_guards_shared_ref_physical_assertions(tmp_path):
+    tree, scope, source, _, base = _checked_correction_fixture(tmp_path)
+    original = source.model_copy(
+        update={
+            "fields": source.fields.model_copy(
+                update={"measurement_unit": value_field("Antal")}
+            )
+        }
+    )
+    negative = original.model_copy(
+        update={
+            "record_id": original.record_id + "-other-unit",
+            "fields": original.fields.model_copy(
+                update={"measurement_unit": value_field("Kronor (SEK)")}
+            ),
+        }
+    )
+    fields = (
+        "name",
+        "definition",
+        "description",
+        "operational_definition",
+        "classification_declared",
+        "representation",
+        "data_type",
+        "coverage_from",
+        "coverage_to",
+        "measurement_unit",
+    )
+    guards = list(
+        capture_expectations((original,), fields=fields)[0].alternatives[0].fields
+    )
+    entry = ErrataFieldEntry(
+        **{
+            **base.model_dump(exclude={"field", "value", "expected_fields"}),
+            "expected_fields": guards,
+        },
+        field="measurement_unit",
+        value="Antal personer",
+    )
+    register = tree.registers[0]
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={"errata": register.errata.model_copy(update={"field": [entry]})}
+            ),
+        ),
+    )
+    cases, issues, _ = _run_checked_correction(tree, scope, (original, negative))
+    assert not issues
+    result = apply_occurrence_cases((original, negative), cases[scope.source, None])
+    assert not result.diagnostics
+    changed, untouched = result.occurrences
+    assert changed.fields.measurement_unit.value == "Antal personer"
+    assert changed.source_records == (original,)
+    assert changed.edition_scope == original.edition_scope
+    assert untouched == source_occurrence(negative)
+    for field in ("measurement_unit", "definition", "representation"):
+        altered = original.model_copy(
+            update={
+                "fields": original.fields.model_copy(
+                    update={field: value_field("Changed supplied assertion")}
+                )
+            }
+        )
+        _, stale, _ = _run_checked_correction(tree, scope, (altered, negative))
+        assert stale and stale[0].code == "stale_curation_entry"
+    for missing in ("measurement_unit", "representation", "coverage_from"):
+        with pytest.raises(ValueError):
+            entry.model_validate(
+                {
+                    **entry.model_dump(),
+                    "expected_fields": [
+                        g.model_dump() for g in guards if g.name != missing
+                    ],
+                }
+            )

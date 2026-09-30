@@ -9170,3 +9170,73 @@ periods = [["1989-01-01", "1989-12-31"]]
 members = [["83100", "Okänt värde"]]
 reason = "Preserve the exact supplied unknown-labelled values as bounded variable-local classification sentinels."
 source = "Complete pinned SCB source coding and original family audit: these exact code-label pairs are explicitly unknown in this occurrence cohort. Substantive same-literal source categories remain outside this decision. Preserve complete source lists, original claims, fields, periods and all registry codes; no global sentinel widening or source label replacement."
+
+[[errata.field]]
+variable = "25.21503"
+variant = "25.763"
+column = "BREKBID"
+edition = "4978"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Rekryteringsbidrag, antal veckor utbetalt." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Rekryteringsbidrag, antal veckor utbetalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
+expected_period_text = "2012, preliminär version"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "measurement_unit"
+value = "Veckor"
+evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "25.21503"
+variant = "25.763"
+column = "BREKBID"
+edition = "5521"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Rekryteringsbidrag, antal veckor utbetalt." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Rekryteringsbidrag, antal veckor utbetalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal veckor" }]
+expected_period_text = "2013, preliminär version"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "measurement_unit"
+value = "Veckor"
+evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "25.21503"
+variant = "25.763"
+column = "BREKBID"
+edition = "5626"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Rekryteringsbidrag, antal veckor utbetalt." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Rekryteringsbidrag, antal veckor utbetalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal veckor" }]
+expected_period_text = "2013, slutlig version"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "measurement_unit"
+value = "Veckor"
+evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "25.27150"
+variant = "25.763"
+column = "BVBMAN"
+edition = "4346"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Antal månader med beslutat vårdnadsbidrag för barnet. Månaderna är registrerade på barnet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Antal månader med vårdnadsbidrag" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }]
+expected_period_text = "2011, slutlig version"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+field = "measurement_unit"
+value = "Antal månader"
+evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "25.21503"
+variant = "25.763"
+column = "BREKBID"
+edition = "5226"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Rekryteringsbidrag, antal veckor utbetalt." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Rekryteringsbidrag, antal veckor utbetalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
+expected_period_text = "2012, slutlig version"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "measurement_unit"
+value = "Veckor"
+evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+noted = "2026-09-30"

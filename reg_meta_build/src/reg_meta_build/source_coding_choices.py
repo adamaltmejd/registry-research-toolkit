@@ -373,6 +373,9 @@ def compile_coding_selection(
             DocumentedCodingSelection(
                 members=documented.members,
                 version_label=documented.version_label,
+                source_scope=documented.source_authority.source_scope
+                if documented.source_authority is not None
+                else None,
                 expected_source_codings=tuple(documented.source_authority.codings)
                 if documented.source_authority is not None
                 else None,
@@ -471,7 +474,11 @@ def _selection(
             claims
         ) != tuple(sorted(selection.expected_source_codings)):
             return None, "documented_source_coding_changed"
-        scope = TemporalScope(
+        if selection.source_scope is not None and any(
+            claim.scope != selection.source_scope for claim in claims
+        ):
+            return None, "documented_source_scope_changed"
+        scope = selection.source_scope or TemporalScope(
             kind="intervals",
             intervals=(
                 ScopeInterval(start=decision.valid_from, end=decision.valid_to),
@@ -632,6 +639,18 @@ def apply_coding_choices(
             accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
             continue
         if isinstance(records, SourceEvidence) and records.effective_scopes is not None:
+            if (
+                isinstance(decision.selection, DocumentedCodingSelection)
+                and decision.selection.source_scope is not None
+                and records.effective_scopes.get(decision.column_key)
+                != frozenset((decision.selection.source_scope,))
+            ):
+                report(
+                    "coding_delivery_changed",
+                    "The exact supplied source-scope delivery changed.",
+                )
+                accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
+                continue
             windows = (
                 (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
                 for scope in records.effective_scopes.get(decision.column_key, ())
