@@ -29,6 +29,7 @@ from reg_meta_build.source_curation import (
     CheckedIdentityChange,
     ClassificationDecision,
     CodingDecision,
+    DeliveryUnitDecision,
     OccurrenceCorrectionDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
@@ -505,7 +506,9 @@ def resolve_source_scope(
                     )
             key = column_owners.get(column_key)
         else:
-            assert isinstance(case.decision, RepresentationDecision)
+            assert isinstance(
+                case.decision, (RepresentationDecision, DeliveryUnitDecision)
+            )
             key = case.decision.variable_key
         if key not in groups:
             raise ValueError(

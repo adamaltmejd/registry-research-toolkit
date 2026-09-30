@@ -50,6 +50,8 @@ from reg_meta_build.source_curation import (
     CodingDecision,
     CuratedOccurrenceAddition,
     CurationCase,
+    DeliveryUnitColumn,
+    DeliveryUnitDecision,
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
@@ -513,6 +515,74 @@ def test_ordinary_scope_forms_variables_with_literal_provider_keys():
     assert {v.provider_key for v in result.variables.values()} == {"5", "6"}
     assert sum(len(v.states) for v in result.variables.values()) == 2
     assert len(result.corrections.occurrences) == 2
+
+
+def test_scope_routes_checked_delivery_units_to_literal_state_formation():
+    records = tuple(
+        item.model_copy(
+            update={
+                "fields": item.fields.model_copy(
+                    update={
+                        "definition": value_field("Annual received amount"),
+                        "measurement_unit": value_field(unit),
+                    }
+                )
+            }
+        )
+        for item, unit in (
+            (record(year="2020"), "kronor"),
+            (record(member=2, year="2021"), "hundratals kronor"),
+        )
+    )
+    case = CurationCase(
+        case_id="checked-literal-delivery-units",
+        peer_guards=(
+            PeerGuard(
+                guard_id="whole-variable",
+                source=records[0].source,
+                coordinates=(("variable", records[0].subject.variable),),
+                expected_members=tuple(record_ref(item) for item in records),
+            ),
+        ),
+        targets=capture_expectations(
+            records, fields=tuple(SourceFields.model_fields), parents=True, coding=True
+        ),
+        decision=DeliveryUnitDecision(
+            reviewed=True,
+            variable_key=native_variable_key(records[0]),
+            columns=(
+                DeliveryUnitColumn(
+                    variant_key=native_variant_key(records[0]),
+                    column="VALUE",
+                    valid_from="2020-01-01",
+                    valid_to="2021-12-31",
+                    expected_codings=(),
+                ),
+            ),
+            reason="Retain each supplied unit without converting amounts.",
+            provenance="exact source fixture",
+        ),
+    )
+    result = resolve(records, cases=(case,))
+    assert [(issue.code, issue.severity) for issue in result.diagnostics] == [
+        ("delivery_unit_projected", "warning")
+    ]
+    variable = next(iter(result.variables.values()))
+    assert variable.measurement_unit is None
+    assert [
+        (state.valid_from, state.measurement_unit) for state in variable.states
+    ] == [
+        ("2020-01-01", "kronor"),
+        ("2021-01-01", "hundratals kronor"),
+    ]
+    assert (
+        tuple(
+            source
+            for occurrence in result.corrections.occurrences
+            for source in occurrence.source_records
+        )
+        == records
+    )
 
 
 def test_superseded_scb_preliminary_is_support_and_final_alone_forms_state():
