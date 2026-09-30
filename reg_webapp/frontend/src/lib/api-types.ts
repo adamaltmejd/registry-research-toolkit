@@ -3162,10 +3162,14 @@ export interface components {
             definition?: string | null;
             /** Delivery Column Name */
             delivery_column_name: string | null;
+            /** Description */
+            description?: string | null;
             /** Is Identifier */
             is_identifier: boolean;
             /** Measurement Unit */
             measurement_unit?: string | null;
+            /** Name */
+            name?: string | null;
             /** Operational Definition */
             operational_definition?: string | null;
             /**

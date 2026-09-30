@@ -57,8 +57,8 @@ from .relations import load_relations
 from .resolved_metadata import _variable
 from .source_curation import (
     ColumnRepresentation,
-    DeliveryUnitColumn,
-    DeliveryUnitDecision,
+    DeliveryMetadataColumn,
+    DeliveryMetadataDecision,
     DocumentedCodingSelection,
     FieldExpectation,
     FiniteCurationWindow,
@@ -1024,11 +1024,14 @@ class IdentityCuration(_CurationModel):
     rename: list[IdentityRenameEntry] = Field(default_factory=list)
 
 
-class DeliveryUnitEntry(_CurationModel):
+class DeliveryMetadataEntry(_CurationModel):
     variable: str
+    fields: list[Literal["measurement_unit", "name", "description"]] = Field(
+        min_length=1
+    )
     records: list[RecordExpectation] = Field(min_length=1)
     support: list[RecordExpectation] = Field(default_factory=list)
-    columns: list[DeliveryUnitColumn] = Field(min_length=1)
+    columns: list[DeliveryMetadataColumn] = Field(min_length=1)
     evidence: str
     noted: str
 
@@ -1043,21 +1046,34 @@ class DeliveryUnitEntry(_CurationModel):
     @classmethod
     def _columns(cls, values):
         return [
-            DeliveryUnitColumn.model_validate_json(json.dumps(value))
+            DeliveryMetadataColumn.model_validate_json(
+                json.dumps(
+                    {
+                        **value,
+                        **(
+                            {"source_scope": _scope_shape(value["source_scope"])}
+                            if value.get("source_scope") is not None
+                            else {}
+                        ),
+                    }
+                )
+            )
             if isinstance(value, dict)
             else value
             for value in values
         ]
 
     @model_validator(mode="after")
-    def _positive(self) -> DeliveryUnitEntry:
-        DeliveryUnitDecision.require_targets(tuple(self.records))
+    def _positive(self) -> DeliveryMetadataEntry:
+        DeliveryMetadataDecision.require_targets(
+            tuple(self.records), tuple(self.fields)
+        )
         return self
 
 
 class RepresentationCuration(_CurationModel):
     period_family: list[PeriodFamilyEntry] = Field(default_factory=list)
-    delivery_unit: list[DeliveryUnitEntry] = Field(default_factory=list)
+    delivery_metadata: list[DeliveryMetadataEntry] = Field(default_factory=list)
     alias_window: list[AliasWindowEntry] = Field(default_factory=list)
     parallel: list[ParallelRepresentationEntry] = Field(default_factory=list)
 
@@ -1585,7 +1601,7 @@ def _register_arrays(
         ("representation.period_family", entry.representation.period_family),
         ("representation.alias_window", entry.representation.alias_window),
         ("representation.parallel", entry.representation.parallel),
-        ("representation.delivery_unit", entry.representation.delivery_unit),
+        ("representation.delivery_metadata", entry.representation.delivery_metadata),
         ("identity.partition", entry.identity.partition),
         ("identity.column_owner", entry.identity.column_owner),
         ("identity.route", entry.identity.route),
@@ -1737,7 +1753,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     ErrataOccurrencePeriodEntry,
                     CodingEntry,
                     ParallelRepresentationEntry,
-                    DeliveryUnitEntry,
+                    DeliveryMetadataEntry,
                 ),
             ):
                 native_id = identity.native_id

@@ -313,7 +313,7 @@ def test_binding_leaf_embeds_full_record(client):
         assert field in body
 
 
-def test_states_endpoint_returns_delivery_provenance(client, catalog_db):
+def test_states_and_binding_leaf_return_literal_delivery_text(client, catalog_db):
     provenance = (
         "errata:scoped-attributions\n"
         '[{"class":"omitted-column-in-version",'
@@ -322,15 +322,22 @@ def test_states_endpoint_returns_delivery_provenance(client, catalog_db):
     )
     with sqlite3.connect(catalog_db) as conn:
         conn.execute(
-            "UPDATE variable_state SET provenance = ? "
+            "UPDATE variable_state SET provenance = ?, name = ?, description = ? "
             "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')",
-            (provenance,),
+            (provenance, "Supplied delivery name", "Supplied delivery description"),
         )
 
     resp = client.get("/api/catalog/scb/lisa/kon/states")
 
     assert resp.status_code == 200
-    assert resp.json()["states"][0]["provenance"] == provenance
+    state = resp.json()["states"][0]
+    assert state["provenance"] == provenance
+    assert state["name"] == "Supplied delivery name"
+    assert state["description"] == "Supplied delivery description"
+    leaf = client.get("/api/catalog/scb/lisa/kon")
+    assert leaf.status_code == 200
+    assert leaf.json()["states"][0]["name"] == state["name"]
+    assert leaf.json()["states"][0]["description"] == state["description"]
 
 
 def test_binding_leaf_embeds_full_succession_chain(client):

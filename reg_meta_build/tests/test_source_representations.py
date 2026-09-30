@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from contextlib import closing
+from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
@@ -113,6 +114,7 @@ def _setup(records=None, claims=None):
         fields=(
             "column_name",
             "name",
+            "description",
             "definition",
             "measurement_unit",
             "data_type",
@@ -1026,7 +1028,10 @@ def test_per_column_operation_and_attribution_do_not_borrow_sibling_facts(
 
 
 def _unit_fixture(*, overlap=False):
-    from reg_meta_build.source_curation import DeliveryUnitColumn, DeliveryUnitDecision
+    from reg_meta_build.source_curation import (
+        DeliveryMetadataColumn,
+        DeliveryMetadataDecision,
+    )
 
     revision = SourceRevision.create(
         dataset="fixture",
@@ -1081,11 +1086,12 @@ def _unit_fixture(*, overlap=False):
                 expected_members=tuple(e.ref for e in expectations),
             ),
         ),
-        decision=DeliveryUnitDecision(
+        decision=DeliveryMetadataDecision(
+            fields=("measurement_unit",),
             reviewed=True,
             variable_key=first.variable_key,
             columns=(
-                DeliveryUnitColumn(
+                DeliveryMetadataColumn(
                     variant_key=first.variant_key,
                     column="VALUE",
                     valid_from="2020-01-01",
@@ -1126,7 +1132,7 @@ def _form_units(fixture, *, cases=None, records=None):
     return resolution, formed
 
 
-def test_checked_delivery_units_retain_literals_and_coverage(tmp_path):
+def test_checked_delivery_metadata_retain_literals_and_coverage(tmp_path):
     fixture = _unit_fixture()
     records, _, _, _ = fixture
     _, baseline = _form_units(fixture, cases=())
@@ -1167,7 +1173,7 @@ def test_checked_delivery_units_retain_literals_and_coverage(tmp_path):
 
 
 @pytest.mark.parametrize("drift", ["missing", "changed", "new", "partial", "owner"])
-def test_checked_delivery_units_fail_closed(drift):
+def test_checked_delivery_metadata_fail_closed(drift):
     fixture = _unit_fixture()
     records, case, variants, coding = fixture
     if drift == "missing":
@@ -1227,7 +1233,7 @@ def test_checked_delivery_units_fail_closed(drift):
         )
 
 
-def test_checked_delivery_units_do_not_resolve_same_column_conflicts():
+def test_checked_delivery_metadata_do_not_resolve_same_column_conflicts():
     _, formed = _form_units(_unit_fixture(overlap=True))
     assert any(
         issue.severity == "error" and "measurement_unit" in issue.fields
@@ -1235,7 +1241,7 @@ def test_checked_delivery_units_do_not_resolve_same_column_conflicts():
     )
 
 
-def test_checked_delivery_units_reject_unknown_units_and_changed_coding():
+def test_checked_delivery_metadata_reject_unknown_units_and_changed_coding():
     from reg_meta_build.source_curation import capture_expectations
 
     fixture = _unit_fixture()
@@ -1265,5 +1271,327 @@ def test_checked_delivery_units_reject_unknown_units_and_changed_coding():
             )
         }
     )
-    with pytest.raises(ValueError, match="positive literal units"):
+    with pytest.raises(ValueError, match="at least one positive supplied unit"):
         resolve_representation_cases(unknown, (unknown_case,), coding=coding)
+
+
+@pytest.mark.parametrize("name_permission", [False, True])
+def test_checked_delivery_text_keeps_source_names_without_common_winner(
+    name_permission,
+):
+    records, case, variants, coding = _unit_fixture()
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={
+                        "name": value_field("Visit" if index == 0 else "Admission"),
+                        "description": value_field(
+                            "Visited facility" if index == 0 else "Admitting facility"
+                        ),
+                        "measurement_unit": value_field("Kronor (SEK)"),
+                    }
+                )
+            }
+        )
+        for index, record in enumerate(records)
+    )
+    decision = case.decision.model_copy(
+        update={
+            "fields": ("name", "description") if name_permission else ("description",)
+        }
+    )
+    case = case.model_copy(
+        update={
+            "decision": decision,
+            "targets": capture_expectations(
+                records,
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            ),
+        }
+    )
+    resolution, formed = _form_units((records, case, variants, coding))
+    assert resolution.cases == (case,)
+    if not name_permission:
+        assert formed.variable is None
+        assert any(d.code == "unresolved_variable_name" for d in formed.diagnostics)
+        return
+    variable = formed.variable
+    assert variable is not None
+    assert variable.name is None and variable.description is None
+    assert [(s.name, s.description) for s in variable.states] == [
+        ("Visit", "Visited facility"),
+        ("Admission", "Admitting facility"),
+    ]
+    assert not any(d.severity == "error" for d in formed.diagnostics)
+    check_delivery_coverage((variable,), formed.coverage, withheld={})
+    changed = variable.model_copy(
+        update={
+            "states": (
+                variable.states[0].model_copy(
+                    update={"description": "Borrowed sibling description"}
+                ),
+                *variable.states[1:],
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="literal delivery description changed"):
+        check_delivery_coverage((changed,), formed.coverage, withheld={})
+    unknown = records[0].model_copy(
+        update={"fields": records[0].fields.model_copy(update={"name": None})}
+    )
+    unknown_case = case.model_copy(
+        update={
+            "targets": capture_expectations(
+                (unknown, records[1]),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="positive permitted source facts"):
+        resolve_representation_cases(
+            (unknown, records[1]), (unknown_case,), coding=coding
+        )
+
+
+def test_delivery_metadata_permissions_do_not_cover_an_enlarged_effective_scope():
+    records, case, variants, coding = _unit_fixture()
+    column = case.decision.columns[0].model_copy(update={"valid_to": "2020-12-31"})
+    case = case.model_copy(
+        update={"decision": case.decision.model_copy(update={"columns": (column,)})}
+    )
+    resolution, formed = _form_units((records, case, variants, coding))
+    assert resolution.cases == (case,)
+    assert any(
+        d.code == "conflicting_variable_fact" and d.fields == ("measurement_unit",)
+        for d in formed.diagnostics
+    )
+
+
+def test_delivery_metadata_requires_unique_explicit_field_permissions():
+    _, case, _, _ = _unit_fixture()
+    decision = type(case.decision)
+    for fields in ((), ("name", "name"), ("data_type",)):
+        with pytest.raises(ValueError):
+            decision.model_validate({**case.decision.model_dump(), "fields": fields})
+
+
+def test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption():
+    from reg_meta_build.source_curation import DeliveryMetadataColumn, SourceEvidence
+
+    original, case, variants, coding = _unit_fixture()
+    scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="2020", end=None),)
+    )
+    record = original[0].model_copy(
+        update={
+            "edition_scope": scope,
+            "edition_period_scope": TemporalScope(kind="not_applicable"),
+        }
+    )
+    column = DeliveryMetadataColumn(
+        variant_key=case.decision.columns[0].variant_key,
+        column="VALUE",
+        valid_from="2020-01-01",
+        valid_to="9999-12-31",
+        expected_codings=(),
+        source_scope=scope,
+    )
+    case = case.model_copy(
+        update={
+            "targets": capture_expectations(
+                (record,),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            ),
+            "peer_guards": tuple(
+                g.model_copy(update={"expected_members": (record_ref(record),)})
+                for g in case.peer_guards
+            ),
+            "decision": case.decision.model_copy(update={"columns": (column,)}),
+        }
+    )
+    resolution, formed = _form_units(((record,), case, variants, coding))
+    assert resolution.cases == (case,) and formed.variable is not None
+    assert formed.variable.states[0].valid_to == "9999-12-31"
+    assert record.edition_scope.intervals[0].end is None
+    for bad in (
+        {"source_scope": None},
+        {"valid_to": "2021-12-31"},
+        {"source_scope": TemporalScope(kind="unknown", label="unknown supplied scope")},
+        {"source_scope": TemporalScope(kind="year_independent")},
+    ):
+        with pytest.raises(ValueError):
+            DeliveryMetadataColumn.model_validate({**column.model_dump(), **bad})
+    # Equal derived dates still do not imply the same supplied source scope.
+    other_scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="2020-01-01", end=None),)
+    )
+    changed_column = column.model_copy(update={"source_scope": other_scope})
+    changed_case = case.model_copy(
+        update={
+            "decision": case.decision.model_copy(update={"columns": (changed_column,)})
+        }
+    )
+    rejected = resolve_representation_cases((record,), (changed_case,), coding=coding)
+    assert not rejected.cases
+    assert [d.code for d in rejected.diagnostics] == ["stale_delivery_metadata_scope"]
+    for changed_scope in (
+        TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2019", end=None),)
+        ),
+        TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2020", end="2021"),)
+        ),
+    ):
+        effective = replace(source_occurrence(record), edition_scope=changed_scope)
+        evidence = SourceEvidence((record,), effective_occurrences=(effective,))
+        rejected = resolve_representation_cases(evidence, (case,), coding=coding)
+        assert not rejected.cases
+        assert any(
+            d.code == "stale_delivery_metadata_scope" for d in rejected.diagnostics
+        )
+
+
+@pytest.mark.parametrize("changed_field", ["name", "measurement_unit"])
+def test_delivery_metadata_keeps_unrelated_checked_field_corrections(changed_field):
+    from reg_meta_build.source_curation import SourceEvidence
+
+    records, metadata, variants, coding = _unit_fixture()
+    correction = metadata.model_copy(
+        update={
+            "case_id": "checked-source-field",
+            "decision": OccurrenceCorrectionDecision(
+                reviewed=True,
+                effects=tuple(
+                    CheckedFieldChange(
+                        ref=record_ref(record),
+                        replacement=FieldExpectation(
+                            name=changed_field,
+                            status="value",
+                            value="Checked source wording",
+                        ),
+                    )
+                    for record in records[:1]
+                ),
+                reason="Independent supplied source correction",
+                provenance="exact fixture",
+            ),
+        }
+    )
+    corrected = apply_occurrence_cases(records, (correction,))
+    assert not corrected.diagnostics
+    evidence = SourceEvidence(records, effective_occurrences=corrected.occurrences)
+    representations = resolve_representation_cases(evidence, (metadata,), coding=coding)
+    formed = form_native_variable(
+        corrected.occurrences,
+        register=ResolvedRegister(provider="scb", slug="example", name="Example"),
+        variants=variants,
+        slug="income",
+        provider_key="1",
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+        coding=coding,
+        representations=representations.cases,
+    )
+    unit_conflicts = [
+        d
+        for d in formed.diagnostics
+        if d.code == "conflicting_variable_fact" and d.fields == ("measurement_unit",)
+    ]
+    assert bool(unit_conflicts) == (changed_field == "measurement_unit")
+    if changed_field == "name":
+        # The independent name disagreement stays visible; unit permission grants no name waiver.
+        assert any(
+            d.code == "conflicting_variable_fact" and d.fields == ("name",)
+            for d in formed.diagnostics
+        )
+        assert corrected.occurrences[0].fields.name.value == "Checked source wording"
+        assert corrected.occurrences[0].source_records == (records[0],)
+
+
+def test_checked_delivery_metadata_preserves_literal_unit_absence():
+    from reg_meta.source_evidence import SourceField
+
+    original, case, variants, coding = _unit_fixture()
+    absent = original[0].model_copy(
+        update={
+            "fields": original[0].fields.model_copy(update={"measurement_unit": None})
+        }
+    )
+    records = (absent, original[1])
+    case = case.model_copy(
+        update={
+            "targets": capture_expectations(
+                records,
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        }
+    )
+    resolution, formed = _form_units((records, case, variants, coding))
+    assert resolution.cases == (case,) and formed.variable is not None
+    assert formed.variable.measurement_unit is None
+    assert [s.measurement_unit for s in formed.variable.states] == [
+        None,
+        "Kronor (SEK)",
+    ]
+    assert not any(d.severity == "error" for d in formed.diagnostics)
+    check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
+    changed = absent.model_copy(
+        update={
+            "fields": absent.fields.model_copy(
+                update={"measurement_unit": value_field("New literal unit")}
+            )
+        }
+    )
+    stale = resolve_representation_cases((changed, original[1]), (case,), coding=coding)
+    assert not stale.cases
+    unknown = absent.model_copy(
+        update={
+            "fields": absent.fields.model_copy(
+                update={
+                    "measurement_unit": SourceField(
+                        status="unknown", raw_value="Unknown source unit"
+                    )
+                }
+            )
+        }
+    )
+    unknown_case = case.model_copy(
+        update={
+            "targets": capture_expectations(
+                (unknown, original[1]),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="positive literal or explicit source absence"):
+        resolve_representation_cases(
+            (unknown, original[1]), (unknown_case,), coding=coding
+        )
+    for missing in ("name", "definition"):
+        bad = absent.model_copy(
+            update={"fields": absent.fields.model_copy(update={missing: None})}
+        )
+        bad_case = case.model_copy(
+            update={
+                "targets": capture_expectations(
+                    (bad, original[1]),
+                    fields=tuple(SourceFields.model_fields),
+                    parents=True,
+                    coding=True,
+                )
+            }
+        )
+        with pytest.raises(ValueError, match="positive permitted source facts"):
+            resolve_representation_cases((bad, original[1]), (bad_case,), coding=coding)

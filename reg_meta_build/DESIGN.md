@@ -769,13 +769,25 @@ windows carry the exact calendar month. State merging, delivery coverage and sea
 aggregation retain these literal definitions. No generic prose replacement or scale
 conversion is inferred.
 
-A checked `representation.delivery_unit` decision permits literal units to vary for one
-exact reviewed owner. Compilation captures every original field, source scope, parent
-and coding association, including finite sibling support, and formation checks that
-every effective contributor belongs to the reviewed owner and exact projection. Each
-state and column window retains its own literal unit; a common unit is written only when
-it agrees. Unknown units and contradictions within one column remain unresolved. This
-does not convert values, infer currency or fill absent components.
+A checked `representation.delivery_metadata` decision permits only its explicitly listed
+fields (`name`, `description`, `measurement_unit`) to vary for one exact reviewed owner.
+Compilation captures every original field, source scope, parent and coding association,
+including sibling support. Formation requires complete coverage of the owner's effective
+contributors before suppressing a disagreement in a permitted field. Each state and
+column window retains its literal texts and unit; a common value is written only when it
+agrees. Unknown names still withhold the quantity unless complete checked positive state
+names are available. Unit permission requires positive quantity names and definitions,
+permits exact supplied absence alongside at least one positive unit, and writes NULL for
+that absence without interpreting it. Unknown units and contradictions within one column
+remain unresolved.
+
+Ordinary delivery-metadata windows remain finite. An explicitly authored `source_scope`
+may retain an open supplied delivery scope only when it exactly matches every effective
+contributor and its derived window. The original open bound remains unchanged; existing
+normalized output bounds do not license inferred availability. Complete original
+snapshots guard raw source facts, while permitted fields must also match their effective
+literal values. Unrelated checked field corrections remain effective. This does not
+convert values, infer currency, choose winning wording or fill absent components.
 
 An independent `coding_metadata = "per_column"` mode retains each checked column's
 complete finite response domain on its alias windows. The shared quantity state claims

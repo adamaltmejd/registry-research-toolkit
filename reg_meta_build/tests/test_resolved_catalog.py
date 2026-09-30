@@ -71,6 +71,46 @@ def _variable(provider: str = "scb", slug: str = "ampoltyp") -> ResolvedVariable
     )
 
 
+def test_delivery_names_and_descriptions_survive_without_common_text(tmp_path: Path):
+    variable = _variable()
+    states = tuple(
+        state.model_copy(update={"name": name, "description": description})
+        for state, name, description in zip(
+            variable.states,
+            ("Admission region", "Encounter region"),
+            ("Region reporting an admission", "Region reporting an encounter"),
+            strict=True,
+        )
+    )
+    variable = ResolvedVariable.model_validate(
+        variable.model_copy(
+            update={"name": None, "description": None, "states": states}
+        ).model_dump()
+    )
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog((variable,), output, manifest={})
+    assert validate_built_db(output, corpus=False).passed
+    with closing(open_db(output)) as conn:
+        result = Catalog(conn).resolve("scb/example/ampoltyp")
+        assert isinstance(result, CatalogVariable)
+        assert result.name is result.description is None
+        assert [(s.name, s.description) for s in result.states] == [
+            (s.name, s.description) for s in states
+        ]
+        for text in ("Admission", "encounter"):
+            hits = search(conn, text, field="description", type="variable").results
+            assert len(hits) == 1
+            assert isinstance(hits[0], VariableSearchResult)
+            assert str(hits[0].fqid) == "scb/example/ampoltyp"
+
+
+def test_missing_common_name_still_requires_positive_delivery_names():
+    with pytest.raises(ValidationError, match="positive delivery names"):
+        ResolvedVariable.model_validate(
+            _variable().model_copy(update={"name": None}).model_dump()
+        )
+
+
 def test_independent_parent_metadata_survives_without_variables_or_editions(
     tmp_path: Path,
 ) -> None:

@@ -51,6 +51,8 @@ let {
   scopeStates = null,
   focusColumn = null,
   focusVariant = null,
+  commonName = null,
+  commonDescription = null,
   commonDefinition = null,
   commonUnit = null,
 }: {
@@ -72,6 +74,8 @@ let {
    * deep link with no variant) — `valueSetKeyForColumn`'s back-compat path. */
   focusVariant?: string | null;
   /** Common facts already displayed by the containing variable view. */
+  commonName?: string | null;
+  commonDescription?: string | null;
   commonDefinition?: string | null;
   commonUnit?: string | null;
 } = $props();
@@ -238,14 +242,24 @@ function usageChanges(
   return usage.spans.flatMap((span) => span.changes ?? []);
 }
 
+function stateTextFacts(state: VariableStateModel) {
+  return (
+    [
+      ["Name", state.name, commonName],
+      ["Description", state.description, commonDescription],
+      ["Definition", state.definition, commonDefinition],
+      ["Unit", state.measurement_unit, commonUnit],
+    ] as const
+  ).flatMap(([label, value, common]) =>
+    value && value !== common ? [{ label, value }] : [],
+  );
+}
+
 function definitionStates(
   usage: DistinctValueSet["usages"][number],
 ): VariableStateModel[] {
   return usage.states.filter(
-    (s) =>
-      s.operational_definition ||
-      (s.definition && s.definition !== commonDefinition) ||
-      (s.measurement_unit && s.measurement_unit !== commonUnit),
+    (state) => state.operational_definition || stateTextFacts(state).length > 0,
   );
 }
 
@@ -474,15 +488,12 @@ function trackDisclosure(key: string, event: Event): void {
                     >{/if}
                 </dt>
                 <dd>
-                  {#if s.definition && s.definition !== commonDefinition}
-                    <span class="micro-label">Definition:</span>{" "}{s.definition}
-                  {/if}
-                  {#if s.measurement_unit && s.measurement_unit !== commonUnit}
-                    {#if s.definition && s.definition !== commonDefinition}<br />{/if}
-                    <span class="micro-label">Unit:</span>{" "}{s.measurement_unit}
-                  {/if}
+                  {#each stateTextFacts(s) as fact, index}
+                    {#if index > 0}<br />{/if}
+                    <span class="micro-label">{fact.label}:</span>{" "}{fact.value}
+                  {/each}
                   {#if s.operational_definition}
-                    {#if (s.definition && s.definition !== commonDefinition) || (s.measurement_unit && s.measurement_unit !== commonUnit)}<br />{/if}
+                    {#if stateTextFacts(s).length > 0}<br />{/if}
                     {s.operational_definition}
                   {/if}
                 </dd>
@@ -624,14 +635,10 @@ function trackDisclosure(key: string, event: Event): void {
         <dt class="micro-label">Value-set version</dt>
         <dd>{s.value_set_version_label}</dd>
       {/if}
-      {#if s.definition && s.definition !== commonDefinition}
-        <dt class="micro-label">Definition</dt>
-        <dd>{s.definition}</dd>
-      {/if}
-      {#if s.measurement_unit && s.measurement_unit !== commonUnit}
-        <dt class="micro-label">Unit</dt>
-        <dd>{s.measurement_unit}</dd>
-      {/if}
+      {#each stateTextFacts(s) as fact}
+        <dt class="micro-label">{fact.label}</dt>
+        <dd>{fact.value}</dd>
+      {/each}
       {#if s.operational_definition}
         <dt class="micro-label">Operational definition</dt>
         <dd>{s.operational_definition}</dd>

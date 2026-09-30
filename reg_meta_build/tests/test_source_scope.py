@@ -50,8 +50,8 @@ from reg_meta_build.source_curation import (
     CodingDecision,
     CuratedOccurrenceAddition,
     CurationCase,
-    DeliveryUnitColumn,
-    DeliveryUnitDecision,
+    DeliveryMetadataColumn,
+    DeliveryMetadataDecision,
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
@@ -517,7 +517,7 @@ def test_ordinary_scope_forms_variables_with_literal_provider_keys():
     assert len(result.corrections.occurrences) == 2
 
 
-def test_scope_routes_checked_delivery_units_to_literal_state_formation():
+def test_scope_routes_checked_delivery_metadata_to_literal_state_formation():
     records = tuple(
         item.model_copy(
             update={
@@ -547,11 +547,12 @@ def test_scope_routes_checked_delivery_units_to_literal_state_formation():
         targets=capture_expectations(
             records, fields=tuple(SourceFields.model_fields), parents=True, coding=True
         ),
-        decision=DeliveryUnitDecision(
+        decision=DeliveryMetadataDecision(
+            fields=("measurement_unit",),
             reviewed=True,
             variable_key=native_variable_key(records[0]),
             columns=(
-                DeliveryUnitColumn(
+                DeliveryMetadataColumn(
                     variant_key=native_variant_key(records[0]),
                     column="VALUE",
                     valid_from="2020-01-01",
@@ -565,7 +566,7 @@ def test_scope_routes_checked_delivery_units_to_literal_state_formation():
     )
     result = resolve(records, cases=(case,))
     assert [(issue.code, issue.severity) for issue in result.diagnostics] == [
-        ("delivery_unit_projected", "warning")
+        ("delivery_metadata_projected", "warning")
     ]
     variable = next(iter(result.variables.values()))
     assert variable.measurement_unit is None

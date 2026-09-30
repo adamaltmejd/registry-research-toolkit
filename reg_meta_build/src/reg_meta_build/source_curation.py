@@ -661,28 +661,78 @@ class RepresentationDecision(FiniteCurationWindow):
         return self
 
 
-class DeliveryUnitColumn(ColumnRepresentation):
+class DeliveryMetadataColumn(ColumnRepresentation):
     variant_key: NativeKey
+    source_scope: TemporalScope | None = None
+
+    @model_validator(mode="after")
+    def _bounded(self) -> Self:
+        if self.source_scope is None:
+            FiniteCurationWindow(valid_from=self.valid_from, valid_to=self.valid_to)
+            return self
+        from .source_coding import coding_scope_bounds
+
+        bounds = coding_scope_bounds(self.source_scope)
+        positive_start = (
+            self.source_scope.kind == "intervals"
+            and len(self.source_scope.intervals) == 1
+            and self.source_scope.intervals[0].start is not None
+        ) or (
+            self.source_scope.kind == "pooled_unknown"
+            and self.source_scope.pooled_start is not None
+            and self.source_scope.pooled_end is not None
+        )
+        if (
+            not positive_start
+            or bounds is None
+            or len(bounds) != 1
+            or (self.valid_from, self.valid_to)
+            != tuple(date.fromordinal(bound).isoformat() for bound in bounds[0])
+        ):
+            raise ValueError(
+                "delivery metadata bounds must exactly match positive supplied source scope"
+            )
+        return self
 
     @model_validator(mode="after")
     def _checked(self) -> Self:
         if not self.variant_key or self.expected_codings is None:
-            raise ValueError("delivery units need exact variant and coding evidence")
+            raise ValueError("delivery metadata need exact variant and coding evidence")
         return self
 
 
-class DeliveryUnitDecision(_CurationModel):
-    """Retain checked literal units without converting quantities or source scopes."""
+class DeliveryMetadataDecision(_CurationModel):
+    """Retain checked literal delivery metadata without converting quantities or source scopes."""
 
-    kind: Literal["delivery_unit"] = "delivery_unit"
+    kind: Literal["delivery_metadata"] = "delivery_metadata"
     reviewed: Literal[True]
     variable_key: NativeKey
-    columns: tuple[DeliveryUnitColumn, ...] = Field(min_length=1)
+    fields: tuple[Literal["measurement_unit", "name", "description"], ...] = Field(
+        min_length=1
+    )
+    columns: tuple[DeliveryMetadataColumn, ...] = Field(min_length=1)
     reason: str = Field(min_length=1)
     provenance: str = Field(min_length=1)
 
     @staticmethod
-    def require_targets(targets: tuple[RecordExpectation, ...]) -> None:
+    def require_fields(fields: tuple[str, ...]) -> None:
+        if not fields or len(set(fields)) != len(fields):
+            raise ValueError(
+                "delivery metadata field permissions must be nonempty and unique"
+            )
+
+    @staticmethod
+    def require_targets(
+        targets: tuple[RecordExpectation, ...],
+        fields: tuple[Literal["measurement_unit", "name", "description"], ...],
+    ) -> None:
+        DeliveryMetadataDecision.require_fields(fields)
+        required: set[str] = set(fields)
+        unit_permission = "measurement_unit" in required
+        if unit_permission:
+            required.remove("measurement_unit")
+            required.update(("definition", "name"))
+        positive_unit = False
         for record in targets:
             for projection in record.alternatives:
                 supplied = {field.name: field for field in projection.fields}
@@ -691,11 +741,28 @@ class DeliveryUnitDecision(_CurationModel):
                     or supplied[name].status != "value"
                     or not isinstance(value := supplied[name].value, str)
                     or not value.strip()
-                    for name in ("measurement_unit", "definition", "name")
+                    for name in required
                 ):
                     raise ValueError(
-                        "delivery units need positive literal units, names and definitions"
+                        "delivery metadata needs positive permitted source facts"
                     )
+                if unit_permission:
+                    unit = supplied.get("measurement_unit")
+                    if (
+                        unit is not None
+                        and unit.status == "value"
+                        and isinstance(unit.value, str)
+                        and unit.value.strip()
+                    ):
+                        positive_unit = True
+                    elif (
+                        unit is None
+                        or unit.status not in {"absent", "negative"}
+                        or unit.value is not None
+                    ):
+                        raise ValueError(
+                            "delivery metadata unit must be positive literal or explicit source absence"
+                        )
                 if (
                     set(supplied) != set(SourceFields.model_fields)
                     or projection.subject is None
@@ -705,17 +772,23 @@ class DeliveryUnitDecision(_CurationModel):
                     or projection.code_set_references is None
                 ):
                     raise ValueError(
-                        "delivery units need complete original source projections"
+                        "delivery metadata need complete original source projections"
                     )
+
+        if unit_permission and not positive_unit:
+            raise ValueError(
+                "delivery metadata requires at least one positive supplied unit"
+            )
 
     @model_validator(mode="after")
     def _owner(self) -> Self:
+        self.require_fields(self.fields)
         if not self.variable_key or "" in self.variable_key:
-            raise ValueError("delivery units need an exact accepted owner")
+            raise ValueError("delivery metadata need an exact accepted owner")
         if len({(column.variant_key, column.column) for column in self.columns}) != len(
             self.columns
         ):
-            raise ValueError("delivery units require unique literal variant columns")
+            raise ValueError("delivery metadata require unique literal variant columns")
         return self
 
 
@@ -880,7 +953,7 @@ type CurationDecision = (
     | SearchAliasDecision
     | AliasWindowDecision
     | RepresentationDecision
-    | DeliveryUnitDecision
+    | DeliveryMetadataDecision
     | CodingDecision
     | ClassificationDecision
 )

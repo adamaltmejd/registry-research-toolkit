@@ -437,11 +437,11 @@ def test_column_metadata_preserves_literal_values_and_explicit_nulls(
     write_conn = sqlite3.connect(db)
     try:
         write_conn.execute(
-            "UPDATE variable_state SET definition = 'Canonical definition', measurement_unit = '100-tals kronor', operational_definition = 'Canonical operation', source_register_text = 'Canonical source' WHERE variable_id = 1"
+            "UPDATE variable_state SET name = 'Canonical name', description = 'Canonical description', definition = 'Canonical definition', measurement_unit = '100-tals kronor', operational_definition = 'Canonical operation', source_register_text = 'Canonical source' WHERE variable_id = 1"
         )
         if mode == "per_column":
             write_conn.execute(
-                "UPDATE variable_alias_window SET column_metadata = 'per_column', data_type = 'integer', data_length = '3', definition = 'Physical definition', measurement_unit = 'Kronor (SEK)', operational_definition = 'Physical operation', source_register_text = 'Physical source' WHERE delivery_column_name = ?",
+                "UPDATE variable_alias_window SET column_metadata = 'per_column', name = 'Physical name', description = 'Physical description', data_type = 'integer', data_length = '3', definition = 'Physical definition', measurement_unit = 'Kronor (SEK)', operational_definition = 'Physical operation', source_register_text = 'Physical source' WHERE delivery_column_name = ?",
                 (_ALIASES[0],),
             )
             write_conn.execute(
@@ -463,6 +463,8 @@ def test_column_metadata_preserves_literal_values_and_explicit_nulls(
                 s.source_register_text,
                 s.definition,
                 s.measurement_unit,
+                s.name,
+                s.description,
             )
             for s in states
         ]
@@ -475,8 +477,10 @@ def test_column_metadata_preserves_literal_values_and_explicit_nulls(
                     "Physical source",
                     "Physical definition",
                     "Kronor (SEK)",
+                    "Physical name",
+                    "Physical description",
                 ),
-                (None, None, None, None, None, None),
+                (None, None, None, None, None, None, None, None),
             ]
             if mode == "per_column"
             else [
@@ -487,6 +491,8 @@ def test_column_metadata_preserves_literal_values_and_explicit_nulls(
                     "Canonical source",
                     "Canonical definition",
                     "100-tals kronor",
+                    "Canonical name",
+                    "Canonical description",
                 )
             ]
             * 2

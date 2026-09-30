@@ -759,6 +759,8 @@ class VariableState(_CatalogModel):
     # Exact source definition at this delivery; checked month families may differ.
     definition: str | None = None
     measurement_unit: str | None = None
+    name: str | None = None
+    description: str | None = None
     provenance: str | None = Field(
         description="NULL for an ordinary provider-documented interval. SCB "
         "corrections use `errata:<class>\\n<evidence>`; when a corrected source "
@@ -1267,6 +1269,8 @@ type _StoredAliasWindow = tuple[
     str,
     int | None,
     str,
+    str | None,
+    str | None,
 ]
 
 
@@ -2855,7 +2859,7 @@ class Catalog:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.operational_definition, vs.definition, vs.measurement_unit, vs.provenance, vs.pooled, vs.value_set_id, "
+                "vs.operational_definition, vs.definition, vs.measurement_unit, vs.name, vs.description, vs.provenance, vs.pooled, vs.value_set_id, "
                 "vs.value_set_version_label, vs.period_scope, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
@@ -2881,7 +2885,7 @@ class Catalog:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.operational_definition, vs.definition, vs.measurement_unit, vs.provenance, vs.pooled, vs.value_set_id, "
+                "vs.operational_definition, vs.definition, vs.measurement_unit, vs.name, vs.description, vs.provenance, vs.pooled, vs.value_set_id, "
                 "vs.value_set_version_label, vs.period_scope, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "ccf.status AS conformance_status, "
@@ -3071,6 +3075,8 @@ class Catalog:
             operational_definition=row["operational_definition"],
             definition=row["definition"],
             measurement_unit=row["measurement_unit"],
+            name=row["name"],
+            description=row["description"],
             provenance=row["provenance"],
             pooled=bool(row["pooled"]),
             value_set_version_label=row["value_set_version_label"],
@@ -3118,7 +3124,7 @@ class Catalog:
         `register_variant_id` → [(delivery_column_name, valid_from, valid_to,
         provenance, column_metadata, data_type, data_length, operational_definition,
         source_register_text, definition, measurement_unit, coding_metadata,
-        value_set_id, value_set_version_label), …] sorted by window start.
+        value_set_id, value_set_version_label, name, description), …] sorted by window start.
         EMPTY for variables with no resolver-visible alias representations, so expansion is a no-op there.
         One indexed point-lookup on `idx_variable_alias_window_lookup`."""
         out: dict[int, list[_StoredAliasWindow]] = {}
@@ -3138,11 +3144,13 @@ class Catalog:
             coding_mode,
             value_set_id,
             version_label,
+            name,
+            description,
         ) in self._conn.execute(
             "SELECT register_variant_id, delivery_column_name, valid_from, valid_to, "
             "provenance, column_metadata, data_type, data_length, "
             "operational_definition, source_register_text, definition, measurement_unit, "
-            "coding_metadata, value_set_id, value_set_version_label "
+            "coding_metadata, value_set_id, value_set_version_label, name, description "
             "FROM variable_alias_window WHERE variable_id = ? "
             "ORDER BY register_variant_id, valid_from, delivery_column_name",
             (variable_id,),
@@ -3163,6 +3171,8 @@ class Catalog:
                     coding_mode,
                     value_set_id,
                     version_label,
+                    name,
+                    description,
                 )
             )
         return out
@@ -3224,6 +3234,8 @@ class Catalog:
                 coding_mode,
                 value_set_id,
                 version_label,
+                name,
+                description,
             ) = window
             return base.model_copy(
                 update={
@@ -3243,6 +3255,8 @@ class Catalog:
                             "source_register_text": source_text,
                             "definition": definition,
                             "measurement_unit": unit,
+                            "name": name,
+                            "description": description,
                         }
                         if mode == "per_column"
                         else {}

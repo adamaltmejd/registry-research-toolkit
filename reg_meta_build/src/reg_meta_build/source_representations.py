@@ -24,14 +24,16 @@ from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_coordinates import column_identity
 from reg_meta_build.source_curation import (
     CurationCase,
-    DeliveryUnitColumn,
-    DeliveryUnitDecision,
+    DeliveryMetadataColumn,
+    DeliveryMetadataDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
+    SourceEvidence,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
+from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
@@ -63,17 +65,17 @@ def resolve_representation_cases(
         raise ValueError("representation case IDs must be unique")
     for case in ordered:
         if not isinstance(
-            case.decision, (RepresentationDecision, DeliveryUnitDecision)
+            case.decision, (RepresentationDecision, DeliveryMetadataDecision)
         ):
             raise TypeError(
                 "representation resolution requires representation decisions"
             )
         decision = case.decision
-        if isinstance(decision, DeliveryUnitDecision):
-            decision.require_targets(case.targets)
+        if isinstance(decision, DeliveryMetadataDecision):
+            decision.require_targets(case.targets, decision.fields)
         for column in decision.columns:
-            if isinstance(decision, DeliveryUnitDecision):
-                assert isinstance(column, DeliveryUnitColumn)
+            if isinstance(decision, DeliveryMetadataDecision):
+                assert isinstance(column, DeliveryMetadataColumn)
                 variant_key = column.variant_key
             else:
                 variant_key = decision.variant_key
@@ -93,7 +95,7 @@ def resolve_representation_cases(
             _require_checked(
                 target,
                 tuple(SourceFields.model_fields)
-                if isinstance(decision, DeliveryUnitDecision)
+                if isinstance(decision, DeliveryMetadataDecision)
                 else (
                     "column_name",
                     "data_type",
@@ -101,7 +103,13 @@ def resolve_representation_cases(
                     "operational_definition",
                 )
                 + (
-                    ("definition", "measurement_unit", "source_attribution")
+                    (
+                        "name",
+                        "description",
+                        "definition",
+                        "measurement_unit",
+                        "source_attribution",
+                    )
                     if decision.column_metadata == "per_column"
                     else ()
                 ),
@@ -113,20 +121,57 @@ def resolve_representation_cases(
                 raise ValueError(
                     "representations require guarded original membership and coding references"
                 )
-    evaluations = evaluate_cases(ordered, records)
+    evidence = (
+        records if isinstance(records, SourceEvidence) else SourceEvidence(records)
+    )
+    evaluations = evaluate_cases(ordered, evidence)
     diagnostics = []
     applicable = []
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
-        assert isinstance(decision, (RepresentationDecision, DeliveryUnitDecision))
+        assert isinstance(decision, (RepresentationDecision, DeliveryMetadataDecision))
+        scope_changed = []
+        if isinstance(decision, DeliveryMetadataDecision):
+            for column in decision.columns:
+                if column.source_scope is None:
+                    continue
+                key = column_identity(
+                    decision.variable_key, column.variant_key, column.column
+                )
+                scopes = (
+                    evidence.effective_scopes.get(key, frozenset())
+                    if evidence.effective_scopes is not None
+                    else frozenset(
+                        record.edition_period_scope
+                        if record.edition_period_scope.kind != "not_applicable"
+                        else record.edition_scope
+                        for record in evidence.records
+                        if source_occurrence(record).column_key == key
+                    )
+                )
+                if scopes != {column.source_scope}:
+                    scope_changed.append(column.column)
+        if scope_changed:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="stale_delivery_metadata_scope",
+                    severity="error",
+                    case_id=case.case_id,
+                    subject=repr(decision.variable_key),
+                    detail=f"Exact supplied delivery metadata scope changed for columns {scope_changed!r}.",
+                    refs=tuple(target.ref for target in case.targets),
+                    fields=("period",),
+                    withheld_output=("representations",),
+                )
+            )
         coding_changed = []
         if (
-            isinstance(decision, DeliveryUnitDecision)
+            isinstance(decision, DeliveryMetadataDecision)
             or decision.coding_metadata == "per_column"
         ):
             for column in decision.columns:
-                if isinstance(decision, DeliveryUnitDecision):
-                    assert isinstance(column, DeliveryUnitColumn)
+                if isinstance(decision, DeliveryMetadataDecision):
+                    assert isinstance(column, DeliveryMetadataColumn)
                     variant_key = column.variant_key
                 else:
                     variant_key = decision.variant_key
@@ -166,7 +211,11 @@ def resolve_representation_cases(
                     withheld_output=("representations",),
                 )
             )
-        if evaluation.status == "applicable" and not coding_changed:
+        if (
+            evaluation.status == "applicable"
+            and not coding_changed
+            and not scope_changed
+        ):
             applicable.append(case)
         for issue in evaluation.issues:
             diagnostics.append(
@@ -418,6 +467,8 @@ def form_representations(
                 column: {} for column in columns
             }
             for field in (
+                "name",
+                "description",
                 "definition",
                 "measurement_unit",
                 "data_type",
@@ -517,6 +568,10 @@ def form_representations(
                 codes, label, classification, conformance = next(iter(code_values))
             else:
                 codes, label, classification, conformance = None, "", None, None
+                fact_conflicts.extend(
+                    (variant.slug, column, "coding", start, end)
+                    for column in sorted(columns)
+                )
                 report(
                     "conflicting_representation_coding",
                     ("coding",),
@@ -555,6 +610,8 @@ def form_representations(
                     delivery_column_name=representative,
                     data_type=values["data_type"],
                     data_length=values["data_length"],
+                    name=values["name"],
+                    description=values["description"],
                     definition=values["definition"],
                     measurement_unit=values["measurement_unit"],
                     operational_definition=values["operational_definition"],

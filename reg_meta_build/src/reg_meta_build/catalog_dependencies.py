@@ -114,7 +114,7 @@ def resolve_variable_successions(
             )
             for v in variables
             for state in v.states
-            if state.classification is not None
+            if state.classification is not None and v.name is not None
         ),
         ((e.predecessor, e.successor, e.effective_year) for e in classifications),
     )
@@ -209,6 +209,8 @@ class CoverageObligation:
     attributions: tuple[str, ...] = ()
     coding_claim: tuple[ResolvedCodeSet | None, str | None] | None = None
     column_text_claim: tuple[str | None, str | None] | None = None
+    name_claim: tuple[str, str | None] | None = None
+    description_claim: tuple[str, str | None] | None = None
     definition_claim: tuple[str, str | None] | None = None
     measurement_unit_claim: tuple[str, str | None] | None = None
     period_scope: Literal["intervals", "year_independent"] = "intervals"
@@ -437,6 +439,8 @@ def check_delivery_coverage(
             and not claimed_attributions
             and obligation.coding_claim is None
             and obligation.column_text_claim is None
+            and obligation.name_claim is None
+            and obligation.description_claim is None
             and obligation.definition_claim is None
             and obligation.measurement_unit_claim is None
             and not alias_cover
@@ -536,6 +540,8 @@ def check_delivery_coverage(
                             "valid_to": window.valid_to,
                             **(
                                 {
+                                    "name": window.name,
+                                    "description": window.description,
                                     "definition": window.definition,
                                     "measurement_unit": window.measurement_unit,
                                     "data_type": window.data_type,
@@ -581,6 +587,13 @@ def check_delivery_coverage(
                     )
                     candidates.setdefault(token, candidate)
         for state in candidates.values():
+            for field in ("name", "description"):
+                claim = getattr(obligation, field + "_claim")
+                if claim is not None and getattr(state, field) != claim[1]:
+                    ob_facts.append(
+                        f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                        f"{scope_label} claimed by {refs}: literal delivery {field} changed"
+                    )
             if (
                 obligation.measurement_unit_claim is not None
                 and state.measurement_unit != obligation.measurement_unit_claim[1]
@@ -1096,7 +1109,7 @@ def resolve_variable_edge_groups(
             ResolvedVariableGroup(
                 register=register,
                 key=key,
-                label=by_fqid[members[0]].name,
+                label=by_fqid[members[0]].name or key,
                 source="edge",
                 members=tuple(ResolvedGroupVariable(variable=m) for m in members),
             )

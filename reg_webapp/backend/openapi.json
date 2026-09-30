@@ -5060,6 +5060,17 @@
             ],
             "title": "Delivery Column Name"
           },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
           "is_identifier": {
             "title": "Is Identifier",
             "type": "boolean"
@@ -5074,6 +5085,17 @@
               }
             ],
             "title": "Measurement Unit"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
           },
           "operational_definition": {
             "anyOf": [

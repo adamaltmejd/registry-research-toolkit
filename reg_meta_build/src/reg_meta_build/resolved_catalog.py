@@ -299,6 +299,8 @@ class ResolvedState(_ResolvedDeliveryScope):
     source_register_text: str | None = None
     definition: str | None = None
     measurement_unit: str | None = None
+    name: str | None = None
+    description: str | None = None
     # Y-202: True when the state spans a pooled multi-year edition range with no
     # explicit annual coverage — one marked state over the whole pooled range,
     # never inferred annual availability. False for every other state.
@@ -354,6 +356,8 @@ class ResolvedAliasWindow(_ResolvedWindow):
     source_register_text: str | None = None
     definition: str | None = None
     measurement_unit: str | None = None
+    name: str | None = None
+    description: str | None = None
     coding_metadata: Literal["shared", "per_column"] = "shared"
     value_set: ResolvedCodeSet | None = None
     value_set_version_label: str = ""
@@ -370,6 +374,8 @@ class ResolvedAliasWindow(_ResolvedWindow):
                     self.source_register_text,
                     self.definition,
                     self.measurement_unit,
+                    self.name,
+                    self.description,
                 )
             )
         ):
@@ -406,7 +412,7 @@ class ResolvedVariable(_ResolvedModel):
     register_ref: ResolvedRegister = Field(alias="register")
     slug: str
     provider_key: str
-    name: str
+    name: str | None
     definition: str | None
     description: str | None
     operational_definition: str | None
@@ -420,13 +426,24 @@ class ResolvedVariable(_ResolvedModel):
     source_register_text: str | None = None
     source_label: str | None = None
 
-    _text = field_validator("provider_key", "name")(_require_trimmed)
+    _text = field_validator("provider_key")(_require_trimmed)
+
+    @field_validator("name")
+    @classmethod
+    def _name(cls, value: str | None) -> str | None:
+        return _require_trimmed(value) if value is not None else None
 
     @model_validator(mode="after")
     def _resolved_identity_and_states(self) -> Self:
         Fqid.binding_fqid(self.register_ref.provider, self.register_ref.slug, self.slug)
         if not self.states:
             raise ValueError("a resolved variable needs at least one delivery state")
+        if self.name is None and any(
+            not state.name or not state.name.strip() for state in self.states
+        ):
+            raise ValueError(
+                "a variable without a common name needs positive delivery names"
+            )
         previous: dict[tuple[str, str], ResolvedState] = {}
         for state in sorted(
             self.states,
@@ -1162,8 +1179,8 @@ def write_resolved_catalog(
                         "INSERT INTO variable_state (state_id, variable_id, "
                         "register_variant_id, valid_from, valid_to, delivery_column_name, "
                         "data_type, data_length, operational_definition, provenance, pooled, "
-                        "value_set_id, value_set_version_label, source_register_text, classification_id, period_scope, definition, measurement_unit) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "value_set_id, value_set_version_label, source_register_text, classification_id, period_scope, definition, measurement_unit, name, description) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             state_id,
                             variable_id,
@@ -1187,6 +1204,8 @@ def write_resolved_catalog(
                             state.period_scope,
                             state.definition,
                             state.measurement_unit,
+                            state.name,
+                            state.description,
                         ),
                     )
                     if state.conformance is not None:
@@ -1210,8 +1229,8 @@ def write_resolved_catalog(
                     )
                     conn.executemany(
                         "INSERT INTO variable_alias_window "
-                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, column_metadata, data_type, data_length, operational_definition, source_register_text, coding_metadata, value_set_id, value_set_version_label, definition, measurement_unit) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, column_metadata, data_type, data_length, operational_definition, source_register_text, coding_metadata, value_set_id, value_set_version_label, definition, measurement_unit, name, description) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             (
                                 variable_id,
@@ -1232,6 +1251,8 @@ def write_resolved_catalog(
                                 window.value_set_version_label,
                                 window.definition,
                                 window.measurement_unit,
+                                window.name,
+                                window.description,
                             )
                             for window in sorted(
                                 alias.windows, key=lambda w: w.valid_from

@@ -635,7 +635,7 @@ def test_repo_classification_files_count_and_stay_unique() -> None:
     assert len(labels) == len(set(labels)) == 112
     assert sum(len(book.sentinel_codes) for book in books) == 543
     assert sum(1 for book in books if book.sentinel_codes) == 65
-    assert len(bound) == len(set(bound)) == 13
+    assert len(bound) == len(set(bound)) == 10
     books_dir = _ROOT / "input_data" / "classifications"
     assert all((books_dir / book.codes_file).is_file() for book in books)
 
@@ -645,7 +645,11 @@ def test_repo_rtb_named_edition_splits_load() -> None:
     rtb = next(
         register for register in tree.registers if register.register_info.slug == "rtb"
     )
-    splits = {entry.variant: entry for entry in rtb.identity.edition_split}
+    splits = {
+        entry.variant: entry
+        for entry in rtb.identity.edition_split
+        if entry.split.endswith("-kvartal") or entry.variant in {"2.66", "2.1028"}
+    }
     quarterly = {
         "2.53": ("folkbokforda-personer-kvartal", "Kvartal 1-3 fr.o.m. 2009", 58),
         "2.56": ("civilstandsandringar-kvartal", "Kvartal 1-3 fr.o.m. 2010", 33),
@@ -685,6 +689,24 @@ def test_repo_rtb_named_edition_splits_load() -> None:
             parent.panel_time_key,
             parent.panel_time_grain,
         )
+    historical = {
+        entry.split: (tuple(entry.editions), len(entry.source_editions))
+        for entry in rtb.identity.edition_split
+        if entry.variant == "2.56" and not entry.split.endswith("-kvartal")
+    }
+    assert historical == {
+        "2.56.civilstandsandringar-gifta": (("Gifta 1968-1995", "Gifta 1996-1997"), 32),
+        "2.56.civilstandsandringar-skilda": (("Skilda 1968-1997",), 33),
+        "2.56.civilstandsandringar-ankor-anklingar": (
+            ("Änkor/ änklingar 1968-1997",),
+            33,
+        ),
+        "2.56.civilstandsandringar-registrerade-partners": (
+            ("Registrerade partners 1995-1997",),
+            33,
+        ),
+    }
+    assert len(rtb.identity.edition_split) == 14
     assert "Änkor/ änklingar 1968-1997" in splits["2.56"].source_editions
     assert "1961-1997" in splits["2.61"].source_editions
 
@@ -710,8 +732,8 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 179
-    assert sum(len(entry.periods) for entry in coding) == 332
+    assert len(coding) == 184
+    assert sum(len(entry.periods) for entry in coding) == 337
     assert (
         sum(
             entry.source_authority is not None
@@ -727,7 +749,7 @@ def test_repo_coding_windows_are_ported() -> None:
             for register in tree.registers
             for entry in register.coding.choice
         )
-        == 96
+        == 99
     )
     assert (
         sum(
@@ -1132,7 +1154,7 @@ def test_repo_scb_errata_parses() -> None:
     )
     assert errata  # the verified LISA DispInkKE case ships with the repo
     assert (len(errata.delivered), len(errata.columns), len(errata.versions)) == (
-        223,
+        225,
         1885,
         4,
     )
@@ -2839,11 +2861,27 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
     )
     assert {c.column for c in participating.columns} == {"GenomHsKod", "MedverkHsKod"}
 
-    units = [
+    metadata = [
         entry
         for register in tree.registers
-        for entry in register.representation.delivery_unit
+        for entry in register.representation.delivery_metadata
     ]
+    assert len(metadata) == 43
+    assert Counter(tuple(entry.fields) for entry in metadata) == {
+        ("measurement_unit",): 20,
+        ("description",): 21,
+        ("name",): 1,
+        ("description", "name"): 1,
+    }
+    # Retain the original four-owner receipt separately from later unit and
+    # prose projections; none grants permission for an unlisted field.
+    original_unit_owners = {
+        "25.39431",
+        "34.16249.ku1ink",
+        "34.31290.ku3ink",
+        "34.31395",
+    }
+    units = [entry for entry in metadata if entry.variable in original_unit_owners]
     assert {entry.variable for entry in units} == {
         "25.39431",
         "34.16249.ku1ink",

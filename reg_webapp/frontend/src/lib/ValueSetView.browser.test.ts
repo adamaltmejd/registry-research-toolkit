@@ -156,12 +156,14 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it.each([false, true])(
-    "shows literal delivery definitions and units (multiple=%s)",
+    "shows literal delivery names, descriptions, definitions and units (multiple=%s)",
     async (multiple) => {
       const first = state({
         state_id: 10,
         value_set_id: 500,
         delivery_column_name: "AGI1LonFink01",
+        name: "Income reported in January",
+        description: "Exact January source description",
         definition: "Löneinkomst i januari från största förvärvskällan",
         measurement_unit: "100-tals kronor",
       });
@@ -171,6 +173,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
             state({
               ...first,
               delivery_column_name: "AGI1LonFink02",
+              name: "Income reported in February",
+              description: "Exact February source description",
               definition: "Löneinkomst i februari från största förvärvskällan",
               measurement_unit: "Kronor (SEK)",
             }),
@@ -183,6 +187,12 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         )
         .toBeVisible();
       await expect.element(page.getByText("100-tals kronor")).toBeVisible();
+      await expect
+        .element(page.getByText("Income reported in January"))
+        .toBeVisible();
+      await expect
+        .element(page.getByText("Exact January source description"))
+        .toBeVisible();
       if (multiple) {
         await expect
           .element(
@@ -192,6 +202,12 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
           )
           .toBeVisible();
         await expect.element(page.getByText("Kronor (SEK)")).toBeVisible();
+        await expect
+          .element(page.getByText("Income reported in February"))
+          .toBeVisible();
+        await expect
+          .element(page.getByText("Exact February source description"))
+          .toBeVisible();
       }
     },
   );
@@ -199,14 +215,29 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   it("omits common facts and does not fill absent delivery facts", async () => {
     await render(ValueSetView, {
       states: [
-        state({ definition: "Common definition", measurement_unit: "Kronor" }),
-        state({ state_id: 2, definition: null, measurement_unit: null }),
+        state({
+          name: "Common name",
+          description: "Common description",
+          definition: "Common definition",
+          measurement_unit: "Kronor",
+        }),
+        state({
+          state_id: 2,
+          name: null,
+          description: null,
+          definition: null,
+          measurement_unit: null,
+        }),
       ],
       narrowed: false,
+      commonName: "Common name",
+      commonDescription: "Common description",
       commonDefinition: "Common definition",
       commonUnit: "Kronor",
     });
     expect(document.querySelector(".state-definitions")).toBeNull();
+    expect(document.body.textContent).not.toContain("Common name");
+    expect(document.body.textContent).not.toContain("Common description");
     expect(document.body.textContent).not.toContain("Common definition");
     expect(document.body.textContent).not.toContain("Kronor");
   });

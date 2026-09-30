@@ -4274,9 +4274,11 @@ def test_selected_classification_variable_binding_has_exact_status(tmp_path):
     assert [issue.code for issue in stale.diagnostics] == ["stale_curation_entry"]
 
 
-def test_delivery_units_use_fresh_partition_cases_without_duplicate_emission(tmp_path):
-    from reg_meta_build.curation_tree import DeliveryUnitEntry
-    from reg_meta_build.source_curation import DeliveryUnitColumn
+def test_delivery_metadata_use_fresh_partition_cases_without_duplicate_emission(
+    tmp_path,
+):
+    from reg_meta_build.curation_tree import DeliveryMetadataEntry
+    from reg_meta_build.source_curation import DeliveryMetadataColumn
 
     root = tmp_path / "curation"
     _tree(root)
@@ -4304,7 +4306,8 @@ def test_delivery_units_use_fresh_partition_cases_without_duplicate_emission(tmp
     )
     target = records[0]
     bounds = target.edition_period_scope.intervals[0]
-    entry = DeliveryUnitEntry(
+    entry = DeliveryMetadataEntry(
+        fields=["measurement_unit"],
         variable="1.5.ku",
         records=list(
             capture_expectations(
@@ -4323,7 +4326,7 @@ def test_delivery_units_use_fresh_partition_cases_without_duplicate_emission(tmp
             )
         ),
         columns=[
-            DeliveryUnitColumn(
+            DeliveryMetadataColumn(
                 variant_key=native_variant_key(target),
                 column="KU",
                 valid_from=bounds.start,
@@ -4339,7 +4342,7 @@ def test_delivery_units_use_fresh_partition_cases_without_duplicate_emission(tmp
     register = register.model_copy(
         update={
             "representation": register.representation.model_copy(
-                update={"delivery_unit": [entry]}
+                update={"delivery_metadata": [entry]}
             )
         }
     )
@@ -4369,11 +4372,13 @@ def test_delivery_units_use_fresh_partition_cases_without_duplicate_emission(tmp
     cases = compiled.cases[scope.source, scope.register_key]
     assert [case.decision.kind for case in cases] == [
         "correct_occurrences",
-        "delivery_unit",
+        "delivery_metadata",
     ]
     assert len({case.case_id for case in cases}) == 2
     assert scope.cases == ()
-    assert not any("delivery_unit" in (d.case_id or "") for d in compiled.diagnostics)
+    assert not any(
+        "delivery_metadata" in (d.case_id or "") for d in compiled.diagnostics
+    )
 
 
 def test_classification_binding_matches_partition_produced_name(tmp_path: Path) -> None:
@@ -4836,6 +4841,25 @@ def test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts(
         assert any(
             d.code == "conflicting_representation_coding" for d in formed.diagnostics
         )
+        assert [
+            state.value_set.members
+            for state in (formed.variable.states[0], formed.variable.states[2])
+        ] == [(("01", "Label"),), (("02", "Label"),)]
+        assert all(
+            claim.coding_claim is None
+            for claim in formed.coverage
+            if claim.valid_from == "2022-01-01"
+        )
+        changed_outer = formed.variable.model_copy(
+            update={
+                "states": (
+                    formed.variable.states[0].model_copy(update={"value_set": None}),
+                    *formed.variable.states[1:],
+                )
+            }
+        )
+        with pytest.raises(ValueError, match="claimed coding"):
+            check_delivery_coverage((changed_outer,), formed.coverage, withheld={})
     else:
         assert formed.diagnostics == ()
     assert [
@@ -6155,10 +6179,15 @@ def test_finite_scoped_owner_closes_only_fully_covered_unassigned_literal(
 
 
 @pytest.mark.parametrize("drift", [None, "unit", "missing", "new", "partial", "window"])
-def test_delivery_unit_compiler_keeps_complete_literal_source_guards(tmp_path, drift):
-    from reg_meta_build.curation_compile import compile_delivery_units
-    from reg_meta_build.curation_tree import DeliveryUnitEntry
-    from reg_meta_build.source_curation import DeliveryUnitColumn, capture_expectations
+def test_delivery_metadata_compiler_keeps_complete_literal_source_guards(
+    tmp_path, drift
+):
+    from reg_meta_build.curation_compile import compile_delivery_metadata
+    from reg_meta_build.curation_tree import DeliveryMetadataEntry
+    from reg_meta_build.source_curation import (
+        DeliveryMetadataColumn,
+        capture_expectations,
+    )
     from reg_meta_build.source_records import SourceFields, value_field
 
     path, raw, naming = _pooled_parallel_fixture(tmp_path)
@@ -6175,7 +6204,8 @@ def test_delivery_unit_compiler_keeps_complete_literal_source_guards(tmp_path, d
         )
         for record, unit in zip(raw, ("100-tal kronor", "Kronor (SEK)"), strict=True)
     )
-    entry = DeliveryUnitEntry(
+    entry = DeliveryMetadataEntry(
+        fields=["measurement_unit"],
         variable="1.1.income",
         records=list(
             capture_expectations(
@@ -6186,7 +6216,7 @@ def test_delivery_unit_compiler_keeps_complete_literal_source_guards(tmp_path, d
             )
         ),
         columns=[
-            DeliveryUnitColumn(
+            DeliveryMetadataColumn(
                 variant_key=native_variant_key(record),
                 column=record.fields.column_name.value,
                 valid_from=start,
@@ -6207,7 +6237,7 @@ def test_delivery_unit_compiler_keeps_complete_literal_source_guards(tmp_path, d
     register = register.model_copy(
         update={
             "representation": register.representation.model_copy(
-                update={"parallel": [], "delivery_unit": [entry]}
+                update={"parallel": [], "delivery_metadata": [entry]}
             )
         }
     )
@@ -6247,7 +6277,7 @@ def test_delivery_unit_compiler_keeps_complete_literal_source_guards(tmp_path, d
             update={
                 "representation": register.representation.model_copy(
                     update={
-                        "delivery_unit": [
+                        "delivery_metadata": [
                             entry.model_copy(update={"records": entry.records[:-1]})
                         ]
                     }
@@ -6259,7 +6289,7 @@ def test_delivery_unit_compiler_keeps_complete_literal_source_guards(tmp_path, d
             update={
                 "representation": register.representation.model_copy(
                     update={
-                        "delivery_unit": [
+                        "delivery_metadata": [
                             entry.model_copy(
                                 update={
                                     "columns": [
@@ -6308,7 +6338,7 @@ def test_delivery_unit_compiler_keeps_complete_literal_source_guards(tmp_path, d
             provenance="Exact family",
         ),
     )
-    cases, diagnostics = compile_delivery_units(
+    cases, diagnostics = compile_delivery_metadata(
         register, records, naming, ownership_cases=(identity,)
     )
     assert bool(cases) == (drift is None)

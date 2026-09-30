@@ -888,6 +888,8 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         states={valueSetStates}
         narrowed={isNarrowed}
         scopeStates={valueSetScope}
+        commonName={node.name}
+        commonDescription={node.description}
         commonDefinition={node.definition}
         commonUnit={node.measurement_unit}
         {focusColumn}

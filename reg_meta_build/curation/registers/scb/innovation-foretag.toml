@@ -10884,3 +10884,213 @@ document_sha256 = "25dd4b7f5efbf979e60cf326f23b760768463114160c17475ac695ded9c09
 document_pages = [43, 44, 64]
 reason = "Restore only the exact historical stored list for other technical preparations. The official dictionary explicitly links this quantity to Ja eller nej and supplies0Nej/1Ja. Retain the different later source1Ja/2Nej list and all original associations; do not copy questionnaire box numbers or extend2007–2009."
 source = "Exact SCB SCBDOK 2004-2006:Innovationsverksamhet, andra förberedelser; procedures and technical preparations to implement new or substantially improved products/processes not included in other activities. Source-native RPRE ownership accepted; delivery separately checked by existing SWECOV/edition errata. Full366-original/coding receipt:Innovation15555-linked20-source.json."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-kommun"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:29914\",\"member:474453\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/rpre"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:30127\",\"member:469472\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1209\",\"variable:15555\",\"member:98768\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:2675\",\"variable:15555\",\"member:158930\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:4114\",\"variable:15555\",\"member:257749\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2009-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/ipr-patent"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:32713\",\"member:469420\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-staten"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36983\",\"member:474454\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-staten"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36983\",\"member:474454\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:15555\",\"member:318992\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2012-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-eu"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36984\",\"member:474455\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-eu"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36984\",\"member:474455\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:15555\",\"member:318992\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2012-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/funrtd"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36985\",\"member:474456\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/funrtd"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36985\",\"member:474456\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:15555\",\"member:318992\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2012-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/enmrg"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36987\",\"member:476111\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:15555\",\"member:318992\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2012-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/enout"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36989\",\"member:476439\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:15555\",\"member:318992\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2012-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/hprior"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37065\",\"member:478979\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:4114\",\"variable:15555\",\"member:257749\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2010-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/hfent"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37068\",\"member:478982\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:4114\",\"variable:15555\",\"member:257749\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2010-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/hper"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37070\",\"member:478984\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:4114\",\"variable:15555\",\"member:257749\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2010-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/hpar"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37072\",\"member:478986\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:4114\",\"variable:15555\",\"member:257749\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2010-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/hdem"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37073\",\"member:478987\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:4114\",\"variable:15555\",\"member:257749\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2010-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/ho"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37075\",\"member:478989\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:13272\",\"variable:37075\",\"member:590300\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:17817\",\"variable:37075\",\"member:827141\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:2675\",\"variable:15555\",\"member:158930\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:4114\",\"variable:15555\",\"member:257749\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:15555\",\"member:318992\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2012-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/ipr-monsterskydd"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37076\",\"member:479287\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/ipr-varumarke"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37077\",\"member:479288\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1182\",\"variable:15555\",\"member:98250\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/naringsgren"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:1209\",\"variable:15555\",\"member:98768\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:18898\",\"variable:4027\",\"member:903250\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2002-01-01"
+valid_to = "2004-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/innovation-foretag/agarkontroll"
+refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:15555\",\"member:469453\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:13272\",\"variable:15562\",\"member:590343\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:17817\",\"variable:15562\",\"member:827132\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:20007\",\"variable:74\",\"member:996348\"],\"source\":\"scb-registerinformation\"}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2020-12-31"
+reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
+evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."

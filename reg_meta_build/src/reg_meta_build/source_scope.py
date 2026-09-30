@@ -29,7 +29,7 @@ from reg_meta_build.source_curation import (
     CheckedIdentityChange,
     ClassificationDecision,
     CodingDecision,
-    DeliveryUnitDecision,
+    DeliveryMetadataDecision,
     OccurrenceCorrectionDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
@@ -507,7 +507,7 @@ def resolve_source_scope(
             key = column_owners.get(column_key)
         else:
             assert isinstance(
-                case.decision, (RepresentationDecision, DeliveryUnitDecision)
+                case.decision, (RepresentationDecision, DeliveryMetadataDecision)
             )
             key = case.decision.variable_key
         if key not in groups:
@@ -595,7 +595,7 @@ def resolve_source_scope(
             tuple(
                 c
                 for c in selected
-                if c.decision.kind in {"representations", "delivery_unit"}
+                if c.decision.kind in {"representations", "delivery_metadata"}
             ),
             coding=classified.coding,
         )

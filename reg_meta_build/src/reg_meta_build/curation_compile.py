@@ -89,7 +89,7 @@ from .source_curation import (
     ColumnRepresentation,
     CuratedOccurrenceAddition,
     CurationCase,
-    DeliveryUnitDecision,
+    DeliveryMetadataDecision,
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
@@ -118,7 +118,7 @@ from .source_naming import (
     native_provider_keys,
     native_scb_naming_id,
 )
-from .source_occurrences import source_occurrence
+from .source_occurrences import EffectiveOccurrence, source_occurrence
 from .source_periods import source_scopes
 from .source_records import (
     NativeCoordinates,
@@ -1064,6 +1064,7 @@ def compile_period_families(
                     "definition",
                     "measurement_unit",
                     "name",
+                    "description",
                 ),
                 coding=True,
                 parents=True,
@@ -1159,19 +1160,19 @@ def compile_period_families(
     return tuple(cases), tuple(names), tuple(keys), tuple(diagnostics)
 
 
-def compile_delivery_units(
+def compile_delivery_metadata(
     register: RegisterCuration,
     records: tuple[SourceRecord, ...],
     naming: tuple[NamingDeclaration, ...],
     *,
     ownership_cases: tuple[CurationCase, ...],
 ) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
-    """Authorize exact literal units only for completely pinned accepted owners."""
-    if not register.representation.delivery_unit:
+    """Authorize exact literal delivery metadata only for completely pinned accepted owners."""
+    if not register.representation.delivery_metadata:
         return (), ()
     cases = []
     diagnostics = []
-    unit_names = {entry.variable for entry in register.representation.delivery_unit}
+    unit_names = {entry.variable for entry in register.representation.delivery_metadata}
     owner_keys = {
         name.target.source_key
         for name in naming
@@ -1181,24 +1182,19 @@ def compile_delivery_units(
         case
         for case in ownership_cases
         if isinstance(case.decision, OccurrenceCorrectionDecision)
-        and any(
-            isinstance(effect, CheckedIdentityChange)
-            and effect.variable_key in owner_keys
-            for effect in case.decision.effects
-        )
     )
     corrected = apply_occurrence_cases(records, identities)
     if corrected.diagnostics:
         return (), tuple(
             _stale_partition(
-                f"{register.source_file}#/representation.delivery_unit",
+                f"{register.source_file}#/representation.delivery_metadata",
                 repr(key),
                 "checked effective unit ownership is stale",
             )
             for key in sorted(owner_keys, key=repr)
         )
-    for index, entry in enumerate(register.representation.delivery_unit, 1):
-        ref = f"{register.source_file}#/representation.delivery_unit/{index}"
+    for index, entry in enumerate(register.representation.delivery_metadata, 1):
+        ref = f"{register.source_file}#/representation.delivery_metadata/{index}"
         declarations = tuple(
             name
             for name in naming
@@ -1213,10 +1209,14 @@ def compile_delivery_units(
             )
             continue
         key = next(iter(keys))
+        owned_occurrences = tuple(
+            occurrence
+            for occurrence in corrected.occurrences
+            if occurrence.variable_key == key and occurrence.use == "catalog"
+        )
         owned = tuple(
             record
-            for occurrence in corrected.occurrences
-            if occurrence.variable_key == key
+            for occurrence in owned_occurrences
             for record in occurrence.source_records
         )
         if {record_ref(record) for record in owned} != {
@@ -1229,21 +1229,27 @@ def compile_delivery_units(
             )
             continue
         supplied_windows = {}
+        supplied_scopes = defaultdict(set)
         unsupported_scope = False
-        for record in owned:
+        for occurrence in owned_occurrences:
             bounds = coding_scope_bounds(
-                record.edition_period_scope
-                if record.edition_period_scope.kind != "not_applicable"
-                else record.edition_scope
+                occurrence.edition_period_scope
+                if occurrence.edition_period_scope.kind != "not_applicable"
+                else occurrence.edition_scope
             )
             if not bounds:
                 unsupported_scope = True
                 continue
             coordinate = (
-                native_variant_key(record),
-                _literal_field(record, "column_name"),
+                occurrence.variant_key,
+                _literal_field(occurrence, "column_name"),
             )
             supplied_windows.setdefault(coordinate, []).extend(bounds)
+            supplied_scopes[coordinate].add(
+                occurrence.edition_period_scope
+                if occurrence.edition_period_scope.kind != "not_applicable"
+                else occurrence.edition_scope
+            )
         authored_windows = {
             (column.variant_key, column.column): column for column in entry.columns
         }
@@ -1251,6 +1257,11 @@ def compile_delivery_units(
             unsupported_scope
             or len(authored_windows) != len(entry.columns)
             or set(authored_windows) != set(supplied_windows)
+            or any(
+                column.source_scope is not None
+                and supplied_scopes[coordinate] != {column.source_scope}
+                for coordinate, column in authored_windows.items()
+            )
             or any(
                 (
                     date.fromisoformat(column.valid_from).toordinal(),
@@ -1274,30 +1285,35 @@ def compile_delivery_units(
         guards = []
         all_expected = (*entry.records, *entry.support)
         native_families = {
-            (
-                record.source,
-                record.subject.native.register_id,
-                record.subject.native.variable_id,
-            )
+            native_variable_key(record)
             for record in records
             if record_ref(record) in {item.ref for item in all_expected}
         }
-        for source, register_id, variable_id in sorted(native_families, key=repr):
+        for native in sorted(native_families, key=repr):
             peers = tuple(
-                record
-                for record in records
-                if record.source == source
-                and record.subject.native.register_id == register_id
-                and record.subject.native.variable_id == variable_id
+                record for record in records if native_variable_key(record) == native
             )
+            first = peers[0]
             peer_refs = {record_ref(record) for record in peers}
             authored = {item.ref for item in all_expected if item.ref in peer_refs}
+            register_id = first.subject.native.register_id
+            variable_id = first.subject.native.variable_id
             guards.append(
                 PeerGuard(
-                    guard_id=f"{ref}:{source}:{register_id}:{variable_id}",
-                    source=source,
+                    guard_id=f"{ref}:{first.source}:{register_id}:{variable_id}"
+                    if register_id is not None and variable_id is not None
+                    else f"{ref}:{native!r}",
+                    source=first.source,
                     native=NativeCoordinates(
                         register_id=register_id, variable_id=variable_id
+                    )
+                    if register_id is not None and variable_id is not None
+                    else None,
+                    coordinates=()
+                    if register_id is not None and variable_id is not None
+                    else (
+                        ("register", first.subject.register_name),
+                        ("variable", first.subject.variable),
                     ),
                     expected_members=tuple(sorted(authored, key=repr)),
                 )
@@ -1307,9 +1323,10 @@ def compile_delivery_units(
             targets=tuple(entry.records),
             support=tuple(entry.support),
             peer_guards=tuple(guards),
-            decision=DeliveryUnitDecision(
+            decision=DeliveryMetadataDecision(
                 reviewed=True,
                 variable_key=key,
+                fields=tuple(entry.fields),
                 columns=tuple(entry.columns),
                 reason=entry.evidence,
                 provenance=f"{ref}: {entry.noted}: {entry.evidence}",
@@ -1663,7 +1680,7 @@ def compile_matrix_repr(
             registers[name].representation.period_family
             or registers[name].representation.alias_window
             or registers[name].representation.parallel
-            or registers[name].representation.delivery_unit
+            or registers[name].representation.delivery_metadata
             or name == "scb/innovation-foretag"
         )
         for scope in scopes
@@ -1697,7 +1714,7 @@ def compile_matrix_repr(
                     registers[name].representation.period_family
                     or registers[name].representation.alias_window
                     or registers[name].representation.parallel
-                    or registers[name].representation.delivery_unit
+                    or registers[name].representation.delivery_metadata
                     or name == "scb/innovation-foretag"
                 )
             )
@@ -1810,7 +1827,7 @@ def compile_matrix_repr(
                 )
                 cases[scope_key].extend(parallel_cases)
                 diagnostics.extend(parallel_issues)
-                unit_cases, unit_issues = compile_delivery_units(
+                unit_cases, unit_issues = compile_delivery_metadata(
                     register,
                     records,
                     (*naming.get(scope_key, ()), *names[scope_key]),
@@ -1835,7 +1852,7 @@ def _sos_owner_discriminators(owners: dict[str, str]) -> dict[str, str]:
     return {value: representatives[owner] for value, owner in owners.items()}
 
 
-def _literal_field(record: SourceRecord, name: str) -> str | None:
+def _literal_field(record: SourceRecord | EffectiveOccurrence, name: str) -> str | None:
     field = getattr(record.fields, name)
     return (
         field.value
@@ -5979,6 +5996,12 @@ def compile_curation(
         + partition_keys.get(key, ())
         for key, values in provider_keys.items()
     }
+    correction_cases, correction_diagnostics, correction_report = (
+        compile_occurrence_corrections(tree, prepared, scopes, subset=subset)
+    )
+    thin_cases, thin_diagnostics, thin_report = compile_sos_thin(
+        tree, prepared, scopes, subset=subset
+    )
     matrix_cases, matrix_names, matrix_keys, matrix_diagnostics = compile_matrix_repr(
         tree,
         prepared,
@@ -5988,6 +6011,8 @@ def compile_curation(
                     "cases": (
                         *scope.cases,
                         *partition_cases.get((scope.source, scope.register_key), ()),
+                        *correction_cases.get((scope.source, scope.register_key), ()),
+                        *thin_cases.get((scope.source, scope.register_key), ()),
                     )
                 }
             )
@@ -6024,9 +6049,6 @@ def compile_curation(
         naming[key] = (*naming.get(key, ()), *extra)
     for key, extra in errata_keys.items():
         provider_keys[key] = (*provider_keys.get(key, ()), *extra)
-    correction_cases, correction_diagnostics, correction_report = (
-        compile_occurrence_corrections(tree, prepared, scopes, subset=subset)
-    )
     for key, extra in correction_cases.items():
         cases[key].extend(extra)
     diagnostics.extend(correction_diagnostics)
@@ -6044,9 +6066,6 @@ def compile_curation(
         current = report.setdefault(register, {key: [] for key in statuses})
         for key, values in statuses.items():
             current.setdefault(key, []).extend(values)
-    thin_cases, thin_diagnostics, thin_report = compile_sos_thin(
-        tree, prepared, scopes, subset=subset
-    )
     for key, new_cases in thin_cases.items():
         cases[key].extend(new_cases)
     for key, new_cases in compile_scb_preliminary(prepared, scopes).items():

@@ -24,7 +24,7 @@ from reg_meta_build.resolved_catalog import (
 )
 from reg_meta_build.source_curation import (
     CurationCase,
-    DeliveryUnitDecision,
+    DeliveryMetadataDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
     SourceRecordRef,
@@ -123,6 +123,8 @@ def _state_from_segment(
         delivery_column_name=segment.delivery_column_name,
         data_type=_text(segment.fields, "data_type"),
         data_length=_text(segment.fields, "data_length"),
+        name=_text(segment.fields, "name"),
+        description=_text(segment.fields, "description"),
         definition=_text(segment.fields, "definition"),
         measurement_unit=_text(segment.fields, "measurement_unit"),
         operational_definition=_text(segment.fields, "operational_definition"),
@@ -415,6 +417,7 @@ def _null_conflicting_facts(
     type_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     length_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     unit_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
+    coding_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     for variant, column, fact_field, start, end in conflicts:
         if fact_field == "data_type":
             type_windows[variant, column].append((start, end))
@@ -422,7 +425,14 @@ def _null_conflicting_facts(
             length_windows[variant, column].append((start, end))
         elif fact_field == "measurement_unit":
             unit_windows[variant, column].append((start, end))
-    if not type_windows and not length_windows and not unit_windows:
+        elif fact_field == "coding":
+            coding_windows[variant, column].append((start, end))
+    if (
+        not type_windows
+        and not length_windows
+        and not unit_windows
+        and not coding_windows
+    ):
         return obligations
     result: list[CoverageObligation] = []
     for claim in obligations:
@@ -446,14 +456,29 @@ def _null_conflicting_facts(
             for window in unit_windows.get(key, ())
             if window[0] <= claim.valid_to and window[1] >= claim.valid_from
         ]
-        if not claimed_types and not claimed_lengths and not claimed_units:
+        claimed_coding = [
+            window
+            for window in coding_windows.get(key, ())
+            if window[0] <= claim.valid_to and window[1] >= claim.valid_from
+        ]
+        if (
+            not claimed_types
+            and not claimed_lengths
+            and not claimed_units
+            and not claimed_coding
+        ):
             result.append(claim)
             continue
         cuts = {
             date.fromisoformat(claim.valid_from).toordinal(),
             date.fromisoformat(claim.valid_to).toordinal() + 1,
         }
-        for start, end in (*claimed_types, *claimed_lengths, *claimed_units):
+        for start, end in (
+            *claimed_types,
+            *claimed_lengths,
+            *claimed_units,
+            *claimed_coding,
+        ):
             lower = max(start, claim.valid_from)
             upper = min(end, claim.valid_to)
             cuts.add(date.fromisoformat(lower).toordinal())
@@ -472,6 +497,9 @@ def _null_conflicting_facts(
             null_unit = any(
                 start <= piece_from and end >= piece_to for start, end in claimed_units
             )
+            null_coding = any(
+                start <= piece_from and end >= piece_to for start, end in claimed_coding
+            )
             result.append(
                 replace(
                     claim,
@@ -482,6 +510,7 @@ def _null_conflicting_facts(
                     measurement_unit_claim=None
                     if null_unit
                     else claim.measurement_unit_claim,
+                    coding_claim=None if null_coding else claim.coding_claim,
                 )
             )
     return tuple(result)
@@ -543,16 +572,20 @@ def _checked_month_definitions(
     return tuple(sorted(selected))
 
 
-def _checked_delivery_units(
+def _checked_delivery_metadata(
     effective: tuple[EffectiveOccurrence, ...],
     cases: tuple[CurationCase, ...],
+    field: str,
 ) -> tuple[str, ...]:
-    """A unit permission must cover every original and effective contributor."""
+    """A field permission must cover every original and effective contributor."""
     actual_refs = set(_refs(effective))
     accepted = []
     for case in cases:
         decision = case.decision
-        if not isinstance(decision, DeliveryUnitDecision):
+        if (
+            not isinstance(decision, DeliveryMetadataDecision)
+            or field not in decision.fields
+        ):
             continue
         targets = {target.ref: target for target in case.targets}
         if set(targets) != actual_refs:
@@ -567,14 +600,53 @@ def _checked_delivery_units(
             ):
                 valid = False
                 break
+            if field == "measurement_unit" and any(
+                not _text(occurrence.fields, required)
+                for required in ("name", "definition")
+            ):
+                valid = False
+                break
+            matching_columns = tuple(
+                column
+                for column in decision.columns
+                if column.variant_key == occurrence.variant_key
+                and column.column == _text(occurrence.fields, "column_name")
+            )
+            bounds = occurrence_bounds(occurrence)
+            effective_scope = (
+                occurrence.edition_period_scope
+                if occurrence.edition_period_scope.kind != "not_applicable"
+                else occurrence.edition_scope
+            )
+            if (
+                len(matching_columns) != 1
+                or (
+                    matching_columns[0].source_scope is not None
+                    and matching_columns[0].source_scope != effective_scope
+                )
+                or not bounds
+                or any(
+                    start
+                    < date.fromisoformat(matching_columns[0].valid_from).toordinal()
+                    or end
+                    > date.fromisoformat(matching_columns[0].valid_to).toordinal()
+                    for start, end in bounds
+                )
+            ):
+                valid = False
+                break
             for source in occurrence.source_records:
                 target = targets[record_ref(source)]
                 if not any(
-                    projection.edition_scope == occurrence.edition_scope
-                    and projection.edition_period_scope
-                    == occurrence.edition_period_scope
+                    projection.edition_scope == source.edition_scope
+                    and projection.edition_period_scope == source.edition_period_scope
                     and all(
-                        _field_matches(occurrence, field) for field in projection.fields
+                        _field_matches(source, expected)
+                        for expected in projection.fields
+                    )
+                    and any(
+                        expected.name == field and _field_matches(occurrence, expected)
+                        for expected in projection.fields
                     )
                     for projection in target.alternatives
                 ):
@@ -744,17 +816,26 @@ def form_native_variable(
         "description",
         "measurement_unit",
     }
-    unit_cases = _checked_delivery_units(effective, representations)
-    if "measurement_unit" in conflicts and unit_cases:
-        canonical_fields.remove("measurement_unit")
+    unit_cases = _checked_delivery_metadata(
+        effective, representations, "measurement_unit"
+    )
+    distinct_units = {
+        _text(occurrence.fields, "measurement_unit") for occurrence in effective
+    }
+    projected_unit = bool(unit_cases) and len(distinct_units) > 1
+    if projected_unit:
+        canonical_fields.discard("measurement_unit")
         issue(
-            "delivery_unit_projected",
-            "Checked literal delivery units remain on source states; no common unit or quantity conversion was selected. Cases: "
+            "delivery_metadata_projected",
+            "Checked literal delivery metadata remain on source states; no common unit or quantity conversion was selected. Cases: "
             + ", ".join(unit_cases),
             ("measurement_unit",),
             ("variable.measurement_unit",),
             severity="warning",
         )
+    description_cases = _checked_delivery_metadata(
+        effective, representations, "description"
+    )
     definition_cases = _checked_month_definitions(effective, representations)
     if "definition" in conflicts and definition_cases:
         canonical_fields.remove("definition")
@@ -766,6 +847,19 @@ def form_native_variable(
             ("variable.definition",),
             severity="warning",
         )
+    name_cases = _checked_delivery_metadata(effective, representations, "name")
+    for text_field in ("name", "description"):
+        text_cases = name_cases if text_field == "name" else description_cases
+        if text_field in conflicts and text_cases:
+            canonical_fields.remove(text_field)
+            issue(
+                "delivery_text_projected",
+                "Checked literal source texts remain on delivery states; no common text was selected. Cases: "
+                + ", ".join(text_cases),
+                (text_field,),
+                (f"variable.{text_field}",),
+                severity="warning",
+            )
     for field_name in sorted(canonical_fields & set(conflicts)):
         issue(
             "conflicting_variable_fact",
@@ -774,7 +868,7 @@ def form_native_variable(
             (f"variable.{field_name}",),
         )
     name = _text(canonical, "name")
-    if not name:
+    if not name and not name_cases:
         issue(
             "unresolved_variable_name",
             "The source family does not establish one canonical variable name.",
@@ -908,6 +1002,10 @@ def form_native_variable(
                     segment.valid_to,
                     _refs(segment.occurrences),
                     period_scope=segment.period_scope,
+                    name_claim=_fact_claim(segment.fields.name) if name_cases else None,
+                    description_claim=_fact_claim(segment.fields.description)
+                    if description_cases
+                    else None,
                     definition_claim=_fact_claim(segment.fields.definition)
                     if definition_cases
                     else None,
@@ -933,7 +1031,7 @@ def form_native_variable(
                         f"{case.case_id}: {case.decision.reason}\n{case.decision.provenance}"
                         for case in representations
                         if case.case_id in unit_cases
-                        and isinstance(case.decision, DeliveryUnitDecision)
+                        and isinstance(case.decision, DeliveryMetadataDecision)
                     }
                     new_states = [
                         state.model_copy(
@@ -1158,7 +1256,7 @@ def form_native_variable(
             (subject,),
             severity="warning" if accepted_omission or columnless_only else "error",
         )
-    if not name or not states:
+    if (not name and not name_cases) or not states:
         return VariableFormation(
             None,
             tuple(diagnostics),
@@ -1195,7 +1293,9 @@ def form_native_variable(
         definition=_text(canonical, "definition"),
         description=_text(canonical, "description"),
         operational_definition=_text(canonical, "operational_definition"),
-        measurement_unit=_text(canonical, "measurement_unit"),
+        measurement_unit=None
+        if projected_unit
+        else _text(canonical, "measurement_unit"),
         source_register_text=_text(canonical, "source_attribution"),
         is_sensitive=flag_values["is_sensitive"],
         is_identifier=flag_values["is_identifier"],
