@@ -1359,6 +1359,15 @@ _LOVA_REFERENCE_ROWS = (
         "1 vid överenstämmelse",
         "fel i SCB dokumentaion försök igen",
     ),
+    ("A_LOVA_HOSP", "EJ_PNR", "0, 1", "1 = personnumer saknas"),
+    ("A_LOVA_HOSP", "FORSKRIVNINGSRATT", "J;N", "J = ja, N=nej"),
+    (
+        "A_LOVA_HOSP",
+        "KALLA",
+        "hosp; DESL, sk_spec",
+        "hosp = HOSP, DESL=uppgifter om deslegitimation, sk_spec = uppgifter om specialistsjuksköterskor",
+    ),
+    ("A_LOVA_LISA", "SEKTORKOD", "Se A_LOVA_STYR_SEKTORKOD", "Administrativ"),
 )
 
 
@@ -1423,6 +1432,9 @@ def _lova_reference_record(entry, **changes) -> SourceRecord:
                 changes.get("representation", entry.expected_representation)
             ),
             data_type=value_field("Text"),
+            description=value_field(entry.expected_description)
+            if entry.expected_description is not None
+            else None,
             value_set_declared=value_field("independent coding claim"),
         ),
         delivered_cells=(
@@ -5754,3 +5766,93 @@ def test_checked_name_correction_keeps_same_ref_other_source_scope(tmp_path):
     assert stale and stale[0].code == "stale_curation_entry"
     replay = apply_occurrence_cases((drifted, other), cases[scope.source, None])
     assert replay.diagnostics
+
+
+@pytest.mark.parametrize(
+    "field", ["measurement_unit", "operational_definition", "source_attribution"]
+)
+def test_guarded_column_owner_rejects_changed_role_facts(tmp_path: Path, field):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.amount"\nslug = "amount"\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "ANSWER"\nowner = "1.5.amount"\nref = "explicit amount role"\n'
+        'source_editions = ["2020"]\n'
+        'expected_fields = [{ name = "measurement_unit", status = "value", value = "SEK" }, '
+        '{ name = "operational_definition", status = "value", value = "Amount" }, '
+        '{ name = "source_attribution", status = "value", value = "Authority" }]\n',
+    )
+    original = _errata_record(column="ANSWER", year="2020", member=20)
+    original = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={
+                    "measurement_unit": value_field("SEK"),
+                    "operational_definition": value_field("Amount"),
+                    "source_attribution": value_field("Authority"),
+                }
+            )
+        }
+    )
+    compiled, key, _ = _compile_partition_fixture(root, (original,))
+    assert not apply_occurrence_cases((original,), compiled[0][key]).diagnostics
+    changed = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(update={field: value_field("Changed")})
+        }
+    )
+    assert apply_occurrence_cases((changed,), compiled[0][key]).diagnostics
+    refreshed, _, _ = _compile_partition_fixture(root, (changed,))
+    assert refreshed[-1]
+
+
+@pytest.mark.parametrize(
+    "guards,editions",
+    [
+        ('[{ name = "measurement_unit", status = "value", value = "SEK" }]', "[]"),
+        (
+            '[{ name = "measurement_unit", status = "value", value = "SEK" }, { name = "measurement_unit", status = "value", value = "SEK" }]',
+            '["2020"]',
+        ),
+    ],
+)
+def test_guarded_column_owner_requires_finite_unique_fields(guards, editions):
+    from pydantic import ValidationError
+    from reg_meta_build.curation_tree import IdentityColumnOwnerEntry
+
+    with pytest.raises(ValidationError):
+        IdentityColumnOwnerEntry.model_validate(
+            {
+                "variable": "1.5",
+                "variant": "1.2",
+                "column": "ANSWER",
+                "owner": "1.5.amount",
+                "ref": "role",
+                "source_editions": json.loads(editions),
+                "expected_fields": json.loads(
+                    guards.replace("name = ", '"name": ')
+                    .replace("status = ", '"status": ')
+                    .replace("value = ", '"value": ')
+                ),
+            }
+        )
+
+
+def test_guarded_column_owner_allows_operation_only_guard():
+    from reg_meta_build.curation_tree import IdentityColumnOwnerEntry
+
+    entry = IdentityColumnOwnerEntry.model_validate(
+        {
+            "variable": "1.5",
+            "variant": "1.2",
+            "column": "ANSWER",
+            "owner": "1.5.amount",
+            "ref": "role",
+            "source_editions": ["2020"],
+            "expected_fields": [
+                {"name": "operational_definition", "status": "value", "value": "Amount"}
+            ],
+        }
+    )
+    assert entry.expected_fields[0].value == "Amount"

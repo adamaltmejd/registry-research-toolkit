@@ -9240,3 +9240,39 @@ field = "measurement_unit"
 value = "Veckor"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
 noted = "2026-09-30"
+
+[[identity.column_owner]]
+variable = "25.659"
+variant = "25.763"
+column = "AKYRK"
+owner = "25.659.belopp"
+expected_fields = [{ name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "operational_definition", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "definition", status = "value", value = "Kyrkoavgift exkl. begravningsavgift." }, { name = "name", status = "value", value = "Kyrkoavgift exkl. begravningsavgift" }]
+source_editions = ["2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+ref = "Prepared SCB complete native25.659:2000–2016 AKYRK is explicitly measured in SEK with Skatteverket origin and no supplied operation;2017–2024 AKYRK is explicitly Procent with operation Kyrkoavgiftssats and Svenska kyrkan origin. Generic fee definition does not assert either numeric role. Preserve the amount and rate as distinct supplied concepts, without reconstructing an older formula or changing values. Every original name, generic definition, unit, operation, source attribution, type, width, period and coding remains immutable. Exact enumerated editions only; no unlisted future source ownership."
+
+[[identity.column_owner]]
+variable = "25.659"
+variant = "25.763"
+column = "AKYRK"
+owner = "25.659.sats"
+expected_fields = [{ name = "measurement_unit", status = "value", value = "Procent" }, { name = "operational_definition", status = "value", value = "Kyrkoavgiftssats" }, { name = "source_attribution", status = "value", value = "Svenska kyrkan" }, { name = "definition", status = "value", value = "Kyrkoavgift exkl. begravningsavgift." }, { name = "name", status = "value", value = "Kyrkoavgift exkl. begravningsavgift" }]
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+ref = "Prepared SCB complete native25.659:2000–2016 AKYRK is explicitly measured in SEK with Skatteverket origin and no supplied operation;2017–2024 AKYRK is explicitly Procent with operation Kyrkoavgiftssats and Svenska kyrkan origin. Generic fee definition does not assert either numeric role. Preserve the amount and rate as distinct supplied concepts, without reconstructing an older formula or changing values. Every original name, generic definition, unit, operation, source attribution, type, width, period and coding remains immutable. Exact enumerated editions only; no unlisted future source ownership."
+
+[[variable]]
+native_id = "25.659.belopp"
+slug = "kyrkoavgift-exkl-begravningsavgift"
+
+[[variable]]
+native_id = "25.659.sats"
+slug = "kyrkoavgiftssats-exkl-begravningsavgift"
+
+[[coding.sentinel]]
+variable = "25.2702.bngr"
+variant = "25.763"
+column = "BNGR"
+classification = "sni2002"
+periods = [["2003-01-01", "2003-12-31"]]
+members = [["72201", "Okänt värde"]]
+reason = "Preserve the exact supplied unknown-labelled value as a bounded variable-local classification sentinel."
+source = "Complete pinned SCB native25.2702 original family and CVID737963 coding audit: BNGR2003 supplies72201=Okänt värde as its only noncanonical SNI2002 member. The exact literal pair and finite2003 window are source-positive; substantive same-literal meanings and all other source columns/years remain outside this decision. Preserve all native memberships, source validity, original fields, delivery periods and global SNI2002 codes. Historical-SNI47-bounded-source-manifest.json retains complete six-family943-original context and ordered raw coding evidence."

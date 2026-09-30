@@ -61,6 +61,7 @@ noted = "2026-09-12"
 variant = "it-anvandning-i-foretag"
 column = "EMPMD1PCT"
 versions = ["2014"]
+native_variable_id = 28822
 upstream = "blank-column-name-in-version"
 evidence = "SWECOV holds EMPMD1PCT in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2015, 2017, 2018."
 noted = "2026-09-12"

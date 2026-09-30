@@ -942,3 +942,43 @@ members = [["J", "ja"], ["N", "nej"]]
 reason = "Recover missing labels only from the exact supplied workbook prose; preserve original finite tokens, raw claims and associations."
 source = "Socialstyrelsen supplied LOVA workbook, exact original name/description on the guarded variable row. Complete supplied tokens and prose positively establish this entire local domain. This does not substitute SNI or sector classifications; no absent token, annual coverage or encoding is inferred. Authoring and replay guard complete original fields/scopes/peers and complete source coding; fresh compilation also guards exact workbook revision and physical rows."
 source_authority = { revision = { revision_id = "Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx@sha256:d186882b9a8ef43c64210d00b4b0906628141180c88928b7e973c794b3e6ac0a", dataset = "Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx", publisher = "Socialstyrelsen", purpose = "Selected machine-readable source declarations", upstream_revision = "host-selection-2026-09-14-not-a-provider-release", artifact_path = "catalog/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx", artifact_size = 60767, artifact_sha256 = "2cda1584bfdbb70e06411f78bd77347c3acc57886ba4a2fcc488a7c669a34357" }, source_scope = { kind = "intervals", intervals = [{ start = "1900" }] }, locators = [{ semantic_record_key = ["register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)", "deldatamangd:A_LOVA_HOSP", "variable:FORSKRIVNINGSRATT"], physical_file = "catalog/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx", physical_table = "Metadata - Variabelnivå", physical_record = "row:43", physical_cells = ["Metadata - Variabelnivå!A43", "Metadata - Variabelnivå!B43", "Metadata - Variabelnivå!C43", "Metadata - Variabelnivå!D43", "Metadata - Variabelnivå!E43", "Metadata - Variabelnivå!F43", "Metadata - Variabelnivå!G43", "Metadata - Variabelnivå!H43", "Metadata - Variabelnivå!I43", "Metadata - Variabelnivå!J43", "Metadata - Variabelnivå!K43", "Metadata - Variabelnivå!L43", "Metadata - Variabelnivå!M43", "Metadata - Variabelnivå!N43", "Metadata - Variabelnivå!O43", "Metadata - Variabelnivå!P43"] }], records = [{ ref = { source = "Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx", semantic_record_key = ["register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)", "deldatamangd:A_LOVA_HOSP", "variable:FORSKRIVNINGSRATT"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "value", value = "J = ja, N=nej" }, { name = "column_name", status = "value", value = "FORSKRIVNINGSRATT" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "1900" }, { name = "coverage_to", status = "unknown" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Rätten av förskriva läkemedel" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Förskrivingsrätt J/N" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "J;N" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "value", value = "HOSP" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "1900" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)" }, variant = { status = "value", name = "A_LOVA_HOSP" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "FORSKRIVNINGSRATT", name = "Förskrivingsrätt J/N" }, member = { status = "value", name = "FORSKRIVNINGSRATT" }, native = {  } }, code_set_references = [], parent_facts = [] }] }], codings = ["02c4370f2ac4ca877f97f1767e744e4e357858caaab32b469404df169c99e25d"] }
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "EJ_PNR"
+column = "EJ_PNR"
+expected_reference = "1 = personnumer saknas"
+expected_representation = "0, 1"
+expected_description = "Personnummer saknas i HOSP löpnumret är skapat av Sos"
+evidence = "Exact source cell is a supplied code meaning, source token explanation or administrative note rather than an external classification identity. Preserve the original cell and every source code/meaning. No domain completion or new book inferred; sector A_LOVA_STYR_SEKTORKOD reference and explicit2022break remain in representation/description; missing EJ_PNR0meaning remains unresolved. Source proof: LOVA-prose-reference7-cohort-proposal.json."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "FORSKRIVNINGSRATT"
+column = "FORSKRIVNINGSRATT"
+expected_reference = "J = ja, N=nej"
+expected_representation = "J;N"
+expected_description = "Rätten av förskriva läkemedel"
+evidence = "Exact source cell is a supplied code meaning, source token explanation or administrative note rather than an external classification identity. Preserve the original cell and every source code/meaning. No domain completion or new book inferred; sector A_LOVA_STYR_SEKTORKOD reference and explicit2022break remain in representation/description; missing EJ_PNR0meaning remains unresolved. Source proof: LOVA-prose-reference7-cohort-proposal.json."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "KALLA"
+column = "KALLA"
+expected_reference = "hosp = HOSP, DESL=uppgifter om deslegitimation, sk_spec = uppgifter om specialistsjuksköterskor"
+expected_representation = "hosp; DESL, sk_spec"
+expected_description = "Källa till radens uppgifter"
+evidence = "Exact source cell is a supplied code meaning, source token explanation or administrative note rather than an external classification identity. Preserve the original cell and every source code/meaning. No domain completion or new book inferred; sector A_LOVA_STYR_SEKTORKOD reference and explicit2022break remain in representation/description; missing EJ_PNR0meaning remains unresolved. Source proof: LOVA-prose-reference7-cohort-proposal.json."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_LISA"
+variable = "SEKTORKOD"
+column = "SEKTORKOD"
+expected_reference = "Administrativ"
+expected_representation = "Se A_LOVA_STYR_SEKTORKOD"
+expected_description = "Bygger på data från SCB, fram till 2022 sektorkod, därefter sektorgrp. Därför tidseriebrott)"
+evidence = "Exact source cell is a supplied code meaning, source token explanation or administrative note rather than an external classification identity. Preserve the original cell and every source code/meaning. No domain completion or new book inferred; sector A_LOVA_STYR_SEKTORKOD reference and explicit2022break remain in representation/description; missing EJ_PNR0meaning remains unresolved. Source proof: LOVA-prose-reference7-cohort-proposal.json."
+noted = "2026-09-30"

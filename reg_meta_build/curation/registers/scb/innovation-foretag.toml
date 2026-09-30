@@ -10773,3 +10773,45 @@ column = "SCBID"
 valid_from = "2022-01-01"
 valid_to = "2024-12-31"
 source_editions = ["2022 - 2024"]
+
+[[errata.field]]
+variable = "257.5697"
+variant = "257.553"
+column = "LillaN"
+edition = "18898"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal element per stratum i urvalet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Lilla n per stratum" }, { name = "operational_definition", status = "value", value = "Antal företagsenheter per stratum i urvalet" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
+expected_period_text = "2020 - 2022"
+expected_scope = { kind = "pooled", intervals = [], label = "2020 - 2022", pooled_start = "2020-01-01", pooled_end = "2022-12-31" }
+expected_period = { kind = "pooled", intervals = [], label = "2020 - 2022", pooled_start = "2020-01-01", pooled_end = "2022-12-31" }
+field = "measurement_unit"
+value = "antal företag"
+evidence = "The complete native-family definition explicitly names the same stratum population, sample or respondent count for both literal columns. Within this enterprise survey, the companion NPOP, NSAMP or NRESP column positively supplies antal företag for that exact count. Clarify only the generic Antal unit label; preserve each distinct count definition, all original units, coding associations, periods, names, columns, operational prose, types and scale. No observed values are recoded and no statistical equivalence is asserted."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "257.5696"
+variant = "257.553"
+column = "StoraN"
+edition = "18898"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal element per stratum i populationen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Stora N per stratum" }, { name = "operational_definition", status = "value", value = "Antal företagsenheter per stratum i populationen" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
+expected_period_text = "2020 - 2022"
+expected_scope = { kind = "pooled", intervals = [], label = "2020 - 2022", pooled_start = "2020-01-01", pooled_end = "2022-12-31" }
+expected_period = { kind = "pooled", intervals = [], label = "2020 - 2022", pooled_start = "2020-01-01", pooled_end = "2022-12-31" }
+field = "measurement_unit"
+value = "antal företag"
+evidence = "The complete native-family definition explicitly names the same stratum population, sample or respondent count for both literal columns. Within this enterprise survey, the companion NPOP, NSAMP or NRESP column positively supplies antal företag for that exact count. Clarify only the generic Antal unit label; preserve each distinct count definition, all original units, coding associations, periods, names, columns, operational prose, types and scale. No observed values are recoded and no statistical equivalence is asserted."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "257.6211"
+variant = "257.553"
+column = "LillaNs"
+edition = "18898"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal svarande per stratum" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svarande per stratum" }, { name = "operational_definition", status = "value", value = "Antal svarande företagsenheter per stratum i undersökning" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
+expected_period_text = "2020 - 2022"
+expected_scope = { kind = "pooled", intervals = [], label = "2020 - 2022", pooled_start = "2020-01-01", pooled_end = "2022-12-31" }
+expected_period = { kind = "pooled", intervals = [], label = "2020 - 2022", pooled_start = "2020-01-01", pooled_end = "2022-12-31" }
+field = "measurement_unit"
+value = "antal företag"
+evidence = "The complete native-family definition explicitly names the same stratum population, sample or respondent count for both literal columns. Within this enterprise survey, the companion NPOP, NSAMP or NRESP column positively supplies antal företag for that exact count. Clarify only the generic Antal unit label; preserve each distinct count definition, all original units, coding associations, periods, names, columns, operational prose, types and scale. No observed values are recoded and no statistical equivalence is asserted."
+noted = "2026-09-30"

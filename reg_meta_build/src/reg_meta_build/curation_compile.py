@@ -94,6 +94,7 @@ from .source_curation import (
     ResolutionDiagnostic,
     SearchAliasDecision,
     SourceRecordRef,
+    _field_matches,
     capture_expectations,
 )
 from .source_effects import record_ref
@@ -642,6 +643,7 @@ def convert_column_partitions(
     declared_columns: Mapping[str, str | None] | None = None,
     declaration_reference: str | None = None,
     scoped_owners: Mapping[tuple[SourceRecordRef, str], str] | None = None,
+    guard_fields: tuple[str, ...] = (),
 ) -> ColumnPartitionConversion:
     """Check a complete family and bind independently identifiable accepted splits.
 
@@ -714,7 +716,9 @@ def convert_column_partitions(
     native = native_variable_key(first)
     register = source_register_key(first)
     assert native is not None and register is not None
-    expectations = capture_expectations(records, fields=("column_name",))
+    expectations = capture_expectations(
+        records, fields=tuple(dict.fromkeys(("column_name", *guard_fields)))
+    )
     guard = PeerGuard(
         guard_id=f"accepted-partitions:{first.source}:{source_id}",
         source=first.source,
@@ -888,6 +892,11 @@ def _scoped_column_owners(
         )
         if (
             not matched
+            or any(
+                not _field_matches(record, field)
+                for record in matched
+                for field in entry.expected_fields
+            )
             or entry.owner not in split_ids
             or (
                 entry.source_editions
@@ -1823,6 +1832,11 @@ def compile_partitions(
                         declared_columns=declared,
                         declaration_reference=reference,
                         scoped_owners=scoped,
+                        guard_fields=(
+                            tuple(SourceFields.model_fields)
+                            if any(entry.expected_fields for _, entry in scoped_entries)
+                            else ()
+                        ),
                     )
                 except ValueError as exc:
                     ref = (
@@ -2290,7 +2304,14 @@ def compile_deferred_partitions(
                     ownership = plan.owners
                     scoped = plan.scoped_owners
                 bound = set(ownership) | set(scoped.values())
-                expectations = capture_expectations(records, fields=("column_name",))
+                expectations = capture_expectations(
+                    records,
+                    fields=(
+                        tuple(SourceFields.model_fields)
+                        if any(entry.expected_fields for _, entry in scoped_entries)
+                        else ("column_name",)
+                    ),
+                )
                 guard = PeerGuard(
                     guard_id=f"accepted-partitions:{source}:{source_id}",
                     source=source,

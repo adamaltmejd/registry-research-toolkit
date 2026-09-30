@@ -339,6 +339,15 @@ be rebound under the split variant; corrections to native rows still move with t
 split. RTB's eight `Kvartal 1-3 fr.o.m.` editions use this surface to keep quarterly
 delivery lines separate from their annual parent variants.
 
+An SCB `[[identity.column_owner]]` binds a literal column to an accepted owner within
+explicit source editions. Optional `expected_fields` pin reviewed source facts using the
+existing field-expectation contract. Guarded entries require a finite edition list and
+unique known fields. Changed facts refuse fresh compilation; the compiled complete
+family also guards every supplied field during replay. This supports a reused column
+whose explicitly documented amount or rate role changes between editions without
+normalizing units or borrowing another owner's meaning. Physical source multiplicity
+remains governed by the prepared-source pins and ordered inventory.
+
 SOS `[[identity.split]]` can partition a complete native family by literal supplied
 `data_type`, `deldatamangd`, `name`, or `description`. Supplied names distinguish reused
 columns whose clinical code, flag, or event-file meaning differs despite equal data

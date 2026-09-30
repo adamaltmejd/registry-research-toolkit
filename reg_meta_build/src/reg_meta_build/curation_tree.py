@@ -796,6 +796,18 @@ class IdentityColumnOwnerEntry(_CurationModel):
     ref: str
     source_editions: list[str] = Field(default_factory=list)
 
+    expected_fields: list[FieldExpectation] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _guarded_editions(self) -> IdentityColumnOwnerEntry:
+        if self.expected_fields:
+            names = [field.name for field in self.expected_fields]
+            if not self.source_editions or len(names) != len(set(names)):
+                raise ValueError(
+                    "guarded column owners require exact editions and unique field guards"
+                )
+        return self
+
     _trimmed = field_validator("variable", "variant", "column", "owner", "ref")(
         _require_trimmed
     )
