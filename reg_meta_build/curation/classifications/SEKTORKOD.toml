@@ -39,7 +39,8 @@ value_set_labels = [
 # 00, 11–15, 21–25), not INSEKT: an early label-collision bound them to
 # SEKTOR2000, whose book has no code 15. Each column's observed set was checked
 # against the Y-170 cohort before retargeting; pre-2000 extras and 0/000/''
-# stay nonconforming under the new book exactly as before.
+# retain their literal source domains. LISA uses exact descriptor bindings only:
+# its 1990–1992 "Sektor 1968" domain is not the post-1993 book.
 [[binding.variable]]
 variable = "scb/arbetskraftsbarometern/sektorkod"
 note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
@@ -50,18 +51,6 @@ note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label c
 
 [[binding.variable]]
 variable = "scb/kommunalekonomisk-utjamning/sektor"
-note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
-
-[[binding.variable]]
-variable = "scb/lisa/ast-sektorkod"
-note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
-
-[[binding.variable]]
-variable = "scb/lisa/org-sektorkod"
-note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
-
-[[binding.variable]]
-variable = "scb/lisa/sektorkod"
 note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
 [[binding.variable]]
