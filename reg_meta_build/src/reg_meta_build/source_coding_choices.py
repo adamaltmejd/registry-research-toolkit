@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING, Literal, cast
 from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.source_coding import (
     CodeListClaim,
+    CodeMembershipClaim,
     CodingIssue,
     CodingResolution,
     CodingSegment,
@@ -27,18 +28,25 @@ from reg_meta_build.source_curation import (
     CodingDecision,
     CodingSelection,
     CurationCase,
+    DocumentedCodingSelection,
     ResolutionDiagnostic,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
-from reg_meta_build.source_records import ScopeInterval, TemporalScope
+from reg_meta_build.source_records import (
+    ScopeInterval,
+    SourceFields,
+    TemporalScope,
+    canonical_sha256,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
 
     from reg_meta_build.curation_tree import (
         CodingChoiceEntry,
+        CodingDocumentedEntry,
         CodingEntry,
         CodingExtendEntry,
     )
@@ -244,14 +252,36 @@ def _complete_lists(
 
 
 def compile_coding_selection(
-    entry: CodingEntry | CodingChoiceEntry | CodingExtendEntry,
+    entry: CodingEntry | CodingChoiceEntry | CodingExtendEntry | CodingDocumentedEntry,
     kind: str,
     claims: tuple[CodeListClaim, ...],
     start: str,
     end: str,
-) -> tuple[CodingSelection | Literal["uncoded", "omit_state"] | None, str, str]:
+) -> tuple[
+    CodingSelection
+    | DocumentedCodingSelection
+    | Literal["uncoded", "omit_state"]
+    | None,
+    str,
+    str,
+]:
     """Check a literal coding declaration against the current scope's claims."""
     complete = _complete_lists(claims, start, end)
+    if kind == "documented":
+        if any(
+            segment.code_set is not None and segment.code_set.members
+            for claim in coding_for_period(claims, start, end)
+            for segment in resolve_code_membership((claim,)).segments
+        ):
+            return None, "stale", "period already has a complete source list"
+        documented = cast("CodingDocumentedEntry", entry)
+        return (
+            DocumentedCodingSelection(
+                members=documented.members, version_label=documented.version_label
+            ),
+            "matched",
+            "",
+        )
     if kind in {"uncoded", "omit"}:
         if complete:
             return None, "stale", "period has a complete nonempty list"
@@ -334,6 +364,38 @@ def _selection(
     decision: CodingDecision, claims: tuple[CodeListClaim, ...]
 ) -> tuple[CodingResolution | None, str | None]:
     selection = decision.selection
+    if isinstance(selection, DocumentedCodingSelection):
+        scope = TemporalScope(
+            kind="intervals",
+            intervals=(
+                ScopeInterval(start=decision.valid_from, end=decision.valid_to),
+            ),
+        )
+        documented = resolve_code_membership(
+            (
+                CodeListClaim(
+                    canonical_sha256(
+                        (
+                            "documented",
+                            selection.version_label,
+                            sorted(selection.members),
+                            decision.provenance,
+                            decision.valid_from,
+                            decision.valid_to,
+                        )
+                    ),
+                    scope,
+                    tuple(
+                        CodeMembershipClaim(
+                            code, label, TemporalScope(kind="year_independent")
+                        )
+                        for code, label in selection.members
+                    ),
+                    version_label=selection.version_label,
+                ),
+            )
+        )
+        return replace(documented, claims=claims), None
     if isinstance(selection, str):
         projected = coding_for_period(claims, decision.valid_from, decision.valid_to)
         return CodingResolution(
@@ -404,7 +466,22 @@ def apply_coding_choices(
             raise ValueError("coding decision has an unconverted column binding")
         guarded = {ref for guard in case.peer_guards for ref in guard.expected_members}
         for target in (*case.targets, *case.support):
-            _require_checked(target, ("column_name",), case_id=case.case_id)
+            _require_checked(
+                target,
+                tuple(SourceFields.model_fields)
+                if isinstance(case.decision.selection, DocumentedCodingSelection)
+                else ("column_name",),
+                case_id=case.case_id,
+            )
+            if isinstance(case.decision.selection, DocumentedCodingSelection) and any(
+                alternative.edition_scope is None
+                or alternative.edition_period_scope is None
+                or alternative.code_set_references is None
+                for alternative in target.alternatives
+            ):
+                raise ValueError(
+                    "documented coding requires checked source scopes and coding references"
+                )
             if target.ref not in guarded:
                 raise ValueError("coding decisions require guarded original membership")
     evaluations = evaluate_cases(ordered, records)

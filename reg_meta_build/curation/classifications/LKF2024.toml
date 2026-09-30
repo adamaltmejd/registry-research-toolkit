@@ -9,6 +9,9 @@ valid_to = 2024
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 codes_file = "lkf2024.csv"
 sentinel_codes = [
+  # Reviewed prepared SCB source coding: exact non-geographic missing/abroad tokens.
+  { code = "99", meaning = "Utländsk adress" },
+
   { code = "0000", meaning = "Okänd" },
   { code = "9999", meaning = "Utlandet" },
   { code = "", meaning = "Okänd" },

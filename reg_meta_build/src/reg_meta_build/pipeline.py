@@ -476,6 +476,7 @@ def _run_pipeline(
             or register.coding.uncoded
             or register.coding.omit
             or register.coding.extend
+            or register.coding.documented
         )
     }
     coding_ids = {}
@@ -487,6 +488,7 @@ def _run_pipeline(
                 ("uncoded", register.coding.uncoded),
                 ("omit", register.coding.omit),
                 ("extend", register.coding.extend),
+                ("documented", register.coding.documented),
             )
             for index, entry in enumerate(entries, 1)
             for period_index, _ in enumerate(entry.periods, 1)

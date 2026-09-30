@@ -47,7 +47,11 @@ from .fqid_slugs import (
 from .normalization import normalize_text
 from .relations import load_relations
 from .resolved_metadata import _variable
-from .source_curation import ColumnRepresentation, FiniteCurationWindow
+from .source_curation import (
+    ColumnRepresentation,
+    DocumentedCodingSelection,
+    FiniteCurationWindow,
+)
 from .tags import load_tags
 
 if TYPE_CHECKING:
@@ -604,10 +608,19 @@ class IdentityColumnOwnerEntry(_CurationModel):
     column: str
     owner: str
     ref: str
+    source_editions: list[str] = Field(default_factory=list)
 
     _trimmed = field_validator("variable", "variant", "column", "owner", "ref")(
         _require_trimmed
     )
+
+    @field_validator("source_editions")
+    @classmethod
+    def _editions(cls, value: list[str]) -> list[str]:
+        editions = [_require_trimmed(item) for item in value]
+        if len(set(editions)) != len(editions):
+            raise ValueError("source editions must be unique")
+        return editions
 
     @model_validator(mode="after")
     def _same_family(self) -> IdentityColumnOwnerEntry:
@@ -854,11 +867,26 @@ class CodingExtendEntry(CodingEntry):
         return value
 
 
+class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
+    """Documented members; existing list selectors keep their own contracts."""
+
+    document_url: str = Field(pattern=r"^https://\S+$")
+    document_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    document_pages: list[Annotated[int, Field(gt=0)]] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _finite_documented_periods(self) -> CodingDocumentedEntry:
+        for start, end in self.periods:
+            FiniteCurationWindow(valid_from=start, valid_to=end)
+        return self
+
+
 class CodingCuration(_CurationModel):
     choice: list[CodingChoiceEntry] = Field(default_factory=list)
     uncoded: list[CodingEntry] = Field(default_factory=list)
     omit: list[CodingEntry] = Field(default_factory=list)
     extend: list[CodingExtendEntry] = Field(default_factory=list)
+    documented: list[CodingDocumentedEntry] = Field(default_factory=list)
 
 
 class AcknowledgeEntry(_CurationModel):
@@ -1117,6 +1145,7 @@ def _register_arrays(
         ("coding.uncoded", entry.coding.uncoded),
         ("coding.omit", entry.coding.omit),
         ("coding.extend", entry.coding.extend),
+        ("coding.documented", entry.coding.documented),
         ("acknowledge", entry.acknowledge),
     )
 

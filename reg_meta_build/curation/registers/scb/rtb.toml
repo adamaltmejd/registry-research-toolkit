@@ -458,7 +458,7 @@ panel_time_grain = "delivery"
 # Fastighetstaxering (FTR)
 
 [[variable]]
-native_id = "2.372"
+native_id = "2.372.familjeidentitet-rtb"
 slug = "familjeidentitet-rtb"
 
 
@@ -476,7 +476,7 @@ native_id = "2.24"
 slug = "familjestallning"
 
 [[variable]]
-native_id = "2.25"
+native_id = "2.25.familjetyp"
 slug = "familjetyp"
 
 [[variable]]
@@ -488,7 +488,7 @@ native_id = "2.245"
 slug = "civilstandsdatum"
 
 [[variable]]
-native_id = "2.246"
+native_id = "2.246.civilstandsdatum-tidigare"
 slug = "civilstandsdatum-tidigare"
 
 [[variable]]
@@ -544,12 +544,22 @@ native_id = "2.324"
 slug = "personnr-mor-2"
 
 [[variable]]
-native_id = "2.332"
+native_id = "2.332.senaste-invandringsar"
+slug = "senaste-invandringsar"
+
+
+[[variable]]
+native_id = "2.332.senaste-invandringsdatum"
 slug = "senaste-invandringsdatum"
 
 [[variable]]
-native_id = "2.339"
+native_id = "2.339.flyttningsgrans"
 slug = "flyttningsgrans"
+
+
+[[variable]]
+native_id = "2.339.flyttningsgrans-forsamling"
+slug = "flyttningsgrans-forsamling"
 
 [[variable]]
 native_id = "2.346"
@@ -572,7 +582,7 @@ native_id = "2.3195"
 slug = "h-region"
 
 [[variable]]
-native_id = "2.8180"
+native_id = "2.8180.grund-for-bosattning"
 slug = "grund-for-bosattning"
 
 [[variable]]
@@ -580,8 +590,13 @@ native_id = "2.15724"
 slug = "grund-for-bosattning-grupperad"
 
 [[variable]]
-native_id = "2.16234"
+native_id = "2.16234.fodelseland-eller-lan"
 slug = "fodelseland-eller-lan"
+
+
+[[variable]]
+native_id = "2.16234.fodelseland-eller-lan-mor"
+slug = "fodelseland-eller-lan-mor"
 
 [[variable]]
 native_id = "2.24851"
@@ -608,7 +623,12 @@ native_id = "2.29592"
 slug = "antal-asylsokande-barn"
 
 [[variable]]
-native_id = "2.40255"
+native_id = "2.40255.bearbetningsar-vecka"
+slug = "bearbetningsar-vecka"
+
+
+[[variable]]
+native_id = "2.40255.bearbetningsvecka"
 slug = "bearbetningsvecka"
 
 [[variable]]
@@ -1066,3 +1086,45 @@ slug = "h-region"
 [[variable]]
 native_id = "2.40288.storstadsomrade"
 slug = "storstadsomrade"
+
+# Reviewed exact native source constructs; maps change identity only.
+
+[[identity.partition]]
+variable = "2.16234"
+columns = { "FlandLan" = "2.16234.fodelseland-eller-lan", "FLandLan" = "2.16234.fodelseland-eller-lan", "FLandlan" = "2.16234.fodelseland-eller-lan", "FLandLanMor" = "2.16234.fodelseland-eller-lan-mor" }
+columns_ref = "2026-09-30: SCB RTB VarId 16234: FlandLan, FLandLan and FLandlan are case variants of the supplied person birth-country/county construct; FLandLanMor explicitly refers to the mother. Preserve the source statements about pre-1948 maternal county and unavailable1968-1977 facts, without correcting their original delivery periods. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[identity.partition]]
+variable = "2.246"
+columns = { "CivDatG" = "2.246.civilstandsdatum-tidigare", "TidCivilAndrDatum" = "2.246.civilstandsdatum-tidigare" }
+columns_ref = "2026-09-30: SCB RTB VarId 246: CivDatG and TidCivilAndrDatum both give the previous civil-status-change date. Retain original text/integer types and both YYMMDD and YYYYMMDD operation texts; this owner map does not convert formats. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[identity.partition]]
+variable = "2.332"
+columns = { "SenInvAr" = "2.332.senaste-invandringsar", "DatInv" = "2.332.senaste-invandringsdatum" }
+columns_ref = "2026-09-30: SCB RTB VarId 332: SenInvAr explicitly supplies only the year of latest immigration (four-character text); DatInv supplies the full YYYYMMDD date. Keep distinct source representations, without reconstructing a date from a year. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[identity.partition]]
+variable = "2.339"
+columns = { "FlyttGrans" = "2.339.flyttningsgrans", "Posttyp" = "2.339.flyttningsgrans-forsamling" }
+columns_ref = "2026-09-30: SCB RTB VarId 339: FlyttGrans carries the supplied regional crossing classification (including its historical and parish/district revisions); Posttyp carries the separate3/6 parish-boundary classification. Preserve all delivered memberships and their validity, without treating code3 across lists as equivalent. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[identity.partition]]
+variable = "2.40255"
+columns = { "BearbArVecka" = "2.40255.bearbetningsar-vecka", "BearbArvecka" = "2.40255.bearbetningsar-vecka", "BeArbArVecka" = "2.40255.bearbetningsar-vecka", "BearbVecka" = "2.40255.bearbetningsvecka", "BearbVecka1" = "2.40255.bearbetningsvecka" }
+columns_ref = "2026-09-30: SCB RTB VarId 40255: BearbArVecka, BearbArvecka and BeArbArVecka supply YYYYWW; BearbVecka and BearbVecka1 supply WW. Keep distinct source representations and every original period, including the contradictory Antal minuter unit; no format or unit conversion. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[identity.partition]]
+variable = "2.8180"
+columns = { "GFBKod" = "2.8180.grund-for-bosattning", "GrundForBosattning" = "2.8180.grund-for-bosattning" }
+columns_ref = "2026-09-30: SCB RTB VarId 8180: GFBKod and GrundForBosattning supply the same person-prioritized residence-basis classification. Preserve Nordic US/blank/null not-applicable versus non-Nordic missing meanings and all original member coding. Same literal GrundForBosattning on native2.15724 is a grouped construct outside this map. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[identity.partition]]
+variable = "2.25"
+columns = { "FamTyp" = "2.25.familjetyp", "Famtyp" = "2.25.familjetyp", "FTYP90" = "2.25.familjetyp", "FTYP91" = "2.25.familjetyp", "FTYP92" = "2.25.familjetyp", "FTYP93" = "2.25.familjetyp", "FTYP94" = "2.25.familjetyp", "FTYP95" = "2.25.familjetyp", "FTYP96" = "2.25.familjetyp", "FTYP97" = "2.25.familjetyp" }
+columns_ref = "2026-09-30: SCB RTB VarId 25: FamTyp, Famtyp and FTYP90 through FTYP97 supply the same native family-composition construct and exact Familjetyp coding. Preserve original data lengths, historical source-frame derivation, editions and periods; year suffixes do not authorize inferred date corrections. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[identity.partition]]
+variable = "2.372"
+columns = { "FamId1" = "2.372.familjeidentitet-rtb", "Famid1" = "2.372.familjeidentitet-rtb", "FAMID90" = "2.372.familjeidentitet-rtb", "FAMID91" = "2.372.familjeidentitet-rtb", "FAMID92" = "2.372.familjeidentitet-rtb", "FAMID93" = "2.372.familjeidentitet-rtb", "FAMID94" = "2.372.familjeidentitet-rtb", "FAMID95" = "2.372.familjeidentitet-rtb", "FAMID96" = "2.372.familjeidentitet-rtb", "FAMID97" = "2.372.familjeidentitet-rtb" }
+columns_ref = "2026-09-30: SCB RTB VarId 372: FamId1, Famid1 and FAMID90 through FAMID97 supply the same RTB-family identity, defined as the oldest family member personal identifier. Preserve the historical extended source-frame provenance and original scopes; do not equate other household/family identifiers. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."

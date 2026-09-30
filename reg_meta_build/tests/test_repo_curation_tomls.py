@@ -633,7 +633,7 @@ def test_repo_classification_files_count_and_stay_unique() -> None:
     assert len(list((_CURATION / "classifications").iterdir())) == len(books) == 82
     assert len({book.slug for book in books}) == 82
     assert len(labels) == len(set(labels)) == 112
-    assert sum(len(book.sentinel_codes) for book in books) == 537
+    assert sum(len(book.sentinel_codes) for book in books) == 543
     assert sum(1 for book in books if book.sentinel_codes) == 65
     assert len(bound) == len(set(bound)) == 13
     books_dir = _ROOT / "input_data" / "classifications"
@@ -1253,7 +1253,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 8, 1, 1)
+    ) == (20, 8, 1, 6)
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -2638,3 +2638,43 @@ def test_repo_iot_operational_definitions_keep_slots_points_and_native_scope() -
     assert snapshot["scb/25.24373"] == "forsamling-den-1-11"
     assert snapshot["scb/25.30856"] == "bsamf"
     assert snapshot["scb/25.39924"] == "indtj"
+
+
+def test_repo_workplace_employment_keeps_exact_bas_editions_separate() -> None:
+    lisa = next(
+        r
+        for r in load_curation_tree(_CURATION).registers
+        if r.register_info.native_id == "34"
+    )
+    selectors = [p for p in lisa.identity.column_owner if p.variable == "34.15532"]
+    assert len(selectors) == 5
+    assert not any(p.variable == "34.15532" for p in lisa.identity.partition)
+    for selector in selectors:
+        assert selector.source_editions
+        if selector.owner == "34.15532.bas":
+            assert set(selector.source_editions) == {"2022", "2023"}
+        else:
+            assert selector.owner == "34.15532.fore-bas"
+            assert not {"2022", "2023"} & set(selector.source_editions)
+    assert {(p.variant, p.column) for p in selectors} == {
+        ("34.151", "Ast_AntalSys"),
+        ("34.153", "AntalSys"),
+        ("34.1335", "AntalSys"),
+    }
+
+
+def test_repo_rtb_roles_and_date_granularity_remain_distinct() -> None:
+    rtb = next(
+        r
+        for r in load_curation_tree(_CURATION).registers
+        if r.register_info.native_id == "2"
+    )
+    maps = {p.variable: dict(p.columns) for p in rtb.identity.partition}
+    country = maps["2.16234"]
+    assert country["FlandLan"] == country["FLandLan"] == country["FLandlan"]
+    assert country["FLandLanMor"] != country["FLandLan"]
+    assert maps["2.332"]["SenInvAr"] != maps["2.332"]["DatInv"]
+    week = maps["2.40255"]
+    assert week["BearbArVecka"] == week["BearbArvecka"] == week["BeArbArVecka"]
+    assert week["BearbVecka"] == week["BearbVecka1"] != week["BearbArVecka"]
+    assert maps["2.339"]["FlyttGrans"] != maps["2.339"]["Posttyp"]

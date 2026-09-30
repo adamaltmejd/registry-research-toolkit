@@ -25,6 +25,7 @@ from .cis2016_matrix import (
 )
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import (
+    CodingDocumentedEntry,
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
     ErrataDataTypeEntry,
@@ -126,6 +127,7 @@ if TYPE_CHECKING:
 
     from .curation_tree import (
         CurationTree,
+        IdentityColumnOwnerEntry,
         IdentityRenameEntry,
         IdentitySplitEntry,
         RegisterCuration,
@@ -850,6 +852,58 @@ def _edition_label(record: SourceRecord) -> str | None:
         if parent.kind == "edition" and parent.coordinate.name
     }
     return next(iter(labels)) if len(labels) == 1 else None
+
+
+def _scoped_column_owners(
+    register: RegisterCuration,
+    entries: list[tuple[int, IdentityColumnOwnerEntry]],
+    records: tuple[SourceRecord, ...],
+    split_ids: tuple[str, ...],
+) -> tuple[dict[SourceRecordRef, str], tuple[ResolutionDiagnostic, ...]]:
+    owners: dict[SourceRecordRef, str] = {}
+    diagnostics = []
+    for index, entry in entries:
+        ref = f"{register.source_file}#/identity.column_owner/{index}"
+        matched = tuple(
+            record
+            for record in records
+            if f"{register.register_info.native_id}.{record.subject.variant.native_id}"
+            == entry.variant
+            and _literal_field(record, "column_name") == entry.column
+            and (
+                not entry.source_editions
+                or _edition_label(record) in entry.source_editions
+            )
+        )
+        if (
+            not matched
+            or entry.owner not in split_ids
+            or (
+                entry.source_editions
+                and {_edition_label(record) for record in matched}
+                != set(entry.source_editions)
+            )
+        ):
+            diagnostics.append(
+                _stale_partition(
+                    ref,
+                    entry.variable,
+                    "owner, column or exact source editions changed",
+                )
+            )
+            continue
+        for record in matched:
+            key = record_ref(record)
+            if key in owners and owners[key] != entry.owner:
+                diagnostics.append(
+                    _stale_partition(
+                        ref, entry.variable, "competing scoped column owners"
+                    )
+                )
+            else:
+                owners[key] = entry.owner
+    # A stale selector cannot leave a partly applied family ownership decision.
+    return ({} if diagnostics else owners), tuple(diagnostics)
 
 
 def compile_period_families(
@@ -1717,28 +1771,13 @@ def compile_partitions(
                     continue
                 split_ids = tuple(sorted({item.entry.source_id for item in entries}))
                 split_bases[scope_key].add(native)
-                scoped = {}
-                for i, owner in scoped_entries:
-                    ref = f"{register.source_file}#/identity.column_owner/{i}"
-                    matched = tuple(
-                        record
-                        for record in records
-                        if f"{register.register_info.native_id}.{record.subject.variant.native_id}"
-                        == owner.variant
-                        and record.fields.column_name is not None
-                        and record.fields.column_name.status == "value"
-                        and record.fields.column_name.value == owner.column
-                    )
-                    if not matched or owner.owner not in split_ids:
-                        diagnostics.append(
-                            _stale_partition(
-                                ref, source_id, "owner matches no named split member"
-                            )
-                        )
-                    else:
-                        scoped.update(
-                            {record_ref(record): owner.owner for record in matched}
-                        )
+                scoped, scoped_issues = _scoped_column_owners(
+                    register, scoped_entries, records, split_ids
+                )
+                diagnostics.extend(scoped_issues)
+                if scoped_issues:
+                    null_bases[scope_key].add(native)
+                    continue
                 if len(partitions) > 1:
                     raise ValueError(
                         f"{register.source_file}: duplicate partition map for {source_id}"
@@ -2166,8 +2205,8 @@ def compile_deferred_partitions(
                 if item.variable == source_id
             ]
             scoped_entries = [
-                item
-                for item in register.identity.column_owner
+                (i, item)
+                for i, item in enumerate(register.identity.column_owner, 1)
                 if item.variable == source_id
             ]
             sos_splits = [
@@ -2189,15 +2228,11 @@ def compile_deferred_partitions(
                     continue
                 split_ids = tuple(sorted({item.entry.source_id for item in entries}))
                 split_bases[scope_key].add(native)
-                scoped = {
-                    record_ref(record): owner.owner
-                    for owner in scoped_entries
-                    if owner.owner in split_ids
-                    for record in records
-                    if f"{register.register_info.native_id}.{record.subject.variant.native_id}"
-                    == owner.variant
-                    and _literal_field(record, "column_name") == owner.column
-                }
+                scoped, scoped_issues = _scoped_column_owners(
+                    register, scoped_entries, records, split_ids
+                )
+                if scoped_issues:
+                    continue
                 if len(partitions) > 1:
                     raise ValueError(
                         f"{register.source_file}: duplicate partition map for {source_id}"
@@ -3713,6 +3748,7 @@ def compile_coding_register(
         ("uncoded", register.coding.uncoded),
         ("omit", register.coding.omit),
         ("extend", register.coding.extend),
+        ("documented", register.coding.documented),
     ):
         for index, entry in enumerate(entries, 1):
             ref = f"{register.source_file}#/coding.{kind}/{index}"
@@ -3724,7 +3760,8 @@ def compile_coding_register(
                 and (
                     item.naming.source_id == entry.variable
                     or (
-                        item.target.source_key[-2] == "accepted-partition"
+                        kind != "documented"
+                        and item.target.source_key[-2] == "accepted-partition"
                         and item.naming.source_id.startswith(entry.variable + ".")
                     )
                 )
@@ -3807,7 +3844,13 @@ def compile_coding_register(
                 )
                 if {record_ref(record) for record in target_records} != target_refs:
                     raise ValueError(f"{case_id}: target refs left the original scope")
-                targets = capture_expectations(target_records, fields=("column_name",))
+                targets = capture_expectations(
+                    target_records,
+                    fields=tuple(SourceFields.model_fields)
+                    if kind == "documented"
+                    else ("column_name",),
+                    coding=kind == "documented",
+                )
                 first = records[0]
                 guard = PeerGuard(
                     guard_id=case_id,
@@ -3833,7 +3876,13 @@ def compile_coding_register(
                             expected_codings=coding_expectations(claims, start, end),
                             selection=selection,
                             reason=entry.reason,
-                            provenance=entry.source,
+                            provenance=(
+                                f"{entry.source}\nDocument: {entry.document_url}\n"
+                                f"SHA256: {entry.document_sha256}\n"
+                                f"Pages: {', '.join(map(str, entry.document_pages))}"
+                                if isinstance(entry, CodingDocumentedEntry)
+                                else entry.source
+                            ),
                         ),
                     )
                 )

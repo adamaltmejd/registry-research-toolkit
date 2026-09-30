@@ -9,6 +9,11 @@ valid_to = 2008
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 codes_file = "lkf2008.csv"
 sentinel_codes = [
+  # Reviewed prepared SCB source coding: exact non-geographic missing/abroad tokens.
+  { code = "0000", meaning = "Uppgift saknas eller ej aktuellt" },
+  { code = "00", meaning = "Ej aktuellt" },
+  { code = "9999", meaning = "Utländsk adress" },
+
   { code = "0199", meaning = "Ej svensk hemortskommun" },
   { code = "0", meaning = "Okänt" },
   { code = "000000", meaning = "Okänd" },

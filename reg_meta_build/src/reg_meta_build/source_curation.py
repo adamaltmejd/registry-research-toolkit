@@ -645,6 +645,27 @@ class CodingSelection(CodingWindow):
         return self
 
 
+class DocumentedCodingSelection(_CurationModel):
+    """An exact finite list supplied by independently reviewed documentation."""
+
+    kind: Literal["documented"] = "documented"
+    version_label: str = Field(min_length=1)
+    members: Annotated[
+        tuple[Annotated[tuple[str, str], Field(strict=False)], ...], Field(strict=False)
+    ]
+
+    @model_validator(mode="after")
+    def _finite_members(self) -> Self:
+        if not self.version_label.strip() or not self.members:
+            raise ValueError("documented coding needs a label and finite members")
+        # Empty-string codes are literal values; labels must still supply meaning.
+        if any(not label.strip() for _, label in self.members):
+            raise ValueError("documented member labels must be nonempty")
+        if len({code for code, _ in self.members}) != len(self.members):
+            raise ValueError("documented member codes must be unique")
+        return self
+
+
 class _ColumnDecision(CodingWindow):
     reviewed: Literal[True]
     column_key: NativeKey
@@ -664,7 +685,9 @@ class CodingDecision(_ColumnDecision):
     """Assign coding, explicit uncoded meaning, or omission to one exact window."""
 
     kind: Literal["coding"] = "coding"
-    selection: CodingSelection | Literal["uncoded", "omit_state"]
+    selection: (
+        CodingSelection | DocumentedCodingSelection | Literal["uncoded", "omit_state"]
+    )
 
 
 class ClassificationDecision(_ColumnDecision):

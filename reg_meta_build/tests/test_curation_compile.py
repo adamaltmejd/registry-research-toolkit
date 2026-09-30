@@ -3654,6 +3654,90 @@ def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
     assert corrected[1].variable_key == native
 
 
+@pytest.mark.parametrize("reverse", [False, True])
+def test_column_owner_exact_editions_preserve_unselected_originals(
+    tmp_path: Path, reverse
+):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.old"\nslug = "old"\n'
+        '[[variable]]\nnative_id = "1.5.new"\nslug = "new"\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "ANSWER"\nowner = "1.5.old"\nref = "old basis"\n'
+        'source_editions = ["2020"]\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "ANSWER"\nowner = "1.5.new"\nref = "new basis"\n'
+        'source_editions = ["2021"]\n',
+    )
+    records = tuple(
+        _errata_record(column="ANSWER", year=year, member=20 + index)
+        for index, year in enumerate(("2020", "2021", "2022"))
+    )
+    if reverse:
+        records = records[::-1]
+    compiled, key, native = _compile_partition_fixture(root, records)
+    corrected = apply_occurrence_cases(records, compiled[0][key])
+    assert not corrected.diagnostics
+    occurrences = {record_ref(o.source_records[0]): o for o in corrected.occurrences}
+    keys = {}
+    for record in records:
+        occurrence = occurrences[record_ref(record)]
+        original = source_occurrence(record)
+        year = next(
+            p.coordinate.name for p in record.parent_facts if p.kind == "edition"
+        )
+        keys[year] = occurrence.variable_key
+        assert occurrence.fields == original.fields
+        assert occurrence.edition_scope == original.edition_scope
+    assert keys["2020"] != keys["2021"]
+    assert keys["2022"] == native
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        cast(
+            "Any",
+            SimpleNamespace(
+                records=SimpleNamespace(
+                    iter_partition_families=lambda source, registers=None, select_family=None: (
+                        iter(((native, records),))
+                    )
+                )
+            ),
+        ),
+        (_partition_scope(records),),
+    )
+    assert deferred == (
+        compiled[1],
+        compiled[3],
+        compiled[4],
+        _partition_memberships(compiled[0]),
+    )
+
+
+@pytest.mark.parametrize("editions", ['["2020", "absent"]', '["2021"]'])
+def test_column_owner_stale_or_competing_editions_fail_closed(tmp_path: Path, editions):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.old"\nslug = "old"\n'
+        '[[variable]]\nnative_id = "1.5.new"\nslug = "new"\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "ANSWER"\nowner = "1.5.old"\nref = "old basis"\n'
+        f"source_editions = {editions}\n"
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "ANSWER"\nowner = "1.5.new"\nref = "new basis"\n'
+        'source_editions = ["2021"]\n',
+    )
+    records = tuple(
+        _errata_record(column="ANSWER", year=year, member=20 + index)
+        for index, year in enumerate(("2020", "2021"))
+    )
+    compiled, key, native = _compile_partition_fixture(root, records)
+    assert compiled[-1]
+    corrected = apply_occurrence_cases(records, compiled[0].get(key, ()))
+    assert {o.variable_key for o in corrected.occurrences} == {native}
+
+
 def _sos_partition_records(
     *, rename: bool = False, subsets: tuple[str, ...] | None = None
 ) -> tuple[SourceRecord, ...]:

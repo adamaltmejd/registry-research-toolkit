@@ -442,6 +442,12 @@ a literal claimed by two native variables in the same edition needs a split or
 remain connected through groups; a shared stem or suffix is not evidence that they are
 one variable.
 
+Variant-scoped column owners may select exact source edition labels when the source
+documents a change of measurement basis within one column. Every selected label must
+exist; competing owners or a stale selector withhold the whole ownership decision.
+Unselected editions retain their native identity. These selectors never infer dates or
+extend delivery or coding validity.
+
 Audited naming ambiguities can connect an existing catalog name to an exact unresolved
 source identity. These are error attributions, not new identities or waivers. They must
 still match the original family and actual unresolved result. Missing conversion
@@ -550,6 +556,18 @@ separately checked witness can supply a constant complete coding over another pe
 only when an existing decision explicitly authorizes that extension. Changed target or
 witness evidence invalidates it. Omitted states retain their evidence and do not become
 negative availability claims.
+
+`coding.documented` supplies an independently reviewed finite list for an exact native
+owner, variant, physical column and finite occurrence window when source coding cannot
+establish membership. Its document URL, SHA256 and page references are tracked
+provenance; the build never fetches that document. Exact code strings, including an
+explicitly documented empty string, are preserved. The compiler captures original
+fields, scopes, coding references and complete column peers; changed finite claims
+invalidate application, and any supplied complete list in the window makes the entry
+stale. Contradictory documented assignments withhold only their overlap. Original claims
+and nonmembership associations stay in source accounting. Raw type-marker whitespace is
+not a finite-membership guard: those associations cannot establish a list and are
+retained in the documentary audit.
 
 ### Classifications and representations
 

@@ -1011,3 +1011,227 @@ def test_undated_coding_is_not_consumed_by_finite_uncoded_acceptance() -> None:
     resolved = next(iter(_apply(record, (pooled,), case).coding.values()))
     assert [i.code for i in resolved.issues] == ["unsupported_coding_scope"]
     assert resolved.claims == (pooled,)
+
+
+def _documented_values(members=None):
+    return {
+        "members": members
+        if members is not None
+        else [["1", "ja"], ["", "inte tillfrågad"]],
+        "version_label": "Official 2020 questionnaire",
+        "document_url": "https://example.org/official.pdf",
+        "document_sha256": "a" * 64,
+        "document_pages": [12],
+    }
+
+
+def test_documented_coding_keeps_literal_blank_provenance_and_original_claims():
+    record = _record()
+    claims = (_claim("later", "2", "2021-01-01", "2021-12-31"),)
+    cases, diagnostics, _, _, _, column = _compile_entry(
+        "documented", _documented_values(), claims
+    )
+    assert not diagnostics and len(cases) == 1
+    result = _apply(record, claims, *cases)
+    assert result.accounting[0].status == "applied"
+    assert result.coding[column].claims == claims
+    permuted = cases[0].model_copy(
+        update={
+            "decision": cases[0].decision.model_copy(
+                update={
+                    "selection": cases[0].decision.selection.model_copy(
+                        update={
+                            "members": tuple(
+                                reversed(cases[0].decision.selection.members)
+                            )
+                        }
+                    )
+                }
+            )
+        }
+    )
+    assert _apply(record, claims, permuted).coding == result.coding
+    first, later = result.coding[column].segments
+    assert (first.valid_from, first.valid_to) == ("2020-01-01", "2020-12-31")
+    assert first.code_set is not None
+    assert set(first.code_set.members) == {("1", "ja"), ("", "inte tillfrågad")}
+    assert first.version_label == "Official 2020 questionnaire"
+    assert "https://example.org/official.pdf" in first.provenance[0]
+    assert "SHA256: " + "a" * 64 in first.provenance[0]
+    assert "Pages: 12" in first.provenance[0]
+    assert later == resolve_code_membership(claims).segments[0]
+    assert CurationCase.model_validate_json(cases[0].model_dump_json()) == cases[0]
+    occurrence = source_occurrence(record)
+    assert occurrence.variant_key is not None
+    formed = form_native_variable(
+        (record,),
+        register=ResolvedRegister(provider="scb", slug="test", name="Test"),
+        variants={
+            occurrence.variant_key: ResolvedVariant(slug="people", name="People")
+        },
+        slug="value",
+        provider_key="5",
+        coding=result.coding,
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+    )
+    assert formed.variable is not None
+    assert not any(d.code == "missing_coding_period" for d in formed.diagnostics)
+    assert formed.variable.states[0].value_set == first.code_set
+    assert formed.variable.states[0].provenance is not None
+    assert "https://example.org/official.pdf" in formed.variable.states[0].provenance
+
+
+@pytest.mark.parametrize(
+    "members",
+    [[["1", "yes"], ["1", "no"]], [["", "not asked"], ["", "not asked"]], [["1", ""]]],
+)
+def test_documented_coding_rejects_duplicate_codes_and_missing_labels(members):
+    with pytest.raises(ValidationError):
+        _compile_entry("documented", _documented_values(members), ())
+
+
+@pytest.mark.parametrize(
+    "claims",
+    [(_claim("existing", "1"),), (_claim("partial", "1", "2020-06-01", "2020-07-01"),)],
+)
+def test_documented_coding_rejects_complete_supplied_membership_even_partial_period(
+    claims,
+):
+    cases, diagnostics, *_ = _compile_entry("documented", _documented_values(), claims)
+    assert not cases and diagnostics[0].code == "stale_curation_entry"
+    assert "complete source list" in diagnostics[0].detail
+
+
+@pytest.mark.parametrize("drift", ["field", "scope", "missing", "new_peer", "coding"])
+def test_documented_coding_rejects_changed_original_evidence(drift):
+    record = _record()
+    cases, diagnostics, _, _, _, column = _compile_entry(
+        "documented", _documented_values(), ()
+    )
+    assert not diagnostics
+    records = (record,)
+    claims = ()
+    if drift == "field":
+        records = (
+            record.model_copy(
+                update={
+                    "fields": record.fields.model_copy(
+                        update={"definition": value_field("Changed")}
+                    )
+                }
+            ),
+        )
+    elif drift == "scope":
+        records = (
+            record.model_copy(
+                update={
+                    "edition_period_scope": TemporalScope(
+                        kind="intervals",
+                        intervals=(
+                            ScopeInterval(start="2020-06-01", end="2020-12-31"),
+                        ),
+                    )
+                }
+            ),
+        )
+    elif drift == "missing":
+        records = ()
+    elif drift == "new_peer":
+        records = (record, _record(2021))
+    else:
+        claims = (_claim("new export", "2"),)
+    result = apply_coding_choices(records, cases, coding={column: claims})
+    assert result.accounting[0].status == "stale"
+    assert result.diagnostics
+    assert result.coding[column] == resolve_code_membership(claims)
+
+
+def test_conflicting_documented_lists_withhold_only_overlap():
+    first, _, _, _, _, column = _compile_entry("documented", _documented_values(), ())
+    second = first[0].model_copy(
+        update={
+            "case_id": "second",
+            "decision": first[0].decision.model_copy(
+                update={
+                    "valid_from": "2020-06-01",
+                    "selection": first[0].decision.selection.model_copy(
+                        update={"members": (("2", "nej"),)}
+                    ),
+                }
+            ),
+        }
+    )
+    result = _apply(_record(), (), first[0], second)
+    assert {a.status for a in result.accounting} == {"conflicted"}
+    assert result.coding[column].issues[0].code == "conflicting_coding_choices"
+    assert (
+        result.coding[column].issues[0].valid_from,
+        result.coding[column].issues[0].valid_to,
+    ) == ("2020-06-01", "2020-12-31")
+    assert result.coding[column].segments[0].code_set is not None
+    assert result.coding[column].segments[1].code_set is None
+
+
+def test_documented_coding_requires_an_existing_exact_column_window():
+    values = {**_documented_values(), "periods": [["2019-01-01", "2019-12-31"]]}
+    cases, diagnostics, *_ = _compile_entry("documented", values, ())
+    assert not cases and diagnostics[0].code == "stale_curation_entry"
+    assert "no column occurrence" in diagnostics[0].detail
+
+
+def test_documented_coding_requires_the_exact_partition_owner():
+    cases, diagnostics, *_ = _compile_entry(
+        "documented", _documented_values(), (), split=True
+    )
+    assert not cases and diagnostics[0].code == "stale_curation_entry"
+    cases, diagnostics, *_ = _compile_entry(
+        "documented", {**_documented_values(), "variable": "1.5.part"}, (), split=True
+    )
+    assert len(cases) == 1 and not diagnostics
+
+
+@pytest.mark.parametrize(
+    "invalid",
+    [
+        {"document_sha256": "unknown"},
+        {"document_url": "local.pdf"},
+        {"document_pages": [0]},
+    ],
+)
+def test_documented_coding_requires_exact_document_attribution(invalid):
+    with pytest.raises(ValidationError):
+        _compile_entry("documented", {**_documented_values(), **invalid}, ())
+
+
+def test_existing_extension_selector_still_rejects_blank_codes():
+    with pytest.raises(ValidationError):
+        _compile_entry(
+            "extend",
+            {
+                "list": "list",
+                "list_members": [["", "not asked"]],
+                "witness": ["2020-01-01", "2020-12-31"],
+            },
+            (),
+        )
+
+
+def test_documented_application_requires_full_original_source_guards():
+    cases, diagnostics, *_ = _compile_entry("documented", _documented_values(), ())
+    assert not diagnostics
+    weak = cases[0].model_copy(
+        update={"targets": capture_expectations((_record(),), fields=("column_name",))}
+    )
+    with pytest.raises(ValueError, match="checked"):
+        _apply(_record(), (), weak)
+
+
+def test_documented_coding_rejects_an_open_ended_window():
+    with pytest.raises(ValidationError):
+        _compile_entry(
+            "documented",
+            {**_documented_values(), "periods": [["2020-01-01", "9999-12-31"]]},
+            (),
+        )
