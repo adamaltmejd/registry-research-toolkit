@@ -141,7 +141,8 @@ class SourceEventBindings:
         """Keep independent edges; never choose an ambiguous native-ID binding.
 
         In a register-scoped build an endpoint observed only in an unselected
-        register is deferred; an event with every endpoint there is skipped.
+        register can defer an event only when no endpoint has selected-source
+        evidence; an event with every endpoint outside is skipped.
         """
         diagnostics = []
         withheld = set()
@@ -168,14 +169,21 @@ class SourceEventBindings:
             ]
             if unresolved:
                 outside = [k for k in unresolved if k in self.unselected]
-                if len(outside) == len(keys):
+                selected_evidence = any(self.refs[k] or self.targets[k] for k in keys)
+                if len(outside) == len(keys) and not selected_evidence:
                     skipped += 1
                     self.skipped_events.append(event_ref)
                     continue
                 withheld.add(event_ref)
-                if len(outside) == len(unresolved):
+                if outside and not selected_evidence:
                     code, severity = DEFERRED_REFERENCE, "warning"
-                    detail = f"Succession endpoints {tuple(outside)!r} lie in unselected registers; the complete build resolves them."
+                    unknown = tuple(k for k in unresolved if k not in self.unselected)
+                    detail = (
+                        f"Succession endpoints {tuple(outside)!r} are positively observed "
+                        "in unselected source registers and no endpoint has selected-source evidence. "
+                        f"Unknown endpoints {unknown!r} remain missing, without inferred ownership. "
+                        "The scoped event is deferred; a complete build must reevaluate every endpoint."
+                    )
                 else:
                     code, severity = "unresolved_source_event_endpoint", "error"
                     detail = (

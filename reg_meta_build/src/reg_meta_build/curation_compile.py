@@ -3902,6 +3902,42 @@ def compile_coding_register(
                     selection, status, detail = compile_coding_selection(
                         entry, kind, claims, start, end
                     )
+                if (
+                    isinstance(entry, CodingDocumentedEntry)
+                    and entry.source_authority is not None
+                ):
+                    authority = entry.source_authority
+                    expected = capture_expectations(
+                        records,
+                        fields=tuple(SourceFields.model_fields),
+                        parents=True,
+                        coding=True,
+                    )
+                    if (
+                        tuple(authority.records) != expected
+                        or {
+                            locator for record in records for locator in record.locators
+                        }
+                        != set(authority.locators)
+                        or any(
+                            record.source_revision_id != authority.revision.revision_id
+                            for record in records
+                        )
+                        or tuple(sorted(authority.codings))
+                        != copied_coding_fingerprints(claims)
+                        or {member.code for claim in claims for member in claim.members}
+                        != {code for code, _ in entry.members}
+                        or any(
+                            member.label is not None
+                            and (member.code, member.label) not in entry.members
+                            for claim in claims
+                            for member in claim.members
+                        )
+                    ):
+                        status, detail = (
+                            "stale",
+                            "exact source-row coding authority changed",
+                        )
                 if not used:
                     status, detail = "stale", "period has no column occurrence"
                 if status != "matched":
@@ -3936,6 +3972,11 @@ def compile_coding_register(
                     else ("column_name",),
                     coding=kind in {"documented", "sentinel", "support"},
                 )
+                if (
+                    isinstance(entry, CodingDocumentedEntry)
+                    and entry.source_authority is not None
+                ):
+                    targets = tuple(entry.source_authority.records)
                 guard = PeerGuard(
                     guard_id=case_id,
                     source=scope.source,
@@ -3989,9 +4030,15 @@ def compile_coding_register(
                             selection=selection,
                             reason=entry.reason,
                             provenance=(
-                                f"{entry.source}\nDocument: {entry.document_url}\n"
+                                f"{entry.source}\nSource rows: "
+                                f"{entry.source_authority.revision.artifact_path}\n"
+                                f"SHA256: {entry.source_authority.revision.artifact_sha256}\n"
+                                f"Rows: {', '.join(locator.physical_table + ':' + locator.physical_record for locator in entry.source_authority.locators)}"
+                                if isinstance(entry, CodingDocumentedEntry)
+                                and entry.source_authority is not None
+                                else f"{entry.source}\nDocument: {entry.document_url}\n"
                                 f"SHA256: {entry.document_sha256}\n"
-                                f"Pages: {', '.join(map(str, entry.document_pages))}"
+                                f"Pages: {', '.join(map(str, entry.document_pages or ()))}"
                                 if isinstance(entry, CodingDocumentedEntry)
                                 else entry.source
                             ),

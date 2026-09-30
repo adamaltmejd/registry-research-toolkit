@@ -11,7 +11,7 @@ from reg_meta_build.resolved_catalog import ResolvedRegister
 from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedSuccession
 from reg_meta_build.source_coordinates import source_register_key
 from reg_meta_build.source_event_resolution import SourceEventBindings
-from reg_meta_build.source_records import value_field
+from reg_meta_build.source_records import NativeCoordinates, value_field
 from reg_meta_build.source_reference_records import SourceEventDeclaration
 from test_source_reference_resolution import LOCATOR, REVISION
 from test_source_scope import record, resolve
@@ -190,3 +190,60 @@ def test_accepted_identity_merge_makes_a_native_succession_redundant():
     bindings.observe_scope(originals, scope, uses)
     result = bindings.resolve(ResolvedMetadata())
     assert not result.metadata.successions and not result.diagnostics
+
+
+def test_outside_anchor_defers_unknown_endpoint_only_in_scoped_build():
+    bindings, originals, _scope, _uses = _observe((_event(),))
+    bindings.observe_unselected(originals[0].source, (NativeCoordinates(member_id=1),))
+    result = bindings.resolve(ResolvedMetadata())
+    (issue,) = result.diagnostics
+    assert (issue.code, issue.severity) == (
+        "deferred_out_of_slice_reference",
+        "warning",
+    )
+    assert "Unknown endpoints" in issue.detail and "'2'" in issue.detail
+    assert "without inferred ownership" in issue.detail
+    assert not result.metadata.successions
+    assert len(bindings.unselected) == 1
+    complete = SourceEventBindings(
+        bindings.events, {REVISION.dataset: originals[0].source}
+    )
+    assert complete.resolve(ResolvedMetadata()).diagnostics[0].severity == "error"
+
+
+@pytest.mark.parametrize(
+    "targets",
+    [["scb/example/value-6"], [None], ["scb/example/value-6", "scb/example/other"], []],
+)
+def test_selected_endpoint_evidence_prevents_outside_anchor_deferral(targets):
+    bindings, originals, scope, uses = _observe((_event(),))
+    uses[originals[1].record_id] = [{"variable": v} for v in targets]
+    bindings.observe_scope((originals[1],), scope, uses)
+    bindings.observe_unselected(
+        originals[0].source,
+        (NativeCoordinates(member_id=1), NativeCoordinates(member_id=2)),
+    )
+    (issue,) = bindings.resolve(ResolvedMetadata()).diagnostics
+    assert (issue.code, issue.severity) == ("unresolved_source_event_endpoint", "error")
+    assert any(
+        ref.semantic_record_key != bindings.events[0].locator.semantic_record_key
+        for ref in issue.refs
+    )
+    assert not bindings.skipped_events
+
+
+def test_all_outside_events_skip_but_wholly_unknown_events_remain_errors():
+    bindings, originals, _scope, _uses = _observe((_event(),))
+    assert bindings.resolve(ResolvedMetadata()).diagnostics[0].severity == "error"
+    bindings.observe_unselected(
+        "another-source",
+        (NativeCoordinates(member_id=1), NativeCoordinates(member_id=2)),
+    )
+    assert bindings.resolve(ResolvedMetadata()).diagnostics[0].severity == "error"
+    bindings.observe_unselected(
+        originals[0].source,
+        (NativeCoordinates(member_id=1), NativeCoordinates(member_id=2)),
+    )
+    result = bindings.resolve(ResolvedMetadata())
+    assert not result.metadata.successions and not result.diagnostics
+    assert len(bindings.skipped_events) == 1

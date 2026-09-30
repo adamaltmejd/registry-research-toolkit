@@ -10320,3 +10320,250 @@ keep_members = [["0", "Nej"], ["1", "Ja"]]
 over = ["Ja eller nej"]
 reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
 source = "Finite complete native-family audit: 257.20901, physicalINNA_ONGO, older edition17817/member8271212018–2020 versus later edition18898/member9042332020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[representation.parallel]]
+variable = "257.15568.omsattningsandel-inno-ny-for-marknad"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "TURNMAR"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+[[representation.parallel.columns]]
+column = "TUR_PRD_NEW_MKT"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+
+[[representation.parallel]]
+variable = "257.15569.omsattningsandel-inno-ny-for-foretaget"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "TURNIN"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+[[representation.parallel.columns]]
+column = "TUR_PRD_NEW_ENT"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+
+[[representation.parallel]]
+variable = "257.15570.omsattningsandel-oforandrade-varor"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "TURNTOT"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+[[representation.parallel.columns]]
+column = "TUR_PRD_NINN"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+
+[[representation.parallel]]
+variable = "257.29913.utgifter-ovrig-innovationsverksamhet"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "EXP_INNO_INN_XRND"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "ROTRX"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.4256.nettoomsattning"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "TUR"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "TUR2022"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46650.turpop"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "LillaNs_TUR"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "TURPOP"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[representation.parallel]]
+variable = "257.46654.turresp"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "StoraN_TUR"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "TURRESP"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[representation.parallel]]
+variable = "257.5696.stora-n-per-stratum"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "NPOP"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "StoraN"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.5697.lilla-n-per-stratum"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "LillaN"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "NSAMP"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[representation.parallel]]
+variable = "257.6211.svarande-per-stratum"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "LillaNs"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "NRESP"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[representation.parallel]]
+variable = "257.690.antal-anstallda"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "EMP"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "EMP2022"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.7705.utgifter-for-egen-fou"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "EXP_INNO_RND_IH"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "RRDINX"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.7708.utgifter-for-utlagd-fou"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "EXP_INNO_RND_CONTR_OUT"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "RRDEXX"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]

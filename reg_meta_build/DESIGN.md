@@ -612,14 +612,19 @@ negative availability claims.
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot
 establish membership. Its document URL, SHA256 and page references are tracked
-provenance; the build never fetches that document. Exact code strings, including an
-explicitly documented empty string, are preserved. The compiler captures original
-fields, scopes, coding references and complete column peers; changed finite claims
-invalidate application, and any supplied complete list in the window makes the entry
-stale. Contradictory documented assignments withhold only their overlap. Original claims
-and nonmembership associations stay in source accounting. Raw type-marker whitespace is
-not a finite-membership guard: those associations cannot establish a list and are
-retained in the documentary audit.
+provenance; the build never fetches that document. An alternative authority is the exact
+prepared workbook rows themselves, when their prose supplies the meanings of already
+supplied finite code tokens. This form pins the source revision, physical locators,
+complete original fields, scopes, parent facts and all coding fingerprints. Changed,
+missing or new rows and changed incomplete lists invalidate compilation and application.
+Source rows cannot be mixed with PDF authority; both retain the finite window
+requirement. Exact code strings, including an explicitly documented empty string, are
+preserved. The compiler captures original fields, scopes, coding references and complete
+column peers; changed finite claims invalidate application, and any supplied complete
+list in the window makes the entry stale. Contradictory documented assignments withhold
+only their overlap. Original claims and nonmembership associations stay in source
+accounting. Raw type-marker whitespace is not a finite-membership guard: those
+associations cannot establish a list and are retained in the documentary audit.
 
 `coding.support` retains one proven erroneous physical association as documentary
 support while excluding only that association from effective membership in a finite
@@ -888,21 +893,26 @@ succession edge, a group or tag member, a code/label pair, a source event or a s
 label) is withheld as one warning code, `deferred_out_of_slice_reference`;
 `deferred_references` counts distinct references. A target no scope declares, including
 an undeclared variable in an existing unselected register, stays the complete build's
-error, and a source label matching no known register stays a literal label.
-Succession-event endpoints observed only in unselected registers, and source labels
-naming exactly one unselected register, are likewise deferred, and a source event with
-every endpoint there is skipped as `skipped_curation`; native IDs occurring in both
-scopes, and unselected occurrences with no supported target, need the complete
-occurrence census and are resolved only by the full build. A scoped pass is therefore
-necessary but not sufficient: it may pass where the complete build fails on curation
-outside the slice, and the complete build stays the check on everything, including every
-skipped entry and deferred reference. Literal crosswalks and derivations from a known
-prepared occurrence source wholly outside the selection retain their evidence and defer
-endpoint resolution with the same warning; selected or unknown sources still report
-unbound relationships as errors. Shared-input diagnostics are still reported
-corpus-wide. The scoped output is create-only and marked incomplete and nonpublishable
-in both modes. The summary records the register list, `publication_ready` false and
-`corpus_validation` `not_applicable`; structural validation still runs.
+error, and a source label matching no known register stays a literal label. Source
+labels naming exactly one unselected register are likewise deferred. A source succession
+event may be deferred when at least one endpoint is positively observed in an unselected
+register and no endpoint has selected-source references or targets. Missing counterparts
+remain explicitly unknown; deferral creates neither ownership nor an edge. Selected
+endpoints, including withheld or ambiguous candidates and references without resolved
+targets, retain hard errors. Events with no outside anchor and complete builds retain
+missing-endpoint errors. A source event with every endpoint observed outside is skipped
+as `skipped_curation` only when no endpoint has selected-source evidence. Native IDs
+occurring in both scopes, and unselected occurrences with no supported target, need the
+complete occurrence census and are resolved only by the full build. A scoped pass is
+therefore necessary but not sufficient: it may pass where the complete build fails on
+curation outside the slice, and the complete build stays the check on everything,
+including every skipped entry and deferred reference. Literal crosswalks and derivations
+from a known prepared occurrence source wholly outside the selection retain their
+evidence and defer endpoint resolution with the same warning; selected or unknown
+sources still report unbound relationships as errors. Shared-input diagnostics are still
+reported corpus-wide. The scoped output is create-only and marked incomplete and
+nonpublishable in both modes. The summary records the register list, `publication_ready`
+false and `corpus_validation` `not_applicable`; structural validation still runs.
 
 `check-curation --registers ...` is local editing feedback for complete selected
 register scopes. It shares prepared-input verification, full curation-tree validation,

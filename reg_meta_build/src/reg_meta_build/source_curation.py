@@ -655,6 +655,9 @@ class DocumentedCodingSelection(_CurationModel):
     """An exact finite list supplied by independently reviewed documentation."""
 
     kind: Literal["documented"] = "documented"
+    expected_source_codings: (
+        tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...] | None
+    ) = None
     version_label: str = Field(min_length=1)
     members: Annotated[
         tuple[Annotated[tuple[str, str], Field(strict=False)], ...], Field(strict=False)

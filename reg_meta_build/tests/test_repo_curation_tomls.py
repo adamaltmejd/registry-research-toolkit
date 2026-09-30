@@ -710,8 +710,8 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 173
-    assert sum(len(entry.periods) for entry in coding) == 327
+    assert len(coding) == 178
+    assert sum(len(entry.periods) for entry in coding) == 332
     assert (
         sum(
             len(entry.periods)
@@ -732,7 +732,7 @@ def test_repo_coding_windows_are_ported() -> None:
             )
             for register in tree.registers
         )
-        == 26
+        == 27
     )
 
 
@@ -2784,13 +2784,13 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
     registers = {register.register_info.slug: register for register in tree.registers}
     innovation = registers["innovation-foretag"]
     hreg = registers["hreg"]
-    assert len(innovation.representation.parallel) == 73
+    assert len(innovation.representation.parallel) == 86
     assert (
         sum(
             e.storage_metadata == "per_column"
             for e in innovation.representation.parallel
         )
-        == 43
+        == 56
     )
     assert len(hreg.representation.parallel) == 1
     for register in (innovation, hreg):

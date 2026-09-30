@@ -37,6 +37,10 @@ from reg_meta.documentary import (
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import validate_slug
+from reg_meta.source_evidence import (  # noqa: TC002 - Pydantic resolves nested authority models at runtime.
+    RecordLocator,
+    SourceRevision,
+)
 
 from ._curation import (
     SentinelCode,
@@ -56,9 +60,10 @@ from .source_curation import (
     DocumentedCodingSelection,
     FieldExpectation,
     FiniteCurationWindow,
+    RecordExpectation,
     SupportedCodingAssociation,
 )
-from .source_records import TemporalScope
+from .source_records import SourceFields, TemporalScope
 from .tags import load_tags
 
 if TYPE_CHECKING:
@@ -1029,15 +1034,68 @@ class CodingExtendEntry(CodingEntry):
         return value
 
 
+class PreparedCodingAuthority(_CurationModel):
+    """Exact original source rows supplying the documented finite meanings."""
+
+    revision: SourceRevision
+    locators: list[RecordLocator] = Field(min_length=1)
+    records: list[RecordExpectation] = Field(min_length=1)
+    codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] = Field(
+        min_length=1
+    )
+
+    @model_validator(mode="after")
+    def _complete(self) -> PreparedCodingAuthority:
+        if len({record.ref for record in self.records}) != len(self.records):
+            raise ValueError("source authority must name distinct original members")
+        for record in self.records:
+            if record.ref.source != self.revision.dataset:
+                raise ValueError("source authority rows must use the declared revision")
+            for alternative in record.alternatives:
+                if (
+                    {field.name for field in alternative.fields}
+                    != set(SourceFields.model_fields)
+                    or alternative.subject is None
+                    or alternative.edition_scope is None
+                    or alternative.edition_period_scope is None
+                    or alternative.parent_facts is None
+                    or alternative.code_set_references is None
+                ):
+                    raise ValueError(
+                        "source authority requires complete original facts and scopes"
+                    )
+        return self
+
+
 class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
     """Documented members; existing list selectors keep their own contracts."""
 
-    document_url: str = Field(pattern=r"^https://\S+$")
-    document_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    document_pages: list[Annotated[int, Field(gt=0)]] = Field(min_length=1)
+    document_url: str | None = Field(default=None, pattern=r"^https://\S+$")
+    document_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    document_pages: list[Annotated[int, Field(gt=0)]] | None = Field(
+        default=None, min_length=1
+    )
+    source_authority: PreparedCodingAuthority | None = None
+
+    @field_validator("source_authority", mode="before")
+    @classmethod
+    def _source_rows(cls, value: object) -> object:
+        return (
+            PreparedCodingAuthority.model_validate_json(json.dumps(value))
+            if isinstance(value, dict)
+            else value
+        )
 
     @model_validator(mode="after")
     def _finite_documented_periods(self) -> CodingDocumentedEntry:
+        pdf = (self.document_url, self.document_sha256, self.document_pages)
+        if self.source_authority is None:
+            if any(value is None for value in pdf):
+                raise ValueError(
+                    "documented coding requires complete PDF authority or exact source rows"
+                )
+        elif any(value is not None for value in pdf):
+            raise ValueError("documented coding must select one authority form")
         for start, end in self.periods:
             FiniteCurationWindow(valid_from=start, valid_to=end)
         return self

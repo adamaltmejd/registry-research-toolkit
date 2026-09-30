@@ -1580,3 +1580,173 @@ def test_independent_coding_retains_base_and_rejects_dated_choices(accepted):
         assert result.diagnostics[0].code == "coding_scope_changed"
     else:
         assert not result.diagnostics
+
+
+@pytest.mark.parametrize(
+    "drift",
+    [
+        None,
+        "prose",
+        "scope",
+        "revision",
+        "coding",
+        "label",
+        "peer",
+        "missing",
+        "locator",
+        "incomplete_authority",
+        "mixed_authority",
+        "pdf_open",
+        "pdf_missing_page",
+        "added_documented_code",
+    ],
+)
+def test_documented_source_rows_guard_fresh_compile_and_replay(drift):
+    from reg_meta_build.curation_tree import PreparedCodingAuthority
+    from reg_meta_build.source_coding import copied_coding_fingerprints
+
+    record = _record()
+    claims = (
+        replace(
+            _claim("source", "1"),
+            members=(
+                CodeMembershipClaim("1", None, TemporalScope(kind="year_independent")),
+            ),
+        ),
+    )
+    revision = SourceRevision.create(
+        dataset="scb-fixture",
+        publisher="SCB",
+        purpose="coding fixture",
+        upstream_revision="1",
+        artifact_path="records.csv",
+        artifact_size=1,
+        artifact_sha256="a" * 64,
+    )
+    authority = PreparedCodingAuthority(
+        revision=revision,
+        locators=list(record.locators),
+        records=list(
+            capture_expectations(
+                (record,),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+        codings=list(copied_coding_fingerprints(claims)),
+    )
+    values = {
+        "members": [["1", "Included"]],
+        "version_label": "Supplied row",
+        "source_authority": authority,
+    }
+    if drift in {
+        "incomplete_authority",
+        "mixed_authority",
+        "pdf_open",
+        "pdf_missing_page",
+        "added_documented_code",
+    }:
+        if drift == "incomplete_authority":
+            raw = authority.model_dump(mode="json")
+            raw["records"][0]["alternatives"][0]["fields"].pop()
+            values["source_authority"] = raw
+        elif drift == "mixed_authority":
+            values.update(_documented_values())
+        else:
+            values = _documented_values()
+            if drift == "pdf_open":
+                values["periods"] = [["2020-01-01", "9999-12-31"]]
+            else:
+                values.pop("document_pages")
+        with pytest.raises(ValidationError):
+            _compile_entry("documented", values, claims)
+        return
+    cases, issues, register, scope, _, column = _compile_entry(
+        "documented", values, claims
+    )
+    assert len(cases) == 1 and not issues
+    changed = record
+    changed_claims = claims
+    records = (record,)
+    if drift == "prose":
+        changed = record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"description": value_field("Changed")}
+                )
+            }
+        )
+    elif drift == "scope":
+        changed = record.model_copy(
+            update={"edition_scope": TemporalScope(kind="unknown", label="Changed")}
+        )
+    elif drift == "revision":
+        changed = record.model_copy(update={"source_revision_id": "changed"})
+    elif drift == "coding":
+        changed_claims = (
+            replace(
+                claims[0],
+                members=(
+                    *claims[0].members,
+                    CodeMembershipClaim(
+                        "2", None, TemporalScope(kind="year_independent")
+                    ),
+                ),
+            ),
+        )
+    elif drift == "label":
+        changed_claims = (
+            replace(
+                claims[0],
+                members=(replace(claims[0].members[0], label="Contradictory"),),
+            ),
+        )
+    elif drift == "locator":
+        changed = record.model_copy(
+            update={
+                "locators": (
+                    record.locators[0].model_copy(
+                        update={"physical_record": "changed"}
+                    ),
+                )
+            }
+        )
+    elif drift == "missing":
+        records = ()
+    elif drift == "peer":
+        records = (record, _record(2021))
+    if drift not in {"peer", "missing"}:
+        records = (changed,)
+    if drift == "added_documented_code":
+        entry = register.coding.documented[0].model_copy(
+            update={"members": (("1", "Included"), ("0", "Absent invented token"))}
+        )
+        register = register.model_copy(
+            update={
+                "coding": register.coding.model_copy(update={"documented": [entry]})
+            }
+        )
+    fresh, diagnostics = compile_coding_register(
+        register,
+        scope,
+        originals=records,
+        columns={column: records},
+        column_scopes=_column_scopes({column: records}),
+        coding={column: changed_claims},
+    )
+    if drift is None:
+        assert fresh == cases and not diagnostics
+    else:
+        assert not fresh and diagnostics[0].code == "stale_curation_entry"
+    replay = apply_coding_choices(records, cases, coding={column: changed_claims})
+    if drift in {"prose", "scope", "coding", "label", "peer", "missing"}:
+        assert replay.accounting[0].status == "stale"
+    elif drift is None:
+        assert replay.accounting[0].status == "applied"
+        assert replay.coding[column].claims == claims
+        assert replay.coding[column].segments[0].code_set.members == (
+            ("1", "Included"),
+        )
+        assert "records.csv" in replay.coding[column].segments[0].provenance[0]

@@ -25,6 +25,7 @@ from reg_meta_build.source_coding import (
     coding_content_sha256,
     coding_observation_fingerprints,
     coding_source_sha256,
+    copied_coding_fingerprints,
     resolve_code_membership,
 )
 from reg_meta_build.source_curation import (
@@ -370,7 +371,11 @@ def compile_coding_selection(
         documented = cast("CodingDocumentedEntry", entry)
         return (
             DocumentedCodingSelection(
-                members=documented.members, version_label=documented.version_label
+                members=documented.members,
+                version_label=documented.version_label,
+                expected_source_codings=tuple(documented.source_authority.codings)
+                if documented.source_authority is not None
+                else None,
             ),
             "matched",
             "",
@@ -462,6 +467,10 @@ def _selection(
             selection, claims, decision.valid_from, decision.valid_to
         )
     if isinstance(selection, DocumentedCodingSelection):
+        if selection.expected_source_codings is not None and copied_coding_fingerprints(
+            claims
+        ) != tuple(sorted(selection.expected_source_codings)):
+            return None, "documented_source_coding_changed"
         scope = TemporalScope(
             kind="intervals",
             intervals=(

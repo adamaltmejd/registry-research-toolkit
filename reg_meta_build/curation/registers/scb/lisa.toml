@@ -1325,8 +1325,6 @@ native_id = "34.1582"
 slug = "individer-fodelseland"
 display_group = "Individer födelseland"
 panel_entity_key = "personnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 
 [[variant]]
@@ -1334,8 +1332,6 @@ native_id = "34.1583"
 slug = "individer-in-utvandring"
 display_group = "Individer in- och utvandring"
 panel_entity_key = "personnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 
 [[variant]]
@@ -4884,3 +4880,129 @@ noted = "2026-09-30"
 variable = "34.45"
 columns = { InvUtvLand = "34.45.invutvland", Inv_UtvGrEg = "34.45.inv-utvgreg", Inv_UtvGrEg2 = "34.45.inv-utvgreg2", Inv_UtvGrEg3 = "34.45.inv-utvgreg3", Inv_UtvGrEg4 = "34.45.inv-utvgreg4" }
 columns_ref = "SCB LISA Bakgrundsfakta1990–2017, Referensperiod: birth country (own, mother, father, and groupings) and migration country are not tied to a specific annual edition. Exact reviewed23originals, native34.1569/304/305/45 and editions15549/15550 only; original unknown scopes retained. Grouping versions follow explicit source operations and coding descriptors, never inferred availability. Preserve all contradictory text and coding. Retained source SHA256 16e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119. Keep each literal grouping and source role distinct; country-name spelling owners retain existing public slugs."
+
+[[errata.occurrence_period]]
+variable = "34.57"
+variant = "34.1582"
+column = "PersonNr"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Personnummer" }, { name = "operational_definition", status = "value", value = "Personnummer hämtas från Flergenerationsregistret, dels från biologiska föräldrar och dels från födelseuppgifter." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page38 explicitly places parental birth dates and both foreign/Swedish-background groupings under Årsoberoende variabler, baseras på uppgifter avseende senast årgången av LISA; pages67/68 explicitly place migration event year/month and Posttyp in the nonannual table containing all migration events; pages72/74 explicitly place maternal/paternal birth dates in nonannual person tables. Exact source-local column in edition15549/15550 only; PersonNr is the entity role in these tables. Preserve supplied unknown labels, definitions, types, lengths, original coding/validity and all native57 sibling sources. Event dates are values, never annual delivery bounds or an inferred unique event key. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.occurrence_period]]
+variable = "34.67"
+variant = "34.1582"
+column = "UtlSvBakg"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Anger om en person har utländsk eller svensk bakgrund." }, { name = "description", status = "value", value = "Uppgiften hämtas från befolkningsregistret (RTB) och är där härledd baserad på uppgifter om födelseland från folkbokföringen.\nSe även \"Meddelande i samordningsfrågor för Sveriges offentliga statistik\" (MIS) 2002:3." }, { name = "name", status = "value", value = "Utländsk/svensk bakgrund" }, { name = "operational_definition", status = "value", value = "Om förälders födelseland saknas antas för person som är inrikes född att förälder är inrikes född. För person som är utrikes född antas att förälder är utrikes född." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page38 explicitly places parental birth dates and both foreign/Swedish-background groupings under Årsoberoende variabler, baseras på uppgifter avseende senast årgången av LISA; pages67/68 explicitly place migration event year/month and Posttyp in the nonannual table containing all migration events; pages72/74 explicitly place maternal/paternal birth dates in nonannual person tables. Exact source-local column in edition15549/15550 only; PersonNr is the entity role in these tables. Preserve supplied unknown labels, definitions, types, lengths, original coding/validity and all native57 sibling sources. Event dates are values, never annual delivery bounds or an inferred unique event key. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.occurrence_period]]
+variable = "34.6178"
+variant = "34.1582"
+column = "UtlSvBakgAlt"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Anger om en person har utländsk eller svensk bakgrund enligt en alternativ indelning." }, { name = "description", status = "value", value = "Uppgiften hämtas från befolkningsregistret (RTB) och är där härledd baserad på uppgifter om födelseland från folkbokföringen.\nSe även \"Meddelande i samordningsfrågor för Sveriges offentliga statistik\" (MIS) 2002:3." }, { name = "name", status = "value", value = "Utländsk/svensk bakgrund (alternativ indelning)" }, { name = "operational_definition", status = "value", value = "Om förälders födelseland saknas antas för person som är inrikes född att förälder är inrikes född. För person som är utrikes född antas att förälder är utrikes född." }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page38 explicitly places parental birth dates and both foreign/Swedish-background groupings under Årsoberoende variabler, baseras på uppgifter avseende senast årgången av LISA; pages67/68 explicitly place migration event year/month and Posttyp in the nonannual table containing all migration events; pages72/74 explicitly place maternal/paternal birth dates in nonannual person tables. Exact source-local column in edition15549/15550 only; PersonNr is the entity role in these tables. Preserve supplied unknown labels, definitions, types, lengths, original coding/validity and all native57 sibling sources. Event dates are values, never annual delivery bounds or an inferred unique event key. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.occurrence_period]]
+variable = "34.7946"
+variant = "34.1582"
+column = "FodelseTidFar"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Datum för födelse för far." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelsedatum far" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page38 explicitly places parental birth dates and both foreign/Swedish-background groupings under Årsoberoende variabler, baseras på uppgifter avseende senast årgången av LISA; pages67/68 explicitly place migration event year/month and Posttyp in the nonannual table containing all migration events; pages72/74 explicitly place maternal/paternal birth dates in nonannual person tables. Exact source-local column in edition15549/15550 only; PersonNr is the entity role in these tables. Preserve supplied unknown labels, definitions, types, lengths, original coding/validity and all native57 sibling sources. Event dates are values, never annual delivery bounds or an inferred unique event key. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.occurrence_period]]
+variable = "34.7947"
+variant = "34.1582"
+column = "FodelseTidMor"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Datum för födelse för far." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelsedatum mor" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page38 explicitly places parental birth dates and both foreign/Swedish-background groupings under Årsoberoende variabler, baseras på uppgifter avseende senast årgången av LISA; pages67/68 explicitly place migration event year/month and Posttyp in the nonannual table containing all migration events; pages72/74 explicitly place maternal/paternal birth dates in nonannual person tables. Exact source-local column in edition15549/15550 only; PersonNr is the entity role in these tables. Preserve supplied unknown labels, definitions, types, lengths, original coding/validity and all native57 sibling sources. Event dates are values, never annual delivery bounds or an inferred unique event key. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "34.7947"
+variant = "34.1582"
+column = "FodelseTidMor"
+edition = "15549"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Datum för födelse för far." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelsedatum mor" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "Födelseland"
+expected_scope = { kind = "unknown", intervals = [], label = "Födelseland" }
+expected_period = { kind = "unknown", intervals = [], label = "Födelseland" }
+field = "definition"
+value = "Datum för födelse för mor."
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page72 states Moderns födelsetid FodelseTidMor, År, månad och dag för moderns födelse. Correct only native34.7947 variant34.1582 edition15549 literalFodelseTidMor: supplied definition erroneously says father although supplied name and physical question denote mother. Capture complete singleton native family and nine original prose/classification/type/coverage guards. Preserve original erroneous definition, coding markers and unknown source scopes; this changes effective interpretation only. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.occurrence_period]]
+variable = "34.57"
+variant = "34.1583"
+column = "personnr"
+edition = "15550"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Personnummer" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "In- och utvandrade"
+expected_scope = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+expected_period = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page38 explicitly places parental birth dates and both foreign/Swedish-background groupings under Årsoberoende variabler, baseras på uppgifter avseende senast årgången av LISA; pages67/68 explicitly place migration event year/month and Posttyp in the nonannual table containing all migration events; pages72/74 explicitly place maternal/paternal birth dates in nonannual person tables. Exact source-local column in edition15549/15550 only; PersonNr is the entity role in these tables. Preserve supplied unknown labels, definitions, types, lengths, original coding/validity and all native57 sibling sources. Event dates are values, never annual delivery bounds or an inferred unique event key. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.occurrence_period]]
+variable = "34.50"
+variant = "34.1583"
+column = "InvUtvManad"
+edition = "15550"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "En av de tolv månaderna under ett år." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Månad" }, { name = "operational_definition", status = "value", value = "Härledd variabel  som visar år coh månad då in- eller utvandringen skedde." }, { name = "representation", status = "absent" }]
+expected_period_text = "In- och utvandrade"
+expected_scope = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+expected_period = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page38 explicitly places parental birth dates and both foreign/Swedish-background groupings under Årsoberoende variabler, baseras på uppgifter avseende senast årgången av LISA; pages67/68 explicitly place migration event year/month and Posttyp in the nonannual table containing all migration events; pages72/74 explicitly place maternal/paternal birth dates in nonannual person tables. Exact source-local column in edition15549/15550 only; PersonNr is the entity role in these tables. Preserve supplied unknown labels, definitions, types, lengths, original coding/validity and all native57 sibling sources. Event dates are values, never annual delivery bounds or an inferred unique event key. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
+
+[[errata.occurrence_period]]
+variable = "34.5639"
+variant = "34.1583"
+column = "PostTyp"
+edition = "15550"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Posttyp" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Posttyp" }, { name = "operational_definition", status = "value", value = "Visar om migrationen avser in- eller utvandring." }, { name = "representation", status = "absent" }]
+expected_period_text = "In- och utvandrade"
+expected_scope = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+expected_period = { kind = "unknown", intervals = [], label = "In- och utvandrade" }
+edition_scope = { kind = "year_independent" }
+edition_period_scope = { kind = "year_independent" }
+evidence = "SCB LISA Bakgrundsfakta1990–2017 page38 explicitly places parental birth dates and both foreign/Swedish-background groupings under Årsoberoende variabler, baseras på uppgifter avseende senast årgången av LISA; pages67/68 explicitly place migration event year/month and Posttyp in the nonannual table containing all migration events; pages72/74 explicitly place maternal/paternal birth dates in nonannual person tables. Exact source-local column in edition15549/15550 only; PersonNr is the entity role in these tables. Preserve supplied unknown labels, definitions, types, lengths, original coding/validity and all native57 sibling sources. Event dates are values, never annual delivery bounds or an inferred unique event key. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+noted = "2026-09-30"
