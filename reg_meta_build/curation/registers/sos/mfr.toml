@@ -1822,3 +1822,315 @@ reason = "Exact supplied GRVB has no native catalog endpoint; no days/weeks repl
 [[documentary.binding.negative_native_guards]]
 native = "GRVB"
 originals_sha256 = "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+
+# Approved exact source coding limitations; ambiguous effective coding remains withheld.
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/butsatt"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:BUTSATT\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "1982-01-01"
+valid_to = "1988-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2002-01-01"
+valid_to = "2003-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2007-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2009-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2011-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2013-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2022-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "9999-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2002-01-01"
+valid_to = "2003-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2007-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2009-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2011-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2013-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2022-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_FOK\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "9999-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2002-01-01"
+valid_to = "2003-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2007-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2009-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2011-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2013-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2022-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "sos/mfr/sjukhus"
+refs = ["{\"semantic_record_key\":[\"register:Medicinska födelseregistret\",\"deldatamangd:MFR_LMED\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx\"}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "9999-12-31"
+reason = "Accept this exact unresolved source coding contradiction as a warning; ambiguous effective coding remains withheld."
+evidence = "Reviewed MFR source lists contradict code11010 hospital labels (2001 onward) or code2 discharge destinations (1982–1988). Current authority does not establish a correction throughout these exact windows. All original fields, domains, periods and associations remain intact. Do not choose, merge, recode or invent historical applicability. See MFR-hospital-BUTSATT31-user-review.md and source-proof.json."
