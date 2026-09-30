@@ -420,3 +420,39 @@ def test_identity_split_part_requires_matching_discriminator(
         load_register_files(tmp_path)
     assert "registers/sos/par.toml" in excinfo.value.message
     assert "identity.split" in excinfo.value.message
+
+
+@pytest.mark.parametrize(
+    "provider, coverage, edition, error",
+    [
+        ("scb", False, False, "require an exact native edition"),
+        ("sos", False, False, "require both supplied coverage guards"),
+        ("sos", True, False, None),
+        ("scb", False, True, None),
+    ],
+)
+def test_period_correction_requires_provider_source_coordinates(
+    tmp_path: Path, provider, coverage, edition, error
+):
+    path = tmp_path / "registers" / provider / "sample.toml"
+    path.parent.mkdir(parents=True)
+    fields = '{ name = "name", status = "value", value = "Name" }, { name = "description", status = "absent" }, { name = "definition", status = "absent" }, { name = "operational_definition", status = "absent" }'
+    if coverage:
+        fields += ', { name = "coverage_from", status = "value", value = "2011 och 2013" }, { name = "coverage_to", status = "value", value = "2011 och 2013" }'
+    path.write_text(
+        f'[register]\nprovider = "{provider}"\nslug = "sample"\nnative_id = "1"\n'
+        '[[errata.occurrence_period]]\nvariable = "1.ATC"\nvariant = "PAR_OV"\ncolumn = "ATC"\n'
+        + ('edition = "99"\n' if edition else "")
+        + f"expected_fields = [{fields}]\n"
+        'expected_scope = { kind = "unknown", label = "Original" }\n'
+        'expected_period = { kind = "not_applicable" }\n'
+        'edition_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }, { start = "2013", end = "2013" }] }\n'
+        'edition_period_scope = { kind = "not_applicable" }\n'
+        'evidence = "Exact original source bounds"\nnoted = "2026-09-30"\n'
+    )
+    if error is not None:
+        with pytest.raises(RegMetaError) as excinfo:
+            load_register_files(tmp_path)
+        assert error in excinfo.value.message
+    else:
+        assert len(load_register_files(tmp_path)[0].errata.occurrence_period) == 1

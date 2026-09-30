@@ -721,3 +721,16 @@ parts = [{deldatamangd = "PAR_OV", owner = "5891427617861710725.ALDER_S.alder-vi
 [[variable]]
 native_id = "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut"
 slug = "alder-vid-utskrivningsarets-slut"
+
+# Exact disjoint years supplied on the original OP_NR row.
+[[errata.occurrence_period]]
+variable = "5891427617861710725.OP_NR"
+variant = "PAR_TV"
+column = "OP_NR"
+expected_fields = [{ name = "coverage_from", status = "value", value = "2011 och 2013" }, { name = "coverage_to", status = "value", value = "2011 och 2013" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Åtgärdens sekvensnummer" }, { name = "name", status = "value", value = "Sekvensnummer för åtgärden" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "unknown", intervals = [], label = "Data från=2011 och 2013; Data till=2011 och 2013" }
+expected_period = { kind = "not_applicable", intervals = [] }
+edition_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }, { start = "2013", end = "2013" }] }
+edition_period_scope = { kind = "not_applicable", intervals = [] }
+evidence = "Both original Data från and Data till state exactly 2011 och 2013. Retain those two disjoint calendar years and the gap in2012; the wider2010–2014 ATGARD source must not extend this occurrence. All prose, type, coding and contexts remain unchanged."
+noted = "2026-09-30"

@@ -737,3 +737,51 @@ evidence = "LOVA original row:152 and row:151 supply the same SSYK4_J16 construc
 noted = "2026-09-30"
 field = "description"
 value = "Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för förvärvsarbetande och företagare för aktuellt år"
+
+[[errata.field]]
+variable = "7847722537922273761.SSYK4"
+variant = "A_LOVA_LISA"
+column = "SSYK4"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för aktuellt år" }, { name = "name", status = "value", value = "Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för aktuellt år" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2013" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Yrke enligt SSYK, klassad enligt SSYK96, 4-siffernivå, för förvärvsarbetande"
+evidence = "LOVA SSYK4, exact original row:147 and peer row:146. The exact peer descriptions, representations and declared classification agree; retain the main source name, including its explicit employment qualifier. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "7847722537922273761.SSYKSTATUS"
+variant = "A_LOVA_LISA"
+column = "SSYKSTATUS"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Visar yrkets överensstämmelse med det organisationsnummer som personen har blivit novembersysselsatt på." }, { name = "name", status = "value", value = "Yrkets överensstämmelse med novembersysselsättningen" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2016" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Yrkets överensstämmelse med novembersysselsättningen för förvärvsarbetande"
+evidence = "LOVA SSYKSTATUS, exact original row:158 and peer row:157. The exact peer descriptions, representations and declared classification agree; retain the main source name, including its explicit employment qualifier. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "7847722537922273761.SSYKSTATUS_J16"
+variant = "A_LOVA_LISA"
+column = "SSYKSTATUS_J16"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Visar yrkets överensstämmelse med det organisationsnummer som personen har blivit novembersysselsatt på." }, { name = "name", status = "value", value = "Yrkets överensstämmelse med novembersysselsättningen" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2022" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Yrkets överensstämmelse med novembersysselsättningen för förvärvsarbetande och företagare"
+evidence = "LOVA SSYKSTATUS_J16, exact original row:160 and peer row:159. The exact peer descriptions, representations and declared classification agree; retain the main source name, including its explicit employment qualifier. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "7847722537922273761.UTBLAND"
+variant = "A_LOVA"
+column = "UTBLAND"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Enligt A_LOVA_STYR_LANDSKOD" }, { name = "name", status = "value", value = "Utbildningsland grupperingskod" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1995", end = "2022" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "description"
+value = "Ubildningsland för underliggande examen för legitamationen/beviset"
+evidence = "LOVA UTBLAND, exact original row:181 and peer row:182. The main source points to the same exact country-group steering list as the HOSP row, which explicitly explains the underlying qualification country. Retain that explanatory description; original list reference remains on the original record. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
+noted = "2026-09-30"

@@ -9137,3 +9137,36 @@ slug = "pensionsbeloppskontroll-familj-familj-alternativa-pensionssummor-ku"
 [[variable]]
 native_id = "25.21784.familj-villkor-ku"
 slug = "pensionsbeloppskontroll-familj-familj-villkor-ku"
+
+
+[[coding.sentinel]]
+variable = "25.21073.naringsgren-for-anstallda"
+variant = "25.763"
+column = "KUSNI"
+classification = "sni1969"
+periods = [["1987-01-01", "1987-12-31"]]
+members = [["09350", "Okänt"], ["83100", "Okänt"]]
+reason = "Preserve the exact supplied unknown-labelled values as bounded variable-local classification sentinels."
+source = "Complete pinned SCB source coding and original family audit: these exact code-label pairs are explicitly unknown in this occurrence cohort. Substantive same-literal source categories remain outside this decision. Preserve complete source lists, original claims, fields, periods and all registry codes; no global sentinel widening or source label replacement."
+
+
+[[coding.sentinel]]
+variable = "25.21073.naringsgren-for-anstallda"
+variant = "25.763"
+column = "KUSNI"
+classification = "sni1969"
+periods = [["1988-01-01", "1988-12-31"]]
+members = [["83100", "Okänt"]]
+reason = "Preserve the exact supplied unknown-labelled values as bounded variable-local classification sentinels."
+source = "Complete pinned SCB source coding and original family audit: these exact code-label pairs are explicitly unknown in this occurrence cohort. Substantive same-literal source categories remain outside this decision. Preserve complete source lists, original claims, fields, periods and all registry codes; no global sentinel widening or source label replacement."
+
+
+[[coding.sentinel]]
+variable = "25.21073.naringsgren-for-anstallda"
+variant = "25.763"
+column = "KUSNI"
+classification = "sni1969"
+periods = [["1989-01-01", "1989-12-31"]]
+members = [["83100", "Okänt värde"]]
+reason = "Preserve the exact supplied unknown-labelled values as bounded variable-local classification sentinels."
+source = "Complete pinned SCB source coding and original family audit: these exact code-label pairs are explicitly unknown in this occurrence cohort. Substantive same-literal source categories remain outside this decision. Preserve complete source lists, original claims, fields, periods and all registry codes; no global sentinel widening or source label replacement."

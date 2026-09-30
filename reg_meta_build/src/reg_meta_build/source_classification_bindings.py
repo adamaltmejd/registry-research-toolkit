@@ -8,17 +8,26 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
 
+from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.normalization import normalize_text
 from reg_meta_build.source_classifications import resolve_classification_conformance
-from reg_meta_build.source_coding import CodingIssue, CodingResolution, CodingSegment
+from reg_meta_build.source_coding import (
+    CodingIssue,
+    CodingResolution,
+    CodingSegment,
+    copied_coding_fingerprints,
+)
+from reg_meta_build.source_coding_choices import coding_expectations
 from reg_meta_build.source_curation import (
     ClassificationDecision,
     CurationCase,
     ResolutionDiagnostic,
+    SourceEvidence,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked, record_ref
-from reg_meta_build.source_intervals import scope_bounds
+from reg_meta_build.source_intervals import coding_scope_bounds, scope_bounds
+from reg_meta_build.source_records import SourceFields, canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -48,6 +57,7 @@ class _Binding:
     unresolved: bool = False
     rule: bool = False
     override: bool = False
+    sentinel_members: tuple[tuple[str, str], ...] = ()
 
 
 def _source_bindings(
@@ -298,7 +308,13 @@ def apply_classification_cases(
             raise ValueError("classification cases must compose in one application")
         guarded = {ref for guard in case.peer_guards for ref in guard.expected_members}
         for target in (*case.targets, *case.support):
-            _require_checked(target, ("column_name",), case_id=case.case_id)
+            _require_checked(
+                target,
+                tuple(SourceFields.model_fields)
+                if decision.sentinel_members
+                else ("column_name",),
+                case_id=case.case_id,
+            )
             if target.ref not in guarded or any(
                 projection.code_set_references is None
                 for projection in target.alternatives
@@ -410,6 +426,52 @@ def apply_classification_cases(
             )
         if evaluation.status != "applicable":
             continue
+        if decision.sentinel_members:
+            base = coding[decision.column_key]
+            delivery_changed = False
+            if (
+                isinstance(records, SourceEvidence)
+                and records.effective_scopes is not None
+            ):
+                windows = (
+                    (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
+                    for scope in records.effective_scopes.get(decision.column_key, ())
+                    for lo, hi in (coding_scope_bounds(scope) or ())
+                )
+                delivery_changed = not covers_window(
+                    windows, decision.valid_from, decision.valid_to
+                )
+            if (
+                delivery_changed
+                or copied_coding_fingerprints(base.claims)
+                != decision.expected_source_codings
+                or coding_expectations(
+                    base.claims, decision.valid_from, decision.valid_to
+                )
+                != decision.expected_codings
+                or canonical_sha256(classification.model_dump(mode="json"))
+                != decision.expected_classification
+            ):
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="classification_evidence_changed",
+                        severity="error",
+                        subject=repr(decision.column_key),
+                        case_id=case.case_id,
+                        detail="The scoped sentinel source coding or codebook changed; no sentinel decision was applied.",
+                        refs=tuple(t.ref for t in case.targets),
+                        fields=("coding", "classification"),
+                        valid_from=decision.valid_from,
+                        valid_to=decision.valid_to,
+                        withheld_output=("state.classification",),
+                    )
+                )
+                continue
+            if any(
+                code in canonical[classification.slug]
+                for code, _ in decision.sentinel_members
+            ):
+                raise ValueError("scoped sentinels must not overlap canonical codes")
         selected[decision.column_key].append(
             _Binding(
                 decision.valid_from,
@@ -418,6 +480,7 @@ def apply_classification_cases(
                 tuple(t.ref for t in (*case.targets, *case.support)),
                 (f"{case.case_id}: {decision.reason}\n{decision.provenance}",),
                 inline_only=decision.binding_scope == "inline_coding",
+                sentinel_members=decision.sentinel_members,
             )
         )
 
@@ -505,6 +568,15 @@ def apply_classification_cases(
                         c.code for c in classifications[slug].codes
                     )
                     sentinel_maps[slug] = _sentinel_map(classifications[slug])
+                local_sentinels = dict(sentinel_maps[slug])
+                actual_members = set(segment.code_set.members)
+                for binding in active:
+                    for code, label in binding.sentinel_members:
+                        if (code, label) in actual_members and all(
+                            member_code != code or member_label == label
+                            for member_code, member_label in actual_members
+                        ):
+                            local_sentinels[code] = label
                 checked = resolve_classification_conformance(
                     segment.code_set,
                     classification=slug,
@@ -513,7 +585,7 @@ def apply_classification_cases(
                     refs=refs,
                     valid_from=start,
                     valid_to=end,
-                    sentinel_codes=sentinel_maps[slug],
+                    sentinel_codes=local_sentinels,
                 )
                 diagnostics.extend(checked.diagnostics)
                 conformance = checked.conformance

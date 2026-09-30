@@ -26,10 +26,14 @@ from .cis2016_matrix import (
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import (
     CodingDocumentedEntry,
+    CodingSentinelEntry,
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
     ErrataDataTypeEntry,
     ErrataFieldEntry,
+    ErrataOccurrencePeriodEntry,
+    ErrataSupportEntry,
+    _OccurrenceCorrectionEntry,
 )
 from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
 from .normalization import normalize_token
@@ -59,7 +63,7 @@ from .scb_errata import (
     edition_bindings,
     load_scb_errata,
 )
-from .source_coding import copied_coding_fingerprints
+from .source_coding import copied_coding_fingerprints, resolve_code_membership
 from .source_coding_choices import coding_expectations, compile_coding_selection
 from .source_coordinates import (
     column_identity,
@@ -77,6 +81,7 @@ from .source_curation import (
     CheckedPeriodChange,
     CheckedSourceUse,
     CheckedVariantAssignment,
+    ClassificationDecision,
     CodingDecision,
     ColumnRepresentation,
     CuratedOccurrenceAddition,
@@ -135,9 +140,11 @@ if TYPE_CHECKING:
     )
     from .pipeline import CompiledScope
     from .prepared_catalog import PreparedCatalogSources
+    from .resolved_catalog import ResolvedClassification
     from .source_coding import CodeListClaim
     from .source_coordinates import NativeKey
     from .source_records import SourceRecord
+    from .source_value_bindings import ValueBindingSession
 
 
 @dataclass(frozen=True)
@@ -529,7 +536,7 @@ def _bindable_split_literals(
 class _ColumnPartitionPlan:
     columns: dict[str, list[SourceRecord]]
     owners: dict[str, tuple[str, ...]]
-    scoped_owners: Mapping[SourceRecordRef, str]
+    scoped_owners: Mapping[tuple[SourceRecordRef, str], str]
     unassigned: tuple[str, ...]
     unresolved: set[str]
     candidates: dict[str, list[str]]
@@ -542,7 +549,7 @@ def _column_partition_plan(
     split_ids: tuple[str, ...],
     declared_columns: Mapping[str, str | None] | None,
     declaration_reference: str | None,
-    scoped_owners: Mapping[SourceRecordRef, str] | None,
+    scoped_owners: Mapping[tuple[SourceRecordRef, str], str] | None,
 ) -> _ColumnPartitionPlan:
     """Resolve literal ownership without constructing slice-only diagnostics."""
     keys = {native_variable_key(record) for record in records}
@@ -567,7 +574,7 @@ def _column_partition_plan(
     scoped_columns = {
         record.fields.column_name.value
         for record in records
-        if record_ref(record) in scoped_owners
+        if (record_ref(record), _literal_field(record, "column_name")) in scoped_owners
         and record.fields.column_name is not None
         and record.fields.column_name.status == "value"
     }
@@ -634,7 +641,7 @@ def convert_column_partitions(
     split_ids: tuple[str, ...],
     declared_columns: Mapping[str, str | None] | None = None,
     declaration_reference: str | None = None,
-    scoped_owners: Mapping[SourceRecordRef, str] | None = None,
+    scoped_owners: Mapping[tuple[SourceRecordRef, str], str] | None = None,
 ) -> ColumnPartitionConversion:
     """Check a complete family and bind independently identifiable accepted splits.
 
@@ -724,7 +731,7 @@ def convert_column_partitions(
         for column in partition_columns.get(split_id, ()):
             for record in columns[column]:
                 ref = record_ref(record)
-                if ref in scoped_owners:
+                if (ref, column) in scoped_owners:
                     continue
                 effect = CheckedIdentityChange(
                     ref=ref,
@@ -738,7 +745,10 @@ def convert_column_partitions(
                 effects[ref, column] = effect
         for record in records:
             ref = record_ref(record)
-            if scoped_owners.get(ref) != split_id:
+            if (
+                scoped_owners.get((ref, _literal_field(record, "column_name")))
+                != split_id
+            ):
                 continue
             column = record.fields.column_name
             assert column is not None and column.status == "value"
@@ -860,8 +870,8 @@ def _scoped_column_owners(
     entries: list[tuple[int, IdentityColumnOwnerEntry]],
     records: tuple[SourceRecord, ...],
     split_ids: tuple[str, ...],
-) -> tuple[dict[SourceRecordRef, str], tuple[ResolutionDiagnostic, ...]]:
-    owners: dict[SourceRecordRef, str] = {}
+) -> tuple[dict[tuple[SourceRecordRef, str], str], tuple[ResolutionDiagnostic, ...]]:
+    owners: dict[tuple[SourceRecordRef, str], str] = {}
     diagnostics = []
     for index, entry in entries:
         ref = f"{register.source_file}#/identity.column_owner/{index}"
@@ -894,7 +904,7 @@ def _scoped_column_owners(
             )
             continue
         for record in matched:
-            key = record_ref(record)
+            key = (record_ref(record), entry.column)
             if key in owners and owners[key] != entry.owner:
                 diagnostics.append(
                     _stale_partition(
@@ -2306,13 +2316,18 @@ def compile_deferred_partitions(
                         (record_ref(record), column)
                         for column in ownership.get(split_id, ())
                         for record in columns[column]
-                        if record_ref(record) not in scoped
+                        if (record_ref(record), column) not in scoped
                     }
                     pairs.update(
                         (ref, cast("str", _literal_field(record, "column_name")))
                         for record in records
-                        if (ref := record_ref(record)) in scoped
-                        and scoped[ref] == split_id
+                        if scoped.get(
+                            (
+                                (ref := record_ref(record)),
+                                cast("str", _literal_field(record, "column_name")),
+                            )
+                        )
+                        == split_id
                     )
                     if pairs:
                         members[scope_key][key].update(pairs)
@@ -3741,6 +3756,7 @@ def compile_coding_register(
     columns: Mapping[NativeKey, tuple[SourceRecord, ...]],
     column_scopes: Mapping[NativeKey, frozenset[TemporalScope]],
     coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
+    classifications: Mapping[str, ResolvedClassification] | None = None,
 ) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
     """Compile one register's coding from established scope identities and claims.
 
@@ -3759,6 +3775,7 @@ def compile_coding_register(
         ("omit", register.coding.omit),
         ("extend", register.coding.extend),
         ("documented", register.coding.documented),
+        ("sentinel", register.coding.sentinel),
     ):
         for index, entry in enumerate(entries, 1):
             ref = f"{register.source_file}#/coding.{kind}/{index}"
@@ -3770,7 +3787,7 @@ def compile_coding_register(
                 and (
                     item.naming.source_id == entry.variable
                     or (
-                        kind != "documented"
+                        kind not in {"documented", "sentinel"}
                         and item.target.source_key[-2] == "accepted-partition"
                         and item.naming.source_id.startswith(entry.variable + ".")
                     )
@@ -3817,9 +3834,45 @@ def compile_coding_register(
                     for lo, hi in (coding_scope_bounds(column_scope) or ())
                 )
                 used = covers_window(source_windows, start, end)
-                selection, status, detail = compile_coding_selection(
-                    entry, kind, claims, start, end
-                )
+                selection = None
+                if isinstance(entry, CodingSentinelEntry):
+                    if (
+                        classifications is None
+                        or entry.classification not in classifications
+                    ):
+                        raise ValueError(
+                            "scoped sentinel requires a converted classification"
+                        )
+                    book = classifications[entry.classification]
+                    canonical_codes = {code.code for code in book.codes}
+                    accepted = set(map(tuple, entry.members))
+                    resolved = resolve_code_membership(claims)
+                    matching = [
+                        (segment.valid_from, segment.valid_to)
+                        for segment in resolved.segments
+                        if segment.code_set is not None
+                        and accepted <= set(segment.code_set.members)
+                        and all(
+                            code not in canonical_codes
+                            and all(
+                                c != code or label == meaning
+                                for c, label in segment.code_set.members
+                            )
+                            for code, meaning in accepted
+                        )
+                    ]
+                    status, detail = (
+                        ("matched", "")
+                        if covers_window(matching, start, end)
+                        else (
+                            "stale",
+                            "exact noncanonical sentinel members no longer cover the window",
+                        )
+                    )
+                else:
+                    selection, status, detail = compile_coding_selection(
+                        entry, kind, claims, start, end
+                    )
                 if not used:
                     status, detail = "stale", "period has no column occurrence"
                 if status != "matched":
@@ -3840,7 +3893,7 @@ def compile_coding_register(
                         )
                     )
                     continue
-                assert selection is not None
+                assert selection is not None or isinstance(entry, CodingSentinelEntry)
                 target_refs = {record_ref(record) for record in records}
                 target_records = tuple(
                     record for record in originals if record_ref(record) in target_refs
@@ -3850,9 +3903,9 @@ def compile_coding_register(
                 targets = capture_expectations(
                     target_records,
                     fields=tuple(SourceFields.model_fields)
-                    if kind in {"documented", "uncoded"}
+                    if kind in {"documented", "uncoded", "sentinel"}
                     else ("column_name",),
-                    coding=kind == "documented",
+                    coding=kind in {"documented", "sentinel"},
                 )
                 guard = PeerGuard(
                     guard_id=case_id,
@@ -3860,6 +3913,39 @@ def compile_coding_register(
                     effective_column=column,
                     expected_members=tuple(target.ref for target in targets),
                 )
+                if isinstance(entry, CodingSentinelEntry):
+                    assert classifications is not None
+                    cases.append(
+                        CurationCase(
+                            case_id=case_id,
+                            targets=targets,
+                            peer_guards=(guard,),
+                            decision=ClassificationDecision(
+                                reviewed=True,
+                                column_key=column,
+                                valid_from=start,
+                                valid_to=end,
+                                expected_codings=coding_expectations(
+                                    claims, start, end
+                                ),
+                                expected_source_codings=copied_coding_fingerprints(
+                                    claims
+                                ),
+                                classification=entry.classification,
+                                expected_classification=canonical_sha256(
+                                    classifications[entry.classification].model_dump(
+                                        mode="json"
+                                    )
+                                ),
+                                binding_scope="inline_coding",
+                                sentinel_members=tuple(map(tuple, entry.members)),
+                                reason=entry.reason,
+                                provenance=entry.source,
+                            ),
+                        )
+                    )
+                    continue
+                assert selection is not None
                 cases.append(
                     CurationCase(
                         case_id=case_id,
@@ -3929,6 +4015,75 @@ def _family_diagnostic(
     )
 
 
+def _select_occurrence_correction(
+    register: RegisterCuration,
+    entry: _OccurrenceCorrectionEntry,
+    family: tuple[SourceRecord, ...],
+) -> tuple[SourceRecord, ...]:
+    return tuple(
+        record
+        for record in family
+        if (
+            f"{register.register_info.native_id}.{record.subject.variant.native_id}"
+            if record.subject.variant.native_id is not None
+            else record.subject.variant.name
+        )
+        == entry.variant
+        and _literal_field(record, "column_name") == entry.column
+        and (
+            entry.edition is None
+            or (
+                record.subject.native.edition_id is not None
+                and str(record.subject.native.edition_id) == entry.edition
+            )
+        )
+    )
+
+
+def _occurrence_correction_matches(
+    entry: _OccurrenceCorrectionEntry, selected: tuple[SourceRecord, ...]
+) -> bool:
+    expected = {field.name: field for field in entry.expected_fields}
+    return bool(selected) and all(
+        record.original_period_text == entry.expected_period_text
+        and record.edition_scope == entry.expected_scope
+        and record.edition_period_scope == entry.expected_period
+        and all(
+            (
+                FieldExpectation(name=field, status="absent")
+                if value is None
+                else FieldExpectation(
+                    name=field, status=value.status, value=value.value
+                )
+            )
+            == expected[field]
+            for field in expected
+            for value in (getattr(record.fields, field),)
+        )
+        for record in selected
+    )
+
+
+def _support_coding_sha256(
+    records: tuple[SourceRecord, ...], sessions: tuple[ValueBindingSession, ...]
+) -> str:
+    observations: dict[tuple[SourceRecordRef, str | None], set[tuple[str, ...]]] = (
+        defaultdict(set)
+    )
+    for record in records:
+        observations[record_ref(record), _literal_field(record, "column_name")].add(
+            copied_coding_fingerprints(bind_code_lists(record, sessions).claims)
+        )
+    return canonical_sha256(
+        tuple(
+            (ref.model_dump(mode="json"), column, sorted(fingerprints))
+            for (ref, column), fingerprints in sorted(
+                observations.items(), key=lambda item: str(item[0])
+            )
+        )
+    )
+
+
 def compile_occurrence_corrections(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -3960,6 +4115,7 @@ def compile_occurrence_corrections(
     )
     for register in tree.registers:
         entries = (
+            ("support", register.errata.support),
             ("field", register.errata.field),
             ("occurrence_period", register.errata.occurrence_period),
         )
@@ -3977,6 +4133,10 @@ def compile_occurrence_corrections(
                 for _, rows in entries
                 for entry in rows
             }
+            wanted.update(
+                entry.authority.variable.rsplit(".", 1)[-1]
+                for entry in register.errata.support
+            )
             families = {
                 str(key[-1]): members
                 for key, members in prepared.records.iter_native_families(
@@ -3993,53 +4153,60 @@ def compile_occurrence_corrections(
                     statuses["not_evaluated_in_subset"].append(case_id)
                     continue
                 family = families.get(entry.variable.rsplit(".", 1)[-1], ())
-                selected = tuple(
-                    record
-                    for record in family
-                    if (
-                        f"{register.register_info.native_id}.{record.subject.variant.native_id}"
-                        if record.subject.variant.native_id is not None
-                        else record.subject.variant.name
-                    )
-                    == entry.variant
-                    and _literal_field(record, "column_name") == entry.column
-                    and (
-                        entry.edition is None
-                        or (
-                            record.subject.native.edition_id is not None
-                            and str(record.subject.native.edition_id) == entry.edition
-                        )
-                    )
-                )
+                selected = _select_occurrence_correction(register, entry, family)
                 expected = {field.name: field for field in entry.expected_fields}
+                chosen_refs = {record_ref(record) for record in selected}
                 by_edition: dict[int | None, set[SourceRecordRef]] = defaultdict(set)
                 for record in selected:
                     by_edition[record.subject.native.edition_id].add(record_ref(record))
-                overbroad = len(matches) > 1 or any(
-                    len(refs) > 1 for refs in by_edition.values()
+                overbroad = (
+                    len(matches) > 1
+                    or any(len(refs) > 1 for refs in by_edition.values())
+                    or (
+                        isinstance(entry, ErrataOccurrencePeriodEntry)
+                        and any(
+                            record_ref(record) in chosen_refs
+                            and _literal_field(record, "column_name") != entry.column
+                            for record in family
+                        )
+                    )
                 )
                 valid = (
                     bool(selected)
-                    and not overbroad
-                    and all(
-                        record.original_period_text == entry.expected_period_text
-                        and record.edition_scope == entry.expected_scope
-                        and record.edition_period_scope == entry.expected_period
-                        and all(
-                            (
-                                FieldExpectation(name=field, status="absent")
-                                if value is None
-                                else FieldExpectation(
-                                    name=field, status=value.status, value=value.value
-                                )
-                            )
-                            == expected[field]
-                            for field in expected
-                            for value in (getattr(record.fields, field),)
-                        )
-                        for record in selected
+                    and (
+                        not isinstance(entry, ErrataOccurrencePeriodEntry)
+                        or register.register_info.provider != "scb"
+                        or entry.edition is not None
                     )
+                    and (
+                        not isinstance(entry, ErrataOccurrencePeriodEntry)
+                        or register.register_info.provider != "sos"
+                        or {"coverage_from", "coverage_to"}.issubset(expected)
+                    )
+                    and not overbroad
+                    and _occurrence_correction_matches(entry, selected)
                 )
+                authority_family: tuple[SourceRecord, ...] = ()
+                if isinstance(entry, ErrataSupportEntry):
+                    authority_family = families.get(
+                        entry.authority.variable.rsplit(".", 1)[-1], ()
+                    )
+                    authority = _select_occurrence_correction(
+                        register, entry.authority, authority_family
+                    )
+                    valid = (
+                        valid
+                        and _occurrence_correction_matches(entry.authority, authority)
+                        and len({record_ref(r) for r in authority}) == 1
+                    )
+                    if valid:
+                        with open_value_bindings(prepared.value_sources) as sessions:
+                            valid = (
+                                _support_coding_sha256(
+                                    family + authority_family, sessions
+                                )
+                                == entry.expected_coding_sha256
+                            )
                 if not valid:
                     statuses["over_broad" if overbroad else "stale"].append(case_id)
                     diagnostics.append(
@@ -4054,15 +4221,28 @@ def compile_occurrence_corrections(
                     continue
                 assert location is not None
                 scope, register_key = location
-                chosen_refs = {record_ref(record) for record in selected}
                 effects = tuple(
                     CheckedFieldChange(
                         ref=record_ref(record),
                         replacement=FieldExpectation(
                             name=entry.field, status="value", value=entry.value
                         ),
+                        when=(
+                            FieldExpectation(
+                                name="column_name", status="value", value=entry.column
+                            ),
+                        ),
                     )
                     if isinstance(entry, ErrataFieldEntry)
+                    else CheckedSourceUse(
+                        ref=record_ref(record),
+                        when=(
+                            FieldExpectation(
+                                name="column_name", status="value", value=entry.column
+                            ),
+                        ),
+                    )
+                    if isinstance(entry, ErrataSupportEntry)
                     else CheckedPeriodChange(
                         ref=record_ref(record),
                         edition_scope=entry.edition_scope,
@@ -4070,36 +4250,59 @@ def compile_occurrence_corrections(
                     )
                     for record in selected
                 )
+                expected_names = set(expected)
+                if isinstance(entry, ErrataSupportEntry):
+                    expected_names.update(
+                        field.name for field in entry.authority.expected_fields
+                    )
+                entry_guarded_fields = guarded_fields + tuple(
+                    sorted(expected_names - set(guarded_fields))
+                )
                 cases[scope.source, scope.register_key].append(
                     CurationCase(
                         case_id=case_id,
                         targets=capture_expectations(
-                            selected, fields=guarded_fields, coding=True, parents=True
+                            tuple(
+                                record
+                                for record in family
+                                if record_ref(record) in chosen_refs
+                            ),
+                            fields=entry_guarded_fields,
+                            coding=True,
+                            parents=True,
                         ),
                         support=capture_expectations(
                             tuple(
                                 record
-                                for record in family
+                                for record in family + authority_family
                                 if record_ref(record) not in chosen_refs
                             ),
-                            fields=guarded_fields,
+                            fields=entry_guarded_fields,
                             coding=True,
                         ),
-                        peer_guards=(
+                        peer_guards=tuple(
                             PeerGuard(
-                                guard_id=case_id,
+                                guard_id=f"{case_id}:{guarded_family[0].subject.variable}",
                                 source=scope.source,
                                 coordinates=(
-                                    ("register", selected[0].subject.register_name),
-                                    ("variable", selected[0].subject.variable),
+                                    (
+                                        "register",
+                                        guarded_family[0].subject.register_name,
+                                    ),
+                                    ("variable", guarded_family[0].subject.variable),
                                 ),
                                 expected_members=tuple(
                                     sorted(
-                                        {record_ref(record) for record in family},
+                                        {
+                                            record_ref(record)
+                                            for record in guarded_family
+                                        },
                                         key=str,
                                     )
                                 ),
-                            ),
+                            )
+                            for guarded_family in (family, authority_family)
+                            if guarded_family
                         ),
                         decision=OccurrenceCorrectionDecision(
                             reviewed=True,

@@ -446,9 +446,15 @@ class _OccurrenceCorrectionEntry(_CurationModel):
     @classmethod
     def _prose_guards(cls, value: list[FieldExpectation]) -> list[FieldExpectation]:
         required = {"name", "definition", "description", "operational_definition"}
-        if {item.name for item in value} != required or len(value) != len(required):
+        names = {item.name for item in value}
+        coverage = {"coverage_from", "coverage_to"}
+        if (
+            not required.issubset(names)
+            or names - required not in (set(), coverage)
+            or len(names) != len(value)
+        ):
             raise ValueError(
-                "expected_fields must guard all four supplied prose fields"
+                "expected_fields must guard all four supplied prose fields, optionally both coverage fields"
             )
         return value
 
@@ -473,8 +479,32 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
         return self
 
 
-class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
+class ErrataSupportEntry(_OccurrenceCorrectionEntry):
     edition: str
+    authority: _OccurrenceCorrectionEntry
+    expected_coding_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+    @model_validator(mode="after")
+    def _same_physical_question(self) -> ErrataSupportEntry:
+        authority = self.authority
+        if (
+            authority.variable == self.variable
+            or authority.variable.rsplit(".", 1)[0] != self.variable.rsplit(".", 1)[0]
+            or authority.variant != self.variant
+            or authority.column != self.column
+            or authority.edition != self.edition
+            or authority.expected_scope != self.expected_scope
+            or authority.expected_period != self.expected_period
+            or authority.expected_period_text != self.expected_period_text
+        ):
+            raise ValueError(
+                "support authority must identify the same source-local physical question and exact edition under a different native variable"
+            )
+        return self
+
+
+class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
+    edition: str | None = None
     edition_scope: TemporalScope
     edition_period_scope: TemporalScope
 
@@ -493,6 +523,7 @@ class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
 
 
 class ErrataCuration(_CurationModel):
+    support: list[ErrataSupportEntry] = Field(default_factory=list)
     field: list[ErrataFieldEntry] = Field(default_factory=list)
     occurrence_period: list[ErrataOccurrencePeriodEntry] = Field(default_factory=list)
     delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
@@ -981,12 +1012,31 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
         return self
 
 
+class CodingSentinelEntry(CodingEntry):
+    """Exact source members accepted only in this column's finite windows."""
+
+    classification: str
+    members: list[list[str]]
+
+    _classification = field_validator("classification")(_require_trimmed)
+    _members = field_validator("members")(_coding_members)
+
+    @model_validator(mode="after")
+    def _finite_sentinels(self) -> CodingSentinelEntry:
+        if len({code for code, _ in self.members}) != len(self.members):
+            raise ValueError("scoped sentinel codes must be unique")
+        for start, end in self.periods:
+            FiniteCurationWindow(valid_from=start, valid_to=end)
+        return self
+
+
 class CodingCuration(_CurationModel):
     choice: list[CodingChoiceEntry] = Field(default_factory=list)
     uncoded: list[CodingEntry] = Field(default_factory=list)
     omit: list[CodingEntry] = Field(default_factory=list)
     extend: list[CodingExtendEntry] = Field(default_factory=list)
     documented: list[CodingDocumentedEntry] = Field(default_factory=list)
+    sentinel: list[CodingSentinelEntry] = Field(default_factory=list)
 
 
 class AcknowledgeEntry(_CurationModel):
@@ -1222,6 +1272,7 @@ def _register_arrays(
     entry: RegisterCuration,
 ) -> tuple[tuple[str, Sequence[BaseModel]], ...]:
     return (
+        ("errata.support", entry.errata.support),
         ("errata.field", entry.errata.field),
         ("errata.occurrence_period", entry.errata.occurrence_period),
         ("errata.delivered", entry.errata.delivered),
@@ -1391,6 +1442,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     IdentityPartitionEntry,
                     IdentityColumnOwnerEntry,
                     ErrataFieldEntry,
+                    ErrataSupportEntry,
                     ErrataOccurrencePeriodEntry,
                     CodingEntry,
                     ParallelRepresentationEntry,
@@ -1406,6 +1458,28 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                         f"{row.variable!r} does not belong to native_id {native_id!r}.",
                         "Move the entry to the register file owning that native family.",
                     )
+            if (
+                isinstance(row, ErrataOccurrencePeriodEntry)
+                and identity.provider == "scb"
+                and row.edition is None
+            ):
+                raise curation_error(
+                    _CODE,
+                    f"{file} [[{table}]] entry {index}: SCB period corrections require an exact native edition.",
+                    "Supply the native source edition; only SOS can omit that coordinate.",
+                )
+            if (
+                isinstance(row, ErrataOccurrencePeriodEntry)
+                and identity.provider == "sos"
+                and not {"coverage_from", "coverage_to"}.issubset(
+                    {f.name for f in row.expected_fields}
+                )
+            ):
+                raise curation_error(
+                    _CODE,
+                    f"{file} [[{table}]] entry {index}: SOS period corrections require both supplied coverage guards.",
+                    "Guard coverage_from and coverage_to alongside all four supplied prose fields.",
+                )
             if isinstance(row, IdentitySplitEntry):
                 native_id = identity.native_id
                 if native_id is not None:

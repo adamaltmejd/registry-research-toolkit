@@ -477,6 +477,7 @@ def _run_pipeline(
             or register.coding.omit
             or register.coding.extend
             or register.coding.documented
+            or register.coding.sentinel
         )
     }
     coding_ids = {}
@@ -489,6 +490,7 @@ def _run_pipeline(
                 ("omit", register.coding.omit),
                 ("extend", register.coding.extend),
                 ("documented", register.coding.documented),
+                ("sentinel", register.coding.sentinel),
             )
             for index, entry in enumerate(entries, 1)
             for period_index, _ in enumerate(entry.periods, 1)
@@ -556,6 +558,7 @@ def _run_pipeline(
         e for e in prepared.manifest.inputs if e.record_usage == "occurrence"
     )
     sources = {e.revision.dataset for e in entries if e.revision is not None}
+    selected_occurrence_sources = {source for source, _ in visit}
     if registers:
         if not {s for s, _ in scope_keys} <= sources:
             raise ValueError(
@@ -653,13 +656,29 @@ def _run_pipeline(
                             declarations.append(declaration)
                             disposition = "literal_metadata"
                     else:
-                        disposition = "unbound_relationship"
+                        outside_slice = (
+                            bool(registers)
+                            and declaration.revision.dataset in sources
+                            and declaration.revision.dataset
+                            not in selected_occurrence_sources
+                        )
+                        disposition = (
+                            "out_of_slice_relationship"
+                            if outside_slice
+                            else "unbound_relationship"
+                        )
                         issue(
                             ResolutionDiagnostic(
-                                code="unbound_source_relationship",
-                                severity="error",
+                                code=DEFERRED_REFERENCE
+                                if outside_slice
+                                else "unbound_source_relationship",
+                                severity="warning" if outside_slice else "error",
                                 subject=repr(declaration.locator.semantic_record_key),
-                                detail="A literal source relationship has no accepted binding to catalog endpoints; its evidence is retained without inventing that binding.",
+                                detail=(
+                                    "The literal relationship belongs to an unselected prepared occurrence source; endpoint resolution is deferred and its original evidence is retained."
+                                    if outside_slice
+                                    else "A literal source relationship has no accepted binding to catalog endpoints; its evidence is retained without inventing that binding."
+                                ),
                                 refs=(
                                     SourceRecordRef(
                                         source=declaration.revision.dataset,

@@ -28,9 +28,15 @@ from reg_meta_build.pipeline import (
     build_catalog,
     check_curation,
 )
-from reg_meta_build.prepared_catalog import prepare_catalog_sources
+from reg_meta_build.prepared_catalog import (
+    PreparedCatalogSources,
+    ReferenceEvidence,
+    prepare_catalog_sources,
+)
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_naming import authored_naming_id
+from reg_meta_build.source_records import RecordLocator, SourceRevision
+from reg_meta_build.source_reference_records import SourceCodeCrosswalkDeclaration
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
@@ -1411,3 +1417,72 @@ def test_curation_wholly_outside_slice_is_skipped_without_claiming_proof(
     assert not any(
         issue["code"] == "deferred_out_of_slice_reference" for issue in _issues(report)
     )
+
+
+@pytest.mark.parametrize("catalog", ["thin"], indirect=True)
+@pytest.mark.parametrize(
+    "source", ["scb-registerinformation", "Forsakringskassan/fk.toml", "unknown"]
+)
+def test_unbound_relationship_defers_only_known_unselected_occurrence_source(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, source: str
+) -> None:
+    revision = SourceRevision.create(
+        dataset=source,
+        publisher="fixture",
+        purpose="relationship selection regression",
+        upstream_revision="1",
+        artifact_path="crosswalk.csv",
+        artifact_size=1,
+        artifact_sha256="a" * 64,
+    )
+    declaration = SourceCodeCrosswalkDeclaration(
+        revision=revision,
+        locator=RecordLocator(
+            semantic_record_key=("crosswalk",),
+            physical_file="crosswalk.csv",
+            physical_table="crosswalk",
+            physical_record="row:1",
+            physical_cells=("row:1",),
+        ),
+        delivered_cells=(),
+        member_name=None,
+        supplied_period=None,
+        section_period=None,
+        section_locator=None,
+        description=None,
+        operands=(),
+    )
+    evidence = ReferenceEvidence(
+        revision_id=revision.revision_id, declaration=declaration
+    )
+    original = PreparedCatalogSources.iter_evidence
+
+    def with_crosswalk(prepared):
+        yield from original(prepared)
+        yield evidence
+
+    monkeypatch.setattr(PreparedCatalogSources, "iter_evidence", with_crosswalk)
+    for label, registers in (("slice", ("1",)), ("full", ())):
+        report = tmp_path / f"{label}-report"
+        catalog.build(
+            tmp_path / f"{label}.db", report, registers=registers, diagnostic=True
+        )
+        deferred = label == "slice" and source == "Forsakringskassan/fk.toml"
+        assert [(i["code"], i["severity"]) for i in _issues(report)] == [
+            (
+                "deferred_out_of_slice_reference"
+                if deferred
+                else "unbound_source_relationship",
+                "warning" if deferred else "error",
+            )
+        ]
+        with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+            retained = [
+                item
+                for line in stream
+                if (item := json.loads(line)).get("revision_id") == revision.revision_id
+            ]
+        assert len(retained) == 1
+        assert retained[0]["disposition"] == (
+            "out_of_slice_relationship" if deferred else "unbound_relationship"
+        )

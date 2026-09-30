@@ -1255,7 +1255,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 19, 1, 235)
+    ) == (20, 19, 1, 237)
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -2730,6 +2730,13 @@ def test_repo_identity_splits_preserve_public_dependency_targets() -> None:
         for entry in register.variable
     }
     assert names["34.17.arbetsstallenummer"] == "arbetsstallenummer"
+    assert (
+        names["258.44742.kommersiell-modifierad"] == "ai-forvarv-kommersiell-modifierad"
+    )
+    assert (
+        names["258.44742.oppen-kallkod-modifierad"]
+        == "ai-anvands-oppen-kallkod-modifierad"
+    )
     assert names["34.667.arbetsstallekommun"] == "kommun-for-arbetsstalle"
     assert names["25.21515.inkl-kapitalvinst"] == "delkomponent-disponibel-inkomst-2004"
     assert names["25.22306.individ"] == "disponibel-inkomst-exkl-kapvinst-2004"
@@ -2738,6 +2745,8 @@ def test_repo_identity_splits_preserve_public_dependency_targets() -> None:
     snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
     for owner in (
         "34.17.arbetsstallenummer",
+        "258.44742.kommersiell-modifierad",
+        "258.44742.oppen-kallkod-modifierad",
         "34.667.arbetsstallekommun",
         "25.21515.inkl-kapitalvinst",
         "25.22306.individ",
@@ -2753,3 +2762,32 @@ def test_repo_identity_splits_preserve_public_dependency_targets() -> None:
         for member in group.members
         if member.delivery_column == "CDISP04"
     } == {names["25.21515.inkl-kapitalvinst"]}
+
+
+def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
+    tree = load_curation_tree(_CURATION)
+    registers = {register.register_info.slug: register for register in tree.registers}
+    innovation = registers["innovation-foretag"]
+    hreg = registers["hreg"]
+    assert len(innovation.representation.parallel) == 30
+    assert len(hreg.representation.parallel) == 1
+    for register in (innovation, hreg):
+        for entry in register.representation.parallel:
+            assert entry.valid_from == max(c.valid_from for c in entry.columns)
+            assert entry.valid_to == min(c.valid_to for c in entry.columns)
+            assert len({c.column for c in entry.columns}) == len(entry.columns)
+            partition = next(
+                p
+                for p in register.identity.partition
+                if entry.variable in p.columns.values()
+            )
+            assert {partition.columns[c.column] for c in entry.columns} == {
+                entry.variable
+            }
+    participating = hreg.representation.parallel[0]
+    assert participating.variable == "47.38118.medverkande-hogskola"
+    assert (participating.valid_from, participating.valid_to) == (
+        "2008-01-01",
+        "2008-12-31",
+    )
+    assert {c.column for c in participating.columns} == {"GenomHsKod", "MedverkHsKod"}

@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
+from functools import lru_cache
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import (
@@ -66,6 +67,7 @@ class OccurrenceResolution:
     unsupported_occurrences: tuple[SourceRecord, ...]
 
 
+@lru_cache(maxsize=4096)
 def scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     """Resolve known bounds; date.max represents an explicitly open upper bound.
 

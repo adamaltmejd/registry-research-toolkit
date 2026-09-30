@@ -6144,7 +6144,7 @@ native_id = "258.44739"
 slug = "ai-anvands-for-marknadsforing"
 
 [[variable]]
-native_id = "258.44742"
+native_id = "258.44742.kommersiell-modifierad"
 slug = "ai-forvarv-kommersiell-modifierad"
 
 [[variable]]
@@ -8724,3 +8724,135 @@ source_editions = ["2014", "2017", "2018", "2020", "2021", "2023", "2025"]
 [[variable]]
 native_id = "258.30776.individvariant"
 slug = "koper-fillagring-som-molntjanst-individvariant"
+
+[[identity.column_owner]]
+variable = "258.44742"
+variant = "258.556"
+column = "E_AI_AMOWN"
+owner = "258.44742.kommersiell-modifierad"
+source_editions = ["2024"]
+ref = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+
+[[identity.column_owner]]
+variable = "258.44742"
+variant = "258.556"
+column = "E_AI_AOS"
+owner = "258.44742.oppen-kallkod-modifierad"
+source_editions = ["2021", "2023", "2024"]
+ref = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+
+[[variable]]
+native_id = "258.44742.oppen-kallkod-modifierad"
+slug = "ai-anvands-oppen-kallkod-modifierad"
+
+[[errata.field]]
+variable = "258.44742"
+variant = "258.556"
+column = "E_AI_AOS"
+edition = "17809"
+expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
+evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "258.44742"
+variant = "258.556"
+column = "E_AI_AOS"
+edition = "17809"
+expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "definition"
+value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
+evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "258.44742"
+variant = "258.556"
+column = "E_AI_AOS"
+edition = "18927"
+expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
+evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "258.44742"
+variant = "258.556"
+column = "E_AI_AOS"
+edition = "18927"
+expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "definition"
+value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
+evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "258.44742"
+variant = "258.556"
+column = "E_AI_AOS"
+edition = "19517"
+expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2024"
+expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+field = "name"
+value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
+evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "258.44742"
+variant = "258.556"
+column = "E_AI_AOS"
+edition = "19517"
+expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2024"
+expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+field = "definition"
+value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
+evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+noted = "2026-09-30"
+
+[[errata.support]]
+variable = "258.17588"
+variant = "258.557"
+column = "H8X1"
+edition = "12033"
+expected_fields = [{ name = "definition", status = "value", value = "Vilken är din huvudsakliga sysselsättninng?\n1. Anställd\n2. Egen företagare\n3. Praktikplats eller liknande (med lön eller ersättning)\n4. Sjukskriven\n5. Studerande\n6. Arbetssökande\n7. Pensionär\n8. Annat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sysselsättningstyp skapad" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2015"
+expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
+evidence = "SCB official2015 questionnaire, SCBDOK LE0108 appendix1 PDFpage22, explicitly distinguishes H8 main employment status from H8X1 asking whether a sick-listed respondent has a job: https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/le0108_do_2015.pdf. Positive native258.35544 Sjukskrivning supplies exactly that H8X1 question at edition12033. The simultaneous native17588 H8X1 employment-status assertion and native12944 H8X1 legacy14-day sick-leave assertion contradict that direct questionnaire and positive same-edition question. Retain those exact assertions as support evidence, with all originals, contradictory definitions, SCB coding, periods and provenance unchanged. Keep genuine native35544 and H8 employment status in catalog; do not merge native identities, infer response-code equivalence or reinterpret unspecified H9txt/H8X2txt roles. Both entire target and authoritative native families, complete external coding fingerprints and every alternative sharing the targeted semantic reference are guarded."
+noted = "2026-09-30"
+authority = { variable = "258.35544", variant = "258.557", column = "H8X1", edition = "12033", expected_fields = [{ name = "definition", status = "value", value = "Har du något arbete som du är sjukskriven ifrån?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sjukskrivning" }, { name = "operational_definition", status = "absent" }], expected_period_text = "2015", expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }, expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }, evidence = "SCB official2015 questionnaire, SCBDOK LE0108 appendix1 PDFpage22, explicitly distinguishes H8 main employment status from H8X1 asking whether a sick-listed respondent has a job: https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/le0108_do_2015.pdf. Positive native258.35544 Sjukskrivning supplies exactly that H8X1 question at edition12033. The simultaneous native17588 H8X1 employment-status assertion and native12944 H8X1 legacy14-day sick-leave assertion contradict that direct questionnaire and positive same-edition question. Retain those exact assertions as support evidence, with all originals, contradictory definitions, SCB coding, periods and provenance unchanged. Keep genuine native35544 and H8 employment status in catalog; do not merge native identities, infer response-code equivalence or reinterpret unspecified H9txt/H8X2txt roles. Both entire target and authoritative native families, complete external coding fingerprints and every alternative sharing the targeted semantic reference are guarded.", noted = "2026-09-30" }
+expected_coding_sha256 = "04093eb98cfa918e26d0ebdccc96c3adcc3c2bf49332c842f731393aba497cf2"
+
+[[errata.support]]
+variable = "258.12944"
+variant = "258.557"
+column = "H8X1"
+edition = "12033"
+expected_fields = [{ name = "definition", status = "value", value = "Har Ni varit sjukskriven eller sjukanmäld under den\naktuella 14-dagarsperioden?\n1980,1981,1988,1989  1996-97enbart 16-74år" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sjukskriven" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2015"
+expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
+evidence = "SCB official2015 questionnaire, SCBDOK LE0108 appendix1 PDFpage22, explicitly distinguishes H8 main employment status from H8X1 asking whether a sick-listed respondent has a job: https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/le0108_do_2015.pdf. Positive native258.35544 Sjukskrivning supplies exactly that H8X1 question at edition12033. The simultaneous native17588 H8X1 employment-status assertion and native12944 H8X1 legacy14-day sick-leave assertion contradict that direct questionnaire and positive same-edition question. Retain those exact assertions as support evidence, with all originals, contradictory definitions, SCB coding, periods and provenance unchanged. Keep genuine native35544 and H8 employment status in catalog; do not merge native identities, infer response-code equivalence or reinterpret unspecified H9txt/H8X2txt roles. Both entire target and authoritative native families, complete external coding fingerprints and every alternative sharing the targeted semantic reference are guarded."
+noted = "2026-09-30"
+authority = { variable = "258.35544", variant = "258.557", column = "H8X1", edition = "12033", expected_fields = [{ name = "definition", status = "value", value = "Har du något arbete som du är sjukskriven ifrån?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sjukskrivning" }, { name = "operational_definition", status = "absent" }], expected_period_text = "2015", expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }, expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }, evidence = "SCB official2015 questionnaire, SCBDOK LE0108 appendix1 PDFpage22, explicitly distinguishes H8 main employment status from H8X1 asking whether a sick-listed respondent has a job: https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/le0108_do_2015.pdf. Positive native258.35544 Sjukskrivning supplies exactly that H8X1 question at edition12033. The simultaneous native17588 H8X1 employment-status assertion and native12944 H8X1 legacy14-day sick-leave assertion contradict that direct questionnaire and positive same-edition question. Retain those exact assertions as support evidence, with all originals, contradictory definitions, SCB coding, periods and provenance unchanged. Keep genuine native35544 and H8 employment status in catalog; do not merge native identities, infer response-code equivalence or reinterpret unspecified H9txt/H8X2txt roles. Both entire target and authoritative native families, complete external coding fingerprints and every alternative sharing the targeted semantic reference are guarded.", noted = "2026-09-30" }
+expected_coding_sha256 = "547b701aec19d2cdaa8b3f91e2a7c9197f67ff9400d4e5700de3b4ccdfbd6763"

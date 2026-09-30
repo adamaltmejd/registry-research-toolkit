@@ -389,6 +389,9 @@ class CheckedSourceUse(_CurationModel):
     kind: Literal["source_use"] = "source_use"
     ref: SourceRecordRef
     use: Literal["support"] = "support"
+    when: tuple[FieldExpectation, ...] = ()
+
+    _conditions = field_validator("when")(_unique_conditions)
 
 
 class CheckedVariantAssignment(_CurationModel):
@@ -697,6 +700,24 @@ class ClassificationDecision(_ColumnDecision):
     classification: str = Field(min_length=1)
     expected_classification: str = Field(pattern=r"^[0-9a-f]{64}$")
     binding_scope: Literal["inline_coding", "declared"]
+    sentinel_members: tuple[tuple[str, str], ...] = ()
+    expected_source_codings: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def _scoped_sentinels(self) -> Self:
+        if bool(self.sentinel_members) != bool(self.expected_source_codings):
+            raise ValueError("scoped sentinels require complete source coding guards")
+        if self.sentinel_members and (
+            self.binding_scope != "inline_coding" or not self.expected_codings
+        ):
+            raise ValueError("scoped sentinels require guarded inline coding")
+        if any(not code or not label for code, label in self.sentinel_members):
+            raise ValueError("scoped sentinel codes and labels must be nonempty")
+        if len({code for code, _ in self.sentinel_members}) != len(
+            self.sentinel_members
+        ):
+            raise ValueError("scoped sentinel codes must be unique")
+        return self
 
 
 type CurationDecision = (

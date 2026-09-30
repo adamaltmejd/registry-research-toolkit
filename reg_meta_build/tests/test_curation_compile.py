@@ -4824,3 +4824,632 @@ def test_sos_name_split_distinguishes_shared_source_coordinates(
                 )
                 == original
             )
+
+
+def _shared_ref_column_fixture(tmp_path):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.first"\nslug = "first"\n'
+        '[[variable]]\nnative_id = "1.5.second"\nslug = "second"\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "FIRST"\nowner = "1.5.first"\nref = "first construct"\n'
+        'source_editions = ["2020"]\n'
+        '[[identity.column_owner]]\nvariable = "1.5"\nvariant = "1.2"\n'
+        'column = "SECOND"\nowner = "1.5.second"\nref = "second construct"\n'
+        'source_editions = ["2020"]\n',
+    )
+    records = tuple(
+        _errata_record(column=column, year="2020", member=20)
+        for column in ("FIRST", "SECOND")
+    )
+    assert record_ref(records[0]) == record_ref(records[1])
+    return root, records
+
+
+def test_shared_ref_literal_owners_preserve_direct_deferred_memberships(tmp_path):
+    root, records = _shared_ref_column_fixture(tmp_path)
+    compiled, key, native = _compile_partition_fixture(root, records)
+    corrected = apply_occurrence_cases(records, compiled[0][key])
+    assert not corrected.diagnostics
+    assert [o.variable_key[-1] for o in corrected.occurrences] == [
+        "1.5.first",
+        "1.5.second",
+    ]
+    assert [o.fields for o in corrected.occurrences] == [r.fields for r in records]
+    assert [o.source_records for o in corrected.occurrences] == [(r,) for r in records]
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        cast(
+            "Any",
+            SimpleNamespace(
+                records=SimpleNamespace(
+                    iter_partition_families=lambda *args, **kwargs: iter(
+                        ((native, records),)
+                    )
+                )
+            ),
+        ),
+        (_partition_scope(records),),
+    )
+    assert deferred == (
+        compiled[1],
+        compiled[3],
+        compiled[4],
+        _partition_memberships(compiled[0]),
+    )
+
+
+def _shared_ref_field_fixture(tmp_path):
+    root, records = _shared_ref_column_fixture(tmp_path)
+    tree = load_curation_tree(root)
+    first = records[0]
+    entry = ErrataFieldEntry(
+        variable="1.5",
+        variant="1.2",
+        column="FIRST",
+        edition="2020",
+        expected_fields=list(
+            capture_expectations(
+                (first,),
+                fields=("name", "definition", "description", "operational_definition"),
+            )[0]
+            .alternatives[0]
+            .fields
+        ),
+        expected_period_text=first.original_period_text,
+        expected_scope=first.edition_scope,
+        expected_period=first.edition_period_scope,
+        field="name",
+        value="Reviewed first construct",
+        evidence="Reviewed exact literal",
+        noted="2026-09-30",
+    )
+    reg = next(r for r in tree.registers if r.register_info.slug == "sample")
+    tree = replace(
+        tree,
+        registers=(
+            reg.model_copy(
+                update={"errata": reg.errata.model_copy(update={"field": [entry]})}
+            ),
+        ),
+    )
+    scope = _partition_scope(records)
+    cases, issues, _ = _run_checked_correction(tree, scope, records)
+    assert not issues
+    return tree, scope, records, cases[scope.source, None]
+
+
+def test_checked_field_shared_ref_changes_only_target_literal(tmp_path):
+    _, _, records, cases = _shared_ref_field_fixture(tmp_path)
+    result = apply_occurrence_cases(records, cases)
+    assert not result.diagnostics
+    assert result.occurrences[0].fields.name.value == "Reviewed first construct"
+    assert result.occurrences[1] == source_occurrence(records[1])
+    assert result.occurrences[0].source_records == (records[0],)
+    assert len(cases[0].targets[0].alternatives) == 2
+
+
+@pytest.mark.parametrize("change", ["changed", "missing", "new"])
+@pytest.mark.parametrize("field_correction", [False, True])
+def test_shared_ref_literal_effects_reject_changed_physical_peers(
+    tmp_path, change, field_correction
+):
+    if field_correction:
+        _, _, records, cases = _shared_ref_field_fixture(tmp_path)
+    else:
+        root, records = _shared_ref_column_fixture(tmp_path)
+        compiled, key, _ = _compile_partition_fixture(root, records)
+        cases = compiled[0][key]
+    if change == "missing":
+        altered = records[:1]
+    elif change == "new":
+        altered = (*records, _errata_record(column="THIRD", year="2020", member=20))
+    else:
+        altered = (
+            records[0],
+            records[1].model_copy(
+                update={
+                    "fields": records[1].fields.model_copy(
+                        update={
+                            (
+                                "name" if field_correction else "column_name"
+                            ): value_field("Changed second construct")
+                        }
+                    )
+                }
+            ),
+        )
+    result = apply_occurrence_cases(altered, cases)
+    assert result.diagnostics
+    assert result.occurrences == tuple(source_occurrence(r) for r in altered)
+
+
+def test_checked_period_correction_rejects_shared_ref_physical_columns(tmp_path):
+    tree, scope, selected, negative, _ = _checked_correction_fixture(
+        tmp_path, period=True
+    )
+    twin = _errata_record(column="OTHER", year="2009", edition_id=99)
+    assert record_ref(twin) == record_ref(selected)
+    cases, issues, report = _run_checked_correction(
+        tree, scope, (selected, twin, negative)
+    )
+    assert issues and not cases
+    assert len(report["scb/sample"]["over_broad"]) == 1
+
+
+@pytest.mark.parametrize("label", ["Unknown", "Substantive industry"])
+def test_compile_scoped_sentinel_requires_exact_members_and_preserves_guards(
+    tmp_path, label
+):
+    from reg_meta_build.resolved_catalog import (
+        ResolvedClassification,
+        ResolvedClassificationCode,
+    )
+    from reg_meta_build.source_classification_bindings import apply_classification_cases
+    from reg_meta_build.source_curation import ClassificationDecision
+
+    record = _errata_record(column="VALUE", year="2021", member=20)
+    fragment = (
+        '\n[[coding.sentinel]]\nvariable = "1.5"\nvariant = "people"\n'
+        'column = "VALUE"\nclassification = "fixture"\n'
+        'periods = [["2021-01-01", "2021-12-31"]]\n'
+        'members = [["99", "Unknown"]]\n'
+        'reason = "Exact supplied unknown marker"\nsource = "Reviewed complete source list"\n'
+    )
+    tree, _, scope = _errata_fixture(tmp_path, (record,), fragment)
+    scope = _scope_with_coding_names(scope, record)
+    register = next(r for r in tree.registers if r.register_info.slug == "sample")
+    occurrence = source_occurrence(record)
+    column = occurrence.column_key
+    assert column is not None
+    claims = (
+        CodeListClaim(
+            "list",
+            record.edition_period_scope,
+            (
+                CodeMembershipClaim(
+                    "01", "Category", TemporalScope(kind="year_independent")
+                ),
+                CodeMembershipClaim(
+                    "99", label, TemporalScope(kind="year_independent")
+                ),
+            ),
+        ),
+    )
+    book = ResolvedClassification(
+        slug="fixture",
+        short_name="FIX",
+        name="Fixture",
+        codes=(ResolvedClassificationCode(code="01", label="Canonical"),),
+    )
+    evidence = SourceEvidence((record,), effective_occurrences=(occurrence,))
+    cases, issues = compile_coding_register(
+        register,
+        scope,
+        originals=(record,),
+        columns={column: (record,)},
+        column_scopes=evidence.effective_scopes or {},
+        coding={column: claims},
+        classifications={"fixture": book},
+    )
+    if label != "Unknown":
+        assert not cases and [d.code for d in issues] == ["stale_curation_entry"]
+        return
+    assert len(cases) == 1 and not issues
+    assert isinstance(cases[0].decision, ClassificationDecision)
+    assert cases[0].decision.sentinel_members == (("99", "Unknown"),)
+    result = apply_classification_cases(
+        evidence,
+        cases,
+        coding={column: resolve_code_membership(claims)},
+        classifications={"fixture": book},
+    )
+    assert result.coding[column].claims == claims
+    assert result.coding[column].segments[0].classification == "fixture"
+    assert result.coding[column].segments[0].conformance.sentinel_members == (
+        ("99", "Unknown"),
+    )
+    changed = record.model_copy(
+        update={
+            "fields": record.fields.model_copy(
+                update={"description": value_field("Changed description")}
+            )
+        }
+    )
+    stale = apply_classification_cases(
+        SourceEvidence((changed,), effective_occurrences=(source_occurrence(changed),)),
+        cases,
+        coding={column: resolve_code_membership(claims)},
+        classifications={"fixture": book},
+    )
+    assert stale.evaluations[0].status != "applicable"
+    assert all(
+        segment.classification is None for segment in stale.coding[column].segments
+    )
+
+
+@pytest.mark.parametrize("change", [None, "coverage", "missing-coverage-guard"])
+def test_sos_period_correction_without_native_edition_preserves_disjoint_years(
+    tmp_path: Path, change
+):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/sos/par.toml"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        '[register]\nprovider = "sos"\nslug = "par"\nnative_id = "5891427617861710725"\n'
+    )
+    original, negative = _sos_partition_records(subsets=("PAR_OV", "PAR_SV"))
+    original = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={
+                    "availability": value_field(True),
+                    "coverage_from": value_field("2011 och 2013"),
+                    "coverage_to": value_field("2011 och 2013"),
+                }
+            ),
+            "edition_scope": TemporalScope(kind="unknown", label="2011 och 2013"),
+        }
+    )
+    intervals = TemporalScope(
+        kind="intervals",
+        intervals=(
+            ScopeInterval(start="2011", end="2011"),
+            ScopeInterval(start="2013", end="2013"),
+        ),
+    )
+    entry = ErrataOccurrencePeriodEntry(
+        variable="5891427617861710725.ATC",
+        variant="PAR_OV",
+        column="ATC",
+        expected_fields=list(
+            capture_expectations(
+                (original,),
+                fields=(
+                    "name",
+                    "definition",
+                    "description",
+                    "operational_definition",
+                    "coverage_from",
+                    "coverage_to",
+                ),
+            )[0]
+            .alternatives[0]
+            .fields
+        ),
+        expected_scope=original.edition_scope,
+        expected_period=original.edition_period_scope,
+        edition_scope=intervals,
+        edition_period_scope=original.edition_period_scope,
+        evidence="Both supplied coverage bounds name exactly 2011 and 2013.",
+        noted="2026-09-30",
+    )
+    tree = load_curation_tree(root)
+    reg = next(r for r in tree.registers if r.register_info.slug == "par")
+    reg = reg.model_copy(
+        update={"errata": reg.errata.model_copy(update={"occurrence_period": [entry]})}
+    )
+    tree = replace(tree, registers=(reg,))
+    scope = _partition_scope((original, negative))
+    cases, issues, _ = _run_checked_correction(tree, scope, (original, negative))
+    assert not issues
+    if change == "coverage":
+        changed = original.model_copy(
+            update={
+                "fields": original.fields.model_copy(
+                    update={"coverage_to": value_field("2011-2013")}
+                )
+            }
+        )
+        refused = apply_occurrence_cases((changed, negative), cases[scope.source, None])
+        assert all(
+            o == source_occurrence(r)
+            for o, r in zip(refused.occurrences, (changed, negative), strict=True)
+        )
+        original = changed
+    elif change == "missing-coverage-guard":
+        bad = entry.model_copy(
+            update={
+                "expected_fields": [
+                    f for f in entry.expected_fields if f.name != "coverage_from"
+                ]
+            }
+        )
+        reg = reg.model_copy(
+            update={
+                "errata": reg.errata.model_copy(update={"occurrence_period": [bad]})
+            }
+        )
+        tree = replace(tree, registers=(reg,))
+    if change is not None:
+        fresh, diagnostics, _ = _run_checked_correction(
+            tree, scope, (original, negative)
+        )
+        assert diagnostics and not fresh
+        return
+    result = apply_occurrence_cases((original, negative), cases[scope.source, None])
+    assert not result.diagnostics
+    changed, untouched = result.occurrences
+    assert changed.edition_scope == intervals
+    assert changed.edition_period_scope == original.edition_period_scope
+    assert changed.source_records == (original,)
+    assert untouched == source_occurrence(negative)
+    assert replace(
+        changed, edition_scope=original.edition_scope, corrections=()
+    ) == source_occurrence(original)
+
+    formed = form_native_variable(
+        (changed,),
+        register=ResolvedRegister(provider="sos", slug="par", name="Patientregistret"),
+        variants={
+            native_variant_key(original): ResolvedVariant(slug="par-ov", name="PAR_OV")
+        },
+        slug="sequence",
+        provider_key="ATC",
+        coding={changed.column_key: resolve_code_membership(())},
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+    )
+    assert formed.variable is not None
+    assert [(state.valid_from, state.valid_to) for state in formed.variable.states] == [
+        ("2011-01-01", "2011-12-31"),
+        ("2013-01-01", "2013-12-31"),
+    ]
+
+
+def test_scb_period_correction_still_requires_native_edition(tmp_path: Path):
+    tree, scope, original, negative, entry = _checked_correction_fixture(
+        tmp_path, period=True
+    )
+    reg = tree.registers[0]
+    bad = entry.model_copy(update={"edition": None})
+    reg = reg.model_copy(
+        update={"errata": reg.errata.model_copy(update={"occurrence_period": [bad]})}
+    )
+    cases, issues, _ = _run_checked_correction(
+        replace(tree, registers=(reg,)), scope, (original, negative)
+    )
+    assert issues and not cases
+
+
+def _checked_support_fixture(tmp_path, monkeypatch):
+    from reg_meta_build.curation_compile import _support_coding_sha256
+    from reg_meta_build.curation_tree import ErrataSupportEntry
+
+    root, targets = _shared_ref_column_fixture(tmp_path)
+    authority = (
+        _errata_record(column="FIRST", year="2020", variable=6, member=21),
+        _errata_record(column="FIRST", year="2021", variable=6, member=22),
+    )
+    label = ["Authoritative yes"]
+
+    def original_coding(record, sessions):
+        return SimpleNamespace(
+            claims=(
+                CodeListClaim(
+                    "source-list",
+                    record.edition_period_scope,
+                    (
+                        CodeMembershipClaim(
+                            "1",
+                            label[0]
+                            if record.subject.native.variable_id == 6
+                            else "Legacy category",
+                            TemporalScope(kind="year_independent"),
+                        ),
+                    ),
+                ),
+            )
+        )
+
+    monkeypatch.setattr(
+        "reg_meta_build.curation_compile.bind_code_lists", original_coding
+    )
+
+    def selector(record):
+        return {
+            "variable": f"1.{record.subject.native.variable_id}",
+            "variant": "1.2",
+            "column": record.fields.column_name.value,
+            "edition": str(record.subject.native.edition_id),
+            "expected_fields": list(
+                capture_expectations(
+                    (record,),
+                    fields=(
+                        "name",
+                        "definition",
+                        "description",
+                        "operational_definition",
+                    ),
+                )[0]
+                .alternatives[0]
+                .fields
+            ),
+            "expected_period_text": record.original_period_text,
+            "expected_scope": record.edition_scope,
+            "expected_period": record.edition_period_scope,
+            "evidence": "Primary questionnaire identifies the authoritative physical question",
+            "noted": "2026-09-30",
+        }
+
+    entry = ErrataSupportEntry(
+        **selector(targets[0]),
+        authority=selector(authority[0]),
+        expected_coding_sha256=_support_coding_sha256(targets + authority, ()),
+    )
+    tree = load_curation_tree(root)
+    register = next(r for r in tree.registers if r.register_info.slug == "sample")
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={
+                    "errata": register.errata.model_copy(update={"support": [entry]})
+                }
+            ),
+        ),
+    )
+    return tree, _partition_scope(targets), targets, authority, label, entry
+
+
+def _run_checked_support(tree, scope, targets, authority):
+    families = ((native_variable_key(targets[0]), targets),)
+    if authority:
+        families += ((native_variable_key(authority[0]), authority),)
+    prepared = SimpleNamespace(
+        records=SimpleNamespace(
+            iter_native_families=lambda *args, **kwargs: iter(families)
+        ),
+        value_sources=(),
+    )
+    return compile_occurrence_corrections(tree, prepared, (scope,), subset=False)
+
+
+def test_checked_support_retains_catalog_twin_and_complete_authority(
+    tmp_path, monkeypatch
+):
+    tree, scope, targets, authority, _, _ = _checked_support_fixture(
+        tmp_path, monkeypatch
+    )
+    cases, issues, _ = _run_checked_support(tree, scope, targets, authority)
+    assert not issues
+    case = cases[scope.source, None][0]
+    assert len(case.targets[0].alternatives) == 2
+    assert {expectation.ref for expectation in case.support} == {
+        record_ref(r) for r in authority
+    }
+    result = apply_occurrence_cases(targets + authority, (case,))
+    assert not result.diagnostics
+    assert [o.use for o in result.occurrences] == [
+        "support",
+        "catalog",
+        "catalog",
+        "catalog",
+    ]
+    for original, occurrence in zip(
+        targets + authority, result.occurrences, strict=True
+    ):
+        assert occurrence.fields == original.fields
+        assert occurrence.source_records == (original,)
+        assert occurrence.edition_scope == original.edition_scope
+        assert occurrence.edition_period_scope == original.edition_period_scope
+
+
+@pytest.mark.parametrize(
+    "change", ["missing", "extra", "prose", "literal", "coding-reference"]
+)
+def test_checked_support_rejects_changed_complete_authority(
+    tmp_path, monkeypatch, change
+):
+    tree, scope, targets, authority, _, _ = _checked_support_fixture(
+        tmp_path, monkeypatch
+    )
+    cases, issues, _ = _run_checked_support(tree, scope, targets, authority)
+    assert not issues
+    if change == "missing":
+        altered = authority[:1]
+    elif change == "extra":
+        altered = (
+            *authority,
+            _errata_record(column="FIRST", year="2022", variable=6, member=23),
+        )
+    elif change == "coding-reference":
+        altered = (
+            authority[0],
+            authority[1].model_copy(
+                update={
+                    "code_set_references": (
+                        CodeSetReference(
+                            reference_id="new-list",
+                            content_sha256="a" * 64,
+                            physical_locator="fixture:list",
+                        ),
+                    )
+                }
+            ),
+        )
+    else:
+        altered = (
+            authority[0].model_copy(
+                update={
+                    "fields": authority[0].fields.model_copy(
+                        update={
+                            "name" if change == "prose" else "column_name": value_field(
+                                "Changed"
+                            )
+                        }
+                    )
+                }
+            ),
+            authority[1],
+        )
+    originals = targets + altered
+    result = apply_occurrence_cases(originals, cases[scope.source, None])
+    assert result.diagnostics
+    assert result.occurrences == tuple(source_occurrence(r) for r in originals)
+    if change != "coding-reference":
+        refreshed, issues, _ = _run_checked_support(tree, scope, targets, altered)
+        assert issues and not refreshed
+
+
+def test_checked_support_rejects_changed_external_authority_codes(
+    tmp_path, monkeypatch
+):
+    tree, scope, targets, authority, label, _ = _checked_support_fixture(
+        tmp_path, monkeypatch
+    )
+    label[0] = "Changed source category"
+    cases, issues, _ = _run_checked_support(tree, scope, targets, authority)
+    assert issues and not cases
+
+
+@pytest.mark.parametrize("coordinate", ["variable", "variant", "column", "edition"])
+def test_checked_support_authority_requires_same_source_local_question(
+    tmp_path, monkeypatch, coordinate
+):
+    from reg_meta_build.curation_tree import ErrataSupportEntry
+
+    *_, entry = _checked_support_fixture(tmp_path, monkeypatch)
+    authored = entry.model_dump(mode="json")
+    authored["authority"][coordinate] = {
+        "variable": "2.6",
+        "variant": "1.3",
+        "column": "SECOND",
+        "edition": "2021",
+    }[coordinate]
+    with pytest.raises(ValueError, match="same source-local physical question"):
+        ErrataSupportEntry.model_validate_json(json.dumps(authored))
+
+
+@pytest.mark.parametrize("change", ["missing", "extra", "prose"])
+def test_checked_support_rejects_changed_shared_ref_target(
+    tmp_path, monkeypatch, change
+):
+    tree, scope, targets, authority, _, _ = _checked_support_fixture(
+        tmp_path, monkeypatch
+    )
+    cases, issues, _ = _run_checked_support(tree, scope, targets, authority)
+    assert not issues
+    if change == "missing":
+        altered = targets[1:]
+    elif change == "extra":
+        altered = (*targets, _errata_record(column="THIRD", year="2020", member=20))
+    else:
+        altered = (
+            targets[0].model_copy(
+                update={
+                    "fields": targets[0].fields.model_copy(
+                        update={"definition": value_field("Changed")}
+                    )
+                }
+            ),
+            targets[1],
+        )
+    result = apply_occurrence_cases(altered + authority, cases[scope.source, None])
+    assert result.diagnostics
+    assert result.occurrences == tuple(
+        source_occurrence(r) for r in altered + authority
+    )

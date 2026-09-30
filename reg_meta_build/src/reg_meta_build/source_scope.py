@@ -471,6 +471,7 @@ def resolve_source_scope(
             columns=coding_columns,
             column_scopes=coding_evidence.effective_scopes or {},
             coding=original_coding,
+            classifications=classifications,
         )
         compiled_cases.extend(new_cases)
         for issue in new_diagnostics:
@@ -570,7 +571,7 @@ def resolve_source_scope(
             else None
         )
         classified = apply_classification_cases(
-            evidence,
+            coding_evidence,
             tuple(c for c in selected if c.decision.kind == "classification"),
             coding=chosen.coding,
             classifications=classifications,

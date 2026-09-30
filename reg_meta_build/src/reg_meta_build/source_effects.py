@@ -149,7 +149,7 @@ def _check_contract(case: CurationCase) -> None:
                     "an identity/use assignment requires guarded source membership"
                 )
             if isinstance(
-                effect, (CheckedFieldChange, CheckedIdentityChange)
+                effect, (CheckedFieldChange, CheckedIdentityChange, CheckedSourceUse)
             ) and not any(
                 all(field in alternative.fields for field in effect.when)
                 for alternative in targets[effect.ref].alternatives
@@ -163,6 +163,8 @@ def _check_contract(case: CurationCase) -> None:
                 if isinstance(effect, CheckedFieldChange)
                 else ("column_name", *(field.name for field in effect.when))
                 if isinstance(effect, CheckedIdentityChange)
+                else tuple(field.name for field in effect.when)
+                if isinstance(effect, CheckedSourceUse)
                 else (),
                 case_id=case.case_id,
             )
@@ -271,7 +273,7 @@ def apply_occurrence_cases(
             elif isinstance(effect, CheckedIdentityChange):
                 identities[effect.ref].append((effect, correction))
             elif isinstance(effect, CheckedSourceUse):
-                support_uses[effect.ref].append(correction)
+                support_uses[effect.ref].append((effect, correction))
             elif isinstance(effect, CheckedVariantAssignment):
                 variants[effect.ref].append((effect, correction))
             elif isinstance(effect, CheckedEditionRebind):
@@ -421,11 +423,16 @@ def apply_occurrence_cases(
                 reported_identity_conflicts.add(signature)
         elif assigned:
             variable_key = next(iter(assigned))
+        matching_support = tuple(
+            owner
+            for effect, owner in support_uses.get(ref, ())
+            if all(_field_matches(record, field) for field in effect.when)
+        )
         corrected = replace(
             occurrence,
             variable_key=variable_key,
             identity_checked=len(assigned) == 1,
-            use="support" if support_uses.get(ref) else occurrence.use,
+            use="support" if matching_support else occurrence.use,
             fields=SourceFields.model_validate(values),
             edition_scope=scope,
             edition_period_scope=period,
@@ -434,7 +441,7 @@ def apply_occurrence_cases(
                     (
                         *field_owners[ref],
                         *matching_owners,
-                        *support_uses.get(ref, ()),
+                        *matching_support,
                         *(owner for _, owner in identity_claims),
                     ),
                     key=lambda c: (c.case_id, c.effect_index),

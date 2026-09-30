@@ -286,20 +286,22 @@ variant = "sokande-grund-avancerad"
 column = "SUN2000Inr_lprog"
 name = "Programmets suninriktning på 3-siffernivå (SUN2000)"
 definition = "Programmets suninriktning på 3-siffernivå (SUN2000)"
+data_type = "text"
 holdings_period = "2007-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema catalog/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+noted = "2026-09-30"
 
 [[errata.column]]
 variant = "sokande-grund-avancerad"
 column = "SUN2020Niva3_lprog"
 name = "Programmets sunnivå på 3-siffernivå (SUN2020)"
 definition = "Programmets sunnivå på 3-siffernivå (SUN2020)"
+data_type = "text"
 holdings_period = "2007-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema catalog/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+noted = "2026-09-30"
 
 [[enrichment.description]]
 register = "scb/hreg"
@@ -1329,3 +1331,21 @@ ref = "SCB HREG native 47.241: reviewed all ten pooled original occurrences and 
 variable = "47.1715"
 columns = { "ExArTermin" = "47.1715.ar-och-termin-for-examen", "LicArTermin" = "47.1715.ar-och-termin-for-examen", "ArTermin" = "47.1715.ar-och-termin-for-examen" }
 columns_ref = "SCB HREG native 47.1715: all three originals explicitly measure year and semester (calendar half-year) for the issued examination certificate. ExArTermin specifies a doctoral certificate, LicArTermin identifies a completed licentiate certificate, and ArTermin covers the examination event in the mixed doctoral/licentiate examination variant. This is one generic certificate-issued-semester question, not an assertion that degree types or observations are equivalent. All three retain text length 5, Termin unit and Tal nonmembership coding. Preserve the pre-autumn-1998 paper-report caveat and every pooled source scope, including the LicArTermin January period versus July context discrepancy. ArTermin on other native variables is outside this mapping."
+
+[[representation.parallel]]
+variable = "47.38118.medverkande-hogskola"
+variant = "47.1390"
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+evidence = "Accepted prepared SCB export native 47.38118: both columns explicitly identify a university participating in a doctoral school, with identical operational translation from external university name codes to SCB internal codes. Both original names, definitions, type text, length 3 and complete supplied university coding and validity agree. Admit the two literal representations only in their exact pooled-edition intersection; retain the full original 2001–2008 and 2008–2022 scopes, all coding associations and provenance."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "GenomHsKod"
+valid_from = "2001-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2001-2008"]
+[[representation.parallel.columns]]
+column = "MedverkHsKod"
+valid_from = "2008-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2008-2022"]

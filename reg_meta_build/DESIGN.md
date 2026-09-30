@@ -437,16 +437,27 @@ changes. They are not restricted to one atom per field. Equal assignments compos
 contradictory assignments withhold the disputed aspect. No case reads another
 correction's output as its supporting source. Application order cannot choose a winner.
 
-Register `[[errata.field]]` entries correct reviewed equivalent text in `name`,
+Register `[[errata.field]]` entries correct reviewed source-backed text in `name`,
 `description` or `definition` at exact original variable/variant/column coordinates.
-`[[errata.occurrence_period]]` entries additionally require one exact native source
-edition. Both guard the original edition text, both original scopes and all four
-supplied prose fields, including absent or unknown values. Complete native-family
-support and peer guards retain unrelated editions and coding references. Period entries
-carry explicit replacement `TemporalScope` values; omitting an interval's `end` in TOML
-means an open end, while unknown and pooled scopes retain their labels and bounds. These
-entries emit existing checked field/period effects and never rewrite the original source
-records.
+`[[errata.occurrence_period]]` entries require one exact native source edition for SCB.
+SOS rows lack that coordinate and instead require both literal supplied coverage fields
+alongside the exact native variable, subset and column. Both entry types guard the
+original edition text, both original scopes and all four supplied prose fields,
+including absent or unknown values. Complete native-family support and peer guards
+retain unrelated editions and coding references. Period entries carry explicit
+replacement `TemporalScope` values; omitting an interval's `end` in TOML means an open
+end, while unknown and pooled scopes retain their labels and bounds. These entries emit
+existing checked field/period effects and never rewrite the original source records.
+
+`[[errata.support]]` retains one documented erroneous assertion as support rather than
+catalog data. Its positive `authority` must name another native variable in the same
+source-local variant, literal column and exact edition, with matching original scopes
+and edition text. Both selectors guard all four prose fields. Complete target and
+authority families supply checked projections and peer membership; a pinned combined
+fingerprint checks their source code lists and validity during compilation. The emitted
+`CheckedSourceUse` carries a literal field condition, so a sibling column sharing the
+semantic source reference keeps its catalog role. Originals and coding remain evidence;
+this decision neither merges identities nor corrects unsupported physical roles.
 
 Ordinary variables form from an established native identity. Their names bind that exact
 source coordinate; additional deliveries do not require handwritten whole-variable
@@ -622,6 +633,15 @@ other noncanonical code still severs the binding with the existing error, which 
 only the non-sentinel codes. A sentinel must not be a canonical code; the load refuses
 the overlap. The sentinel list is conformance curation, not codebook content, so
 curating a sentinel never stales a binding. Original coding issues remain visible.
+
+Where one literal code has substantive meanings in other source lists, finite
+`coding.sentinel` entries name exact source code-label pairs at one accepted owner,
+variant and column. They compile through the existing coding compiler into checked
+classification decisions. Complete original fields, scopes, coding, effective peers,
+effective delivery and the selected codebook are guarded. Changed evidence withholds the
+scoped decision. Only matching pairs inside the reviewed windows become local sentinels;
+source lists and global codebooks remain unchanged. Missing memberships, competing lists
+and other noncanonical codes retain their existing errors.
 
 A parallel-column decision names each literal column and its finite delivery window. It
 reconciles sibling metadata and coding before forming shared states. Conflicting facts
@@ -837,7 +857,10 @@ scopes, and unselected occurrences with no supported target, need the complete
 occurrence census and are resolved only by the full build. A scoped pass is therefore
 necessary but not sufficient: it may pass where the complete build fails on curation
 outside the slice, and the complete build stays the check on everything, including every
-skipped entry and deferred reference. Shared-input diagnostics are still reported
+skipped entry and deferred reference. Literal crosswalks and derivations from a known
+prepared occurrence source wholly outside the selection retain their evidence and defer
+endpoint resolution with the same warning; selected or unknown sources still report
+unbound relationships as errors. Shared-input diagnostics are still reported
 corpus-wide. The scoped output is create-only and marked incomplete and nonpublishable
 in both modes. The summary records the register list, `publication_ready` false and
 `corpus_validation` `not_applicable`; structural validation still runs.

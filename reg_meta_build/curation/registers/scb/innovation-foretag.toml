@@ -9059,3 +9059,309 @@ column = "REAS_NMINN_RESC"
 owner = "257.46591.source-native-question"
 ref = "User-approved 2026-09-30 source-native identity policy for these six reciprocal Innovation questions: assume the exported native question IDs and definitions identify the correct quantity even when physical column labels change or recur across waves. Keep no innovation activities versus no additional innovation activities independent, with separate no-need, other-reasons and lack-of-resources question meanings. This explicit assumption does not independently verify annual questionnaires or statistical/numerical equivalence. Finite exact native, variant, literal and pooled source-edition selectors only. Preserve every contradictory label, definition, operation omission, type/unit, coding association, original pooled survey period and provenance; do not infer actual holdings or normalize response coding."
 source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.15556.geografisk-marknad-eu-efta"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "A2c"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q2c"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15571.introduktion-av-produktionsmetoder"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "C8a"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q8a"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15578.introduktion-av-leveransmetoder"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "C8b"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q8b"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15579.introduktion-av-stodverksamheter"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "C8c"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q8c"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15582.introduktion-av-varor"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "B5a"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q5a"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15583.introduktion-av-tjanster"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "B5b"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q5b"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15600.innovationssamarbete"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "F12"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q12"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15614.inna-egen-fou"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "E10a"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q10a"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15616.inna-utlagd-fou"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "E10b"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q10b"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15617.inna-forvarv-maskiner"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "E10c"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q10c"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15618.inna-forvarv-existerande-kunskap"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "E10d"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q10d"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15619.inna-utbildning"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "E10e"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q10e"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15620.inna-marknadsintroduktion"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "E10f"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q10f"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15621.inna-andra-forberedelser"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "E10g"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q10g"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.15642.geografisk-marknad-regional-lokal"
+variant = "257.553"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "A2a"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+[[representation.parallel.columns]]
+column = "Q2a"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+
+[[representation.parallel]]
+variable = "257.4027.naringsgren"
+variant = "257.553"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INDU_MAIN_ACT"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "SNI"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.462.stratum"
+variant = "257.553"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "STRAT"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "Stratum"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]

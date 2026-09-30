@@ -4440,3 +4440,14 @@ column = "OpVLedare"
 owner = "34.49430.flagga"
 source_editions = ["2023"]
 ref = "Separate the descriptive twelve-position PersonNr_OpV identifier representation from one-position OpVLedare with exact supplied 0=Nej and 1=Ja finite domain. Native definition and source algorithm remain unchanged; no identifier or sensitivity flags are fabricated."
+
+
+[[coding.sentinel]]
+variable = "34.19054.org-sni92"
+variant = "34.152"
+column = "Org_Sni92"
+classification = "sni1992"
+periods = [["1990-01-01", "1990-12-31"], ["1991-01-01", "1991-12-31"], ["1992-01-01", "1992-12-31"], ["1993-01-01", "1993-12-31"], ["1994-01-01", "1994-12-31"], ["1995-01-01", "1995-12-31"]]
+members = [["01250", "Okänt värde"], ["02010", "Okänt värde"]]
+reason = "Preserve the exact supplied unknown-labelled values as bounded variable-local classification sentinels."
+source = "Complete pinned SCB source coding and original family audit: these exact code-label pairs are explicitly unknown in this occurrence cohort. Substantive same-literal source categories remain outside this decision. Preserve complete source lists, original claims, fields, periods and all registry codes; no global sentinel widening or source label replacement."
