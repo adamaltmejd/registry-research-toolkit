@@ -638,6 +638,14 @@ def _run_pipeline(
             for entry in prepared.manifest.inputs:
                 event("input", entry.model_dump(mode="json"))
             declarations = []
+            documentary = {
+                (
+                    r.declaration.revision.dataset,
+                    r.declaration.locator.physical_table,
+                    r.declaration.locator.physical_record,
+                ): r
+                for r in selected.metadata.documentary_relationships
+            }
             for index, item in enumerate(prepared.iter_evidence()):
                 disposition = "source_context"
                 if isinstance(item, ReferenceEvidence):
@@ -662,32 +670,65 @@ def _run_pipeline(
                             and declaration.revision.dataset
                             not in selected_occurrence_sources
                         )
-                        disposition = (
-                            "out_of_slice_relationship"
-                            if outside_slice
-                            else "unbound_relationship"
-                        )
-                        issue(
-                            ResolutionDiagnostic(
-                                code=DEFERRED_REFERENCE
-                                if outside_slice
-                                else "unbound_source_relationship",
-                                severity="warning" if outside_slice else "error",
-                                subject=repr(declaration.locator.semantic_record_key),
-                                detail=(
-                                    "The literal relationship belongs to an unselected prepared occurrence source; endpoint resolution is deferred and its original evidence is retained."
-                                    if outside_slice
-                                    else "A literal source relationship has no accepted binding to catalog endpoints; its evidence is retained without inventing that binding."
-                                ),
-                                refs=(
-                                    SourceRecordRef(
-                                        source=declaration.revision.dataset,
-                                        semantic_record_key=declaration.locator.semantic_record_key,
-                                    ),
-                                ),
-                                withheld_output=("catalog_relationship",),
+                        relationship = documentary.get(
+                            (
+                                declaration.revision.dataset,
+                                declaration.locator.physical_table,
+                                declaration.locator.physical_record,
                             )
                         )
+                        if relationship is not None and not outside_slice:
+                            disposition = "owner_bound_literal"
+                            for unresolved in relationship.unresolved:
+                                coordinate = (
+                                    f"clause:{unresolved.clause_index}"
+                                    if unresolved.clause_index is not None
+                                    else f"operand:{unresolved.operand_index}"
+                                )
+                                issue(
+                                    ResolutionDiagnostic(
+                                        code="unresolved_documentary_operand",
+                                        severity="warning",
+                                        subject=f"{relationship.owner}:{declaration.locator.physical_table}:{declaration.locator.physical_record}:{coordinate}",
+                                        detail=f"{unresolved.token!r}: {unresolved.reason} The owner-bound literal is retained without claiming executable or fully bound semantics.",
+                                        refs=(
+                                            SourceRecordRef(
+                                                source=declaration.revision.dataset,
+                                                semantic_record_key=declaration.locator.semantic_record_key,
+                                            ),
+                                        ),
+                                        withheld_output=("fully_bound_operands",),
+                                    )
+                                )
+                        else:
+                            disposition = (
+                                "out_of_slice_relationship"
+                                if outside_slice
+                                else "unbound_relationship"
+                            )
+                            issue(
+                                ResolutionDiagnostic(
+                                    code=DEFERRED_REFERENCE
+                                    if outside_slice
+                                    else "unbound_source_relationship",
+                                    severity="warning" if outside_slice else "error",
+                                    subject=repr(
+                                        declaration.locator.semantic_record_key
+                                    ),
+                                    detail=(
+                                        "The literal relationship belongs to an unselected prepared occurrence source; endpoint resolution is deferred and its original evidence is retained."
+                                        if outside_slice
+                                        else "A literal source relationship has no accepted binding to catalog endpoints; its evidence is retained without inventing that binding."
+                                    ),
+                                    refs=(
+                                        SourceRecordRef(
+                                            source=declaration.revision.dataset,
+                                            semantic_record_key=declaration.locator.semantic_record_key,
+                                        ),
+                                    ),
+                                    withheld_output=("catalog_relationship",),
+                                )
+                            )
                 event(
                     "prepared_evidence",
                     {

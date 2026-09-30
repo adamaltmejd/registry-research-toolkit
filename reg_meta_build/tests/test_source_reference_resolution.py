@@ -6,15 +6,15 @@ from typing import cast
 
 import pytest
 from pydantic import ValidationError
-from reg_meta_build.source_records import (
+from reg_meta.documentary import SourceCodeCrosswalkDeclaration
+from reg_meta.source_evidence import (
     DeliveredCell,
     RecordLocator,
     SourceField,
     SourceRevision,
-    value_field,
 )
+from reg_meta_build.source_records import value_field
 from reg_meta_build.source_reference_records import (
-    SourceCodeCrosswalkDeclaration,
     SourceColumnTypeDeclaration,
     SourceEventDeclaration,
     SourceJoinKeyDeclaration,

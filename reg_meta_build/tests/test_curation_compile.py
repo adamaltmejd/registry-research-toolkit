@@ -11,6 +11,12 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from _prepared_fixtures import accept_prepared
 from reg_meta.errors import RegMetaError
+from reg_meta.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+)
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.curation_compile import (
     CompiledCuration,
@@ -86,17 +92,13 @@ from reg_meta_build.source_naming import (
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     CodeSetReference,
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
-    SourceField,
     SourceFieldCells,
     SourceFields,
     SourceParentObservation,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,
@@ -1217,6 +1219,46 @@ def test_mfr_classification_reference_fails_closed_on_changed_facts(variable: st
     ].disposition == ("stale")
 
 
+def test_mfr_reference_description_witness_is_checked_before_and_after_compile():
+    register, entry = _mfr_reference_register("BPNR")
+    entry = entry.model_copy(update={"expected_description": "Created with checkpnr"})
+    register = register.model_copy(
+        update={
+            "errata": register.errata.model_copy(
+                update={"classification_reference": (entry,)}
+            )
+        }
+    )
+    record = _mfr_reference_record(entry)
+    record = record.model_copy(
+        update={
+            "fields": record.fields.model_copy(
+                update={"description": value_field(entry.expected_description)}
+            )
+        }
+    )
+    cases, diagnostics, _ = _compile_sos_register(register, (record,))
+    assert diagnostics == ()
+    cases = tuple(
+        case for case in cases if "/errata.classification_reference/" in case.case_id
+    )
+    assert apply_occurrence_cases((record,), cases).occurrences[
+        0
+    ].fields.classification_declared == SourceField(status="unknown")
+    for description in (None, value_field("Created with another algorithm")):
+        changed = record.model_copy(
+            update={
+                "fields": record.fields.model_copy(update={"description": description})
+            }
+        )
+        _, diagnostics, _ = _compile_sos_register(register, (changed,))
+        assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
+        assert (
+            apply_occurrence_cases((changed,), cases).accounting[0].disposition
+            == "stale"
+        )
+
+
 def test_mfr_reference_entries_exclude_missing_sheet_and_bdiag_consumers():
     from pathlib import Path
 
@@ -1232,12 +1274,15 @@ def test_mfr_reference_entries_exclude_missing_sheet_and_bdiag_consumers():
     } == {
         ("MFR_IVF", name)
         for name in ("BPNR", "BPSEUDO", "EMBRYON", "ETDATUM", "HINNSACK")
-    } | {("MFR", name) for name in ("SECMARK", "SUGMARK", "TANGMARK")}
+    } | {("MFR", name) for name in ("SECMARK", "SUGMARK", "TANGMARK")} | {
+        (variant, "BPNRQ") for variant in ("MFR", "MFR_FOK", "MFR_IVF")
+    } | {(variant, "MPNRQ") for variant in ("MFR", "MFR_FOK", "MFR_IVF", "MFR_LMED")}
     assert all(
         item.expected_reference == "Kodlista_förlossningssätt!A1"
         and item.expected_representation == "1 = ja" + " " * 538 + "0 = nej"
         for item in register.errata.classification_reference
         if item.deldatamangd == "MFR"
+        and item.variable in {"SECMARK", "SUGMARK", "TANGMARK"}
     )
 
 

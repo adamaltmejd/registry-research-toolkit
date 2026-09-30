@@ -13,6 +13,13 @@ from typing import TYPE_CHECKING, Literal, Self
 import reg_meta.fqid as reg_meta_fqid
 import reg_meta.queries as reg_meta_queries
 from pydantic import BaseModel, ConfigDict, model_validator
+from reg_meta.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+    canonical_sha256,
+)
 
 from reg_meta_build import _curation as curation_module
 from reg_meta_build.input_snapshot import (
@@ -23,15 +30,10 @@ from reg_meta_build.input_snapshot import (
     _update_record_hash,
 )
 from reg_meta_build.source_records import (
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
-    SourceField,
     SourceRecord,
-    SourceRevision,
     TemporalScope,
-    canonical_sha256,
 )
 from reg_meta_build.sources.lisa import read_lisa_source
 from reg_meta_build.sources.scb_records import (

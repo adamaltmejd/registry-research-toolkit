@@ -10,6 +10,7 @@ import pytest
 from _curation_fixtures import write_fdb_partition_curation
 from _prepared_fixtures import accept_prepared
 from reg_meta.db import open_db
+from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
 from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.prepared_sources import (
@@ -42,13 +43,10 @@ from reg_meta_build.source_occurrences import (
 from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

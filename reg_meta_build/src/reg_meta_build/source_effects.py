@@ -11,6 +11,8 @@ from collections import defaultdict
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING, Literal
 
+from reg_meta.source_evidence import SourceField
+
 from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_curation import (
     ApplicabilityIssue,
@@ -38,7 +40,7 @@ from reg_meta_build.source_occurrences import (
     EffectiveOccurrence,
     source_occurrence,
 )
-from reg_meta_build.source_records import SourceField, SourceFields, TemporalScope
+from reg_meta_build.source_records import SourceFields, TemporalScope
 
 if TYPE_CHECKING:
     from collections.abc import Mapping

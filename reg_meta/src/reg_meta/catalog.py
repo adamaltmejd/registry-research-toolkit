@@ -29,6 +29,7 @@ from .db import (
 from .doc_db import (
     RelatedDocument,  # noqa: TC001 - Pydantic resolves model fields at runtime.
 )
+from .documentary import DocumentaryRelationship
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import (
     DEFAULT_VARIANT_SLUG,
@@ -3526,6 +3527,80 @@ class Catalog:
             replaced_by=self._successor_edges(*triple),
             via_same_as=via_same_as,
         )
+
+    def documentary_relationships(
+        self, fqid: str | Fqid
+    ) -> tuple[DocumentaryRelationship, ...]:
+        """Literal source clauses owned by this variable, never executable relations.
+
+        Supplied periods remain literal metadata. Operand references do not extend
+        variable availability or claim that a formula or code namespace is resolved.
+        """
+        parsed = self._parse_binding(fqid)
+        resolved = self._resolve_variable_identity(parsed)
+        if resolved is None:
+            raise _not_found(parsed)
+        variable, _ = resolved
+        meta = self._lookup_variable_meta(variable["variable_id"])
+        owner = str(
+            Fqid.binding_fqid(
+                meta["provider_slug"], meta["register_slug"], meta["slug"]
+            )
+        )
+        relationships = []
+        for row in self._conn.execute(
+            "SELECT * FROM source_relationship WHERE owner_variable_id = ? ORDER BY relationship_id",
+            (variable["variable_id"],),
+        ):
+            anchors = []
+            for anchor in self._conn.execute(
+                "SELECT a.*, p.slug AS provider_slug, r.slug AS register_slug, v.slug AS variable_slug "
+                "FROM source_relationship_variable a JOIN variable v ON v.variable_id=a.endpoint_variable_id "
+                "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
+                "WHERE a.relationship_id=? ORDER BY a.ordinal",
+                (row["relationship_id"],),
+            ):
+                if anchor["ordinal"] != len(anchors):
+                    raise ValueError(
+                        "documentary variable reference ordinals must be contiguous"
+                    )
+                anchors.append(
+                    {
+                        "clause_index": anchor["clause_index"],
+                        "operand_index": anchor["operand_index"],
+                        "token": anchor["literal_token"],
+                        "variable": str(
+                            Fqid.binding_fqid(
+                                anchor["provider_slug"],
+                                anchor["register_slug"],
+                                anchor["variable_slug"],
+                            )
+                        ),
+                    }
+                )
+            relationship = DocumentaryRelationship.model_validate_json(
+                json.dumps(
+                    {
+                        "relationship_id": row["relationship_id"],
+                        "owner": owner,
+                        "declaration": json.loads(row["declaration_json"]),
+                        "variables": anchors,
+                        "unresolved": json.loads(row["unresolved_json"]),
+                        "binding_status": row["binding_status"],
+                        "provenance": row["provenance"],
+                    }
+                )
+            )
+            if (
+                relationship.declaration.kind,
+                relationship.declaration.revision.dataset,
+                relationship.declaration.revision.revision_id,
+            ) != (row["kind"], row["source_dataset"], row["source_revision_id"]):
+                raise ValueError(
+                    "documentary storage identity disagrees with its validated declaration"
+                )
+            relationships.append(relationship)
+        return tuple(relationships)
 
     def resolve_at(
         self,

@@ -623,6 +623,29 @@ CREATE TABLE variable_alias (
 -- exact source-edition intervals for already-owned aliases absent from SCB's edition
 -- metadata. EMPTY for variables with no alias windows (the resolver no-ops then,
 -- leaving those variables' behaviour byte-identical). SHIPS — the query layer reads it.
+-- Literal source metadata, with documentary references rather than availability edges.
+CREATE TABLE source_relationship (
+    relationship_id INTEGER PRIMARY KEY,
+    owner_variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    kind TEXT NOT NULL CHECK (kind IN ('code_crosswalk', 'derivation')),
+    source_dataset TEXT NOT NULL,
+    source_revision_id TEXT NOT NULL,
+    declaration_json TEXT NOT NULL CHECK (json_valid(declaration_json)),
+    binding_status TEXT NOT NULL CHECK (binding_status = 'owner_bound_literal'),
+    unresolved_json TEXT NOT NULL CHECK (json_valid(unresolved_json)),
+    provenance TEXT NOT NULL
+);
+CREATE INDEX idx_source_relationship_owner ON source_relationship(owner_variable_id);
+CREATE TABLE source_relationship_variable (
+    relationship_id INTEGER NOT NULL REFERENCES source_relationship(relationship_id),
+    ordinal INTEGER NOT NULL CHECK (ordinal >= 0),
+    clause_index INTEGER CHECK (clause_index >= 0),
+    operand_index INTEGER CHECK (operand_index >= 0),
+    literal_token TEXT NOT NULL,
+    endpoint_variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    CHECK ((clause_index IS NULL) != (operand_index IS NULL)),
+    PRIMARY KEY (relationship_id, ordinal)
+);
 CREATE TABLE variable_alias_window (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),

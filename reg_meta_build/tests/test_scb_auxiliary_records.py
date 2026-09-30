@@ -13,8 +13,8 @@ from _csv_fixtures import (
     write_scb_snapshot,
 )
 from reg_meta.errors import RegMetaError
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.input_snapshot import open_scb_snapshot
-from reg_meta_build.source_records import SourceRevision
 from reg_meta_build.sources.scb_auxiliary import (
     clean_identifier_row,
     clean_unika_row,

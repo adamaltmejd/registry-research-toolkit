@@ -13,30 +13,33 @@ from datetime import date, datetime
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Literal, overload
 
+from reg_meta.documentary import (
+    SourceCodeCrosswalkDeclaration,
+    SourceCodeOperand,
+    SourceDerivationClause,
+    SourceDerivationDeclaration,
+)
+from reg_meta.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    canonical_sha256,
+)
+
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
     SourceEvidenceRow,
     SourceEvidenceTable,
-    SourceField,
     SourceFieldCells,
     SourceFields,
     SourceParentObservation,
     SourceRecord,
     SourceSubject,
     TemporalScope,
-    canonical_sha256,
     value_field,
-)
-from reg_meta_build.source_reference_records import (
-    SourceCodeCrosswalkDeclaration,
-    SourceCodeOperand,
-    SourceDerivationClause,
-    SourceDerivationDeclaration,
 )
 from reg_meta_build.source_value_periods import value_period, value_window
 from reg_meta_build.source_values import (
@@ -52,7 +55,8 @@ from reg_meta_build.sources.sos import _classify_value_set_text
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping
 
-    from reg_meta_build.source_records import FieldScalar, SourceRevision
+    from reg_meta.source_evidence import FieldScalar, SourceRevision
+
     from reg_meta_build.source_reference_records import SourceReferenceDeclaration
     from reg_meta_build.sources.sos import (
         SosCellEvidence,

@@ -6,6 +6,8 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_meta.source_evidence import SourceField
+
 from reg_meta_build.resolved_catalog import (
     ResolvedEdition,
     ResolvedObjectType,
@@ -23,7 +25,6 @@ from reg_meta_build.source_curation import ResolutionDiagnostic
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_occurrences import EffectiveOccurrence
-from reg_meta_build.source_records import SourceField
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping

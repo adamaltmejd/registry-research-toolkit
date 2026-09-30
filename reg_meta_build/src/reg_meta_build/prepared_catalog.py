@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
+from reg_meta.source_evidence import SourceRevision
 
 from reg_meta_build._accepted_prepared import (
     check_accepted_files,
@@ -48,11 +49,7 @@ from reg_meta_build.prepared_values import (
     _manifest as _value_manifest,
     prepare_source_values,
 )
-from reg_meta_build.source_records import (
-    SourceEvidenceTable,
-    SourceRecord,
-    SourceRevision,
-)
+from reg_meta_build.source_records import SourceEvidenceTable, SourceRecord
 from reg_meta_build.source_reference_records import (
     SourceReferenceDeclaration,  # noqa: TC001
 )

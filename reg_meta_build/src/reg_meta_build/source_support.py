@@ -22,12 +22,10 @@ from reg_meta_build.source_records import SourceFields
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator, Mapping
 
+    from reg_meta.source_evidence import SourceField
+
     from reg_meta_build.source_coordinates import NativeKey
-    from reg_meta_build.source_records import (
-        SourceCoordinate,
-        SourceField,
-        SourceRecord,
-    )
+    from reg_meta_build.source_records import SourceCoordinate, SourceRecord
 
 
 class SourceSupportJoin(BaseModel):

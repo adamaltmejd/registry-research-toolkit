@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from _prepared_fixtures import accept_prepared
+from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build.prepared_sources import (
     open_prepared_source_records,
     prepare_source_records,
@@ -22,7 +23,7 @@ from reg_meta_build.source_curation import (
     evaluate_case,
     parent_fact_projection,
 )
-from reg_meta_build.source_records import SourceField, SourceRecord, SourceRevision
+from reg_meta_build.source_records import SourceRecord
 from reg_meta_build.sources.scb_records import clean_scb_row
 from test_source_curation import _decision
 

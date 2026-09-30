@@ -938,3 +938,887 @@ field = "name"
 value = "Sjukhuskod, bearbetad"
 evidence = "Both originals explicitly identify a processed hospital code. Add only the supplied punctuation in the MFR name; preserve each original processing description, representation, coding, type and availability. This does not equate processing rules or hospital-code histories."
 noted = "2026-09-30"
+
+# Macro documentation describes derivation; inline response domains remain unchanged.
+
+[[errata.classification_reference]]
+deldatamangd = "MFR"
+variable = "BPNRQ"
+column = "BPNRQ"
+expected_reference = "Makron i registermiljön"
+expected_representation = "0 = Korrekt personnummer                                                                                                                                                                                                                                                                                                                                                      5 = Dödfödd, personnummer saknas\n8 = Ogiltigt personnummer\n9 = Personnummer saknas, strängen är tom"
+expected_description = "Variabel som visar kvaliteten på ett personnummer (BPNR) enligt vissa förutbestämda regler. Variabeln är skapad med hjälp av standardmacrot checkpnr. Gäller barnets personnummer."
+evidence = "Metadata - Variabelnivå row:49 explicitly describes derivation using standardmacrot checkpnr and supplies the output response codes in Värdemängd. The G hyperlink names the internal macro documentation page, not a separately named classification of output values. Retain the exact inline response representation, algorithm description and source hyperlink; infer no extra code or label."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "MFR"
+variable = "MPNRQ"
+column = "MPNRQ"
+expected_reference = "Makron i registermiljön"
+expected_representation = "0 = Korrekt personnummer\n4 = Samordningsnummer\n8 = Ogiltigt personnummer\n9 = Personnummer saknas, strängen är tom"
+expected_description = "Variabel som visar kvaliteten på ett personnummer (MPNR) enligt vissa förutbestämda regler. Variabeln är skapad med hjälp av standardmacrot checkpnr. Gäller den gravida/förlösta personens personnummer."
+evidence = "Metadata - Variabelnivå row:147 explicitly describes derivation using standardmacrot checkpnr and supplies the output response codes in Värdemängd. The G hyperlink names the internal macro documentation page, not a separately named classification of output values. Retain the exact inline response representation, algorithm description and source hyperlink; infer no extra code or label."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "MFR_FOK"
+variable = "BPNRQ"
+column = "BPNRQ"
+expected_reference = "Makron i registermiljön"
+expected_representation = "0 = Korrekt personnummer\n4 = Samordningsnummer                                                                                                                                                                                                                                                                                                                                                        5 = Dödfödd, personnummer saknas\n8 = Ogiltigt personnummer\n9 = Personnummer saknas, strängen är tom"
+expected_description = "Variabel som visar kvaliteten på ett personnummer (BPNR) enligt vissa förutbestämda regler. Variabeln är skapad med hjälp av standardmacrot checkpnr. Gäller barnets personnummer."
+evidence = "Metadata - Variabelnivå row:247 explicitly describes derivation using standardmacrot checkpnr and supplies the output response codes in Värdemängd. The G hyperlink names the internal macro documentation page, not a separately named classification of output values. Retain the exact inline response representation, algorithm description and source hyperlink; infer no extra code or label."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "MFR_FOK"
+variable = "MPNRQ"
+column = "MPNRQ"
+expected_reference = "Makron i registermiljön"
+expected_representation = "0 = Korrekt personnummer\n4 = Samordningsnummer\n8 = Ogiltigt personnummer\n9 = Personnummer saknas, strängen är tom"
+expected_description = "Variabel som visar kvaliteten på ett personnummer (MPNR) enligt vissa förutbestämda regler. Variabeln är skapad med hjälp av standardmacrot checkpnr. Gäller den gravida/förlösta personens personnummer."
+evidence = "Metadata - Variabelnivå row:267 explicitly describes derivation using standardmacrot checkpnr and supplies the output response codes in Värdemängd. The G hyperlink names the internal macro documentation page, not a separately named classification of output values. Retain the exact inline response representation, algorithm description and source hyperlink; infer no extra code or label."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "MFR_IVF"
+variable = "BPNRQ"
+column = "BPNRQ"
+expected_reference = "Makron i registermiljön"
+expected_representation = "0 = Korrekt personnummer\n4 = Samordningsnummer                                                                                                                                                                                                                                                                                                                                                        5 = Dödfödd, personnummer saknas\n8 = Ogiltigt personnummer\n9 = Personnummer saknas, strängen är tom"
+expected_description = "Variabel som visar kvaliteten på ett personnummer (BPNR) enligt vissa förutbestämda regler. Variabeln är skapad med hjälp av standardmacrot checkpnr. Gäller barnets personnummer."
+evidence = "Metadata - Variabelnivå row:277 explicitly describes derivation using standardmacrot checkpnr and supplies the output response codes in Värdemängd. The G hyperlink names the internal macro documentation page, not a separately named classification of output values. Retain the exact inline response representation, algorithm description and source hyperlink; infer no extra code or label."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "MFR_IVF"
+variable = "MPNRQ"
+column = "MPNRQ"
+expected_reference = "Makron i registermiljön"
+expected_representation = "0 = Korrekt personnummer\n4 = Samordningsnummer\n8 = Ogiltigt personnummer\n9 = Personnummer saknas, strängen är tom"
+expected_description = "Variabel som visar kvaliteten på ett personnummer (MPNR) enligt vissa förutbestämda regler. Variabeln är skapad med hjälp av standardmacrot checkpnr. Gäller den gravida/förlösta personens personnummer."
+evidence = "Metadata - Variabelnivå row:287 explicitly describes derivation using standardmacrot checkpnr and supplies the output response codes in Värdemängd. The G hyperlink names the internal macro documentation page, not a separately named classification of output values. Retain the exact inline response representation, algorithm description and source hyperlink; infer no extra code or label."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "MFR_LMED"
+variable = "MPNRQ"
+column = "MPNRQ"
+expected_reference = "Makron i registermiljön"
+expected_representation = "0 = Korrekt personnummer\n4 = Samordningsnummer\n8 = Ogiltigt personnummer\n9 = Personnummer saknas, strängen är tom"
+expected_description = "Variabel som visar kvaliteten på ett personnummer (MPNR) enligt vissa förutbestämda regler. Variabeln är skapad med hjälp av standardmacrot checkpnr. Gäller den gravida/förlösta personens personnummer."
+evidence = "Metadata - Variabelnivå row:298 explicitly describes derivation using standardmacrot checkpnr and supplies the output response codes in Värdemängd. The G hyperlink names the internal macro documentation page, not a separately named classification of output values. Retain the exact inline response representation, algorithm description and source hyperlink; infer no extra code or label."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.ATC"
+variant = "MFR_LMED"
+column = "ATC"
+expected_fields = [{ name = "classification_declared", status = "value", value = "FASS Vårdpersonal - Startsida" }, { name = "coverage_from", status = "value", value = "1995" }, { name = "coverage_to", status = "unknown" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Preparatets ATC-kod" }, { name = "name", status = "value", value = "ATC-kod" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "value", value = "ATC-kod enligt FASS" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1995" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "Exact original row:291: supplied name, description and representation explicitly identify ATC. The generic documentation link does not distinguish that scheme. Bind only this positively identified original to the existing book; preserve its original claim and all retrospective observation scopes, widths, types, contexts and coding. No classification year or coverage is inferred."
+noted = "2026-09-30"
+field = "classification_declared"
+value = "ATC"
+
+[[coding.support]]
+variable = "6052270801387609014.BDIAG_BK1"
+variant = "mfr-fok"
+column = "BDIAG_BK1"
+periods = [["1965-01-01", "1998-12-31"]]
+code = "16310"
+label = "micropolygyri"
+association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:23"
+expected_association = "6fb9fad2ac5f6f3b18ee1d904ba1dc0b368e49e61360551c949903457b210c1d"
+authority_code = "16320"
+authority_label = "mikropolygyri i cerebrala cortex"
+authority_association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:22"
+expected_authority_association = "3a8a6db047d9d87d4bb33ff88922c32fabccb0614a370831def468e677d4dedb"
+expected_source_codings = ["b9ccbc8160b98682c5f9d005fd764ebd38eca3f7b261fa978f6df2d9ae17ed56"]
+reason = "Original Källén code-list image distinguishes 16310 pakygyri from 16320 mikropolygyri. The workbook already supplies the correct 16320 row in this same complete list and window. Retain the erroneous 16310/micropolygyri row as documentary support only; preserve every raw assertion and supplied validity."
+source = "https://research.chalmers.se/publication/538735/file/538735_Fulltext.pdf; SHA-256185b9c5dba065eab4e55688ed60de405a1bf1480e574be58b763f53518fe5e2a; page14 Figure3 original Källén sheet supplied personally by Bengt Källén; reviewed image retained in MFR-Kallen-original-list-p14.png. Finite checked association policy; no inferred historical code changes."
+
+
+[[coding.support]]
+variable = "6052270801387609014.BDIAG_BK2"
+variant = "mfr-fok"
+column = "BDIAG_BK2"
+periods = [["1965-01-01", "1998-12-31"]]
+code = "16310"
+label = "micropolygyri"
+association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:23"
+expected_association = "6fb9fad2ac5f6f3b18ee1d904ba1dc0b368e49e61360551c949903457b210c1d"
+authority_code = "16320"
+authority_label = "mikropolygyri i cerebrala cortex"
+authority_association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:22"
+expected_authority_association = "3a8a6db047d9d87d4bb33ff88922c32fabccb0614a370831def468e677d4dedb"
+expected_source_codings = ["d2ad3c355b52e412fc232712e9e660d2202eb21f52222a6f7d81c02a0d6fd662"]
+reason = "Original Källén code-list image distinguishes 16310 pakygyri from 16320 mikropolygyri. The workbook already supplies the correct 16320 row in this same complete list and window. Retain the erroneous 16310/micropolygyri row as documentary support only; preserve every raw assertion and supplied validity."
+source = "https://research.chalmers.se/publication/538735/file/538735_Fulltext.pdf; SHA-256185b9c5dba065eab4e55688ed60de405a1bf1480e574be58b763f53518fe5e2a; page14 Figure3 original Källén sheet supplied personally by Bengt Källén; reviewed image retained in MFR-Kallen-original-list-p14.png. Finite checked association policy; no inferred historical code changes."
+
+
+[[coding.support]]
+variable = "6052270801387609014.BDIAG_BK3"
+variant = "mfr-fok"
+column = "BDIAG_BK3"
+periods = [["1965-01-01", "1998-12-31"]]
+code = "16310"
+label = "micropolygyri"
+association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:23"
+expected_association = "6fb9fad2ac5f6f3b18ee1d904ba1dc0b368e49e61360551c949903457b210c1d"
+authority_code = "16320"
+authority_label = "mikropolygyri i cerebrala cortex"
+authority_association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:22"
+expected_authority_association = "3a8a6db047d9d87d4bb33ff88922c32fabccb0614a370831def468e677d4dedb"
+expected_source_codings = ["f52729292b085071c9c842a3b0433bb874a70878ce9550103783aa994bef88c0"]
+reason = "Original Källén code-list image distinguishes 16310 pakygyri from 16320 mikropolygyri. The workbook already supplies the correct 16320 row in this same complete list and window. Retain the erroneous 16310/micropolygyri row as documentary support only; preserve every raw assertion and supplied validity."
+source = "https://research.chalmers.se/publication/538735/file/538735_Fulltext.pdf; SHA-256185b9c5dba065eab4e55688ed60de405a1bf1480e574be58b763f53518fe5e2a; page14 Figure3 original Källén sheet supplied personally by Bengt Källén; reviewed image retained in MFR-Kallen-original-list-p14.png. Finite checked association policy; no inferred historical code changes."
+
+
+[[coding.support]]
+variable = "6052270801387609014.BDIAG_BK4"
+variant = "mfr-fok"
+column = "BDIAG_BK4"
+periods = [["1965-01-01", "1998-12-31"]]
+code = "16310"
+label = "micropolygyri"
+association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:23"
+expected_association = "6fb9fad2ac5f6f3b18ee1d904ba1dc0b368e49e61360551c949903457b210c1d"
+authority_code = "16320"
+authority_label = "mikropolygyri i cerebrala cortex"
+authority_association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:22"
+expected_authority_association = "3a8a6db047d9d87d4bb33ff88922c32fabccb0614a370831def468e677d4dedb"
+expected_source_codings = ["95f161f5b9b72b6c2cf2abe399a11df3c9274ce80b66f29e34366aa36bf0d8ba"]
+reason = "Original Källén code-list image distinguishes 16310 pakygyri from 16320 mikropolygyri. The workbook already supplies the correct 16320 row in this same complete list and window. Retain the erroneous 16310/micropolygyri row as documentary support only; preserve every raw assertion and supplied validity."
+source = "https://research.chalmers.se/publication/538735/file/538735_Fulltext.pdf; SHA-256185b9c5dba065eab4e55688ed60de405a1bf1480e574be58b763f53518fe5e2a; page14 Figure3 original Källén sheet supplied personally by Bengt Källén; reviewed image retained in MFR-Kallen-original-list-p14.png. Finite checked association policy; no inferred historical code changes."
+
+
+[[coding.support]]
+variable = "6052270801387609014.BDIAG_BK5"
+variant = "mfr-fok"
+column = "BDIAG_BK5"
+periods = [["1965-01-01", "1998-12-31"]]
+code = "16310"
+label = "micropolygyri"
+association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:23"
+expected_association = "6fb9fad2ac5f6f3b18ee1d904ba1dc0b368e49e61360551c949903457b210c1d"
+authority_code = "16320"
+authority_label = "mikropolygyri i cerebrala cortex"
+authority_association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:22"
+expected_authority_association = "3a8a6db047d9d87d4bb33ff88922c32fabccb0614a370831def468e677d4dedb"
+expected_source_codings = ["2a8da0ba12a4f71cdaefd492031c24f2cf1968e68fa8fcaa1eb3aab64f4e84eb"]
+reason = "Original Källén code-list image distinguishes 16310 pakygyri from 16320 mikropolygyri. The workbook already supplies the correct 16320 row in this same complete list and window. Retain the erroneous 16310/micropolygyri row as documentary support only; preserve every raw assertion and supplied validity."
+source = "https://research.chalmers.se/publication/538735/file/538735_Fulltext.pdf; SHA-256185b9c5dba065eab4e55688ed60de405a1bf1480e574be58b763f53518fe5e2a; page14 Figure3 original Källén sheet supplied personally by Bengt Källén; reviewed image retained in MFR-Kallen-original-list-p14.png. Finite checked association policy; no inferred historical code changes."
+
+
+[[coding.support]]
+variable = "6052270801387609014.BDIAG_BK6"
+variant = "mfr-fok"
+column = "BDIAG_BK6"
+periods = [["1965-01-01", "1998-12-31"]]
+code = "16310"
+label = "micropolygyri"
+association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:23"
+expected_association = "6fb9fad2ac5f6f3b18ee1d904ba1dc0b368e49e61360551c949903457b210c1d"
+authority_code = "16320"
+authority_label = "mikropolygyri i cerebrala cortex"
+authority_association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:22"
+expected_authority_association = "3a8a6db047d9d87d4bb33ff88922c32fabccb0614a370831def468e677d4dedb"
+expected_source_codings = ["51a9dca54841f38cfa59042357acdb3b1e6ead8747b3440e04c5d3d4f3b656df"]
+reason = "Original Källén code-list image distinguishes 16310 pakygyri from 16320 mikropolygyri. The workbook already supplies the correct 16320 row in this same complete list and window. Retain the erroneous 16310/micropolygyri row as documentary support only; preserve every raw assertion and supplied validity."
+source = "https://research.chalmers.se/publication/538735/file/538735_Fulltext.pdf; SHA-256185b9c5dba065eab4e55688ed60de405a1bf1480e574be58b763f53518fe5e2a; page14 Figure3 original Källén sheet supplied personally by Bengt Källén; reviewed image retained in MFR-Kallen-original-list-p14.png. Finite checked association policy; no inferred historical code changes."
+
+
+[[coding.support]]
+variable = "6052270801387609014.BDIAG_BK7"
+variant = "mfr-fok"
+column = "BDIAG_BK7"
+periods = [["1965-01-01", "1998-12-31"]]
+code = "16310"
+label = "micropolygyri"
+association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:23"
+expected_association = "6fb9fad2ac5f6f3b18ee1d904ba1dc0b368e49e61360551c949903457b210c1d"
+authority_code = "16320"
+authority_label = "mikropolygyri i cerebrala cortex"
+authority_association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:22"
+expected_authority_association = "3a8a6db047d9d87d4bb33ff88922c32fabccb0614a370831def468e677d4dedb"
+expected_source_codings = ["792be328f35da7291b6210bee0875061d0599a3db182cf84c866da62479c65d9"]
+reason = "Original Källén code-list image distinguishes 16310 pakygyri from 16320 mikropolygyri. The workbook already supplies the correct 16320 row in this same complete list and window. Retain the erroneous 16310/micropolygyri row as documentary support only; preserve every raw assertion and supplied validity."
+source = "https://research.chalmers.se/publication/538735/file/538735_Fulltext.pdf; SHA-256185b9c5dba065eab4e55688ed60de405a1bf1480e574be58b763f53518fe5e2a; page14 Figure3 original Källén sheet supplied personally by Bengt Källén; reviewed image retained in MFR-Kallen-original-list-p14.png. Finite checked association policy; no inferred historical code changes."
+
+
+[[coding.support]]
+variable = "6052270801387609014.BDIAG_BK8"
+variant = "mfr-fok"
+column = "BDIAG_BK8"
+periods = [["1965-01-01", "1998-12-31"]]
+code = "16310"
+label = "micropolygyri"
+association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:23"
+expected_association = "6fb9fad2ac5f6f3b18ee1d904ba1dc0b368e49e61360551c949903457b210c1d"
+authority_code = "16320"
+authority_label = "mikropolygyri i cerebrala cortex"
+authority_association = "catalog/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx:Kodlista_bdiag_bk:row:22"
+expected_authority_association = "3a8a6db047d9d87d4bb33ff88922c32fabccb0614a370831def468e677d4dedb"
+expected_source_codings = ["5fa4f82641221ccffe525f2057b21f43b71ffdd94f1bc546e82479aeed3129ac"]
+reason = "Original Källén code-list image distinguishes 16310 pakygyri from 16320 mikropolygyri. The workbook already supplies the correct 16320 row in this same complete list and window. Retain the erroneous 16310/micropolygyri row as documentary support only; preserve every raw assertion and supplied validity."
+source = "https://research.chalmers.se/publication/538735/file/538735_Fulltext.pdf; SHA-256185b9c5dba065eab4e55688ed60de405a1bf1480e574be58b763f53518fe5e2a; page14 Figure3 original Källén sheet supplied personally by Bengt Källén; reviewed image retained in MFR-Kallen-original-list-p14.png. Finite checked association policy; no inferred historical code changes."
+
+# Checked literal metadata: owner-bound documentary clauses, not executable transforms.
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:2"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "00909aaade689da6ccd93199fea651a57aea5bcfeddeb9a4a7615096ab073f02"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:3"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "c712e4906c17484d2ae4d0a5744b3cb8872be076c5024b51f6d860ae2366742e"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:4"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "59cc51fd03725dda9aa5ea29a67dfd01bddb2e2686fc3e0b5d3515f4a1154c32"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:5"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "91f14f84b205afd7724831355baade8d12fc8f2fe38ca19427d400fe01220838"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:6"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "fb11de30dd82f4fdfd1c426d35010766ebd11eba808d9fae35d3c247de5edea2"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:7"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "6ebcb16b5f056c69ff07280f8d8c2db419babd82516b355dbd8dd328f6ff1256"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:8"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "1f3f043d0f44be31edc3e9bc22aec04879858374ad88ca894ac6c1436d0e90a2"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:9"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "b777532a261ab12e15fb4c5ad9b690abb9fa715a9eab4e35d42cbed2f357e43d"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:10"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "44158c2669d6c7d7f0543d7ce7231abeaaea0cfcf2a79d37a3a95a7f0392098a"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:11"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "769c2777b681f6867293c33ea7f7f6f7d268facde1345894639a70ea6f9e1185"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_famsit"
+row = "row:12"
+member = "FAMSIT"
+owner = "sos/mfr/famsit"
+payload_sha256 = "eecef62447d1cb284f86391304e5fc0b96f49b8237e787f9e994f1bd8c5b14b9"
+table_sha256 = "1bab04af7ada4ea4858a383c087becb454725b3d9ed7baf0e8c2341ff2b87031"
+owner_originals_sha256 = "cbb255e9e57a7cb63483f2a214dad3c6d8dbd8688824f78da7fb429325cd5546"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+operand_index = 0
+token = "Indata Kod"
+reason = "Historical input namespace is documentary only, without an imported independent code-set version."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_förlossningssätt"
+row = "row:2"
+member = "SUGMARK"
+owner = "sos/mfr/sugmark"
+payload_sha256 = "d7d238dde1892cb65a872882b67efe3f4654a2cbbad5591fc4e66ee2c3344e5c"
+table_sha256 = "249e8712c17843aebcecb3f43c521d598ec2cc1c1836caf9f23751676231a1a5"
+owner_originals_sha256 = "61f8340979b4d2ef36f0ecb2411a52169d7bcc8a4ed62a8f22ea08110e670257"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+clause_index = 4
+token = "7640, 7641, 7642, 7643, 7644, 7645"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_förlossningssätt"
+row = "row:3"
+member = "SUGMARK"
+owner = "sos/mfr/sugmark"
+payload_sha256 = "23555a7c20b666fccca5f131428c06fbd56b94c9759ee7ccd213751000db56cd"
+table_sha256 = "249e8712c17843aebcecb3f43c521d598ec2cc1c1836caf9f23751676231a1a5"
+owner_originals_sha256 = "61f8340979b4d2ef36f0ecb2411a52169d7bcc8a4ed62a8f22ea08110e670257"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "SUGKLOCK"
+variable = "sos/mfr/sugklock"
+originals_sha256 = "5542b387f3fe62bbd597a286c05f4744d1d6384b1734a6504f04416511715e45"
+
+[[documentary.binding.unresolved]]
+clause_index = 3
+token = "O81.4"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding.unresolved]]
+clause_index = 4
+token = "7640, 7641, 7642, 7643, 7644, 7645"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding.unresolved]]
+clause_index = 5
+token = "MAE00, MAE03, MAE20, MAE96, MAC20, MAH00"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_förlossningssätt"
+row = "row:4"
+member = "TANGMARK"
+owner = "sos/mfr/tangmark"
+payload_sha256 = "407228e2f1da280327e52538704864fa2e2919d520fef1e7c5abe07e705349e9"
+table_sha256 = "249e8712c17843aebcecb3f43c521d598ec2cc1c1836caf9f23751676231a1a5"
+owner_originals_sha256 = "7afc9e6354c1058565a9d5e6f2a70d734f9655e73d92981337c4e94e184acff4"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.unresolved]]
+clause_index = 4
+token = "7650, 7651, 7652, 7653"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_förlossningssätt"
+row = "row:5"
+member = "TANGMARK"
+owner = "sos/mfr/tangmark"
+payload_sha256 = "a4a45168573d50b774821e442f9b86d70c6b7ec43259a7273108da9e8f254670"
+table_sha256 = "249e8712c17843aebcecb3f43c521d598ec2cc1c1836caf9f23751676231a1a5"
+owner_originals_sha256 = "7afc9e6354c1058565a9d5e6f2a70d734f9655e73d92981337c4e94e184acff4"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "TANG"
+variable = "sos/mfr/forlossningsavslut-tang"
+originals_sha256 = "eba9c522df2bb40d68173ab62b2b05fc886fc93965115c478b1b73dce18624c0"
+
+[[documentary.binding.unresolved]]
+clause_index = 3
+token = "O81.0, O81.1, O81.2, O81.3"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding.unresolved]]
+clause_index = 4
+token = "7650, 7651, 7652, 7653"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding.unresolved]]
+clause_index = 5
+token = "MAH03/MAC23  (ersatt av MAC23 2007-12-31), MAF00, MAF10, MAF20, MAF96"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_förlossningssätt"
+row = "row:6"
+member = "SECMARK"
+owner = "sos/mfr/secmark"
+payload_sha256 = "b3327b9d02e6347e6778c8ba9b165a2fc6159112cfacff6566fc4ad4cd4f6bd5"
+table_sha256 = "249e8712c17843aebcecb3f43c521d598ec2cc1c1836caf9f23751676231a1a5"
+owner_originals_sha256 = "9365690c37f359084502b78631c1032ffba7477f0877c5ddbb3464d5ab14056d"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "SECFORE"
+variable = "sos/mfr/secfore"
+originals_sha256 = "9a6c8fb7d54305f93b4267d73b8b496085c5e28a7fd80abe27bbdbaf2738f34d"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "SECAVSL"
+variable = "sos/mfr/secavsl"
+originals_sha256 = "c6ef879a86d949179c27b597e170a0d10d564959bc2208044061e821ad385c08"
+
+[[documentary.binding.unresolved]]
+clause_index = 4
+token = "7800, 7810,7811"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_förlossningssätt"
+row = "row:7"
+member = "SECMARK"
+owner = "sos/mfr/secmark"
+payload_sha256 = "2571a12d05c75e8b5a23b8dc9adae07086e2113cdd64d38634b5536b4c5f93f8"
+table_sha256 = "249e8712c17843aebcecb3f43c521d598ec2cc1c1836caf9f23751676231a1a5"
+owner_originals_sha256 = "9365690c37f359084502b78631c1032ffba7477f0877c5ddbb3464d5ab14056d"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "SECFORE"
+variable = "sos/mfr/secfore"
+originals_sha256 = "9a6c8fb7d54305f93b4267d73b8b496085c5e28a7fd80abe27bbdbaf2738f34d"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "SECAVSL"
+variable = "sos/mfr/secavsl"
+originals_sha256 = "c6ef879a86d949179c27b597e170a0d10d564959bc2208044061e821ad385c08"
+
+[[documentary.binding.unresolved]]
+clause_index = 3
+token = "O664, O82 (alla underdiagnoser), O842"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding.unresolved]]
+clause_index = 4
+token = "7800, 7810,7811"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding.unresolved]]
+clause_index = 5
+token = "MCA"
+reason = "Literal code-system family/text supplies no diagnostic/action catalog column or exact classification edition."
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_msga_mlga"
+row = "row:2"
+member = "MSGA"
+owner = "sos/mfr/latt-for-tiden-sga"
+payload_sha256 = "26743d7a36fd1cbf33be25c56873053633138e44f144ef54d144603209ce9235"
+table_sha256 = "a267521c7018e1d7a7bcbf959b2439cbe9f9d19f01217fd25cdff0f8b1783721"
+owner_originals_sha256 = "91211fb3ec77a8b7bb516a07523c36664dc66dcafe3529723e291588233a5524"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "KON"
+variable = "sos/mfr/kon"
+originals_sha256 = "d0ffcca5274de0b62d897aa71fafae11ce6adba9c748607a64f613a4aa2b06aa"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "GRDBS"
+variable = "sos/mfr/graviditetslangd-dagar-basta-skattning"
+originals_sha256 = "ac9d7e6961bced806c682b93289849a99f6c0df00b11c68329cd706a892dd489"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "BORDF2"
+variable = "sos/mfr/borduppgift-f2"
+originals_sha256 = "9eeafcdd728cb76096f0406fa79e44d0f13ff518c0080b00ea828cfd60dbc498"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "KON"
+variable = "sos/mfr/kon"
+originals_sha256 = "d0ffcca5274de0b62d897aa71fafae11ce6adba9c748607a64f613a4aa2b06aa"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "BORDF2"
+variable = "sos/mfr/borduppgift-f2"
+originals_sha256 = "9eeafcdd728cb76096f0406fa79e44d0f13ff518c0080b00ea828cfd60dbc498"
+
+[[documentary.binding.anchors]]
+clause_index = 2
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 2
+token = "GRDBS"
+variable = "sos/mfr/graviditetslangd-dagar-basta-skattning"
+originals_sha256 = "ac9d7e6961bced806c682b93289849a99f6c0df00b11c68329cd706a892dd489"
+
+[[documentary.binding.unresolved]]
+clause_index = 1
+token = "GRVB"
+reason = "Exact supplied GRVB has no native catalog endpoint; no days/weeks replacement is authorized."
+
+[[documentary.binding.negative_native_guards]]
+native = "GRVB"
+originals_sha256 = "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_msga_mlga"
+row = "row:3"
+member = "MSGA"
+owner = "sos/mfr/latt-for-tiden-sga"
+payload_sha256 = "b289860c7644cc94b59aa8de2921c740aa05d76b37c39a6d716021eea61fb75a"
+table_sha256 = "a267521c7018e1d7a7bcbf959b2439cbe9f9d19f01217fd25cdff0f8b1783721"
+owner_originals_sha256 = "91211fb3ec77a8b7bb516a07523c36664dc66dcafe3529723e291588233a5524"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "KON"
+variable = "sos/mfr/kon"
+originals_sha256 = "d0ffcca5274de0b62d897aa71fafae11ce6adba9c748607a64f613a4aa2b06aa"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "GRDBS"
+variable = "sos/mfr/graviditetslangd-dagar-basta-skattning"
+originals_sha256 = "ac9d7e6961bced806c682b93289849a99f6c0df00b11c68329cd706a892dd489"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "BORDF2"
+variable = "sos/mfr/borduppgift-f2"
+originals_sha256 = "9eeafcdd728cb76096f0406fa79e44d0f13ff518c0080b00ea828cfd60dbc498"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "KON"
+variable = "sos/mfr/kon"
+originals_sha256 = "d0ffcca5274de0b62d897aa71fafae11ce6adba9c748607a64f613a4aa2b06aa"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "BORDF2"
+variable = "sos/mfr/borduppgift-f2"
+originals_sha256 = "9eeafcdd728cb76096f0406fa79e44d0f13ff518c0080b00ea828cfd60dbc498"
+
+[[documentary.binding.anchors]]
+clause_index = 2
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 2
+token = "GRDBS"
+variable = "sos/mfr/graviditetslangd-dagar-basta-skattning"
+originals_sha256 = "ac9d7e6961bced806c682b93289849a99f6c0df00b11c68329cd706a892dd489"
+
+[[documentary.binding.unresolved]]
+clause_index = 1
+token = "GRVB"
+reason = "Exact supplied GRVB has no native catalog endpoint; no days/weeks replacement is authorized."
+
+[[documentary.binding.negative_native_guards]]
+native = "GRVB"
+originals_sha256 = "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_msga_mlga"
+row = "row:4"
+member = "MLGA"
+owner = "sos/mfr/tung-for-tiden-lga"
+payload_sha256 = "7a6e265f8821f0d2249bc1854c58dd5b0e8a7a343553aaa89f0fedb6583f5c1c"
+table_sha256 = "a267521c7018e1d7a7bcbf959b2439cbe9f9d19f01217fd25cdff0f8b1783721"
+owner_originals_sha256 = "ab3e98a257da993fc3c8737b334556a8862fa747fe4485285a8f09b5559c7572"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "KON"
+variable = "sos/mfr/kon"
+originals_sha256 = "d0ffcca5274de0b62d897aa71fafae11ce6adba9c748607a64f613a4aa2b06aa"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "GRDBS"
+variable = "sos/mfr/graviditetslangd-dagar-basta-skattning"
+originals_sha256 = "ac9d7e6961bced806c682b93289849a99f6c0df00b11c68329cd706a892dd489"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "BORDF2"
+variable = "sos/mfr/borduppgift-f2"
+originals_sha256 = "9eeafcdd728cb76096f0406fa79e44d0f13ff518c0080b00ea828cfd60dbc498"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "KON"
+variable = "sos/mfr/kon"
+originals_sha256 = "d0ffcca5274de0b62d897aa71fafae11ce6adba9c748607a64f613a4aa2b06aa"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "BORDF2"
+variable = "sos/mfr/borduppgift-f2"
+originals_sha256 = "9eeafcdd728cb76096f0406fa79e44d0f13ff518c0080b00ea828cfd60dbc498"
+
+[[documentary.binding.anchors]]
+clause_index = 2
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 2
+token = "GRDBS"
+variable = "sos/mfr/graviditetslangd-dagar-basta-skattning"
+originals_sha256 = "ac9d7e6961bced806c682b93289849a99f6c0df00b11c68329cd706a892dd489"
+
+[[documentary.binding.unresolved]]
+clause_index = 1
+token = "GRVB"
+reason = "Exact supplied GRVB has no native catalog endpoint; no days/weeks replacement is authorized."
+
+[[documentary.binding.negative_native_guards]]
+native = "GRVB"
+originals_sha256 = "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+
+[[documentary.binding]]
+source = "Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+table = "Kodlista_msga_mlga"
+row = "row:5"
+member = "MLGA"
+owner = "sos/mfr/tung-for-tiden-lga"
+payload_sha256 = "7bcd071e12f186292d8c4072779308b6c5326393094e22d2aef34c75012854b2"
+table_sha256 = "a267521c7018e1d7a7bcbf959b2439cbe9f9d19f01217fd25cdff0f8b1783721"
+owner_originals_sha256 = "ab3e98a257da993fc3c8737b334556a8862fa747fe4485285a8f09b5559c7572"
+evidence = "Accepted MFR workbook: exact complete declaration/table/endpoint originals; literal periods, formulas, clauses and code text retained. Owner and explicitly supplied variable tokens are documentary references only. Unresolved namespaces and GRVB are retained; no evaluation, code edition inference or availability extension."
+noted = "2026-09-30"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "KON"
+variable = "sos/mfr/kon"
+originals_sha256 = "d0ffcca5274de0b62d897aa71fafae11ce6adba9c748607a64f613a4aa2b06aa"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "GRDBS"
+variable = "sos/mfr/graviditetslangd-dagar-basta-skattning"
+originals_sha256 = "ac9d7e6961bced806c682b93289849a99f6c0df00b11c68329cd706a892dd489"
+
+[[documentary.binding.anchors]]
+clause_index = 0
+token = "BORDF2"
+variable = "sos/mfr/borduppgift-f2"
+originals_sha256 = "9eeafcdd728cb76096f0406fa79e44d0f13ff518c0080b00ea828cfd60dbc498"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "KON"
+variable = "sos/mfr/kon"
+originals_sha256 = "d0ffcca5274de0b62d897aa71fafae11ce6adba9c748607a64f613a4aa2b06aa"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 1
+token = "BORDF2"
+variable = "sos/mfr/borduppgift-f2"
+originals_sha256 = "9eeafcdd728cb76096f0406fa79e44d0f13ff518c0080b00ea828cfd60dbc498"
+
+[[documentary.binding.anchors]]
+clause_index = 2
+token = "BVIKT"
+variable = "sos/mfr/barnets-fodelsevikt"
+originals_sha256 = "85a98974e4fa25f180ec7332ff8fa8ab420ccdf6c135eeed267ad5a5e3de8099"
+
+[[documentary.binding.anchors]]
+clause_index = 2
+token = "GRDBS"
+variable = "sos/mfr/graviditetslangd-dagar-basta-skattning"
+originals_sha256 = "ac9d7e6961bced806c682b93289849a99f6c0df00b11c68329cd706a892dd489"
+
+[[documentary.binding.unresolved]]
+clause_index = 1
+token = "GRVB"
+reason = "Exact supplied GRVB has no native catalog endpoint; no days/weeks replacement is authorized."
+
+[[documentary.binding.negative_native_guards]]
+native = "GRVB"
+originals_sha256 = "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"

@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _prepared_fixtures import accept_prepared
+from reg_meta.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.prepared_sources import (
     PreparedSourceError,
     PreparedSourceRecords,
@@ -20,9 +21,7 @@ from reg_meta_build.prepared_sources import (
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_records import (
     CodeSetReference,
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     SourceCoordinate,
     SourceEvidenceRow,
     SourceEvidenceTable,
@@ -30,7 +29,6 @@ from reg_meta_build.source_records import (
     SourceFields,
     SourceParentObservation,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

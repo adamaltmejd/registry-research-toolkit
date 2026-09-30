@@ -4,16 +4,15 @@ from __future__ import annotations
 
 import pytest
 from pydantic import ValidationError
+from reg_meta.source_evidence import RecordLocator, SourceRevision
 from reg_meta_build.source_coordinates import native_variable_key
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_records import (
     NativeCoordinates,
-    RecordLocator,
     SourceCoordinate,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

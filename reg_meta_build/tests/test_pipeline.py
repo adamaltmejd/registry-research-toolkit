@@ -14,7 +14,9 @@ import pytest
 from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
 from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
+from reg_meta.documentary import SourceCodeCrosswalkDeclaration
 from reg_meta.errors import EXIT_USAGE
+from reg_meta.source_evidence import RecordLocator, SourceRevision
 from reg_meta_build.catalog_dependencies import CatalogDependencyError
 from reg_meta_build.cli import run
 from reg_meta_build.curation_tree import (
@@ -35,8 +37,6 @@ from reg_meta_build.prepared_catalog import (
 )
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_naming import authored_naming_id
-from reg_meta_build.source_records import RecordLocator, SourceRevision
-from reg_meta_build.source_reference_records import SourceCodeCrosswalkDeclaration
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:

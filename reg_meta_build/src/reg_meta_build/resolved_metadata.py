@@ -11,6 +11,7 @@ from collections import defaultdict
 from typing import TYPE_CHECKING, Any, Literal, Self
 
 from pydantic import Field, field_validator, model_validator
+from reg_meta.documentary import DocumentaryRelationship
 from reg_meta.fqid import FqidKind, parse, validate_slug
 
 from reg_meta_build._resolved_common import (
@@ -395,6 +396,7 @@ class ResolvedMetadata(_ResolvedModel):
     source_join_keys: tuple[ResolvedSourceJoinKey, ...] = ()
     identifiers: tuple[ResolvedIdentifierMetadata, ...] = ()
     timeseries_events: tuple[ResolvedTimeseriesEvent, ...] = ()
+    documentary_relationships: tuple[DocumentaryRelationship, ...] = ()
 
 
 def _unique(values: Any, label: str) -> None:
@@ -416,6 +418,10 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
         "variable group key",
     )
     _unique((g.key for g in metadata.classification_groups), "classification group key")
+    _unique(
+        (r.relationship_id for r in metadata.documentary_relationships),
+        "documentary relationship identity",
+    )
     owners = {}
     for group in metadata.variable_groups:
         for member in group.members:
@@ -531,6 +537,8 @@ _COLUMNS = {
     "source_join_key": "table_name,column_name,description",
     "identifier_semantics": "var_id,variabelnamn,variabeldefinition",
     "timeseries_event": "namn,handelse,beskrivning,entitet,id1,id2,fil_id",
+    "source_relationship": "relationship_id,owner_variable_id,kind,source_dataset,source_revision_id,declaration_json,binding_status,unresolved_json,provenance",
+    "source_relationship_variable": "relationship_id,ordinal,clause_index,operand_index,literal_token,endpoint_variable_id",
 }
 
 
@@ -812,6 +820,38 @@ def prepare_resolved_metadata(
         )
         for item in metadata.timeseries_events
     )
+    for relationship in metadata.documentary_relationships:
+        relationship = DocumentaryRelationship.model_validate_json(
+            relationship.model_dump_json()
+        )
+        rows["source_relationship"].append(
+            (
+                relationship.relationship_id,
+                variable_ids[relationship.owner],
+                relationship.declaration.kind,
+                relationship.declaration.revision.dataset,
+                relationship.declaration.revision.revision_id,
+                relationship.declaration.model_dump_json(),
+                relationship.binding_status,
+                json.dumps(
+                    [u.model_dump(mode="json") for u in relationship.unresolved],
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                ),
+                relationship.provenance,
+            )
+        )
+        rows["source_relationship_variable"].extend(
+            (
+                relationship.relationship_id,
+                ordinal,
+                anchor.clause_index,
+                anchor.operand_index,
+                anchor.token,
+                variable_ids[anchor.variable],
+            )
+            for ordinal, anchor in enumerate(relationship.variables)
+        )
     return rows
 
 

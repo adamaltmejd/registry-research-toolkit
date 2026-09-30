@@ -8856,3 +8856,16 @@ evidence = "SCB official2015 questionnaire, SCBDOK LE0108 appendix1 PDFpage22, e
 noted = "2026-09-30"
 authority = { variable = "258.35544", variant = "258.557", column = "H8X1", edition = "12033", expected_fields = [{ name = "definition", status = "value", value = "Har du något arbete som du är sjukskriven ifrån?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sjukskrivning" }, { name = "operational_definition", status = "absent" }], expected_period_text = "2015", expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }, expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }, evidence = "SCB official2015 questionnaire, SCBDOK LE0108 appendix1 PDFpage22, explicitly distinguishes H8 main employment status from H8X1 asking whether a sick-listed respondent has a job: https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/le0108_do_2015.pdf. Positive native258.35544 Sjukskrivning supplies exactly that H8X1 question at edition12033. The simultaneous native17588 H8X1 employment-status assertion and native12944 H8X1 legacy14-day sick-leave assertion contradict that direct questionnaire and positive same-edition question. Retain those exact assertions as support evidence, with all originals, contradictory definitions, SCB coding, periods and provenance unchanged. Keep genuine native35544 and H8 employment status in catalog; do not merge native identities, infer response-code equivalence or reinterpret unspecified H9txt/H8X2txt roles. Both entire target and authoritative native families, complete external coding fingerprints and every alternative sharing the targeted semantic reference are guarded.", noted = "2026-09-30" }
 expected_coding_sha256 = "547b701aec19d2cdaa8b3f91e2a7c9197f67ff9400d4e5700de3b4ccdfbd6763"
+
+[[coding.documented]]
+variable = "258.15968.utfort-bankarenden-pa-natet"
+variant = "258.557"
+column = "DatC5M"
+periods = [["2007-01-01", "2007-12-31"]]
+version_label = "Använt Internetbank 2007"
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
+document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
+document_pages = [60, 61]
+reason = "Restore the complete stored2007 online-banking response domain from the exact-wave variable dictionary; preserve every original and subsequent response list."
+source = "SCB IT0102 SCBDOK2007 dictionary pages60–61: Använt Internetbank explicitly identifies questionC5m and private internet banking during the last three months. Supplied native15968 definition identifies private online banking during the same three months, physical2007DatC5M, and the approved IT75 native-question identity retains this alias. The dictionary supplies stored codes1/2/8/9 and empty=inte tillfrågad, including missing/filter categories; transcribe them literally. This is neither a generic binary-code assumption nor an extension of a later list; all later code/label changes and original associations remain unchanged."

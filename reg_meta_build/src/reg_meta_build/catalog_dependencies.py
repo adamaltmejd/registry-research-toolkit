@@ -1209,6 +1209,14 @@ def resolve_metadata_dependencies(
             "lineage_warnings",
             lambda e, o: [state(e.consumer, o)],
         ),
+        "documentary_relationships": selected(
+            metadata.documentary_relationships,
+            "documentary_relationships",
+            lambda e, o: [
+                entity(fqid, o)
+                for fqid in (e.owner, *(a.variable for a in e.variables))
+            ],
+        ),
         "source_join_keys": selected(
             metadata.source_join_keys,
             "source_join_keys",

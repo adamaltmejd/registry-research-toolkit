@@ -36,10 +36,10 @@ from typing import TYPE_CHECKING, Any, Literal, Self, cast
 from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
+from reg_meta.source_evidence import SourceRevision
 
 from .db import _CURATED_PROVIDERS, _file_sha256
 from .dbdiff import TableIgnore, diff_db_content, format_report
-from .source_records import SourceRevision
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Iterator, Mapping, Sequence

@@ -23,6 +23,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, field_validator
+from reg_meta.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+)
 
 from reg_meta_build._accepted_prepared import (
     check_accepted_files,
@@ -33,19 +39,15 @@ from reg_meta_build.input_snapshot import SnapshotError, _git
 from reg_meta_build.source_coordinates import native_register_key, native_variable_key
 from reg_meta_build.source_records import (
     CodeSetReference,
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
     SourceEvidenceRow,
     SourceEvidenceTable,
-    SourceField,
     SourceFieldCells,
     SourceFields,
     SourceParentObservation,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
 )

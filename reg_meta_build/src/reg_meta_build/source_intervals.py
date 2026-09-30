@@ -13,6 +13,8 @@ from datetime import date
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
+from reg_meta.source_evidence import SourceField
+
 from reg_meta_build._curation import (
     data_type_class,
     fold_column,
@@ -20,7 +22,6 @@ from reg_meta_build._curation import (
 )
 from reg_meta_build.source_occurrences import EffectiveOccurrence, effective_occurrence
 from reg_meta_build.source_records import (
-    SourceField,
     SourceFields,
     SourceParentObservation,
     SourceRecord,

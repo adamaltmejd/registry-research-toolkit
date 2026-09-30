@@ -13,6 +13,12 @@ from functools import cached_property
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from reg_meta.source_evidence import (
+    FieldScalar,
+    FieldState,
+    SourceField,
+    canonical_sha256,
+)
 
 from reg_meta_build._curation import fold_column
 from reg_meta_build._resolved_common import covers_window
@@ -24,18 +30,14 @@ from reg_meta_build.source_coordinates import (
 )
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
-    FieldScalar,
-    FieldState,
     NativeCoordinates,
     SourceCoordinate,
-    SourceField,
     SourceFields,
     SourceParentKind,
     SourceParentObservation,
     SourceRecord,
     SourceSubject,
     TemporalScope,
-    canonical_sha256,
 )
 
 if TYPE_CHECKING:
@@ -670,6 +672,32 @@ class DocumentedCodingSelection(_CurationModel):
         return self
 
 
+class SupportedCodingAssociation(_CurationModel):
+    """One erroneous physical assertion retained as documentary support only."""
+
+    kind: Literal["support"] = "support"
+    code: str
+    label: str
+    association: str = Field(min_length=1)
+    expected_association: str = Field(pattern=r"^[0-9a-f]{64}$")
+    authority_code: str
+    authority_label: str
+    authority_association: str = Field(min_length=1)
+    expected_authority_association: str = Field(pattern=r"^[0-9a-f]{64}$")
+    expected_source_codings: Annotated[
+        tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...],
+        Field(strict=False, min_length=1),
+    ]
+
+    @model_validator(mode="after")
+    def _distinct_associations(self) -> Self:
+        if self.association == self.authority_association:
+            raise ValueError("support disposition needs a distinct positive authority")
+        if len(set(self.expected_source_codings)) != len(self.expected_source_codings):
+            raise ValueError("source coding fingerprints must be unique")
+        return self
+
+
 class _ColumnDecision(CodingWindow):
     reviewed: Literal[True]
     column_key: NativeKey
@@ -690,7 +718,10 @@ class CodingDecision(_ColumnDecision):
 
     kind: Literal["coding"] = "coding"
     selection: (
-        CodingSelection | DocumentedCodingSelection | Literal["uncoded", "omit_state"]
+        CodingSelection
+        | DocumentedCodingSelection
+        | SupportedCodingAssociation
+        | Literal["uncoded", "omit_state"]
     )
 
 

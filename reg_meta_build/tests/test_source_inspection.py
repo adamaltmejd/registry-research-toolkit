@@ -23,6 +23,7 @@ from _lisa_fixtures import write_lisa_workbook
 from openpyxl import load_workbook
 from pydantic import ValidationError
 from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
+from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.input_snapshot import (
     LISA_DATASET_ID,
     LisaWorkbookSelection,
@@ -42,13 +43,10 @@ from reg_meta_build.source_inspection import (
 from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

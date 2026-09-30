@@ -6,7 +6,7 @@ import hashlib
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta_build.source_records import SourceRevision
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.sources.code_lists import CodeListSourceError, read_code_list
 
 if TYPE_CHECKING:

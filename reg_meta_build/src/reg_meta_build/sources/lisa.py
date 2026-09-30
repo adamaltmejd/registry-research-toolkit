@@ -8,18 +8,16 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
+from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 
 from reg_meta_build.input_snapshot import SnapshotError
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

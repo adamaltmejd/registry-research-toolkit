@@ -841,3 +841,39 @@ expected_reference = "fel i SCB dokumentaion försök igen"
 expected_representation = "1 vid överenstämmelse"
 evidence = "Metadata - Variabelnivå row 160 describes a match flag between occupation and the November employment organisation number, with F='1 vid överenstämmelse'. G contains only the editorial error note 'fel i SCB dokumentaion försök igen', which does not name a classification. No additional response code or label is inferred."
 noted = "2026-09-30"
+
+[[errata.field]]
+variable = "7847722537922273761.SUN2000INR"
+variant = "A_LOVA_EXAMEN"
+column = "SUN2000INR"
+expected_fields = [{ name = "classification_declared", status = "value", value = "Svensk utbildningsnomenklatur (SUN)" }, { name = "coverage_from", status = "value", value = "1995" }, { name = "coverage_to", status = "unknown" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Inriktning på högsta utbilding enligt SUN2000" }, { name = "name", status = "value", value = "Utbildningsinriktning, högsta avslutade, SUN2000" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "value", value = "Fyrställig kod med 3 siffror och en bokstav" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1995" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "Exact original row:161: supplied name, description and representation explicitly identify SUN2000-INRIKTNING. The generic documentation link does not distinguish that scheme. Bind only this positively identified original to the existing book; preserve its original claim and all retrospective observation scopes, widths, types, contexts and coding. No classification year or coverage is inferred."
+noted = "2026-09-30"
+field = "classification_declared"
+value = "SUN2000-INRIKTNING"
+
+[[errata.field]]
+variable = "7847722537922273761.SUN2020INR"
+variant = "A_LOVA_EXAMEN"
+column = "SUN2020INR"
+expected_fields = [{ name = "classification_declared", status = "value", value = "Svensk utbildningsnomenklatur (SUN)" }, { name = "coverage_from", status = "value", value = "1977" }, { name = "coverage_to", status = "unknown" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Inriktning på högsta utbilding enligt SUN2020" }, { name = "name", status = "value", value = "Utbildningsinriktning, högsta avslutade, SUN2020" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "value", value = "Fyrställig kod med 3 siffror och en bokstav" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1977" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "Exact original row:164: supplied name, description and representation explicitly identify SUN2020-INRIKTNING. The generic documentation link does not distinguish that scheme. Bind only this positively identified original to the existing book; preserve its original claim and all retrospective observation scopes, widths, types, contexts and coding. No classification year or coverage is inferred."
+noted = "2026-09-30"
+field = "classification_declared"
+value = "SUN2020-INRIKTNING"
+
+[[errata.field]]
+variable = "7847722537922273761.SUN2020NIVA"
+variant = "A_LOVA_EXAMEN"
+column = "SUN2020NIVA"
+expected_fields = [{ name = "classification_declared", status = "value", value = "Svensk utbildningsnomenklatur (SUN)" }, { name = "coverage_from", status = "value", value = "1977" }, { name = "coverage_to", status = "unknown" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Nivå på högsta utbilding enligt SUN2020" }, { name = "name", status = "value", value = "Utbildningsnivå, högsta avslutade, SUN2020" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "value", value = "tresiffrig kod" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1977" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "Exact original row:165: supplied name, description and representation explicitly identify SUN2020-NIVA. The generic documentation link does not distinguish that scheme. Bind only this positively identified original to the existing book; preserve its original claim and all retrospective observation scopes, widths, types, contexts and coding. No classification year or coverage is inferred."
+noted = "2026-09-30"
+field = "classification_declared"
+value = "SUN2020-NIVA"

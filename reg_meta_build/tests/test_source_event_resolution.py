@@ -6,11 +6,12 @@ from dataclasses import replace
 
 import pytest
 from reg_meta.errors import RegMetaError
+from reg_meta.source_evidence import DeliveredCell
 from reg_meta_build.resolved_catalog import ResolvedRegister
 from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedSuccession
 from reg_meta_build.source_coordinates import source_register_key
 from reg_meta_build.source_event_resolution import SourceEventBindings
-from reg_meta_build.source_records import DeliveredCell, value_field
+from reg_meta_build.source_records import value_field
 from reg_meta_build.source_reference_records import SourceEventDeclaration
 from test_source_reference_resolution import LOCATOR, REVISION
 from test_source_scope import record, resolve

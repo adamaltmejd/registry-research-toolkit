@@ -15,6 +15,8 @@ from datetime import date
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
+from reg_meta.source_evidence import canonical_sha256
+
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
@@ -38,19 +40,19 @@ from reg_meta_build.source_records import (
     SourceFields,
     SourceRecord,
     TemporalScope,
-    canonical_sha256,
 )
 from reg_meta_build.source_values import SourceValueWindow
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
+    from reg_meta.source_evidence import RecordLocator
+
     from reg_meta_build.prepared_values import (
         PreparedSourceValues,
         PreparedValueSession,
     )
     from reg_meta_build.source_occurrences import EffectiveOccurrence
-    from reg_meta_build.source_records import RecordLocator
     from reg_meta_build.source_support import SourceSupportBindings
     from reg_meta_build.source_values import SourceValueAssociation
 

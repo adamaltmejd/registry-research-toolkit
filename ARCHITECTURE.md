@@ -267,3 +267,9 @@ git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
   | §6.8.3 semantic rules, §9 webapp                                                                                    | `reg_webapp/DESIGN.md`              |
   | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                             | `archive/mona-subsystem`            |
   | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–12, remaining §16 | `REFACTOR_SPEC.md` (remaining work) |
+
+Shared literal source evidence types belong to `reg_meta`: the consumer must be able to
+validate documentary catalog relationships without importing the builder.
+`reg_meta_build` owns occurrence formation and reconciliation and imports those strict
+evidence types directly. Documentary owner/operand links are metadata, not state
+availability, equivalence, lineage or executable transformation edges.

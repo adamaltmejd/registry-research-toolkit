@@ -10,6 +10,7 @@ from typing import Any, cast
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from _prepared_fixtures import accept_prepared
+from reg_meta.source_evidence import SourceField, SourceRevision, canonical_sha256
 from reg_meta_build.catalog_dependencies import (
     CatalogDependencies,
     CatalogDependencyError,
@@ -69,12 +70,9 @@ from reg_meta_build.source_naming import (
 )
 from reg_meta_build.source_records import (
     ScopeInterval,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     TemporalScope,
-    canonical_sha256,
     value_field,
 )
 from reg_meta_build.source_scope import resolve_source_scope

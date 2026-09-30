@@ -3,8 +3,9 @@
 from dataclasses import replace
 
 import pytest
+from reg_meta.source_evidence import SourceField
 from reg_meta_build.source_occurrences import source_occurrence
-from reg_meta_build.source_records import SourceField, value_field
+from reg_meta_build.source_records import value_field
 from reg_meta_build.source_siblings import resolve_sibling_pairs
 from test_source_scope import record
 

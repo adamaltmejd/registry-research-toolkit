@@ -7,16 +7,12 @@ from typing import TYPE_CHECKING
 
 from _lisa_fixtures import write_lisa_workbook
 from openpyxl import load_workbook
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import source_occurrence
-from reg_meta_build.source_records import (
-    SourceFields,
-    SourceRecord,
-    SourceRevision,
-    value_field,
-)
+from reg_meta_build.source_records import SourceFields, SourceRecord, value_field
 from reg_meta_build.sources.lisa import read_lisa_source
 
 if TYPE_CHECKING:

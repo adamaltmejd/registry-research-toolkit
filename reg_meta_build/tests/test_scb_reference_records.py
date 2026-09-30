@@ -15,8 +15,8 @@ from _csv_fixtures import (
 )
 from openpyxl import Workbook
 from pydantic import TypeAdapter
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.input_snapshot import open_scb_snapshot
-from reg_meta_build.source_records import SourceRevision
 from reg_meta_build.source_reference_records import SourceReferenceDeclaration
 from reg_meta_build.sources.scb_reference_records import (
     ScbReferenceSourceError,

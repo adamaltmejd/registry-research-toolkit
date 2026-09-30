@@ -706,11 +706,12 @@ def test_repo_coding_windows_are_ported() -> None:
             register.coding.omit,
             register.coding.extend,
             register.coding.documented,
+            register.coding.support,
         )
         for entry in kind
     ]
-    assert len(coding) == 163
-    assert sum(len(entry.periods) for entry in coding) == 311
+    assert len(coding) == 172
+    assert sum(len(entry.periods) for entry in coding) == 320
     assert (
         sum(
             len(entry.periods)
@@ -727,10 +728,11 @@ def test_repo_coding_windows_are_ported() -> None:
                 or register.coding.omit
                 or register.coding.extend
                 or register.coding.documented
+                or register.coding.support
             )
             for register in tree.registers
         )
-        == 25
+        == 26
     )
 
 

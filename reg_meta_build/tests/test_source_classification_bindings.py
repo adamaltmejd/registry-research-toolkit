@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build._curation import SentinelCode
 from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.curation_tree import load_curation_tree
@@ -36,9 +37,7 @@ from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,
     ScopeInterval,
-    SourceField,
     SourceFields,
-    SourceRevision,
     TemporalScope,
     value_field,
 )
@@ -863,8 +862,8 @@ def test_retained_detailed_sni_label_still_binds():
 
 
 def _scoped_sentinel_case(setup, *, start="2020-01-01", end="2020-12-31"):
+    from reg_meta.source_evidence import canonical_sha256
     from reg_meta_build.source_coding import copied_coding_fingerprints
-    from reg_meta_build.source_records import canonical_sha256
 
     record, case, coding, books = setup
     decision = case.decision

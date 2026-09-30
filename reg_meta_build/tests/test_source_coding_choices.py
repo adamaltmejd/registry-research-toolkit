@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.curation_tree import RegisterCuration
 from reg_meta_build.pipeline import CompiledScope
@@ -41,7 +42,6 @@ from reg_meta_build.source_records import (
     ScopeInterval,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     TemporalScope,
     value_field,
 )
@@ -1462,3 +1462,102 @@ def test_documented_coding_rejects_an_open_ended_window():
             {**_documented_values(), "periods": [["2020-01-01", "9999-12-31"]]},
             (),
         )
+
+
+def _association_support_fixture():
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_values import SourceValueAssociation
+
+    scope = TemporalScope(kind="year_independent")
+    associations = tuple(
+        SourceValueAssociation(i, "book", str(i), "book.xlsx", "codes")
+        for i in (21, 22, 23)
+    )
+    claim = replace(
+        _claim("complete", "16310"),
+        members=(
+            CodeMembershipClaim("16310", "Pachygyria", scope, (associations[0],)),
+            CodeMembershipClaim("16320", "Microgyria", scope, (associations[1],)),
+            CodeMembershipClaim(
+                "16310", "Erroneous microgyria", scope, (associations[2],)
+            ),
+        ),
+    )
+    values = {
+        "code": "16310",
+        "label": "Erroneous microgyria",
+        "association": associations[2].locator,
+        "expected_association": coding_source_sha256(associations[2]),
+        "authority_code": "16320",
+        "authority_label": "Microgyria",
+        "authority_association": associations[1].locator,
+        "expected_authority_association": coding_source_sha256(associations[1]),
+        "expected_source_codings": [coding_source_sha256(claim)],
+    }
+    return claim, values
+
+
+def test_checked_association_support_preserves_raw_claim_and_distinct_constructs():
+    claim, values = _association_support_fixture()
+    record = _record()
+    cases, diagnostics, _, _, _, column = _compile_entry(
+        "support", values, (claim,), record=record
+    )
+    assert not diagnostics
+    result = apply_coding_choices((record,), cases, coding={column: (claim,)})
+    assert result.accounting[0].status == "applied"
+    assert result.coding[column].claims == (claim,)
+    assert result.coding[column].segments[0].code_set.members == (
+        ("16310", "Pachygyria"),
+        ("16320", "Microgyria"),
+    )
+    assert result.coding[column].segments[0].provenance
+    assert [d.code for d in result.diagnostics] == [
+        "supported_erroneous_coding_association"
+    ]
+
+
+@pytest.mark.parametrize("change", ["missing", "new", "label", "association", "scope"])
+def test_checked_association_support_rejects_changed_complete_evidence(change):
+    claim, values = _association_support_fixture()
+    record = _record()
+    cases, _, _, _, _, column = _compile_entry(
+        "support", values, (claim,), record=record
+    )
+    if change == "missing":
+        changed = replace(claim, members=claim.members[:1] + claim.members[2:])
+    elif change == "new":
+        changed = replace(
+            claim,
+            members=claim.members
+            + (
+                CodeMembershipClaim("9", "New", TemporalScope(kind="year_independent")),
+            ),
+        )
+    elif change == "label":
+        changed = replace(
+            claim,
+            members=(replace(claim.members[0], label="Changed"), *claim.members[1:]),
+        )
+    elif change == "association":
+        m = claim.members[0]
+        changed = replace(
+            claim,
+            members=(
+                replace(m, associations=(replace(m.associations[0], row_number=99),)),
+                *claim.members[1:],
+            ),
+        )
+    else:
+        changed = replace(
+            claim,
+            scope=TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start="2020-02-01", end="2020-12-31"),),
+            ),
+        )
+    _, diagnostics, *_ = _compile_entry("support", values, (changed,), record=record)
+    assert diagnostics[0].code == "stale_curation_entry"
+    result = apply_coding_choices((record,), cases, coding={column: (changed,)})
+    assert result.accounting[0].status == "stale"
+    assert result.coding[column].claims == (changed,)

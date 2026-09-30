@@ -7,17 +7,19 @@ import re
 from typing import TYPE_CHECKING
 
 from openpyxl import load_workbook
+from reg_meta.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+    canonical_sha256,
+)
 
 from reg_meta_build.db import EXPECTED_HEADERS, _open_scb_csv_prepared
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
-    DeliveredCell,
-    RecordLocator,
     SourceEvidenceRow,
     SourceEvidenceTable,
-    SourceField,
-    SourceRevision,
-    canonical_sha256,
     value_field,
 )
 from reg_meta_build.source_reference_records import (

@@ -13,6 +13,8 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal, cast
 
+from reg_meta.source_evidence import canonical_sha256
+
 from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.source_coding import (
     CodeListClaim,
@@ -22,6 +24,7 @@ from reg_meta_build.source_coding import (
     CodingSegment,
     coding_content_sha256,
     coding_observation_fingerprints,
+    coding_source_sha256,
     resolve_code_membership,
 )
 from reg_meta_build.source_curation import (
@@ -31,16 +34,12 @@ from reg_meta_build.source_curation import (
     DocumentedCodingSelection,
     ResolutionDiagnostic,
     SourceEvidence,
+    SupportedCodingAssociation,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
-from reg_meta_build.source_records import (
-    ScopeInterval,
-    SourceFields,
-    TemporalScope,
-    canonical_sha256,
-)
+from reg_meta_build.source_records import ScopeInterval, SourceFields, TemporalScope
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -252,6 +251,65 @@ def _complete_lists(
     return tuple((digest, *found[digest]) for digest in sorted(found))
 
 
+def _supported_association(
+    selection: SupportedCodingAssociation,
+    claims: tuple[CodeListClaim, ...],
+    start: str,
+    end: str,
+) -> tuple[CodingResolution | None, str | None]:
+    if tuple(sorted({coding_source_sha256(claim) for claim in claims})) != tuple(
+        sorted(selection.expected_source_codings)
+    ):
+        return None, "support_coding_evidence_changed"
+    matches = []
+    authority = []
+    for ci, claim in enumerate(claims):
+        for mi, member in enumerate(claim.members):
+            for ai, association in enumerate(member.associations):
+                receipt = coding_source_sha256(association)
+                if (
+                    (member.code, member.label) == (selection.code, selection.label)
+                    and association.locator == selection.association
+                    and receipt == selection.expected_association
+                ):
+                    matches.append((ci, mi, ai))
+                if (
+                    (member.code, member.label)
+                    == (selection.authority_code, selection.authority_label)
+                    and association.locator == selection.authority_association
+                    and receipt == selection.expected_authority_association
+                ):
+                    authority.append((ci, mi))
+    if len(matches) != 1 or len(authority) != 1:
+        return None, "support_association_or_authority_changed"
+    ci, mi, ai = matches[0]
+    aci, ami = authority[0]
+    if ci != aci or not _covers(
+        resolve_code_membership(
+            (replace(claims[aci], members=(claims[aci].members[ami],)),)
+        ),
+        start,
+        end,
+    ):
+        return None, "support_authority_window_changed"
+    members = []
+    for index, member in enumerate(claims[ci].members):
+        if index == mi:
+            associations = member.associations[:ai] + member.associations[ai + 1 :]
+            if associations:
+                members.append(replace(member, associations=associations))
+        else:
+            members.append(member)
+    effective = tuple(
+        replace(claim, members=tuple(members)) if index == ci else claim
+        for index, claim in enumerate(claims)
+    )
+    resolved = resolve_code_membership(coding_for_period(effective, start, end))
+    if not _covers(resolved, start, end):
+        return None, "support_projection_still_conflicted"
+    return replace(resolved, claims=claims), None
+
+
 def compile_coding_selection(
     entry: CodingEntry | CodingChoiceEntry | CodingExtendEntry | CodingDocumentedEntry,
     kind: str,
@@ -261,12 +319,24 @@ def compile_coding_selection(
 ) -> tuple[
     CodingSelection
     | DocumentedCodingSelection
+    | SupportedCodingAssociation
     | Literal["uncoded", "omit_state"]
     | None,
     str,
     str,
 ]:
     """Check a literal coding declaration against the current scope's claims."""
+    if kind == "support":
+        selection = SupportedCodingAssociation.model_validate(
+            {
+                name: getattr(entry, name)
+                for name in SupportedCodingAssociation.model_fields
+            }
+        )
+        _, problem = _supported_association(selection, claims, start, end)
+        return (
+            (selection, "matched", "") if problem is None else (None, "stale", problem)
+        )
     complete = _complete_lists(claims, start, end)
     if kind == "documented":
         if any(
@@ -365,6 +435,10 @@ def _selection(
     decision: CodingDecision, claims: tuple[CodeListClaim, ...]
 ) -> tuple[CodingResolution | None, str | None]:
     selection = decision.selection
+    if isinstance(selection, SupportedCodingAssociation):
+        return _supported_association(
+            selection, claims, decision.valid_from, decision.valid_to
+        )
     if isinstance(selection, DocumentedCodingSelection):
         scope = TemporalScope(
             kind="intervals",
@@ -470,11 +544,17 @@ def apply_coding_choices(
             _require_checked(
                 target,
                 tuple(SourceFields.model_fields)
-                if isinstance(case.decision.selection, DocumentedCodingSelection)
+                if isinstance(
+                    case.decision.selection,
+                    (DocumentedCodingSelection, SupportedCodingAssociation),
+                )
                 else ("column_name",),
                 case_id=case.case_id,
             )
-            if isinstance(case.decision.selection, DocumentedCodingSelection) and any(
+            if isinstance(
+                case.decision.selection,
+                (DocumentedCodingSelection, SupportedCodingAssociation),
+            ) and any(
                 alternative.edition_scope is None
                 or alternative.edition_period_scope is None
                 or alternative.code_set_references is None
@@ -554,11 +634,9 @@ def apply_coding_choices(
         else:
             selected, problem = _selection(decision, claims)
             if problem is not None:
-                selection = decision.selection
-                assert isinstance(selection, CodingSelection)
                 report(
                     problem,
-                    f"The selected coding witness in {selection.valid_from} to {selection.valid_to} changed, is incomplete, or cannot supply one constant membership for an extension.",
+                    "The checked coding selection or complete source-association evidence changed; no assignment was applied.",
                 )
                 status = "stale"
             else:
@@ -575,6 +653,18 @@ def apply_coding_choices(
                         for segment in selected.segments
                     ),
                 )
+                if isinstance(decision.selection, SupportedCodingAssociation):
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code="supported_erroneous_coding_association",
+                            severity="warning",
+                            case_id=case.case_id,
+                            subject=repr(decision.column_key),
+                            detail=f"Original assertion {decision.selection.association} retained as support only. {decision.reason}",
+                            valid_from=decision.valid_from,
+                            valid_to=decision.valid_to,
+                        )
+                    )
                 choices[decision.column_key].append((case.case_id, selected))
                 status = "applied"
         accounting.append(

@@ -8,6 +8,8 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
 
+from reg_meta.source_evidence import canonical_sha256
+
 from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.normalization import normalize_text
 from reg_meta_build.source_classifications import resolve_classification_conformance
@@ -27,7 +29,7 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import _require_checked, record_ref
 from reg_meta_build.source_intervals import coding_scope_bounds, scope_bounds
-from reg_meta_build.source_records import SourceFields, canonical_sha256
+from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping

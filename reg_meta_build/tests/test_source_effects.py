@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.db import open_db
+from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.resolved_catalog import (
@@ -57,12 +58,9 @@ from reg_meta_build.source_intervals import (
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     TemporalScope,
     value_field,
 )

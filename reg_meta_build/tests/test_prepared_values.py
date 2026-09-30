@@ -10,13 +10,13 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _prepared_fixtures import accept_prepared
+from reg_meta.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.prepared_values import (
     PreparedValueError,
     open_prepared_source_values,
     prepare_source_values,
     prepared_value_paths,
 )
-from reg_meta_build.source_records import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.source_values import (
     SourceMemberHint,
     SourceValue,

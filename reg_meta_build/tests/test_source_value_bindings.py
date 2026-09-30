@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Literal
 
 import pytest
 from _prepared_fixtures import accept_prepared
+from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.prepared_values import (
     open_prepared_source_values,
     prepare_source_values,
@@ -21,13 +22,10 @@ from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

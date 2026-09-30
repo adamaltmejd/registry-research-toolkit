@@ -10,6 +10,7 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
 from reg_meta.catalog import Catalog
 from reg_meta.db import open_db
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
@@ -43,7 +44,6 @@ from reg_meta_build.source_records import (
     NativeCoordinates,
     ScopeInterval,
     SourceFields,
-    SourceRevision,
     TemporalScope,
     value_field,
 )

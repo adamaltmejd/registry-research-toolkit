@@ -17,6 +17,7 @@ from _csv_fixtures import (
 )
 from _lisa_fixtures import write_lisa_workbook
 from openpyxl import load_workbook
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.db import _open_scb_csv_raw
 from reg_meta_build.input_snapshot import LisaWorkbookSelection, open_input_bundle
 from reg_meta_build.source_inspection import (
@@ -24,7 +25,6 @@ from reg_meta_build.source_inspection import (
     inspect_bundle_source_records,
     write_scb_observation_census,
 )
-from reg_meta_build.source_records import SourceRevision
 from reg_meta_build.sources import lisa as lisa_module
 from reg_meta_build.sources.lisa import read_lisa_source
 

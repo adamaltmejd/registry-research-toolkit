@@ -5,22 +5,22 @@ Native tokens retain their delivered representation and source-local meaning.
 """
 
 # Pydantic resolves inherited declaration field types at runtime.
-# ruff: noqa: TC001
+# ruff: noqa: TC001, TC002
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
-
-from reg_meta_build.source_records import (
-    DeliveredCell,
-    RecordLocator,
-    SourceEvidenceTable,
-    SourceField,
-    SourceRevision,
+from pydantic import Field
+from reg_meta.documentary import (
+    SourceCodeCrosswalkDeclaration,
+    SourceDerivationDeclaration,
+    _SourceDeclaration,
 )
+from reg_meta.source_evidence import DeliveredCell, SourceField, SourceRevision
+
+from reg_meta_build.source_records import SourceEvidenceTable
 
 type SourceEventAction = Literal[
     "retired", "series_break", "replaced_by", "replaces", "unknown"
@@ -36,14 +36,6 @@ type SourceEntityKind = Literal[
     "population_context",
     "opaque",
 ]
-
-
-class _SourceDeclaration(BaseModel):
-    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
-
-    revision: SourceRevision
-    locator: RecordLocator
-    delivered_cells: tuple[DeliveredCell, ...]
 
 
 class SourceEventDeclaration(_SourceDeclaration):
@@ -75,43 +67,6 @@ class SourceJoinKeyDeclaration(_SourceDeclaration):
     description: SourceField
 
 
-class SourceCodeOperand(BaseModel):
-    """A named source code column; peer operands do not choose a namespace."""
-
-    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
-
-    role: Literal["input", "output", "peer"]
-    name: str
-    code: SourceField
-
-
-class SourceCodeCrosswalkDeclaration(_SourceDeclaration):
-    kind: Literal["code_crosswalk"] = "code_crosswalk"
-    member_name: SourceField | None
-    supplied_period: SourceField | None
-    section_period: SourceField | None
-    section_locator: RecordLocator | None
-    description: SourceField | None
-    operands: tuple[SourceCodeOperand, ...]
-
-
-class SourceDerivationClause(BaseModel):
-    """One named literal clause, never an evaluated expression or code list."""
-
-    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
-
-    name: str
-    content: SourceField
-
-
-class SourceDerivationDeclaration(_SourceDeclaration):
-    kind: Literal["derivation"] = "derivation"
-    member_name: SourceField | None
-    supplied_period: SourceField | None
-    description: SourceField | None
-    clauses: tuple[SourceDerivationClause, ...]
-
-
 type SourceReferenceDeclaration = Annotated[
     SourceEventDeclaration
     | SourceColumnTypeDeclaration
@@ -131,11 +86,7 @@ class CleanedSourceReferences:
 
 __all__ = [
     "CleanedSourceReferences",
-    "SourceCodeCrosswalkDeclaration",
-    "SourceCodeOperand",
     "SourceColumnTypeDeclaration",
-    "SourceDerivationClause",
-    "SourceDerivationDeclaration",
     "SourceEntityKind",
     "SourceEventAction",
     "SourceEventDeclaration",

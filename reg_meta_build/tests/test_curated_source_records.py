@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 from reg_meta.fqid import derive_variable_slug
-from reg_meta_build.source_records import SourceRevision
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.sources.curated_records import (
     CuratedSourceError,
     read_curated_source,

@@ -9,15 +9,17 @@ remain in the result so duplicate source associations are not lost in accounting
 
 from __future__ import annotations
 
+import json
 from collections import defaultdict
 from dataclasses import asdict, dataclass
 from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
+from reg_meta.source_evidence import canonical_sha256
+
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_intervals import coding_scope_bounds
-from reg_meta_build.source_records import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -437,3 +439,12 @@ def copied_coding_fingerprints(claims: Iterable[CodeListClaim]) -> tuple[str, ..
             else fingerprint
         )
     return tuple(sorted(fingerprints))
+
+
+def coding_source_sha256(value: CodeListClaim | SourceValueAssociation) -> str:
+    """Pin every ordered physical assertion and raw validity, including duplicates."""
+    return canonical_sha256(
+        json.loads(
+            json.dumps(asdict(value), default=lambda item: item.model_dump(mode="json"))
+        )
+    )

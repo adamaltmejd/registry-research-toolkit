@@ -14,26 +14,24 @@ from _sos_fixtures import (
     BU_SPEC_ONE_LINE,
     BU_SPEC_WRAPPED,
 )
+from reg_meta.documentary import (
+    SourceCodeCrosswalkDeclaration,
+    SourceDerivationDeclaration,
+)
+from reg_meta.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.source_coordinates import native_parent_key, source_register_key
 from reg_meta_build.source_curation import record_ref
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import (
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,
-)
-from reg_meta_build.source_reference_records import (
-    SourceCodeCrosswalkDeclaration,
-    SourceDerivationDeclaration,
 )
 from reg_meta_build.sources.sos import SosParseError, SosParseIssue, parse_register_file
 from reg_meta_build.sources.sos_records import (

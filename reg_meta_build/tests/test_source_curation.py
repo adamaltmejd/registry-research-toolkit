@@ -12,6 +12,12 @@ from typing import Literal
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
+from reg_meta.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+)
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
     CodingDecision,
@@ -26,15 +32,11 @@ from reg_meta_build.source_curation import (
     evaluate_cases,
 )
 from reg_meta_build.source_records import (
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

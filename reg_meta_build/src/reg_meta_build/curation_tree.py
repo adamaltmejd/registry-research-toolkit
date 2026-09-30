@@ -31,6 +31,10 @@ from pydantic import (
     field_validator,
     model_validator,
 )
+from reg_meta.documentary import (
+    DocumentaryVariableReference,
+    UnresolvedDocumentaryReference,
+)
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import validate_slug
 
@@ -52,6 +56,7 @@ from .source_curation import (
     DocumentedCodingSelection,
     FieldExpectation,
     FiniteCurationWindow,
+    SupportedCodingAssociation,
 )
 from .source_records import TemporalScope
 from .tags import load_tags
@@ -379,6 +384,7 @@ class ErrataClassificationReferenceEntry(_CurationModel):
     column: str
     expected_reference: str
     expected_representation: str
+    expected_description: str | None = None
     evidence: str
     noted: str
 
@@ -390,6 +396,11 @@ class ErrataClassificationReferenceEntry(_CurationModel):
         "expected_representation",
         "evidence",
     )(_require_trimmed)
+
+    @field_validator("expected_description")
+    @classmethod
+    def _description(cls, value: str | None) -> str | None:
+        return _require_trimmed(value) if value is not None else None
 
     @field_validator("noted")
     @classmethod
@@ -1032,6 +1043,10 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
         return self
 
 
+class CodingSupportEntry(CodingEntry, SupportedCodingAssociation):
+    """Checked disposition of one erroneous association, with positive authority."""
+
+
 class CodingSentinelEntry(CodingEntry):
     """Exact source members accepted only in this column's finite windows."""
 
@@ -1057,6 +1072,7 @@ class CodingCuration(_CurationModel):
     extend: list[CodingExtendEntry] = Field(default_factory=list)
     documented: list[CodingDocumentedEntry] = Field(default_factory=list)
     sentinel: list[CodingSentinelEntry] = Field(default_factory=list)
+    support: list[CodingSupportEntry] = Field(default_factory=list)
 
 
 class AcknowledgeEntry(_CurationModel):
@@ -1109,6 +1125,42 @@ class AcknowledgeEntry(_CurationModel):
         return self
 
 
+class DocumentaryEndpointGuard(_CurationModel):
+    native: str
+    originals_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+    _native = field_validator("native")(_require_trimmed)
+
+
+class DocumentaryAnchorEntry(DocumentaryVariableReference):
+    originals_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
+class DocumentaryBindingEntry(_CurationModel):
+    source: str
+    table: str
+    row: str
+    member: str
+    owner: str
+    payload_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    table_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    owner_originals_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    anchors: list[DocumentaryAnchorEntry] = Field(default_factory=list)
+    unresolved: list[UnresolvedDocumentaryReference] = Field(default_factory=list)
+    negative_native_guards: list[DocumentaryEndpointGuard] = Field(default_factory=list)
+    evidence: str
+    noted: str
+
+    _owner = field_validator("owner")(_variable)
+    _text = field_validator("source", "table", "row", "member", "evidence", "noted")(
+        _require_trimmed
+    )
+
+
+class DocumentaryCuration(_CurationModel):
+    binding: list[DocumentaryBindingEntry] = Field(default_factory=list)
+
+
 class RegisterCuration(_CurationModel):
     """One register file with a closed, typed table set."""
 
@@ -1124,6 +1176,7 @@ class RegisterCuration(_CurationModel):
     )
     identity: IdentityCuration = Field(default_factory=IdentityCuration)
     coding: CodingCuration = Field(default_factory=CodingCuration)
+    documentary: DocumentaryCuration = Field(default_factory=DocumentaryCuration)
     acknowledge: list[AcknowledgeEntry] = Field(default_factory=list)
 
     _source_file: str = PrivateAttr(default="")
@@ -1319,6 +1372,7 @@ def _register_arrays(
         ("coding.omit", entry.coding.omit),
         ("coding.extend", entry.coding.extend),
         ("coding.documented", entry.coding.documented),
+        ("coding.support", entry.coding.support),
         ("acknowledge", entry.acknowledge),
     )
 

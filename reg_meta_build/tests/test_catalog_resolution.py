@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.db import open_db
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.resolved_catalog import write_resolved_catalog
 from reg_meta_build.source_coding import resolve_code_membership
@@ -33,7 +34,7 @@ from reg_meta_build.source_naming import (
     check_naming_target,
 )
 from reg_meta_build.source_occurrences import source_occurrence
-from reg_meta_build.source_records import SourceFields, SourceRevision, value_field
+from reg_meta_build.source_records import SourceFields, value_field
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import SlugEntry

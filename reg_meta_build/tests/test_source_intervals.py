@@ -3,18 +3,16 @@
 from __future__ import annotations
 
 import pytest
+from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.source_intervals import resolve_occurrence_intervals
 from reg_meta_build.source_occurrences import effective_occurrence
 from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

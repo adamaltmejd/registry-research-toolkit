@@ -13,7 +13,7 @@ from datetime import date
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
-    from reg_meta_build.source_records import DeliveredCell, RecordLocator
+    from reg_meta.source_evidence import DeliveredCell, RecordLocator
 
 
 type NormalizedValue = tuple[str | None, str | None]

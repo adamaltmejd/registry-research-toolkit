@@ -1744,3 +1744,14 @@ are **not catalog entities** and have no FQID slot.
   Session-bound WebSocket with no documented contract.
 - **Browser automation** — fragile, unrepeatable. Manual CSV export is more reliable.
 - **Query caching / user adaptation database** — deferred. Not needed yet.
+
+### Documentary source relationships
+
+`Catalog.documentary_relationships(fqid)` returns strict typed source crosswalks and
+derivation clauses owned by the resolved variable. The original declarations, ordered
+variable references and unresolved source coordinates are retained. The status is
+explicitly `owner_bound_literal`: references describe documentary metadata and do not
+make formulas executable, establish variable equivalence, choose a code namespace or
+extend availability. Supplied periods remain literal source fields. The reader validates
+persisted JSON using the same evidence models as ingestion; the schema is regenerated
+directly when this contract changes.

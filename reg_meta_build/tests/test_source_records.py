@@ -14,17 +14,19 @@ from _csv_fixtures import (
     write_scb_input,
     write_scb_snapshot,
 )
+from reg_meta.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+)
 from reg_meta_build.input_snapshot import open_scb_snapshot
 from reg_meta_build.source_records import (
     CodeSetReference,
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     SourceCoordinate,
-    SourceField,
     SourceFields,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

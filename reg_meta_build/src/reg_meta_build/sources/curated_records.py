@@ -20,22 +20,24 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, Any
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from reg_meta.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+)
 
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
-    DeliveredCell,
     NativeCoordinates,
-    RecordLocator,
     ScopeInterval,
     SourceCoordinate,
     SourceEvidenceRow,
     SourceEvidenceTable,
-    SourceField,
     SourceFieldCells,
     SourceFields,
     SourceParentObservation,
     SourceRecord,
-    SourceRevision,
     SourceSubject,
     TemporalScope,
     value_field,

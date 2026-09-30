@@ -14,15 +14,15 @@ from dataclasses import dataclass, replace
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 
-from reg_meta_build.normalization import normalize_text, normalize_token
-from reg_meta_build.source_records import (
+from reg_meta.source_evidence import (
     DeliveredCell,
     RecordLocator,
-    SourceEvidenceRow,
-    SourceEvidenceTable,
     SourceRevision,
     canonical_sha256,
 )
+
+from reg_meta_build.normalization import normalize_text, normalize_token
+from reg_meta_build.source_records import SourceEvidenceRow, SourceEvidenceTable
 from reg_meta_build.source_value_periods import value_window
 from reg_meta_build.source_values import (
     SourceValue,

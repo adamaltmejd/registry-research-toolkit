@@ -9,6 +9,7 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from _curation_fixtures import write_fdb_partition_curation
 from pydantic import ValidationError
+from reg_meta.source_evidence import SourceRevision, canonical_sha256
 from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.id import mint, mint_canonical_scb
@@ -37,11 +38,7 @@ from reg_meta_build.source_naming import (
     native_scb_naming_id,
     read_naming_selection,
 )
-from reg_meta_build.source_records import (
-    NativeCoordinates,
-    SourceRevision,
-    canonical_sha256,
-)
+from reg_meta_build.source_records import NativeCoordinates
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import SlugEntry, declared_column_ownership

@@ -14,6 +14,8 @@ from dataclasses import dataclass, fields
 from datetime import date
 from typing import TYPE_CHECKING, cast
 
+from reg_meta.source_evidence import canonical_sha256
+
 from ._curation import (
     curation_error,
     data_type_class,
@@ -44,13 +46,7 @@ from .source_curation import (
 )
 from .source_occurrences import source_occurrence
 from .source_periods import source_scopes
-from .source_records import (
-    NativeCoordinates,
-    SourceFields,
-    TemporalScope,
-    canonical_sha256,
-    value_field,
-)
+from .source_records import NativeCoordinates, SourceFields, TemporalScope, value_field
 from .sources.swecov_column_types import (
     SWECOV_COLUMN_TYPES_PATH,
     infer_steward_column_type,

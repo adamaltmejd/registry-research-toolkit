@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pydantic import TypeAdapter, ValidationError
 from reg_meta.fqid import FqidKind, derive_variable_slug, parse as parse_fqid
+from reg_meta.source_evidence import canonical_sha256
 
 from ._curation import SentinelCode, fold_column
 from ._resolved_common import covers_window
@@ -118,7 +119,6 @@ from .source_records import (
     ScopeInterval,
     SourceFields,
     TemporalScope,
-    canonical_sha256,
 )
 from .source_reference_records import SourceColumnTypeDeclaration
 from .source_value_bindings import bind_code_lists, open_value_bindings
@@ -3526,12 +3526,18 @@ def _compile_sos_register(
             field_name = "data_type" if is_type else "classification_declared"
             expected_label = "type" if is_type else "classification reference"
             expected = entry.expected_type if is_type else entry.expected_reference
+            expected_description = None if is_type else entry.expected_description
             valid = (
                 len(peers) == 1
                 and len(matching) == 1
                 and _source_text(getattr(matching[0].fields, field_name)) == expected
                 and _source_text(matching[0].fields.representation)
                 == entry.expected_representation
+                and (
+                    expected_description is None
+                    or _source_text(matching[0].fields.description)
+                    == expected_description
+                )
             )
             if not valid:
                 status = "over_broad" if len(peers) > 1 else "stale"
@@ -3555,7 +3561,9 @@ def _compile_sos_register(
             record = matching[0]
             ref = record_ref(record)
             targets = capture_expectations(
-                (record,), fields=("column_name", field_name, "representation")
+                (record,),
+                fields=("column_name", field_name, "representation")
+                + (("description",) if expected_description is not None else ()),
             )
             replacement = (
                 FieldExpectation(
@@ -3604,6 +3612,17 @@ def _compile_sos_register(
                                         status="value",
                                         value=entry.expected_representation,
                                     ),
+                                )
+                                + (
+                                    (
+                                        FieldExpectation(
+                                            name="description",
+                                            status="value",
+                                            value=expected_description,
+                                        ),
+                                    )
+                                    if expected_description is not None
+                                    else ()
                                 ),
                             ),
                         ),
@@ -3782,6 +3801,7 @@ def compile_coding_register(
         ("extend", register.coding.extend),
         ("documented", register.coding.documented),
         ("sentinel", register.coding.sentinel),
+        ("support", register.coding.support),
     ):
         for index, entry in enumerate(entries, 1):
             ref = f"{register.source_file}#/coding.{kind}/{index}"
@@ -3793,7 +3813,7 @@ def compile_coding_register(
                 and (
                     item.naming.source_id == entry.variable
                     or (
-                        kind not in {"documented", "sentinel"}
+                        kind not in {"documented", "sentinel", "support"}
                         and item.target.source_key[-2] == "accepted-partition"
                         and item.naming.source_id.startswith(entry.variable + ".")
                     )
@@ -3909,9 +3929,9 @@ def compile_coding_register(
                 targets = capture_expectations(
                     target_records,
                     fields=tuple(SourceFields.model_fields)
-                    if kind in {"documented", "uncoded", "sentinel"}
+                    if kind in {"documented", "uncoded", "sentinel", "support"}
                     else ("column_name",),
-                    coding=kind in {"documented", "sentinel"},
+                    coding=kind in {"documented", "sentinel", "support"},
                 )
                 guard = PeerGuard(
                     guard_id=case_id,
@@ -5531,6 +5551,13 @@ def compile_curation(
                 variable_families.setdefault(
                     f"{register}/{name.naming.slug}", set()
                 ).add((scope.source, name.target.source_key))
+    from .source_documentary import compile_documentary_bindings
+
+    documentary, documentary_issues = compile_documentary_bindings(
+        tree, prepared, scopes, variable_families
+    )
+    metadata = metadata.model_copy(update={"documentary_relationships": documentary})
+    diagnostics.extend(documentary_issues)
     classification_report = {
         key: []
         for key in (

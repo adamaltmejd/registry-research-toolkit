@@ -4,6 +4,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from reg_meta.source_evidence import RecordLocator
 from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_classifications import (
@@ -11,7 +12,6 @@ from reg_meta_build.source_classifications import (
     resolve_classification_conformance,
 )
 from reg_meta_build.source_curation import SourceRecordRef
-from reg_meta_build.source_records import RecordLocator
 from reg_meta_build.source_values import SourceValue
 
 

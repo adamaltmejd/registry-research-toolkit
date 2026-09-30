@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build._curation import data_type_class, widen_data_type_classes
 from reg_meta_build.input_snapshot import _validate_bundle_contract
 from reg_meta_build.pipeline import build_catalog
@@ -21,7 +22,6 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
     prepare_catalog_sources,
 )
-from reg_meta_build.source_records import SourceRevision
 from reg_meta_build.source_reference_records import SourceColumnTypeDeclaration
 from reg_meta_build.sources.swecov_column_types import (
     SwecovColumnTypesError,

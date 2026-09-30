@@ -605,6 +605,15 @@ and nonmembership associations stay in source accounting. Raw type-marker whites
 not a finite-membership guard: those associations cannot establish a list and are
 retained in the documentary audit.
 
+`coding.support` retains one proven erroneous physical association as documentary
+support while excluding only that association from effective membership in a finite
+column window. It pins the complete ordered source claims and the exact target and
+positive authority associations in the same bound list. The authority must establish
+membership over the whole window. Changed, new or missing rows invalidate fresh
+compilation and application. Raw claims, codes, labels, periods and ordered associations
+remain unchanged; effective segments carry case provenance and an explicit warning. This
+cannot supply a missing code, choose a temporal cut, or suppress an entire list.
+
 Coding decisions require complete checked effective column delivery over their finite
 window. Original field and scope guards still capture the supplied records, including
 anchors for accepted deliveries; a changed delivery invalidates the decision.
@@ -992,3 +1001,27 @@ documents to change catalog facts.
 
 `doc_db.py` owns the build and FTS creation. Read schema constants and helpers remain in
 `reg_meta`, so querying the document database does not import maintainer tooling.
+
+### Literal documentary relationships
+
+`documentary.binding` binds a supplied crosswalk or derivation row to its exact catalog
+owner. The complete declaration, physical table peers and endpoint native families have
+authored payload digests. Fresh source-native naming must agree with each owner and
+operand reference. Missing, duplicate or changed source evidence withholds the
+relationship. Outside-slice evidence retains its deferred disposition.
+
+These are `owner_bound_literal` metadata. Their typed declarations preserve every
+supplied clause, operand, period, delivered cell and locator. Explicit variable
+references record literal source names; no expression evaluation, join, equivalence,
+recoding date, classification-edition inference or availability extension follows.
+Unresolved input namespaces and clause operands retain exact coordinates and warnings.
+They do not become fully bound or executable merely because the owner exists. Dependency
+resolution withholds a relation if its exact catalog endpoints are unsupported. The two
+source relationship tables preserve the literal document and ordered catalog references
+without adding state or coding edges.
+
+The shared evidence primitives and crosswalk/derivation declarations live in
+`reg_meta.source_evidence` and `reg_meta.documentary`. Build ingestion and catalog
+reading use the same strict models and validators. Source occurrence, temporal and
+reconciliation models remain build-only. This keeps the consumer independent of the
+builder while retaining identical serialized source evidence.
