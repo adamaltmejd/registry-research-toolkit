@@ -456,3 +456,41 @@ def test_period_correction_requires_provider_source_coordinates(
         assert error in excinfo.value.message
     else:
         assert len(load_register_files(tmp_path)[0].errata.occurrence_period) == 1
+
+
+def test_parallel_coding_fingerprints_load_from_toml_without_weakening_runtime(
+    tmp_path: Path,
+) -> None:
+    from reg_meta_build.source_curation import ColumnRepresentation
+
+    path = tmp_path / "registers/scb/sample.toml"
+    path.parent.mkdir(parents=True)
+    text = (
+        '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+        '[[representation.parallel]]\nvariable = "1.5"\nvariant = "1.10"\n'
+        'coding_metadata = "per_column"\nvalid_from = "2020-01-01"\nvalid_to = "2020-12-31"\n'
+        'evidence = "Complete finite native domains"\nnoted = "2026-09-30"\n'
+    )
+    for column in ("First", "Second"):
+        text += (
+            f'[[representation.parallel.columns]]\ncolumn = "{column}"\n'
+            'valid_from = "2020-01-01"\nvalid_to = "2020-12-31"\nsource_editions = ["2020"]\n'
+            f'expected_codings = ["{"a" * 64}"]\n'
+        )
+    path.write_text(text)
+    entry = load_register_files(tmp_path)[0].representation.parallel[0]
+    assert entry.columns[0].expected_codings == ("a" * 64,)
+    with pytest.raises(ValidationError):
+        ColumnRepresentation.model_validate(
+            {
+                "column": "First",
+                "valid_from": "2020-01-01",
+                "valid_to": "2020-12-31",
+                "expected_codings": ["a" * 64],
+            }
+        )
+    path.write_text(
+        text.replace('coding_metadata = "per_column"', 'coding_metadata = "shared"')
+    )
+    with pytest.raises(RegMetaError):
+        load_register_files(tmp_path)

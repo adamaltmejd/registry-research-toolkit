@@ -584,6 +584,17 @@ class ColumnRepresentation(FiniteCurationWindow):
     """One exact physical representation within a reviewed metadata window."""
 
     column: str = Field(min_length=1)
+    expected_codings: (
+        tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...] | None
+    ) = None
+
+    @model_validator(mode="after")
+    def _unique_codings(self) -> Self:
+        if self.expected_codings is not None and len(set(self.expected_codings)) != len(
+            self.expected_codings
+        ):
+            raise ValueError("source coding fingerprints must be unique")
+        return self
 
     @field_validator("column")
     @classmethod
@@ -601,6 +612,7 @@ class RepresentationDecision(FiniteCurationWindow):
     variable_key: NativeKey
     variant_key: NativeKey
     storage_metadata: Literal["shared", "per_column"] = "shared"
+    coding_metadata: Literal["shared", "per_column"] = "shared"
     columns: tuple[ColumnRepresentation, ...] = Field(min_length=2)
     reason: str = Field(min_length=1)
     provenance: str = Field(min_length=1)
@@ -609,6 +621,17 @@ class RepresentationDecision(FiniteCurationWindow):
     def _covered(self) -> Self:
         if any(not key or "" in key for key in (self.variable_key, self.variant_key)):
             raise ValueError("representations need exact variable and variant keys")
+        if any(
+            (self.coding_metadata == "per_column") != bool(c.expected_codings)
+            or (
+                c.expected_codings is not None
+                and len(set(c.expected_codings)) != len(c.expected_codings)
+            )
+            for c in self.columns
+        ):
+            raise ValueError(
+                "per-column coding needs unique positive source fingerprints on every column; shared coding has none"
+            )
         if len({c.column for c in self.columns}) != len(self.columns):
             raise ValueError("representation columns must be unique")
         if any(

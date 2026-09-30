@@ -1249,6 +1249,11 @@ def _period_bounds(period: Period) -> tuple[str, str] | None:
     raise _bad_period(period, "expected int year, token, range, or '_default'")
 
 
+type _StoredAliasWindow = tuple[
+    str, str, str, str | None, str, str | None, str | None, str, int | None, str
+]
+
+
 class Catalog:
     """FQID resolution against an open reg_meta SQLite connection."""
 
@@ -3090,15 +3095,14 @@ class Catalog:
 
     def _variable_windows(
         self, variable_id: int
-    ) -> dict[int, list[tuple[str, str, str, str | None, str, str | None, str | None]]]:
+    ) -> dict[int, list[_StoredAliasWindow]]:
         """`variable_alias_window` rows (#319/#945/Y-132) grouped by
         `register_variant_id` → [(delivery_column_name, valid_from, valid_to,
-        provenance, storage_metadata, data_type, data_length), …] sorted by window start. EMPTY for variables with no
-        resolver-visible alias representations, so expansion is a no-op there.
+        provenance, storage_metadata, data_type, data_length, coding_metadata,
+        value_set_id, value_set_version_label), …] sorted by window start.
+        EMPTY for variables with no resolver-visible alias representations, so expansion is a no-op there.
         One indexed point-lookup on `idx_variable_alias_window_lookup`."""
-        out: dict[
-            int, list[tuple[str, str, str, str | None, str, str | None, str | None]]
-        ] = {}
+        out: dict[int, list[_StoredAliasWindow]] = {}
         for (
             rvid,
             col,
@@ -3108,15 +3112,30 @@ class Catalog:
             mode,
             dtype,
             length,
+            coding_mode,
+            value_set_id,
+            version_label,
         ) in self._conn.execute(
             "SELECT register_variant_id, delivery_column_name, valid_from, valid_to, "
-            "provenance, storage_metadata, data_type, data_length "
+            "provenance, storage_metadata, data_type, data_length, "
+            "coding_metadata, value_set_id, value_set_version_label "
             "FROM variable_alias_window WHERE variable_id = ? "
             "ORDER BY register_variant_id, valid_from, delivery_column_name",
             (variable_id,),
         ):
             out.setdefault(rvid, []).append(
-                (col, wfrom, wto, provenance, mode, dtype, length)
+                (
+                    col,
+                    wfrom,
+                    wto,
+                    provenance,
+                    mode,
+                    dtype,
+                    length,
+                    coding_mode,
+                    value_set_id,
+                    version_label,
+                )
             )
         return out
 
@@ -3136,14 +3155,19 @@ class Catalog:
         the existing replacement semantics: they expand a participating base state
         into window representations. Provenance-bearing curated windows (Y-132)
         are additive, so they cannot hide the base representation or another source
-        window. Variables with no window rows map 1:1 via `_row_to_state`
+        window. Explicit per-column coded windows instead replace the participating
+        base projection, retaining their checked provenance. Variables with no window rows map 1:1 via `_row_to_state`
         (byte-identical behaviour).
 
-        Windows share the base state's `state_id` + `value_set_version_label`; only
+        Windows share the base state's `state_id`; shared coding also retains its
+        native version label. Only
         `delivery_column_name` + `valid_from`/`valid_to` are always overridden. An
         explicit window provenance overrides the base provenance; otherwise it is
-        inherited. Explicit per-column storage replaces type and width, including nulls,
-        and intersects canonical state boundaries. Shared storage stays inherited.
+        inherited. Explicit per-column storage replaces type and width, including
+        nulls, and intersects canonical state boundaries. Shared storage stays
+        inherited. Explicit per-column coding replaces the value set and native
+        version label, clears classification attribution, and respects lazy
+        code/summary loading.
         Expanded alias representations do not inherit the base column's
         operational definition. The per-window identity is the compound (state_id,
         delivery_column_name, valid_from)."""
@@ -3155,9 +3179,20 @@ class Catalog:
 
         def expand_window(
             base: VariableState,
-            window: tuple[str, str, str, str | None, str, str | None, str | None],
+            window: _StoredAliasWindow,
         ) -> VariableState:
-            col, wfrom, wto, provenance, mode, dtype, length = window
+            (
+                col,
+                wfrom,
+                wto,
+                provenance,
+                mode,
+                dtype,
+                length,
+                coding_mode,
+                value_set_id,
+                version_label,
+            ) = window
             return base.model_copy(
                 update={
                     "delivery_column_name": col,
@@ -3171,6 +3206,22 @@ class Catalog:
                     **(
                         {"data_type": dtype, "data_length": length}
                         if mode == "per_column"
+                        else {}
+                    ),
+                    **(
+                        {
+                            "value_set_id": value_set_id,
+                            "value_set_version_label": version_label,
+                            "value_set": self._value_set_codes(value_set_id)
+                            if with_codes
+                            else None,
+                            "value_set_summary": self.value_set_summary(value_set_id)
+                            if with_code_summary and value_set_id is not None
+                            else None,
+                            "classification_slug": None,
+                            "classification_conformance": None,
+                        }
+                        if coding_mode == "per_column"
                         else {}
                     ),
                 }
@@ -3188,11 +3239,9 @@ class Catalog:
                 continue
             assert base.valid_from is not None and base.valid_to is not None
             windows = windows_by_variant.get(row["register_variant_id"], [])
-            state_windows: list[
-                tuple[str, str, str, str | None, str, str | None, str | None]
-            ] = []
+            state_windows: list[_StoredAliasWindow] = []
             for window in windows:
-                if window[4] == "per_column":
+                if window[4] == "per_column" or window[7] == "per_column":
                     # One physical storage window may span successive coding states.
                     start, end = (
                         max(base.valid_from, window[1]),
@@ -3202,8 +3251,12 @@ class Catalog:
                         state_windows.append((window[0], start, end, *window[3:]))
                 elif base.valid_from <= window[1] and window[2] <= base.valid_to:
                     state_windows.append(window)
-            source_windows = [w for w in state_windows if w[3] is None]
-            curated_windows = [w for w in state_windows if w[3] is not None]
+            source_windows = [
+                w for w in state_windows if w[3] is None or w[7] == "per_column"
+            ]
+            curated_windows = [
+                w for w in state_windows if w[3] is not None and w[7] != "per_column"
+            ]
             has_source_base = base.delivery_column_name is not None and any(
                 window[0].lower() == base.delivery_column_name.lower()
                 for window in source_windows

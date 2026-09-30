@@ -17,8 +17,10 @@ from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
+    ResolvedCodeSet,
     ResolvedState,
 )
+from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_coordinates import column_identity
 from reg_meta_build.source_curation import (
     CurationCase,
@@ -27,6 +29,7 @@ from reg_meta_build.source_curation import (
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
+from reg_meta_build.source_intervals import coding_scope_bounds
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -90,7 +93,40 @@ def resolve_representation_cases(
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
         assert isinstance(decision, RepresentationDecision)
-        if evaluation.status == "applicable":
+        coding_changed = []
+        if decision.coding_metadata == "per_column":
+            lower = date.fromisoformat(decision.valid_from).toordinal()
+            upper = date.fromisoformat(decision.valid_to).toordinal()
+            for column in decision.columns:
+                resolution = coding[
+                    column_identity(
+                        decision.variable_key, decision.variant_key, column.column
+                    )
+                ]
+                claims = tuple(
+                    claim
+                    for claim in resolution.claims
+                    if (bounds := coding_scope_bounds(claim.scope)) is None
+                    or any(start <= upper and end >= lower for start, end in bounds)
+                )
+                if copied_coding_fingerprints(claims) != column.expected_codings:
+                    coding_changed.append(column.column)
+        if coding_changed:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="stale_representation_coding",
+                    severity="error",
+                    case_id=case.case_id,
+                    subject=repr(decision.variable_key),
+                    detail=f"Complete source coding changed for literal columns {coding_changed!r}.",
+                    refs=tuple(t.ref for t in (*case.targets, *case.support)),
+                    fields=("coding",),
+                    valid_from=decision.valid_from,
+                    valid_to=decision.valid_to,
+                    withheld_output=("representations",),
+                )
+            )
+        if evaluation.status == "applicable" and not coding_changed:
             applicable.append(case)
         for issue in evaluation.issues:
             diagnostics.append(
@@ -295,8 +331,12 @@ def form_representations(
             signatures = {
                 (
                     d.storage_metadata,
+                    d.coding_metadata,
                     tuple(
-                        sorted((c.column, c.valid_from, c.valid_to) for c in d.columns)
+                        sorted(
+                            (c.column, c.valid_from, c.valid_to, c.expected_codings)
+                            for c in d.columns
+                        )
                     ),
                 )
                 for d in decisions
@@ -389,7 +429,44 @@ def form_representations(
                 )
                 for s in represented
             }
-            if len(code_values) == 1:
+            column_coding: dict[str, tuple[ResolvedCodeSet, str]] = {}
+            if first.coding_metadata == "per_column":
+                # simplify: only complete finite unclassified domains; add explicit
+                # alias conformance storage when a positively evidenced classified
+                # cohort needs it. Never inherit a sibling's classification.
+                invalid_coding = False
+                for column in sorted(columns):
+                    alternatives = {
+                        (
+                            s.value_set,
+                            s.value_set_version_label,
+                            s.classification,
+                            s.conformance,
+                        )
+                        for s in represented
+                        if s.delivery_column_name == column
+                    }
+                    if len(alternatives) != 1 or any(
+                        domain is None
+                        or classification is not None
+                        or conformance is not None
+                        for domain, _, classification, conformance in alternatives
+                    ):
+                        invalid_coding = True
+                        report(
+                            "unsupported_representation_coding",
+                            ("coding",),
+                            (f"representation.{column}.value_set",),
+                            f"Literal column {column!r} needs one complete finite unclassified domain; no coding was selected.",
+                        )
+                    else:
+                        domain, native_label, _, _ = next(iter(alternatives))
+                        assert domain is not None
+                        column_coding[column] = (domain, native_label)
+                if invalid_coding:
+                    continue
+                codes, label, classification, conformance = None, "", None, None
+            elif len(code_values) == 1:
                 codes, label, classification, conformance = next(iter(code_values))
             else:
                 codes, label, classification, conformance = None, "", None, None
@@ -453,6 +530,13 @@ def form_representations(
                             # complete curation attribution lives on the shared state.
                             provenance=None,
                             storage_metadata=first.storage_metadata,
+                            coding_metadata=first.coding_metadata,
+                            value_set=column_coding[column.column][0]
+                            if column.column in column_coding
+                            else None,
+                            value_set_version_label=column_coding[column.column][1]
+                            if column.column in column_coding
+                            else "",
                             **column_storage[column.column],
                         )
                     )

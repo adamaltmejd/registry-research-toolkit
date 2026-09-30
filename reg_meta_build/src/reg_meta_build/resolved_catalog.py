@@ -313,6 +313,9 @@ class ResolvedAliasWindow(_ResolvedWindow):
     storage_metadata: Literal["shared", "per_column"] = "shared"
     data_type: str | None = None
     data_length: str | None = None
+    coding_metadata: Literal["shared", "per_column"] = "shared"
+    value_set: ResolvedCodeSet | None = None
+    value_set_version_label: str = ""
 
     @model_validator(mode="after")
     def _storage_scope(self) -> Self:
@@ -320,6 +323,12 @@ class ResolvedAliasWindow(_ResolvedWindow):
             self.data_type is not None or self.data_length is not None
         ):
             raise ValueError("shared representation storage comes from its state")
+        if self.coding_metadata == "shared" and (
+            self.value_set is not None or self.value_set_version_label
+        ):
+            raise ValueError("shared representation coding comes from its state")
+        if self.coding_metadata == "per_column" and self.value_set is None:
+            raise ValueError("per-column coding requires a complete finite domain")
         return self
 
 
@@ -568,6 +577,13 @@ def _write_value_sets(
             for variable in variables
             for state in variable.states
             if state.value_set is not None
+        }
+        | {
+            window.value_set
+            for variable in variables
+            for alias in variable.aliases
+            for window in alias.windows
+            if window.value_set is not None
         },
         key=lambda code_set: code_set.members,
     )
@@ -1108,8 +1124,8 @@ def write_resolved_catalog(
                     )
                     conn.executemany(
                         "INSERT INTO variable_alias_window "
-                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, storage_metadata, data_type, data_length) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, storage_metadata, data_type, data_length, coding_metadata, value_set_id, value_set_version_label) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             (
                                 variable_id,
@@ -1121,6 +1137,11 @@ def write_resolved_catalog(
                                 window.storage_metadata,
                                 window.data_type,
                                 window.data_length,
+                                window.coding_metadata,
+                                value_set_ids[window.value_set]
+                                if window.value_set is not None
+                                else None,
+                                window.value_set_version_label,
                             )
                             for window in sorted(
                                 alias.windows, key=lambda w: w.valid_from
@@ -1132,7 +1153,10 @@ def write_resolved_catalog(
                 "INSERT INTO code_variable_map (code_id, variable_id) "
                 "SELECT DISTINCT member.code_id, state.variable_id "
                 "FROM variable_state state JOIN value_set_member member "
-                "ON state.value_set_id = member.value_set_id"
+                "ON state.value_set_id = member.value_set_id "
+                "UNION SELECT DISTINCT member.code_id, alias.variable_id "
+                "FROM variable_alias_window alias JOIN value_set_member member "
+                "ON alias.value_set_id = member.value_set_id"
             )
             conn.execute(
                 "UPDATE value_code SET mapping_count = ("

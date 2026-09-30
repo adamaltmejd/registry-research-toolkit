@@ -781,14 +781,40 @@ def form_native_variable(
                         )
                     ),
                 )
-                claims.append(new_claim)
-                folded_claim[id(new_claim)] = folded
                 new_states, new_issues, uncoded = _coded_states(
                     segment, variant, code_result, subject
                 )
                 waived[variant.slug, column].extend(uncoded)
                 created_states.extend(new_states)
+                if not new_states:
+                    claims.append(new_claim)
+                    folded_claim[id(new_claim)] = folded
+                elif segment.period_scope == "intervals":
+                    assert (
+                        segment.valid_from is not None and segment.valid_to is not None
+                    )
+                    for start, end in remaining_windows(
+                        (
+                            (state.valid_from, state.valid_to)
+                            for state in new_states
+                            if state.valid_from is not None
+                            and state.valid_to is not None
+                        ),
+                        segment.valid_from,
+                        segment.valid_to,
+                    ):
+                        gap_claim = replace(new_claim, valid_from=start, valid_to=end)
+                        claims.append(gap_claim)
+                        folded_claim[id(gap_claim)] = folded
                 for state in new_states:
+                    coding_claim = replace(
+                        new_claim,
+                        valid_from=state.valid_from,
+                        valid_to=state.valid_to,
+                        coding_claim=(state.value_set, state.value_set_version_label),
+                    )
+                    claims.append(coding_claim)
+                    folded_claim[id(coding_claim)] = folded
                     folded_state[id(state)] = folded
                 states.extend(new_states)
                 diagnostics.extend(new_issues)

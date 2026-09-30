@@ -138,13 +138,15 @@ def test_open_doc_db_rejects_stale_1_1_0_schema(tmp_path: Path) -> None:
     assert exc_info.value.code == "doc_schema_incompatible"
 
 
-def test_open_db_rejects_catalog_without_explicit_delivery_scope(
+@pytest.mark.parametrize("schema_version", ["6.11.0", "6.12.0"])
+def test_open_db_rejects_catalog_without_current_delivery_contract(
     tmp_path: Path,
+    schema_version: str,
 ) -> None:
     db_file = tmp_path / DB_FILENAME
     _make_wal_db(
         db_file,
-        setup_sql="CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT); INSERT INTO import_manifest VALUES ('schema_version', '6.11.0');",
+        setup_sql=f"CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT); INSERT INTO import_manifest VALUES ('schema_version', '{schema_version}');",
     )
     with pytest.raises(RegMetaError) as exc_info:
         open_db(db_file)

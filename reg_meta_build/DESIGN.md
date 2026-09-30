@@ -715,6 +715,17 @@ operational definitions and attribution retain the shared reconciliation contrac
 default `shared` mode retains its existing behavior. Source SQL widths and precision
 remain literal metadata; this mode neither converts them nor asserts comparability.
 
+An independent `coding_metadata = "per_column"` mode retains each checked column's
+complete finite response domain on its alias windows. The shared quantity state claims
+no common domain when they differ. Original fields, scopes, complete peers and coding
+associations remain guarded; missing or contradictory within-column coding is withheld.
+Windows intersect the existing coding boundaries and cannot bridge a gap. Each window
+stores an existing value-set reference and its literal native version label; readers
+project that domain without falling back to shared coding. Shared mode carries no
+override. Initially this mode requires unclassified domains; classified domains need an
+explicit per-window conformance contract before acceptance. No codes are unioned,
+dropped or recoded, and no version names are invented.
+
 Search aliases add discovery spellings without adding states or coverage. An alias
 window makes an already owned spelling orderable only within supported state coverage
 for its variable and variant. Gaps or competing owners withhold the affected window.

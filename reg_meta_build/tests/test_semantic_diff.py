@@ -570,3 +570,44 @@ def test_year_independent_semantic_identity_keeps_null_scope_and_membership(tmp_
     assert row["interval_representation"] == "year_independent"
     assert row["valid_from"] is None and row["valid_to"] is None
     assert row["period_scope"] == "year_independent"
+
+
+@pytest.mark.parametrize("change", [None, "domain", "version", "mode"])
+def test_per_column_alias_coding_semantics_resolve_value_set_ids(tmp_path, change):
+    left, right = tmp_path / "left.db", tmp_path / "right.db"
+    _catalog(left)
+    _catalog(right, offset=100)
+    for path, offset in ((left, 0), (right, 100)):
+        with closing(sqlite3.connect(path)) as conn:
+            conn.execute(
+                "UPDATE variable_state SET value_set_id=NULL, value_set_version_label='', classification_id=NULL"
+            )
+            conn.execute(
+                "UPDATE variable_alias_window SET coding_metadata='per_column',value_set_id=?,value_set_version_label='Native coding'",
+                (offset + 9,),
+            )
+            if path == right and change == "domain":
+                conn.execute("UPDATE value_code SET label='Different'")
+                conn.execute(
+                    "UPDATE value_set SET member_hash=?",
+                    (_value_set_hash([("01", "Different")]),),
+                )
+            elif path == right and change == "version":
+                conn.execute(
+                    "UPDATE variable_alias_window SET value_set_version_label='Different version'"
+                )
+            elif path == right and change == "mode":
+                conn.execute(
+                    "UPDATE variable_alias_window SET coding_metadata='shared',value_set_id=NULL,value_set_version_label=''"
+                )
+            conn.commit()
+    compared = diff_catalog_semantics(left, right)
+    if change is None:
+        assert compared.content.identical
+    else:
+        difference = next(
+            t
+            for t in compared.content.table_results
+            if t.table == "variable_alias_window"
+        )
+        assert not difference.identical

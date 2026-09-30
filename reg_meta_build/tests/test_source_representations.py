@@ -813,3 +813,115 @@ def test_dated_representation_does_not_manufacture_independent_window():
     assert states == independent
     assert not aliases and not withheld
     assert any(issue.code == "unsupported_representation_scope" for issue in issues)
+
+
+def _column_coding_setup():
+    from reg_meta_build.source_coding import copied_coding_fingerprints
+
+    setup = _column_storage_setup(
+        "text",
+        "18",
+        "integer",
+        "0",
+        claims={"First": (_claim("first", "01"),), "Second": (_claim("second", "02"),)},
+    )
+    decision = setup[2].decision
+    assert isinstance(decision, RepresentationDecision)
+    variant_key = next(iter(setup[3]))
+    decision = decision.model_copy(
+        update={
+            "coding_metadata": "per_column",
+            "columns": tuple(
+                column.model_copy(
+                    update={
+                        "expected_codings": copied_coding_fingerprints(
+                            setup[4][
+                                column_identity(KEY, variant_key, column.column)
+                            ].claims
+                        ),
+                    }
+                )
+                for column in decision.columns
+            ),
+        }
+    )
+    return (*setup[:2], setup[2].model_copy(update={"decision": decision}), *setup[3:])
+
+
+def test_per_column_coding_preserves_native_domains_and_alias_only_index(
+    tmp_path: Path,
+) -> None:
+    setup = _column_coding_setup()
+    formed, proof = _form(setup)
+    assert proof.diagnostics == () and formed.diagnostics == ()
+    variable = formed.variable
+    assert variable is not None
+    assert variable.states[0].value_set is None
+    assert {
+        alias.delivery_column_name: alias.windows[0].value_set.members
+        for alias in variable.aliases
+    } == {
+        "First": (("01", "Label"),),
+        "Second": (("02", "Label"),),
+    }
+    assert all(
+        window.coding_metadata == "per_column" and window.provenance is None
+        for alias in variable.aliases
+        for window in alias.windows
+    )
+    check_delivery_coverage((variable,), formed.coverage, withheld={})
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog((variable,), output, manifest={})
+    with closing(open_db(output)) as conn:
+        assert conn.execute("SELECT count(*) FROM value_set").fetchone()[0] == 2
+        assert conn.execute("SELECT count(*) FROM code_variable_map").fetchone()[0] == 2
+        assert (
+            conn.execute(
+                "SELECT count(*) FROM variable_alias_window WHERE value_set_id IS NOT NULL"
+            ).fetchone()[0]
+            == 2
+        )
+
+
+def test_per_column_coding_source_domain_drift_fails_closed() -> None:
+    setup = _column_coding_setup()
+    coding = dict(setup[4])
+    key = column_identity(KEY, next(iter(setup[3])), "First")
+    coding[key] = resolve_code_membership((_claim("first", "changed"),))
+    proof = resolve_representation_cases(setup[0], (setup[2],), coding=coding)
+    assert proof.cases == ()
+    assert [issue.code for issue in proof.diagnostics] == [
+        "stale_representation_coding"
+    ]
+
+
+@pytest.mark.parametrize("unsupported", ["missing", "classification", "conflict"])
+def test_per_column_coding_withholds_unsupported_domain_without_shared_fallback(
+    unsupported,
+) -> None:
+    setup = _column_coding_setup()
+    formed, _ = _form(setup)
+    variable = formed.variable
+    assert variable is not None
+    base = variable.states[0]
+    states = [
+        base.model_copy(
+            update={
+                "delivery_column_name": alias.delivery_column_name,
+                "value_set": alias.windows[0].value_set,
+                "value_set_version_label": alias.windows[0].value_set_version_label,
+            }
+        )
+        for alias in variable.aliases
+    ]
+    if unsupported == "missing":
+        states[0] = states[0].model_copy(update={"value_set": None})
+    elif unsupported == "classification":
+        states[0] = states[0].model_copy(update={"classification": "scb/sni2007"})
+    else:
+        states.append(states[0].model_copy(update={"value_set": states[1].value_set}))
+    result, aliases, issues, _, _ = form_representations(
+        states, (setup[2],), variable_key=KEY, variants=setup[3], subject="fixture"
+    )
+    assert result == [] and aliases == ()
+    assert [issue.code for issue in issues] == ["unsupported_representation_coding"]

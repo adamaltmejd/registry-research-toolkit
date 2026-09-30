@@ -1638,3 +1638,87 @@ def test_year_independent_delivery_proof_compares_exact_column_facts_without_cal
     keys = variable_dependency_keys(independent)
     assert ("independent_state", "scb/example/value", "birth", "value", "") in keys
     assert not any(key[0] == "state" for key in keys)
+
+
+@pytest.mark.parametrize(
+    "damage", [None, "missing", "domain", "version", "common", "classified"]
+)
+def test_per_column_alias_coding_preserves_exact_delivery_claims(damage):
+    from dataclasses import replace
+
+    variant = ResolvedVariant(slug="people", name="People")
+    first = ResolvedCodeSet(members=(("0", "No"), ("1", "Yes")))
+    second = ResolvedCodeSet(members=(("1", "Yes"), ("2", "Unknown")))
+    state = (
+        _fact_variable()
+        .states[0]
+        .model_copy(
+            update={
+                "delivery_column_name": "First",
+                "value_set": None,
+                "value_set_version_label": "",
+            }
+        )
+    )
+    windows = tuple(
+        ResolvedAliasWindow(
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            coding_metadata="per_column",
+            value_set=domain,
+            value_set_version_label=version,
+        )
+        for domain, version in ((first, "First question"), (second, "Second question"))
+    )
+    if damage in {"missing", "domain", "version"}:
+        windows = (
+            windows[0],
+            windows[1].model_copy(
+                update={"value_set": None}
+                if damage == "missing"
+                else {"value_set": first}
+                if damage == "domain"
+                else {"value_set_version_label": "Changed"}
+            ),
+        )
+    elif damage == "common":
+        state = state.model_copy(
+            update={"value_set": first, "value_set_version_label": "First question"}
+        )
+    elif damage == "classified":
+        state = state.model_copy(
+            update={
+                "classification": ResolvedClassification(
+                    slug="example",
+                    short_name="Example",
+                    name="Example",
+                    codes=(ResolvedClassificationCode(code="1", label="Yes"),),
+                )
+            }
+        )
+    variable = _fact_variable().model_copy(
+        update={
+            "states": (state,),
+            "aliases": tuple(
+                ResolvedAlias(variant=variant, delivery_column_name=column).model_copy(
+                    update={"windows": (window,)}
+                )
+                for column, window in zip(("First", "Second"), windows, strict=True)
+            ),
+        }
+    )
+    obligations = tuple(
+        replace(
+            _fact_obligation(column=column, attributions=()),
+            coding_claim=(domain, version),
+        )
+        for column, domain, version in (
+            ("First", first, "First question"),
+            ("Second", second, "Second question"),
+        )
+    )
+    if damage is None:
+        check_delivery_coverage((variable,), obligations, withheld={})
+    else:
+        with pytest.raises(ValueError, match="supported delivery facts changed"):
+            check_delivery_coverage((variable,), obligations, withheld={})

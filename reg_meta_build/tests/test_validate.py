@@ -2659,6 +2659,51 @@ class TestVariableAliasWindowChecks:
     def test_passes_on_coherent_window(self):
         assert self._run(self._windowed_db()).passed
 
+    @pytest.mark.parametrize(
+        "damage",
+        [None, "missing", "empty", "common", "classified", "unbacked", "shared"],
+    )
+    def test_per_column_alias_coding_requires_own_domain_and_unclassified_backing(
+        self, damage
+    ):
+        conn = self._windowed_db()
+        conn.execute(
+            "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
+            (b"a" * 32,),
+        )
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (1, '1', 'Yes')"
+        )
+        conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
+        conn.execute(
+            "UPDATE variable_alias_window SET coding_metadata='per_column', value_set_id=1, value_set_version_label='Native'"
+        )
+        if damage == "missing":
+            conn.execute("PRAGMA ignore_check_constraints=ON")
+            conn.execute("UPDATE variable_alias_window SET value_set_id=NULL")
+        elif damage == "empty":
+            conn.execute("DELETE FROM value_set_member")
+        elif damage == "common":
+            conn.execute("UPDATE variable_state SET value_set_id=1")
+        elif damage == "classified":
+            conn.execute(
+                "INSERT INTO classification (id, slug, short_name, name) VALUES (1, 'example', 'Example', 'Example')"
+            )
+            conn.execute("UPDATE variable_state SET classification_id=1")
+        elif damage == "unbacked":
+            conn.execute("UPDATE variable_state SET valid_from='2019-01-01'")
+        elif damage == "shared":
+            conn.execute("PRAGMA ignore_check_constraints=ON")
+            conn.execute("UPDATE variable_alias_window SET coding_metadata='shared'")
+        result = self._run(conn)
+        if damage is None:
+            assert result.passed, result.failures
+        else:
+            assert any(
+                "coding" in message or "backing" in message
+                for message in result.failures
+            ), result.failures
+
     def test_orphan_variable_id_fails(self):
         conn = self._windowed_db()
         conn.execute("PRAGMA foreign_keys=OFF")

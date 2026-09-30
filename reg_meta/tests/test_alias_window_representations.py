@@ -8,6 +8,12 @@ from typing import TYPE_CHECKING
 from _representation_fixtures import build_alias_representations
 from reg_meta.catalog import Catalog, ValueSetMember
 from reg_meta.db import open_db
+from reg_meta.queries import (
+    get_coded_variables,
+    get_schema,
+    get_values_by_variable,
+    get_varinfo,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -325,5 +331,98 @@ def test_provenance_column_keeps_monthly_window_selection_unchanged(
         assert [
             state.delivery_column_name for state in cat.resolve_at(_FQID, "2018-02")
         ] == [february_column]
+    finally:
+        conn.close()
+
+
+def test_per_column_coding_preserves_domains_native_labels_and_lazy_loading(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    db = _build_multi_alias_db(tmp_path)
+    write_conn = sqlite3.connect(db)
+    try:
+        variable_id, variant_id, state_id, first_set = write_conn.execute(
+            "SELECT variable_id, register_variant_id, state_id, value_set_id FROM variable_state WHERE variable_id = 1"
+        ).fetchone()
+        second_set = write_conn.execute(
+            "INSERT INTO value_set (member_hash) VALUES (?) RETURNING value_set_id",
+            (b"x" * 32,),
+        ).fetchone()[0]
+        write_conn.execute(
+            "INSERT INTO value_set_member SELECT ?, code_id FROM value_set_member WHERE value_set_id = ? AND code_id = (SELECT MAX(code_id) FROM value_set_member WHERE value_set_id = ?)",
+            (second_set, first_set, first_set),
+        )
+        classification_id = write_conn.execute(
+            "INSERT INTO classification (short_name, name, slug) VALUES ('base', 'Base classification', 'base') RETURNING id"
+        ).fetchone()[0]
+        write_conn.execute(
+            "UPDATE variable_state SET classification_id = ?, value_set_id = NULL, value_set_version_label = 'base-label' WHERE state_id = ?",
+            (classification_id, state_id),
+        )
+        write_conn.execute(
+            "INSERT INTO classification_conformance VALUES (?, ?, 'kept', 2, 2, 0, 1.0)",
+            (state_id, classification_id),
+        )
+        write_conn.execute("DELETE FROM variable_alias_window")
+        write_conn.executemany(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, coding_metadata, value_set_id, value_set_version_label) VALUES (?, ?, ?, '2018-01-01', '2018-12-31', 'errata:checked-column-coding', 'per_column', ?, 'native-wave')",
+            [
+                (variable_id, variant_id, column, code_set)
+                for column, code_set in zip(
+                    _ALIASES, (first_set, second_set), strict=True
+                )
+            ],
+        )
+        write_conn.commit()
+    finally:
+        write_conn.close()
+    conn = open_db(db)
+    try:
+        cat = Catalog(conn)
+        states = cat.resolve_at(_FQID, "2018", value_set_version="native-wave")
+        assert [s.delivery_column_name for s in states] == list(_ALIASES)
+        assert [s.value_set_id for s in states] == [first_set, second_set]
+        assert [len(s.value_set) for s in states] == [2, 1]
+        assert all(
+            s.classification_slug is s.classification_conformance is None
+            for s in states
+        )
+        assert cat.resolve_at(_FQID, "2018", value_set_version="base-label") == []
+        assert cat.states(_FQID) == states
+        schema = get_schema(conn, register_variant_id=str(variant_id))
+        columns = [
+            c
+            for c in schema["variants"][0]["versions"][0]["columns"]
+            if c["variable_id"] == variable_id
+        ]
+        assert [c["aliases"] for c in columns] == list(_ALIASES)
+        assert {c["value_set_version_label"] for c in columns} == {"native-wave"}
+        info = get_varinfo(conn, _ALIASES[0])
+        assert [i["value_set_count"] for i in info[0]["instances"]] == [2, 1]
+        values = get_values_by_variable(conn, _ALIASES[0])
+        assert [i["delivery_column_name"] for i in values["instances"]] == list(
+            _ALIASES
+        )
+        assert [len(i["values"]) for i in values["instances"]] == [2, 1]
+        assert {i["value_set_version_label"] for i in values["instances"]} == {
+            "native-wave"
+        }
+        assert get_coded_variables(conn)[0]["n_distinct_codes"] == 2
+
+        def unexpected_code_read(*args):
+            raise AssertionError("metadata-only resolution must not hydrate codes")
+
+        original_code_reader = cat._value_set_codes
+        monkeypatch.setattr(cat, "_value_set_codes", unexpected_code_read)
+        metadata = cat.resolve_at(_FQID, "2018", with_codes=False)
+        assert [s.value_set_id for s in metadata] == [first_set, second_set]
+        assert all(s.value_set is s.value_set_summary is None for s in metadata)
+        monkeypatch.setattr(cat, "_value_set_codes", original_code_reader)
+        summary = cat.resolve_at(
+            _FQID, "2018", with_codes=False, with_code_summary=True
+        )
+        assert [s.value_set_summary.code_count for s in summary] == [2, 1]
+        assert all(s.value_set is s.classification_conformance is None for s in summary)
     finally:
         conn.close()

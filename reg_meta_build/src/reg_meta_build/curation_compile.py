@@ -1249,6 +1249,7 @@ def compile_parallel_representations(
                     columns=tuple(
                         ColumnRepresentation(
                             column=column.column,
+                            expected_codings=column.expected_codings,
                             valid_from=entry.valid_from,
                             valid_to=entry.valid_to,
                         )
@@ -1257,6 +1258,7 @@ def compile_parallel_representations(
                     reason=entry.evidence,
                     provenance=ref,
                     storage_metadata=entry.storage_metadata,
+                    coding_metadata=entry.coding_metadata,
                 ),
             )
         )

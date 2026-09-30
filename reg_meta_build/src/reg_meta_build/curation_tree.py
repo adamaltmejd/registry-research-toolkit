@@ -662,6 +662,13 @@ class ParallelRepresentationColumn(ColumnRepresentation):
     """An exact source column/window, before clipping to the shared window."""
 
     source_editions: list[str] = Field(min_length=1)
+    expected_codings: (
+        Annotated[
+            tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...],
+            Field(strict=False),
+        ]
+        | None
+    ) = None
 
     @field_validator("source_editions")
     @classmethod
@@ -676,6 +683,7 @@ class ParallelRepresentationEntry(FiniteCurationWindow):
     variable: str
     variant: str
     storage_metadata: Literal["shared", "per_column"] = "shared"
+    coding_metadata: Literal["shared", "per_column"] = "shared"
     columns: list[ParallelRepresentationColumn] = Field(min_length=2)
     evidence: str
     noted: str
@@ -686,6 +694,13 @@ class ParallelRepresentationEntry(FiniteCurationWindow):
 
     @model_validator(mode="after")
     def _shared_window(self) -> ParallelRepresentationEntry:
+        if any(
+            (self.coding_metadata == "per_column") != bool(c.expected_codings)
+            for c in self.columns
+        ):
+            raise ValueError(
+                "per-column coding needs positive source fingerprints; shared coding has none"
+            )
         if len({column.column for column in self.columns}) != len(self.columns):
             raise ValueError("parallel columns must be unique")
         if any(

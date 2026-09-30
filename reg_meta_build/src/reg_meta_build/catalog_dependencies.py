@@ -30,6 +30,7 @@ from reg_meta_build.relations import (
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
+    ResolvedCodeSet,
     ResolvedEdition,
     ResolvedRegister,
     ResolvedState,
@@ -206,6 +207,7 @@ class CoverageObligation:
     data_type_claim: tuple[str, str | None] | None = None
     data_length_claim: tuple[str, str | None] | None = None
     attributions: tuple[str, ...] = ()
+    coding_claim: tuple[ResolvedCodeSet | None, str | None] | None = None
     period_scope: Literal["intervals", "year_independent"] = "intervals"
 
     def __post_init__(self) -> None:
@@ -430,6 +432,7 @@ def check_delivery_coverage(
             not check_type
             and not check_length
             and not claimed_attributions
+            and obligation.coding_claim is None
             and not alias_cover
         ):
             losses.extend(ob_losses)
@@ -487,7 +490,7 @@ def check_delivery_coverage(
                     and state.valid_to >= obligation.valid_from
                 ):
                     continue
-                storage_windows = [
+                metadata_windows = [
                     window.model_copy(
                         update={
                             "valid_from": max(state.valid_from, window.valid_from),
@@ -498,32 +501,61 @@ def check_delivery_coverage(
                     if alias.variant.slug == obligation.variant
                     and alias.delivery_column_name == obligation.column
                     for window in alias.windows
-                    if window.storage_metadata == "per_column"
+                    if (
+                        window.storage_metadata == "per_column"
+                        or window.coding_metadata == "per_column"
+                    )
                     and state.valid_from <= window.valid_to
                     and window.valid_from <= state.valid_to
                     and window.valid_from <= obligation.valid_to
                     and window.valid_to >= obligation.valid_from
                 ]
+                for window in metadata_windows:
+                    if window.coding_metadata == "per_column" and (
+                        window.value_set is None
+                        or not window.value_set.members
+                        or state.value_set is not None
+                        or state.value_set_version_label
+                        or state.classification is not None
+                    ):
+                        ob_facts.append(
+                            f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                            f"{scope_label} claimed by {refs}: invalid per-column coding override or classified backing"
+                        )
                 projected = [
                     state.model_copy(
                         update={
                             "delivery_column_name": obligation.column,
                             "valid_from": window.valid_from,
                             "valid_to": window.valid_to,
-                            "data_type": window.data_type,
-                            "data_length": window.data_length,
+                            **(
+                                {
+                                    "data_type": window.data_type,
+                                    "data_length": window.data_length,
+                                }
+                                if window.storage_metadata == "per_column"
+                                else {}
+                            ),
+                            **(
+                                {
+                                    "value_set": window.value_set,
+                                    "value_set_version_label": window.value_set_version_label,
+                                }
+                                if window.coding_metadata == "per_column"
+                                else {}
+                            ),
                         }
                     )
-                    for window in storage_windows
+                    for window in metadata_windows
                 ]
-                if storage_windows:
+                if metadata_windows:
                     if direct:
                         projected.extend(
                             state.model_copy(
                                 update={"valid_from": start, "valid_to": end}
                             )
                             for start, end in remaining_windows(
-                                ((w.valid_from, w.valid_to) for w in storage_windows),
+                                ((w.valid_from, w.valid_to) for w in metadata_windows),
                                 max(state.valid_from, obligation.valid_from),
                                 min(state.valid_to, obligation.valid_to),
                             )
@@ -539,6 +571,16 @@ def check_delivery_coverage(
                     )
                     candidates.setdefault(token, candidate)
         for state in candidates.values():
+            if (
+                obligation.coding_claim is not None
+                and (state.value_set, state.value_set_version_label)
+                != obligation.coding_claim
+            ):
+                ob_facts.append(
+                    f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                    f"{scope_label} claimed by {refs}: claimed coding={obligation.coding_claim!r} "
+                    f"written coding={(state.value_set, state.value_set_version_label)!r}"
+                )
             if check_type and state.data_type != expected_type:
                 ob_facts.append(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "

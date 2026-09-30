@@ -3099,7 +3099,7 @@ def get_schema(
         # join, else each `variable_state` row would fan out into N duplicate
         # columns. Only `group_key`/`label` are read here, so DISTINCT is exact.
         state_rows = conn.execute(
-            "SELECT vs.period_scope, vs.valid_from, vs.valid_to, vs.value_set_version_label, "
+            "SELECT vs.state_id, vs.period_scope, vs.valid_from, vs.valid_to, vs.value_set_version_label, "
             "vs.data_type, vs.data_length, vs.delivery_column_name, "
             "v.variable_id, " + _VAR_ID_V + ", v.slug AS variable_slug, "
             "v.name AS variable_name, COALESCE(v.source_label, '') AS source, "
@@ -3114,11 +3114,13 @@ def get_schema(
             (rvid,),
         ).fetchall()
 
+        state_rows = _expand_coded_alias_rows(conn, state_rows)
+
         # Group states into editions keyed by the DELIVERY WINDOW only,
         # preserving first-seen order for determinism. One edition per window
         # holds ALL columns delivered then — including every vintage-state of a
         # folded variable; the label rides on each column below.
-        editions: dict[tuple[str, str], list[sqlite3.Row]] = {}
+        editions: dict[tuple[str | None, str | None], list[dict[str, Any]]] = {}
         for s in state_rows:
             editions.setdefault((s["valid_from"], s["valid_to"]), []).append(s)
 
@@ -3307,7 +3309,7 @@ def get_varinfo(
         # A2.2 split (siblings share one source key), so a provider_key filter
         # would fan in every sibling's states under this one matched variable.
         states = conn.execute(
-            "SELECT vs.state_id, vs.register_variant_id, vs.period_scope, vs.valid_from, vs.valid_to, "
+            "SELECT vs.state_id, vs.variable_id, vs.register_variant_id, vs.period_scope, vs.valid_from, vs.valid_to, "
             "vs.value_set_version_label, vs.data_type, vs.data_length, "
             "vs.delivery_column_name, vs.operational_definition, vs.provenance, "
             "vs.value_set_id, "
@@ -3323,6 +3325,8 @@ def get_varinfo(
             "vs.register_variant_id, vs.state_id",
             (variable_id,),
         ).fetchall()
+
+        states = _expand_coded_alias_rows(conn, states)
 
         # Value-set member counts per value_set_id (None when the state has no
         # codes). Batched so a wide variable doesn't fan out N+1 queries.
@@ -3611,6 +3615,61 @@ def _get_availability_register(
     }
 
 
+def _expand_coded_alias_rows(
+    conn: sqlite3.Connection, rows: list[sqlite3.Row]
+) -> list[dict[str, Any]]:
+    """Reuse catalog representations where physical columns own finite codings."""
+    if not rows:
+        return []
+    variable_ids = sorted({row["variable_id"] for row in rows})
+    coded_ids = {
+        row[0]
+        for row in conn.execute(
+            f"SELECT DISTINCT variable_id FROM variable_alias_window WHERE coding_metadata = 'per_column' AND variable_id IN ({_in_placeholders(variable_ids)})",
+            variable_ids,
+        )
+    }
+    if not coded_ids:
+        return [dict(row) for row in rows]
+    catalog = Catalog(conn)
+    expanded = {}
+    for variable_id in sorted(coded_ids):
+        by_state = {}
+        for state in catalog._states_for_variable(
+            variable_id, with_codes=False, with_code_summary=False
+        ):
+            by_state.setdefault(state.state_id, []).append(state)
+        expanded[variable_id] = by_state
+    out = []
+    fields = (
+        "period_scope",
+        "valid_from",
+        "valid_to",
+        "delivery_column_name",
+        "data_type",
+        "data_length",
+        "operational_definition",
+        "provenance",
+        "value_set_id",
+        "value_set_version_label",
+    )
+    for row in rows:
+        original = dict(row)
+        states = expanded.get(row["variable_id"], {}).get(row["state_id"])
+        if states is None:
+            out.append(original)
+        else:
+            out.extend(
+                {
+                    **original,
+                    **{field: getattr(state, field) for field in fields},
+                    "_coded_alias": True,
+                }
+                for state in states
+            )
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Get values
 # ---------------------------------------------------------------------------
@@ -3751,6 +3810,8 @@ def get_values_by_variable(
         variable_ids,
     ).fetchall()
 
+    state_rows = _expand_coded_alias_rows(conn, state_rows)
+
     instances: list[dict[str, Any]] = []
     # Group code rows by value_set_id; a state's `values` is its set's codes.
     by_value_set: dict[int, list[dict[str, Any]]] = {}
@@ -3785,6 +3846,11 @@ def get_values_by_variable(
             "period_scope": row["period_scope"],
             "values": [],
         }
+        if row.get("_coded_alias"):
+            inst.update(
+                delivery_column_name=row["delivery_column_name"],
+                value_set_version_label=row["value_set_version_label"],
+            )
         instances.append(inst)
         if row["value_set_id"] is not None:
             by_value_set.setdefault(row["value_set_id"], []).append(inst)
@@ -4317,7 +4383,13 @@ def get_coded_variables(
         "COUNT(DISTINCT vs.state_id) as n_instances "
         "FROM variable v "
         "JOIN variable_state vs ON vs.variable_id = v.variable_id "
-        "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
+        "JOIN (SELECT state_id, value_set_id FROM variable_state WHERE value_set_id IS NOT NULL "
+        "UNION SELECT vs.state_id, w.value_set_id FROM variable_state vs "
+        "JOIN variable_alias_window w ON w.variable_id = vs.variable_id "
+        "AND w.register_variant_id = vs.register_variant_id "
+        "AND w.valid_from <= vs.valid_to AND w.valid_to >= vs.valid_from "
+        "WHERE w.coding_metadata = 'per_column') coding ON coding.state_id = vs.state_id "
+        "JOIN value_set_member vsm ON coding.value_set_id = vsm.value_set_id "
         "JOIN value_code vc ON vsm.code_id = vc.code_id "
         "GROUP BY v.name "
         "HAVING n_distinct_codes >= ? AND n_registers >= ? "

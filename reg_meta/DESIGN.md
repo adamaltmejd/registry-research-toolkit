@@ -396,6 +396,14 @@ no `@` handling.) The binding-side "representation" chooser — which delivery c
 co-delivery maps to — is a `project_data`/`reg_schema` concern, not part of the reg_meta
 identifier.
 
+Checked per-column coding windows handle simultaneous columns with the same native
+version label but different supplied response domains. Each expanded column returns its
+own value-set ID, summary and optionally loaded codes. Native version filtering uses the
+expanded label; the literal delivery column distinguishes the representations. A missing
+override never borrows the shared state's domain. The initial contract requires
+unclassified complete finite domains and clears classification/conformance on those
+projections. Existing shared coding and lazy code loading remain unchanged.
+
 **Slug grammar.** Every slug matches `^[a-z](?:[a-z0-9]|-[a-z0-9])*$` (lowercase ASCII
 kebab-case: starts with a letter, ends with a letter or digit, hyphens only singly
 between alphanumerics; single-character slugs match `^[a-z]$`). The regex is anchored

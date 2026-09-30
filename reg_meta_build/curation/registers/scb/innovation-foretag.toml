@@ -10567,3 +10567,171 @@ column = "RRDEXX"
 valid_from = "2014-01-01"
 valid_to = "2016-12-31"
 source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.15555.geografisk-marknad-nationellt"
+variant = "257.553"
+storage_metadata = "per_column"
+coding_metadata = "per_column"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "The complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+noted = "2026-09-30"
+
+[[representation.parallel.columns]]
+column = "A2b"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+expected_codings = ["7ac023009bf1b12d768ea4801255a6c271a6943c74728a9def02640e3174ef82"]
+
+[[representation.parallel.columns]]
+column = "Q2b"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+expected_codings = ["a9f05a9ea71be23083a743c732a6c863a45c140981796b1bc54d7599069c7818"]
+
+[[representation.parallel]]
+variable = "257.15559.geografisk-marknad-ovriga-lander"
+variant = "257.553"
+storage_metadata = "per_column"
+coding_metadata = "per_column"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "The complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+noted = "2026-09-30"
+
+[[representation.parallel.columns]]
+column = "A2d"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+expected_codings = ["7ac023009bf1b12d768ea4801255a6c271a6943c74728a9def02640e3174ef82"]
+
+[[representation.parallel.columns]]
+column = "Q2d"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+expected_codings = ["a9f05a9ea71be23083a743c732a6c863a45c140981796b1bc54d7599069c7818"]
+
+[[representation.parallel]]
+variable = "257.15562.produktinnovation-ny-for-marknad"
+variant = "257.553"
+storage_metadata = "per_column"
+coding_metadata = "per_column"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "The complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+noted = "2026-09-30"
+
+[[representation.parallel.columns]]
+column = "B6a"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+expected_codings = ["7ac023009bf1b12d768ea4801255a6c271a6943c74728a9def02640e3174ef82"]
+
+[[representation.parallel.columns]]
+column = "Q6a"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+expected_codings = ["a9f05a9ea71be23083a743c732a6c863a45c140981796b1bc54d7599069c7818"]
+
+[[representation.parallel]]
+variable = "257.15563.produktinnovation-ny-for-foretaget"
+variant = "257.553"
+storage_metadata = "per_column"
+coding_metadata = "per_column"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "The complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+noted = "2026-09-30"
+
+[[representation.parallel.columns]]
+column = "B6b"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+expected_codings = ["7ac023009bf1b12d768ea4801255a6c271a6943c74728a9def02640e3174ef82"]
+
+[[representation.parallel.columns]]
+column = "Q6b"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+expected_codings = ["a9f05a9ea71be23083a743c732a6c863a45c140981796b1bc54d7599069c7818"]
+
+[[representation.parallel]]
+variable = "257.15580.utvecklare-av-processinnovationer"
+variant = "257.553"
+storage_metadata = "per_column"
+coding_metadata = "per_column"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "The complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+noted = "2026-09-30"
+
+[[representation.parallel.columns]]
+column = "C81"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+expected_codings = ["604a42ce89a8a85c6e52d063d22fa7ab1f346b9dd4cd4a9bb19980bcf16e8c59"]
+
+[[representation.parallel.columns]]
+column = "Q81"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+expected_codings = ["4fa5151e4e289ecc006e43349dcfb7240b8c2c2ea203f50639848f3287d98eee"]
+
+[[representation.parallel]]
+variable = "257.15593.huvudkontoret-belaget"
+variant = "257.553"
+storage_metadata = "per_column"
+coding_metadata = "per_column"
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+evidence = "The complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+noted = "2026-09-30"
+
+[[representation.parallel.columns]]
+column = "A1a"
+valid_from = "2006-01-01"
+valid_to = "2008-12-31"
+source_editions = ["2006 - 2008"]
+expected_codings = ["81d1f2c69cf214c9dc79de504aa35439e15b40589802051f3656c9c2a928b534"]
+
+[[representation.parallel.columns]]
+column = "Q1a"
+valid_from = "2004-01-01"
+valid_to = "2006-12-31"
+source_editions = ["2004 - 2006"]
+expected_codings = ["64d69bf1cadedb2e1e05cb2ebc3793302cb3983ce90713d567753bea7f4961d5"]
+
+[[representation.parallel]]
+variable = "257.39126.coop-pub-clcu-neu-nefta"
+variant = "257.553"
+storage_metadata = "per_column"
+coding_metadata = "per_column"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+evidence = "The complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+noted = "2026-09-30"
+
+[[representation.parallel.columns]]
+column = "COOP_PUB_CLCU_NEU_EFTA"
+valid_from = "2018-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2018 - 2020"]
+expected_codings = ["b369c4008b27b1269d51f5e638e3c0152ed75d6d1ed6ee1ddfff0c7e9f8d5f7e"]
+
+[[representation.parallel.columns]]
+column = "COOP_PUB_CLCU_NEU_NEFTA"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+expected_codings = ["fbed0d8ea73d5e7f202fd7872ef366691834061d91916f331399e53597ca3230"]

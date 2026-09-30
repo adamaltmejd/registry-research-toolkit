@@ -314,7 +314,8 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   column of the same variable; readers must not borrow the shared state's facts.
 # - 6.12.0: explicit year-independent delivery states with NULL calendar bounds.
 #   Readers require period_scope and cannot interpret these as dated/pooled states.
-SCHEMA_VERSION = "6.12.0"
+# - 6.13.0: explicit per-column coded alias-window domains and native labels.
+SCHEMA_VERSION = "6.13.0"
 DB_FILENAME = "reg_meta.db"
 
 

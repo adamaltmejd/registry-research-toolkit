@@ -662,7 +662,12 @@ CREATE TABLE variable_alias_window (
     storage_metadata TEXT NOT NULL DEFAULT 'shared' CHECK (storage_metadata IN ('shared', 'per_column')),
     data_type TEXT,
     data_length TEXT,
+    coding_metadata TEXT NOT NULL DEFAULT 'shared' CHECK (coding_metadata IN ('shared', 'per_column')),
+    value_set_id INTEGER REFERENCES value_set(value_set_id),
+    value_set_version_label TEXT NOT NULL DEFAULT '',
     CHECK (storage_metadata = 'per_column' OR (data_type IS NULL AND data_length IS NULL)),
+    CHECK ((coding_metadata = 'shared' AND value_set_id IS NULL AND value_set_version_label = '')
+        OR (coding_metadata = 'per_column' AND value_set_id IS NOT NULL)),
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_name, valid_from)
 );
 CREATE INDEX idx_variable_alias_window_lookup

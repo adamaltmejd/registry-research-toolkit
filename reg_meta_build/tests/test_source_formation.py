@@ -242,6 +242,10 @@ def test_explicit_open_ended_coverage_survives_formation_and_storage(
     assert result.variable is not None and result.diagnostics == ()
     state = result.variable.states[0]
     assert (state.valid_from, state.valid_to) == ("2004-01-01", "9999-12-31")
+    assert result.coverage[0].coding_claim == (
+        state.value_set,
+        state.value_set_version_label,
+    )
     output = tmp_path / "catalog.db"
     write_resolved_catalog((result.variable,), output, manifest={})
     with closing(open_db(output)) as conn:
@@ -1052,3 +1056,4 @@ def test_independent_delivery_forms_without_calendar_dates_and_retains_source():
     (obligation,) = formed.coverage
     assert obligation.period_scope == "year_independent"
     assert obligation.valid_from is obligation.valid_to is None
+    assert obligation.coding_claim == (state.value_set, "EU25")

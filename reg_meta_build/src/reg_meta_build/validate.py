@@ -1698,7 +1698,7 @@ def _check_variable_alias_window(
         "FROM variable_alias_window w LEFT JOIN variable_state vs "
         "ON vs.variable_id = w.variable_id AND vs.register_variant_id = w.register_variant_id "
         "AND vs.valid_from <= w.valid_to AND vs.valid_to >= w.valid_from "
-        "WHERE w.storage_metadata = 'per_column'"
+        "WHERE w.storage_metadata = 'per_column' OR w.coding_metadata = 'per_column'"
     ):
         intervals = backing.setdefault((vid, rvid, column, start, end), [])
         if state_start is not None:
@@ -1710,10 +1710,38 @@ def _check_variable_alias_window(
     )
     if unbacked:
         result.fail(
-            f"{unbacked:,} per-column storage window(s) lack complete backing states"
+            f"{unbacked:,} per-column metadata window(s) lack complete backing states"
         )
     else:
-        result.ok("every per-column storage window has complete backing states")
+        result.ok("every per-column metadata window has complete backing states")
+
+    invalid_coding = conn.execute(
+        "SELECT COUNT(*) FROM variable_alias_window w WHERE "
+        "(w.coding_metadata = 'shared' AND (w.value_set_id IS NOT NULL OR w.value_set_version_label != '')) "
+        "OR (w.coding_metadata = 'per_column' AND (w.value_set_id IS NULL "
+        "OR NOT EXISTS (SELECT 1 FROM value_set_member m WHERE m.value_set_id = w.value_set_id)))"
+    ).fetchone()[0]
+    if invalid_coding:
+        result.fail(
+            f"{invalid_coding:,} alias coding override(s) lack an exact positive finite domain"
+        )
+    else:
+        result.ok("every alias coding override has an exact positive finite domain")
+    contaminated = conn.execute(
+        "SELECT COUNT(DISTINCT w.rowid) FROM variable_alias_window w JOIN variable_state vs "
+        "ON vs.variable_id = w.variable_id AND vs.register_variant_id = w.register_variant_id "
+        "AND vs.valid_from <= w.valid_to AND vs.valid_to >= w.valid_from "
+        "WHERE w.coding_metadata = 'per_column' AND (vs.classification_id IS NOT NULL "
+        "OR vs.value_set_id IS NOT NULL OR vs.value_set_version_label != '')"
+    ).fetchone()[0]
+    if contaminated:
+        result.fail(
+            f"{contaminated:,} per-column coding window(s) have classified or common-coded backing states"
+        )
+    else:
+        result.ok(
+            "per-column coding windows have unclassified backing without common coding"
+        )
 
     if corpus:
         n_families = conn.execute(
