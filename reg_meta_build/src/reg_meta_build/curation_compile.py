@@ -1257,7 +1257,7 @@ def compile_parallel_representations(
                     ),
                     reason=entry.evidence,
                     provenance=ref,
-                    storage_metadata=entry.storage_metadata,
+                    column_metadata=entry.column_metadata,
                     coding_metadata=entry.coding_metadata,
                 ),
             )

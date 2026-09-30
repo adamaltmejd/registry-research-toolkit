@@ -1667,7 +1667,7 @@ def _check_variable_alias_window(
         "  AND w.register_variant_id = vs.register_variant_id "
         "  AND w.provenance IS NULL "
         "  AND ((w.valid_from = vs.valid_from AND w.valid_to = vs.valid_to) "
-        "    OR (w.storage_metadata = 'per_column' "
+        "    OR (w.column_metadata = 'per_column' "
         "      AND w.valid_from <= vs.valid_from AND w.valid_to >= vs.valid_to))"
         ") "
         "AND NOT EXISTS ("
@@ -1677,7 +1677,7 @@ def _check_variable_alias_window(
         "  AND w.provenance IS NULL "
         "  AND py_lower(w.delivery_column_name) = py_lower(vs.delivery_column_name) "
         "  AND ((w.valid_from = vs.valid_from AND w.valid_to = vs.valid_to) "
-        "    OR (w.storage_metadata = 'per_column' "
+        "    OR (w.column_metadata = 'per_column' "
         "      AND w.valid_from <= vs.valid_from AND w.valid_to >= vs.valid_to))"
         ")"
     ).fetchone()[0]
@@ -1698,7 +1698,7 @@ def _check_variable_alias_window(
         "FROM variable_alias_window w LEFT JOIN variable_state vs "
         "ON vs.variable_id = w.variable_id AND vs.register_variant_id = w.register_variant_id "
         "AND vs.valid_from <= w.valid_to AND vs.valid_to >= w.valid_from "
-        "WHERE w.storage_metadata = 'per_column' OR w.coding_metadata = 'per_column'"
+        "WHERE w.column_metadata = 'per_column' OR w.coding_metadata = 'per_column'"
     ):
         intervals = backing.setdefault((vid, rvid, column, start, end), [])
         if state_start is not None:

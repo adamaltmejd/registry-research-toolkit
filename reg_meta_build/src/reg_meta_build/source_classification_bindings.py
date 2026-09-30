@@ -12,6 +12,7 @@ from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.normalization import normalize_text
+from reg_meta_build.resolved_catalog import ResolvedScopedSentinels
 from reg_meta_build.source_classifications import resolve_classification_conformance
 from reg_meta_build.source_coding import (
     CodingIssue,
@@ -60,6 +61,7 @@ class _Binding:
     rule: bool = False
     override: bool = False
     sentinel_members: tuple[tuple[str, str], ...] = ()
+    sentinel_certificate: ResolvedScopedSentinels | None = None
 
 
 def _source_bindings(
@@ -480,6 +482,22 @@ def apply_classification_cases(
                 for code, _ in decision.sentinel_members
             ):
                 raise ValueError("scoped sentinels must not overlap canonical codes")
+        certificate = None
+        if decision.sentinel_members:
+            literal_column = decision.column_key[-1]
+            if not isinstance(literal_column, str):
+                raise ValueError(
+                    "scoped sentinel decision needs an exact literal column"
+                )
+            certificate = ResolvedScopedSentinels(
+                valid_from=decision.valid_from,
+                valid_to=decision.valid_to,
+                delivery_column_name=literal_column,
+                classification_sha256=decision.expected_classification,
+                source_fingerprints=decision.expected_source_codings,
+                members=decision.sentinel_members,
+                provenance=f"{case.case_id}: {decision.reason}\n{decision.provenance}",
+            )
         selected[decision.column_key].append(
             _Binding(
                 decision.valid_from,
@@ -489,6 +507,7 @@ def apply_classification_cases(
                 (f"{case.case_id}: {decision.reason}\n{decision.provenance}",),
                 inline_only=decision.binding_scope == "inline_coding",
                 sentinel_members=decision.sentinel_members,
+                sentinel_certificate=certificate,
             )
         )
 
@@ -599,6 +618,7 @@ def apply_classification_cases(
                     sentinel_maps[slug] = _sentinel_map(classifications[slug])
                 local_sentinels = dict(sentinel_maps[slug])
                 actual_members = set(segment.code_set.members)
+                certificates = []
                 for binding in active:
                     for code, label in binding.sentinel_members:
                         if (code, label) in actual_members and all(
@@ -606,6 +626,22 @@ def apply_classification_cases(
                             for member_code, member_label in actual_members
                         ):
                             local_sentinels[code] = label
+                    if binding.sentinel_certificate is not None:
+                        members = tuple(
+                            pair
+                            for pair in binding.sentinel_members
+                            if pair in actual_members
+                            and all(
+                                code != pair[0] or label == pair[1]
+                                for code, label in actual_members
+                            )
+                        )
+                        if members:
+                            certificates.append(
+                                binding.sentinel_certificate.model_copy(
+                                    update={"members": members}
+                                )
+                            )
                 checked = resolve_classification_conformance(
                     segment.code_set,
                     classification=slug,
@@ -615,6 +651,7 @@ def apply_classification_cases(
                     valid_from=start,
                     valid_to=end,
                     sentinel_codes=local_sentinels,
+                    scoped_sentinels=tuple(certificates),
                 )
                 diagnostics.extend(checked.diagnostics)
                 conformance = checked.conformance

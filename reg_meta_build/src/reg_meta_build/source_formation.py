@@ -812,6 +812,10 @@ def form_native_variable(
                         valid_from=state.valid_from,
                         valid_to=state.valid_to,
                         coding_claim=(state.value_set, state.value_set_version_label),
+                        column_text_claim=(
+                            state.operational_definition,
+                            state.source_register_text,
+                        ),
                     )
                     claims.append(coding_claim)
                     folded_claim[id(coding_claim)] = folded

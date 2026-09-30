@@ -1250,7 +1250,18 @@ def _period_bounds(period: Period) -> tuple[str, str] | None:
 
 
 type _StoredAliasWindow = tuple[
-    str, str, str, str | None, str, str | None, str | None, str, int | None, str
+    str,
+    str,
+    str,
+    str | None,
+    str,
+    str | None,
+    str | None,
+    str | None,
+    str | None,
+    str,
+    int | None,
+    str,
 ]
 
 
@@ -3098,7 +3109,8 @@ class Catalog:
     ) -> dict[int, list[_StoredAliasWindow]]:
         """`variable_alias_window` rows (#319/#945/Y-132) grouped by
         `register_variant_id` → [(delivery_column_name, valid_from, valid_to,
-        provenance, storage_metadata, data_type, data_length, coding_metadata,
+        provenance, column_metadata, data_type, data_length, operational_definition,
+        source_register_text, coding_metadata,
         value_set_id, value_set_version_label), …] sorted by window start.
         EMPTY for variables with no resolver-visible alias representations, so expansion is a no-op there.
         One indexed point-lookup on `idx_variable_alias_window_lookup`."""
@@ -3112,12 +3124,15 @@ class Catalog:
             mode,
             dtype,
             length,
+            operation,
+            source_text,
             coding_mode,
             value_set_id,
             version_label,
         ) in self._conn.execute(
             "SELECT register_variant_id, delivery_column_name, valid_from, valid_to, "
-            "provenance, storage_metadata, data_type, data_length, "
+            "provenance, column_metadata, data_type, data_length, "
+            "operational_definition, source_register_text, "
             "coding_metadata, value_set_id, value_set_version_label "
             "FROM variable_alias_window WHERE variable_id = ? "
             "ORDER BY register_variant_id, valid_from, delivery_column_name",
@@ -3132,6 +3147,8 @@ class Catalog:
                     mode,
                     dtype,
                     length,
+                    operation,
+                    source_text,
                     coding_mode,
                     value_set_id,
                     version_label,
@@ -3163,8 +3180,8 @@ class Catalog:
         native version label. Only
         `delivery_column_name` + `valid_from`/`valid_to` are always overridden. An
         explicit window provenance overrides the base provenance; otherwise it is
-        inherited. Explicit per-column storage replaces type and width, including
-        nulls, and intersects canonical state boundaries. Shared storage stays
+        inherited. Explicit per-column metadata replaces type, width, operational definition
+        and source attribution, including nulls, and intersects canonical state boundaries. Shared storage stays
         inherited. Explicit per-column coding replaces the value set and native
         version label, clears classification attribution, and respects lazy
         code/summary loading.
@@ -3189,6 +3206,8 @@ class Catalog:
                 mode,
                 dtype,
                 length,
+                operation,
+                source_text,
                 coding_mode,
                 value_set_id,
                 version_label,
@@ -3204,7 +3223,12 @@ class Catalog:
                     ),
                     "period_token": self._period_token_for_window(wfrom, wto),
                     **(
-                        {"data_type": dtype, "data_length": length}
+                        {
+                            "data_type": dtype,
+                            "data_length": length,
+                            "operational_definition": operation,
+                            "source_register_text": source_text,
+                        }
                         if mode == "per_column"
                         else {}
                     ),
@@ -3241,8 +3265,8 @@ class Catalog:
             windows = windows_by_variant.get(row["register_variant_id"], [])
             state_windows: list[_StoredAliasWindow] = []
             for window in windows:
-                if window[4] == "per_column" or window[7] == "per_column":
-                    # One physical storage window may span successive coding states.
+                if window[4] == "per_column" or window[9] == "per_column":
+                    # One physical column window may span successive coding states.
                     start, end = (
                         max(base.valid_from, window[1]),
                         min(base.valid_to, window[2]),
@@ -3252,10 +3276,10 @@ class Catalog:
                 elif base.valid_from <= window[1] and window[2] <= base.valid_to:
                     state_windows.append(window)
             source_windows = [
-                w for w in state_windows if w[3] is None or w[7] == "per_column"
+                w for w in state_windows if w[3] is None or w[9] == "per_column"
             ]
             curated_windows = [
-                w for w in state_windows if w[3] is not None and w[7] != "per_column"
+                w for w in state_windows if w[3] is not None and w[9] != "per_column"
             ]
             has_source_base = base.delivery_column_name is not None and any(
                 window[0].lower() == base.delivery_column_name.lower()

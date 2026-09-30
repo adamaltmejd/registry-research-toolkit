@@ -682,7 +682,7 @@ class ParallelRepresentationColumn(ColumnRepresentation):
 class ParallelRepresentationEntry(FiniteCurationWindow):
     variable: str
     variant: str
-    storage_metadata: Literal["shared", "per_column"] = "shared"
+    column_metadata: Literal["shared", "per_column"] = "shared"
     coding_metadata: Literal["shared", "per_column"] = "shared"
     columns: list[ParallelRepresentationColumn] = Field(min_length=2)
     evidence: str

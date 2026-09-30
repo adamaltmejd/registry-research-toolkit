@@ -5,6 +5,7 @@ from __future__ import annotations
 import sqlite3
 from typing import TYPE_CHECKING
 
+import pytest
 from _representation_fixtures import build_alias_representations
 from reg_meta.catalog import Catalog, ValueSetMember
 from reg_meta.db import open_db
@@ -424,5 +425,70 @@ def test_per_column_coding_preserves_domains_native_labels_and_lazy_loading(
         )
         assert [s.value_set_summary.code_count for s in summary] == [2, 1]
         assert all(s.value_set is s.classification_conformance is None for s in summary)
+    finally:
+        conn.close()
+
+
+@pytest.mark.parametrize("mode", ["shared", "per_column"])
+def test_column_metadata_preserves_literal_values_and_explicit_nulls(
+    tmp_path: Path, mode: str
+) -> None:
+    db = _build_multi_alias_db(tmp_path)
+    write_conn = sqlite3.connect(db)
+    try:
+        write_conn.execute(
+            "UPDATE variable_state SET operational_definition = 'Canonical operation', source_register_text = 'Canonical source' WHERE variable_id = 1"
+        )
+        if mode == "per_column":
+            write_conn.execute(
+                "UPDATE variable_alias_window SET column_metadata = 'per_column', data_type = 'integer', data_length = '3', operational_definition = 'Physical operation', source_register_text = 'Physical source' WHERE delivery_column_name = ?",
+                (_ALIASES[0],),
+            )
+            write_conn.execute(
+                "UPDATE variable_alias_window SET column_metadata = 'per_column' WHERE delivery_column_name = ?",
+                (_ALIASES[1],),
+            )
+        write_conn.commit()
+    finally:
+        write_conn.close()
+    conn = open_db(db)
+    try:
+        states = Catalog(conn).resolve_at(_FQID, "2018")
+        assert [s.delivery_column_name for s in states] == list(_ALIASES)
+        fields = [
+            (
+                s.data_type,
+                s.data_length,
+                s.operational_definition,
+                s.source_register_text,
+            )
+            for s in states
+        ]
+        assert fields == (
+            [
+                ("integer", "3", "Physical operation", "Physical source"),
+                (None, None, None, None),
+            ]
+            if mode == "per_column"
+            else [("integer", "1", None, "Canonical source")] * 2
+        )
+        assert all(s.value_set_id == 1 and len(s.value_set) == 2 for s in states)
+        if mode == "per_column":
+            columns = [
+                c
+                for c in get_schema(conn, register_variant_id="10")["variants"][0][
+                    "versions"
+                ][0]["columns"]
+                if c["variable_id"] == 1
+            ]
+            assert [
+                (c["operational_definition"], c["source_register_text"])
+                for c in columns
+            ] == [("Physical operation", "Physical source"), (None, None)]
+            instances = get_varinfo(conn, _ALIASES[0])[0]["instances"]
+            assert [
+                (s["operational_definition"], s["source_register_text"])
+                for s in instances
+            ] == [("Physical operation", "Physical source"), (None, None)]
     finally:
         conn.close()

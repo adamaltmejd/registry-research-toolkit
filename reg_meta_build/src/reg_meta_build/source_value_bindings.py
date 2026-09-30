@@ -379,6 +379,8 @@ class ValueBindingSession:
                         ].append(association.locator)
                     groups[descriptor.payload_key].append(association)
         claims, bindings = [], []
+        outer_bounds_ready = False
+        outer_bounds = None
         for descriptor_key, associations in sorted(groups.items()):
             descriptor = self.session.descriptor(descriptor_key)
             if descriptor.unresolved_members:
@@ -451,7 +453,7 @@ class ValueBindingSession:
                     )
                 if issue:
                     issues[issue, descriptor_key].append(association.locator)
-                if (
+                can_use_edition_membership = (
                     join.validity_target == "item"
                     and issue is None
                     and not invalid_item
@@ -461,8 +463,13 @@ class ValueBindingSession:
                         window is not None and window.status == "known"
                         for window in validity_windows
                     )
-                    and coding_scope_bounds(scope) is not None
-                ):
+                )
+                if can_use_edition_membership:
+                    if not outer_bounds_ready:
+                        outer_bounds = coding_scope_bounds(scope)
+                        outer_bounds_ready = True
+                    can_use_edition_membership = outer_bounds is not None
+                if can_use_edition_membership:
                     # Explicit edition membership outranks global item dates when
                     # no independent row/section restriction excludes the member.
                     # Keep the original dates and report every widened association.
@@ -480,8 +487,10 @@ class ValueBindingSession:
                         and (
                             member_scope is None
                             or coding_scope_bounds(member_scope)
-                            != coding_scope_bounds(
-                                scope if bounded.kind == "year_independent" else bounded
+                            != (
+                                outer_bounds
+                                if bounded.kind == "year_independent"
+                                else coding_scope_bounds(bounded)
                             )
                         )
                     ):

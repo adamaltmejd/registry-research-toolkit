@@ -1307,3 +1307,112 @@ def test_year_independent_writer_preserves_null_bounds_and_guards_scope_mixing(
             tmp_path / "bad-alias.db",
             manifest={},
         )
+
+
+def _scoped_sentinel_variable():
+    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.resolved_catalog import ResolvedScopedSentinels
+
+    book = _classification()
+    certificate = ResolvedScopedSentinels(
+        delivery_column_name="AmPolTyp",
+        valid_from="2000-01-01",
+        valid_to="2000-12-31",
+        classification_sha256=canonical_sha256(book.model_dump(mode="json")),
+        source_fingerprints=("a" * 64,),
+        members=(("09350", "Okänt"),),
+        provenance="checked-source-sentinel: exact original coding and codebook guards",
+    )
+    conformance = ResolvedConformance(
+        declared_classification=book.slug,
+        status="kept",
+        checked_codes=("001", "09350"),
+        sentinel_members=certificate.members,
+        scoped_sentinels=(certificate,),
+    )
+    state = _state(2000).model_copy(
+        update={
+            "value_set": ResolvedCodeSet(
+                members=(("001", "Source label"), ("09350", "Okänt"))
+            ),
+            "classification": book.slug,
+            "conformance": conformance,
+        }
+    )
+    return _variable().model_copy(update={"states": (state,)}), book
+
+
+def test_scoped_sentinel_certificate_keeps_local_member_without_changing_book(
+    tmp_path: Path,
+) -> None:
+    variable, book = _scoped_sentinel_variable()
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
+    with closing(open_db(output)) as conn:
+        assert tuple(
+            conn.execute(
+                "SELECT status, checked_code_count, matched_code_count, nonconforming_code_count FROM classification_conformance"
+            ).fetchone()
+        ) == ("kept", 2, 2, 0)
+        assert (
+            conn.execute(
+                "SELECT count(*) FROM classification_code WHERE code_id IN (SELECT code_id FROM value_code WHERE code='09350')"
+            ).fetchone()[0]
+            == 0
+        )
+        assert (
+            conn.execute(
+                "SELECT count(*) FROM value_code WHERE code='09350' AND label='Okänt'"
+            ).fetchone()[0]
+            == 1
+        )
+
+
+@pytest.mark.parametrize(
+    "defect", ["missing", "book", "column", "window", "label", "canonical"]
+)
+def test_scoped_sentinel_certificate_tampering_is_refused_before_publish(
+    tmp_path: Path, defect: str
+) -> None:
+    variable, book = _scoped_sentinel_variable()
+    state = variable.states[0]
+    conformance = state.conformance
+    assert conformance is not None
+    certificate = conformance.scoped_sentinels[0]
+    if defect == "missing":
+        conformance = conformance.model_copy(update={"scoped_sentinels": ()})
+    else:
+        update = {
+            "book": {"classification_sha256": "b" * 64},
+            "column": {"delivery_column_name": "Other"},
+            "window": {"valid_to": "2000-06-30"},
+            "label": {"members": (("09350", "Different meaning"),)},
+            "canonical": {"members": (("001", "Source label"),)},
+        }[defect]
+        conformance = conformance.model_copy(
+            update={"scoped_sentinels": (certificate.model_copy(update=update),)}
+        )
+    variable = variable.model_copy(
+        update={"states": (state.model_copy(update={"conformance": conformance}),)}
+    )
+    output = tmp_path / "existing.db"
+    output.write_bytes(b"previous")
+    with pytest.raises(
+        ValueError, match="scoped sentinel certificate|conformance disagrees"
+    ):
+        write_resolved_catalog(
+            (variable,), output, manifest={}, classifications=(book,)
+        )
+    assert output.read_bytes() == b"previous"
+
+
+def test_scoped_sentinel_certificate_requires_positive_source_and_case_evidence() -> (
+    None
+):
+    variable, _ = _scoped_sentinel_variable()
+    certificate = variable.states[0].conformance.scoped_sentinels[0]
+    for field, invalid in (("source_fingerprints", ()), ("provenance", "")):
+        with pytest.raises(ValidationError):
+            type(certificate).model_validate(
+                {**certificate.model_dump(), field: invalid}
+            )

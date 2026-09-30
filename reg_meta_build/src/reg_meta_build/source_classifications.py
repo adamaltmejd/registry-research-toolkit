@@ -19,7 +19,7 @@ from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping, Set as AbstractSet
 
-    from reg_meta_build.resolved_catalog import ResolvedCodeSet
+    from reg_meta_build.resolved_catalog import ResolvedCodeSet, ResolvedScopedSentinels
     from reg_meta_build.source_values import SourceValue
 
 
@@ -46,6 +46,7 @@ def resolve_classification_conformance(
     valid_from: str,
     valid_to: str,
     sentinel_codes: Mapping[str, str] | None = None,
+    scoped_sentinels: tuple[ResolvedScopedSentinels, ...] = (),
 ) -> ClassificationConformance:
     """Check an already-declared binding against curated sentinel meanings.
 
@@ -81,6 +82,7 @@ def resolve_classification_conformance(
         checked_codes=checked,
         nonconforming_members=nonconforming,
         sentinel_members=sentinel_members,
+        scoped_sentinels=scoped_sentinels,
     )
     diagnostics: list[ResolutionDiagnostic] = []
     if nonconforming:

@@ -427,7 +427,7 @@ def _delivered(
     windows: dict[_PairIds, list[tuple[str, str, str, str | None, str]]] = {}
     for row in conn.execute(
         "SELECT variable_id, register_variant_id, delivery_column_name, "
-        "valid_from, valid_to, provenance, storage_metadata FROM variable_alias_window"
+        "valid_from, valid_to, provenance, column_metadata FROM variable_alias_window"
     ):
         (
             variable_id,

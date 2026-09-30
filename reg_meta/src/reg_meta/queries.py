@@ -3114,7 +3114,7 @@ def get_schema(
             (rvid,),
         ).fetchall()
 
-        state_rows = _expand_coded_alias_rows(conn, state_rows)
+        state_rows = _expand_column_alias_rows(conn, state_rows)
 
         # Group states into editions keyed by the DELIVERY WINDOW only,
         # preserving first-seen order for determinism. One edition per window
@@ -3153,6 +3153,14 @@ def get_schema(
                         # columns, e.g. `sni92`/`sni2007` for the two states of a
                         # folded multi-vintage variable sharing this window.
                         "value_set_version_label": s["value_set_version_label"],
+                        **(
+                            {
+                                "operational_definition": s["operational_definition"],
+                                "source_register_text": s["source_register_text"],
+                            }
+                            if s.get("_column_alias")
+                            else {}
+                        ),
                         # The state's denormalized latest alias (see DESIGN.md → Two-level variable model) is the
                         # display column; emit it under `aliases` for the
                         # table/flat renderers and `compare()` flattening.
@@ -3326,7 +3334,7 @@ def get_varinfo(
             (variable_id,),
         ).fetchall()
 
-        states = _expand_coded_alias_rows(conn, states)
+        states = _expand_column_alias_rows(conn, states)
 
         # Value-set member counts per value_set_id (None when the state has no
         # codes). Batched so a wide variable doesn't fan out N+1 queries.
@@ -3374,6 +3382,8 @@ def get_varinfo(
                     s["variable_slug"],
                 ),
             }
+            if s.get("_column_alias"):
+                inst_dict["source_register_text"] = s["source_register_text"]
             instances_out.append(inst_dict)
 
         var_classifications = classifications_for_variable(conn, variable_id)
@@ -3615,25 +3625,25 @@ def _get_availability_register(
     }
 
 
-def _expand_coded_alias_rows(
+def _expand_column_alias_rows(
     conn: sqlite3.Connection, rows: list[sqlite3.Row]
 ) -> list[dict[str, Any]]:
-    """Reuse catalog representations where physical columns own finite codings."""
+    """Reuse catalog representations where physical columns own literal metadata."""
     if not rows:
         return []
     variable_ids = sorted({row["variable_id"] for row in rows})
-    coded_ids = {
+    column_ids = {
         row[0]
         for row in conn.execute(
-            f"SELECT DISTINCT variable_id FROM variable_alias_window WHERE coding_metadata = 'per_column' AND variable_id IN ({_in_placeholders(variable_ids)})",
+            f"SELECT DISTINCT variable_id FROM variable_alias_window WHERE (coding_metadata = 'per_column' OR column_metadata = 'per_column') AND variable_id IN ({_in_placeholders(variable_ids)})",
             variable_ids,
         )
     }
-    if not coded_ids:
+    if not column_ids:
         return [dict(row) for row in rows]
     catalog = Catalog(conn)
     expanded = {}
-    for variable_id in sorted(coded_ids):
+    for variable_id in sorted(column_ids):
         by_state = {}
         for state in catalog._states_for_variable(
             variable_id, with_codes=False, with_code_summary=False
@@ -3649,6 +3659,7 @@ def _expand_coded_alias_rows(
         "data_type",
         "data_length",
         "operational_definition",
+        "source_register_text",
         "provenance",
         "value_set_id",
         "value_set_version_label",
@@ -3663,7 +3674,7 @@ def _expand_coded_alias_rows(
                 {
                     **original,
                     **{field: getattr(state, field) for field in fields},
-                    "_coded_alias": True,
+                    "_column_alias": True,
                 }
                 for state in states
             )
@@ -3810,7 +3821,7 @@ def get_values_by_variable(
         variable_ids,
     ).fetchall()
 
-    state_rows = _expand_coded_alias_rows(conn, state_rows)
+    state_rows = _expand_column_alias_rows(conn, state_rows)
 
     instances: list[dict[str, Any]] = []
     # Group code rows by value_set_id; a state's `values` is its set's codes.
@@ -3846,7 +3857,7 @@ def get_values_by_variable(
             "period_scope": row["period_scope"],
             "values": [],
         }
-        if row.get("_coded_alias"):
+        if row.get("_column_alias"):
             inst.update(
                 delivery_column_name=row["delivery_column_name"],
                 value_set_version_label=row["value_set_version_label"],

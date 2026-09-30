@@ -14,7 +14,7 @@ from graphlib import CycleError, TopologicalSorter
 from itertools import combinations
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Literal, Self
+from typing import Annotated, Literal, Self
 
 from pydantic import (
     Field,
@@ -31,6 +31,7 @@ from reg_meta.db import (
     register_py_lower,
 )
 from reg_meta.fqid import Fqid, validate_slug
+from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build._curation import SentinelCode  # noqa: TC001
 from reg_meta_build._resolved_common import (
@@ -207,6 +208,32 @@ class ResolvedClassification(_ResolvedModel):
         return self
 
 
+class ResolvedScopedSentinels(_ResolvedWindow):
+    """Build-time certificate from a checked, finite source sentinel decision."""
+
+    delivery_column_name: str
+    classification_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    source_fingerprints: tuple[
+        Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...
+    ] = Field(min_length=1)
+    members: tuple[tuple[str, str], ...] = Field(min_length=1)
+    provenance: str
+
+    _text = field_validator("delivery_column_name", "provenance")(_require_trimmed)
+
+    @model_validator(mode="after")
+    def _unique_evidence(self) -> Self:
+        if len(set(self.source_fingerprints)) != len(self.source_fingerprints):
+            raise ValueError("duplicate scoped sentinel source fingerprint")
+        if any(not code or not label for code, label in self.members) or len(
+            {code for code, _ in self.members}
+        ) != len(self.members):
+            raise ValueError(
+                "scoped sentinels need unique literal nonempty code-label pairs"
+            )
+        return self
+
+
 class ResolvedConformance(_ResolvedModel):
     """The common resolver's explicit conformance decision, including omissions."""
 
@@ -215,10 +242,11 @@ class ResolvedConformance(_ResolvedModel):
     checked_codes: tuple[str, ...]
     nonconforming_members: tuple[tuple[str, str], ...] = ()
     # Observed non-canonical members whose code is on the declared
-    # classification's curated sentinel list. Kept in the state's value set as
-    # variable-local codes (never in `classification_code`); the binding is
-    # kept and one warning per state names them.
+    # classification's global sentinel list or an explicitly certified finite
+    # source decision. Kept as variable-local codes, never classification_code.
+    # The build-time certificate is not a global codebook mutation.
     sentinel_members: tuple[tuple[str, str], ...] = ()
+    scoped_sentinels: tuple[ResolvedScopedSentinels, ...] = ()
 
     @field_validator("declared_classification")
     @classmethod
@@ -234,6 +262,13 @@ class ResolvedConformance(_ResolvedModel):
             raise ValueError("duplicate nonconforming member")
         if len(self.sentinel_members) != len(set(self.sentinel_members)):
             raise ValueError("duplicate sentinel member")
+        if any(
+            not set(certificate.members) <= set(self.sentinel_members)
+            for certificate in self.scoped_sentinels
+        ):
+            raise ValueError(
+                "scoped sentinel certificate members must be recorded sentinels"
+            )
         if {code for code, _ in self.sentinel_members} & {
             code for code, _ in self.nonconforming_members
         }:
@@ -310,19 +345,31 @@ class ResolvedState(_ResolvedDeliveryScope):
 
 class ResolvedAliasWindow(_ResolvedWindow):
     provenance: str | None = None
-    storage_metadata: Literal["shared", "per_column"] = "shared"
+    column_metadata: Literal["shared", "per_column"] = "shared"
     data_type: str | None = None
     data_length: str | None = None
+    operational_definition: str | None = None
+    source_register_text: str | None = None
     coding_metadata: Literal["shared", "per_column"] = "shared"
     value_set: ResolvedCodeSet | None = None
     value_set_version_label: str = ""
 
     @model_validator(mode="after")
-    def _storage_scope(self) -> Self:
-        if self.storage_metadata == "shared" and (
-            self.data_type is not None or self.data_length is not None
+    def _column_scope(self) -> Self:
+        if self.column_metadata == "shared" and (
+            any(
+                value is not None
+                for value in (
+                    self.data_type,
+                    self.data_length,
+                    self.operational_definition,
+                    self.source_register_text,
+                )
+            )
         ):
-            raise ValueError("shared representation storage comes from its state")
+            raise ValueError(
+                "shared representation column metadata comes from its state"
+            )
         if self.coding_metadata == "shared" and (
             self.value_set is not None or self.value_set_version_label
         ):
@@ -671,13 +718,44 @@ def _validate_catalog_metadata(
                 for pair in state.value_set.members
                 if pair[0] in checked and pair[0] not in canonical
             }
-            expected = {pair for pair in observed if pair[0] not in sentinels}
+            scoped_pairs = set()
+            context = f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug} column {state.delivery_column_name!r} {state.valid_from}..{state.valid_to} book {book.slug!r}"
+            for certificate in conformance.scoped_sentinels:
+                if (
+                    certificate.classification_sha256
+                    != canonical_sha256(book.model_dump(mode="json"))
+                    or certificate.delivery_column_name != state.delivery_column_name
+                    or state.period_scope != "intervals"
+                    or state.valid_from is None
+                    or state.valid_to is None
+                    or not certificate.valid_from
+                    <= state.valid_from
+                    <= state.valid_to
+                    <= certificate.valid_to
+                    or not set(certificate.members) <= observed
+                    or any(
+                        code == member_code and label != member_label
+                        for code, label in certificate.members
+                        for member_code, member_label in state.value_set.members
+                    )
+                ):
+                    raise ValueError(
+                        f"scoped sentinel certificate disagrees with source state or canonical book: {context}"
+                    )
+                scoped_pairs.update(certificate.members)
+            expected = {
+                pair
+                for pair in observed
+                if pair[0] not in sentinels and pair not in scoped_pairs
+            }
             if expected != set(conformance.nonconforming_members):
-                raise ValueError("conformance disagrees with canonical code membership")
+                raise ValueError(
+                    f"conformance disagrees with canonical code membership: {context}; expected nonconforming {sorted(expected)!r}, recorded {sorted(conformance.nonconforming_members)!r}"
+                )
             expected_sentinels = observed - expected
             if expected_sentinels != set(conformance.sentinel_members):
                 raise ValueError(
-                    "conformance disagrees with curated sentinel code membership"
+                    f"conformance disagrees with curated sentinel code membership: {context}"
                 )
 
 
@@ -1124,8 +1202,8 @@ def write_resolved_catalog(
                     )
                     conn.executemany(
                         "INSERT INTO variable_alias_window "
-                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, storage_metadata, data_type, data_length, coding_metadata, value_set_id, value_set_version_label) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, column_metadata, data_type, data_length, operational_definition, source_register_text, coding_metadata, value_set_id, value_set_version_label) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             (
                                 variable_id,
@@ -1134,9 +1212,11 @@ def write_resolved_catalog(
                                 window.valid_from,
                                 window.valid_to,
                                 window.provenance,
-                                window.storage_metadata,
+                                window.column_metadata,
                                 window.data_type,
                                 window.data_length,
+                                window.operational_definition,
+                                window.source_register_text,
                                 window.coding_metadata,
                                 value_set_ids[window.value_set]
                                 if window.value_set is not None

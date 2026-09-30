@@ -2793,13 +2793,13 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
     registers = {register.register_info.slug: register for register in tree.registers}
     innovation = registers["innovation-foretag"]
     hreg = registers["hreg"]
-    assert len(innovation.representation.parallel) == 93
+    assert len(innovation.representation.parallel) == 95
     assert (
         sum(
-            e.storage_metadata == "per_column"
+            e.column_metadata == "per_column"
             for e in innovation.representation.parallel
         )
-        == 63
+        == 65
     )
     assert (
         sum(

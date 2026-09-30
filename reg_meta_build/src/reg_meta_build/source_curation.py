@@ -611,7 +611,7 @@ class RepresentationDecision(FiniteCurationWindow):
     reviewed: Literal[True]
     variable_key: NativeKey
     variant_key: NativeKey
-    storage_metadata: Literal["shared", "per_column"] = "shared"
+    column_metadata: Literal["shared", "per_column"] = "shared"
     coding_metadata: Literal["shared", "per_column"] = "shared"
     columns: tuple[ColumnRepresentation, ...] = Field(min_length=2)
     reason: str = Field(min_length=1)

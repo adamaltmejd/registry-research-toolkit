@@ -906,6 +906,13 @@ def test_scoped_sentinel_preserves_source_list_and_only_affects_its_window():
         == setup[2][case.decision.column_key].claims
     )
     assert segments[1].conformance.sentinel_members == (("99", "Source label"),)
+    certificate = segments[1].conformance.scoped_sentinels[0]
+    assert certificate.members == segments[1].conformance.sentinel_members
+    assert certificate.classification_sha256 == case.decision.expected_classification
+    assert certificate.source_fingerprints == case.decision.expected_source_codings
+    assert certificate.valid_from == "2020-07-01"
+    assert certificate.delivery_column_name == case.decision.column_key[-1]
+    assert "scoped-sentinel" in certificate.provenance
     assert setup[3]["fixture"].sentinel_codes == ()
     assert [d.code for d in result.diagnostics] == [
         "nonconforming_classification_codes",

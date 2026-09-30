@@ -4366,19 +4366,19 @@ def _parallel_coding(case):
     }
 
 
-@pytest.mark.parametrize("storage_metadata", ["shared", "per_column"])
+@pytest.mark.parametrize("column_metadata", ["shared", "per_column"])
 def test_pooled_parallel_compile_keeps_original_bounds_and_exact_intersection(
     tmp_path,
-    storage_metadata,
+    column_metadata,
 ):
     from reg_meta_build.source_curation import RepresentationDecision
     from reg_meta_build.source_representations import resolve_representation_cases
 
     path, records, naming = _pooled_parallel_fixture(tmp_path)
-    if storage_metadata == "per_column":
+    if column_metadata == "per_column":
         path.write_text(
             path.read_text().replace(
-                'variant = "1.10"', 'variant = "1.10"\nstorage_metadata = "per_column"'
+                'variant = "1.10"', 'variant = "1.10"\ncolumn_metadata = "per_column"'
             )
         )
     before = tuple(r.model_dump(mode="json") for r in records)
@@ -4392,7 +4392,7 @@ def test_pooled_parallel_compile_keeps_original_bounds_and_exact_intersection(
         ("First", "2022-01-01", "2022-12-31"),
         ("Second", "2022-01-01", "2022-12-31"),
     ]
-    assert decision.storage_metadata == storage_metadata
+    assert decision.column_metadata == column_metadata
     proof = resolve_representation_cases(records, cases, coding=_parallel_coding(case))
     assert proof.cases == cases and proof.diagnostics == ()
     assert tuple(r.model_dump(mode="json") for r in records) == before

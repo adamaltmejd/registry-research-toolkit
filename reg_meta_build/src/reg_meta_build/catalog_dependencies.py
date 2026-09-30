@@ -208,6 +208,7 @@ class CoverageObligation:
     data_length_claim: tuple[str, str | None] | None = None
     attributions: tuple[str, ...] = ()
     coding_claim: tuple[ResolvedCodeSet | None, str | None] | None = None
+    column_text_claim: tuple[str | None, str | None] | None = None
     period_scope: Literal["intervals", "year_independent"] = "intervals"
 
     def __post_init__(self) -> None:
@@ -433,6 +434,7 @@ def check_delivery_coverage(
             and not check_length
             and not claimed_attributions
             and obligation.coding_claim is None
+            and obligation.column_text_claim is None
             and not alias_cover
         ):
             losses.extend(ob_losses)
@@ -502,7 +504,7 @@ def check_delivery_coverage(
                     and alias.delivery_column_name == obligation.column
                     for window in alias.windows
                     if (
-                        window.storage_metadata == "per_column"
+                        window.column_metadata == "per_column"
                         or window.coding_metadata == "per_column"
                     )
                     and state.valid_from <= window.valid_to
@@ -532,8 +534,10 @@ def check_delivery_coverage(
                                 {
                                     "data_type": window.data_type,
                                     "data_length": window.data_length,
+                                    "operational_definition": window.operational_definition,
+                                    "source_register_text": window.source_register_text,
                                 }
-                                if window.storage_metadata == "per_column"
+                                if window.column_metadata == "per_column"
                                 else {}
                             ),
                             **(
@@ -580,6 +584,15 @@ def check_delivery_coverage(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                     f"{scope_label} claimed by {refs}: claimed coding={obligation.coding_claim!r} "
                     f"written coding={(state.value_set, state.value_set_version_label)!r}"
+                )
+            if (
+                obligation.column_text_claim is not None
+                and (state.operational_definition, state.source_register_text)
+                != obligation.column_text_claim
+            ):
+                ob_facts.append(
+                    f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                    f"{scope_label} claimed by {refs}: column operation/source attribution changed"
                 )
             if check_type and state.data_type != expected_type:
                 ob_facts.append(

@@ -1477,3 +1477,21 @@ def test_rangeless_pooled_and_unknown_scopes_stay_unsupported(
     resolved = resolve_code_membership(result.claims)
     assert resolved.segments == ()
     assert [issue.code for issue in resolved.issues] == ["unsupported_coding_scope"]
+
+
+@pytest.mark.parametrize("member", [1001, "not-native"])
+def test_empty_or_invalid_native_binding_does_not_evaluate_outer_bounds(
+    tmp_path: Path, monkeypatch, member: int | str
+) -> None:
+    source = _prepare(tmp_path / "values", join=_join(), rows=())
+
+    def unexpected_bounds(scope):
+        raise AssertionError("no eligible membership needs outer scope bounds")
+
+    monkeypatch.setattr(source_value_bindings, "coding_scope_bounds", unexpected_bounds)
+    with open_value_bindings((source,)) as sessions:
+        bound = bind_code_lists(_record(member=member), sessions)
+    assert bound.claims == bound.bindings == ()
+    assert [issue.code for issue in bound.issues] == (
+        ["unknown_record_member"] if isinstance(member, str) else []
+    )

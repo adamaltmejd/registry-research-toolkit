@@ -686,6 +686,13 @@ scoped decision. Only matching pairs inside the reviewed windows become local se
 source lists and global codebooks remain unchanged. Missing memberships, competing lists
 and other noncanonical codes retain their existing errors.
 
+The resolver carries each accepted local exception to the writer as a checked
+certificate: literal column, finite state window, exact code-label pairs, selected
+codebook hash, complete source-coding hashes and case provenance. The writer checks that
+certificate against its actual state and book before validating membership. Missing,
+changed or out-of-window certificates cannot broaden conformance. The certificate is
+build-time evidence; it adds no canonical codes or public sentinel policy.
+
 A parallel-column decision names each literal column and its finite delivery window. It
 reconciles sibling metadata and coding before forming shared states. Conflicting facts
 stay unknown; missing members or contradictory representation choices withhold the
@@ -704,16 +711,18 @@ separate evidence and are not inferred from a shared native identifier. Later so
 drift stales the checked case. Metadata and coding conflicts still pass through the
 existing reconciliation diagnostics.
 
-An explicit `storage_metadata = "per_column"` retains physical type and width on each
-checked representation window instead of requiring those two facts to be shared. Each
-literal column is reconciled independently; a conflict within that column remains
-unknown and diagnosed. The shared state never selects a storage donor. The existing
-`variable_alias_window` carries the mode and normalized type/width, and selected-column
-reads project those facts, including nulls, onto that representation. Coverage checks
-compare the source claim with the same column's written window. Names, meaning, coding,
-operational definitions and attribution retain the shared reconciliation contract. The
-default `shared` mode retains its existing behavior. Source SQL widths and precision
-remain literal metadata; this mode neither converts them nor asserts comparability.
+An explicit `column_metadata = "per_column"` retains physical type, width, operational
+definition and source attribution on each checked representation window. Each literal
+column is reconciled independently; a conflict within that column remains unknown and
+diagnosed. The shared state retains only agreed facts and never selects a metadata
+donor. The existing `variable_alias_window` carries the mode and these four fields, and
+selected-column reads project them, including nulls, onto that representation. An absent
+source attribution never inherits a sibling's questionnaire reference. Coverage checks
+compare the source claim with the same column's written window. Names, meaning and
+measurement units retain the shared reconciliation contract; coding has its independent
+mode below. The default `shared` mode retains its existing behavior. Source SQL widths
+and precision remain literal metadata; this mode neither converts them nor asserts
+comparability.
 
 An independent `coding_metadata = "per_column"` mode retains each checked column's
 complete finite response domain on its alias windows. The shared quantity state claims

@@ -117,6 +117,7 @@ def _setup(records=None, claims=None):
             "data_type",
             "data_length",
             "operational_definition",
+            "source_attribution",
         ),
         coding=True,
     )
@@ -230,7 +231,7 @@ def _column_storage_setup(
         update={
             "decision": decision.model_copy(
                 update={
-                    "storage_metadata": "per_column",
+                    "column_metadata": "per_column",
                     "columns": tuple(
                         column.model_copy(
                             update={
@@ -278,7 +279,7 @@ def test_per_column_storage_survives_formation_coverage_and_catalog_read(
         for alias in variable.aliases
     } == expected
     assert all(
-        w.storage_metadata == "per_column" for a in variable.aliases for w in a.windows
+        w.column_metadata == "per_column" for a in variable.aliases for w in a.windows
     )
     check_delivery_coverage((variable,), formed.coverage, withheld={})
     last_alias = variable.aliases[-1]
@@ -412,7 +413,7 @@ def test_per_column_window_spans_coding_states_without_losing_storage(
                 w.valid_from,
                 w.valid_to,
                 w.provenance,
-                w.storage_metadata,
+                w.column_metadata,
             )
             for a in variable.aliases
             for w in a.windows
@@ -469,7 +470,7 @@ def test_per_column_storage_keeps_same_column_conflict_and_rejects_mixed_modes()
     shared = case.model_copy(
         update={
             "case_id": "shared",
-            "decision": case.decision.model_copy(update={"storage_metadata": "shared"}),
+            "decision": case.decision.model_copy(update={"column_metadata": "shared"}),
         }
     )
     result, aliases, issues, _, _ = form_representations(
@@ -925,3 +926,99 @@ def test_per_column_coding_withholds_unsupported_domain_without_shared_fallback(
     )
     assert result == [] and aliases == ()
     assert [issue.code for issue in issues] == ["unsupported_representation_coding"]
+
+
+@pytest.mark.parametrize("second_source", [None, "Question 2 in another edition"])
+def test_per_column_operation_and_attribution_do_not_borrow_sibling_facts(
+    tmp_path, second_source
+):
+    setup = _column_storage_setup("integer", "0", "integer", "0")
+    records = setup[0]
+    # Rebuild target guards after changing the original source fixture.
+    records = tuple(
+        r.model_copy(
+            update={
+                "fields": r.fields.model_copy(
+                    update={
+                        "operational_definition": value_field(
+                            "First operation" if i == 0 else "Second operation"
+                        ),
+                        "source_attribution": value_field("Question 1")
+                        if i == 0
+                        else value_field(second_source)
+                        if second_source
+                        else None,
+                    }
+                )
+            }
+        )
+        for i, r in enumerate(records)
+    )
+    setup = _setup(records)
+    case = setup[2].model_copy(
+        update={
+            "decision": setup[2].decision.model_copy(
+                update={"column_metadata": "per_column"}
+            )
+        }
+    )
+    formed, proof = _form((*setup[:2], case, *setup[3:]))
+    assert not proof.diagnostics and not formed.diagnostics
+    variable = formed.variable
+    assert variable.states[0].operational_definition is None
+    assert variable.states[0].source_register_text is None
+    assert {
+        a.delivery_column_name: (
+            a.windows[0].operational_definition,
+            a.windows[0].source_register_text,
+        )
+        for a in variable.aliases
+    } == {
+        "First": ("First operation", "Question 1"),
+        "Second": ("Second operation", second_source),
+    }
+    check_delivery_coverage((variable,), formed.coverage, withheld={})
+    write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
+    with closing(open_db(tmp_path / "reg_meta.db")) as conn:
+        assert {
+            tuple(row)
+            for row in conn.execute(
+                "SELECT delivery_column_name, operational_definition, source_register_text FROM variable_alias_window"
+            )
+        } == {
+            ("First", "First operation", "Question 1"),
+            ("Second", "Second operation", second_source),
+        }
+    from reg_meta_build.source_curation import evaluate_cases
+
+    changed = (
+        records[0].model_copy(
+            update={
+                "fields": records[0].fields.model_copy(
+                    update={"source_attribution": None}
+                )
+            }
+        ),
+        records[1],
+    )
+    assert evaluate_cases((case,), changed)[0].status != "applicable"
+    aliases = tuple(
+        a.model_copy(
+            update={
+                "windows": (
+                    a.windows[0].model_copy(
+                        update={"source_register_text": "Question 1"}
+                    ),
+                )
+            }
+        )
+        if a.delivery_column_name == "Second"
+        else a
+        for a in variable.aliases
+    )
+    with pytest.raises(ValueError, match="supported delivery facts changed"):
+        check_delivery_coverage(
+            (variable.model_copy(update={"aliases": aliases}),),
+            formed.coverage,
+            withheld={},
+        )
