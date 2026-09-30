@@ -17,7 +17,7 @@ register = "scb/iot"
 key = "disponibel-inkomst"
 label = "Disponibel inkomst"
 axes = [{ axis = "enhet", label = "Enhet" }, { axis = "hushallsbegrepp", label = "Hushållsbegrepp" }, { axis = "kapitalvinst", label = "Kapitalvinst" }]
-members = [{ variable = "delkomponent-disponibel-inkomst", delivery_column = "CDISP", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-exkl-kapitalvinst", delivery_column = "CDISP5", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN83", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN84", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN86", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din88k", delivery_column = "DIN88K", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din91", delivery_column = "DIN91", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dind", delivery_column = "DIND", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinkd", delivery_column = "DINKD", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinu82", delivery_column = "DINU82", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj", delivery_column = "CDISPH", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF83", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF84", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF86", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-3", delivery_column = "DINF88K", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-4", delivery_column = "DINF91", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-5", delivery_column = "DINFU82", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-6", delivery_column = "DINKF", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-2004-inkl-kapitalvinst", delivery_column = "CDISP04", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-2004-exkl-kapitalvinst", delivery_column = "CDISP504", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj-2004", delivery_column = "CDISPKE04H", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2004", delivery_column = "CDISP04H", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst", delivery_column = "CDISP04HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-2", delivery_column = "CDISP04VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-3", delivery_column = "CDISPHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-4", delivery_column = "CDISPVXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-kosthushall-2004", delivery_column = "CDISP04HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004-individ", delivery_column = "CDISP504", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004-hushall", delivery_column = "CDISP504HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende", delivery_column = "CDISP504VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst-individ", delivery_column = "CDISP5", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst-hushall", delivery_column = "CDISP5HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende", delivery_column = "CDISP5VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj", delivery_column = "CDISPKEH", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj", delivery_column = "DINFKE", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispp", delivery_column = "CDISPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinkpp", delivery_column = "DINKPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp", delivery_column = "DINPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1981", delivery_column = "DINPP81", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning", delivery_column = "DINPP82", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning", delivery_column = "DINPP83", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1984", delivery_column = "DINPP84", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1986", delivery_column = "DINPP86", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp88k", delivery_column = "DINPP88K", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp91", delivery_column = "DINPP91", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinupp", delivery_column = "DINUPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp04kehb", delivery_column = "CDISP04KEHB", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispkehb", delivery_column = "CDISPKEHB", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispkevx", delivery_column = "CDISPKEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp04kevx", delivery_column = "CDISP04KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp5kevx", delivery_column = "CDISP5KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "cdisp504kevx", delivery_column = "CDISP504KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }]
+members = [{ variable = "delkomponent-disponibel-inkomst", delivery_column = "CDISP", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-exkl-kapitalvinst", delivery_column = "CDISP5", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN83", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN84", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din8", delivery_column = "DIN86", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din88k", delivery_column = "DIN88K", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "din91", delivery_column = "DIN91", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dind", delivery_column = "DIND", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinkd", delivery_column = "DINKD", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinu82", delivery_column = "DINU82", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj", delivery_column = "CDISPH", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF83", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF84", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2", delivery_column = "DINF86", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-3", delivery_column = "DINF88K", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-4", delivery_column = "DINF91", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-5", delivery_column = "DINFU82", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-6", delivery_column = "DINKF", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-2004", delivery_column = "CDISP04", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "delkomponent-disponibel-inkomst-2004-exkl-kapitalvinst", delivery_column = "CDISP504", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj-2004", delivery_column = "CDISPKE04H", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-familj-2004", delivery_column = "CDISP04H", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst", delivery_column = "CDISP04HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-2", delivery_column = "CDISP04VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-3", delivery_column = "CDISPHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-4", delivery_column = "CDISPVXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-kosthushall-2004", delivery_column = "CDISP04HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004", delivery_column = "CDISP504", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004-hushall", delivery_column = "CDISP504HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende", delivery_column = "CDISP504VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst", delivery_column = "CDISP5", coords = [{ axis = "enhet", value = "individ", label = "Individ" }, { axis = "hushallsbegrepp", value = "na", label = "—" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst-hushall", delivery_column = "CDISP5HB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende", delivery_column = "CDISP5VXHB", coords = [{ axis = "enhet", value = "hushall", label = "Hushåll" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj", delivery_column = "CDISPKEH", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-ke-familj", delivery_column = "DINFKE", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispp", delivery_column = "CDISPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinkpp", delivery_column = "DINKPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp", delivery_column = "DINPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1981", delivery_column = "DINPP81", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning", delivery_column = "DINPP82", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning", delivery_column = "DINPP83", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1984", delivery_column = "DINPP84", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "disponibel-inkomst-per-vuxen-familj-1986", delivery_column = "DINPP86", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp88k", delivery_column = "DINPP88K", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinpp91", delivery_column = "DINPP91", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "dinupp", delivery_column = "DINUPP", coords = [{ axis = "enhet", value = "per-vuxen", label = "Per vuxen" }, { axis = "hushallsbegrepp", value = "familj", label = "Familj" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp04kehb", delivery_column = "CDISP04KEHB", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispkehb", delivery_column = "CDISPKEHB", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdispkevx", delivery_column = "CDISPKEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp04kevx", delivery_column = "CDISP04KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" }] }, { variable = "cdisp5kevx", delivery_column = "CDISP5KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }, { variable = "cdisp504kevx", delivery_column = "CDISP504KEVX", coords = [{ axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" }, { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" }, { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" }] }]
 
 # CDISP5 explicitly excludes capital gains; retain a distinct calculation owner.
 
@@ -71,7 +71,7 @@ panel_time_grain = "delivery"
 # Registerbaserad arbetsmarknadsstatistik (RAMS)
 
 [[variable]]
-native_id = "25.56"
+native_id = "25.56.kolumn-personnr"
 slug = "person-orgnr"
 
 
@@ -86,7 +86,7 @@ slug = "hushallsid"
 
 
 [[variable]]
-native_id = "25.25"
+native_id = "25.25.formel-ej-angiven"
 slug = "familjetyp"
 
 [[variable]]
@@ -138,7 +138,7 @@ native_id = "25.271"
 slug = "medborgarskapsland"
 
 [[variable]]
-native_id = "25.335"
+native_id = "25.335.individ-forvarvsinkomst-kapital"
 slug = "forvarvs-och-kapitalinkomst"
 
 [[variable]]
@@ -170,11 +170,11 @@ native_id = "25.591"
 slug = "tjanstepension-tjanst"
 
 [[variable]]
-native_id = "25.594"
+native_id = "25.594.individ-formel-ej-angiven"
 slug = "privat-pensionsforsakring-livranta"
 
 [[variable]]
-native_id = "25.595"
+native_id = "25.595.individ-komponentbas-2019"
 slug = "allman-pension-tjanstepension-summa"
 
 [[variable]]
@@ -338,11 +338,11 @@ native_id = "25.1078"
 slug = "rantor-utdelningar-exkl-rantebidrag"
 
 [[variable]]
-native_id = "25.1081"
+native_id = "25.1081.source-native-quantity"
 slug = "pgi-annat-forvarvsarbete"
 
 [[variable]]
-native_id = "25.1082"
+native_id = "25.1082.source-native-quantity"
 slug = "pgi-anstallning"
 
 [[variable]]
@@ -370,7 +370,7 @@ native_id = "25.1111"
 slug = "statlig-taxerad-kapitalinkomst"
 
 [[variable]]
-native_id = "25.1159"
+native_id = "25.1159.individ-formel-ej-angiven"
 slug = "inkomstranta-utdelning-kapital"
 
 [[variable]]
@@ -606,7 +606,7 @@ native_id = "25.1486"
 slug = "barnpension-skattepliktig-och-skattefri"
 
 [[variable]]
-native_id = "25.1487"
+native_id = "25.1487.individ-formel-ej-angiven"
 slug = "skattefri-del-livranta-pension"
 
 [[variable]]
@@ -630,7 +630,7 @@ native_id = "25.1508"
 slug = "garantipension"
 
 [[variable]]
-native_id = "25.1520"
+native_id = "25.1520.individ-tre-komponenter-ku"
 slug = "summa-pension-ku"
 
 [[variable]]
@@ -798,7 +798,7 @@ native_id = "25.2650"
 slug = "handlaggande-skattemyndighet"
 
 [[variable]]
-native_id = "25.2664"
+native_id = "25.2664.familj-fyra-komponenter"
 slug = "studiemedel-lan-och-bidrag-familj"
 
 [[variable]]
@@ -886,11 +886,11 @@ native_id = "25.3289"
 slug = "kapitalforlust-annan-fond-rantefond"
 
 [[variable]]
-native_id = "25.3290"
+native_id = "25.3290.source-native-quantity"
 slug = "kapitalvinst-rantefond"
 
 [[variable]]
-native_id = "25.3291"
+native_id = "25.3291.source-native-quantity"
 slug = "kapitalforlust-rantefond"
 
 [[variable]]
@@ -1030,7 +1030,7 @@ native_id = "25.5642"
 slug = "taxering-skontaxeringsblankett"
 
 [[variable]]
-native_id = "25.5649"
+native_id = "25.5649.individ-formel-ej-angiven"
 slug = "folkpension"
 
 [[variable]]
@@ -1246,11 +1246,11 @@ native_id = "25.21729"
 slug = "kapitalvinst-brutto"
 
 [[variable]]
-native_id = "25.21783"
+native_id = "25.21783.individ-villkor-komponentbas-2019"
 slug = "pensionsbeloppskontroll-per-person"
 
 [[variable]]
-native_id = "25.21784"
+native_id = "25.21784.familj-villkor-komponentbas-2019"
 slug = "pensionsbeloppskontroll-familj"
 
 [[variable]]
@@ -1426,11 +1426,11 @@ native_id = "25.24169"
 slug = "underlag-skattereduktion-rot-forman"
 
 [[variable]]
-native_id = "25.24175"
+native_id = "25.24175.source-native-quantity"
 slug = "andel-grad-sjukersattning-vilande"
 
 [[variable]]
-native_id = "25.24193"
+native_id = "25.24193.source-native-quantity"
 slug = "andel-grad-aktivitetsersattning-vilande"
 
 [[variable]]
@@ -7686,7 +7686,7 @@ slug = "disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende"
 
 [[variable]]
 native_id = "25.22306.individ"
-slug = "disponibel-inkomst-exkl-kapvinst-2004-individ"
+slug = "disponibel-inkomst-exkl-kapvinst-2004"
 
 [[variable]]
 native_id = "25.22307.hushall"
@@ -7698,7 +7698,7 @@ slug = "disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende"
 
 [[variable]]
 native_id = "25.22307.individ"
-slug = "disponibel-inkomst-exkl-kapitalvinst-individ"
+slug = "disponibel-inkomst-exkl-kapitalvinst"
 
 [[variable]]
 native_id = "25.21862.hushall"
@@ -8333,3 +8333,807 @@ slug = "studiemedel-studiehjalp-lan-och-bidrag-hushall-vaxelvis-boende"
 [[variable]]
 native_id = "25.1430.individ-utlandsbidrag-utlandslan"
 slug = "studiemedel-studiehjalp-lan-och-bidrag-individ-utlandsbidrag-utlandslan"
+
+[[identity.column_owner]]
+variable = "25.335"
+variant = "25.763"
+column = "CFVIKI"
+owner = "25.335.individ-forvarvsinkomst-kapital"
+ref = "Prepared SCB export: The older supplied operation lists taxable income components (agriculture, property, business, partnership, employment, temporary earned work, taxable seamen income and capital). Preserve its truncated 1970 final token verbatim. Later FINK/CFVIKI explicitly sum earned income, capital surplus and a separate seamen-income component; the newer individual and household operations supply earned income plus capital surplus without that separate component. Keep these explicitly supplied formula bases and household/shared-residence calculations independent; do not infer whether seamen income is already included upstream or reconstruct an unreported formula. Native 25.125 reused CFVIKI remains an independent A/B-income calculation with its own alternative tax-income maximum. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.335"
+variant = "25.763"
+column = "CFVIKI"
+owner = "25.335.individ-forvarvsinkomst-kapital-sjoinkomst"
+ref = "Prepared SCB export: The older supplied operation lists taxable income components (agriculture, property, business, partnership, employment, temporary earned work, taxable seamen income and capital). Preserve its truncated 1970 final token verbatim. Later FINK/CFVIKI explicitly sum earned income, capital surplus and a separate seamen-income component; the newer individual and household operations supply earned income plus capital surplus without that separate component. Keep these explicitly supplied formula bases and household/shared-residence calculations independent; do not infer whether seamen income is already included upstream or reconstruct an unreported formula. Native 25.125 reused CFVIKI remains an independent A/B-income calculation with its own alternative tax-income maximum. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.335"
+variant = "25.763"
+column = "CFVIKI"
+owner = "25.335.individ-inkomstslag"
+ref = "Prepared SCB export: The older supplied operation lists taxable income components (agriculture, property, business, partnership, employment, temporary earned work, taxable seamen income and capital). Preserve its truncated 1970 final token verbatim. Later FINK/CFVIKI explicitly sum earned income, capital surplus and a separate seamen-income component; the newer individual and household operations supply earned income plus capital surplus without that separate component. Keep these explicitly supplied formula bases and household/shared-residence calculations independent; do not infer whether seamen income is already included upstream or reconstruct an unreported formula. Native 25.125 reused CFVIKI remains an independent A/B-income calculation with its own alternative tax-income maximum. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1968, slutlig version", "1969, slutlig version", "1970, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.335"
+variant = "25.1153"
+column = "CFVIKIHB"
+owner = "25.335.hushall"
+ref = "Prepared SCB export: The older supplied operation lists taxable income components (agriculture, property, business, partnership, employment, temporary earned work, taxable seamen income and capital). Preserve its truncated 1970 final token verbatim. Later FINK/CFVIKI explicitly sum earned income, capital surplus and a separate seamen-income component; the newer individual and household operations supply earned income plus capital surplus without that separate component. Keep these explicitly supplied formula bases and household/shared-residence calculations independent; do not infer whether seamen income is already included upstream or reconstruct an unreported formula. Native 25.125 reused CFVIKI remains an independent A/B-income calculation with its own alternative tax-income maximum. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2011, slutlig version", "2012, slutlig version", "2013, slutlig version", "2014, slutlig version", "2015, slutlig version", "2016, slutlig version", "2017, slutlig version", "2018, slutlig version", "2019, slutlig version", "2020, slutlig version", "2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.335"
+variant = "25.1153"
+column = "CFVIKIVXHB"
+owner = "25.335.hushall-vaxelvis-boende"
+ref = "Prepared SCB export: The older supplied operation lists taxable income components (agriculture, property, business, partnership, employment, temporary earned work, taxable seamen income and capital). Preserve its truncated 1970 final token verbatim. Later FINK/CFVIKI explicitly sum earned income, capital surplus and a separate seamen-income component; the newer individual and household operations supply earned income plus capital surplus without that separate component. Keep these explicitly supplied formula bases and household/shared-residence calculations independent; do not infer whether seamen income is already included upstream or reconstruct an unreported formula. Native 25.125 reused CFVIKI remains an independent A/B-income calculation with its own alternative tax-income maximum. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.335"
+variant = "25.763"
+column = "FINK"
+owner = "25.335.individ-forvarvsinkomst-kapital-sjoinkomst"
+ref = "Prepared SCB export: The older supplied operation lists taxable income components (agriculture, property, business, partnership, employment, temporary earned work, taxable seamen income and capital). Preserve its truncated 1970 final token verbatim. Later FINK/CFVIKI explicitly sum earned income, capital surplus and a separate seamen-income component; the newer individual and household operations supply earned income plus capital surplus without that separate component. Keep these explicitly supplied formula bases and household/shared-residence calculations independent; do not infer whether seamen income is already included upstream or reconstruct an unreported formula. Native 25.125 reused CFVIKI remains an independent A/B-income calculation with its own alternative tax-income maximum. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1992, slutlig version"]
+
+[[variable]]
+native_id = "25.335.hushall"
+slug = "forvarvs-och-kapitalinkomst-hushall"
+
+[[variable]]
+native_id = "25.335.hushall-vaxelvis-boende"
+slug = "forvarvs-och-kapitalinkomst-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.335.individ-forvarvsinkomst-kapital-sjoinkomst"
+slug = "forvarvs-och-kapitalinkomst-individ-forvarvsinkomst-kapital-sjoinkomst"
+
+[[variable]]
+native_id = "25.335.individ-inkomstslag"
+slug = "forvarvs-och-kapitalinkomst-individ-inkomstslag"
+
+[[identity.column_owner]]
+variable = "25.2664"
+variant = "25.763"
+column = "ISTUDH"
+owner = "25.2664.familj-fyra-komponenter"
+ref = "Prepared SCB export: The supplied RTB-family study formulas differ: the earlier explicit sum includes foreign study grants; ISTUDSFH explicitly includes boarding contribution; newer ISTUDH lists four component codes ISMBID, ISMLAN, ISHBID and ISHEXT. The 1987 STUDF operation explicitly returns the personal amount for 16–17-year-olds who do not form their own family, so keep that different aggregation basis independent. Blank or family-total-only operations have an unspecified calculation owner; neither component contents nor a reference date is reconstructed. Native 25.4661 reused ISTUDSFH remains independent with its own family and individual boarding-contribution sums. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.2664"
+variant = "25.763"
+column = "ISTUDH"
+owner = "25.2664.familj-med-utlandsbidrag"
+ref = "Prepared SCB export: The supplied RTB-family study formulas differ: the earlier explicit sum includes foreign study grants; ISTUDSFH explicitly includes boarding contribution; newer ISTUDH lists four component codes ISMBID, ISMLAN, ISHBID and ISHEXT. The 1987 STUDF operation explicitly returns the personal amount for 16–17-year-olds who do not form their own family, so keep that different aggregation basis independent. Blank or family-total-only operations have an unspecified calculation owner; neither component contents nor a reference date is reconstructed. Native 25.4661 reused ISTUDSFH remains independent with its own family and individual boarding-contribution sums. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version"]
+
+[[identity.column_owner]]
+variable = "25.2664"
+variant = "25.763"
+column = "ISTUDSFH"
+owner = "25.2664.familj-med-inackorderingsbidrag"
+ref = "Prepared SCB export: The supplied RTB-family study formulas differ: the earlier explicit sum includes foreign study grants; ISTUDSFH explicitly includes boarding contribution; newer ISTUDH lists four component codes ISMBID, ISMLAN, ISHBID and ISHEXT. The 1987 STUDF operation explicitly returns the personal amount for 16–17-year-olds who do not form their own family, so keep that different aggregation basis independent. Blank or family-total-only operations have an unspecified calculation owner; neither component contents nor a reference date is reconstructed. Native 25.4661 reused ISTUDSFH remains independent with its own family and individual boarding-contribution sums. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.2664"
+variant = "25.763"
+column = "STUDF"
+owner = "25.2664.berakning-ej-specificerad"
+ref = "Prepared SCB export: The supplied RTB-family study formulas differ: the earlier explicit sum includes foreign study grants; ISTUDSFH explicitly includes boarding contribution; newer ISTUDH lists four component codes ISMBID, ISMLAN, ISHBID and ISHEXT. The 1987 STUDF operation explicitly returns the personal amount for 16–17-year-olds who do not form their own family, so keep that different aggregation basis independent. Blank or family-total-only operations have an unspecified calculation owner; neither component contents nor a reference date is reconstructed. Native 25.4661 reused ISTUDSFH remains independent with its own family and individual boarding-contribution sums. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1983, slutlig version", "1984, slutlig version", "1985, slutlig version", "1986, slutlig version", "1988, slutlig version", "1989, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.2664"
+variant = "25.763"
+column = "STUDF"
+owner = "25.2664.familj-med-personundantag"
+ref = "Prepared SCB export: The supplied RTB-family study formulas differ: the earlier explicit sum includes foreign study grants; ISTUDSFH explicitly includes boarding contribution; newer ISTUDH lists four component codes ISMBID, ISMLAN, ISHBID and ISHEXT. The 1987 STUDF operation explicitly returns the personal amount for 16–17-year-olds who do not form their own family, so keep that different aggregation basis independent. Blank or family-total-only operations have an unspecified calculation owner; neither component contents nor a reference date is reconstructed. Native 25.4661 reused ISTUDSFH remains independent with its own family and individual boarding-contribution sums. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1987, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.2664"
+variant = "25.763"
+column = "STUDF"
+owner = "25.2664.familj-med-utlandsbidrag"
+ref = "Prepared SCB export: The supplied RTB-family study formulas differ: the earlier explicit sum includes foreign study grants; ISTUDSFH explicitly includes boarding contribution; newer ISTUDH lists four component codes ISMBID, ISMLAN, ISHBID and ISHEXT. The 1987 STUDF operation explicitly returns the personal amount for 16–17-year-olds who do not form their own family, so keep that different aggregation basis independent. Blank or family-total-only operations have an unspecified calculation owner; neither component contents nor a reference date is reconstructed. Native 25.4661 reused ISTUDSFH remains independent with its own family and individual boarding-contribution sums. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1990, slutlig version", "1991, slutlig version", "1992, slutlig version"]
+
+[[variable]]
+native_id = "25.2664.berakning-ej-specificerad"
+slug = "studiemedel-lan-och-bidrag-berakning-ej-specificerad"
+
+[[variable]]
+native_id = "25.2664.familj-med-inackorderingsbidrag"
+slug = "studiemedel-lan-och-bidrag-familj-med-inackorderingsbidrag"
+
+[[variable]]
+native_id = "25.2664.familj-med-personundantag"
+slug = "studiemedel-lan-och-bidrag-familj-med-personundantag"
+
+[[variable]]
+native_id = "25.2664.familj-med-utlandsbidrag"
+slug = "studiemedel-lan-och-bidrag-familj-med-utlandsbidrag"
+
+[[identity.column_owner]]
+variable = "25.25"
+variant = "25.763"
+column = "BFAMTYP"
+owner = "25.25.folkbokforing-arbetsinkomst"
+ref = "Prepared SCB export: Source operations through 1997 explicitly use population registration plus labour income and the five-code Familjetyp IoT -1997 scheme. Supplied 1998–2011 operations explicitly describe registration-only derivation and the thirteen-code scheme. Later operations are blank; retain an unspecified formula owner even though their thirteen source codes match the newer classification. Preserve all original text/integer representations and per-member coding; no category or algorithm equivalence is inferred from shared names, codes or omitted prose. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.25"
+variant = "25.763"
+column = "FAMTYP"
+owner = "25.25.folkbokforing-arbetsinkomst"
+ref = "Prepared SCB export: Source operations through 1997 explicitly use population registration plus labour income and the five-code Familjetyp IoT -1997 scheme. Supplied 1998–2011 operations explicitly describe registration-only derivation and the thirteen-code scheme. Later operations are blank; retain an unspecified formula owner even though their thirteen source codes match the newer classification. Preserve all original text/integer representations and per-member coding; no category or algorithm equivalence is inferred from shared names, codes or omitted prose. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1978, slutlig version", "1979, slutlig version", "1980, slutlig version", "1981, slutlig version", "1982, slutlig version", "1983, slutlig version", "1984, slutlig version", "1985, slutlig version", "1986, slutlig version", "1987, slutlig version", "1988, slutlig version", "1989, slutlig version", "1990, slutlig version", "1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.25"
+variant = "25.763"
+column = "Famtyp"
+owner = "25.25.folkbokforing"
+ref = "Prepared SCB export: Source operations through 1997 explicitly use population registration plus labour income and the five-code Familjetyp IoT -1997 scheme. Supplied 1998–2011 operations explicitly describe registration-only derivation and the thirteen-code scheme. Later operations are blank; retain an unspecified formula owner even though their thirteen source codes match the newer classification. Preserve all original text/integer representations and per-member coding; no category or algorithm equivalence is inferred from shared names, codes or omitted prose. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.25"
+variant = "25.763"
+column = "Famtyp"
+owner = "25.25.folkbokforing-arbetsinkomst"
+ref = "Prepared SCB export: Source operations through 1997 explicitly use population registration plus labour income and the five-code Familjetyp IoT -1997 scheme. Supplied 1998–2011 operations explicitly describe registration-only derivation and the thirteen-code scheme. Later operations are blank; retain an unspecified formula owner even though their thirteen source codes match the newer classification. Preserve all original text/integer representations and per-member coding; no category or algorithm equivalence is inferred from shared names, codes or omitted prose. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1996, slutlig version", "1997, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.25"
+variant = "25.763"
+column = "Famtyp"
+owner = "25.25.formel-ej-angiven"
+ref = "Prepared SCB export: Source operations through 1997 explicitly use population registration plus labour income and the five-code Familjetyp IoT -1997 scheme. Supplied 1998–2011 operations explicitly describe registration-only derivation and the thirteen-code scheme. Later operations are blank; retain an unspecified formula owner even though their thirteen source codes match the newer classification. Preserve all original text/integer representations and per-member coding; no category or algorithm equivalence is inferred from shared names, codes or omitted prose. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[variable]]
+native_id = "25.25.folkbokforing"
+slug = "familjetyp-folkbokforing"
+
+[[variable]]
+native_id = "25.25.folkbokforing-arbetsinkomst"
+slug = "familjetyp-folkbokforing-arbetsinkomst"
+
+[[identity.column_owner]]
+variable = "25.595"
+variant = "25.763"
+column = "KUAPENS"
+owner = "25.595.individ-ku"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20, explicitly moves part of occupational-pension PTJP into PAPEN; Appendix1 p27 defines PSSP from remaining PTJP, PALLM and PBARNSP. Thus preserve the old KUAPENS/PKUSSP annual-control-statement construct separately from PSSP after this documented component/reporting change. Retain household and shared-residence roles independently. Stable exported definitions support the source-native constructs without reconstructing older component formulas or claiming numerical equivalence. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.595"
+variant = "25.763"
+column = "PKUSSP"
+owner = "25.595.individ-ku"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20, explicitly moves part of occupational-pension PTJP into PAPEN; Appendix1 p27 defines PSSP from remaining PTJP, PALLM and PBARNSP. Thus preserve the old KUAPENS/PKUSSP annual-control-statement construct separately from PSSP after this documented component/reporting change. Retain household and shared-residence roles independently. Stable exported definitions support the source-native constructs without reconstructing older component formulas or claiming numerical equivalence. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.595"
+variant = "25.763"
+column = "PSSP"
+owner = "25.595.individ-komponentbas-2019"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20, explicitly moves part of occupational-pension PTJP into PAPEN; Appendix1 p27 defines PSSP from remaining PTJP, PALLM and PBARNSP. Thus preserve the old KUAPENS/PKUSSP annual-control-statement construct separately from PSSP after this documented component/reporting change. Retain household and shared-residence roles independently. Stable exported definitions support the source-native constructs without reconstructing older component formulas or claiming numerical equivalence. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.595"
+variant = "25.1153"
+column = "PSSPHB"
+owner = "25.595.hushall"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20, explicitly moves part of occupational-pension PTJP into PAPEN; Appendix1 p27 defines PSSP from remaining PTJP, PALLM and PBARNSP. Thus preserve the old KUAPENS/PKUSSP annual-control-statement construct separately from PSSP after this documented component/reporting change. Retain household and shared-residence roles independently. Stable exported definitions support the source-native constructs without reconstructing older component formulas or claiming numerical equivalence. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.595"
+variant = "25.1153"
+column = "PSSPVXHB"
+owner = "25.595.hushall-vaxelvis-boende"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20, explicitly moves part of occupational-pension PTJP into PAPEN; Appendix1 p27 defines PSSP from remaining PTJP, PALLM and PBARNSP. Thus preserve the old KUAPENS/PKUSSP annual-control-statement construct separately from PSSP after this documented component/reporting change. Retain household and shared-residence roles independently. Stable exported definitions support the source-native constructs without reconstructing older component formulas or claiming numerical equivalence. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[variable]]
+native_id = "25.595.hushall"
+slug = "allman-pension-tjanstepension-summa-hushall"
+
+[[variable]]
+native_id = "25.595.hushall-vaxelvis-boende"
+slug = "allman-pension-tjanstepension-summa-hushall-vaxelvis-boende"
+
+[[variable]]
+native_id = "25.595.individ-ku"
+slug = "allman-pension-tjanstepension-summa-individ-ku"
+
+[[identity.column_owner]]
+variable = "25.1520"
+variant = "25.763"
+column = "KUPENST"
+owner = "25.1520.individ-pension-transfereringar-ku"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: Keep the exported older individual taxable pension-plus-transfers description independent from the explicitly listed PKUAPEN+PKUSSP+TPRIV formula in2017/2018. SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20 and Appendix1 p27, documents the PTJP/PAPEN component and reporting change and a modern PAPENS production formula. Keep the2019-onward PAPENS basis independent rather than silently equating that production formula with the unchanged exported older component prose. Retain original exported prose verbatim, including discrepancies with production documentation. Household KU, newer household and shared-residence aggregation roles remain distinct; no input is reconstructed. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1520"
+variant = "25.763"
+column = "PAPENS"
+owner = "25.1520.individ-komponentbas-2019"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: Keep the exported older individual taxable pension-plus-transfers description independent from the explicitly listed PKUAPEN+PKUSSP+TPRIV formula in2017/2018. SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20 and Appendix1 p27, documents the PTJP/PAPEN component and reporting change and a modern PAPENS production formula. Keep the2019-onward PAPENS basis independent rather than silently equating that production formula with the unchanged exported older component prose. Retain original exported prose verbatim, including discrepancies with production documentation. Household KU, newer household and shared-residence aggregation roles remain distinct; no input is reconstructed. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1520"
+variant = "25.1153"
+column = "PAPENSHB"
+owner = "25.1520.hushall-komponentbas-2019"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: Keep the exported older individual taxable pension-plus-transfers description independent from the explicitly listed PKUAPEN+PKUSSP+TPRIV formula in2017/2018. SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20 and Appendix1 p27, documents the PTJP/PAPEN component and reporting change and a modern PAPENS production formula. Keep the2019-onward PAPENS basis independent rather than silently equating that production formula with the unchanged exported older component prose. Retain original exported prose verbatim, including discrepancies with production documentation. Household KU, newer household and shared-residence aggregation roles remain distinct; no input is reconstructed. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2019, slutlig version", "2020, slutlig version", "2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1520"
+variant = "25.1153"
+column = "PAPENSVXHB"
+owner = "25.1520.hushall-vaxelvis-boende-komponentbas-2019"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: Keep the exported older individual taxable pension-plus-transfers description independent from the explicitly listed PKUAPEN+PKUSSP+TPRIV formula in2017/2018. SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20 and Appendix1 p27, documents the PTJP/PAPEN component and reporting change and a modern PAPENS production formula. Keep the2019-onward PAPENS basis independent rather than silently equating that production formula with the unchanged exported older component prose. Retain original exported prose verbatim, including discrepancies with production documentation. Household KU, newer household and shared-residence aggregation roles remain distinct; no input is reconstructed. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1520"
+variant = "25.763"
+column = "PKUPENS"
+owner = "25.1520.individ-pension-transfereringar-ku"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: Keep the exported older individual taxable pension-plus-transfers description independent from the explicitly listed PKUAPEN+PKUSSP+TPRIV formula in2017/2018. SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20 and Appendix1 p27, documents the PTJP/PAPEN component and reporting change and a modern PAPENS production formula. Keep the2019-onward PAPENS basis independent rather than silently equating that production formula with the unchanged exported older component prose. Retain original exported prose verbatim, including discrepancies with production documentation. Household KU, newer household and shared-residence aggregation roles remain distinct; no input is reconstructed. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1520"
+variant = "25.763"
+column = "PKUPENS"
+owner = "25.1520.individ-tre-komponenter-ku"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: Keep the exported older individual taxable pension-plus-transfers description independent from the explicitly listed PKUAPEN+PKUSSP+TPRIV formula in2017/2018. SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20 and Appendix1 p27, documents the PTJP/PAPEN component and reporting change and a modern PAPENS production formula. Keep the2019-onward PAPENS basis independent rather than silently equating that production formula with the unchanged exported older component prose. Retain original exported prose verbatim, including discrepancies with production documentation. Household KU, newer household and shared-residence aggregation roles remain distinct; no input is reconstructed. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1520"
+variant = "25.1153"
+column = "PKUPENSHB"
+owner = "25.1520.hushall-ku"
+ref = "https://www.scb.se/contentassets/39bb9c0e1232445b9232a68f265913bc/he0101_dokstar_2019_20210303.pdf and prepared SCB export: Keep the exported older individual taxable pension-plus-transfers description independent from the explicitly listed PKUAPEN+PKUSSP+TPRIV formula in2017/2018. SCB IoT 2019 DOKSTAR (2021-03-03), K5.1 pp19-20 and Appendix1 p27, documents the PTJP/PAPEN component and reporting change and a modern PAPENS production formula. Keep the2019-onward PAPENS basis independent rather than silently equating that production formula with the unchanged exported older component prose. Retain original exported prose verbatim, including discrepancies with production documentation. Household KU, newer household and shared-residence aggregation roles remain distinct; no input is reconstructed. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2011, slutlig version", "2012, slutlig version", "2013, slutlig version", "2014, slutlig version", "2015, slutlig version", "2016, slutlig version", "2017, slutlig version", "2018, slutlig version"]
+
+[[variable]]
+native_id = "25.1520.hushall-komponentbas-2019"
+slug = "summa-pension-ku-hushall-komponentbas-2019"
+
+[[variable]]
+native_id = "25.1520.hushall-ku"
+slug = "summa-pension-ku-hushall-ku"
+
+[[variable]]
+native_id = "25.1520.hushall-vaxelvis-boende-komponentbas-2019"
+slug = "summa-pension-ku-hushall-vaxelvis-boende-komponentbas-2019"
+
+[[variable]]
+native_id = "25.1520.individ-komponentbas-2019"
+slug = "summa-pension-ku-individ-komponentbas-2019"
+
+[[variable]]
+native_id = "25.1520.individ-pension-transfereringar-ku"
+slug = "summa-pension-ku-individ-pension-transfereringar-ku"
+
+[[identity.column_owner]]
+variable = "25.1159"
+variant = "25.763"
+column = "KAPRTA"
+owner = "25.1159.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Only the2013 final individual KIRANTA source edition explicitly sums interest/dividend income and schablonintakter. Keep that supplied calculation independent from every individual edition with a blank operation, including KAPRTA and other KIRANTA records; their shared native quantity definition does not establish component or numerical equivalence. Household and shared-residence quantities remain separate roles with unspecified formulas. Do not project the2013 or modern production formula into another edition or infer ownership from year suffixes. Preserve blank operational facts and every original unit/type/coding representation. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1159"
+variant = "25.763"
+column = "KIRANTA"
+owner = "25.1159.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Only the2013 final individual KIRANTA source edition explicitly sums interest/dividend income and schablonintakter. Keep that supplied calculation independent from every individual edition with a blank operation, including KAPRTA and other KIRANTA records; their shared native quantity definition does not establish component or numerical equivalence. Household and shared-residence quantities remain separate roles with unspecified formulas. Do not project the2013 or modern production formula into another edition or infer ownership from year suffixes. Preserve blank operational facts and every original unit/type/coding representation. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1159"
+variant = "25.763"
+column = "KIRANTA"
+owner = "25.1159.individ-ranta-utdelning-schablon"
+ref = "Prepared SCB export: Only the2013 final individual KIRANTA source edition explicitly sums interest/dividend income and schablonintakter. Keep that supplied calculation independent from every individual edition with a blank operation, including KAPRTA and other KIRANTA records; their shared native quantity definition does not establish component or numerical equivalence. Household and shared-residence quantities remain separate roles with unspecified formulas. Do not project the2013 or modern production formula into another edition or infer ownership from year suffixes. Preserve blank operational facts and every original unit/type/coding representation. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2013, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1159"
+variant = "25.1153"
+column = "KIRANTAHB"
+owner = "25.1159.hushall-formel-ej-angiven"
+ref = "Prepared SCB export: Only the2013 final individual KIRANTA source edition explicitly sums interest/dividend income and schablonintakter. Keep that supplied calculation independent from every individual edition with a blank operation, including KAPRTA and other KIRANTA records; their shared native quantity definition does not establish component or numerical equivalence. Household and shared-residence quantities remain separate roles with unspecified formulas. Do not project the2013 or modern production formula into another edition or infer ownership from year suffixes. Preserve blank operational facts and every original unit/type/coding representation. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1159"
+variant = "25.1153"
+column = "KIRANTAVXHB"
+owner = "25.1159.hushall-vaxelvis-boende-formel-ej-angiven"
+ref = "Prepared SCB export: Only the2013 final individual KIRANTA source edition explicitly sums interest/dividend income and schablonintakter. Keep that supplied calculation independent from every individual edition with a blank operation, including KAPRTA and other KIRANTA records; their shared native quantity definition does not establish component or numerical equivalence. Household and shared-residence quantities remain separate roles with unspecified formulas. Do not project the2013 or modern production formula into another edition or infer ownership from year suffixes. Preserve blank operational facts and every original unit/type/coding representation. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[variable]]
+native_id = "25.1159.hushall-formel-ej-angiven"
+slug = "inkomstranta-utdelning-kapital-hushall-formel-ej-angiven"
+
+[[variable]]
+native_id = "25.1159.hushall-vaxelvis-boende-formel-ej-angiven"
+slug = "inkomstranta-utdelning-kapital-hushall-vaxelvis-boende-formel-ej-angiven"
+
+[[variable]]
+native_id = "25.1159.individ-ranta-utdelning-schablon"
+slug = "inkomstranta-utdelning-kapital-individ-ranta-utdelning-schablon"
+
+[[identity.column_owner]]
+variable = "25.594"
+variant = "25.763"
+column = "KUPPENS"
+owner = "25.594.individ-formel-ej-angiven"
+ref = "Prepared SCB export: The individual KUPPENS, PKUSSPL, PKUSLSP and PSLSP literals have the same explicit native private-pension/taxable-annuity quantity definition and the same complete Tal value text naming that quantity with SCBLOVO origin. This supports a quantity-only alias owner with unspecified calculation, not identical component inputs or numerical equivalence. Household and shared-residence coding explicitly names that quantity with SCBSTIN origin; keep those aggregation roles independent. SCB2019 DOKSTAR pp19-20 exempts pension-insurance payments from the employer AGI transition, so a blanket AGI split would be unsupported. No production formula is projected into the exported blank operations. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.594"
+variant = "25.763"
+column = "PKUSLSP"
+owner = "25.594.individ-formel-ej-angiven"
+ref = "Prepared SCB export: The individual KUPPENS, PKUSSPL, PKUSLSP and PSLSP literals have the same explicit native private-pension/taxable-annuity quantity definition and the same complete Tal value text naming that quantity with SCBLOVO origin. This supports a quantity-only alias owner with unspecified calculation, not identical component inputs or numerical equivalence. Household and shared-residence coding explicitly names that quantity with SCBSTIN origin; keep those aggregation roles independent. SCB2019 DOKSTAR pp19-20 exempts pension-insurance payments from the employer AGI transition, so a blanket AGI split would be unsupported. No production formula is projected into the exported blank operations. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.594"
+variant = "25.763"
+column = "PKUSSPL"
+owner = "25.594.individ-formel-ej-angiven"
+ref = "Prepared SCB export: The individual KUPPENS, PKUSSPL, PKUSLSP and PSLSP literals have the same explicit native private-pension/taxable-annuity quantity definition and the same complete Tal value text naming that quantity with SCBLOVO origin. This supports a quantity-only alias owner with unspecified calculation, not identical component inputs or numerical equivalence. Household and shared-residence coding explicitly names that quantity with SCBSTIN origin; keep those aggregation roles independent. SCB2019 DOKSTAR pp19-20 exempts pension-insurance payments from the employer AGI transition, so a blanket AGI split would be unsupported. No production formula is projected into the exported blank operations. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.594"
+variant = "25.763"
+column = "PSLSP"
+owner = "25.594.individ-formel-ej-angiven"
+ref = "Prepared SCB export: The individual KUPPENS, PKUSSPL, PKUSLSP and PSLSP literals have the same explicit native private-pension/taxable-annuity quantity definition and the same complete Tal value text naming that quantity with SCBLOVO origin. This supports a quantity-only alias owner with unspecified calculation, not identical component inputs or numerical equivalence. Household and shared-residence coding explicitly names that quantity with SCBSTIN origin; keep those aggregation roles independent. SCB2019 DOKSTAR pp19-20 exempts pension-insurance payments from the employer AGI transition, so a blanket AGI split would be unsupported. No production formula is projected into the exported blank operations. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.594"
+variant = "25.1153"
+column = "PSLSPHB"
+owner = "25.594.hushall-formel-ej-angiven"
+ref = "Prepared SCB export: The individual KUPPENS, PKUSSPL, PKUSLSP and PSLSP literals have the same explicit native private-pension/taxable-annuity quantity definition and the same complete Tal value text naming that quantity with SCBLOVO origin. This supports a quantity-only alias owner with unspecified calculation, not identical component inputs or numerical equivalence. Household and shared-residence coding explicitly names that quantity with SCBSTIN origin; keep those aggregation roles independent. SCB2019 DOKSTAR pp19-20 exempts pension-insurance payments from the employer AGI transition, so a blanket AGI split would be unsupported. No production formula is projected into the exported blank operations. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.594"
+variant = "25.1153"
+column = "PSLSPVXHB"
+owner = "25.594.hushall-vaxelvis-boende-formel-ej-angiven"
+ref = "Prepared SCB export: The individual KUPPENS, PKUSSPL, PKUSLSP and PSLSP literals have the same explicit native private-pension/taxable-annuity quantity definition and the same complete Tal value text naming that quantity with SCBLOVO origin. This supports a quantity-only alias owner with unspecified calculation, not identical component inputs or numerical equivalence. Household and shared-residence coding explicitly names that quantity with SCBSTIN origin; keep those aggregation roles independent. SCB2019 DOKSTAR pp19-20 exempts pension-insurance payments from the employer AGI transition, so a blanket AGI split would be unsupported. No production formula is projected into the exported blank operations. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[variable]]
+native_id = "25.594.hushall-formel-ej-angiven"
+slug = "privat-pensionsforsakring-livranta-hushall-formel-ej-angiven"
+
+[[variable]]
+native_id = "25.594.hushall-vaxelvis-boende-formel-ej-angiven"
+slug = "privat-pensionsforsakring-livranta-hushall-vaxelvis-boende-formel-ej-angiven"
+
+[[identity.column_owner]]
+variable = "25.1487"
+variant = "25.763"
+column = "LIVSKF"
+owner = "25.1487.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Individual LIVSKF, PKUSLSF and PSLSF share the explicit native tax-free pension/annuity quantity definition and identical complete Tal value text naming that quantity with SCBLOVO origin. Household and shared-residence coding explicitly names it with SCBSTIN origin. Accept quantity-only literal aliases while retaining independent aggregation roles and unspecified component formulas; neither calculation nor numerical/statistical equivalence is asserted. Do not infer an AGI reporting change from removal of KU in the literal. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1487"
+variant = "25.763"
+column = "PKUSLSF"
+owner = "25.1487.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Individual LIVSKF, PKUSLSF and PSLSF share the explicit native tax-free pension/annuity quantity definition and identical complete Tal value text naming that quantity with SCBLOVO origin. Household and shared-residence coding explicitly names it with SCBSTIN origin. Accept quantity-only literal aliases while retaining independent aggregation roles and unspecified component formulas; neither calculation nor numerical/statistical equivalence is asserted. Do not infer an AGI reporting change from removal of KU in the literal. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1487"
+variant = "25.763"
+column = "PSLSF"
+owner = "25.1487.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Individual LIVSKF, PKUSLSF and PSLSF share the explicit native tax-free pension/annuity quantity definition and identical complete Tal value text naming that quantity with SCBLOVO origin. Household and shared-residence coding explicitly names it with SCBSTIN origin. Accept quantity-only literal aliases while retaining independent aggregation roles and unspecified component formulas; neither calculation nor numerical/statistical equivalence is asserted. Do not infer an AGI reporting change from removal of KU in the literal. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1487"
+variant = "25.1153"
+column = "PSLSFHB"
+owner = "25.1487.hushall-formel-ej-angiven"
+ref = "Prepared SCB export: Individual LIVSKF, PKUSLSF and PSLSF share the explicit native tax-free pension/annuity quantity definition and identical complete Tal value text naming that quantity with SCBLOVO origin. Household and shared-residence coding explicitly names it with SCBSTIN origin. Accept quantity-only literal aliases while retaining independent aggregation roles and unspecified component formulas; neither calculation nor numerical/statistical equivalence is asserted. Do not infer an AGI reporting change from removal of KU in the literal. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1487"
+variant = "25.1153"
+column = "PSLSFVXHB"
+owner = "25.1487.hushall-vaxelvis-boende-formel-ej-angiven"
+ref = "Prepared SCB export: Individual LIVSKF, PKUSLSF and PSLSF share the explicit native tax-free pension/annuity quantity definition and identical complete Tal value text naming that quantity with SCBLOVO origin. Household and shared-residence coding explicitly names it with SCBSTIN origin. Accept quantity-only literal aliases while retaining independent aggregation roles and unspecified component formulas; neither calculation nor numerical/statistical equivalence is asserted. Do not infer an AGI reporting change from removal of KU in the literal. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[variable]]
+native_id = "25.1487.hushall-formel-ej-angiven"
+slug = "skattefri-del-livranta-pension-hushall-formel-ej-angiven"
+
+[[variable]]
+native_id = "25.1487.hushall-vaxelvis-boende-formel-ej-angiven"
+slug = "skattefri-del-livranta-pension-hushall-vaxelvis-boende-formel-ej-angiven"
+
+[[identity.column_owner]]
+variable = "25.5649"
+variant = "25.763"
+column = "BELPENS"
+owner = "25.5649.individ-folkpension-operation"
+ref = "Prepared SCB export: Every original FP, BELPENS, DELPENS, SGAMAX and PFP member has a complete Tal value explicitly naming Folkpension, with SCBSTIN origin for the older operation-bearing records and scbdanb origin for the later blank-operation records. This supplies positive quantity grounding for the SGAMAX literal without decoding its stem. Keep the explicitly supplied old-age/widow/disability pension operation cohort independent from the unspecified-formula cohort. Preserve all source origin text, blank operations and decimal/integer representations; no component or numerical equivalence is inferred. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1978, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.5649"
+variant = "25.763"
+column = "DELPENS"
+owner = "25.5649.individ-folkpension-operation"
+ref = "Prepared SCB export: Every original FP, BELPENS, DELPENS, SGAMAX and PFP member has a complete Tal value explicitly naming Folkpension, with SCBSTIN origin for the older operation-bearing records and scbdanb origin for the later blank-operation records. This supplies positive quantity grounding for the SGAMAX literal without decoding its stem. Keep the explicitly supplied old-age/widow/disability pension operation cohort independent from the unspecified-formula cohort. Preserve all source origin text, blank operations and decimal/integer representations; no component or numerical equivalence is inferred. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1979, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.5649"
+variant = "25.763"
+column = "FP"
+owner = "25.5649.individ-folkpension-operation"
+ref = "Prepared SCB export: Every original FP, BELPENS, DELPENS, SGAMAX and PFP member has a complete Tal value explicitly naming Folkpension, with SCBSTIN origin for the older operation-bearing records and scbdanb origin for the later blank-operation records. This supplies positive quantity grounding for the SGAMAX literal without decoding its stem. Keep the explicitly supplied old-age/widow/disability pension operation cohort independent from the unspecified-formula cohort. Preserve all source origin text, blank operations and decimal/integer representations; no component or numerical equivalence is inferred. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1974, slutlig version", "1975, slutlig version", "1976, slutlig version", "1977, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.5649"
+variant = "25.763"
+column = "FP"
+owner = "25.5649.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Every original FP, BELPENS, DELPENS, SGAMAX and PFP member has a complete Tal value explicitly naming Folkpension, with SCBSTIN origin for the older operation-bearing records and scbdanb origin for the later blank-operation records. This supplies positive quantity grounding for the SGAMAX literal without decoding its stem. Keep the explicitly supplied old-age/widow/disability pension operation cohort independent from the unspecified-formula cohort. Preserve all source origin text, blank operations and decimal/integer representations; no component or numerical equivalence is inferred. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.5649"
+variant = "25.763"
+column = "PFP"
+owner = "25.5649.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Every original FP, BELPENS, DELPENS, SGAMAX and PFP member has a complete Tal value explicitly naming Folkpension, with SCBSTIN origin for the older operation-bearing records and scbdanb origin for the later blank-operation records. This supplies positive quantity grounding for the SGAMAX literal without decoding its stem. Keep the explicitly supplied old-age/widow/disability pension operation cohort independent from the unspecified-formula cohort. Preserve all source origin text, blank operations and decimal/integer representations; no component or numerical equivalence is inferred. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.5649"
+variant = "25.763"
+column = "SGAMAX"
+owner = "25.5649.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Every original FP, BELPENS, DELPENS, SGAMAX and PFP member has a complete Tal value explicitly naming Folkpension, with SCBSTIN origin for the older operation-bearing records and scbdanb origin for the later blank-operation records. This supplies positive quantity grounding for the SGAMAX literal without decoding its stem. Keep the explicitly supplied old-age/widow/disability pension operation cohort independent from the unspecified-formula cohort. Preserve all source origin text, blank operations and decimal/integer representations; no component or numerical equivalence is inferred. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1991, slutlig version"]
+
+[[variable]]
+native_id = "25.5649.individ-folkpension-operation"
+slug = "folkpension-individ-folkpension-operation"
+
+[[identity.column_owner]]
+variable = "25.56"
+variant = "25.1642"
+column = "BKURORD"
+owner = "25.56.kolumn-bkurord"
+ref = "Prepared SCB export: The supplied generic legal-entity identifier quantity name and definition are identical for PersonNr in variant763 and BKURORD in variant1642; both have text type, blank operation and descriptive coding. No source-native co-delivery of these two columns occurs within one variant and source edition. Keep two explicitly guarded physical source-column owners because their identifier relationship is unspecified. The existing generic public name remains on the PersonNr source quantity and BKURORD gets a neutral physical-column suffix. Do not infer which entity either identifies, an encoding or pseudonymization scheme, reversible mapping, interchangeable keys or joinability. Preserve every original generic definition, field and coding association. Other native quantities4544/57 reusing PersonNr remain independent. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1999", "2000", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"]
+
+[[identity.column_owner]]
+variable = "25.56"
+variant = "25.763"
+column = "PersonNr"
+owner = "25.56.kolumn-personnr"
+ref = "Prepared SCB export: The supplied generic legal-entity identifier quantity name and definition are identical for PersonNr in variant763 and BKURORD in variant1642; both have text type, blank operation and descriptive coding. No source-native co-delivery of these two columns occurs within one variant and source edition. Keep two explicitly guarded physical source-column owners because their identifier relationship is unspecified. The existing generic public name remains on the PersonNr source quantity and BKURORD gets a neutral physical-column suffix. Do not infer which entity either identifies, an encoding or pseudonymization scheme, reversible mapping, interchangeable keys or joinability. Preserve every original generic definition, field and coding association. Other native quantities4544/57 reusing PersonNr remain independent. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1990, slutlig version", "1991, slutlig version", "1992, slutlig version", "1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[variable]]
+native_id = "25.56.kolumn-bkurord"
+slug = "person-orgnr-kolumn-bkurord"
+
+[[identity.column_owner]]
+variable = "25.1081"
+variant = "25.763"
+column = "CPGIAFV"
+owner = "25.1081.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1081"
+variant = "25.763"
+column = "PGIAF"
+owner = "25.1081.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1990, slutlig version", "1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1081"
+variant = "25.763"
+column = "PGIANST"
+owner = "25.1081.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1989, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1082"
+variant = "25.763"
+column = "CPGIAN"
+owner = "25.1082.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1082"
+variant = "25.763"
+column = "PGIAF"
+owner = "25.1082.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1989, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.1082"
+variant = "25.763"
+column = "PGIANST"
+owner = "25.1082.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1990, slutlig version", "1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.3290"
+variant = "25.763"
+column = "KFKUFON3"
+owner = "25.3290.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.3290"
+variant = "25.763"
+column = "KVKUFON3"
+owner = "25.3290.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.3291"
+variant = "25.763"
+column = "KFKUFON3"
+owner = "25.3291.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.3291"
+variant = "25.763"
+column = "KVKUFON3"
+owner = "25.3291.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2016, preliminär version", "2016, slutlig version", "2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.24175"
+variant = "25.763"
+column = "BFSJUK"
+owner = "25.24175.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.24175"
+variant = "25.763"
+column = "BGARV"
+owner = "25.24175.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.24175"
+variant = "25.763"
+column = "BTINKV"
+owner = "25.24175.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2011, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.24193"
+variant = "25.763"
+column = "BFAKT"
+owner = "25.24193.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version", "2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.24193"
+variant = "25.763"
+column = "BGARV"
+owner = "25.24193.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2011, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.24193"
+variant = "25.763"
+column = "BTINKV"
+owner = "25.24193.source-native-quantity"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: the exported native question IDs and their definitions are treated as correct; physical column content can change while its literal label stays unchanged. Thus membership follows the exact native question and reviewed literal/variant/edition map, despite reciprocal labels between employment/other pension income, fund gain/loss or dormant sickness/activity compensation. Keep the exported quantity definition and every contradictory column label and coding fact verbatim. This is quantity identity under the explicit assumption, not independent verification of an upstream mistake, an inferred missing operation, or numerical/statistical equivalence. Companion native questions retain separate owners even when a literal exchanges roles. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.763"
+column = "PENST"
+owner = "25.21783.individ-alternativa-pensionssummor-ku"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1990, slutlig version", "1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.763"
+column = "PENST"
+owner = "25.21783.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1981, slutlig version", "1982, slutlig version", "1983, slutlig version", "1984, slutlig version", "1985, slutlig version", "1987, slutlig version", "1988, slutlig version", "1989, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.763"
+column = "PENSTF"
+owner = "25.21783.individ-formel-ej-angiven"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1986, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.763"
+column = "PKONTR"
+owner = "25.21783.individ-alternativa-pensionssummor-ku"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.763"
+column = "PKONTR"
+owner = "25.21783.individ-villkor-komponentbas-2019"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.763"
+column = "PKONTR"
+owner = "25.21783.individ-villkor-ku"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.1153"
+column = "PKONTRHB"
+owner = "25.21783.hushall-alternativa-pensionssummor-ku"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2011, slutlig version", "2012, slutlig version", "2013, slutlig version", "2014, slutlig version", "2015, slutlig version", "2016, slutlig version", "2017, slutlig version", "2018, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.1153"
+column = "PKONTRHB"
+owner = "25.21783.hushall-komponentbas-2019"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2019, slutlig version", "2020, slutlig version", "2021, slutlig version", "2022, slutlig version", "2023, slutlig version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21783"
+variant = "25.1153"
+column = "PKONTRVXHB"
+owner = "25.21783.hushall-vaxelvis-boende-komponentbas-2019"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2021VX, slutlig version", "2022VX, slutlig version", "2023VX, slutlig version", "2024VX, slutlig version"]
+
+[[variable]]
+native_id = "25.21783.hushall-alternativa-pensionssummor-ku"
+slug = "pensionsbeloppskontroll-per-person-hushall-alternativa-pensionssummor-ku"
+
+[[variable]]
+native_id = "25.21783.hushall-komponentbas-2019"
+slug = "pensionsbeloppskontroll-per-person-hushall-komponentbas-2019"
+
+[[variable]]
+native_id = "25.21783.hushall-vaxelvis-boende-komponentbas-2019"
+slug = "pensionsbeloppskontroll-per-person-hushall-vaxelvis-boende-komponentbas-2019"
+
+[[variable]]
+native_id = "25.21783.individ-alternativa-pensionssummor-ku"
+slug = "pensionsbeloppskontroll-per-person-individ-alternativa-pensionssummor-ku"
+
+[[variable]]
+native_id = "25.21783.individ-formel-ej-angiven"
+slug = "pensionsbeloppskontroll-per-person-individ-formel-ej-angiven"
+
+[[variable]]
+native_id = "25.21783.individ-villkor-ku"
+slug = "pensionsbeloppskontroll-per-person-individ-villkor-ku"
+
+[[identity.column_owner]]
+variable = "25.21784"
+variant = "25.763"
+column = "PENST"
+owner = "25.21784.familj-alternativa-pensionssummor-ku"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1986, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21784"
+variant = "25.763"
+column = "PENSTF"
+owner = "25.21784.familj-alternativa-pensionssummor-ku"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1981, slutlig version", "1982, slutlig version", "1983, slutlig version", "1984, slutlig version", "1985, slutlig version", "1987, slutlig version", "1988, slutlig version", "1989, slutlig version", "1990, slutlig version", "1991, slutlig version", "1992, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21784"
+variant = "25.763"
+column = "PKONTRH"
+owner = "25.21784.familj-alternativa-pensionssummor-ku"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["1993, slutlig version", "1994, slutlig version", "1995, slutlig version", "1996, slutlig version", "1997, slutlig version", "1998, slutlig version", "1999, slutlig version", "2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21784"
+variant = "25.763"
+column = "PKONTRH"
+owner = "25.21784.familj-villkor-komponentbas-2019"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2019, preliminär version", "2019, slutlig version", "2020, preliminär version", "2020, slutlig version", "2021, preliminär version", "2021, slutlig version", "2022, preliminär version", "2022, slutlig version", "2023, preliminär version", "2023, slutlig version", "2024, preliminär version", "2024, slutlig version"]
+
+[[identity.column_owner]]
+variable = "25.21784"
+variant = "25.763"
+column = "PKONTRH"
+owner = "25.21784.familj-villkor-ku"
+ref = "Prepared SCB export: Maintainer-approved source-native identity assumption: exported question IDs and definitions are treated as correct despite the1986 PENST/PENSTF exchange of individual and family labels. Preserve every original label and source role. Keep the older blank individual formula, alternative-sum prose, explicitly supplied conditional PKUPENS>0 formula and independently documented2019 pension-input component basis separate; household and alternating-residence roles also remain independent. No conditional formula or family reference date is projected into earlier incomplete prose. SCB2019 DOKSTAR pp19-20 and Appendix1 p27 documents the pension component/reporting change; preserve its discrepancy with exported formula text rather than rewrite either. No numerical/statistical equivalence or independently verified source error is asserted. Every owner is limited to exact supplied column, variant and source-edition labels. Keep every original operation, blank field, name, unit, period and provenance unchanged; no numerical/statistical equivalence and no ownership for unlisted source editions."
+source_editions = ["2017, preliminär version", "2017, slutlig version", "2018, preliminär version", "2018, slutlig version"]
+
+[[variable]]
+native_id = "25.21784.familj-alternativa-pensionssummor-ku"
+slug = "pensionsbeloppskontroll-familj-familj-alternativa-pensionssummor-ku"
+
+[[variable]]
+native_id = "25.21784.familj-villkor-ku"
+slug = "pensionsbeloppskontroll-familj-familj-villkor-ku"

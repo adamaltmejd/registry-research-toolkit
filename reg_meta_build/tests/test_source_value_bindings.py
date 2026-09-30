@@ -367,15 +367,14 @@ def test_native_join_preserves_raw_tokens_uses_one_session_and_exact_validity(
             (s.valid_from, s.valid_to, s.code_set.members if s.code_set else None)
             for s in resolved.segments
         ] == [
-            ("2020-01-01", "2020-06-30", (("", "Blank"),)),
-            ("2020-07-01", "2020-12-31", (("", "Blank"), ("01", "One"))),
+            ("2020-01-01", "2020-12-31", (("", "Blank"), ("01", "One"))),
         ]
         assert result.bindings[0].association_count == 2
     assert tuple(source.associations()) == rows
     assert source.manifest.auxiliary_count == 0
 
 
-def test_edition_list_sets_aside_item_validity_only_when_wholly_excluded(
+def test_edition_list_sets_aside_global_item_dates_for_explicit_membership(
     tmp_path: Path,
 ) -> None:
     rows = (
@@ -432,12 +431,13 @@ def test_edition_list_sets_aside_item_validity_only_when_wholly_excluded(
     )
     with open_value_bindings((partial_source,)) as sessions:
         bound = bind_code_lists(_record(), sessions, scope=partial)
-    assert bound.bindings[0].item_validity_set_aside == ()
-    assert [member.code for member in bound.claims[0].members] == ["01"]
-    assert [
-        (issue.code, issue.valid_from, issue.valid_to)
-        for issue in resolve_code_membership(bound.claims).issues
-    ] == [("empty_active_coding", "2008-01-01", "2008-11-18")]
+    assert bound.bindings[0].item_validity_set_aside == rows
+    assert [member.code for member in bound.claims[0].members] == ["01", ""]
+    assert resolve_code_membership(bound.claims).issues == ()
+    assert [member.validity for member in bound.claims[0].members] == [
+        (partial_validity[0],),
+        (partial_validity[1],),
+    ]
 
     pooled = TemporalScope(
         kind="intervals",
@@ -456,11 +456,11 @@ def test_edition_list_sets_aside_item_validity_only_when_wholly_excluded(
     )
     with open_value_bindings((pooled_source,)) as sessions:
         bound = bind_code_lists(_record(), sessions, scope=pooled)
-    assert bound.bindings[0].item_validity_set_aside == ()
-    assert [member.scope.intervals[0].start for member in bound.claims[0].members] == [
-        "2012-01-04",
-        "2012-01-04",
-    ]
+    assert bound.bindings[0].item_validity_set_aside == rows
+    assert all(
+        member.scope.kind == "year_independent" for member in bound.claims[0].members
+    )
+    assert resolve_code_membership(bound.claims).issues == ()
 
 
 @pytest.mark.parametrize(
@@ -470,7 +470,7 @@ def test_edition_list_sets_aside_item_validity_only_when_wholly_excluded(
         ("2001-01-01", "2004-12-31", ()),
     ),
 )
-def test_overlapping_item_validity_prevents_whole_list_set_aside(
+def test_explicit_member_windows_remain_restrictions_on_association_fallback(
     tmp_path: Path,
     supplied_start: str,
     supplied_end: str,
@@ -506,9 +506,17 @@ def test_overlapping_item_validity_prevents_whole_list_set_aside(
     with open_value_bindings((source,)) as sessions:
         bound = bind_code_lists(_record(), sessions, scope=scope)
     assert tuple(issue.code for issue in bound.issues) == expected_issues
-    assert bound.bindings[0].item_validity_set_aside == ()
-    assert rows[1] in bound.bindings[0].inactive_associations
-    assert all(rows[1] not in member.associations for member in bound.claims[0].members)
+    assert bound.bindings[0].item_validity_set_aside == rows[1:]
+    assert bound.bindings[0].inactive_associations == (
+        rows[:1] if not expected_issues else ()
+    )
+    assert rows[1] in bound.claims[0].members[-1].associations
+    if expected_issues:
+        assert resolve_code_membership(bound.claims).issues
+    else:
+        assert all(
+            rows[0] not in member.associations for member in bound.claims[0].members
+        )
 
 
 def test_item_validity_set_aside_is_independent_of_association_order(
@@ -650,9 +658,19 @@ def test_item_validity_set_aside_respects_join_and_evidence_guards(
             sessions,
             scope=scope,
         )
-    assert bound.bindings[0].item_validity_set_aside == ()
+    if obstacle in {"unknown", "type_marker"}:
+        assert bound.bindings[0].item_validity_set_aside == (
+            rows[:1] if obstacle == "unknown" else rows[1:]
+        )
+    else:
+        assert bound.bindings[0].item_validity_set_aside == ()
     if obstacle == "unknown":
         assert [issue.code for issue in bound.issues] == ["unknown_code_validity"]
+        assert resolve_code_membership(bound.claims).issues
+    elif obstacle == "type_marker":
+        assert bound.issues == ()
+        assert bound.bindings[0].non_membership_associations == rows[:1]
+        assert [member.code for member in bound.claims[0].members] == ["02"]
     else:
         assert bound.issues == ()
         assert bound.claims[0].members == ()
@@ -709,10 +727,7 @@ def test_equal_membership_periods_keep_distinct_association_and_validity_evidenc
     with open_value_bindings((source,)) as sessions:
         members = bind_code_lists(_record(), sessions).claims[0].members
         assert [member.scope for member in members] == [
-            TemporalScope(
-                kind="intervals",
-                intervals=(ScopeInterval(start="2020-07-01", end="2020-12-31"),),
-            )
+            TemporalScope(kind="year_independent")
         ] * 2
         assert [member.associations for member in members] == [(rows[0],), (rows[1],)]
         assert [member.validity for member in members] == [
@@ -1097,13 +1112,28 @@ def test_repeated_binding_errors_share_context_but_keep_all_original_association
     )
 
 
+@pytest.mark.parametrize("outside_dates", (False, True))
 def test_normalized_member_collision_keeps_conflicting_complete_lists(
     tmp_path: Path,
+    outside_dates: bool,
 ) -> None:
     source = _prepare(
         tmp_path / "values",
         join=_join(),
         descriptors=(SourceValueDescriptor("first"), SourceValueDescriptor("second")),
+        validity=tuple(
+            SourceValueValidity(
+                index + 2,
+                str(index + 1),
+                "2021-01-01",
+                None,
+                "validity",
+                window=value_window("2021-01-01", None),
+            )
+            for index in range(2)
+        )
+        if outside_dates
+        else (),
         rows=(
             SourceValueAssociation(
                 2, "first", "a", "values", member_id="01001", item_id="1"

@@ -1003,6 +1003,7 @@ class PreparedSourceRecords:
         self,
         source: str,
         registers: Collection[NativeKey | None] | None = None,
+        select_family: Callable[[NativeKey], bool] | None = None,
     ) -> Iterator[tuple[NativeKey, tuple[SourceRecord, ...]]]:
         """Decode one source-native family at a time using the cold-prepared index.
 
@@ -1024,8 +1025,11 @@ class PreparedSourceRecords:
                 (source,),
             )
             for family, members in groupby(rows, key=lambda row: row["family_payload"]):
+                family_key = payload(family, "native_family")
+                if select_family is not None and not select_family(family_key):
+                    continue
                 yield (
-                    payload(family, "native_family"),
+                    family_key,
                     _read_record_batch(
                         conn,
                         payload,

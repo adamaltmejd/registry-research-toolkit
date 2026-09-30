@@ -404,6 +404,40 @@ def test_native_family_register_filter_preserves_grouping_and_order(
     ) == tuple(family for family in all_families if family[0][:5] == first_register)
     assert tuple(reader.iter_native_families(revision.dataset, set())) == ()
 
+    needed = native_variable_key(first)
+    assert needed is not None
+    filtered = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=commit
+    )
+    decoded_native = []
+    original_batch = prepared_sources._read_record_batch
+
+    def tracked_batch(conn, payload, rows, *args):
+        decoded_native.extend(
+            payload(row["family_payload"], "native_family") for row in rows
+        )
+        return original_batch(conn, payload, rows, *args)
+
+    monkeypatch.setattr(prepared_sources, "_read_record_batch", tracked_batch)
+    selected_native = tuple(
+        filtered.iter_native_families(
+            revision.dataset, {first_register}, select_family={needed}.__contains__
+        )
+    )
+    assert selected_native == tuple(f for f in all_families if f[0] == needed)
+    assert decoded_native == [needed, needed]
+    decoded_native.clear()
+    assert (
+        tuple(
+            filtered.iter_native_families(
+                revision.dataset, {first_register}, select_family=set().__contains__
+            )
+        )
+        == ()
+    )
+    assert decoded_native == []
+    monkeypatch.setattr(prepared_sources, "_read_record_batch", original_batch)
+
     narrow = open_prepared_source_records(
         root, expected_sha256=manifest.sha256, input_commit=commit
     )

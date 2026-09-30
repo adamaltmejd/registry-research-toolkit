@@ -29,6 +29,7 @@ from .curation_tree import (
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
     ErrataDataTypeEntry,
+    ErrataFieldEntry,
 )
 from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
 from .normalization import normalize_token
@@ -1575,6 +1576,14 @@ def compile_matrix_repr(
     )
 
 
+def _sos_owner_discriminators(owners: dict[str, str]) -> dict[str, str]:
+    """Reuse one identity for literal split values assigned to the same owner."""
+    representatives: dict[str, str] = {}
+    for value, owner in sorted(owners.items()):
+        representatives.setdefault(owner, value)
+    return {value: representatives[owner] for value, owner in owners.items()}
+
+
 def _literal_field(record: SourceRecord, name: str) -> str | None:
     field = getattr(record.fields, name)
     return (
@@ -1876,13 +1885,14 @@ def compile_partitions(
                         )
                         null_bases[scope_key].add(native)
                         continue
+                    discriminators = _sos_owner_discriminators(owners)
                     effects = tuple(
                         CheckedIdentityChange(
                             ref=record_ref(record),
                             variable_key=(
                                 *native,
                                 "accepted-shape",
-                                cast("str", value),
+                                discriminators[cast("str", value)],
                             ),
                             when=(
                                 FieldExpectation(
@@ -1983,7 +1993,10 @@ def compile_partitions(
                         ),
                     )
                 )
+                discriminators = _sos_owner_discriminators(owners)
                 for value, owner in sorted(owners.items()):
+                    if value != discriminators[value]:
+                        continue
                     key = (
                         *native,
                         "accepted-shape" if is_split else "accepted-name",
@@ -2386,7 +2399,10 @@ def compile_deferred_partitions(
                     ),
                     expected_members=tuple(item.ref for item in expectations),
                 )
+                discriminators = _sos_owner_discriminators(owners)
                 for value, owner in sorted(owners.items()):
+                    if value != discriminators[value]:
+                        continue
                     key = (
                         *native,
                         "accepted-shape" if is_split else "accepted-name",
@@ -3920,6 +3936,194 @@ def _family_diagnostic(
     )
 
 
+def compile_occurrence_corrections(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[CompiledScope, ...],
+    *,
+    subset: bool,
+) -> tuple[
+    dict[Any, tuple[CurationCase, ...]],
+    tuple[ResolutionDiagnostic, ...],
+    dict[str, dict[str, list[str]]],
+]:
+    """Compile literal text and occurrence-period corrections from original evidence."""
+    cases: dict[Any, list[CurationCase]] = defaultdict(list)
+    diagnostics = []
+    report: dict[str, dict[str, list[str]]] = {}
+    locations: dict[str, list[Any]] = defaultdict(list)
+    for scope in scopes:
+        for name, key in _scope_registers(scope):
+            locations[name].append((scope, key))
+    guarded_fields = (
+        "column_name",
+        "name",
+        "definition",
+        "description",
+        "operational_definition",
+        "data_type",
+        "representation",
+        "classification_declared",
+    )
+    for register in tree.registers:
+        entries = (
+            ("field", register.errata.field),
+            ("occurrence_period", register.errata.occurrence_period),
+        )
+        if not any(rows for _, rows in entries):
+            continue
+        name = f"{register.register_info.provider}/{register.register_info.slug}"
+        statuses = _family_status(report, name)
+        matches = locations.get(name, ())
+        location = matches[0] if len(matches) == 1 else None
+        families = {}
+        if location is not None:
+            scope, register_key = location
+            wanted = {
+                entry.variable.rsplit(".", 1)[-1]
+                for _, rows in entries
+                for entry in rows
+            }
+            families = {
+                str(key[-1]): members
+                for key, members in prepared.records.iter_native_families(
+                    scope.source,
+                    (register_key,),
+                    select_family=lambda key, wanted=wanted: str(key[-1]) in wanted,
+                )
+            }
+        for table, rows in entries:
+            for index, entry in enumerate(rows, 1):
+                case_id = f"{register.source_file}#/errata.{table}/{index}"
+                statuses["entries_read"].append(case_id)
+                if not matches and subset:
+                    statuses["not_evaluated_in_subset"].append(case_id)
+                    continue
+                family = families.get(entry.variable.rsplit(".", 1)[-1], ())
+                selected = tuple(
+                    record
+                    for record in family
+                    if (
+                        f"{register.register_info.native_id}.{record.subject.variant.native_id}"
+                        if record.subject.variant.native_id is not None
+                        else record.subject.variant.name
+                    )
+                    == entry.variant
+                    and _literal_field(record, "column_name") == entry.column
+                    and (
+                        entry.edition is None
+                        or (
+                            record.subject.native.edition_id is not None
+                            and str(record.subject.native.edition_id) == entry.edition
+                        )
+                    )
+                )
+                expected = {field.name: field for field in entry.expected_fields}
+                by_edition: dict[int | None, set[SourceRecordRef]] = defaultdict(set)
+                for record in selected:
+                    by_edition[record.subject.native.edition_id].add(record_ref(record))
+                overbroad = len(matches) > 1 or any(
+                    len(refs) > 1 for refs in by_edition.values()
+                )
+                valid = (
+                    bool(selected)
+                    and not overbroad
+                    and all(
+                        record.original_period_text == entry.expected_period_text
+                        and record.edition_scope == entry.expected_scope
+                        and record.edition_period_scope == entry.expected_period
+                        and all(
+                            (
+                                FieldExpectation(name=field, status="absent")
+                                if value is None
+                                else FieldExpectation(
+                                    name=field, status=value.status, value=value.value
+                                )
+                            )
+                            == expected[field]
+                            for field in expected
+                            for value in (getattr(record.fields, field),)
+                        )
+                        for record in selected
+                    )
+                )
+                if not valid:
+                    statuses["over_broad" if overbroad else "stale"].append(case_id)
+                    diagnostics.append(
+                        _family_diagnostic(
+                            case_id,
+                            entry.variable,
+                            "literal source coordinate has no originals or differs from the guarded prose/scopes",
+                            refs=tuple(record_ref(record) for record in selected),
+                            overbroad=overbroad,
+                        )
+                    )
+                    continue
+                assert location is not None
+                scope, register_key = location
+                chosen_refs = {record_ref(record) for record in selected}
+                effects = tuple(
+                    CheckedFieldChange(
+                        ref=record_ref(record),
+                        replacement=FieldExpectation(
+                            name=entry.field, status="value", value=entry.value
+                        ),
+                    )
+                    if isinstance(entry, ErrataFieldEntry)
+                    else CheckedPeriodChange(
+                        ref=record_ref(record),
+                        edition_scope=entry.edition_scope,
+                        edition_period_scope=entry.edition_period_scope,
+                    )
+                    for record in selected
+                )
+                cases[scope.source, scope.register_key].append(
+                    CurationCase(
+                        case_id=case_id,
+                        targets=capture_expectations(
+                            selected, fields=guarded_fields, coding=True, parents=True
+                        ),
+                        support=capture_expectations(
+                            tuple(
+                                record
+                                for record in family
+                                if record_ref(record) not in chosen_refs
+                            ),
+                            fields=guarded_fields,
+                            coding=True,
+                        ),
+                        peer_guards=(
+                            PeerGuard(
+                                guard_id=case_id,
+                                source=scope.source,
+                                coordinates=(
+                                    ("register", selected[0].subject.register_name),
+                                    ("variable", selected[0].subject.variable),
+                                ),
+                                expected_members=tuple(
+                                    sorted(
+                                        {record_ref(record) for record in family},
+                                        key=str,
+                                    )
+                                ),
+                            ),
+                        ),
+                        decision=OccurrenceCorrectionDecision(
+                            reviewed=True,
+                            effects=effects,
+                            reason=entry.evidence,
+                            provenance=f"{case_id}: {entry.evidence}",
+                        ),
+                    )
+                )
+                statuses["entries_matched"].append(case_id)
+    return (
+        {key: tuple(value) for key, value in cases.items()},
+        tuple(diagnostics),
+        report,
+    )
+
+
 def _partition_memberships(
     partition_cases: dict[Any, tuple[CurationCase, ...]],
 ) -> dict[Any, dict[tuple[str | int, ...], frozenset[tuple[SourceRecordRef, str]]]]:
@@ -5057,12 +5261,18 @@ def compile_curation(
         naming[key] = (*naming.get(key, ()), *extra)
     for key, extra in errata_keys.items():
         provider_keys[key] = (*provider_keys.get(key, ()), *extra)
+    correction_cases, correction_diagnostics, correction_report = (
+        compile_occurrence_corrections(tree, prepared, scopes, subset=subset)
+    )
+    for key, extra in correction_cases.items():
+        cases[key].extend(extra)
+    diagnostics.extend(correction_diagnostics)
     enrichment_cases, enrichment_diagnostics, enrichment_report = compile_enrichment(
         tree, prepared, scopes, naming, partition_cases, errata_cases, subset=subset
     )
     for key, extra in enrichment_cases.items():
         cases[key].extend(extra)
-    for family_report in (errata_report, enrichment_report):
+    for family_report in (errata_report, enrichment_report, correction_report):
         for register, statuses in family_report.items():
             current = report.setdefault(register, {key: [] for key in statuses})
             for status, entries in statuses.items():

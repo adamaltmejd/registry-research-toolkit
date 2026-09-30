@@ -24,6 +24,7 @@ from reg_meta_build.curation_compile import (
     compile_enrichment,
     compile_errata,
     compile_native_naming,
+    compile_occurrence_corrections,
     compile_partitions,
     compile_scb_preliminary,
     compile_sos_thin,
@@ -33,6 +34,8 @@ from reg_meta_build.curation_compile import (
 )
 from reg_meta_build.curation_tree import (
     ErrataDataTypeEntry,
+    ErrataFieldEntry,
+    ErrataOccurrencePeriodEntry,
     load_curation_tree,
     load_register_files,
 )
@@ -65,6 +68,7 @@ from reg_meta_build.source_curation import (
     OccurrenceCorrectionDecision,
     SearchAliasDecision,
     SourceEvidence,
+    capture_expectations,
 )
 from reg_meta_build.source_effects import (
     _require_checked,
@@ -85,6 +89,7 @@ from reg_meta_build.source_records import (
     DeliveredCell,
     NativeCoordinates,
     RecordLocator,
+    ScopeInterval,
     SourceCoordinate,
     SourceField,
     SourceFieldCells,
@@ -3923,6 +3928,88 @@ def test_sos_subdataset_split_routes_same_type_occurrences(tmp_path: Path):
 
 
 @pytest.mark.parametrize(
+    "subsets",
+    [
+        ("PAR_OV", "PAR_SV", "PAR_TV"),
+        ("PAR_OV", "PAR_TV"),
+        ("PAR_OV", "PAR_SV", "PAR_TV", "UNDECLARED"),
+    ],
+)
+def test_sos_split_groups_discriminators_by_declared_owner(tmp_path: Path, subsets):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/sos/par.toml"
+    path.parent.mkdir(parents=True)
+    parts = (
+        '{ deldatamangd = "PAR_OV", owner = "5891427617861710725.ATC.shared" }',
+        '{ deldatamangd = "PAR_SV", owner = "5891427617861710725.ATC.shared" }',
+        '{ deldatamangd = "PAR_TV", owner = "5891427617861710725.ATC.other" }',
+    )
+    records = _sos_partition_records(subsets=subsets)
+    first = None
+    for ordered_parts in (parts, parts[::-1]):
+        path.write_text(
+            '[register]\nprovider = "sos"\nslug = "par"\n'
+            'native_id = "5891427617861710725"\nname = "Patientregistret"\n'
+            '[[identity.split]]\nvariable = "ATC"\nby = "deldatamangd"\n'
+            f"parts = [{', '.join(ordered_parts)}]\n"
+            '[[variable]]\nnative_id = "5891427617861710725.ATC.shared"\n'
+            'slug = "shared"\n'
+            '[[variable]]\nnative_id = "5891427617861710725.ATC.other"\n'
+            'slug = "other"\n',
+            encoding="utf-8",
+        )
+        compiled, key, native = _compile_partition_fixture(root, records)
+        if first is None:
+            first = compiled
+        else:
+            assert compiled == first
+        reader = SimpleNamespace(
+            iter_partition_families=lambda source, registers=None, select_family=None, native=native: (
+                iter(((native, records),))
+            )
+        )
+        deferred = compile_deferred_partitions(
+            load_curation_tree(root),
+            cast("Any", SimpleNamespace(records=reader)),
+            (_partition_scope(records),),
+        )
+        assert deferred == (
+            compiled[1],
+            compiled[3],
+            compiled[4],
+            _partition_memberships(compiled[0]),
+        )
+        corrected = apply_occurrence_cases(records, compiled[0].get(key, ()))
+        assert not corrected.diagnostics
+        if len(subsets) != 3:
+            assert [issue.code for issue in compiled[-1]] == ["stale_curation_entry"]
+            assert all(o.variable_key == native for o in corrected.occurrences)
+            continue
+        assert not compiled[-1]
+        assert len(compiled[1][key]) == 2
+        by_subset = dict(zip(subsets, corrected.occurrences, strict=True))
+        assert by_subset["PAR_OV"].variable_key == by_subset["PAR_SV"].variable_key
+        assert by_subset["PAR_TV"].variable_key != by_subset["PAR_OV"].variable_key
+        assert by_subset["PAR_TV"].variable_key[-1] == "PAR_TV"
+        assert {n.target.source_key[-1]: n.naming.slug for n in compiled[1][key]} == {
+            "PAR_OV": "shared",
+            "PAR_TV": "other",
+        }
+        for record, occurrence in zip(records, corrected.occurrences, strict=True):
+            original = source_occurrence(record)
+            assert (
+                replace(
+                    occurrence,
+                    variable_key=original.variable_key,
+                    identity_checked=original.identity_checked,
+                    corrections=original.corrections,
+                )
+                == original
+            )
+
+
+@pytest.mark.parametrize(
     "subsets, declared",
     [
         (("PAR_OV",), ("PAR_OV", "PAR_SV")),
@@ -4475,3 +4562,170 @@ def test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts(
         ("First", "2022-01-01", "2022-12-31"),
         ("Second", "2022-01-01", "2022-12-31"),
     }
+
+
+def _checked_correction_fixture(tmp_path, *, period=False):
+    root = tmp_path / "curation"
+    _scb_partition_tree(root, "")
+    selected = _errata_record(column="ANSWER", year="2009", edition_id=99)
+    negative = _errata_record(column="ANSWER", year="2017", edition_id=100, member=21)
+    tree = load_curation_tree(root)
+    scope = _partition_scope((selected, negative))
+    base = {
+        "variable": "1.5",
+        "variant": "1.2",
+        "column": "ANSWER",
+        "edition": "99",
+        "expected_fields": list(
+            capture_expectations(
+                (selected,),
+                fields=("name", "definition", "description", "operational_definition"),
+            )[0]
+            .alternatives[0]
+            .fields
+        ),
+        "expected_period_text": selected.original_period_text,
+        "expected_scope": selected.edition_scope,
+        "expected_period": selected.edition_period_scope,
+        "evidence": "Exact supplied definition establishes the reviewed correction.",
+        "noted": "2026-09-30",
+    }
+    if period:
+        entry = ErrataOccurrencePeriodEntry(
+            **base,
+            edition_scope=TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start="2016-01-01", end=None),),
+            ),
+            edition_period_scope=TemporalScope(
+                kind="unknown", label="Original unknown period retained"
+            ),
+        )
+        field = "occurrence_period"
+    else:
+        entry = ErrataFieldEntry(**base, field="name", value="Reviewed label")
+        field = "field"
+    reg = next(r for r in tree.registers if r.register_info.slug == "sample")
+    reg = reg.model_copy(
+        update={"errata": reg.errata.model_copy(update={field: [entry]})}
+    )
+    return replace(tree, registers=(reg,)), scope, selected, negative, entry
+
+
+def _run_checked_correction(tree, scope, records):
+    native = native_variable_key(records[0])
+    reader = SimpleNamespace(
+        iter_native_families=lambda source, registers=None, select_family=None: iter(
+            ((native, records),)
+        )
+    )
+    return compile_occurrence_corrections(
+        tree, cast("Any", SimpleNamespace(records=reader)), (scope,), subset=False
+    )
+
+
+@pytest.mark.parametrize("period", [False, True])
+def test_checked_occurrence_corrections_preserve_originals_and_unselected_editions(
+    tmp_path, period
+):
+    tree, scope, original, negative, entry = _checked_correction_fixture(
+        tmp_path, period=period
+    )
+    cases, issues, report = _run_checked_correction(tree, scope, (original, negative))
+    assert not issues
+    assert len(report["scb/sample"]["entries_matched"]) == 1
+    result = apply_occurrence_cases((original, negative), cases[scope.source, None])
+    assert not result.diagnostics
+    changed, untouched = result.occurrences
+    assert changed.source_records == (original,)
+    assert untouched == source_occurrence(negative)
+    if period:
+        assert changed.edition_scope == entry.edition_scope
+        assert changed.edition_period_scope == entry.edition_period_scope
+        assert changed.edition_scope.intervals[0].end is None
+        assert changed.fields == original.fields
+    else:
+        assert changed.fields.name.value == entry.value
+        assert changed.edition_scope == original.edition_scope
+        assert changed.edition_period_scope == original.edition_period_scope
+    assert changed.variable_key == native_variable_key(original)
+
+
+@pytest.mark.parametrize(
+    "change", ["prose", "period", "period-text", "missing", "new-peer", "new-match"]
+)
+def test_checked_occurrence_corrections_fail_closed_on_source_changes(tmp_path, change):
+    tree, scope, original, negative, _ = _checked_correction_fixture(tmp_path)
+    cases, _, _ = _run_checked_correction(tree, scope, (original, negative))
+    records = (original, negative)
+    if change == "prose":
+        records = (
+            original.model_copy(
+                update={
+                    "fields": original.fields.model_copy(
+                        update={"description": value_field("Changed source meaning")}
+                    )
+                }
+            ),
+            negative,
+        )
+    elif change == "period":
+        records = (
+            original.model_copy(
+                update={
+                    "edition_scope": TemporalScope(
+                        kind="pooled",
+                        label="Unknown annual assignment",
+                        pooled_start="2009-01-01",
+                        pooled_end="2010-12-31",
+                    )
+                }
+            ),
+            negative,
+        )
+    elif change == "period-text":
+        records = (
+            original.model_copy(
+                update={"original_period_text": "Changed original edition text"}
+            ),
+            negative,
+        )
+    elif change == "missing":
+        records = (negative,)
+    elif change == "new-match":
+        records = (
+            *records,
+            _errata_record(column="ANSWER", year="2009", member=22, edition_id=99),
+        )
+    else:
+        records = (
+            *records,
+            _errata_record(column="ANSWER", year="2018", member=22, edition_id=101),
+        )
+    result = apply_occurrence_cases(records, cases[scope.source, None])
+    if change != "period-text":
+        assert result.diagnostics
+        assert result.occurrences == tuple(source_occurrence(r) for r in records)
+    if change != "new-peer":
+        refreshed, issues, _ = _run_checked_correction(tree, scope, records)
+        assert issues and not refreshed
+
+
+def test_checked_text_corrections_compose_and_withhold_conflicting_assignments(
+    tmp_path,
+):
+    tree, scope, original, negative, entry = _checked_correction_fixture(tmp_path)
+    reg = tree.registers[0]
+    conflicting = entry.model_copy(update={"value": "Other reviewed label"})
+    reg = reg.model_copy(
+        update={"errata": reg.errata.model_copy(update={"field": [entry, conflicting]})}
+    )
+    cases, issues, _ = _run_checked_correction(
+        replace(tree, registers=(reg,)), scope, (original, negative)
+    )
+    assert not issues
+    result = apply_occurrence_cases((original, negative), cases[scope.source, None])
+    assert result.diagnostics
+    assert result.occurrences[0].fields.name.status == "unknown"
+    assert result.occurrences[0].source_records == (original,)
+    assert result.occurrences[1] == source_occurrence(negative)

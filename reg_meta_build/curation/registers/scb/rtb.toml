@@ -1141,3 +1141,159 @@ slug = "grund-for-bosattning-grupperad-senaste"
 variable = "2.15724"
 columns = {"GrundForBosattning" = "2.15724.prioriterad", "GFBGrupp_SCB" = "2.15724.senaste"}
 columns_ref = "Prepared SCB operations explicitly distinguish grouping the prioritized residence-basis classification from grouping the latest residence-basis classification. Keep both owners distinct; retain Nordic US/blank/null-to-unknown wording, all literal codes and labels, widths, original years and source facts. The reused GrundForBosattning under native 2.8180 is an ungrouped classification and remains an independent native identity."
+
+# Exact district availability statements in quarterly source editions.
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.53"
+column = "DistriktsKod"
+expected_period_text = "Kvartal 1-3 fr.o.m. 2009"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Hämtas från Fastighetsregistrets distriktsregister. Matchningsbegrepp är s.k. adressplatsnyckel, dvs. den unika identiteten för adressen. Detta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 1." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2009-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 1; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13829"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-01-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-01-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.56"
+column = "DistriktsKod"
+expected_period_text = "Kvartal 1-3 fr.o.m. 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för personen vid civilståndsändringen. Matchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen. Detta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13802"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.56"
+column = "DistriktsKodRel"
+expected_period_text = "Kvartal 1-3 fr.o.m. 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för relationspersonen vid civilståndsändringen.Matchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen. Detta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13802"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.57"
+column = "DistriktsKod"
+expected_period_text = "Kvartal 1-3 fr.o.m. 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för personen vid dödsfallet. Matchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen. Detta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13811"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.60"
+column = "DistriktsKod"
+expected_period_text = "Kvartal 1-3 fr.o.m. 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för personen vid utvandringen. Matchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen.\nDetta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13818"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.61"
+column = "DistriktsKodFar"
+expected_period_text = "Kvartal 1-3 fr.o.m. 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för fadern vid födelsen. Matchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen.\nDetta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13813"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.61"
+column = "DistriktsKod"
+expected_period_text = "Kvartal 1-3 fr.o.m. 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för barnet vid födelsen. Matchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen.\nDetta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13813"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.62"
+column = "DistriktsKod"
+expected_period_text = "Kvartal 1-3 fr.o.m 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för personen vid invandringen. Matchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen.\nDetta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 2" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13815"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.63"
+column = "DistriktsKod"
+expected_period_text = "Kvartal 1-3 fr.o.m 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för personen efter flyttidpunkten.\nMatchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen. Detta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13814"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.35747"
+variant = "2.63"
+column = "DistriktsKodG"
+expected_period_text = "Kvartal 1-3 fr.o.m 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Distrikt tidigare" }, { name = "operational_definition", status = "value", value = "Distriktskod för personen före flyttidpunkten.\nMatchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen. Detta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns fr.o.m. 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13814"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+
+[[errata.occurrence_period]]
+variable = "2.32959"
+variant = "2.64"
+column = "DistriktsKod"
+expected_period_text = "Kvartal 1-3 fr.o.m. 2010"
+expected_fields = [{ name = "definition", status = "value", value = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }, { name = "description", status = "value", value = "Distriktsindelningen infördes i folkbokföringsdatabasen den 1 januari 2016.\n\nDistriktsindelningen är stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser." }, { name = "name", status = "value", value = "Distrikt" }, { name = "operational_definition", status = "value", value = "Distriktskod för personen vid medborgarskapsändringen. Matchningsbegrepp är adressplatsnyckel, dvs. den unika identiteten för adressen.\nDetta medför att distriktskod saknas för personer som saknar adressplatsnyckel, t.ex. de som är \"på kommunen skriven\" eller utan känd hemvist.\n\nFinns med fr.o.m. 2016 kvartal 2." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01" }] }
+evidence = "The original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
+noted = "2026-09-30"
+edition = "13824"
+edition_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2016-04-01" }] }

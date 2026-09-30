@@ -721,3 +721,80 @@ native_id = "392.41337"
 slug = "ej-skatteavdrag"
 
 # register 393
+
+[[coding.extend]]
+variable = "392.1073"
+variant = "392.1519"
+column = "FORMAN_HAR_JUSTERATS"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
+
+[[coding.extend]]
+variable = "392.22251"
+variant = "392.1519"
+column = "FORMAN_SOM_PENSION_EJ_ULAG_SA"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
+
+[[coding.extend]]
+variable = "392.6060"
+variant = "392.1519"
+column = "BILERSATTNING"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
+
+[[coding.extend]]
+variable = "392.16099.bostadsf-ej-smahus-ej-ulag-sa"
+variant = "392.1519"
+column = "BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
+
+[[coding.extend]]
+variable = "392.16099.bostadsf-ej-smahus-ulag-ag"
+variant = "392.1519"
+column = "BOSTADSF_EJ_SMAHUS_ULAG_AG"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
+
+[[coding.extend]]
+variable = "392.16099.bostadsf-ej-smahus-ulag-ea"
+variant = "392.1519"
+column = "BOSTADSF_EJ_SMAHUS_ULAG_EA"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
+
+[[coding.extend]]
+variable = "392.16099.bostadsf-smahus-ej-ulag-sa"
+variant = "392.1519"
+column = "BOSTADSF_SMAHUS_EJ_ULAG_SA"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."

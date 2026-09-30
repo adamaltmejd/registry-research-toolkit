@@ -397,7 +397,7 @@ class ValueBindingSession:
                 ]
             )
             members, inactive, non_membership = [], [], []
-            set_aside_candidates = []
+            set_aside = []
             for association in associations:
                 if (
                     descriptor.non_membership_codes
@@ -449,28 +449,44 @@ class ValueBindingSession:
                     )
                 if issue:
                     issues[issue, descriptor_key].append(association.locator)
-                if member_scope is None:
-                    inactive.append(association)
+                if (
+                    join.validity_target == "item"
+                    and issue is None
+                    and not invalid_item
+                    and association.locator not in contradictory
+                    and validity
+                    and all(
+                        window is not None and window.status == "known"
+                        for window in validity_windows
+                    )
+                    and coding_scope_bounds(scope) is not None
+                ):
+                    # Explicit edition membership outranks global item dates when
+                    # no independent row/section restriction excludes the member.
+                    # Keep the original dates and report every widened association.
+                    bounded, bound_issue = _member_scope(
+                        scope,
+                        association.supplied_window,
+                        association.section_window,
+                        (),
+                        missing_validity="unrestricted",
+                        invalid_item=False,
+                    )
                     if (
-                        join.validity_target == "item"
-                        and issue is None
-                        and not invalid_item
-                        and validity
-                        and all(
-                            window is not None and window.status == "known"
-                            for window in validity_windows
+                        bound_issue is None
+                        and bounded is not None
+                        and (
+                            member_scope is None
+                            or coding_scope_bounds(member_scope)
+                            != coding_scope_bounds(
+                                scope if bounded.kind == "year_independent" else bounded
+                            )
                         )
                     ):
-                        item_scope, item_issue = _member_scope(
-                            scope,
-                            None,
-                            None,
-                            validity_windows,
-                            missing_validity=join.missing_validity,
-                            invalid_item=False,
-                        )
-                        if item_scope is None and item_issue is None:
-                            set_aside_candidates.append((association, validity))
+                        member_scope = bounded
+                        set_aside.append(association)
+                if member_scope is None:
+                    inactive.append(association)
                     continue
                 value = self.session.value(association.value_key)
                 members.append(
@@ -484,47 +500,9 @@ class ValueBindingSession:
                         and issue == "unknown_code_validity",
                     )
                 )
-            set_aside = []
-            if (
-                join.validity_target == "item"
-                and not members
-                and not non_membership
-                and len(set_aside_candidates) == len(associations)
-                and not any(key == descriptor_key for _, key in issues)
-            ):
-                for association, validity in sorted(
-                    set_aside_candidates, key=lambda pair: pair[0].locator
-                ):
-                    member_scope, issue = _member_scope(
-                        scope,
-                        association.supplied_window,
-                        association.section_window,
-                        (),
-                        missing_validity="unrestricted",
-                        invalid_item=False,
-                    )
-                    if issue is not None or member_scope is None:
-                        continue
-                    value = self.session.value(association.value_key)
-                    members.append(
-                        CodeMembershipClaim(
-                            value.code,
-                            value.label,
-                            member_scope,
-                            (association,),
-                            validity,
-                        )
-                    )
-                    set_aside.append(association)
-                if set_aside:
-                    set_aside_locators = {
-                        association.locator for association in set_aside
-                    }
-                    inactive = [
-                        association
-                        for association in inactive
-                        if association.locator not in set_aside_locators
-                    ]
+            if set_aside:
+                set_aside.sort(key=lambda association: association.locator)
+                members.sort(key=lambda member: member.associations[0].locator)
             if len(non_membership) != len(associations):
                 claim = CodeListClaim(
                     claim_id,

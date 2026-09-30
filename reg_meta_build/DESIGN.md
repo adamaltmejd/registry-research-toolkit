@@ -179,10 +179,12 @@ supply no flags; conflicting flags are not combined with Boolean OR.
 SCB value preparation keeps descriptor/value dictionaries, ordered CVID/ItemId
 associations, validity declarations, disconnected identifiers and duplicates. Missing,
 empty and zero stay distinct. A descriptor label is not a global code-list ID. Exact
-validity dates are not truncated to years or silently repaired. An edition's own item
-associations establish its code list when global item validity would exclude every
-associated item over the whole edition scope. Supplied and section windows still apply,
-and partial exclusions retain item validity.
+validity dates are not truncated to years or silently repaired. An edition's explicit
+item associations establish membership across its finite scope when known global item
+dates would leave gaps. This is the accepted continuity assumption when no independent
+period information is supplied. Original item dates remain evidence and every widened
+association emits a warning. Supplied and section windows still restrict membership;
+unknown or conflicting validity, ambiguous joins and competing lists still withhold.
 
 The exact `Tal` and `Beskrivande text` rows whose code, version and level agree are type
 declarations, not enumerated codes. Cleaning records that distinction on the descriptor;
@@ -425,6 +427,17 @@ Cases can coordinate identity, occurrence, field, period, coding and representat
 changes. They are not restricted to one atom per field. Equal assignments compose;
 contradictory assignments withhold the disputed aspect. No case reads another
 correction's output as its supporting source. Application order cannot choose a winner.
+
+Register `[[errata.field]]` entries correct reviewed equivalent text in `name`,
+`description` or `definition` at exact original variable/variant/column coordinates.
+`[[errata.occurrence_period]]` entries additionally require one exact native source
+edition. Both guard the original edition text, both original scopes and all four
+supplied prose fields, including absent or unknown values. Complete native-family
+support and peer guards retain unrelated editions and coding references. Period entries
+carry explicit replacement `TemporalScope` values; omitting an interval's `end` in TOML
+means an open end, while unknown and pooled scopes retain their labels and bounds. These
+entries emit existing checked field/period effects and never rewrite the original source
+records.
 
 Ordinary variables form from an established native identity. Their names bind that exact
 source coordinate; additional deliveries do not require handwritten whole-variable

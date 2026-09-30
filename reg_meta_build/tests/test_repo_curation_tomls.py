@@ -709,8 +709,8 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 143
-    assert sum(len(entry.periods) for entry in coding) == 277
+    assert len(coding) == 150
+    assert sum(len(entry.periods) for entry in coding) == 298
     assert (
         sum(
             len(entry.periods)
@@ -730,7 +730,7 @@ def test_repo_coding_windows_are_ported() -> None:
             )
             for register in tree.registers
         )
-        == 23
+        == 24
     )
 
 
@@ -1255,7 +1255,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 8, 1, 61)
+    ) == (20, 11, 1, 144)
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -2692,11 +2692,24 @@ def test_repo_identity_splits_preserve_public_dependency_targets() -> None:
     assert names["34.17.arbetsstallenummer"] == "arbetsstallenummer"
     assert names["34.667.arbetsstallekommun"] == "kommun-for-arbetsstalle"
     assert names["25.21515.inkl-kapitalvinst"] == "delkomponent-disponibel-inkomst-2004"
+    assert names["25.22306.individ"] == "disponibel-inkomst-exkl-kapvinst-2004"
+    assert names["25.22307.individ"] == "disponibel-inkomst-exkl-kapitalvinst"
     assert not {"34.17", "34.667", "25.21515"} & names.keys()
     snapshot = json.loads((_CURATION / ".slug_snapshot.json").read_text())["variable"]
     for owner in (
         "34.17.arbetsstallenummer",
         "34.667.arbetsstallekommun",
         "25.21515.inkl-kapitalvinst",
+        "25.22306.individ",
+        "25.22307.individ",
     ):
         assert snapshot[f"scb/{owner}"] == names[owner]
+    iot = next(
+        register for register in tree.registers if register.register_info.slug == "iot"
+    )
+    group = next(group for group in iot.group if group.key == "disponibel-inkomst")
+    assert {
+        member.variable
+        for member in group.members
+        if member.delivery_column == "CDISP04"
+    } == {names["25.21515.inkl-kapitalvinst"]}

@@ -220,8 +220,34 @@ variable = "INVARN8"
 name = "Invandringsdatum 9 numerisk"
 column = "INVARN9"
 
-# Not carried: sos.py KNOWN_MERGE_ALLOWLIST {("lova", "EXAMAR")} (L1489) only
-# silenced a same-name data_type warning; the merge was the default. No v18 case.
+# Rows 32/34 concern the current degree; row 33 concerns the highest degree.
+# Their delivered integer/text types select these meanings without changing either type.
+[[identity.split]]
+variable = "EXAMAR"
+by = "data_type"
+parts = [
+  { data_type = "integer", owner = "7847722537922273761.EXAMAR.examar" },
+  { data_type = "text", owner = "7847722537922273761.EXAMAR.exam-ar-hogsta-examen" },
+]
+
+# Rows 26/27 distinguish the actual CFAR number from its replacement identifier.
+[[identity.split]]
+variable = "CFARNR"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "A_LOVA", owner = "7847722537922273761.CFARNR.cfarnr" },
+  { deldatamangd = "A_LOVA_LISA", owner = "7847722537922273761.CFARNR.cfarnr-lopnummer" },
+]
+
+# Main rows include EXAM; HOSP and its lookup key both restrict the domain to LEG/SPEC.
+[[identity.split]]
+variable = "KATEGORI"
+by = "deldatamangd"
+parts = [
+  { deldatamangd = "A_LOVA", owner = "7847722537922273761.KATEGORI.kategori" },
+  { deldatamangd = "A_LOVA_HOSP", owner = "7847722537922273761.KATEGORI.kategori-legitimation-specialitet" },
+  { deldatamangd = "A_LOVA_STYR_LEG_SPEC_EXAM_KOD", owner = "7847722537922273761.KATEGORI.kategori-legitimation-specialitet" },
+]
 
 [[variant]]
 native_id = "7847722537922273761.4795487256388705735"
@@ -245,7 +271,7 @@ native_id = "7847722537922273761.5062264322777987324"
 slug = "lova-examen"
 display_group = "LOVA EXAMEN"
 panel_entity_key = "lopnr"
-panel_time_key = "examar"
+panel_time_key = "exam-ar-hogsta-examen"
 panel_time_grain = "row"
 
 
@@ -575,3 +601,139 @@ slug = "utvandringsland-8"
 native_id = "7847722537922273761.UTVLAND9"
 slug = "utvandringsland-9"
 # register 8948214044434034899
+
+# Source-backed LOVA identity owners; retain established slugs for the main delivery.
+
+[[variable]]
+native_id = "7847722537922273761.EXAMAR.examar"
+slug = "examar"
+
+[[variable]]
+native_id = "7847722537922273761.EXAMAR.exam-ar-hogsta-examen"
+slug = "exam-ar-hogsta-examen"
+
+[[variable]]
+native_id = "7847722537922273761.CFARNR.cfarnr"
+slug = "cfarnr"
+
+[[variable]]
+native_id = "7847722537922273761.CFARNR.cfarnr-lopnummer"
+slug = "cfarnr-lopnummer"
+
+[[variable]]
+native_id = "7847722537922273761.KATEGORI.kategori"
+slug = "kategori"
+
+[[variable]]
+native_id = "7847722537922273761.KATEGORI.kategori-legitimation-specialitet"
+slug = "kategori-legitimation-specialitet"
+
+# Reviewed equivalent source wording; no concept split for spelling/abbreviation.
+
+[[errata.field]]
+variable = "7847722537922273761.AGARKAT"
+variant = "A_LOVA_LISA"
+column = "AGARKAT"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Om arbetsstället är privat eller offentlig ägt" }, { name = "name", status = "value", value = "Ägarkategori härledd från InstKod av SoS" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1995" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:3 and row:2 supply the same AGARKAT construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "description"
+value = "Kod för om arbetsstället är privat eller offentlig ägt"
+
+[[errata.field]]
+variable = "7847722537922273761.ALDER"
+variant = "A_LOVA_PERSON"
+column = "ALDER"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Ålder vid året slut" }, { name = "name", status = "value", value = "Ålder" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1893", end = "2022" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:6 and row:5 supply the same ALDER construct. Adopt the peer's explicit name wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "name"
+value = "Ålder vid årets slut"
+
+[[errata.field]]
+variable = "7847722537922273761.AR"
+variant = "A_LOVA_LISA"
+column = "AR"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "år för aktuell rads uppgifter" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1995" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:8 and row:7 supply the same AR construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "description"
+value = "År som gäller för raden"
+
+[[errata.field]]
+variable = "7847722537922273761.ASTSNI2007"
+variant = "A_LOVA_LISA"
+column = "ASTSNI2007"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Arbetsställets branch enligt SNI2007" }, { name = "name", status = "value", value = "Arbetsställets näringsgren, SNI2007" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1995" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:16 and row:15 supply the same ASTSNI2007 construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "description"
+value = "Arbetsställets branch enligt  Standard för svensk näringsgrensindelning, SNI2007"
+
+[[errata.field]]
+variable = "7847722537922273761.HSKOLEORT"
+variant = "A_LOVA_EXAMEN"
+column = "HSKOLEORT"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Hörskoleort för aktuell examen" }, { name = "name", status = "value", value = "Högskoleort" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1977" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:50 and row:49 supply the same HSKOLEORT construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "description"
+value = "Högskoleort för aktuell examen"
+
+[[errata.field]]
+variable = "7847722537922273761.LEG_SPEC_AR"
+variant = "A_LOVA_HOSP"
+column = "LEG_SPEC_AR"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "År" }, { name = "name", status = "value", value = "År för utfärdande av legitimation eller specialitetsbevis" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1900" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:103 and row:102 supply the same LEG_SPEC_AR construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "description"
+value = "År för utfärdande av aktuell legitimation eller specialitetsbevis"
+
+[[errata.field]]
+variable = "7847722537922273761.LEG_SPECDATUM"
+variant = "A_LOVA"
+column = "LEG_SPECDATUM"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Utfärdandedatum för aktuellt legitimation/bevis" }, { name = "name", status = "value", value = "Datum för utfärdande av legitimation eller specialitetsbevis" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1995", end = "2022" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:112 and row:113 supply the same LEG_SPECDATUM construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "description"
+value = "Datum för utfärdande av legitimation eller specialitetsbevis"
+
+[[errata.field]]
+variable = "7847722537922273761.SSYK3"
+variant = "A_LOVA_LISA"
+column = "SSYK3"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Yrke enligt Standard för svensk yrkesklassificering, SSYK, -ett system för att gruppera individers yrken eller arbetsuppgifter -, klassad enligt SSYK96, 3-siffernivå, för aktuellt år" }, { name = "name", status = "value", value = "Yrke enligt SSYK, 3-siffernivå, för förvärvsarbetande" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2013" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:140 and row:139 supply the same SSYK3 construct. Adopt the peer's explicit name wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "name"
+value = "Yrke enligt SSYK, klassad enligt SSYK96, 3-siffernivå, för förvärvsarbetande"
+
+[[errata.field]]
+variable = "7847722537922273761.SSYK4_J16"
+variant = "A_LOVA_LISA"
+column = "SSYK4_J16"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för aktuellt år" }, { name = "name", status = "value", value = "Yrke enligt SSYK, klassad enligt SSYK96, 4-siffernivå, för förvärvsarbetande och företagare" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2013" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+evidence = "LOVA original row:152 and row:151 supply the same SSYK4_J16 construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
+noted = "2026-09-30"
+field = "description"
+value = "Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för förvärvsarbetande och företagare för aktuellt år"

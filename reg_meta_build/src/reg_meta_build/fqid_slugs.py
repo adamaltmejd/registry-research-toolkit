@@ -599,6 +599,22 @@ def _is_split_base_pair(a: SlugEntry, b: SlugEntry) -> bool:
     return len(split.source_id.split(".")) == 3 and family == base.source_id
 
 
+def _register_allows_split_base_pair(
+    register: RegisterCuration, a: SlugEntry, b: SlugEntry
+) -> bool:
+    """Allow a checked identity owner to retain its native family's public slug."""
+    if not _is_split_base_pair(a, b):
+        return False
+    split, base = (a, b) if len(a.source_id.split(".")) == 3 else (b, a)
+    if any(p.variable == base.source_id for p in register.identity.partition):
+        return True
+    return any(
+        f"{register.register_info.native_id}.{declaration.variable}" == base.source_id
+        and any(part.owner == split.source_id for part in declaration.parts)
+        for declaration in register.identity.split
+    )
+
+
 @lru_cache(maxsize=8)
 def _register_files_for_curation_dir(path: str) -> tuple[RegisterCuration, ...]:
     """Read the immutable register tree once per resolved curation directory."""
@@ -905,14 +921,9 @@ def _load_register_slug_tree(
                 previous = slug_owners.get(slug_key)
                 if previous is not None:
                     other, other_file = previous
-                    split_pair = kind == "variable" and _is_split_base_pair(
-                        other, entry
-                    )
-                    partitioned = split_pair and any(
-                        p.variable == reg_id + "." + source_id.split(".")[1]
-                        for p in register.identity.partition
-                    )
-                    if not partitioned:
+                    if kind != "variable" or not _register_allows_split_base_pair(
+                        register, other, entry
+                    ):
                         raise _err(
                             "slug_toml_invalid",
                             f"{file} {location}: slug {entry.slug!r} reused by {other_file} ({other.source_id!r}).",
@@ -946,13 +957,7 @@ def _load_register_slug_tree(
             previous = by_slug.get(entry.slug)
             if previous is not None:
                 other, other_location = previous
-                pair = _is_split_base_pair(other, entry)
-                family = min(
-                    (other, entry), key=lambda item: len(item.source_id)
-                ).source_id
-                if not pair or not any(
-                    p.variable == family for p in register.identity.partition
-                ):
+                if not _register_allows_split_base_pair(register, other, entry):
                     raise _err(
                         "slug_toml_invalid",
                         f"{location}: variable slug {entry.slug!r} reused by {other_location} ({other.source_id!r}).",

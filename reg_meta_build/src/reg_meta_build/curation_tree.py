@@ -50,8 +50,10 @@ from .resolved_metadata import _variable
 from .source_curation import (
     ColumnRepresentation,
     DocumentedCodingSelection,
+    FieldExpectation,
     FiniteCurationWindow,
 )
+from .source_records import TemporalScope
 from .tags import load_tags
 
 if TYPE_CHECKING:
@@ -401,7 +403,98 @@ class ErrataClassificationReferenceEntry(_CurationModel):
         return value
 
 
+class _OccurrenceCorrectionEntry(_CurationModel):
+    variable: str
+    variant: str
+    column: str
+    edition: str | None = None
+    expected_fields: list[FieldExpectation]
+    expected_period_text: str | None = None
+    expected_scope: TemporalScope
+    expected_period: TemporalScope
+    evidence: str
+    noted: str
+
+    _text = field_validator("variable", "variant", "column", "edition", "evidence")(
+        _require_trimmed
+    )
+
+    @field_validator("noted")
+    @classmethod
+    def _noted(cls, value: str) -> str:
+        return ErrataClassificationReferenceEntry._noted(value)
+
+    @field_validator("expected_scope", "expected_period", mode="before")
+    @classmethod
+    def _scope(cls, value):
+        if isinstance(value, dict):
+            # TOML has no null: an omitted interval end explicitly stays open.
+            if isinstance(value.get("intervals"), list):
+                value = {
+                    **value,
+                    "intervals": [
+                        {"end": None, **interval}
+                        if isinstance(interval, dict)
+                        else interval
+                        for interval in value["intervals"]
+                    ],
+                }
+            return TemporalScope.model_validate_json(json.dumps(value))
+        return value
+
+    @field_validator("expected_fields")
+    @classmethod
+    def _prose_guards(cls, value: list[FieldExpectation]) -> list[FieldExpectation]:
+        required = {"name", "definition", "description", "operational_definition"}
+        if {item.name for item in value} != required or len(value) != len(required):
+            raise ValueError(
+                "expected_fields must guard all four supplied prose fields"
+            )
+        return value
+
+
+class ErrataFieldEntry(_OccurrenceCorrectionEntry):
+    field: Literal["name", "definition", "description"]
+    value: str
+
+    _value = field_validator("value")(_require_trimmed)
+
+    @model_validator(mode="after")
+    def _changed_text(self) -> ErrataFieldEntry:
+        expected = next(
+            item for item in self.expected_fields if item.name == self.field
+        )
+        if expected.status != "value" or not isinstance(expected.value, str):
+            raise ValueError(
+                "the corrected field needs an original supplied text value"
+            )
+        if expected.value == self.value:
+            raise ValueError("the replacement must differ from the original text")
+        return self
+
+
+class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
+    edition: str
+    edition_scope: TemporalScope
+    edition_period_scope: TemporalScope
+
+    _scopes = field_validator("edition_scope", "edition_period_scope", mode="before")(
+        _OccurrenceCorrectionEntry._scope
+    )
+
+    @model_validator(mode="after")
+    def _changed_period(self) -> ErrataOccurrencePeriodEntry:
+        if (
+            self.expected_scope == self.edition_scope
+            and self.expected_period == self.edition_period_scope
+        ):
+            raise ValueError("the replacement must differ from the original period")
+        return self
+
+
 class ErrataCuration(_CurationModel):
+    field: list[ErrataFieldEntry] = Field(default_factory=list)
+    occurrence_period: list[ErrataOccurrencePeriodEntry] = Field(default_factory=list)
     delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
     column: list[ErrataColumnEntry] = Field(default_factory=list)
     version: list[ErrataVersionEntry] = Field(default_factory=list)
@@ -1122,6 +1215,8 @@ def _register_arrays(
     entry: RegisterCuration,
 ) -> tuple[tuple[str, Sequence[BaseModel]], ...]:
     return (
+        ("errata.field", entry.errata.field),
+        ("errata.occurrence_period", entry.errata.occurrence_period),
         ("errata.delivered", entry.errata.delivered),
         ("errata.column", entry.errata.column),
         ("errata.version", entry.errata.version),
@@ -1288,6 +1383,8 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 (
                     IdentityPartitionEntry,
                     IdentityColumnOwnerEntry,
+                    ErrataFieldEntry,
+                    ErrataOccurrencePeriodEntry,
                     CodingEntry,
                     ParallelRepresentationEntry,
                 ),

@@ -550,7 +550,7 @@ class TestProviderToml:
         assert exc.value.code == "slug_toml_invalid"
         assert "within register '34'" in exc.value.message
 
-    # A register-file partition is the only basis for reusing a split/base slug.
+    # Checked register identity declarations authorize retaining a base slug.
     _BASE = '[variable."34.4"]\nslug = "kon"\n'
     _SPLIT = '[variable."34.4.kon"]\nslug = "kon"\n'
 
@@ -595,6 +595,39 @@ class TestProviderToml:
         with pytest.raises(RegMetaError) as exc:
             load_slug_dir(curation)
         assert exc.value.code == "slug_toml_invalid"
+
+    @pytest.mark.parametrize("auto_base", [False, True])
+    @pytest.mark.parametrize("declared_owner", ["current", "undeclared"])
+    def test_sos_split_retains_only_declared_owner_base_slug(
+        self, tmp_path: Path, auto_base: bool, declared_owner: str
+    ) -> None:
+        curation = tmp_path / "curation"
+        directory = curation / "registers" / "sos"
+        directory.mkdir(parents=True)
+        base = '[[variable]]\nnative_id = "123.EXAMAR"\nslug = "examar"\n'
+        body = (
+            '[register]\nprovider = "sos"\nslug = "lova"\nnative_id = "123"\n'
+            '[[identity.split]]\nvariable = "EXAMAR"\nby = "data_type"\n'
+            f'parts = [{{ data_type = "integer", owner = "123.EXAMAR.{declared_owner}" }}, '
+            '{ data_type = "text", owner = "123.EXAMAR.highest" }]\n'
+            '[[variable]]\nnative_id = "123.EXAMAR.current"\nslug = "examar"\n'
+        )
+        if auto_base:
+            (curation / "slug_state.toml").write_text('sos = "curating"\n')
+            (directory / "lova.auto.toml").write_text(base)
+        else:
+            body += base
+        (directory / "lova.toml").write_text(body)
+        if declared_owner == "current":
+            entries = load_slug_dir(curation)
+            assert {e.source_id for e in entries} >= {
+                "123.EXAMAR",
+                "123.EXAMAR.current",
+            }
+        else:
+            with pytest.raises(RegMetaError) as exc:
+                load_slug_dir(curation)
+            assert "reused" in exc.value.message
 
     @pytest.mark.parametrize(
         "field",
