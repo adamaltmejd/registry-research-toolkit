@@ -498,6 +498,13 @@ records. A finite scoped name correction selects exact original source scopes an
 carries those same scopes into its conditional replay effect. A monthly row sharing an
 annual row's semantic reference cannot inherit that name correction.
 
+Period entries may cite exact supplied subset metadata through `authority`. Compilation
+checks its full source projection, register and routed variant, positive coverage and
+containment of the replacement delivery window. Complete metadata peer guards and source
+expectations remain in the case for replay; changed, missing or new conflicting
+authority refuses the correction. These decisions change effective delivery coverage
+without changing original coverage cells or historical dates stored as values.
+
 `[[errata.support]]` retains one documented erroneous assertion as support rather than
 catalog data. Its positive `authority` must name another native variable in the same
 source-local variant, literal column and exact edition, with matching original scopes

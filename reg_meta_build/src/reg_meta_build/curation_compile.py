@@ -100,6 +100,7 @@ from .source_curation import (
     _field_matches,
     capture_expectations,
     evaluate_cases,
+    evaluate_source_expectations,
 )
 from .source_effects import apply_occurrence_cases, record_ref
 from .source_intervals import coding_scope_bounds, scope_bounds
@@ -1061,6 +1062,7 @@ def compile_period_families(
                     "operational_definition",
                     "source_attribution",
                     "definition",
+                    "measurement_unit",
                     "name",
                 ),
                 coding=True,
@@ -4415,6 +4417,10 @@ def _select_occurrence_correction(
             )
         )
         and (
+            not isinstance(entry, ErrataOccurrencePeriodEntry)
+            or _occurrence_correction_matches(entry, (record,))
+        )
+        and (
             not isinstance(entry, ErrataFieldEntry)
             or entry.field != "measurement_unit"
             or (
@@ -4486,6 +4492,7 @@ def compile_occurrence_corrections(
     dict[str, dict[str, list[str]]],
 ]:
     """Compile literal text and occurrence-period corrections from original evidence."""
+    parent_metadata: dict[str, tuple[SourceRecord, ...]] = {}
     cases: dict[Any, list[CurationCase]] = defaultdict(list)
     diagnostics = []
     report: dict[str, dict[str, list[str]]] = {}
@@ -4576,6 +4583,104 @@ def compile_occurrence_corrections(
                     and not overbroad
                     and _occurrence_correction_matches(entry, selected)
                 )
+                period_authority: tuple[SourceRecord, ...] = ()
+                authority_guards: tuple[PeerGuard, ...] = ()
+                if (
+                    location is not None
+                    and isinstance(entry, ErrataOccurrencePeriodEntry)
+                    and entry.authority
+                ):
+                    authority_groups = tuple(
+                        tuple(
+                            prepared.records.lookup(
+                                expected.ref.source, expected.ref.semantic_record_key
+                            )
+                        )
+                        for expected in entry.authority
+                    )
+                    period_authority = tuple(
+                        record for group in authority_groups for record in group
+                    )
+                    if scope.source not in parent_metadata:
+                        parent_metadata[scope.source] = tuple(
+                            prepared.records.iter_without_native_family(scope.source)
+                        )
+                    authority_guards = tuple(
+                        PeerGuard(
+                            guard_id=f"{case_id}:parent:{index}",
+                            source=record.source,
+                            coordinates=(
+                                ("register", record.subject.register_name),
+                                ("variant", record.subject.variant),
+                                ("variable", record.subject.variable),
+                            ),
+                            expected_members=tuple(
+                                expected.ref
+                                for expected in entry.authority
+                                if any(
+                                    projection.subject == record.subject
+                                    for projection in expected.alternatives
+                                )
+                            ),
+                        )
+                        for index, record in enumerate(period_authority)
+                    )
+                    routed_names = {
+                        name
+                        for route in register.identity.route
+                        if route.deldatamangd == entry.variant
+                        for name in route.variants
+                    } | {entry.variant}
+                    valid = valid and (
+                        len({expected.ref for expected in entry.authority})
+                        == len(entry.authority)
+                        and all(len(group) == 1 for group in authority_groups)
+                        and not evaluate_source_expectations(
+                            (),
+                            tuple(entry.authority),
+                            authority_guards,
+                            parent_metadata[scope.source],
+                        )
+                        and all(
+                            record.source == scope.source
+                            and source_register_key(record) == register_key
+                            and record.subject.variable.status == "not_applicable"
+                            and record.subject.variant.name in routed_names
+                            and record.edition_scope.kind == "intervals"
+                            and any(
+                                parent.kind == "variant"
+                                and parent.coordinate == record.subject.variant
+                                and parent.fields.coverage_from is not None
+                                and parent.fields.coverage_from.status == "value"
+                                for parent in record.parent_facts
+                            )
+                            for record in period_authority
+                        )
+                        and all(
+                            {field.name for field in projection.fields}
+                            == set(SourceFields.model_fields)
+                            and projection.subject is not None
+                            and projection.edition_scope is not None
+                            and projection.edition_period_scope is not None
+                            and projection.parent_facts is not None
+                            and projection.code_set_references is not None
+                            for expected in entry.authority
+                            for projection in expected.alternatives
+                        )
+                        and bool(
+                            replacement_bounds := scope_bounds(entry.edition_scope)
+                        )
+                        and all(
+                            any(
+                                lower <= start and end <= upper
+                                for lower, upper in (
+                                    scope_bounds(record.edition_scope) or ()
+                                )
+                            )
+                            for record in period_authority
+                            for start, end in replacement_bounds
+                        )
+                    )
                 authority_family: tuple[SourceRecord, ...] = ()
                 if isinstance(entry, ErrataSupportEntry):
                     authority_family = families.get(
@@ -4687,6 +4792,11 @@ def compile_occurrence_corrections(
                             ),
                             fields=entry_guarded_fields,
                             coding=True,
+                        )
+                        + (
+                            tuple(entry.authority)
+                            if isinstance(entry, ErrataOccurrencePeriodEntry)
+                            else ()
                         ),
                         peer_guards=tuple(
                             PeerGuard(
@@ -4711,7 +4821,8 @@ def compile_occurrence_corrections(
                             )
                             for guarded_family in (family, authority_family)
                             if guarded_family
-                        ),
+                        )
+                        + authority_guards,
                         decision=OccurrenceCorrectionDecision(
                             reviewed=True,
                             effects=effects,

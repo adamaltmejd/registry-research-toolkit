@@ -421,6 +421,45 @@ class ErrataClassificationReferenceEntry(_CurationModel):
         return value
 
 
+def _scope_shape(value):
+    if isinstance(value, dict) and isinstance(value.get("intervals"), list):
+        # TOML has no null: an omitted interval end explicitly stays open.
+        return {
+            **value,
+            "intervals": [
+                {"end": None, **interval} if isinstance(interval, dict) else interval
+                for interval in value["intervals"]
+            ],
+        }
+    return value
+
+
+def _record_expectation_shapes(values):
+    return [
+        RecordExpectation.model_validate_json(
+            json.dumps(
+                {
+                    **value,
+                    "alternatives": [
+                        {
+                            **projection,
+                            **{
+                                name: _scope_shape(projection[name])
+                                for name in ("edition_scope", "edition_period_scope")
+                                if name in projection
+                            },
+                        }
+                        for projection in value.get("alternatives", [])
+                    ],
+                }
+            )
+        )
+        if isinstance(value, dict)
+        else value
+        for value in values
+    ]
+
+
 class _OccurrenceCorrectionEntry(_CurationModel):
     variable: str
     variant: str
@@ -446,18 +485,7 @@ class _OccurrenceCorrectionEntry(_CurationModel):
     @classmethod
     def _scope(cls, value):
         if isinstance(value, dict):
-            # TOML has no null: an omitted interval end explicitly stays open.
-            if isinstance(value.get("intervals"), list):
-                value = {
-                    **value,
-                    "intervals": [
-                        {"end": None, **interval}
-                        if isinstance(interval, dict)
-                        else interval
-                        for interval in value["intervals"]
-                    ],
-                }
-            return TemporalScope.model_validate_json(json.dumps(value))
+            return TemporalScope.model_validate_json(json.dumps(_scope_shape(value)))
         return value
 
     @field_validator("expected_fields")
@@ -552,6 +580,10 @@ class ErrataSupportEntry(_OccurrenceCorrectionEntry):
 
 
 class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
+    authority: list[RecordExpectation] = Field(default_factory=list)
+    _authority_shapes = field_validator("authority", mode="before")(
+        _record_expectation_shapes
+    )
     edition: str | None = None
     edition_scope: TemporalScope
     edition_period_scope: TemporalScope
@@ -1005,12 +1037,7 @@ class DeliveryUnitEntry(_CurationModel):
     @field_validator("records", "support", mode="before")
     @classmethod
     def _record_shapes(cls, values):
-        return [
-            RecordExpectation.model_validate_json(json.dumps(value))
-            if isinstance(value, dict)
-            else value
-            for value in values
-        ]
+        return _record_expectation_shapes(values)
 
     @field_validator("columns", mode="before")
     @classmethod

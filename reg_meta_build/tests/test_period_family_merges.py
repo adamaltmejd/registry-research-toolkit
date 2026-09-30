@@ -346,6 +346,41 @@ def _form_defined_months(register, records, *, omit_target=False, key_override=N
     return formed, cases
 
 
+def test_checked_month_units_are_captured_before_alias_projection(tmp_path):
+    from reg_meta_build.source_curation import evaluate_cases
+    from reg_meta_build.source_records import value_field
+
+    _, register, records, _ = _defined_month_family(tmp_path)
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"measurement_unit": value_field("Kronor (SEK)")}
+                )
+            }
+        )
+        for record in records
+    )
+    formed, cases = _form_defined_months(register, records)
+    assert formed.variable is not None
+    assert all(
+        window.measurement_unit == "Kronor (SEK)"
+        for alias in formed.variable.aliases
+        for window in alias.windows
+    )
+    changed = records[0].model_copy(
+        update={
+            "fields": records[0].fields.model_copy(
+                update={"measurement_unit": value_field("100-tal kronor")}
+            )
+        }
+    )
+    assert all(
+        result.status == "stale"
+        for result in evaluate_cases(cases, (changed, *records[1:]))
+    )
+
+
 def test_checked_month_definitions_keep_literal_text_and_source_scopes(tmp_path):
     import sqlite3
 
