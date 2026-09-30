@@ -309,7 +309,10 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   ONE state over the whole pooled range with `pooled = 1`; every other state
 #   writes 0. A 6.9.0 DB cannot mark pooled coverage and is rejected via the
 #   minor-version gate.
-SCHEMA_VERSION = "6.10.0"
+# - 6.11.0: checked per-column storage metadata on variable_alias_window.
+#   A representation's supplied type/width can differ from another literal
+#   column of the same variable; readers must not borrow the shared state's facts.
+SCHEMA_VERSION = "6.11.0"
 DB_FILENAME = "reg_meta.db"
 
 

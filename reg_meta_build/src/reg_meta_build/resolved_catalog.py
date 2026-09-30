@@ -303,6 +303,17 @@ class ResolvedState(_ResolvedWindow):
 
 class ResolvedAliasWindow(_ResolvedWindow):
     provenance: str | None = None
+    storage_metadata: Literal["shared", "per_column"] = "shared"
+    data_type: str | None = None
+    data_length: str | None = None
+
+    @model_validator(mode="after")
+    def _storage_scope(self) -> Self:
+        if self.storage_metadata == "shared" and (
+            self.data_type is not None or self.data_length is not None
+        ):
+            raise ValueError("shared representation storage comes from its state")
+        return self
 
 
 class ResolvedAlias(_ResolvedModel):
@@ -1036,8 +1047,8 @@ def write_resolved_catalog(
                     )
                     conn.executemany(
                         "INSERT INTO variable_alias_window "
-                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance) "
-                        "VALUES (?, ?, ?, ?, ?, ?)",
+                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, storage_metadata, data_type, data_length) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             (
                                 variable_id,
@@ -1046,6 +1057,9 @@ def write_resolved_catalog(
                                 window.valid_from,
                                 window.valid_to,
                                 window.provenance,
+                                window.storage_metadata,
+                                window.data_type,
+                                window.data_length,
                             )
                             for window in sorted(
                                 alias.windows, key=lambda w: w.valid_from

@@ -418,15 +418,57 @@ def check_delivery_coverage(
                     and state.valid_to >= obligation.valid_from
                 ):
                     continue
-                token = (
-                    state.variant.slug,
-                    state.delivery_column_name,
-                    state.valid_from,
-                    state.valid_to,
-                )
-                if token in candidates:
-                    continue
-                candidates[token] = state
+                storage_windows = [
+                    window.model_copy(
+                        update={
+                            "valid_from": max(state.valid_from, window.valid_from),
+                            "valid_to": min(state.valid_to, window.valid_to),
+                        }
+                    )
+                    for alias in variable.aliases
+                    if alias.variant.slug == obligation.variant
+                    and alias.delivery_column_name == obligation.column
+                    for window in alias.windows
+                    if window.storage_metadata == "per_column"
+                    and state.valid_from <= window.valid_to
+                    and window.valid_from <= state.valid_to
+                    and window.valid_from <= obligation.valid_to
+                    and window.valid_to >= obligation.valid_from
+                ]
+                projected = [
+                    state.model_copy(
+                        update={
+                            "delivery_column_name": obligation.column,
+                            "valid_from": window.valid_from,
+                            "valid_to": window.valid_to,
+                            "data_type": window.data_type,
+                            "data_length": window.data_length,
+                        }
+                    )
+                    for window in storage_windows
+                ]
+                if storage_windows:
+                    if direct:
+                        projected.extend(
+                            state.model_copy(
+                                update={"valid_from": start, "valid_to": end}
+                            )
+                            for start, end in remaining_windows(
+                                ((w.valid_from, w.valid_to) for w in storage_windows),
+                                max(state.valid_from, obligation.valid_from),
+                                min(state.valid_to, obligation.valid_to),
+                            )
+                        )
+                else:
+                    projected.append(state)
+                for candidate in projected:
+                    token = (
+                        candidate.variant.slug,
+                        candidate.delivery_column_name,
+                        candidate.valid_from,
+                        candidate.valid_to,
+                    )
+                    candidates.setdefault(token, candidate)
         for state in candidates.values():
             if check_type and state.data_type != expected_type:
                 ob_facts.append(

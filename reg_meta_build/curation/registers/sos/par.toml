@@ -734,3 +734,69 @@ edition_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011
 edition_period_scope = { kind = "not_applicable", intervals = [] }
 evidence = "Both original Data från and Data till state exactly 2011 och 2013. Retain those two disjoint calendar years and the gap in2012; the wider2010–2014 ATGARD source must not extend this occurrence. All prose, type, coding and contexts remain unchanged."
 noted = "2026-09-30"
+
+[[errata.field]]
+variable = "5891427617861710725.DISTRIKT"
+variant = "PAR_TV"
+column = "DISTRIKT"
+expected_fields = [{ name = "classification_declared", status = "value", value = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/lan-och-kommuner-i-kodnummerordning/" }, { name = "coverage_from", status = "value", value = "2024" }, { name = "coverage_to", status = "unknown" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Distrikt där patienten var folkbokförd vid slut av psykiatrisk vårdform. Saknas slutdatum används datum då registret skapas. Finns i månadsversionen." }, { name = "name", status = "value", value = "Hemdistrikt vid vårdkontakten" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "value", value = "Distriktskoder. Se kodverk." }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2024" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "classification_declared"
+value = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/distrikt/"
+evidence = "The exact original name/description and representation identify an independent six-digit District code, while the original classification reference names a municipality list. Correct only that reference to SCB District. SCB and Lantmäteriet complete2523-code lists agree exactly; LM documents the static division from2016 until another decision. Preserve every original classification claim, observation date, context and coding reference. This does not infer observed district values or revise pre2016 retrospective source dates. Source and full-list comparison receipts: District-SOS-authority-intake-proposal.json and proof-inputs/district-intake/scb-lm-complete-codelist-comparison.json."
+noted = "2026-09-30"
+
+# Exact supplied observation time distinguishes year-end from care-event residence.
+[[identity.split]]
+variable = "DISTRIKT"
+by = "description"
+parts = [
+  { description = "Distrikt där patienten var folkbokförd vid tidpunkten för vårdkontakten. Finns i månadsversionen.", owner = "5891427617861710725.DISTRIKT.distrikt-vid-oppenvardskontakt" },
+  { description = "Distrikt där patienten var folkbokförd 31 december året för vårdkontakten. Finns i årsversionerna", owner = "5891427617861710725.DISTRIKT.distrikt" },
+  { description = "Distrikt där patienten var folkbokförd vid utskrivningsdatum. Saknas utskrivningsdatum används datum då registret skapas. Finns i månadsversionen.", owner = "5891427617861710725.DISTRIKT.distrikt-vid-utskrivning-slutenvard" },
+  { description = "Distrikt där patienten var folkbokförd vid slut av psykiatrisk vårdform. Saknas slutdatum används datum då registret skapas. Finns i månadsversionen.", owner = "5891427617861710725.DISTRIKT.distrikt-vid-slut-psykiatrisk-vardform" },
+]
+
+[[variable]]
+native_id = "5891427617861710725.DISTRIKT.distrikt-vid-oppenvardskontakt"
+slug = "distrikt-vid-oppenvardskontakt"
+
+[[variable]]
+native_id = "5891427617861710725.DISTRIKT.distrikt"
+slug = "distrikt"
+
+[[variable]]
+native_id = "5891427617861710725.DISTRIKT.distrikt-vid-utskrivning-slutenvard"
+slug = "distrikt-vid-utskrivning-slutenvard"
+
+[[variable]]
+native_id = "5891427617861710725.DISTRIKT.distrikt-vid-slut-psykiatrisk-vardform"
+slug = "distrikt-vid-slut-psykiatrisk-vardform"
+
+# Exact supplied observation time distinguishes year-end from care-event residence.
+[[identity.split]]
+variable = "LK"
+by = "description"
+parts = [
+  { description = "Län och kommun där patienten var folkbokförd 31 december året för vårdkontakten. Finns i årsversionerna.", owner = "5891427617861710725.LK.folkbokforingsort-lan-kommun" },
+  { description = "Län och kommun där patienten var folkbokförd vid tidpunkten för vårdkontakten. Finns i månadsversionen.", owner = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-oppenvardskontakt" },
+  { description = "Län och kommun där patienten var folkbokförd vid utskrivningsdatum. Saknas utskrivningsdatum används datum då registret skapas. Finns i månadsversionen.", owner = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard" },
+  { description = "Län och kommun där patienten var folkbokförd vid tidpunkten för slut av psykiatrisk vårdform. Saknas slutdatum används datum då registret skapas.  Finns i månadsversionen.", owner = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform" },
+]
+
+[[variable]]
+native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun"
+slug = "folkbokforingsort-lan-kommun"
+
+[[variable]]
+native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-oppenvardskontakt"
+slug = "folkbokforingsort-lan-kommun-vid-oppenvardskontakt"
+
+[[variable]]
+native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard"
+slug = "folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard"
+
+[[variable]]
+native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform"
+slug = "folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform"

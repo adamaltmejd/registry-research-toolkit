@@ -263,7 +263,12 @@ def form_representations(
                 )
 
             signatures = {
-                tuple(sorted((c.column, c.valid_from, c.valid_to) for c in d.columns))
+                (
+                    d.storage_metadata,
+                    tuple(
+                        sorted((c.column, c.valid_from, c.valid_to) for c in d.columns)
+                    ),
+                )
                 for d in decisions
             }
             if len(signatures) != 1:
@@ -295,6 +300,9 @@ def form_representations(
                 )
                 continue
             values = {}
+            column_storage: dict[str, dict[str, str | None]] = {
+                column: {} for column in columns
+            }
             for field in (
                 "data_type",
                 "data_length",
@@ -305,6 +313,32 @@ def form_representations(
                 values[field] = (
                     next(iter(alternatives)) if len(alternatives) == 1 else None
                 )
+                if first.storage_metadata == "per_column" and field in {
+                    "data_type",
+                    "data_length",
+                }:
+                    for column in sorted(columns):
+                        observed_values = {
+                            getattr(s, field)
+                            for s in represented
+                            if s.delivery_column_name == column
+                        }
+                        column_storage[column][field] = (
+                            next(iter(observed_values))
+                            if len(observed_values) == 1
+                            else None
+                        )
+                        if len(observed_values) != 1:
+                            report(
+                                "conflicting_representation_fact",
+                                (field,),
+                                (f"representation.{column}.{field}",),
+                                f"The literal column {column!r} has conflicting storage facts; no source was selected.",
+                            )
+                            fact_conflicts.append(
+                                (variant.slug, column, field, start, end)
+                            )
+                    continue
                 if len(alternatives) != 1:
                     report(
                         "conflicting_representation_fact",
@@ -388,6 +422,8 @@ def form_representations(
                             # from additive corrections by null window provenance. The
                             # complete curation attribution lives on the shared state.
                             provenance=None,
+                            storage_metadata=first.storage_metadata,
+                            **column_storage[column.column],
                         )
                     )
                 # Outside its declared window a sibling delivers this slice instead,

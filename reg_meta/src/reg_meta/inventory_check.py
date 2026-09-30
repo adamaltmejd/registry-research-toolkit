@@ -360,11 +360,12 @@ def _delivered(
 
     `variable_alias_window` is read the way its ONLY resolver reader reads it
     (`Catalog._expand_state_windows`), never as a flat union. Source-derived
-    windows replace a state only when they are CONTAINED in its validity AND its
+    shared windows replace a state only when contained in its validity and its
     own delivery column participates; otherwise the state stands on its own.
-    Provenance-bearing curated windows are additive to that source result, but
-    still must be contained. A flat union would bless an orphaned or
-    non-contained window as deliverable and let a deployment boot on a mapping
+    Per-column storage windows intersect canonical states; structural validation
+    requires complete backing state coverage. Provenance-bearing curated windows
+    are additive. A flat union would bless an orphaned window as deliverable
+    and let a deployment boot on a mapping
     `resolve_at` cannot fill — the exact false pass this gate exists to prevent.
 
     These two tables have a SECOND reader with a deliberately different rule:
@@ -386,16 +387,24 @@ def _delivered(
             states.setdefault(pair, []).append((valid_from, valid_to, column))
     if not states:
         return {}
-    windows: dict[_PairIds, list[tuple[str, str, str, str | None]]] = {}
+    windows: dict[_PairIds, list[tuple[str, str, str, str | None, str]]] = {}
     for row in conn.execute(
         "SELECT variable_id, register_variant_id, delivery_column_name, "
-        "valid_from, valid_to, provenance FROM variable_alias_window"
+        "valid_from, valid_to, provenance, storage_metadata FROM variable_alias_window"
     ):
-        variable_id, register_variant_id, column, valid_from, valid_to, provenance = row
+        (
+            variable_id,
+            register_variant_id,
+            column,
+            valid_from,
+            valid_to,
+            provenance,
+            mode,
+        ) = row
         pair = (variable_id, register_variant_id)
         if pair in states:
             windows.setdefault(pair, []).append(
-                (column, valid_from, valid_to, provenance)
+                (column, valid_from, valid_to, provenance, mode)
             )
     return {
         pair: _expanded_columns(state_rows, windows.get(pair, []))
@@ -405,17 +414,23 @@ def _delivered(
 
 def _expanded_columns(
     states: list[tuple[str, str, str | None]],
-    windows: list[tuple[str, str, str, str | None]],
+    windows: list[tuple[str, str, str, str | None, str]],
 ) -> frozenset[str]:
     """`Catalog._expand_state_windows`'s delivery columns for one pair.
 
     The gate reads the WHOLE history (`"_default"`, no period filter), so the
     resolver's window ∩ requested-bounds test is trivially true and is not
-    mirrored — every contained window is in range. What is mirrored is source
-    replacement versus curated addition after the shared containment rule."""
+    mirrored. Shared windows must be contained; per-column storage windows
+    intersect canonical states. Source replacement and curated addition follow
+    the same rules as the reader."""
     columns: set[str] = set()
     for valid_from, valid_to, column in states:
-        contained = [w for w in windows if valid_from <= w[1] and w[2] <= valid_to]
+        contained = [
+            w
+            for w in windows
+            if (w[4] == "per_column" and valid_from <= w[2] and w[1] <= valid_to)
+            or (valid_from <= w[1] and w[2] <= valid_to)
+        ]
         source_windows = [w for w in contained if w[3] is None]
         if (
             source_windows

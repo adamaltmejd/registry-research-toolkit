@@ -1,0 +1,11 @@
+[classification]
+short_name = "DISTR2016"
+slug = "distrikt2016"
+name = "Distriktsindelning från 2016"
+name_en = "Registration district division from 2016"
+publisher = "Lantmäteriet / SCB"
+valid_from = 2016
+description = "Statisk distriktsindelning som gäller från 2016-01-01 tills annat beslutats. Bygger på justerad territoriell församlingsindelning 1999-12-31. Sexsiffriga distriktskoder är fristående från församlingskoder."
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/distrikt/"
+codes_file = "district2016.csv"
+aliases = ["https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/distrikt/"]

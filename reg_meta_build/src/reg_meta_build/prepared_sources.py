@@ -876,6 +876,7 @@ def _read_partition_record(
         fields=SourceFields.model_construct(
             column_name=fields.column_name,
             name=fields.name,
+            description=fields.description,
             data_type=fields.data_type,
         ),
     )

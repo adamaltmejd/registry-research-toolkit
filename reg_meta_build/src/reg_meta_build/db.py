@@ -634,6 +634,10 @@ CREATE TABLE variable_alias_window (
     -- read side treats non-NULL provenance as an additive representation and
     -- projects it onto VariableState.provenance.
     provenance TEXT,
+    storage_metadata TEXT NOT NULL DEFAULT 'shared' CHECK (storage_metadata IN ('shared', 'per_column')),
+    data_type TEXT,
+    data_length TEXT,
+    CHECK (storage_metadata = 'per_column' OR (data_type IS NULL AND data_length IS NULL)),
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_name, valid_from)
 );
 CREATE INDEX idx_variable_alias_window_lookup

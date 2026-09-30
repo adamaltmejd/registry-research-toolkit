@@ -9365,3 +9365,958 @@ column = "Stratum"
 valid_from = "2020-01-01"
 valid_to = "2022-12-31"
 source_editions = ["2020 - 2022"]
+
+[[coding.documented]]
+variable = "257.37073"
+variant = "257.553"
+column = "HDEM"
+periods = [["2002-01-01", "2004-12-31"]]
+version_label = "Grad av betydelse"
+members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+document_url = "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2002-2004.pdf"
+document_sha256 = "e42b5a88d7f1c1df980398d440ea29fe8e9f9d225249924a0799041240824437"
+document_pages = [34, 63, 64]
+reason = "Restore the independently documented historical response list for uncertainty of demand as an innovation obstacle; retain the different later-wave coding unchanged."
+source = "SCB UF0315 SCBDOK 2002-2004: Hinder, efterfrågan explicitly links uncertainty of demand for new/improved goods/services to Grad av betydelse; complete stored0–3 value table transcribed literally. HDEM supplied operational meaning is uncertainty of demand for innovation ideas; exact historical physical delivery is separately checked by existing SWECOV/edition errata. No later-wave membership, questionnaire box numbers, response-code normalization or statistical equivalence inferred."
+
+[[coding.documented]]
+variable = "257.37073"
+variant = "257.553"
+column = "HDEM"
+periods = [["2004-01-01", "2006-12-31"]]
+version_label = "Grad av betydelse"
+members = [["0", "Inte relevant"], ["1", "Låg"], ["2", "Medel"], ["3", "Hög"]]
+document_url = "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2004-2006.pdf"
+document_sha256 = "25dd4b7f5efbf979e60cf326f23b760768463114160c17475ac695ded9c092ae"
+document_pages = [35, 64, 65]
+reason = "Restore the independently documented historical response list for uncertainty of demand as an innovation obstacle; retain the different later-wave coding unchanged."
+source = "SCB UF0315 SCBDOK 2004-2006: Hinder, efterfrågan explicitly links uncertainty of demand for new/improved goods/services to Grad av betydelse; complete stored0–3 value table transcribed literally. HDEM supplied operational meaning is uncertainty of demand for innovation ideas; exact historical physical delivery is separately checked by existing SWECOV/edition errata. No later-wave membership, questionnaire box numbers, response-code normalization or statistical equivalence inferred."
+
+[[coding.documented]]
+variable = "257.37075"
+variant = "257.553"
+column = "HO"
+periods = [["2004-01-01", "2006-12-31"]]
+version_label = "Huvudkontoret beläget"
+members = [["0", "Utomlands"], ["1", "Sverige"]]
+document_url = "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2004-2006.pdf"
+document_sha256 = "25dd4b7f5efbf979e60cf326f23b760768463114160c17475ac695ded9c092ae"
+document_pages = [40, 65]
+reason = "Restore the independently documented location response list on the exact historical headquarters column; preserve subsequent survey-wave lists unchanged."
+source = "SCB UF0315 SCBDOK2004-2006: Huvudkontoret beläget definition Anger var huvudkontoret är beläget links to complete stored membership0=Utomlands,1=Sverige. The questionnaire lists different box numbers; do not reinterpret stored codes. Existing SWECOV/edition errata independently supplies this exact historical HO delivery. All raw definitions, period text and original coding associations remain retained."
+
+[[representation.parallel]]
+variable = "257.15562.produktinnovation-ny-for-marknad"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PRD_NEW_MKT"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "NEWMKT"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.15563.produktinnovation-ny-for-foretaget"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PRD_NEW_ENT"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "NEWFRM"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.15571.introduktion-av-produktionsmetoder"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PCS_PRD"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "INPSPD"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.15578.introduktion-av-leveransmetoder"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PCS_LOG"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "INPSLG"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.15579.introduktion-av-stodverksamheter"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PCS_ACCT"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "INPSSU"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.15582.introduktion-av-varor"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PRD_GD"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "INPDGD"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.15583.introduktion-av-tjanster"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PRD_SERV"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "INPDSV"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.15614.inna-egen-fou"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "EGFOU"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+[[representation.parallel.columns]]
+column = "INNA_IH_RND"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+
+[[representation.parallel]]
+variable = "257.15616.inna-utlagd-fou"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNA_RND_CONTR_OUT"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "RRDEX"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.17402.koncerntillhorighet"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ENTGRP_PART"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "Koncern"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.20900.avbruten-innovationsaktivitet"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INABA"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+[[representation.parallel.columns]]
+column = "INNA_ABDN"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+
+[[representation.parallel]]
+variable = "257.20901.pagaende-innovationsaktivitet"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNA_ONGO"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "INONG"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.20941.introduktion-metoder-ansvar-beslut"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PCS_WR_DEC_HRM"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "ORGWKP"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.20942.introduktion-metoder-externa-relationer"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PCS_OPROC_EXTREL"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "ORGEXR"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.20949.introduktion-metoder-marknadsforing"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "INNO_PCS_SLS_SERV"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "MKTPDP"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.20955.miljoinnovation-minskad-materialatgang"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_MAT"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_MAT_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.20957.j20c"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_ENO"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_ENO_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.20958.miljoinnovation-materialersattning"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_SUB"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_SUB_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.20959.miljoinnovation-fororeningar-foretaget"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_POL"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_POL_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.20960.miljoinnovation-atervinning-avfall"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_REC"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_REC_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.20962.miljoinno-fororeningar-slutkonsumtion"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_POS"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_POS_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.29914.stod-for-innovationsverksamhet-kommun"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "FUND_AUT_LOC_REG_RNDINN"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "FUNLOC"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.32713.ipr-patent"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "IPR_OUT_PAT"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "PROPAT"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.36983.stod-for-innovationsverksamhet-staten"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "FUND_GOV_CTL_RNDINN"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "FUNGMT"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.36984.stod-for-innovationsverksamhet-eu"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "FUND_EU_OTH_RNDINN"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "FUNEU"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.37076.ipr-monsterskydd"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "IPR_OUT_IDESG"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "PRODSG"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.37077.ipr-varumarke"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "IPR_OUT_TRDM"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "PROTM"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.37078.ipr-salt"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "IPR_OUT_SELL"
+valid_from = "2016-01-01"
+valid_to = "2018-12-31"
+source_editions = ["2016 - 2018"]
+[[representation.parallel.columns]]
+column = "PROLEX"
+valid_from = "2014-01-01"
+valid_to = "2016-12-31"
+source_editions = ["2014 - 2016"]
+
+[[representation.parallel]]
+variable = "257.39094.stod-innovationsaktiviteter-eu-h2020"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "FUND_EU_HP2020_RNDINN"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "FUND_EU_HP_RNDINN"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[representation.parallel]]
+variable = "257.39096.stod-fran-eu-h2020"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "FUND_EU_HP"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "FUND_EU_HP2020"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46481.miljoinno-livscykel"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_EXT"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_EXT_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46482.miljoinno-atervinning"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_REA"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_REA_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46483.eco-enu-sg"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_ENU"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_ENU_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46484.miljoinno-mangfald-kons"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_BIU"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_BIU_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46485.miljoinno-mangfald-intern"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_BIO"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_BIO_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46492.miljoinno-fossila"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "ECO_REP"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "ECO_REP_SG"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46586.source-native-question"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "REAS_NINN_NNEED"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "REAS_NMINN_NNEED"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[representation.parallel]]
+variable = "257.46587.source-native-question"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "REAS_NINN_OTH"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "REAS_NMINN_OTH"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[representation.parallel]]
+variable = "257.46588.source-native-question"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "REAS_NINN_RESC"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "REAS_NMINN_RESC"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[representation.parallel]]
+variable = "257.46589.source-native-question"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "REAS_NINN_NNEED"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "REAS_NMINN_NNEED"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46590.source-native-question"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "REAS_NINN_OTH"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "REAS_NMINN_OTH"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.46591.source-native-question"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "REAS_NINN_RESC"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+[[representation.parallel.columns]]
+column = "REAS_NMINN_RESC"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+
+[[representation.parallel]]
+variable = "257.73.ar"
+variant = "257.553"
+storage_metadata = "per_column"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Accepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "Ar"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020 - 2022"]
+[[representation.parallel.columns]]
+column = "TIME_PERIOD"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022 - 2024"]
+
+[[coding.choice]]
+variable = "257.32713"
+variant = "257.553"
+column = "IPR_OUT_PAT"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.32713, physicalIPR_OUT_PAT, older edition17817/member8271172018–2020 versus later edition18898/member9045682020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[coding.choice]]
+variable = "257.15583"
+variant = "257.553"
+column = "INNO_PRD_SERV"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.15583, physicalINNO_PRD_SERV, older edition17817/member8271232018–2020 versus later edition18898/member9045702020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[coding.choice]]
+variable = "257.15582"
+variant = "257.553"
+column = "INNO_PRD_GD"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.15582, physicalINNO_PRD_GD, older edition17817/member8271242018–2020 versus later edition18898/member9045692020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[coding.choice]]
+variable = "257.15563"
+variant = "257.553"
+column = "INNO_PRD_NEW_ENT"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.15563, physicalINNO_PRD_NEW_ENT, older edition17817/member8271312018–2020 versus later edition18898/member9045612020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[coding.choice]]
+variable = "257.15562"
+variant = "257.553"
+column = "INNO_PRD_NEW_MKT"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.15562, physicalINNO_PRD_NEW_MKT, older edition17817/member8271322018–2020 versus later edition18898/member9045602020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[coding.choice]]
+variable = "257.20900"
+variant = "257.553"
+column = "INNA_ABDN"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.20900, physicalINNA_ABDN, older edition17817/member8271222018–2020 versus later edition18898/member9042342020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[coding.choice]]
+variable = "257.15578"
+variant = "257.553"
+column = "INNO_PCS_LOG"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.15578, physicalINNO_PCS_LOG, older edition17817/member8271262018–2020 versus later edition18898/member9045402020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[coding.choice]]
+variable = "257.15571"
+variant = "257.553"
+column = "INNO_PCS_PRD"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.15571, physicalINNO_PCS_PRD, older edition17817/member8271272018–2020 versus later edition18898/member9045412020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."
+
+[[coding.choice]]
+variable = "257.20901"
+variant = "257.553"
+column = "INNA_ONGO"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "Variant ja/nej (1,0)"
+keep_members = [["0", "Nej"], ["1", "Ja"]]
+over = ["Ja eller nej"]
+reason = "Apply existing explicit P4 later-pooled-wave preference only to the2020 shared boundary and descriptor label; both complete memberships are literally identical0=Nej,1=Ja."
+source = "Finite complete native-family audit: 257.20901, physicalINNA_ONGO, older edition17817/member8271212018–2020 versus later edition18898/member9042332020–2022. Keep exact later supplied descriptor Variant ja/nej(1,0) with its unchanged complete memberships. Preserve both original descriptors, raw labels/code strings, validity and every ordered association. This is an authorized finite P4 display-label choice, not an independently established equivalence, code normalization, list union or automatic recency rule."

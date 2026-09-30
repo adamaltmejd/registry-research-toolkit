@@ -902,3 +902,39 @@ field = "description"
 value = "Barnets dödsålder i dagar, endast om barnet har avlidit under nyföddhetsperioden"
 evidence = "Both originals state child death age restricted to the neonatal period and supply the identical 0–27 day representation. Original rows row:252 and row:63 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.DISTRIKT"
+variant = "MFR"
+column = "DISTRIKT"
+expected_fields = [{ name = "classification_declared", status = "value", value = "Län och kommuner" }, { name = "coverage_from", status = "value", value = "2016" }, { name = "coverage_to", status = "unknown" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Kod för distrikt där den förlösta var inskriven vid förlossningstidpunkt" }, { name = "name", status = "value", value = "Distriktskod" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "value", value = "max 6 tecken" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2016" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "classification_declared"
+value = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/distrikt/"
+evidence = "The exact original name/description and representation identify an independent six-digit District code, while the original classification reference names a municipality list. Correct only that reference to SCB District. SCB and Lantmäteriet complete2523-code lists agree exactly; LM documents the static division from2016 until another decision. Preserve every original classification claim, observation date, context and coding reference. This does not infer observed district values or revise pre2016 retrospective source dates. Source and full-list comparison receipts: District-SOS-authority-intake-proposal.json and proof-inputs/district-intake/scb-lm-complete-codelist-comparison.json."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.GRVBS"
+variant = "MFR_FOK"
+column = "GRVBS"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Graviditetslängd i fullbordade veckor, första hand enligt ultraljud och andra hand enligt sista mensdatum" }, { name = "name", status = "value", value = "Graviditetslängd i veckor, bästa skattning" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1999" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Graviditetslängd, fullbordade veckor, bästa skattning"
+evidence = "Both originals explicitly describe gestational length in completed weeks, best estimate. Expand only the abbreviated name using the supplied MFR name. Keep each original algorithm description, range (22–45 versus21–44), type, availability and source coding unchanged; this does not assert algorithm or distribution equivalence."
+noted = "2026-09-30"
+
+[[errata.field]]
+variable = "6052270801387609014.SJUKHUS_S"
+variant = "MFR_FOK"
+column = "SJUKHUS_S"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Sjukhuskod utan felaktiga koder (framtaget för statistik)" }, { name = "name", status = "value", value = "Sjukhuskod bearbetad" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "1964" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "name"
+value = "Sjukhuskod, bearbetad"
+evidence = "Both originals explicitly identify a processed hospital code. Add only the supplied punctuation in the MFR name; preserve each original processing description, representation, coding, type and availability. This does not equate processing rules or hospital-code histories."
+noted = "2026-09-30"

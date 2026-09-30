@@ -57,6 +57,7 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import classification_succession_as_of_year, open_db
 
+from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.db import (
     _PROVIDER_SEED,
     _VALID_TO_SENTINEL,
@@ -1603,8 +1604,9 @@ def _check_variable_alias_window(
         "  WHERE w.variable_id = vs.variable_id "
         "  AND w.register_variant_id = vs.register_variant_id "
         "  AND w.provenance IS NULL "
-        "  AND w.valid_from = vs.valid_from "
-        "  AND w.valid_to = vs.valid_to"
+        "  AND ((w.valid_from = vs.valid_from AND w.valid_to = vs.valid_to) "
+        "    OR (w.storage_metadata = 'per_column' "
+        "      AND w.valid_from <= vs.valid_from AND w.valid_to >= vs.valid_to))"
         ") "
         "AND NOT EXISTS ("
         "  SELECT 1 FROM variable_alias_window w "
@@ -1612,8 +1614,9 @@ def _check_variable_alias_window(
         "  AND w.register_variant_id = vs.register_variant_id "
         "  AND w.provenance IS NULL "
         "  AND py_lower(w.delivery_column_name) = py_lower(vs.delivery_column_name) "
-        "  AND w.valid_from = vs.valid_from "
-        "  AND w.valid_to = vs.valid_to"
+        "  AND ((w.valid_from = vs.valid_from AND w.valid_to = vs.valid_to) "
+        "    OR (w.storage_metadata = 'per_column' "
+        "      AND w.valid_from <= vs.valid_from AND w.valid_to >= vs.valid_to))"
         ")"
     ).fetchone()[0]
     if base_hidden == 0:
@@ -1625,6 +1628,30 @@ def _check_variable_alias_window(
             f"{base_hidden:,} exact source-window state(s) missing their "
             "representative column"
         )
+
+    backing: dict[tuple[int, int, str, str, str], list[tuple[str, str]]] = {}
+    for vid, rvid, column, start, end, state_start, state_end in conn.execute(
+        "SELECT w.variable_id, w.register_variant_id, w.delivery_column_name, "
+        "w.valid_from, w.valid_to, vs.valid_from, vs.valid_to "
+        "FROM variable_alias_window w LEFT JOIN variable_state vs "
+        "ON vs.variable_id = w.variable_id AND vs.register_variant_id = w.register_variant_id "
+        "AND vs.valid_from <= w.valid_to AND vs.valid_to >= w.valid_from "
+        "WHERE w.storage_metadata = 'per_column'"
+    ):
+        intervals = backing.setdefault((vid, rvid, column, start, end), [])
+        if state_start is not None:
+            intervals.append((max(start, state_start), min(end, state_end)))
+    unbacked = sum(
+        bool(remaining_windows(intervals, start, end))
+        for (_, _, _, start, end), intervals in backing.items()
+        if start <= end
+    )
+    if unbacked:
+        result.fail(
+            f"{unbacked:,} per-column storage window(s) lack complete backing states"
+        )
+    else:
+        result.ok("every per-column storage window has complete backing states")
 
     if corpus:
         n_families = conn.execute(

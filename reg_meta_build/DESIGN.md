@@ -324,12 +324,15 @@ split. RTB's eight `Kvartal 1-3 fr.o.m.` editions use this surface to keep quart
 delivery lines separate from their annual parent variants.
 
 SOS `[[identity.split]]` can partition a complete native family by literal supplied
-`data_type`, `deldatamangd`, or `name`. Supplied names distinguish reused columns whose
-clinical code, flag, or event-file meaning differs despite equal data types. Every
-observed discriminator must be declared, and every declared discriminator must occur;
-new or missing values make the whole split stale. Multiple literals may share a declared
-owner. Name-conditioned effects keep distinct originals at the same semantic source
-coordinate separate. This establishes concept ownership; it does not infer delivery
+`data_type`, `deldatamangd`, `name`, or `description`. Supplied names distinguish reused
+columns whose clinical code, flag, or event-file meaning differs despite equal data
+types. Exact supplied descriptions distinguish observation times when the literal column
+and name are reused, such as year-end residence versus residence at a care event. They
+do not authorize rewriting the description or merging different events. Every observed
+discriminator must be declared, and every declared discriminator must occur; new or
+missing values make the whole split stale. Multiple literals may share a declared owner.
+Name-conditioned effects keep distinct originals at the same semantic source coordinate
+separate. This establishes concept ownership; it does not infer delivery
 interchangeability or fill missing file-role coordinates.
 
 `[[errata.version]]` carries `variant`, `name`, `evidence`, and `noted`; it adds an
@@ -660,6 +663,17 @@ accepts one literal column per source edition; same-edition competing columns re
 separate evidence and are not inferred from a shared native identifier. Later source
 drift stales the checked case. Metadata and coding conflicts still pass through the
 existing reconciliation diagnostics.
+
+An explicit `storage_metadata = "per_column"` retains physical type and width on each
+checked representation window instead of requiring those two facts to be shared. Each
+literal column is reconciled independently; a conflict within that column remains
+unknown and diagnosed. The shared state never selects a storage donor. The existing
+`variable_alias_window` carries the mode and normalized type/width, and selected-column
+reads project those facts, including nulls, onto that representation. Coverage checks
+compare the source claim with the same column's written window. Names, meaning, coding,
+operational definitions and attribution retain the shared reconciliation contract. The
+default `shared` mode retains its existing behavior. Source SQL widths and precision
+remain literal metadata; this mode neither converts them nor asserts comparability.
 
 Search aliases add discovery spellings without adding states or coverage. An alias
 window makes an already owned spelling orderable only within supported state coverage

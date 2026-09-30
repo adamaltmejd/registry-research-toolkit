@@ -1256,6 +1256,7 @@ def compile_parallel_representations(
                     ),
                     reason=entry.evidence,
                     provenance=ref,
+                    storage_metadata=entry.storage_metadata,
                 ),
             )
         )
@@ -1758,6 +1759,8 @@ def compile_partitions(
                 records,
                 fields=("column_name",)
                 if native[1] == "scb"
+                else ("column_name", "name", "data_type", "description")
+                if sos_splits and sos_splits[0][1].by == "description"
                 else ("column_name", "name", "data_type"),
             )
             guard = PeerGuard(
@@ -1871,7 +1874,7 @@ def compile_partitions(
                     }
                     values = tuple(
                         _literal_field(record, by)
-                        if by in ("data_type", "name")
+                        if by in ("data_type", "name", "description")
                         else (
                             record.subject.variant.name
                             if record.subject.variant.status == "value"
@@ -1889,7 +1892,7 @@ def compile_partitions(
                             _stale_partition(
                                 ref,
                                 source_id,
-                                f"{'data types' if by == 'data_type' else 'names' if by == 'name' else 'deldatamangd values'} "
+                                f"{'data types' if by == 'data_type' else 'names' if by == 'name' else 'descriptions' if by == 'description' else 'deldatamangd values'} "
                                 f"{sorted(actual)!r} do not equal declared {sorted(owners)!r}",
                             )
                         )
@@ -1907,7 +1910,7 @@ def compile_partitions(
                             when=(
                                 FieldExpectation(name=by, status="value", value=value),
                             )
-                            if by in ("data_type", "name")
+                            if by in ("data_type", "name", "description")
                             else (),
                         )
                         for record, value in zip(records, values, strict=True)
@@ -2361,7 +2364,7 @@ def compile_deferred_partitions(
                     }
                     values = tuple(
                         _literal_field(record, declaration.by)
-                        if declaration.by in ("data_type", "name")
+                        if declaration.by in ("data_type", "name", "description")
                         else (
                             record.subject.variant.name
                             if record.subject.variant.status == "value"
@@ -2396,7 +2399,10 @@ def compile_deferred_partitions(
                 }:
                     continue
                 expectations = capture_expectations(
-                    records, fields=("column_name", "name", "data_type")
+                    records,
+                    fields=("column_name", "name", "data_type", "description")
+                    if is_split and sos_splits[0].by == "description"
+                    else ("column_name", "name", "data_type"),
                 )
                 guard = PeerGuard(
                     guard_id=f"accepted-partitions:{source}:{source_id}",
@@ -4037,6 +4043,15 @@ def _select_occurrence_correction(
                 and str(record.subject.native.edition_id) == entry.edition
             )
         )
+        and (
+            not isinstance(entry, ErrataFieldEntry)
+            or entry.field != "classification_declared"
+            or (
+                record.edition_scope == entry.expected_scope
+                and record.edition_period_scope == entry.expected_period
+                and record.original_period_text == entry.expected_period_text
+            )
+        )
     )
 
 
@@ -4230,6 +4245,11 @@ def compile_occurrence_corrections(
                         when=(
                             FieldExpectation(
                                 name="column_name", status="value", value=entry.column
+                            ),
+                            *(
+                                tuple(entry.expected_fields)
+                                if entry.field == "classification_declared"
+                                else ()
                             ),
                         ),
                     )

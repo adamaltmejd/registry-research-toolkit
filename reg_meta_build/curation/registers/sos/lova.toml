@@ -785,3 +785,59 @@ field = "description"
 value = "Ubildningsland för underliggande examen för legitamationen/beviset"
 evidence = "LOVA UTBLAND, exact original row:181 and peer row:182. The main source points to the same exact country-group steering list as the HOSP row, which explicitly explains the underlying qualification country. Retain that explanatory description; original list reference remains on the original record. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
 noted = "2026-09-30"
+
+# Reviewed output identifiers and match flags; retain the raw lookup/error notes as source evidence.
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA"
+variable = "CFARNR"
+column = "CFARNR"
+expected_reference = "CfarNrSok - SCB - Sökning efter arbetsställen"
+expected_representation = "Åttaställigt nummer för arbetsställe"
+evidence = "Metadata - Variabelnivå row 26 names an eight-position unique workplace identifier (or its replacing serial identifier), and G links the CFAR workplace-search service. This is identifier lookup provenance, not a classification of identifier output values."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_LISA"
+variable = "CFARNR"
+column = "CFARNR"
+expected_reference = "CfarNrSok - SCB - Sökning efter arbetsställen"
+expected_representation = "Åttaställigt nummer för arbetsställe"
+evidence = "Metadata - Variabelnivå row 27 names an eight-position unique workplace identifier (or its replacing serial identifier), and G links the CFAR workplace-search service. This is identifier lookup provenance, not a classification of identifier output values."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA"
+variable = "SSYKSTATUS"
+column = "SSYKSTATUS"
+expected_reference = "fel i SCB dokumentaion försök igen"
+expected_representation = "1 vid överenstämmelse"
+evidence = "Metadata - Variabelnivå row 157 describes a match flag between occupation and the November employment organisation number, with F='1 vid överenstämmelse'. G contains only the editorial error note 'fel i SCB dokumentaion försök igen', which does not name a classification. No additional response code or label is inferred."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_LISA"
+variable = "SSYKSTATUS"
+column = "SSYKSTATUS"
+expected_reference = "fel i SCB dokumentaion försök igen"
+expected_representation = "1 vid överenstämmelse"
+evidence = "Metadata - Variabelnivå row 158 describes a match flag between occupation and the November employment organisation number, with F='1 vid överenstämmelse'. G contains only the editorial error note 'fel i SCB dokumentaion försök igen', which does not name a classification. No additional response code or label is inferred."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA"
+variable = "SSYKSTATUS_J16"
+column = "SSYKSTATUS_J16"
+expected_reference = "fel i SCB dokumentaion försök igen"
+expected_representation = "1 vid överenstämmelse"
+evidence = "Metadata - Variabelnivå row 159 describes a match flag between occupation and the November employment organisation number, with F='1 vid överenstämmelse'. G contains only the editorial error note 'fel i SCB dokumentaion försök igen', which does not name a classification. No additional response code or label is inferred."
+noted = "2026-09-30"
+
+[[errata.classification_reference]]
+deldatamangd = "A_LOVA_LISA"
+variable = "SSYKSTATUS_J16"
+column = "SSYKSTATUS_J16"
+expected_reference = "fel i SCB dokumentaion försök igen"
+expected_representation = "1 vid överenstämmelse"
+evidence = "Metadata - Variabelnivå row 160 describes a match flag between occupation and the November employment organisation number, with F='1 vid överenstämmelse'. G contains only the editorial error note 'fel i SCB dokumentaion försök igen', which does not name a classification. No additional response code or label is inferred."
+noted = "2026-09-30"

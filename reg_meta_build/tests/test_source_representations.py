@@ -200,6 +200,285 @@ def _form(setup, cases=None):
     return formed, resolution
 
 
+def _column_storage_setup(
+    first_type, first_length, second_type, second_length, *, claims=None
+):
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={
+                        "data_type": value_field(dtype) if dtype is not None else None,
+                        "data_length": value_field(length)
+                        if length is not None
+                        else None,
+                    }
+                )
+            }
+        )
+        for record, dtype, length in zip(
+            _records(),
+            (first_type, second_type),
+            (first_length, second_length),
+            strict=True,
+        )
+    )
+    setup = _setup(records, claims=claims)
+    decision = setup[2].decision
+    assert isinstance(decision, RepresentationDecision)
+    case = setup[2].model_copy(
+        update={
+            "decision": decision.model_copy(
+                update={
+                    "storage_metadata": "per_column",
+                    "columns": tuple(
+                        column.model_copy(
+                            update={
+                                "valid_from": decision.valid_from,
+                                "valid_to": decision.valid_to,
+                            }
+                        )
+                        for column in decision.columns
+                    ),
+                }
+            )
+        }
+    )
+    return (*setup[:2], case, *setup[3:])
+
+
+@pytest.mark.parametrize(
+    ("first_type", "first_length", "second_type", "second_length"),
+    [
+        ("text", "200", "text", "18"),
+        ("decimal", "53", "integer", "0"),
+        (None, None, "integer", "0"),
+    ],
+)
+def test_per_column_storage_survives_formation_coverage_and_catalog_read(
+    tmp_path: Path, first_type, first_length, second_type, second_length
+) -> None:
+    setup = _column_storage_setup(first_type, first_length, second_type, second_length)
+    formed, proof = _form(setup)
+    assert proof.diagnostics == ()
+    assert [d.code for d in formed.diagnostics] == (
+        ["unknown_data_type"] if first_type is None else []
+    )
+    variable = formed.variable
+    assert variable is not None and len(variable.states) == 1
+    expected = {
+        "First": (first_type, first_length),
+        "Second": (second_type, second_length),
+    }
+    assert {
+        alias.delivery_column_name: (
+            alias.windows[0].data_type,
+            alias.windows[0].data_length,
+        )
+        for alias in variable.aliases
+    } == expected
+    assert all(
+        w.storage_metadata == "per_column" for a in variable.aliases for w in a.windows
+    )
+    check_delivery_coverage((variable,), formed.coverage, withheld={})
+    last_alias = variable.aliases[-1]
+    bad_alias = last_alias.model_copy(
+        update={
+            "windows": (
+                last_alias.windows[0].model_copy(update={"data_length": "wrong"}),
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="claimed data_length"):
+        check_delivery_coverage(
+            (
+                variable.model_copy(
+                    update={"aliases": (*variable.aliases[:-1], bad_alias)}
+                ),
+            ),
+            formed.coverage,
+            withheld={},
+        )
+    if first_type is None:
+        # A known null on the physical column must override even a populated base.
+        variable = variable.model_copy(
+            update={
+                "states": tuple(
+                    state.model_copy(
+                        update={"data_type": "integer", "data_length": "99"}
+                    )
+                    for state in variable.states
+                )
+            }
+        )
+    write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
+    with closing(Catalog.open(tmp_path)) as catalog:
+        assert {
+            state.delivery_column_name: (state.data_type, state.data_length)
+            for state in catalog.resolve_at("scb/example/income", "2020")
+        } == expected
+    assert (
+        _form((tuple(reversed(setup[0])), tuple(reversed(setup[1])), *setup[2:]))[
+            0
+        ].variable
+        == formed.variable
+    )
+    changed = setup[0][0].model_copy(
+        update={
+            "fields": setup[0][0].fields.model_copy(
+                update={"data_length": value_field("changed")}
+            )
+        }
+    )
+    assert (
+        resolve_representation_cases(
+            (changed, setup[0][1]), (setup[2],), coding=setup[4]
+        ).cases
+        == ()
+    )
+
+
+def test_per_column_window_spans_coding_states_without_losing_storage(
+    tmp_path: Path,
+) -> None:
+    claims = tuple(
+        CodeListClaim(
+            name,
+            TemporalScope(
+                kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
+            ),
+            (
+                CodeMembershipClaim(
+                    code, "Label", TemporalScope(kind="year_independent")
+                ),
+            ),
+        )
+        for name, code, start, end in (
+            ("before", "01", "2020-01-01", "2020-06-30"),
+            ("after", "02", "2020-07-01", "2020-12-31"),
+        )
+    )
+    setup = _column_storage_setup(
+        "text", "200", "text", "18", claims={"First": claims, "Second": claims}
+    )
+    formed, _ = _form(setup)
+    assert formed.diagnostics == () and formed.variable is not None
+    variable = formed.variable.model_copy(
+        update={
+            "aliases": tuple(
+                alias.model_copy(
+                    update={
+                        "windows": (
+                            alias.windows[0].model_copy(
+                                update={
+                                    "valid_from": "2020-01-01",
+                                    "valid_to": "2020-12-31",
+                                }
+                            ),
+                        )
+                    }
+                )
+                for alias in formed.variable.aliases
+            )
+        }
+    )
+    assert len(variable.states) == 2
+    check_delivery_coverage((variable,), formed.coverage, withheld={})
+    write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
+    with closing(Catalog.open(tmp_path)) as catalog:
+        states = catalog.resolve_at("scb/example/income", "2020")
+        assert {
+            (s.delivery_column_name, s.valid_from, s.valid_to, s.data_length)
+            for s in states
+        } == {
+            (col, start, end, width)
+            for col, width in (("First", "200"), ("Second", "18"))
+            for start, end in (
+                ("2020-01-01", "2020-06-30"),
+                ("2020-07-01", "2020-12-31"),
+            )
+        }
+        assert {
+            s.delivery_column_name
+            for s in catalog.resolve_at("scb/example/income", "2020-10")
+        } == {"First", "Second"}
+    from reg_meta.inventory_check import _expanded_columns
+
+    assert _expanded_columns(
+        [(s.valid_from, s.valid_to, s.delivery_column_name) for s in variable.states],
+        [
+            (
+                a.delivery_column_name,
+                w.valid_from,
+                w.valid_to,
+                w.provenance,
+                w.storage_metadata,
+            )
+            for a in variable.aliases
+            for w in a.windows
+        ],
+    ) == {"First", "Second"}
+    gap = variable.model_copy(
+        update={
+            "states": (
+                variable.states[0].model_copy(update={"valid_to": "2020-06-29"}),
+                variable.states[1],
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="complete backing states"):
+        write_resolved_catalog((gap,), tmp_path / "gap.db", manifest={})
+
+
+def test_per_column_storage_keeps_same_column_conflict_and_rejects_mixed_modes() -> (
+    None
+):
+    setup = _column_storage_setup("text", "200", "integer", "0")
+    formed, _ = _form(setup)
+    assert formed.variable is not None
+    state = formed.variable.states[0]
+    variant = state.variant
+    members = [
+        state.model_copy(
+            update={
+                "delivery_column_name": col,
+                "data_type": dtype,
+                "data_length": length,
+            }
+        )
+        for col, dtype, length in (
+            ("First", "text", "200"),
+            ("First", "text", "18"),
+            ("Second", "integer", "0"),
+        )
+    ]
+    result, aliases, issues, _, conflicts = form_representations(
+        members, (setup[2],), variable_key=KEY, variants=setup[3], subject="fixture"
+    )
+    assert len(result) == 1
+    assert aliases[0].windows[0].data_length is None
+    assert aliases[1].windows[0].data_length == "0"
+    assert [(d.code, d.fields) for d in issues] == [
+        ("conflicting_representation_fact", ("data_length",))
+    ]
+    assert conflicts == (
+        (variant.slug, "First", "data_length", "2020-01-01", "2020-12-31"),
+    )
+    case = setup[2]
+    assert isinstance(case.decision, RepresentationDecision)
+    shared = case.model_copy(
+        update={
+            "case_id": "shared",
+            "decision": case.decision.model_copy(update={"storage_metadata": "shared"}),
+        }
+    )
+    result, aliases, issues, _, _ = form_representations(
+        members, (case, shared), variable_key=KEY, variants=setup[3], subject="fixture"
+    )
+    assert result == [] and aliases == ()
+    assert issues[0].code == "conflicting_representation_decisions"
+
+
 def test_shared_state_keeps_metadata_period_and_query_selects_precise_column(
     tmp_path: Path,
 ) -> None:

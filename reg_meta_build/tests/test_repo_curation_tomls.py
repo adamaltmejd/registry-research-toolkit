@@ -630,8 +630,8 @@ def test_repo_classification_files_count_and_stay_unique() -> None:
         for entry in tree.classifications
         for binding in entry.binding.variable
     ]
-    assert len(list((_CURATION / "classifications").iterdir())) == len(books) == 82
-    assert len({book.slug for book in books}) == 82
+    assert len(list((_CURATION / "classifications").iterdir())) == len(books) == 83
+    assert len({book.slug for book in books}) == 83
     assert len(labels) == len(set(labels)) == 112
     assert sum(len(book.sentinel_codes) for book in books) == 543
     assert sum(1 for book in books if book.sentinel_codes) == 65
@@ -709,15 +709,15 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 150
-    assert sum(len(entry.periods) for entry in coding) == 298
+    assert len(coding) == 163
+    assert sum(len(entry.periods) for entry in coding) == 311
     assert (
         sum(
             len(entry.periods)
             for register in tree.registers
             for entry in register.coding.choice
         )
-        == 87
+        == 96
     )
     assert (
         sum(
@@ -730,7 +730,7 @@ def test_repo_coding_windows_are_ported() -> None:
             )
             for register in tree.registers
         )
-        == 24
+        == 25
     )
 
 
@@ -1255,7 +1255,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 19, 1, 237)
+    ) == (20, 21, 1, 237)
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -1269,6 +1269,18 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         entry.variable: {getattr(part, entry.by): part.owner for part in entry.parts}
         for entry in par.identity.split
     } == {
+        "DISTRIKT": {
+            "Distrikt där patienten var folkbokförd vid tidpunkten för vårdkontakten. Finns i månadsversionen.": "5891427617861710725.DISTRIKT.distrikt-vid-oppenvardskontakt",
+            "Distrikt där patienten var folkbokförd 31 december året för vårdkontakten. Finns i årsversionerna": "5891427617861710725.DISTRIKT.distrikt",
+            "Distrikt där patienten var folkbokförd vid utskrivningsdatum. Saknas utskrivningsdatum används datum då registret skapas. Finns i månadsversionen.": "5891427617861710725.DISTRIKT.distrikt-vid-utskrivning-slutenvard",
+            "Distrikt där patienten var folkbokförd vid slut av psykiatrisk vårdform. Saknas slutdatum används datum då registret skapas. Finns i månadsversionen.": "5891427617861710725.DISTRIKT.distrikt-vid-slut-psykiatrisk-vardform",
+        },
+        "LK": {
+            "Län och kommun där patienten var folkbokförd 31 december året för vårdkontakten. Finns i årsversionerna.": "5891427617861710725.LK.folkbokforingsort-lan-kommun",
+            "Län och kommun där patienten var folkbokförd vid tidpunkten för vårdkontakten. Finns i månadsversionen.": "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-oppenvardskontakt",
+            "Län och kommun där patienten var folkbokförd vid utskrivningsdatum. Saknas utskrivningsdatum används datum då registret skapas. Finns i månadsversionen.": "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard",
+            "Län och kommun där patienten var folkbokförd vid tidpunkten för slut av psykiatrisk vårdform. Saknas slutdatum används datum då registret skapas.  Finns i månadsversionen.": "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform",
+        },
         "ALDER_S": {
             "PAR_OV": "5891427617861710725.ALDER_S.alder-vid-arets-slut",
             "PAR_SV": "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut",
@@ -1347,6 +1359,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         "deldatamangd": 8,
         "data_type": 2,
         "name": 4,
+        "description": 2,
     }
     par_owners = {
         part.owner
@@ -1354,7 +1367,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         if entry.variable != "ATC"
         for part in entry.parts
     }
-    assert len(par_owners) == 36
+    assert len(par_owners) == 44
     assert {("sos", owner) for owner in par_owners} <= slugged
     assert {
         variant.display_group: variant.panel_time_key for variant in par.variant
@@ -2769,21 +2782,37 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
     registers = {register.register_info.slug: register for register in tree.registers}
     innovation = registers["innovation-foretag"]
     hreg = registers["hreg"]
-    assert len(innovation.representation.parallel) == 30
+    assert len(innovation.representation.parallel) == 73
+    assert (
+        sum(
+            e.storage_metadata == "per_column"
+            for e in innovation.representation.parallel
+        )
+        == 43
+    )
     assert len(hreg.representation.parallel) == 1
     for register in (innovation, hreg):
         for entry in register.representation.parallel:
             assert entry.valid_from == max(c.valid_from for c in entry.columns)
             assert entry.valid_to == min(c.valid_to for c in entry.columns)
             assert len({c.column for c in entry.columns}) == len(entry.columns)
-            partition = next(
+            partitions = [
                 p
                 for p in register.identity.partition
                 if entry.variable in p.columns.values()
-            )
-            assert {partition.columns[c.column] for c in entry.columns} == {
-                entry.variable
-            }
+            ]
+            for column in entry.columns:
+                owners = {
+                    p.columns[column.column]
+                    for p in partitions
+                    if column.column in p.columns
+                }
+                owners.update(
+                    e.owner
+                    for e in register.identity.column_owner
+                    if e.owner == entry.variable and e.column == column.column
+                )
+                assert owners == {entry.variable}
     participating = hreg.representation.parallel[0]
     assert participating.variable == "47.38118.medverkande-hogskola"
     assert (participating.valid_from, participating.valid_to) == (

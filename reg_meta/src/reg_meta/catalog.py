@@ -3034,20 +3034,34 @@ class Catalog:
 
     def _variable_windows(
         self, variable_id: int
-    ) -> dict[int, list[tuple[str, str, str, str | None]]]:
+    ) -> dict[int, list[tuple[str, str, str, str | None, str, str | None, str | None]]]:
         """`variable_alias_window` rows (#319/#945/Y-132) grouped by
         `register_variant_id` → [(delivery_column_name, valid_from, valid_to,
-        provenance), …] sorted by window start. EMPTY for variables with no
+        provenance, storage_metadata, data_type, data_length), …] sorted by window start. EMPTY for variables with no
         resolver-visible alias representations, so expansion is a no-op there.
         One indexed point-lookup on `idx_variable_alias_window_lookup`."""
-        out: dict[int, list[tuple[str, str, str, str | None]]] = {}
-        for rvid, col, wfrom, wto, provenance in self._conn.execute(
+        out: dict[
+            int, list[tuple[str, str, str, str | None, str, str | None, str | None]]
+        ] = {}
+        for (
+            rvid,
+            col,
+            wfrom,
+            wto,
+            provenance,
+            mode,
+            dtype,
+            length,
+        ) in self._conn.execute(
             "SELECT register_variant_id, delivery_column_name, valid_from, valid_to, "
-            "provenance FROM variable_alias_window WHERE variable_id = ? "
+            "provenance, storage_metadata, data_type, data_length "
+            "FROM variable_alias_window WHERE variable_id = ? "
             "ORDER BY register_variant_id, valid_from, delivery_column_name",
             (variable_id,),
         ):
-            out.setdefault(rvid, []).append((col, wfrom, wto, provenance))
+            out.setdefault(rvid, []).append(
+                (col, wfrom, wto, provenance, mode, dtype, length)
+            )
         return out
 
     def _expand_state_windows(
@@ -3072,7 +3086,9 @@ class Catalog:
         Windows share the base state's `state_id` + `value_set_version_label`; only
         `delivery_column_name` + `valid_from`/`valid_to` are always overridden. An
         explicit window provenance overrides the base provenance; otherwise it is
-        inherited. Expanded alias representations do not inherit the base column's
+        inherited. Explicit per-column storage replaces type and width, including nulls,
+        and intersects canonical state boundaries. Shared storage stays inherited.
+        Expanded alias representations do not inherit the base column's
         operational definition. The per-window identity is the compound (state_id,
         delivery_column_name, valid_from)."""
 
@@ -3082,9 +3098,10 @@ class Catalog:
             )
 
         def expand_window(
-            base: VariableState, window: tuple[str, str, str, str | None]
+            base: VariableState,
+            window: tuple[str, str, str, str | None, str, str | None, str | None],
         ) -> VariableState:
-            col, wfrom, wto, provenance = window
+            col, wfrom, wto, provenance, mode, dtype, length = window
             return base.model_copy(
                 update={
                     "delivery_column_name": col,
@@ -3095,6 +3112,11 @@ class Catalog:
                         provenance if provenance is not None else base.provenance
                     ),
                     "period_token": self._period_token_for_window(wfrom, wto),
+                    **(
+                        {"data_type": dtype, "data_length": length}
+                        if mode == "per_column"
+                        else {}
+                    ),
                 }
             )
 
@@ -3106,18 +3128,25 @@ class Catalog:
         for row in rows:
             base = to_state(row)
             windows = windows_by_variant.get(row["register_variant_id"], [])
-            # Windows belonging to THIS state. Overlapping states can exist, so
-            # containment remains part of both source and curated semantics.
-            state_windows = [
-                (col, wfrom, wto, provenance)
-                for (col, wfrom, wto, provenance) in windows
-                if base.valid_from <= wfrom and wto <= base.valid_to
-            ]
+            state_windows: list[
+                tuple[str, str, str, str | None, str, str | None, str | None]
+            ] = []
+            for window in windows:
+                if window[4] == "per_column":
+                    # One physical storage window may span successive coding states.
+                    start, end = (
+                        max(base.valid_from, window[1]),
+                        min(base.valid_to, window[2]),
+                    )
+                    if start <= end:
+                        state_windows.append((window[0], start, end, *window[3:]))
+                elif base.valid_from <= window[1] and window[2] <= base.valid_to:
+                    state_windows.append(window)
             source_windows = [w for w in state_windows if w[3] is None]
             curated_windows = [w for w in state_windows if w[3] is not None]
             has_source_base = base.delivery_column_name is not None and any(
-                col.lower() == base.delivery_column_name.lower()
-                for (col, _wfrom, _wto, _provenance) in source_windows
+                window[0].lower() == base.delivery_column_name.lower()
+                for window in source_windows
             )
             matched_source = [
                 window

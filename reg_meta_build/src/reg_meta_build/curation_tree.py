@@ -448,25 +448,36 @@ class _OccurrenceCorrectionEntry(_CurationModel):
         required = {"name", "definition", "description", "operational_definition"}
         names = {item.name for item in value}
         coverage = {"coverage_from", "coverage_to"}
+        classification = {"classification_declared", "representation", "data_type"}
         if (
             not required.issubset(names)
-            or names - required not in (set(), coverage)
+            or names - required not in (set(), coverage, classification | coverage)
             or len(names) != len(value)
         ):
             raise ValueError(
-                "expected_fields must guard all four supplied prose fields, optionally both coverage fields"
+                "expected_fields must guard all four supplied prose fields, optionally both coverage fields and the complete classification/type/representation group"
             )
         return value
 
 
 class ErrataFieldEntry(_OccurrenceCorrectionEntry):
-    field: Literal["name", "definition", "description"]
+    field: Literal["name", "definition", "description", "classification_declared"]
     value: str
 
     _value = field_validator("value")(_require_trimmed)
 
     @model_validator(mode="after")
     def _changed_text(self) -> ErrataFieldEntry:
+        if self.field == "classification_declared" and not {
+            "classification_declared",
+            "representation",
+            "data_type",
+            "coverage_from",
+            "coverage_to",
+        }.issubset({item.name for item in self.expected_fields}):
+            raise ValueError(
+                "classification corrections require original classification, type, representation and both coverage guards"
+            )
         expected = next(
             item for item in self.expected_fields if item.name == self.field
         )
@@ -629,6 +640,7 @@ class ParallelRepresentationColumn(ColumnRepresentation):
 class ParallelRepresentationEntry(FiniteCurationWindow):
     variable: str
     variant: str
+    storage_metadata: Literal["shared", "per_column"] = "shared"
     columns: list[ParallelRepresentationColumn] = Field(min_length=2)
     evidence: str
     noted: str
@@ -825,21 +837,29 @@ class IdentitySplitPart(_CurationModel):
     data_type: str | None = None
     deldatamangd: str | None = None
     name: str | None = None
+    description: str | None = None
     owner: str
 
-    _trimmed = field_validator("data_type", "deldatamangd", "name")(_require_trimmed)
+    _trimmed = field_validator("data_type", "deldatamangd", "name", "description")(
+        _require_trimmed
+    )
 
     @model_validator(mode="after")
     def _one_discriminator(self) -> IdentitySplitPart:
         if (
             sum(
                 value is not None
-                for value in (self.data_type, self.deldatamangd, self.name)
+                for value in (
+                    self.data_type,
+                    self.deldatamangd,
+                    self.name,
+                    self.description,
+                )
             )
             != 1
         ):
             raise ValueError(
-                "split part needs exactly one of data_type, deldatamangd or name"
+                "split part needs exactly one of data_type, deldatamangd, name or description"
             )
         return self
 
@@ -863,7 +883,7 @@ class IdentitySplitPart(_CurationModel):
 
 class IdentitySplitEntry(_CurationModel):
     variable: str
-    by: Literal["data_type", "deldatamangd", "name"]
+    by: Literal["data_type", "deldatamangd", "name", "description"]
     parts: list[IdentitySplitPart]
 
     _variable = field_validator("variable")(_require_trimmed)

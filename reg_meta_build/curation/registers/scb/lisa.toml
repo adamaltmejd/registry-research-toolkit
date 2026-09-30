@@ -4451,3 +4451,14 @@ periods = [["1990-01-01", "1990-12-31"], ["1991-01-01", "1991-12-31"], ["1992-01
 members = [["01250", "Okänt värde"], ["02010", "Okänt värde"]]
 reason = "Preserve the exact supplied unknown-labelled values as bounded variable-local classification sentinels."
 source = "Complete pinned SCB source coding and original family audit: these exact code-label pairs are explicitly unknown in this occurrence cohort. Substantive same-literal source categories remain outside this decision. Preserve complete source lists, original claims, fields, periods and all registry codes; no global sentinel widening or source label replacement."
+
+[[coding.extend]]
+variable = "34.41952.fore-bas"
+variant = "34.153"
+column = "TFranv"
+periods = [["2019-01-01", "2019-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Nej"], ["1", "Ja"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "The exact2019 source operation explicitly establishes the exhaustive1/otherwise0 response domain; extend the complete matching2020 TFranv list only over2019."
+source = "Native34.41952, variant153, literalTFranv:2019edition16266/member799066 explicitly says Om individen ska räknas som tillfälligt frånvarande och sysselsatt tar variabeln värdet1, annars0. The same exact operation and physical column in2020edition18093/member837228 supplies complete Förekomst0=Nej,1=Ja membership. This is positive encoded-domain evidence in the target year, not inference from adjacency or blanket binary extension. Preserve all original prose, types, years and coding associations; exclude BTFranv/BAS reporting basis and unrelated columns."

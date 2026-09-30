@@ -1278,6 +1278,42 @@ _LOVA_REFERENCE_ROWS = (
     ("A_LOVA_EXAMEN", "EXAMEN", "fritext", _LOVA_SSYK),
     ("A_LOVA_HOSP", "TEMPBEHORIGHETFRAN", "YYYY-MM-DD", _LOVA_SUN),
     ("A_LOVA_HOSP", "TEMPBEHORIGHETTILL", "YYYY-MM-DD", _LOVA_SUN),
+    (
+        "A_LOVA",
+        "CFARNR",
+        "Åttaställigt nummer för arbetsställe",
+        "CfarNrSok - SCB - Sökning efter arbetsställen",
+    ),
+    (
+        "A_LOVA_LISA",
+        "CFARNR",
+        "Åttaställigt nummer för arbetsställe",
+        "CfarNrSok - SCB - Sökning efter arbetsställen",
+    ),
+    (
+        "A_LOVA",
+        "SSYKSTATUS",
+        "1 vid överenstämmelse",
+        "fel i SCB dokumentaion försök igen",
+    ),
+    (
+        "A_LOVA_LISA",
+        "SSYKSTATUS",
+        "1 vid överenstämmelse",
+        "fel i SCB dokumentaion försök igen",
+    ),
+    (
+        "A_LOVA",
+        "SSYKSTATUS_J16",
+        "1 vid överenstämmelse",
+        "fel i SCB dokumentaion försök igen",
+    ),
+    (
+        "A_LOVA_LISA",
+        "SSYKSTATUS_J16",
+        "1 vid överenstämmelse",
+        "fel i SCB dokumentaion försök igen",
+    ),
 )
 
 
@@ -4285,13 +4321,21 @@ def _parallel_coding(case):
     }
 
 
+@pytest.mark.parametrize("storage_metadata", ["shared", "per_column"])
 def test_pooled_parallel_compile_keeps_original_bounds_and_exact_intersection(
     tmp_path,
+    storage_metadata,
 ):
     from reg_meta_build.source_curation import RepresentationDecision
     from reg_meta_build.source_representations import resolve_representation_cases
 
     path, records, naming = _pooled_parallel_fixture(tmp_path)
+    if storage_metadata == "per_column":
+        path.write_text(
+            path.read_text().replace(
+                'variant = "1.10"', 'variant = "1.10"\nstorage_metadata = "per_column"'
+            )
+        )
     before = tuple(r.model_dump(mode="json") for r in records)
     cases, diagnostics = _compile_pooled_parallel(path, records, naming)
     assert diagnostics == () and len(cases) == 1
@@ -4303,6 +4347,7 @@ def test_pooled_parallel_compile_keeps_original_bounds_and_exact_intersection(
         ("First", "2022-01-01", "2022-12-31"),
         ("Second", "2022-01-01", "2022-12-31"),
     ]
+    assert decision.storage_metadata == storage_metadata
     proof = resolve_representation_cases(records, cases, coding=_parallel_coding(case))
     assert proof.cases == cases and proof.diagnostics == ()
     assert tuple(r.model_dump(mode="json") for r in records) == before
@@ -4740,24 +4785,27 @@ def test_checked_text_corrections_compose_and_withhold_conflicting_assignments(
         ("First", "Second", None),
     ],
 )
-def test_sos_name_split_distinguishes_shared_source_coordinates(
-    tmp_path: Path, supplied_names
+@pytest.mark.parametrize("split_field", ["name", "description"])
+def test_sos_text_split_distinguishes_shared_source_coordinates(
+    tmp_path: Path, supplied_names, split_field
 ):
     root = tmp_path / "curation"
     _tree(root)
     path = root / "registers/sos/par.toml"
     path.parent.mkdir(parents=True)
     parts = (
-        '{ name = "First", owner = "5891427617861710725.ATC.shared" }',
-        '{ name = "Second", owner = "5891427617861710725.ATC.shared" }',
-        '{ name = "Other", owner = "5891427617861710725.ATC.other" }',
+        f'{{ {split_field} = "First", owner = "5891427617861710725.ATC.shared" }}',
+        f'{{ {split_field} = "Second", owner = "5891427617861710725.ATC.shared" }}',
+        f'{{ {split_field} = "Other", owner = "5891427617861710725.ATC.other" }}',
     )
     originals = _sos_partition_records(subsets=("PAR_OV",) * len(supplied_names))
     records = tuple(
         r.model_copy(
             update={
                 "fields": r.fields.model_copy(
-                    update={"name": value_field(name) if name is not None else None}
+                    update={
+                        split_field: value_field(name) if name is not None else None
+                    }
                 ),
                 "locators": (
                     r.locators[0].model_copy(
@@ -4776,7 +4824,7 @@ def test_sos_name_split_distinguishes_shared_source_coordinates(
     for ordered in (parts, parts[::-1]):
         path.write_text(
             '[register]\nprovider = "sos"\nslug = "par"\nnative_id = "5891427617861710725"\n'
-            '[[identity.split]]\nvariable = "ATC"\nby = "name"\n'
+            f'[[identity.split]]\nvariable = "ATC"\nby = "{split_field}"\n'
             f"parts = [{', '.join(ordered)}]\n"
             '[[variable]]\nnative_id = "5891427617861710725.ATC.shared"\nslug = "shared"\n'
             '[[variable]]\nnative_id = "5891427617861710725.ATC.other"\nslug = "other"\n'
@@ -5453,3 +5501,103 @@ def test_checked_support_rejects_changed_shared_ref_target(
     assert result.occurrences == tuple(
         source_occurrence(r) for r in altered + authority
     )
+
+
+def test_classification_reference_corrections_preserve_shared_ref_other_windows(
+    tmp_path,
+):
+    tree, scope, original, _, base = _checked_correction_fixture(tmp_path)
+    original = original.model_copy(
+        update={
+            "fields": original.fields.model_copy(
+                update={
+                    "classification_declared": value_field("Incorrect municipal list"),
+                    "representation": value_field("Six-digit district code"),
+                    "coverage_from": value_field("2009"),
+                    "coverage_to": value_field("2009"),
+                }
+            )
+        }
+    )
+    negative = original.model_copy(
+        update={
+            "record_id": original.record_id + "-other-window",
+            "fields": original.fields.model_copy(
+                update={
+                    "classification_declared": value_field("District reference"),
+                    "coverage_from": value_field("2017"),
+                    "coverage_to": value_field("2017"),
+                }
+            ),
+            "edition_scope": TemporalScope(
+                kind="intervals", intervals=(ScopeInterval(start="2017", end="2017"),)
+            ),
+        }
+    )
+    assert record_ref(original) == record_ref(negative)
+    entry = ErrataFieldEntry(
+        **{
+            **base.model_dump(exclude={"field", "value", "expected_fields"}),
+            "expected_scope": original.edition_scope,
+            "expected_fields": list(
+                capture_expectations(
+                    (original,),
+                    fields=(
+                        "name",
+                        "definition",
+                        "description",
+                        "operational_definition",
+                        "classification_declared",
+                        "representation",
+                        "data_type",
+                        "coverage_from",
+                        "coverage_to",
+                    ),
+                )[0]
+                .alternatives[0]
+                .fields
+            ),
+        },
+        field="classification_declared",
+        value="District reference",
+    )
+    register = tree.registers[0]
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={"errata": register.errata.model_copy(update={"field": [entry]})}
+            ),
+        ),
+    )
+    cases, issues, _ = _run_checked_correction(tree, scope, (original, negative))
+    assert not issues
+    result = apply_occurrence_cases((original, negative), cases[scope.source, None])
+    assert not result.diagnostics
+    changed, untouched = result.occurrences
+    assert changed.source_records == (original,)
+    assert changed.fields.classification_declared.value == "District reference"
+    assert changed.edition_scope == original.edition_scope
+    assert untouched == source_occurrence(negative)
+    for field in ("classification_declared", "representation", "coverage_from"):
+        changed_source = original.model_copy(
+            update={
+                "fields": original.fields.model_copy(
+                    update={field: value_field("Changed source assertion")}
+                )
+            }
+        )
+        _, stale, _ = _run_checked_correction(tree, scope, (changed_source, negative))
+        assert stale and stale[0].code == "stale_curation_entry"
+
+
+def test_classification_reference_corrections_require_complete_metadata_guards(
+    tmp_path,
+):
+    _, _, _, _, base = _checked_correction_fixture(tmp_path)
+    with pytest.raises(ValueError, match="classification corrections require"):
+        ErrataFieldEntry(
+            **base.model_dump(exclude={"field", "value"}),
+            field="classification_declared",
+            value="District reference",
+        )
