@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE
 from reg_meta_build.normalization import normalize_token
 from reg_meta_build.source_coordinates import native_variable_key
 from reg_meta_build.source_curation import ResolutionDiagnostic
@@ -26,6 +27,102 @@ if TYPE_CHECKING:
 
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_records import SourceCoordinate, SourceRecord
+
+
+def diagnostic_register_contexts(
+    record_sources: tuple[str, ...],
+    coordinates: Mapping[
+        str, tuple[tuple[NativeKey | None, SourceCoordinate, int], ...]
+    ],
+    *,
+    register_name: str | None = None,
+) -> frozenset[tuple[str, NativeKey | None]]:
+    """Observed delivery contexts only; missing coordinates remain unresolved."""
+    contexts = set()
+    for source in record_sources:
+        observed = coordinates.get(source, ())
+        if not observed:
+            contexts.add((source, None))
+        for key, coordinate, _ in observed:
+            if register_name is not None and coordinate.name != register_name:
+                continue
+            contexts.add((source, key if coordinate.status == "value" else None))
+    return frozenset(contexts)
+
+
+def scope_support_diagnostics(
+    bindings: SourceSupportBindings,
+    coordinates: Mapping[
+        str, tuple[tuple[NativeKey | None, SourceCoordinate, int], ...]
+    ],
+    selected: frozenset[tuple[str, NativeKey | None]] | None,
+) -> tuple[
+    dict[tuple[str, NativeKey | None], tuple[ResolutionDiagnostic, ...]],
+    tuple[ResolutionDiagnostic, ...],
+]:
+    """Route diagnostic relevance, preserving the binding/accounting decision."""
+    rows = defaultdict(list)
+    for item in bindings.accounting:
+        rows[record_ref(item.record)].append(item.record)
+    scoped = defaultdict(list)
+    unresolved = []
+    for issue in bindings.diagnostics:
+        groups = defaultdict(list)
+        for ref in issue.refs:
+            possibilities = set()
+            complete = True
+            for record in rows[ref]:
+                coordinate = record.subject.register_name
+                contexts = (
+                    diagnostic_register_contexts(
+                        bindings.joins[record.source].target_sources,
+                        coordinates,
+                        register_name=coordinate.name,
+                    )
+                    if coordinate.status == "value" and coordinate.name is not None
+                    else frozenset()
+                )
+                complete = complete and len(contexts) == 1
+                possibilities.update(contexts)
+            context = (
+                next(iter(possibilities))
+                if complete and len(possibilities) == 1
+                else None
+            )
+            if context is not None and context[1] is None:
+                context = None
+            groups[context].append(ref)
+        if not issue.refs:
+            unresolved.append(issue)
+        for context, refs in groups.items():
+            revisions = tuple(
+                sorted({r.source_revision_id for ref in refs for r in rows[ref]})
+            )
+            value = issue.model_copy(
+                update={
+                    "refs": tuple(refs),
+                    "subject": repr((issue.subject, context, revisions)),
+                }
+            )
+            if context is None:
+                unresolved.append(value)
+            elif (
+                selected is not None
+                and context not in selected
+                and (context[0], None) not in selected
+            ):
+                unresolved.append(
+                    value.model_copy(
+                        update={
+                            "code": DEFERRED_REFERENCE,
+                            "severity": "warning",
+                            "detail": f"Outside the selected register slice: {issue.code}. {issue.detail}",
+                        }
+                    )
+                )
+            else:
+                scoped[context].append(value)
+    return {key: tuple(values) for key, values in scoped.items()}, tuple(unresolved)
 
 
 class SourceSupportJoin(BaseModel):

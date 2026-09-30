@@ -79,7 +79,7 @@ class CatalogFixture:
 @pytest.fixture
 def catalog(tmp_path: Path, request) -> CatalogFixture:
     mode = getattr(request, "param", False)
-    second = mode is True
+    second = mode is True or mode == "unknown_support"
     thin = mode in {"thin", "thin_two"}
     source = tmp_path / "source"
     records = [_var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")]
@@ -100,6 +100,11 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
         summaries.append(
             "OTHERREG|Testregistret|Individer|Individer|OtherVar|OTHER|2020|2020|0|0|0"
         )
+    if mode == "unknown_support":
+        summaries = [
+            "|".join((*row.split("|")[:5], "", *row.split("|")[6:]))
+            for row in summaries
+        ]
     write_scb_input(
         source,
         registerinformation_rows=records,
@@ -1525,3 +1530,80 @@ def test_support_only_register_reaches_coding_compiler_and_report(
         "coding.support/1/period/1" in case_id
         for case_id in compiled["scb/sample"]["entries_read"]
     )
+
+
+def test_unbound_value_descriptor_identity_changes_with_exact_source_evidence():
+    from reg_meta_build.pipeline import _value_source_issue
+    from reg_meta_build.source_value_bindings import ValueBindingIssue
+    from reg_meta_build.source_values import SourceValueDescriptor
+
+    descriptor = SourceValueDescriptor(
+        payload_key="sheet:DIAGNOS", raw_cells=("DIAGNOS",)
+    )
+    revision = SimpleNamespace(revision_id="named@sha256:" + ("a" * 64))
+    rows = []
+    session = SimpleNamespace(
+        source="named",
+        descriptors=(descriptor,),
+        session=SimpleNamespace(
+            source=SimpleNamespace(manifest=SimpleNamespace(revision=revision)),
+            lookup_descriptor=lambda key: iter(rows),
+        ),
+    )
+    problem = ValueBindingIssue(
+        "unresolved_list_reference", "named", descriptor.payload_key
+    )
+    original, evidence = _value_source_issue(session, problem)
+    assert original.refs == () and original.severity == "error"
+    assert evidence["physical_associations"] == 0 and evidence["descriptor"][
+        "raw_cells"
+    ] == ["DIAGNOS"]
+    revision.revision_id = "named@sha256:" + ("b" * 64)
+    changed, _ = _value_source_issue(session, problem)
+    assert changed.subject != original.subject
+    revision.revision_id = "named@sha256:" + ("a" * 64)
+    session.descriptors = (replace(descriptor, raw_cells=("changed source cell",)),)
+    changed, _ = _value_source_issue(session, problem)
+    assert changed.subject != original.subject
+    session.descriptors = (descriptor,)
+    rows.append(object())
+    changed, evidence = _value_source_issue(session, problem)
+    assert (
+        changed.subject != original.subject and evidence["physical_associations"] == 1
+    )
+
+
+@pytest.mark.parametrize("catalog", ["unknown_support"], indirect=True)
+def test_pipeline_routes_real_support_errors_without_dropping_source_event(
+    catalog, tmp_path
+):
+    for label, registers in (("slice", ("1",)), ("full", ())):
+        report = tmp_path / label
+        catalog.build(
+            tmp_path / f"{label}.db", report, registers=registers, diagnostic=True
+        )
+        relevant = [
+            i
+            for i in _issues(report)
+            if i["code"] in {"unknown_support_key", "deferred_out_of_slice_reference"}
+        ]
+        assert sorted((i["code"], i["severity"]) for i in relevant) == (
+            [
+                ("deferred_out_of_slice_reference", "warning"),
+                ("unknown_support_key", "error"),
+            ]
+            if registers
+            else [("unknown_support_key", "error"), ("unknown_support_key", "error")]
+        )
+        with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+            raw = [
+                v
+                for line in stream
+                if (v := json.loads(line))["kind"] == "support_source_issue"
+            ]
+        assert (
+            len(raw) == 1 and len(raw[0]["refs"]) == 2 and raw[0]["severity"] == "error"
+        )
+        assert {json.dumps(r, sort_keys=True) for i in relevant for r in i["refs"]} == {
+            json.dumps(r, sort_keys=True) for r in raw[0]["refs"]
+        }

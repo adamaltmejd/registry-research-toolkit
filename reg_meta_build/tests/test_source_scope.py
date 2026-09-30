@@ -218,6 +218,7 @@ def resolve(
     classifications=None,
     label_rules=None,
     classification_overrides=None,
+    source_diagnostics=(),
 ):
     support = SourceSupportBindings((), ())
     for item in records:
@@ -238,6 +239,7 @@ def resolve(
         derive_native_provider_keys=derive_native_provider_keys,
         value_sessions=value_sessions,
         support=support,
+        source_diagnostics=source_diagnostics,
         classifications=classifications or {},
         classification_references={},
         label_rules=label_rules or {},
@@ -2218,3 +2220,72 @@ def test_member_correction_attributions_reach_the_written_state():
         check_delivery_coverage(
             (stripped,), result.coverage, withheld=result.withheld_dependencies
         )
+
+
+def test_explicit_source_diagnostic_uses_exact_register_acknowledgment():
+    item = record()
+    key = source_register_key(item)
+    problem = ResolutionDiagnostic(
+        code="unresolved_list_reference",
+        severity="error",
+        subject="('source','revision','descriptor','digest',0)",
+        detail="No bound source members.",
+        fields=("coding",),
+        withheld_output=("unbound_value_membership",),
+    )
+    case = acknowledge(problem, item)
+    result = resolve((item,), cases=(case,), source_diagnostics=((key, problem),))
+    warning = next(d for d in result.diagnostics if d.code == problem.code)
+    assert warning == problem.model_copy(
+        update={"severity": "warning", "acknowledged_by": case.case_id}
+    )
+    assert result.acknowledged == {"unresolved_list_reference": 1}
+    for problems in (
+        (
+            (
+                key,
+                problem.model_copy(
+                    update={"subject": problem.subject + "changed revision"}
+                ),
+            ),
+        ),
+        ((key, problem), (key, problem)),
+    ):
+        stale = resolve((item,), cases=(case,), source_diagnostics=problems)
+        assert not stale.acknowledged
+        assert any(
+            d.code in {"stale_curation_entry", "overbroad_curation_entry"}
+            for d in stale.diagnostics
+        )
+    wrong = case.model_copy(
+        update={
+            "decision": case.decision.model_copy(
+                update={"register_key": (*key[:-1], 999)}
+            )
+        }
+    )
+    stale = resolve((item,), cases=(wrong,), source_diagnostics=((key, problem),))
+    assert not stale.acknowledged and any(
+        d.severity == "error" for d in stale.diagnostics
+    )
+    with pytest.raises(ValueError, match="positively observed"):
+        resolve((item,), source_diagnostics=(((*key[:-1], 999), problem),))
+
+
+def test_ordinary_empty_reference_issue_cannot_use_source_ack_exception(monkeypatch):
+    item = record()
+    problem = ResolutionDiagnostic(
+        code="unresolved_list_reference",
+        severity="error",
+        subject="ordinary empty reference",
+        detail="No literal ownership proof.",
+        fields=("coding",),
+    )
+    monkeypatch.setattr(
+        "reg_meta_build.source_scope.resolve_sibling_pairs",
+        lambda *a, **k: SiblingResolution((), (), (problem,)),
+    )
+    result = resolve((item,), cases=(acknowledge(problem, item),))
+    assert not result.acknowledged
+    assert any(d == problem for d in result.diagnostics)
+    assert any(d.code == "stale_curation_entry" for d in result.diagnostics)

@@ -1507,7 +1507,9 @@ def test_checked_association_support_preserves_raw_claim_and_distinct_constructs
     result = apply_coding_choices((record,), cases, coding={column: (claim,)})
     assert result.accounting[0].status == "applied"
     assert result.coding[column].claims == (claim,)
-    assert result.coding[column].segments[0].code_set.members == (
+    code_set = result.coding[column].segments[0].code_set
+    assert code_set is not None
+    assert code_set.members == (
         ("16310", "Pachygyria"),
         ("16320", "Microgyria"),
     )
@@ -1751,9 +1753,9 @@ def test_documented_source_rows_guard_fresh_compile_and_replay(drift):
     elif drift is None:
         assert replay.accounting[0].status == "applied"
         assert replay.coding[column].claims == claims
-        assert replay.coding[column].segments[0].code_set.members == (
-            ("1", "Included"),
-        )
+        code_set = replay.coding[column].segments[0].code_set
+        assert code_set is not None
+        assert code_set.members == (("1", "Included"),)
         assert "records.csv" in replay.coding[column].segments[0].provenance[0]
 
 
@@ -1887,8 +1889,369 @@ def test_source_row_coding_follows_exact_supplied_open_scope(drift):
         resolved = result.coding[column]
         assert resolved.claims == claims
         (segment,) = resolved.segments
+        assert segment.code_set is not None
         assert segment.code_set.members == (("J", "ja"), ("N", "nej"))
         assert segment.valid_from == "1900-01-01" and segment.valid_to == "9999-12-31"
         assert resolved.claims[0].scope.intervals[0].end is None
     else:
         assert result.accounting[0].status == "stale"
+
+
+@pytest.mark.parametrize(
+    "drift",
+    [
+        None,
+        "prose",
+        "partial",
+        "binding",
+        "missing_binding",
+        "outside_labels",
+        "finite",
+        "peer",
+        "missing",
+        "scope",
+    ],
+)
+def test_enumerated_source_meanings_require_complete_marker_certificate(drift):
+    from reg_meta_build.source_value_bindings import (
+        ValueListBinding,
+        marker_binding_fingerprints,
+    )
+    from reg_meta_build.source_values import SourceValueAssociation
+
+    record = _record().model_copy(
+        update={
+            "fields": _record().fields.model_copy(
+                update={
+                    "definition": value_field(
+                        "Which amount?\n1. Less than 500\n2. At least 500\n8. Unknown"
+                    )
+                }
+            )
+        }
+    )
+    scope = record.edition_scope
+    marker = SourceValueAssociation(1, "Tal", "marker", "codes.csv")
+    binding = ValueListBinding(
+        None, record.record_id, record.locators, "revision", "Tal", 1, (), (marker,)
+    )
+    bound = ((scope, binding),)
+    fingerprints = marker_binding_fingerprints(bound, "2020-01-01", "2020-12-31")
+    assert fingerprints
+    authority = _row_authority(record, (_claim("irrelevant", "1"),)).model_dump(
+        mode="json"
+    )
+    base_claims = (
+        (_claim("later", "1", "2021-01-01", "2021-12-31"),)
+        if drift == "outside_labels"
+        else ()
+    )
+    from reg_meta_build.source_coding import copied_coding_fingerprints
+
+    authority.update(
+        codings=list(copied_coding_fingerprints(base_claims)),
+        enumeration={
+            "field": "definition",
+            "syntax": "ascii-decimal-dot-space",
+            "lines": ["1. Less than 500", "2. At least 500", "8. Unknown"],
+        },
+        marker_bindings=list(fingerprints),
+    )
+    values = {
+        "members": [["1", "Less than 500"], ["2", "At least 500"], ["8", "Unknown"]],
+        "version_label": "Exact enumerated source",
+        "source_authority": authority,
+    }
+    if drift == "partial":
+        values["members"].pop()
+        authority["enumeration"]["lines"].pop()
+    # Missing binding evidence must never act as a compatibility bypass.
+    cases, issues, register, compiled_scope, _, column = _compile_entry(
+        "documented", values, base_claims, record=record
+    )
+    assert not cases and issues
+    cases, issues = compile_coding_register(
+        register,
+        compiled_scope,
+        originals=(record,),
+        columns={column: (record,)},
+        column_scopes=_column_scopes({column: (record,)}),
+        coding={column: base_claims},
+        value_bindings={column: bound},
+    )
+    if drift == "partial":
+        assert not cases and issues
+        return
+    assert len(cases) == 1 and not issues
+    records, changed_bound, claims = (record,), bound, base_claims
+    if drift == "prose":
+        records = (
+            record.model_copy(
+                update={
+                    "fields": record.fields.model_copy(
+                        update={"definition": value_field("Changed")}
+                    )
+                }
+            ),
+        )
+    elif drift == "binding":
+        changed_bound = ((scope, replace(binding, descriptor_key="Changed")),)
+    elif drift == "missing_binding":
+        changed_bound = ()
+    elif drift == "finite":
+        changed_bound = ((scope, replace(binding, claim_id="new finite")),)
+        claims = (_claim("new", "1"),)
+    elif drift == "peer":
+        records += (_record(2021),)
+    elif drift == "missing":
+        records = ()
+    elif drift == "scope":
+        changed_bound = ((TemporalScope(kind="unknown", label="changed"), binding),)
+    fresh, issues = compile_coding_register(
+        register,
+        compiled_scope,
+        originals=records,
+        columns={column: records},
+        column_scopes=_column_scopes({column: records}),
+        coding={column: claims},
+        value_bindings={column: changed_bound},
+    )
+    evidence = SourceEvidence(
+        records,
+        effective_occurrences=tuple(source_occurrence(r) for r in records),
+        value_bindings={column: changed_bound},
+    )
+    replay = apply_coding_choices(evidence, cases, coding={column: claims})
+    if drift in {None, "outside_labels"}:
+        assert fresh == cases and not issues
+        assert replay.accounting[0].status == "applied"
+        assert replay.coding[column].claims == base_claims
+        code_set = replay.coding[column].segments[0].code_set
+        assert code_set is not None
+        assert code_set.members == tuple(map(tuple, values["members"]))
+    else:
+        assert not fresh and issues
+        assert replay.accounting[0].status == "stale"
+
+
+@pytest.mark.parametrize(
+    "drift",
+    [
+        None,
+        "prose",
+        "parent",
+        "multiplicity",
+        "locator",
+        "label",
+        "token",
+        "validity",
+        "peer",
+        "removed",
+        "removed_assertion",
+        "column",
+        "scope",
+    ],
+)
+def test_guarded_choice_pins_complete_physical_source_authority(drift):
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_values import SourceValueAssociation
+
+    record = _record()
+    association = SourceValueAssociation(1, "binary", "1", "codes.csv")
+    narrow = _claim("narrow", "1")
+    keeper = replace(
+        _claim("keeper", "1"),
+        members=(
+            replace(narrow.members[0], associations=(association,)),
+            CodeMembershipClaim(
+                ".",
+                "Skip",
+                TemporalScope(kind="year_independent"),
+                associations=(replace(association, row_number=2, value_key="."),),
+            ),
+        ),
+    )
+    claims = (narrow, keeper)
+    authority = _row_authority(record, claims).model_copy(
+        update={"raw_codings": sorted({coding_source_sha256(c) for c in claims})}
+    )
+    values = {
+        "keep": "keeper",
+        "keep_members": [["1", "Label"], [".", "Skip"]],
+        "over": ["narrow"],
+        "source_authority": authority,
+    }
+    cases, issues, register, scope, _, column = _compile_entry("choice", values, claims)
+    assert len(cases) == 1 and not issues
+    assert cases[0].targets == tuple(authority.records)
+    records, changed_claims = (record,), claims
+    if drift == "prose":
+        records = (
+            record.model_copy(
+                update={
+                    "fields": record.fields.model_copy(
+                        update={"definition": value_field("Changed")}
+                    )
+                }
+            ),
+        )
+    elif drift == "parent":
+        assert record.parent_facts
+        records = (record.model_copy(update={"parent_facts": ()}),)
+    elif drift == "peer":
+        records += (_record(2021),)
+    elif drift == "column":
+        records = (
+            record.model_copy(
+                update={
+                    "fields": record.fields.model_copy(
+                        update={"column_name": value_field("Other")}
+                    )
+                }
+            ),
+        )
+    elif drift == "scope":
+        records = (
+            record.model_copy(
+                update={"edition_scope": TemporalScope(kind="unknown", label="Changed")}
+            ),
+        )
+    elif drift == "removed":
+        changed_claims = (keeper,)
+    elif drift is not None:
+        member = keeper.members[0]
+        if drift == "multiplicity":
+            member = replace(member, associations=(association, association))
+        elif drift == "removed_assertion":
+            member = replace(member, associations=())
+        elif drift == "locator":
+            member = replace(member, associations=(replace(association, row_number=3),))
+        elif drift == "label":
+            member = replace(member, label="Changed")
+        elif drift == "token":
+            member = replace(member, code="2")
+        elif drift == "validity":
+            member = replace(
+                member,
+                scope=TemporalScope(
+                    kind="intervals",
+                    intervals=(ScopeInterval(start="2020-05-01", end="2020-12-31"),),
+                ),
+            )
+        changed_claims = (narrow, replace(keeper, members=(member, keeper.members[1])))
+    fresh, issues = compile_coding_register(
+        register,
+        scope,
+        originals=records,
+        columns={column: records},
+        column_scopes=_column_scopes({column: records}),
+        coding={column: changed_claims},
+    )
+    replay = apply_coding_choices(
+        SourceEvidence(
+            records, effective_occurrences=tuple(source_occurrence(r) for r in records)
+        ),
+        cases,
+        coding={column: changed_claims},
+    )
+    if drift is None:
+        assert fresh == cases and not issues
+        assert replay.accounting[0].status == "applied"
+        assert replay.coding[column].claims == claims
+        code_set = replay.coding[column].segments[0].code_set
+        assert code_set is not None
+        assert set(code_set.members) == {
+            ("1", "Label"),
+            (".", "Skip"),
+        }
+    else:
+        assert not fresh and issues
+        assert replay.accounting[0].status == "stale"
+
+
+def test_guarded_choice_materializes_all_original_projection_alternatives():
+    from reg_meta_build.source_coding import coding_source_sha256
+
+    record = _record()
+    alternative = record.model_copy(
+        update={
+            "fields": record.fields.model_copy(
+                update={"data_length": value_field("10")}
+            ),
+            "locators": (
+                record.locators[0].model_copy(update={"physical_record": "second"}),
+            ),
+        }
+    )
+    claims = (_claim("keep", "1"), _claim("other", "2"))
+    authority = _row_authority(record, claims).model_copy(
+        update={
+            "records": list(
+                capture_expectations(
+                    (record, alternative),
+                    fields=tuple(SourceFields.model_fields),
+                    parents=True,
+                    coding=True,
+                )
+            ),
+            "locators": [*record.locators, *alternative.locators],
+            "raw_codings": sorted({coding_source_sha256(c) for c in claims}),
+        }
+    )
+    _, _, register, scope, columns, column = _compile_entry(
+        "choice",
+        {"keep": "keep", "over": ["other"], "source_authority": authority},
+        claims,
+    )
+    # Production column membership contains one representative per semantic ref.
+    assert columns[column] == (record,)
+    cases, issues = compile_coding_register(
+        register,
+        scope,
+        originals=(record, alternative),
+        columns=columns,
+        column_scopes=_column_scopes(columns),
+        coding={column: claims},
+    )
+    assert len(cases) == 1 and not issues
+    assert cases[0].targets == tuple(authority.records)
+    replay = apply_coding_choices(
+        SourceEvidence(
+            (record, alternative),
+            effective_occurrences=(
+                source_occurrence(record),
+                source_occurrence(alternative),
+            ),
+        ),
+        cases,
+        coding={column: claims},
+    )
+    assert replay.accounting[0].status == "applied"
+    changed = alternative.model_copy(
+        update={
+            "fields": alternative.fields.model_copy(
+                update={"data_length": value_field("11")}
+            )
+        }
+    )
+    fresh, issues = compile_coding_register(
+        register,
+        scope,
+        originals=(record, changed),
+        columns=columns,
+        column_scopes=_column_scopes(columns),
+        coding={column: claims},
+    )
+    assert not fresh and issues
+    replay = apply_coding_choices(
+        SourceEvidence(
+            (record, changed),
+            effective_occurrences=(
+                source_occurrence(record),
+                source_occurrence(changed),
+            ),
+        ),
+        cases,
+        coding={column: claims},
+    )
+    assert replay.accounting[0].status == "stale"

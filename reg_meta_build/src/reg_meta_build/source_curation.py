@@ -41,9 +41,10 @@ from reg_meta_build.source_records import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Iterable, Iterator, Mapping
 
     from reg_meta_build.source_occurrences import EffectiveOccurrence
+    from reg_meta_build.source_value_bindings import ValueListBinding
 
 
 class _CurationModel(BaseModel):
@@ -808,6 +809,13 @@ class CodingSelection(CodingWindow):
     """A checked existing list, possibly witnessed in a different finite period."""
 
     selected_coding: str = Field(pattern=r"^[0-9a-f]{64}$")
+    expected_raw_codings: (
+        Annotated[
+            tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...],
+            Field(strict=False, min_length=1),
+        ]
+        | None
+    ) = None
 
     @model_validator(mode="after")
     def _existing(self) -> Self:
@@ -816,10 +824,61 @@ class CodingSelection(CodingWindow):
         return self
 
 
+class SourceEnumeration(_CurationModel):
+    """Reviewed complete literal lines under one explicitly named source syntax."""
+
+    field: Literal[
+        "definition", "operational_definition", "description", "representation"
+    ]
+    syntax: Literal["ascii-decimal-dot-space"]
+    lines: Annotated[tuple[str, ...], Field(strict=False, min_length=1)]
+
+    @model_validator(mode="after")
+    def _explicit_decimal_lines(self) -> Self:
+        codes = []
+        for line in self.lines:
+            code, separator, label = line.partition(". ")
+            if (
+                not separator
+                or not code.isascii()
+                or not code.isdecimal()
+                or not label.strip()
+            ):
+                raise ValueError(
+                    "enumeration requires literal ASCII decimal code and label lines"
+                )
+            codes.append(code)
+        if len(set(codes)) != len(codes):
+            raise ValueError("enumeration codes must be unique")
+        return self
+
+    def matches_members(self, members: tuple[tuple[str, str], ...]) -> bool:
+        return self.lines == tuple(f"{code}. {label}" for code, label in members)
+
+    def matches_fields(self, fields: SourceFields) -> bool:
+        fact = getattr(fields, self.field)
+        if fact is None or fact.status != "value" or not isinstance(fact.value, str):
+            return False
+        lines = []
+        for line in fact.value.splitlines():
+            code, separator, _ = line.partition(". ")
+            if separator and code.isascii() and code.isdecimal():
+                lines.append(line)
+        return tuple(lines) == self.lines
+
+
 class DocumentedCodingSelection(_CurationModel):
     """An exact finite list supplied by independently reviewed documentation."""
 
     kind: Literal["documented"] = "documented"
+    enumeration: SourceEnumeration | None = None
+    expected_marker_bindings: (
+        Annotated[
+            tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...],
+            Field(strict=False),
+        ]
+        | None
+    ) = None
     source_scope: TemporalScope | None = None
     expected_source_codings: (
         tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...] | None
@@ -838,6 +897,17 @@ class DocumentedCodingSelection(_CurationModel):
             raise ValueError("documented member labels must be nonempty")
         if len({code for code, _ in self.members}) != len(self.members):
             raise ValueError("documented member codes must be unique")
+        if (self.enumeration is None) != (self.expected_marker_bindings is None):
+            raise ValueError("enumerated authority needs exact marker bindings")
+        if self.enumeration is not None and (
+            not self.expected_marker_bindings
+            or self.expected_source_codings is None
+            or not self.enumeration.matches_members(self.members)
+            or self.source_scope is not None
+        ):
+            raise ValueError(
+                "enumerated authority requires complete finite literal members"
+            )
         return self
 
 
@@ -1207,8 +1277,13 @@ class SourceEvidence:
         records: Iterable[SourceRecord],
         *,
         effective_occurrences: Iterable[EffectiveOccurrence] | None = None,
+        value_bindings: Mapping[
+            NativeKey, tuple[tuple[TemporalScope, ValueListBinding], ...]
+        ]
+        | None = None,
     ) -> None:
         self.records = tuple(records)
+        self.value_bindings = value_bindings
         self.grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]] = (
             defaultdict(list)
         )

@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict
+from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
@@ -47,6 +48,7 @@ from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
 )
+from reg_meta_build.prepared_values import _DESCRIPTOR
 from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
     ResolvedClassification,
@@ -81,7 +83,11 @@ from reg_meta_build.source_scope import (
     declared_register_fqids,
     resolve_source_scope,
 )
-from reg_meta_build.source_support import SourceSupportBindings
+from reg_meta_build.source_support import (
+    SourceSupportBindings,
+    diagnostic_register_contexts,
+    scope_support_diagnostics,
+)
 from reg_meta_build.source_value_bindings import open_value_bindings
 from reg_meta_build.sources.swecov_column_types import (
     SWECOV_COLUMN_TYPES_PATH,
@@ -93,6 +99,10 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
     from reg_meta_build.curation_tree import CurationTree
+    from reg_meta_build.source_value_bindings import (
+        ValueBindingIssue,
+        ValueBindingSession,
+    )
 
 
 class CompletedArtifactError(Exception):
@@ -246,6 +256,50 @@ def _selected_scopes(
             f"--registers names scopes in several sources, qualify as SOURCE:ID: {ambiguous}"
         )
     return {key for spec in specs for key in names[spec]}
+
+
+def _value_source_issue(
+    session: ValueBindingSession, problem: ValueBindingIssue
+) -> tuple[ResolutionDiagnostic, dict[str, object]]:
+    """An unbound descriptor is evidence, never an inferred variable reference."""
+    revision = session.session.source.manifest.revision.revision_id
+    descriptor = next(
+        (d for d in session.descriptors if d.payload_key == problem.descriptor_key),
+        None,
+    )
+    payload = (
+        _DESCRIPTOR.dump_python(descriptor, mode="json", warnings="error")
+        if descriptor is not None
+        else None
+    )
+    physical = (
+        sum(1 for _ in session.session.lookup_descriptor(descriptor.payload_key))
+        if descriptor is not None
+        else problem.occurrence_count
+    )
+    evidence = {
+        **asdict(problem),
+        "revision_id": revision,
+        "descriptor": payload,
+        "physical_associations": physical,
+    }
+    return ResolutionDiagnostic(
+        code=problem.code,
+        severity="error",
+        subject=repr(
+            (
+                session.source,
+                revision,
+                problem.descriptor_key,
+                canonical_sha256(payload),
+                physical,
+                problem.raw_member_tokens,
+            )
+        ),
+        detail=f"Source code-list evidence cannot identify its target: {problem!r}",
+        fields=("coding",),
+        withheld_output=("unbound_value_membership",),
+    ), evidence
 
 
 def build_catalog(
@@ -833,8 +887,44 @@ def _run_pipeline(
                 support.observe_target(target)
             support.seal()
             for value in support.diagnostics:
-                issue(value)
+                event("support_source_issue", value.model_dump(mode="json"))
             sessions = stack.enter_context(open_value_bindings(prepared.value_sources))
+            diagnostic_coordinates = {
+                source: prepared.records.register_coordinates(source)
+                for source in {
+                    *(
+                        source
+                        for join in prepared.manifest.support_joins
+                        for source in join.target_sources
+                    ),
+                    *(
+                        source
+                        for session in sessions
+                        if session.join is not None
+                        for source in session.join.record_sources
+                    ),
+                }
+            }
+            source_issues, unscoped_issues = scope_support_diagnostics(
+                support, diagnostic_coordinates, frozenset(visit) if registers else None
+            )
+            pending_source_issues = defaultdict(list)
+
+            def route_source_issue(
+                context: tuple[str, NativeKey | None], value: ResolutionDiagnostic
+            ) -> None:
+                source, register = context
+                destination = context if context in visit else (source, None)
+                if register is None or destination not in visit:
+                    issue(value)
+                else:
+                    pending_source_issues[destination].append((register, value))
+
+            for context, values in source_issues.items():
+                for value in values:
+                    route_source_issue(context, value)
+            for value in unscoped_issues:
+                issue(value)
             value_roles = {
                 entry.revision.dataset: entry.role
                 for entry in prepared.manifest.inputs
@@ -861,20 +951,34 @@ def _run_pipeline(
                 counts["value_associations"] += manifest.association_count
                 if canonical:
                     continue
+                assert session.join is not None
                 for problem in session.source_issues():
                     # An unbindable list has no target occurrence to visit later.
                     # Preserve its exact lookup tokens separately from field issues.
-                    event("value_source_issue", asdict(problem))
-                    issue(
-                        ResolutionDiagnostic(
-                            code=problem.code,
-                            severity="error",
-                            subject=session.source,
-                            detail=f"Source code-list evidence cannot identify its target: {problem!r}",
-                            fields=("coding",),
-                            withheld_output=("unbound_value_membership",),
-                        )
+                    value, source_evidence = _value_source_issue(session, problem)
+                    event("value_source_issue", source_evidence)
+                    contexts = diagnostic_register_contexts(
+                        session.join.record_sources, diagnostic_coordinates
                     )
+                    context = next(iter(contexts)) if len(contexts) == 1 else None
+                    if context is None or context[1] is None:
+                        issue(value)
+                    elif (
+                        registers
+                        and context not in visit
+                        and (context[0], None) not in visit
+                    ):
+                        issue(
+                            value.model_copy(
+                                update={
+                                    "code": DEFERRED_REFERENCE,
+                                    "severity": "warning",
+                                    "detail": f"Outside the selected register slice: {problem.code}. {value.detail}",
+                                }
+                            )
+                        )
+                    else:
+                        route_source_issue(context, value)
             _emit_timing("pipeline: reference metadata and support", phase_started)
             phase_started = time.perf_counter()
             # A scoped build reads register coordinates, never records, to count
@@ -956,6 +1060,9 @@ def _run_pipeline(
                     resolution_started = time.perf_counter()
                     result = resolve_source_scope(
                         originals,
+                        source_diagnostics=tuple(
+                            pending_source_issues.pop(scope_key, ())
+                        ),
                         cases=scope.cases,
                         naming=scope.naming,
                         naming_ambiguities=scope.naming_ambiguities,
@@ -1095,6 +1202,9 @@ def _run_pipeline(
                     )
                     _emit_timing(f"pipeline: scope {scope_key!r}", scope_started)
             _emit_timing("pipeline: all source scopes", phase_started)
+            for remaining in pending_source_issues.values():
+                for _, value in remaining:
+                    issue(value)
             phase_started = time.perf_counter()
             if seen_scopes != visit:
                 raise ValueError("declared source scopes were not visited")

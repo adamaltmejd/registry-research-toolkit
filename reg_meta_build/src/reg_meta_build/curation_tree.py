@@ -63,6 +63,7 @@ from .source_curation import (
     FieldExpectation,
     FiniteCurationWindow,
     RecordExpectation,
+    SourceEnumeration,
     SupportedCodingAssociation,
 )
 from .source_records import SourceFields, TemporalScope
@@ -556,13 +557,57 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
 
 
 class ErrataSupportEntry(_OccurrenceCorrectionEntry):
+    kind: Literal["contradictory_question", "nonphysical_projection"] = (
+        "contradictory_question"
+    )
     edition: str
+
+    _text = field_validator("variable", "variant", "edition", "evidence")(
+        _require_trimmed
+    )
+
+    @field_validator("expected_fields")
+    @classmethod
+    def _prose_guards(cls, value: list[FieldExpectation]) -> list[FieldExpectation]:
+        if {item.name for item in value} == set(SourceFields.model_fields) and len(
+            value
+        ) == len(SourceFields.model_fields):
+            return value
+        return _OccurrenceCorrectionEntry._prose_guards(value)
+
     authority: _OccurrenceCorrectionEntry
     expected_coding_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
     @model_validator(mode="after")
     def _same_physical_question(self) -> ErrataSupportEntry:
         authority = self.authority
+        if self.kind == "nonphysical_projection":
+            expected = {item.name: item for item in self.expected_fields}
+            witness = {item.name: item for item in authority.expected_fields}
+            column = expected.get("column_name")
+            if (
+                self.column != ""
+                or set(expected) != set(SourceFields.model_fields)
+                or column is None
+                or column.status != "negative"
+                or column.value is not None
+                or authority.variable != self.variable
+                or authority.variant != self.variant
+                or not authority.column
+                or authority.edition is None
+                or any(
+                    expected[name].status != "value"
+                    or not isinstance(value := expected[name].value, str)
+                    or not value.strip()
+                    or witness.get(name) != expected[name]
+                    for name in ("name", "definition")
+                )
+            ):
+                raise ValueError(
+                    "nonphysical support requires complete negative-column guards and a positive same-quantity native witness"
+                )
+            return self
+        _require_trimmed(self.column)
         if (
             authority.variable == self.variable
             or authority.variable.rsplit(".", 1)[0] != self.variable.rsplit(".", 1)[0]
@@ -1136,6 +1181,26 @@ def _coding_members(value: list[list[str]]) -> list[list[str]]:
 
 
 class CodingChoiceEntry(CodingEntry):
+    source_authority: PreparedCodingAuthority | None = None
+
+    @field_validator("source_authority", mode="before")
+    @classmethod
+    def _source_rows(cls, value: object) -> object:
+        return _prepared_coding_authority(value)
+
+    @model_validator(mode="after")
+    def _checked_authority(self) -> CodingChoiceEntry:
+        authority = self.source_authority
+        if authority is not None and (
+            authority.enumeration is not None
+            or authority.source_scope is not None
+            or not authority.raw_codings
+        ):
+            raise ValueError(
+                "choice authority requires finite original rows and complete source coding fingerprints"
+            )
+        return self
+
     keep: str
     keep_members: list[list[str]] | None = None
     over: list[str]
@@ -1182,12 +1247,20 @@ class PreparedCodingAuthority(_CurationModel):
     source_scope: TemporalScope | None = None
     locators: list[RecordLocator] = Field(min_length=1)
     records: list[RecordExpectation] = Field(min_length=1)
-    codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] = Field(
-        min_length=1
+    codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]]
+    enumeration: SourceEnumeration | None = None
+    raw_codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] | None = None
+    marker_bindings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] | None = (
+        None
     )
 
     @model_validator(mode="after")
     def _complete(self) -> PreparedCodingAuthority:
+        if self.enumeration is None:
+            if not self.codings or self.marker_bindings is not None:
+                raise ValueError("source-row token authority requires supplied codings")
+        elif not self.marker_bindings or self.source_scope is not None:
+            raise ValueError("enumeration requires marker evidence and finite periods")
         if self.source_scope is not None:
             from .source_coding import coding_scope_bounds
 
@@ -1221,6 +1294,25 @@ class PreparedCodingAuthority(_CurationModel):
         return self
 
 
+def _prepared_coding_authority(value: object) -> object:
+    if not isinstance(value, dict):
+        return value
+    value = json.loads(json.dumps(value))
+    scope_locations = [(value, "source_scope")]
+    scope_locations.extend(
+        (alternative, name)
+        for record in value.get("records", [])
+        for alternative in record.get("alternatives", [])
+        for name in ("edition_scope", "edition_period_scope")
+    )
+    for location, name in scope_locations:
+        if name in location and location[name] is not None:
+            location[name] = _OccurrenceCorrectionEntry._scope(
+                location[name]
+            ).model_dump(mode="json")
+    return PreparedCodingAuthority.model_validate_json(json.dumps(value))
+
+
 class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
     """Documented members; existing list selectors keep their own contracts."""
 
@@ -1240,22 +1332,7 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
     @field_validator("source_authority", mode="before")
     @classmethod
     def _source_rows(cls, value: object) -> object:
-        if not isinstance(value, dict):
-            return value
-        value = json.loads(json.dumps(value))
-        scope_locations = [(value, "source_scope")]
-        scope_locations.extend(
-            (alternative, name)
-            for record in value.get("records", [])
-            for alternative in record.get("alternatives", [])
-            for name in ("edition_scope", "edition_period_scope")
-        )
-        for location, name in scope_locations:
-            if name in location and location[name] is not None:
-                location[name] = _OccurrenceCorrectionEntry._scope(
-                    location[name]
-                ).model_dump(mode="json")
-        return PreparedCodingAuthority.model_validate_json(json.dumps(value))
+        return _prepared_coding_authority(value)
 
     @model_validator(mode="after")
     def _finite_documented_periods(self) -> CodingDocumentedEntry:
@@ -1265,6 +1342,10 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
                 raise ValueError(
                     "documented coding requires complete PDF authority or exact source rows"
                 )
+        elif self.source_authority.raw_codings is not None:
+            raise ValueError(
+                "raw choice coding fingerprints belong to choice authority"
+            )
         elif any(value is not None for value in pdf):
             raise ValueError("documented coding must select one authority form")
         exact_scope = (
@@ -1276,8 +1357,19 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
             raise ValueError(
                 "documented coding requires finite periods or exact source scope, exclusively"
             )
-        if self.source_scope is not None or self.expected_source_codings is not None:
+        if (
+            self.enumeration is not None
+            or self.expected_marker_bindings is not None
+            or self.source_scope is not None
+            or self.expected_source_codings is not None
+        ):
             raise ValueError("source-scope coding must use checked source authority")
+        if (
+            self.source_authority is not None
+            and self.source_authority.enumeration is not None
+            and not self.source_authority.enumeration.matches_members(self.members)
+        ):
+            raise ValueError("source enumeration must certify all literal members")
         for start, end in self.periods:
             FiniteCurationWindow(valid_from=start, valid_to=end)
         return self

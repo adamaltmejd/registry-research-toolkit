@@ -376,6 +376,15 @@ def compile_coding_selection(
                 source_scope=documented.source_authority.source_scope
                 if documented.source_authority is not None
                 else None,
+                enumeration=documented.source_authority.enumeration
+                if documented.source_authority is not None
+                else None,
+                expected_marker_bindings=tuple(
+                    sorted(documented.source_authority.marker_bindings)
+                )
+                if documented.source_authority is not None
+                and documented.source_authority.marker_bindings is not None
+                else None,
                 expected_source_codings=tuple(documented.source_authority.codings)
                 if documented.source_authority is not None
                 else None,
@@ -526,6 +535,12 @@ def _selection(
             (),
             claims,
         ), None
+    if (
+        selection.expected_raw_codings is not None
+        and tuple(sorted({coding_source_sha256(claim) for claim in claims}))
+        != selection.expected_raw_codings
+    ):
+        return None, "coding_source_evidence_changed"
     observed = coding_expectations(claims, selection.valid_from, selection.valid_to)
     if set(observed) != set(selection.expected_codings):
         return None, "coding_witness_changed"
@@ -638,6 +653,35 @@ def apply_coding_choices(
                 report(issue.code, issue.detail)
             accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
             continue
+        if (
+            isinstance(decision.selection, DocumentedCodingSelection)
+            and decision.selection.enumeration is not None
+        ):
+            from reg_meta_build.source_value_bindings import marker_binding_fingerprints
+
+            if (
+                not isinstance(records, SourceEvidence)
+                or records.value_bindings is None
+                or not all(
+                    decision.selection.enumeration.matches_fields(record.fields)
+                    for target in case.targets
+                    for record in records.grouped.get(
+                        (target.ref.source, target.ref.semantic_record_key), ()
+                    )
+                )
+                or marker_binding_fingerprints(
+                    records.value_bindings.get(decision.column_key, ()),
+                    decision.valid_from,
+                    decision.valid_to,
+                )
+                != decision.selection.expected_marker_bindings
+            ):
+                report(
+                    "coding_binding_changed",
+                    "The complete recognized marker binding evidence changed.",
+                )
+                accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
+                continue
         if isinstance(records, SourceEvidence) and records.effective_scopes is not None:
             if (
                 isinstance(decision.selection, DocumentedCodingSelection)

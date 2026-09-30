@@ -48,6 +48,7 @@ from reg_meta_build.curation_tree import (
 from reg_meta_build.id import mint
 from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.prepared_sources import (
+    PreparedPartitionRecord,
     open_prepared_source_records,
     prepare_source_records,
 )
@@ -6156,6 +6157,36 @@ def test_guarded_column_owner_rejects_changed_role_facts(tmp_path: Path, field):
         }
     )
     compiled, key, _ = _compile_partition_fixture(root, (original,))
+    projection = PreparedPartitionRecord(
+        source=original.source,
+        subject=original.subject,
+        parent_facts=original.parent_facts,
+        edition_scope=original.edition_scope,
+        edition_period_scope=original.edition_period_scope,
+        locators=original.locators,
+        fields=original.fields,
+    )
+    reader = SimpleNamespace(
+        iter_partition_families=lambda *args, **kwargs: iter(
+            ((native_variable_key(original), (projection,)),)
+        ),
+        iter_native_families=lambda *args, **kwargs: iter(
+            ((native_variable_key(original), (original,)),)
+        ),
+    )
+    projected = compile_partitions(
+        load_curation_tree(root),
+        SimpleNamespace(records=reader),
+        (_partition_scope((original,)),),
+    )
+    assert projected == compiled
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        SimpleNamespace(records=reader),
+        (_partition_scope((original,)),),
+    )
+    assert deferred[0] == compiled[1]
+    assert deferred[3] == _partition_memberships(compiled[0])
     assert not apply_occurrence_cases((original,), compiled[0][key]).diagnostics
     changed = original.model_copy(
         update={
@@ -6724,3 +6755,101 @@ def test_period_correction_uses_exact_prose_to_distinguish_same_column_originals
     )
     assert _run_checked_correction(tree, scope, (original, negative, extra))[1]
     assert evaluate_cases((case,), (original, negative, extra))[0].status == "stale"
+
+
+def test_checked_nonphysical_support_retains_quantity_witness_and_raw_facts(
+    tmp_path, monkeypatch
+):
+    from reg_meta_build.curation_compile import _support_coding_sha256
+    from reg_meta_build.curation_tree import ErrataSupportEntry
+
+    root, _ = _shared_ref_column_fixture(tmp_path)
+    target = _errata_record(column="", year="2021", member=21)
+    authority = _errata_record(column="FIRST", year="2020", member=20)
+    monkeypatch.setattr(
+        "reg_meta_build.curation_compile.bind_code_lists",
+        lambda *args: SimpleNamespace(claims=()),
+    )
+
+    def selector(record, fields):
+        return {
+            "variable": "1.5",
+            "variant": "1.2",
+            "column": record.fields.column_name.value or "",
+            "edition": str(record.subject.native.edition_id),
+            "expected_fields": list(
+                capture_expectations((record,), fields=fields)[0].alternatives[0].fields
+            ),
+            "expected_period_text": record.original_period_text,
+            "expected_scope": record.edition_scope,
+            "expected_period": record.edition_period_scope,
+            "evidence": "A blank physical column is source support; the witness establishes quantity only.",
+            "noted": "2026-09-30",
+        }
+
+    entry = ErrataSupportEntry(
+        **selector(target, tuple(SourceFields.model_fields)),
+        kind="nonphysical_projection",
+        authority=selector(
+            authority, ("name", "definition", "description", "operational_definition")
+        ),
+        expected_coding_sha256=_support_coding_sha256((target, authority), ()),
+    )
+    tree = load_curation_tree(root)
+    register = next(r for r in tree.registers if r.register_info.slug == "sample")
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={
+                    "errata": register.errata.model_copy(update={"support": [entry]})
+                }
+            ),
+        ),
+    )
+    scope = _partition_scope((target, authority))
+
+    def compile_rows(rows):
+        prepared = SimpleNamespace(
+            records=SimpleNamespace(
+                iter_native_families=lambda *args, **kwargs: iter(
+                    ((native_variable_key(target), rows),)
+                )
+            ),
+            value_sources=(),
+        )
+        return compile_occurrence_corrections(tree, prepared, (scope,), subset=False)
+
+    compiled, issues, _ = compile_rows((target, authority))
+    assert not issues
+    cases = compiled[scope.source, None]
+    result = apply_occurrence_cases((target, authority), cases)
+    assert not result.diagnostics
+    assert {o.source_records[0]: o.use for o in result.occurrences} == {
+        target: "support",
+        authority: "catalog",
+    }
+    assert {r for o in result.occurrences for r in o.source_records} == {
+        target,
+        authority,
+    }
+    extra = _errata_record(column="SECOND", year="2022", member=22)
+    changed = target.model_copy(
+        update={
+            "fields": target.fields.model_copy(
+                update={"column_name": value_field("NEW")}
+            )
+        }
+    )
+    for rows in (
+        (authority,),
+        (target,),
+        (target, authority, extra),
+        (changed, authority),
+    ):
+        assert compile_rows(rows)[1]
+        assert evaluate_cases(cases, rows)[0].status == "stale"
+    positive = entry.model_dump(mode="json")
+    positive["column"] = "FIRST"
+    with pytest.raises(ValueError, match="negative-column"):
+        ErrataSupportEntry.model_validate_json(json.dumps(positive))

@@ -153,6 +153,7 @@ def resolve_source_scope(
     declared_variants: Mapping[NativeKey, ResolvedVariant] | None = None,
     on_binding: Callable[[NativeKey, ValueBindingResult], None] | None = None,
     on_diagnostic: Callable[[ResolutionDiagnostic], None] | None = None,
+    source_diagnostics: tuple[tuple[NativeKey, ResolutionDiagnostic], ...] = (),
     diagnostic: bool = False,
     coding_scope: CompiledScope | None = None,
     coding_registers: tuple[RegisterCuration, ...] = (),
@@ -233,7 +234,9 @@ def resolve_source_scope(
         else:
             on_diagnostic(issue)
 
-    def emit(issue: ResolutionDiagnostic) -> None:
+    def emit(
+        issue: ResolutionDiagnostic, *, source_register: NativeKey | None = None
+    ) -> None:
         if held and issue.severity == "error":
             match = held.get(
                 (
@@ -245,9 +248,10 @@ def resolve_source_scope(
                     issue.valid_to,
                 )
             )
-            if (
-                match is not None
-                and issue.refs
+            if match is not None and (
+                source_register == match[1].register_key
+                if source_register is not None
+                else bool(issue.refs)
                 and all(
                     original_registers.get(ref) == match[1].register_key
                     for ref in issue.refs
@@ -256,6 +260,22 @@ def resolve_source_scope(
                 match[2].append(issue)
                 return
         record(issue)
+
+    observed_registers = (
+        {
+            source_register_key(item)
+            for item in originals
+            if item.subject.register_name.status == "value"
+        }
+        if source_diagnostics
+        else set()
+    )
+    for register, initial_issue in source_diagnostics:
+        if register not in observed_registers:
+            raise ValueError(
+                "source diagnostic lacks a positively observed scope register"
+            )
+        emit(initial_issue, source_register=register)
 
     names = {}
     withheld_naming = set()
@@ -280,8 +300,18 @@ def resolve_source_scope(
     )
     copied_coding = bind_copied_coding(evidence, occurrence_cases, value_sessions)
     corrected = apply_occurrence_cases(evidence, occurrence_cases, coding=copied_coding)
+    enumerated_columns = {
+        entry.column
+        for register in coding_registers
+        for entry in register.coding.documented
+        if entry.source_authority is not None
+        and entry.source_authority.enumeration is not None
+    }
+    enumerated_bindings = defaultdict(list) if enumerated_columns else None
     coding_evidence = SourceEvidence(
-        originals, effective_occurrences=corrected.occurrences
+        originals,
+        effective_occurrences=corrected.occurrences,
+        value_bindings=enumerated_bindings,
     )
     for issue in corrected.diagnostics:
         emit(issue)
@@ -407,6 +437,19 @@ def resolve_source_scope(
                 occurrence, value_sessions, support=support
             )
             claims[column].extend(bound.claims)
+            if (
+                enumerated_bindings is not None
+                and occurrence.fields.column_name is not None
+                and occurrence.fields.column_name.value in enumerated_columns
+            ):
+                binding_scope = (
+                    occurrence.edition_period_scope
+                    if occurrence.edition_period_scope.kind != "not_applicable"
+                    else occurrence.edition_scope
+                )
+                enumerated_bindings[column].extend(
+                    (binding_scope, binding) for binding in bound.bindings
+                )
             if on_binding is not None:
                 on_binding(key, bound)
             for binding in bound.bindings:
@@ -473,6 +516,7 @@ def resolve_source_scope(
             column_scopes=coding_evidence.effective_scopes or {},
             coding=original_coding,
             classifications=classifications,
+            value_bindings=enumerated_bindings,
         )
         compiled_cases.extend(new_cases)
         for issue in new_diagnostics:

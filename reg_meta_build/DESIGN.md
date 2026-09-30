@@ -515,6 +515,15 @@ fingerprint checks their source code lists and validity during compilation. The 
 semantic source reference keeps its catalog role. Originals and coding remain evidence;
 this decision neither merges identities nor corrects unsupported physical roles.
 
+The `nonphysical_projection` kind handles an explicitly negative column assertion. It
+requires an empty literal column and every original `SourceFields` value, with the
+column's status guarded as negative. Its positive witness must be the same native
+variable and variant with matching supplied name and definition in an exact finite
+edition. Complete target, witness and peer projections and coding fingerprints guard
+compilation and replay. The witness establishes the quantity, not delivery in the
+negative-column edition. Only the checked negative projection becomes support; all
+original facts remain available and positive physical occurrences retain their role.
+
 Ordinary variables form from an established native identity. Their names bind that exact
 source coordinate; additional deliveries do not require handwritten whole-variable
 cases. Column spellings that differ only by case or diacritics fold to one column by the
@@ -646,6 +655,12 @@ only when an existing decision explicitly authorizes that extension. Changed tar
 witness evidence invalidates it. Omitted states retain their evidence and do not become
 negative availability claims.
 
+Under the reviewed explicit-link policy, a checked choice can select a supplied complete
+superset when every positively linked code is retained and shared code labels agree.
+This includes explicitly supplied routing and nonresponse codes. The choice requires
+complete source-row authority and coding guards; changed, missing or additional source
+assertions invalidate it. Contrary meanings for a shared code remain unresolved.
+
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot
 establish membership. Its document URL, SHA256 and page references are tracked
@@ -668,6 +683,14 @@ list in the window makes the entry stale. Contradictory documented assignments w
 only their overlap. Original claims and nonmembership associations stay in source
 accounting. Raw type-marker whitespace is not a finite-membership guard: those
 associations cannot establish a list and are retained in the documentary audit.
+
+A finite source-row authority can also certify an explicit complete enumeration in a
+named prose field. It records the exact ASCII decimal-code-and-label lines and requires
+them to equal every numbered line under that syntax in each guarded original. Complete
+recognized type-marker bindings are fingerprinted separately, including their ordered
+raw associations; absent, changed or competing finite bindings invalidate the decision.
+The original type markers remain evidence. This route supplies only the exact stored
+codes and labels explicitly enumerated in the source, with all later coding unchanged.
 
 `coding.support` retains one proven erroneous physical association as documentary
 support while excluding only that association from effective membership in a finite
@@ -1018,10 +1041,24 @@ curation outside the slice, and the complete build stays the check on everything
 including every skipped entry and deferred reference. Literal crosswalks and derivations
 from a known prepared occurrence source wholly outside the selection retain their
 evidence and defer endpoint resolution with the same warning; selected or unknown
-sources still report unbound relationships as errors. Shared-input diagnostics are still
-reported corpus-wide. The scoped output is create-only and marked incomplete and
-nonpublishable in both modes. The summary records the register list, `publication_ready`
-false and `corpus_validation` `not_applicable`; structural validation still runs.
+sources still report unbound relationships as errors.
+
+Source-wide support and value-list diagnostics retain their complete raw events and
+physical accounting. A scoped build routes an issue only through declared source joins
+and positively observed, unambiguous register coordinates. Selected-register issues
+remain errors and use the existing exact acknowledgment mechanism; proven unselected
+register issues become explicit out-of-slice warnings. Unknown or ambiguous contexts
+remain errors, and complete builds never use this slice deferral. Unbound list subjects
+include the source revision, complete descriptor digest, literal lookup tokens and
+physical association count, so an empty target reference cannot become a general future
+acknowledgment. Explicit source-diagnostic acknowledgments require equality with the
+positively observed delivery register; ordinary occurrence-reference ownership guards
+remain unchanged. No support flags, coding domains or missing variable targets are
+inferred.
+
+The scoped output is create-only and marked incomplete and nonpublishable in both modes.
+The summary records the register list, `publication_ready` false and `corpus_validation`
+`not_applicable`; structural validation still runs.
 
 `check-curation --registers ...` is local editing feedback for complete selected
 register scopes. It shares prepared-input verification, full curation-tree validation,

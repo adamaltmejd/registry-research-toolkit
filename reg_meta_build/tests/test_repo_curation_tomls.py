@@ -732,8 +732,8 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 184
-    assert sum(len(entry.periods) for entry in coding) == 337
+    assert len(coding) == 191
+    assert sum(len(entry.periods) for entry in coding) == 344
     assert (
         sum(
             entry.source_authority is not None
@@ -749,7 +749,7 @@ def test_repo_coding_windows_are_ported() -> None:
             for register in tree.registers
             for entry in register.coding.choice
         )
-        == 99
+        == 105
     )
     assert (
         sum(
@@ -2866,9 +2866,9 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
         for register in tree.registers
         for entry in register.representation.delivery_metadata
     ]
-    assert len(metadata) == 39
+    assert len(metadata) == 41
     assert Counter(tuple(entry.fields) for entry in metadata) == {
-        ("measurement_unit",): 18,
+        ("measurement_unit",): 20,
         ("description",): 21,
     }
     # Retain the original four-owner receipt separately from later unit and

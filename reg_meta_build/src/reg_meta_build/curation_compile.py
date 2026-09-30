@@ -26,6 +26,7 @@ from .cis2016_matrix import (
 )
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import (
+    CodingChoiceEntry,
     CodingDocumentedEntry,
     CodingEntry,
     CodingSentinelEntry,
@@ -66,7 +67,11 @@ from .scb_errata import (
     edition_bindings,
     load_scb_errata,
 )
-from .source_coding import copied_coding_fingerprints, resolve_code_membership
+from .source_coding import (
+    coding_source_sha256,
+    copied_coding_fingerprints,
+    resolve_code_membership,
+)
 from .source_coding_choices import coding_expectations, compile_coding_selection
 from .source_coordinates import (
     column_identity,
@@ -124,10 +129,15 @@ from .source_records import (
     NativeCoordinates,
     ScopeInterval,
     SourceFields,
+    SourceRecord,
     TemporalScope,
 )
 from .source_reference_records import SourceColumnTypeDeclaration
-from .source_value_bindings import bind_code_lists, open_value_bindings
+from .source_value_bindings import (
+    bind_code_lists,
+    marker_binding_fingerprints,
+    open_value_bindings,
+)
 from .sources.swecov_column_types import (
     SWECOV_COLUMN_TYPES_PATH,
     index_swecov_column_types,
@@ -149,8 +159,7 @@ if TYPE_CHECKING:
     from .resolved_catalog import ResolvedClassification
     from .source_coding import CodeListClaim
     from .source_coordinates import NativeKey
-    from .source_records import SourceRecord
-    from .source_value_bindings import ValueBindingSession
+    from .source_value_bindings import ValueBindingSession, ValueListBinding
 
 
 @dataclass(frozen=True)
@@ -1933,6 +1942,36 @@ def _partition_ambiguity(
     )
 
 
+def _partition_originals(
+    prepared: PreparedCatalogSources,
+    source: str,
+    native: NativeKey,
+    records: tuple[SourceRecord, ...],
+    *,
+    guarded: bool,
+) -> tuple[SourceRecord, ...]:
+    """Promote guarded projections through the existing indexed original reader."""
+    if not guarded or not records or isinstance(records[0], SourceRecord):
+        return records
+    families = tuple(
+        prepared.records.iter_native_families(
+            source,
+            (native[:5],),
+            select_family=lambda key: key == native,
+        )
+    )
+    if len(families) != 1 or families[0][0] != native:
+        raise ValueError(
+            f"guarded partition lacks one complete original family: {native!r}"
+        )
+    originals = families[0][1]
+    if {record_ref(r) for r in originals} != {record_ref(r) for r in records}:
+        raise ValueError(
+            f"guarded partition projection differs from its originals: {native!r}"
+        )
+    return originals
+
+
 def compile_partitions(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -2036,6 +2075,13 @@ def compile_partitions(
             ):
                 continue
             seen.add((source, native[:5], source_id))
+            records = _partition_originals(
+                prepared,
+                source,
+                native,
+                records,
+                guarded=any(entry.expected_fields for _, entry in scoped_entries),
+            )
             expectations = capture_expectations(
                 records,
                 fields=("column_name",)
@@ -2539,6 +2585,13 @@ def compile_deferred_partitions(
                 if not entries:
                     continue
                 split_ids = tuple(sorted({item.entry.source_id for item in entries}))
+                records = _partition_originals(
+                    prepared,
+                    source,
+                    native,
+                    records,
+                    guarded=any(entry.expected_fields for _, entry in scoped_entries),
+                )
                 split_bases[scope_key].add(native)
                 scoped, scoped_issues = _scoped_column_owners(
                     register, scoped_entries, records, split_ids
@@ -2585,6 +2638,8 @@ def compile_deferred_partitions(
                         if any(entry.expected_fields for _, entry in scoped_entries)
                         else ("column_name",)
                     ),
+                    parents=any(entry.expected_fields for _, entry in scoped_entries),
+                    coding=any(entry.expected_fields for _, entry in scoped_entries),
                 )
                 guard = PeerGuard(
                     guard_id=f"accepted-partitions:{source}:{source_id}",
@@ -4102,6 +4157,10 @@ def compile_coding_register(
     column_scopes: Mapping[NativeKey, frozenset[TemporalScope]],
     coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
     classifications: Mapping[str, ResolvedClassification] | None = None,
+    value_bindings: Mapping[
+        NativeKey, tuple[tuple[TemporalScope, ValueListBinding], ...]
+    ]
+    | None = None,
 ) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
     """Compile one register's coding from established scope identities and claims.
 
@@ -4230,15 +4289,35 @@ def compile_coding_register(
                         entry, kind, claims, start, end
                     )
                 if (
-                    isinstance(entry, CodingDocumentedEntry)
+                    isinstance(entry, (CodingDocumentedEntry, CodingChoiceEntry))
                     and entry.source_authority is not None
                 ):
                     authority = entry.source_authority
+                    authority_refs = {record_ref(record) for record in records}
+                    authority_records = (
+                        tuple(r for r in originals if record_ref(r) in authority_refs)
+                        if isinstance(entry, CodingChoiceEntry)
+                        else records
+                    )
                     expected = capture_expectations(
-                        records,
+                        authority_records,
                         fields=tuple(SourceFields.model_fields),
                         parents=True,
                         coding=True,
+                    )
+                    enumeration_matches = (
+                        isinstance(entry, CodingDocumentedEntry)
+                        and authority.enumeration is not None
+                        and authority.enumeration.matches_members(entry.members)
+                        and all(
+                            authority.enumeration.matches_fields(record.fields)
+                            for record in authority_records
+                        )
+                        and value_bindings is not None
+                        and marker_binding_fingerprints(
+                            value_bindings.get(column, ()), start, end
+                        )
+                        == tuple(sorted(authority.marker_bindings or ()))
                     )
                     if (
                         tuple(authority.records) != expected
@@ -4250,22 +4329,48 @@ def compile_coding_register(
                             )
                         )
                         or {
-                            locator for record in records for locator in record.locators
+                            locator
+                            for record in authority_records
+                            for locator in record.locators
                         }
                         != set(authority.locators)
                         or any(
                             record.source_revision_id != authority.revision.revision_id
                             for record in records
                         )
+                        or (
+                            authority.raw_codings is not None
+                            and tuple(sorted(authority.raw_codings))
+                            != tuple(
+                                sorted(
+                                    {coding_source_sha256(claim) for claim in claims}
+                                )
+                            )
+                        )
                         or tuple(sorted(authority.codings))
                         != copied_coding_fingerprints(claims)
-                        or {member.code for claim in claims for member in claim.members}
-                        != {code for code, _ in entry.members}
-                        or any(
-                            member.label is not None
-                            and (member.code, member.label) not in entry.members
-                            for claim in claims
-                            for member in claim.members
+                        or (
+                            isinstance(entry, CodingDocumentedEntry)
+                            and (
+                                not enumeration_matches
+                                if authority.enumeration is not None
+                                else {
+                                    member.code
+                                    for claim in claims
+                                    for member in claim.members
+                                }
+                                != {code for code, _ in entry.members}
+                            )
+                        )
+                        or (
+                            isinstance(entry, CodingDocumentedEntry)
+                            and authority.enumeration is None
+                            and any(
+                                member.label is not None
+                                and (member.code, member.label) not in entry.members
+                                for claim in claims
+                                for member in claim.members
+                            )
                         )
                     ):
                         status, detail = (
@@ -4292,10 +4397,29 @@ def compile_coding_register(
                         )
                     )
                     continue
+                if (
+                    isinstance(entry, CodingChoiceEntry)
+                    and entry.source_authority is not None
+                ):
+                    assert selection is not None and not isinstance(selection, str)
+                    selection = selection.model_copy(
+                        update={
+                            "expected_raw_codings": tuple(
+                                sorted(entry.source_authority.raw_codings or ())
+                            )
+                        }
+                    )
                 assert selection is not None or isinstance(entry, CodingSentinelEntry)
                 target_refs = {record_ref(record) for record in records}
-                target_records = tuple(
-                    record for record in originals if record_ref(record) in target_refs
+                target_records = (
+                    authority_records
+                    if isinstance(entry, CodingChoiceEntry)
+                    and entry.source_authority is not None
+                    else tuple(
+                        record
+                        for record in originals
+                        if record_ref(record) in target_refs
+                    )
                 )
                 if {record_ref(record) for record in target_records} != target_refs:
                     raise ValueError(f"{case_id}: target refs left the original scope")
@@ -4307,7 +4431,7 @@ def compile_coding_register(
                     coding=kind in {"documented", "sentinel", "support"},
                 )
                 if (
-                    isinstance(entry, CodingDocumentedEntry)
+                    isinstance(entry, (CodingDocumentedEntry, CodingChoiceEntry))
                     and entry.source_authority is not None
                 ):
                     targets = tuple(entry.source_authority.records)
@@ -4368,7 +4492,9 @@ def compile_coding_register(
                                 f"{entry.source_authority.revision.artifact_path}\n"
                                 f"SHA256: {entry.source_authority.revision.artifact_sha256}\n"
                                 f"Rows: {', '.join(locator.physical_table + ':' + locator.physical_record for locator in entry.source_authority.locators)}"
-                                if isinstance(entry, CodingDocumentedEntry)
+                                if isinstance(
+                                    entry, (CodingDocumentedEntry, CodingChoiceEntry)
+                                )
                                 and entry.source_authority is not None
                                 else f"{entry.source}\nDocument: {entry.document_url}\n"
                                 f"SHA256: {entry.document_sha256}\n"
@@ -4439,7 +4565,13 @@ def _select_occurrence_correction(
             else record.subject.variant.name
         )
         == entry.variant
-        and _literal_field(record, "column_name") == entry.column
+        and _literal_field(record, "column_name")
+        == (
+            None
+            if isinstance(entry, ErrataSupportEntry)
+            and entry.kind == "nonphysical_projection"
+            else entry.column
+        )
         and (
             entry.edition is None
             or (
@@ -4743,7 +4875,13 @@ def compile_occurrence_corrections(
                         with open_value_bindings(prepared.value_sources) as sessions:
                             valid = (
                                 _support_coding_sha256(
-                                    family + authority_family, sessions
+                                    tuple(
+                                        {
+                                            r.record_id: r
+                                            for r in family + authority_family
+                                        }.values()
+                                    ),
+                                    sessions,
                                 )
                                 == entry.expected_coding_sha256
                             )
@@ -4795,7 +4933,13 @@ def compile_occurrence_corrections(
                     else CheckedSourceUse(
                         ref=record_ref(record),
                         when=(
-                            FieldExpectation(
+                            next(
+                                field
+                                for field in entry.expected_fields
+                                if field.name == "column_name"
+                            )
+                            if entry.kind == "nonphysical_projection"
+                            else FieldExpectation(
                                 name="column_name", status="value", value=entry.column
                             ),
                         ),
@@ -4832,11 +4976,15 @@ def compile_occurrence_corrections(
                         support=capture_expectations(
                             tuple(
                                 record
-                                for record in family + authority_family
+                                for record in {
+                                    r.record_id: r for r in family + authority_family
+                                }.values()
                                 if record_ref(record) not in chosen_refs
                             ),
                             fields=entry_guarded_fields,
                             coding=True,
+                            parents=isinstance(entry, ErrataSupportEntry)
+                            and entry.kind == "nonphysical_projection",
                         )
                         + (
                             tuple(entry.authority)
@@ -4864,7 +5012,10 @@ def compile_occurrence_corrections(
                                     )
                                 ),
                             )
-                            for guarded_family in (family, authority_family)
+                            for guarded_family in (
+                                family,
+                                () if authority_family == family else authority_family,
+                            )
                             if guarded_family
                         )
                         + authority_guards,

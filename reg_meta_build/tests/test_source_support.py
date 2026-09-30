@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 from reg_meta.source_evidence import RecordLocator, SourceRevision
-from reg_meta_build.source_coordinates import native_variable_key
+from reg_meta_build.source_coordinates import native_variable_key, source_register_key
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_records import (
@@ -17,7 +17,11 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
-from reg_meta_build.source_support import SourceSupportBindings, SourceSupportJoin
+from reg_meta_build.source_support import (
+    SourceSupportBindings,
+    SourceSupportJoin,
+    scope_support_diagnostics,
+)
 from reg_meta_build.sources.scb_auxiliary import scb_support_joins
 
 
@@ -377,3 +381,91 @@ def test_a_candidate_without_native_identity_keeps_its_key_unresolved() -> None:
     (item,) = index.accounting
     assert item.disposition == "ambiguous_target"
     assert item.targets == (native_variable_key(known),)
+
+
+def test_source_support_relevance_preserves_accounting_and_full_build_errors():
+    first = _record("summary", column=None)
+    second = _record("summary", row=2, register=2, column=None)
+    second = second.model_copy(
+        update={
+            "subject": second.subject.model_copy(
+                update={
+                    "register_name": SourceCoordinate(
+                        status="value", native_id=2, name="Outside"
+                    )
+                }
+            )
+        }
+    )
+    index = SourceSupportBindings(_joins(), (first, second))
+    index.seal()
+    selected_key = source_register_key(_record("delivery"))
+    outside_key = source_register_key(_record("delivery", register=2))
+    coordinates = {
+        "delivery": (
+            (selected_key, first.subject.register_name, 1),
+            (outside_key, second.subject.register_name, 1),
+        )
+    }
+    original = index.diagnostics
+    accounting = index.accounting
+    scoped, remaining = scope_support_diagnostics(
+        index, coordinates, frozenset((("delivery", selected_key),))
+    )
+    assert len(scoped["delivery", selected_key]) == 1
+    assert scoped["delivery", selected_key][0].severity == "error"
+    assert [(i.code, i.severity) for i in remaining] == [
+        ("deferred_out_of_slice_reference", "warning")
+    ]
+    assert {r for values in scoped.values() for i in values for r in i.refs} | {
+        r for i in remaining for r in i.refs
+    } == set(original[0].refs)
+    full, remaining = scope_support_diagnostics(index, coordinates, None)
+    assert not remaining and len(full) == 2
+    assert all(i.severity == "error" for values in full.values() for i in values)
+    assert index.diagnostics == original and index.accounting == accounting
+    assert all(
+        a.disposition == "unknown_key" and not a.targets for a in index.accounting
+    )
+
+
+@pytest.mark.parametrize("context", ["unknown", "unobserved", "ambiguous"])
+def test_source_support_unknown_context_is_not_deferred(context):
+    item = _record("summary", column=None)
+    if context == "unknown":
+        item = item.model_copy(
+            update={
+                "subject": item.subject.model_copy(
+                    update={"register_name": SourceCoordinate(status="unknown")}
+                )
+            }
+        )
+    index = SourceSupportBindings(_joins(), (item,))
+    index.seal()
+    key = source_register_key(_record("delivery"))
+    coordinates = {
+        "delivery": (
+            (
+                key,
+                SourceCoordinate(
+                    status="value",
+                    native_id=1,
+                    name="Other" if context == "unobserved" else "Register",
+                ),
+                1,
+            ),
+        )
+    }
+    if context == "ambiguous":
+        coordinates["delivery"] += (
+            (
+                (*key[:-1], 2),
+                SourceCoordinate(status="value", native_id=2, name="Register"),
+                1,
+            ),
+        )
+    scoped, remaining = scope_support_diagnostics(index, coordinates, frozenset())
+    assert not scoped and len(remaining) == 1
+    assert (
+        remaining[0].code == "unknown_support_key" and remaining[0].severity == "error"
+    )

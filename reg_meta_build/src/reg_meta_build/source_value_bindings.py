@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from datetime import date
 from functools import lru_cache
 from typing import TYPE_CHECKING
@@ -86,6 +86,39 @@ class ValueBindingResult:
     claims: tuple[CodeListClaim, ...]
     bindings: tuple[ValueListBinding, ...]
     issues: tuple[ValueBindingIssue, ...]
+
+
+def marker_binding_fingerprints(
+    bindings: Iterable[tuple[TemporalScope, ValueListBinding]],
+    valid_from: str,
+    valid_to: str,
+) -> tuple[str, ...] | None:
+    """Certify complete recognized marker bindings in this exact dated window."""
+    fingerprints = []
+    first, last = (
+        date.fromisoformat(valid_from).toordinal(),
+        date.fromisoformat(valid_to).toordinal(),
+    )
+    for scope, binding in bindings:
+        bounds = coding_scope_bounds(scope)
+        if bounds is None:
+            return None
+        if not any(start <= last and end >= first for start, end in bounds):
+            continue
+        if (
+            binding.claim_id is not None
+            or not binding.non_membership_associations
+            or binding.association_count != len(binding.non_membership_associations)
+            or binding.inactive_associations
+            or binding.item_validity_set_aside
+        ):
+            return None
+        payload = asdict(binding)
+        payload["record_locators"] = [
+            locator.model_dump(mode="json") for locator in binding.record_locators
+        ]
+        fingerprints.append(canonical_sha256((scope.model_dump(mode="json"), payload)))
+    return tuple(sorted(fingerprints)) if fingerprints else None
 
 
 def _declared_identifier(fields: SourceFields) -> bool:
