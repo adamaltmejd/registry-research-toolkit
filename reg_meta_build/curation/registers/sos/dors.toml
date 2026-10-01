@@ -1431,3 +1431,89 @@ valid_from = "1987-01-01"
 valid_to = "1996-12-31"
 reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
 evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+# Reviewed synonymous wording; retain every original and physical representation.
+
+[[errata.field]]
+variable = "5369119272181688462.PNR"
+variant = "DORS"
+column = "PNR"
+expected_fields = [{"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Den avlidnes personnummer."}, {"name" = "name", "status" = "value", "value" = "Personnummer"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "intervals", "intervals" = [{"start" = "1952"}]}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "Reviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+noted = "2026-10-01"
+field = "description"
+value = "Den avlidnes personnummer"
+
+[[errata.field]]
+variable = "5369119272181688462.ALDER"
+variant = "DORS_AVI"
+column = "ALDER"
+expected_fields = [{"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Ålder i år vid dödsfallet"}, {"name" = "name", "status" = "value", "value" = "Ålder vid dödsfall"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "unknown", "intervals" = [], "label" = "Data från=Senaste tre år; Data till=<blank>"}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "Reviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+noted = "2026-10-01"
+field = "name"
+value = "Dödsålder i år"
+
+[[errata.field]]
+variable = "5369119272181688462.ALDER"
+variant = "DORS-COV"
+column = "ALDER"
+expected_fields = [{"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Ålder i år vid dödsfallet"}, {"name" = "name", "status" = "value", "value" = "Ålder vid dödsfall"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "intervals", "intervals" = [{"start" = "2020"}]}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "Reviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+noted = "2026-10-01"
+field = "name"
+value = "Dödsålder i år"
+
+[[errata.field]]
+variable = "5369119272181688462.DODSDAT"
+variant = "DORS_AVI"
+column = "DODSDAT"
+expected_fields = [{"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Den avlidnes dödsdatum"}, {"name" = "name", "status" = "value", "value" = "Datum för dödsfall"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "unknown", "intervals" = [], "label" = "Data från=Senaste tre år; Data till=<blank>"}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "Reviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+noted = "2026-10-01"
+field = "name"
+value = "Dödsdatum"
+
+[[errata.field]]
+variable = "5369119272181688462.DODSDAT"
+variant = "DORS-COV"
+column = "DODSDAT"
+expected_fields = [{"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Den avlidnes dödsdatum"}, {"name" = "name", "status" = "value", "value" = "Datum för dödsfall"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "intervals", "intervals" = [{"start" = "2020"}]}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "Reviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+noted = "2026-10-01"
+field = "name"
+value = "Dödsdatum"
+
+[[errata.field]]
+variable = "5369119272181688462.DODSDATN"
+variant = "DORS_AVI"
+column = "DODSDATN"
+expected_fields = [{"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Den avlidnes dödsdatum i numeriskt SAS-datum"}, {"name" = "name", "status" = "value", "value" = "Datum för dödsfall, SAS-datum"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "unknown", "intervals" = [], "label" = "Data från=Senaste tre år; Data till=<blank>"}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "Reviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+noted = "2026-10-01"
+field = "name"
+value = "Dödsdatum, SAS-datum"
+
+[[errata.field]]
+variable = "5369119272181688462.DODSDATN"
+variant = "DORS-COV"
+column = "DODSDATN"
+expected_fields = [{"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Den avlidnes dödsdatum i numeriskt SAS-datum"}, {"name" = "name", "status" = "value", "value" = "Datum för dödsfall, SAS-datum"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "intervals", "intervals" = [{"start" = "2020"}]}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "Reviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+noted = "2026-10-01"
+field = "name"
+value = "Dödsdatum, SAS-datum"
