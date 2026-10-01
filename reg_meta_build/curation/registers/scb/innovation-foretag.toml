@@ -12349,3 +12349,15 @@ column = "GP"
 valid_from = "2008-01-01"
 valid_to = "2010-12-31"
 source_editions = ["2008 - 2010"]
+
+# Exact reviewed matrix activations; answer meanings remain in the evidence files.
+
+[[representation.matrix]]
+source_mode = "documented_blank"
+evidence_file = "registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2012 - 2014", regver_id = 7293, var_id = 15662, cvid = 400684 }
+
+[[representation.matrix]]
+source_mode = "named"
+evidence_file = "registers/scb/innovation-foretag/cis2016-matrix-meaning-evidence.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2014 - 2016", regver_id = 11529, var_id = 15662, cvid = 469456 }

@@ -7,7 +7,10 @@ from pathlib import Path
 
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.cis2016_matrix import load_cis2014_matrix, load_cis2016_matrix
+from reg_meta_build.cis2016_matrix import (
+    MatrixSelector,
+    load_matrix,
+)
 
 # The pre-flip `_reparent_variable_alias` projection (the function A4.3a
 # deleted) — used to prove the IR-carried IRVariableAlias rows are row-identical.
@@ -166,9 +169,15 @@ class TestCis2014MatrixProjection:
         path = tmp_path / "invalid-answer-facts.json"
         path.write_text(json.dumps(payload), encoding="utf-8")
         with pytest.raises(RegMetaError) as exc:
-            load_cis2014_matrix(path)
+            load_matrix(
+                path,
+                source_mode="documented_blank",
+                expected_selector=MatrixSelector.model_validate(
+                    _cis2014_payload()["selector"]
+                ),
+            )
         assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "cis2014_matrix_invalid"
+        assert exc.value.code == "matrix_evidence_invalid"
 
     def test_repo_evidence_loads(self) -> None:
         path = (
@@ -176,7 +185,13 @@ class TestCis2014MatrixProjection:
             / "curation/registers/scb/innovation-foretag/"
             / "cis2014-matrix-meaning-evidence.json"
         )
-        matrix = load_cis2014_matrix(path)
+        matrix = load_matrix(
+            path,
+            source_mode="documented_blank",
+            expected_selector=MatrixSelector.model_validate(
+                _cis2014_payload()["selector"]
+            ),
+        )
         assert matrix is not None
         assert len(matrix.answers) == 45
         assert matrix.answer_facts.data_type == "decimal"
@@ -202,9 +217,19 @@ class TestCis2014MatrixProjection:
             path = tmp_path / f"invalid-{index}.json"
             path.write_text(json.dumps(payload), encoding="utf-8")
             with pytest.raises(RegMetaError) as exc:
-                load_cis2014_matrix(path)
+                load_matrix(
+                    path,
+                    source_mode="documented_blank",
+                    expected_selector=MatrixSelector.model_validate(
+                        _cis2014_payload()["selector"]
+                    ),
+                )
             assert exc.value.exit_code == EXIT_CONFIG
-            assert exc.value.code == "cis2014_matrix_invalid"
+            assert exc.value.code == (
+                "matrix_evidence_unknown_selector"
+                if index == 1
+                else "matrix_evidence_invalid"
+            )
 
 
 class TestCis2016MatrixProjection:
@@ -214,9 +239,15 @@ class TestCis2016MatrixProjection:
         path = tmp_path / "cis2016-answer-facts.json"
         path.write_text(json.dumps(payload), encoding="utf-8")
         with pytest.raises(RegMetaError) as exc:
-            load_cis2016_matrix(path)
+            load_matrix(
+                path,
+                source_mode="named",
+                expected_selector=MatrixSelector.model_validate(
+                    _cis2016_payload()["selector"]
+                ),
+            )
         assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "cis2016_matrix_invalid"
+        assert exc.value.code == "matrix_evidence_invalid"
 
     def test_duplicate_and_conflicting_answer_selectors_fail_config(
         self, tmp_path: Path
@@ -240,6 +271,12 @@ class TestCis2016MatrixProjection:
             path = tmp_path / f"{name}.json"
             path.write_text(json.dumps(payload), encoding="utf-8")
             with pytest.raises(RegMetaError) as exc:
-                load_cis2016_matrix(path)
+                load_matrix(
+                    path,
+                    source_mode="named",
+                    expected_selector=MatrixSelector.model_validate(
+                        _cis2016_payload()["selector"]
+                    ),
+                )
             assert exc.value.exit_code == EXIT_CONFIG
-            assert exc.value.code == "cis2016_matrix_invalid"
+            assert exc.value.code == "matrix_evidence_invalid"

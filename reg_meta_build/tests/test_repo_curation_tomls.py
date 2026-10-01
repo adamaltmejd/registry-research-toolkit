@@ -2923,3 +2923,31 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections(
     assert len(units) == 4
     assert sum(len(entry.columns) for entry in units) == 7
     assert sum(len(entry.records) for entry in units) == 105
+
+
+def test_repo_reviewed_matrix_activations_pin_exact_evidence(
+    repo_tree: CurationTree,
+) -> None:
+    from reg_meta_build.cis2016_matrix import load_matrix
+
+    register = next(
+        r for r in repo_tree.registers if r.register_info.slug == "innovation-foretag"
+    )
+    declarations = register.representation.matrix
+    assert [
+        (d.source_mode, d.selector.edition, d.selector.regver_id, d.selector.cvid)
+        for d in declarations
+    ] == [
+        ("documented_blank", "2012 - 2014", 7293, 400684),
+        ("named", "2014 - 2016", 11529, 469456),
+    ]
+    for declaration, count in zip(declarations, (45, 54), strict=True):
+        matrix = load_matrix(
+            _CURATION / declaration.evidence_file,
+            source_mode=declaration.source_mode,
+            expected_selector=declaration.selector,
+        )
+        assert matrix.selector.register_id == 257
+        assert matrix.selector.register_variant_id == 553
+        assert matrix.selector.var_id == 15662
+        assert len(matrix.answers) == count

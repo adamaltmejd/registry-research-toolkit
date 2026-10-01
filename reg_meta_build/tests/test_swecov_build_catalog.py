@@ -57,11 +57,15 @@ def test_default_csv_uses_newest_full_inventory_or_requires_argument(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    generator = tmp_path / "build_catalog.py"
+    generator = tmp_path / "reg_meta_build/input_data/swecov/build_catalog.py"
+    generator.parent.mkdir(parents=True)
     generator.write_bytes(_GENERATOR.read_bytes())
-    old_name = tmp_path / "SWECOV_variables_2099-01-01.csv"
-    older = tmp_path / "SWECOV_variables_full_2026-08-01.csv"
-    newest = tmp_path / "SWECOV_variables_full_2026-09-13.csv"
+    policy = tmp_path / "reg_webapp/stewards/swecov/source_policy.toml"
+    policy.parent.mkdir(parents=True)
+    policy.write_bytes(build_catalog.SOURCE_POLICY_PATH.read_bytes())
+    old_name = generator.parent / "SWECOV_variables_2099-01-01.csv"
+    older = generator.parent / "SWECOV_variables_full_2026-08-01.csv"
+    newest = generator.parent / "SWECOV_variables_full_2026-09-13.csv"
     for path in (old_name, older, newest):
         path.touch()
 
@@ -1608,3 +1612,87 @@ def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
     admitted, issue = build_catalog._inventory_period_records(records, 2020)
     assert admitted == []
     assert issue == "no_covering_delivery_owner"
+
+
+@pytest.mark.parametrize(
+    ("case", "message"),
+    [
+        ("duplicate_route", "duplicate route"),
+        ("duplicate_flavor", "duplicate flavor coordinate"),
+        ("unknown_section", "Extra inputs are not permitted"),
+        ("unknown_field", "Extra inputs are not permitted"),
+        ("unknown_status", "Input should be"),
+        ("unknown_selector", "unknown or invalid route selector"),
+        ("duplicate_selector", "duplicate route selector"),
+        ("duplicate_tables", "flavor tables must be nonblank and unique"),
+        ("duplicate_register", "duplicate flavor register"),
+        ("unknown_register", "policy registers must be register FQIDs"),
+        ("blank_category", "non-catalog categories and reasons must be nonblank"),
+        ("unknown_target", "3-part variant coordinate"),
+        ("unknown_split_target", "3-part variant coordinate"),
+        ("unknown_graft", "policy registers must be register FQIDs"),
+        ("unknown_scope_register", "policy registers must be register FQIDs"),
+    ],
+)
+def test_source_policy_rejects_unchecked_or_duplicate_decisions(
+    tmp_path: Path, case: str, message: str
+) -> None:
+    from pydantic import ValidationError
+
+    raw = tomllib.loads(build_catalog.SOURCE_POLICY_PATH.read_text(encoding="utf-8"))
+    if case == "duplicate_route":
+        raw["route"].append(raw["route"][0])
+    elif case == "duplicate_flavor":
+        raw["flavor"].append(raw["flavor"][0])
+    elif case == "unknown_section":
+        raw["unknown"] = []
+    elif case == "unknown_field":
+        raw["route"][0]["typo"] = "unchecked"
+    elif case == "unknown_status":
+        raw["route"][0]["status"] = "guess"
+    elif case in {"unknown_selector", "duplicate_selector"}:
+        entry = next(entry for entry in raw["route"] if entry["status"] == "split")
+        if case == "unknown_selector":
+            entry["split"][0]["selector"] = "guess:AKU"
+        else:
+            entry["split"].append(entry["split"][0])
+    elif case == "duplicate_tables":
+        raw["flavor"][0]["tables"] = ["same", "same"]
+    elif case == "duplicate_register":
+        raw["flavor_registers"].append(raw["flavor_registers"][0])
+    elif case == "unknown_register":
+        raw["flavor_registers"] = ["scb"]
+    elif case == "unknown_target":
+        raw["route"][0]["target"] = "scb/agi"
+    elif case == "unknown_split_target":
+        entry = next(entry for entry in raw["route"] if entry["status"] == "split")
+        entry["split"][0]["target"] = "scb/agi"
+    elif case == "unknown_graft":
+        raw["route"][0]["graft"] = "scb"
+    elif case == "unknown_scope_register":
+        raw["register_scope"][0]["register"] = "scb"
+    else:
+        raw["non_catalog_categories"]["blank"] = " "
+    with pytest.raises(ValidationError, match=message):
+        build_catalog.SourcePolicy.model_validate(raw)
+
+
+def test_flavor_rejects_stale_declared_table_before_writing(tmp_path: Path) -> None:
+    enriched = _synthetic_enriched()
+    entry = next(
+        entry
+        for entry in build_catalog._FLAVOR_DISPOSITION
+        if (entry[1], entry[3], entry[5]) in build_catalog._FLAVOR_VARIANT_TABLES
+    )
+    table = build_catalog._FLAVOR_VARIANT_TABLES[entry[1], entry[3], entry[5]][0]
+    enriched[entry[0]]["table_columns"].pop(table)
+    with pytest.raises(SystemExit, match=r"table\(s\) absent from holding"):
+        _run_flavor(tmp_path, enriched)
+    assert not (tmp_path / "providers").exists()
+
+
+def test_source_policy_loader_refuses_unknown_sections(tmp_path: Path) -> None:
+    path = tmp_path / "policy.toml"
+    path.write_text(build_catalog.SOURCE_POLICY_PATH.read_text() + "\n[[unknown]]\n")
+    with pytest.raises(SystemExit, match="invalid SWECOV source policy"):
+        build_catalog._load_source_policy(path)

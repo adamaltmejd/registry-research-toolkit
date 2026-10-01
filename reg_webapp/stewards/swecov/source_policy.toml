@@ -1,0 +1,1158 @@
+# Checked SWECOV source routing and steward-flavor policy.
+# Physical table/column overrides remain in inventory_overlay.toml.
+# Original decision notes (retained from the reviewed routing tables):
+# Commercial deliveries — no global home by construction.
+# Regional primary care (region-owned, not a national register).
+# Municipal special-housing (SÄBO) deliveries.
+# Pandemrix vaccination deliveries — one provider per delivering region.
+# Inera / 1177 Vårdguiden — two REGISTERS: the deliveries are disjoint
+# schemas sharing only `PersonNr` (the rule above), and each is its own
+# enriched-holding key, so neither needs a `_FLAVOR_VARIANT_TABLES` selector.
+# The 1177 service names the PROVIDER.
+# National quality registers — no SCB/SOS catalog home.
+# SWECOV-constructed columns on top of RTB — only the Källa-empty columns
+# survive _flavor_variables (the Källa=RTB ones are canonical, routed to the
+# global graft track). RTB/PostNr is intentionally NOT listed: its only
+# content column (`postnr`, Källa=RTB) is canonical RTB postnummer (→ graft),
+# leaving nothing steward-authored, so it would flavor to a bare linkage id.
+# Skatteverket COVID-19 business-support delivery (SKV_*). The single
+# ("Skatteverket", "") holding carries 10 physical tables = 5 schemes; each
+# disposition entry below names a register/variant and `_FLAVOR_VARIANT_TABLES`
+# selects the physical table(s) whose columns it draws (the bespoke pandemic
+# extract is steward-only — P1105-keyed delivery, not a standing register).
+# Tillväxtverket korttidsarbete (KTA) — COVID-19 short-time-work support,
+# reported FROM Tillväxtverket (Källa = "Inrapporterat från Tillväxtverket",
+# kept in the flavor via _PROVENANCE_KALLA). One register, a variant per delivery
+# model: individmodellen (person-keyed) and transaktionsmodellen (ärende-keyed).
+# Arbetsförmedlingen (AMS) — jobseeker administrative delivery (AMS_*), no SCB/SOS
+# home (#443/#444 routed these to the flavor, not global; #365 needs them for 100%
+# coverage). The one ("Arbetsförmedlingen", "") holding bundles 3 distinct tables
+# (each with a 2021-vintage twin carrying identical columns) → 3 registers, split
+# by `_FLAVOR_VARIANT_TABLES`. All columns are Källa-empty (no master-list docs),
+# so definitions stay null — thin holdings-column coverage.
+# IAF (Inspektionen för arbetslöshetsförsäkringen) — unemployment-insurance (a-kassa)
+# administrative delivery (IFA_*). One ("IAF", "") holding bundles 8 distinct tables
+# (Lev2/Lev3 access tiers and year-range vintages carry identical columns → collapse
+# into one register each via `_FLAVOR_VARIANT_TABLES`). All columns Källa-empty.
+# Arbetsförmedlingen (AMS): one holding, 3 registers; each pairs a base table with
+# its 2021-vintage twin (identical columns → deduped by norm_col into one set).
+# IAF: one holding, 8 registers; Lev2/Lev3 access tiers and year-range vintages
+# carry identical columns, so each register names all its physical tables.
+
+flavor_registers = ["scb/gdb"]
+
+[non_catalog_categories]
+"Arbetsförmedlingen" = "Arbetsförmedlingen delivery (AMS_*), not SCB/SOS"
+"FOHM" = "Folkhälsomyndigheten delivery (FHM_*)"
+"Försäkringskassan" = "Försäkringskassan delivery (FK_*)"
+"Högskoleprovet" = "Umeå university delivery (UMU_*)"
+"IAF" = "Inspektionen för arbetslöshetsförsäkringen delivery (IFA_*)"
+"Inera/1177" = "Inera delivery"
+"Kolorektalcancer" = "Quality register (SCRCR)"
+"Korttidsarbete" = "Tillväxtverket delivery (KTA_*)"
+"Läkemedelsverket" = "Läkemedelsverket delivery (LV_*)"
+"Military enlistment" = "Pliktverket / Riksarkivet delivery"
+"Pandemrix vaccinations" = "Regional health-care deliveries"
+"Primary care" = "Regional health-care deliveries"
+"Quality register" = "Quality registers (Graviditetsregistret, NDR)"
+"SCB" = "LopNr key-change crosswalk table, not register data"
+"SOS Alarm" = "SOS Alarm delivery"
+"Skatteverket" = "Skatteverket delivery (SKV_*)"
+"Swedbank" = "Swedbank delivery"
+"SÄBO" = "Municipal / county deliveries"
+"Telia" = "Telia delivery"
+
+[[route]]
+category = "AGI"
+detail = "ARB Individ"
+status = "mapped"
+target = "scb/agi/individuppgifter-agi"
+
+[[route]]
+category = "AGI"
+detail = "SOC Individ"
+status = "mapped"
+note = "ERSATTNINGS_KOD/BELOPP1-4 are wide pivots of the kod+belopp concepts"
+target = "scb/agi/individuppgifter-agi"
+
+[[route]]
+category = "AGI"
+detail = "Huvud"
+status = "flavor"
+note = "employer-level AGI declaration header; register absent from reg_meta"
+
+[[route]]
+category = "AKU"
+detail = ""
+status = "split"
+
+[[route.split]]
+selector = "stem:AKU_"
+note = "2015-2020 holdings"
+target = "scb/aku/aku-april-2005-dec-2020"
+
+[[route.split]]
+selector = "stem:AKU_RL_"
+note = "2021-2024 holdings"
+target = "scb/aku/aku-januari-2021"
+
+[[route.split]]
+selector = "stem:AKU_Corona_"
+note = "flavor: SWECOV covid add-on questions"
+
+[[route]]
+category = "Elevregistret"
+detail = "Betyg Ak6"
+status = "mapped"
+target = "scb/grundskola-betyg-ak6/_default"
+
+[[route]]
+category = "Elevregistret"
+detail = "Elever gymnasiet"
+status = "mapped"
+target = "scb/gymnasieskola-elever/_default"
+
+[[route]]
+category = "Elevregistret"
+detail = "Grund, förskola, fritidshem"
+status = "mapped"
+note = "combined table; förskola/fritidshem-only columns go to flavor graft"
+target = "scb/grundskola-elever/individregister"
+
+[[route]]
+category = "Elevregistret"
+detail = "Gymnasieskola avgangar"
+status = "split"
+
+[[route.split]]
+selector = "stem:GymnasieskolaAvg_Individ_"
+note = "75% grounded"
+target = "scb/gymnasieskola-betyg/slutbetyg"
+
+[[route.split]]
+selector = "stem:GymnasieskolaAvg_Kurs_"
+note = "tie broken semantically"
+target = "scb/gymnasieskola-betyg/kursbetyg"
+
+[[route.split]]
+selector = "stem:GymnasieskolaAvg_Amne_"
+note = "flavor: 1985-1996 ämne shape ungrounded"
+
+[[route]]
+category = "Elevregistret"
+detail = "Kursprov"
+status = "mapped"
+target = "scb/gymnasieskola-prov/_default"
+
+[[route]]
+category = "Elevregistret"
+detail = "School code key"
+status = "lookup"
+note = "skolkod<->skolenhetskod crosswalk"
+
+[[route]]
+category = "Elevregistret"
+detail = "Slutbetyg Ak9"
+status = "mapped"
+target = "scb/grundskola-ak9/grundskolan-betyg-ak9"
+
+[[route]]
+category = "Elevregistret"
+detail = "Ämnesprov Ak3"
+status = "mapped"
+target = "scb/grundskola-prov-ak3/_default"
+
+[[route]]
+category = "Elevregistret"
+detail = "Ämnesprov Ak6"
+status = "mapped"
+target = "scb/grundskola-prov-ak6/_default"
+
+[[route]]
+category = "Elevregistret"
+detail = "Ämnesprov Ak9"
+status = "split"
+
+[[route.split]]
+selector = "period:2003-2012"
+note = "variant validity window"
+target = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+
+[[route.split]]
+selector = "period:2013-"
+note = "variant validity window"
+target = "scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"
+
+[[route]]
+category = "Firms"
+detail = "Företagens ekonomi"
+status = "mapped"
+note = "weak column grounding (18%); SWECOV FE extract is heavily derived — most columns to flavor graft"
+target = "scb/fek/fek-slutdata"
+
+[[route]]
+category = "Firms"
+detail = "Företagsdatabasen"
+status = "split"
+
+[[route.split]]
+selector = "stem:FDB_AE_"
+note = "incl. _Ng_ näringsgren extras"
+target = "scb/fdb/arbetsstalleenheter"
+
+[[route.split]]
+selector = "stem:FDB_AST_"
+note = "7/7 grounded"
+target = "scb/fdb/administrativa"
+
+[[route]]
+category = "Geografidatabasen"
+detail = "Arbetsställen"
+status = "flavor"
+graft = "scb/gdb"
+note = "master-list Källa=Geo.databas for every column -> graft onto scb/gdb; reg_meta gdb variants don't enumerate the DeSO/Ruta250 delivery columns"
+
+[[route]]
+category = "Geografidatabasen"
+detail = "Individer"
+status = "flavor"
+graft = "scb/gdb"
+note = "as Arbetsställen"
+
+[[route]]
+category = "Geografidatabasen"
+detail = "Skolor"
+status = "flavor"
+graft = "scb/gdb"
+note = "as Arbetsställen"
+
+[[route]]
+category = "Högskoleregistret"
+detail = ""
+status = "split"
+
+[[route.split]]
+selector = "stem:Hreg_Reg_"
+note = "42% grounded"
+target = "scb/hreg/grundutbildning-1993"
+
+[[route.split]]
+selector = "stem:Hreg_Poang_"
+note = "65% grounded"
+target = "scb/hreg/grundutbildning-poang"
+
+[[route.split]]
+selector = "stem:Hreg_Sok_"
+note = "58% grounded"
+target = "scb/hreg/sokande-grund-avancerad"
+
+[[route.split]]
+selector = "stem:Hreg_Examina_"
+note = "33% grounded"
+target = "scb/hreg/grundutbildning-examina"
+
+[[route.split]]
+selector = "stem:Hreg_H_"
+note = "flavor: klartext lookup tables"
+
+[[route.split]]
+selector = "stem:klartext_utbildning"
+note = "flavor: klartext lookup"
+
+[[route]]
+category = "Industrins varuproduktion"
+detail = ""
+status = "mapped"
+note = "6/7 tie with ivp/returravara broken semantically (IVP_ = main survey)"
+target = "scb/ivp/industrins-varuproduktion"
+
+[[route]]
+category = "Industrins varuproduktion"
+detail = "Text"
+status = "lookup"
+note = "VaraText code lookup"
+
+[[route]]
+category = "Inkomst- och taxeringsregistret"
+detail = ""
+status = "mapped"
+note = "thin 7-column extract"
+target = "scb/iot/individer-och-dodsbon"
+
+[[route]]
+category = "Konjunkturstatistik sjuklöner"
+detail = ""
+status = "mapped"
+note = "ERSDAG/ERSK/FALLK etc. are wide pivots"
+target = "scb/ksju/sjukfranvaro-sjukloneperioden"
+
+[[route]]
+category = "Konkurser"
+detail = ""
+status = "mapped"
+target = "scb/konkurser/konkurser-offentliga-ackord"
+
+[[route]]
+category = "LISA"
+detail = "Arbetsställe"
+status = "mapped"
+target = "scb/lisa/arbetsstallen"
+
+[[route]]
+category = "LISA"
+detail = "Företag"
+status = "mapped"
+target = "scb/lisa/foretag"
+
+[[route]]
+category = "LISA"
+detail = "Individ"
+status = "split"
+
+[[route.split]]
+selector = "period:1990-2009"
+note = "variant validity window"
+target = "scb/lisa/individer-16plus"
+
+[[route.split]]
+selector = "period:2010-"
+note = "variant validity window"
+target = "scb/lisa/individer-15plus"
+
+[[route]]
+category = "Lärarregistret"
+detail = ""
+status = "mapped"
+target = "scb/lararreg/tjansteregistret"
+
+[[route]]
+category = "Momsregistret"
+detail = ""
+status = "mapped"
+target = "scb/moms/momsdeklarationsregistret"
+
+[[route]]
+category = "RAMS"
+detail = ""
+status = "mapped"
+target = "scb/rams/jobbregistret"
+
+[[route]]
+category = "RAMS"
+detail = "ASTRA"
+status = "mapped"
+target = "scb/rams/arbetsstallen"
+
+[[route]]
+category = "RTB"
+detail = "Adress särskilt boende"
+status = "flavor"
+note = "SWECOV-specific SÄBO address extract"
+
+[[route]]
+category = "RTB"
+detail = "Döda"
+status = "mapped"
+target = "scb/rtb/doda"
+
+[[route]]
+category = "RTB"
+detail = "Emigranter/Immigranter"
+status = "split"
+
+[[route.split]]
+selector = "stem:emigranter_"
+note = "3/3 grounded"
+target = "scb/rtb/utvandringar"
+
+[[route.split]]
+selector = "stem:immigranter_"
+note = "mirror of utvandringar"
+target = "scb/rtb/invandringar"
+
+[[route]]
+category = "RTB"
+detail = "Familj"
+status = "mapped"
+target = "scb/rtb/familjer-fran-1998"
+
+[[route]]
+category = "RTB"
+detail = "Flergenerationsregistret"
+status = "split"
+
+[[route.split]]
+selector = "stem:FlerGen_Bioforaldrar_"
+note = "3/3; semantic tiebreak"
+target = "scb/flergenreg/folkbokforda-biologiska"
+
+[[route.split]]
+selector = "stem:FlerGen_Adopforaldrar_"
+note = "3/3"
+target = "scb/flergenreg/folkbokforda-adoptivforaldrar"
+
+[[route]]
+category = "RTB"
+detail = "Födelseuppgifter"
+status = "flavor"
+graft = "scb/rtb"
+note = "Källa=RTB for FodelseLan/Fodelseland/UtlSvBakg -> graft onto scb/rtb (SCB metadata gap, not SWECOV construction); EU groupings are SWECOV lookups"
+
+[[route]]
+category = "RTB"
+detail = "HB"
+status = "mapped"
+note = "HUSHALLSID_YYYY are year-pivots of HUSHALLSID"
+target = "scb/hushallens-boende/individer"
+
+[[route]]
+category = "RTB"
+detail = "HP"
+status = "mapped"
+note = "HUSHALLSID_YYYY year-pivots as HB"
+target = "scb/rtb/hushall"
+
+[[route]]
+category = "RTB"
+detail = "Inrikes flyttningar"
+status = "mapped"
+note = "RTB_SaBo_InrFlyttFlode extras to flavor"
+target = "scb/rtb/inrikes-flyttningar"
+
+[[route]]
+category = "RTB"
+detail = "Land"
+status = "lookup"
+note = "country-code EU-grouping lookup"
+
+[[route]]
+category = "RTB"
+detail = "Partner"
+status = "flavor"
+graft = "scb/rtb"
+note = "Källa=RTB/Hushållsreg. for Famstall/HushallsStallning/partner-lopnr; FST90-97 wide pivots from familjer-1990-1997 -> derived link table grafted on scb/rtb"
+
+[[route]]
+category = "RTB"
+detail = "Population"
+status = "flavor"
+note = "Källa empty for IndexPop/Partner/LopNrByte etc. -> SWECOV-constructed population spine"
+
+[[route]]
+category = "RTB"
+detail = "PostNr"
+status = "flavor"
+note = "postnr-per-person extract, 2 columns"
+
+[[route]]
+category = "RTB"
+detail = "RTB"
+status = "mapped"
+target = "scb/rtb/folkbokforda-personer"
+
+[[route]]
+category = "SCB"
+detail = ""
+status = "lookup"
+note = "LopNrByte key-change crosswalk"
+
+[[route]]
+category = "STATIV"
+detail = ""
+status = "mapped"
+target = "scb/stativ/_default"
+
+[[route]]
+category = "Sjukfränvaro under sjuklöneperioden"
+detail = ""
+status = "mapped"
+target = "scb/anst/sus"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Barn"
+status = "mapped"
+target = "sos/bu/_default"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Cancerregistret"
+status = "mapped"
+target = "sos/can/can"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Dödsorsaksregistret"
+status = "mapped"
+target = "sos/dors/dors"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Ekonomiskt bistand"
+status = "mapped"
+target = "sos/ekb/ekb-manad"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Intensivvårdsregistret"
+status = "flavor"
+note = "SIR is a quality register routed via SoS; not in the SOS catalog"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Kommunal hälso- och sjukvård"
+status = "mapped"
+target = "sos/hsl/hsl"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "LSS"
+status = "mapped"
+target = "sos/lss/_default"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Läkemedelsregistret"
+status = "mapped"
+note = "ATC/FORPDDD live in lmed-vara; SWECOV table is a denormalized join"
+target = "sos/lmed/lmed"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Slutenvård"
+status = "mapped"
+note = "DIA1..30/EKOD1.. wide pivots of long-format concepts; SV_comorb derived"
+target = "sos/par/par-sv"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Socialtjänst (Äldrevård)"
+status = "mapped"
+target = "sos/sol/sol"
+
+[[route]]
+category = "Socialstyrelsen"
+detail = "Öppenvård"
+status = "mapped"
+note = "wide pivots as Slutenvård"
+target = "sos/par/par-ov"
+
+[[route]]
+category = "Survey"
+detail = "Distansutbildning"
+status = "split"
+
+[[route.split]]
+selector = "stem:Distansutb_grund_"
+note = "100%"
+target = "scb/utbildningsanalyser/distansundervisning-grundskola"
+
+[[route.split]]
+selector = "stem:Distansutb_gymn_"
+note = "100%"
+target = "scb/utbildningsanalyser/distansundervisning-gymnasieskolan"
+
+[[route]]
+category = "Survey"
+detail = "FOU"
+status = "mapped"
+note = "wave columns mostly undocumented in reg_meta -> flavor graft"
+target = "scb/fou/foretagssektorn"
+
+[[route]]
+category = "Survey"
+detail = "IT"
+status = "mapped"
+note = "2008-2012 waves poorly enumerated in reg_meta"
+target = "scb/it-anvandning/it-anvandning-i-foretag"
+
+[[route]]
+category = "Survey"
+detail = "IT Mikro"
+status = "mapped"
+target = "scb/it-anvandning/it-anvandning-i-foretag"
+
+[[route]]
+category = "Survey"
+detail = "IT Stora"
+status = "mapped"
+target = "scb/it-anvandning/it-anvandning-i-foretag"
+
+[[route]]
+category = "Survey"
+detail = "Innovation"
+status = "mapped"
+note = "CIS wave drift; unmatched wave items -> flavor graft"
+target = "scb/innovation-foretag/_default"
+
+[[route]]
+category = "Utbildningsregistret"
+detail = ""
+status = "mapped"
+target = "scb/ureg/personens-hogsta-utbildning"
+
+[[route]]
+category = "Utrikeshandel"
+detail = "Tjänster"
+status = "flavor"
+note = "no tjänster register in reg_meta"
+
+[[route]]
+category = "Utrikeshandel"
+detail = "Varor"
+status = "mapped"
+note = "exact tie with landfordelad-extrastat; SWECOV UHV is the combined flow — needs sign-off"
+target = "scb/utrikeshandel/varu-landfordelat-intrastat"
+
+[[flavor]]
+holding = "Swedbank"
+provider = "swedbank"
+provider_name = "Swedbank AB"
+register = "konsumtion"
+register_name = "Konsumtionsstatistik"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Konsumtionsstatistik"
+
+[[flavor]]
+holding = "Telia"
+provider = "telia"
+provider_name = "Telia Company AB"
+register = "mobilitet"
+register_name = "Mobilitetsdata"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Mobilitetsdata"
+
+[[flavor]]
+holding = "Primary care/Skane"
+provider = "region-skane"
+provider_name = "Region Skåne"
+register = "primarvard"
+register_name = "Primärvård"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Primärvård"
+
+[[flavor]]
+holding = "Primary care/Stockholm"
+provider = "region-stockholm"
+provider_name = "Region Stockholm"
+register = "primarvard"
+register_name = "Primärvård"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Primärvård"
+
+[[flavor]]
+holding = "Primary care/VGR - Primärvård"
+provider = "vgr"
+provider_name = "Västra Götalandsregionen"
+register = "primarvard"
+register_name = "Primärvård"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Primärvård"
+
+[[flavor]]
+holding = "Primary care/VGR - Diagnoser"
+provider = "vgr"
+provider_name = "Västra Götalandsregionen"
+register = "primarvard-diagnoser"
+register_name = "Primärvård – diagnoser"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Primärvård – diagnoser"
+
+[[flavor]]
+holding = "SÄBO/Adresses"
+provider = "sabo"
+provider_name = "Kommunala SÄBO-leveranser"
+register = "adresser"
+register_name = "SÄBO-adresser"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "SÄBO-adresser"
+
+[[flavor]]
+holding = "SÄBO/Patients"
+provider = "sabo"
+provider_name = "Kommunala SÄBO-leveranser"
+register = "patienter"
+register_name = "SÄBO-patienter"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "SÄBO-patienter"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Dalarna"
+provider = "region-dalarna"
+provider_name = "Region Dalarna"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Gävleborg"
+provider = "region-gavleborg"
+provider_name = "Region Gävleborg"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Jönköping"
+provider = "region-jonkoping"
+provider_name = "Region Jönköping"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Kalmar Län"
+provider = "region-kalmar"
+provider_name = "Region Kalmar län"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Kronoberg"
+provider = "region-kronoberg"
+provider_name = "Region Kronoberg"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Norrbotten"
+provider = "region-norrbotten"
+provider_name = "Region Norrbotten"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Uppsala"
+provider = "region-uppsala"
+provider_name = "Region Uppsala"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Värmland"
+provider = "region-varmland"
+provider_name = "Region Värmland"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Västerbotten"
+provider = "region-vasterbotten"
+provider_name = "Region Västerbotten"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Pandemrix vaccinations/Region Östergötland"
+provider = "region-ostergotland"
+provider_name = "Region Östergötland"
+register = "pandemrix-vaccinationer"
+register_name = "Pandemrix-vaccinationer"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Pandemrix-vaccinationer"
+
+[[flavor]]
+holding = "Inera/1177/Calls to 1177"
+provider = "inera"
+provider_name = "Inera AB / 1177 Vårdguiden"
+register = "samtal"
+register_name = "Samtal 1177"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Samtal 1177"
+
+[[flavor]]
+holding = "Inera/1177/Ordered tests"
+provider = "inera"
+provider_name = "Inera AB / 1177 Vårdguiden"
+register = "bestallda-prover"
+register_name = "Beställda prover"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Beställda prover"
+
+[[flavor]]
+holding = "Kolorektalcancer"
+provider = "scrcr"
+provider_name = "Svenska Kolorektalcancerregistret (SCRCR)"
+register = "kolorektalcancer"
+register_name = "Kolorektalcancerregistret"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Kolorektalcancerregistret"
+
+[[flavor]]
+holding = "Quality register/Graviditetsregistret"
+provider = "graviditetsregistret"
+provider_name = "Graviditetsregistret"
+register = "graviditetsregistret"
+register_name = "Graviditetsregistret"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Graviditetsregistret"
+
+[[flavor]]
+holding = "Quality register/NDR"
+provider = "ndr"
+provider_name = "Nationella Diabetesregistret (NDR)"
+register = "nationella-diabetesregistret"
+register_name = "Nationella diabetesregistret"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Nationella diabetesregistret"
+
+[[flavor]]
+holding = "Socialstyrelsen/Intensivvårdsregistret"
+provider = "sir"
+provider_name = "Svenska Intensivvårdsregistret (SIR)"
+register = "intensivvardsregistret"
+register_name = "Svenska Intensivvårdsregistret"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Svenska Intensivvårdsregistret"
+
+[[flavor]]
+holding = "SOS Alarm"
+provider = "sos-alarm"
+provider_name = "SOS Alarm Sverige AB"
+register = "ambulanslarm"
+register_name = "Ambulanslarm"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Ambulanslarm"
+
+[[flavor]]
+holding = "RTB/Population"
+provider = "swecov"
+provider_name = "SWECOV (konstruerade variabler)"
+register = "population"
+register_name = "Populationsspine (konstruerad)"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Populationsspine (konstruerad)"
+
+[[flavor]]
+holding = "RTB/Adress särskilt boende"
+provider = "swecov"
+provider_name = "SWECOV (konstruerade variabler)"
+register = "adress-sarskilt-boende"
+register_name = "Adress särskilt boende"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Adress särskilt boende"
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "omstallningsstod"
+register_name = "Omställningsstöd"
+variant = "ansokt"
+variant_slug = "ansokt"
+variant_name = "Ansökt"
+tables = ["SKV_omststod_ansokt"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "omstallningsstod"
+register_name = "Omställningsstöd"
+variant = "beviljat"
+variant_slug = "beviljat"
+variant_name = "Beviljat"
+tables = ["SKV_omststod_beviljat"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "omstallningsstod"
+register_name = "Omställningsstöd"
+variant = "avslag"
+variant_slug = "avslag"
+variant_name = "Avslag"
+tables = ["SKV_omststod_avslag"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "tillfalligt-anstand"
+register_name = "Tillfälligt anstånd med skatteinbetalning"
+variant = "ansokt"
+variant_slug = "ansokt"
+variant_name = "Ansökt"
+tables = ["SKV_anstand_tillf_ansokan"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "tillfalligt-anstand"
+register_name = "Tillfälligt anstånd med skatteinbetalning"
+variant = "beviljat"
+variant_slug = "beviljat"
+variant_name = "Beviljat"
+tables = ["SKV_anstand_tillf_beviljat"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "tillfalligt-anstand"
+register_name = "Tillfälligt anstånd med skatteinbetalning"
+variant = "upphort"
+variant_slug = "upphort"
+variant_name = "Upphört"
+tables = ["SKV_anstand_tillf_upphort"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "tillfalligt-anstand"
+register_name = "Tillfälligt anstånd med skatteinbetalning"
+variant = "aterkallat"
+variant_slug = "aterkallat"
+variant_name = "Återkallat"
+tables = ["SKV_anstand_tillf_aterk"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "arbetsgivardeklaration"
+register_name = "Uppgifter från arbetsgivardeklaration"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Uppgifter från arbetsgivardeklaration"
+tables = ["SKV_ag_skatt"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "reducerad-egenavgift"
+register_name = "Reducerad egenavgift inkomstår 2020"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Reducerad egenavgift inkomstår 2020"
+tables = ["SKV_reducerad_egenavg"]
+
+[[flavor]]
+holding = "Skatteverket"
+provider = "skatteverket"
+provider_name = "Skatteverket"
+register = "momsdeklaration"
+register_name = "Uppgifter från momsdeklaration"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Uppgifter från momsdeklaration"
+tables = ["SKV_Moms"]
+
+[[flavor]]
+holding = "Korttidsarbete/Individer"
+provider = "tillvaxtverket"
+provider_name = "Tillväxtverket"
+register = "korttidsarbete"
+register_name = "Korttidsarbete (KTA)"
+variant = "individer"
+variant_slug = "individer"
+variant_name = "Individer"
+
+[[flavor]]
+holding = "Korttidsarbete/Transaktioner"
+provider = "tillvaxtverket"
+provider_name = "Tillväxtverket"
+register = "korttidsarbete"
+register_name = "Korttidsarbete (KTA)"
+variant = "transaktioner"
+variant_slug = "transaktioner"
+variant_name = "Transaktioner"
+
+[[flavor]]
+holding = "Arbetsförmedlingen"
+provider = "arbetsformedlingen"
+provider_name = "Arbetsförmedlingen"
+register = "aktso"
+register_name = "Aktivitet och sökandekategori (AKTSO)"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Aktivitet och sökandekategori (AKTSO)"
+tables = ["AMS_HIST_AKTSO", "AMS_HIST_AKTSO_2021_20230726"]
+
+[[flavor]]
+holding = "Arbetsförmedlingen"
+provider = "arbetsformedlingen"
+provider_name = "Arbetsförmedlingen"
+register = "insper"
+register_name = "Inskrivningsperioder (INSPER)"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Inskrivningsperioder (INSPER)"
+tables = ["AMS_INSPER", "AMS_INSPER_2021_20230726"]
+
+[[flavor]]
+holding = "Arbetsförmedlingen"
+provider = "arbetsformedlingen"
+provider_name = "Arbetsförmedlingen"
+register = "sokatper"
+register_name = "Sökandekategoriperioder (SOKATPER)"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Sökandekategoriperioder (SOKATPER)"
+tables = ["AMS_SOKATPER", "AMS_SOKATPER_2021_20230726"]
+
+[[flavor]]
+holding = "IAF"
+provider = "iaf"
+provider_name = "Inspektionen för arbetslöshetsförsäkringen"
+register = "beslut"
+register_name = "Beslut"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Beslut"
+tables = ["IFA_Beslut", "IFA_Beslut_From2018_Lev2", "IFA_Beslut_Lev3", "IFA_Beslut_Tom2017_Lev2"]
+
+[[flavor]]
+holding = "IAF"
+provider = "iaf"
+provider_name = "Inspektionen för arbetslöshetsförsäkringen"
+register = "diverse"
+register_name = "Diverse beslut"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Diverse beslut"
+tables = ["IFA_Diverse_Lev2", "IFA_Diverse_Lev3"]
+
+[[flavor]]
+holding = "IAF"
+provider = "iaf"
+provider_name = "Inspektionen för arbetslöshetsförsäkringen"
+register = "ersattningsperiod"
+register_name = "Ersättningsperioder"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Ersättningsperioder"
+tables = ["IFA_Ersperiod_Lev2", "IFA_Ersperiod_Lev3"]
+
+[[flavor]]
+holding = "IAF"
+provider = "iaf"
+provider_name = "Inspektionen för arbetslöshetsförsäkringen"
+register = "utbetalning"
+register_name = "Utbetalningar"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Utbetalningar"
+tables = ["IFA_Utbet_2015_2017_Lev2", "IFA_Utbet_2018_2019_Lev2", "IFA_Utbet_2020_2021_Lev2", "IFA_Utbet_Lev3"]
+
+[[flavor]]
+holding = "IAF"
+provider = "iaf"
+provider_name = "Inspektionen för arbetslöshetsförsäkringen"
+register = "medlemskap"
+register_name = "Medlemskap i a-kassa"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Medlemskap i a-kassa"
+tables = ["IFA_Medlemskap_Lev2", "IFA_Medlemskap_Lev3"]
+
+[[flavor]]
+holding = "IAF"
+provider = "iaf"
+provider_name = "Inspektionen för arbetslöshetsförsäkringen"
+register = "kassakod"
+register_name = "Kassakoder (a-kassor)"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Kassakoder (a-kassor)"
+tables = ["IFA_Kassakod", "IFA_Kassakod_Lev2", "IFA_Kassakod_Lev3"]
+
+[[flavor]]
+holding = "IAF"
+provider = "iaf"
+provider_name = "Inspektionen för arbetslöshetsförsäkringen"
+register = "kassakortsvecka"
+register_name = "Kassakortsveckor"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Kassakortsveckor"
+tables = ["IFA_KKvecka_Lev2", "IFA_KKvecka_Lev3"]
+
+[[flavor]]
+holding = "IAF"
+provider = "iaf"
+provider_name = "Inspektionen för arbetslöshetsförsäkringen"
+register = "deltidsveckor"
+register_name = "Deltidsveckor"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Deltidsveckor"
+tables = ["IFA_Deltidsveckor_Lev2", "IFA_Deltidsveckor_Lev3"]
+
+[[provider_scope]]
+holding_prefix = "FOHM"
+provider = "fohm"
+
+[[provider_scope]]
+holding_prefix = "Försäkringskassan"
+provider = "fk"
+
+[[provider_scope]]
+holding_prefix = "Högskoleprovet"
+provider = "umu"
+
+[[provider_scope]]
+holding_prefix = "Läkemedelsverket"
+provider = "lakemedelsverket"
+
+[[provider_scope]]
+holding_prefix = "Military enlistment/Pliktverket"
+provider = "pliktverket"
+
+[[provider_scope]]
+holding_prefix = "Military enlistment/Riksarkivet"
+provider = "riksarkivet"
+
+[[register_scope]]
+holding = "AGI/Huvud"
+register = "scb/agi-huvud"
+
+[[register_scope]]
+holding = "Utrikeshandel/Tjänster"
+register = "scb/utrikeshandel-tjanster"

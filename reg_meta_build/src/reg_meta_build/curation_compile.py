@@ -16,13 +16,12 @@ from pydantic import TypeAdapter, ValidationError
 from reg_meta.fqid import FqidKind, derive_variable_slug, parse as parse_fqid
 from reg_meta.source_evidence import canonical_sha256
 
-from ._curation import SentinelCode, fold_column
+from ._curation import SentinelCode, curation_error, fold_column
 from ._resolved_common import covers_window
 from .cis2016_matrix import (
     Cis2014Matrix,
     convert_matrix,
-    load_cis2014_matrix,
-    load_cis2016_matrix,
+    load_matrix,
 )
 from .concept_groups import _MONTH_TOKENS, CodeLabelPair
 from .curation_tree import (
@@ -1792,34 +1791,24 @@ def compile_matrix_repr(
     registers = {
         f"{item.register_info.provider}/{item.register_info.slug}": item
         for item in tree.registers
+        if any(
+            (
+                item.representation.matrix,
+                item.representation.period_family,
+                item.representation.alias_window,
+                item.representation.parallel,
+                item.representation.delivery_metadata,
+            )
+        )
     }
     if not any(
-        name in registers
-        and (
-            registers[name].representation.period_family
-            or registers[name].representation.alias_window
-            or registers[name].representation.parallel
-            or registers[name].representation.delivery_metadata
-            or name == "scb/innovation-foretag"
-        )
-        for scope in scopes
-        for name, _ in _scope_registers(scope)
+        name in registers for scope in scopes for name, _ in _scope_registers(scope)
     ):
         return {}, {}, {}, ()
     cases: dict[Any, list[CurationCase]] = defaultdict(list)
     names: dict[Any, list[NamingDeclaration]] = defaultdict(list)
     keys: dict[Any, list[tuple[tuple[str | int, ...], str]]] = defaultdict(list)
     diagnostics = []
-    matrices = (
-        load_cis2014_matrix(
-            tree.root
-            / "registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json"
-        ),
-        load_cis2016_matrix(
-            tree.root
-            / "registers/scb/innovation-foretag/cis2016-matrix-meaning-evidence.json"
-        ),
-    )
     with open_value_bindings(prepared.value_sources) as sessions:
         for scope in sorted(
             scopes, key=lambda item: (item.source, repr(item.register_key))
@@ -1829,13 +1818,6 @@ def compile_matrix_repr(
                 (registers[name], native)
                 for name, native in _scope_registers(scope)
                 if name in registers
-                and (
-                    registers[name].representation.period_family
-                    or registers[name].representation.alias_window
-                    or registers[name].representation.parallel
-                    or registers[name].representation.delivery_metadata
-                    or name == "scb/innovation-foretag"
-                )
             )
             if not selected_registers:
                 continue
@@ -1861,77 +1843,80 @@ def compile_matrix_repr(
                 names[scope_key].extend(period_names)
                 keys[scope_key].extend(period_keys)
                 diagnostics.extend(issues)
-                if (
-                    register.register_info.slug == "innovation-foretag"
-                    and register.register_info.provider == "scb"
-                ):
-                    for matrix in matrices:
-                        if matrix is None:
-                            continue
-                        ref = (
-                            f"{register.source_file}#/matrix/{matrix.selector.edition}"
+                for declaration in register.representation.matrix:
+                    path = tree.root / declaration.evidence_file
+                    if not path.resolve().is_relative_to(tree.root.resolve()):
+                        raise curation_error(
+                            "matrix_evidence_invalid",
+                            f"{declaration.evidence_file}: matrix evidence escapes curation root.",
+                            "Keep reviewed matrix evidence inside the curation tree.",
                         )
-                        if native[-1] != matrix.selector.register_id:
+                    matrix = load_matrix(
+                        path,
+                        source_mode=declaration.source_mode,
+                        expected_selector=declaration.selector,
+                    )
+                    ref = f"{register.source_file}#/matrix/{matrix.selector.edition}"
+                    if native[-1] != matrix.selector.register_id:
+                        diagnostics.append(
+                            _stale_partition(
+                                ref,
+                                matrix.selector.edition,
+                                "matrix register selector changed",
+                            )
+                        )
+                        continue
+                    coding = None
+                    if isinstance(matrix, Cis2014Matrix):
+                        donors = tuple(
+                            record
+                            for record in records
+                            if record.subject.native.edition_id
+                            == matrix.selector.regver_id
+                            and record.subject.native.variable_id
+                            == matrix.selector.var_id
+                            and record.subject.native.member_id == matrix.selector.cvid
+                        )
+                        if len({record_ref(record) for record in donors}) != 1:
                             diagnostics.append(
                                 _stale_partition(
                                     ref,
                                     matrix.selector.edition,
-                                    "matrix register selector changed",
+                                    "blank matrix has no unique semantic donor",
                                 )
                             )
                             continue
-                        coding = None
-                        if isinstance(matrix, Cis2014Matrix):
-                            donors = tuple(
-                                record
-                                for record in records
-                                if record.subject.native.edition_id
-                                == matrix.selector.regver_id
-                                and record.subject.native.variable_id
-                                == matrix.selector.var_id
-                                and record.subject.native.member_id
-                                == matrix.selector.cvid
-                            )
-                            if len({record_ref(record) for record in donors}) != 1:
-                                diagnostics.append(
-                                    _stale_partition(
-                                        ref,
-                                        matrix.selector.edition,
-                                        "blank matrix has no unique semantic donor",
-                                    )
-                                )
-                                continue
-                            bound = bind_code_lists(donors[0], sessions)
-                            if (
-                                bound.issues
-                                or len(bound.claims) != 1
-                                or not bound.claims[0].members
-                            ):
-                                diagnostics.append(
-                                    _stale_partition(
-                                        ref,
-                                        matrix.selector.edition,
-                                        "blank matrix donor lacks one complete list",
-                                    )
-                                )
-                                continue
-                            coding = {record_ref(donors[0]): bound.claims}
-                        try:
-                            converted = convert_matrix(
-                                matrix,
-                                records,
-                                case_id=ref,
-                                provenance=ref,
-                                coding=coding,
-                            )
-                        except ValueError as exc:
+                        bound = bind_code_lists(donors[0], sessions)
+                        if (
+                            bound.issues
+                            or len(bound.claims) != 1
+                            or not bound.claims[0].members
+                        ):
                             diagnostics.append(
-                                _stale_partition(ref, matrix.selector.edition, str(exc))
+                                _stale_partition(
+                                    ref,
+                                    matrix.selector.edition,
+                                    "blank matrix donor lacks one complete list",
+                                )
                             )
                             continue
-                        cases[scope_key].append(converted.case)
-                        names[scope_key].extend(converted.naming)
-                        keys[scope_key].extend(converted.provider_keys.items())
+                        coding = {record_ref(donors[0]): bound.claims}
+                    try:
+                        converted = convert_matrix(
+                            matrix,
+                            records,
+                            case_id=ref,
+                            provenance=ref,
+                            coding=coding,
+                        )
+                    except ValueError as exc:
+                        diagnostics.append(
+                            _stale_partition(ref, matrix.selector.edition, str(exc))
+                        )
+                        continue
+                    cases[scope_key].append(converted.case)
+                    names[scope_key].extend(converted.naming)
+                    keys[scope_key].extend(converted.provider_keys.items())
                 alias_cases, alias_issues = compile_alias_windows(
                     register,
                     records,

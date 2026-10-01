@@ -286,3 +286,204 @@ def test_converter_rejects_unreviewed_columns_or_competing_members(blank: bool) 
             case_id="matrix",
             provenance="input",
         )
+
+
+def _matrix_activation(tmp_path, *, declared=True, records=None, blank=False):
+    from types import SimpleNamespace
+
+    from reg_meta_build.curation_compile import compile_matrix_repr
+    from reg_meta_build.curation_tree import load_register_files
+    from reg_meta_build.pipeline import CompiledScope
+    from reg_meta_build.source_coordinates import source_register_key
+    from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
+
+    from reg_meta_build.fqid_slugs import SlugEntry
+
+    matrix = _matrix(blank=blank)
+    root = tmp_path / "curation"
+    evidence = root / "registers/scb/innovation-foretag/answers.json"
+    evidence.parent.mkdir(parents=True)
+    evidence.write_text(matrix.model_dump_json(by_alias=True), encoding="utf-8")
+    path = evidence.parent.with_suffix(".toml")
+    body = (
+        '[register]\nprovider = "scb"\nslug = "innovation-foretag"\nnative_id = "257"\n'
+        '[[variant]]\nnative_id = "257.553"\nslug = "_default"\n'
+    )
+    selector = ", ".join(
+        f"{key} = {json.dumps(value)}"
+        for key, value in matrix.selector.model_dump(by_alias=True).items()
+    )
+    if declared:
+        body += (
+            f'[[representation.matrix]]\nsource_mode = "{"documented_blank" if blank else "named"}"\n'
+            'evidence_file = "registers/scb/innovation-foretag/answers.json"\n'
+            f"selector = {{ {selector} }}\n"
+        )
+    path.write_text(body, encoding="utf-8")
+    records = (
+        records
+        if records is not None
+        else _rows(matrix, ("", "") if blank else ("CO11", "CO12"))
+    )
+    register_key = source_register_key(records[0])
+    named = NamingDeclaration(
+        target=NativeNamingTarget(
+            kind="register", provider="scb", source_key=register_key
+        ),
+        naming=SlugEntry(
+            kind="register", provider="scb", source_id="257", slug="innovation-foretag"
+        ),
+        contributors=(),
+    )
+    scope = CompiledScope(
+        source=records[0].source, register_key=register_key, naming=(named,)
+    )
+
+    class Records:
+        def iter_register_slices(self, source, wanted):
+            assert source == scope.source and register_key in wanted
+            yield register_key, records
+
+    def compile():
+        (register,) = load_register_files(root)
+        return compile_matrix_repr(
+            SimpleNamespace(root=root, registers=(register,)),
+            SimpleNamespace(records=Records(), value_sources=()),
+            (scope,),
+            {(scope.source, register_key): (named,)},
+        )
+
+    return compile, evidence, path, matrix, records, (scope.source, register_key)
+
+
+def test_matrix_activation_preserves_existing_case_and_checked_conversion(
+    tmp_path,
+) -> None:
+    compile, _, _, matrix, records, key = _matrix_activation(tmp_path)
+    cases, names, keys, issues = compile()
+    ref = "curation/registers/scb/innovation-foretag.toml#/matrix/2014 - 2016"
+    expected = convert_matrix(matrix, records, case_id=ref, provenance=ref)
+    assert issues == ()
+    assert cases[key] == (expected.case,)
+    assert names[key] == expected.naming
+    assert keys[key] == tuple(expected.provider_keys.items())
+
+
+def test_matrix_evidence_does_not_activate_without_declaration(tmp_path) -> None:
+    compile, _, _, _, _, _ = _matrix_activation(tmp_path, declared=False)
+    assert compile() == ({}, {}, {}, ())
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "missing",
+        "selector",
+        "meaning",
+        "parent_path",
+        "symlink",
+        "missing_selector",
+        "wrong_register",
+        "wrong_variant",
+        "absolute_path",
+        "duplicate",
+    ],
+)
+def test_matrix_activation_refuses_missing_or_changed_checked_evidence(
+    tmp_path, change
+) -> None:
+    from reg_meta.errors import EXIT_CONFIG, RegMetaError
+
+    compile, evidence, path, _, _, _ = _matrix_activation(tmp_path)
+    if change == "missing":
+        evidence.unlink()
+    elif change in {"selector", "meaning"}:
+        payload = json.loads(evidence.read_text())
+        if change == "selector":
+            payload["selector"]["cvid"] += 1
+        else:
+            payload["answers"][0]["columns"].append("CO13")
+            payload["answers"][0]["source_pages"]["CO13"] = 23
+        evidence.write_text(json.dumps(payload), encoding="utf-8")
+    elif change == "parent_path":
+        path.write_text(
+            path.read_text().replace(
+                "innovation-foretag/answers.json", "innovation-foretag/../answers.json"
+            )
+        )
+    elif change == "symlink":
+        external = tmp_path / "external.json"
+        evidence.rename(external)
+        evidence.symlink_to(external)
+    else:
+        content = path.read_text()
+        if change == "missing_selector":
+            content = "\n".join(
+                line
+                for line in content.splitlines()
+                if not line.startswith("selector =")
+            )
+        elif change == "wrong_register":
+            content = content.replace("register_id = 257", "register_id = 258")
+        elif change == "wrong_variant":
+            content = content.replace(
+                "register_variant_id = 553", "register_variant_id = 554"
+            )
+        elif change == "absolute_path":
+            content = content.replace(
+                "registers/scb/innovation-foretag/answers.json", "/answers.json"
+            )
+        else:
+            content += (
+                "[[representation.matrix]]"
+                + content.split("[[representation.matrix]]", 1)[1]
+            )
+        path.write_text(content)
+    with pytest.raises(RegMetaError) as exc:
+        compile()
+    assert exc.value.exit_code == EXIT_CONFIG
+
+
+def test_matrix_activation_refuses_changed_complete_source_members(tmp_path) -> None:
+    matrix = _matrix()
+    records = (*_rows(matrix, ("CO11", "CO12")), *_rows(matrix, ("NEW",), cvid=999))
+    compile, _, _, _, _, _ = _matrix_activation(tmp_path, records=records)
+    cases, names, keys, issues = compile()
+    assert (
+        not any(cases.values()) and not any(names.values()) and not any(keys.values())
+    )
+    assert [issue.code for issue in issues] == ["stale_curation_entry"]
+    assert "complete CVID partition changed" in issues[0].detail
+
+
+def test_blank_matrix_activation_preserves_checked_donor_and_coding(
+    tmp_path, monkeypatch
+) -> None:
+    from reg_meta_build.source_value_bindings import ValueBindingResult
+
+    compile, _, _, matrix, records, key = _matrix_activation(tmp_path, blank=True)
+    claims = (
+        CodeListClaim(
+            "original",
+            records[0].edition_scope,
+            (CodeMembershipClaim("1", "Yes", records[0].edition_scope),),
+        ),
+    )
+    monkeypatch.setattr(
+        "reg_meta_build.curation_compile.bind_code_lists",
+        lambda record, sessions: ValueBindingResult(claims, (), ()),
+    )
+    cases, names, keys, issues = compile()
+    ref = "curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014"
+    expected = convert_matrix(
+        matrix,
+        records,
+        case_id=ref,
+        provenance=ref,
+        coding={record_ref(records[0]): claims},
+    )
+    assert issues == ()
+    assert cases[key] == (expected.case,)
+    assert names[key] == expected.naming
+    assert keys[key] == tuple(expected.provider_keys.items())
+    assert evaluate_case(cases[key][0], records).status == "applicable"

@@ -61,13 +61,12 @@ dependency and lineage resolution → `resolved_catalog.write_resolved_catalog`.
   | —    | `extend_db.py`, `sources/curated.py`, `ir/`                                                | Separate steward extension over a released global catalog.                                        |
   | —    | `doc_db.py`                                                                                | Document indexing; independent of source fact resolution.                                         |
 
-Transitional: builder code still names specific registers or variants in four places.
+Transitional: builder code still names specific registers or variants in three places.
 They are debt to remove, not precedent:
 
 - `sources/scb_records.py` `_PROJECTION_REGISTERS`, which reads one forecast register's
   edition names as vintages;
 - the LISA code-membership anchor in `validate.py`;
-- the CIS 2014 register/variant selector in `cis2016_matrix.py`;
 - the LISA variant pins in `source_inspection.py`.
 
 ## Source observations and authority
@@ -624,6 +623,13 @@ holdings preserve unknown coverage; pooled editions cannot create annual states.
 Delivery correction guards capture every supplied source field, parent fact and coding
 reference from both donor and target evidence. Changed meaning or bindings makes the
 correction stale, even when the physical column and storage type remain unchanged.
+
+`[[representation.matrix]]` activates a reviewed answer partition in its owning register
+file. It names a source mode, a normalized evidence JSON path inside the curation tree
+and the exact expected native selector. Missing evidence, an escaped path or a selector
+that disagrees with either the JSON or the owning register fails configuration.
+Undeclared evidence files do not activate processing. The existing meaning,
+source-member and coding guards still govern each conversion.
 
 The CIS cooperation-matrix declarations bind reviewed answer meanings to their exact
 source partitions. CIS 2014 has a blank-column source member, so each added answer
@@ -1288,6 +1294,15 @@ pooled ranges/lists are explicitly unassessed and never infer annual column
 availability. A missing delivery inventory fails configuration unless the explicit skip
 flag is selected. Provider regeneration and input acceptance remain separate maintainer
 operations.
+
+SWECOV source routing lives in the tracked `source_policy.toml` beside its inventory
+overlay. Category/detail routes select catalog variants or split selectors; flavor
+entries carry explicit provider/register/variant metadata and any exact table selectors.
+The generator validates this policy once and derives its runtime indexes. Repeated
+selectors, conflicting metadata and unknown fields fail configuration. Physical
+table/column overrides remain in `inventory_overlay.toml`: they have a different scope
+from category routing. Both files are curation inputs, not generated outputs. The
+generator neither invents routes nor changes their declarations.
 
 Inventory generation retains accepted catalog placement bounds and resolves each finite
 table edition through positively covering declared owners. Missing coverage or

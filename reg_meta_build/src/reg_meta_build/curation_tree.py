@@ -50,6 +50,9 @@ from ._curation import (
     repo_curation_dir,
 )
 from ._resolved_common import _require_trimmed
+from .cis2016_matrix import (
+    MatrixSelector,  # noqa: TC001 - Pydantic resolves the nested selector at runtime.
+)
 from .fqid_slugs import (
     load_lineage_config,
 )
@@ -1199,11 +1202,41 @@ class DeliveryMetadataEntry(_CurationModel):
         return self
 
 
+class MatrixRepresentationEntry(_CurationModel):
+    source_mode: Literal["named", "documented_blank"]
+    evidence_file: str
+    selector: MatrixSelector
+
+    @field_validator("evidence_file")
+    @classmethod
+    def _evidence_path(cls, value: str) -> str:
+        path = PurePosixPath(value)
+        if (
+            path.is_absolute()
+            or ".." in path.parts
+            or path.as_posix() != value
+            or path.suffix != ".json"
+        ):
+            raise ValueError("matrix evidence must be a normalized relative .json path")
+        return value
+
+
 class RepresentationCuration(_CurationModel):
+    matrix: list[MatrixRepresentationEntry] = Field(default_factory=list)
     period_family: list[PeriodFamilyEntry] = Field(default_factory=list)
     delivery_metadata: list[DeliveryMetadataEntry] = Field(default_factory=list)
     alias_window: list[AliasWindowEntry] = Field(default_factory=list)
     parallel: list[ParallelRepresentationEntry] = Field(default_factory=list)
+
+    @field_validator("matrix")
+    @classmethod
+    def _unique_matrix_editions(
+        cls, value: list[MatrixRepresentationEntry]
+    ) -> list[MatrixRepresentationEntry]:
+        editions = [entry.selector.edition for entry in value]
+        if len(editions) != len(set(editions)):
+            raise ValueError("matrix declarations must select distinct editions")
+        return value
 
     @field_validator("alias_window")
     @classmethod
@@ -1843,6 +1876,7 @@ def _register_arrays(
         ("enrichment.alias", entry.enrichment.alias),
         ("group", entry.group),
         ("code_label_pair", entry.code_label_pair),
+        ("representation.matrix", entry.representation.matrix),
         ("representation.period_family", entry.representation.period_family),
         ("representation.alias_window", entry.representation.alias_window),
         ("representation.parallel", entry.representation.parallel),
@@ -1945,6 +1979,24 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
 
     for table, rows in _register_arrays(entry):
         for index, row in enumerate(rows, start=1):
+            if isinstance(row, MatrixRepresentationEntry):
+                selector = row.selector
+                if (
+                    selector.register_fqid != expected
+                    or str(selector.register_id) != identity.native_id
+                    or not row.evidence_file.startswith(f"registers/{expected}/")
+                    or not any(
+                        variant.native_id
+                        == f"{selector.register_id}.{selector.register_variant_id}"
+                        and variant.slug == selector.variant
+                        for variant in entry.variant
+                    )
+                ):
+                    raise curation_error(
+                        _CODE,
+                        f"{file} [[{table}]] entry {index}: matrix selector/path must belong to this register and native variant.",
+                        "Use the owning register's evidence path and declared native variant.",
+                    )
             if isinstance(row, ErrataEditionPeriodEntry) and (
                 identity.provider != "scb" or row.variant not in native_variant_slugs
             ):

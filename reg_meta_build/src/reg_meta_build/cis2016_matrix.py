@@ -3,8 +3,8 @@
 SCB's machine export gives the CIS 2016 answer columns one VarId and one CVID,
 while its CIS 2014 source instance names no columns at all.  The accompanying
 quality declaration distinguishes both waves' answers.  This module loads the
-two reviewed evidence declarations; the SCB adapter applies them at their exact
-source-instance boundaries before generic coalescing.
+reviewed evidence declarations activated by register curation. The common
+compiler binds them at their exact source-instance boundaries.
 
 This is intentionally not a matrix-discovery or source-mapping framework.
 Other waves need their own reviewed meaning evidence before they can acquire
@@ -23,15 +23,12 @@ from pydantic import (
     StrictBool,
     StringConstraints,
     ValidationError,
-    field_validator,
     model_validator,
 )
 from reg_meta.fqid import derive_variable_slug
 
 from ._curation import curation_error
 from .fqid_slugs import SlugEntry
-from .scb_errata import _DATA_TYPES
-from .source_coding import copied_coding_fingerprints
 from .source_coordinates import source_register_key
 from .source_curation import (
     CheckedFieldChange,
@@ -58,23 +55,6 @@ if TYPE_CHECKING:
     from .source_records import SourceRecord
 
 
-_CIS2016_FILE_NAME = (
-    "curation/registers/scb/innovation-foretag/cis2016-matrix-meaning-evidence.json"
-)
-_CIS2014_FILE_NAME = (
-    "curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json"
-)
-_CIS2014_SELECTOR = (
-    "scb/innovation-foretag",
-    257,
-    "_default",
-    553,
-    "2012 - 2014",
-    7293,
-    15662,
-    400684,
-)
-
 NonEmpty = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 StableKey = Annotated[
     str,
@@ -100,6 +80,8 @@ class _CurationModel(BaseModel):
 
 
 class MatrixSelector(_CurationModel):
+    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
+
     register_fqid: NonEmpty = Field(alias="register")
     register_id: Annotated[int, Field(ge=0)]
     variant: NonEmpty
@@ -210,18 +192,11 @@ class Cis2016Matrix(_CisMatrix):
 
 
 class MatrixAnswerFacts(_CurationModel):
-    data_type: str
+    data_type: Literal["text", "decimal", "integer", "date"]
     data_type_evidence: NonEmpty
     is_identifier: StrictBool
     is_sensitive: StrictBool
     flag_evidence: NonEmpty
-
-    @field_validator("data_type")
-    @classmethod
-    def _catalog_data_type(cls, value: str) -> str:
-        if value not in _DATA_TYPES:
-            raise ValueError(f"answer data_type must be one of {sorted(_DATA_TYPES)}")
-        return value
 
 
 class Cis2014Matrix(_CisMatrix):
@@ -231,23 +206,7 @@ class Cis2014Matrix(_CisMatrix):
     answer_facts: MatrixAnswerFacts
 
     @model_validator(mode="after")
-    def _exact_blank_source(self) -> Cis2014Matrix:
-        selector = self.selector
-        observed = (
-            selector.register_fqid,
-            selector.register_id,
-            selector.variant,
-            selector.register_variant_id,
-            selector.edition,
-            selector.regver_id,
-            selector.var_id,
-            selector.cvid,
-        )
-        if observed != _CIS2014_SELECTOR:
-            raise ValueError(
-                "documented_blank is confined to the reviewed CIS 2014 selector "
-                f"{_CIS2014_SELECTOR!r}, observed {observed!r}"
-            )
+    def _single_column_answers(self) -> Cis2014Matrix:
         if any(len(answer.columns) != 1 for answer in self.answers):
             raise ValueError(
                 "documented_blank answers must each name one reviewed column"
@@ -255,86 +214,32 @@ class Cis2014Matrix(_CisMatrix):
         return self
 
 
-def _load_matrix[MatrixT: _CisMatrix](
-    path: Path | None,
-    slug_dir: Path | None,
+def load_matrix(
+    path: Path,
     *,
-    model: type[MatrixT],
-    wave: str,
-    code_prefix: str,
-    file_name: str,
-) -> MatrixT | None:
-    """Load one explicit reviewed matrix declaration.
-
-    Missing is an empty curation surface for wheel installs and synthetic
-    builds, matching the repository's other curation loaders.  Syntax and
-    contract drift are maintainer configuration errors with the standard
-    ``EXIT_CONFIG`` shape.
-    """
-    if path is None or not path.is_file():
-        return None
+    source_mode: Literal["named", "documented_blank"],
+    expected_selector: MatrixSelector,
+) -> Cis2014Matrix | Cis2016Matrix:
+    """Read activated meaning evidence bound to an exact reviewed selector."""
+    model = Cis2014Matrix if source_mode == "documented_blank" else Cis2016Matrix
     try:
         matrix = model.model_validate_json(path.read_bytes())
     except (OSError, ValidationError) as exc:
         raise curation_error(
-            f"{code_prefix}_invalid",
-            f"Could not load {wave} matrix curation {path}: {exc}",
-            f"Fix the selectors and evidence in reg_meta_build/{file_name}.",
+            "matrix_evidence_invalid",
+            f"Could not load matrix evidence {path}: {exc}",
+            f"Fix the selectors and evidence in {path}.",
         ) from exc
 
-    if slug_dir is not None:
-        # The projection runs before DB slugs are populated. Reuse the same
-        # curated-slug resolver as SCB errata so the human-readable FQIDs and
-        # the numeric source selectors cannot silently disagree.
-        from .scb_errata import _scb_slug_ids
+    if matrix.selector != expected_selector:
+        raise curation_error(
+            "matrix_evidence_unknown_selector",
+            "Matrix evidence selector differs from the checked declaration: "
+            f"expected {expected_selector!r}, observed {matrix.selector!r}.",
+            "Keep the evidence and activation bound to the same reviewed source coordinate.",
+        )
 
-        registers, variants = _scb_slug_ids(slug_dir)
-        register_slug = matrix.selector.register_fqid.removeprefix("scb/")
-        observed = (
-            registers.get(register_slug),
-            variants.get(f"{register_slug}/{matrix.selector.variant}"),
-        )
-        expected = (
-            matrix.selector.register_id,
-            matrix.selector.register_variant_id,
-        )
-        if observed != expected:
-            raise curation_error(
-                f"{code_prefix}_unknown_selector",
-                f"{wave} matrix register/variant FQIDs do not resolve to their "
-                f"declared source ids: expected {expected!r}, observed {observed!r}.",
-                "Fix the selector or the curated SCB register/variant slugs; do "
-                "not apply this evidence to another source coordinate.",
-            )
     return matrix
-
-
-def load_cis2016_matrix(
-    path: Path | None, slug_dir: Path | None = None
-) -> Cis2016Matrix | None:
-    """Load the reviewed named-column CIS 2016 matrix declaration."""
-    return _load_matrix(
-        path,
-        slug_dir,
-        model=Cis2016Matrix,
-        wave="CIS 2016",
-        code_prefix="cis2016_matrix",
-        file_name=_CIS2016_FILE_NAME,
-    )
-
-
-def load_cis2014_matrix(
-    path: Path | None, slug_dir: Path | None = None
-) -> Cis2014Matrix | None:
-    """Load the reviewed blank-source CIS 2014 matrix declaration."""
-    return _load_matrix(
-        path,
-        slug_dir,
-        model=Cis2014Matrix,
-        wave="CIS 2014",
-        code_prefix="cis2014_matrix",
-        file_name=_CIS2014_FILE_NAME,
-    )
 
 
 @dataclass(frozen=True)
@@ -359,6 +264,8 @@ def convert_matrix(
     The emitted peer guard checks that same scope on replay. Other editions and
     variables are left untouched.
     """
+    from .source_coding import copied_coding_fingerprints
+
     selector = matrix.selector
     native = NativeCoordinates(
         register_id=selector.register_id,

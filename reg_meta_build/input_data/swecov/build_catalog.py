@@ -44,8 +44,17 @@ import unicodedata
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Annotated, Literal
 
-from pydantic import Field, model_validator
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_validator,
+    model_validator,
+)
+from reg_meta.fqid import FqidKind, parse as parse_fqid
 from reg_meta.inventory import ColumnMapping, InventoryColumn, edition_bounds
 
 DEFAULT_CSV = max(
@@ -65,27 +74,6 @@ LOPNR_PREFIX = re.compile(r"^P1105_LopNr_", re.IGNORECASE)
 # the steward catalog. Grounding still runs over them so an unexpected
 # high-overlap match would surface in the report instead of being silently
 # discarded.
-NON_CATALOG_CATEGORIES: dict[str, str] = {
-    "Arbetsförmedlingen": "Arbetsförmedlingen delivery (AMS_*), not SCB/SOS",
-    "FOHM": "Folkhälsomyndigheten delivery (FHM_*)",
-    "Försäkringskassan": "Försäkringskassan delivery (FK_*)",
-    "Högskoleprovet": "Umeå university delivery (UMU_*)",
-    "IAF": "Inspektionen för arbetslöshetsförsäkringen delivery (IFA_*)",
-    "Inera/1177": "Inera delivery",
-    "Kolorektalcancer": "Quality register (SCRCR)",
-    "Korttidsarbete": "Tillväxtverket delivery (KTA_*)",
-    "Läkemedelsverket": "Läkemedelsverket delivery (LV_*)",
-    "Military enlistment": "Pliktverket / Riksarkivet delivery",
-    "Pandemrix vaccinations": "Regional health-care deliveries",
-    "Primary care": "Regional health-care deliveries",
-    "Quality register": "Quality registers (Graviditetsregistret, NDR)",
-    "SCB": "LopNr key-change crosswalk table, not register data",
-    "SOS Alarm": "SOS Alarm delivery",
-    "Skatteverket": "Skatteverket delivery (SKV_*)",
-    "Swedbank": "Swedbank delivery",
-    "SÄBO": "Municipal / county deliveries",
-    "Telia": "Telia delivery",
-}
 
 
 # --- normalize: CSV -> holdings --------------------------------------------
@@ -338,340 +326,215 @@ def ground_pair(
 #   lookup         SWECOV-side helper/crosswalk table, not register data
 # Evidence notes ride along so the emitted catalog can cite them.
 
-MAPPING: dict[tuple[str, str], dict] = {
-    ("AGI", "ARB Individ"): {"status": "mapped", "to": "scb/agi/individuppgifter-agi"},
-    ("AGI", "SOC Individ"): {
-        "status": "mapped",
-        "to": "scb/agi/individuppgifter-agi",
-        "note": "ERSATTNINGS_KOD/BELOPP1-4 are wide pivots of the kod+belopp concepts",
-    },
-    ("AGI", "Huvud"): {
-        "status": "flavor",
-        "note": "employer-level AGI declaration header; register absent from reg_meta",
-    },
-    ("AKU", ""): {
-        "status": "split",
-        "to": [
-            ("stem:AKU_", "scb/aku/aku-april-2005-dec-2020", "2015-2020 holdings"),
-            ("stem:AKU_RL_", "scb/aku/aku-januari-2021", "2021-2024 holdings"),
-            ("stem:AKU_Corona_", None, "flavor: SWECOV covid add-on questions"),
-        ],
-    },
-    ("Elevregistret", "Betyg Ak6"): {
-        "status": "mapped",
-        "to": "scb/grundskola-betyg-ak6/_default",
-    },
-    ("Elevregistret", "Elever gymnasiet"): {
-        "status": "mapped",
-        "to": "scb/gymnasieskola-elever/_default",
-    },
-    ("Elevregistret", "Grund, förskola, fritidshem"): {
-        "status": "mapped",
-        "to": "scb/grundskola-elever/individregister",
-        "note": "combined table; förskola/fritidshem-only columns go to flavor graft",
-    },
-    ("Elevregistret", "Gymnasieskola avgangar"): {
-        "status": "split",
-        "to": [
+
+def _register_coordinate(value: str) -> str:
+    if parse_fqid(value).kind != FqidKind.REGISTER:
+        raise ValueError("policy registers must be register FQIDs")
+    return value
+
+
+RegisterCoordinate = Annotated[str, AfterValidator(_register_coordinate)]
+VariantCoordinate = Annotated[str, AfterValidator(ColumnMapping._check_variant_coord)]
+
+
+class _PolicyModel(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
+
+
+class RouteSplit(_PolicyModel):
+    selector: str
+    target: VariantCoordinate | None = Field(default=None, min_length=1)
+    note: str = Field(min_length=1)
+
+    @field_validator("selector")
+    @classmethod
+    def _selector(cls, value: str) -> str:
+        if value.startswith("stem:") and value[5:]:
+            return value
+        if (match := re.fullmatch(r"period:(\d{4})-(\d{4})?", value)) and (
+            match[2] is None or int(match[1]) <= int(match[2])
+        ):
+            return value
+        raise ValueError(f"unknown or invalid route selector {value!r}")
+
+
+class SourceRoute(_PolicyModel):
+    category: str = Field(min_length=1)
+    detail: str
+    status: Literal["mapped", "split", "flavor", "lookup"]
+    target: VariantCoordinate | None = Field(default=None, min_length=1)
+    note: str | None = None
+    graft: RegisterCoordinate | None = Field(default=None, min_length=1)
+    split: list[RouteSplit] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _shape(self) -> SourceRoute:
+        if (self.status == "mapped") != (self.target is not None):
+            raise ValueError("only mapped routes must name a target")
+        if (self.status == "split") != bool(self.split):
+            raise ValueError("only split routes must name selectors")
+        if len({entry.selector for entry in self.split}) != len(self.split):
+            raise ValueError("duplicate route selector")
+        return self
+
+
+class FlavorDisposition(_PolicyModel):
+    holding: str = Field(min_length=1)
+    provider: str = Field(min_length=1)
+    provider_name: str = Field(min_length=1)
+    register_key: str = Field(alias="register", min_length=1)
+    register_name: str = Field(min_length=1)
+    variant: str = Field(min_length=1)
+    variant_slug: str = Field(min_length=1)
+    variant_name: str = Field(min_length=1)
+    tables: list[str] | None = None
+
+    @model_validator(mode="after")
+    def _tables(self) -> FlavorDisposition:
+        ColumnMapping._check_variant_coord(
+            f"{self.provider}/{self.register_key}/{self.variant_slug}"
+        )
+        if self.tables is not None and (
+            not self.tables
+            or any(not table.strip() for table in self.tables)
+            or len(set(self.tables)) != len(self.tables)
+        ):
+            raise ValueError("flavor tables must be nonblank and unique")
+        return self
+
+
+class ProviderScope(_PolicyModel):
+    holding_prefix: str = Field(min_length=1)
+    provider: str = Field(min_length=1)
+
+
+class RegisterScope(_PolicyModel):
+    holding: str = Field(min_length=1)
+    register_key: RegisterCoordinate = Field(alias="register", min_length=1)
+
+
+class SourcePolicy(_PolicyModel):
+    non_catalog_categories: dict[str, str]
+    flavor_registers: list[RegisterCoordinate]
+
+    @field_validator("non_catalog_categories")
+    @classmethod
+    def _nonblank_categories(cls, value: dict[str, str]) -> dict[str, str]:
+        if any(not key.strip() or not reason.strip() for key, reason in value.items()):
+            raise ValueError("non-catalog categories and reasons must be nonblank")
+        return value
+
+    @field_validator("flavor_registers")
+    @classmethod
+    def _registers(cls, value: list[str]) -> list[str]:
+        if len(set(value)) != len(value):
+            raise ValueError("duplicate flavor register")
+        return value
+
+    route: list[SourceRoute]
+    flavor: list[FlavorDisposition]
+    provider_scope: list[ProviderScope]
+    register_scope: list[RegisterScope]
+
+    @model_validator(mode="after")
+    def _unique(self) -> SourcePolicy:
+        for label, keys in (
+            ("route", [(entry.category, entry.detail) for entry in self.route]),
             (
-                "stem:GymnasieskolaAvg_Individ_",
-                "scb/gymnasieskola-betyg/slutbetyg",
-                "75% grounded",
+                "flavor coordinate",
+                [
+                    (entry.provider, entry.register_key, entry.variant)
+                    for entry in self.flavor
+                ],
             ),
             (
-                "stem:GymnasieskolaAvg_Kurs_",
-                "scb/gymnasieskola-betyg/kursbetyg",
-                "tie broken semantically",
+                "flavor variant slug",
+                [
+                    (entry.provider, entry.register_key, entry.variant_slug)
+                    for entry in self.flavor
+                ],
             ),
+            ("provider scope", [entry.holding_prefix for entry in self.provider_scope]),
+            ("register scope", [entry.holding for entry in self.register_scope]),
+        ):
+            if len(set(keys)) != len(keys):
+                raise ValueError(f"duplicate {label}")
+        provider_names: dict[str, str] = {}
+        register_names: dict[tuple[str, str], str] = {}
+        for entry in self.flavor:
+            if (
+                provider_names.setdefault(entry.provider, entry.provider_name)
+                != entry.provider_name
+            ):
+                raise ValueError(f"conflicting provider name {entry.provider!r}")
+            key = entry.provider, entry.register_key
+            if (
+                register_names.setdefault(key, entry.register_name)
+                != entry.register_name
+            ):
+                raise ValueError(f"conflicting register name {key!r}")
+        return self
+
+    def mapping(self) -> dict[tuple[str, str], dict]:
+        result = {}
+        for entry in self.route:
+            value: dict = {"status": entry.status}
+            if entry.graft is not None:
+                value["graft"] = entry.graft
+            if entry.note is not None:
+                value["note"] = entry.note
+            if entry.target is not None:
+                value["to"] = entry.target
+            if entry.split:
+                value["to"] = [
+                    (item.selector, item.target, item.note) for item in entry.split
+                ]
+            result[entry.category, entry.detail] = value
+        return result
+
+    def disposition(self) -> list[tuple[str, str, str, str, str, str, str, str]]:
+        return [
             (
-                "stem:GymnasieskolaAvg_Amne_",
-                None,
-                "flavor: 1985-1996 ämne shape ungrounded",
-            ),
-        ],
-    },
-    ("Elevregistret", "Kursprov"): {
-        "status": "mapped",
-        "to": "scb/gymnasieskola-prov/_default",
-    },
-    ("Elevregistret", "School code key"): {
-        "status": "lookup",
-        "note": "skolkod<->skolenhetskod crosswalk",
-    },
-    ("Elevregistret", "Slutbetyg Ak9"): {
-        "status": "mapped",
-        "to": "scb/grundskola-ak9/grundskolan-betyg-ak9",
-    },
-    ("Elevregistret", "Ämnesprov Ak3"): {
-        "status": "mapped",
-        "to": "scb/grundskola-prov-ak3/_default",
-    },
-    ("Elevregistret", "Ämnesprov Ak6"): {
-        "status": "mapped",
-        "to": "scb/grundskola-prov-ak6/_default",
-    },
-    ("Elevregistret", "Ämnesprov Ak9"): {
-        "status": "split",
-        "to": [
-            (
-                "period:2003-2012",
-                "scb/grundskola-prov-ak9/amne-sv-eng-ma",
-                "variant validity window",
-            ),
-            (
-                "period:2013-",
-                "scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so",
-                "variant validity window",
-            ),
-        ],
-    },
-    ("Firms", "Företagens ekonomi"): {
-        "status": "mapped",
-        "to": "scb/fek/fek-slutdata",
-        "note": "weak column grounding (18%); SWECOV FE extract is heavily derived — most columns to flavor graft",
-    },
-    ("Firms", "Företagsdatabasen"): {
-        "status": "split",
-        "to": [
-            (
-                "stem:FDB_AE_",
-                "scb/fdb/arbetsstalleenheter",
-                "incl. _Ng_ näringsgren extras",
-            ),
-            ("stem:FDB_AST_", "scb/fdb/administrativa", "7/7 grounded"),
-        ],
-    },
-    ("Geografidatabasen", "Arbetsställen"): {
-        "status": "flavor",
-        "graft": "scb/gdb",
-        "note": "master-list Källa=Geo.databas for every column -> graft onto scb/gdb;"
-        " reg_meta gdb variants don't enumerate the DeSO/Ruta250 delivery columns",
-    },
-    ("Geografidatabasen", "Individer"): {
-        "status": "flavor",
-        "graft": "scb/gdb",
-        "note": "as Arbetsställen",
-    },
-    ("Geografidatabasen", "Skolor"): {
-        "status": "flavor",
-        "graft": "scb/gdb",
-        "note": "as Arbetsställen",
-    },
-    ("Högskoleregistret", ""): {
-        "status": "split",
-        "to": [
-            ("stem:Hreg_Reg_", "scb/hreg/grundutbildning-1993", "42% grounded"),
-            ("stem:Hreg_Poang_", "scb/hreg/grundutbildning-poang", "65% grounded"),
-            ("stem:Hreg_Sok_", "scb/hreg/sokande-grund-avancerad", "58% grounded"),
-            ("stem:Hreg_Examina_", "scb/hreg/grundutbildning-examina", "33% grounded"),
-            ("stem:Hreg_H_", None, "flavor: klartext lookup tables"),
-            ("stem:klartext_utbildning", None, "flavor: klartext lookup"),
-        ],
-    },
-    ("Industrins varuproduktion", ""): {
-        "status": "mapped",
-        "to": "scb/ivp/industrins-varuproduktion",
-        "note": "6/7 tie with ivp/returravara broken semantically (IVP_ = main survey)",
-    },
-    ("Industrins varuproduktion", "Text"): {
-        "status": "lookup",
-        "note": "VaraText code lookup",
-    },
-    ("Inkomst- och taxeringsregistret", ""): {
-        "status": "mapped",
-        "to": "scb/iot/individer-och-dodsbon",
-        "note": "thin 7-column extract",
-    },
-    ("Konjunkturstatistik sjuklöner", ""): {
-        "status": "mapped",
-        "to": "scb/ksju/sjukfranvaro-sjukloneperioden",
-        "note": "ERSDAG/ERSK/FALLK etc. are wide pivots",
-    },
-    ("Konkurser", ""): {
-        "status": "mapped",
-        "to": "scb/konkurser/konkurser-offentliga-ackord",
-    },
-    ("LISA", "Arbetsställe"): {"status": "mapped", "to": "scb/lisa/arbetsstallen"},
-    ("LISA", "Företag"): {"status": "mapped", "to": "scb/lisa/foretag"},
-    ("LISA", "Individ"): {
-        "status": "split",
-        "to": [
-            (
-                "period:1990-2009",
-                "scb/lisa/individer-16plus",
-                "variant validity window",
-            ),
-            ("period:2010-", "scb/lisa/individer-15plus", "variant validity window"),
-        ],
-    },
-    ("Lärarregistret", ""): {"status": "mapped", "to": "scb/lararreg/tjansteregistret"},
-    ("Momsregistret", ""): {
-        "status": "mapped",
-        "to": "scb/moms/momsdeklarationsregistret",
-    },
-    ("RAMS", ""): {"status": "mapped", "to": "scb/rams/jobbregistret"},
-    ("RAMS", "ASTRA"): {"status": "mapped", "to": "scb/rams/arbetsstallen"},
-    ("RTB", "Adress särskilt boende"): {
-        "status": "flavor",
-        "note": "SWECOV-specific SÄBO address extract",
-    },
-    ("RTB", "Döda"): {"status": "mapped", "to": "scb/rtb/doda"},
-    ("RTB", "Emigranter/Immigranter"): {
-        "status": "split",
-        "to": [
-            ("stem:emigranter_", "scb/rtb/utvandringar", "3/3 grounded"),
-            ("stem:immigranter_", "scb/rtb/invandringar", "mirror of utvandringar"),
-        ],
-    },
-    ("RTB", "Familj"): {"status": "mapped", "to": "scb/rtb/familjer-fran-1998"},
-    ("RTB", "Flergenerationsregistret"): {
-        "status": "split",
-        "to": [
-            (
-                "stem:FlerGen_Bioforaldrar_",
-                "scb/flergenreg/folkbokforda-biologiska",
-                "3/3; semantic tiebreak",
-            ),
-            (
-                "stem:FlerGen_Adopforaldrar_",
-                "scb/flergenreg/folkbokforda-adoptivforaldrar",
-                "3/3",
-            ),
-        ],
-    },
-    ("RTB", "Födelseuppgifter"): {
-        "status": "flavor",
-        "graft": "scb/rtb",
-        "note": "Källa=RTB for FodelseLan/Fodelseland/UtlSvBakg -> graft onto scb/rtb"
-        " (SCB metadata gap, not SWECOV construction); EU groupings are SWECOV lookups",
-    },
-    ("RTB", "HB"): {
-        "status": "mapped",
-        "to": "scb/hushallens-boende/individer",
-        "note": "HUSHALLSID_YYYY are year-pivots of HUSHALLSID",
-    },
-    ("RTB", "HP"): {
-        "status": "mapped",
-        "to": "scb/rtb/hushall",
-        "note": "HUSHALLSID_YYYY year-pivots as HB",
-    },
-    ("RTB", "Inrikes flyttningar"): {
-        "status": "mapped",
-        "to": "scb/rtb/inrikes-flyttningar",
-        "note": "RTB_SaBo_InrFlyttFlode extras to flavor",
-    },
-    ("RTB", "Land"): {"status": "lookup", "note": "country-code EU-grouping lookup"},
-    ("RTB", "Partner"): {
-        "status": "flavor",
-        "graft": "scb/rtb",
-        "note": "Källa=RTB/Hushållsreg. for Famstall/HushallsStallning/partner-lopnr;"
-        " FST90-97 wide pivots from familjer-1990-1997 -> derived link table grafted on scb/rtb",
-    },
-    ("RTB", "Population"): {
-        "status": "flavor",
-        "note": "Källa empty for IndexPop/Partner/LopNrByte etc. -> SWECOV-constructed population spine",
-    },
-    ("RTB", "PostNr"): {
-        "status": "flavor",
-        "note": "postnr-per-person extract, 2 columns",
-    },
-    ("RTB", "RTB"): {"status": "mapped", "to": "scb/rtb/folkbokforda-personer"},
-    ("SCB", ""): {"status": "lookup", "note": "LopNrByte key-change crosswalk"},
-    ("STATIV", ""): {"status": "mapped", "to": "scb/stativ/_default"},
-    ("Sjukfränvaro under sjuklöneperioden", ""): {
-        "status": "mapped",
-        "to": "scb/anst/sus",
-    },
-    ("Socialstyrelsen", "Barn"): {"status": "mapped", "to": "sos/bu/_default"},
-    ("Socialstyrelsen", "Cancerregistret"): {"status": "mapped", "to": "sos/can/can"},
-    ("Socialstyrelsen", "Dödsorsaksregistret"): {
-        "status": "mapped",
-        "to": "sos/dors/dors",
-    },
-    ("Socialstyrelsen", "Ekonomiskt bistand"): {
-        "status": "mapped",
-        "to": "sos/ekb/ekb-manad",
-    },
-    ("Socialstyrelsen", "Intensivvårdsregistret"): {
-        "status": "flavor",
-        "note": "SIR is a quality register routed via SoS; not in the SOS catalog",
-    },
-    ("Socialstyrelsen", "Kommunal hälso- och sjukvård"): {
-        "status": "mapped",
-        "to": "sos/hsl/hsl",
-    },
-    ("Socialstyrelsen", "LSS"): {"status": "mapped", "to": "sos/lss/_default"},
-    ("Socialstyrelsen", "Läkemedelsregistret"): {
-        "status": "mapped",
-        "to": "sos/lmed/lmed",
-        "note": "ATC/FORPDDD live in lmed-vara; SWECOV table is a denormalized join",
-    },
-    ("Socialstyrelsen", "Slutenvård"): {
-        "status": "mapped",
-        "to": "sos/par/par-sv",
-        "note": "DIA1..30/EKOD1.. wide pivots of long-format concepts; SV_comorb derived",
-    },
-    ("Socialstyrelsen", "Socialtjänst (Äldrevård)"): {
-        "status": "mapped",
-        "to": "sos/sol/sol",
-    },
-    ("Socialstyrelsen", "Öppenvård"): {
-        "status": "mapped",
-        "to": "sos/par/par-ov",
-        "note": "wide pivots as Slutenvård",
-    },
-    ("Survey", "Distansutbildning"): {
-        "status": "split",
-        "to": [
-            (
-                "stem:Distansutb_grund_",
-                "scb/utbildningsanalyser/distansundervisning-grundskola",
-                "100%",
-            ),
-            (
-                "stem:Distansutb_gymn_",
-                "scb/utbildningsanalyser/distansundervisning-gymnasieskolan",
-                "100%",
-            ),
-        ],
-    },
-    ("Survey", "FOU"): {
-        "status": "mapped",
-        "to": "scb/fou/foretagssektorn",
-        "note": "wave columns mostly undocumented in reg_meta -> flavor graft",
-    },
-    ("Survey", "IT"): {
-        "status": "mapped",
-        "to": "scb/it-anvandning/it-anvandning-i-foretag",
-        "note": "2008-2012 waves poorly enumerated in reg_meta",
-    },
-    ("Survey", "IT Mikro"): {
-        "status": "mapped",
-        "to": "scb/it-anvandning/it-anvandning-i-foretag",
-    },
-    ("Survey", "IT Stora"): {
-        "status": "mapped",
-        "to": "scb/it-anvandning/it-anvandning-i-foretag",
-    },
-    ("Survey", "Innovation"): {
-        "status": "mapped",
-        "to": "scb/innovation-foretag/_default",
-        "note": "CIS wave drift; unmatched wave items -> flavor graft",
-    },
-    ("Utbildningsregistret", ""): {
-        "status": "mapped",
-        "to": "scb/ureg/personens-hogsta-utbildning",
-    },
-    ("Utrikeshandel", "Tjänster"): {
-        "status": "flavor",
-        "note": "no tjänster register in reg_meta",
-    },
-    ("Utrikeshandel", "Varor"): {
-        "status": "mapped",
-        "to": "scb/utrikeshandel/varu-landfordelat-intrastat",
-        "note": "exact tie with landfordelad-extrastat; SWECOV UHV is the combined flow — needs sign-off",
-    },
-}
+                entry.holding,
+                entry.provider,
+                entry.provider_name,
+                entry.register_key,
+                entry.register_name,
+                entry.variant,
+                entry.variant_slug,
+                entry.variant_name,
+            )
+            for entry in self.flavor
+        ]
+
+    def variant_tables(self) -> dict[tuple[str, str, str], tuple[str, ...]]:
+        return {
+            (entry.provider, entry.register_key, entry.variant): tuple(entry.tables)
+            for entry in self.flavor
+            if entry.tables is not None
+        }
+
+
+def _load_source_policy(path: Path) -> SourcePolicy:
+    import tomllib
+
+    try:
+        return SourcePolicy.model_validate(
+            tomllib.loads(path.read_text(encoding="utf-8"))
+        )
+    except (OSError, ValueError) as exc:
+        raise SystemExit(f"invalid SWECOV source policy {path}: {exc}") from exc
+
+
+SOURCE_POLICY_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "reg_webapp/stewards/swecov/source_policy.toml"
+)
+_POLICY = _load_source_policy(SOURCE_POLICY_PATH)
+NON_CATALOG_CATEGORIES = _POLICY.non_catalog_categories
+
+
+MAPPING = _POLICY.mapping()
 
 
 # --- enrich: join delivery documentation onto holdings -----------------------
@@ -1373,7 +1236,7 @@ _PROJECT_PREFIX = re.compile(r"^P\d+_", re.IGNORECASE)
 # variables → steward flavor, never global (maintainer call 2026-06-14): GDB's
 # 250m/1000m grid coordinates are Geografidatabasen's pseudonymized location
 # (exact point never delivered), the spatial analogue of a LopNr.
-_FLAVOR_REGISTERS = frozenset({"scb/gdb"})
+_FLAVOR_REGISTERS = frozenset(_POLICY.flavor_registers)
 
 
 def _split_key(key: str) -> tuple[str, str]:
@@ -1715,607 +1578,13 @@ def cmd_grafts(args: argparse.Namespace) -> None:
 #  disjoint schemas are separate registers (reg_meta/DESIGN.md → "Why the
 #  variant is a coordinate, not an identity level"). Exactly one entry names a
 #  given (provider, register, variant) — a second is fatal in `cmd_flavor`.
-_FLAVOR_DISPOSITION: list[tuple[str, str, str, str, str, str, str, str]] = [
-    # Commercial deliveries — no global home by construction.
-    (
-        "Swedbank",
-        "swedbank",
-        "Swedbank AB",
-        "konsumtion",
-        "Konsumtionsstatistik",
-        "_default",
-        "_default",
-        "Konsumtionsstatistik",
-    ),
-    (
-        "Telia",
-        "telia",
-        "Telia Company AB",
-        "mobilitet",
-        "Mobilitetsdata",
-        "_default",
-        "_default",
-        "Mobilitetsdata",
-    ),
-    # Regional primary care (region-owned, not a national register).
-    (
-        "Primary care/Skane",
-        "region-skane",
-        "Region Skåne",
-        "primarvard",
-        "Primärvård",
-        "_default",
-        "_default",
-        "Primärvård",
-    ),
-    (
-        "Primary care/Stockholm",
-        "region-stockholm",
-        "Region Stockholm",
-        "primarvard",
-        "Primärvård",
-        "_default",
-        "_default",
-        "Primärvård",
-    ),
-    (
-        "Primary care/VGR - Primärvård",
-        "vgr",
-        "Västra Götalandsregionen",
-        "primarvard",
-        "Primärvård",
-        "_default",
-        "_default",
-        "Primärvård",
-    ),
-    (
-        "Primary care/VGR - Diagnoser",
-        "vgr",
-        "Västra Götalandsregionen",
-        "primarvard-diagnoser",
-        "Primärvård – diagnoser",
-        "_default",
-        "_default",
-        "Primärvård – diagnoser",
-    ),
-    # Municipal special-housing (SÄBO) deliveries.
-    (
-        "SÄBO/Adresses",
-        "sabo",
-        "Kommunala SÄBO-leveranser",
-        "adresser",
-        "SÄBO-adresser",
-        "_default",
-        "_default",
-        "SÄBO-adresser",
-    ),
-    (
-        "SÄBO/Patients",
-        "sabo",
-        "Kommunala SÄBO-leveranser",
-        "patienter",
-        "SÄBO-patienter",
-        "_default",
-        "_default",
-        "SÄBO-patienter",
-    ),
-    # Pandemrix vaccination deliveries — one provider per delivering region.
-    (
-        "Pandemrix vaccinations/Region Dalarna",
-        "region-dalarna",
-        "Region Dalarna",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Gävleborg",
-        "region-gavleborg",
-        "Region Gävleborg",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Jönköping",
-        "region-jonkoping",
-        "Region Jönköping",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Kalmar Län",
-        "region-kalmar",
-        "Region Kalmar län",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Kronoberg",
-        "region-kronoberg",
-        "Region Kronoberg",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Norrbotten",
-        "region-norrbotten",
-        "Region Norrbotten",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Uppsala",
-        "region-uppsala",
-        "Region Uppsala",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Värmland",
-        "region-varmland",
-        "Region Värmland",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Västerbotten",
-        "region-vasterbotten",
-        "Region Västerbotten",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    (
-        "Pandemrix vaccinations/Region Östergötland",
-        "region-ostergotland",
-        "Region Östergötland",
-        "pandemrix-vaccinationer",
-        "Pandemrix-vaccinationer",
-        "_default",
-        "_default",
-        "Pandemrix-vaccinationer",
-    ),
-    # Inera / 1177 Vårdguiden — two REGISTERS: the deliveries are disjoint
-    # schemas sharing only `PersonNr` (the rule above), and each is its own
-    # enriched-holding key, so neither needs a `_FLAVOR_VARIANT_TABLES` selector.
-    # The 1177 service names the PROVIDER.
-    (
-        "Inera/1177/Calls to 1177",
-        "inera",
-        "Inera AB / 1177 Vårdguiden",
-        "samtal",
-        "Samtal 1177",
-        "_default",
-        "_default",
-        "Samtal 1177",
-    ),
-    (
-        "Inera/1177/Ordered tests",
-        "inera",
-        "Inera AB / 1177 Vårdguiden",
-        "bestallda-prover",
-        "Beställda prover",
-        "_default",
-        "_default",
-        "Beställda prover",
-    ),
-    # National quality registers — no SCB/SOS catalog home.
-    (
-        "Kolorektalcancer",
-        "scrcr",
-        "Svenska Kolorektalcancerregistret (SCRCR)",
-        "kolorektalcancer",
-        "Kolorektalcancerregistret",
-        "_default",
-        "_default",
-        "Kolorektalcancerregistret",
-    ),
-    (
-        "Quality register/Graviditetsregistret",
-        "graviditetsregistret",
-        "Graviditetsregistret",
-        "graviditetsregistret",
-        "Graviditetsregistret",
-        "_default",
-        "_default",
-        "Graviditetsregistret",
-    ),
-    (
-        "Quality register/NDR",
-        "ndr",
-        "Nationella Diabetesregistret (NDR)",
-        "nationella-diabetesregistret",
-        "Nationella diabetesregistret",
-        "_default",
-        "_default",
-        "Nationella diabetesregistret",
-    ),
-    (
-        "Socialstyrelsen/Intensivvårdsregistret",
-        "sir",
-        "Svenska Intensivvårdsregistret (SIR)",
-        "intensivvardsregistret",
-        "Svenska Intensivvårdsregistret",
-        "_default",
-        "_default",
-        "Svenska Intensivvårdsregistret",
-    ),
-    (
-        "SOS Alarm",
-        "sos-alarm",
-        "SOS Alarm Sverige AB",
-        "ambulanslarm",
-        "Ambulanslarm",
-        "_default",
-        "_default",
-        "Ambulanslarm",
-    ),
-    # SWECOV-constructed columns on top of RTB — only the Källa-empty columns
-    # survive _flavor_variables (the Källa=RTB ones are canonical, routed to the
-    # global graft track). RTB/PostNr is intentionally NOT listed: its only
-    # content column (`postnr`, Källa=RTB) is canonical RTB postnummer (→ graft),
-    # leaving nothing steward-authored, so it would flavor to a bare linkage id.
-    (
-        "RTB/Population",
-        "swecov",
-        "SWECOV (konstruerade variabler)",
-        "population",
-        "Populationsspine (konstruerad)",
-        "_default",
-        "_default",
-        "Populationsspine (konstruerad)",
-    ),
-    (
-        "RTB/Adress särskilt boende",
-        "swecov",
-        "SWECOV (konstruerade variabler)",
-        "adress-sarskilt-boende",
-        "Adress särskilt boende",
-        "_default",
-        "_default",
-        "Adress särskilt boende",
-    ),
-    # Skatteverket COVID-19 business-support delivery (SKV_*). The single
-    # ("Skatteverket", "") holding carries 10 physical tables = 5 schemes; each
-    # disposition entry below names a register/variant and `_FLAVOR_VARIANT_TABLES`
-    # selects the physical table(s) whose columns it draws (the bespoke pandemic
-    # extract is steward-only — P1105-keyed delivery, not a standing register).
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "omstallningsstod",
-        "Omställningsstöd",
-        "ansokt",
-        "ansokt",
-        "Ansökt",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "omstallningsstod",
-        "Omställningsstöd",
-        "beviljat",
-        "beviljat",
-        "Beviljat",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "omstallningsstod",
-        "Omställningsstöd",
-        "avslag",
-        "avslag",
-        "Avslag",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "tillfalligt-anstand",
-        "Tillfälligt anstånd med skatteinbetalning",
-        "ansokt",
-        "ansokt",
-        "Ansökt",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "tillfalligt-anstand",
-        "Tillfälligt anstånd med skatteinbetalning",
-        "beviljat",
-        "beviljat",
-        "Beviljat",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "tillfalligt-anstand",
-        "Tillfälligt anstånd med skatteinbetalning",
-        "upphort",
-        "upphort",
-        "Upphört",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "tillfalligt-anstand",
-        "Tillfälligt anstånd med skatteinbetalning",
-        "aterkallat",
-        "aterkallat",
-        "Återkallat",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "arbetsgivardeklaration",
-        "Uppgifter från arbetsgivardeklaration",
-        "_default",
-        "_default",
-        "Uppgifter från arbetsgivardeklaration",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "reducerad-egenavgift",
-        "Reducerad egenavgift inkomstår 2020",
-        "_default",
-        "_default",
-        "Reducerad egenavgift inkomstår 2020",
-    ),
-    (
-        "Skatteverket",
-        "skatteverket",
-        "Skatteverket",
-        "momsdeklaration",
-        "Uppgifter från momsdeklaration",
-        "_default",
-        "_default",
-        "Uppgifter från momsdeklaration",
-    ),
-    # Tillväxtverket korttidsarbete (KTA) — COVID-19 short-time-work support,
-    # reported FROM Tillväxtverket (Källa = "Inrapporterat från Tillväxtverket",
-    # kept in the flavor via _PROVENANCE_KALLA). One register, a variant per delivery
-    # model: individmodellen (person-keyed) and transaktionsmodellen (ärende-keyed).
-    (
-        "Korttidsarbete/Individer",
-        "tillvaxtverket",
-        "Tillväxtverket",
-        "korttidsarbete",
-        "Korttidsarbete (KTA)",
-        "individer",
-        "individer",
-        "Individer",
-    ),
-    (
-        "Korttidsarbete/Transaktioner",
-        "tillvaxtverket",
-        "Tillväxtverket",
-        "korttidsarbete",
-        "Korttidsarbete (KTA)",
-        "transaktioner",
-        "transaktioner",
-        "Transaktioner",
-    ),
-    # Arbetsförmedlingen (AMS) — jobseeker administrative delivery (AMS_*), no SCB/SOS
-    # home (#443/#444 routed these to the flavor, not global; #365 needs them for 100%
-    # coverage). The one ("Arbetsförmedlingen", "") holding bundles 3 distinct tables
-    # (each with a 2021-vintage twin carrying identical columns) → 3 registers, split
-    # by `_FLAVOR_VARIANT_TABLES`. All columns are Källa-empty (no master-list docs),
-    # so definitions stay null — thin holdings-column coverage.
-    (
-        "Arbetsförmedlingen",
-        "arbetsformedlingen",
-        "Arbetsförmedlingen",
-        "aktso",
-        "Aktivitet och sökandekategori (AKTSO)",
-        "_default",
-        "_default",
-        "Aktivitet och sökandekategori (AKTSO)",
-    ),
-    (
-        "Arbetsförmedlingen",
-        "arbetsformedlingen",
-        "Arbetsförmedlingen",
-        "insper",
-        "Inskrivningsperioder (INSPER)",
-        "_default",
-        "_default",
-        "Inskrivningsperioder (INSPER)",
-    ),
-    (
-        "Arbetsförmedlingen",
-        "arbetsformedlingen",
-        "Arbetsförmedlingen",
-        "sokatper",
-        "Sökandekategoriperioder (SOKATPER)",
-        "_default",
-        "_default",
-        "Sökandekategoriperioder (SOKATPER)",
-    ),
-    # IAF (Inspektionen för arbetslöshetsförsäkringen) — unemployment-insurance (a-kassa)
-    # administrative delivery (IFA_*). One ("IAF", "") holding bundles 8 distinct tables
-    # (Lev2/Lev3 access tiers and year-range vintages carry identical columns → collapse
-    # into one register each via `_FLAVOR_VARIANT_TABLES`). All columns Källa-empty.
-    (
-        "IAF",
-        "iaf",
-        "Inspektionen för arbetslöshetsförsäkringen",
-        "beslut",
-        "Beslut",
-        "_default",
-        "_default",
-        "Beslut",
-    ),
-    (
-        "IAF",
-        "iaf",
-        "Inspektionen för arbetslöshetsförsäkringen",
-        "diverse",
-        "Diverse beslut",
-        "_default",
-        "_default",
-        "Diverse beslut",
-    ),
-    (
-        "IAF",
-        "iaf",
-        "Inspektionen för arbetslöshetsförsäkringen",
-        "ersattningsperiod",
-        "Ersättningsperioder",
-        "_default",
-        "_default",
-        "Ersättningsperioder",
-    ),
-    (
-        "IAF",
-        "iaf",
-        "Inspektionen för arbetslöshetsförsäkringen",
-        "utbetalning",
-        "Utbetalningar",
-        "_default",
-        "_default",
-        "Utbetalningar",
-    ),
-    (
-        "IAF",
-        "iaf",
-        "Inspektionen för arbetslöshetsförsäkringen",
-        "medlemskap",
-        "Medlemskap i a-kassa",
-        "_default",
-        "_default",
-        "Medlemskap i a-kassa",
-    ),
-    (
-        "IAF",
-        "iaf",
-        "Inspektionen för arbetslöshetsförsäkringen",
-        "kassakod",
-        "Kassakoder (a-kassor)",
-        "_default",
-        "_default",
-        "Kassakoder (a-kassor)",
-    ),
-    (
-        "IAF",
-        "iaf",
-        "Inspektionen för arbetslöshetsförsäkringen",
-        "kassakortsvecka",
-        "Kassakortsveckor",
-        "_default",
-        "_default",
-        "Kassakortsveckor",
-    ),
-    (
-        "IAF",
-        "iaf",
-        "Inspektionen för arbetslöshetsförsäkringen",
-        "deltidsveckor",
-        "Deltidsveckor",
-        "_default",
-        "_default",
-        "Deltidsveckor",
-    ),
-]
+_FLAVOR_DISPOSITION = _POLICY.disposition()
 
 # Table selectors for disposition entries whose holding bundles several physical
 # tables under one (Category, Detail) key: (provider, register, variant) -> the
 # SKV_* table name(s) whose columns that variant draws. Entries absent here draw
 # the holding's full column union (the default for every other flavor provider).
-_FLAVOR_VARIANT_TABLES: dict[tuple[str, str, str], tuple[str, ...]] = {
-    ("skatteverket", "omstallningsstod", "ansokt"): ("SKV_omststod_ansokt",),
-    ("skatteverket", "omstallningsstod", "beviljat"): ("SKV_omststod_beviljat",),
-    ("skatteverket", "omstallningsstod", "avslag"): ("SKV_omststod_avslag",),
-    ("skatteverket", "tillfalligt-anstand", "ansokt"): ("SKV_anstand_tillf_ansokan",),
-    ("skatteverket", "tillfalligt-anstand", "beviljat"): (
-        "SKV_anstand_tillf_beviljat",
-    ),
-    ("skatteverket", "tillfalligt-anstand", "upphort"): ("SKV_anstand_tillf_upphort",),
-    ("skatteverket", "tillfalligt-anstand", "aterkallat"): ("SKV_anstand_tillf_aterk",),
-    ("skatteverket", "arbetsgivardeklaration", "_default"): ("SKV_ag_skatt",),
-    ("skatteverket", "reducerad-egenavgift", "_default"): ("SKV_reducerad_egenavg",),
-    ("skatteverket", "momsdeklaration", "_default"): ("SKV_Moms",),
-    # Arbetsförmedlingen (AMS): one holding, 3 registers; each pairs a base table with
-    # its 2021-vintage twin (identical columns → deduped by norm_col into one set).
-    ("arbetsformedlingen", "aktso", "_default"): (
-        "AMS_HIST_AKTSO",
-        "AMS_HIST_AKTSO_2021_20230726",
-    ),
-    ("arbetsformedlingen", "insper", "_default"): (
-        "AMS_INSPER",
-        "AMS_INSPER_2021_20230726",
-    ),
-    ("arbetsformedlingen", "sokatper", "_default"): (
-        "AMS_SOKATPER",
-        "AMS_SOKATPER_2021_20230726",
-    ),
-    # IAF: one holding, 8 registers; Lev2/Lev3 access tiers and year-range vintages
-    # carry identical columns, so each register names all its physical tables.
-    ("iaf", "beslut", "_default"): (
-        "IFA_Beslut",
-        "IFA_Beslut_From2018_Lev2",
-        "IFA_Beslut_Lev3",
-        "IFA_Beslut_Tom2017_Lev2",
-    ),
-    ("iaf", "diverse", "_default"): ("IFA_Diverse_Lev2", "IFA_Diverse_Lev3"),
-    ("iaf", "ersattningsperiod", "_default"): (
-        "IFA_Ersperiod_Lev2",
-        "IFA_Ersperiod_Lev3",
-    ),
-    ("iaf", "utbetalning", "_default"): (
-        "IFA_Utbet_2015_2017_Lev2",
-        "IFA_Utbet_2018_2019_Lev2",
-        "IFA_Utbet_2020_2021_Lev2",
-        "IFA_Utbet_Lev3",
-    ),
-    ("iaf", "medlemskap", "_default"): (
-        "IFA_Medlemskap_Lev2",
-        "IFA_Medlemskap_Lev3",
-    ),
-    ("iaf", "kassakod", "_default"): (
-        "IFA_Kassakod",
-        "IFA_Kassakod_Lev2",
-        "IFA_Kassakod_Lev3",
-    ),
-    ("iaf", "kassakortsvecka", "_default"): ("IFA_KKvecka_Lev2", "IFA_KKvecka_Lev3"),
-    ("iaf", "deltidsveckor", "_default"): (
-        "IFA_Deltidsveckor_Lev2",
-        "IFA_Deltidsveckor_Lev3",
-    ),
-}
+_FLAVOR_VARIANT_TABLES = _POLICY.variant_tables()
 
 
 def _kebab(text: str) -> str:
@@ -2653,12 +1922,7 @@ _STEWARD_DISP_PROVIDER = {entry[0]: entry[1] for entry in _FLAVOR_DISPOSITION}
 # gap, never steward flavor. Keyed by an enriched-key PREFIX (the Military
 # enlistment key has a `/Pliktverket` vs `/Riksarkivet` detail tail).
 _STEWARD_RESIDUE_PROVIDER = {
-    "FOHM": "fohm",
-    "Försäkringskassan": "fk",
-    "Högskoleprovet": "umu",
-    "Läkemedelsverket": "lakemedelsverket",
-    "Military enlistment/Pliktverket": "pliktverket",
-    "Military enlistment/Riksarkivet": "riksarkivet",
+    entry.holding_prefix: entry.provider for entry in _POLICY.provider_scope
 }
 
 # Holdings whose canonical-SCB content landed on a specific register after the
@@ -2666,8 +1930,7 @@ _STEWARD_RESIDUE_PROVIDER = {
 # employer-header register and the utrikeshandel-tjänster register. Keyed by
 # exact enriched key → register coord (`provider/register`).
 _STEWARD_HOLDING_REGISTER = {
-    "AGI/Huvud": "scb/agi-huvud",
-    "Utrikeshandel/Tjänster": "scb/utrikeshandel-tjanster",
+    entry.holding: entry.register_key for entry in _POLICY.register_scope
 }
 
 
