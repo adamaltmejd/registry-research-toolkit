@@ -91,6 +91,7 @@ _PLAIN_TABLES = frozenset(
         "variable_state_lineage_warning",
         "timeseries_event",
         "source_relationship_variable",
+        "data_warning",
     }
 )
 

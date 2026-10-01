@@ -772,8 +772,8 @@ CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 
 -- Per-state value-set/classification conformance (#656). A row exists only for
 -- a state whose value set declared a CSV-backed classification. `declared_*`
--- preserves the source claim even when the coverage gate clears
--- `variable_state.classification_id` below the overlap floor.
+-- preserves the source claim. The state keeps its classification link; source
+-- extensions stay outside the canonical book and are recorded separately.
 CREATE TABLE classification_conformance (
     state_id INTEGER PRIMARY KEY REFERENCES variable_state(state_id),
     declared_classification_id INTEGER NOT NULL REFERENCES classification(id),

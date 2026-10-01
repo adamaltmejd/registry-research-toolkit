@@ -57,6 +57,13 @@ def _catalog(path: Path, *, offset: int = 0, split: bool = False) -> None:
                 (key(number), key(2), str(number), slug, slug, key(2)),
             )
         conn.execute(
+            "INSERT INTO data_warning (warning_id, register_id, variable_id, "
+            "register_variant_id, delivery_column_name, valid_from, valid_to, "
+            "warning_json) VALUES ('reviewed-warning', ?, ?, ?, 'Benefit', "
+            "'2000-01-01', '2001-12-31', ?) ",
+            (key(2), key(5), key(3), '{"summary":"Source limitation"}'),
+        )
+        conn.execute(
             "INSERT INTO classification (id, short_name, name, slug, code_count) "
             "VALUES (?, 'Example coding', 'Classification', 'example-coding', 1)",
             (key(7),),
@@ -162,7 +169,7 @@ def _linked_facts(path: Path, *, offset: int = 0, split_source: bool = False) ->
             )
         conn.execute(
             "INSERT INTO classification_conformance "
-            "SELECT state_id, ?, 'kept', 2, 1, 1, 0.5 FROM variable_state",
+            "SELECT state_id, ?, 'extended', 2, 1, 1, 0.5 FROM variable_state",
             (key(7),),
         )
         conn.execute(
@@ -235,6 +242,10 @@ def test_equivalent_alias_window_segmentation_is_neutral(tmp_path: Path) -> None
         ("UPDATE value_code SET label = 'Changed meaning'", "value_code"),
         ("DELETE FROM variable_same_as", "variable_same_as"),
         ("UPDATE register SET purpose = 'Other purpose'", "register"),
+        (
+            'UPDATE data_warning SET warning_json = \'{"summary":"Changed limitation"}\'',
+            "data_warning",
+        ),
         ("UPDATE population SET definition = 'Other population'", "population"),
         (
             "UPDATE concept_group_variable_facet SET value = 'two'",

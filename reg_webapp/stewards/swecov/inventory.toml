@@ -200961,18 +200961,8 @@ register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
 variable = "scb/it-anvandning/andel-anstallda-barbara-enheter-mobil"
 representation = "EMPMD1PCT"
 
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/mobiluppkoppling-3g-4g"
-representation = "EMPMD1PCT"
-
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
@@ -201559,11 +201549,6 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
@@ -202247,11 +202232,6 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
@@ -203666,11 +203646,6 @@ register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
 variable = "scb/it-anvandning/andel-anstallda-barbara-enheter-mobil"
 representation = "EMPMD1PCT"
 
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/mobiluppkoppling-3g-4g"
-representation = "EMPMD1PCT"
-
 [[table.column]]
 name = "FIXBB"
 
@@ -204325,11 +204300,6 @@ name = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
 variable = "scb/it-anvandning/fixbb"
 representation = "FIXBB"
 
@@ -204813,11 +204783,6 @@ representation = "E_AWS_COWN"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
@@ -206205,11 +206170,6 @@ register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
 variable = "scb/it-anvandning/andel-anstallda-barbara-enheter-mobil"
 representation = "EMPMD1PCT"
 
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/mobiluppkoppling-3g-4g"
-representation = "EMPMD1PCT"
-
 [[table.column]]
 name = "FENr"
 
@@ -206220,11 +206180,6 @@ representation = "FENr"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
@@ -206929,11 +206884,6 @@ register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
 variable = "scb/it-anvandning/andel-anstallda-barbara-enheter-mobil"
 representation = "EMPMD1PCT"
 
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/mobiluppkoppling-3g-4g"
-representation = "EMPMD1PCT"
-
 [[table.column]]
 name = "FENr"
 
@@ -206960,11 +206910,6 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
@@ -207962,11 +207907,6 @@ register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
 variable = "scb/it-anvandning/andel-anstallda-barbara-enheter-mobil"
 representation = "EMPMD1PCT"
 
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/mobiluppkoppling-3g-4g"
-representation = "EMPMD1PCT"
-
 [[table.column]]
 name = "FENr"
 
@@ -207993,11 +207933,6 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
@@ -210189,11 +210124,6 @@ register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
 variable = "scb/it-anvandning/andel-anstallda-barbara-enheter-mobil"
 representation = "EMPMD1PCT"
 
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/mobiluppkoppling-3g-4g"
-representation = "EMPMD1PCT"
-
 [[table.column]]
 name = "E_AWBUY"
 
@@ -211299,11 +211229,6 @@ name = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
 variable = "scb/it-anvandning/fixbb"
 representation = "FIXBB"
 
@@ -212169,11 +212094,6 @@ representation = "E_AWS_COWN"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
 
 [[table.column.mapping]]
 register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
