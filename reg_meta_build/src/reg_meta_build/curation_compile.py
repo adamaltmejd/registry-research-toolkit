@@ -4716,6 +4716,7 @@ def compile_coding_register(
                         tuple(authority.records) != expected
                         or (
                             source_scope is not None
+                            and authority.period_block is None
                             and (
                                 column_scopes.get(column) != frozenset((source_scope,))
                                 or any(claim.scope != source_scope for claim in claims)
@@ -4748,6 +4749,7 @@ def compile_coding_register(
                                 not enumeration_matches
                                 if authority.enumeration is not None
                                 else not authority.label_equivalences
+                                and authority.period_block is None
                                 and {
                                     member.code
                                     for claim in claims
@@ -4759,6 +4761,7 @@ def compile_coding_register(
                         or (
                             isinstance(entry, CodingDocumentedEntry)
                             and authority.enumeration is None
+                            and authority.period_block is None
                             and not documented_labels_match(
                                 documented_source_members(
                                     claims,

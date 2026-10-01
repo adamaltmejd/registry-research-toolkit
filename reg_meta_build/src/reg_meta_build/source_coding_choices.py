@@ -42,6 +42,7 @@ from reg_meta_build.source_curation import (
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
 from reg_meta_build.source_records import ScopeInterval, SourceFields, TemporalScope
+from reg_meta_build.source_value_bindings import _member_scope
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -421,6 +422,111 @@ def _documented_targets_match(
     return True
 
 
+def documented_period_block(
+    claims: tuple[CodeListClaim, ...], anchor: str
+) -> tuple[TemporalScope, tuple[tuple[str, str], ...]] | None:
+    """Read one reviewed block from its positive physical-row period anchor.
+
+    This opt-in authority never changes the original membership scopes. Every
+    member must have one physical row in one sheet; blank periods can belong only
+    to the preceding positively dated row until the next dated row.
+    """
+    if len(claims) != 1 or not claims[0].members:
+        return None
+    members = claims[0].members
+    if any(
+        len(member.associations) != 1
+        or member.code is None
+        or member.label is None
+        or not member.label.strip()
+        or member.unknown_validity
+        or member.validity
+        for member in members
+    ):
+        return None
+    rows = sorted(members, key=lambda member: member.associations[0].row_number)
+    associations = tuple(member.associations[0] for member in rows)
+    if (
+        len({(row.source_file, row.source_table) for row in associations}) != 1
+        or associations[0].source_table is None
+        or len({row.row_number for row in associations}) != len(associations)
+    ):
+        return None
+    current_scope = None
+    selected_scope = None
+    selected = []
+    selected_block = False
+    for member, row in zip(rows, associations, strict=True):
+        if row.section_window is not None or row.section_period is not None:
+            return None
+        if row.supplied_period is not None:
+            window = row.supplied_window
+            if (
+                not row.supplied_period.strip()
+                or window is None
+                or window.status != "known"
+                or window.start is None
+            ):
+                return None
+            current_scope, issue = _member_scope(
+                claims[0].scope,
+                window,
+                None,
+                (),
+                missing_validity="unrestricted",
+                invalid_item=False,
+            )
+            if (
+                issue is not None
+                or current_scope is None
+                or member.scope != current_scope
+            ):
+                return None
+            selected_block = row.locator == anchor
+            if selected_block:
+                selected_scope = current_scope
+        elif (
+            current_scope is None
+            or row.supplied_window is not None
+            or member.scope.kind != "year_independent"
+        ):
+            return None
+        if selected_block:
+            assert member.code is not None and member.label is not None
+            selected.append((member.code, member.label))
+    if (
+        selected_scope is None
+        or not selected
+        or len({c for c, _ in selected}) != len(selected)
+    ):
+        return None
+    return selected_scope, tuple(selected)
+
+
+def documented_period_block_matches(
+    claims: tuple[CodeListClaim, ...],
+    anchor: str,
+    members: tuple[tuple[str, str], ...],
+    start: str,
+    end: str,
+    source_scope: TemporalScope | None = None,
+) -> bool:
+    block = documented_period_block(claims, anchor)
+    return (
+        block is not None
+        and block[1] == members
+        and (source_scope is None or block[0] == source_scope)
+        and covers_window(
+            (
+                (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
+                for lo, hi in coding_scope_bounds(block[0]) or ()
+            ),
+            start,
+            end,
+        )
+    )
+
+
 def compile_coding_selection(
     entry: CodingEntry | CodingChoiceEntry | CodingExtendEntry | CodingDocumentedEntry,
     kind: str,
@@ -455,13 +561,25 @@ def compile_coding_selection(
             documented.source_authority is not None
             and documented.source_authority.witness is not None
         )
-        if not witnessed_labels and any(
-            segment.code_set is not None and segment.code_set.members
-            for claim in coding_for_period(claims, start, end)
-            for segment in resolve_code_membership((claim,)).segments
+        period_block = (
+            documented.source_authority.period_block
+            if documented.source_authority is not None
+            else None
+        )
+        if (
+            not witnessed_labels
+            and period_block is None
+            and any(
+                segment.code_set is not None and segment.code_set.members
+                for claim in coding_for_period(claims, start, end)
+                for segment in resolve_code_membership((claim,)).segments
+            )
         ):
             return None, "stale", "period already has a complete source list"
         selection = DocumentedCodingSelection(
+            period_block=documented.source_authority.period_block
+            if documented.source_authority is not None
+            else None,
             members=documented.members,
             version_label=documented.version_label,
             source_scope=documented.source_authority.source_scope
@@ -490,6 +608,15 @@ def compile_coding_selection(
             if documented.source_authority is not None
             else (),
         )
+        if selection.period_block is not None and not documented_period_block_matches(
+            claims,
+            selection.period_block,
+            selection.members,
+            start,
+            end,
+            selection.source_scope,
+        ):
+            return None, "stale", "source period block changed or does not cover target"
         if witnessed_labels and not _documented_targets_match(
             claims, selection, start, end
         ):
@@ -586,6 +713,15 @@ def _selection(
             selection, claims, decision.valid_from, decision.valid_to
         )
     if isinstance(selection, DocumentedCodingSelection):
+        if selection.period_block is not None and not documented_period_block_matches(
+            claims,
+            selection.period_block,
+            selection.members,
+            decision.valid_from,
+            decision.valid_to,
+            selection.source_scope,
+        ):
+            return None, "documented_source_period_block_changed"
         if selection.witness is not None and not _documented_targets_match(
             claims, selection, decision.valid_from, decision.valid_to
         ):
@@ -616,11 +752,20 @@ def _selection(
             claims
         ) != tuple(sorted(selection.expected_source_codings)):
             return None, "documented_source_coding_changed"
-        if selection.source_scope is not None and any(
-            claim.scope != selection.source_scope for claim in claims
+        if (
+            selection.source_scope is not None
+            and selection.period_block is None
+            and any(claim.scope != selection.source_scope for claim in claims)
         ):
             return None, "documented_source_scope_changed"
-        scope = selection.source_scope or TemporalScope(
+        block = (
+            documented_period_block(claims, selection.period_block)
+            if selection.period_block is not None
+            else None
+        )
+        scope = (
+            block[0] if block is not None else selection.source_scope
+        ) or TemporalScope(
             kind="intervals",
             intervals=(
                 ScopeInterval(start=decision.valid_from, end=decision.valid_to),
@@ -830,6 +975,7 @@ def apply_coding_choices(
             if (
                 isinstance(decision.selection, DocumentedCodingSelection)
                 and decision.selection.source_scope is not None
+                and decision.selection.period_block is None
                 and records.effective_scopes.get(decision.column_key)
                 != frozenset((decision.selection.source_scope,))
             ):

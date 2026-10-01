@@ -803,16 +803,27 @@ exclusive with authored finite periods. That scope must match every effective oc
 and list claim exactly, including an open `end`. The authored scope and originals retain
 `end = None`; only the existing internal interval normalization reaches the maximum
 date. Complete original and list guards invalidate any source-scope change. This does
-not authorize future extrapolation or relax finite bounds for other coding decisions.
-Exact code strings, including an explicitly documented empty string, are preserved. The
-compiler captures original fields, scopes, coding references and complete column peers;
-changed finite claims invalidate application, and any supplied complete list in the
-window makes an ordinary documented entry stale. The guarded witness label certificate
-additionally requires every positive target domain to match after exact reviewed label
-normalization. Contradictory documented assignments withhold only their overlap.
-Original claims and nonmembership associations stay in source accounting. Raw
-type-marker whitespace is not a finite-membership guard: those associations cannot
-establish a list and are retained in the documentary audit.
+not authorize future extrapolation or relax finite bounds for other coding decisions. An
+opt-in `source_authority.period_block` identifies the physical first row of a positively
+dated workbook code block. Complete original and raw coding guards cover the whole
+claim. Each member must have exactly one physical association on the same sheet;
+subsequent blank period cells belong to that block until the next positive period
+anchor. The selected code-label pairs must match the complete block exactly. Its
+applicability intersects that positive period with the already known delivery scope.
+Compilation and application share this check; missing, new or changed rows, anchors,
+periods or associations invalidate the decision. This does not infer blank variable
+availability or expand documentary range and blank tokens into stored codes. An optional
+explicit `data_warning` records an unverified storage interpretation while retaining
+those exact source tokens and all original coding evidence. Exact code strings,
+including an explicitly documented empty string, are preserved. The compiler captures
+original fields, scopes, coding references and complete column peers; changed finite
+claims invalidate application, and any supplied complete list in the window makes an
+ordinary documented entry stale. The guarded witness label certificate additionally
+requires every positive target domain to match after exact reviewed label normalization.
+Contradictory documented assignments withhold only their overlap. Original claims and
+nonmembership associations stay in source accounting. Raw type-marker whitespace is not
+a finite-membership guard: those associations cannot establish a list and are retained
+in the documentary audit.
 
 A finite source-row authority can also certify an explicit complete enumeration in a
 named prose field. It records the exact ASCII decimal-code-and-label lines and requires

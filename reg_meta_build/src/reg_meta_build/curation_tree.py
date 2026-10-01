@@ -1386,7 +1386,8 @@ class _CheckedCodingEntry(CodingEntry):
     def _checked_authority(self) -> _CheckedCodingEntry:
         authority = self.source_authority
         if authority is not None and (
-            authority.enumeration is not None
+            authority.period_block is not None
+            or authority.enumeration is not None
             or authority.source_scope is not None
             or not authority.raw_codings
             or authority.label_equivalences
@@ -1452,6 +1453,7 @@ class PreparedCodingAuthority(_CurationModel):
     """Exact original source rows supplying the documented finite meanings."""
 
     revision: SourceRevision
+    period_block: str | None = Field(default=None, min_length=1)
     source_scope: TemporalScope | None = None
     locators: list[RecordLocator] = Field(min_length=1)
     records: list[RecordExpectation] = Field(min_length=1)
@@ -1466,6 +1468,19 @@ class PreparedCodingAuthority(_CurationModel):
 
     @model_validator(mode="after")
     def _complete(self) -> PreparedCodingAuthority:
+        if self.period_block is not None and (
+            self.period_block != self.period_block.strip()
+            or not self.period_block
+            or not self.raw_codings
+            or not self.codings
+            or self.enumeration is not None
+            or self.label_equivalences
+            or self.witness is not None
+            or self.marker_bindings is not None
+        ):
+            raise ValueError(
+                "period block requires exclusive complete source authority"
+            )
         if self.witness is not None:
             if not self.label_equivalences:
                 raise ValueError("documented witness requires a label certificate")
@@ -1557,6 +1572,7 @@ def _prepared_coding_authority(value: object) -> object:
 class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
     """Documented members; existing list selectors keep their own contracts."""
 
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     document_url: str | None = Field(default=None, pattern=r"^https://\S+$")
     document_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     document_pages: list[Annotated[int, Field(gt=0)]] | None = Field(
@@ -1585,6 +1601,7 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
                 )
         elif (
             self.source_authority.raw_codings is not None
+            and self.source_authority.period_block is None
             and not self.source_authority.label_equivalences
             and (
                 self.source_authority.enumeration is None
@@ -1607,7 +1624,8 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
                 "documented coding requires finite periods or exact source scope, exclusively"
             )
         if (
-            self.enumeration is not None
+            self.period_block is not None
+            or self.enumeration is not None
             or self.expected_marker_bindings is not None
             or self.source_scope is not None
             or self.expected_source_codings is not None

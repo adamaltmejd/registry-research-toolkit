@@ -2964,3 +2964,184 @@ def test_reviewed_decimal_comma_certificate_preserves_exact_source_and_no_claims
                 syntax="ascii-decimal-comma-equals",
                 lines=bad_lines,
             )
+
+
+@pytest.mark.parametrize(
+    "drift",
+    [
+        None,
+        "new_anchor",
+        "changed_period",
+        "missing_row",
+        "foreign_sheet",
+        "multiplicity",
+        "out_of_block",
+        "outside",
+        "multiple_claims",
+    ],
+)
+def test_documented_period_block_retains_literal_codes_and_all_raw_claims(drift):
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_values import SourceValueAssociation, SourceValueWindow
+
+    record = _record()
+    early = TemporalScope(
+        kind="intervals",
+        intervals=(ScopeInterval(start="2019-01-01", end="2020-12-31"),),
+    )
+    later = TemporalScope(
+        kind="intervals",
+        intervals=(ScopeInterval(start="2021-01-01", end="2021-12-31"),),
+    )
+    unrestricted = TemporalScope(kind="year_independent")
+    pairs = (
+        ("00", "Original"),
+        ("2-3", "Range token"),
+        ("blank", "No type"),
+        ("00", "Later meaning"),
+        ("blank", "Later missing meaning"),
+    )
+    members = []
+    for row, (code, label) in enumerate(pairs, 1):
+        period = early if row == 1 else later if row == 4 else None
+        association = SourceValueAssociation(
+            row,
+            "book",
+            str(row),
+            "book.xlsx",
+            "codes",
+            supplied_period="2019-2020" if row == 1 else "2021" if row == 4 else None,
+            supplied_window=SourceValueWindow(
+                "known",
+                period.intervals[0].start,
+                period.intervals[0].end,
+            )
+            if period is not None
+            else None,
+        )
+        members.append(
+            CodeMembershipClaim(
+                code, label, period or unrestricted, associations=(association,)
+            )
+        )
+    claim = replace(
+        _claim("Source", "00", "2019-01-01", "2021-12-31"), members=tuple(members)
+    )
+    claims = (claim,)
+    authority = _row_authority(record, claims).model_copy(
+        update={
+            "raw_codings": [coding_source_sha256(claim)],
+            "period_block": members[0].associations[0].locator,
+        }
+    )
+    values = {
+        "members": list(pairs[:3]),
+        "version_label": "Reviewed2019-2020block",
+        "data_warning": "The source tokens' stored encoding is unverified.",
+        "source_authority": authority,
+    }
+    cases, diagnostics, _, _, _, column = _compile_entry(
+        "documented",
+        values,
+        claims,
+        record=record,
+    )
+    assert not diagnostics and cases
+    assert cases[0].decision.data_warning == values["data_warning"]
+    changed = members.copy()
+    if drift in {"new_anchor", "changed_period", "foreign_sheet"}:
+        index = 0 if drift == "changed_period" else 1
+        association = changed[index].associations[0]
+        update = (
+            {"source_table": "other"}
+            if drift == "foreign_sheet"
+            else {
+                "supplied_period": "2018-2020",
+                "supplied_window": SourceValueWindow(
+                    "known", "2018-01-01", "2020-12-31"
+                ),
+            }
+        )
+        changed[index] = replace(
+            changed[index], associations=(replace(association, **update),)
+        )
+    elif drift == "missing_row":
+        changed.pop(2)
+    elif drift == "multiplicity":
+        changed[1] = replace(changed[1], associations=changed[1].associations * 2)
+    elif drift == "out_of_block":
+        changed[-1] = replace(changed[-1], label="Contrary later source meaning")
+    elif drift == "outside":
+        values = {**values, "periods": [["2021-01-01", "2021-12-31"]]}
+        assert _compile_entry("documented", values, claims, record=record)[1]
+        return
+    fresh = (replace(claim, members=tuple(changed)),)
+    if drift == "multiple_claims":
+        fresh = (*fresh, replace(claim, claim_id="other"))
+    result = apply_coding_choices((record,), cases, coding={column: fresh})
+    assert result.coding[column].claims == fresh
+    if drift is None:
+        assert not result.diagnostics
+        assert any(
+            s.code_set is not None and set(s.code_set.members) == set(pairs[:3])
+            for s in result.coding[column].segments
+        )
+    else:
+        assert result.accounting[0].status == "stale"
+        assert _compile_entry("documented", values, fresh, record=record)[1]
+
+
+@pytest.mark.parametrize("end", ["2020-12-31", None])
+def test_documented_period_block_intersects_known_delivery_scope(end):
+    from reg_meta_build.source_coding_choices import (
+        documented_period_block,
+        documented_period_block_matches,
+    )
+    from reg_meta_build.source_values import SourceValueAssociation, SourceValueWindow
+
+    effective = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="2020-01-01", end=end),)
+    )
+    association = SourceValueAssociation(
+        6,
+        "book",
+        "6",
+        "book.xlsx",
+        "codes",
+        supplied_period="2019-2020" if end else "2019-",
+        supplied_window=SourceValueWindow("known", "2019-01-01", end),
+    )
+    claim = replace(
+        _claim("Source", "00", "2020-01-01", "2021-12-31"),
+        scope=effective,
+        members=(
+            CodeMembershipClaim(
+                "00", "Original", effective, associations=(association,)
+            ),
+            CodeMembershipClaim(
+                "blank",
+                "Missing",
+                TemporalScope(kind="year_independent"),
+                associations=(
+                    replace(
+                        association,
+                        row_number=7,
+                        value_key="7",
+                        supplied_period=None,
+                        supplied_window=None,
+                    ),
+                ),
+            ),
+        ),
+    )
+    pairs = (("00", "Original"), ("blank", "Missing"))
+    assert documented_period_block((claim,), association.locator) == (effective, pairs)
+    assert documented_period_block_matches(
+        (claim,), association.locator, pairs, "2020-01-01", "2020-12-31", effective
+    )
+    assert not documented_period_block_matches(
+        (claim,), association.locator, pairs, "2019-01-01", "2019-12-31", effective
+    )
+    assert claim.members[0].associations[0].supplied_period == (
+        "2019-2020" if end else "2019-"
+    )

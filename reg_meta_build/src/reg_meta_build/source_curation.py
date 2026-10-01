@@ -980,6 +980,7 @@ class DocumentedCodingSelection(_CurationModel):
     """An exact finite list supplied by independently reviewed documentation."""
 
     kind: Literal["documented"] = "documented"
+    period_block: str | None = Field(default=None, min_length=1)
     enumeration: SourceEnumeration | None = None
     expected_marker_bindings: (
         Annotated[
@@ -1010,6 +1011,19 @@ class DocumentedCodingSelection(_CurationModel):
 
     @model_validator(mode="after")
     def _finite_members(self) -> Self:
+        if self.period_block is not None and (
+            not self.period_block.strip()
+            or self.period_block != self.period_block.strip()
+            or not self.expected_raw_codings
+            or not self.expected_source_codings
+            or self.enumeration is not None
+            or self.expected_marker_bindings is not None
+            or self.label_equivalences
+            or self.witness is not None
+        ):
+            raise ValueError(
+                "period block requires exclusive complete source authority"
+            )
         if self.witness is not None:
             if (
                 not self.label_equivalences
