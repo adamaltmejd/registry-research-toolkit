@@ -601,3 +601,1883 @@ valid_from = "2006-07-01"
 valid_to = "2006-12-31"
 reason = "The supplied study-level lists give code0 contradictory meanings (Påbyggnadsnivå and Okänt värde). Preserve every source list; effective coding remains unavailable in this exact window."
 evidence = "Complete accepted native family249.14642 reviewed:212 original records and212 bound claims. Active lists disagree about code0 and three windows also differ by a blank missing-value member. No evidence establishes which code0 meaning to remove. Exact ambiguity retention follows the previously approved source-conflict policy and maintainer best-judgment authorization2026-10-01. Batch47-Komvux-Niva-complete-conflict-evidence.json and Batch47-Komvux-Niva-ACK-source-proof.json."
+
+[[representation.parallel]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+variable = "249.104"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+column = "SkolKod"
+source_editions = ["1996 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1997-06-30"
+column = "Skolkod"
+source_editions = ["1996/1997"]
+
+[[representation.parallel]]
+valid_from = "1997-01-01"
+valid_to = "1997-06-30"
+variable = "249.104"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1997-01-01"
+valid_to = "1997-06-30"
+column = "SkolKod"
+source_editions = ["1997 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1997-06-30"
+column = "Skolkod"
+source_editions = ["1996/1997"]
+
+[[representation.parallel]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+variable = "249.14655"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+column = "KStart"
+source_editions = ["2015 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "Kstart"
+source_editions = ["2015"]
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+variable = "249.14655"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+column = "KStart"
+source_editions = ["2016 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "Kstart"
+source_editions = ["2016"]
+
+[[representation.parallel]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+variable = "249.14655"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+column = "KStart"
+source_editions = ["2016 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "Kstart"
+source_editions = ["2016"]
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+variable = "249.14655"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+column = "KStart"
+source_editions = ["2017 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "Kstart"
+source_editions = ["2017"]
+
+[[representation.parallel]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+variable = "249.14655"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+column = "KStart"
+source_editions = ["2017 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "Kstart"
+source_editions = ["2017"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.14655"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "KStart"
+source_editions = ["2018 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "Kstart"
+source_editions = ["2018"]
+
+[[representation.parallel]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+variable = "249.14655"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+column = "KStart"
+source_editions = ["2018 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "Kstart"
+source_editions = ["2018"]
+
+[[representation.parallel]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+variable = "249.14656"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+column = "KSlut"
+source_editions = ["2015 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "Kslut"
+source_editions = ["2015"]
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+variable = "249.14656"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+column = "KSlut"
+source_editions = ["2016 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "Kslut"
+source_editions = ["2016"]
+
+[[representation.parallel]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+variable = "249.14656"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+column = "KSlut"
+source_editions = ["2016 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "Kslut"
+source_editions = ["2016"]
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+variable = "249.14656"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+column = "KSlut"
+source_editions = ["2017 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "Kslut"
+source_editions = ["2017"]
+
+[[representation.parallel]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+variable = "249.14656"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+column = "KSlut"
+source_editions = ["2017 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "Kslut"
+source_editions = ["2017"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.14656"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "KSlut"
+source_editions = ["2018 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "Kslut"
+source_editions = ["2018"]
+
+[[representation.parallel]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+variable = "249.14656"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+column = "KSlut"
+source_editions = ["2018 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "Kslut"
+source_editions = ["2018"]
+
+[[representation.parallel]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+variable = "249.1839"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+column = "OrgNr"
+source_editions = ["2021 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "orgNr"
+source_editions = ["2021"]
+
+[[representation.parallel]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+variable = "249.1839"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+column = "OrgNr"
+source_editions = ["2021 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "orgNr"
+source_editions = ["2021"]
+
+[[representation.parallel]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+variable = "249.1839"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+column = "OrgNr"
+source_editions = ["2022 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "orgNr"
+source_editions = ["2022"]
+
+[[representation.parallel]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+variable = "249.1839"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+column = "OrgNr"
+source_editions = ["2022 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "orgNr"
+source_editions = ["2022"]
+
+[[representation.parallel]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+variable = "249.1839"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+column = "OrgNr"
+source_editions = ["2023 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "orgNr"
+source_editions = ["2023"]
+
+[[representation.parallel]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+variable = "249.1839"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+column = "OrgNr"
+source_editions = ["2023 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "orgNr"
+source_editions = ["2023"]
+
+[[representation.parallel]]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+variable = "249.1839"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+column = "OrgNr"
+source_editions = ["2024 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "orgNr"
+source_editions = ["2024"]
+
+[[representation.parallel]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+variable = "249.1839"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+column = "OrgNr"
+source_editions = ["2024 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "orgNr"
+source_editions = ["2024"]
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+variable = "249.29427"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+column = "GyFNamn"
+source_editions = ["2015 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "GyfNamn"
+source_editions = ["2015"]
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "GyFNamn"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+column = "GyfNamn"
+source_editions = ["2015 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "GyFNamn"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+column = "GyfNamn"
+source_editions = ["2015 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "GyFNamn"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+column = "GyfNamn"
+source_editions = ["2016 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "GyFNamn"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+column = "GyfNamn"
+source_editions = ["2016 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "GyFNamn"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+column = "GyfNamn"
+source_editions = ["2017 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "GyFNamn"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+column = "GyfNamn"
+source_editions = ["2017 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "GyFNamn"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "GyfNamn"
+source_editions = ["2018 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "GyFNamn"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+column = "GyfNamn"
+source_editions = ["2018 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-01-01"
+valid_to = "2019-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "GyFNamn"
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-06-30"
+column = "GyfNamn"
+source_editions = ["2019 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "GyFNamn"
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+column = "GyfNamn"
+source_editions = ["2019 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+column = "GyFNamn"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+column = "GyfNamn"
+source_editions = ["2020 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2020-07-01"
+valid_to = "2020-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+column = "GyFNamn"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+valid_from = "2020-07-01"
+valid_to = "2020-12-31"
+column = "GyfNamn"
+source_editions = ["2020 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "GyFNamn"
+source_editions = ["2021"]
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+column = "GyfNamn"
+source_editions = ["2021 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "GyFNamn"
+source_editions = ["2021"]
+[[representation.parallel.columns]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+column = "GyfNamn"
+source_editions = ["2021 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "GyFNamn"
+source_editions = ["2022"]
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+column = "GyfNamn"
+source_editions = ["2022 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "GyFNamn"
+source_editions = ["2022"]
+[[representation.parallel.columns]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+column = "GyfNamn"
+source_editions = ["2022 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "GyFNamn"
+source_editions = ["2023"]
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+column = "GyfNamn"
+source_editions = ["2023 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "GyFNamn"
+source_editions = ["2023"]
+[[representation.parallel.columns]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+column = "GyfNamn"
+source_editions = ["2023 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "GyFNamn"
+source_editions = ["2024"]
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+column = "GyfNamn"
+source_editions = ["2024 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+variable = "249.29427"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "GyFNamn"
+source_editions = ["2024"]
+[[representation.parallel.columns]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+column = "GyfNamn"
+source_editions = ["2024 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-01-01"
+valid_to = "2019-06-30"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "GyFNamn"
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-06-30"
+column = "GyfNamn"
+source_editions = ["2019 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "GyFNamn"
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+column = "GyfNamn"
+source_editions = ["2019 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+column = "GyFNamn"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+column = "GyfNamn"
+source_editions = ["2020 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2020-07-01"
+valid_to = "2020-12-31"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+column = "GyFNamn"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+valid_from = "2020-07-01"
+valid_to = "2020-12-31"
+column = "GyfNamn"
+source_editions = ["2020 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "GyFNamn"
+source_editions = ["2021"]
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+column = "GyfNamn"
+source_editions = ["2021 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "GyFNamn"
+source_editions = ["2021"]
+[[representation.parallel.columns]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+column = "GyfNamn"
+source_editions = ["2021 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "GyFNamn"
+source_editions = ["2022"]
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+column = "GyfNamn"
+source_editions = ["2022 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "GyFNamn"
+source_editions = ["2022"]
+[[representation.parallel.columns]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+column = "GyfNamn"
+source_editions = ["2022 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "GyFNamn"
+source_editions = ["2023"]
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+column = "GyfNamn"
+source_editions = ["2023 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "GyFNamn"
+source_editions = ["2023"]
+[[representation.parallel.columns]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+column = "GyfNamn"
+source_editions = ["2023 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "GyFNamn"
+source_editions = ["2024"]
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+column = "GyfNamn"
+source_editions = ["2024 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+variable = "249.29427"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "GyFNamn"
+source_editions = ["2024"]
+[[representation.parallel.columns]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+column = "GyfNamn"
+source_editions = ["2024 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+variable = "249.29427"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "GyFNamn"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+column = "GyfNamn"
+source_editions = ["2015 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+variable = "249.29427"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "GyFNamn"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+column = "GyfNamn"
+source_editions = ["2016 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+variable = "249.29427"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "GyFNamn"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+column = "GyfNamn"
+source_editions = ["2016 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+variable = "249.29427"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "GyFNamn"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+column = "GyfNamn"
+source_editions = ["2017 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+variable = "249.29427"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "GyFNamn"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+column = "GyfNamn"
+source_editions = ["2017 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.29427"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "GyFNamn"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "GyfNamn"
+source_editions = ["2018 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+variable = "249.29427"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "GyFNamn"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+column = "GyfNamn"
+source_editions = ["2018 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "1999-07-01"
+valid_to = "1999-12-31"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "2000-06-30"
+column = "AntKurs1"
+source_editions = ["1999/2000"]
+[[representation.parallel.columns]]
+valid_from = "1999-01-01"
+valid_to = "1999-12-31"
+column = "Antkurs1"
+source_editions = ["1999"]
+
+[[representation.parallel]]
+valid_from = "2000-01-01"
+valid_to = "2000-06-30"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "2000-06-30"
+column = "AntKurs1"
+source_editions = ["1999/2000"]
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+column = "Antkurs1"
+source_editions = ["2000"]
+
+[[representation.parallel]]
+valid_from = "2000-07-01"
+valid_to = "2000-12-31"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2001-06-30"
+column = "AntKurs1"
+source_editions = ["2000/2001"]
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+column = "Antkurs1"
+source_editions = ["2000"]
+
+[[representation.parallel]]
+valid_from = "2001-01-01"
+valid_to = "2001-06-30"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2001-06-30"
+column = "AntKurs1"
+source_editions = ["2000/2001"]
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+column = "Antkurs1"
+source_editions = ["2001"]
+
+[[representation.parallel]]
+valid_from = "2001-07-01"
+valid_to = "2001-12-31"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2002-06-30"
+column = "AntKurs1"
+source_editions = ["2001/2002"]
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+column = "Antkurs1"
+source_editions = ["2001"]
+
+[[representation.parallel]]
+valid_from = "2002-01-01"
+valid_to = "2002-06-30"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2002-06-30"
+column = "AntKurs1"
+source_editions = ["2001/2002"]
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+column = "Antkurs1"
+source_editions = ["2002"]
+
+[[representation.parallel]]
+valid_from = "2002-07-01"
+valid_to = "2002-12-31"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2003-06-30"
+column = "AntKurs1"
+source_editions = ["2002/2003"]
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+column = "Antkurs1"
+source_editions = ["2002"]
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-06-30"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2003-06-30"
+column = "AntKurs1"
+source_editions = ["2002/2003"]
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+column = "Antkurs1"
+source_editions = ["2003"]
+
+[[representation.parallel]]
+valid_from = "2003-07-01"
+valid_to = "2003-12-31"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+column = "AntKurs1"
+source_editions = ["2003/2004"]
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+column = "Antkurs1"
+source_editions = ["2003"]
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-06-30"
+variable = "249.32739"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+column = "AntKurs1"
+source_editions = ["2003/2004"]
+[[representation.parallel.columns]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+column = "Antkurs1"
+source_editions = ["2004"]
+
+[[representation.parallel]]
+valid_from = "1999-07-01"
+valid_to = "1999-12-31"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "2000-06-30"
+column = "AntKurs2"
+source_editions = ["1999/2000"]
+[[representation.parallel.columns]]
+valid_from = "1999-01-01"
+valid_to = "1999-12-31"
+column = "Antkurs2"
+source_editions = ["1999"]
+
+[[representation.parallel]]
+valid_from = "2000-01-01"
+valid_to = "2000-06-30"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "2000-06-30"
+column = "AntKurs2"
+source_editions = ["1999/2000"]
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+column = "Antkurs2"
+source_editions = ["2000"]
+
+[[representation.parallel]]
+valid_from = "2000-07-01"
+valid_to = "2000-12-31"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2001-06-30"
+column = "AntKurs2"
+source_editions = ["2000/2001"]
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+column = "Antkurs2"
+source_editions = ["2000"]
+
+[[representation.parallel]]
+valid_from = "2001-01-01"
+valid_to = "2001-06-30"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2001-06-30"
+column = "AntKurs2"
+source_editions = ["2000/2001"]
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+column = "Antkurs2"
+source_editions = ["2001"]
+
+[[representation.parallel]]
+valid_from = "2001-07-01"
+valid_to = "2001-12-31"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2002-06-30"
+column = "AntKurs2"
+source_editions = ["2001/2002"]
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+column = "Antkurs2"
+source_editions = ["2001"]
+
+[[representation.parallel]]
+valid_from = "2002-01-01"
+valid_to = "2002-06-30"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2002-06-30"
+column = "AntKurs2"
+source_editions = ["2001/2002"]
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+column = "Antkurs2"
+source_editions = ["2002"]
+
+[[representation.parallel]]
+valid_from = "2002-07-01"
+valid_to = "2002-12-31"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2003-06-30"
+column = "AntKurs2"
+source_editions = ["2002/2003"]
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+column = "Antkurs2"
+source_editions = ["2002"]
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-06-30"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2003-06-30"
+column = "AntKurs2"
+source_editions = ["2002/2003"]
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+column = "Antkurs2"
+source_editions = ["2003"]
+
+[[representation.parallel]]
+valid_from = "2003-07-01"
+valid_to = "2003-12-31"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+column = "AntKurs2"
+source_editions = ["2003/2004"]
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+column = "Antkurs2"
+source_editions = ["2003"]
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-06-30"
+variable = "249.32744"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+column = "AntKurs2"
+source_editions = ["2003/2004"]
+[[representation.parallel.columns]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+column = "Antkurs2"
+source_editions = ["2004"]
+
+[[representation.parallel]]
+valid_from = "1999-07-01"
+valid_to = "1999-12-31"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "2000-06-30"
+column = "AntKurs3"
+source_editions = ["1999/2000"]
+[[representation.parallel.columns]]
+valid_from = "1999-01-01"
+valid_to = "1999-12-31"
+column = "Antkurs3"
+source_editions = ["1999"]
+
+[[representation.parallel]]
+valid_from = "2000-01-01"
+valid_to = "2000-06-30"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "2000-06-30"
+column = "AntKurs3"
+source_editions = ["1999/2000"]
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+column = "Antkurs3"
+source_editions = ["2000"]
+
+[[representation.parallel]]
+valid_from = "2000-07-01"
+valid_to = "2000-12-31"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2001-06-30"
+column = "AntKurs3"
+source_editions = ["2000/2001"]
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+column = "Antkurs3"
+source_editions = ["2000"]
+
+[[representation.parallel]]
+valid_from = "2001-01-01"
+valid_to = "2001-06-30"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2001-06-30"
+column = "AntKurs3"
+source_editions = ["2000/2001"]
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+column = "Antkurs3"
+source_editions = ["2001"]
+
+[[representation.parallel]]
+valid_from = "2001-07-01"
+valid_to = "2001-12-31"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2002-06-30"
+column = "AntKurs3"
+source_editions = ["2001/2002"]
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+column = "Antkurs3"
+source_editions = ["2001"]
+
+[[representation.parallel]]
+valid_from = "2002-01-01"
+valid_to = "2002-06-30"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2002-06-30"
+column = "AntKurs3"
+source_editions = ["2001/2002"]
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+column = "Antkurs3"
+source_editions = ["2002"]
+
+[[representation.parallel]]
+valid_from = "2002-07-01"
+valid_to = "2002-12-31"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2003-06-30"
+column = "AntKurs3"
+source_editions = ["2002/2003"]
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+column = "Antkurs3"
+source_editions = ["2002"]
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-06-30"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2003-06-30"
+column = "AntKurs3"
+source_editions = ["2002/2003"]
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+column = "Antkurs3"
+source_editions = ["2003"]
+
+[[representation.parallel]]
+valid_from = "2003-07-01"
+valid_to = "2003-12-31"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+column = "AntKurs3"
+source_editions = ["2003/2004"]
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+column = "Antkurs3"
+source_editions = ["2003"]
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-06-30"
+variable = "249.35319"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal retains its own original edition bounds, metadata and provenance; the reviewed intersection admits both delivery representations. No bound coding claims exist on these exact original peers. This does not assert statistical equivalence or change source facts."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+column = "AntKurs3"
+source_editions = ["2003/2004"]
+[[representation.parallel.columns]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+column = "Antkurs3"
+source_editions = ["2004"]
