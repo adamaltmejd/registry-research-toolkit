@@ -258,6 +258,16 @@ the chosen labeled row exactly; renaming or removing it makes the route stale. L
 `A_LOVA` routes to its Huvudtabell row and `A_LOVA_LISA` to its ekonomi/arbetsmarknad
 row. The prepared source-records schema is 15; older stores must be re-prepared.
 
+An authored thin-provider variant may declare `period_scope = "pooled"` with two
+explicit, ordered ISO date bounds. The reader retains this declaration and the
+maintained-declaration compiler emits bounded pooled occurrences, including when a
+variable narrows that range. It never expands the table's observed span into annual
+column availability. Register inception may remain unknown when a named delivery
+supplies the bounds. An optional nonblank variable `data_warning` stays in the original
+cells and becomes a warning scoped to its exact variable, variant, column and period
+through the existing checked-occurrence warning contract. These declarations distinguish
+maintainer transcription and sensitivity policy from verified provider meanings.
+
 A missing SOS subset sheet does not establish that its variable rows describe one table.
 An authored named-variant topology binds the explicit native subset coordinates on those
 rows and carries their literal names into parent resolution. Missing declared tables

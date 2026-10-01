@@ -329,3 +329,102 @@ def test_fohm_thin_slug_entries_follow_authored_columns() -> None:
                 if item["native_id"].endswith(f".{column}")
             )
             assert entry["slug"] == derive_variable_slug(column)
+
+
+def test_pooled_delivery_remains_pooled_through_checked_thin_compilation(tmp_path):
+    from reg_meta_build.curation_compile import _compile_thin_register
+    from reg_meta_build.source_curation import CuratedOccurrenceAddition
+    from reg_meta_build.source_effects import apply_occurrence_cases
+
+    path, revision = _source(
+        tmp_path,
+        """
+[[register]]
+key = "r"
+name = "Register with unknown inception"
+[[register.variant]]
+key = "table"
+name = "Pooled table"
+valid_from = "2020-01-01"
+valid_to = "2021-12-31"
+period_scope = "pooled"
+[[register.variable]]
+name = "Literal header"
+column = "HEADER"
+data_type = "text"
+data_warning = "Header-only metadata; response codes unavailable."
+variants = ["table"]
+valid_from = "2020-06-01"
+valid_to = "2021-06-30"
+""",
+    )
+    clean = read_curated_source(path, revision, provider="agency")
+    register, variant, variable = clean.records
+    assert register.parent_facts[0].fields.coverage_from is None
+    assert variant.edition_period_scope.kind == "pooled"
+    assert any(
+        cell.name == "period_scope" and cell.raw_value == "pooled"
+        for cell in variant.delivered_cells
+    )
+    cases = _compile_thin_register(clean.records, ())
+    assert (
+        cases[0].decision.data_warning
+        == "Header-only metadata; response codes unavailable."
+    )
+    assert len(cases[0].decision.data_warning_refs) == 1
+    assert cases[0].decision.data_warning_fields == ("name", "definition", "coding")
+    additions = [
+        effect
+        for case in cases
+        for effect in case.decision.effects
+        if isinstance(effect, CuratedOccurrenceAddition)
+    ]
+    assert len(additions) == 1
+    scope = additions[0].edition_period_scope
+    assert (scope.kind, scope.pooled_start, scope.pooled_end) == (
+        "pooled",
+        "2020-06-01",
+        "2021-06-30",
+    )
+    assert scope.intervals == ()
+    applied = apply_occurrence_cases(clean.records, cases)
+    assert not applied.diagnostics
+    physical = [
+        occurrence
+        for occurrence in applied.occurrences
+        if occurrence.use == "catalog" and occurrence.variable_key is not None
+    ]
+    assert len(physical) == 1
+    assert physical[0].edition_period_scope == scope
+    assert physical[0].support_records == (variable,)
+
+
+@pytest.mark.parametrize(
+    "bounds",
+    [
+        "",
+        'valid_from = "2020-01-01"',
+        'valid_to = "2021-12-31"',
+        'valid_from = "2021-12-31"\nvalid_to = "2020-01-01"',
+        'valid_from = "2020"\nvalid_to = "2021"',
+        'valid_from = "2020-02-30"\nvalid_to = "2021-12-31"',
+    ],
+)
+def test_pooled_delivery_requires_explicit_valid_ordered_iso_bounds(tmp_path, bounds):
+    path, revision = _source(
+        tmp_path,
+        _BASE
+        + '\n[[register.variant]]\nkey = "table"\nname = "Table"\nperiod_scope = "pooled"\n'
+        + bounds,
+    )
+    with pytest.raises(CuratedSourceError, match="pooled|day.*range"):
+        read_curated_source(path, revision, provider="agency")
+
+
+@pytest.mark.parametrize("warning", ['""', '"   "', "false", "12"])
+def test_thin_data_warning_requires_nonblank_text(tmp_path, warning):
+    path, revision = _source(
+        tmp_path, _BASE + _VARIABLE + f"\ndata_warning = {warning}\n"
+    )
+    with pytest.raises(CuratedSourceError, match="data_warning"):
+        read_curated_source(path, revision, provider="agency")

@@ -4286,6 +4286,7 @@ def _compile_thin_register(
         )
     register = register_facts[0]
     variants = {}
+    variant_periods = {}
     for record in records:
         for parent in record.parent_facts:
             if parent.kind != "variant":
@@ -4296,6 +4297,7 @@ def _compile_thin_register(
                     f"{record.source}: duplicate or missing thin variant key {name!r}"
                 )
             variants[name] = parent
+            variant_periods[name] = record.edition_period_scope
     reg_from = _source_text(register.fields.coverage_from)
     reg_to = _source_text(register.fields.coverage_to)
     cases = []
@@ -4356,9 +4358,19 @@ def _compile_thin_register(
                 raise ValueError(
                     f"{case_id}: empty or inverted thin coverage window for {name!r}"
                 )
-            period = TemporalScope(
-                kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
-            )
+            if name in variant_periods and variant_periods[name].kind == "pooled":
+                if end is None:
+                    raise ValueError(f"{case_id}: pooled thin coverage needs an end")
+                period = TemporalScope(
+                    kind="pooled",
+                    label=variant_periods[name].label,
+                    pooled_start=start,
+                    pooled_end=end,
+                )
+            else:
+                period = TemporalScope(
+                    kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
+                )
             copied = record.fields.value_set_declared is not None
             effects.append(
                 CuratedOccurrenceAddition(
@@ -4383,6 +4395,14 @@ def _compile_thin_register(
         expectations = capture_expectations(
             (record,), fields=tuple(SourceFields.model_fields), coding=True
         )
+        data_warning = next(
+            (
+                cell.interpreted_value
+                for cell in record.delivered_cells
+                if cell.name == "data_warning"
+            ),
+            None,
+        )
         cases.append(
             CurationCase(
                 case_id=case_id,
@@ -4400,6 +4420,11 @@ def _compile_thin_register(
                 ),
                 decision=OccurrenceCorrectionDecision(
                     reviewed=True,
+                    data_warning=data_warning,
+                    data_warning_refs=(ref,) if data_warning is not None else (),
+                    data_warning_fields=("name", "definition", "coding")
+                    if data_warning is not None
+                    else (),
                     effects=tuple(effects),
                     reason="Authored thin-provider record declares its own finite coverage.",
                     provenance=record.source,

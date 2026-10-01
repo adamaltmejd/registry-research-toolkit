@@ -1,0 +1,31 @@
+# Literal source keys from the maintained SWECOV pooled-delivery candidate.
+# Neither the project pseudonym nor its float storage denotes an original PersonNr.
+[register]
+provider = "fohm"
+slug = "covidwgs"
+native_id = "7376555732108864140"
+
+[[variant]]
+native_id = "7376555732108864140.8956613898378564678"
+slug = "fhm-covidwgs"
+display_group = "CovidWGS"
+
+[[variable]]
+native_id = "7376555732108864140.P1105_LopNr_PersonNr"
+slug = "p1105-lopnr-personnr"
+
+[[variable]]
+native_id = "7376555732108864140.Provdatum"
+slug = "provdatum"
+
+[[variable]]
+native_id = "7376555732108864140.Lineage"
+slug = "lineage-field"
+
+[[variable]]
+native_id = "7376555732108864140.Gisaid"
+slug = "gisaid"
+
+[[variable]]
+native_id = "7376555732108864140.SmiLab_nr"
+slug = "smilab-nr"

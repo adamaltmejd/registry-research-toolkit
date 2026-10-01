@@ -17,9 +17,9 @@ import tomllib
 from dataclasses import dataclass, field
 from datetime import date
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Annotated, Any
+from typing import TYPE_CHECKING, Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 from reg_meta.source_evidence import (
     DeliveredCell,
     RecordLocator,
@@ -72,6 +72,20 @@ class _Variant(_Declaration):
     description: str | None = None
     valid_from: str | None = None
     valid_to: str | None = None
+    period_scope: Literal["intervals", "pooled"] = "intervals"
+
+    @model_validator(mode="after")
+    def _pooled_bounds(self) -> _Variant:
+        if self.period_scope == "pooled":
+            if self.valid_from is None or self.valid_to is None:
+                raise ValueError("pooled variant requires both explicit date bounds")
+            for value in (self.valid_from, self.valid_to):
+                if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+                    raise ValueError("pooled variant requires ISO date bounds")
+                date.fromisoformat(value)
+            if self.valid_from > self.valid_to:
+                raise ValueError("pooled variant requires ordered date bounds")
+        return self
 
 
 class _Variable(_Declaration):
@@ -88,6 +102,7 @@ class _Variable(_Declaration):
     variants: list[str] | None = None
     classification: str | None = None
     value_set: str | None = None
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
 
 
 class _Register(_Declaration):
@@ -203,6 +218,13 @@ def _scope(entry: Mapping[str, Any]) -> TemporalScope:
             return TemporalScope(
                 kind="unknown",
                 label="Invalid or conflicting declared valid_from/valid_to; original bounds retained",
+            )
+        if entry.get("period_scope") == "pooled":
+            return TemporalScope(
+                kind="pooled",
+                label=f"{start}–{end}",
+                pooled_start=start,
+                pooled_end=end,
             )
         return TemporalScope(
             kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
